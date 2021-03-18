@@ -10,18 +10,22 @@ import se.tink.backend.aggregation.nxgen.controllers.signing.multifactor.bankid.
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.core.account.GenericTypeMapper;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.pair.Pair;
 import se.tink.libraries.payment.enums.PaymentType;
 
 public class NordeaNoPaymentExecutorSelector extends NordeaBasePaymentExecutor {
-    private static final GenericTypeMapper<PaymentType, Pair<Type, Type>>
+    private static final GenericTypeMapper<
+                    PaymentType, Pair<AccountIdentifierType, AccountIdentifierType>>
             accountIdentifiersToPaymentTypeMapper =
-                    GenericTypeMapper.<PaymentType, Pair<Type, Type>>genericBuilder()
+                    GenericTypeMapper
+                            .<PaymentType, Pair<AccountIdentifierType, AccountIdentifierType>>
+                                    genericBuilder()
                             .put(
                                     PaymentType.DOMESTIC,
-                                    new Pair<>(Type.NO, Type.NO),
-                                    new Pair<>(Type.NO, Type.IBAN))
+                                    new Pair<>(AccountIdentifierType.NO, AccountIdentifierType.NO),
+                                    new Pair<>(
+                                            AccountIdentifierType.NO, AccountIdentifierType.IBAN))
                             .build();
 
     private final SupplementalInformationController supplementalInformationController;
@@ -35,7 +39,7 @@ public class NordeaNoPaymentExecutorSelector extends NordeaBasePaymentExecutor {
 
     @Override
     protected PaymentType getPaymentType(PaymentRequest paymentRequest) {
-        Pair<Type, Type> accountIdentifiersKey =
+        Pair<AccountIdentifierType, AccountIdentifierType> accountIdentifiersKey =
                 paymentRequest.getPayment().getCreditorAndDebtorAccountType();
 
         return accountIdentifiersToPaymentTypeMapper

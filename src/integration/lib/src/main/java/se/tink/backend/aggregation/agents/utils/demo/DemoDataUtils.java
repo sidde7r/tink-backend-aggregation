@@ -27,6 +27,7 @@ import se.tink.backend.aggregation.agents.models.TransactionTypes;
 import se.tink.backend.aggregation.agents.utils.mappers.CoreAccountMapper;
 import se.tink.backend.aggregation.agents.utils.mappers.CoreCredentialsMapper;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.account.rpc.Account;
 import se.tink.libraries.amount.ExactCurrencyAmount;
@@ -215,7 +216,7 @@ public class DemoDataUtils {
                                         TransferType.PAYMENT);
 
                         fakePayment.setId(UUIDUtils.fromTinkUUID(transaction.getId()));
-                        fakePayment.setSource(account.getIdentifier(AccountIdentifier.Type.SE));
+                        fakePayment.setSource(account.getIdentifier(AccountIdentifierType.SE));
 
                         transaction.setPayload(
                                 TransactionPayloadTypes.EDITABLE_TRANSACTION_TRANSFER,

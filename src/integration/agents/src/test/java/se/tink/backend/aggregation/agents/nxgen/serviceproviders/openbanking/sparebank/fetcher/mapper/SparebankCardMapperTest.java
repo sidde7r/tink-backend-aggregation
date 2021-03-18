@@ -18,6 +18,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.spa
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.fetcher.transactionalaccount.rpc.BalanceResponse;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
@@ -87,7 +88,7 @@ public class SparebankCardMapperTest {
         assertThat(creditCardAccount.getIdentifiers().get(0))
                 .isEqualTo(
                         AccountIdentifier.create(
-                                AccountIdentifier.Type.PAYMENT_CARD_NUMBER, TEST_MASKED_PAN));
+                                AccountIdentifierType.PAYMENT_CARD_NUMBER, TEST_MASKED_PAN));
 
         assertThat(creditCardAccount.getApiIdentifier()).isEqualTo(TEST_RESOURCE_ID);
     }

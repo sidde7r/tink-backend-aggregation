@@ -27,6 +27,7 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdMo
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.loan.LoanModule;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.account.identifiers.formatters.DisplayAccountIdentifierFormatter;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
@@ -103,7 +104,7 @@ public class LoanResponse extends HtmlResponse {
     public LoanAccount toLoanAccount() {
         final String accountNumber = getIban();
         final AccountIdentifier iban =
-                AccountIdentifier.create(AccountIdentifier.Type.IBAN, accountNumber);
+                AccountIdentifier.create(AccountIdentifierType.IBAN, accountNumber);
         final String formattedIban = iban.getIdentifier(new DisplayAccountIdentifierFormatter());
         return LoanAccount.nxBuilder()
                 .withLoanDetails(

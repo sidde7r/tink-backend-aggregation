@@ -3,22 +3,20 @@ package se.tink.backend.aggregation.agents.banks.lansforsakringar;
 import org.junit.Assert;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.Originator;
-import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 
 public class OriginatorTest {
 
     @Test
     public void testValidBankGiroAccountNumber() {
         Originator o = createOriginator("687-5496", "TINK AB", null);
-        Assert.assertEquals(
-                AccountIdentifier.Type.SE_BG, o.generalGetAccountIdentifier().getType());
+        Assert.assertEquals(AccountIdentifierType.SE_BG, o.generalGetAccountIdentifier().getType());
     }
 
     @Test
     public void testValidPostGiroAccountNumber() {
         Originator o = createOriginator("687549-6", "TINK AB", null);
-        Assert.assertEquals(
-                AccountIdentifier.Type.SE_PG, o.generalGetAccountIdentifier().getType());
+        Assert.assertEquals(AccountIdentifierType.SE_PG, o.generalGetAccountIdentifier().getType());
     }
 
     @Test

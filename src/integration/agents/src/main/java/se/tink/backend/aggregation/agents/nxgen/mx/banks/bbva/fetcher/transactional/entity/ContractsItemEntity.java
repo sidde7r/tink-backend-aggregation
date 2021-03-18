@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdMo
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 
 @JsonObject
 public class ContractsItemEntity {
@@ -57,7 +58,7 @@ public class ContractsItemEntity {
                                 .withAccountName(subProductType.getName())
                                 .addIdentifier(
                                         AccountIdentifier.create(
-                                                AccountIdentifier.Type.TINK, number))
+                                                AccountIdentifierType.TINK, number))
                                 .build())
                 .putInTemporaryStorage(BbvaMxConstants.STORAGE.ACCOUNT_ID, id)
                 .addHolderName(holdername)
@@ -76,7 +77,7 @@ public class ContractsItemEntity {
                                 .withAccountName(subProductType.getName())
                                 .addIdentifier(
                                         AccountIdentifier.create(
-                                                AccountIdentifier.Type.TINK, number))
+                                                AccountIdentifierType.TINK, number))
                                 .build())
                 .putInTemporaryStorage(BbvaMxConstants.STORAGE.ACCOUNT_ID, id)
                 .addHolderName(holdername)

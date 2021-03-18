@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdMo
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument.InstrumentModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.portfolio.PortfolioModule;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
@@ -126,7 +127,7 @@ public class PortfolioEntity {
                                 .withAccountName(getAccountName(clusterId))
                                 .addIdentifier(
                                         AccountIdentifier.create(
-                                                AccountIdentifier.Type.SE, accountId))
+                                                AccountIdentifierType.SE, accountId))
                                 .setProductName(portfolio.getRawType())
                                 .build())
                 .addHolderName(holderName.toString())

@@ -21,10 +21,10 @@ junit_test(
         "//src/integration/transfer:enums",
         "//src/integration/transfer:rpc",
         "//src/integration/user:rpc",
-        "//src/libraries/account_identifier",
         "//third_party:org_iban4j_iban4j",
         "//third_party:org_mockito_mockito_core",
         "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
+        "@tink_backend//src/libraries/account_identifier",
         "@tink_backend//src/libraries/payments_common/src/java/se/tink/libraries/payments/common/model:payments_common_model",
     ],
 )
@@ -63,7 +63,6 @@ junit_test(
         "//src/integration/payment:rpc",
         "//src/integration/transfer:enums",
         "//src/integration/transfer:rpc",
-        "//src/libraries/account_identifier",
         "//src/libraries/date",
         "//src/libraries/serialization",
         "//third_party:com_github_tomakehurst_wiremock",
@@ -75,5 +74,6 @@ junit_test(
         "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
         "@aggregation//:com_fasterxml_jackson_core_jackson_core",
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
+        "@tink_backend//src/libraries/account_identifier",
     ],
 )

@@ -42,6 +42,7 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.ran
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.signableoperation.enums.InternalStatus;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
@@ -180,17 +181,17 @@ public class NordeaExecutorHelper {
     }
 
     public String getPaymentType(final AccountIdentifier destination) {
-        if (!destination.is(AccountIdentifier.Type.SE_PG)
-                && !destination.is(AccountIdentifier.Type.SE_BG)) {
+        if (!destination.is(AccountIdentifierType.SE_PG)
+                && !destination.is(AccountIdentifierType.SE_BG)) {
             throw ErrorResponse.invalidPaymentType();
         }
-        return destination.is(AccountIdentifier.Type.SE_PG)
+        return destination.is(AccountIdentifierType.SE_PG)
                 ? NordeaBaseConstants.PaymentTypes.PLUSGIRO
                 : NordeaBaseConstants.PaymentTypes.BANKGIRO;
     }
 
     public String getPaymentAccountType(final AccountIdentifier destination) {
-        return destination.is(AccountIdentifier.Type.SE_PG)
+        return destination.is(AccountIdentifierType.SE_PG)
                 ? NordeaBaseConstants.PaymentAccountTypes.PLUSGIRO
                 : NordeaBaseConstants.PaymentAccountTypes.BANKGIRO;
     }

@@ -7,7 +7,7 @@ import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.integra
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationReader;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.enums.MarketCode;
 import se.tink.libraries.payment.rpc.Creditor;
@@ -51,11 +51,13 @@ public class CaisseEpargneIleDeFranceWireMockTest {
         return new Payment.Builder()
                 .withCreditor(
                         new Creditor(
-                                AccountIdentifier.create(Type.IBAN, "FR1420041010050500013M02606"),
+                                AccountIdentifier.create(
+                                        AccountIdentifierType.IBAN, "FR1420041010050500013M02606"),
                                 "Tink"))
                 .withDebtor(
                         new Debtor(
-                                AccountIdentifier.create(Type.IBAN, "FR1261401750597365134612940")))
+                                AccountIdentifier.create(
+                                        AccountIdentifierType.IBAN, "FR1261401750597365134612940")))
                 .withExactCurrencyAmount(amount)
                 .withCurrency(currency)
                 .withRemittanceInformation(remittanceInformation)

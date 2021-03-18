@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdMo
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
@@ -78,7 +79,7 @@ public class AccountResponse {
                                 .withAccountName(getBankName())
                                 .addIdentifier(
                                         AccountIdentifier.create(
-                                                AccountIdentifier.Type.IBAN, getIban()))
+                                                AccountIdentifierType.IBAN, getIban()))
                                 .build())
                 .build();
     }

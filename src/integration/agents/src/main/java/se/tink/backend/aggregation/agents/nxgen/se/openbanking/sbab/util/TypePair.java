@@ -1,15 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.util;
 
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.pair.Pair;
 
-public class TypePair extends Pair<Type, Type> {
+public class TypePair extends Pair<AccountIdentifierType, AccountIdentifierType> {
 
-    public TypePair(Type type, Type type2) {
+    public TypePair(AccountIdentifierType type, AccountIdentifierType type2) {
         super(type, type2);
     }
 
-    public TypePair(Pair<Type, Type> pair) {
+    public TypePair(Pair<AccountIdentifierType, AccountIdentifierType> pair) {
         super(pair.first, pair.second);
     }
 }

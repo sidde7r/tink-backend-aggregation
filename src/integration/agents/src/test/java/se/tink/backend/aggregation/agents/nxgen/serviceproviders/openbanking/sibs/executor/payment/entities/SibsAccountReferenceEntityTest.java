@@ -12,7 +12,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentValidationException;
-import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
@@ -34,8 +34,8 @@ public class SibsAccountReferenceEntityTest {
         when(payment.getDebtor()).thenReturn(debtor);
         when(payment.getExactCurrencyAmountFromField())
                 .thenReturn(new ExactCurrencyAmount(new BigDecimal("1.0"), "EUR"));
-        when(creditor.getAccountIdentifierType()).thenReturn(AccountIdentifier.Type.IBAN);
-        when(debtor.getAccountIdentifierType()).thenReturn(AccountIdentifier.Type.IBAN);
+        when(creditor.getAccountIdentifierType()).thenReturn(AccountIdentifierType.IBAN);
+        when(debtor.getAccountIdentifierType()).thenReturn(AccountIdentifierType.IBAN);
         when(creditor.getAccountNumber()).thenReturn("");
         when(debtor.getAccountNumber()).thenReturn("");
         when(payment.isSepa()).thenReturn(true);
@@ -71,7 +71,7 @@ public class SibsAccountReferenceEntityTest {
     public void shouldReturnSibsAccountReferenceWithPanFromPaymentCreditor()
             throws PaymentValidationException {
         when(creditor.getAccountIdentifierType())
-                .thenReturn(AccountIdentifier.Type.PAYMENT_CARD_NUMBER);
+                .thenReturn(AccountIdentifierType.PAYMENT_CARD_NUMBER);
         when(creditor.getAccountNumber()).thenReturn(DUMMY_PAN);
 
         SibsAccountReferenceEntity sibsAccountReferenceEntity =
@@ -86,7 +86,7 @@ public class SibsAccountReferenceEntityTest {
     public void shouldReturnSibsAccountReferenceWithPanFromPaymentDebtor()
             throws PaymentValidationException {
         when(debtor.getAccountIdentifierType())
-                .thenReturn(AccountIdentifier.Type.PAYMENT_CARD_NUMBER);
+                .thenReturn(AccountIdentifierType.PAYMENT_CARD_NUMBER);
         when(debtor.getAccountNumber()).thenReturn(DUMMY_PAN);
 
         SibsAccountReferenceEntity sibsAccountReferenceEntity =
@@ -101,7 +101,7 @@ public class SibsAccountReferenceEntityTest {
     public void shouldReturnSibsAccountReferenceWithMsisdnFromPaymentCreditor()
             throws PaymentValidationException {
         when(creditor.getAccountIdentifierType())
-                .thenReturn(AccountIdentifier.Type.PAYM_PHONE_NUMBER);
+                .thenReturn(AccountIdentifierType.PAYM_PHONE_NUMBER);
         when(creditor.getAccountNumber()).thenReturn(DUMMY_MSISDN);
 
         SibsAccountReferenceEntity sibsAccountReferenceEntity =
@@ -115,8 +115,7 @@ public class SibsAccountReferenceEntityTest {
     @Test
     public void shouldReturnSibsAccountReferenceWithMisidnFromPaymentDebtor()
             throws PaymentValidationException {
-        when(debtor.getAccountIdentifierType())
-                .thenReturn(AccountIdentifier.Type.PAYM_PHONE_NUMBER);
+        when(debtor.getAccountIdentifierType()).thenReturn(AccountIdentifierType.PAYM_PHONE_NUMBER);
         when(debtor.getAccountNumber()).thenReturn(DUMMY_MSISDN);
 
         SibsAccountReferenceEntity sibsAccountReferenceEntity =
@@ -128,17 +127,17 @@ public class SibsAccountReferenceEntityTest {
     }
 
     private Object[] unsupportedTypes() {
-        AccountIdentifier.Type[] types = AccountIdentifier.Type.values();
+        AccountIdentifierType[] types = AccountIdentifierType.values();
         return ArrayUtils.removeElements(
                 types,
-                AccountIdentifier.Type.PAYM_PHONE_NUMBER,
-                AccountIdentifier.Type.IBAN,
-                AccountIdentifier.Type.PAYMENT_CARD_NUMBER);
+                AccountIdentifierType.PAYM_PHONE_NUMBER,
+                AccountIdentifierType.IBAN,
+                AccountIdentifierType.PAYMENT_CARD_NUMBER);
     }
 
     @Test(expected = PaymentValidationException.class)
     @Parameters(method = "unsupportedTypes")
-    public void shouldThrowExceptionWhenUnsupportedExceptionIsThrown(AccountIdentifier.Type type)
+    public void shouldThrowExceptionWhenUnsupportedExceptionIsThrown(AccountIdentifierType type)
             throws PaymentValidationException {
         SibsAccountReferenceEntity.of(() -> type, () -> "");
     }
@@ -146,7 +145,7 @@ public class SibsAccountReferenceEntityTest {
     @Test
     public void shouldReturnSibsAccountReferenceEntityFromIban() throws PaymentValidationException {
         SibsAccountReferenceEntity sibsAccountReferenceEntity =
-                SibsAccountReferenceEntity.of(() -> AccountIdentifier.Type.IBAN, () -> DUMMY_IBAN);
+                SibsAccountReferenceEntity.of(() -> AccountIdentifierType.IBAN, () -> DUMMY_IBAN);
 
         Assertions.assertThat(sibsAccountReferenceEntity.getIban()).isEqualTo(DUMMY_IBAN);
     }
@@ -155,7 +154,7 @@ public class SibsAccountReferenceEntityTest {
     public void shouldReturnSibsAccountReferenceEntityFromPan() throws PaymentValidationException {
         SibsAccountReferenceEntity sibsAccountReferenceEntity =
                 SibsAccountReferenceEntity.of(
-                        () -> AccountIdentifier.Type.PAYMENT_CARD_NUMBER, () -> DUMMY_PAN);
+                        () -> AccountIdentifierType.PAYMENT_CARD_NUMBER, () -> DUMMY_PAN);
 
         Assertions.assertThat(sibsAccountReferenceEntity.getPan()).isEqualTo(DUMMY_PAN);
     }
@@ -165,7 +164,7 @@ public class SibsAccountReferenceEntityTest {
             throws PaymentValidationException {
         SibsAccountReferenceEntity sibsAccountReferenceEntity =
                 SibsAccountReferenceEntity.of(
-                        () -> AccountIdentifier.Type.PAYM_PHONE_NUMBER, () -> DUMMY_MSISDN);
+                        () -> AccountIdentifierType.PAYM_PHONE_NUMBER, () -> DUMMY_MSISDN);
 
         Assertions.assertThat(sibsAccountReferenceEntity.getMsisdn()).isEqualTo(DUMMY_MSISDN);
     }

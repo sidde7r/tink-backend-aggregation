@@ -18,6 +18,7 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdMo
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class EdenredAccountsFetcher implements AccountFetcher<TransactionalAccount> {
@@ -57,7 +58,7 @@ public class EdenredAccountsFetcher implements AccountFetcher<TransactionalAccou
                         .withUniqueIdentifier(id)
                         .withAccountNumber(id)
                         .withAccountName(cardEntity.getProduct().getName())
-                        .addIdentifier(AccountIdentifier.create(AccountIdentifier.Type.IBAN, id))
+                        .addIdentifier(AccountIdentifier.create(AccountIdentifierType.IBAN, id))
                         .build();
 
         return TransactionalAccount.nxBuilder()

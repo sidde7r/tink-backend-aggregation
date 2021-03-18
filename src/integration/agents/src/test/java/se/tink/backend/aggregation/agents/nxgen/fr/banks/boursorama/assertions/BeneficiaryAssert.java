@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.fr.banks.boursorama.assertions;
 import java.util.Objects;
 import org.assertj.core.api.AbstractAssert;
 import org.junit.Ignore;
-import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.payment.rpc.Beneficiary;
 
 @Ignore
@@ -26,7 +26,7 @@ public class BeneficiaryAssert extends AbstractAssert<BeneficiaryAssert, Benefic
         return this;
     }
 
-    public BeneficiaryAssert hasAccountNumberType(AccountIdentifier.Type type) {
+    public BeneficiaryAssert hasAccountNumberType(AccountIdentifierType type) {
         isNotNull();
         if (!Objects.equals(actual.getAccountNumberType(), type)) {
             failWithMessage(

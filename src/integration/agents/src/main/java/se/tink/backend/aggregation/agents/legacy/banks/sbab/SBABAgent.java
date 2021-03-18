@@ -62,7 +62,7 @@ import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConf
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.constants.CommonHeaders;
 import se.tink.backend.aggregation.nxgen.http.filter.factory.ClientFilterFactory;
-import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.serialization.TypeReferences;
@@ -342,7 +342,7 @@ public class SBABAgent extends AbstractAgent
                             .setDestinationAccounts(recipientEntities)
                             .setTinkAccounts(accounts)
                             .addMultiMatchPattern(
-                                    AccountIdentifier.Type.SE, TransferDestinationPattern.ALL)
+                                    AccountIdentifierType.SE, TransferDestinationPattern.ALL)
                             .build();
             return new FetchTransferDestinationsResponse(transferPatterns);
         } catch (Exception e) {

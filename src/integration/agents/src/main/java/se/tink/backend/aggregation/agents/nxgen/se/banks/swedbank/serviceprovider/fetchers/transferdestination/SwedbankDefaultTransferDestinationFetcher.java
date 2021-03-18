@@ -17,7 +17,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovide
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.BankProfile;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationFetcher;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 
 public class SwedbankDefaultTransferDestinationFetcher implements TransferDestinationFetcher {
 
@@ -74,9 +74,9 @@ public class SwedbankDefaultTransferDestinationFetcher implements TransferDestin
         log.info("hasExtendedUsage: {}", hasExtendedUsage);
         if (hasExtendedUsage) {
             transferDestinationPatternBuilder.addMultiMatchPattern(
-                    AccountIdentifier.Type.SE_BG, TransferDestinationPattern.ALL);
+                    AccountIdentifierType.SE_BG, TransferDestinationPattern.ALL);
             transferDestinationPatternBuilder.addMultiMatchPattern(
-                    AccountIdentifier.Type.SE_PG, TransferDestinationPattern.ALL);
+                    AccountIdentifierType.SE_PG, TransferDestinationPattern.ALL);
         } else {
             log.warn("No ExtendedUsage present for the user");
         }
@@ -109,7 +109,7 @@ public class SwedbankDefaultTransferDestinationFetcher implements TransferDestin
         // are added explicitly when we set destination accounts.
         if (hasExtendedUsage) {
             transferDestinationPatternBuilder.addMultiMatchPattern(
-                    AccountIdentifier.Type.SE, TransferDestinationPattern.ALL);
+                    AccountIdentifierType.SE, TransferDestinationPattern.ALL);
         }
 
         return transferDestinationPatternBuilder.build();

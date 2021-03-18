@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdMo
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.portfolio.PortfolioModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.portfolio.PortfolioModule.PortfolioType;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 
 @JsonObject
 public class PensionPlanEntity extends AbstractContractDetailsEntity {
@@ -46,7 +46,9 @@ public class PensionPlanEntity extends AbstractContractDetailsEntity {
                                 .withUniqueIdentifier(getId())
                                 .withAccountNumber(getAccountNumber())
                                 .withAccountName(getAccountName())
-                                .addIdentifier(AccountIdentifier.create(Type.TINK, getId()))
+                                .addIdentifier(
+                                        AccountIdentifier.create(
+                                                AccountIdentifierType.TINK, getId()))
                                 .setProductName(getProduct().getName())
                                 .build())
                 .setApiIdentifier(getId())

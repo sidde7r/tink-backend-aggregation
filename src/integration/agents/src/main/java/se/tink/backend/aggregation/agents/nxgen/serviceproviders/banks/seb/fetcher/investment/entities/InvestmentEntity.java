@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdMo
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument.InstrumentModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.portfolio.PortfolioModule;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 
 @JsonObject
 public class InvestmentEntity {
@@ -51,7 +52,7 @@ public class InvestmentEntity {
                         .withAccountName(type)
                         .addIdentifier(
                                 AccountIdentifier.create(
-                                        AccountIdentifier.Type.TINK, bankIdentifier))
+                                        AccountIdentifierType.TINK, bankIdentifier))
                         .build();
         return InvestmentAccount.nxBuilder()
                 .withPortfolios(portfolios)

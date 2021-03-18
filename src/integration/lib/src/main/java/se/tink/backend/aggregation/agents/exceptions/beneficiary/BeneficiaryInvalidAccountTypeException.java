@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.exceptions.beneficiary;
 
-import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 
 public class BeneficiaryInvalidAccountTypeException extends BeneficiaryException {
     private static final String DEFAULT_MESSAGE =
@@ -14,7 +14,7 @@ public class BeneficiaryInvalidAccountTypeException extends BeneficiaryException
         super(message);
     }
 
-    public BeneficiaryInvalidAccountTypeException(AccountIdentifier.Type type) {
+    public BeneficiaryInvalidAccountTypeException(AccountIdentifierType type) {
         super(String.format(DEFAULT_MESSAGE, type.toString()));
     }
 }

@@ -3,6 +3,6 @@ java_library(
     srcs = glob(["**/*.java"]),
     visibility = ["//visibility:public"],
     deps = [
-        "//src/libraries/account_identifier",
+        "@tink_backend//src/libraries/account_identifier",
     ],
 )

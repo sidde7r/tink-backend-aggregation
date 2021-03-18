@@ -11,7 +11,7 @@ import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager.IbanArgumentEnum;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
@@ -41,11 +41,11 @@ public class RaiffeisenAgentPaymentTest {
         for (int i = 0; i < numberOfMockedPayments; ++i) {
             Creditor creditor = mock(Creditor.class);
             doReturn("name").when(creditor).getName();
-            doReturn(Type.IBAN).when(creditor).getAccountIdentifierType();
+            doReturn(AccountIdentifierType.IBAN).when(creditor).getAccountIdentifierType();
             doReturn("AT959900000000012476").when(creditor).getAccountNumber();
 
             Debtor debtor = mock(Debtor.class);
-            doReturn(Type.IBAN).when(debtor).getAccountIdentifierType();
+            doReturn(AccountIdentifierType.IBAN).when(debtor).getAccountIdentifierType();
             doReturn("AT439900000000010017").when(debtor).getAccountNumber();
 
             ExactCurrencyAmount amount = ExactCurrencyAmount.inSEK(new Random().nextInt(100));

@@ -27,7 +27,6 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
         "//src/integration/signableoperation/src/main/java/se/tink/libraries/signableoperation/enums",
-        "//src/libraries/account_identifier",
         "//src/libraries/i18n",
         "//src/libraries/pair",
         "//src/libraries/serialization",
@@ -45,5 +44,6 @@ java_library(
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
         "@aggregation//:com_google_guava_guava",
         "@aggregation//:net_java_dev_jna_jna",
+        "@tink_backend//src/libraries/account_identifier",
     ],
 )

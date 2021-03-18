@@ -12,7 +12,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.Se
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.utils.SebUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.payment.rpc.Creditor;
@@ -33,9 +33,9 @@ public class CreditorAccountEntity {
     public Creditor toTinkCreditor(PaymentProduct paymentProduct) {
         switch (paymentProduct) {
             case SWEDISH_DOMESTIC_PRIVATE_PLUSGIROS:
-                return new Creditor(AccountIdentifier.create(Type.SE_PG, pgnr));
+                return new Creditor(AccountIdentifier.create(AccountIdentifierType.SE_PG, pgnr));
             case SWEDISH_DOMESTIC_PRIVATE_BANKGIROS:
-                return new Creditor(AccountIdentifier.create(Type.SE_BG, bgnr));
+                return new Creditor(AccountIdentifier.create(AccountIdentifierType.SE_BG, bgnr));
             default:
                 if (paymentProduct == PaymentProduct.SWEDISH_DOMESTIC_PRIVATE_CREDIT_TRANSFERS
                         && bban != null) {

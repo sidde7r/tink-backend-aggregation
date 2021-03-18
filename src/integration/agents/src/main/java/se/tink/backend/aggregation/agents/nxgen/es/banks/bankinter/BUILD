@@ -22,7 +22,6 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
         "//src/integration/models",
         "//src/integration/webdriver/src/main/java/se/tink/integration/webdriver",
-        "//src/libraries/account_identifier",
         "//src/libraries/serialization",
         "//third_party:com_google_code_findbugs_jsr305",
         "//third_party:com_google_http_client_google_http_client",
@@ -42,5 +41,6 @@ java_library(
         "@aggregation//:com_google_guava_guava",
         "@selenium//:org_seleniumhq_selenium_selenium_api",
         "@selenium//:org_seleniumhq_selenium_selenium_support",
+        "@tink_backend//src/libraries/account_identifier",
     ],
 )

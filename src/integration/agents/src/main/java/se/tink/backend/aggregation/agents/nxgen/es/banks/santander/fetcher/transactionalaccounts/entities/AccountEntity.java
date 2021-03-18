@@ -23,7 +23,7 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdMo
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.account.identifiers.formatters.DisplayAccountIdentifierFormatter;
 
 @JsonObject
@@ -126,7 +126,7 @@ public class AccountEntity {
         HolderName holderName = loginResponse.getHolderName();
 
         AccountIdentifier ibanIdentifier =
-                AccountIdentifier.create(Type.IBAN, iban.replaceAll("\\s+", ""));
+                AccountIdentifier.create(AccountIdentifierType.IBAN, iban.replaceAll("\\s+", ""));
         DisplayAccountIdentifierFormatter formatter = new DisplayAccountIdentifierFormatter();
 
         return TransactionalAccount.nxBuilder()

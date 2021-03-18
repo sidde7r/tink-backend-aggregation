@@ -12,7 +12,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.Se
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.fetcher.transferdestinations.rpc.FetchAccountDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebCommonConstants;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationFetcher;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 
 public class SebTransferDestinationFetcher implements TransferDestinationFetcher {
 
@@ -49,15 +49,15 @@ public class SebTransferDestinationFetcher implements TransferDestinationFetcher
 
     private List<TransferDestinationPattern> getTransferDestinations() {
         return Arrays.asList(
-                TransferDestinationPattern.createForMultiMatchAll(Type.IBAN),
-                TransferDestinationPattern.createForMultiMatchAll(Type.SE));
+                TransferDestinationPattern.createForMultiMatchAll(AccountIdentifierType.IBAN),
+                TransferDestinationPattern.createForMultiMatchAll(AccountIdentifierType.SE));
     }
 
     private List<TransferDestinationPattern> getTransferAndPaymentDestinations() {
         return Arrays.asList(
-                TransferDestinationPattern.createForMultiMatchAll(Type.SE_BG),
-                TransferDestinationPattern.createForMultiMatchAll(Type.SE_PG),
-                TransferDestinationPattern.createForMultiMatchAll(Type.IBAN),
-                TransferDestinationPattern.createForMultiMatchAll(Type.SE));
+                TransferDestinationPattern.createForMultiMatchAll(AccountIdentifierType.SE_BG),
+                TransferDestinationPattern.createForMultiMatchAll(AccountIdentifierType.SE_PG),
+                TransferDestinationPattern.createForMultiMatchAll(AccountIdentifierType.IBAN),
+                TransferDestinationPattern.createForMultiMatchAll(AccountIdentifierType.SE));
     }
 }

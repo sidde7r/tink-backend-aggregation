@@ -13,10 +13,10 @@ junit_test(
         "//src/integration/lib",
         "//src/integration/transfer:enums",
         "//src/integration/transfer:rpc",
-        "//src/libraries/account_identifier",
         "//third_party:org_assertj_assertj_core",
         "//third_party:org_mockito_mockito_core",
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
         "@aggregation//:commons_lang_commons_lang",
+        "@tink_backend//src/libraries/account_identifier",
     ],
 )

@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.nxgen.controllers.payment;
 import java.time.LocalDate;
 import java.util.Optional;
 import se.tink.backend.aggregation.nxgen.core.account.GenericTypeMapper;
-import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.enums.MarketCode;
 import se.tink.libraries.pair.Pair;
 import se.tink.libraries.payment.enums.PaymentType;
@@ -12,45 +12,40 @@ import se.tink.libraries.payment.rpc.Payment;
 public class AccountTypeToPaymentTypeMapper {
 
     private static GenericTypeMapper<
-                    PaymentType, Pair<AccountIdentifier.Type, AccountIdentifier.Type>>
+                    PaymentType, Pair<AccountIdentifierType, AccountIdentifierType>>
             AccountTypeToPaymentTypeMapperSE =
                     GenericTypeMapper
-                            .<PaymentType, Pair<AccountIdentifier.Type, AccountIdentifier.Type>>
+                            .<PaymentType, Pair<AccountIdentifierType, AccountIdentifierType>>
                                     genericBuilder()
                             .put(
                                     PaymentType.DOMESTIC,
+                                    new Pair<>(AccountIdentifierType.SE, AccountIdentifierType.SE),
                                     new Pair<>(
-                                            AccountIdentifier.Type.SE, AccountIdentifier.Type.SE),
+                                            AccountIdentifierType.BBAN, AccountIdentifierType.BBAN),
                                     new Pair<>(
-                                            AccountIdentifier.Type.BBAN,
-                                            AccountIdentifier.Type.BBAN),
+                                            AccountIdentifierType.BBAN, AccountIdentifierType.IBAN),
                                     new Pair<>(
-                                            AccountIdentifier.Type.BBAN,
-                                            AccountIdentifier.Type.IBAN),
-                                    new Pair<>(
-                                            AccountIdentifier.Type.IBAN,
-                                            AccountIdentifier.Type.IBAN))
+                                            AccountIdentifierType.IBAN, AccountIdentifierType.IBAN))
                             .build();
 
     private static GenericTypeMapper<
-                    PaymentType, Pair<AccountIdentifier.Type, AccountIdentifier.Type>>
+                    PaymentType, Pair<AccountIdentifierType, AccountIdentifierType>>
             AccountTypeToPaymentTypeMapperGB =
                     GenericTypeMapper
-                            .<PaymentType, Pair<AccountIdentifier.Type, AccountIdentifier.Type>>
+                            .<PaymentType, Pair<AccountIdentifierType, AccountIdentifierType>>
                                     genericBuilder()
                             .put(
                                     PaymentType.DOMESTIC,
                                     new Pair<>(
-                                            AccountIdentifier.Type.SORT_CODE,
-                                            AccountIdentifier.Type.SORT_CODE),
+                                            AccountIdentifierType.SORT_CODE,
+                                            AccountIdentifierType.SORT_CODE),
                                     new Pair<>(
-                                            AccountIdentifier.Type.PAYM_PHONE_NUMBER,
-                                            AccountIdentifier.Type.PAYM_PHONE_NUMBER))
+                                            AccountIdentifierType.PAYM_PHONE_NUMBER,
+                                            AccountIdentifierType.PAYM_PHONE_NUMBER))
                             .put(
                                     PaymentType.INTERNATIONAL,
                                     new Pair<>(
-                                            AccountIdentifier.Type.IBAN,
-                                            AccountIdentifier.Type.IBAN))
+                                            AccountIdentifierType.IBAN, AccountIdentifierType.IBAN))
                             .build();
 
     public static PaymentType getType(Payment payment, String marketCode) {

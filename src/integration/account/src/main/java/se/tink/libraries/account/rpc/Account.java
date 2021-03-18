@@ -16,9 +16,9 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.account.enums.AccountExclusion;
 import se.tink.libraries.account.enums.AccountFlag;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.account.enums.AccountTypes;
 import se.tink.libraries.account.identifiers.GiroIdentifier;
 import se.tink.libraries.account.iface.Identifiable;
@@ -311,7 +311,7 @@ public class Account implements Identifiable, Cloneable {
     }
 
     @JsonIgnore
-    public AccountIdentifier getIdentifier(AccountIdentifier.Type type) {
+    public AccountIdentifier getIdentifier(AccountIdentifierType type) {
         if (this.identifiers == null) {
             return null;
         }
@@ -328,8 +328,7 @@ public class Account implements Identifiable, Cloneable {
     }
 
     @JsonIgnore
-    public <T extends AccountIdentifier> T getIdentifier(
-            AccountIdentifier.Type type, Class<T> cls) {
+    public <T extends AccountIdentifier> T getIdentifier(AccountIdentifierType type, Class<T> cls) {
         AccountIdentifier identifier = getIdentifier(type);
         if (identifier == null) {
             return null;
@@ -420,7 +419,8 @@ public class Account implements Identifiable, Cloneable {
 
     private static final Predicate<AccountIdentifier> FIND_GIRO_WITH_OCR =
             accountIdentifier -> {
-                if (accountIdentifier.is(Type.SE_BG) || accountIdentifier.is(Type.SE_PG)) {
+                if (accountIdentifier.is(AccountIdentifierType.SE_BG)
+                        || accountIdentifier.is(AccountIdentifierType.SE_PG)) {
                     Optional<String> ocr = accountIdentifier.to(GiroIdentifier.class).getOcr();
                     return ocr.isPresent();
                 }

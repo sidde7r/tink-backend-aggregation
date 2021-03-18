@@ -13,7 +13,7 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepReq
 import se.tink.backend.aggregation.nxgen.controllers.signing.SigningStepConstants;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.pair.Pair;
 import se.tink.libraries.payment.enums.PaymentStatus;
@@ -103,7 +103,7 @@ public final class SwedbankTestHelper {
         final Payment paymentMock = mock(Payment.class);
 
         when(paymentMock.getCreditorAndDebtorAccountType())
-                .thenReturn(new Pair<>(Type.SE, Type.SE));
+                .thenReturn(new Pair<>(AccountIdentifierType.SE, AccountIdentifierType.SE));
 
         when(paymentMock.getExecutionDate()).thenReturn(executionDate);
 
@@ -121,7 +121,7 @@ public final class SwedbankTestHelper {
         final AccountIdentifier accountIdentifierMock = createAccountIdentifier();
 
         when(creditorMock.getAccountIdentifier()).thenReturn(accountIdentifierMock);
-        when(creditorMock.getAccountIdentifierType()).thenReturn(Type.SE);
+        when(creditorMock.getAccountIdentifierType()).thenReturn(AccountIdentifierType.SE);
         when(creditorMock.getName()).thenReturn(NAME);
         when(creditorMock.getAccountNumber()).thenReturn(ACCOUNT_NUMBER);
 
@@ -131,7 +131,7 @@ public final class SwedbankTestHelper {
     private static AccountIdentifier createAccountIdentifier() {
         final AccountIdentifier accountIdentifierMock = mock(AccountIdentifier.class);
 
-        when(accountIdentifierMock.getType()).thenReturn(Type.SE);
+        when(accountIdentifierMock.getType()).thenReturn(AccountIdentifierType.SE);
         when(accountIdentifierMock.getIdentifier()).thenReturn(ACCOUNT_NUMBER);
 
         return accountIdentifierMock;

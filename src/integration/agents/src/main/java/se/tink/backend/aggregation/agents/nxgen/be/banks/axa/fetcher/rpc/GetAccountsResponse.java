@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdMo
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
@@ -58,7 +59,7 @@ public final class GetAccountsResponse {
                                                 .withAccountName(accountEntity.getTypeDescription())
                                                 .addIdentifier(
                                                         AccountIdentifier.create(
-                                                                AccountIdentifier.Type.IBAN, iban))
+                                                                AccountIdentifierType.IBAN, iban))
                                                 .build())
                                 .addHolderName(accountEntity.getTitularName())
                                 .build()
@@ -83,7 +84,7 @@ public final class GetAccountsResponse {
                                                 .withAccountName(accountEntity.getTypeDescription())
                                                 .addIdentifier(
                                                         AccountIdentifier.create(
-                                                                AccountIdentifier.Type.IBAN, iban))
+                                                                AccountIdentifierType.IBAN, iban))
                                                 .build())
                                 .addHolderName(accountEntity.getTitularName())
                                 .build()

@@ -16,9 +16,9 @@ junit_test(
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
         "//src/integration/payment:rpc",
         "//src/integration/transfer:rpc",
-        "//src/libraries/account_identifier",
         "//src/libraries/date",
         "//third_party:org_iban4j_iban4j",
         "//third_party:org_mockito_mockito_core",
+        "@tink_backend//src/libraries/account_identifier",
     ],
 )

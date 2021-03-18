@@ -28,11 +28,11 @@ java_library(
         "//src/integration/payment:rpc",
         "//src/integration/transfer:enums",
         "//src/integration/transfer:rpc",
-        "//src/libraries/account_identifier",
         "//third_party:lombok_libs",
         "//third_party:org_assertj_assertj_core",
         "//third_party:org_mockito_mockito_core",
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
         "@aggregation//:com_google_guava_guava",
+        "@tink_backend//src/libraries/account_identifier",
     ],
 )

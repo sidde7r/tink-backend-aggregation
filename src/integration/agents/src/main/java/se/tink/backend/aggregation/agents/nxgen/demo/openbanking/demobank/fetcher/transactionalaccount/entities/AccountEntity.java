@@ -21,6 +21,7 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdMo
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.account.identifiers.NonValidIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
@@ -101,7 +102,7 @@ public class AccountEntity {
     private AccountIdentifier toTinkAccountIdentifier(DemobankAccountIdentifier id) {
         try {
             return AccountIdentifier.create(
-                    AccountIdentifier.Type.valueOf(id.getType()), id.getIdentifier());
+                    AccountIdentifierType.valueOf(id.getType()), id.getIdentifier());
         } catch (RuntimeException e) {
             return new NonValidIdentifier(id.getIdentifier());
         }

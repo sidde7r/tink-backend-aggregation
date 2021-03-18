@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.at.openbanking.bawag.executor.p
 
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.payment.rpc.Debtor;
 
 @JsonObject
@@ -28,7 +28,7 @@ public class DebtorAccountRequest extends Account {
     }
 
     public Debtor toTinkDebtor() {
-        return new Debtor(AccountIdentifier.create(Type.IBAN, iban));
+        return new Debtor(AccountIdentifier.create(AccountIdentifierType.IBAN, iban));
     }
 
     public static class DebtorAccountBuilder {

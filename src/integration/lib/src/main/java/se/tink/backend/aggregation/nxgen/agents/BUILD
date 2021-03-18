@@ -34,7 +34,6 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
         "//src/integration/models",
         "//src/integration/transfer:rpc",
-        "//src/libraries/account_identifier",
         "//src/libraries/date",
         "//src/libraries/i18n",
         "//third_party:com_fasterxml_jackson_core_jackson_core",
@@ -44,5 +43,6 @@ java_library(
         "//third_party:org_bouncycastle_bcprov_jdk15on",
         "//third_party:org_iban4j_iban4j",
         "//third_party:org_slf4j_slf4j_api",
+        "@tink_backend//src/libraries/account_identifier",
     ],
 )

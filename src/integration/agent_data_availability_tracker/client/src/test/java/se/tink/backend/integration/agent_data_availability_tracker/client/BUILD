@@ -16,11 +16,11 @@ junit_test(
         "//src/integration/agent_data_availability_tracker/client/src/main/java/se/tink/backend/integration/agent_data_availability_tracker/serialization",
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/models",
-        "//src/libraries/account_identifier",
         "//src/libraries/serialization",
         "//third_party:com_google_inject_guice",
         "//third_party:io_dropwizard_dropwizard_lifecycle",
         "@io_grpc_grpc_java//api",
         "@tink_backend//src/agent-data-availability-tracker/src/main/java/se/tink/backend/agent_data_availability_tracker/client",
+        "@tink_backend//src/libraries/account_identifier",
     ],
 )

@@ -42,6 +42,7 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.Storage;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.pair.Pair;
 import se.tink.libraries.payment.enums.PaymentStatus;
@@ -357,8 +358,7 @@ public class UkOpenBankingPaymentTestFixtures {
         when(paymentMock.getCreditorAndDebtorAccountType())
                 .thenReturn(
                         new Pair<>(
-                                AccountIdentifier.Type.SORT_CODE,
-                                AccountIdentifier.Type.SORT_CODE));
+                                AccountIdentifierType.SORT_CODE, AccountIdentifierType.SORT_CODE));
 
         final LocalDate executionDate = LocalDate.now(clockMock).plusDays(1L);
         when(paymentMock.getExecutionDate()).thenReturn(executionDate);
@@ -428,8 +428,7 @@ public class UkOpenBankingPaymentTestFixtures {
         when(paymentMock.getCreditorAndDebtorAccountType())
                 .thenReturn(
                         new Pair<>(
-                                AccountIdentifier.Type.SORT_CODE,
-                                AccountIdentifier.Type.SORT_CODE));
+                                AccountIdentifierType.SORT_CODE, AccountIdentifierType.SORT_CODE));
 
         when(paymentMock.getExecutionDate()).thenReturn(executionDate);
 
@@ -458,7 +457,7 @@ public class UkOpenBankingPaymentTestFixtures {
         final AccountIdentifier accountIdentifierMock = createAccountIdentifier();
 
         when(creditorMock.getAccountIdentifier()).thenReturn(accountIdentifierMock);
-        when(creditorMock.getAccountIdentifierType()).thenReturn(AccountIdentifier.Type.SORT_CODE);
+        when(creditorMock.getAccountIdentifierType()).thenReturn(AccountIdentifierType.SORT_CODE);
         when(creditorMock.getName()).thenReturn(NAME);
         when(creditorMock.getAccountNumber()).thenReturn(ACCOUNT_NUMBER);
 
@@ -468,7 +467,7 @@ public class UkOpenBankingPaymentTestFixtures {
     private static AccountIdentifier createAccountIdentifier() {
         final AccountIdentifier accountIdentifierMock = mock(AccountIdentifier.class);
 
-        when(accountIdentifierMock.getType()).thenReturn(AccountIdentifier.Type.SORT_CODE);
+        when(accountIdentifierMock.getType()).thenReturn(AccountIdentifierType.SORT_CODE);
         when(accountIdentifierMock.getIdentifier()).thenReturn(ACCOUNT_NUMBER);
 
         return accountIdentifierMock;

@@ -16,7 +16,7 @@ import se.tink.backend.aggregation.agents.general.models.GeneralAccountEntityImp
 import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationFetcher;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 
 @RequiredArgsConstructor
 public class UkOpenBankingTransferDestinationFetcher implements TransferDestinationFetcher {
@@ -31,22 +31,23 @@ public class UkOpenBankingTransferDestinationFetcher implements TransferDestinat
                     .add(AccountTypes.SAVINGS)
                     .build();
 
-    private static final List<Type> WHITELISTED_TRANSFER_DESTINATION_ACCOUNT_TYPES =
-            ImmutableList.<Type>builder()
-                    .add(Type.NO)
-                    .add(Type.SE_BG)
-                    .add(Type.BE)
-                    .add(Type.SE)
-                    .add(Type.SE_PG)
-                    .add(Type.SE_SHB_INTERNAL)
-                    .add(Type.IBAN)
-                    .add(Type.SORT_CODE)
-                    .add(Type.FI)
-                    .add(Type.SEPA_EUR)
-                    .add(Type.TINK)
-                    .build();
+    private static final List<AccountIdentifierType>
+            WHITELISTED_TRANSFER_DESTINATION_ACCOUNT_TYPES =
+                    ImmutableList.<AccountIdentifierType>builder()
+                            .add(AccountIdentifierType.NO)
+                            .add(AccountIdentifierType.SE_BG)
+                            .add(AccountIdentifierType.BE)
+                            .add(AccountIdentifierType.SE)
+                            .add(AccountIdentifierType.SE_PG)
+                            .add(AccountIdentifierType.SE_SHB_INTERNAL)
+                            .add(AccountIdentifierType.IBAN)
+                            .add(AccountIdentifierType.SORT_CODE)
+                            .add(AccountIdentifierType.FI)
+                            .add(AccountIdentifierType.SEPA_EUR)
+                            .add(AccountIdentifierType.TINK)
+                            .build();
 
-    private final Type destinationAccountIdentifierType;
+    private final AccountIdentifierType destinationAccountIdentifierType;
     private final Class<? extends AccountIdentifier> destinationAccountIdentifierClass;
 
     @Override

@@ -24,6 +24,7 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrum
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.portfolio.PortfolioModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.portfolio.PortfolioModule.PortfolioType;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 
 public class CaixaInvestmentAccountFetcher implements AccountFetcher<InvestmentAccount> {
 
@@ -59,7 +60,7 @@ public class CaixaInvestmentAccountFetcher implements AccountFetcher<InvestmentA
                 .withAccountName(account.getDescription())
                 .addIdentifier(
                         AccountIdentifier.create(
-                                AccountIdentifier.Type.IBAN, account.getFullAccountKey()))
+                                AccountIdentifierType.IBAN, account.getFullAccountKey()))
                 .build();
     }
 

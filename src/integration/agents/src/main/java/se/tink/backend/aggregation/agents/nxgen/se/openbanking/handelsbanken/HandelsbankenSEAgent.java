@@ -25,7 +25,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticato
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
-import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, CREDIT_CARDS})
 public final class HandelsbankenSEAgent extends HandelsbankenBaseAgent
@@ -88,9 +88,9 @@ public final class HandelsbankenSEAgent extends HandelsbankenBaseAgent
     public FetchTransferDestinationsResponse fetchTransferDestinations(List<Account> accounts) {
         return InferredTransferDestinations.forPaymentAccounts(
                 accounts,
-                AccountIdentifier.Type.SE,
-                AccountIdentifier.Type.SE_PG,
-                AccountIdentifier.Type.SE_BG);
+                AccountIdentifierType.SE,
+                AccountIdentifierType.SE_PG,
+                AccountIdentifierType.SE_BG);
     }
 
     @Override

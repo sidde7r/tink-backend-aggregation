@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Creditor;
 
@@ -35,7 +35,7 @@ public class CreditorEntity {
 
     @JsonIgnore
     private void setUpBban(Creditor creditor) {
-        if (creditor.getAccountIdentifierType() == Type.IBAN) {
+        if (creditor.getAccountIdentifierType() == AccountIdentifierType.IBAN) {
             this.bban = creditor.getAccountNumber().substring(4);
         } else {
             this.bban = creditor.getAccountNumber();
@@ -50,9 +50,9 @@ public class CreditorEntity {
     @JsonIgnore
     public Creditor toTinkCreditor(PaymentType paymentType) {
         if (paymentType == PaymentType.SEPA) {
-            return new Creditor(AccountIdentifier.create(Type.IBAN, iban));
+            return new Creditor(AccountIdentifier.create(AccountIdentifierType.IBAN, iban));
         }
 
-        return new Creditor(AccountIdentifier.create(Type.DK, bban));
+        return new Creditor(AccountIdentifier.create(AccountIdentifierType.DK, bban));
     }
 }

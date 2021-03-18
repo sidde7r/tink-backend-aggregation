@@ -33,7 +33,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 
 @AgentDependencyModules(modules = QSealcSignerModuleRSASHA256.class)
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS})
@@ -106,7 +106,11 @@ public final class NordeaSeAgent extends NordeaBaseAgent
     @Override
     public FetchTransferDestinationsResponse fetchTransferDestinations(List<Account> accounts) {
         return InferredTransferDestinations.forPaymentAccounts(
-                accounts, Type.IBAN, Type.SE, Type.SE_BG, Type.SE_PG);
+                accounts,
+                AccountIdentifierType.IBAN,
+                AccountIdentifierType.SE,
+                AccountIdentifierType.SE_BG,
+                AccountIdentifierType.SE_PG);
     }
 
     @Override

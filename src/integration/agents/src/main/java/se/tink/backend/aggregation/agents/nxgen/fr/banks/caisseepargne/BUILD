@@ -21,7 +21,6 @@ java_library(
         "//src/integration/models",
         "//src/integration/payment:enums",
         "//src/integration/payment:rpc",
-        "//src/libraries/account_identifier",
         "//src/libraries/streamutils",
         "//third_party:com_google_http_client_google_http_client",
         "//third_party:com_google_inject_guice",
@@ -36,5 +35,6 @@ java_library(
         "@aggregation//:com_fasterxml_jackson_core_jackson_core",
         "@aggregation//:com_fasterxml_jackson_dataformat_jackson_dataformat_xml",
         "@aggregation//:com_google_guava_guava",
+        "@tink_backend//src/libraries/account_identifier",
     ],
 )

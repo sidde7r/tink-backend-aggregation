@@ -6,6 +6,7 @@ import se.tink.backend.aggregation.agents.general.models.GeneralAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.NordeaBaseConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.account.identifiers.BankGiroIdentifier;
 import se.tink.libraries.account.identifiers.NDAPersonalNumberIdentifier;
 import se.tink.libraries.account.identifiers.PlusGiroIdentifier;
@@ -72,7 +73,7 @@ public class BeneficiariesEntity implements GeneralAccountEntity {
     @Override
     public String generalGetBank() {
         AccountIdentifier accountIdentifier = generalGetAccountIdentifier();
-        if (accountIdentifier.isValid() && accountIdentifier.is(AccountIdentifier.Type.SE)) {
+        if (accountIdentifier.isValid() && accountIdentifier.is(AccountIdentifierType.SE)) {
             return accountIdentifier.to(SwedishIdentifier.class).getBankName();
         }
         return null;

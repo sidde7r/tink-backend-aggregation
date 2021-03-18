@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.agents.utils.remittanceinformation.Remittance
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationReader;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.enums.MarketCode;
 import se.tink.libraries.payment.rpc.Creditor;
@@ -108,7 +108,7 @@ public abstract class WireMockTestFixtures {
         private final String providerName;
         private final String currency;
         private final String destinationIdentifier;
-        private final AccountIdentifier.Type accountIdentifierType;
+        private final AccountIdentifierType accountIdentifierType;
         private final String remittanceInfoValue;
         private final MarketCode marketCode;
         private final String configurationFileName;
@@ -127,7 +127,7 @@ public abstract class WireMockTestFixtures {
                 String providerName,
                 String currency,
                 String destinationIdentifier,
-                Type accountIdentifierType,
+                AccountIdentifierType accountIdentifierType,
                 String remittanceInfoValue,
                 MarketCode marketCode,
                 String configurationFileName,

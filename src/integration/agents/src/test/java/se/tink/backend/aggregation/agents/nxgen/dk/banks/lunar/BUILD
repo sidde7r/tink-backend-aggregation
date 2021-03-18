@@ -48,7 +48,6 @@ junit_test(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/response",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
         "//src/integration/models",
-        "//src/libraries/account_identifier",
         "//src/libraries/date",
         "//src/libraries/serialization",
         "//third_party:com_sun_jersey_jersey_core",
@@ -60,5 +59,6 @@ junit_test(
         "//third_party:org_mockito_mockito_core",
         "//third_party:pl_pragmatists_junitparams",
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
+        "@tink_backend//src/libraries/account_identifier",
     ],
 )

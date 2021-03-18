@@ -13,11 +13,11 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/core/authentication",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/client",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/response",
-        "//src/libraries/account_identifier",
         "//third_party:com_google_inject_guice",
         "//third_party:com_sun_jersey_jersey_core",
         "//third_party:lombok_libs",
         "//third_party:org_apache_commons_commons_collections4",
         "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
+        "@tink_backend//src/libraries/account_identifier",
     ],
 )

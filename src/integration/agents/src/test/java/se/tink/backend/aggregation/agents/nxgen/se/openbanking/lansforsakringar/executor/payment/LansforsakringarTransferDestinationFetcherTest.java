@@ -14,7 +14,7 @@ import se.tink.backend.aggregation.agents.TransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.fetcher.transfersdestinations.LansforsakringarTransferDestinationFetcher;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 
 public class LansforsakringarTransferDestinationFetcherTest {
 
@@ -45,13 +45,17 @@ public class LansforsakringarTransferDestinationFetcherTest {
         assertThat(destinations.size()).isEqualTo(2);
 
         List<TransferDestinationPattern> listForFirstAccount = new ArrayList<>();
-        listForFirstAccount.add(TransferDestinationPattern.createForMultiMatchAll(Type.SE));
+        listForFirstAccount.add(
+                TransferDestinationPattern.createForMultiMatchAll(AccountIdentifierType.SE));
         assertThat(destinations.get(accounts.get(0))).isEqualTo(listForFirstAccount);
 
         List<TransferDestinationPattern> listForSecondAccount = new ArrayList<>();
-        listForSecondAccount.add(TransferDestinationPattern.createForMultiMatchAll(Type.SE));
-        listForSecondAccount.add(TransferDestinationPattern.createForMultiMatchAll(Type.SE_BG));
-        listForSecondAccount.add(TransferDestinationPattern.createForMultiMatchAll(Type.SE_PG));
+        listForSecondAccount.add(
+                TransferDestinationPattern.createForMultiMatchAll(AccountIdentifierType.SE));
+        listForSecondAccount.add(
+                TransferDestinationPattern.createForMultiMatchAll(AccountIdentifierType.SE_BG));
+        listForSecondAccount.add(
+                TransferDestinationPattern.createForMultiMatchAll(AccountIdentifierType.SE_PG));
         assertThat(destinations.get(accounts.get(1))).isEqualTo(listForSecondAccount);
     }
 

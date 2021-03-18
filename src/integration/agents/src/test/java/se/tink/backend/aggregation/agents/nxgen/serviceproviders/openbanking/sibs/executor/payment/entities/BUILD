@@ -11,11 +11,11 @@ junit_test(
         "//src/integration/amount",
         "//src/integration/lib",
         "//src/integration/payment:rpc",
-        "//src/libraries/account_identifier",
         "//third_party:junit_junit",
         "//third_party:org_apache_commons_commons_lang3",
         "//third_party:org_assertj_assertj_core",
         "//third_party:org_mockito_mockito_core",
         "//third_party:pl_pragmatists_junitparams",
+        "@tink_backend//src/libraries/account_identifier",
     ],
 )

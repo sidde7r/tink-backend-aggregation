@@ -153,6 +153,7 @@ import se.tink.backend.aggregation.utils.transfer.StringNormalizerSwedish;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageLengthConfig;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.account.identifiers.formatters.DefaultAccountIdentifierFormatter;
 import se.tink.libraries.account.identifiers.formatters.DisplayAccountIdentifierFormatter;
@@ -520,8 +521,8 @@ public final class LansforsakringarAgent extends AbstractAgent
                 .setSourceAccounts(paymentAccounts)
                 .setDestinationAccounts(recipientsResponse.getRecipients())
                 .setTinkAccounts(accounts)
-                .addMultiMatchPattern(AccountIdentifier.Type.SE_BG, TransferDestinationPattern.ALL)
-                .addMultiMatchPattern(AccountIdentifier.Type.SE_PG, TransferDestinationPattern.ALL)
+                .addMultiMatchPattern(AccountIdentifierType.SE_BG, TransferDestinationPattern.ALL)
+                .addMultiMatchPattern(AccountIdentifierType.SE_PG, TransferDestinationPattern.ALL)
                 .build();
     }
 
@@ -570,7 +571,7 @@ public final class LansforsakringarAgent extends AbstractAgent
                 .setSourceAccounts(fromResponse.getAccounts())
                 .setDestinationAccounts(toResponse.getAccounts())
                 .setTinkAccounts(updatedAccounts)
-                .addMultiMatchPattern(AccountIdentifier.Type.SE, TransferDestinationPattern.ALL)
+                .addMultiMatchPattern(AccountIdentifierType.SE, TransferDestinationPattern.ALL)
                 .build();
     }
 
@@ -1020,7 +1021,7 @@ public final class LansforsakringarAgent extends AbstractAgent
         AccountIdentifier source = transfer.getSource();
         AccountIdentifier destination = transfer.getDestination();
 
-        if (!destination.is(AccountIdentifier.Type.SE)) {
+        if (!destination.is(AccountIdentifierType.SE)) {
             throw cancelTransferWithMessage(
                     "Transfer account identifiers other than Swedish are not supported.",
                     EndUserMessage.INVALID_DESTINATION,
@@ -1139,7 +1140,7 @@ public final class LansforsakringarAgent extends AbstractAgent
             } else {
                 // If not found, let's try anyway to create the transaction (should work for major
                 // banks at least).
-                if (destination.is(AccountIdentifier.Type.SE)) {
+                if (destination.is(AccountIdentifierType.SE)) {
                     SwedishIdentifier swedishDestination = destination.to(SwedishIdentifier.class);
                     ClearingNumber.Details clearingNumber =
                             LFUtils.getClearingNumberDetails(swedishDestination);

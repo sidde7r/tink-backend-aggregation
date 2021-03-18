@@ -16,7 +16,6 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/module/annotation",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/annotations",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/response",
-        "//src/libraries/account_identifier",
         "//src/libraries/mapper",
         "//third_party:com_google_http_client_google_http_client",
         "//third_party:com_google_inject_guice",
@@ -24,5 +23,6 @@ java_library(
         "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
         "@aggregation//:com_fasterxml_jackson_core_jackson_core",
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
+        "@tink_backend//src/libraries/account_identifier",
     ],
 )

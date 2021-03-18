@@ -5,6 +5,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.entities.
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.transfer.rpc.TransferSignRequest;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.account.identifiers.SwedishSHBInternalIdentifier;
 
@@ -41,7 +42,7 @@ public class HandelsbankenSEPaymentAccount
 
     private String getBankName(AccountIdentifier identifier) {
         if (identifier.isValid()) {
-            if (identifier.getType() == AccountIdentifier.Type.SE_SHB_INTERNAL) {
+            if (identifier.getType() == AccountIdentifierType.SE_SHB_INTERNAL) {
                 return "Handelsbanken";
             }
             return identifier.to(SwedishIdentifier.class).getBankName();

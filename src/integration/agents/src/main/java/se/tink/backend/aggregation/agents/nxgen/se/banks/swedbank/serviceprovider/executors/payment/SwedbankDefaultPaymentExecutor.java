@@ -24,6 +24,7 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.PaymentExecutor;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.signableoperation.enums.InternalStatus;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
@@ -151,8 +152,8 @@ public class SwedbankDefaultPaymentExecutor extends BaseTransferExecutor
 
     private AbstractAccountEntity createSignedPayee(final Transfer transfer) {
         AccountIdentifier accountIdentifier = transfer.getDestination();
-        if (!accountIdentifier.is(AccountIdentifier.Type.SE_PG)
-                && !accountIdentifier.is(AccountIdentifier.Type.SE_BG)) {
+        if (!accountIdentifier.is(AccountIdentifierType.SE_PG)
+                && !accountIdentifier.is(AccountIdentifierType.SE_BG)) {
             throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                     .setEndUserMessage(
                             catalog.getString("You can only make payments to Swedish destinations"))

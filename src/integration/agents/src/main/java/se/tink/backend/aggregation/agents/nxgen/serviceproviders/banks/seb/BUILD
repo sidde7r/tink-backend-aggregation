@@ -20,7 +20,6 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
         "//src/integration/models",
         "//src/integration/signableoperation/src/main/java/se/tink/libraries/signableoperation/enums",
-        "//src/libraries/account_identifier",
         "//src/libraries/i18n",
         "//src/libraries/serialization",
         "//src/libraries/social_security_number",
@@ -35,5 +34,6 @@ java_library(
         "//third_party:org_slf4j_slf4j_api",
         "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
         "@aggregation//:com_google_guava_guava",
+        "@tink_backend//src/libraries/account_identifier",
     ],
 )

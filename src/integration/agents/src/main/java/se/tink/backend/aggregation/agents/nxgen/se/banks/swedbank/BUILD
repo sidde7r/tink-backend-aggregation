@@ -40,7 +40,6 @@ java_library(
         "//src/integration/signableoperation/src/main/java/se/tink/libraries/signableoperation/enums",
         "//src/integration/transfer:enums",
         "//src/integration/transfer:rpc",
-        "//src/libraries/account_identifier",
         "//src/libraries/date",
         "//src/libraries/giro_validation",
         "//src/libraries/i18n",
@@ -62,6 +61,7 @@ java_library(
         "//third_party:org_slf4j_slf4j_api",
         "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
         "@aggregation//:com_google_guava_guava",
+        "@tink_backend//src/libraries/account_identifier",
         "@tink_backend//src/libraries/strings",
     ],
 )

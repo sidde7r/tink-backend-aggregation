@@ -27,6 +27,7 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -80,8 +81,7 @@ public class EdenredTransactionsFetcherTest {
                                 .withAccountNumber("456")
                                 .withAccountName("Something")
                                 .addIdentifier(
-                                        AccountIdentifier.create(
-                                                AccountIdentifier.Type.IBAN, "456"))
+                                        AccountIdentifier.create(AccountIdentifierType.IBAN, "456"))
                                 .build())
                 .setApiIdentifier("123")
                 .build()

@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdMo
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
@@ -62,7 +62,8 @@ public class BankdataAccountEntity {
                                 .withUniqueIdentifier(constructUniqueIdentifier())
                                 .withAccountNumber(accountNo)
                                 .withAccountName(name)
-                                .addIdentifier(AccountIdentifier.create(Type.IBAN, iban))
+                                .addIdentifier(
+                                        AccountIdentifier.create(AccountIdentifierType.IBAN, iban))
                                 .build())
                 .addHolderName(accountOwner)
                 .setApiIdentifier(constructUniqueIdentifier())

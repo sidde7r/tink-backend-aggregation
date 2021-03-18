@@ -22,7 +22,7 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.account.identifiers.PlusGiroIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
@@ -38,15 +38,23 @@ public class HandelsbankenSEPaymentExecutorTest {
     private HandelsbankenBaseApiClient apiClient;
 
     private static final SwedishIdentifier ACCOUNT_SHB_1 =
-            (SwedishIdentifier) AccountIdentifier.create(Type.SE, "6666123456789", "Sven Svensson");
+            (SwedishIdentifier)
+                    AccountIdentifier.create(
+                            AccountIdentifierType.SE, "6666123456789", "Sven Svensson");
     private static final SwedishIdentifier ACCOUNT_SHB_2 =
-            (SwedishIdentifier) AccountIdentifier.create(Type.SE, "66661111111", "Test Testsson");
+            (SwedishIdentifier)
+                    AccountIdentifier.create(
+                            AccountIdentifierType.SE, "66661111111", "Test Testsson");
     private static final SwedishIdentifier ACCOUNT_SHB_LONG_NAME =
             (SwedishIdentifier)
                     AccountIdentifier.create(
-                            Type.SE, "66661111112", "Very long mame that will not be valid");
+                            AccountIdentifierType.SE,
+                            "66661111112",
+                            "Very long mame that will not be valid");
     private static final SwedishIdentifier ACCOUNT_SEB =
-            (SwedishIdentifier) AccountIdentifier.create(Type.SE, "912022222222", "Test Testsson");
+            (SwedishIdentifier)
+                    AccountIdentifier.create(
+                            AccountIdentifierType.SE, "912022222222", "Test Testsson");
     private static final PlusGiroIdentifier ACCOUNT_PLUSGIRO =
             new PlusGiroIdentifier("9020900", "1212121212");
 

@@ -19,6 +19,7 @@ import se.tink.backend.aggregation.agents.framework.ArgumentManager.ArgumentMana
 import se.tink.backend.aggregation.agents.framework.ArgumentManager.LoadBeforeSaveAfterArgumentEnum;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager.SsnArgumentEnum;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.rpc.Creditor;
@@ -94,11 +95,11 @@ public class NordeaSEAgentDomesticPaymentTest {
 
         for (int i = 0; i < numberOfMockedPayments; ++i) {
             Creditor creditor = mock(Creditor.class);
-            doReturn(AccountIdentifier.Type.IBAN).when(creditor).getAccountIdentifierType();
+            doReturn(AccountIdentifierType.IBAN).when(creditor).getAccountIdentifierType();
             doReturn(Iban.random(CountryCode.SE).toString()).when(creditor).getAccountNumber();
 
             Debtor debtor = mock(Debtor.class);
-            doReturn(AccountIdentifier.Type.SE).when(debtor).getAccountIdentifierType();
+            doReturn(AccountIdentifierType.SE).when(debtor).getAccountIdentifierType();
             doReturn("41351300039").when(debtor).getAccountNumber();
 
             ExactCurrencyAmount amount = ExactCurrencyAmount.inSEK(1);

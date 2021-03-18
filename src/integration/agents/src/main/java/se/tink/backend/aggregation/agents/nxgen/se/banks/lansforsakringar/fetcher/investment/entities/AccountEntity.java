@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccou
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.portfolio.PortfolioModule;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.strings.StringUtils;
 
@@ -33,7 +33,7 @@ public class AccountEntity {
                 .withUniqueIdentifier(accountNumber)
                 .withAccountNumber(accountNumber)
                 .withAccountName(Strings.isNullOrEmpty(customName) ? accountNumber : customName)
-                .addIdentifier(AccountIdentifier.create(Type.SE, accountNumber))
+                .addIdentifier(AccountIdentifier.create(AccountIdentifierType.SE, accountNumber))
                 .build();
     }
 }

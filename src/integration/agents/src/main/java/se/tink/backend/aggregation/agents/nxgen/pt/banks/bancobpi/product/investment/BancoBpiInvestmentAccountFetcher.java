@@ -14,7 +14,7 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdMo
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.portfolio.PortfolioModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.portfolio.PortfolioModule.PortfolioType;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class BancoBpiInvestmentAccountFetcher implements AccountFetcher<InvestmentAccount> {
@@ -51,7 +51,8 @@ public class BancoBpiInvestmentAccountFetcher implements AccountFetcher<Investme
                                             .withAccountName(p.getName())
                                             .addIdentifier(
                                                     AccountIdentifier.create(
-                                                            Type.PT_BPI, p.getNumber()))
+                                                            AccountIdentifierType.PT_BPI,
+                                                            p.getNumber()))
                                             .build())
                             .addHolderName(p.getOwner())
                             .build());

@@ -10,7 +10,7 @@ import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.TransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationFetcher;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 
 public class DanskeBankSETransferDestinationFetcher implements TransferDestinationFetcher {
 
@@ -31,8 +31,8 @@ public class DanskeBankSETransferDestinationFetcher implements TransferDestinati
 
     public static List<TransferDestinationPattern> getAllSupportedTransferDestinations() {
         return Arrays.asList(
-                TransferDestinationPattern.createForMultiMatchAll(Type.SE),
-                TransferDestinationPattern.createForMultiMatchAll(Type.SE_BG),
-                TransferDestinationPattern.createForMultiMatchAll(Type.SE_PG));
+                TransferDestinationPattern.createForMultiMatchAll(AccountIdentifierType.SE),
+                TransferDestinationPattern.createForMultiMatchAll(AccountIdentifierType.SE_BG),
+                TransferDestinationPattern.createForMultiMatchAll(AccountIdentifierType.SE_PG));
     }
 }

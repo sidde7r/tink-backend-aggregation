@@ -21,7 +21,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsba
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.rpc.ApplicationEntryPointResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationFetcher;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
-import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.account.identifiers.SwedishSHBInternalIdentifier;
 
 public class HandelsbankenSETransferDestinationFetcher implements TransferDestinationFetcher {
@@ -66,9 +66,9 @@ public class HandelsbankenSETransferDestinationFetcher implements TransferDestin
                 .setSourceAccounts(transferContext.retrieveOwnedSourceAccounts())
                 .setDestinationAccounts(transferContext.retrieveDestinationAccounts())
                 .setTinkAccounts(accounts)
-                .addMultiMatchPattern(AccountIdentifier.Type.SE, TransferDestinationPattern.ALL)
+                .addMultiMatchPattern(AccountIdentifierType.SE, TransferDestinationPattern.ALL)
                 .matchDestinationAccountsOn(
-                        AccountIdentifier.Type.SE_SHB_INTERNAL, SwedishSHBInternalIdentifier.class)
+                        AccountIdentifierType.SE_SHB_INTERNAL, SwedishSHBInternalIdentifier.class)
                 .build();
     }
 
@@ -84,13 +84,13 @@ public class HandelsbankenSETransferDestinationFetcher implements TransferDestin
                                         .setDestinationAccounts(
                                                 paymentContext.retrieveDestinationAccounts())
                                         .addMultiMatchPattern(
-                                                AccountIdentifier.Type.SE_PG,
+                                                AccountIdentifierType.SE_PG,
                                                 TransferDestinationPattern.ALL)
                                         .addMultiMatchPattern(
-                                                AccountIdentifier.Type.SE_BG,
+                                                AccountIdentifierType.SE_BG,
                                                 TransferDestinationPattern.ALL)
                                         .matchDestinationAccountsOn(
-                                                AccountIdentifier.Type.SE_SHB_INTERNAL,
+                                                AccountIdentifierType.SE_SHB_INTERNAL,
                                                 SwedishSHBInternalIdentifier.class)
                                         .build())
                 .orElseGet(Collections::emptyMap);

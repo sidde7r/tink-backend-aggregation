@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockp
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationReader;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.enums.MarketCode;
 import se.tink.libraries.transfer.enums.TransferType;
@@ -42,9 +43,9 @@ public class LansforsakringarAgentWireMockTest {
         RemittanceInformation remittanceInformation = new RemittanceInformation();
         remittanceInformation.setValue("108117405510002");
         Transfer transfer = new Transfer();
-        transfer.setSource(AccountIdentifier.create(AccountIdentifier.Type.SE, "90247744574"));
+        transfer.setSource(AccountIdentifier.create(AccountIdentifierType.SE, "90247744574"));
 
-        transfer.setDestination(AccountIdentifier.create(AccountIdentifier.Type.SE_BG, "7355837"));
+        transfer.setDestination(AccountIdentifier.create(AccountIdentifierType.SE_BG, "7355837"));
         transfer.setAmount(ExactCurrencyAmount.inSEK(171d));
         transfer.setType(TransferType.PAYMENT);
         transfer.setDueDate(

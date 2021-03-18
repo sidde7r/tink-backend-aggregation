@@ -37,8 +37,7 @@ import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformati
 import se.tink.backend.aggregation.nxgen.core.account.GenericTypeMapper;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.utils.accountidentifier.IntraBankChecker;
-import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.pair.Pair;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.enums.PaymentType;
@@ -59,7 +58,7 @@ public class SbabPaymentExecutor implements PaymentExecutor, FetchablePaymentExe
                             .put(
                                     PaymentType.DOMESTIC,
                                     new TypePair(
-                                            AccountIdentifier.Type.SE, AccountIdentifier.Type.SE))
+                                            AccountIdentifierType.SE, AccountIdentifierType.SE))
                             .build();
 
     public SbabPaymentExecutor(
@@ -70,7 +69,7 @@ public class SbabPaymentExecutor implements PaymentExecutor, FetchablePaymentExe
     }
 
     private PaymentType getPaymentType(PaymentRequest paymentRequest) {
-        Pair<Type, Type> accountIdentifiersKey =
+        Pair<AccountIdentifierType, AccountIdentifierType> accountIdentifiersKey =
                 paymentRequest.getPayment().getCreditorAndDebtorAccountType();
 
         return accountIdentifiersToPaymentTypeMapper

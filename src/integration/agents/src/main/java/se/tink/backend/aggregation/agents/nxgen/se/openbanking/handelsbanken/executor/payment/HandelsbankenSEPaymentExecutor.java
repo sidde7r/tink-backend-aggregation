@@ -31,7 +31,7 @@ import se.tink.backend.aggregation.nxgen.controllers.signing.multifactor.bankid.
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.core.account.GenericTypeMapper;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.account.identifiers.BankGiroIdentifier;
 import se.tink.libraries.account.identifiers.GiroIdentifier;
 import se.tink.libraries.account.identifiers.PlusGiroIdentifier;
@@ -45,14 +45,18 @@ import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 public class HandelsbankenSEPaymentExecutor extends HandelsbankenBasePaymentExecutor {
 
-    private static final GenericTypeMapper<HandelsbankenPaymentType, Type> PAYMENT_TYPE_MAPPER =
-            GenericTypeMapper.<HandelsbankenPaymentType, Type>genericBuilder()
-                    .put(HandelsbankenPaymentType.SWEDISH_DOMESTIC_CREDIT_TRANSFER, Type.SE)
-                    .put(
-                            HandelsbankenPaymentType.SWEDISH_DOMESTIC_GIRO_PAYMENT,
-                            Type.SE_BG,
-                            Type.SE_PG)
-                    .build();
+    private static final GenericTypeMapper<HandelsbankenPaymentType, AccountIdentifierType>
+            PAYMENT_TYPE_MAPPER =
+                    GenericTypeMapper
+                            .<HandelsbankenPaymentType, AccountIdentifierType>genericBuilder()
+                            .put(
+                                    HandelsbankenPaymentType.SWEDISH_DOMESTIC_CREDIT_TRANSFER,
+                                    AccountIdentifierType.SE)
+                            .put(
+                                    HandelsbankenPaymentType.SWEDISH_DOMESTIC_GIRO_PAYMENT,
+                                    AccountIdentifierType.SE_BG,
+                                    AccountIdentifierType.SE_PG)
+                            .build();
     private final SupplementalInformationController supplementalInformationController;
     private Credentials credentials;
     private final HandelsbankenSEBankIdSigner bankIdSigner;
@@ -72,7 +76,8 @@ public class HandelsbankenSEPaymentExecutor extends HandelsbankenBasePaymentExec
     @Override
     protected AccountEntity getDebtorAccountEntity(Payment payment) {
         final Debtor debtor = payment.getDebtor();
-        Preconditions.checkArgument(debtor.getAccountIdentifierType().equals(Type.SE));
+        Preconditions.checkArgument(
+                debtor.getAccountIdentifierType().equals(AccountIdentifierType.SE));
         // Debtor account without clearing number
         final SwedishIdentifier identifier = new SwedishIdentifier(debtor.getAccountNumber());
         final AccountEntity accountEntity =
@@ -83,7 +88,7 @@ public class HandelsbankenSEPaymentExecutor extends HandelsbankenBasePaymentExec
 
     @Override
     protected AccountEntity getCreditorAccountEntity(Creditor creditor) {
-        final Type creditorType = creditor.getAccountIdentifierType();
+        final AccountIdentifierType creditorType = creditor.getAccountIdentifierType();
         switch (creditorType) {
             case SE:
                 // get account number without clearing number
@@ -106,8 +111,8 @@ public class HandelsbankenSEPaymentExecutor extends HandelsbankenBasePaymentExec
 
     @Override
     protected Optional<CreditorAgentEntity> getCreditorAgentEntity(Creditor creditor) {
-        final Type creditorType = creditor.getAccountIdentifierType();
-        if (creditorType.equals(Type.SE)) {
+        final AccountIdentifierType creditorType = creditor.getAccountIdentifierType();
+        if (creditorType.equals(AccountIdentifierType.SE)) {
             final SwedishIdentifier identifier = new SwedishIdentifier(creditor.getAccountNumber());
             return Optional.of(
                     CreditorAgentEntity.ofIdentification(
@@ -121,7 +126,7 @@ public class HandelsbankenSEPaymentExecutor extends HandelsbankenBasePaymentExec
     @Override
     protected RemittanceInformationEntity getRemittanceInformationEntity(Payment payment) {
         final Creditor creditor = payment.getCreditor();
-        final Type creditorType = creditor.getAccountIdentifierType();
+        final AccountIdentifierType creditorType = creditor.getAccountIdentifierType();
         final GiroIdentifier giroIdentifier;
         switch (creditorType) {
             case SE_PG:
@@ -150,21 +155,23 @@ public class HandelsbankenSEPaymentExecutor extends HandelsbankenBasePaymentExec
     @Override
     protected HandelsbankenPaymentType getPaymentType(PaymentRequest paymentRequest)
             throws PaymentException {
-        final Type debtorType = paymentRequest.getPayment().getDebtor().getAccountIdentifierType();
-        if (!debtorType.equals(Type.SE)) {
+        final AccountIdentifierType debtorType =
+                paymentRequest.getPayment().getDebtor().getAccountIdentifierType();
+        if (!debtorType.equals(AccountIdentifierType.SE)) {
             final String errorMessage = "Unsupported debtor account type " + debtorType;
             throw new DebtorValidationException(
                     errorMessage, "", new IllegalArgumentException(errorMessage));
         }
 
-        final Type creditorType =
+        final AccountIdentifierType creditorType =
                 paymentRequest.getPayment().getCreditor().getAccountIdentifierType();
         return PAYMENT_TYPE_MAPPER
                 .translate(creditorType)
                 .orElseThrow(() -> createCreditorTypeValidationException(creditorType));
     }
 
-    private CreditorValidationException createCreditorTypeValidationException(Type creditorType) {
+    private CreditorValidationException createCreditorTypeValidationException(
+            AccountIdentifierType creditorType) {
         final String errorMessage = "Unsupported creditor account type " + creditorType;
         return new CreditorValidationException(
                 errorMessage, "", new IllegalArgumentException(errorMessage));

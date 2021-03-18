@@ -21,9 +21,9 @@ junit_test(
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/configuration",
         "//src/integration/transfer:enums",
         "//src/integration/transfer:rpc",
-        "//src/libraries/account_identifier",
         "//src/libraries/serialization",
         "//third_party:org_assertj_assertj_core",
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
+        "@tink_backend//src/libraries/account_identifier",
     ],
 )

@@ -26,7 +26,6 @@ java_library(
         "//src/integration/signableoperation/src/main/java/se/tink/libraries/signableoperation/enums",
         "//src/integration/transfer:enums",
         "//src/integration/transfer:rpc",
-        "//src/libraries/account_identifier",
         "//src/libraries/pair",
         "//src/libraries/serialization",
         "//third_party:com_sun_jersey_jersey_core",
@@ -40,5 +39,6 @@ java_library(
         "@aggregation//:com_google_guava_guava",
         "@aggregation//:org_apache_httpcomponents_httpcore",
         "@tink_backend//src/aggregation-controller/api/src/main/java/se/tink/backend/aggregationcontroller/v1/rpc/enums",
+        "@tink_backend//src/libraries/account_identifier",
     ],
 )

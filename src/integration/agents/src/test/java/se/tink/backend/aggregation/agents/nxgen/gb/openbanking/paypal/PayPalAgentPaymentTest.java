@@ -9,7 +9,7 @@ import java.util.Random;
 import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Debtor;
@@ -35,7 +35,7 @@ public class PayPalAgentPaymentTest {
         for (int i = 0; i < numberOfMockedPayments; ++i) {
             Debtor debtor = mock(Debtor.class);
             doReturn("payee@example.com").when(debtor).getAccountNumber();
-            doReturn(Type.TINK).when(debtor).getAccountIdentifierType();
+            doReturn(AccountIdentifierType.TINK).when(debtor).getAccountIdentifierType();
 
             String currency = "GBP";
             ExactCurrencyAmount amount = ExactCurrencyAmount.of(randomAmount(), currency);

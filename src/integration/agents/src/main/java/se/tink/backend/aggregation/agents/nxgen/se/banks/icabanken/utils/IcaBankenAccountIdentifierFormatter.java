@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.utils;
 
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.account.identifiers.formatters.AccountIdentifierFormatter;
 import se.tink.libraries.account.identifiers.formatters.DefaultAccountIdentifierFormatter;
@@ -11,7 +12,7 @@ public class IcaBankenAccountIdentifierFormatter implements AccountIdentifierFor
 
     @Override
     public String apply(AccountIdentifier identifier) {
-        if (identifier.is(AccountIdentifier.Type.SE)) {
+        if (identifier.is(AccountIdentifierType.SE)) {
             SwedishIdentifier swedishIdentifier = identifier.to(SwedishIdentifier.class);
 
             switch (swedishIdentifier.getBank()) {
@@ -26,8 +27,8 @@ public class IcaBankenAccountIdentifierFormatter implements AccountIdentifierFor
             }
 
             return swedishIdentifier.getIdentifier(new DefaultAccountIdentifierFormatter());
-        } else if (identifier.is(AccountIdentifier.Type.SE_BG)
-                || identifier.is(AccountIdentifier.Type.SE_PG)) {
+        } else if (identifier.is(AccountIdentifierType.SE_BG)
+                || identifier.is(AccountIdentifierType.SE_PG)) {
             return new DisplayAccountIdentifierFormatter().apply(identifier);
         }
 

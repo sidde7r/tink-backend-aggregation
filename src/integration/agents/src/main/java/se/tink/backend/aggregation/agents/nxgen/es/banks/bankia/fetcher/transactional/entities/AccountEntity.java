@@ -19,7 +19,7 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.account.identifiers.formatters.DisplayAccountIdentifierFormatter;
 import se.tink.libraries.serialization.utils.SerializationUtils;
@@ -77,7 +77,8 @@ public class AccountEntity {
                                             new DisplayAccountIdentifierFormatter()
                                                     .apply(
                                                             AccountIdentifier.create(
-                                                                    Type.IBAN, iban)))
+                                                                    AccountIdentifierType.IBAN,
+                                                                    iban)))
                                     .withAccountName(getAccountName(iban))
                                     .addIdentifier(new IbanIdentifier(iban))
                                     .build())

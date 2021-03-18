@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails.Type;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.loan.LoanModule;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.strings.StringUtils;
 
@@ -34,7 +35,7 @@ public class LoanEntity {
                 .withAccountName(name)
                 .addIdentifier(
                         AccountIdentifier.create(
-                                AccountIdentifier.Type.NO,
+                                AccountIdentifierType.NO,
                                 StringUtils.removeNonAlphaNumeric(formattedNumber)))
                 .build();
     }

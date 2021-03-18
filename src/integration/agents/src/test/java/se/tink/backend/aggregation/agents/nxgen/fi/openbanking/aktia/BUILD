@@ -23,7 +23,6 @@ junit_test(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/filter/filterable/request",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/response",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
-        "//src/libraries/account_identifier",
         "//src/libraries/metrics:core",
         "//src/libraries/metrics:counters",
         "//src/libraries/metrics:histograms",
@@ -39,5 +38,6 @@ junit_test(
         "@aggregation//:com_fasterxml_jackson_core_jackson_core",
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
         "@aggregation//:com_google_guava_guava",
+        "@tink_backend//src/libraries/account_identifier",
     ],
 )

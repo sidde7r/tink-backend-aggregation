@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoSavingsAccount;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoTransactionAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.i18n.Catalog;
 
 public class DemoAccountFactoryTest {
@@ -51,7 +52,7 @@ public class DemoAccountFactoryTest {
         Assert.assertEquals(
                 Lists.newArrayList(
                         AccountIdentifier.create(
-                                AccountIdentifier.Type.SORT_CODE, "21835381396957", "testAccount")),
+                                AccountIdentifierType.SORT_CODE, "21835381396957", "testAccount")),
                 checkingAccount.getIdentifiers());
 
         Assert.assertNotNull(checkingAccount.getExactAvailableBalance());
@@ -74,7 +75,7 @@ public class DemoAccountFactoryTest {
         Assert.assertEquals(
                 Lists.newArrayList(
                         AccountIdentifier.create(
-                                AccountIdentifier.Type.SORT_CODE, "21835361152705", "testAccount")),
+                                AccountIdentifierType.SORT_CODE, "21835361152705", "testAccount")),
                 savingsAccount.getIdentifiers());
 
         Assert.assertNull(savingsAccount.getExactAvailableBalance());

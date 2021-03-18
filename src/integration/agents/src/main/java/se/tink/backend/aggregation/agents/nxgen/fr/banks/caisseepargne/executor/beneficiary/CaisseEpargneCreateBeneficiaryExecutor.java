@@ -33,7 +33,7 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryRe
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryResponse;
 import se.tink.backend.aggregation.nxgen.controllers.signing.SigningStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.payment.enums.CreateBeneficiaryStatus;
 
 @Slf4j
@@ -56,7 +56,7 @@ public class CaisseEpargneCreateBeneficiaryExecutor implements CreateBeneficiary
                                 .orElseThrow(
                                         () ->
                                                 new BeneficiaryInvalidAccountTypeException(
-                                                        Type.IBAN)));
+                                                        AccountIdentifierType.IBAN)));
 
         CreateBeneficiaryResponse createBeneficiaryResponse =
                 new CreateBeneficiaryResponse(createBeneficiaryRequest.getBeneficiary());
@@ -159,7 +159,7 @@ public class CaisseEpargneCreateBeneficiaryExecutor implements CreateBeneficiary
                                 .orElseThrow(
                                         () ->
                                                 new BeneficiaryInvalidAccountTypeException(
-                                                        Type.IBAN)));
+                                                        AccountIdentifierType.IBAN)));
         CreateBeneficiaryMultiStepResponse createBeneficiaryMultiStepResponse =
                 new CreateBeneficiaryMultiStepResponse(
                         createBeneficiaryMultiStepRequest,

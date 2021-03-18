@@ -24,7 +24,7 @@ import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoSavingsAccount;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoTransactionAccount;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.account.identifiers.BankGiroIdentifier;
 import se.tink.libraries.account.identifiers.BbanIdentifier;
 import se.tink.libraries.account.identifiers.BelgianIdentifier;
@@ -46,28 +46,29 @@ import se.tink.libraries.account.identifiers.TinkIdentifier;
 
 /** Deterministic account generator based on user-name and provider */
 public class DemoAccountDefinitionGenerator {
-    private static final Map<Type, Class<? extends AccountIdentifier>> identifiersForType;
+    private static final Map<AccountIdentifierType, Class<? extends AccountIdentifier>>
+            identifiersForType;
 
     static {
-        Map<Type, Class<? extends AccountIdentifier>> map = new HashMap<>();
-        map.put(Type.IBAN, IbanIdentifier.class);
-        map.put(Type.BBAN, BbanIdentifier.class);
-        map.put(Type.BE, BelgianIdentifier.class);
-        map.put(Type.SE, SwedishIdentifier.class);
-        map.put(Type.SORT_CODE, SortCodeIdentifier.class);
-        map.put(Type.SE_BG, BankGiroIdentifier.class);
-        map.put(Type.SE_PG, PlusGiroIdentifier.class);
-        map.put(Type.PT_BPI, PortugalBancoBpiIdentifier.class);
-        map.put(Type.SE_SHB_INTERNAL, SwedishSHBInternalIdentifier.class);
-        map.put(Type.SEPA_EUR, SepaEurIdentifier.class);
-        map.put(Type.DE, GermanIdentifier.class);
-        map.put(Type.DK, DanishIdentifier.class);
-        map.put(Type.NO, NorwegianIdentifier.class);
-        map.put(Type.FI, FinnishIdentifier.class);
-        map.put(Type.SE_NDA_SSN, NDAPersonalNumberIdentifier.class);
-        map.put(Type.TINK, TinkIdentifier.class);
-        map.put(Type.PAYM_PHONE_NUMBER, PaymPhoneNumberIdentifier.class);
-        map.put(Type.PAYMENT_CARD_NUMBER, PaymentCardNumberIdentifier.class);
+        Map<AccountIdentifierType, Class<? extends AccountIdentifier>> map = new HashMap<>();
+        map.put(AccountIdentifierType.IBAN, IbanIdentifier.class);
+        map.put(AccountIdentifierType.BBAN, BbanIdentifier.class);
+        map.put(AccountIdentifierType.BE, BelgianIdentifier.class);
+        map.put(AccountIdentifierType.SE, SwedishIdentifier.class);
+        map.put(AccountIdentifierType.SORT_CODE, SortCodeIdentifier.class);
+        map.put(AccountIdentifierType.SE_BG, BankGiroIdentifier.class);
+        map.put(AccountIdentifierType.SE_PG, PlusGiroIdentifier.class);
+        map.put(AccountIdentifierType.PT_BPI, PortugalBancoBpiIdentifier.class);
+        map.put(AccountIdentifierType.SE_SHB_INTERNAL, SwedishSHBInternalIdentifier.class);
+        map.put(AccountIdentifierType.SEPA_EUR, SepaEurIdentifier.class);
+        map.put(AccountIdentifierType.DE, GermanIdentifier.class);
+        map.put(AccountIdentifierType.DK, DanishIdentifier.class);
+        map.put(AccountIdentifierType.NO, NorwegianIdentifier.class);
+        map.put(AccountIdentifierType.FI, FinnishIdentifier.class);
+        map.put(AccountIdentifierType.SE_NDA_SSN, NDAPersonalNumberIdentifier.class);
+        map.put(AccountIdentifierType.TINK, TinkIdentifier.class);
+        map.put(AccountIdentifierType.PAYM_PHONE_NUMBER, PaymPhoneNumberIdentifier.class);
+        map.put(AccountIdentifierType.PAYMENT_CARD_NUMBER, PaymentCardNumberIdentifier.class);
         identifiersForType = Collections.unmodifiableMap(map);
     }
 
@@ -183,12 +184,12 @@ public class DemoAccountDefinitionGenerator {
 
             @Override
             public List<AccountIdentifier> getIdentifiers() {
-                AccountIdentifier.Type type = AccountIdentifier.Type.SE;
+                AccountIdentifierType type = AccountIdentifierType.SE;
                 if (providerName.matches(MarketRegex.UK_PROVIDERS_REGEX)) {
-                    type = AccountIdentifier.Type.SORT_CODE;
+                    type = AccountIdentifierType.SORT_CODE;
                 }
                 if (shouldSetIbanAsIdentifier(providerName)) {
-                    type = AccountIdentifier.Type.IBAN;
+                    type = AccountIdentifierType.IBAN;
                 }
                 AccountIdentifier identifier =
                         AccountIdentifier.create(type, getAccountId(), "testAccount");
@@ -244,12 +245,12 @@ public class DemoAccountDefinitionGenerator {
 
             @Override
             public List<AccountIdentifier> getIdentifiers() {
-                AccountIdentifier.Type type = AccountIdentifier.Type.SE;
+                AccountIdentifierType type = AccountIdentifierType.SE;
                 if (providerName.matches(MarketRegex.UK_PROVIDERS_REGEX)) {
-                    type = AccountIdentifier.Type.SORT_CODE;
+                    type = AccountIdentifierType.SORT_CODE;
                 }
                 if (shouldSetIbanAsIdentifier(providerName)) {
-                    type = AccountIdentifier.Type.IBAN;
+                    type = AccountIdentifierType.IBAN;
                 }
                 AccountIdentifier identifier =
                         AccountIdentifier.create(type, getAccountId(), "testAccount");
@@ -345,12 +346,12 @@ public class DemoAccountDefinitionGenerator {
 
             @Override
             public List<AccountIdentifier> getIdentifiers() {
-                AccountIdentifier.Type type = AccountIdentifier.Type.SE;
+                AccountIdentifierType type = AccountIdentifierType.SE;
                 if (providerName.matches(MarketRegex.UK_PROVIDERS_REGEX)) {
-                    type = AccountIdentifier.Type.SORT_CODE;
+                    type = AccountIdentifierType.SORT_CODE;
                 }
                 if (shouldSetIbanAsIdentifier(providerName)) {
-                    type = AccountIdentifier.Type.IBAN;
+                    type = AccountIdentifierType.IBAN;
                 }
                 AccountIdentifier identifier =
                         AccountIdentifier.create(type, getAccountId(), "testAccount");
@@ -389,7 +390,7 @@ public class DemoAccountDefinitionGenerator {
     }
 
     private static Map<Account, List<TransferDestinationPattern>> generateTransferDestinations(
-            List<Account> accounts, Type destinationAccountType) {
+            List<Account> accounts, AccountIdentifierType destinationAccountType) {
         List<GeneralAccountEntity> sourceAccounts =
                 accounts.stream()
                         .map(DemoAccountDefinitionGenerator::accountToGeneralAccountEntity)
@@ -411,14 +412,16 @@ public class DemoAccountDefinitionGenerator {
                         .setTinkAccounts(accounts)
                         .addMultiMatchPattern(
                                 destinationAccountType, TransferDestinationPattern.ALL);
-        if (destinationAccountType.equals(Type.SE)) {
-            builder.addMultiMatchPattern(Type.SE_PG, TransferDestinationPattern.ALL)
-                    .addMultiMatchPattern(Type.SE_BG, TransferDestinationPattern.ALL);
+        if (destinationAccountType.equals(AccountIdentifierType.SE)) {
+            builder.addMultiMatchPattern(
+                            AccountIdentifierType.SE_PG, TransferDestinationPattern.ALL)
+                    .addMultiMatchPattern(
+                            AccountIdentifierType.SE_BG, TransferDestinationPattern.ALL);
         }
         return builder.build();
     }
 
-    private static Class<? extends AccountIdentifier> getClassForType(Type type) {
+    private static Class<? extends AccountIdentifier> getClassForType(AccountIdentifierType type) {
         Class<? extends AccountIdentifier> clazz = identifiersForType.get(type);
         if (clazz == null) {
             throw new IllegalArgumentException("Unknown identifier.");

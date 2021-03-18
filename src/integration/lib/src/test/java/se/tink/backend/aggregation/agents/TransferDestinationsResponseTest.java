@@ -8,7 +8,7 @@ import java.util.List;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
-import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 
 public class TransferDestinationsResponseTest {
     @Test
@@ -107,7 +107,7 @@ public class TransferDestinationsResponseTest {
 
     private static TransferDestinationPattern createTransferDestinationPattern(int pattern) {
         return TransferDestinationPattern.createForMultiMatch(
-                AccountIdentifier.Type.SE, "" + pattern);
+                AccountIdentifierType.SE, "" + pattern);
     }
 
     private static Account createAccountWithBankId(String bankId) {

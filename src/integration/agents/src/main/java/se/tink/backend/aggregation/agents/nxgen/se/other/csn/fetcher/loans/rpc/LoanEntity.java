@@ -12,7 +12,7 @@ import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.loan.LoanModule;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class LoanEntity {
@@ -84,7 +84,8 @@ public class LoanEntity {
                 .withUniqueIdentifier(getUniqueIdenifier(userInfo.getSsn()))
                 .withAccountNumber(getAccountNumber())
                 .withAccountName(getAccountName())
-                .addIdentifier(AccountIdentifier.create(Type.TINK, getAccountNumber()))
+                .addIdentifier(
+                        AccountIdentifier.create(AccountIdentifierType.TINK, getAccountNumber()))
                 .build();
     }
 

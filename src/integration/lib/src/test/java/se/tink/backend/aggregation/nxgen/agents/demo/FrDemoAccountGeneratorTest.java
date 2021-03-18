@@ -8,6 +8,7 @@ import org.junit.Test;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoSavingsAccount;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoTransactionAccount;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 
 public class FrDemoAccountGeneratorTest {
@@ -23,7 +24,7 @@ public class FrDemoAccountGeneratorTest {
         IbanIdentifier expectedRecipientAccount = new IbanIdentifier("FR6720041010050008697430710");
         AccountIdentifier expectedIdentifier =
                 AccountIdentifier.create(
-                        AccountIdentifier.Type.IBAN, expectedRecipientAccount.getIban());
+                        AccountIdentifierType.IBAN, expectedRecipientAccount.getIban());
 
         assertThat(savingsAccount.getAccountName()).isEqualTo("Savings Account Tink");
         assertThat(savingsAccount.getIdentifiers()).contains(expectedIdentifier);
@@ -40,7 +41,7 @@ public class FrDemoAccountGeneratorTest {
         IbanIdentifier expectedRecipientAccount = new IbanIdentifier("FR4820041010050014391645720");
         AccountIdentifier expectedIdentifier =
                 AccountIdentifier.create(
-                        AccountIdentifier.Type.IBAN, expectedRecipientAccount.getIban());
+                        AccountIdentifierType.IBAN, expectedRecipientAccount.getIban());
         assertThat(transactionAccount.getAccountName()).isEqualTo("Checking Account Tink");
         assertThat(transactionAccount.getIdentifiers()).contains(expectedIdentifier);
         assertThat(transactionAccount.getBalance()).isEqualByComparingTo(649.74);

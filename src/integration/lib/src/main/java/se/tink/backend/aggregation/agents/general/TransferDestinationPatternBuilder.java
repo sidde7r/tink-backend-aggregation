@@ -14,6 +14,7 @@ import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.general.models.GeneralAccountEntity;
 import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.account.identifiers.se.swedbank.SwedbankClearingNumberUtils;
 
@@ -27,12 +28,12 @@ public class TransferDestinationPatternBuilder {
 
     private List<TransferDestinationPattern> multiMatchPatterns;
 
-    private AccountIdentifier.Type destinationAccountType;
+    private AccountIdentifierType destinationAccountType;
     private Class<? extends AccountIdentifier> destinationAccountIdentifier;
 
     public TransferDestinationPatternBuilder() {
         // Defaults
-        destinationAccountType = AccountIdentifier.Type.SE;
+        destinationAccountType = AccountIdentifierType.SE;
         destinationAccountIdentifier = SwedishIdentifier.class;
     }
 
@@ -54,7 +55,7 @@ public class TransferDestinationPatternBuilder {
     }
 
     public TransferDestinationPatternBuilder matchDestinationAccountsOn(
-            AccountIdentifier.Type destinationAccountType,
+            AccountIdentifierType destinationAccountType,
             Class<? extends AccountIdentifier> destinationAccountIdentifier) {
 
         this.destinationAccountType = destinationAccountType;
@@ -63,7 +64,7 @@ public class TransferDestinationPatternBuilder {
     }
 
     public TransferDestinationPatternBuilder addMultiMatchPattern(
-            AccountIdentifier.Type type, String pattern) {
+            AccountIdentifierType type, String pattern) {
         if (multiMatchPatterns == null) {
             multiMatchPatterns = Lists.newArrayList();
         }

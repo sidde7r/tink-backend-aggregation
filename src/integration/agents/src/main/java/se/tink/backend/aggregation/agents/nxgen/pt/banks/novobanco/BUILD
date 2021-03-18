@@ -14,7 +14,6 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/filter/filterable/request",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
-        "//src/libraries/account_identifier",
         "//src/libraries/pair",
         "//src/libraries/uuid",
         "//third_party:com_google_http_client_google_http_client",
@@ -26,5 +25,6 @@ java_library(
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
         "@aggregation//:com_google_code_gson_gson",
         "@aggregation//:com_google_guava_guava",
+        "@tink_backend//src/libraries/account_identifier",
     ],
 )

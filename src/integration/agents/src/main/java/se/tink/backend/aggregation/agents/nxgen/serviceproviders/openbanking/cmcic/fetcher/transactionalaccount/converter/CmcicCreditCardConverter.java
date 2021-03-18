@@ -6,7 +6,7 @@ import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccou
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.creditcard.CreditCardModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class CmcicCreditCardConverter {
@@ -28,7 +28,7 @@ public class CmcicCreditCardConverter {
                                 .withAccountName(accountResourceDto.getName())
                                 .addIdentifier(
                                         AccountIdentifier.create(
-                                                Type.PAYMENT_CARD_NUMBER,
+                                                AccountIdentifierType.PAYMENT_CARD_NUMBER,
                                                 accountResourceDto.getAccountId().getIban()))
                                 .setProductName(accountResourceDto.getName())
                                 .build())

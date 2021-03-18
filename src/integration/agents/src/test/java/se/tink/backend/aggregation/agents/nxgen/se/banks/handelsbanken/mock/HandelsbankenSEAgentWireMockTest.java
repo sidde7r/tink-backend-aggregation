@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockp
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.command.TransferCommand;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockrefresh.AgentWireMockRefreshTest;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.enums.MarketCode;
 import se.tink.libraries.transfer.enums.TransferType;
@@ -60,9 +61,9 @@ public class HandelsbankenSEAgentWireMockTest {
         RemittanceInformation remittanceInformation = new RemittanceInformation();
         remittanceInformation.setValue("241234491");
         Transfer transfer = new Transfer();
-        transfer.setSource(AccountIdentifier.create(AccountIdentifier.Type.SE, "83279000000000"));
+        transfer.setSource(AccountIdentifier.create(AccountIdentifierType.SE, "83279000000000"));
 
-        transfer.setDestination(AccountIdentifier.create(AccountIdentifier.Type.SE_BG, "54588934"));
+        transfer.setDestination(AccountIdentifier.create(AccountIdentifierType.SE_BG, "54588934"));
         transfer.setAmount(ExactCurrencyAmount.inSEK(227));
         transfer.setType(TransferType.PAYMENT);
         transfer.setDueDate(

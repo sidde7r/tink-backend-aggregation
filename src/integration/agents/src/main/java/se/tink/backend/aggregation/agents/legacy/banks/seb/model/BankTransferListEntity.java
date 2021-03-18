@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.banks.seb.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class BankTransferListEntity extends TransferListEntity {
@@ -21,7 +21,7 @@ public class BankTransferListEntity extends TransferListEntity {
 
     @Override
     @JsonIgnore
-    public AccountIdentifier.Type getDestinationType() {
-        return AccountIdentifier.Type.SE;
+    public AccountIdentifierType getDestinationType() {
+        return AccountIdentifierType.SE;
     }
 }

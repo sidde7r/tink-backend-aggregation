@@ -7,6 +7,7 @@ import java.util.Optional;
 import se.tink.backend.aggregation.agents.banks.seb.SebAccountIdentifierFormatter;
 import se.tink.backend.aggregation.agents.general.models.GeneralAccountEntity;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -74,7 +75,7 @@ public class AccountEntity implements GeneralAccountEntity {
     public String generalGetBank() {
         Optional<? extends AccountIdentifier> parsedIdentifier = getParsedIdentifier();
 
-        if (parsedIdentifier.isPresent() && parsedIdentifier.get().is(AccountIdentifier.Type.SE)) {
+        if (parsedIdentifier.isPresent() && parsedIdentifier.get().is(AccountIdentifierType.SE)) {
             return parsedIdentifier.get().to(SwedishIdentifier.class).getBankName();
         } else {
             return null;
@@ -106,11 +107,11 @@ public class AccountEntity implements GeneralAccountEntity {
      * To do payments to e.g. PG or BG types we need to have the BETFL flag == "1" to be able to do
      * these kinds of transfers (according to analyze from Charles on one of our SEB credential)
      */
-    public boolean isAllowedToTransferTo(AccountIdentifier.Type destinationType) {
-        if (destinationType == AccountIdentifier.Type.SE) {
+    public boolean isAllowedToTransferTo(AccountIdentifierType destinationType) {
+        if (destinationType == AccountIdentifierType.SE) {
             return true;
-        } else if (destinationType == AccountIdentifier.Type.SE_PG
-                || destinationType == AccountIdentifier.Type.SE_BG) {
+        } else if (destinationType == AccountIdentifierType.SE_PG
+                || destinationType == AccountIdentifierType.SE_BG) {
             return Objects.equal(BETFL, "1");
         }
 

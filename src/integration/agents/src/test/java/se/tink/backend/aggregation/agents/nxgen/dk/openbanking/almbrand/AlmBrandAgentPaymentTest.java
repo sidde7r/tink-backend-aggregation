@@ -9,7 +9,7 @@ import java.util.List;
 import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
@@ -34,12 +34,12 @@ public class AlmBrandAgentPaymentTest {
 
         for (int i = 0; i < numberOfMockedPayments; ++i) {
             Creditor creditor = mock(Creditor.class);
-            doReturn(Type.DK).when(creditor).getAccountIdentifierType();
+            doReturn(AccountIdentifierType.DK).when(creditor).getAccountIdentifierType();
             doReturn("").when(creditor).getAccountNumber();
             doReturn("").when(creditor).getName();
 
             Debtor debtor = mock(Debtor.class);
-            doReturn(Type.DK).when(debtor).getAccountIdentifierType();
+            doReturn(AccountIdentifierType.DK).when(debtor).getAccountIdentifierType();
             doReturn("").when(debtor).getAccountNumber();
 
             ExactCurrencyAmount amount = ExactCurrencyAmount.inDKK(2);

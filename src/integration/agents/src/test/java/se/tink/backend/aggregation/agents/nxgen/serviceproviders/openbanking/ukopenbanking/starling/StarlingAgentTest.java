@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.libraries.transfer.rpc.Transfer;
@@ -33,9 +34,9 @@ public class StarlingAgentTest {
 
         transfer.setType(TransferType.BANK_TRANSFER);
         transfer.setSource(
-                AccountIdentifier.create(AccountIdentifier.Type.SORT_CODE, TRANSFER_SOURCE));
+                AccountIdentifier.create(AccountIdentifierType.SORT_CODE, TRANSFER_SOURCE));
         transfer.setDestination(
-                AccountIdentifier.create(AccountIdentifier.Type.SORT_CODE, TRANSFER_DEST));
+                AccountIdentifier.create(AccountIdentifierType.SORT_CODE, TRANSFER_DEST));
         transfer.setAmount(ExactCurrencyAmount.of("10.50", "GBP"));
         transfer.setSourceMessage("Message!");
 

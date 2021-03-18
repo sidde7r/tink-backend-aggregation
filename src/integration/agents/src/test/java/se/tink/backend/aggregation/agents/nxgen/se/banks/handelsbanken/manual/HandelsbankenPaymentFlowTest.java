@@ -8,6 +8,7 @@ import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.transfer.enums.RemittanceInformationType;
 import se.tink.libraries.transfer.enums.TransferType;
@@ -59,12 +60,12 @@ public class HandelsbankenPaymentFlowTest {
         Transfer transfer = new Transfer();
         transfer.setSource(
                 AccountIdentifier.create(
-                        AccountIdentifier.Type.SE,
+                        AccountIdentifierType.SE,
                         manager.get(HandelsbankenPaymentFlowTest.Arg.SRC_ACCOUNT)));
 
         transfer.setDestination(
                 AccountIdentifier.create(
-                        AccountIdentifier.Type.SE_BG,
+                        AccountIdentifierType.SE_BG,
                         manager.get(HandelsbankenPaymentFlowTest.Arg.DEST_BG_ACCOUNT)));
         transfer.setAmount(ExactCurrencyAmount.inSEK(1d));
         transfer.setType(TransferType.PAYMENT);

@@ -22,6 +22,7 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.BankTransferExecut
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.utils.accountidentifier.IntraBankChecker;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.signableoperation.enums.InternalStatus;
@@ -130,7 +131,7 @@ public class SwedbankDefaultBankTransferExecutor extends BaseTransferExecutor
     private AbstractAccountEntity createSignedRecipient(final Transfer transfer) {
 
         AccountIdentifier accountIdentifier = transfer.getDestination();
-        if (accountIdentifier.getType() != AccountIdentifier.Type.SE) {
+        if (accountIdentifier.getType() != AccountIdentifierType.SE) {
             throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                     .setEndUserMessage(
                             catalog.getString("You can only make transfers to Swedish accounts"))

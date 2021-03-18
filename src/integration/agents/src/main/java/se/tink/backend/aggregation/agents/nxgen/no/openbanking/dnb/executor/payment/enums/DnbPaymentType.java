@@ -4,7 +4,7 @@ import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.executor.paym
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.core.account.GenericTypeMapper;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.pair.Pair;
 import se.tink.libraries.payment.enums.PaymentType;
 
@@ -23,8 +23,12 @@ public enum DnbPaymentType {
                     GenericTypeMapper.<DnbPaymentType, TypePair>genericBuilder()
                             .put(
                                     NORWEGIAN_DOMESTIC_CREDIT_TRANSFERS,
-                                    new TypePair(Type.NO, Type.NO))
-                            .put(SEPA_CREDIT_TRANSFERS, new TypePair(Type.IBAN, Type.IBAN))
+                                    new TypePair(
+                                            AccountIdentifierType.NO, AccountIdentifierType.NO))
+                            .put(
+                                    SEPA_CREDIT_TRANSFERS,
+                                    new TypePair(
+                                            AccountIdentifierType.IBAN, AccountIdentifierType.IBAN))
                             .build();
     private String text;
     private PaymentType paymentType;
@@ -35,7 +39,7 @@ public enum DnbPaymentType {
     }
 
     public static DnbPaymentType getDnbPaymentType(PaymentRequest paymentRequest) {
-        Pair<Type, Type> accountIdentifiersKey =
+        Pair<AccountIdentifierType, AccountIdentifierType> accountIdentifiersKey =
                 paymentRequest.getPayment().getCreditorAndDebtorAccountType();
 
         return accountIdentifiersToPaymentTypeMapper

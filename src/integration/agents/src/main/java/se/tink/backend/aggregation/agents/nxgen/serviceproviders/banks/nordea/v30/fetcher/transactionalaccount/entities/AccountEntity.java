@@ -19,7 +19,7 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.transactional.T
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.account.identifiers.NDAPersonalNumberIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
@@ -101,7 +101,9 @@ public class AccountEntity implements GeneralAccountEntity {
                                         .withAccountNumber(identifier.getIdentifier())
                                         .withAccountName(nickname)
                                         .addIdentifier(identifier)
-                                        .addIdentifier(AccountIdentifier.create(Type.IBAN, iban))
+                                        .addIdentifier(
+                                                AccountIdentifier.create(
+                                                        AccountIdentifierType.IBAN, iban))
                                         .build())
                         .setApiIdentifier(accountId)
                         .putInTemporaryStorage(NordeaBaseConstants.PROUDCT_CODE, productCode);
@@ -151,7 +153,7 @@ public class AccountEntity implements GeneralAccountEntity {
     @Override
     public AccountIdentifier generalGetAccountIdentifier() {
         AccountIdentifier identifier = getAccountIdentifier();
-        if (identifier.is(Type.SE_NDA_SSN)) {
+        if (identifier.is(AccountIdentifierType.SE_NDA_SSN)) {
             return identifier.to(NDAPersonalNumberIdentifier.class).toSwedishIdentifier();
         } else {
             return identifier;
@@ -163,12 +165,13 @@ public class AccountEntity implements GeneralAccountEntity {
         final String formattedAccountNumber = formatAccountNumber();
         if (formattedAccountNumber.length() == NDAPersonalNumberIdentifier.LENGTH) {
             final AccountIdentifier ssnIdentifier =
-                    AccountIdentifier.create(Type.SE_NDA_SSN, formattedAccountNumber);
+                    AccountIdentifier.create(
+                            AccountIdentifierType.SE_NDA_SSN, formattedAccountNumber);
             if (ssnIdentifier.isValid()) {
                 return ssnIdentifier;
             }
         }
-        return AccountIdentifier.create(AccountIdentifier.Type.SE, formattedAccountNumber);
+        return AccountIdentifier.create(AccountIdentifierType.SE, formattedAccountNumber);
     }
 
     @JsonIgnore

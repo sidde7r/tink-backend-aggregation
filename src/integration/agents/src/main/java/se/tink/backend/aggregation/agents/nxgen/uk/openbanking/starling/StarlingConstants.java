@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling;
 
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 
 public class StarlingConstants {
 
@@ -10,10 +10,10 @@ public class StarlingConstants {
     public static final String CLIENT_ID_PARAM_KEY = "client_id";
     public static final String CLIENT_SECRET_PARAM_KEY = "client_secret";
 
-    public static final TypeMapper<AccountIdentifier.Type> ACCOUNT_IDENTIFIER_MAPPER =
-            TypeMapper.<AccountIdentifier.Type>builder()
-                    .put(AccountIdentifier.Type.IBAN, "IBAN")
-                    .put(AccountIdentifier.Type.SORT_CODE, "SORT_CODE")
+    public static final TypeMapper<AccountIdentifierType> ACCOUNT_IDENTIFIER_MAPPER =
+            TypeMapper.<AccountIdentifierType>builder()
+                    .put(AccountIdentifierType.IBAN, "IBAN")
+                    .put(AccountIdentifierType.SORT_CODE, "SORT_CODE")
                     .build();
 
     public static class UrlParams {

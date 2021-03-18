@@ -24,9 +24,9 @@ junit_test(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/configuration",
-        "//src/libraries/account_identifier",
         "//src/libraries/serialization",
         "//third_party:org_assertj_assertj_core",
         "//third_party:org_mockito_mockito_core",
+        "@tink_backend//src/libraries/account_identifier",
     ],
 )

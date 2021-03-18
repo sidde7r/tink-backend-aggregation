@@ -21,11 +21,11 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/instrumentation",
         "//src/integration/payment:enums",
         "//src/integration/payment:rpc",
-        "//src/libraries/account_identifier",
         "//src/libraries/concurrency",
         "//third_party:com_google_guava_guava",
         "//third_party:org_slf4j_slf4j_api",
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
         "@aggregation//:io_reactivex_rxjava3_rxjava",
+        "@tink_backend//src/libraries/account_identifier",
     ],
 )

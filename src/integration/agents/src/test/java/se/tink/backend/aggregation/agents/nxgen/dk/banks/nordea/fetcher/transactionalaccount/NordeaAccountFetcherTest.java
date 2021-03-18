@@ -33,7 +33,7 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
@@ -257,7 +257,8 @@ public class NordeaAccountFetcherTest {
                                 .withUniqueIdentifier("UNIQUE_IDENTIFIER")
                                 .withAccountNumber("")
                                 .withAccountName("")
-                                .addIdentifier(AccountIdentifier.create(Type.IBAN, ""))
+                                .addIdentifier(
+                                        AccountIdentifier.create(AccountIdentifierType.IBAN, ""))
                                 .build())
                 .putInTemporaryStorage(NordeaDkConstants.StorageKeys.PRODUCT_CODE, "PRODUCT_CODE")
                 .setApiIdentifier("API_IDENTIFIER")

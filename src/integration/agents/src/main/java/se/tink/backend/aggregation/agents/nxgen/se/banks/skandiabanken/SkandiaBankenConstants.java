@@ -9,8 +9,7 @@ import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccountTypeMa
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.transfer.enums.TransferType;
 
 public class SkandiaBankenConstants {
@@ -233,12 +232,12 @@ public class SkandiaBankenConstants {
                     .put(Portfolio.Type.ISK, "ISK")
                     .build();
 
-    public static final TypeMapper<AccountIdentifier.Type> PAYMENT_RECIPIENT_TYPE_MAP =
-            TypeMapper.<AccountIdentifier.Type>builder()
-                    .put(Type.SE_BG, "BankGiro", "BankGiroOCR", "BankGiroInvoice")
-                    .put(Type.SE_PG, "PlusGiro", "PlusGiroOCR", "PlusGiroInvoice")
+    public static final TypeMapper<AccountIdentifierType> PAYMENT_RECIPIENT_TYPE_MAP =
+            TypeMapper.<AccountIdentifierType>builder()
+                    .put(AccountIdentifierType.SE_BG, "BankGiro", "BankGiroOCR", "BankGiroInvoice")
+                    .put(AccountIdentifierType.SE_PG, "PlusGiro", "PlusGiroOCR", "PlusGiroInvoice")
                     .put(
-                            Type.SE,
+                            AccountIdentifierType.SE,
                             "AutoGiroAvi",
                             "AutoGiroRecurrent",
                             "CreditCardInvoice",

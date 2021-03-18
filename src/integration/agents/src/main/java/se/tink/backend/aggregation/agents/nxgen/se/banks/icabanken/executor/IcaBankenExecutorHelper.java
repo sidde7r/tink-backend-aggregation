@@ -36,6 +36,7 @@ import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformati
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.signableoperation.enums.InternalStatus;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
@@ -125,7 +126,7 @@ public class IcaBankenExecutorHelper {
         recipientEntity.setName(findDestinationNameFor(destination));
         recipientEntity.setBudgetGroup("");
 
-        if (AccountIdentifier.Type.SE.equals(destination.getType())) {
+        if (AccountIdentifierType.SE.equals(destination.getType())) {
             recipientEntity.setTransferBankId(fetchTransferBankIdFor(destination));
         }
 
@@ -153,7 +154,7 @@ public class IcaBankenExecutorHelper {
     private Optional<RecipientEntity> getRecipientEntity(
             AccountIdentifier destination, List<RecipientEntity> destinationAccounts) {
 
-        if (AccountIdentifier.Type.SE.equals(destination.getType())) {
+        if (AccountIdentifierType.SE.equals(destination.getType())) {
             return IcaBankenExecutorUtils.tryFindRegisteredTransferAccount(
                     destination, destinationAccounts);
         }
@@ -174,7 +175,7 @@ public class IcaBankenExecutorHelper {
             return destinationName.get();
         }
 
-        if (!AccountIdentifier.Type.SE.equals(destination.getType())) {
+        if (!AccountIdentifierType.SE.equals(destination.getType())) {
             destinationName =
                     apiClient.fetchPaymentDestinationName(
                             destination.getIdentifier(

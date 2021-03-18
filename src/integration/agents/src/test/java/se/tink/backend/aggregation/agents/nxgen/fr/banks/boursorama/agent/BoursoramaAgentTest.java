@@ -7,7 +7,7 @@ import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager.UsernamePasswordArgumentEnum;
-import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.payment.rpc.Beneficiary;
 import se.tink.libraries.payment.rpc.CreateBeneficiary;
 
@@ -62,7 +62,7 @@ public class BoursoramaAgentTest {
                                         Beneficiary.builder()
                                                 .name(newBeneficiaryName)
                                                 .accountNumber(newBeneficiaryIban)
-                                                .accountNumberType(AccountIdentifier.Type.IBAN)
+                                                .accountNumberType(AccountIdentifierType.IBAN)
                                                 .build())
                                 .build());
     }

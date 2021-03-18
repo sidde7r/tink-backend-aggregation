@@ -7,8 +7,8 @@ java_library(
         "//src/integration:__subpackages__",
     ],
     deps = [
-        "//src/libraries/account_identifier",
         "//third_party:org_apache_commons_commons_lang3",
         "@aggregation//:com_google_guava_guava",
+        "@tink_backend//src/libraries/account_identifier",
     ],
 )

@@ -7,7 +7,7 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdMo
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 
 public class AccountEntity {
     private String id;
@@ -29,7 +29,8 @@ public class AccountEntity {
                                 .withUniqueIdentifier(email)
                                 .withAccountNumber(email)
                                 .withAccountName(email)
-                                .addIdentifier(AccountIdentifier.create(Type.TINK, email))
+                                .addIdentifier(
+                                        AccountIdentifier.create(AccountIdentifierType.TINK, email))
                                 .build())
                 .build();
     }

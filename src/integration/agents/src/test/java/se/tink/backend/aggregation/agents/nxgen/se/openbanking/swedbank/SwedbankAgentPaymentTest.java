@@ -15,7 +15,7 @@ import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager.SsnArgumentEnum;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager.ToAccountFromAccountArgumentEnum;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
@@ -54,7 +54,9 @@ public class SwedbankAgentPaymentTest {
         remittanceInformation.setValue("tinkTest");
 
         builder.build()
-                .testGenericPayment(createListMockedPayment(1, Type.SE, remittanceInformation));
+                .testGenericPayment(
+                        createListMockedPayment(
+                                1, AccountIdentifierType.SE, remittanceInformation));
     }
 
     @Test
@@ -64,12 +66,14 @@ public class SwedbankAgentPaymentTest {
         remittanceInformation.setValue("13077598319");
 
         builder.build()
-                .testGenericPayment(createListMockedPayment(1, Type.SE_BG, remittanceInformation));
+                .testGenericPayment(
+                        createListMockedPayment(
+                                1, AccountIdentifierType.SE_BG, remittanceInformation));
     }
 
     private List<Payment> createListMockedPayment(
             int numberOfMockedPayments,
-            Type creditorType,
+            AccountIdentifierType creditorType,
             RemittanceInformation remittanceInformation) {
         List<Payment> listOfMockedPayments = new ArrayList<>();
 
@@ -78,7 +82,7 @@ public class SwedbankAgentPaymentTest {
 
             AccountIdentifier sourceAccountIdentifier =
                     AccountIdentifier.create(
-                            Type.SE,
+                            AccountIdentifierType.SE,
                             toFromManager.get(ToAccountFromAccountArgumentEnum.FROM_ACCOUNT));
 
             AccountIdentifier destinationAccountIdentifier =
@@ -95,7 +99,7 @@ public class SwedbankAgentPaymentTest {
             doReturn(destinationAccountIdentifier).when(creditor).getAccountIdentifier();
 
             Debtor debtor = mock(Debtor.class);
-            doReturn(Type.SE).when(debtor).getAccountIdentifierType();
+            doReturn(AccountIdentifierType.SE).when(debtor).getAccountIdentifierType();
             doReturn(sourceAccountIdentifier.getIdentifier()).when(debtor).getAccountNumber();
             doReturn(sourceAccountIdentifier).when(debtor).getAccountIdentifier();
 

@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentValidationException;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
@@ -73,7 +73,7 @@ public class SibsAccountReferenceEntity {
     }
 
     public static SibsAccountReferenceEntity of(
-            Supplier<AccountIdentifier.Type> accountTypeSupplier,
+            Supplier<AccountIdentifierType> accountTypeSupplier,
             Supplier<String> accountNumberSupplier)
             throws PaymentValidationException {
         SibsAccountReferenceEntity are = new SibsAccountReferenceEntity();
@@ -99,11 +99,17 @@ public class SibsAccountReferenceEntity {
     public Creditor toTinkCreditor() throws PaymentException {
         Creditor creditor;
         if (StringUtils.isNotEmpty(iban)) {
-            creditor = new Creditor(AccountIdentifier.create(Type.IBAN, iban));
+            creditor = new Creditor(AccountIdentifier.create(AccountIdentifierType.IBAN, iban));
         } else if (StringUtils.isNotEmpty(msisdn)) {
-            creditor = new Creditor(AccountIdentifier.create(Type.PAYM_PHONE_NUMBER, iban));
+            creditor =
+                    new Creditor(
+                            AccountIdentifier.create(
+                                    AccountIdentifierType.PAYM_PHONE_NUMBER, iban));
         } else if (StringUtils.isNotEmpty(pan)) {
-            creditor = new Creditor(AccountIdentifier.create(Type.PAYMENT_CARD_NUMBER, iban));
+            creditor =
+                    new Creditor(
+                            AccountIdentifier.create(
+                                    AccountIdentifierType.PAYMENT_CARD_NUMBER, iban));
         } else {
             throw new PaymentException("Unsupported payment type returned");
         }
@@ -113,11 +119,17 @@ public class SibsAccountReferenceEntity {
     public Debtor toTinkDebtor() throws PaymentException {
         Debtor debtor;
         if (StringUtils.isNotEmpty(iban)) {
-            debtor = new Debtor(AccountIdentifier.create(Type.IBAN, iban));
+            debtor = new Debtor(AccountIdentifier.create(AccountIdentifierType.IBAN, iban));
         } else if (StringUtils.isNotEmpty(msisdn)) {
-            debtor = new Debtor(AccountIdentifier.create(Type.PAYM_PHONE_NUMBER, iban));
+            debtor =
+                    new Debtor(
+                            AccountIdentifier.create(
+                                    AccountIdentifierType.PAYM_PHONE_NUMBER, iban));
         } else if (StringUtils.isNotEmpty(pan)) {
-            debtor = new Debtor(AccountIdentifier.create(Type.PAYMENT_CARD_NUMBER, iban));
+            debtor =
+                    new Debtor(
+                            AccountIdentifier.create(
+                                    AccountIdentifierType.PAYMENT_CARD_NUMBER, iban));
         } else {
             throw new PaymentException("Unsupported payment type returned");
         }

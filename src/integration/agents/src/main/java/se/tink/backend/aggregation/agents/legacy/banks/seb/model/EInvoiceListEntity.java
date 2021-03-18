@@ -17,6 +17,7 @@ import se.tink.backend.aggregation.agents.banks.seb.SEBAgentUtils;
 import se.tink.backend.aggregation.agents.banks.seb.SebAccountIdentifierFormatter;
 import se.tink.backend.aggregation.annotations.JsonDouble;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.account.identifiers.BankGiroIdentifier;
 import se.tink.libraries.account.identifiers.NonValidIdentifier;
 import se.tink.libraries.account.identifiers.PlusGiroIdentifier;
@@ -319,11 +320,11 @@ public class EInvoiceListEntity implements MatchableTransferRequestEntity {
             return false;
         }
 
-        AccountIdentifier.Type expectedType;
+        AccountIdentifierType expectedType;
         if (Objects.equal(giroType.trim(), "BG")) {
-            expectedType = AccountIdentifier.Type.SE_BG;
+            expectedType = AccountIdentifierType.SE_BG;
         } else if (Objects.equal(giroType.trim(), "PG")) {
-            expectedType = AccountIdentifier.Type.SE_PG;
+            expectedType = AccountIdentifierType.SE_PG;
         } else {
             logger.error("Unexpected account type found: " + giroType);
             return false;

@@ -26,7 +26,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
-import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 
 public abstract class UnicreditBaseAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor,
@@ -137,6 +137,6 @@ public abstract class UnicreditBaseAgent extends NextGenerationAgent
     @Override
     public FetchTransferDestinationsResponse fetchTransferDestinations(List<Account> accounts) {
         return InferredTransferDestinations.forPaymentAccounts(
-                accounts, AccountIdentifier.Type.IBAN);
+                accounts, AccountIdentifierType.IBAN);
     }
 }

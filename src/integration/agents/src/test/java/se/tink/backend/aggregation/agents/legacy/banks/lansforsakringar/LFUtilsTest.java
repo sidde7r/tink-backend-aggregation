@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.PaymentRe
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.RecipientEntity;
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.UpcomingTransactionEntity;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.i18n.Catalog;
 
@@ -53,7 +54,7 @@ public class LFUtilsTest {
 
     private SwedishIdentifier createIdentifier(String clearingAndAccountNumber) {
         AccountIdentifier accountIdentifier =
-                AccountIdentifier.create(AccountIdentifier.Type.SE, clearingAndAccountNumber);
+                AccountIdentifier.create(AccountIdentifierType.SE, clearingAndAccountNumber);
 
         assertThat(accountIdentifier).isNotNull();
 

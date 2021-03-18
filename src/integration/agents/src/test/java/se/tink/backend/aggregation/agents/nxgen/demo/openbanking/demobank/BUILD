@@ -25,8 +25,8 @@ junit_test(
         "//src/integration/payment:rpc",
         "//src/integration/transfer:enums",
         "//src/integration/transfer:rpc",
-        "//src/libraries/account_identifier",
         "//third_party:org_hamcrest_hamcrest_library",
         "@aggregation//:com_google_guava_guava",
+        "@tink_backend//src/libraries/account_identifier",
     ],
 )

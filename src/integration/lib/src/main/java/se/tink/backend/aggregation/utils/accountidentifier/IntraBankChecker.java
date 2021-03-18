@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.utils.accountidentifier;
 
 import java.util.Optional;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.account.identifiers.se.ClearingNumber;
@@ -20,9 +20,9 @@ public class IntraBankChecker {
     public static boolean isSwedishMarketIntraBank(
             AccountIdentifier sourceAccount, AccountIdentifier destinationAccount) {
         boolean isIntraBank = false;
-        if (AccountIdentifier.Type.SE.equals(destinationAccount.getType())) {
+        if (AccountIdentifierType.SE.equals(destinationAccount.getType())) {
             Optional<Details> sourceAccountClearingNumber =
-                    Type.IBAN.equals(sourceAccount.getType())
+                    AccountIdentifierType.IBAN.equals(sourceAccount.getType())
                             ? ClearingNumber.get(
                                     new SwedishIdentifier(
                                                     sourceAccount
@@ -74,8 +74,8 @@ public class IntraBankChecker {
      */
     public static boolean isIbanIntraBank(
             AccountIdentifier sourceAccount, AccountIdentifier destinationAccount) {
-        if (!Type.IBAN.equals(destinationAccount.getType())
-                && !Type.IBAN.equals(sourceAccount.getType())) {
+        if (!AccountIdentifierType.IBAN.equals(destinationAccount.getType())
+                && !AccountIdentifierType.IBAN.equals(sourceAccount.getType())) {
             return false;
         }
         IbanIdentifier source = sourceAccount.to(IbanIdentifier.class);

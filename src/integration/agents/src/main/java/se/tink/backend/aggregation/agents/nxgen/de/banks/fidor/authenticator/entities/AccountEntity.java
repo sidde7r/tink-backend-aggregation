@@ -5,6 +5,7 @@ import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
@@ -104,7 +105,7 @@ public class AccountEntity {
     public TransactionalAccount toTransactionalAccount() {
         return TransactionalAccount.builder(getType(), getId(), getTinkBalance())
                 .setAccountNumber(getId())
-                .addIdentifier(AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban))
+                .addIdentifier(AccountIdentifier.create(AccountIdentifierType.IBAN, iban))
                 .build();
     }
 }

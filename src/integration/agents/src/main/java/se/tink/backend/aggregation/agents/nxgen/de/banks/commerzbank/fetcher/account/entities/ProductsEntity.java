@@ -19,6 +19,7 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.backend.aggregation.utils.CreditCardMasker;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.enums.AccountFlag;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
@@ -87,7 +88,7 @@ public class ProductsEntity {
                 TransactionalAccount.builder(accountType, iban, getTinkBalance())
                         .setName(productType.getProductName())
                         .setAccountNumber(internalAccountNumber)
-                        .addIdentifier(AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban))
+                        .addIdentifier(AccountIdentifier.create(AccountIdentifierType.IBAN, iban))
                         .putInTemporaryStorage(Headers.IDENTIFIER, productId.getIdentifier())
                         .putInTemporaryStorage(Headers.PRODUCT_TYPE, productId.getProductType())
                         .putInTemporaryStorage(

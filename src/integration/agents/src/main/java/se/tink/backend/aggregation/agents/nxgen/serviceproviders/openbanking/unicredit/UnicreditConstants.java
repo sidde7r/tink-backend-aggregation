@@ -4,7 +4,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.executor.payment.enums.UnicreditPaymentProduct;
 import se.tink.backend.aggregation.nxgen.core.account.GenericTypeMapper;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.pair.Pair;
 import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payments.common.model.PaymentScheme;
@@ -12,10 +12,17 @@ import se.tink.libraries.payments.common.model.PaymentScheme;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class UnicreditConstants {
 
-    public static final GenericTypeMapper<PaymentType, Pair<Type, Type>> PAYMENT_TYPE_MAPPER =
-            GenericTypeMapper.<PaymentType, Pair<Type, Type>>genericBuilder()
-                    .put(PaymentType.SEPA, new Pair<>(Type.IBAN, Type.IBAN))
-                    .build();
+    public static final GenericTypeMapper<
+                    PaymentType, Pair<AccountIdentifierType, AccountIdentifierType>>
+            PAYMENT_TYPE_MAPPER =
+                    GenericTypeMapper
+                            .<PaymentType, Pair<AccountIdentifierType, AccountIdentifierType>>
+                                    genericBuilder()
+                            .put(
+                                    PaymentType.SEPA,
+                                    new Pair<>(
+                                            AccountIdentifierType.IBAN, AccountIdentifierType.IBAN))
+                            .build();
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class ErrorMessages {

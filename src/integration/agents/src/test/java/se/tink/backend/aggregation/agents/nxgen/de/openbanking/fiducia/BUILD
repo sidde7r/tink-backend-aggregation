@@ -19,7 +19,6 @@ junit_test(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/supplementalfields",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/response",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
-        "//src/libraries/account_identifier",
         "//src/libraries/serialization",
         "//third_party:org_apache_commons_commons_lang",
         "//third_party:org_assertj_assertj_core",
@@ -27,5 +26,6 @@ junit_test(
         "//third_party:org_mockito_mockito_core",
         "//third_party:pl_pragmatists_junitparams",
         "@aggregation//:com_google_guava_guava",
+        "@tink_backend//src/libraries/account_identifier",
     ],
 )

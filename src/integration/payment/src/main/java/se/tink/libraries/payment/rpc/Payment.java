@@ -6,8 +6,7 @@ import java.time.LocalDate;
 import java.util.Objects;
 import java.util.UUID;
 import org.iban4j.IbanUtil;
-import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.enums.MarketCode;
@@ -195,7 +194,7 @@ public class Payment {
         return dayOfExecution;
     }
 
-    public Pair<AccountIdentifier.Type, AccountIdentifier.Type> getCreditorAndDebtorAccountType() {
+    public Pair<AccountIdentifierType, AccountIdentifierType> getCreditorAndDebtorAccountType() {
         if (Objects.isNull(debtor) || Objects.isNull(debtor.getAccountIdentifier())) {
             return new Pair<>(null, creditor.getAccountIdentifierType());
         }
@@ -204,12 +203,12 @@ public class Payment {
 
     public boolean isSepa() {
         if (debtor == null) {
-            return creditor.getAccountIdentifierType() == Type.IBAN
+            return creditor.getAccountIdentifierType() == AccountIdentifierType.IBAN
                     && sepaCountriesWithEur.contains(
                             IbanUtil.getCountryCode(creditor.getAccountNumber()));
         }
-        return debtor.getAccountIdentifierType() == Type.IBAN
-                && creditor.getAccountIdentifierType() == Type.IBAN
+        return debtor.getAccountIdentifierType() == AccountIdentifierType.IBAN
+                && creditor.getAccountIdentifierType() == AccountIdentifierType.IBAN
                 && sepaCountriesWithEur.contains(IbanUtil.getCountryCode(debtor.getAccountNumber()))
                 && sepaCountriesWithEur.contains(
                         IbanUtil.getCountryCode(creditor.getAccountNumber()));
@@ -220,7 +219,7 @@ public class Payment {
     }
 
     public String getMarketCode(
-            String accountNumber, String marketCode, AccountIdentifier.Type accountIdentifierType) {
+            String accountNumber, String marketCode, AccountIdentifierType accountIdentifierType) {
         switch (accountIdentifierType) {
             case PAYM_PHONE_NUMBER:
             case SORT_CODE:

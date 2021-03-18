@@ -15,11 +15,11 @@ java_library(
         "//src/integration/payment:rpc",
         "//src/integration/transfer:enums",
         "//src/integration/transfer:rpc",
-        "//src/libraries/account_identifier",
         "//third_party:com_github_rholder_guava_retrying",
         "//third_party:lombok_libs",
         "//third_party:org_apache_commons_commons_lang",
         "//third_party:org_slf4j_slf4j_api",
         "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
+        "@tink_backend//src/libraries/account_identifier",
     ],
 )

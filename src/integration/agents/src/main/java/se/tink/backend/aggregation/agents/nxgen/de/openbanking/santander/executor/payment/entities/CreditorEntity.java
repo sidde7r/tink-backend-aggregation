@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.de.openbanking.santander.execut
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.payment.rpc.Creditor;
 
 @JsonObject
@@ -20,6 +21,6 @@ public class CreditorEntity {
 
     @JsonIgnore
     public Creditor toTinkCreditor() {
-        return new Creditor(AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban));
+        return new Creditor(AccountIdentifier.create(AccountIdentifierType.IBAN, iban));
     }
 }

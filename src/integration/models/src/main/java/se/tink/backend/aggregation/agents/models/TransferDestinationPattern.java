@@ -6,6 +6,7 @@ import com.google.common.collect.Ordering;
 import java.util.Objects;
 import java.util.Optional;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.account.identifiers.formatters.DisplayAccountIdentifierFormatter;
 
@@ -19,14 +20,14 @@ public class TransferDestinationPattern implements Comparable<TransferDestinatio
     private String name;
     private String bank;
 
-    public AccountIdentifier.Type getType() {
+    public AccountIdentifierType getType() {
         if (type == null) {
             return null;
         }
-        return AccountIdentifier.Type.fromScheme(type);
+        return AccountIdentifierType.fromScheme(type);
     }
 
-    public void setType(AccountIdentifier.Type type) {
+    public void setType(AccountIdentifierType type) {
         if (type == null) {
             this.type = null;
         } else {
@@ -59,7 +60,7 @@ public class TransferDestinationPattern implements Comparable<TransferDestinatio
     }
 
     public static TransferDestinationPattern createForMultiMatch(
-            AccountIdentifier.Type type, String pattern) {
+            AccountIdentifierType type, String pattern) {
         TransferDestinationPattern destination = new TransferDestinationPattern();
         destination.setMatchesMultiple(true);
         destination.setType(type);
@@ -67,7 +68,7 @@ public class TransferDestinationPattern implements Comparable<TransferDestinatio
         return destination;
     }
 
-    public static TransferDestinationPattern createForMultiMatchAll(AccountIdentifier.Type type) {
+    public static TransferDestinationPattern createForMultiMatchAll(AccountIdentifierType type) {
         return createForMultiMatch(type, ALL);
     }
 

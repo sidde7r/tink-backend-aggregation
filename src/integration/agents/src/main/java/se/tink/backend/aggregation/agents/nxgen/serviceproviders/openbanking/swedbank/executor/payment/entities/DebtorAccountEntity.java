@@ -4,13 +4,13 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.ErrorMessages;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 
 @JsonObject
 @JsonInclude(Include.NON_NULL)
 public class DebtorAccountEntity extends AccountEntity {
 
-    DebtorAccountEntity(String accountNumber, Type accountIdentifierType) {
+    DebtorAccountEntity(String accountNumber, AccountIdentifierType accountIdentifierType) {
         switch (accountIdentifierType) {
             case IBAN:
                 this.iban = accountNumber;

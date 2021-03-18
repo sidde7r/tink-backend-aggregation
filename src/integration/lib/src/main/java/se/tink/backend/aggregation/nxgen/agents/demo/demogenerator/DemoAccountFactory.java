@@ -20,7 +20,7 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.buil
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.i18n.Catalog;
 
@@ -130,7 +130,7 @@ public class DemoAccountFactory {
 
     private static AccountIdentifier createDefaultAccountIdentifier() {
         AccountIdentifier fakeIbanAccountIdentifier =
-                AccountIdentifier.create(Type.TINK, UUID.randomUUID().toString());
+                AccountIdentifier.create(AccountIdentifierType.TINK, UUID.randomUUID().toString());
 
         return fakeIbanAccountIdentifier;
     }

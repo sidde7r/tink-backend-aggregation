@@ -46,7 +46,6 @@ junit_test(
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/assertions",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/compositeagenttest/wiremockrefresh",
         "//src/integration/models",
-        "//src/libraries/account_identifier",
         "//src/libraries/serialization",
         "//third_party:com_google_code_findbugs_jsr305",
         "//third_party:com_google_http_client_google_http_client",
@@ -67,5 +66,6 @@ junit_test(
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
         "@aggregation//:com_google_guava_guava",
         "@aggregation//:io_vavr_vavr",
+        "@tink_backend//src/libraries/account_identifier",
     ],
 )

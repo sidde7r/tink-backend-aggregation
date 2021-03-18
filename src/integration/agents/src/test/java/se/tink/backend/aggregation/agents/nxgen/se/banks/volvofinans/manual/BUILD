@@ -26,10 +26,10 @@ junit_test(
         "//src/integration/transfer:enums",
         "//src/integration/transfer:rpc",
         "//src/integration/user:rpc",
-        "//src/libraries/account_identifier",
         "//src/libraries/serialization",
         "//third_party:com_github_tomakehurst_wiremock",
         "//third_party:org_apache_httpcomponents_httpcore",
         "//third_party:org_mockito_mockito_core",
+        "@tink_backend//src/libraries/account_identifier",
     ],
 )

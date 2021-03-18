@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.banks.sbab.util;
 
 import com.google.common.base.Strings;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.account.identifiers.formatters.AccountIdentifierFormatter;
 import se.tink.libraries.account.identifiers.formatters.DefaultAccountIdentifierFormatter;
@@ -12,7 +13,7 @@ public class SBABDestinationAccountIdentifierFormatter implements AccountIdentif
 
     @Override
     public String apply(AccountIdentifier identifier) {
-        if (identifier.is(AccountIdentifier.Type.SE)) {
+        if (identifier.is(AccountIdentifierType.SE)) {
             return toSBABDestination(identifier.to(SwedishIdentifier.class));
         }
         return identifier.getIdentifier(DEFAULT_FORMATTER);

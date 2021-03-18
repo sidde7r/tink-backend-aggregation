@@ -32,7 +32,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
-import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 
 public abstract class FabricAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor,
@@ -159,6 +159,6 @@ public abstract class FabricAgent extends NextGenerationAgent
     @Override
     public FetchTransferDestinationsResponse fetchTransferDestinations(List<Account> accounts) {
         return InferredTransferDestinations.forPaymentAccounts(
-                accounts, AccountIdentifier.Type.IBAN);
+                accounts, AccountIdentifierType.IBAN);
     }
 }

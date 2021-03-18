@@ -28,12 +28,12 @@ junit_test(
         "//src/integration/payment:rpc",
         "//src/integration/transfer:enums",
         "//src/integration/transfer:rpc",
-        "//src/libraries/account_identifier",
         "//src/libraries/pair",
         "//third_party:org_assertj_assertj_core",
         "//third_party:org_iban4j_iban4j",
         "//third_party:org_mockito_mockito_core",
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
         "@aggregation//:com_google_code_gson_gson",
+        "@tink_backend//src/libraries/account_identifier",
     ],
 )

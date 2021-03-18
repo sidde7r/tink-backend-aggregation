@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdMo
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
@@ -63,9 +64,9 @@ public class ViewDetailListItem {
                                 .withAccountName(account.getAccountName())
                                 .addIdentifier(
                                         AccountIdentifier.create(
-                                                AccountIdentifier.Type.IBAN,
+                                                AccountIdentifierType.IBAN,
                                                 iban,
-                                                AccountIdentifier.Type.IBAN.name()))
+                                                AccountIdentifierType.IBAN.name()))
                                 .build())
                 .setApiIdentifier(getIban())
                 .putInTemporaryStorage(

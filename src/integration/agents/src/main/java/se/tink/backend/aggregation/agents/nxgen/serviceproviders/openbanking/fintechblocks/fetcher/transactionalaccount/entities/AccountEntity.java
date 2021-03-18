@@ -11,7 +11,7 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdMo
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
@@ -74,8 +74,8 @@ public class AccountEntity {
     private AccountIdentifier getAccountIdentifier() {
         return Optional.ofNullable(getIban())
                 .filter(iban -> !iban.equalsIgnoreCase(""))
-                .map(iban -> AccountIdentifier.create(Type.IBAN, iban))
-                .orElse(AccountIdentifier.create(Type.BE, getBban()));
+                .map(iban -> AccountIdentifier.create(AccountIdentifierType.IBAN, iban))
+                .orElse(AccountIdentifier.create(AccountIdentifierType.BE, getBban()));
     }
 
     private String getIdentifier() {

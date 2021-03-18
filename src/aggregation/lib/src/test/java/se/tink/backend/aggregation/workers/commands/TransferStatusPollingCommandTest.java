@@ -22,6 +22,7 @@ import se.tink.backend.aggregation.rpc.TransferRequest;
 import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
@@ -181,7 +182,7 @@ public class TransferStatusPollingCommandTest {
 
     private static Transfer createTransfer() {
         return TransferMock.bankTransfer()
-                .to(AccountIdentifier.create(AccountIdentifier.Type.SE, ACCOUNT_NUMBER))
+                .to(AccountIdentifier.create(AccountIdentifierType.SE, ACCOUNT_NUMBER))
                 .withAmountInSEK(AMOUNT_IN_SEK)
                 .withRemittanceInformation(new RemittanceInformation())
                 .build();

@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.utils.remittanceinformation.Remittance
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationReader;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.enums.MarketCode;
 import se.tink.libraries.payment.rpc.Creditor;
@@ -80,13 +81,13 @@ public class N26AgentWireMockTest {
                         new Creditor(
                                 AccountIdentifier.create(
                                         // This is FR IBAN example
-                                        AccountIdentifier.Type.IBAN, "FR1420041010050500013M02606"),
+                                        AccountIdentifierType.IBAN, "FR1420041010050500013M02606"),
                                 "Recipient Name"))
                 // This is DE IBAN example
                 .withDebtor(
                         new Debtor(
                                 AccountIdentifier.create(
-                                        AccountIdentifier.Type.IBAN, "DE89370400440532013000")))
+                                        AccountIdentifierType.IBAN, "DE89370400440532013000")))
                 .withExactCurrencyAmount(amount)
                 .withCurrency(currency)
                 .withRemittanceInformation(

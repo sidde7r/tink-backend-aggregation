@@ -11,8 +11,7 @@ import org.mockito.Mockito;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbConstants.CredentialKeys;
-import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
@@ -42,13 +41,13 @@ public class DkbAgentPaymentTest {
 
         for (int i = 0; i < numberOfMockedPayments; ++i) {
             Creditor creditor = Mockito.mock(Creditor.class);
-            Mockito.doReturn(AccountIdentifier.Type.IBAN).when(creditor).getAccountIdentifierType();
+            Mockito.doReturn(AccountIdentifierType.IBAN).when(creditor).getAccountIdentifierType();
             Mockito.doReturn(Iban.random(CountryCode.DE).toString())
                     .when(creditor)
                     .getAccountNumber();
             Mockito.doReturn("Creditor Name").when(creditor).getName();
             Debtor debtor = Mockito.mock(Debtor.class);
-            Mockito.doReturn(Type.IBAN).when(debtor).getAccountIdentifierType();
+            Mockito.doReturn(AccountIdentifierType.IBAN).when(debtor).getAccountIdentifierType();
             Mockito.doReturn(Iban.random(CountryCode.DE).toString())
                     .when(debtor)
                     .getAccountNumber();

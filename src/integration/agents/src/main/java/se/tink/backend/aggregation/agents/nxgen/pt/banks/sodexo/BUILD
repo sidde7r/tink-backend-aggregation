@@ -13,9 +13,9 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/form",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/response",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
-        "//src/libraries/account_identifier",
         "//third_party:com_google_inject_guice",
         "//third_party:lombok_libs",
         "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
+        "@tink_backend//src/libraries/account_identifier",
     ],
 )

@@ -9,7 +9,7 @@ import se.tink.backend.aggregation.agents.exceptions.payment.DebtorValidationExc
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants.PaymentTypes;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -23,7 +23,8 @@ public class AccountNumbersResponse {
         return accounts.stream().filter(a -> a.getBban().equals(accountNumber)).findFirst();
     }
 
-    public void checkIfTransactionTypeIsAllowed(String bban, Type accountIdentifierType)
+    public void checkIfTransactionTypeIsAllowed(
+            String bban, AccountIdentifierType accountIdentifierType)
             throws DebtorValidationException {
 
         AccountInfoEntity correctAccountIfPresent =

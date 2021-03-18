@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.net.URI;
 import java.net.URISyntaxException;
 import org.junit.Test;
-import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.account.identifiers.TinkIdentifier;
 
 public class BeneficiaryTest {
@@ -35,7 +35,7 @@ public class BeneficiaryTest {
         assertThat(beneficiary.getName()).isEqualTo("name");
         assertThat(beneficiary.getAccountIdentifier().getIdentifier()).isEqualTo("abc");
         assertThat(beneficiary.getAccountIdentifier().getType())
-                .isEqualTo(AccountIdentifier.Type.TINK);
+                .isEqualTo(AccountIdentifierType.TINK);
         assertThat(beneficiary.getValueByKey("id")).isEqualTo("1");
         assertThat(beneficiary.getValueByKey("foo")).isEqualTo("bar");
     }

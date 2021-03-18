@@ -11,7 +11,7 @@ import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.isp.apiclient.IspApiClient;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
-import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 
 public class LoanAccountFetcherTest {
 
@@ -38,7 +38,7 @@ public class LoanAccountFetcherTest {
         assertThat(loanAccount.getApiIdentifier()).isEqualTo("123456789");
         assertThat(loanAccount.getIdentifiers()).hasSize(1);
         assertThat(loanAccount.getIdentifiers().get(0).getType())
-                .isEqualTo(AccountIdentifier.Type.IBAN);
+                .isEqualTo(AccountIdentifierType.IBAN);
         assertThat(loanAccount.getIdentifiers().get(0).getIdentifier())
                 .isEqualTo("IT14X0300203280334787988525");
         assertThat(loanAccount.getExactBalance().getExactValue()).isEqualByComparingTo("-7500");

@@ -7,6 +7,7 @@ import java.util.Optional;
 import se.tink.backend.aggregation.agents.banks.seb.SebAccountIdentifierFormatter;
 import se.tink.backend.aggregation.agents.general.models.GeneralAccountEntity;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -70,7 +71,7 @@ public class ExternalAccount implements GeneralAccountEntity {
     public String generalGetBank() {
         Optional<? extends AccountIdentifier> parsedIdentifier = getParsedIdentifier();
 
-        if (parsedIdentifier.isPresent() && parsedIdentifier.get().is(AccountIdentifier.Type.SE)) {
+        if (parsedIdentifier.isPresent() && parsedIdentifier.get().is(AccountIdentifierType.SE)) {
             return parsedIdentifier.get().to(SwedishIdentifier.class).getBankName();
         } else {
             return null;

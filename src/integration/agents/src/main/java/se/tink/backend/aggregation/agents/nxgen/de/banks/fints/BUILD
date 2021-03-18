@@ -13,7 +13,6 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/camt",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/supplementalfields",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/client",
-        "//src/libraries/account_identifier",
         "//src/libraries/strings",
         "//third_party:com_fasterxml_jackson_core_jackson_annotations",
         "//third_party:com_google_http_client_google_http_client",
@@ -22,5 +21,6 @@ java_library(
         "//third_party:org_apache_commons_commons_lang3",
         "//third_party:org_slf4j_slf4j_api",
         "@aggregation//:com_google_guava_guava",
+        "@tink_backend//src/libraries/account_identifier",
     ],
 )

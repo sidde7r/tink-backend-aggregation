@@ -16,7 +16,7 @@ import se.tink.backend.aggregation.agents.utils.remittanceinformation.Remittance
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationReader;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.enums.MarketCode;
@@ -178,9 +178,12 @@ public class BarclaysAgentWireMockTest {
                 .withCreditor(
                         new Creditor(
                                 AccountIdentifier.create(
-                                        AccountIdentifier.Type.SORT_CODE, DESTINATION_IDENTIFIER),
+                                        AccountIdentifierType.SORT_CODE, DESTINATION_IDENTIFIER),
                                 "Ritesh Tink"))
-                .withDebtor(new Debtor(AccountIdentifier.create(Type.SORT_CODE, SOURCE_IDENTIFIER)))
+                .withDebtor(
+                        new Debtor(
+                                AccountIdentifier.create(
+                                        AccountIdentifierType.SORT_CODE, SOURCE_IDENTIFIER)))
                 .withExactCurrencyAmount(amount)
                 .withExecutionDate(executionDate)
                 .withCurrency(currency)

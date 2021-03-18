@@ -50,7 +50,7 @@ import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.Storage;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.account.identifiers.formatters.DisplayAccountIdentifierFormatter;
 import se.tink.libraries.date.CountryDateHelper;
 import se.tink.libraries.payment.enums.PaymentStatus;
@@ -97,7 +97,7 @@ public class LansforsakringarPaymentExecutor implements PaymentExecutor, Fetchab
                                                 .format(DateTimeFormatter.ISO_DATE))
                         .orElse(null);
 
-        Type accountIdentifierType =
+        AccountIdentifierType accountIdentifierType =
                 paymentRequest.getPayment().getCreditor().getAccountIdentifierType();
 
         validateDebtorAccount(debtor, accountIdentifierType);
@@ -113,7 +113,8 @@ public class LansforsakringarPaymentExecutor implements PaymentExecutor, Fetchab
         }
     }
 
-    private void validateDebtorAccount(AccountEntity debtor, Type accountIdentifierType)
+    private void validateDebtorAccount(
+            AccountEntity debtor, AccountIdentifierType accountIdentifierType)
             throws DebtorValidationException {
         AccountNumbersResponse accountNumbers = apiClient.getAccountNumbers();
         accountNumbers.checkIfTransactionTypeIsAllowed(debtor.getBban(), accountIdentifierType);

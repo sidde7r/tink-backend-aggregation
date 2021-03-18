@@ -21,9 +21,9 @@ import java.util.function.Predicate;
 import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
 import se.tink.backend.aggregation.source_info.AccountSourceInfo;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.account.enums.AccountExclusion;
 import se.tink.libraries.account.enums.AccountFlag;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.account.identifiers.GiroIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.serialization.TypeReferences;
@@ -38,7 +38,8 @@ import se.tink.libraries.uuid.UUIDUtils;
 public class Account implements Cloneable {
     private static final Predicate<AccountIdentifier> FIND_GIRO_WITH_OCR =
             accountIdentifier -> {
-                if (accountIdentifier.is(Type.SE_BG) || accountIdentifier.is(Type.SE_PG)) {
+                if (accountIdentifier.is(AccountIdentifierType.SE_BG)
+                        || accountIdentifier.is(AccountIdentifierType.SE_PG)) {
                     Optional<String> ocr = accountIdentifier.to(GiroIdentifier.class).getOcr();
                     return ocr.isPresent();
                 }
@@ -369,21 +370,22 @@ public class Account implements Cloneable {
     }
 
     @JsonIgnore
-    public AccountIdentifier getPreferredIdentifier(Type destinationIdentifierType) {
+    public AccountIdentifier getPreferredIdentifier(
+            AccountIdentifierType destinationIdentifierType) {
         switch (destinationIdentifierType) {
             case SE:
             case SE_PG:
             case SE_BG:
             case SE_SHB_INTERNAL:
             case TINK:
-                return getIdentifier(Type.SE);
+                return getIdentifier(AccountIdentifierType.SE);
             case FI:
             case IBAN:
-                return getIdentifier(Type.IBAN);
+                return getIdentifier(AccountIdentifierType.IBAN);
             case BE:
-                return getIdentifier(Type.BE);
+                return getIdentifier(AccountIdentifierType.BE);
             case SEPA_EUR:
-                return getIdentifier(Type.SEPA_EUR);
+                return getIdentifier(AccountIdentifierType.SEPA_EUR);
         }
         return null;
     }
@@ -406,7 +408,7 @@ public class Account implements Cloneable {
     }
 
     @JsonIgnore
-    public AccountIdentifier getIdentifier(AccountIdentifier.Type type) {
+    public AccountIdentifier getIdentifier(AccountIdentifierType type) {
         if (this.identifiers == null) {
             return null;
         }
@@ -423,8 +425,7 @@ public class Account implements Cloneable {
     }
 
     @JsonIgnore
-    public <T extends AccountIdentifier> T getIdentifier(
-            AccountIdentifier.Type type, Class<T> cls) {
+    public <T extends AccountIdentifier> T getIdentifier(AccountIdentifierType type, Class<T> cls) {
         AccountIdentifier identifier = getIdentifier(type);
         if (identifier == null) {
             return null;
@@ -447,7 +448,7 @@ public class Account implements Cloneable {
     }
 
     public boolean definedBy(AccountIdentifier identifier) {
-        if (identifier.getType() == AccountIdentifier.Type.TINK) {
+        if (identifier.getType() == AccountIdentifierType.TINK) {
             return getId().equals(identifier.getIdentifier());
         }
 

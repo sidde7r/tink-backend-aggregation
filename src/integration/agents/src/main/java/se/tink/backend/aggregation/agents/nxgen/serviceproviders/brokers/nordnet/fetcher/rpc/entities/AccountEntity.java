@@ -19,6 +19,7 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.portfol
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
@@ -123,7 +124,7 @@ public class AccountEntity {
                                         .withAccountName(alias)
                                         .addIdentifier(
                                                 AccountIdentifier.create(
-                                                        AccountIdentifier.Type.SE,
+                                                        AccountIdentifierType.SE,
                                                         bankAccountNumber))
                                         .build())
                         .addHolderName(userFullName)

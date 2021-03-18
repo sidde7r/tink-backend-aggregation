@@ -16,7 +16,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.executor.payment.entities.AccountInfoEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.executor.payment.entities.AccountNumbersResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationFetcher;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 
 @AllArgsConstructor
 public class LansforsakringarTransferDestinationFetcher implements TransferDestinationFetcher {
@@ -55,12 +55,12 @@ public class LansforsakringarTransferDestinationFetcher implements TransferDesti
 
     public static List<TransferDestinationPattern> getDomesticTransferDestinations() {
         return Collections.singletonList(
-                TransferDestinationPattern.createForMultiMatchAll(Type.SE));
+                TransferDestinationPattern.createForMultiMatchAll(AccountIdentifierType.SE));
     }
 
     public static List<TransferDestinationPattern> getDomesticGirosTransferDestinations() {
         return Arrays.asList(
-                TransferDestinationPattern.createForMultiMatchAll(Type.SE_BG),
-                TransferDestinationPattern.createForMultiMatchAll(Type.SE_PG));
+                TransferDestinationPattern.createForMultiMatchAll(AccountIdentifierType.SE_BG),
+                TransferDestinationPattern.createForMultiMatchAll(AccountIdentifierType.SE_PG));
     }
 }

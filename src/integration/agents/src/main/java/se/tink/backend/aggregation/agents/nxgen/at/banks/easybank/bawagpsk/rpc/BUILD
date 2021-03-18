@@ -10,8 +10,8 @@ java_library(
         "//src/integration/amount",
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/lib",
-        "//src/libraries/account_identifier",
         "//third_party:org_apache_commons_commons_lang3",
         "//third_party:org_slf4j_slf4j_api",
+        "@tink_backend//src/libraries/account_identifier",
     ],
 )

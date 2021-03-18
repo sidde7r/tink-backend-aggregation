@@ -23,7 +23,7 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrum
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.portfolio.PortfolioModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.portfolio.PortfolioModule.PortfolioType;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
@@ -46,7 +46,9 @@ public class PensionDetailsResponse extends BaseResponse {
                                 .withUniqueIdentifier(identifier)
                                 .withAccountNumber(identifier)
                                 .withAccountName(pensionName)
-                                .addIdentifier(AccountIdentifier.create(Type.TINK, identifier))
+                                .addIdentifier(
+                                        AccountIdentifier.create(
+                                                AccountIdentifierType.TINK, identifier))
                                 .build())
                 .build();
     }
@@ -63,7 +65,9 @@ public class PensionDetailsResponse extends BaseResponse {
                                 .withUniqueIdentifier(identifer)
                                 .withAccountNumber(identifer)
                                 .withAccountName(pensionName)
-                                .addIdentifier(AccountIdentifier.create(Type.TINK, identifer))
+                                .addIdentifier(
+                                        AccountIdentifier.create(
+                                                AccountIdentifierType.TINK, identifer))
                                 .build())
                 .build();
     }

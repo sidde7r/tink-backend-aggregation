@@ -22,6 +22,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.fetcher.UkOpenBankingTransferDestinationFetcher;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.revolut.RevolutTransferDestinationAccountsProvider;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 
 public class RevolutTransferDestinationFetcherTest {
@@ -46,7 +47,7 @@ public class RevolutTransferDestinationFetcherTest {
         transferDestinationFetcher =
                 new UkOpenBankingTransferDestinationFetcher(
                         new RevolutTransferDestinationAccountsProvider(apiClient),
-                        AccountIdentifier.Type.IBAN,
+                        AccountIdentifierType.IBAN,
                         IbanIdentifier.class);
     }
 
@@ -55,7 +56,7 @@ public class RevolutTransferDestinationFetcherTest {
         mockedSourceAccount2 = mock(Account.class);
         when(mockedSourceAccount1.getBankId()).thenReturn("7a435413813242caba23a5dd59c193c5");
         AccountIdentifier account1Identifier =
-                AccountIdentifier.create(AccountIdentifier.Type.IBAN, "GB40BARC20038075285485");
+                AccountIdentifier.create(AccountIdentifierType.IBAN, "GB40BARC20038075285485");
         when(mockedSourceAccount1.getIdentifiers())
                 .thenReturn(ImmutableList.of(account1Identifier));
         when(mockedSourceAccount1.getIdentifier(any(), any())).thenReturn(account1Identifier);
@@ -63,7 +64,7 @@ public class RevolutTransferDestinationFetcherTest {
 
         when(mockedSourceAccount2.getBankId()).thenReturn("0e9bb36bb8bb4d158a0b6a9be3556be0");
         AccountIdentifier account2Identifier =
-                AccountIdentifier.create(AccountIdentifier.Type.IBAN, "GB71BARC20038054128742");
+                AccountIdentifier.create(AccountIdentifierType.IBAN, "GB71BARC20038054128742");
         when(mockedSourceAccount2.getIdentifiers())
                 .thenReturn(ImmutableList.of(account2Identifier));
         when(mockedSourceAccount2.getIdentifier(any(), any())).thenReturn(account2Identifier);

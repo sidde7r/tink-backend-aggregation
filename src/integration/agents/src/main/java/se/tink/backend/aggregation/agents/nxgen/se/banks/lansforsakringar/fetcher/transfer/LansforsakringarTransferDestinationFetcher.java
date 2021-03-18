@@ -11,8 +11,7 @@ import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.LansforsakringarApiClient;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationFetcher;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
-import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 
 public class LansforsakringarTransferDestinationFetcher implements TransferDestinationFetcher {
 
@@ -38,7 +37,7 @@ public class LansforsakringarTransferDestinationFetcher implements TransferDesti
                     .setDestinationAccounts(
                             apiClient.fetchSavedTransferDestinationAccounts().getAccounts())
                     .setTinkAccounts(accounts)
-                    .addMultiMatchPattern(AccountIdentifier.Type.SE, TransferDestinationPattern.ALL)
+                    .addMultiMatchPattern(AccountIdentifierType.SE, TransferDestinationPattern.ALL)
                     .build();
         } catch (HttpResponseException e) {
             return Collections.emptyMap();
@@ -52,8 +51,10 @@ public class LansforsakringarTransferDestinationFetcher implements TransferDesti
                     .setSourceAccounts(apiClient.fetchPaymentAccounts().getPaymentAccounts())
                     .setDestinationAccounts(apiClient.fetchSavedPaymentRecipients().getRecipients())
                     .setTinkAccounts(accounts)
-                    .addMultiMatchPattern(Type.SE_BG, TransferDestinationPattern.ALL)
-                    .addMultiMatchPattern(Type.SE_PG, TransferDestinationPattern.ALL)
+                    .addMultiMatchPattern(
+                            AccountIdentifierType.SE_BG, TransferDestinationPattern.ALL)
+                    .addMultiMatchPattern(
+                            AccountIdentifierType.SE_PG, TransferDestinationPattern.ALL)
                     .build();
         } catch (HttpResponseException e) {
             return Collections.emptyMap();

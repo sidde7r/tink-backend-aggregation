@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.executor.payment.enums.NordeaAccountType;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.account.identifiers.BankGiroIdentifier;
 import se.tink.libraries.account.identifiers.DanishIdentifier;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
@@ -39,7 +40,7 @@ public class AccountEntity {
         return value;
     }
 
-    private AccountIdentifier.Type toTinkAccountType() {
+    private AccountIdentifierType toTinkAccountType() {
         return NordeaAccountType.fromString(type).mapToTinkAccountType();
     }
 

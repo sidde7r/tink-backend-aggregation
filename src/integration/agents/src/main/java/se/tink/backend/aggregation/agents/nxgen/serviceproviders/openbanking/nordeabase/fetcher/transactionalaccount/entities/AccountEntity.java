@@ -20,6 +20,7 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdMo
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.account.identifiers.NDAPersonalNumberIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
@@ -132,7 +133,7 @@ public class AccountEntity {
 
     public Optional<TransactionalAccount> toTinkAccount() {
         AccountIdentifier identifier =
-                AccountIdentifier.create(AccountIdentifier.Type.IBAN, getIban());
+                AccountIdentifier.create(AccountIdentifierType.IBAN, getIban());
         return TransactionalAccount.nxBuilder()
                 .withTypeAndFlagsFrom(
                         NordeaBaseConstants.ACCOUNT_TYPE_MAPPER,
@@ -154,7 +155,7 @@ public class AccountEntity {
     @JsonIgnore
     public AccountIdentifier generalGetAccountIdentifier() {
         AccountIdentifier identifier = getAccountIdentifier();
-        if (identifier.is(AccountIdentifier.Type.SE_NDA_SSN)) {
+        if (identifier.is(AccountIdentifierType.SE_NDA_SSN)) {
             return identifier.to(NDAPersonalNumberIdentifier.class).toSwedishIdentifier();
         } else {
             return identifier;
@@ -165,12 +166,12 @@ public class AccountEntity {
     public AccountIdentifier getAccountIdentifier() {
         if (NordeaBaseConstants.TransactionalAccounts.PERSONAL_ACCOUNT.equalsIgnoreCase(product)) {
             AccountIdentifier ssnIdentifier =
-                    AccountIdentifier.create(AccountIdentifier.Type.SE_NDA_SSN, getBban());
+                    AccountIdentifier.create(AccountIdentifierType.SE_NDA_SSN, getBban());
             if (ssnIdentifier.isValid()) {
                 return ssnIdentifier;
             }
         }
-        return AccountIdentifier.create(AccountIdentifier.Type.SE, getBban());
+        return AccountIdentifier.create(AccountIdentifierType.SE, getBban());
     }
 
     public ExactCurrencyAmount getAvailableBalance() {

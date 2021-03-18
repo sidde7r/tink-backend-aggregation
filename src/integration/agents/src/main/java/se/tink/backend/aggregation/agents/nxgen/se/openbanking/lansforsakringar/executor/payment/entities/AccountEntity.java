@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 
@@ -20,10 +21,10 @@ public class AccountEntity implements TinkCreditorConstructor {
     private String currency;
 
     public Creditor toTinkCreditor() {
-        return new Creditor(AccountIdentifier.create(AccountIdentifier.Type.SE, bban));
+        return new Creditor(AccountIdentifier.create(AccountIdentifierType.SE, bban));
     }
 
     public Debtor toTinkDebtor() {
-        return new Debtor(AccountIdentifier.create(AccountIdentifier.Type.SE, bban));
+        return new Debtor(AccountIdentifier.create(AccountIdentifierType.SE, bban));
     }
 }

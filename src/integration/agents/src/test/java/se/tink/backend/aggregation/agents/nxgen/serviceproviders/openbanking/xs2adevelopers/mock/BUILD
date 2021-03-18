@@ -18,11 +18,11 @@ junit_test(
         "//src/integration/payment:rpc",
         "//src/integration/transfer:enums",
         "//src/integration/transfer:rpc",
-        "//src/libraries/account_identifier",
         "//third_party:com_github_tomakehurst_wiremock",
         "//third_party:com_google_inject_guice",
         "//third_party:org_mockito_mockito_core",
         "//third_party:pl_pragmatists_junitparams",
         "@aggregation//:com_google_guava_guava",
+        "@tink_backend//src/libraries/account_identifier",
     ],
 )

@@ -11,7 +11,7 @@ import org.iban4j.CountryCode;
 import org.iban4j.Iban;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
-import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
@@ -38,11 +38,11 @@ public class HandelsbankenAgentPaymentTest {
 
         for (int i = 0; i < numberOfMockedPayments; ++i) {
             Debtor debtor = mock(Debtor.class);
-            doReturn(AccountIdentifier.Type.IBAN).when(debtor).getAccountIdentifierType();
+            doReturn(AccountIdentifierType.IBAN).when(debtor).getAccountIdentifierType();
             doReturn(Iban.random(CountryCode.NL).toString()).when(debtor).getAccountNumber();
 
             Creditor creditor = mock(Creditor.class);
-            doReturn(AccountIdentifier.Type.IBAN).when(creditor).getAccountIdentifierType();
+            doReturn(AccountIdentifierType.IBAN).when(creditor).getAccountIdentifierType();
             doReturn(Iban.random(CountryCode.NL).toString()).when(creditor).getAccountNumber();
 
             ExactCurrencyAmount amount = ExactCurrencyAmount.inEUR(new Random().nextInt(50000));

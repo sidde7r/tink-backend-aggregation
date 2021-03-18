@@ -18,6 +18,6 @@ junit_test(
         "//src/integration/payment:rpc",
         "//src/integration/transfer:enums",
         "//src/integration/transfer:rpc",
-        "//src/libraries/account_identifier",
+        "@tink_backend//src/libraries/account_identifier",
     ],
 )

@@ -36,7 +36,6 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
         "//src/integration/payment:enums",
-        "//src/libraries/account_identifier",
         "//src/libraries/i18n",
         "//src/libraries/serialization",
         "//third_party:com_github_rholder_guava_retrying",
@@ -46,5 +45,6 @@ java_library(
         "//third_party:org_apache_httpcomponents_httpclient",
         "//third_party:org_assertj_assertj_core",
         "@aggregation//:com_google_guava_guava",
+        "@tink_backend//src/libraries/account_identifier",
     ],
 )

@@ -9,7 +9,7 @@ import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizatio
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.AgentWireMockPaymentTest;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.command.PaymentCommand;
 import se.tink.backend.aggregation.agents.utils.fixtures.WireMockTestFixtures.Properties;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.enums.MarketCode;
 import se.tink.libraries.payment.rpc.Payment;
 
@@ -29,7 +29,7 @@ public class SantanderPTAgentWireMockTest {
                         .marketCode(MarketCode.PT)
                         .currency("EUR")
                         .destinationIdentifier("PT50000201231234567890154")
-                        .accountIdentifierType(Type.IBAN)
+                        .accountIdentifierType(AccountIdentifierType.IBAN)
                         .remittanceInfoValue("PT Demo")
                         .build();
 

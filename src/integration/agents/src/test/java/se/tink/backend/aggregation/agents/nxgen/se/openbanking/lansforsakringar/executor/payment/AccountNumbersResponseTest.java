@@ -6,7 +6,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.exceptions.payment.DebtorValidationException;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.executor.payment.entities.AccountNumbersResponse;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 
 public class AccountNumbersResponseTest {
 
@@ -14,7 +14,7 @@ public class AccountNumbersResponseTest {
     public void testSuccess() throws DebtorValidationException {
         AccountNumbersResponse accountNumbersResponse =
                 AccountNumbersUtil.getAccountNumbersResponse("1234", "4321");
-        accountNumbersResponse.checkIfTransactionTypeIsAllowed("1234", Type.SE);
+        accountNumbersResponse.checkIfTransactionTypeIsAllowed("1234", AccountIdentifierType.SE);
     }
 
     @Test
@@ -26,7 +26,7 @@ public class AccountNumbersResponseTest {
                 catchThrowable(
                         () ->
                                 accountNumbersResponse.checkIfTransactionTypeIsAllowed(
-                                        "12345", Type.SE));
+                                        "12345", AccountIdentifierType.SE));
         Assertions.assertThat(thrown).isInstanceOf(DebtorValidationException.class);
         Assertions.assertThat(thrown).hasMessage(DebtorValidationException.DEFAULT_MESSAGE);
     }
@@ -40,7 +40,7 @@ public class AccountNumbersResponseTest {
                 catchThrowable(
                         () ->
                                 accountNumbersResponse.checkIfTransactionTypeIsAllowed(
-                                        "4321", Type.SE));
+                                        "4321", AccountIdentifierType.SE));
         Assertions.assertThat(thrown).isInstanceOf(DebtorValidationException.class);
         Assertions.assertThat(thrown).hasMessage(DebtorValidationException.DEFAULT_MESSAGE);
     }
@@ -54,7 +54,7 @@ public class AccountNumbersResponseTest {
                 catchThrowable(
                         () ->
                                 accountNumbersResponse.checkIfTransactionTypeIsAllowed(
-                                        "4321", Type.SE_BG));
+                                        "4321", AccountIdentifierType.SE_BG));
         Assertions.assertThat(thrown).isInstanceOf(DebtorValidationException.class);
         Assertions.assertThat(thrown).hasMessage(DebtorValidationException.DEFAULT_MESSAGE);
     }

@@ -19,7 +19,7 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrum
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.portfolio.PortfolioModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.portfolio.PortfolioModule.PortfolioType;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class InvestmentAccountBuilderTest {
@@ -29,7 +29,8 @@ public class InvestmentAccountBuilderTest {
                     .withUniqueIdentifier("1234")
                     .withAccountNumber("134246685684")
                     .withAccountName("Account")
-                    .addIdentifier(AccountIdentifier.create(Type.SE, "33009101010011"))
+                    .addIdentifier(
+                            AccountIdentifier.create(AccountIdentifierType.SE, "33009101010011"))
                     .build();
 
     private static final PortfolioModule PORTFOLIO_MODULE =
@@ -107,7 +108,7 @@ public class InvestmentAccountBuilderTest {
         assertEquals("Account", account.getName());
         assertEquals(1, account.getIdentifiers().size());
         assertEquals(
-                AccountIdentifier.create(Type.SE, "33009101010011"),
+                AccountIdentifier.create(AccountIdentifierType.SE, "33009101010011"),
                 account.getIdentifiers().get(0));
         assertEquals(
                 ExactCurrencyAmount.of(BigDecimal.valueOf(200), "SEK"), account.getExactBalance());
@@ -128,7 +129,7 @@ public class InvestmentAccountBuilderTest {
         assertEquals("Account", account.getName());
         assertEquals(1, account.getIdentifiers().size());
         assertEquals(
-                AccountIdentifier.create(Type.SE, "33009101010011"),
+                AccountIdentifier.create(AccountIdentifierType.SE, "33009101010011"),
                 account.getIdentifiers().get(0));
         assertEquals(
                 ExactCurrencyAmount.of(BigDecimal.valueOf(330), "SEK"), account.getExactBalance());
@@ -154,7 +155,7 @@ public class InvestmentAccountBuilderTest {
         assertEquals("Account", account.getName());
         assertEquals(1, account.getIdentifiers().size());
         assertEquals(
-                AccountIdentifier.create(Type.SE, "33009101010011"),
+                AccountIdentifier.create(AccountIdentifierType.SE, "33009101010011"),
                 account.getIdentifiers().get(0));
         assertEquals(
                 ExactCurrencyAmount.of(BigDecimal.valueOf(330), "SEK"), account.getExactBalance());
@@ -181,7 +182,7 @@ public class InvestmentAccountBuilderTest {
         assertEquals("Account", account.getName());
         assertEquals(1, account.getIdentifiers().size());
         assertEquals(
-                AccountIdentifier.create(Type.SE, "33009101010011"),
+                AccountIdentifier.create(AccountIdentifierType.SE, "33009101010011"),
                 account.getIdentifiers().get(0));
         assertEquals(
                 ExactCurrencyAmount.of(BigDecimal.valueOf(200), "SEK"), account.getExactBalance());
@@ -205,7 +206,7 @@ public class InvestmentAccountBuilderTest {
         assertEquals("Account", account.getName());
         assertEquals(1, account.getIdentifiers().size());
         assertEquals(
-                AccountIdentifier.create(Type.SE, "33009101010011"),
+                AccountIdentifier.create(AccountIdentifierType.SE, "33009101010011"),
                 account.getIdentifiers().get(0));
         assertEquals(
                 ExactCurrencyAmount.of(BigDecimal.valueOf(200), "SEK"), account.getExactBalance());
@@ -230,7 +231,7 @@ public class InvestmentAccountBuilderTest {
         assertEquals("Account", account.getName());
         assertEquals(1, account.getIdentifiers().size());
         assertEquals(
-                AccountIdentifier.create(Type.SE, "33009101010011"),
+                AccountIdentifier.create(AccountIdentifierType.SE, "33009101010011"),
                 account.getIdentifiers().get(0));
         assertEquals(
                 ExactCurrencyAmount.of(BigDecimal.valueOf(130), "SEK"), account.getExactBalance());
@@ -277,7 +278,7 @@ public class InvestmentAccountBuilderTest {
         assertEquals("Account", account.getName());
         assertEquals(1, account.getIdentifiers().size());
         assertEquals(
-                AccountIdentifier.create(Type.SE, "33009101010011"),
+                AccountIdentifier.create(AccountIdentifierType.SE, "33009101010011"),
                 account.getIdentifiers().get(0));
         assertEquals(
                 ExactCurrencyAmount.of(BigDecimal.valueOf(230), "SEK"), account.getExactBalance());

@@ -25,7 +25,6 @@ java_library(
         "//src/integration/payment:enums",
         "//src/integration/payment:rpc",
         "//src/integration/transfer:enums",
-        "//src/libraries/account_identifier",
         "//src/libraries/mapper",
         "//src/libraries/metrics:collection",
         "//src/libraries/serialization",
@@ -40,5 +39,6 @@ java_library(
         "//third_party:org_apache_httpcomponents_httpcore",
         "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
+        "@tink_backend//src/libraries/account_identifier",
     ],
 )

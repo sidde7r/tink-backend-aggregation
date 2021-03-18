@@ -47,7 +47,7 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.enums.PaymentStatus;
@@ -226,7 +226,7 @@ public class LaBanquePostalePaymentExecutorTest {
                 .isEqualTo("FR383390733324Z58PF2RSRNB11");
         Assertions.assertThat(
                         paymentResponse.getPayment().getCreditor().getAccountIdentifier().getType())
-                .isEqualTo(Type.IBAN);
+                .isEqualTo(AccountIdentifierType.IBAN);
         Assertions.assertThat(paymentResponse.getPayment().getDebtor()).isEqualTo(null);
 
         verify(sessionStorage).put(PAYMENT_AUTHORIZATION_URL, AUTHORIZATION_URL);

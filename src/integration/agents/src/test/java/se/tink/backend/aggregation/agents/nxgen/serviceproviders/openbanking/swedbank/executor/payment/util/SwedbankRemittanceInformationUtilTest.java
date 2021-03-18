@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.agents.exceptions.payment.ReferenceValidation
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.ReferenceType;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
@@ -39,7 +39,7 @@ public class SwedbankRemittanceInformationUtilTest {
 
         SwedbankRemittanceInformationUtil.of(
                 createPaymentRequest(
-                        Type.SE,
+                        AccountIdentifierType.SE,
                         remittanceInformation,
                         BANK1_SOURCE_ACCOUNT,
                         BANK1_DESTINATION_ACCOUNT));
@@ -54,7 +54,7 @@ public class SwedbankRemittanceInformationUtilTest {
 
         SwedbankRemittanceInformationUtil.of(
                 createPaymentRequest(
-                        Type.SE,
+                        AccountIdentifierType.SE,
                         remittanceInformation,
                         BANK1_SOURCE_ACCOUNT,
                         BANK2_DESTINATION_ACCOUNT));
@@ -70,7 +70,7 @@ public class SwedbankRemittanceInformationUtilTest {
         SwedbankRemittanceInformationUtil remittanceInformationUtil =
                 SwedbankRemittanceInformationUtil.of(
                         createPaymentRequest(
-                                Type.SE,
+                                AccountIdentifierType.SE,
                                 remittanceInformation,
                                 BANK1_SOURCE_ACCOUNT,
                                 BANK1_DESTINATION_ACCOUNT));
@@ -90,7 +90,7 @@ public class SwedbankRemittanceInformationUtilTest {
         SwedbankRemittanceInformationUtil remittanceInformationUtil =
                 SwedbankRemittanceInformationUtil.of(
                         createPaymentRequest(
-                                Type.SE,
+                                AccountIdentifierType.SE,
                                 remittanceInformation,
                                 BANK1_SOURCE_ACCOUNT,
                                 BANK2_DESTINATION_ACCOUNT));
@@ -109,7 +109,7 @@ public class SwedbankRemittanceInformationUtilTest {
         SwedbankRemittanceInformationUtil remittanceInformationUtil =
                 SwedbankRemittanceInformationUtil.of(
                         createPaymentRequest(
-                                Type.SE,
+                                AccountIdentifierType.SE,
                                 remittanceInformation,
                                 BANK1_SOURCE_ACCOUNT,
                                 BANK2_DESTINATION_ACCOUNT));
@@ -129,7 +129,7 @@ public class SwedbankRemittanceInformationUtilTest {
         SwedbankRemittanceInformationUtil remittanceInformationUtil =
                 SwedbankRemittanceInformationUtil.of(
                         createPaymentRequest(
-                                Type.SE_BG,
+                                AccountIdentifierType.SE_BG,
                                 remittanceInformation,
                                 BANK1_SOURCE_ACCOUNT,
                                 BANK2_DESTINATION_ACCOUNT));
@@ -152,7 +152,7 @@ public class SwedbankRemittanceInformationUtilTest {
         SwedbankRemittanceInformationUtil remittanceInformationUtil =
                 SwedbankRemittanceInformationUtil.of(
                         createPaymentRequest(
-                                Type.SE_BG,
+                                AccountIdentifierType.SE_BG,
                                 remittanceInformation,
                                 BANK1_SOURCE_ACCOUNT,
                                 BANK2_DESTINATION_ACCOUNT));
@@ -174,14 +174,14 @@ public class SwedbankRemittanceInformationUtilTest {
 
         SwedbankRemittanceInformationUtil.of(
                 createPaymentRequest(
-                        Type.SE,
+                        AccountIdentifierType.SE,
                         remittanceInformation,
                         BANK1_SOURCE_ACCOUNT,
                         BANK2_DESTINATION_ACCOUNT));
     }
 
     private PaymentRequest createPaymentRequest(
-            Type creditorType,
+            AccountIdentifierType creditorType,
             RemittanceInformation remittanceInformation,
             String sourceAccount,
             String destinationAccount) {
@@ -189,7 +189,7 @@ public class SwedbankRemittanceInformationUtilTest {
         Creditor creditor = mock(Creditor.class);
 
         AccountIdentifier sourceAccountIdentifier =
-                AccountIdentifier.create(Type.SE, sourceAccount);
+                AccountIdentifier.create(AccountIdentifierType.SE, sourceAccount);
 
         AccountIdentifier destinationAccountIdentifier =
                 AccountIdentifier.create(creditorType, destinationAccount);
@@ -201,7 +201,7 @@ public class SwedbankRemittanceInformationUtilTest {
         doReturn(destinationAccountIdentifier).when(creditor).getAccountIdentifier();
 
         Debtor debtor = mock(Debtor.class);
-        doReturn(Type.SE).when(debtor).getAccountIdentifierType();
+        doReturn(AccountIdentifierType.SE).when(debtor).getAccountIdentifierType();
         doReturn(sourceAccountIdentifier.getIdentifier()).when(debtor).getAccountNumber();
         doReturn(sourceAccountIdentifier).when(debtor).getAccountIdentifier();
 

@@ -12,7 +12,7 @@ import org.iban4j.Iban;
 import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
-import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
@@ -37,11 +37,11 @@ public class NordeaNoAgentPaymentTest {
 
         for (int i = 0; i < numberOfMockedPayments; ++i) {
             Creditor creditor = mock(Creditor.class);
-            doReturn(AccountIdentifier.Type.IBAN).when(creditor).getAccountIdentifierType();
+            doReturn(AccountIdentifierType.IBAN).when(creditor).getAccountIdentifierType();
             doReturn(Iban.random(CountryCode.NO).toString()).when(creditor).getAccountNumber();
 
             Debtor debtor = mock(Debtor.class);
-            doReturn(AccountIdentifier.Type.NO).when(debtor).getAccountIdentifierType();
+            doReturn(AccountIdentifierType.NO).when(debtor).getAccountIdentifierType();
             doReturn("60301132843").when(debtor).getAccountNumber();
 
             ExactCurrencyAmount amount = ExactCurrencyAmount.inNOK(new Random().nextInt(50000));

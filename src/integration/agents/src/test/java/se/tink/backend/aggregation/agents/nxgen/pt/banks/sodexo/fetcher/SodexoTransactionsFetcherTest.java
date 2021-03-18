@@ -23,7 +23,7 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -80,7 +80,8 @@ public class SodexoTransactionsFetcherTest {
                                 .withUniqueIdentifier("123")
                                 .withAccountNumber("456")
                                 .withAccountName("AccName")
-                                .addIdentifier(AccountIdentifier.create(Type.TINK, "420"))
+                                .addIdentifier(
+                                        AccountIdentifier.create(AccountIdentifierType.TINK, "420"))
                                 .build())
                 .setApiIdentifier("111")
                 .build()

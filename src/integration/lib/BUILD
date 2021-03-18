@@ -137,7 +137,6 @@ junit_test(
         "//src/integration/transfer:mocks",
         "//src/integration/transfer:rpc",
         "//src/integration/user:rpc",
-        "//src/libraries/account_identifier",
         "//src/libraries/date",
         "//src/libraries/giro_validation",
         "//src/libraries/i18n",
@@ -198,5 +197,6 @@ junit_test(
         "@aggregation//:joda_time_joda_time",
         "@tink_backend//src/aggregation-controller/api/src/main/java/se/tink/backend/aggregationcontroller/v1/rpc/accountholder",
         "@tink_backend//src/aggregation-controller/api/src/main/java/se/tink/backend/aggregationcontroller/v1/rpc/enums",
+        "@tink_backend//src/libraries/account_identifier",
     ],
 )

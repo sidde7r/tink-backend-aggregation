@@ -12,7 +12,7 @@ import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager.ArgumentManagerEnum;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.transfer.enums.RemittanceInformationType;
@@ -80,9 +80,10 @@ public class NordeaSEAgentTest {
     @Test
     public void testTransfer() throws Exception {
         Transfer transfer = new Transfer();
-        transfer.setSource(AccountIdentifier.create(Type.SE, manager.get(Arg.FROMACCOUNT)));
+        transfer.setSource(
+                AccountIdentifier.create(AccountIdentifierType.SE, manager.get(Arg.FROMACCOUNT)));
         transfer.setDestination(
-                AccountIdentifier.create(AccountIdentifier.Type.SE, manager.get(Arg.TOACCOUNT)));
+                AccountIdentifier.create(AccountIdentifierType.SE, manager.get(Arg.TOACCOUNT)));
         transfer.setAmount(ExactCurrencyAmount.inSEK(1d));
         transfer.setType(TransferType.BANK_TRANSFER);
         Calendar c = Calendar.getInstance();
@@ -104,9 +105,10 @@ public class NordeaSEAgentTest {
         exception.expectMessage(
                 TransferExecutionException.EndUserMessage.INVALID_MINIMUM_AMOUNT.getKey().get());
         Transfer transfer = new Transfer();
-        transfer.setSource(AccountIdentifier.create(Type.SE, manager.get(Arg.FROMACCOUNT)));
+        transfer.setSource(
+                AccountIdentifier.create(AccountIdentifierType.SE, manager.get(Arg.FROMACCOUNT)));
         transfer.setDestination(
-                AccountIdentifier.create(AccountIdentifier.Type.SE, manager.get(Arg.TOACCOUNT)));
+                AccountIdentifier.create(AccountIdentifierType.SE, manager.get(Arg.TOACCOUNT)));
         transfer.setAmount(ExactCurrencyAmount.inSEK(0.99d));
         transfer.setType(TransferType.BANK_TRANSFER);
         Calendar c = Calendar.getInstance();
@@ -125,9 +127,11 @@ public class NordeaSEAgentTest {
     @Test
     public void testTransferToNordeaSSN() throws Exception {
         Transfer transfer = new Transfer();
-        transfer.setSource(AccountIdentifier.create(Type.SE, manager.get(Arg.FROMACCOUNT)));
+        transfer.setSource(
+                AccountIdentifier.create(AccountIdentifierType.SE, manager.get(Arg.FROMACCOUNT)));
         transfer.setDestination(
-                AccountIdentifier.create(Type.SE_NDA_SSN, manager.get(Arg.TOACCOUNTSSN)));
+                AccountIdentifier.create(
+                        AccountIdentifierType.SE_NDA_SSN, manager.get(Arg.TOACCOUNTSSN)));
         transfer.setAmount(ExactCurrencyAmount.inSEK(1d));
         transfer.setType(TransferType.BANK_TRANSFER);
         Calendar c = Calendar.getInstance();
@@ -147,8 +151,9 @@ public class NordeaSEAgentTest {
     public void testPayment() throws Exception {
         Transfer transfer = new Transfer();
         transfer.setSource(
-                AccountIdentifier.create(AccountIdentifier.Type.SE, manager.get(Arg.FROMACCOUNT)));
-        transfer.setDestination(AccountIdentifier.create(Type.SE_BG, manager.get(Arg.BGACCOUNT)));
+                AccountIdentifier.create(AccountIdentifierType.SE, manager.get(Arg.FROMACCOUNT)));
+        transfer.setDestination(
+                AccountIdentifier.create(AccountIdentifierType.SE_BG, manager.get(Arg.BGACCOUNT)));
         transfer.setAmount(ExactCurrencyAmount.inSEK(2d));
         transfer.setType(TransferType.PAYMENT);
         Calendar c = Calendar.getInstance();

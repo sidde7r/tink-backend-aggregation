@@ -8,7 +8,7 @@ import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.rpc.Beneficiary;
 import se.tink.libraries.payment.rpc.CreateBeneficiary;
@@ -40,11 +40,11 @@ public class RedirectAuthenticationDemoAgentTest {
         Transfer transfer = new Transfer();
         transfer.setType(TransferType.BANK_TRANSFER);
         AccountIdentifier sourceAccount =
-                AccountIdentifier.create(AccountIdentifier.Type.SORT_CODE, SOURCE_IDENTIFIER);
+                AccountIdentifier.create(AccountIdentifierType.SORT_CODE, SOURCE_IDENTIFIER);
         sourceAccount.setName(SOURCE_ACCOUNT_NAME);
         transfer.setSource(sourceAccount);
         transfer.setDestination(
-                AccountIdentifier.create(AccountIdentifier.Type.SORT_CODE, DESTINATION_IDENTIFIER));
+                AccountIdentifier.create(AccountIdentifierType.SORT_CODE, DESTINATION_IDENTIFIER));
 
         transfer.setAmount(ExactCurrencyAmount.of(10.50, "GBP"));
         transfer.setSourceMessage("TRANSFER, test Tink!");
@@ -145,7 +145,7 @@ public class RedirectAuthenticationDemoAgentTest {
         Beneficiary beneficiary =
                 Beneficiary.builder()
                         .accountNumber(ITALY_DESTINATION_ACCOUNT)
-                        .accountNumberType(Type.IBAN)
+                        .accountNumberType(AccountIdentifierType.IBAN)
                         .name("Test")
                         .build();
         CreateBeneficiary createBeneficiary =
@@ -169,7 +169,7 @@ public class RedirectAuthenticationDemoAgentTest {
         Beneficiary beneficiary =
                 Beneficiary.builder()
                         .accountNumber(FRANCE_DESTINATION_ACCOUNT)
-                        .accountNumberType(Type.IBAN)
+                        .accountNumberType(AccountIdentifierType.IBAN)
                         .name("Test")
                         .build();
         CreateBeneficiary createBeneficiary =
@@ -203,10 +203,10 @@ public class RedirectAuthenticationDemoAgentTest {
             Creditor creditor =
                     new Creditor(
                             AccountIdentifier.create(
-                                    AccountIdentifier.Type.IBAN, DESTINATION_ACCOUNT));
+                                    AccountIdentifierType.IBAN, DESTINATION_ACCOUNT));
             Debtor debtor =
                     new Debtor(
-                            AccountIdentifier.create(AccountIdentifier.Type.IBAN, SOURCE_ACCOUNT));
+                            AccountIdentifier.create(AccountIdentifierType.IBAN, SOURCE_ACCOUNT));
 
             ExactCurrencyAmount amount = ExactCurrencyAmount.inEUR(1.0);
             LocalDate executionDate = LocalDate.now();

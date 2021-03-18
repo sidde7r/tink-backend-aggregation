@@ -28,7 +28,7 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.creditc
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @RequiredArgsConstructor
@@ -105,7 +105,7 @@ public class BoursoramaCreditCardFetcher
                                 .withAccountName(accountEntity.getName())
                                 .addIdentifier(
                                         AccountIdentifier.create(
-                                                Type.TINK,
+                                                AccountIdentifierType.TINK,
                                                 accountEntity
                                                         .getAccountId()
                                                         .getOther()

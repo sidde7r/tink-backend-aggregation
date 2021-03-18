@@ -48,6 +48,7 @@ import se.tink.backend.aggregation.nxgen.framework.validation.AisValidator;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
 import se.tink.connectivity.errors.ConnectivityError;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.account_data_cache.AccountData;
 import se.tink.libraries.account_data_cache.AccountDataCache;
 import se.tink.libraries.amount.ExactCurrencyAmount;
@@ -504,7 +505,7 @@ public final class NewAgentTestContext extends AgentContext {
                                     row.put(
                                             "type",
                                             Optional.ofNullable(transferDestination.getType())
-                                                    .map(AccountIdentifier.Type::name)
+                                                    .map(AccountIdentifierType::name)
                                                     .orElse(null));
                                     row.put("bank", transferDestination.getBank());
                                     row.put("name", transferDestination.getName());

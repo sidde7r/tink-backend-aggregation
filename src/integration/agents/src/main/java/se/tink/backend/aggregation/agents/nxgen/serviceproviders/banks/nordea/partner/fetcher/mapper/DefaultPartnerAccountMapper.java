@@ -15,7 +15,7 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @Slf4j
@@ -63,6 +63,7 @@ public class DefaultPartnerAccountMapper implements NordeaPartnerAccountMapper {
 
     @JsonIgnore
     protected List<AccountIdentifier> getAccountIdentifiers(AccountEntity account) {
-        return Collections.singletonList(AccountIdentifier.create(Type.IBAN, account.getIban()));
+        return Collections.singletonList(
+                AccountIdentifier.create(AccountIdentifierType.IBAN, account.getIban()));
     }
 }

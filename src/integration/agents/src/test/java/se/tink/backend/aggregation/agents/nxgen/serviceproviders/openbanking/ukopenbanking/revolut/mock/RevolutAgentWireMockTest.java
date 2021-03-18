@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.agents.utils.remittanceinformation.Remittance
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationReader;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.enums.MarketCode;
 import se.tink.libraries.payment.rpc.Creditor;
@@ -45,7 +46,7 @@ public class RevolutAgentWireMockTest {
                 .withCreditor(
                         new Creditor(
                                 AccountIdentifier.create(
-                                        AccountIdentifier.Type.SORT_CODE, "30654138867868"),
+                                        AccountIdentifierType.SORT_CODE, "30654138867868"),
                                 "Amnesty"))
                 .withExactCurrencyAmount(amount)
                 .withExecutionDate(executionDate)

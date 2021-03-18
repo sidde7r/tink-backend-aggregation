@@ -20,6 +20,7 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdMo
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument.InstrumentModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.portfolio.PortfolioModule;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.strings.StringUtils;
 
@@ -68,7 +69,7 @@ public class DetailedPensionEntity {
                                 .withAccountName(name)
                                 .addIdentifier(
                                         AccountIdentifier.create(
-                                                AccountIdentifier.Type.SE, fullyFormattedNumber))
+                                                AccountIdentifierType.SE, fullyFormattedNumber))
                                 .build())
                 .build();
     }

@@ -19,9 +19,9 @@ junit_test(
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/configuration",
         "//src/integration/models",
         "//src/integration/payment:rpc",
-        "//src/libraries/account_identifier",
         "//src/libraries/serialization",
         "//third_party:org_mockito_mockito_core",
         "@aggregation//:com_google_guava_guava",
+        "@tink_backend//src/libraries/account_identifier",
     ],
 )

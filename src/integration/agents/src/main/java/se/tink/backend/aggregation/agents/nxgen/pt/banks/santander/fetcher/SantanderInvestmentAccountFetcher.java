@@ -16,7 +16,7 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdMo
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.portfolio.PortfolioModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.portfolio.PortfolioModule.PortfolioType;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class SantanderInvestmentAccountFetcher implements AccountFetcher<InvestmentAccount> {
@@ -84,7 +84,8 @@ public class SantanderInvestmentAccountFetcher implements AccountFetcher<Investm
                                 .withAccountName(account.get(Investment.PRODUCT_NAME).trim())
                                 .addIdentifier(
                                         AccountIdentifier.create(
-                                                Type.IBAN, account.get(Investment.ACCOUNT_NUMBER)))
+                                                AccountIdentifierType.IBAN,
+                                                account.get(Investment.ACCOUNT_NUMBER)))
                                 .build())
                 .build();
     }

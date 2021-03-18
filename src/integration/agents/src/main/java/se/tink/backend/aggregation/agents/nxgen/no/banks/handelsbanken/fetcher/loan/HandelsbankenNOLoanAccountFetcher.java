@@ -21,6 +21,7 @@ import se.tink.backend.aggregation.nxgen.core.account.loan.util.InterestRateConv
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.loan.LoanModule;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @Slf4j
@@ -75,7 +76,7 @@ public class HandelsbankenNOLoanAccountFetcher implements AccountFetcher<LoanAcc
                                 .withAccountName(loanEntity.getAccountDescription())
                                 .addIdentifier(
                                         AccountIdentifier.create(
-                                                AccountIdentifier.Type.NO, loanEntity.getId()))
+                                                AccountIdentifierType.NO, loanEntity.getId()))
                                 .build())
                 .build();
     }

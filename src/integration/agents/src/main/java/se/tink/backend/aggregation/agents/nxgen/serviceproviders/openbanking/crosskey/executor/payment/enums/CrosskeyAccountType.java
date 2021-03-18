@@ -3,8 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cr
 import com.google.common.collect.EnumHashBiMap;
 import java.util.Arrays;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants.ExceptionMessagePatterns;
-import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 
 public enum CrosskeyAccountType {
     IBAN("UK.OBIE.IBAN"),
@@ -12,11 +11,11 @@ public enum CrosskeyAccountType {
     PAYM("UK.OBIE.Paym"),
     SORT("UK.OBIE.SortCodeAccountNumber");
 
-    private static final EnumHashBiMap<Type, CrosskeyAccountType>
-            tinkToCrosskeyAccountTypeBiMapper = EnumHashBiMap.create(AccountIdentifier.Type.class);
+    private static final EnumHashBiMap<AccountIdentifierType, CrosskeyAccountType>
+            tinkToCrosskeyAccountTypeBiMapper = EnumHashBiMap.create(AccountIdentifierType.class);
 
     static {
-        tinkToCrosskeyAccountTypeBiMapper.put(AccountIdentifier.Type.IBAN, IBAN);
+        tinkToCrosskeyAccountTypeBiMapper.put(AccountIdentifierType.IBAN, IBAN);
     }
 
     private String statusText;

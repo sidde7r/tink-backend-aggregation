@@ -15,7 +15,7 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrum
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.portfolio.PortfolioModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.portfolio.PortfolioModule.PortfolioType;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @JsonObject
@@ -86,7 +86,9 @@ public class FundHoldingsUser {
                                 .withUniqueIdentifier(getIdentifier())
                                 .withAccountNumber(getIdentifier())
                                 .withAccountName(custodyAccount.getTitle())
-                                .addIdentifier(AccountIdentifier.create(Type.TINK, getIdentifier()))
+                                .addIdentifier(
+                                        AccountIdentifier.create(
+                                                AccountIdentifierType.TINK, getIdentifier()))
                                 .build())
                 .putPayload(
                         AccountPayloadKeys.FUND_ACCOUNT_NUMBER,

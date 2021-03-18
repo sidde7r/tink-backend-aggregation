@@ -19,7 +19,6 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
         "//src/integration/payment:enums",
         "//src/integration/payment:rpc",
-        "//src/libraries/account_identifier",
         "//src/libraries/serialization",
         "//third_party:com_github_rholder_guava_retrying",
         "//third_party:com_google_inject_guice",
@@ -28,5 +27,6 @@ java_library(
         "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
         "@aggregation//:com_google_guava_guava",
         "@tink_backend//src/aggregation-controller/api/src/main/java/se/tink/backend/aggregationcontroller/v1/rpc/enums",
+        "@tink_backend//src/libraries/account_identifier",
     ],
 )

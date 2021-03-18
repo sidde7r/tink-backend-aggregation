@@ -70,6 +70,7 @@ import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPa
 import se.tink.backend.aggregation.nxgen.http.filter.factory.ClientFilterFactory;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.credentials.demo.DemoCredentials;
 import se.tink.libraries.credentials.demo.DemoCredentials.DemoUserFeature;
 import se.tink.libraries.credentials.service.CredentialsRequest;
@@ -668,13 +669,13 @@ public final class DemoAgent extends AbstractAgent
             List<TransferDestinationPattern> destinations = new ArrayList<>();
             destinations.add(
                     TransferDestinationPattern.createForMultiMatch(
-                            AccountIdentifier.Type.SE, TransferDestinationPattern.ALL));
+                            AccountIdentifierType.SE, TransferDestinationPattern.ALL));
             destinations.add(
                     TransferDestinationPattern.createForMultiMatch(
-                            AccountIdentifier.Type.SE_BG, TransferDestinationPattern.ALL));
+                            AccountIdentifierType.SE_BG, TransferDestinationPattern.ALL));
             destinations.add(
                     TransferDestinationPattern.createForMultiMatch(
-                            AccountIdentifier.Type.SE_PG, TransferDestinationPattern.ALL));
+                            AccountIdentifierType.SE_PG, TransferDestinationPattern.ALL));
             transferDestinations.put(account, destinations);
         }
         return new FetchTransferDestinationsResponse(transferDestinations);

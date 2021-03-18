@@ -30,7 +30,7 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class AccountResponse extends HtmlResponse {
@@ -60,7 +60,8 @@ public class AccountResponse extends HtmlResponse {
                                 "//dt[text()='Cuenta' or text()='Compte']/following-sibling::dd",
                                 String.class)
                         .replaceAll("[\\s\\u202F\\u00A0]", "");
-        AccountIdentifier identifier = AccountIdentifier.create(Type.IBAN, ibanString);
+        AccountIdentifier identifier =
+                AccountIdentifier.create(AccountIdentifierType.IBAN, ibanString);
         identifier.setName(getAccountName());
         if (!identifier.isValid()) {
             throw new IllegalStateException("Found invalid account IBAN.");

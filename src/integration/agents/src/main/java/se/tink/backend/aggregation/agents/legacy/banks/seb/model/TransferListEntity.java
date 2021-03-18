@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.text.ParseException;
 import java.util.Date;
-import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.date.DateUtils;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
@@ -42,7 +42,7 @@ public abstract class TransferListEntity {
     public abstract String getTransferDateString();
 
     @JsonIgnore
-    public abstract AccountIdentifier.Type getDestinationType();
+    public abstract AccountIdentifierType getDestinationType();
 
     @JsonIgnore
     public Date getTransferDate() throws ParseException {

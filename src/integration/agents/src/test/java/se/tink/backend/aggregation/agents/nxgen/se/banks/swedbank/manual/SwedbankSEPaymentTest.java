@@ -12,7 +12,7 @@ import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager.SsnArgumentEnum;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager.ToAccountFromAccountArgumentEnum;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
@@ -50,10 +50,11 @@ public class SwedbankSEPaymentTest {
         Transfer transfer = new Transfer();
         transfer.setSource(
                 AccountIdentifier.create(
-                        Type.SE, toFromManager.get(ToAccountFromAccountArgumentEnum.FROM_ACCOUNT)));
+                        AccountIdentifierType.SE,
+                        toFromManager.get(ToAccountFromAccountArgumentEnum.FROM_ACCOUNT)));
         transfer.setDestination(
                 AccountIdentifier.create(
-                        AccountIdentifier.Type.SE,
+                        AccountIdentifierType.SE,
                         toFromManager.get(ToAccountFromAccountArgumentEnum.TO_ACCOUNT)));
         transfer.setAmount(ExactCurrencyAmount.inSEK(1d));
         transfer.setType(TransferType.BANK_TRANSFER);
@@ -70,11 +71,11 @@ public class SwedbankSEPaymentTest {
         Transfer transfer = new Transfer();
         transfer.setSource(
                 AccountIdentifier.create(
-                        AccountIdentifier.Type.SE,
+                        AccountIdentifierType.SE,
                         toFromManager.get(ToAccountFromAccountArgumentEnum.FROM_ACCOUNT)));
         transfer.setDestination(
                 AccountIdentifier.create(
-                        Type.SE_BG,
+                        AccountIdentifierType.SE_BG,
                         toFromManager.get(ToAccountFromAccountArgumentEnum.TO_ACCOUNT)));
         transfer.setAmount(ExactCurrencyAmount.inSEK(1d));
         transfer.setType(TransferType.PAYMENT);

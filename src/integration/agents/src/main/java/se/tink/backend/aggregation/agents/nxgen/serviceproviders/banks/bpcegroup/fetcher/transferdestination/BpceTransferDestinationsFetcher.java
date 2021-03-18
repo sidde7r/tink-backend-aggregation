@@ -18,8 +18,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bpcegroup
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bpcegroup.apiclient.dto.transferdestination.TransferCreditorIdentityDto;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.transfer.entity.BeneficiaryEntity;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationFetcher;
-import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 
 @RequiredArgsConstructor
@@ -45,7 +44,7 @@ public class BpceTransferDestinationsFetcher implements TransferDestinationFetch
                 .setSourceAccounts(ownAccountList)
                 .setDestinationAccounts(destinationAccountList)
                 .setTinkAccounts(accounts)
-                .matchDestinationAccountsOn(AccountIdentifier.Type.IBAN, IbanIdentifier.class)
+                .matchDestinationAccountsOn(AccountIdentifierType.IBAN, IbanIdentifier.class)
                 .build();
     }
 
@@ -129,6 +128,6 @@ public class BpceTransferDestinationsFetcher implements TransferDestinationFetch
     private static BeneficiaryEntity convertAccountToBeneficiaryEntity(
             Account account, String bankLabel) {
         return new BeneficiaryEntity(
-                account.getIdentifier(Type.IBAN), bankLabel, account.getName());
+                account.getIdentifier(AccountIdentifierType.IBAN), bankLabel, account.getName());
     }
 }

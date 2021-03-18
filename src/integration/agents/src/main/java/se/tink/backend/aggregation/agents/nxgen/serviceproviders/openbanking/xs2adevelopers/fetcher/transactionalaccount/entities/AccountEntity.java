@@ -16,7 +16,7 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.creditc
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 
 @JsonObject
 public class AccountEntity {
@@ -56,7 +56,8 @@ public class AccountEntity {
                                 .withUniqueIdentifier(getAccountNumber())
                                 .withAccountNumber(getAccountNumber())
                                 .withAccountName(getAccountName())
-                                .addIdentifier(AccountIdentifier.create(Type.IBAN, iban))
+                                .addIdentifier(
+                                        AccountIdentifier.create(AccountIdentifierType.IBAN, iban))
                                 .build())
                 .addHolderName(ownerName)
                 .setApiIdentifier(resourceId)
@@ -96,7 +97,8 @@ public class AccountEntity {
                                 .withAccountName(getAccountName())
                                 .addIdentifier(
                                         AccountIdentifier.create(
-                                                Type.PAYMENT_CARD_NUMBER, maskedPan))
+                                                AccountIdentifierType.PAYMENT_CARD_NUMBER,
+                                                maskedPan))
                                 .build())
                 .setApiIdentifier(resourceId)
                 .addHolderName(ownerName)

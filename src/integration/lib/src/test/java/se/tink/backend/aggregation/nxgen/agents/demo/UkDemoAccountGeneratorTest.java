@@ -6,6 +6,7 @@ import org.junit.Test;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoSavingsAccount;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoTransactionAccount;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.account.identifiers.SortCodeIdentifier;
 
 public class UkDemoAccountGeneratorTest {
@@ -38,7 +39,7 @@ public class UkDemoAccountGeneratorTest {
         SortCodeIdentifier expectedRecipientAccount = new SortCodeIdentifier("21835371527841");
         AccountIdentifier expectedIdentifier =
                 AccountIdentifier.create(
-                        AccountIdentifier.Type.SORT_CODE, expectedRecipientAccount.toString());
+                        AccountIdentifierType.SORT_CODE, expectedRecipientAccount.toString());
         Assert.assertEquals("Checking Account Tink", transactionAccount.getAccountName());
         Assert.assertTrue(transactionAccount.getIdentifiers().contains(expectedIdentifier));
 
