@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 @Builder
-public class DecoupledAuthorizationRequest {
+public class DecoupledAuthRequest {
     private String clientId;
 
     // Allows requesting a language for the text presented to the end user. This is a request for a

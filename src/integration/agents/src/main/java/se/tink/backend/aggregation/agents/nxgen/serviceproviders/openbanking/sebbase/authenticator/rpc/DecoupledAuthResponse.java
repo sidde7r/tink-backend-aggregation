@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 @Getter
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
-public class DecoupledAuthorizationResponse {
+public class DecoupledAuthResponse {
     private String authReqId;
     private String autoStartToken;
     private String hintCode;

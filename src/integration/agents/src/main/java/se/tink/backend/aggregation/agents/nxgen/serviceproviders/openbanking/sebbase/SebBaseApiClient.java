@@ -12,8 +12,8 @@ import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebCommonConstants.HttpClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebCommonConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.AuthorizeResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.DecoupledAuthorizationRequest;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.DecoupledAuthorizationResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.DecoupledAuthRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.DecoupledAuthResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.ErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.RefreshRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.TokenRequest;
@@ -56,18 +56,21 @@ public abstract class SebBaseApiClient {
         this.configuration = configuration;
     }
 
-    public DecoupledAuthorizationResponse startDecoupledAuthorization(
-            DecoupledAuthorizationRequest authorizationRequest) {
+    public DecoupledAuthResponse startDecoupledAuthorization(
+            DecoupledAuthRequest authorizationRequest) {
         return client.request(Urls.DECOUPLED_AUTHORIZATION)
                 .accept(MediaType.APPLICATION_JSON_TYPE)
                 .body(authorizationRequest, MediaType.APPLICATION_JSON_TYPE)
-                .post(DecoupledAuthorizationResponse.class);
+                .post(DecoupledAuthResponse.class);
     }
 
-    public DecoupledAuthorizationResponse getDecoupledAuthStatus(String authRequestId) {
-        return client.request(Urls.DECOUPLED_AUTHORIZATION)
+    public DecoupledAuthResponse getDecoupledAuthStatus(String authRequestId) {
+        return client.request(
+                        Urls.DECOUPLED_AUTHORIZATION
+                                .concat(URL.URL_SEPARATOR)
+                                .concat(authRequestId))
                 .accept(MediaType.APPLICATION_JSON_TYPE)
-                .get(DecoupledAuthorizationResponse.class);
+                .get(DecoupledAuthResponse.class);
     }
 
     public abstract RequestBuilder getAuthorizeUrl();

@@ -41,6 +41,8 @@ public class SebCommonConstants {
         public static final String CANCELLED = "cancelled";
         public static final String START_FAILED = "start_failed";
         public static final String UNKNOWN_BANK_ID = "SEB_UNKNOWN_BANKID";
+        public static final String REQUIRES_EXTRA_VERIFICATION =
+                "BANKID_REQUIRES_EXTRA_VERIFICATION";
     }
 
     public static class QueryKeys {

@@ -17,8 +17,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.seb
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebCommonConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.AuthorizeRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.AuthorizeResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.DecoupledAuthorizationRequest;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.DecoupledAuthorizationResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.DecoupledAuthRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.DecoupledAuthResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.RefreshRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.TokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.configuration.SebConfiguration;
@@ -52,20 +52,18 @@ public class SebDecoupledAuthenticator implements BankIdAuthenticator<String> {
         String authRequestId =
                 apiClient
                         .startDecoupledAuthorization(
-                                DecoupledAuthorizationRequest.builder()
+                                DecoupledAuthRequest.builder()
                                         .clientId(configuration.getClientId())
                                         .build())
                         .getAuthReqId();
-        autoStartToken =
-                apiClient.getDecoupledAuthStatus(authRequestId).getAutoStartToken();
+        autoStartToken = apiClient.getDecoupledAuthStatus(authRequestId).getAutoStartToken();
         return authRequestId;
     }
 
     @Override
     public BankIdStatus collect(String authRequestId)
             throws AuthenticationException, AuthorizationException {
-        DecoupledAuthorizationResponse authorizationResponse =
-                apiClient.getDecoupledAuthStatus(authRequestId);
+        DecoupledAuthResponse response = apiClient.getDecoupledAuthStatus(authRequestId);
 
         switch (response.getStatus().toLowerCase()) {
             case PollResponses.COMPLETE:
