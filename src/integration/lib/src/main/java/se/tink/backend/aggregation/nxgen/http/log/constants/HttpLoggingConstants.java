@@ -78,5 +78,6 @@ public final class HttpLoggingConstants {
                     "x-ratelimit-remaining",
                     "x-request-id",
                     "x-response-id",
-                    "x-xss-protection");
+                    "x-xss-protection",
+                    "x-servicerequestid");
 }
