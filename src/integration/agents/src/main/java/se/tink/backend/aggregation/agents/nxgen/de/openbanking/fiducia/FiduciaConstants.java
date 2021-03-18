@@ -109,9 +109,9 @@ public final class FiduciaConstants {
         public static final LocalizableKey UNAVAILABLE_ACCOUNT_MESSAGE =
                 new LocalizableKey(
                         "There are no accounts available for access. Please contact your bank.");
-        public static final LocalizableKey BLOCKED_TAN_MESSAGE =
+        public static final LocalizableKey BLOCKED_ACCESS_MESSAGE =
                 new LocalizableKey("Online access blocked. Please contact your bank.");
-        public static final LocalizableKey PIN_CHANGE_MESSAGE =
+        public static final LocalizableKey BLOCKED_TAN_MESSAGE =
                 new LocalizableKey("Sm@rt-TAN plus blocked. Please contact your bank.");
         public static final LocalizableKey BANK_NO_LONGER_AVAILABLE_MESSAGE =
                 new LocalizableKey("Bank is no longer available.");
