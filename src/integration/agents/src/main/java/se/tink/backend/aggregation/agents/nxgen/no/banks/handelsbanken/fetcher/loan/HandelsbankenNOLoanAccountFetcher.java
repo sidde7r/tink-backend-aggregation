@@ -17,6 +17,7 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.fetcher.t
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
+import se.tink.backend.aggregation.nxgen.core.account.loan.util.InterestRateConverter;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.loan.LoanModule;
 import se.tink.libraries.account.AccountIdentifier;
@@ -56,7 +57,9 @@ public class HandelsbankenNOLoanAccountFetcher implements AccountFetcher<LoanAcc
                                 .withBalance(
                                         ExactCurrencyAmount.of(
                                                 loanEntity.getBalance(), NOK_CURRENCY_CODE))
-                                .withInterestRate(loanDetailsResponse.getNominalInterestRate())
+                                .withInterestRate(
+                                        InterestRateConverter.toDecimalValue(
+                                                loanDetailsResponse.getNominalInterestRate(), 6))
                                 .setMonthlyAmortization(
                                         ExactCurrencyAmount.of(
                                                 getInstalment(loanDetailsResponse),

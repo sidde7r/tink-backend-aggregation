@@ -32,7 +32,7 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 public class HandelsbankenNOLoanAccountFetcherTest {
 
     private static final BigDecimal BALANCE = BigDecimal.valueOf(1.00);
-    private static final double INTEREST_RATE = 2.02;
+    private static final double INTEREST_RATE = 0.0202;
     private static final BigDecimal INSTALMENT = BigDecimal.valueOf(11.11);
     private static final long INITIAL_BALANCE = 4234234;
     private static final String ID = "8923454567";
@@ -389,7 +389,7 @@ public class HandelsbankenNOLoanAccountFetcherTest {
         detailsResponse.setId(ID);
         detailsResponse.setOriginalLoanAmount(
                 HandelsbankenNOLoanAccountFetcherTest.INITIAL_BALANCE);
-        detailsResponse.setNominalInterestRate(HandelsbankenNOLoanAccountFetcherTest.INTEREST_RATE);
+        detailsResponse.setNominalInterestRate(2.02);
         detailsResponse.setPaymentDetail(paymentDetails);
         return detailsResponse;
     }
