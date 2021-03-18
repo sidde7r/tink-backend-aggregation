@@ -407,6 +407,7 @@ public class AgentWorkerOperationFactory {
                         context,
                         new CredentialsCrypto(
                                 cacheClient, controllerWrapper, cryptoWrapper, metricRegistry)));
+        commands.add(new DebugSpecialCharactersWorkerCommand(context, "after decrypt"));
         commands.add(
                 new MigrateCredentialsAndAccountsWorkerCommand(
                         context.getRequest(), controllerWrapper, clientInfo));
@@ -1084,7 +1085,7 @@ public class AgentWorkerOperationFactory {
         // acquire lock to avoid encryption/decryption race conditions
         commands.add(
                 new LockAgentWorkerCommand(context, operation, interProcessSemaphoreMutexFactory));
-        commands.add(new DebugSpecialCharactersWorkerCommand(context));
+        commands.add(new DebugSpecialCharactersWorkerCommand(context, "before encrypt"));
         commands.add(new EncryptCredentialsWorkerCommand(context, false, credentialsCrypto));
 
         return new AgentWorkerOperation(
