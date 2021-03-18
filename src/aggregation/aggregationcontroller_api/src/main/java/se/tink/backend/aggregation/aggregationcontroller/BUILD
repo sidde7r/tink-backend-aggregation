@@ -33,5 +33,6 @@ java_library(
         "@tink_backend//src/aggregation-controller/api/src/main/java/se/tink/backend/aggregationcontroller/v1/rpc/credentialsservice",
         "@tink_backend//src/libraries/metrics/core/src/main/java/se/tink/libraries/metrics/core",
         "@tink_backend//src/libraries/metrics/core/src/main/java/se/tink/libraries/metrics/registry",
+        "@tink_backend//src/libraries/tracing/jersey",
     ],
 )

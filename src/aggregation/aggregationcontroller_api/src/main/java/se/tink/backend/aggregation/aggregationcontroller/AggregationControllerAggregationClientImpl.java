@@ -48,6 +48,7 @@ import se.tink.libraries.jersey.utils.JerseyUtils;
 import se.tink.libraries.metrics.core.MetricId;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 import se.tink.libraries.signableoperation.rpc.SignableOperation;
+import se.tink.libraries.tracing.jersey.filter.ClientTracingFilter;
 
 public class AggregationControllerAggregationClientImpl
         implements AggregationControllerAggregationClient {
@@ -91,6 +92,7 @@ public class AggregationControllerAggregationClientImpl
                         hostConfiguration.isDisablerequestcompression(),
                         this.config);
         client.addFilter(new ClientLoggingFilter());
+        client.addFilter(new ClientTracingFilter());
 
         JerseyUtils.registerAPIAccessToken(client, hostConfiguration.getApiToken());
 

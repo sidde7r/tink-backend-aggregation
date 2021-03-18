@@ -59,6 +59,7 @@ java_library(
         "@tink_backend//src/libraries/uuid",
         "@tink_backend//src/libraries/payments_validations",
         "@tink_backend//src/libraries/dropwizard_lifecycle",
+        "@tink_backend//src/libraries/tracing",
 
         # JSR305 (javax.annotations)
         "//third_party:com_google_code_findbugs_jsr305",
