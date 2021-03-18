@@ -12,6 +12,7 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.fetcher.loan.ent
 import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.fetcher.loan.rpc.LoanDetailsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
+import se.tink.backend.aggregation.nxgen.core.account.loan.util.InterestRateConverter;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.loan.LoanModule;
 import se.tink.libraries.account.identifiers.NorwegianIdentifier;
@@ -48,7 +49,9 @@ public class LoanFetcher implements AccountFetcher<LoanAccount> {
         return LoanModule.builder()
                 .withType(loanDetails.getTinkLoanType())
                 .withBalance(getBalance(loanDetails))
-                .withInterestRate(loanDetails.getInterest().getRate())
+                .withInterestRate(
+                        InterestRateConverter.toDecimalValue(
+                                loanDetails.getInterest().getRate(), 6))
                 .setAmortized(getPaid(loanDetails))
                 .setInitialBalance(getInitialBalance(loanDetails))
                 .setApplicants(applicants)
