@@ -14,7 +14,7 @@ public abstract class LansforsakringarConstants {
     public static final int DAYS_TO_FETCH_BG = 89;
     public static final int MAX_NUM_RETRIES = 3;
     public static final int RETRY_SLEEP_MILLIS_SECONDS = 2000;
-    public static final int TIME_OUT_MILLIS = 1500;
+    public static final int TIME_OUT_MILLIS = 1800;
 
     public static final TypeMapper<PaymentStatus> PAYMENT_STATUS_MAPPER =
             TypeMapper.<PaymentStatus>builder()
