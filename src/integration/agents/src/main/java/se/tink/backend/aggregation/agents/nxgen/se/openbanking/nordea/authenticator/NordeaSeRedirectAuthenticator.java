@@ -1,16 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.authenticator;
 
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.NordeaSeApiClient;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.NordeaSeConstants.BodyValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.authenticator.NordeaBaseAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.authenticator.rpc.AuthorizeRequest.AuthorizeRequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
-public class NordeaSeAuthenticator extends NordeaBaseAuthenticator {
+public class NordeaSeRedirectAuthenticator extends NordeaBaseAuthenticator {
 
-    private static final String COUNTRY = "SE";
-    private static final String AUTHENTICATION_METHOD = "BANKID_SE";
-
-    public NordeaSeAuthenticator(NordeaSeApiClient apiClient) {
+    public NordeaSeRedirectAuthenticator(NordeaSeApiClient apiClient) {
         super(apiClient);
     }
 
@@ -18,8 +16,8 @@ public class NordeaSeAuthenticator extends NordeaBaseAuthenticator {
     public URL buildAuthorizeUrl(String state) {
         return apiClient.getAuthorizeUrl(
                 new AuthorizeRequestBuilder()
-                        .withCountry(COUNTRY)
+                        .withCountry(BodyValues.COUNTRY)
                         .withState(state)
-                        .withAuthenticationMethod(AUTHENTICATION_METHOD));
+                        .withAuthenticationMethod(BodyValues.AUTHENTICATION_METHOD));
     }
 }
