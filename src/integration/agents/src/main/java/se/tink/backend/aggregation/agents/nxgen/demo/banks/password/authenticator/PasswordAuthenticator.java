@@ -41,7 +41,25 @@ public class PasswordAuthenticator implements TypedAuthenticator {
         String username = credentials.getField(Field.Key.USERNAME);
         String password = credentials.getField(Field.Key.PASSWORD);
 
-        log.info("Logging password {} for username {}", password, username);
+        int filedsSerializedHash = 0;
+        if (credentials.getFieldsSerialized() != null) {
+            filedsSerializedHash = credentials.getFieldsSerialized().hashCode();
+        }
+
+        log.info(
+                "Credentials Id {} fieldSerializedHash {}",
+                credentials.getId(),
+                filedsSerializedHash);
+        log.info(
+                "Credentials Id {} password {} for username {}",
+                credentials.getId(),
+                password,
+                username);
+        log.info(
+                "Credentials Id {} hash password {} for username {}",
+                credentials.getId(),
+                getHash(password),
+                getHash(username));
 
         if (Strings.isNullOrEmpty(username) || Strings.isNullOrEmpty(password)) {
             throw LoginError.INCORRECT_CREDENTIALS.exception();
@@ -51,5 +69,11 @@ public class PasswordAuthenticator implements TypedAuthenticator {
                 && TEST_CREDENTIALS.get(username).equals(password))) {
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
+    }
+
+    private int getHash(final String message) {
+        if (message == null) return 0;
+
+        return message.hashCode();
     }
 }

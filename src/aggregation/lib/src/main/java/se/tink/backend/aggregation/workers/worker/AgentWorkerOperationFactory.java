@@ -49,6 +49,7 @@ import se.tink.backend.aggregation.workers.commands.CreateAgentConfigurationCont
 import se.tink.backend.aggregation.workers.commands.CreateLogMaskerWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.DataFetchingRestrictionWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.DebugAgentWorkerCommand;
+import se.tink.backend.aggregation.workers.commands.DebugSpecialCharactersWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.DecryptCredentialsWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.EncryptCredentialsWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.ExpireSessionAgentWorkerCommand;
@@ -1083,6 +1084,7 @@ public class AgentWorkerOperationFactory {
         // acquire lock to avoid encryption/decryption race conditions
         commands.add(
                 new LockAgentWorkerCommand(context, operation, interProcessSemaphoreMutexFactory));
+        commands.add(new DebugSpecialCharactersWorkerCommand(context));
         commands.add(new EncryptCredentialsWorkerCommand(context, false, credentialsCrypto));
 
         return new AgentWorkerOperation(
