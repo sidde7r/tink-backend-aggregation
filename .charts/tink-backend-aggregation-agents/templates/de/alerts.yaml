@@ -793,13 +793,13 @@ spec:
     ### All login success rates - Temporary Errors - OB ###
     ############################################################
 
-    - alert: all_login_success_rates_below85_and_greater70_with_temporary_errors_and_attempt_limit_de_ob
+    - alert: all_login_success_rates_below80_and_greater65_with_temporary_errors_and_attempt_limit_de_ob
       expr: |
         (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="DE"}))
-                    / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.85
+                    / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.8
         and (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="DE"}))
-                    / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) >= 0.7
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 4
+                    / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) >= 0.65
+        and sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 10
       for: 5m
       labels:
         severity: urgent
@@ -808,17 +808,17 @@ spec:
       annotations:
         description: {{ .Values.kibanaLink }}
           {{ .Values.grafanaLink }}
-        summary: Login success rate for OB agents and all authentication types with temporary errors is between 70 - 85% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+        summary: Login success rate for OB agents and all authentication types with temporary errors is between 65 - 80% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
           the last 30 minutes.
         tags: {{ .Values.tags }}
 
-    - alert: all_login_success_rates_below70_and_greater60_with_temporary_errors_and_attempt_limit_de_ob
+    - alert: all_login_success_rates_below65_and_greater50_with_temporary_errors_and_attempt_limit_de_ob
       expr: |
         (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="DE"}))
-                    / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.7
+                    / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.65
         and (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="DE"}))
-                    / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) >= 0.6
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 4
+                    / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) >= 0.5
+        and sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 10
       for: 5m
       labels:
         severity: urgent
@@ -827,17 +827,17 @@ spec:
       annotations:
         description: {{ .Values.kibanaLink }}
           {{ .Values.grafanaLink }}
-        summary: Login success rate for OB agents and for all authentication types with temporary errors is between 60 - 70% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+        summary: Login success rate for OB agents and for all authentication types with temporary errors is between 50 - 65% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
           the last 30 minutes.
         tags: {{ .Values.tags }}
 
-    - alert: all_login_success_rates_below60_and_greater50_with_temporary_errors_and_attempt_limit_de_ob
+    - alert: all_login_success_rates_below50_and_greater40_with_temporary_errors_and_attempt_limit_de_ob
       expr: |
         (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="DE"}))
-                    / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.6
+                    / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.5
         and (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="DE"}))
-                    / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) >= 0.5
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 4
+                    / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) >= 0.4
+        and sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 10
       for: 5m
       labels:
         severity: urgent
@@ -846,15 +846,15 @@ spec:
       annotations:
         description: {{ .Values.kibanaLink }}
           {{ .Values.grafanaLink }}
-        summary: Login success rate for OB agents and for all authentication types with temporary errors is between 50 - 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+        summary: Login success rate for OB agents and for all authentication types with temporary errors is between 40 - 50% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
           the last 30 minutes.
         tags: {{ .Values.tags }}
 
-    - alert: all_login_success_rates_below50_with_temporary_errors_and_attempt_limit_de_ob
+    - alert: all_login_success_rates_below40_with_temporary_errors_and_attempt_limit_de_ob
       expr: |
         (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="DE"}))
-                    / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.5
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 4
+                    / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.4
+        and sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 10
       for: 5m
       labels:
         severity: urgent
@@ -863,7 +863,7 @@ spec:
       annotations:
         description: {{ .Values.kibanaLink }}
           {{ .Values.grafanaLink }}
-        summary: Login success rate for OB agents and for all authentication types with temporary errors is below 50% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+        summary: Login success rate for OB agents and for all authentication types with temporary errors is below 40% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
           the last 30 minutes.
         tags: {{ .Values.tags }}
 
@@ -878,7 +878,7 @@ spec:
                     / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.85
         and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="DE"}))
                     / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) >= 0.7
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 4
+        and sum by (provider) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 10
       for: 5m
       labels:
         severity: urgent
@@ -897,7 +897,7 @@ spec:
                     / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.7
         and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="DE"}))
                     / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) >= 0.6
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 4
+        and sum by (provider) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 10
       for: 5m
       labels:
         severity: urgent
@@ -916,7 +916,7 @@ spec:
                     / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.6
         and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="DE"}))
                     / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) >= 0.5
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 4
+        and sum by (provider) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 10
       for: 5m
       labels:
         severity: urgent
@@ -933,7 +933,7 @@ spec:
       expr: |
         (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="DE"}))
                     / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.5
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 4
+        and sum by (provider) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 10
       for: 5m
       labels:
         severity: urgent
@@ -956,7 +956,7 @@ spec:
                     / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.5
         and (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="DE"}))
                     / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) >= 0.3
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 4
+        and sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 10
       for: 5m
       labels:
         severity: urgent
@@ -975,7 +975,7 @@ spec:
                     / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.3
         and (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="DE"}))
                     / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) >= 0.2
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 4
+        and sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 10
       for: 5m
       labels:
         severity: urgent
@@ -994,7 +994,7 @@ spec:
                     / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.2
         and (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="DE"}))
                     / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) >= 0.1
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 4
+        and sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 10
       for: 5m
       labels:
         severity: urgent
@@ -1011,7 +1011,7 @@ spec:
       expr: |
         (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="DE"}))
                     / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.1
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 4
+        and sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 10
       for: 5m
       labels:
         severity: urgent
@@ -1034,7 +1034,7 @@ spec:
                     / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.5
         and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="DE"}))
                     / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) >= 0.3
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 4
+        and sum by (provider) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 10
       for: 5m
       labels:
         severity: urgent
@@ -1053,7 +1053,7 @@ spec:
                     / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.3
         and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="DE"}))
                     / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) >= 0.2
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 4
+        and sum by (provider) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 10
       for: 5m
       labels:
         severity: urgent
@@ -1072,7 +1072,7 @@ spec:
                     / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.2
         and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="DE"}))
                     / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) >= 0.1
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 4
+        and sum by (provider) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 10
       for: 5m
       labels:
         severity: urgent
@@ -1089,7 +1089,7 @@ spec:
       expr: |
         (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="DE"}))
                     / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.1
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 4
+        and sum by (provider) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 10
       for: 5m
       labels:
         severity: urgent
@@ -1112,7 +1112,7 @@ spec:
                     / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.7
         and (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="DE"}))
                     / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) >= 0.6
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 4
+        and sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 10
       for: 5m
       labels:
         severity: urgent
@@ -1131,7 +1131,7 @@ spec:
                     / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.6
         and (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="DE"}))
                     / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) >= 0.5
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 4
+        and sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 10
       for: 5m
       labels:
         severity: urgent
@@ -1150,7 +1150,7 @@ spec:
                     / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.5
         and (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="DE"}))
                     / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) >= 0.4
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 4
+        and sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 10
       for: 5m
       labels:
         severity: urgent
@@ -1167,7 +1167,7 @@ spec:
       expr: |
         (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="DE"}))
                     / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.4
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 4
+        and sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 10
       for: 5m
       labels:
         severity: urgent
@@ -1190,7 +1190,7 @@ spec:
                     / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.7
         and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="DE"}))
                     / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) >= 0.6
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 4
+        and sum by (provider) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 10
       for: 5m
       labels:
         severity: urgent
@@ -1209,7 +1209,7 @@ spec:
                     / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.6
         and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="DE"}))
                     / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) >= 0.5
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 4
+        and sum by (provider) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 10
       for: 5m
       labels:
         severity: urgent
@@ -1228,7 +1228,7 @@ spec:
                     / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.5
         and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="DE"}))
                     / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) >= 0.4
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 4
+        and sum by (provider) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 10
       for: 5m
       labels:
         severity: urgent
@@ -1245,7 +1245,7 @@ spec:
       expr: |
         (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="DE"}))
                     / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.4
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 4
+        and sum by (provider) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 10
       for: 5m
       labels:
         severity: urgent
@@ -1268,7 +1268,7 @@ spec:
                     / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.4
         and (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.agentErrorsAuth }} , market="DE"}))
                     / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) >= 0.25
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 4
+        and sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 10
       for: 5m
       labels:
         severity: urgent
@@ -1287,7 +1287,7 @@ spec:
                     / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.25
         and (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.agentErrorsAuth }} , market="DE"}))
                     / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) >= 0.15
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 4
+        and sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 10
       for: 5m
       labels:
         severity: urgent
@@ -1306,7 +1306,7 @@ spec:
                     / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.15
         and (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.agentErrorsAuth }} , market="DE"}))
                     / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) >= 0.1
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 4
+        and sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 10
       for: 5m
       labels:
         severity: urgent
@@ -1323,7 +1323,7 @@ spec:
       expr: |
         (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.agentErrorsAuth }} , market="DE"}))
                     / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.1
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 4
+        and sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 10
       for: 5m
       labels:
         severity: urgent
@@ -1346,7 +1346,7 @@ spec:
                     / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.4
         and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.agentErrorsAuth }} , market="DE"}))
                     / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) >= 0.25
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 4
+        and sum by (provider) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 10
       for: 5m
       labels:
         severity: urgent
@@ -1365,7 +1365,7 @@ spec:
                     / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.25
         and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.agentErrorsAuth }} , market="DE"}))
                     / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) >= 0.15
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 4
+        and sum by (provider) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 10
       for: 5m
       labels:
         severity: urgent
@@ -1384,7 +1384,7 @@ spec:
                     / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.15
         and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.agentErrorsAuth }} , market="DE"}))
                     / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) >= 0.1
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 4
+        and sum by (provider) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 10
       for: 5m
       labels:
         severity: urgent
@@ -1401,7 +1401,7 @@ spec:
       expr: |
         (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.agentErrorsAuth }} , market="DE"}))
                     / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.1
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 4
+        and sum by (provider) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 10
       for: 5m
       labels:
         severity: urgent
@@ -1424,7 +1424,7 @@ spec:
                     / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.35
         and (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="DE"}))
                     / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) >= 0.25
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 4
+        and sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 10
       for: 5m
       labels:
         severity: urgent
@@ -1443,7 +1443,7 @@ spec:
                     / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.25
         and (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="DE"}))
                     / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) >= 0.15
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 4
+        and sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 10
       for: 5m
       labels:
         severity: urgent
@@ -1462,7 +1462,7 @@ spec:
                     / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.15
         and (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="DE"}))
                     / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) >= 0.1
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 4
+        and sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 10
       for: 5m
       labels:
         severity: urgent
@@ -1479,7 +1479,7 @@ spec:
       expr: |
         (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="DE"}))
                     / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.1
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 4
+        and sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 10
       for: 5m
       labels:
         severity: urgent
@@ -1502,7 +1502,7 @@ spec:
                     / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.35
         and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="DE"}))
                     / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) >= 0.25
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 4
+        and sum by (provider) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 10
       for: 5m
       labels:
         severity: urgent
@@ -1521,7 +1521,7 @@ spec:
                     / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.25
         and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="DE"}))
                     / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) >= 0.15
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 4
+        and sum by (provider) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 10
       for: 5m
       labels:
         severity: urgent
@@ -1556,7 +1556,7 @@ spec:
       expr: |
         (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="DE"}))
                     / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.1
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 4
+        and sum by (provider) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 10
       for: 5m
       labels:
         severity: urgent
@@ -1581,7 +1581,7 @@ spec:
             / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"})) < 0.6
         and (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.bankErrorsRefresh }}, market="DE"}))
             / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"})) >= 0.5
-         and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"}) > 4
+         and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"}) > 10
       for: 5m
       labels:
         severity: urgent
@@ -1600,7 +1600,7 @@ spec:
             / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"})) < 0.5
         and (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.bankErrorsRefresh }}, market="DE"}))
             / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"})) >= 0.4
-         and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"}) > 4
+         and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"}) > 10
       for: 5m
       labels:
         severity: urgent
@@ -1619,7 +1619,7 @@ spec:
             / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"})) < 0.4
         and (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.bankErrorsRefresh }}, market="DE"}))
             / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"})) >= 0.3
-         and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"}) > 4
+         and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"}) > 10
       for: 5m
       labels:
         severity: urgent
@@ -1636,7 +1636,7 @@ spec:
       expr: |
         (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.bankErrorsRefresh }}, market="DE"}))
             / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"})) < 0.3
-         and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"}) > 4
+         and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"}) > 10
       for: 5m
       labels:
         severity: urgent
@@ -1659,7 +1659,7 @@ spec:
             / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"})) < 0.6
         and (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.agentErrorsRefresh }}, market="DE"}))
             / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"})) >= 0.5
-         and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"}) > 4
+         and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"}) > 10
       for: 5m
       labels:
         severity: urgent
@@ -1678,7 +1678,7 @@ spec:
             / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"})) < 0.5
         and (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.agentErrorsRefresh }}, market="DE"}))
             / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"})) >= 0.4
-         and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"}) > 4
+         and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"}) > 10
       for: 5m
       labels:
         severity: urgent
@@ -1697,7 +1697,7 @@ spec:
             / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"})) < 0.4
         and (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.agentErrorsRefresh }}, market="DE"}))
             / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"})) >= 0.3
-         and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"}) > 4
+         and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"}) > 10
       for: 5m
       labels:
         severity: urgent
@@ -1714,7 +1714,7 @@ spec:
       expr: |
         (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.agentErrorsRefresh }}, market="DE"}))
             / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"})) < 0.3
-         and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"}) > 4
+         and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"}) > 10
       for: 5m
       labels:
         severity: urgent
@@ -1737,7 +1737,7 @@ spec:
             / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"})) < 0.45
         and (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.allErrorsRefresh }}, market="DE"}))
             / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"})) >= 0.35
-         and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"}) > 4
+         and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"}) > 10
       for: 5m
       labels:
         severity: urgent
@@ -1756,7 +1756,7 @@ spec:
             / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"})) < 0.35
         and (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.allErrorsRefresh }}, market="DE"}))
             / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"})) >= 0.25
-         and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"}) > 4
+         and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"}) > 10
       for: 5m
       labels:
         severity: urgent
@@ -1775,7 +1775,7 @@ spec:
             / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"})) < 0.25
         and (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.allErrorsRefresh }}, market="DE"}))
             / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"})) >= 0.15
-         and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"}) > 4
+         and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"}) > 10
       for: 5m
       labels:
         severity: urgent
@@ -1792,7 +1792,7 @@ spec:
       expr: |
         (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.allErrorsRefresh }}, market="DE"}))
             / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"})) < 0.15
-         and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"}) > 4
+         and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"}) > 10
       for: 5m
       labels:
         severity: urgent
@@ -1815,7 +1815,7 @@ spec:
             / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"})) < 0.6
         and (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.partiallyCompletedErrorRefresh }}, market="DE"}))
             / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"})) >= 0.5
-         and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"}) > 4
+         and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"}) > 10
       for: 5m
       labels:
         severity: urgent
@@ -1834,7 +1834,7 @@ spec:
             / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"})) < 0.5
         and (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.partiallyCompletedErrorRefresh }}, market="DE"}))
             / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"})) >= 0.4
-         and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"}) > 4
+         and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"}) > 10
       for: 5m
       labels:
         severity: urgent
@@ -1853,7 +1853,7 @@ spec:
             / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"})) < 0.4
         and (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.partiallyCompletedErrorRefresh }}, market="DE"}))
             / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"})) >= 0.3
-         and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"}) > 4
+         and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"}) > 10
       for: 5m
       labels:
         severity: urgent
@@ -1870,7 +1870,7 @@ spec:
       expr: |
         (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.partiallyCompletedErrorRefresh }}, market="DE"}))
             / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"})) < 0.3
-         and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"}) > 4
+         and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"}) > 10
       for: 5m
       labels:
         severity: urgent
