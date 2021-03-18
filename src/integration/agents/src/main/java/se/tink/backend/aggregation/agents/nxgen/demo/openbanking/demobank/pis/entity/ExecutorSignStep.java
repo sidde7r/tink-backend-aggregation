@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.nxgen.controllers.signing.SigningStepConstant
 @Getter
 public enum ExecutorSignStep {
     AUTHENTICATE,
-    EXECUTE_PAYMENT;
+    CHECK_STATUS;
 
     public static ExecutorSignStep of(String value) {
         if (SigningStepConstants.STEP_INIT.equals(value)) {

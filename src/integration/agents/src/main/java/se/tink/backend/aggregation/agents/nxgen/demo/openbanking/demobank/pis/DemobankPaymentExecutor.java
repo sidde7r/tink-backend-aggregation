@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.apiclient.DemobankPaymentApiClient;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.authenticator.DemobankPaymentAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.entity.ExecutorSignStep;
@@ -22,6 +23,8 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
+import se.tink.libraries.payment.enums.PaymentStatus;
+import se.tink.libraries.payment.rpc.Payment;
 
 @RequiredArgsConstructor
 public class DemobankPaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
@@ -56,8 +59,8 @@ public class DemobankPaymentExecutor implements PaymentExecutor, FetchablePaymen
             case AUTHENTICATE:
                 return authenticate(paymentMultiStepRequest);
 
-            case EXECUTE_PAYMENT:
-                return executePayment();
+            case CHECK_STATUS:
+                return checkStatusAndUpdatePayment(paymentMultiStepRequest.getPayment());
             default:
                 throw new IllegalArgumentException(
                         "Unknown step: " + paymentMultiStepRequest.getStep());
@@ -87,20 +90,24 @@ public class DemobankPaymentExecutor implements PaymentExecutor, FetchablePaymen
         storage.storeAccessToken(accessToken);
 
         return new PaymentMultiStepResponse(
-                paymentMultiStepRequest,
-                ExecutorSignStep.EXECUTE_PAYMENT.name(),
-                new ArrayList<>());
+                paymentMultiStepRequest, ExecutorSignStep.CHECK_STATUS.name(), new ArrayList<>());
     }
 
-    private PaymentMultiStepResponse executePayment() {
+    private PaymentMultiStepResponse checkStatusAndUpdatePayment(Payment payment)
+            throws PaymentRejectedException {
 
         final String paymentId = storage.getPaymentId();
 
-        final PaymentResponse paymentResponse = apiClient.executePayment(paymentId);
+        final PaymentStatus paymentStatus = apiClient.getPaymentStatus(paymentId);
+
+        if (paymentStatus != PaymentStatus.SIGNED) {
+            throw new PaymentRejectedException(
+                    "Unexpected payment status: " + paymentStatus.name());
+        }
+
+        payment.setStatus(paymentStatus);
 
         return new PaymentMultiStepResponse(
-                paymentResponse.getPayment(),
-                AuthenticationStepConstants.STEP_FINALIZE,
-                new ArrayList<>());
+                payment, AuthenticationStepConstants.STEP_FINALIZE, new ArrayList<>());
     }
 }
