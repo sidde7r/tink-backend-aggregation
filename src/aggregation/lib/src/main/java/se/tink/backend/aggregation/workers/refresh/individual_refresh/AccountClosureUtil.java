@@ -68,6 +68,7 @@ public class AccountClosureUtil {
     public static Set<String> getRequestedAccountIds(
             CredentialsRequest request, List<Account> processedAccounts) {
         if (!(request instanceof RefreshInformationRequest)) {
+            logger.info("Empty RequestedAccountIds. Class: {}", request.getClass().getName());
             return Collections.emptySet();
         }
         RefreshInformationRequest refreshRequest = (RefreshInformationRequest) request;
@@ -78,11 +79,25 @@ public class AccountClosureUtil {
         Set<AccountTypes> accountTypesToRefresh =
                 mapRefreshableItemsToAccountTypes(refreshRequest.getItemsToRefresh());
 
-        return Stream.of(refreshRequest.getAccounts(), processedAccounts)
-                .flatMap(List::stream)
-                .filter(a -> accountTypesToRefresh.contains(a.getType()))
-                .map(Account::getId)
-                .collect(Collectors.toSet());
+        Set<String> result =
+                Stream.of(refreshRequest.getAccounts(), processedAccounts)
+                        .flatMap(List::stream)
+                        .filter(a -> accountTypesToRefresh.contains(a.getType()))
+                        .map(Account::getId)
+                        .collect(Collectors.toSet());
+        if (result.isEmpty()) {
+            logger.info(
+                    "Empty RequestedAccountIds. request.accounts: {}, processedAccounts: {}, refreshableItems: {}, accountTypesToRefresh: {}",
+                    getAccountTypes(refreshRequest.getAccounts()),
+                    getAccountTypes(processedAccounts),
+                    refreshRequest.getItemsToRefresh(),
+                    accountTypesToRefresh);
+        }
+        return result;
+    }
+
+    private static List<AccountTypes> getAccountTypes(List<Account> accounts) {
+        return accounts.stream().map(Account::getType).collect(Collectors.toList());
     }
 
     private static Set<AccountTypes> mapRefreshableItemsToAccountTypes(
@@ -108,7 +123,6 @@ public class AccountClosureUtil {
             case ACCOUNTS:
                 return ImmutableSet.copyOf(AccountTypes.values());
             default:
-                logger.info("Unexpected RefreshableItem: {}", item);
                 return ImmutableSet.of();
         }
     }
