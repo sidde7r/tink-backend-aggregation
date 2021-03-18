@@ -19,6 +19,7 @@ import se.tink.libraries.concurrency.ListenableThreadPoolExecutor;
 import se.tink.libraries.concurrency.NamedRunnable;
 import se.tink.libraries.metrics.core.MetricId;
 import se.tink.libraries.metrics.registry.MetricRegistry;
+import se.tink.libraries.tracing.lib.api.Tracing;
 
 public class RateLimitedExecutorService implements Managed {
     private static final Logger logger =
@@ -121,7 +122,7 @@ public class RateLimitedExecutorService implements Managed {
             throws Exception {
         final RateLimitedExecutorProxy executorProxy =
                 rateLimitedRefreshInformationRequestExecutorByProvider.get(provider);
-        executorProxy.execute(namedRunnable);
+        executorProxy.execute(Tracing.wrapRunnable(namedRunnable));
     }
 
     @VisibleForTesting

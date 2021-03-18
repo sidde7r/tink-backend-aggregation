@@ -16,6 +16,7 @@ import se.tink.libraries.concurrency.RunnableMdcWrapper;
 import se.tink.libraries.metrics.core.MetricId;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 import se.tink.libraries.metrics.types.histograms.Histogram;
+import se.tink.libraries.tracing.lib.api.Tracing;
 
 public class RateLimitedExecutorProxy extends AbstractExecutorService {
     private final MetricRegistry metricRegistry;
@@ -92,7 +93,7 @@ public class RateLimitedExecutorProxy extends AbstractExecutorService {
                         new RateLimitedRunnable(
                                 Preconditions.checkNotNull(command), metricRegistry));
 
-        rateLimitedExecutorService.execute(instrumentedRunnable);
+        rateLimitedExecutorService.execute(Tracing.wrapRunnable(instrumentedRunnable));
         instrumentedRunnable.submitted();
     }
 

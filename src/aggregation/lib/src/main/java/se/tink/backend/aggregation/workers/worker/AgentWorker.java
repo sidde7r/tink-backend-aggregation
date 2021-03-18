@@ -23,6 +23,7 @@ import se.tink.libraries.dropwizard_lifecycle.ManagedSafeStop;
 import se.tink.libraries.executor.ExecutorServiceUtils;
 import se.tink.libraries.metrics.core.MetricId;
 import se.tink.libraries.metrics.registry.MetricRegistry;
+import se.tink.libraries.tracing.lib.api.Tracing;
 
 public class AgentWorker extends ManagedSafeStop {
     private static final Logger log = LoggerFactory.getLogger(AgentWorker.class);
@@ -169,7 +170,7 @@ public class AgentWorker extends ManagedSafeStop {
 
         if (operation.getRequest().isManual()) {
             // Don't rate limit manual requests
-            aggregationExecutorService.execute(namedRunnable);
+            aggregationExecutorService.execute(Tracing.wrapRunnable(namedRunnable));
         } else {
             rateLimitedExecutorService.execute(namedRunnable, operation.getRequest().getProvider());
         }
