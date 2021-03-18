@@ -19,6 +19,7 @@ import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.ap
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.apiclient.dto.LinksDto;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.apiclient.dto.PaymentInitiationDto;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.apiclient.dto.PaymentResponseDto;
+import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.apiclient.dto.PaymentStatusResponseDto;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.apiclient.dto.RemittanceInformationStructuredDto;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.entity.PaymentStatusDto;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.storage.DemobankStorage;
@@ -41,8 +42,8 @@ import se.tink.libraries.transfer.rpc.RemittanceInformation;
 public class DemobankPaymentApiClient {
 
     private static final String CREATE_PAYMENT_URL = "/api/payment/v1/payments/domestic/create";
-    private static final String EXECUTE_PAYMENT_URL = "/api/payment/v1/payments/%s/execute";
     private static final String GET_PAYMENT_URL = "/api/payment/v1/payments/";
+    private static final String GET_PAYMENT_STATUS_URL = "/api/payment/v1/status/";
     private static final String PAYMENT_CLIENT_TOKEN_HEADER = "X-Client-Header";
 
     private final DemobankPaymentRequestFilter requestFilter;
@@ -75,17 +76,6 @@ public class DemobankPaymentApiClient {
                 .toOAuth2Token();
     }
 
-    public PaymentResponse executePayment(String paymentId) {
-        final String url = String.format(BASE_URL + EXECUTE_PAYMENT_URL, paymentId);
-        final PaymentResponseDto paymentResponseDto =
-                client.request(url)
-                        .addFilter(requestFilter)
-                        .accept(MediaType.APPLICATION_JSON_TYPE)
-                        .post(PaymentResponseDto.class);
-
-        return convertResponseDtoToPaymentResponse(paymentResponseDto);
-    }
-
     public PaymentResponse getPayment(String paymentId) {
         final PaymentResponseDto paymentResponseDto =
                 client.request(BASE_URL + GET_PAYMENT_URL + paymentId)
@@ -94,6 +84,16 @@ public class DemobankPaymentApiClient {
                         .get(PaymentResponseDto.class);
 
         return convertResponseDtoToPaymentResponse(paymentResponseDto);
+    }
+
+    public PaymentStatus getPaymentStatus(String paymentId) {
+        final PaymentStatusResponseDto paymentStatusResponseDto =
+                client.request(BASE_URL + GET_PAYMENT_STATUS_URL + paymentId)
+                        .addFilter(requestFilter)
+                        .accept(MediaType.APPLICATION_JSON_TYPE)
+                        .get(PaymentStatusResponseDto.class);
+
+        return convertPaymentStatus(paymentStatusResponseDto.getStatus());
     }
 
     private void saveToStorage(PaymentResponseDto response) {
@@ -244,7 +244,11 @@ public class DemobankPaymentApiClient {
         final PaymentStatusDto paymentStatusDto =
                 PaymentStatusDto.createFromFullName(paymentStatus);
 
-        switch (paymentStatusDto) {
+        return convertPaymentStatus(paymentStatusDto);
+    }
+
+    private static PaymentStatus convertPaymentStatus(PaymentStatusDto paymentStatus) {
+        switch (paymentStatus) {
             case RCVD:
                 return PaymentStatus.CREATED;
             case ACTC:
