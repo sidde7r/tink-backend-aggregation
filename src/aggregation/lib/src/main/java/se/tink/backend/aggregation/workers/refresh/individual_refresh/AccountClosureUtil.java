@@ -68,7 +68,10 @@ public class AccountClosureUtil {
     public static Set<String> getRequestedAccountIds(
             CredentialsRequest request, List<Account> processedAccounts) {
         if (!(request instanceof RefreshInformationRequest)) {
-            logger.info("Empty RequestedAccountIds. Class: {}", request.getClass().getName());
+            logger.info(
+                    "Empty RequestedAccountIds. Class: {}, processedAccounts: {}",
+                    request.getClass().getName(),
+                    processedAccounts.size());
             return Collections.emptySet();
         }
         RefreshInformationRequest refreshRequest = (RefreshInformationRequest) request;
