@@ -6,6 +6,7 @@ import static org.junit.Assert.assertNull;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.junit.Test;
@@ -85,9 +86,20 @@ public class AgentInitialisationTest {
                                         || ProviderStatuses.OBSOLETE.equals(provider.getStatus()))
                 .filter(provider -> !provider.getName().toLowerCase().contains("test"))
                 .filter(
-                        provider ->
-                                provider.getAgentSources()
-                                        .contains(Provider.AgentSource.AGGREGATION_SERVICE))
+                        provider -> {
+                            if (Objects.isNull(provider.getAgentSources())) {
+                                log.warn(
+                                        "agentSource field is null for provider with name {}. Please fix the provider configuration",
+                                        provider.getName());
+                                // For now, if agentSource field is null, assume that an agent for
+                                // this provider exists in AS.
+                                // If it does not exists, the test will crash and one must fix the
+                                // configuration for the provider
+                                return true;
+                            }
+                            return provider.getAgentSources()
+                                    .contains(Provider.AgentSource.AGGREGATION_SERVICE);
+                        })
                 .collect(groupingBy(Provider::getClassName))
                 .entrySet()
                 .stream()
@@ -133,11 +145,17 @@ public class AgentInitialisationTest {
         Throwable throwable =
                 catchThrowable(
                         () ->
-                                providers.stream()
-                                        .forEach(
-                                                provider -> {
-                                                    agentInitialisor.initialiseAgent(provider);
-                                                }));
+                                providers.forEach(
+                                        provider -> {
+                                            try {
+                                                agentInitialisor.initialiseAgent(provider);
+                                            } catch (Exception e) {
+                                                log.error(
+                                                        "Could not initialize agent for provider {}",
+                                                        provider.getName());
+                                                throw e;
+                                            }
+                                        }));
 
         // then
         if (throwable != null) {
