@@ -9,7 +9,6 @@ import static se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.LunarConst
 
 import javax.ws.rs.core.MediaType;
 import lombok.RequiredArgsConstructor;
-import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.storage.PersistentStorageService;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.LunarConstants;
@@ -109,8 +108,7 @@ public class FetcherApiClient {
     private void throwBankSideErrorOrOriginal(HttpResponseException e) {
         switch (e.getResponse().getStatus()) {
             case 500:
-                throw BankServiceError.BANK_SIDE_FAILURE.exception(
-                        "Http status: " + HttpStatus.SC_INTERNAL_SERVER_ERROR);
+                throw BankServiceError.BANK_SIDE_FAILURE.exception("Http status: " + 500);
             case 502:
             case 503:
             case 504:

@@ -8,7 +8,6 @@ import static org.mockito.Mockito.when;
 
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
-import org.apache.http.HttpStatus;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.ObjectMapperFactory;
@@ -53,11 +52,7 @@ public class FetcherApiClientTest {
 
     private Object[] errorsParams() {
         return new Object[] {
-            new Object[] {
-                500,
-                BankServiceError.BANK_SIDE_FAILURE.exception(
-                        "Http status: " + HttpStatus.SC_INTERNAL_SERVER_ERROR)
-            },
+            new Object[] {500, BankServiceError.BANK_SIDE_FAILURE.exception("Http status: " + 500)},
             new Object[] {502, BankServiceError.NO_BANK_SERVICE.exception("Http status: " + 502)},
             new Object[] {503, BankServiceError.NO_BANK_SERVICE.exception("Http status: " + 503)},
             new Object[] {504, BankServiceError.NO_BANK_SERVICE.exception("Http status: " + 504)},
