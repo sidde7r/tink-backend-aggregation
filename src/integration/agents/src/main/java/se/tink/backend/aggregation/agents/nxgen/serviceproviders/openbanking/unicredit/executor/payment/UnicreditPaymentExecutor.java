@@ -73,7 +73,10 @@ public class UnicreditPaymentExecutor implements PaymentExecutor, FetchablePayme
                 .instructedAmount(getAmountEntity(payment))
                 .creditorName(payment.getCreditor().getName())
                 .remittanceInformationUnstructured(getUnstructuredRemittance(payment))
-                .requestedExecutionDate(payment.getExecutionDate().toString())
+                .requestedExecutionDate(
+                        payment.getExecutionDate() != null
+                                ? payment.getExecutionDate().toString()
+                                : null)
                 .build();
     }
 
