@@ -19,7 +19,6 @@ import java.util.concurrent.TimeUnit;
 import org.apache.commons.collections4.map.CaseInsensitiveMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentCancelledException;
@@ -82,10 +81,10 @@ import se.tink.libraries.uuid.UUIDUtils;
 
 public class CmcicPaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
 
-    private CmcicApiClient apiClient;
-    private SessionStorage sessionStorage;
-    private String redirectUrl;
-    private List<PaymentResponse> paymentResponses;
+    private final CmcicApiClient apiClient;
+    private final SessionStorage sessionStorage;
+    private final String redirectUrl;
+    private final List<PaymentResponse> paymentResponses;
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final StrongAuthenticationState strongAuthenticationState;
     private static final Logger logger = LoggerFactory.getLogger(CmcicPaymentExecutor.class);
@@ -138,7 +137,7 @@ public class CmcicPaymentExecutor implements PaymentExecutor, FetchablePaymentEx
     }
 
     @Override
-    public PaymentResponse fetch(PaymentRequest paymentRequest) throws PaymentException {
+    public PaymentResponse fetch(PaymentRequest paymentRequest) {
         HalPaymentRequestEntity paymentRequestEntity =
                 apiClient.fetchPayment(paymentRequest.getPayment().getUniqueId());
 
@@ -150,7 +149,7 @@ public class CmcicPaymentExecutor implements PaymentExecutor, FetchablePaymentEx
     @Override
     public PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentMultiStepRequest)
             throws PaymentException {
-        PaymentMultiStepResponse paymentMultiStepResponse = null;
+        PaymentMultiStepResponse paymentMultiStepResponse;
         Payment payment = paymentMultiStepRequest.getPayment();
         String paymentId = getPaymentId(sessionStorage.get(StorageKeys.AUTH_URL));
         switch (paymentMultiStepRequest.getStep()) {
@@ -452,8 +451,9 @@ public class CmcicPaymentExecutor implements PaymentExecutor, FetchablePaymentEx
                                 TimeUnit.MINUTES)
                         .orElseThrow(
                                 () ->
-                                        AuthorizationError.UNAUTHORIZED.exception(
-                                                "callbackData wasn't received"));
+                                        new PaymentAuthenticationException(
+                                                "Payment authentication failed. There is no authorization url!",
+                                                new PaymentRejectedException()));
 
         // Query parameters can be case insesitive returned by bank,this is to take care of that
         // situation and we avoid failing the payment.
