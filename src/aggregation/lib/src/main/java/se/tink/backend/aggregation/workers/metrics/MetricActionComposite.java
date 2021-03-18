@@ -42,6 +42,11 @@ public class MetricActionComposite implements MetricActionIface {
     }
 
     @Override
+    public void cancelledDueToThirdPartyAppTimeout() {
+        metricActions.forEach(MetricActionIface::cancelledDueToThirdPartyAppTimeout);
+    }
+
+    @Override
     public void unavailable() {
         metricActions.forEach(MetricActionIface::unavailable);
     }

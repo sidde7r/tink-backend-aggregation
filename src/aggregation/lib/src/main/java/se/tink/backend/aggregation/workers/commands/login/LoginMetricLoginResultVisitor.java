@@ -1,5 +1,9 @@
 package se.tink.backend.aggregation.workers.commands.login;
 
+import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.aggregation.agents.agentplatform.authentication.result.error.NoUserInteractionResponseError;
+import se.tink.backend.aggregation.agents.exceptions.ThirdPartyAppException;
+import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AuthenticationError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AuthorizationError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.BankApiErrorVisitor;
@@ -14,13 +18,17 @@ import se.tink.backend.aggregation.workers.commands.login.handler.result.LoginRe
 import se.tink.backend.aggregation.workers.commands.login.handler.result.LoginSuccessResult;
 import se.tink.backend.aggregation.workers.commands.login.handler.result.LoginUnknownErrorResult;
 import se.tink.backend.aggregation.workers.metrics.MetricActionIface;
+import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
 
 public class LoginMetricLoginResultVisitor implements LoginResultVisitor {
 
     private final MetricActionIface loginMetric;
+    private Credentials credentials;
 
-    public LoginMetricLoginResultVisitor(final MetricActionIface loginMetric) {
+    public LoginMetricLoginResultVisitor(
+            final MetricActionIface loginMetric, Credentials credentials) {
         this.loginMetric = loginMetric;
+        this.credentials = credentials;
     }
 
     @Override
@@ -35,7 +43,18 @@ public class LoginMetricLoginResultVisitor implements LoginResultVisitor {
 
     @Override
     public void visit(LoginAuthenticationErrorResult authenticationErrorResult) {
-        loginMetric.cancelled();
+        if (isThirdPartyAppTimeoutError(authenticationErrorResult)) {
+            loginMetric.cancelledDueToThirdPartyAppTimeout();
+        } else {
+            loginMetric.cancelled();
+        }
+    }
+
+    private boolean isThirdPartyAppTimeoutError(LoginAuthenticationErrorResult errorResult) {
+        return credentials.getStatus() == CredentialsStatus.AWAITING_THIRD_PARTY_APP_AUTHENTICATION
+                && errorResult.getException() instanceof ThirdPartyAppException
+                && ((ThirdPartyAppException) errorResult.getException()).getError()
+                        == ThirdPartyAppError.TIMED_OUT;
     }
 
     @Override
@@ -62,7 +81,11 @@ public class LoginMetricLoginResultVisitor implements LoginResultVisitor {
                         new BankApiErrorVisitor<Void>() {
                             @Override
                             public Void visit(AuthenticationError error) {
-                                loginMetric.cancelled();
+                                if (isThirdPartyAppTimeoutError(error)) {
+                                    loginMetric.cancelledDueToThirdPartyAppTimeout();
+                                } else {
+                                    loginMetric.cancelled();
+                                }
                                 return null;
                             }
 
@@ -84,5 +107,10 @@ public class LoginMetricLoginResultVisitor implements LoginResultVisitor {
                                         "Fetching data error is not allowed during authentication");
                             }
                         });
+    }
+
+    private boolean isThirdPartyAppTimeoutError(AuthenticationError error) {
+        return credentials.getStatus() == CredentialsStatus.AWAITING_THIRD_PARTY_APP_AUTHENTICATION
+                && error instanceof NoUserInteractionResponseError;
     }
 }
