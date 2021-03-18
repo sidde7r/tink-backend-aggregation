@@ -62,7 +62,7 @@ public class RateLimitedExecutorServiceTest {
 
         RateLimitedExecutorService executorService =
                 new RateLimitedExecutorService(
-                        delegateExecutor, dummyMetricRegistry, MAX_QUEUED_UP);
+                        false, delegateExecutor, dummyMetricRegistry, MAX_QUEUED_UP);
         executorService.start();
 
         CountDownLatch countDownLatch = new CountDownLatch(2);

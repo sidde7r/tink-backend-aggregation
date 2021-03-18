@@ -11,6 +11,7 @@ import com.sun.jersey.api.client.UniformInterfaceException;
 import com.sun.jersey.api.client.config.ClientConfig;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
+import javax.inject.Named;
 import javax.ws.rs.core.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,12 +69,15 @@ public class AggregationControllerAggregationClientImpl
     private final MetricRegistry metricRegistry;
     private static final MetricId AGGREGATION_CONTROLLER_RETRIES =
             MetricId.newId("aggregation_controller_retries");
+    private boolean enableTracingExperimental;
 
     @Inject
     private AggregationControllerAggregationClientImpl(
+            @Named("enableTracingExperimental") boolean enableTracingExperimental,
             ClientConfig custom,
             AccountInformationServiceConfiguration accountInformationServiceConfiguration,
             MetricRegistry metricRegistry) {
+        this.enableTracingExperimental = enableTracingExperimental;
         this.config = custom;
         this.accountInformationServiceConfiguration = accountInformationServiceConfiguration;
         this.metricRegistry = metricRegistry;
@@ -92,7 +96,9 @@ public class AggregationControllerAggregationClientImpl
                         hostConfiguration.isDisablerequestcompression(),
                         this.config);
         client.addFilter(new ClientLoggingFilter());
-        client.addFilter(new ClientTracingFilter());
+        if (enableTracingExperimental) {
+            client.addFilter(new ClientTracingFilter());
+        }
 
         JerseyUtils.registerAPIAccessToken(client, hostConfiguration.getApiToken());
 
