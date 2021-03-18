@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment;
 
+import static java.util.Objects.nonNull;
+
 import com.google.api.client.repackaged.com.google.common.base.Preconditions;
 import java.util.ArrayList;
 import java.util.List;
@@ -127,7 +129,7 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
                                 ? payment.getExecutionRule().toString()
                                 : null)
                 .dayOfExecution(
-                        payment.getDayOfExecution() != 0
+                        nonNull(payment.getDayOfExecution())
                                 ? String.valueOf(payment.getDayOfExecution())
                                 : null)
                 .build();

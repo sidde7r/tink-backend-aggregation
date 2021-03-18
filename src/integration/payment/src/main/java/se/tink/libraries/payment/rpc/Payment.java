@@ -64,7 +64,7 @@ public class Payment {
     private Frequency frequency;
     private LocalDate startDate;
     private LocalDate endDate;
-    private int dayOfExecution;
+    private Integer dayOfExecution;
     private ExecutionRule executionRule;
 
     private Payment(Builder builder) {
@@ -191,7 +191,7 @@ public class Payment {
         return executionRule;
     }
 
-    public int getDayOfExecution() {
+    public Integer getDayOfExecution() {
         return dayOfExecution;
     }
 
@@ -261,7 +261,7 @@ public class Payment {
         private Frequency frequency;
         private LocalDate startDate;
         private LocalDate endDate;
-        private int dayOfExecution;
+        private Integer dayOfExecution;
         private ExecutionRule executionRule;
 
         public Builder withPaymentServiceType(PaymentServiceType paymentServiceType) {
@@ -284,7 +284,7 @@ public class Payment {
             return this;
         }
 
-        public Builder withDayOfExecution(int dayOfExecution) {
+        public Builder withDayOfExecution(Integer dayOfExecution) {
             this.dayOfExecution = dayOfExecution;
             return this;
         }
