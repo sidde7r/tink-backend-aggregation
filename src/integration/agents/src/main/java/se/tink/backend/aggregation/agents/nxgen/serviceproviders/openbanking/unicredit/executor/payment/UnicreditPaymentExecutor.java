@@ -7,7 +7,9 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentCancelledException;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.executor.payment.entity.AccountEntity;
@@ -124,7 +126,7 @@ public class UnicreditPaymentExecutor implements PaymentExecutor, FetchablePayme
 
     @Override
     public PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentMultiStepRequest)
-            throws PaymentAuthorizationException {
+            throws PaymentException {
         Payment payment = paymentMultiStepRequest.getPayment();
 
         PaymentMultiStepResponse paymentMultiStepResponse;
@@ -132,14 +134,21 @@ public class UnicreditPaymentExecutor implements PaymentExecutor, FetchablePayme
         PaymentStatus paymentStatus = paymentResponse.getPayment().getStatus();
         log.info("Payment id={} sign status={}", payment.getId(), paymentStatus);
 
-        if (PaymentStatus.SIGNED.equals(paymentStatus)) {
+        if (PaymentStatus.SIGNED.equals(paymentStatus)
+                || PaymentStatus.PAID.equals(paymentStatus)) {
             paymentMultiStepResponse =
                     new PaymentMultiStepResponse(
                             paymentResponse,
                             AuthenticationStepConstants.STEP_FINALIZE,
                             new ArrayList<>());
+        } else if (PaymentStatus.REJECTED.equals(paymentStatus)) {
+            throw new PaymentRejectedException("Payment rejected by Bank");
+        } else if (PaymentStatus.CANCELLED.equals(paymentStatus)) {
+            throw new PaymentCancelledException("Payment Cancelled by PSU");
         } else {
-            throw new PaymentAuthorizationException();
+            paymentMultiStepResponse =
+                    new PaymentMultiStepResponse(
+                            paymentResponse, "IN_PROGRESS", new ArrayList<>(0));
         }
 
         return paymentMultiStepResponse;
