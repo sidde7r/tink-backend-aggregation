@@ -73,6 +73,11 @@ public class SebCommonConstants {
         public static final String PENDING = "pending";
     }
 
+    public static class BodyValues {
+        public static final String AST = "ast";
+        public static final String QR = "qr";
+    }
+
     public static class HeaderKeys {
         public static final String X_REQUEST_ID = "X-Request-ID";
         public static final String PSU_IP_ADDRESS = "PSU-IP-Address";

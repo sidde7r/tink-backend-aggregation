@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator;
 
 import com.google.api.client.repackaged.com.google.common.base.Strings;
-import com.google.common.base.Preconditions;
 import java.lang.invoke.MethodHandles;
 import java.util.Optional;
 import org.slf4j.Logger;
@@ -16,9 +15,10 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.seb
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebCommonConstants.PollResponses;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebCommonConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebCommonConstants.Urls;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.AuthResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.AuthorizeRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.AuthorizeResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.DecoupledAuthorizationRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.DecoupledAuthorizationResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.RefreshRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.TokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.configuration.SebConfiguration;
@@ -36,7 +36,6 @@ public class SebDecoupledAuthenticator implements BankIdAuthenticator<String> {
     private final String redirectUrl;
     private OAuth2Token oAuth2Token;
     private String autoStartToken;
-    private String csrfToken;
     private String ssn;
 
     public SebDecoupledAuthenticator(
@@ -50,20 +49,23 @@ public class SebDecoupledAuthenticator implements BankIdAuthenticator<String> {
     public String init(String ssn)
             throws BankServiceException, AuthorizationException, AuthenticationException {
         this.ssn = ssn;
-        final AuthResponse response = apiClient.initBankId();
-        autoStartToken = response.getAutoStartToken();
-        csrfToken = response.getCsrfToken();
-
-        return response.getAutoStartToken();
+        String authRequestId =
+                apiClient
+                        .startDecoupledAuthorization(
+                                DecoupledAuthorizationRequest.builder()
+                                        .clientId(configuration.getClientId())
+                                        .build())
+                        .getAuthReqId();
+        autoStartToken =
+                apiClient.getDecoupledAuthStatus(authRequestId).getAutoStartToken();
+        return authRequestId;
     }
 
     @Override
-    public BankIdStatus collect(String reference)
+    public BankIdStatus collect(String authRequestId)
             throws AuthenticationException, AuthorizationException {
-        Preconditions.checkNotNull(Strings.emptyToNull(csrfToken), "Missing auto start token");
-
-        final AuthResponse response = apiClient.collectBankId(csrfToken);
-        csrfToken = response.getCsrfToken();
+        DecoupledAuthorizationResponse authorizationResponse =
+                apiClient.getDecoupledAuthStatus(authRequestId);
 
         switch (response.getStatus().toLowerCase()) {
             case PollResponses.COMPLETE:
