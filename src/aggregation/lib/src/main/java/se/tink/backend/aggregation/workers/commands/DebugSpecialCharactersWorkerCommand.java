@@ -15,10 +15,13 @@ public class DebugSpecialCharactersWorkerCommand extends AgentWorkerCommand {
             LoggerFactory.getLogger(DebugSpecialCharactersWorkerCommand.class);
 
     private final AgentWorkerCommandContext context;
+    private final String debugAdditionalInfo;
     private boolean execute = false;
 
-    public DebugSpecialCharactersWorkerCommand(AgentWorkerCommandContext context) {
+    public DebugSpecialCharactersWorkerCommand(
+            AgentWorkerCommandContext context, final String debugAdditionalInfo) {
         this.context = context;
+        this.debugAdditionalInfo = debugAdditionalInfo;
 
         CredentialsRequest request = context.getRequest();
         if (request != null) {
@@ -43,7 +46,8 @@ public class DebugSpecialCharactersWorkerCommand extends AgentWorkerCommand {
                 }
 
                 log.info(
-                        "[pre] credentialsId {}  fieldSeralized hascode {}",
+                        "[pre][{}] credentialsId {}  fieldSeralized hascode {}",
+                        debugAdditionalInfo,
                         credentials.getId(),
                         fieldsSerializedHascode);
                 credentials
@@ -51,7 +55,8 @@ public class DebugSpecialCharactersWorkerCommand extends AgentWorkerCommand {
                         .forEach(
                                 (k, v) ->
                                         log.info(
-                                                "[pre] key: {} value hascode: {}",
+                                                "[pre][{}] key: {} value hascode: {}",
+                                                debugAdditionalInfo,
                                                 k,
                                                 v.hashCode()));
             }
