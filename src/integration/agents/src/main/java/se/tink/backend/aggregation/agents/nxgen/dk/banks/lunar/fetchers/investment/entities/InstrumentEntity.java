@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.investm
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument.InstrumentModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument.id.InstrumentIdModule;
@@ -37,11 +36,9 @@ public class InstrumentEntity {
     }
 
     private InstrumentModule.InstrumentType getType() {
-        if (StringUtils.isNotBlank(type) && "stock".equals(type)) {
-            return InstrumentModule.InstrumentType.STOCK;
-        }
-        log.info("Found different Lunar instrument type than Stock!");
-        return InstrumentModule.InstrumentType.OTHER;
+        return "stock".equalsIgnoreCase(type)
+                ? InstrumentModule.InstrumentType.STOCK
+                : InstrumentModule.InstrumentType.OTHER;
     }
 
     private InstrumentIdModule buildInstrumentIdModule() {

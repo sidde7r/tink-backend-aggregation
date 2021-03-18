@@ -25,7 +25,6 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdMo
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument.InstrumentModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument.id.InstrumentIdModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.portfolio.PortfolioModule;
-import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.libraries.account.identifiers.DanishIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.serialization.utils.SerializationUtils;
@@ -167,39 +166,6 @@ public class LunarInvestmentsFetcherTest {
                 buildExpectedInvestmentAccounts(
                         2.0, TOTAL_PROFIT, 30.0, -5.0, buildTestInstruments())
             },
-        };
-    }
-
-    @Test
-    @Parameters(method = "responseExceptionParams")
-    public void shouldCatchHttpResponseExceptionAndReturnEmptyList(
-            boolean shouldFetchInvestmentsThrow, boolean shouldFetchPerformanceDataThrow) {
-        // given
-        when(apiClient.fetchInvestments())
-                .thenReturn(deserialize("invest_portfolio.json", InvestmentsResponse.class));
-
-        // and
-        if (shouldFetchInvestmentsThrow) {
-            when(apiClient.fetchInvestments()).thenThrow(new HttpResponseException(null, null));
-        } else if (shouldFetchPerformanceDataThrow) {
-            when(apiClient.fetchPerformanceData()).thenThrow(new HttpResponseException(null, null));
-        } else {
-            when(apiClient.fetchInstruments()).thenThrow(new HttpResponseException(null, null));
-        }
-
-        // when
-        List<InvestmentAccount> result =
-                (List<InvestmentAccount>) investmentsFetcher.fetchAccounts();
-
-        // then
-        assertThat(result).isEqualTo(Collections.emptyList());
-    }
-
-    private Object[] responseExceptionParams() {
-        return new Object[] {
-            new Object[] {true, false},
-            new Object[] {false, true},
-            new Object[] {false, false},
         };
     }
 

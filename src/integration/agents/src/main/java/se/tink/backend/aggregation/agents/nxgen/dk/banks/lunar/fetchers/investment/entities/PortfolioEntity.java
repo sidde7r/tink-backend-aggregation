@@ -48,11 +48,6 @@ public class PortfolioEntity {
 
     private PortfolioModule buildPortfolioModule(
             PerformanceDataEntity performanceData, List<InstrumentEntity> instruments) {
-        // Wiski delete unnecessary logs
-        if (totalValue == null && !instruments.isEmpty()) {
-            log.info("Lunar user has no investment funds but owns some instruments!");
-        }
-
         return PortfolioModule.builder()
                 .withType(PortfolioModule.PortfolioType.DEPOT)
                 .withUniqueIdentifier(accountNumber)

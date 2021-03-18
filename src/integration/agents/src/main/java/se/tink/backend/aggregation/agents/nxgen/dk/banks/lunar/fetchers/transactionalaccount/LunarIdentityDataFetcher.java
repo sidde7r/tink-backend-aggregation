@@ -61,7 +61,6 @@ public class LunarIdentityDataFetcher implements IdentityDataFetcher {
     }
 
     private List<String> fetchAccountsHolders() {
-        // Delete unnecessary logs after getting more data
         // If user has only not shared accounts, we should use the name on one of the cards.
         // In case of shared account, we should fetch members of the account. Members list does not
         // contain main account holder name, hence we should filter names from cards to get main
@@ -74,16 +73,7 @@ public class LunarIdentityDataFetcher implements IdentityDataFetcher {
         List<String> accountsHoldersNamesFromCards = collectAccountsHoldersFromCards(accounts);
         String userId = getLunarPersistedData().getLunarUserId();
         List<String> distinctAccountsMembers = collectAccountsMembers(accounts, userId);
-        List<String> accountHolders =
-                getMainAccountHolders(accountsHoldersNamesFromCards, distinctAccountsMembers);
-
-        if (accountHolders.isEmpty()) {
-            log.info("Couldn't find Lunar accountHolder!");
-        } else if (accountHolders.size() > 1) {
-            log.info("There is more than one Lunar accountHolder!");
-        }
-
-        return accountHolders;
+        return getMainAccountHolders(accountsHoldersNamesFromCards, distinctAccountsMembers);
     }
 
     private AccountsResponse getAccountsResponseFromStorage() {

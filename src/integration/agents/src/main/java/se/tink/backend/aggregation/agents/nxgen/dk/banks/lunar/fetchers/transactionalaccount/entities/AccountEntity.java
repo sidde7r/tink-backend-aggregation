@@ -22,7 +22,6 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 public class AccountEntity extends BaseResponseEntity {
 
     private static final String LUNAR_BANK_NAME = "Lunar";
-    private static final String ACTIVE_STATE = "active";
 
     @JsonProperty("BIC")
     private String bic;

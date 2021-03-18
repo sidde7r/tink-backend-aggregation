@@ -7,7 +7,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
@@ -69,19 +68,13 @@ public class GoalEntity extends BaseResponseEntity {
     }
 
     private String getTitle() {
-        // Wiski delete logs and refactor it after getting more data from logs
-        List<String> titles =
-                fields.stream()
-                        .filter(BaseResponseEntity::notDeleted)
-                        .filter(field -> BooleanUtils.isNotFalse(field.getVisible()))
-                        .map(this::getTitleOrNull)
-                        .filter(Objects::nonNull)
-                        .collect(Collectors.toList());
-        if (titles.isEmpty()) {
-            log.info("Lunar goal has no title!");
-            return "";
-        }
-        return titles.get(0);
+        return fields.stream()
+                .filter(BaseResponseEntity::notDeleted)
+                .filter(field -> BooleanUtils.isNotFalse(field.getVisible()))
+                .map(this::getTitleOrNull)
+                .filter(Objects::nonNull)
+                .findFirst()
+                .orElse("");
     }
 
     private String getTitleOrNull(FieldEntity field) {
