@@ -25,7 +25,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uni
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.executor.payment.enums.UnicreditPaymentProduct;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.executor.payment.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.executor.payment.rpc.CreatePaymentResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.executor.payment.rpc.FetchPaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.executor.payment.rpc.FetchPaymentStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.executor.payment.rpc.UnicreditCreatePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.fetcher.transactionalaccount.rpc.AccountDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.fetcher.transactionalaccount.rpc.AccountsResponse;
@@ -214,11 +214,11 @@ public class UnicreditBaseApiClient {
         return createPaymentResponse;
     }
 
-    public FetchPaymentResponse fetchPayment(PaymentRequest paymentRequest) {
+    public FetchPaymentStatusResponse fetchPaymentStatus(PaymentRequest paymentRequest) {
 
         String paymentId = paymentRequest.getPayment().getUniqueId();
         return createRequestBuilder(
-                        new URL(providerConfiguration.getBaseUrl() + Endpoints.FETCH_PAYMENT)
+                        new URL(providerConfiguration.getBaseUrl() + Endpoints.FETCH_PAYMENT_STATUS)
                                 .parameter(
                                         PathParameters.PAYMENT_SERVICE,
                                         getPaymentService(paymentRequest))
@@ -228,7 +228,7 @@ public class UnicreditBaseApiClient {
                                 .parameter(PathParameters.PAYMENT_ID, paymentId))
                 .header(HeaderKeys.X_REQUEST_ID, Psd2Headers.getRequestId())
                 .header(HeaderKeys.PSU_IP_ADDRESS, getPsuIpAddress(paymentRequest))
-                .get(FetchPaymentResponse.class);
+                .get(FetchPaymentStatusResponse.class);
     }
 
     private String getPsuIpAddress(PaymentRequest paymentRequest) {
