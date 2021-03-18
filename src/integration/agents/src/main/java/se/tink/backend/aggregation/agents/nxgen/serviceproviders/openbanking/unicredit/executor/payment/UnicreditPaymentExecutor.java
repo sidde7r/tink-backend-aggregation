@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.executor.payment;
 
+import static java.util.Objects.nonNull;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
@@ -99,7 +101,7 @@ public class UnicreditPaymentExecutor implements PaymentExecutor, FetchablePayme
                                 ? payment.getExecutionRule().toString()
                                 : null)
                 .dayOfExecution(
-                        payment.getDayOfExecution() != 0
+                        nonNull(payment.getDayOfExecution())
                                 ? String.valueOf(payment.getDayOfExecution())
                                 : null)
                 .build();

@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.executor.payment;
 
+import static java.util.Objects.isNull;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -132,7 +134,10 @@ public class FabricPaymentExecutor implements PaymentExecutor, FetchablePaymentE
                                 .remittanceInformationUnstructured(remittanceInformation.getValue())
                                 .frequency(payment.getFrequency().toString())
                                 .startDate(payment.getStartDate().toString())
-                                .dayOfExecution(String.valueOf(payment.getDayOfExecution()));
+                                .dayOfExecution(
+                                        isNull(payment.getDayOfExecution())
+                                                ? null
+                                                : String.valueOf(payment.getDayOfExecution()));
         // optional attributes
         if (Optional.ofNullable(payment.getEndDate()).isPresent()) {
             createRecurringPaymentRequest.endDate(payment.getEndDate().toString());
