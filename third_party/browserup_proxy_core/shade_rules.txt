@@ -1,0 +1,12 @@
+rule com.fasterxml.** browserup_proxy_core.com.fasterxml.@1
+rule com.google.** browserup_proxy_core.com.google.@1
+rule com.barchart.** browserup_proxy_core.com.barchart.@1
+rule com.jcraft.** browserup_proxy_core.com.jcraft.@1
+rule javassist.** browserup_proxy_core.javassist.@1
+rule org.apache.** browserup_proxy_core.org.apache.@1
+rule org.bouncycastle.** browserup_proxy_core.org.bouncycastle.@1
+rule org.littleshoot.** browserup_proxy_core.org.littleshoot.@1
+rule org.checkerframework.** browserup_proxy_core.org.checkerframework.@1
+rule org.slf4j.** browserup_proxy_core.org.slf4j.@1
+rule org.xbill.** browserup_proxy_core.org.xbill.@1
+rule org.brotli.** browserup_proxy_core.org.brotli.@1
