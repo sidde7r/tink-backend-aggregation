@@ -77,6 +77,7 @@ public class CreditCardEntity {
                 .withCardDetails(cardModule)
                 .withoutFlags()
                 .withId(idModule)
+                .addHolderName(holderName)
                 .build();
     }
 

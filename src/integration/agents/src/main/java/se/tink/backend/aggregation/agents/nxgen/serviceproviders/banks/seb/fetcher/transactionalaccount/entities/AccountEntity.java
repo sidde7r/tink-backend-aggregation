@@ -131,7 +131,9 @@ public class AccountEntity {
 
     @JsonIgnore
     public Optional<TransactionalAccount> toTinkAccount(
-            AccountTypeMapper mapper, SebSessionStorage sebSessionStorage) {
+            AccountTypeMapper mapper,
+            SebSessionStorage sebSessionStorage,
+            boolean isBusinessAccount) {
         final Optional<AccountTypes> tinkAccountType = mapper.translate(accountType);
         Preconditions.checkState(tinkAccountType.isPresent());
         Preconditions.checkNotNull(accountNumber);
@@ -157,7 +159,10 @@ public class AccountEntity {
                 .withBalance(getBalanceModule())
                 .withId(idModule)
                 .setApiIdentifier(accountNumber)
-                .addHolderName(getHolderName(sebSessionStorage.getHolderNameBusiness()))
+                .addHolderName(
+                        isBusinessAccount
+                                ? getHolderName(sebSessionStorage.getHolderNameBusiness())
+                                : holderName)
                 .putInTemporaryStorage(
                         StorageKeys.ACCOUNT_CUSTOMER_ID, sebSessionStorage.getCustomerNumber())
                 .canWithdrawCash(
