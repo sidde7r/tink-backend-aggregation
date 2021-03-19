@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentCancelledException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
@@ -131,29 +132,24 @@ public class UnicreditPaymentExecutor implements PaymentExecutor, FetchablePayme
             throws PaymentException {
         Payment payment = paymentMultiStepRequest.getPayment();
 
-        PaymentMultiStepResponse paymentMultiStepResponse;
         PaymentResponse paymentResponse = fetchPaymentWithId(paymentMultiStepRequest);
         PaymentStatus paymentStatus = paymentResponse.getPayment().getStatus();
         log.info("Payment id={} sign status={}", payment.getId(), paymentStatus);
 
         if (PaymentStatus.SIGNED.equals(paymentStatus)
                 || PaymentStatus.PAID.equals(paymentStatus)) {
-            paymentMultiStepResponse =
-                    new PaymentMultiStepResponse(
-                            paymentResponse,
-                            AuthenticationStepConstants.STEP_FINALIZE,
-                            new ArrayList<>());
+            return new PaymentMultiStepResponse(
+                    paymentResponse, AuthenticationStepConstants.STEP_FINALIZE, new ArrayList<>());
         } else if (PaymentStatus.REJECTED.equals(paymentStatus)) {
             throw new PaymentRejectedException("Payment rejected by Bank");
         } else if (PaymentStatus.CANCELLED.equals(paymentStatus)) {
             throw new PaymentCancelledException("Payment Cancelled by PSU");
         } else {
-            paymentMultiStepResponse =
-                    new PaymentMultiStepResponse(
-                            paymentResponse, "IN_PROGRESS", new ArrayList<>(0));
-        }
 
-        return paymentMultiStepResponse;
+            // payment status= RCVD
+            log.error("Payment was not signed even after waiting for 9 min");
+            throw new PaymentAuthorizationException();
+        }
     }
 
     private PaymentResponse fetchPaymentWithId(PaymentRequest paymentRequest) {
