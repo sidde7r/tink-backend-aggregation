@@ -5,6 +5,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
+import java.util.NoSuchElementException;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankApiClient;
@@ -14,6 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeban
 import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class DkAccountEntityMapperTest {
@@ -55,7 +57,13 @@ public class DkAccountEntityMapperTest {
         assert result != null;
         assertThat(result.getIdModule().getUniqueId()).isEqualTo(ZERO + ACCOUNT_NO_EXT);
         assertThat(result.getIdentifiers().size()).isEqualTo(2);
-        assertThat(result.getIdentifiers().get(0).getIdentifier()).isEqualTo(IBAN_NUMBER);
+        assertThat(
+                        result.getIdentifiers().stream()
+                                .filter(id -> id.getType() == AccountIdentifierType.IBAN)
+                                .findFirst()
+                                .orElseThrow(NoSuchElementException::new)
+                                .getIdentifier())
+                .isEqualTo(IBAN_NUMBER);
         assertThat(
                         result.getIdentifiers().stream()
                                 .filter(id -> id.getIdentifier().equals(ACCOUNT_NO_EXT))
