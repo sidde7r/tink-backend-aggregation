@@ -7,7 +7,7 @@ junit_test(
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/be/openbanking/bnpparibasfortis/integration/resources",
     ],
     visibility = ["//visibility:public"],
-    runtime_deps = ["//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/be/openbanking/bnpparibasfortis"],
+    runtime_deps = ["//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/bnpparibasfortisbase"],
     deps = [
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/be/openbanking/bnpparibasfortis/integration/module",
         "//src/integration/amount",

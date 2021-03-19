@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis;
+package se.tink.backend.aggregation.agents.nxgen.be.openbanking.hellobank;
 
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
 
@@ -13,16 +13,16 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponen
 
 @AgentDependencyModules(modules = QSealcSignerModuleRSASHA256.class)
 @AgentCapabilities({CHECKING_ACCOUNTS})
-public class BnpParibasFortisAgent extends BnpParibasFortisBaseAgent {
+public class HelloBankAgent extends BnpParibasFortisBaseAgent {
 
     @Inject
-    public BnpParibasFortisAgent(
+    public HelloBankAgent(
             AgentComponentProvider agentComponentProvider, QsealcSigner qsealcSigner) {
         super(
                 agentComponentProvider,
                 qsealcSigner,
                 new BnpParibasFortisBaseBankConfiguration(
-                        "https://regulatory.api.bnpparibasfortis.be",
-                        "https://services.bnpparibasfortis.be/SEPLJ04/sps/oauth/oauth20/authorize"));
+                        "https://regulatory.api.hellobank.be",
+                        "https://services.hellobank.be/SEPLJ04/sps/oauth/oauth20/authorize"));
     }
 }
