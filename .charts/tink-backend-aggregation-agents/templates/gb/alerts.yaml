@@ -7,9 +7,9 @@ spec:
   rules:
     - alert: LoginSuccessRateLowWithAttemptLimitGB
       expr: |
-        # Successful/Cancelled attempts above 90%
+        # Successful/Cancelled attempts above 80%
         (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled|unavailable", market="GB", provider_type!="test"}[60m])) by (action,className,provider)
-            / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="GB", provider_type!="test"}[60m])) by (action,className,provider) < 0.90)
+            / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="GB", provider_type!="test"}[60m])) by (action,className,provider) < 0.80)
         # At least this many attempts.
         and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="GB", provider_type!="test"}[60m])) by (action,className,provider) > 5
       for: 5m
@@ -20,15 +20,15 @@ spec:
         description: {{ .Values.kibanaLink }}
           {{ .Values.grafanaLink }}
           Please check if the problem is not caused by API maintenance here https://openbanking.atlassian.net/wiki/spaces/DZ/pages/441614754/API+Downtime
-        summary: Login success rate is below 90% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+        summary: Login success rate is below 80% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
           the last hour.
         tags: {{ .Values.tags }}
 
     - alert: RefreshSuccessRateLowWithAttemptLimitGB
       expr: |
-        # Successful attempts above 90%
+        # Successful attempts above 80%
         (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="GB", provider_type!="test"}[60m])) by (className,provider,type)
-            / sum(increase(tink_agent_refresh_total{market="GB", provider_type!="test"}[60m])) by (className,provider,type) < 0.90)
+            / sum(increase(tink_agent_refresh_total{market="GB", provider_type!="test"}[60m])) by (className,provider,type) < 0.80)
         # At least this many attempts.
         and sum(increase(tink_agent_refresh_total{market="GB", provider_type!="test"}[60m])) by (className,provider,type) > 5
       for: 5m
@@ -39,7 +39,7 @@ spec:
         description: {{ .Values.kibanaLink }}
           {{ .Values.grafanaLink }}
           Please check if the problem is not caused by API maintenance here https://openbanking.atlassian.net/wiki/spaces/DZ/pages/441614754/API+Downtime
-        summary: Refresh success rate is below 90% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+        summary: Refresh success rate is below 80% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
           the last hour for <{ $labels.type }>.
         tags: {{ .Values.tags }}
     ### Bank side failures
