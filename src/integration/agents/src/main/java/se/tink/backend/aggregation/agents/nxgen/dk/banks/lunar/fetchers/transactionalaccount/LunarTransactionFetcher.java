@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.transac
 
 import static se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.LunarConstants.QueryParamsValues;
 
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,6 +24,10 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 public class LunarTransactionFetcher
         implements TransactionKeyPaginator<TransactionalAccount, String> {
 
+    private static final String FUTURE_STATUS = "future";
+    private static final List<String> KNOWN_TRANSACTIONS_STATUSES =
+            Arrays.asList(FUTURE_STATUS, "authorization", "financial");
+
     private final FetcherApiClient apiClient;
 
     @Override
@@ -32,6 +37,7 @@ public class LunarTransactionFetcher
             return new TransactionKeyPaginatorResponseImpl<>(getGoalTransactions(account), null);
         }
         List<TransactionEntity> lunarTransactions = getLunarTransactions(account, key);
+        logInfoAboutPotentialPendingTransactions(lunarTransactions);
         String nextKey = getNextKey(lunarTransactions);
 
         return new TransactionKeyPaginatorResponseImpl<>(
@@ -69,5 +75,43 @@ public class LunarTransactionFetcher
                 .filter(BaseResponseEntity::notDeleted)
                 .map(TransactionEntity::toTinkTransaction)
                 .collect(Collectors.toList());
+    }
+
+    private void logInfoAboutPotentialPendingTransactions(
+            List<TransactionEntity> lunarTransactions) {
+        // Wiski delete this method after getting more data
+        lunarTransactions.stream()
+                .filter(transaction -> transaction.getTimestamp() > 0)
+                .forEach(
+                        transactionEntity -> {
+                            logTransactionsWithTimestampHigherThanUpdated(transactionEntity);
+                            logUnknownTransactionsStatuses(transactionEntity);
+                            logTransactionsWithTimestampInTheFuture(transactionEntity);
+                        });
+    }
+
+    private void logTransactionsWithTimestampHigherThanUpdated(
+            TransactionEntity transactionEntity) {
+        if ((transactionEntity.getTimestamp() > transactionEntity.getUpdated())
+                && !FUTURE_STATUS.equalsIgnoreCase(transactionEntity.getStatus())) {
+            log.info("Possible pending transaction. Status: {}", transactionEntity.getStatus());
+        }
+    }
+
+    private void logUnknownTransactionsStatuses(TransactionEntity transactionEntity) {
+        if (transactionEntity.getStatus() != null
+                && !KNOWN_TRANSACTIONS_STATUSES.contains(
+                        transactionEntity.getStatus().toLowerCase())) {
+            log.info("Found unknown transaction status: {}", transactionEntity.getStatus());
+        }
+    }
+
+    private void logTransactionsWithTimestampInTheFuture(TransactionEntity transactionEntity) {
+        if (!FUTURE_STATUS.equalsIgnoreCase(transactionEntity.getStatus())
+                && transactionEntity.getTimestamp() > System.currentTimeMillis()) {
+            log.info(
+                    "Transaction has a future timestamp and status is: {}",
+                    transactionEntity.getStatus());
+        }
     }
 }

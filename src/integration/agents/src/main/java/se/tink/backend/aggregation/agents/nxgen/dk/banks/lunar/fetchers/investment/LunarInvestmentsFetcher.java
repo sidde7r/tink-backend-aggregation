@@ -24,18 +24,11 @@ public class LunarInvestmentsFetcher implements AccountFetcher<InvestmentAccount
 
     @Override
     public Collection<InvestmentAccount> fetchAccounts() {
-        // Wiski change try catch after getting more data
-
-        try {
-            return Optional.ofNullable(apiClient.fetchInvestments())
-                    .map(InvestmentsResponse::getPortfolio)
-                    .filter(this::hasAccountNumber)
-                    .map(this::getInvestmentAccounts)
-                    .orElse(Collections.emptyList());
-        } catch (RuntimeException e) {
-            log.warn("Failed to fetch Lunar investments!", e);
-            return Collections.emptyList();
-        }
+        return Optional.ofNullable(apiClient.fetchInvestments())
+                .map(InvestmentsResponse::getPortfolio)
+                .filter(this::hasAccountNumber)
+                .map(this::getInvestmentAccounts)
+                .orElse(Collections.emptyList());
     }
 
     private boolean hasAccountNumber(PortfolioEntity portfolioEntity) {
@@ -43,7 +36,6 @@ public class LunarInvestmentsFetcher implements AccountFetcher<InvestmentAccount
     }
 
     private List<InvestmentAccount> getInvestmentAccounts(PortfolioEntity portfolio) {
-        log.info("Lunar user has investment account");
         return portfolio.toInvestmentAccounts(
                 apiClient.fetchPerformanceData().getPerformanceData(), getUserLunarInstruments());
     }
