@@ -245,62 +245,62 @@ spec:
     ### Split login success rates - Authentication Errors - RE ###
     ##############################################################
 
-    - alert: split_login_success_rates_below40_and_greater30_with_authentication_errors_and_attempt_limit_dk_re
-      expr: |
-        (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="DK"}))
-                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DK"})) < 0.4
-        and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="DK"}))
-                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DK"})) >= 0.3
-        and sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DK"})  > 10
-      for: 5m
-      labels:
-        severity: urgent
-        priority: P4
-        who: integration-teletubbies
-      annotations:
-        description: {{ .Values.kibanaLink }}
-          {{ .Values.grafanaLink }}
-        summary: Login success rate for RE agents and for one of login type with authentication errors is between 30 - 40% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
-          the last 30 minutes.
-        tags: {{ .Values.tags }}
-
-    - alert: split_login_success_rates_below30_and_greater20_with_authentication_errors_and_attempt_limit_dk_re
-      expr: |
-        (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="DK"}))
-                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DK"})) < 0.3
-        and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="DK"}))
-                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DK"})) >= 0.2
-        and sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DK"})  > 10
-      for: 5m
-      labels:
-        severity: urgent
-        priority: P3
-        who: integration-teletubbies
-      annotations:
-        description: {{ .Values.kibanaLink }}
-          {{ .Values.grafanaLink }}
-        summary: Login success rate for RE agents and for one of login type with authentication errors is between 20 - 30% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
-          the last 30 minutes.
-        tags: {{ .Values.tags }}
-
-    - alert: split_login_success_rates_below20_and_greater10_with_authentication_errors_and_attempt_limit_dk_re
-      expr: |
-        (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="DK"}))
-                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DK"})) < 0.2
-        and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="DK"}))
-                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DK"})) >= 0.1
-        and sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DK"})  > 10
-      for: 5m
-      labels:
-        severity: urgent
-        priority: P2
-        who: integration-teletubbies
-      annotations:
-        description: {{ .Values.kibanaLink }}
-          {{ .Values.grafanaLink }}
-        summary: Login success rate for RE agents and for one of login type with authentication errors is between 10 - 20% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
-          the last 30 minutes.
-        tags: {{ .Values.tags }}
+#    - alert: split_login_success_rates_below40_and_greater30_with_authentication_errors_and_attempt_limit_dk_re
+#      expr: |
+#        (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="DK"}))
+#                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DK"})) < 0.4
+#        and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="DK"}))
+#                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DK"})) >= 0.3
+#        and sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DK"})  > 10
+#      for: 5m
+#      labels:
+#        severity: urgent
+#        priority: P4
+#        who: integration-teletubbies
+#      annotations:
+#        description: {{ .Values.kibanaLink }}
+#          {{ .Values.grafanaLink }}
+#        summary: Login success rate for RE agents and for one of login type with authentication errors is between 30 - 40% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+#          the last 30 minutes.
+#        tags: {{ .Values.tags }}
+#
+#    - alert: split_login_success_rates_below30_and_greater20_with_authentication_errors_and_attempt_limit_dk_re
+#      expr: |
+#        (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="DK"}))
+#                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DK"})) < 0.3
+#        and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="DK"}))
+#                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DK"})) >= 0.2
+#        and sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DK"})  > 10
+#      for: 5m
+#      labels:
+#        severity: urgent
+#        priority: P3
+#        who: integration-teletubbies
+#      annotations:
+#        description: {{ .Values.kibanaLink }}
+#          {{ .Values.grafanaLink }}
+#        summary: Login success rate for RE agents and for one of login type with authentication errors is between 20 - 30% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+#          the last 30 minutes.
+#        tags: {{ .Values.tags }}
+#
+#    - alert: split_login_success_rates_below20_and_greater10_with_authentication_errors_and_attempt_limit_dk_re
+#      expr: |
+#        (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="DK"}))
+#                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DK"})) < 0.2
+#        and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="DK"}))
+#                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DK"})) >= 0.1
+#        and sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DK"})  > 10
+#      for: 5m
+#      labels:
+#        severity: urgent
+#        priority: P2
+#        who: integration-teletubbies
+#      annotations:
+#        description: {{ .Values.kibanaLink }}
+#          {{ .Values.grafanaLink }}
+#        summary: Login success rate for RE agents and for one of login type with authentication errors is between 10 - 20% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+#          the last 30 minutes.
+#        tags: {{ .Values.tags }}
 
     - alert: split_login_success_rates_below10_with_authentication_errors_and_attempt_limit_dk_re
       expr: |
@@ -557,62 +557,62 @@ spec:
     ### Split login success rates - Agent Errors - RE ###
     #####################################################
 
-    - alert: split_login_success_rates_below35_and_greater30_with_agent_errors_and_attempt_limit_dk_re
-      expr: |
-        (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.agentErrorsAuth }} , market="DK"}))
-                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DK"})) < 0.35
-        and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.agentErrorsAuth }} , market="DK"}))
-                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DK"})) >= 0.3
-        and sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DK"})  > 10
-      for: 5m
-      labels:
-        severity: urgent
-        priority: P4
-        who: integration-teletubbies
-      annotations:
-        description: {{ .Values.kibanaLink }}
-          {{ .Values.grafanaLink }}
-        summary: Login success rate for RE agents and for one of login type with Agent errors is between 30 - 35% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
-          the last 30 minutes.
-        tags: {{ .Values.tags }}
-
-    - alert: split_login_success_rates_below30_and_greater20_with_agent_errors_and_attempt_limit_dk_re
-      expr: |
-        (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.agentErrorsAuth }} , market="DK"}))
-                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DK"})) < 0.3
-        and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.agentErrorsAuth }} , market="DK"}))
-                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DK"})) >= 0.2
-        and sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DK"})  > 10
-      for: 5m
-      labels:
-        severity: urgent
-        priority: P3
-        who: integration-teletubbies
-      annotations:
-        description: {{ .Values.kibanaLink }}
-          {{ .Values.grafanaLink }}
-        summary: Login success rate for RE agents and for one of login type with Agent errors is between 20 - 30% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
-          the last 30 minutes.
-        tags: {{ .Values.tags }}
-
-    - alert: split_login_success_rates_below20_and_greater10_with_agent_errors_and_attempt_limit_dk_re
-      expr: |
-        (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.agentErrorsAuth }} , market="DK"}))
-                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DK"})) < 0.2
-        and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.agentErrorsAuth }} , market="DK"}))
-                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DK"})) >= 0.1
-        and sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DK"})  > 10
-      for: 5m
-      labels:
-        severity: urgent
-        priority: P2
-        who: integration-teletubbies
-      annotations:
-        description: {{ .Values.kibanaLink }}
-          {{ .Values.grafanaLink }}
-        summary: Login success rate for RE agents and for one of login type with Agent errors is between 20 - 30% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
-          the last 30 minutes.
-        tags: {{ .Values.tags }}
+#    - alert: split_login_success_rates_below35_and_greater30_with_agent_errors_and_attempt_limit_dk_re
+#      expr: |
+#        (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.agentErrorsAuth }} , market="DK"}))
+#                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DK"})) < 0.35
+#        and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.agentErrorsAuth }} , market="DK"}))
+#                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DK"})) >= 0.3
+#        and sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DK"})  > 10
+#      for: 5m
+#      labels:
+#        severity: urgent
+#        priority: P4
+#        who: integration-teletubbies
+#      annotations:
+#        description: {{ .Values.kibanaLink }}
+#          {{ .Values.grafanaLink }}
+#        summary: Login success rate for RE agents and for one of login type with Agent errors is between 30 - 35% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+#          the last 30 minutes.
+#        tags: {{ .Values.tags }}
+#
+#    - alert: split_login_success_rates_below30_and_greater20_with_agent_errors_and_attempt_limit_dk_re
+#      expr: |
+#        (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.agentErrorsAuth }} , market="DK"}))
+#                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DK"})) < 0.3
+#        and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.agentErrorsAuth }} , market="DK"}))
+#                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DK"})) >= 0.2
+#        and sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DK"})  > 10
+#      for: 5m
+#      labels:
+#        severity: urgent
+#        priority: P3
+#        who: integration-teletubbies
+#      annotations:
+#        description: {{ .Values.kibanaLink }}
+#          {{ .Values.grafanaLink }}
+#        summary: Login success rate for RE agents and for one of login type with Agent errors is between 20 - 30% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+#          the last 30 minutes.
+#        tags: {{ .Values.tags }}
+#
+#    - alert: split_login_success_rates_below20_and_greater10_with_agent_errors_and_attempt_limit_dk_re
+#      expr: |
+#        (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.agentErrorsAuth }} , market="DK"}))
+#                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DK"})) < 0.2
+#        and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.agentErrorsAuth }} , market="DK"}))
+#                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DK"})) >= 0.1
+#        and sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DK"})  > 10
+#      for: 5m
+#      labels:
+#        severity: urgent
+#        priority: P2
+#        who: integration-teletubbies
+#      annotations:
+#        description: {{ .Values.kibanaLink }}
+#          {{ .Values.grafanaLink }}
+#        summary: Login success rate for RE agents and for one of login type with Agent errors is between 20 - 30% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+#          the last 30 minutes.
+#        tags: {{ .Values.tags }}
 
     - alert: split_login_success_rates_below10_with_agent_errors_and_attempt_limit_dk_re
       expr: |
@@ -713,62 +713,62 @@ spec:
     ### Split login success rates - All Errors - RE ###
     ###################################################
 
-    - alert: split_login_success_rates_below30_and_greater25_with_all_errors_and_attempt_limit_dk_re
-      expr: |
-        (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="DK"}))
-                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DK"})) < 0.30
-        and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="DK"}))
-                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DK"})) >= 0.25
-        and sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DK"})  > 10
-      for: 5m
-      labels:
-        severity: urgent
-        priority: P4
-        who: integration-teletubbies
-      annotations:
-        description: {{ .Values.kibanaLink }}
-          {{ .Values.grafanaLink }}
-        summary: Login success rate for RE agents and for one of login type with All Errors is between 25 - 30% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
-          the last 30 minutes.
-        tags: {{ .Values.tags }}
-
-    - alert: split_login_success_rates_below25_and_greater15_with_all_errors_and_attempt_limit_dk_re
-      expr: |
-        (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="DK"}))
-                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DK"})) < 0.25
-        and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="DK"}))
-                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DK"})) >= 0.15
-        and sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DK"})  > 10
-      for: 5m
-      labels:
-        severity: urgent
-        priority: P3
-        who: integration-teletubbies
-      annotations:
-        description: {{ .Values.kibanaLink }}
-          {{ .Values.grafanaLink }}
-        summary: Login success rate for RE agents and for one of login type with All Errors is between 15 - 25% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
-          the last 30 minutes.
-        tags: {{ .Values.tags }}
-
-    - alert: split_login_success_rates_below15_and_greater10_with_all_errors_and_attempt_limit_dk_re
-      expr: |
-        (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="DK"}))
-                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DK"})) < 0.15
-        and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="DK"}))
-                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DK"})) >= 0.1
-        and sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DK"})  > 10
-      for: 5m
-      labels:
-        severity: urgent
-        priority: P2
-        who: integration-teletubbies
-      annotations:
-        description: {{ .Values.kibanaLink }}
-          {{ .Values.grafanaLink }}
-        summary: Login success rate for RE agents and for one of login type with All Errors is between 10 - 15% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
-          the last 30 minutes.
-        tags: {{ .Values.tags }}
+#    - alert: split_login_success_rates_below30_and_greater25_with_all_errors_and_attempt_limit_dk_re
+#      expr: |
+#        (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="DK"}))
+#                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DK"})) < 0.30
+#        and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="DK"}))
+#                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DK"})) >= 0.25
+#        and sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DK"})  > 10
+#      for: 5m
+#      labels:
+#        severity: urgent
+#        priority: P4
+#        who: integration-teletubbies
+#      annotations:
+#        description: {{ .Values.kibanaLink }}
+#          {{ .Values.grafanaLink }}
+#        summary: Login success rate for RE agents and for one of login type with All Errors is between 25 - 30% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+#          the last 30 minutes.
+#        tags: {{ .Values.tags }}
+#
+#    - alert: split_login_success_rates_below25_and_greater15_with_all_errors_and_attempt_limit_dk_re
+#      expr: |
+#        (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="DK"}))
+#                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DK"})) < 0.25
+#        and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="DK"}))
+#                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DK"})) >= 0.15
+#        and sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DK"})  > 10
+#      for: 5m
+#      labels:
+#        severity: urgent
+#        priority: P3
+#        who: integration-teletubbies
+#      annotations:
+#        description: {{ .Values.kibanaLink }}
+#          {{ .Values.grafanaLink }}
+#        summary: Login success rate for RE agents and for one of login type with All Errors is between 15 - 25% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+#          the last 30 minutes.
+#        tags: {{ .Values.tags }}
+#
+#    - alert: split_login_success_rates_below15_and_greater10_with_all_errors_and_attempt_limit_dk_re
+#      expr: |
+#        (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="DK"}))
+#                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DK"})) < 0.15
+#        and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="DK"}))
+#                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DK"})) >= 0.1
+#        and sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DK"})  > 10
+#      for: 5m
+#      labels:
+#        severity: urgent
+#        priority: P2
+#        who: integration-teletubbies
+#      annotations:
+#        description: {{ .Values.kibanaLink }}
+#          {{ .Values.grafanaLink }}
+#        summary: Login success rate for RE agents and for one of login type with All Errors is between 10 - 15% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+#          the last 30 minutes.
+#        tags: {{ .Values.tags }}
 
     - alert: split_login_success_rates_below10_with_all_errors_and_attempt_limit_dk_re
       expr: |
