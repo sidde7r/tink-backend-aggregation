@@ -765,19 +765,14 @@ public class AgentWorkerOperationFactory {
                                 RefreshableItem.convertLegacyItems(
                                         RefreshableItem.REFRESHABLE_ITEMS_ALL)));
 
-        if (isAisPlusPisFlow(request)) {
+        // https://tink.slack.com/archives/CS4BJQJBV/p1612518614089100
+        boolean sendDataForProcessingEnabled = isSendDataForProcessingEnabled();
+        if (sendDataForProcessingEnabled) {
             commands.add(sendDataForProcessingAgentWorkerCommand);
-        } else {
-            // https://tink.slack.com/archives/CS4BJQJBV/p1612518614089100
-            double skipRatio = 0.5;
-            boolean isIncluded = random.nextDouble() > skipRatio;
-            if (isIncluded) {
-                commands.add(sendDataForProcessingAgentWorkerCommand);
-            }
-            log.info(
-                    "sendDataForProcessingAgentWorkerCommand is used in command chain: {}",
-                    isIncluded);
         }
+        log.info(
+                "sendDataForProcessingAgentWorkerCommand is used in command chain: {}",
+                sendDataForProcessingEnabled);
 
         commands.add(
                 new CreateAgentConfigurationControllerWorkerCommand(
@@ -837,6 +832,11 @@ public class AgentWorkerOperationFactory {
 
         return new AgentWorkerOperation(
                 agentWorkerOperationState, operationName, request, commands, context);
+    }
+
+    private boolean isSendDataForProcessingEnabled() {
+        double skipRatio = 0.05;
+        return random.nextDouble() > skipRatio;
     }
 
     @VisibleForTesting
@@ -1019,9 +1019,8 @@ public class AgentWorkerOperationFactory {
         commands.add(new ReportProviderTransferMetricsAgentWorkerCommand(context, operationName));
 
         // https://tink.slack.com/archives/CS4BJQJBV/p1612518614089100
-        double skipRatio = 0.1;
-        boolean isIncluded = random.nextDouble() > skipRatio;
-        if (isIncluded) {
+        boolean sendDataForProcessingEnabled = isSendDataForProcessingEnabled();
+        if (sendDataForProcessingEnabled) {
             SendDataForProcessingAgentWorkerCommand sendDataForProcessingAgentWorkerCommand =
                     new SendDataForProcessingAgentWorkerCommand(
                             context,
@@ -1033,7 +1032,8 @@ public class AgentWorkerOperationFactory {
             commands.add(sendDataForProcessingAgentWorkerCommand);
         }
         log.info(
-                "sendDataForProcessingAgentWorkerCommand is used in command chain: {}", isIncluded);
+                "sendDataForProcessingAgentWorkerCommand is used in command chain: {}",
+                sendDataForProcessingEnabled);
 
         commands.add(
                 new CreateAgentConfigurationControllerWorkerCommand(
