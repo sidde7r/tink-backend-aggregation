@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
+import java.nio.charset.StandardCharsets;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Answers;
@@ -42,7 +43,8 @@ public class EncryptCredentialsWorkerCommandTest {
     @Test
     public void doExecuteShouldContinueIfCredentialsWereEncrypted() throws Exception {
         // given
-        given(credentialsCrypto.encrypt(context.getRequest(), true, null)).willReturn(true);
+        given(credentialsCrypto.encrypt(context.getRequest(), true, StandardCharsets.UTF_8))
+                .willReturn(true);
 
         // when
         AgentWorkerCommandResult result = command.doExecute();

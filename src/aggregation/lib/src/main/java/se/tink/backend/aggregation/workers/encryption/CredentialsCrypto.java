@@ -149,8 +149,17 @@ public class CredentialsCrypto {
                                 if (v2.getPayload() != null) {
                                     int keyId = v2.getPayload().getKeyId();
                                     byte[] payloadKey = cryptoWrapper.getCryptoKeyByKeyId(keyId);
-                                    String result =
-                                            CredentialsCryptoV2.decryptV2Payload(payloadKey, v2);
+                                    String result;
+
+                                    if (charset != null) {
+                                        result =
+                                                CredentialsCryptoV2.decryptV2Payload(
+                                                        payloadKey, v2, charset);
+                                    } else {
+                                        result =
+                                                CredentialsCryptoV2.decryptV2Payload(
+                                                        payloadKey, v2);
+                                    }
                                     // be aware of side-effect here! this is same credentials object
                                     // as on the Request
                                     credentials.setSensitivePayloadSerialized(result);
