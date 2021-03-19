@@ -806,7 +806,7 @@ spec:
 #        priority: P4
 #        who: integration-teletubbies
 #      annotations:
-#        description: {{ .Values.kibanaLink }}
+#        description: {{ .Values.kibanaClassLink }}
 #          {{ .Values.grafanaLink }}
 #        summary: Login success rate for OB agents and all authentication types with temporary errors is between 65 - 80% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
 #          the last 30 minutes.
@@ -825,7 +825,7 @@ spec:
 #        priority: P3
 #        who: integration-teletubbies
 #      annotations:
-#        description: {{ .Values.kibanaLink }}
+#        description: {{ .Values.kibanaClassLink }}
 #          {{ .Values.grafanaLink }}
 #        summary: Login success rate for OB agents and for all authentication types with temporary errors is between 50 - 65% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
 #          the last 30 minutes.
@@ -844,7 +844,7 @@ spec:
 #        priority: P2
 #        who: integration-teletubbies
 #      annotations:
-#        description: {{ .Values.kibanaLink }}
+#        description: {{ .Values.kibanaClassLink }}
 #          {{ .Values.grafanaLink }}
 #        summary: Login success rate for OB agents and for all authentication types with temporary errors is between 40 - 50% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
 #          the last 30 minutes.
@@ -861,7 +861,7 @@ spec:
 #        priority: P1
 #        who: integration-teletubbies
 #      annotations:
-#        description: {{ .Values.kibanaLink }}
+#        description: {{ .Values.kibanaClassLink }}
 #          {{ .Values.grafanaLink }}
 #        summary: Login success rate for OB agents and for all authentication types with temporary errors is below 40% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
 #          the last 30 minutes.
@@ -885,7 +885,7 @@ spec:
         priority: P4
         who: integration-teletubbies
       annotations:
-        description: {{ .Values.kibanaLink }}
+        description: {{ .Values.kibanaClassLink }}
           {{ .Values.grafanaLink }}
         summary: Login success rate for OB agents and for one of login type with temporary errors is between 70 - 85% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
           the last 30 minutes.
@@ -904,7 +904,7 @@ spec:
         priority: P3
         who: integration-teletubbies
       annotations:
-        description: {{ .Values.kibanaLink }}
+        description: {{ .Values.kibanaClassLink }}
           {{ .Values.grafanaLink }}
         summary: Login success rate for OB agents and for one of login type with temporary errors is between 60 - 70% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
           the last 30 minutes.
@@ -923,7 +923,7 @@ spec:
         priority: P2
         who: integration-teletubbies
       annotations:
-        description: {{ .Values.kibanaLink }}
+        description: {{ .Values.kibanaClassLink }}
           {{ .Values.grafanaLink }}
         summary: Login success rate for OB agents and for one of login type with temporary errors is between 50 - 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
           the last 30 minutes.
@@ -940,7 +940,7 @@ spec:
         priority: P1
         who: integration-teletubbies
       annotations:
-        description: {{ .Values.kibanaLink }}
+        description: {{ .Values.kibanaClassLink }}
           {{ .Values.grafanaLink }}
         summary: Login success rate for OB agents and for one of login type with temporary errors is below 50% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
           the last 30 minutes.
@@ -952,11 +952,11 @@ spec:
 
     - alert: all_login_success_rates_below40_and_greater30_with_authentication_errors_and_attempt_limit_de_ob
       expr: |
-        (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="DE"}))
-                    / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.4
-        and (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="DE"}))
-                    / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) >= 0.3
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 20
+        (sum by (className) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="DE"}))
+                    / (sum by (className) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.4
+        and (sum by (className) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="DE"}))
+                    / (sum by (className) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) >= 0.3
+        and sum by (className) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 20
       for: 5m
       labels:
         severity: urgent
@@ -971,11 +971,11 @@ spec:
 
     - alert: all_login_success_rates_below30_and_greater20_with_authentication_errors_and_attempt_limit_de_ob
       expr: |
-        (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="DE"}))
-                    / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.3
-        and (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="DE"}))
-                    / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) >= 0.2
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 20
+        (sum by (className) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="DE"}))
+                    / (sum by (className) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.3
+        and (sum by (className) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="DE"}))
+                    / (sum by (className) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) >= 0.2
+        and sum by (className) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 20
       for: 5m
       labels:
         severity: urgent
@@ -990,11 +990,11 @@ spec:
 
     - alert: all_login_success_rates_below20_and_greater10_with_authentication_errors_and_attempt_limit_de_ob
       expr: |
-        (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="DE"}))
-                    / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.2
-        and (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="DE"}))
-                    / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) >= 0.1
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 20
+        (sum by (className) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="DE"}))
+                    / (sum by (className) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.2
+        and (sum by (className) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="DE"}))
+                    / (sum by (className) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) >= 0.1
+        and sum by (className) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 20
       for: 5m
       labels:
         severity: urgent
@@ -1009,9 +1009,9 @@ spec:
 
     - alert: all_login_success_rates_below10_with_authentication_errors_and_attempt_limit_de_ob
       expr: |
-        (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="DE"}))
-                    / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.1
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 20
+        (sum by (className) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="DE"}))
+                    / (sum by (className) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.1
+        and sum by (className) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 20
       for: 5m
       labels:
         severity: urgent
@@ -1030,11 +1030,11 @@ spec:
 
     - alert: split_login_success_rates_below40_and_greater30_with_authentication_errors_and_attempt_limit_de_ob
       expr: |
-        (sum by (provider, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="DE"}))
-                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.4
-        and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="DE"}))
+        (sum by (className, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="DE"}))
+                    / (sum by (className, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.4
+        and (sum by (className, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="DE"}))
                     / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) >= 0.3
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 20
+        and sum by (className) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 20
       for: 5m
       labels:
         severity: urgent
@@ -1049,11 +1049,11 @@ spec:
 
     - alert: split_login_success_rates_below30_and_greater20_with_authentication_errors_and_attempt_limit_de_ob
       expr: |
-        (sum by (provider, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="DE"}))
-                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.3
-        and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="DE"}))
-                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) >= 0.2
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 20
+        (sum by (className, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="DE"}))
+                    / (sum by (className, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.3
+        and (sum by (className, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="DE"}))
+                    / (sum by (className, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) >= 0.2
+        and sum by (className, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 20
       for: 5m
       labels:
         severity: urgent
@@ -1068,11 +1068,11 @@ spec:
 
     - alert: split_login_success_rates_below20_and_greater10_with_authentication_errors_and_attempt_limit_de_ob
       expr: |
-        (sum by (provider, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="DE"}))
-                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.2
-        and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="DE"}))
-                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) >= 0.1
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 20
+        (sum by (className, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="DE"}))
+                    / (sum by (className, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.2
+        and (sum by (className, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="DE"}))
+                    / (sum by (className, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) >= 0.1
+        and sum by (className, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 20
       for: 5m
       labels:
         severity: urgent
@@ -1087,9 +1087,9 @@ spec:
 
     - alert: split_login_success_rates_below10_with_authentication_errors_and_attempt_limit_de_ob
       expr: |
-        (sum by (provider, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="DE"}))
-                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.1
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 20
+        (sum by (className, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="DE"}))
+                    / (sum by (className, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.1
+        and sum by (className, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 20
       for: 5m
       labels:
         severity: urgent
@@ -1119,7 +1119,7 @@ spec:
 #        priority: P4
 #        who: integration-teletubbies
 #      annotations:
-#        description: {{ .Values.kibanaLink }}
+#        description: {{ .Values.kibanaClassLink }}
 #          {{ .Values.grafanaLink }}
 #        summary: Login success rate for OB agents and all Bank types with Bank errors is between 60 - 70% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
 #          the last 30 minutes.
@@ -1138,7 +1138,7 @@ spec:
 #        priority: P3
 #        who: integration-teletubbies
 #      annotations:
-#        description: {{ .Values.kibanaLink }}
+#        description: {{ .Values.kibanaClassLink }}
 #          {{ .Values.grafanaLink }}
 #        summary: Login success rate for OB agents and for all Bank types with Bank errors is between 50 - 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
 #          the last 30 minutes.
@@ -1157,7 +1157,7 @@ spec:
 #        priority: P2
 #        who: integration-teletubbies
 #      annotations:
-#        description: {{ .Values.kibanaLink }}
+#        description: {{ .Values.kibanaClassLink }}
 #          {{ .Values.grafanaLink }}
 #        summary: Login success rate for OB agents and for all Bank types with Bank errors is between 40 - 50% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
 #          the last 30 minutes.
@@ -1174,7 +1174,7 @@ spec:
 #        priority: P1
 #        who: integration-teletubbies
 #      annotations:
-#        description: {{ .Values.kibanaLink }}
+#        description: {{ .Values.kibanaClassLink }}
 #          {{ .Values.grafanaLink }}
 #        summary: Login success rate for OB agents and for all Bank types with Bank errors is below 40% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
 #          the last 30 minutes.
@@ -1197,7 +1197,7 @@ spec:
         priority: P4
         who: integration-teletubbies
       annotations:
-        description: {{ .Values.kibanaLink }}
+        description: {{ .Values.kibanaClassLink }}
           {{ .Values.grafanaLink }}
         summary: Login success rate for OB agents and for one of login type with Bank errors is between 60 - 70% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
           the last 30 minutes.
@@ -1216,7 +1216,7 @@ spec:
         priority: P3
         who: integration-teletubbies
       annotations:
-        description: {{ .Values.kibanaLink }}
+        description: {{ .Values.kibanaClassLink }}
           {{ .Values.grafanaLink }}
         summary: Login success rate for OB agents and for one of login type with Bank errors is between 50 - 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
           the last 30 minutes.
@@ -1235,7 +1235,7 @@ spec:
         priority: P2
         who: integration-teletubbies
       annotations:
-        description: {{ .Values.kibanaLink }}
+        description: {{ .Values.kibanaClassLink }}
           {{ .Values.grafanaLink }}
         summary: Login success rate for OB agents and for one of login type with Bank errors is between 40 - 50% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
           the last 30 minutes.
@@ -1252,7 +1252,7 @@ spec:
         priority: P1
         who: integration-teletubbies
       annotations:
-        description: {{ .Values.kibanaLink }}
+        description: {{ .Values.kibanaClassLink }}
           {{ .Values.grafanaLink }}
         summary: Login success rate for OB agents and for one of login type with Bank errors is below 40% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
           the last 30 minutes.
@@ -1275,7 +1275,7 @@ spec:
 #        priority: P4
 #        who: integration-teletubbies
 #      annotations:
-#        description: {{ .Values.kibanaLink }}
+#        description: {{ .Values.kibanaClassLink }}
 #          {{ .Values.grafanaLink }}
 #        summary: Login success rate for OB agents and all Agent types with Agent errors is between 25 - 40% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
 #          the last 30 minutes.
@@ -1294,7 +1294,7 @@ spec:
 #        priority: P3
 #        who: integration-teletubbies
 #      annotations:
-#        description: {{ .Values.kibanaLink }}
+#        description: {{ .Values.kibanaClassLink }}
 #          {{ .Values.grafanaLink }}
 #        summary: Login success rate for OB agents and for all Agent types with Agent errors is between 15 - 25% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
 #          the last 30 minutes.
@@ -1313,7 +1313,7 @@ spec:
 #        priority: P2
 #        who: integration-teletubbies
 #      annotations:
-#        description: {{ .Values.kibanaLink }}
+#        description: {{ .Values.kibanaClassLink }}
 #          {{ .Values.grafanaLink }}
 #        summary: Login success rate for OB agents and for all Agent types with Agent errors is between 10 - 15% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
 #          the last 30 minutes.
@@ -1330,7 +1330,7 @@ spec:
 #        priority: P1
 #        who: integration-teletubbies
 #      annotations:
-#        description: {{ .Values.kibanaLink }}
+#        description: {{ .Values.kibanaClassLink }}
 #          {{ .Values.grafanaLink }}
 #        summary: Login success rate for OB agents and for all Agent types with Agent errors is below 10% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
 #          the last 30 minutes.
@@ -1353,7 +1353,7 @@ spec:
         priority: P4
         who: integration-teletubbies
       annotations:
-        description: {{ .Values.kibanaLink }}
+        description: {{ .Values.kibanaClassLink }}
           {{ .Values.grafanaLink }}
         summary: Login success rate for OB agents and for one of login type with Agent errors is between 50 - 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
           the last 30 minutes.
@@ -1372,7 +1372,7 @@ spec:
         priority: P3
         who: integration-teletubbies
       annotations:
-        description: {{ .Values.kibanaLink }}
+        description: {{ .Values.kibanaClassLink }}
           {{ .Values.grafanaLink }}
         summary: Login success rate for OB agents and for one of login type with Agent errors is between 40 - 50% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
           the last 30 minutes.
@@ -1391,7 +1391,7 @@ spec:
         priority: P2
         who: integration-teletubbies
       annotations:
-        description: {{ .Values.kibanaLink }}
+        description: {{ .Values.kibanaClassLink }}
           {{ .Values.grafanaLink }}
         summary: Login success rate for OB agents and for one of login type with Agent errors is between 10 - 20% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
           the last 30 minutes.
@@ -1408,7 +1408,7 @@ spec:
         priority: P1
         who: integration-teletubbies
       annotations:
-        description: {{ .Values.kibanaLink }}
+        description: {{ .Values.kibanaClassLink }}
           {{ .Values.grafanaLink }}
         summary: Login success rate for OB agents and for one of login type with Agent errors is below 10% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
           the last 30 minutes.
@@ -1431,7 +1431,7 @@ spec:
         priority: P4
         who: integration-teletubbies
       annotations:
-        description: {{ .Values.kibanaLink }}
+        description: {{ .Values.kibanaClassLink }}
           {{ .Values.grafanaLink }}
         summary: Login success rate for OB agents and all Agent types with All Errors is between 20 - 30% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
           the last 30 minutes.
@@ -1450,7 +1450,7 @@ spec:
         priority: P3
         who: integration-teletubbies
       annotations:
-        description: {{ .Values.kibanaLink }}
+        description: {{ .Values.kibanaClassLink }}
           {{ .Values.grafanaLink }}
         summary: Login success rate for OB agents and for all Agent types with All Errors is between 15 - 20% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
           the last 30 minutes.
@@ -1469,7 +1469,7 @@ spec:
         priority: P2
         who: integration-teletubbies
       annotations:
-        description: {{ .Values.kibanaLink }}
+        description: {{ .Values.kibanaClassLink }}
           {{ .Values.grafanaLink }}
         summary: Login success rate for OB agents and for all Agent types with All Errors is between 10 - 15% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
           the last 30 minutes.
@@ -1486,7 +1486,7 @@ spec:
         priority: P1
         who: integration-teletubbies
       annotations:
-        description: {{ .Values.kibanaLink }}
+        description: {{ .Values.kibanaClassLink }}
           {{ .Values.grafanaLink }}
         summary: Login success rate for OB agents and for all Agent types with All Errors is below 10% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
           the last 30 minutes.
@@ -1509,7 +1509,7 @@ spec:
         priority: P4
         who: integration-teletubbies
       annotations:
-        description: {{ .Values.kibanaLink }}
+        description: {{ .Values.kibanaClassLink }}
           {{ .Values.grafanaLink }}
         summary: Login success rate for OB agents and for one of login type with All Errors is between 20 - 30% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
           the last 30 minutes.
@@ -1528,7 +1528,7 @@ spec:
         priority: P3
         who: integration-teletubbies
       annotations:
-        description: {{ .Values.kibanaLink }}
+        description: {{ .Values.kibanaClassLink }}
           {{ .Values.grafanaLink }}
         summary: Login success rate for OB agents and for one of login type with All Errors is between 15 - 20% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
           the last 30 minutes.
@@ -1547,7 +1547,7 @@ spec:
         priority: P2
         who: integration-teletubbies
       annotations:
-        description: {{ .Values.kibanaLink }}
+        description: {{ .Values.kibanaClassLink }}
           {{ .Values.grafanaLink }}
         summary: Login success rate for OB agents and for one of login type with All Errors is between 10 - 15% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
           the last 30 minutes.
@@ -1564,7 +1564,7 @@ spec:
         priority: P1
         who: integration-teletubbies
       annotations:
-        description: {{ .Values.kibanaLink }}
+        description: {{ .Values.kibanaClassLink }}
           {{ .Values.grafanaLink }}
         summary: Login success rate for OB agents and for one of login type with All Errors is below 10% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
           the last 30 minutes.
@@ -1589,7 +1589,7 @@ spec:
         priority: P4
         who: integration-teletubbies
       annotations:
-        description: {{ .Values.kibanaLink }}
+        description: {{ .Values.kibanaClassLink }}
           {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is between 50 - 60% because of bank issues ( <{ $value }> ) for <{ $labels.className }>
           the last 30 minutes for <{ $labels.type }>
@@ -1608,7 +1608,7 @@ spec:
         priority: P3
         who: integration-teletubbies
       annotations:
-        description: {{ .Values.kibanaLink }}
+        description: {{ .Values.kibanaClassLink }}
           {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is between 40 - 50% because of bank issues ( <{ $value }> ) for <{ $labels.className }>
           the last 30 minutes for <{ $labels.type }>
@@ -1627,7 +1627,7 @@ spec:
         priority: P2
         who: integration-teletubbies
       annotations:
-        description: {{ .Values.kibanaLink }}
+        description: {{ .Values.kibanaClassLink }}
           {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is between 30 - 40% because of bank issues ( <{ $value }> ) for <{ $labels.className }>
           the last 30 minutes for <{ $labels.type }>
@@ -1644,7 +1644,7 @@ spec:
         priority: P1
         who: integration-teletubbies
       annotations:
-        description: {{ .Values.kibanaLink }}
+        description: {{ .Values.kibanaClassLink }}
           {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is below 30% because of bank issues ( <{ $value }> ) for <{ $labels.className }>
           the last 30 minutes for <{ $labels.type }>
@@ -1667,7 +1667,7 @@ spec:
         priority: P4
         who: integration-teletubbies
       annotations:
-        description: {{ .Values.kibanaLink }}
+        description: {{ .Values.kibanaClassLink }}
           {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is between 50 - 60% because of agent issues ( <{ $value }> ) for <{ $labels.className }>
           the last 30 minutes for <{ $labels.type }>
@@ -1686,7 +1686,7 @@ spec:
         priority: P3
         who: integration-teletubbies
       annotations:
-        description: {{ .Values.kibanaLink }}
+        description: {{ .Values.kibanaClassLink }}
           {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is between 40 - 50% because of agent issues ( <{ $value }> ) for <{ $labels.className }>
           the last 30 minutes for <{ $labels.type }>
@@ -1705,7 +1705,7 @@ spec:
         priority: P2
         who: integration-teletubbies
       annotations:
-        description: {{ .Values.kibanaLink }}
+        description: {{ .Values.kibanaClassLink }}
           {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is between 30 - 40% because of agent issues ( <{ $value }> ) for <{ $labels.className }>
           the last 30 minutes for <{ $labels.type }>
@@ -1722,7 +1722,7 @@ spec:
         priority: P1
         who: integration-teletubbies
       annotations:
-        description: {{ .Values.kibanaLink }}
+        description: {{ .Values.kibanaClassLink }}
           {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is below 30% because of agent issues ( <{ $value }> ) for <{ $labels.className }>
           the last 30 minutes for <{ $labels.type }>
@@ -1745,7 +1745,7 @@ spec:
         priority: P4
         who: integration-teletubbies
       annotations:
-        description: {{ .Values.kibanaLink }}
+        description: {{ .Values.kibanaClassLink }}
           {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is between 35 - 45% because of all issues ( <{ $value }> ) for <{ $labels.className }>
           the last 30 minutes for <{ $labels.type }>
@@ -1764,7 +1764,7 @@ spec:
         priority: P3
         who: integration-teletubbies
       annotations:
-        description: {{ .Values.kibanaLink }}
+        description: {{ .Values.kibanaClassLink }}
           {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is between 25 - 35% because of all issues ( <{ $value }> ) for <{ $labels.className }>
           the last 30 minutes for <{ $labels.type }>
@@ -1783,7 +1783,7 @@ spec:
         priority: P2
         who: integration-teletubbies
       annotations:
-        description: {{ .Values.kibanaLink }}
+        description: {{ .Values.kibanaClassLink }}
           {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is between 15 - 25% because of all issues ( <{ $value }> ) for <{ $labels.className }>
           the last 30 minutes for <{ $labels.type }>
@@ -1800,7 +1800,7 @@ spec:
         priority: P1
         who: integration-teletubbies
       annotations:
-        description: {{ .Values.kibanaLink }}
+        description: {{ .Values.kibanaClassLink }}
           {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is below 15% because of all issues ( <{ $value }> ) for <{ $labels.className }>
           the last 30 minutes for <{ $labels.type }>
@@ -1823,7 +1823,7 @@ spec:
         priority: P4
         who: integration-teletubbies
       annotations:
-        description: {{ .Values.kibanaLink }}
+        description: {{ .Values.kibanaClassLink }}
           {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is between 50 - 60% because of all issues ( <{ $value }> ) for <{ $labels.className }>
           the last 30 minutes.
@@ -1842,7 +1842,7 @@ spec:
         priority: P3
         who: integration-teletubbies
       annotations:
-        description: {{ .Values.kibanaLink }}
+        description: {{ .Values.kibanaClassLink }}
           {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is between 40 - 50% because of all issues ( <{ $value }> ) for <{ $labels.className }>
           the last 30 minutes.
@@ -1861,7 +1861,7 @@ spec:
         priority: P2
         who: integration-teletubbies
       annotations:
-        description: {{ .Values.kibanaLink }}
+        description: {{ .Values.kibanaClassLink }}
           {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is between 30 - 40% because of all issues ( <{ $value }> ) for <{ $labels.className }>
           the last 30 minutes.
@@ -1878,7 +1878,7 @@ spec:
         priority: P1
         who: integration-teletubbies
       annotations:
-        description: {{ .Values.kibanaLink }}
+        description: {{ .Values.kibanaClassLink }}
           {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is below 30% because of all issues ( <{ $value }> ) for <{ $labels.className }>
           the last 30 minutes.

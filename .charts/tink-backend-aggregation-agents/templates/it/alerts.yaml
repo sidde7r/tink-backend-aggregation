@@ -1589,7 +1589,7 @@ spec:
         priority: P4
         who: integration-teletubbies
       annotations:
-        description: {{ .Values.kibanaLink }}
+        description: {{ .Values.kibanaClassLink }}
           {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is between 50 - 60% because of bank issues ( <{ $value }> ) for <{ $labels.className }>
           the last 30 minutes for <{ $labels.type }>
@@ -1608,7 +1608,7 @@ spec:
         priority: P3
         who: integration-teletubbies
       annotations:
-        description: {{ .Values.kibanaLink }}
+        description: {{ .Values.kibanaClassLink }}
           {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is between 40 - 50% because of bank issues ( <{ $value }> ) for <{ $labels.className }>
           the last 30 minutes for <{ $labels.type }>
@@ -1627,7 +1627,7 @@ spec:
         priority: P2
         who: integration-teletubbies
       annotations:
-        description: {{ .Values.kibanaLink }}
+        description: {{ .Values.kibanaClassLink }}
           {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is between 30 - 40% because of bank issues ( <{ $value }> ) for <{ $labels.className }>
           the last 30 minutes for <{ $labels.type }>
@@ -1644,7 +1644,7 @@ spec:
         priority: P1
         who: integration-teletubbies
       annotations:
-        description: {{ .Values.kibanaLink }}
+        description: {{ .Values.kibanaClassLink }}
           {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is below 30% because of bank issues ( <{ $value }> ) for <{ $labels.className }>
           the last 30 minutes for <{ $labels.type }>
@@ -1667,7 +1667,7 @@ spec:
         priority: P4
         who: integration-teletubbies
       annotations:
-        description: {{ .Values.kibanaLink }}
+        description: {{ .Values.kibanaClassLink }}
           {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is between 50 - 60% because of agent issues ( <{ $value }> ) for <{ $labels.className }>
           the last 30 minutes for <{ $labels.type }>
@@ -1686,7 +1686,7 @@ spec:
         priority: P3
         who: integration-teletubbies
       annotations:
-        description: {{ .Values.kibanaLink }}
+        description: {{ .Values.kibanaClassLink }}
           {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is between 40 - 50% because of agent issues ( <{ $value }> ) for <{ $labels.className }>
           the last 30 minutes for <{ $labels.type }>
@@ -1705,7 +1705,7 @@ spec:
         priority: P2
         who: integration-teletubbies
       annotations:
-        description: {{ .Values.kibanaLink }}
+        description: {{ .Values.kibanaClassLink }}
           {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is between 30 - 40% because of agent issues ( <{ $value }> ) for <{ $labels.className }>
           the last 30 minutes for <{ $labels.type }>
@@ -1722,7 +1722,7 @@ spec:
         priority: P1
         who: integration-teletubbies
       annotations:
-        description: {{ .Values.kibanaLink }}
+        description: {{ .Values.kibanaClassLink }}
           {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is below 30% because of agent issues ( <{ $value }> ) for <{ $labels.className }>
           the last 30 minutes for <{ $labels.type }>
@@ -1745,7 +1745,7 @@ spec:
         priority: P4
         who: integration-teletubbies
       annotations:
-        description: {{ .Values.kibanaLink }}
+        description: {{ .Values.kibanaClassLink }}
           {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is between 35 - 45% because of all issues ( <{ $value }> ) for <{ $labels.className }>
           the last 30 minutes for <{ $labels.type }>
@@ -1764,7 +1764,7 @@ spec:
         priority: P3
         who: integration-teletubbies
       annotations:
-        description: {{ .Values.kibanaLink }}
+        description: {{ .Values.kibanaClassLink }}
           {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is between 25 - 35% because of all issues ( <{ $value }> ) for <{ $labels.className }>
           the last 30 minutes for <{ $labels.type }>
@@ -1783,7 +1783,7 @@ spec:
         priority: P2
         who: integration-teletubbies
       annotations:
-        description: {{ .Values.kibanaLink }}
+        description: {{ .Values.kibanaClassLink }}
           {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is between 15 - 25% because of all issues ( <{ $value }> ) for <{ $labels.className }>
           the last 30 minutes for <{ $labels.type }>
@@ -1800,7 +1800,7 @@ spec:
         priority: P1
         who: integration-teletubbies
       annotations:
-        description: {{ .Values.kibanaLink }}
+        description: {{ .Values.kibanaClassLink }}
           {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is below 15% because of all issues ( <{ $value }> ) for <{ $labels.className }>
           the last 30 minutes for <{ $labels.type }>
@@ -1823,7 +1823,7 @@ spec:
         priority: P4
         who: integration-teletubbies
       annotations:
-        description: {{ .Values.kibanaLink }}
+        description: {{ .Values.kibanaClassLink }}
           {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is between 50 - 60% because of all issues ( <{ $value }> ) for <{ $labels.className }>
           the last 30 minutes.
@@ -1842,7 +1842,7 @@ spec:
         priority: P3
         who: integration-teletubbies
       annotations:
-        description: {{ .Values.kibanaLink }}
+        description: {{ .Values.kibanaClassLink }}
           {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is between 40 - 50% because of all issues ( <{ $value }> ) for <{ $labels.className }>
           the last 30 minutes.
@@ -1861,7 +1861,7 @@ spec:
         priority: P2
         who: integration-teletubbies
       annotations:
-        description: {{ .Values.kibanaLink }}
+        description: {{ .Values.kibanaClassLink }}
           {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is between 30 - 40% because of all issues ( <{ $value }> ) for <{ $labels.className }>
           the last 30 minutes.
@@ -1878,7 +1878,7 @@ spec:
         priority: P1
         who: integration-teletubbies
       annotations:
-        description: {{ .Values.kibanaLink }}
+        description: {{ .Values.kibanaClassLink }}
           {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is below 30% because of all issues ( <{ $value }> ) for <{ $labels.className }>
           the last 30 minutes.
