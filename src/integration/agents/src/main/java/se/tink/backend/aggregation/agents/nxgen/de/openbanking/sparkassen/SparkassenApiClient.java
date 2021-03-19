@@ -6,6 +6,7 @@ import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen
 import java.time.LocalDate;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
+import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
@@ -39,13 +40,19 @@ public class SparkassenApiClient {
     private final String bankCode;
     private final boolean isManual;
     private final String userIp;
+    private final Provider provider;
 
     public SparkassenApiClient(
-            TinkHttpClient client, String bankCode, boolean isManual, String userIp) {
+            TinkHttpClient client,
+            String bankCode,
+            boolean isManual,
+            String userIp,
+            Provider provider) {
         this.client = client;
         this.bankCode = bankCode;
         this.isManual = isManual;
         this.userIp = userIp;
+        this.provider = provider;
     }
 
     private RequestBuilder createRequest(URL url) {
@@ -90,6 +97,8 @@ public class SparkassenApiClient {
                             AuthenticationMethodResponse.class,
                             new InitAuthorizationRequest(new PsuDataEntity(password)));
         } catch (HttpResponseException e) {
+            // ITE-2489 - temporary experiment
+            SparkassenExperimentalLoginErrorHandling.handleIncorrectLogin(e, provider);
             if (e.getResponse().getBody(String.class).contains(PSU_CREDENTIALS_INVALID)) {
                 throw LoginError.INCORRECT_CREDENTIALS.exception(e);
             }
