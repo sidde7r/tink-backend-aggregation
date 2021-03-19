@@ -14,14 +14,16 @@ public class UkOpenBankingPs256Base64SignatureCreator extends UkOpenBankingPs256
     protected Map<String, Object> createJwtHeaders() {
         final String orgId = getSoftwareStatement().getOrgId();
         final String softwareId = getSoftwareStatement().getSoftwareId();
+        final String trustAnchorDomain = getTrustAnchorDomain();
         Objects.requireNonNull(orgId);
         Objects.requireNonNull(softwareId);
+        Objects.requireNonNull(trustAnchorDomain);
 
         return JwtHeaders.create()
                 .addB64()
                 .addIat()
                 .addIssWithOrgId(orgId, softwareId)
-                .addTan()
+                .addTan(trustAnchorDomain)
                 .build();
     }
 }

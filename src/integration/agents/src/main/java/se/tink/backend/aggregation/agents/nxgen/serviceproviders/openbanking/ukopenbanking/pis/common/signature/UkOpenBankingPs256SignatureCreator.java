@@ -17,6 +17,10 @@ public abstract class UkOpenBankingPs256SignatureCreator implements UkOpenBankin
     @Getter(value = AccessLevel.PROTECTED)
     private SoftwareStatementAssertion softwareStatement;
 
+    @Setter
+    @Getter(value = AccessLevel.PROTECTED)
+    private String trustAnchorDomain;
+
     @Override
     public String createSignature(Map<String, Object> payloadClaims) {
         return signer.sign(JwtSigner.Algorithm.PS256, createJwtHeaders(), payloadClaims, true);

@@ -15,9 +15,15 @@ public class UkOpenBankingPs256WithoutBase64SignatureCreator
     protected Map<String, Object> createJwtHeaders() {
         final String orgId = getSoftwareStatement().getOrgId();
         final String softwareId = getSoftwareStatement().getSoftwareId();
+        final String trustAnchorDomain = getTrustAnchorDomain();
         Objects.requireNonNull(orgId);
         Objects.requireNonNull(softwareId);
+        Objects.requireNonNull(trustAnchorDomain);
 
-        return JwtHeaders.create().addIat().addIssWithOrgId(orgId, softwareId).addTan().build();
+        return JwtHeaders.create()
+                .addIat()
+                .addIssWithOrgId(orgId, softwareId)
+                .addTan(trustAnchorDomain)
+                .build();
     }
 }

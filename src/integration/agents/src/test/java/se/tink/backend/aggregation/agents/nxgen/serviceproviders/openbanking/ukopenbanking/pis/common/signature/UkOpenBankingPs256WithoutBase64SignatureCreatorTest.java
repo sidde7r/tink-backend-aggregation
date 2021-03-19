@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentTestFixtures.TRUST_ANCHOR_DOMAIN;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentTestFixtures.createSoftwareStatementAssertion;
 
 import com.google.common.collect.ImmutableSet;
@@ -24,6 +25,7 @@ public class UkOpenBankingPs256WithoutBase64SignatureCreatorTest {
         ukOpenBankingPs256WithoutBase64SignatureCreator =
                 new UkOpenBankingPs256WithoutBase64SignatureCreator(jwtSignerMock);
         ukOpenBankingPs256WithoutBase64SignatureCreator.setSoftwareStatement(softwareStatementMock);
+        ukOpenBankingPs256WithoutBase64SignatureCreator.setTrustAnchorDomain(TRUST_ANCHOR_DOMAIN);
     }
 
     @Test

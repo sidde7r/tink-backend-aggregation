@@ -39,6 +39,7 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.controllers.signing.SigningStepConstants;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
+import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.Storage;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
@@ -67,6 +68,7 @@ public class UkOpenBankingPaymentTestFixtures {
     public static final String SUPPLEMENTAL_KEY = "DUMMY_SUPPLEMENTAL_KEY";
     public static final String SIGNATURE = "DUMMY_SIGNATURE";
     public static final String SOFTWARE_ID = "DUMMY_SOFTWARE_ID";
+    public static final String TRUST_ANCHOR_DOMAIN = "dummy.domain";
 
     private static final String ORG_ID = "DUMMY_ORG_ID";
     private static final String ACCOUNT_NUMBER = "12345678901234";
@@ -81,6 +83,8 @@ public class UkOpenBankingPaymentTestFixtures {
     private static final Instant NOW = Instant.now();
     private static final String CLIENT_ID = "DUMMY_CLIENT_ID";
     private static final String ID_TOKEN = "DUMMY_ID_TOKEN";
+    private static final String SCHEME = "https://";
+    private static final String QUERY = "?param1=a&param2=b";
 
     public static Payment createPayment() {
         final RemittanceInformation remittanceInformation =
@@ -372,6 +376,16 @@ public class UkOpenBankingPaymentTestFixtures {
 
         when(softwareStatementMock.getSoftwareId()).thenReturn(SOFTWARE_ID);
         when(softwareStatementMock.getOrgId()).thenReturn(ORG_ID);
+
+        return softwareStatementMock;
+    }
+
+    public static SoftwareStatementAssertion createSoftwareStatementAssertionWithJwksEndpoint(
+            String domain) {
+        final SoftwareStatementAssertion softwareStatementMock = createSoftwareStatementAssertion();
+        final String jwksEndpoint = SCHEME + domain + QUERY;
+
+        when(softwareStatementMock.getJwksEndpoint()).thenReturn(new URL(jwksEndpoint));
 
         return softwareStatementMock;
     }
