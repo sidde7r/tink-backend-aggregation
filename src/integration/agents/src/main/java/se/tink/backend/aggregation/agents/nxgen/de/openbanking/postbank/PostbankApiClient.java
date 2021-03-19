@@ -86,9 +86,17 @@ public class PostbankApiClient extends DeutscheBankApiClient {
     }
 
     public AuthorisationResponse updateAuthorisationForOtp(URL url, String psuId, String otp) {
-        UpdateAuthorisationRequest updateAuthorisationRequest =
-                new UpdateAuthorisationRequest(otp, null);
-        return updateAuthorisation(url, psuId, updateAuthorisationRequest);
+        try {
+            UpdateAuthorisationRequest updateAuthorisationRequest =
+                    new UpdateAuthorisationRequest(otp, null);
+            return updateAuthorisation(url, psuId, updateAuthorisationRequest);
+        } catch (HttpResponseException hre) {
+            handleHttpResponseException(
+                    hre,
+                    ERR_CREDENTIALS_INVALID,
+                    LoginError.INCORRECT_CHALLENGE_RESPONSE.exception(hre));
+            return null;
+        }
     }
 
     private AuthorisationResponse updateAuthorisation(
