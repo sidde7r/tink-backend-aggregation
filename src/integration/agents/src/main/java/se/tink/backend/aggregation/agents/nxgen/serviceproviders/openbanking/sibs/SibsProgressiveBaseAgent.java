@@ -59,7 +59,11 @@ public abstract class SibsProgressiveBaseAgent extends SubsequentProgressiveGene
         setConfiguration(agentsServiceConfiguration);
         apiClient =
                 new SibsBaseApiClient(
-                        client, userState, request.getProvider().getPayload(), request.isManual());
+                        client,
+                        userState,
+                        request.getProvider().getPayload(),
+                        request.isManual(),
+                        userIp);
         final AgentConfiguration<SibsConfiguration> agentConfiguration = getAgentConfiguration();
         final SibsConfiguration sibsConfiguration =
                 agentConfiguration.getProviderSpecificConfiguration();
