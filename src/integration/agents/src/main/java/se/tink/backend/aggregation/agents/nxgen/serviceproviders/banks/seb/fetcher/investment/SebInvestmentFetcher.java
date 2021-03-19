@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.SebApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.fetcher.investment.entities.InvestmentEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.fetcher.investment.entities.InvestmentInstrumnentEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.fetcher.investment.entities.InvestmentInstrumentEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.rpc.Response;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
@@ -34,7 +34,7 @@ public class SebInvestmentFetcher implements AccountFetcher<InvestmentAccount> {
 
                     List<InstrumentModule> instrumentModules =
                             response.getInvestmentInstruments().stream()
-                                    .map(InvestmentInstrumnentEntity::toTinkInstrument)
+                                    .map(InvestmentInstrumentEntity::toTinkInstrument)
                                     .collect(Collectors.toList());
                     res.add(entity.toTinkAccount(instrumentModules));
                 });

@@ -17,7 +17,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.entit
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.fetcher.creditcard.entities.CreditCardEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.fetcher.creditcard.entities.CreditCardTransactionEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.fetcher.investment.entities.InvestmentEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.fetcher.investment.entities.InvestmentInstrumnentEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.fetcher.investment.entities.InvestmentInstrumentEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.fetcher.investment.entities.SimpleInsuranceEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.fetcher.loan.entities.LoanEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.fetcher.transactionalaccount.entities.AccountEntity;
@@ -162,7 +162,7 @@ public class Response {
     }
 
     @JsonIgnore
-    public List<InvestmentInstrumnentEntity> getInvestmentInstruments() {
+    public List<InvestmentInstrumentEntity> getInvestmentInstruments() {
         return payload.getInvestmentInstruments();
     }
 

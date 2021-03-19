@@ -7,7 +7,7 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrum
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument.id.InstrumentIdModule;
 
 @JsonObject
-public class InvestmentInstrumnentEntity {
+public class InvestmentInstrumentEntity {
     @JsonProperty("ANDEL_ANTAL")
     private double shares;
 
