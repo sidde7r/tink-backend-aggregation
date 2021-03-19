@@ -3,9 +3,9 @@ package se.tink.backend.aggregation.resources;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.inject.Inject;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
@@ -373,6 +373,8 @@ public class AggregationServiceResource implements AggregationService {
                 "ExcludedAgentConfigParamNames in SecretsNamesValidationRequest cannot be null.");
 
         List<ProviderConfiguration> allProviders = providerConfigurationService.listAll();
+        Preconditions.checkState(
+                !allProviders.isEmpty(), "Should find at least 1 provider for all providers");
 
         List<ProviderConfiguration> filteredProviders =
                 allProviders.stream()
@@ -380,12 +382,17 @@ public class AggregationServiceResource implements AggregationService {
                         .filter(prv -> prv.getAccessType() == AccessType.OPEN_BANKING)
                         .collect(Collectors.toList());
 
-        Preconditions.checkState(
-                !allProviders.isEmpty(), "Should find at least 1 provider for all providers");
-
-        Preconditions.checkState(
-                !filteredProviders.isEmpty() && filteredProviders.size() == 1,
-                "Should find 1 provider for the request providerId");
+        // return no provider found rather than 500 in this case
+        if (filteredProviders.isEmpty() || filteredProviders.size() != 1) {
+            return new SecretsNamesValidationResponse(
+                    Collections.emptySet(),
+                    Collections.emptySet(),
+                    Collections.emptySet(),
+                    Collections.emptySet(),
+                    Collections.emptySet(),
+                    Collections.emptySet(),
+                    providerId);
+        }
 
         return new ClientConfigurationValidator(Provider.of(filteredProviders.get(0)))
                 .validate(
@@ -394,9 +401,7 @@ public class AggregationServiceResource implements AggregationService {
                         request.getSensitiveSecretsNames(),
                         request.getExcludedSensitiveSecretsNames(),
                         request.getAgentConfigParamNames(),
-                        request.getExcludedAgentConfigParamNames(),
-                        // will remove nonUniqueProviderNames after the removal of its usage in ESS
-                        "");
+                        request.getExcludedAgentConfigParamNames());
     }
 
     @Override
