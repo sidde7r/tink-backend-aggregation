@@ -11,7 +11,6 @@ import com.sun.jersey.api.client.UniformInterfaceException;
 import com.sun.jersey.api.client.config.ClientConfig;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
-import javax.inject.Named;
 import javax.ws.rs.core.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,7 +48,6 @@ import se.tink.libraries.jersey.utils.JerseyUtils;
 import se.tink.libraries.metrics.core.MetricId;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 import se.tink.libraries.signableoperation.rpc.SignableOperation;
-import se.tink.libraries.tracing.jersey.filter.ClientTracingFilter;
 
 public class AggregationControllerAggregationClientImpl
         implements AggregationControllerAggregationClient {
@@ -69,15 +67,12 @@ public class AggregationControllerAggregationClientImpl
     private final MetricRegistry metricRegistry;
     private static final MetricId AGGREGATION_CONTROLLER_RETRIES =
             MetricId.newId("aggregation_controller_retries");
-    private boolean enableTracingExperimental;
 
     @Inject
     private AggregationControllerAggregationClientImpl(
-            @Named("enableTracingExperimental") boolean enableTracingExperimental,
             ClientConfig custom,
             AccountInformationServiceConfiguration accountInformationServiceConfiguration,
             MetricRegistry metricRegistry) {
-        this.enableTracingExperimental = enableTracingExperimental;
         this.config = custom;
         this.accountInformationServiceConfiguration = accountInformationServiceConfiguration;
         this.metricRegistry = metricRegistry;
@@ -96,9 +91,6 @@ public class AggregationControllerAggregationClientImpl
                         hostConfiguration.isDisablerequestcompression(),
                         this.config);
         client.addFilter(new ClientLoggingFilter());
-        if (enableTracingExperimental) {
-            client.addFilter(new ClientTracingFilter());
-        }
 
         JerseyUtils.registerAPIAccessToken(client, hostConfiguration.getApiToken());
 
