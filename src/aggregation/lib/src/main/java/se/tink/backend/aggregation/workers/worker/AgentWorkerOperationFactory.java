@@ -50,7 +50,6 @@ import se.tink.backend.aggregation.workers.commands.CreateLogMaskerWorkerCommand
 import se.tink.backend.aggregation.workers.commands.DataFetchingRestrictionWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.DebugAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.DebugDecryptSpecialCharactersWorkerCommand;
-import se.tink.backend.aggregation.workers.commands.DebugSpecialCharactersWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.DecryptCredentialsWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.EncryptCredentialsWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.ExpireSessionAgentWorkerCommand;
@@ -404,11 +403,15 @@ public class AgentWorkerOperationFactory {
                 new LockAgentWorkerCommand(context, metricsName, interProcessSemaphoreMutexFactory)
                         .withLoginEvent(loginAgentEventProducer));
         commands.add(
+                new DebugDecryptSpecialCharactersWorkerCommand(
+                        context,
+                        new CredentialsCrypto(
+                                cacheClient, controllerWrapper, cryptoWrapper, metricRegistry)));
+        commands.add(
                 new DecryptCredentialsWorkerCommand(
                         context,
                         new CredentialsCrypto(
                                 cacheClient, controllerWrapper, cryptoWrapper, metricRegistry)));
-        commands.add(new DebugSpecialCharactersWorkerCommand(context, "after decrypt"));
         commands.add(
                 new MigrateCredentialsAndAccountsWorkerCommand(
                         context.getRequest(), controllerWrapper, clientInfo));
@@ -522,6 +525,11 @@ public class AgentWorkerOperationFactory {
         commands.add(
                 new LockAgentWorkerCommand(context, metricsName, interProcessSemaphoreMutexFactory)
                         .withLoginEvent(loginAgentEventProducer));
+        commands.add(
+                new DebugDecryptSpecialCharactersWorkerCommand(
+                        context,
+                        new CredentialsCrypto(
+                                cacheClient, controllerWrapper, cryptoWrapper, metricRegistry)));
         commands.add(
                 new DecryptCredentialsWorkerCommand(
                         context,
@@ -708,6 +716,11 @@ public class AgentWorkerOperationFactory {
 
         commands.add(lockAgentWorkerCommand);
 
+        commands.add(
+                new DebugDecryptSpecialCharactersWorkerCommand(
+                        context,
+                        new CredentialsCrypto(
+                                cacheClient, controllerWrapper, cryptoWrapper, metricRegistry)));
         commands.add(new DecryptCredentialsWorkerCommand(context, credentialsCrypto));
 
         if (isAisPlusPisFlow(request)) {
@@ -919,6 +932,11 @@ public class AgentWorkerOperationFactory {
                 new LockAgentWorkerCommand(
                                 context, operationName, interProcessSemaphoreMutexFactory)
                         .withLoginEvent(loginAgentEventProducer));
+        commands.add(
+                new DebugDecryptSpecialCharactersWorkerCommand(
+                        context,
+                        new CredentialsCrypto(
+                                cacheClient, controllerWrapper, cryptoWrapper, metricRegistry)));
         commands.add(new DecryptCredentialsWorkerCommand(context, credentialsCrypto));
         commands.add(
                 new MigrateCredentialsAndAccountsWorkerCommand(
@@ -1001,6 +1019,11 @@ public class AgentWorkerOperationFactory {
         commands.add(
                 new LockAgentWorkerCommand(
                         context, operationName, interProcessSemaphoreMutexFactory));
+        commands.add(
+                new DebugDecryptSpecialCharactersWorkerCommand(
+                        context,
+                        new CredentialsCrypto(
+                                cacheClient, controllerWrapper, cryptoWrapper, metricRegistry)));
         commands.add(new DecryptCredentialsWorkerCommand(context, credentialsCrypto));
         commands.add(
                 new UpdateCredentialsStatusAgentWorkerCommand(
@@ -1086,7 +1109,6 @@ public class AgentWorkerOperationFactory {
         // acquire lock to avoid encryption/decryption race conditions
         commands.add(
                 new LockAgentWorkerCommand(context, operation, interProcessSemaphoreMutexFactory));
-        commands.add(new DebugSpecialCharactersWorkerCommand(context, "before encrypt"));
         commands.add(new EncryptCredentialsWorkerCommand(context, false, credentialsCrypto));
         commands.add(
                 new DebugDecryptSpecialCharactersWorkerCommand(
@@ -1133,6 +1155,11 @@ public class AgentWorkerOperationFactory {
         commands.add(
                 new LockAgentWorkerCommand(context, operation, interProcessSemaphoreMutexFactory));
         commands.add(new EncryptCredentialsWorkerCommand(context, false, credentialsCrypto));
+        commands.add(
+                new DebugDecryptSpecialCharactersWorkerCommand(
+                        context,
+                        new CredentialsCrypto(
+                                cacheClient, controllerWrapper, cryptoWrapper, metricRegistry)));
 
         return new AgentWorkerOperation(
                 agentWorkerOperationState, operation, request, commands, context);
@@ -1176,6 +1203,13 @@ public class AgentWorkerOperationFactory {
                                         cryptoWrapper,
                                         metricRegistry)),
                         new EncryptCredentialsWorkerCommand(
+                                context,
+                                new CredentialsCrypto(
+                                        cacheClient,
+                                        controllerWrapper,
+                                        cryptoWrapper,
+                                        metricRegistry)),
+                        new DebugDecryptSpecialCharactersWorkerCommand(
                                 context,
                                 new CredentialsCrypto(
                                         cacheClient,
@@ -1275,6 +1309,11 @@ public class AgentWorkerOperationFactory {
         commands.add(
                 new LockAgentWorkerCommand(context, metricsName, interProcessSemaphoreMutexFactory)
                         .withLoginEvent(loginAgentEventProducer));
+        commands.add(
+                new DebugDecryptSpecialCharactersWorkerCommand(
+                        context,
+                        new CredentialsCrypto(
+                                cacheClient, controllerWrapper, cryptoWrapper, metricRegistry)));
         commands.add(new DecryptCredentialsWorkerCommand(context, credentialsCrypto));
         commands.add(
                 new MigrateCredentialsAndAccountsWorkerCommand(
@@ -1388,6 +1427,11 @@ public class AgentWorkerOperationFactory {
                 new LockAgentWorkerCommand(
                                 context, operationMetricName, interProcessSemaphoreMutexFactory)
                         .withLoginEvent(loginAgentEventProducer));
+        commands.add(
+                new DebugDecryptSpecialCharactersWorkerCommand(
+                        context,
+                        new CredentialsCrypto(
+                                cacheClient, controllerWrapper, cryptoWrapper, metricRegistry)));
         commands.add(
                 new DecryptCredentialsWorkerCommand(
                         context,
