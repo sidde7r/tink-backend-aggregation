@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.workers.encryption;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import java.lang.invoke.MethodHandles;
+import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Optional;
@@ -54,6 +55,10 @@ public class CredentialsCrypto {
     }
 
     public boolean decrypt(CredentialsRequest request) {
+        return decrypt(request, null);
+    }
+
+    public boolean decrypt(CredentialsRequest request, Charset charset) {
         Credentials credentials = request.getCredentials();
 
         // See if there is any sensitive data in the cache
@@ -121,8 +126,15 @@ public class CredentialsCrypto {
                                 if (v2.getFields() != null) {
                                     int keyId = v2.getFields().getKeyId();
                                     byte[] fieldsKey = cryptoWrapper.getCryptoKeyByKeyId(keyId);
-                                    String result =
-                                            CredentialsCryptoV2.decryptV2Fields(fieldsKey, v2);
+                                    String result;
+
+                                    if (charset != null) {
+                                        result =
+                                                CredentialsCryptoV2.decryptV2Fields(
+                                                        fieldsKey, v2, charset);
+                                    } else {
+                                        result = CredentialsCryptoV2.decryptV2Fields(fieldsKey, v2);
+                                    }
                                     // be aware of side-effect here! this is same credentials object
                                     // as on the Request
                                     credentials.addSerializedFields(result);
@@ -155,6 +167,11 @@ public class CredentialsCrypto {
     }
 
     public boolean encrypt(CredentialsRequest request, boolean doUpdateCredential) {
+        return encrypt(request, doUpdateCredential, null);
+    }
+
+    public boolean encrypt(
+            CredentialsRequest request, boolean doUpdateCredential, Charset charset) {
         Optional<CryptoConfiguration> cryptoConfiguration =
                 cryptoWrapper.getLatestCryptoConfiguration();
         if (!cryptoConfiguration.isPresent()) {
@@ -173,12 +190,23 @@ public class CredentialsCrypto {
         sensitiveInformationCredentials.onlySensitiveInformation(request.getProvider());
 
         // Encrypt with most recent version, currently: V2
-        EncryptedPayloadHead encryptedCredentials =
-                CredentialsCryptoV2.encryptV2(
-                        clusterKeyId,
-                        clusterKey,
-                        sensitiveInformationCredentials.getFieldsSerialized(),
-                        sensitiveInformationCredentials.getSensitivePayloadSerialized());
+        EncryptedPayloadHead encryptedCredentials;
+        if (charset != null) {
+            encryptedCredentials =
+                    CredentialsCryptoV2.encryptV2(
+                            clusterKeyId,
+                            clusterKey,
+                            sensitiveInformationCredentials.getFieldsSerialized(),
+                            sensitiveInformationCredentials.getSensitivePayloadSerialized(),
+                            charset);
+        } else {
+            encryptedCredentials =
+                    CredentialsCryptoV2.encryptV2(
+                            clusterKeyId,
+                            clusterKey,
+                            sensitiveInformationCredentials.getFieldsSerialized(),
+                            sensitiveInformationCredentials.getSensitivePayloadSerialized());
+        }
 
         String serializedEncryptedCredentials =
                 SerializationUtils.serializeToString(encryptedCredentials);

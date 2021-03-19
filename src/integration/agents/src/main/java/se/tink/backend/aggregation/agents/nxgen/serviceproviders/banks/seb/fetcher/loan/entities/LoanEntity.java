@@ -9,10 +9,13 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import se.tink.backend.aggregation.agents.AgentParsingUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.SebConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities.Answer;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Party;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails.Type;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
@@ -71,6 +74,7 @@ public class LoanEntity {
                 .canPlaceFunds(Answer.UNKNOWN)
                 .canExecuteExternalTransfer(Answer.NO)
                 .canReceiveExternalTransfer(Answer.NO)
+                .addParties(getParties())
                 .build();
     }
 
@@ -94,6 +98,12 @@ public class LoanEntity {
                 .withAccountName(loanName)
                 .addIdentifier(new SwedishIdentifier(loanNumber))
                 .build();
+    }
+
+    private List<Party> getParties() {
+        return Stream.of(applicant1, applicant2)
+                .map(name -> new Party(name, Party.Role.HOLDER))
+                .collect(Collectors.toList());
     }
 
     private ExactCurrencyAmount getBalance() {

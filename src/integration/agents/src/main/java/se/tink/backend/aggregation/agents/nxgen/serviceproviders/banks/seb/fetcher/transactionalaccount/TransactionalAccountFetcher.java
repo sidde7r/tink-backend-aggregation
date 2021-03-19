@@ -33,13 +33,14 @@ public class TransactionalAccountFetcher implements AccountFetcher<Transactional
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
+        final boolean isBusinessAccount = sebBaseConfiguration.isBusinessAgent();
         final Response response =
                 apiClient.fetchAccounts(
                         sebSessionStorage.getCustomerNumber(),
                         ServiceInputValues.DEFAULT_ACCOUNT_TYPE);
         final List<AccountEntity> accountEntities =
                 sebBaseConfiguration.getAccountEntities(response).orElseGet(ArrayList::new);
-        if (sebBaseConfiguration.isBusinessAgent()) {
+        if (isBusinessAccount) {
             sebSessionStorage.putAccountHolderNameBusiness(response.getHolderNameBusiness());
         }
         AccountTypeMapper mapper =
@@ -48,7 +49,7 @@ public class TransactionalAccountFetcher implements AccountFetcher<Transactional
                         : SebConstants.ACCOUNT_TYPE_MAPPER;
         return accountEntities.stream()
                 .filter(e -> e.isTransactionalAccount(mapper))
-                .map(account -> account.toTinkAccount(mapper, sebSessionStorage))
+                .map(account -> account.toTinkAccount(mapper, sebSessionStorage, isBusinessAccount))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toList());
