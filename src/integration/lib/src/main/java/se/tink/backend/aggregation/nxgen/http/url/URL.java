@@ -38,7 +38,7 @@ public final class URL {
      * @param url {@link String} containing a URL
      */
     public URL(String url) {
-        String[] parts = url.split("\\?");
+        String[] parts = url.split("\\?", 2);
         this.url = parts[0];
         this.query = parts.length > 1 ? parts[1] : null;
     }
