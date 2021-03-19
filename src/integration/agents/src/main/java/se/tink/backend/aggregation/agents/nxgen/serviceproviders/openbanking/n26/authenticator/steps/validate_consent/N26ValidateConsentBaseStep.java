@@ -50,6 +50,7 @@ public abstract class N26ValidateConsentBaseStep {
             return parseValidateConsentCombinedResponse(
                     callResult.getResponse().get(), persistedData);
         }
+        log.warn("SessionExpired: Could not validate consent");
         return Optional.of(
                 new AgentFailedAuthenticationResult(new SessionExpiredError(), persistedData));
     }
@@ -64,6 +65,7 @@ public abstract class N26ValidateConsentBaseStep {
                 getN26ConsentPersistentData(persistedData);
 
         if (n26ConsentPersistentData.getConsentId() == null) {
+            log.warn("SessionExpired: ConsentId was null");
             return new ExternalApiCallResult<>(new SessionExpiredError());
         }
 
@@ -112,7 +114,7 @@ public abstract class N26ValidateConsentBaseStep {
             return Optional.of(new AgentSucceededAuthenticationResult(validUntil, persistedData));
 
         } else if (callResultResponse.isLoginExpired()) {
-            log.warn("Login attempt expired. Returning SessionExpiredError");
+            log.info("SessionExpired: Consent expired");
             return Optional.of(
                     new AgentFailedAuthenticationResult(new SessionExpiredError(), persistedData));
         }

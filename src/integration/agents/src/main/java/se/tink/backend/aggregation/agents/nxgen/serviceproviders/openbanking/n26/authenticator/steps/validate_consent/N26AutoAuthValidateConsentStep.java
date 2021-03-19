@@ -43,6 +43,10 @@ public class N26AutoAuthValidateConsentStep extends N26ValidateConsentBaseStep
         Optional<AgentAuthenticationResult> resultOptional =
                 parseCommonResponseToResult(callResult, persistedData);
         return resultOptional.orElseGet(
-                () -> new AgentFailedAuthenticationResult(new SessionExpiredError(), null));
+                () -> {
+                    log.info(
+                            "SessionExpired: No AgentAuthenticationResult for consent validation for auto refresh");
+                    return new AgentFailedAuthenticationResult(new SessionExpiredError(), null);
+                });
     }
 }
