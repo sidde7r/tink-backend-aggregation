@@ -91,11 +91,11 @@ spec:
 
     - alert: split_login_success_rates_below50_and_greater40_with_temporary_errors_and_attempt_limit_de_re
       expr: |
-        (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="DE"}))
-                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"})) < 0.5
-        and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="DE"}))
-                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"})) >= 0.4
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"}) > 4
+        (sum by (provider, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="DE"}))
+                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"})) < 0.5
+        and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="DE"}))
+                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"})) >= 0.4
+        and sum by (provider) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"}) > 4
       for: 5m
       labels:
         severity: urgent
@@ -110,11 +110,11 @@ spec:
 
     - alert: split_login_success_rates_below40_and_greater30_with_temporary_errors_and_attempt_limit_de_re
       expr: |
-        (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="DE"}))
-                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"})) < 0.4
-        and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="DE"}))
-                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"})) >= 0.3
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"}) > 4
+        (sum by (provider, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="DE"}))
+                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"})) < 0.4
+        and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="DE"}))
+                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"})) >= 0.3
+        and sum by (provider) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"}) > 4
       for: 5m
       labels:
         severity: urgent
@@ -129,11 +129,11 @@ spec:
 
     - alert: split_login_success_rates_below30_and_greater20_with_temporary_errors_and_attempt_limit_de_re
       expr: |
-        (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="DE"}))
-                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"})) < 0.3
-        and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="DE"}))
-                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"})) >= 0.2
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"}) > 4
+        (sum by (provider, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="DE"}))
+                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"})) < 0.3
+        and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="DE"}))
+                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"})) >= 0.2
+        and sum by (provider) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"}) > 4
       for: 5m
       labels:
         severity: urgent
@@ -148,9 +148,9 @@ spec:
 
     - alert: split_login_success_rates_below20_with_temporary_errors_and_attempt_limit_de_re
       expr: |
-        (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="DE"}))
-                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"})) < 0.2
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"}) > 4
+        (sum by (provider, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="DE"}))
+                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"})) < 0.2
+        and sum by (provider) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"}) > 4
       for: 5m
       labels:
         severity: urgent
@@ -247,11 +247,11 @@ spec:
 
     - alert: split_login_success_rates_below40_and_greater30_with_authentication_errors_and_attempt_limit_de_re
       expr: |
-        (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="DE"}))
-                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"})) < 0.4
-        and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="DE"}))
-                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"})) >= 0.3
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"}) > 4
+        (sum by (provider, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="DE"}))
+                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"})) < 0.4
+        and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="DE"}))
+                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"})) >= 0.3
+        and sum by (provider) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"}) > 4
       for: 5m
       labels:
         severity: urgent
@@ -266,11 +266,11 @@ spec:
 
     - alert: split_login_success_rates_below30_and_greater20_with_authentication_errors_and_attempt_limit_de_re
       expr: |
-        (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="DE"}))
-                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"})) < 0.3
-        and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="DE"}))
-                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"})) >= 0.2
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"}) > 4
+        (sum by (provider, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="DE"}))
+                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"})) < 0.3
+        and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="DE"}))
+                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"})) >= 0.2
+        and sum by (provider) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"}) > 4
       for: 5m
       labels:
         severity: urgent
@@ -285,11 +285,11 @@ spec:
 
     - alert: split_login_success_rates_below20_and_greater10_with_authentication_errors_and_attempt_limit_de_re
       expr: |
-        (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="DE"}))
-                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"})) < 0.2
-        and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="DE"}))
-                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"})) >= 0.1
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"}) > 4
+        (sum by (provider, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="DE"}))
+                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"})) < 0.2
+        and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="DE"}))
+                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"})) >= 0.1
+        and sum by (provider) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"}) > 4
       for: 5m
       labels:
         severity: urgent
@@ -304,9 +304,9 @@ spec:
 
     - alert: split_login_success_rates_below10_with_authentication_errors_and_attempt_limit_de_re
       expr: |
-        (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="DE"}))
-                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"})) < 0.1
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"}) > 4
+        (sum by (provider, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="DE"}))
+                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"})) < 0.1
+        and sum by (provider) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"}) > 4
       for: 5m
       labels:
         severity: urgent
@@ -403,11 +403,11 @@ spec:
 
     - alert: split_login_success_rates_below40_and_greater30_with_bank_errors_and_attempt_limit_de_re
       expr: |
-        (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="DE"}))
-                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"})) < 0.4
-        and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="DE"}))
-                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"})) >= 0.3
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"}) > 4
+        (sum by (provider, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="DE"}))
+                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"})) < 0.4
+        and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="DE"}))
+                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"})) >= 0.3
+        and sum by (provider) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"}) > 4
       for: 5m
       labels:
         severity: urgent
@@ -422,11 +422,11 @@ spec:
 
     - alert: split_login_success_rates_below30_and_greater20_with_bank_errors_and_attempt_limit_de_re
       expr: |
-        (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="DE"}))
-                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"})) < 0.3
-        and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="DE"}))
-                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"})) >= 0.2
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"}) > 4
+        (sum by (provider, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="DE"}))
+                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"})) < 0.3
+        and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="DE"}))
+                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"})) >= 0.2
+        and sum by (provider) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"}) > 4
       for: 5m
       labels:
         severity: urgent
@@ -441,11 +441,11 @@ spec:
 
     - alert: split_login_success_rates_below20_and_greater10_with_bank_errors_and_attempt_limit_de_re
       expr: |
-        (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="DE"}))
-                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"})) < 0.2
-        and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="DE"}))
-                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"})) >= 0.1
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"}) > 4
+        (sum by (provider, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="DE"}))
+                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"})) < 0.2
+        and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="DE"}))
+                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"})) >= 0.1
+        and sum by (provider) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"}) > 4
       for: 5m
       labels:
         severity: urgent
@@ -460,9 +460,9 @@ spec:
 
     - alert: split_login_success_rates_below10_with_bank_errors_and_attempt_limit_de_re
       expr: |
-        (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="DE"}))
-                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"})) < 0.1
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"}) > 4
+        (sum by (provider, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="DE"}))
+                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"})) < 0.1
+        and sum by (provider) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"}) > 4
       for: 5m
       labels:
         severity: urgent
@@ -559,11 +559,11 @@ spec:
 
     - alert: split_login_success_rates_below35_and_greater30_with_agent_errors_and_attempt_limit_de_re
       expr: |
-        (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.agentErrorsAuth }} , market="DE"}))
-                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"})) < 0.35
-        and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.agentErrorsAuth }} , market="DE"}))
-                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"})) >= 0.3
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"}) > 4
+        (sum by (provider, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.agentErrorsAuth }} , market="DE"}))
+                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"})) < 0.35
+        and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.agentErrorsAuth }} , market="DE"}))
+                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"})) >= 0.3
+        and sum by (provider) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"}) > 4
       for: 5m
       labels:
         severity: urgent
@@ -578,11 +578,11 @@ spec:
 
     - alert: split_login_success_rates_below30_and_greater20_with_agent_errors_and_attempt_limit_de_re
       expr: |
-        (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.agentErrorsAuth }} , market="DE"}))
-                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"})) < 0.3
-        and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.agentErrorsAuth }} , market="DE"}))
-                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"})) >= 0.2
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"}) > 4
+        (sum by (provider, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.agentErrorsAuth }} , market="DE"}))
+                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"})) < 0.3
+        and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.agentErrorsAuth }} , market="DE"}))
+                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"})) >= 0.2
+        and sum by (provider) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"}) > 4
       for: 5m
       labels:
         severity: urgent
@@ -597,11 +597,11 @@ spec:
 
     - alert: split_login_success_rates_below20_and_greater10_with_agent_errors_and_attempt_limit_de_re
       expr: |
-        (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.agentErrorsAuth }} , market="DE"}))
-                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"})) < 0.2
-        and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.agentErrorsAuth }} , market="DE"}))
-                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"})) >= 0.1
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"}) > 4
+        (sum by (provider, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.agentErrorsAuth }} , market="DE"}))
+                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"})) < 0.2
+        and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.agentErrorsAuth }} , market="DE"}))
+                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"})) >= 0.1
+        and sum by (provider) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"}) > 4
       for: 5m
       labels:
         severity: urgent
@@ -616,9 +616,9 @@ spec:
 
     - alert: split_login_success_rates_below10_with_agent_errors_and_attempt_limit_de_re
       expr: |
-        (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.agentErrorsAuth }} , market="DE"}))
-                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"})) < 0.1
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"}) > 4
+        (sum by (provider, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.agentErrorsAuth }} , market="DE"}))
+                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"})) < 0.1
+        and sum by (provider) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"}) > 4
       for: 5m
       labels:
         severity: urgent
@@ -715,11 +715,11 @@ spec:
 
     - alert: split_login_success_rates_below30_and_greater25_with_all_errors_and_attempt_limit_de_re
       expr: |
-        (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="DE"}))
-                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"})) < 0.30
-        and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="DE"}))
-                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"})) >= 0.25
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"}) > 4
+        (sum by (provider, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="DE"}))
+                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"})) < 0.30
+        and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="DE"}))
+                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"})) >= 0.25
+        and sum by (provider) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"}) > 4
       for: 5m
       labels:
         severity: urgent
@@ -734,11 +734,11 @@ spec:
 
     - alert: split_login_success_rates_below25_and_greater15_with_all_errors_and_attempt_limit_de_re
       expr: |
-        (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="DE"}))
-                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"})) < 0.25
-        and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="DE"}))
-                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"})) >= 0.15
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"}) > 4
+        (sum by (provider, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="DE"}))
+                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"})) < 0.25
+        and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="DE"}))
+                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"})) >= 0.15
+        and sum by (provider) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"}) > 4
       for: 5m
       labels:
         severity: urgent
@@ -753,11 +753,11 @@ spec:
 
     - alert: split_login_success_rates_below15_and_greater10_with_all_errors_and_attempt_limit_de_re
       expr: |
-        (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="DE"}))
-                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"})) < 0.15
-        and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="DE"}))
-                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"})) >= 0.1
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"}) > 4
+        (sum by (provider, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="DE"}))
+                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"})) < 0.15
+        and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="DE"}))
+                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"})) >= 0.1
+        and sum by (provider) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"}) > 4
       for: 5m
       labels:
         severity: urgent
@@ -772,9 +772,9 @@ spec:
 
     - alert: split_login_success_rates_below10_with_all_errors_and_attempt_limit_de_re
       expr: |
-        (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="DE"}))
-                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"})) < 0.1
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"}) > 4
+        (sum by (provider, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="DE"}))
+                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"})) < 0.1
+        and sum by (provider) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="DE"}) > 4
       for: 5m
       labels:
         severity: urgent
@@ -789,96 +789,96 @@ spec:
 
         ##### OpenBanking #####
 
-    ############################################################
-    ### All login success rates - Temporary Errors - OB ###
-    ############################################################
-
-    - alert: all_login_success_rates_below80_and_greater65_with_temporary_errors_and_attempt_limit_de_ob
-      expr: |
-        (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="DE"}))
-                    / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.8
-        and (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="DE"}))
-                    / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) >= 0.65
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 20
-      for: 5m
-      labels:
-        severity: urgent
-        priority: P4
-        who: integration-teletubbies
-      annotations:
-        description: {{ .Values.kibanaLink }}
-          {{ .Values.grafanaLink }}
-        summary: Login success rate for OB agents and all authentication types with temporary errors is between 65 - 80% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
-          the last 30 minutes.
-        tags: {{ .Values.tags }}
-
-    - alert: all_login_success_rates_below65_and_greater50_with_temporary_errors_and_attempt_limit_de_ob
-      expr: |
-        (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="DE"}))
-                    / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.65
-        and (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="DE"}))
-                    / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) >= 0.5
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 20
-      for: 5m
-      labels:
-        severity: urgent
-        priority: P3
-        who: integration-teletubbies
-      annotations:
-        description: {{ .Values.kibanaLink }}
-          {{ .Values.grafanaLink }}
-        summary: Login success rate for OB agents and for all authentication types with temporary errors is between 50 - 65% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
-          the last 30 minutes.
-        tags: {{ .Values.tags }}
-
-    - alert: all_login_success_rates_below50_and_greater40_with_temporary_errors_and_attempt_limit_de_ob
-      expr: |
-        (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="DE"}))
-                    / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.5
-        and (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="DE"}))
-                    / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) >= 0.4
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 20
-      for: 5m
-      labels:
-        severity: urgent
-        priority: P2
-        who: integration-teletubbies
-      annotations:
-        description: {{ .Values.kibanaLink }}
-          {{ .Values.grafanaLink }}
-        summary: Login success rate for OB agents and for all authentication types with temporary errors is between 40 - 50% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
-          the last 30 minutes.
-        tags: {{ .Values.tags }}
-
-    - alert: all_login_success_rates_below40_with_temporary_errors_and_attempt_limit_de_ob
-      expr: |
-        (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="DE"}))
-                    / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.4
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 20
-      for: 5m
-      labels:
-        severity: urgent
-        priority: P1
-        who: integration-teletubbies
-      annotations:
-        description: {{ .Values.kibanaLink }}
-          {{ .Values.grafanaLink }}
-        summary: Login success rate for OB agents and for all authentication types with temporary errors is below 40% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
-          the last 30 minutes.
-        tags: {{ .Values.tags }}
+#    ############################################################
+#    ### All login success rates - Temporary Errors - OB ###
+#    ############################################################
+#
+#    - alert: all_login_success_rates_below80_and_greater65_with_temporary_errors_and_attempt_limit_de_ob
+#      expr: |
+#        (sum by (className) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="DE"}))
+#                    / (sum by (className) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.8
+#        and (sum by (className) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="DE"}))
+#                    / (sum by (className) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) >= 0.65
+#        and sum by (className) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 20
+#      for: 5m
+#      labels:
+#        severity: urgent
+#        priority: P4
+#        who: integration-teletubbies
+#      annotations:
+#        description: {{ .Values.kibanaLink }}
+#          {{ .Values.grafanaLink }}
+#        summary: Login success rate for OB agents and all authentication types with temporary errors is between 65 - 80% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+#          the last 30 minutes.
+#        tags: {{ .Values.tags }}
+#
+#    - alert: all_login_success_rates_below65_and_greater50_with_temporary_errors_and_attempt_limit_de_ob
+#      expr: |
+#        (sum by (className) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="DE"}))
+#                    / (sum by (className) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.65
+#        and (sum by (className) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="DE"}))
+#                    / (sum by (className) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) >= 0.5
+#        and sum by (className) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 20
+#      for: 5m
+#      labels:
+#        severity: urgent
+#        priority: P3
+#        who: integration-teletubbies
+#      annotations:
+#        description: {{ .Values.kibanaLink }}
+#          {{ .Values.grafanaLink }}
+#        summary: Login success rate for OB agents and for all authentication types with temporary errors is between 50 - 65% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+#          the last 30 minutes.
+#        tags: {{ .Values.tags }}
+#
+#    - alert: all_login_success_rates_below50_and_greater40_with_temporary_errors_and_attempt_limit_de_ob
+#      expr: |
+#        (sum by (className) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="DE"}))
+#                    / (sum by (className) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.5
+#        and (sum by (className) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="DE"}))
+#                    / (sum by (className) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) >= 0.4
+#        and sum by (className) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 20
+#      for: 5m
+#      labels:
+#        severity: urgent
+#        priority: P2
+#        who: integration-teletubbies
+#      annotations:
+#        description: {{ .Values.kibanaLink }}
+#          {{ .Values.grafanaLink }}
+#        summary: Login success rate for OB agents and for all authentication types with temporary errors is between 40 - 50% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+#          the last 30 minutes.
+#        tags: {{ .Values.tags }}
+#
+#    - alert: all_login_success_rates_below40_with_temporary_errors_and_attempt_limit_de_ob
+#      expr: |
+#        (sum by (className) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="DE"}))
+#                    / (sum by (className) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.4
+#        and sum by (className) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 20
+#      for: 5m
+#      labels:
+#        severity: urgent
+#        priority: P1
+#        who: integration-teletubbies
+#      annotations:
+#        description: {{ .Values.kibanaLink }}
+#          {{ .Values.grafanaLink }}
+#        summary: Login success rate for OB agents and for all authentication types with temporary errors is below 40% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+#          the last 30 minutes.
+#        tags: {{ .Values.tags }}
 
 
     #########################################################
-    ### Split login success rates - Temporary Errors - OB ###
+    ### Split login success rates (without BGR refreshes) - Temporary Errors - OB ###
     #########################################################
 
     - alert: split_login_success_rates_below85_and_greater70_with_temporary_errors_and_attempt_limit_de_ob
       expr: |
-        (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="DE"}))
-                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.85
-        and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="DE"}))
-                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) >= 0.7
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 20
+        (sum by (className, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="DE"}))
+                    / (sum by (className, action) (tink_agent_login_total{ {{ .manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.85
+        and (sum by (className, action) (tink_agent_login_total{ {{ .manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="DE"}))
+                    / (sum by (className, action) (tink_agent_login_total{ {{ .manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) >= 0.7
+        and sum by (className, action) (tink_agent_login_total{ {{ .manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 20
       for: 5m
       labels:
         severity: urgent
@@ -893,11 +893,11 @@ spec:
 
     - alert: split_login_success_rates_below70_and_greater60_with_temporary_errors_and_attempt_limit_de_ob
       expr: |
-        (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="DE"}))
-                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.7
-        and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="DE"}))
-                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) >= 0.6
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 20
+        (sum by (className, action) (tink_agent_login_total{ {{ .manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="DE"}))
+                    / (sum by (className, action) (tink_agent_login_total{ {{ .manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.7
+        and (sum by (className, action) (tink_agent_login_total{ {{ .manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="DE"}))
+                    / (sum by (className, action) (tink_agent_login_total{ {{ .manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) >= 0.6
+        and sum by (className, action) (tink_agent_login_total{ {{ .manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 20
       for: 5m
       labels:
         severity: urgent
@@ -912,11 +912,11 @@ spec:
 
     - alert: split_login_success_rates_below60_and_greater50_with_temporary_errors_and_attempt_limit_de_ob
       expr: |
-        (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="DE"}))
-                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.6
-        and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="DE"}))
-                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) >= 0.5
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 20
+        (sum by (className, action) (tink_agent_login_total{ {{ .manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="DE"}))
+                    / (sum by (className, action) (tink_agent_login_total{ {{ .manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.6
+        and (sum by (className, action) (tink_agent_login_total{ {{ .manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="DE"}))
+                    / (sum by (className, action) (tink_agent_login_total{ {{ .manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) >= 0.5
+        and sum by (className, action) (tink_agent_login_total{ {{ .manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 20
       for: 5m
       labels:
         severity: urgent
@@ -931,9 +931,9 @@ spec:
 
     - alert: split_login_success_rates_below50_with_temporary_errors_and_attempt_limit_de_ob
       expr: |
-        (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="DE"}))
-                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.5
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 20
+        (sum by (className, action) (tink_agent_login_total{ {{ .manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="DE"}))
+                    / (sum by (className, action) (tink_agent_login_total{ {{ .manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.5
+        and sum by (className, action) (tink_agent_login_total{ {{ .manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 20
       for: 5m
       labels:
         severity: urgent
@@ -1030,11 +1030,11 @@ spec:
 
     - alert: split_login_success_rates_below40_and_greater30_with_authentication_errors_and_attempt_limit_de_ob
       expr: |
-        (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="DE"}))
-                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.4
-        and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="DE"}))
-                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) >= 0.3
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 20
+        (sum by (provider, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="DE"}))
+                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.4
+        and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="DE"}))
+                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) >= 0.3
+        and sum by (provider) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 20
       for: 5m
       labels:
         severity: urgent
@@ -1049,11 +1049,11 @@ spec:
 
     - alert: split_login_success_rates_below30_and_greater20_with_authentication_errors_and_attempt_limit_de_ob
       expr: |
-        (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="DE"}))
-                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.3
-        and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="DE"}))
-                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) >= 0.2
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 20
+        (sum by (provider, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="DE"}))
+                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.3
+        and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="DE"}))
+                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) >= 0.2
+        and sum by (provider) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 20
       for: 5m
       labels:
         severity: urgent
@@ -1068,11 +1068,11 @@ spec:
 
     - alert: split_login_success_rates_below20_and_greater10_with_authentication_errors_and_attempt_limit_de_ob
       expr: |
-        (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="DE"}))
-                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.2
-        and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="DE"}))
-                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) >= 0.1
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 20
+        (sum by (provider, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="DE"}))
+                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.2
+        and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="DE"}))
+                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) >= 0.1
+        and sum by (provider) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 20
       for: 5m
       labels:
         severity: urgent
@@ -1087,9 +1087,9 @@ spec:
 
     - alert: split_login_success_rates_below10_with_authentication_errors_and_attempt_limit_de_ob
       expr: |
-        (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="DE"}))
-                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.1
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 20
+        (sum by (provider, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="DE"}))
+                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.1
+        and sum by (provider) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 20
       for: 5m
       labels:
         severity: urgent
@@ -1106,79 +1106,79 @@ spec:
     ### All login success rates - Bank Errors - OB ###
     ##################################################
 
-    - alert: all_login_success_rates_below70_and_greater60_with_bank_errors_and_attempt_limit_de_ob
-      expr: |
-        (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="DE"}))
-                    / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.7
-        and (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="DE"}))
-                    / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) >= 0.6
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 20
-      for: 5m
-      labels:
-        severity: urgent
-        priority: P4
-        who: integration-teletubbies
-      annotations:
-        description: {{ .Values.kibanaLink }}
-          {{ .Values.grafanaLink }}
-        summary: Login success rate for OB agents and all Bank types with Bank errors is between 60 - 70% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
-          the last 30 minutes.
-        tags: {{ .Values.tags }}
-
-    - alert: all_login_success_rates_below60_and_greater50_with_bank_errors_and_attempt_limit_de_ob
-      expr: |
-        (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="DE"}))
-                    / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.6
-        and (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="DE"}))
-                    / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) >= 0.5
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 20
-      for: 5m
-      labels:
-        severity: urgent
-        priority: P3
-        who: integration-teletubbies
-      annotations:
-        description: {{ .Values.kibanaLink }}
-          {{ .Values.grafanaLink }}
-        summary: Login success rate for OB agents and for all Bank types with Bank errors is between 50 - 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
-          the last 30 minutes.
-        tags: {{ .Values.tags }}
-
-    - alert: all_login_success_rates_below60_and_greater50_with_bank_errors_and_attempt_limit_de_ob
-      expr: |
-        (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="DE"}))
-                    / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.5
-        and (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="DE"}))
-                    / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) >= 0.4
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 20
-      for: 5m
-      labels:
-        severity: urgent
-        priority: P2
-        who: integration-teletubbies
-      annotations:
-        description: {{ .Values.kibanaLink }}
-          {{ .Values.grafanaLink }}
-        summary: Login success rate for OB agents and for all Bank types with Bank errors is between 40 - 50% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
-          the last 30 minutes.
-        tags: {{ .Values.tags }}
-
-    - alert: all_login_success_rates_below40_with_bank_errors_and_attempt_limit_de_ob
-      expr: |
-        (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="DE"}))
-                    / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.4
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 20
-      for: 5m
-      labels:
-        severity: urgent
-        priority: P1
-        who: integration-teletubbies
-      annotations:
-        description: {{ .Values.kibanaLink }}
-          {{ .Values.grafanaLink }}
-        summary: Login success rate for OB agents and for all Bank types with Bank errors is below 40% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
-          the last 30 minutes.
-        tags: {{ .Values.tags }}
+#    - alert: all_login_success_rates_below70_and_greater60_with_bank_errors_and_attempt_limit_de_ob
+#      expr: |
+#        (sum by (className) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="DE"}))
+#                    / (sum by (className) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.7
+#        and (sum by (className) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="DE"}))
+#                    / (sum by (className) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) >= 0.6
+#        and sum by (className) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 20
+#      for: 5m
+#      labels:
+#        severity: urgent
+#        priority: P4
+#        who: integration-teletubbies
+#      annotations:
+#        description: {{ .Values.kibanaLink }}
+#          {{ .Values.grafanaLink }}
+#        summary: Login success rate for OB agents and all Bank types with Bank errors is between 60 - 70% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+#          the last 30 minutes.
+#        tags: {{ .Values.tags }}
+#
+#    - alert: all_login_success_rates_below60_and_greater50_with_bank_errors_and_attempt_limit_de_ob
+#      expr: |
+#        (sum by (className) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="DE"}))
+#                    / (sum by (className) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.6
+#        and (sum by (className) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="DE"}))
+#                    / (sum by (className) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) >= 0.5
+#        and sum by (className) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 20
+#      for: 5m
+#      labels:
+#        severity: urgent
+#        priority: P3
+#        who: integration-teletubbies
+#      annotations:
+#        description: {{ .Values.kibanaLink }}
+#          {{ .Values.grafanaLink }}
+#        summary: Login success rate for OB agents and for all Bank types with Bank errors is between 50 - 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+#          the last 30 minutes.
+#        tags: {{ .Values.tags }}
+#
+#    - alert: all_login_success_rates_below60_and_greater50_with_bank_errors_and_attempt_limit_de_ob
+#      expr: |
+#        (sum by (className) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="DE"}))
+#                    / (sum by (className) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.5
+#        and (sum by (className) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="DE"}))
+#                    / (sum by (className) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) >= 0.4
+#        and sum by (className) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 20
+#      for: 5m
+#      labels:
+#        severity: urgent
+#        priority: P2
+#        who: integration-teletubbies
+#      annotations:
+#        description: {{ .Values.kibanaLink }}
+#          {{ .Values.grafanaLink }}
+#        summary: Login success rate for OB agents and for all Bank types with Bank errors is between 40 - 50% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+#          the last 30 minutes.
+#        tags: {{ .Values.tags }}
+#
+#    - alert: all_login_success_rates_below40_with_bank_errors_and_attempt_limit_de_ob
+#      expr: |
+#        (sum by (className) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="DE"}))
+#                    / (sum by (className) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.4
+#        and sum by (className) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 20
+#      for: 5m
+#      labels:
+#        severity: urgent
+#        priority: P1
+#        who: integration-teletubbies
+#      annotations:
+#        description: {{ .Values.kibanaLink }}
+#          {{ .Values.grafanaLink }}
+#        summary: Login success rate for OB agents and for all Bank types with Bank errors is below 40% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+#          the last 30 minutes.
+#        tags: {{ .Values.tags }}
 
     ####################################################
     ### Split login success rates - Bank Errors - OB ###
@@ -1186,11 +1186,11 @@ spec:
 
     - alert: split_login_success_rates_below70_and_greater60_with_bank_errors_and_attempt_limit_de_ob
       expr: |
-        (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="DE"}))
-                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.7
-        and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="DE"}))
-                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) >= 0.6
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 20
+        (sum by (className, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="DE"}))
+                    / (sum by (className, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.7
+        and (sum by (className, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="DE"}))
+                    / (sum by (className, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) >= 0.6
+        and sum by (className, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 20
       for: 5m
       labels:
         severity: urgent
@@ -1205,11 +1205,11 @@ spec:
 
     - alert: split_login_success_rates_below60_and_greater50_with_bank_errors_and_attempt_limit_de_ob
       expr: |
-        (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="DE"}))
-                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.6
-        and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="DE"}))
-                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) >= 0.5
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 20
+        (sum by (className, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="DE"}))
+                    / (sum by (className, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.6
+        and (sum by (className, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="DE"}))
+                    / (sum by (className, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) >= 0.5
+        and sum by (className, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 20
       for: 5m
       labels:
         severity: urgent
@@ -1224,11 +1224,11 @@ spec:
 
     - alert: split_login_success_rates_below50_and_greater40_with_bank_errors_and_attempt_limit_de_ob
       expr: |
-        (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="DE"}))
-                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.5
-        and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="DE"}))
-                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) >= 0.4
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 20
+        (sum by (className, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="DE"}))
+                    / (sum by (className, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.5
+        and (sum by (className, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="DE"}))
+                    / (sum by (className, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) >= 0.4
+        and sum by (className, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 20
       for: 5m
       labels:
         severity: urgent
@@ -1243,9 +1243,9 @@ spec:
 
     - alert: split_login_success_rates_below40_with_bank_errors_and_attempt_limit_de_ob
       expr: |
-        (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="DE"}))
-                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.4
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 20
+        (sum by (className, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="DE"}))
+                    / (sum by (className, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.4
+        and sum by (className, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 20
       for: 5m
       labels:
         severity: urgent
@@ -1262,79 +1262,79 @@ spec:
     ### All login success rates - Agent Errors - OB ###
     ###################################################
 
-    - alert: all_login_success_rates_below40_and_greater25_with_agent_errors_and_attempt_limit_de_ob
-      expr: |
-        (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.agentErrorsAuth }} , market="DE"}))
-                    / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.4
-        and (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.agentErrorsAuth }} , market="DE"}))
-                    / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) >= 0.25
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 20
-      for: 5m
-      labels:
-        severity: urgent
-        priority: P4
-        who: integration-teletubbies
-      annotations:
-        description: {{ .Values.kibanaLink }}
-          {{ .Values.grafanaLink }}
-        summary: Login success rate for OB agents and all Agent types with Agent errors is between 25 - 40% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
-          the last 30 minutes.
-        tags: {{ .Values.tags }}
-
-    - alert: all_login_success_rates_below25_and_greater15_with_agent_errors_and_attempt_limit_de_ob
-      expr: |
-        (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.agentErrorsAuth }} , market="DE"}))
-                    / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.25
-        and (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.agentErrorsAuth }} , market="DE"}))
-                    / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) >= 0.15
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 20
-      for: 5m
-      labels:
-        severity: urgent
-        priority: P3
-        who: integration-teletubbies
-      annotations:
-        description: {{ .Values.kibanaLink }}
-          {{ .Values.grafanaLink }}
-        summary: Login success rate for OB agents and for all Agent types with Agent errors is between 15 - 25% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
-          the last 30 minutes.
-        tags: {{ .Values.tags }}
-
-    - alert: all_login_success_rates_below15_and_greater10_with_agent_errors_and_attempt_limit_de_ob
-      expr: |
-        (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.agentErrorsAuth }} , market="DE"}))
-                    / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.15
-        and (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.agentErrorsAuth }} , market="DE"}))
-                    / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) >= 0.1
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 20
-      for: 5m
-      labels:
-        severity: urgent
-        priority: P2
-        who: integration-teletubbies
-      annotations:
-        description: {{ .Values.kibanaLink }}
-          {{ .Values.grafanaLink }}
-        summary: Login success rate for OB agents and for all Agent types with Agent errors is between 10 - 15% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
-          the last 30 minutes.
-        tags: {{ .Values.tags }}
-
-    - alert: all_login_success_rates_below10_with_agent_errors_and_attempt_limit_de_ob
-      expr: |
-        (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.agentErrorsAuth }} , market="DE"}))
-                    / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.1
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 20
-      for: 5m
-      labels:
-        severity: urgent
-        priority: P1
-        who: integration-teletubbies
-      annotations:
-        description: {{ .Values.kibanaLink }}
-          {{ .Values.grafanaLink }}
-        summary: Login success rate for OB agents and for all Agent types with Agent errors is below 10% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
-          the last 30 minutes.
-        tags: {{ .Values.tags }}
+#    - alert: all_login_success_rates_below40_and_greater25_with_agent_errors_and_attempt_limit_de_ob
+#      expr: |
+#        (sum by (className) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.agentErrorsAuth }} , market="DE"}))
+#                    / (sum by (className) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.4
+#        and (sum by (className) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.agentErrorsAuth }} , market="DE"}))
+#                    / (sum by (className) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) >= 0.25
+#        and sum by (className) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 20
+#      for: 5m
+#      labels:
+#        severity: urgent
+#        priority: P4
+#        who: integration-teletubbies
+#      annotations:
+#        description: {{ .Values.kibanaLink }}
+#          {{ .Values.grafanaLink }}
+#        summary: Login success rate for OB agents and all Agent types with Agent errors is between 25 - 40% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+#          the last 30 minutes.
+#        tags: {{ .Values.tags }}
+#
+#    - alert: all_login_success_rates_below25_and_greater15_with_agent_errors_and_attempt_limit_de_ob
+#      expr: |
+#        (sum by (className) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.agentErrorsAuth }} , market="DE"}))
+#                    / (sum by (className) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.25
+#        and (sum by (className) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.agentErrorsAuth }} , market="DE"}))
+#                    / (sum by (className) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) >= 0.15
+#        and sum by (className) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 20
+#      for: 5m
+#      labels:
+#        severity: urgent
+#        priority: P3
+#        who: integration-teletubbies
+#      annotations:
+#        description: {{ .Values.kibanaLink }}
+#          {{ .Values.grafanaLink }}
+#        summary: Login success rate for OB agents and for all Agent types with Agent errors is between 15 - 25% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+#          the last 30 minutes.
+#        tags: {{ .Values.tags }}
+#
+#    - alert: all_login_success_rates_below15_and_greater10_with_agent_errors_and_attempt_limit_de_ob
+#      expr: |
+#        (sum by (className) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.agentErrorsAuth }} , market="DE"}))
+#                    / (sum by (className) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.15
+#        and (sum by (className) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.agentErrorsAuth }} , market="DE"}))
+#                    / (sum by (className) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) >= 0.1
+#        and sum by (className) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 20
+#      for: 5m
+#      labels:
+#        severity: urgent
+#        priority: P2
+#        who: integration-teletubbies
+#      annotations:
+#        description: {{ .Values.kibanaLink }}
+#          {{ .Values.grafanaLink }}
+#        summary: Login success rate for OB agents and for all Agent types with Agent errors is between 10 - 15% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+#          the last 30 minutes.
+#        tags: {{ .Values.tags }}
+#
+#    - alert: all_login_success_rates_below10_with_agent_errors_and_attempt_limit_de_ob
+#      expr: |
+#        (sum by (className) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.agentErrorsAuth }} , market="DE"}))
+#                    / (sum by (className) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.1
+#        and sum by (className) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 20
+#      for: 5m
+#      labels:
+#        severity: urgent
+#        priority: P1
+#        who: integration-teletubbies
+#      annotations:
+#        description: {{ .Values.kibanaLink }}
+#          {{ .Values.grafanaLink }}
+#        summary: Login success rate for OB agents and for all Agent types with Agent errors is below 10% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+#          the last 30 minutes.
+#        tags: {{ .Values.tags }}
 
     #####################################################
     ### Split login success rates - Agent Errors - OB ###
@@ -1342,11 +1342,11 @@ spec:
 
     - alert: split_login_success_rates_below60_and_greater50_with_agent_errors_and_attempt_limit_de_ob
       expr: |
-        (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.agentErrorsAuth }} , market="DE"}))
-                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.4
-        and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.agentErrorsAuth }} , market="DE"}))
-                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) >= 0.25
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 20
+        (sum by (className, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.agentErrorsAuth }} , market="DE"}))
+                    / (sum by (className, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.4
+        and (sum by (className, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.agentErrorsAuth }} , market="DE"}))
+                    / (sum by (className, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) >= 0.25
+        and sum by (className, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 20
       for: 5m
       labels:
         severity: urgent
@@ -1361,11 +1361,11 @@ spec:
 
     - alert: split_login_success_rates_below50_and_greater40_with_agent_errors_and_attempt_limit_de_ob
       expr: |
-        (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.agentErrorsAuth }} , market="DE"}))
-                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.25
-        and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.agentErrorsAuth }} , market="DE"}))
-                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) >= 0.15
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 20
+        (sum by (className, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.agentErrorsAuth }} , market="DE"}))
+                    / (sum by (className, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.25
+        and (sum by (className, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.agentErrorsAuth }} , market="DE"}))
+                    / (sum by (className, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) >= 0.15
+        and sum by (className, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 20
       for: 5m
       labels:
         severity: urgent
@@ -1380,11 +1380,11 @@ spec:
 
     - alert: split_login_success_rates_below40_and_greater30_with_agent_errors_and_attempt_limit_de_ob
       expr: |
-        (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.agentErrorsAuth }} , market="DE"}))
-                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.15
-        and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.agentErrorsAuth }} , market="DE"}))
-                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) >= 0.1
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 20
+        (sum by (className, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.agentErrorsAuth }} , market="DE"}))
+                    / (sum by (className, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.15
+        and (sum by (className, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.agentErrorsAuth }} , market="DE"}))
+                    / (sum by (className, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) >= 0.1
+        and sum by (className, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 20
       for: 5m
       labels:
         severity: urgent
@@ -1399,9 +1399,9 @@ spec:
 
     - alert: split_login_success_rates_below10_with_agent_errors_and_attempt_limit_de_ob
       expr: |
-        (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.agentErrorsAuth }} , market="DE"}))
-                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.1
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 20
+        (sum by (className, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.agentErrorsAuth }} , market="DE"}))
+                    / (sum by (className, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.1
+        and sum by (className, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 20
       for: 5m
       labels:
         severity: urgent
@@ -1420,11 +1420,11 @@ spec:
 
     - alert: all_login_success_rates_below30_and_greater20_with_all_errors_and_attempt_limit_de_ob
       expr: |
-        (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="DE"}))
-                    / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.3
-        and (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="DE"}))
-                    / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) >= 0.2
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 20
+        (sum by (className) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="DE"}))
+                    / (sum by (className) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.3
+        and (sum by (className) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="DE"}))
+                    / (sum by (className) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) >= 0.2
+        and sum by (className) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 20
       for: 5m
       labels:
         severity: urgent
@@ -1439,11 +1439,11 @@ spec:
 
     - alert: all_login_success_rates_below20_and_greater15_with_all_errors_and_attempt_limit_de_ob
       expr: |
-        (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="DE"}))
-                    / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.20
-        and (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="DE"}))
-                    / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) >= 0.15
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 20
+        (sum by (className) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="DE"}))
+                    / (sum by (className) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.20
+        and (sum by (className) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="DE"}))
+                    / (sum by (className) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) >= 0.15
+        and sum by (className) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 20
       for: 5m
       labels:
         severity: urgent
@@ -1458,11 +1458,11 @@ spec:
 
     - alert: all_login_success_rates_below15_and_greater10_with_all_errors_and_attempt_limit_de_ob
       expr: |
-        (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="DE"}))
-                    / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.15
-        and (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="DE"}))
-                    / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) >= 0.1
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 20
+        (sum by (className) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="DE"}))
+                    / (sum by (className) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.15
+        and (sum by (className) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="DE"}))
+                    / (sum by (className) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) >= 0.1
+        and sum by (className) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 20
       for: 5m
       labels:
         severity: urgent
@@ -1477,9 +1477,9 @@ spec:
 
     - alert: all_login_success_rates_below10_with_all_errors_and_attempt_limit_de_ob
       expr: |
-        (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="DE"}))
-                    / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.1
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 20
+        (sum by (className) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="DE"}))
+                    / (sum by (className) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.1
+        and sum by (className) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 20
       for: 5m
       labels:
         severity: urgent
@@ -1498,11 +1498,11 @@ spec:
 
     - alert: split_login_success_rates_below30_and_greater20_with_all_errors_and_attempt_limit_de_ob
       expr: |
-        (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="DE"}))
-                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.3
-        and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="DE"}))
-                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) >= 0.2
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 20
+        (sum by (className, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="DE"}))
+                    / (sum by (className, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.3
+        and (sum by (className, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="DE"}))
+                    / (sum by (className, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) >= 0.2
+        and sum by (className, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 20
       for: 5m
       labels:
         severity: urgent
@@ -1517,11 +1517,11 @@ spec:
 
     - alert: split_login_success_rates_below20_and_greater15_with_all_errors_and_attempt_limit_de_ob
       expr: |
-        (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="DE"}))
-                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.2
-        and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="DE"}))
-                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) >= 0.15
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 20
+        (sum by (className, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="DE"}))
+                    / (sum by (className, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.2
+        and (sum by (className, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="DE"}))
+                    / (sum by (className, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) >= 0.15
+        and sum by (className, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 20
       for: 5m
       labels:
         severity: urgent
@@ -1536,10 +1536,11 @@ spec:
 
     - alert: split_login_success_rates_below15_and_greater10_with_all_errors_and_attempt_limit_de_ob
       expr: |
-        (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="DE"}))
-                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.15
-        and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="DE"}))
-                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) >= 0.1
+        (sum by (className, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="DE"}))
+                    / (sum by (className, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.15
+        and (sum by (className, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="DE"}))
+                    / (sum by (className, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) >= 0.1
+        and sum by (className, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 20 
       for: 5m
       labels:
         severity: urgent
@@ -1554,9 +1555,9 @@ spec:
 
     - alert: split_login_success_rates_below10_with_all_errors_and_attempt_limit_de_ob
       expr: |
-        (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="DE"}))
-                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.1
-        and sum by (provider) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 20
+        (sum by (className, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="DE"}))
+                    / (sum by (className, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"})) < 0.1
+        and sum by (className, action) (tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="DE"}) > 20
       for: 5m
       labels:
         severity: urgent
