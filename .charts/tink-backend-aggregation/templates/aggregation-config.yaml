@@ -158,8 +158,3 @@ data:
           keyId: 1
         base64encodedkey: "QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUE="
     {{- end }}
-
-    jaegerConfig:
-      serviceName: "aggregation-service"
-      sampleRate: 0.01
-      tracingEnabled: true
