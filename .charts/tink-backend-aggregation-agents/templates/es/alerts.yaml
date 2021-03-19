@@ -550,7 +550,7 @@ spec:
         priority: P4
         who: integration-fluffy
       annotations:
-        description: {{ .Values.kibanaLink }}
+        description: {{ .Values.kibanaClassLink }}
              {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is between 70 - 65% because of bank issues ( <{ $value }> ) for <{ $labels.className }>
                       the last {{ .Values.p4TimeWindow }} for <{ $labels.type }>
@@ -569,7 +569,7 @@ spec:
         priority: P3
         who: integration-fluffy
       annotations:
-        description: {{ .Values.kibanaLink }}
+        description: {{ .Values.kibanaClassLink }}
              {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is between 65 - 55% because of bank issues ( <{ $value }> ) for <{ $labels.className }>
                     the last {{ .Values.p3TimeWindow }} for <{ $labels.type }>
@@ -588,7 +588,7 @@ spec:
         priority: P2
         who: integration-fluffy
       annotations:
-        description: {{ .Values.kibanaLink }}
+        description: {{ .Values.kibanaClassLink }}
              {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is between 55 - 50% because of bank issues ( <{ $value }> ) for <{ $labels.className }>
                     the last {{ .Values.p2TimeWindow }} for <{ $labels.type }>
@@ -605,7 +605,7 @@ spec:
         priority: P1
         who: integration-fluffy
       annotations:
-        description: {{ .Values.kibanaLink }}
+        description: {{ .Values.kibanaClassLink }}
              {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is below 50% because of bank issues ( <{ $value }> ) for <{ $labels.className }>
             the last {{ .Values.p1TimeWindow }} for <{ $labels.type }>
@@ -628,7 +628,7 @@ spec:
         priority: P4
         who: integration-fluffy
       annotations:
-        description: {{ .Values.kibanaLink }}
+        description: {{ .Values.kibanaClassLink }}
              {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is between 70 - 65% because of agent issues ( <{ $value }> ) for <{ $labels.className }>
             the last {{ .Values.p4TimeWindow }} for <{ $labels.type }>
@@ -647,7 +647,7 @@ spec:
         priority: P3
         who: integration-fluffy
       annotations:
-        description: {{ .Values.kibanaLink }}
+        description: {{ .Values.kibanaClassLink }}
              {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is between 65 - 55% because of agent issues ( <{ $value }> ) for <{ $labels.className }>
             the last {{ .Values.p3TimeWindow }} for <{ $labels.type }>
@@ -666,7 +666,7 @@ spec:
         priority: P2
         who: integration-fluffy
       annotations:
-        description: {{ .Values.kibanaLink }}
+        description: {{ .Values.kibanaClassLink }}
              {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is between 55 - 50% because of agent issues ( <{ $value }> ) for <{ $labels.className }>
             the last {{ .Values.p2TimeWindow }} for <{ $labels.type }>
@@ -683,7 +683,7 @@ spec:
         priority: P1
         who: integration-fluffy
       annotations:
-        description: {{ .Values.kibanaLink }}
+        description: {{ .Values.kibanaClassLink }}
              {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is below 50% because of agent issues ( <{ $value }> ) for <{ $labels.className }>
             the last {{ .Values.p1TimeWindow }} for <{ $labels.type }>
@@ -706,7 +706,7 @@ spec:
         priority: P4
         who: integration-fluffy
       annotations:
-        description: {{ .Values.kibanaLink }}
+        description: {{ .Values.kibanaClassLink }}
              {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is between 70 - 65% because of all issues ( <{ $value }> ) for <{ $labels.className }>
             the last {{ .Values.p4TimeWindow }} for <{ $labels.type }>
@@ -725,7 +725,7 @@ spec:
         priority: P3
         who: integration-fluffy
       annotations:
-        description: {{ .Values.kibanaLink }}
+        description: {{ .Values.kibanaClassLink }}
              {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is between 65 - 55% because of all issues ( <{ $value }> ) for <{ $labels.className }>
               the last {{ .Values.p3TimeWindow }} for <{ $labels.type }>
@@ -744,7 +744,7 @@ spec:
         priority: P2
         who: integration-fluffy
       annotations:
-        description: {{ .Values.kibanaLink }}
+        description: {{ .Values.kibanaClassLink }}
              {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is between 55 - 50% because of all issues ( <{ $value }> ) for <{ $labels.className }>
               the last {{ .Values.p2TimeWindow }} for <{ $labels.type }>
@@ -761,7 +761,7 @@ spec:
         priority: P1
         who: integration-fluffy
       annotations:
-        description: {{ .Values.kibanaLink }}
+        description: {{ .Values.kibanaClassLink }}
              {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is below 50% because of all issues ( <{ $value }> ) for <{ $labels.className }>
               the last {{ .Values.p1TimeWindow }} for <{ $labels.type }>
@@ -784,7 +784,7 @@ spec:
         priority: P4
         who: integration-fluffy
       annotations:
-        description: {{ .Values.kibanaLink }}
+        description: {{ .Values.kibanaClassLink }}
              {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is between 70 - 65% because of all issues ( <{ $value }> ) for <{ $labels.className }>
                the last {{ .Values.p4TimeWindow }}.
@@ -803,7 +803,7 @@ spec:
         priority: P3
         who: integration-fluffy
       annotations:
-        description: {{ .Values.kibanaLink }}
+        description: {{ .Values.kibanaClassLink }}
              {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is between 65 - 55% because of all issues ( <{ $value }> ) for <{ $labels.className }>
                the last {{ .Values.p3TimeWindow }}.
@@ -822,7 +822,7 @@ spec:
         priority: P2
         who: integration-fluffy
       annotations:
-        description: {{ .Values.kibanaLink }}
+        description: {{ .Values.kibanaClassLink }}
              {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is between 55 - 50% because of all issues ( <{ $value }> ) for <{ $labels.className }>
                the last {{ .Values.p2TimeWindow }}.
@@ -839,7 +839,7 @@ spec:
         priority: P1
         who: integration-fluffy
       annotations:
-        description: {{ .Values.kibanaLink }}
+        description: {{ .Values.kibanaClassLink }}
              {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is below 50% because of all issues ( <{ $value }> ) for <{ $labels.className }>
                the last {{ .Values.p1TimeWindow }}.
