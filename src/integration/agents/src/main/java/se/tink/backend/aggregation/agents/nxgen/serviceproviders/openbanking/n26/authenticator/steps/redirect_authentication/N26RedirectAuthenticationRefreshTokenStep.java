@@ -39,6 +39,11 @@ public class N26RedirectAuthenticationRefreshTokenStep
                     AgentAuthenticationProcessStep.identifier(N26AutoAuthValidateConsentStep.class),
                     authenticationResult.getAuthenticationPersistedData());
         } else if (authenticationResult instanceof AgentProceedNextStepAuthenticationResult) {
+            /**
+             * When the flow of super method goes to the {@link #prepareNewAuthenticationStepResult}
+             * instead of going to manual flow we want to throw return SessionExpiredError
+             */
+            log.info("SessionExpired: Could not refresh token");
             return new AgentFailedAuthenticationResult(new SessionExpiredError(), null);
         }
         log.error("Unknown state after refreshing access token");
