@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.workers.commands;
 
+import java.nio.charset.StandardCharsets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
@@ -40,7 +41,7 @@ public class DebugDecryptSpecialCharactersWorkerCommand extends AgentWorkerComma
         try {
             if (execute) {
                 CredentialsRequest request = context.getRequest();
-                credentialsCrypto.decrypt(request);
+                credentialsCrypto.decrypt(request, StandardCharsets.UTF_8);
 
                 Credentials credentials = request.getCredentials();
 

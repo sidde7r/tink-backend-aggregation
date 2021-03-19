@@ -47,7 +47,7 @@ public class DecryptCredentialsWorkerCommandTest {
     @Test
     public void doExecuteShouldContinueWhenCredentialsAreDecrypted() throws Exception {
         // given
-        given(credentialsCrypto.decrypt(context.getRequest())).willReturn(true);
+        given(credentialsCrypto.decrypt(context.getRequest(), null)).willReturn(true);
 
         // when
         AgentWorkerCommandResult result = command.doExecute();
@@ -70,7 +70,7 @@ public class DecryptCredentialsWorkerCommandTest {
     @Test
     public void doPostProcessShouldEncryptIfCredsWereDecryptedSuccessfully() throws Exception {
         // given
-        given(credentialsCrypto.decrypt(context.getRequest())).willReturn(true);
+        given(credentialsCrypto.decrypt(context.getRequest(), null)).willReturn(true);
         command.doExecute();
 
         // when

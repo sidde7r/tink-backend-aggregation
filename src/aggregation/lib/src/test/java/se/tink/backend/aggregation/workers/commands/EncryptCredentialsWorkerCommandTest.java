@@ -42,7 +42,7 @@ public class EncryptCredentialsWorkerCommandTest {
     @Test
     public void doExecuteShouldContinueIfCredentialsWereEncrypted() throws Exception {
         // given
-        given(credentialsCrypto.encrypt(context.getRequest(), true)).willReturn(true);
+        given(credentialsCrypto.encrypt(context.getRequest(), true, null)).willReturn(true);
 
         // when
         AgentWorkerCommandResult result = command.doExecute();
