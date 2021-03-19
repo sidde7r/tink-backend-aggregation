@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.nxgen.http;
+package se.tink.backend.aggregation.nxgen.http.url;
 
 import com.sun.jersey.core.util.StringKeyIgnoreCaseMultivaluedMap;
 import java.util.Arrays;
@@ -6,7 +6,6 @@ import java.util.HashMap;
 import javax.ws.rs.core.MultivaluedMap;
 import org.junit.Assert;
 import org.junit.Test;
-import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class UrlTest {
     private static final String BASE_URL = "https://www.tink.se";
@@ -275,5 +274,18 @@ public class UrlTest {
         String url = new URL(BASE_URL).get();
 
         Assert.assertEquals(BASE_URL, url);
+    }
+
+    @Test
+    public void shouldParseCorrectUrlWithNestedParametrizedUrlInQueryParam() {
+        // given
+        final String urlToParse =
+                "https://openbanking.unicre.pt/applinks?loginURL=https://openbanking.unicre.pt/Login/Login?eA0I8VcRRNZwZ9Okfk_q6G2-LkIPEbNHfVT1ZG3noPvD6f_W_hAZ9C7JasXHDFWEeqcP9TggbWUW1uhBJru9NdRRimL6Bq8L_KRoeIFqr_b4nC5DycC_kl1QmrJAnf2ZeQUZJce2-uilTmQEgWCIJu-4q-4ADiIDarq5ySZWkYEYo6viwFIQpEBBJ3matPCY&redirectURL=https://main.production.cardiff.tink.se:8443/api/v1/credentials/third-party/callback?state=8cb781cc-6ce4-4098-8265-e9b59fdbfeed";
+
+        // when
+        URL result = new URL(urlToParse);
+
+        // then
+        Assert.assertEquals(urlToParse, result.toString());
     }
 }
