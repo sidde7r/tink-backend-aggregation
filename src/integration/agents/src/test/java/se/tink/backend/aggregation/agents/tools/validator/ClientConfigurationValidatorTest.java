@@ -159,8 +159,7 @@ public class ClientConfigurationValidatorTest {
                         sensitiveSecretsNames,
                         excludedSensitiveSecretsNames,
                         agentConfigParamNames,
-                        excludedAgentConfigParamNames,
-                        "");
+                        excludedAgentConfigParamNames);
 
         assertThat(response.isValid()).isEqualTo(false);
         assertThat(response.getInvalidSecretsNames()).isEmpty();
@@ -221,8 +220,7 @@ public class ClientConfigurationValidatorTest {
                         sensitiveSecretsNames,
                         excludedSensitiveSecretsNames,
                         agentConfigParamNames,
-                        excludedAgentConfigParamNames,
-                        "");
+                        excludedAgentConfigParamNames);
 
         assertThat(response.isValid()).isEqualTo(false);
         assertThat(response.getMissingSecretsNames()).isEmpty();
@@ -281,8 +279,7 @@ public class ClientConfigurationValidatorTest {
                         sensitiveSecretsNames,
                         excludedSensitiveSecretsNames,
                         agentConfigParamNames,
-                        excludedAgentConfigParamNames,
-                        "");
+                        excludedAgentConfigParamNames);
 
         assertThat(response.isValid()).isEqualTo(false);
         assertThat(response.getMissingSecretsNames()).containsExactly("secret4");
@@ -346,8 +343,7 @@ public class ClientConfigurationValidatorTest {
                         sensitiveSecretsNames,
                         excludedSensitiveSecretsNames,
                         agentConfigParamNames,
-                        excludedAgentConfigParamNames,
-                        "");
+                        excludedAgentConfigParamNames);
 
         assertThat(response.isValid()).isEqualTo(true);
         assertThat(response.getMissingSecretsNames()).isEmpty();

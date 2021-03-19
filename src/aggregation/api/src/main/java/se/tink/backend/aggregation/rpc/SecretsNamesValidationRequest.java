@@ -1,9 +1,10 @@
 package se.tink.backend.aggregation.rpc;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.Set;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public final class SecretsNamesValidationRequest {
-    private String financialInstitutionId;
     private String providerId;
     private Set<String> secretsNames;
     private Set<String> excludedSecretsNames;
@@ -11,10 +12,6 @@ public final class SecretsNamesValidationRequest {
     private Set<String> excludedSensitiveSecretsNames;
     private Set<String> agentConfigParamNames;
     private Set<String> excludedAgentConfigParamNames;
-
-    public String getFinancialInstitutionId() {
-        return financialInstitutionId;
-    }
 
     public String getProviderId() {
         return providerId;
@@ -42,10 +39,6 @@ public final class SecretsNamesValidationRequest {
 
     public Set<String> getExcludedAgentConfigParamNames() {
         return excludedAgentConfigParamNames;
-    }
-
-    public void setFinancialInstitutionId(String financialInstitutionId) {
-        this.financialInstitutionId = financialInstitutionId;
     }
 
     public void setProviderId(String providerId) {
