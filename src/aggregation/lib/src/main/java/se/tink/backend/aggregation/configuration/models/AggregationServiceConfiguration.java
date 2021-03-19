@@ -9,7 +9,6 @@ import se.tink.backend.aggregation.storage.file.models.ProvisionClientsConfig;
 import se.tink.libraries.endpoints.dropwizard.EndpointsConfiguration;
 import se.tink.libraries.queue.sqs.configuration.SqsQueueConfiguration;
 import se.tink.libraries.repository.config.DatabaseConfiguration;
-import se.tink.libraries.tracing.jaeger.models.JaegerConfig;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AggregationServiceConfiguration extends Configuration {
@@ -44,8 +43,6 @@ public class AggregationServiceConfiguration extends Configuration {
             new AggregationDevelopmentConfiguration();
 
     @JsonProperty private boolean isMultiClientDevelopment = false;
-
-    @JsonProperty private JaegerConfig jaegerConfig;
 
     @JsonProperty private ProvisionClientsConfig provisionClientsConfig;
 
@@ -159,13 +156,5 @@ public class AggregationServiceConfiguration extends Configuration {
 
     public boolean isSendAccountInformationServiceEvents() {
         return sendAccountInformationServiceEvents;
-    }
-
-    public JaegerConfig getJaegerConfig() {
-        return jaegerConfig;
-    }
-
-    public void setJaegerConfig(JaegerConfig jaegerConfig) {
-        this.jaegerConfig = jaegerConfig;
     }
 }
