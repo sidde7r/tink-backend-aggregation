@@ -18,6 +18,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.configuration.InstrumentType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.CbiGlobePaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.CbiGlobeTransactionalAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.filter.CbiGlobeRetryFilter;
 import se.tink.backend.aggregation.agents.utils.transfer.InferredTransferDestinations;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
@@ -35,7 +36,6 @@ import se.tink.backend.aggregation.nxgen.http.filter.filters.BadGatewayFilter;
 import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.payloadparser.PayloadParser;
-import src.integration.agents.src.main.java.se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.filter.CBIGlobeRetryFilter;
 
 public abstract class CbiGlobeAgent extends SubsequentProgressiveGenerationAgent
         implements RefreshCheckingAccountsExecutor,
@@ -74,7 +74,7 @@ public abstract class CbiGlobeAgent extends SubsequentProgressiveGenerationAgent
                 new AccessExceededFilter(this.provider != null ? this.provider.getName() : null));
         client.addFilter(new BadGatewayFilter());
         client.addFilter(
-                new CBIGlobeRetryFilter(
+                new CbiGlobeRetryFilter(
                         HttpClient.MAX_RETRIES, HttpClient.RETRY_SLEEP_MILLISECONDS));
     }
 
