@@ -384,7 +384,7 @@ public class AggregationServiceResource implements AggregationService {
                 !allProviders.isEmpty(), "Should find at least 1 provider for all providers");
 
         Preconditions.checkState(
-                !filteredProviders.isEmpty() || filteredProviders.size() != 1,
+                !filteredProviders.isEmpty() && filteredProviders.size() == 1,
                 "Should find 1 provider for the request providerId");
 
         return new ClientConfigurationValidator(Provider.of(filteredProviders.get(0)))
