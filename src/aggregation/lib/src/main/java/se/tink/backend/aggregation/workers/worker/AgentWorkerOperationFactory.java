@@ -74,6 +74,7 @@ import se.tink.backend.aggregation.workers.commands.SendFetchedDataToDataAvailab
 import se.tink.backend.aggregation.workers.commands.SendPsd2PaymentClassificationToUpdateServiceAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.SetCredentialsStatusAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.TransferAgentWorkerCommand;
+import se.tink.backend.aggregation.workers.commands.TransferStatusPollingCommand;
 import se.tink.backend.aggregation.workers.commands.UpdateCredentialsStatusAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.ValidateProviderAgentWorkerStatus;
 import se.tink.backend.aggregation.workers.commands.state.CircuitBreakerAgentWorkerCommandState;
@@ -811,6 +812,14 @@ public class AgentWorkerOperationFactory {
         commands.add(
                 new TransferAgentWorkerCommand(
                         context, request, createCommandMetricState(request)));
+
+        // TODO: this is only for test purposes, remove it later
+        if (Objects.equals("aec3753f2f7d42ffb0fd71740f029992", context.getAppId())
+                && (request.getProvider().getName().equals("uk-hsbc-oauth2")
+                        || request.getProvider().getName().equals("uk-tesco-oauth2"))) {
+            log.info("Adding TransferStatusPollingCommand to command chain.");
+            commands.add(new TransferStatusPollingCommand(context, request));
+        }
 
         if (shouldRefreshAfterPis) {
             commands.addAll(
