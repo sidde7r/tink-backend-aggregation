@@ -19,6 +19,7 @@ import se.tink.libraries.concurrency.ListenableThreadPoolExecutor;
 import se.tink.libraries.concurrency.NamedRunnable;
 import se.tink.libraries.metrics.core.MetricId;
 import se.tink.libraries.metrics.registry.MetricRegistry;
+import se.tink.libraries.tracing.lib.api.Tracing;
 
 public class RateLimitedExecutorService implements Managed {
     private static final Logger logger =
@@ -42,11 +43,14 @@ public class RateLimitedExecutorService implements Managed {
     private ListenableThreadPoolExecutor<Runnable> executorService;
     private final AtomicReference<ProviderRateLimiterFactory> rateLimiterFactory;
     private int maxQueuedItems;
+    private final boolean enableTracingExperimental;
 
     public RateLimitedExecutorService(
+            boolean enableTracingExperimental,
             ListenableThreadPoolExecutor<Runnable> executorService,
             MetricRegistry metricRegistry,
             int maxQueuedItems) {
+        this.enableTracingExperimental = enableTracingExperimental;
         this.executorService = executorService;
         this.metricRegistry = metricRegistry;
         this.maxQueuedItems = maxQueuedItems;
@@ -100,6 +104,7 @@ public class RateLimitedExecutorService implements Managed {
                                         provider.getName(),
                                         provider.hashCode());
                                 return new RateLimitedExecutorProxy(
+                                        enableTracingExperimental,
                                         () ->
                                                 RateLimitedExecutorProxy.RateLimiters.from(
                                                         providerRateLimiterFactory
@@ -121,7 +126,11 @@ public class RateLimitedExecutorService implements Managed {
             throws Exception {
         final RateLimitedExecutorProxy executorProxy =
                 rateLimitedRefreshInformationRequestExecutorByProvider.get(provider);
-        executorProxy.execute(namedRunnable);
+        if (enableTracingExperimental) {
+            executorProxy.execute(Tracing.wrapRunnable(namedRunnable));
+        } else {
+            executorProxy.execute(namedRunnable);
+        }
     }
 
     @VisibleForTesting

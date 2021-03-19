@@ -23,6 +23,7 @@ import se.tink.libraries.dropwizard_lifecycle.ManagedSafeStop;
 import se.tink.libraries.executor.ExecutorServiceUtils;
 import se.tink.libraries.metrics.core.MetricId;
 import se.tink.libraries.metrics.registry.MetricRegistry;
+import se.tink.libraries.tracing.lib.api.Tracing;
 
 public class AgentWorker extends ManagedSafeStop {
     private static final Logger log = LoggerFactory.getLogger(AgentWorker.class);
@@ -32,6 +33,7 @@ public class AgentWorker extends ManagedSafeStop {
     private static final String MONITOR_THREAD_NAME_FORMAT = "agent-worker-operation-thread-%s";
     private final MetricRegistry metricRegistry;
     private final boolean queueAvailable;
+    private final boolean enableTracingExperimental;
 
     // On Leeds (running 3g heap size), we started GC:ing aggressively when above 180k elements in
     // the queue here. At
@@ -80,7 +82,10 @@ public class AgentWorker extends ManagedSafeStop {
 
     @Inject
     public AgentWorker(
-            MetricRegistry metricRegistry, @Named("queueAvailable") boolean queueAvailable) {
+            MetricRegistry metricRegistry,
+            @Named("queueAvailable") boolean queueAvailable,
+            @Named("enableTracingExperimental") boolean enableTracingExperimental) {
+        this.enableTracingExperimental = enableTracingExperimental;
         this.metricRegistry = metricRegistry;
         this.queueAvailable = queueAvailable;
     }
@@ -99,7 +104,10 @@ public class AgentWorker extends ManagedSafeStop {
 
         rateLimitedExecutorService =
                 new RateLimitedExecutorService(
-                        aggregationExecutorService, metricRegistry, MAX_QUEUED_UP);
+                        enableTracingExperimental,
+                        aggregationExecutorService,
+                        metricRegistry,
+                        MAX_QUEUED_UP);
         rateLimitedExecutorService.start();
 
         // Build executionservices for automatic refreshes
@@ -118,6 +126,7 @@ public class AgentWorker extends ManagedSafeStop {
 
         automaticRefreshRateLimitedExecutorService =
                 new RateLimitedExecutorService(
+                        enableTracingExperimental,
                         automaticRefreshExecutorService,
                         metricRegistry,
                         queueAvailable ? MAX_QUEUE_AUTOMATIC_REFRESH : MAX_QUEUED_UP);
@@ -169,7 +178,11 @@ public class AgentWorker extends ManagedSafeStop {
 
         if (operation.getRequest().isManual()) {
             // Don't rate limit manual requests
-            aggregationExecutorService.execute(namedRunnable);
+            if (enableTracingExperimental) {
+                aggregationExecutorService.execute(Tracing.wrapRunnable(operation));
+            } else {
+                aggregationExecutorService.execute(operation);
+            }
         } else {
             rateLimitedExecutorService.execute(namedRunnable, operation.getRequest().getProvider());
         }

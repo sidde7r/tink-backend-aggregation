@@ -25,5 +25,6 @@ java_library(
         "//third_party:org_springframework_data_spring_data_commons",
         "@tink_backend//src/libraries/endpoint_configuration/src/main/java/se/tink/libraries/endpoints/dropwizard",
         "@tink_backend//src/libraries/metrics/core/src/main/java/se/tink/libraries/metrics/prometheus",
+        "@tink_backend//src/libraries/tracing/jaeger",
     ],
 )

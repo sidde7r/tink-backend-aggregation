@@ -5,6 +5,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
+import com.google.inject.name.Names;
 import com.sun.jersey.api.client.UniformInterfaceException;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.client.apache4.config.DefaultApacheHttpClient4Config;
@@ -111,6 +112,7 @@ public final class AggregationControllerAggregationClientTest {
             config.getSingletons().add(jsonProvider);
             config.getSingletons().add(new DummyResponseProvider());
             bind(ClientConfig.class).toInstance(config);
+            bindConstant().annotatedWith(Names.named("enableTracingExperimental")).to(false);
         }
     }
 
