@@ -32,27 +32,13 @@ public class DebugDecryptSpecialCharactersWorkerCommand extends AgentWorkerComma
             String credentialsId = context.getRequest().getCredentials().getId();
             Credentials credentialsNonUTF = request.getCredentials().clone();
             Credentials credentialsUTF8 = request.getCredentials().clone();
-            Credentials credentialsUTF16 = request.getCredentials().clone();
 
             int nonUTFHash = getHash(credentialsNonUTF, null);
             int utf8Hash = getHash(credentialsUTF8, StandardCharsets.UTF_8);
-            int utf16Hash = getHash(credentialsUTF16, StandardCharsets.UTF_16);
 
             if (nonUTFHash != utf8Hash) {
                 log.warn(
                         "[decrypt] credentialsId {} nonUTFHash is not equal to utf8Hash",
-                        credentialsId);
-            }
-
-            if (nonUTFHash != utf16Hash) {
-                log.warn(
-                        "[decrypt] credentialsId {} nonUTFHash is not equal to utf16Hash",
-                        credentialsId);
-            }
-
-            if (utf8Hash != utf16Hash) {
-                log.warn(
-                        "[decrypt] credentialsId {} utf8Hash is not equal to utf16Hash",
                         credentialsId);
             }
 
