@@ -12,7 +12,6 @@ import se.tink.backend.aggregation.agents.utils.jersey.LoggingFilter;
 import se.tink.backend.aggregation.logmasker.LogMaskerImpl;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.net.client.TinkApacheHttpClient4;
-import se.tink.libraries.tracing.jersey.filter.ClientTracingFilter;
 
 public class LegacyAgentProductionStrategy implements LegacyAgentStrategyInterface {
 
@@ -41,7 +40,6 @@ public class LegacyAgentProductionStrategy implements LegacyAgentStrategyInterfa
             client.setReadTimeout(30000);
             client.setConnectTimeout(10000);
 
-            client.addFilter(new ClientTracingFilter());
             try {
                 if (context.getLogOutputStream() != null) {
                     client.addFilter(

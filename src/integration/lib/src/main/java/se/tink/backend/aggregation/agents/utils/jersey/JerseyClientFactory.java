@@ -25,7 +25,6 @@ import se.tink.backend.aggregation.logmasker.LogMaskerImpl.LoggingMode;
 import se.tink.libraries.net.client.TinkApacheHttpClient4;
 import se.tink.libraries.net.client.factory.AbstractJerseyClientFactory;
 import se.tink.libraries.net.client.handler.TinkApacheHttpClient4Handler;
-import se.tink.libraries.tracing.jersey.filter.ClientTracingFilter;
 
 public class JerseyClientFactory extends AbstractJerseyClientFactory {
 
@@ -50,7 +49,6 @@ public class JerseyClientFactory extends AbstractJerseyClientFactory {
     public Client createBasicClient(OutputStream httpLogOutputStream) {
 
         Client client = createBasicClient();
-        client.addFilter(new ClientTracingFilter());
         try {
             if (httpLogOutputStream != null) {
                 client.addFilter(
@@ -74,7 +72,6 @@ public class JerseyClientFactory extends AbstractJerseyClientFactory {
             OutputStream httpLogOutputStream, ApacheHttpClient4Config clientConfig) {
 
         TinkApacheHttpClient4 client = createCustomClient(clientConfig);
-        client.addFilter(new ClientTracingFilter());
         try {
             if (httpLogOutputStream != null) {
                 client.addFilter(
@@ -100,7 +97,6 @@ public class JerseyClientFactory extends AbstractJerseyClientFactory {
             OutputStream httpLogOutputStream, ApacheHttpClient4Config clientConfig) {
 
         ApacheHttpClient4 client = createCookieClient(clientConfig);
-        client.addFilter(new ClientTracingFilter());
         try {
             if (httpLogOutputStream != null) {
                 client.addFilter(
@@ -149,7 +145,6 @@ public class JerseyClientFactory extends AbstractJerseyClientFactory {
         }
 
         tinkJerseyClient.setChunkedEncodingSize(null);
-        tinkJerseyClient.addFilter(new ClientTracingFilter());
         return tinkJerseyClient;
     }
 
