@@ -58,9 +58,15 @@ public class CredentialsCrypto {
         return decrypt(request, null);
     }
 
-    public boolean decrypt(CredentialsRequest request, Charset charset) {
-        Credentials credentials = request.getCredentials();
+    public boolean decrypt(Credentials credentials) {
+        return decrypt(credentials, null);
+    }
 
+    public boolean decrypt(CredentialsRequest request, Charset charset) {
+        return decrypt(request.getCredentials(), charset);
+    }
+
+    public boolean decrypt(Credentials credentials, Charset charset) {
         // See if there is any sensitive data in the cache
         String cachedSensitiveData =
                 (String)

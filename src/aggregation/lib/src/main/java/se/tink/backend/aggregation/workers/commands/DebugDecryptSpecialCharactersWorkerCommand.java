@@ -1,10 +1,10 @@
 package se.tink.backend.aggregation.workers.commands;
 
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.encryption.CredentialsCrypto;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommand;
@@ -19,55 +19,81 @@ public class DebugDecryptSpecialCharactersWorkerCommand extends AgentWorkerComma
     private final AgentWorkerCommandContext context;
     private final CredentialsCrypto credentialsCrypto;
 
-    private boolean execute = false;
-
     public DebugDecryptSpecialCharactersWorkerCommand(
             AgentWorkerCommandContext context, CredentialsCrypto credentialsCrypto) {
         this.context = context;
         this.credentialsCrypto = credentialsCrypto;
-
-        CredentialsRequest request = context.getRequest();
-        if (request != null) {
-            Provider provider = request.getProvider();
-
-            if (provider != null && "at-test-password".equalsIgnoreCase(provider.getName())) {
-                execute = true;
-            }
-        }
     }
 
     @Override
     protected AgentWorkerCommandResult doExecute() throws Exception {
         try {
-            if (execute) {
-                CredentialsRequest request = context.getRequest();
-                credentialsCrypto.decrypt(request, StandardCharsets.UTF_8);
+            CredentialsRequest request = context.getRequest();
+            String credentialsId = context.getRequest().getCredentials().getId();
+            Credentials credentialsNonUTF = request.getCredentials().clone();
+            Credentials credentialsUTF8 = request.getCredentials().clone();
+            Credentials credentialsUTF16 = request.getCredentials().clone();
 
-                Credentials credentials = request.getCredentials();
+            int nonUTFHash = getHash(credentialsNonUTF, null);
+            int utf8Hash = getHash(credentialsUTF8, StandardCharsets.UTF_8);
+            int utf16Hash = getHash(credentialsUTF16, StandardCharsets.UTF_16);
 
-                int fieldsSerializedHascode = 0;
-                if (credentials.getFieldsSerialized() != null) {
-                    fieldsSerializedHascode = credentials.getFieldsSerialized().hashCode();
-                }
-
-                log.info(
-                        "[decrypt]credentialsId {}  fieldSeralized hascode {}",
-                        credentials.getId(),
-                        fieldsSerializedHascode);
-                credentials
-                        .getFields()
-                        .forEach(
-                                (k, v) ->
-                                        log.info(
-                                                "[decrypt] key: {} value hascode: {}",
-                                                k,
-                                                v.hashCode()));
+            if (nonUTFHash != utf8Hash) {
+                log.warn(
+                        "[decrypt] credentialsId {} nonUTFHash is not equal to utf8Hash",
+                        credentialsId);
             }
+
+            if (nonUTFHash != utf16Hash) {
+                log.warn(
+                        "[decrypt] credentialsId {} nonUTFHash is not equal to utf16Hash",
+                        credentialsId);
+            }
+
+            if (utf8Hash != utf16Hash) {
+                log.warn(
+                        "[decrypt] credentialsId {} utf8Hash is not equal to utf16Hash",
+                        credentialsId);
+            }
+
         } catch (Exception e) {
             log.warn("Error with debugging", e);
         }
 
         return AgentWorkerCommandResult.CONTINUE;
+    }
+
+    private int getHash(final Credentials credentials, final Charset charset) {
+        credentialsCrypto.decrypt(credentials, charset);
+        String msg = charset != null ? charset.name() : "NonUTF";
+        infoLog(msg, credentials);
+        return getHashCode(credentials.getFieldsSerialized());
+    }
+
+    private void infoLog(final String msg, final Credentials credentials) {
+        int fieldsSerializedHascode = getHashCode(credentials.getFieldsSerialized());
+
+        log.info(
+                "[decrypt][{}] credentialsId {} fieldSeralized hashcode {}",
+                msg,
+                credentials.getId(),
+                fieldsSerializedHascode);
+        credentials
+                .getFields()
+                .forEach(
+                        (k, v) ->
+                                log.info(
+                                        "[decrypt][{}] key: {} value hashcode: {}",
+                                        msg,
+                                        k,
+                                        v.hashCode()));
+    }
+
+    private int getHashCode(final String fieldsSerialized) {
+        if (fieldsSerialized == null) {
+            return 0;
+        }
+        return fieldsSerialized.hashCode();
     }
 
     @Override
