@@ -111,7 +111,7 @@ public class SparkassenAuthenticator implements MultiFactorAuthenticator, AutoAu
     public void authenticate(Credentials credentials)
             throws AuthenticationException, AuthorizationException {
         validateInput(credentials);
-        logHashes(credentials);
+        logDetails(credentials);
 
         ConsentResponse consentResponse = initializeProcess();
 
@@ -146,21 +146,26 @@ public class SparkassenAuthenticator implements MultiFactorAuthenticator, AutoAu
         }
     }
 
-    private void logHashes(Credentials credentials) {
+    private void logDetails(Credentials credentials) {
         // There are a lot of invalid_credentials thrown.
         // Users often finally manages to provide correct credentials in 2nd or 3rd attempt.
         // We want to investigate if users have problems with providing username or password.
         // To achieve that - this logging will be helpful. We will check the hashes from
         // unsuccessful and successful authentications for the same credentialsId / userId and check
         // whether username hash or credentials hash changed.
+        String password = credentials.getField(Field.Key.PASSWORD);
         log.info(
                 "[Sparkassen Auth] Hashes: {}, {}",
                 ENCODER.encodeToString(
                                 Hash.sha512(credentials.getField(Field.Key.USERNAME) + STATIC_SALT))
                         .substring(0, 6),
-                ENCODER.encodeToString(
-                                Hash.sha512(credentials.getField(Field.Key.PASSWORD) + STATIC_SALT))
-                        .substring(0, 6));
+                ENCODER.encodeToString(Hash.sha512(password + STATIC_SALT)).substring(0, 6));
+
+        if (password.length() <= 5) {
+            log.info("[Sparkassen Auth] Pass length <= 5");
+        } else {
+            log.info("[Sparkassen Auth] Pass length > 5");
+        }
     }
 
     private ConsentResponse initializeProcess() throws LoginException {
