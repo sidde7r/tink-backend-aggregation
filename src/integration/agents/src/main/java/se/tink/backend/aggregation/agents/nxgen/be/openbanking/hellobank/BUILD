@@ -1,5 +1,5 @@
 java_library(
-    name = "bnpparibasfortis",
+    name = "hellobank",
     srcs = glob(["**/*.java"]),
     visibility = ["//visibility:public"],
     deps = [
