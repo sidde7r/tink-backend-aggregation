@@ -8,30 +8,36 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import javax.ws.rs.core.MediaType;
-import org.apache.http.HttpStatus;
+import javax.ws.rs.core.MultivaluedMap;
+import org.apache.http.HttpHeaders;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.se.creditcards.norwegian.NorwegianConstants.ElementAttributes;
 import se.tink.backend.aggregation.agents.nxgen.se.creditcards.norwegian.NorwegianConstants.ElementNames;
+import se.tink.backend.aggregation.agents.nxgen.se.creditcards.norwegian.NorwegianConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.se.creditcards.norwegian.NorwegianConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.creditcards.norwegian.NorwegianConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.se.creditcards.norwegian.NorwegianConstants.Urls;
+import se.tink.backend.aggregation.agents.nxgen.se.creditcards.norwegian.authenticator.LoginParsingUtils;
 import se.tink.backend.aggregation.agents.nxgen.se.creditcards.norwegian.authenticator.rpc.CollectBankIdRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.creditcards.norwegian.authenticator.rpc.CollectBankIdResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.creditcards.norwegian.authenticator.rpc.LoginStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.creditcards.norwegian.authenticator.rpc.OrderBankIdRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.creditcards.norwegian.authenticator.rpc.OrderBankIdResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.creditcards.norwegian.entity.Form;
 import se.tink.backend.aggregation.agents.nxgen.se.creditcards.norwegian.fetcher.common.entity.AccountInfoResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.creditcards.norwegian.fetcher.common.entity.TransactionEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.creditcards.norwegian.fetcher.creditcard.entity.CreditCardEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.creditcards.norwegian.fetcher.creditcard.entity.CreditCardOverviewResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.creditcards.norwegian.fetcher.creditcard.entity.CreditCardResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.creditcards.norwegian.fetcher.savingsaccount.entity.SavingsAccountResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.creditcards.norwegian.handler.NorwegianRedirectHandler;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.agents.utils.jsoup.ElementUtils;
-import se.tink.backend.aggregation.constants.CommonHeaders;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
@@ -43,6 +49,7 @@ public final class NorwegianApiClient {
 
     public NorwegianApiClient(TinkHttpClient client) {
         this.client = client;
+        client.addRedirectHandler(new NorwegianRedirectHandler(client));
     }
 
     private RequestBuilder createRequest(String url) {
@@ -56,9 +63,7 @@ public final class NorwegianApiClient {
     }
 
     private RequestBuilder createScrapeRequest(String url) {
-        return client.request(url)
-                .header("User-Agent", CommonHeaders.DEFAULT_USER_AGENT)
-                .accept(MediaType.TEXT_HTML);
+        return client.request(url).accept(MediaType.TEXT_HTML);
     }
 
     public String fetchLoginReturnUrl() {
@@ -76,21 +81,20 @@ public final class NorwegianApiClient {
     }
 
     public String fetchBankIdInitPage(String returnUrl) {
-        String targetUrl =
-                Urls.LOGIN_URL.concat(EncodingUtils.encodeUrl(Urls.TARGET_URL.concat(returnUrl)));
-        return client.request(targetUrl).get(String.class);
+        String targetUrl = Urls.LOGIN_URL.concat(returnUrl);
+        HttpResponse httpResponse = client.request(targetUrl).get(HttpResponse.class);
+        return httpResponse.getBody(String.class);
     }
 
     public OrderBankIdResponse orderBankId(String bankIdUrl, String ssn) {
         OrderBankIdRequest request = new OrderBankIdRequest(ssn);
 
-        return createRequest(bankIdUrl + NorwegianConstants.Urls.ORDER)
+        return createRequest(new URL(bankIdUrl + NorwegianConstants.Urls.ORDER))
                 .post(OrderBankIdResponse.class, request);
     }
 
     public CollectBankIdResponse collectBankId(String collectUrl, CollectBankIdRequest request) {
-
-        return createRequest(collectUrl).post(CollectBankIdResponse.class, request);
+        return createRequest(new URL(collectUrl)).post(CollectBankIdResponse.class, request);
     }
 
     public String completeBankId(String completeUrl) {
@@ -100,42 +104,56 @@ public final class NorwegianApiClient {
         Element formElement = completeDocument.getElementById(ElementNames.SAML_FORM);
 
         // Use the SAML created secret key to authenticate the user.
-        return client.request(formElement.attr(ElementAttributes.ACTION))
-                .type(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
-                .post(String.class, ElementUtils.parseFormParameters(formElement));
+        return createFormRequest(
+                        formElement.attr(ElementAttributes.ACTION),
+                        ElementUtils.parseFormParameters(formElement))
+                .post(String.class);
     }
 
-    public void completeLogin(String redirectUrl) {
+    public String completeLogin(String body) {
+        Document authenticationForm1 = Jsoup.parse(body);
+        Element authenticationFormElement1 = authenticationForm1.select(ElementNames.FORM).first();
+
+        HttpResponse authenticationResponse =
+                createFormRequest(
+                                authenticationFormElement1.attr(ElementAttributes.ACTION),
+                                ElementUtils.parseFormParameters(authenticationFormElement1))
+                        .post(HttpResponse.class);
+
+        return LoginParsingUtils.getRedirectUrl(authenticationResponse.getBody(String.class));
+    }
+
+    public void signicatRedirect(String redirectUrl) {
+        // Parse the JS window.location.href redirect from the Signicat Callback page, follow
+        // that and submit the form to /signin-oidc-se
         HttpResponse authenticationFormResponse =
-                createFormRequest(Urls.IDENTITY_BASE_URL.concat(redirectUrl.substring(1)))
+                client.request(Urls.IDENTITY_BASE_URL.concat(redirectUrl.substring(1)))
+                        .accept(MediaType.APPLICATION_JSON)
                         .get(HttpResponse.class);
 
         Document authenticationForm = Jsoup.parse(authenticationFormResponse.getBody(String.class));
         Element authenticationFormElement = authenticationForm.select(ElementNames.FORM).first();
 
-        HttpResponse authenticationResponse =
-                createFormRequest(authenticationFormElement.attr(ElementAttributes.ACTION))
-                        .post(
-                                HttpResponse.class,
-                                ElementUtils.parseFormParameters(authenticationFormElement));
-
+        createFormRequest(
+                        authenticationFormElement.attr(ElementAttributes.ACTION),
+                        ElementUtils.parseFormParameters(authenticationFormElement))
+                .post(HttpResponse.class);
         // Try to access transaction page and verify that we aren't redirected
-        HttpResponse loggedInResponse =
-                createRequest(Urls.CARD_TRANSACTION_URL).get(HttpResponse.class);
+        LoginStatusResponse loggedInResponse =
+                createRequest(Urls.LOGIN_STATUS_URL).get(LoginStatusResponse.class);
 
-        if (authenticationResponse.getStatus() != HttpStatus.SC_OK
-                || loggedInResponse.getStatus() != HttpStatus.SC_OK) {
-            throw new IllegalStateException(
-                    String.format(
-                            "Non-200 status code for authenticationResponse or loggedInResponse: %s, %s",
-                            authenticationResponse.getStatus(), loggedInResponse.getStatus()));
+        if (!loggedInResponse.isAuthenticated()) {
+            throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
     }
 
-    private RequestBuilder createFormRequest(String url) {
+    private RequestBuilder createFormRequest(String url, MultivaluedMap<String, String> form) {
+        String body = new Form(form).getBodyValue();
+
         return client.request(url)
-                .accept(MediaType.APPLICATION_JSON)
-                .type(MediaType.APPLICATION_FORM_URLENCODED_TYPE);
+                .body(body, MediaType.APPLICATION_FORM_URLENCODED_TYPE)
+                .header(HttpHeaders.ACCEPT_LANGUAGE, HeaderValues.LANGUAGE)
+                .header(HttpHeaders.ACCEPT, HeaderValues.ACCEPT);
     }
 
     public SavingsAccountResponse fetchSavingsAccount() {

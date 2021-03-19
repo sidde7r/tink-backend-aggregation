@@ -71,11 +71,8 @@ public class NorwegianAuthenticator implements BankIdAuthenticator<OrderBankIdRe
             final String callbackResponse =
                     apiClient.completeBankId(collectResponse.getCompleteUrl());
 
-            // Parse the JS window.location.href redirect from the Signicat Callback page, follow
-            // that and submit the form to /signin-oidc-se
-            String redirectUrl = LoginParsingUtils.getRedirectUrl(callbackResponse);
-            apiClient.completeLogin(redirectUrl);
-
+            String url = apiClient.completeLogin(callbackResponse);
+            apiClient.signicatRedirect(url);
             return bankIdStatus;
         } catch (HttpResponseException e) {
             if (e.getResponse().getStatus() == HttpStatus.SC_CONFLICT) {
