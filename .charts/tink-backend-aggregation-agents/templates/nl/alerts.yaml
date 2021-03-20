@@ -9,9 +9,9 @@ spec:
   - alert: LoginSuccessRateBelow90WithAttemptLimitNL
     expr: |
       # Successful/Cancelled attempts < 90% and >= 80%
-      (sum(increase(tink_agent_login_total{action=~"login|is-logged-in", outcome=~"completed|cancelled|unavailable", market="NL", provider_type!="test"}[60m])) by (action,className,provider)
+      (sum(increase(tink_agent_login_total{action=~"login|is-logged-in", outcome=~"completed|cancelled|unavailable|cancelled_due_to_third_party_app_timeout", market="NL", provider_type!="test"}[60m])) by (action,className,provider)
           / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="NL", provider_type!="test"}[60m])) by (action,className,provider) < 0.90)
-      and (sum(increase(tink_agent_login_total{action=~"login|is-logged-in", outcome=~"completed|cancelled|unavailable", market="NL", provider_type!="test"}[60m])) by (action,className,provider)
+      and (sum(increase(tink_agent_login_total{action=~"login|is-logged-in", outcome=~"completed|cancelled|unavailable|cancelled_due_to_third_party_app_timeout", market="NL", provider_type!="test"}[60m])) by (action,className,provider)
               / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="NL", provider_type!="test"}[60m])) by (action,className,provider) >= 0.80)
       # At least this many attempts.
       and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="NL", provider_type!="test"}[60m])) by (action,className,provider) > 10
@@ -30,9 +30,9 @@ spec:
   - alert: LoginSuccessRateBelow80WithAttemptLimitNL
     expr: |
       # Successful/Cancelled attempts < 80% and >= 70%
-      (sum(increase(tink_agent_login_total{action=~"login|is-logged-in", outcome=~"completed|cancelled|unavailable", market="NL", provider_type!="test"}[60m])) by (action,className,provider)
+      (sum(increase(tink_agent_login_total{action=~"login|is-logged-in", outcome=~"completed|cancelled|unavailable|cancelled_due_to_third_party_app_timeout", market="NL", provider_type!="test"}[60m])) by (action,className,provider)
           / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="NL", provider_type!="test"}[60m])) by (action,className,provider) < 0.80)
-      and (sum(increase(tink_agent_login_total{action=~"login|is-logged-in", outcome=~"completed|cancelled|unavailable", market="NL", provider_type!="test"}[60m])) by (action,className,provider)
+      and (sum(increase(tink_agent_login_total{action=~"login|is-logged-in", outcome=~"completed|cancelled|unavailable|cancelled_due_to_third_party_app_timeout", market="NL", provider_type!="test"}[60m])) by (action,className,provider)
               / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="NL", provider_type!="test"}[60m])) by (action,className,provider) >= 0.70)
       # At least this many attempts.
       and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="NL", provider_type!="test"}[60m])) by (action,className,provider) > 10
@@ -51,9 +51,9 @@ spec:
   - alert: LoginSuccessRateBelow70WithAttemptLimitNL
     expr: |
       # Successful/Cancelled attempts < 70% and >= 60%
-      (sum(increase(tink_agent_login_total{action=~"login|is-logged-in", outcome=~"completed|cancelled|unavailable", market="NL", provider_type!="test"}[60m])) by (action,className,provider)
+      (sum(increase(tink_agent_login_total{action=~"login|is-logged-in", outcome=~"completed|cancelled|unavailable|cancelled_due_to_third_party_app_timeout", market="NL", provider_type!="test"}[60m])) by (action,className,provider)
           / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="NL", provider_type!="test"}[60m])) by (action,className,provider) < 0.70)
-      and (sum(increase(tink_agent_login_total{action=~"login|is-logged-in", outcome=~"completed|cancelled|unavailable", market="NL", provider_type!="test"}[60m])) by (action,className,provider)
+      and (sum(increase(tink_agent_login_total{action=~"login|is-logged-in", outcome=~"completed|cancelled|unavailable|cancelled_due_to_third_party_app_timeout", market="NL", provider_type!="test"}[60m])) by (action,className,provider)
               / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="NL", provider_type!="test"}[60m])) by (action,className,provider) >= 0.60)
       # At least this many attempts.
       and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="NL", provider_type!="test"}[60m])) by (action,className,provider) > 10
@@ -72,7 +72,7 @@ spec:
   - alert: LoginSuccessRateBelow60WithAttemptLimitNL
     expr: |
       # Successful/Cancelled attempts above 60%
-      (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled|unavailable", market="NL", provider_type!="test"}[60m])) by (action,className,provider)
+      (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled|unavailable|cancelled_due_to_third_party_app_timeout", market="NL", provider_type!="test"}[60m])) by (action,className,provider)
           / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="NL", provider_type!="test"}[60m])) by (action,className,provider) < 0.60)
       # At least this many attempts.
       and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="NL", provider_type!="test"}[60m])) by (action,className,provider) > 10

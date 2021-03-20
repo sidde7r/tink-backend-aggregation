@@ -31,10 +31,10 @@ spec:
     expr: sum(increase(tink_agent_transfer_total{market="SE", outcome="failed"}[12h])) or on() vector(0)
 
   - record: sum:tink_cancelled_transfers_in_sweden:delta15m
-    expr: sum(increase(tink_agent_transfer_total{market="SE", outcome="cancelled"}[15m])) or on() vector(0)
+    expr: sum(increase(tink_agent_transfer_total{market="SE", outcome="cancelled|cancelled_due_to_third_party_app_timeout"}[15m])) or on() vector(0)
 
   - record: sum:tink_cancelled_transfers_in_sweden:delta12h
-    expr: sum(increase(tink_agent_transfer_total{market="SE", outcome="cancelled"}[12h])) or on() vector(0)
+    expr: sum(increase(tink_agent_transfer_total{market="SE", outcome="cancelled|cancelled_due_to_third_party_app_timeout"}[12h])) or on() vector(0)
 
   # Precompute realtime banking metrics
   - record: ratio:tink_aggregation_market_success:delta5m
