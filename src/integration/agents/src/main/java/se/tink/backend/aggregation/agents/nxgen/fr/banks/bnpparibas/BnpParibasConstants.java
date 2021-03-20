@@ -20,6 +20,8 @@ public class BnpParibasConstants {
 
     public static final class Errors {
         public static final String INCORRECT_CREDENTIALS = "201";
+        public static final String LOGIN_ERROR = "1002";
+        public static final String ACCOUNT_ERROR = "21501";
     }
 
     public static final class Auth {

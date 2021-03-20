@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.banks.bnpparibas;
 
+import static se.tink.backend.aggregation.agents.nxgen.fr.banks.bnpparibas.BnpParibasConstants.*;
+
 import com.google.common.base.Strings;
 import com.google.common.util.concurrent.Uninterruptibles;
 import java.util.Collection;
@@ -13,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
+import se.tink.backend.aggregation.agents.nxgen.fr.banks.bnpparibas.BnpParibasConstants.Errors;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.bnpparibas.authenticator.entites.LoginDataEntity;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.bnpparibas.authenticator.entites.NumpadDataEntity;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.bnpparibas.authenticator.rpc.LoginRequest;
@@ -46,7 +49,7 @@ public class BnpParibasApiClient {
         NumpadRequest formBody = new NumpadRequest(configuration.getGridType());
 
         NumpadResponse response =
-                client.request(createUrl(BnpParibasConstants.Urls.NUMPAD))
+                client.request(createUrl(Urls.NUMPAD))
                         .body(formBody, MediaType.APPLICATION_FORM_URLENCODED)
                         .post(NumpadResponse.class);
 
@@ -72,23 +75,19 @@ public class BnpParibasApiClient {
                         .build();
 
         LoginResponse response =
-                client.request(createUrl(BnpParibasConstants.Urls.LOGIN))
+                client.request(createUrl(Urls.LOGIN))
                         .body(formBody, MediaType.APPLICATION_FORM_URLENCODED)
                         .post(LoginResponse.class);
 
-        if (!Strings.isNullOrEmpty(response.getErrorCode())
-                && response.getErrorCode()
-                        .equals(BnpParibasConstants.Errors.INCORRECT_CREDENTIALS)) {
-            throw LoginError.INCORRECT_CREDENTIALS.exception();
+        if (!Strings.isNullOrEmpty(response.getErrorCode())) {
+            handleErrors(response);
         }
         response.assertReturnCodeOk();
         return response.getData();
     }
 
     public void keepAlive() {
-        BaseResponse response =
-                client.request(createUrl(BnpParibasConstants.Urls.KEEP_ALIVE))
-                        .get(BaseResponse.class);
+        BaseResponse response = client.request(createUrl(Urls.KEEP_ALIVE)).get(BaseResponse.class);
 
         response.assertReturnCodeOk();
     }
@@ -108,10 +107,7 @@ public class BnpParibasApiClient {
         for (; tries < RETRY_POLICY_MAX_ATTEMPTS; tries++) {
             try {
                 response =
-                        client.request(
-                                        createUrl(
-                                                BnpParibasConstants.Urls
-                                                        .TRANSACTIONAL_ACCOUNT_TRANSACTIONS))
+                        client.request(createUrl(Urls.TRANSACTIONAL_ACCOUNT_TRANSACTIONS))
                                 .type(MediaType.APPLICATION_JSON_TYPE)
                                 .post(TransactionalAccountTransactionsResponse.class, request);
                 break;
@@ -139,8 +135,7 @@ public class BnpParibasApiClient {
 
     public InfoUdcEntity getAccounts() {
         AccountsResponse response =
-                client.request(createUrl(BnpParibasConstants.Urls.LIST_ACCOUNTS))
-                        .get(AccountsResponse.class);
+                client.request(createUrl(Urls.LIST_ACCOUNTS)).get(AccountsResponse.class);
 
         response.assertReturnCodeOk();
 
@@ -149,10 +144,9 @@ public class BnpParibasApiClient {
 
     public List<TransactionAccountEntity> getAccountIbanDetails() {
         AccountIbanDetailsRequest request =
-                new AccountIbanDetailsRequest(
-                        BnpParibasConstants.AccountIbanDetails.MODE_BENEFICIAIRE_TRUE);
+                new AccountIbanDetailsRequest(AccountIbanDetails.MODE_BENEFICIAIRE_TRUE);
         IbanDetailsResponse ibanDetailsResponse =
-                client.request(createUrl(BnpParibasConstants.Urls.LIST_IBANS))
+                client.request(createUrl(Urls.LIST_IBANS))
                         .type(MediaType.APPLICATION_JSON_TYPE)
                         .post(IbanDetailsResponse.class, request);
 
@@ -163,5 +157,16 @@ public class BnpParibasApiClient {
 
     private String createUrl(String path) {
         return configuration.getHost() + path;
+    }
+
+    private void handleErrors(LoginResponse response) {
+        String errorCode = response.getErrorCode();
+        if (Errors.INCORRECT_CREDENTIALS.equals(errorCode)) {
+            throw LoginError.INCORRECT_CREDENTIALS.exception();
+        } else if (Errors.LOGIN_ERROR.equals(errorCode)) {
+            throw LoginError.DEFAULT_MESSAGE.exception();
+        } else if (Errors.ACCOUNT_ERROR.equals(errorCode)) {
+            throw LoginError.NO_ACCESS_TO_MOBILE_BANKING.exception(response.getMessage());
+        }
     }
 }
