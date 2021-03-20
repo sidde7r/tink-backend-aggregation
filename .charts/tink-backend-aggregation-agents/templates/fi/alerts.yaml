@@ -9,7 +9,7 @@ spec:
     - alert: LoginSuccessRateLowWithAttemptLimitFI
       expr: |
         # Successful/Cancelled attempts above 90%
-        (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled|unavailable", market="FI", provider_type!="test"}[60m])) by (action,className,provider)
+        (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled|unavailable|cancelled_due_to_third_party_app_timeout", market="FI", provider_type!="test"}[60m])) by (action,className,provider)
             / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="FI", provider_type!="test"}[60m])) by (action,className,provider) < 0.90)
         # At least this many attempts.
         and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="FI", provider_type!="test"}[60m])) by (action,className,provider) > 5

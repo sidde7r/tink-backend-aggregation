@@ -9,7 +9,7 @@ spec:
     - alert: LoginSuccessRateLowWithAttemptLimitBE
       expr: |
         # Successful/Cancelled attempts above 75%
-        (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled|unavailable", market="BE", provider_type!="test"}[60m])) by (action,className,provider)
+        (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled|unavailable|cancelled_due_to_third_party_app_timeout", market="BE", provider_type!="test"}[60m])) by (action,className,provider)
             / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="BE", provider_type!="test"}[60m])) by (action,className,provider) < 0.75)
         # At least this many attempts.
         and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="BE", provider_type!="test"}[60m])) by (action,className,provider) > 10
@@ -105,11 +105,11 @@ spec:
     - alert: LongTermAuthenticationCancelledOver90%BE
       expr: |
         # Login cancelled the last 6 hours
-        sum(sum_over_time(tink_agent_login_total{action="login",outcome="cancelled", market="BE"}[6h])) BY (className,provider)
+        sum(sum_over_time(tink_agent_login_total{action="login",outcome="cancelled|cancelled_due_to_third_party_app_timeout", market="BE"}[6h])) BY (className,provider)
         # All login attempts the last 6 hours
           / sum(sum_over_time(tink_agent_login_total{action="login", market="BE"}[6h])) BY (className,provider) > 10
         # Login cancelled the last 6 hours
-        and (sum(sum_over_time(tink_agent_login_total{action="login",outcome="cancelled", market="BE"}[6h])) BY (className,provider)
+        and (sum(sum_over_time(tink_agent_login_total{action="login",outcome="cancelled|cancelled_due_to_third_party_app_timeout", market="BE"}[6h])) BY (className,provider)
         # All login attempts the last 6 hours
           / sum(sum_over_time(tink_agent_login_total{action="login", market="BE"}[6h])) BY (className,provider) > 0.90)
       for: 1h
