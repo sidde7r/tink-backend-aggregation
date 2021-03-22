@@ -35,7 +35,7 @@ public class TransactionEntity {
     }
 
     private String getDescription() {
-        return relatedParties != null ? getNameFromRelatedParties() : getOtherDescription();
+        return checkRelatedParties() ? getNameFromRelatedParties() : getOtherDescription();
     }
 
     private ExactCurrencyAmount getAmount() {
@@ -65,5 +65,10 @@ public class TransactionEntity {
         return additionalTransactionInformation != null
                 ? additionalTransactionInformation.getDescription()
                 : "";
+    }
+
+    private boolean checkRelatedParties() {
+        return relatedParties != null
+                && (relatedParties.getCreditor() != null || relatedParties.getDebtor() != null);
     }
 }
