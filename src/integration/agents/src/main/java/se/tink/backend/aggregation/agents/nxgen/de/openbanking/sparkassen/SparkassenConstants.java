@@ -20,6 +20,10 @@ public final class SparkassenConstants {
         static final String CHALLENGE_FORMAT_INVALID =
                 "Format of certain request fields are not matching the XS2A requirements.";
         public static final String STARTCODE_NOT_FOUND = "Startcode fo Chip tan not found";
+        public static final String TEMPORARILY_BLOCKED_ACCOUNT =
+                "Ihr Zugang ist vorläufig gesperrt - Bitte PIN-Sperre aufheben";
+        public static final String BLOCKED_ACCOUNT =
+                "Ihr Zugang ist gesperrt - Bitte informieren Sie Ihren Berater";
     }
 
     static class Urls {

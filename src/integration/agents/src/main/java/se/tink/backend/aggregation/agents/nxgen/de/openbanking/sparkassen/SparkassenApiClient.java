@@ -1,7 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen;
 
+import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants.ErrorMessages.BLOCKED_ACCOUNT;
 import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants.ErrorMessages.CHALLENGE_FORMAT_INVALID;
 import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants.ErrorMessages.PSU_CREDENTIALS_INVALID;
+import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants.ErrorMessages.TEMPORARILY_BLOCKED_ACCOUNT;
 
 import java.time.LocalDate;
 import java.util.UUID;
@@ -9,6 +11,7 @@ import javax.ws.rs.core.MediaType;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
+import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants.HeaderKeys;
@@ -99,8 +102,13 @@ public class SparkassenApiClient {
         } catch (HttpResponseException e) {
             // ITE-2489 - temporary experiment
             SparkassenExperimentalLoginErrorHandling.handleIncorrectLogin(e, provider);
-            if (e.getResponse().getBody(String.class).contains(PSU_CREDENTIALS_INVALID)) {
+            String errorBody = e.getResponse().getBody(String.class);
+
+            if (errorBody.contains(PSU_CREDENTIALS_INVALID)) {
                 throw LoginError.INCORRECT_CREDENTIALS.exception(e);
+            } else if (errorBody.contains(TEMPORARILY_BLOCKED_ACCOUNT)
+                    || errorBody.contains(BLOCKED_ACCOUNT)) {
+                throw AuthorizationError.ACCOUNT_BLOCKED.exception(e);
             }
             throw e;
         }
