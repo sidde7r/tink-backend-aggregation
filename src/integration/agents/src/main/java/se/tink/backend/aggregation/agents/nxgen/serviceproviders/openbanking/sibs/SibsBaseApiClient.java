@@ -35,6 +35,7 @@ import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
@@ -46,11 +47,13 @@ public class SibsBaseApiClient {
     private static final String PAGINATION_DATE_FORMAT = "yyyy-MM-dd";
     private static final DateTimeFormatter DATE_FORMATTER =
             DateTimeFormatter.ofPattern(PAGINATION_DATE_FORMAT);
+    private final boolean manualRefresh;
     private final String isPsuInvolved;
     private final SibsUserState userState;
     private final TinkHttpClient client;
     private String redirectUrl;
-    private String aspspCode;
+    private final String aspspCode;
+    private final String userIp;
     private static final Logger log = LoggerFactory.getLogger(SibsBaseApiClient.class);
 
     /*
@@ -67,11 +70,14 @@ public class SibsBaseApiClient {
             TinkHttpClient client,
             SibsUserState userState,
             String aspspCode,
-            boolean isRequestManual) {
+            boolean isRequestManual,
+            String userIp) {
         this.client = client;
         this.userState = userState;
         this.aspspCode = aspspCode;
         this.isPsuInvolved = String.valueOf(isRequestManual);
+        this.manualRefresh = isRequestManual;
+        this.userIp = userIp;
     }
 
     protected void setConfiguration(AgentConfiguration<SibsConfiguration> agentConfiguration) {
@@ -81,7 +87,7 @@ public class SibsBaseApiClient {
 
     public AccountsResponse fetchAccounts() {
         URL accounts = createUrl(SibsConstants.Urls.ACCOUNTS);
-        return client.request(accounts)
+        return createRequestBuilder(accounts)
                 .queryParam(QueryKeys.WITH_BALANCE, TRUE)
                 .header(HeaderKeys.CONSENT_ID, userState.getConsentId())
                 .get(AccountsResponse.class);
@@ -93,7 +99,7 @@ public class SibsBaseApiClient {
                         .parameter(PathParameterKeys.ACCOUNT_ID, accountId);
 
         try {
-            return client.request(accountBalances)
+            return createRequestBuilder(accountBalances)
                     .queryParam(QueryKeys.PSU_INVOLVED, isPsuInvolved)
                     .header(HeaderKeys.CONSENT_ID, userState.getConsentId())
                     .get(BalancesResponse.class);
@@ -108,7 +114,7 @@ public class SibsBaseApiClient {
                 createUrl(SibsConstants.Urls.ACCOUNT_TRANSACTIONS)
                         .parameter(PathParameterKeys.ACCOUNT_ID, account.getApiIdentifier());
         String transactionFetchFromDate = DATE_FORMATTER.format(dateFrom);
-        return client.request(accountTransactions)
+        return createRequestBuilder(accountTransactions)
                 .queryParam(QueryKeys.WITH_BALANCE, TRUE)
                 .queryParam(QueryKeys.PSU_INVOLVED, isPsuInvolved)
                 .queryParam(QueryKeys.BOOKING_STATUS, SibsConstants.QueryValues.BOTH)
@@ -120,7 +126,7 @@ public class SibsBaseApiClient {
     public TransactionKeyPaginatorResponse<String> getTransactionsForKey(String key) {
         String baseUrl = SibsConstants.Urls.BASE_URL;
 
-        return client.request(new URL(baseUrl + key))
+        return createRequestBuilder(new URL(baseUrl + key))
                 .queryParam(QueryKeys.PSU_INVOLVED, isPsuInvolved)
                 .header(HeaderKeys.CONSENT_ID, userState.getConsentId())
                 .get(TransactionsResponse.class);
@@ -129,7 +135,7 @@ public class SibsBaseApiClient {
     public ConsentResponse createConsent(String state) {
         ConsentRequest consentRequest = getConsentRequest();
         URL createConsent = createUrl(SibsConstants.Urls.CREATE_CONSENT);
-        return client.request(createConsent)
+        return createRequestBuilder(createConsent)
                 .accept(MediaType.APPLICATION_JSON)
                 .type(MediaType.APPLICATION_JSON)
                 .header(
@@ -143,7 +149,7 @@ public class SibsBaseApiClient {
             URL consentStatus =
                     createUrl(SibsConstants.Urls.CONSENT_STATUS)
                             .parameter(PathParameterKeys.CONSENT_ID, userState.getConsentId());
-            return client.request(consentStatus)
+            return createRequestBuilder(consentStatus)
                     .get(ConsentStatusResponse.class)
                     .getConsentStatus();
         } catch (IllegalStateException ex) {
@@ -269,5 +275,13 @@ public class SibsBaseApiClient {
         } else {
             throw exception;
         }
+    }
+
+    private RequestBuilder createRequestBuilder(URL url) {
+        RequestBuilder requestBuilder = client.request(url);
+        if (manualRefresh) {
+            requestBuilder.header(HeaderKeys.PSU_IP_ADDRESS, userIp);
+        }
+        return requestBuilder;
     }
 }
