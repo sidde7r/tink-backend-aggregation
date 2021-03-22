@@ -11,10 +11,10 @@ grafanaMarketLink: https://grafana.global-production.tink.network/d/000000078/in
 
 # Below we are using negation, but in fact e.g. authErrors has outcome cancelled
 temporaryErrorsAuth: outcome!~"failed"
-authErrorsAuth: outcome!~"cancelled"
+authErrorsAuth: outcome!~"cancelled|cancelled_due_to_third_party_app_timeout"
 bankErrorsAuth: outcome!~"unavailable"
-agentErrorsAuth: outcome!~"failed|cancelled"
-allErrorsAuth: outcome!~"cancelled|unavailable|failed"
+agentErrorsAuth: outcome!~"failed|cancelled|cancelled_due_to_third_party_app_timeout"
+allErrorsAuth: outcome!~"cancelled|cancelled_due_to_third_party_app_timeout|unavailable|failed"
 
 agentErrorsRefresh: outcome!~"failed"
 bankErrorsRefresh: outcome!~"unavailable"
