@@ -43,14 +43,11 @@ public class RateLimitedExecutorService implements Managed {
     private ListenableThreadPoolExecutor<Runnable> executorService;
     private final AtomicReference<ProviderRateLimiterFactory> rateLimiterFactory;
     private int maxQueuedItems;
-    private final boolean enableTracingExperimental;
 
     public RateLimitedExecutorService(
-            boolean enableTracingExperimental,
             ListenableThreadPoolExecutor<Runnable> executorService,
             MetricRegistry metricRegistry,
             int maxQueuedItems) {
-        this.enableTracingExperimental = enableTracingExperimental;
         this.executorService = executorService;
         this.metricRegistry = metricRegistry;
         this.maxQueuedItems = maxQueuedItems;
@@ -104,7 +101,6 @@ public class RateLimitedExecutorService implements Managed {
                                         provider.getName(),
                                         provider.hashCode());
                                 return new RateLimitedExecutorProxy(
-                                        enableTracingExperimental,
                                         () ->
                                                 RateLimitedExecutorProxy.RateLimiters.from(
                                                         providerRateLimiterFactory
@@ -126,11 +122,7 @@ public class RateLimitedExecutorService implements Managed {
             throws Exception {
         final RateLimitedExecutorProxy executorProxy =
                 rateLimitedRefreshInformationRequestExecutorByProvider.get(provider);
-        if (enableTracingExperimental) {
-            executorProxy.execute(Tracing.wrapRunnable(namedRunnable));
-        } else {
-            executorProxy.execute(namedRunnable);
-        }
+        executorProxy.execute(Tracing.wrapRunnable(namedRunnable));
     }
 
     @VisibleForTesting

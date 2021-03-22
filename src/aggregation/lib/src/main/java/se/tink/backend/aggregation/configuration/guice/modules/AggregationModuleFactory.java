@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 import com.google.inject.AbstractModule;
 import com.google.inject.Module;
-import com.google.inject.name.Names;
 import io.dropwizard.setup.Environment;
 import se.tink.backend.aggregation.configuration.guice.modules.agentcapabilities.AgentCapabilitiesModule;
 import se.tink.backend.aggregation.configuration.models.AggregationServiceConfiguration;
@@ -40,22 +39,8 @@ public class AggregationModuleFactory {
     private static ImmutableList.Builder<Module> baseBuilder(
             Environment environment, AggregationServiceConfiguration configuration) {
         Builder<Module> builder =
-                new Builder<Module>()
-                        .add(new AgentCapabilitiesModule(environment.jersey()))
-                        .add(
-                                new AbstractModule() {
-                                    @Override
-                                    protected void configure() {
-                                        bindConstant()
-                                                .annotatedWith(
-                                                        Names.named("enableTracingExperimental"))
-                                                .to(
-                                                        configuration.isStagingEnvironment()
-                                                                || configuration.isDecoupledMode());
-                                    }
-                                });
-        if ((configuration.isStagingEnvironment() || configuration.isDecoupledMode())
-                && configuration.getJaegerConfig() != null) {
+                new Builder<Module>().add(new AgentCapabilitiesModule(environment.jersey()));
+        if (configuration.getJaegerConfig() != null) {
             builder.addAll(TracingModuleFactory.getModules(configuration.getJaegerConfig()));
         }
         return builder;
