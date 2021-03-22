@@ -48,15 +48,21 @@ public class DnbApiClient {
                             new URL(headerValues.getRedirectUrl())
                                     .queryParam(QueryKeys.STATE, state))
                     .post(ConsentResponse.class, new ConsentRequest());
-        } catch (HttpResponseException e) {
-            if (e.getResponse().getStatus() == 400
-                    && e.getResponse().hasBody()
-                    && e.getResponse()
-                            .getBody(String.class)
-                            .contains(ErrorMessages.DNB_ERROR_WRONG_PSUID)) {
-                throw LoginError.INCORRECT_CREDENTIALS.exception(e);
-            } else {
-                throw e;
+        } catch (HttpResponseException httpException) {
+            handleKnownCreateConsentErrors(httpException);
+            throw httpException;
+        }
+    }
+
+    private void handleKnownCreateConsentErrors(HttpResponseException httpException) {
+        if (httpException.getResponse().getStatus() == 400
+                && httpException.getResponse().hasBody()) {
+            String body = httpException.getResponse().getBody(String.class);
+            if (body.contains(ErrorMessages.WRONG_PSUID)) {
+                throw LoginError.INCORRECT_CREDENTIALS.exception(httpException);
+            }
+            if (body.contains(ErrorMessages.NO_ACCOUNTS)) {
+                throw LoginError.NO_ACCOUNTS.exception(httpException);
             }
         }
     }
@@ -70,7 +76,7 @@ public class DnbApiClient {
 
     public AccountsResponse fetchAccounts(String consentId) {
         return createRequest(new URL(Urls.ACCOUNTS))
-                .header(DnbConstants.HeaderKeys.CONSENT_ID, consentId)
+                .header(HeaderKeys.CONSENT_ID, consentId)
                 .get(AccountsResponse.class);
     }
 

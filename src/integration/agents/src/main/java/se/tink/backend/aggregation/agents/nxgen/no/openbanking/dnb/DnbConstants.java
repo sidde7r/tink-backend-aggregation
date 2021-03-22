@@ -12,8 +12,9 @@ public final class DnbConstants {
         public static final String WRONG_BALANCE_TYPE =
                 "Wrong balance type. Expected type not found.";
 
-        static final String DNB_ERROR_WRONG_PSUID =
+        static final String WRONG_PSUID =
                 "User id can be either an 11 digit valid Norwegian ssn - or 2 letters followed by 5 digits (business)";
+        static final String NO_ACCOUNTS = "User does not have any accounts.";
     }
 
     public static class Urls {
