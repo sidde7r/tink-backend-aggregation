@@ -1,12 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.se.creditcards.norwegian.handler;
 
-import java.net.URI;
 import java.util.List;
 import org.apache.http.Header;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpRequestWrapper;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.cookie.Cookie;
 import org.apache.http.cookie.CookieOrigin;
@@ -26,13 +24,12 @@ public class NorwegianRedirectHandler extends RedirectHandler {
     @Override
     public boolean allowRedirect(HttpRequest request, HttpResponse response, HttpContext context) {
 
-        URI uri = ((HttpRequestWrapper) request).getURI();
         HttpHost targetHost = ((HttpClientContext) context).getTargetHost();
         CookieOrigin cookieOrigin =
                 new CookieOrigin(
                         targetHost.getHostName(),
                         getPort(targetHost),
-                        uri.getPath(),
+                        request.getRequestLine().getUri(),
                         targetHost.getSchemeName().equalsIgnoreCase("https"));
         Header[] headers = response.getHeaders("Set-cookie");
         if (headers != null) {
