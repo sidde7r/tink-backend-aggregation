@@ -10,6 +10,7 @@ public final class AbnAmroConstants {
     public static final String TRANSACTION_BOOKING_DATE_FORMAT = "yyyy-MM-dd";
     public static final Pattern JOINT_ACCOUNT_SUFFIX_PATTERN =
             Pattern.compile(" CJ$", Pattern.CASE_INSENSITIVE);
+    public static final String BOOKED_BALANCE = "BOOKBALANCE";
 
     private AbnAmroConstants() {
         throw new AssertionError();
