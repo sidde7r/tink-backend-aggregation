@@ -24,6 +24,7 @@ public final class VersionConflictTest {
     // These are tolerated for now because they are hard to resolve
     private final ImmutableSet<String> toleratedConflicts =
             ImmutableSet.of(
+                    "annotations",
                     "commons-codec",
                     "reflections",
                     "commons-logging",
