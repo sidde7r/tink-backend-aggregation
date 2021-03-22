@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.workers.commands;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.encryption.CredentialsCrypto;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommand;
@@ -22,17 +21,7 @@ public class DecryptCredentialsWorkerCommand extends AgentWorkerCommand {
         this.context = context;
         this.credentialsCrypto = credentialsCrypto;
         this.doUpdateCredential = true;
-
-        this.charset = null;
-
-        CredentialsRequest request = context.getRequest();
-        if (request != null) {
-            Provider provider = request.getProvider();
-
-            if (provider != null && "at-test-password".equalsIgnoreCase(provider.getName())) {
-                charset = StandardCharsets.UTF_8;
-            }
-        }
+        this.charset = StandardCharsets.UTF_8;
     }
 
     @Override
