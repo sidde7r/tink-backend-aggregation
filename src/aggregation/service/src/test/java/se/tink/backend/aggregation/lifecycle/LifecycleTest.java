@@ -95,7 +95,9 @@ public class LifecycleTest {
         agentWorker =
                 spy(
                         new AgentWorker(
-                                new se.tink.libraries.metrics.registry.MetricRegistry(), false));
+                                new se.tink.libraries.metrics.registry.MetricRegistry(),
+                                false,
+                                false));
         makeStartStopNoOp(agentWorker);
         when(injector.getInstance(AgentWorker.class)).thenReturn(agentWorker);
 
