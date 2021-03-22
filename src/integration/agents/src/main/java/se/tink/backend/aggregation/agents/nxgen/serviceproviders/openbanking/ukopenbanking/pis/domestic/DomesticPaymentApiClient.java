@@ -1,13 +1,18 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domestic;
 
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentConstants.CONSENT_ID_KEY;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentConstants.ErrorMessage;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentConstants.PAYMENT_ID_KEY;
 
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import se.tink.backend.aggregation.agents.exceptions.payment.CreditorValidationException;
+import se.tink.backend.aggregation.agents.exceptions.payment.DebtorValidationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.InsufficientFundsException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.rpc.ErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.UkOpenBankingPaymentApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.UkOpenBankingRequestBuilder;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domestic.converter.DomesticPaymentConverter;
@@ -23,8 +28,11 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domestic.dto.FundsAvailableResult;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.payment.rpc.Payment;
+import se.tink.libraries.signableoperation.enums.InternalStatus;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -42,18 +50,37 @@ public class DomesticPaymentApiClient implements UkOpenBankingPaymentApiClient {
     private final String baseUrl;
 
     @Override
-    public PaymentResponse createPaymentConsent(PaymentRequest paymentRequest) {
+    public PaymentResponse createPaymentConsent(PaymentRequest paymentRequest)
+            throws PaymentException {
         final DomesticPaymentConsentRequest consentRequest =
                 createDomesticPaymentConsentRequest(paymentRequest);
+        DomesticPaymentConsentResponse response;
+        try {
+            response =
+                    requestBuilder
+                            .createPisRequestWithJwsHeader(createUrl(PAYMENT_CONSENT))
+                            .post(DomesticPaymentConsentResponse.class, consentRequest);
+            validateDomesticPaymentConsentResponse(response);
 
-        final DomesticPaymentConsentResponse response =
-                requestBuilder
-                        .createPisRequestWithJwsHeader(createUrl(PAYMENT_CONSENT))
-                        .post(DomesticPaymentConsentResponse.class, consentRequest);
+            return domesticPaymentConverter.convertConsentResponseDtoToTinkPaymentResponse(
+                    response);
+        } catch (HttpResponseException e) {
+            HttpResponse httpResponse = e.getResponse();
+            ErrorResponse body = httpResponse.getBody(ErrorResponse.class);
+            if (body.getErrorMessages().contains(ErrorMessage.DEBTOR_VALIDATION_FAILURE)) {
+                throw new DebtorValidationException(
+                        DebtorValidationException.DEFAULT_MESSAGE,
+                        InternalStatus.INVALID_SOURCE_ACCOUNT);
+            }
+            if (body.getErrorMessages().contains(ErrorMessage.CREDITOR_VALIDATION_FAILURE)) {
+                throw new CreditorValidationException(
+                        CreditorValidationException.DEFAULT_MESSAGE,
+                        InternalStatus.INVALID_DESTINATION_ACCOUNT);
+            }
 
-        validateDomesticPaymentConsentResponse(response);
-
-        return domesticPaymentConverter.convertConsentResponseDtoToTinkPaymentResponse(response);
+            // To add more internal specific error exception
+            throw e;
+        }
     }
 
     @Override
@@ -95,12 +122,24 @@ public class DomesticPaymentApiClient implements UkOpenBankingPaymentApiClient {
         if (!areFundsAvailable(consentId)) {
             throw new InsufficientFundsException("Funds Availablity are not confirmed by the bank");
         }
-        final DomesticPaymentResponse response =
-                requestBuilder
-                        .createPisRequestWithJwsHeader(createUrl(PAYMENT))
-                        .post(DomesticPaymentResponse.class, request);
+        try {
+            final DomesticPaymentResponse response =
+                    requestBuilder
+                            .createPisRequestWithJwsHeader(createUrl(PAYMENT))
+                            .post(DomesticPaymentResponse.class, request);
 
-        return domesticPaymentConverter.convertResponseDtoToPaymentResponse(response);
+            return domesticPaymentConverter.convertResponseDtoToPaymentResponse(response);
+        } catch (HttpResponseException e) {
+            HttpResponse httpResponse = e.getResponse();
+            ErrorResponse body = httpResponse.getBody(ErrorResponse.class);
+            if (body.getErrorMessages().contains(ErrorMessage.EXCEED_DAILY_LIMIT_FAILURE)) {
+                throw new PaymentRejectedException(
+                        ErrorMessage.EXCEED_DAILY_LIMIT_FAILURE,
+                        InternalStatus.TRANSFER_LIMIT_REACHED);
+            }
+            // To add more internal specific error exception
+            throw e;
+        }
     }
 
     private boolean areFundsAvailable(String consentId) {

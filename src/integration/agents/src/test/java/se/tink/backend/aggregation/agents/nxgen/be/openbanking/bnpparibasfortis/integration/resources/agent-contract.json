@@ -93,6 +93,18 @@
       "timestamp":0,
       "type":"DEFAULT",
       "upcoming":false
+    },
+    {
+      "amount":1.21,
+      "date":1610449200000,
+      "description": "Refund",
+      "internalPayload":{},
+      "originalAmount":0.0,
+      "payload":{},
+      "pending": false,
+      "timestamp":0,
+      "type":"DEFAULT",
+      "upcoming":false
     }
   ]
 }

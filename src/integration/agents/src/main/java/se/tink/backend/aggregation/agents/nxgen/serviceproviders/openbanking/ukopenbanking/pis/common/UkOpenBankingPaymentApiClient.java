@@ -6,7 +6,7 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 
 public interface UkOpenBankingPaymentApiClient {
 
-    PaymentResponse createPaymentConsent(PaymentRequest paymentRequest);
+    PaymentResponse createPaymentConsent(PaymentRequest paymentRequest) throws PaymentException;
 
     PaymentResponse getPayment(String paymentId);
 

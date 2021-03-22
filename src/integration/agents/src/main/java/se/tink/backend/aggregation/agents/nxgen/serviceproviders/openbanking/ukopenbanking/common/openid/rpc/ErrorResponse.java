@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.Setter;
@@ -32,18 +33,36 @@ public class ErrorResponse {
 
     @JsonIgnore
     public boolean messageContains(String pattern) {
-        if (errors == null) {
-            return false;
-        }
-        return errors.stream().anyMatch(errorEntity -> errorEntity.getMessage().contains(pattern));
+        return Optional.ofNullable(errors)
+                .map(
+                        listOfErrors ->
+                                listOfErrors.stream()
+                                        .anyMatch(
+                                                errorEntity ->
+                                                        errorEntity.getMessage().contains(pattern)))
+                .orElse(false);
     }
 
     @JsonIgnore
     public List<String> getErrorCodes() {
-        if (errors == null) {
-            return Collections.emptyList();
-        }
-        return errors.stream().map(ErrorEntity::getErrorCode).collect(Collectors.toList());
+        return Optional.ofNullable(errors)
+                .map(
+                        listOfErrors ->
+                                listOfErrors.stream()
+                                        .map(ErrorEntity::getErrorCode)
+                                        .collect(Collectors.toList()))
+                .orElse(Collections.emptyList());
+    }
+
+    @JsonIgnore
+    public List<String> getErrorMessages() {
+        return Optional.ofNullable(errors)
+                .map(
+                        listOfErrors ->
+                                listOfErrors.stream()
+                                        .map(ErrorEntity::getMessage)
+                                        .collect(Collectors.toList()))
+                .orElse(Collections.emptyList());
     }
 
     @JsonObject
