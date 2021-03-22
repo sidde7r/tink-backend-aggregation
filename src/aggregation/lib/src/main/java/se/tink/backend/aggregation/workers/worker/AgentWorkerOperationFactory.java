@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.apache.curator.framework.CuratorFramework;
@@ -108,7 +107,6 @@ import se.tink.libraries.uuid.UUIDUtils;
 
 public class AgentWorkerOperationFactory {
     private static final Logger log = LoggerFactory.getLogger(AgentWorkerOperationFactory.class);
-    private final Random random = new Random();
 
     private final CacheClient cacheClient;
     private final CryptoConfigurationDao cryptoConfigurationDao;
@@ -755,23 +753,6 @@ public class AgentWorkerOperationFactory {
                     new ReportProviderTransferMetricsAgentWorkerCommand(context, operationName));
         }
 
-        SendDataForProcessingAgentWorkerCommand sendDataForProcessingAgentWorkerCommand =
-                new SendDataForProcessingAgentWorkerCommand(
-                        context,
-                        createCommandMetricState(request),
-                        ProcessableItem.fromRefreshableItems(
-                                RefreshableItem.convertLegacyItems(
-                                        RefreshableItem.REFRESHABLE_ITEMS_ALL)));
-
-        // https://tink.slack.com/archives/CS4BJQJBV/p1612518614089100
-        boolean sendDataForProcessingEnabled = isSendDataForProcessingEnabled();
-        if (sendDataForProcessingEnabled) {
-            commands.add(sendDataForProcessingAgentWorkerCommand);
-        }
-        log.info(
-                "sendDataForProcessingAgentWorkerCommand is used in command chain: {}",
-                sendDataForProcessingEnabled);
-
         commands.add(
                 new CreateAgentConfigurationControllerWorkerCommand(
                         context, tppSecretsServiceClient));
@@ -838,11 +819,6 @@ public class AgentWorkerOperationFactory {
 
         return new AgentWorkerOperation(
                 agentWorkerOperationState, operationName, request, commands, context);
-    }
-
-    private boolean isSendDataForProcessingEnabled() {
-        double skipRatio = 0.60;
-        return random.nextDouble() > skipRatio;
     }
 
     @VisibleForTesting
@@ -1023,23 +999,6 @@ public class AgentWorkerOperationFactory {
                         new AgentWorkerMetricReporter(
                                 metricRegistry, this.providerTierConfiguration)));
         commands.add(new ReportProviderTransferMetricsAgentWorkerCommand(context, operationName));
-
-        // https://tink.slack.com/archives/CS4BJQJBV/p1612518614089100
-        boolean sendDataForProcessingEnabled = isSendDataForProcessingEnabled();
-        if (sendDataForProcessingEnabled) {
-            SendDataForProcessingAgentWorkerCommand sendDataForProcessingAgentWorkerCommand =
-                    new SendDataForProcessingAgentWorkerCommand(
-                            context,
-                            createCommandMetricState(request),
-                            ProcessableItem.fromRefreshableItems(
-                                    RefreshableItem.convertLegacyItems(
-                                            RefreshableItem.REFRESHABLE_ITEMS_ALL)));
-
-            commands.add(sendDataForProcessingAgentWorkerCommand);
-        }
-        log.info(
-                "sendDataForProcessingAgentWorkerCommand is used in command chain: {}",
-                sendDataForProcessingEnabled);
 
         commands.add(
                 new CreateAgentConfigurationControllerWorkerCommand(
