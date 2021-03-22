@@ -302,6 +302,7 @@ public class Transaction implements Comparable<Transaction>, Cloneable {
                 && Objects.equals(first.providerMarket, second.providerMarket);
     }
 
+    //    please mind that those values might appear in logs
     @Override
     public String toString() {
         generateIdIfMissing();
@@ -310,8 +311,8 @@ public class Transaction implements Comparable<Transaction>, Cloneable {
                 .add("credentialsId", credentialsId)
                 .add("accountId", accountId)
                 .add("date", getDate())
-                .add("payload", payload)
-                .add("payloadSerialized", payloadSerialized)
+                .add("payload", payload == null ? null : "***")
+                .add("payloadSerialized", payloadSerialized == null ? null : "***")
                 .add("pending", pending)
                 .add("timestamp", timestamp)
                 .add("type", type)
@@ -319,7 +320,7 @@ public class Transaction implements Comparable<Transaction>, Cloneable {
                 .add("upcoming", upcoming)
                 .add("externalSystemIds", externalSystemIds)
                 .add("mutability", mutability)
-                .add("transactionAmount", transactionAmount)
+                .add("transactionAmount", transactionAmount == null ? null : "***")
                 .add("proprietaryFinancialInstitutionType", proprietaryFinancialInstitutionType)
                 .add("merchantName", merchantName)
                 .add("merchantCategoryCode", merchantCategoryCode)
