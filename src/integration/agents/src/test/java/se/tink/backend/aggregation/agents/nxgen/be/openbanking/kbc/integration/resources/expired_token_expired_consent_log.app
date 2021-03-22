@@ -1,5 +1,5 @@
 REQUEST 1
-POST https://openapi.kbc-group.com/ASK/oauth/token/1
+POST https://psd2.api.kbc-group.com/ASK/oauth/token/1
 Authorization: Basic RFVNTVlfSUQ=
 Content-Type: application/x-www-form-urlencoded
 PSU-IP-Address: 0.0.0.0

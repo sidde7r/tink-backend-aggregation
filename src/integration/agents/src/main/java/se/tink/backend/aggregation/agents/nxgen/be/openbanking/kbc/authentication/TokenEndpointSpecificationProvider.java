@@ -22,6 +22,6 @@ public class TokenEndpointSpecificationProvider {
     }
 
     static URI getAccessTokenEndpoint() {
-        return URI.create("https://openapi.kbc-group.com/ASK/oauth/token/1");
+        return URI.create("https://psd2.api.kbc-group.com/ASK/oauth/token/1");
     }
 }
