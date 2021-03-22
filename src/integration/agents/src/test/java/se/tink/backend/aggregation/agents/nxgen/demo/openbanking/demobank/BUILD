@@ -23,6 +23,8 @@ junit_test(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/random",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
         "//src/integration/payment:rpc",
+        "//src/integration/transfer:enums",
+        "//src/integration/transfer:rpc",
         "//src/libraries/account_identifier",
         "//third_party:org_hamcrest_hamcrest_library",
         "@aggregation//:com_google_guava_guava",

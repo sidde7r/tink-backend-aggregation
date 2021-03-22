@@ -20,6 +20,7 @@ import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.TypedPaymentControllerable;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
+import se.tink.backend.aggregation.agents.agentcapabilities.AgentPisCapability;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants.ClusterIds;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants.ClusterSpecificCallbacks;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.DemobankAppToAppAuthenticator;
@@ -34,11 +35,15 @@ import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.fetche
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.fetcher.transactionalaccount.DemobankIdentityDataFetcher;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.fetcher.transactionalaccount.DemobankTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.filters.AuthenticationErrorFilter;
+import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.DemobankDtoMappers;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.DemobankPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.apiclient.DemobankPaymentApiClient;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.apiclient.DemobankPaymentRequestFilter;
+import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.apiclient.DemobankRecurringPaymentApiClient;
+import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.apiclient.DemobankSinglePaymentApiClient;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.authenticator.DemobankPaymentAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.storage.DemobankStorage;
+import se.tink.backend.aggregation.client.provider_configuration.rpc.PisCapability;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -56,8 +61,12 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.BankServiceInternalErrorFilter;
 import se.tink.libraries.payment.rpc.Payment;
+import se.tink.libraries.transfer.rpc.PaymentServiceType;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, CREDIT_CARDS, IDENTITY_DATA})
+@AgentPisCapability(
+        capabilities = PisCapability.PIS_SEPA_RECURRING_PAYMENTS,
+        markets = {"IT"})
 public final class DemobankAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor,
@@ -265,11 +274,18 @@ public final class DemobankAgent extends NextGenerationAgent
 
     @Override
     public Optional<PaymentController> getPaymentController(Payment payment) {
+        final DemobankDtoMappers mappers = new DemobankDtoMappers();
         final DemobankStorage storage = new DemobankStorage();
         final DemobankPaymentRequestFilter requestFilter =
                 new DemobankPaymentRequestFilter(storage);
+
         final DemobankPaymentApiClient paymentApiClient =
-                new DemobankPaymentApiClient(requestFilter, storage, client, callbackUri);
+                PaymentServiceType.PERIODIC.equals(payment.getPaymentServiceType())
+                        ? new DemobankRecurringPaymentApiClient(
+                                mappers, requestFilter, storage, client, callbackUri)
+                        : new DemobankSinglePaymentApiClient(
+                                mappers, requestFilter, storage, client, callbackUri);
+
         final DemobankPaymentAuthenticator authenticator =
                 new DemobankPaymentAuthenticator(
                         supplementalInformationHelper, strongAuthenticationState, callbackUri);

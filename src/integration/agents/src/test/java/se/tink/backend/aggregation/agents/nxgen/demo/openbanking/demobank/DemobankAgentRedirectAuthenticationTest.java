@@ -11,6 +11,10 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
+import se.tink.libraries.transfer.enums.RemittanceInformationType;
+import se.tink.libraries.transfer.rpc.Frequency;
+import se.tink.libraries.transfer.rpc.PaymentServiceType;
+import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 public class DemobankAgentRedirectAuthenticationTest {
 
@@ -22,12 +26,13 @@ public class DemobankAgentRedirectAuthenticationTest {
     @Before
     public void setup() {
         builder =
-                new AgentIntegrationTest.Builder("uk", "uk-demobank-open-banking-redirect")
+                new AgentIntegrationTest.Builder("it", "it-demobank-open-banking-redirect")
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
                         .setRedirectUrl(
                                 "https://127.0.0.1:7357/api/v1/credentials/third-party/callback")
-                        .expectLoggedIn(false);
+                        .expectLoggedIn(false)
+                        .setAppId("tink");
     }
 
     @Test
@@ -37,16 +42,12 @@ public class DemobankAgentRedirectAuthenticationTest {
 
     @Test
     public void testPayments() throws Exception {
-        AgentIntegrationTest.Builder builder =
-                new AgentIntegrationTest.Builder("it", "it-demobank-open-banking-redirect")
-                        .expectLoggedIn(false)
-                        .loadCredentialsBefore(false)
-                        .saveCredentialsAfter(false)
-                        .setRedirectUrl(
-                                "https://127.0.0.1:7357/api/v1/credentials/third-party/callback")
-                        .setAppId("tink");
-
         builder.build().testGenericPaymentUKOB(createMockedDomesticPayment());
+    }
+
+    @Test
+    public void testRecurringPayment() throws Exception {
+        builder.build().testGenericPaymentUKOB(createMockedRecurringDomesticPayment());
     }
 
     private Payment createMockedDomesticPayment() {
@@ -55,6 +56,7 @@ public class DemobankAgentRedirectAuthenticationTest {
         String currency = "EUR";
 
         return new Payment.Builder()
+                .withPaymentServiceType(PaymentServiceType.SINGLE)
                 .withCreditor(
                         new Creditor(
                                 AccountIdentifier.create(
@@ -70,6 +72,39 @@ public class DemobankAgentRedirectAuthenticationTest {
                 .withRemittanceInformation(
                         RemittanceInformationUtils.generateUnstructuredRemittanceInformation(
                                 "Message"))
+                .withUniqueId(RandomUtils.generateRandomHexEncoded(15))
+                .build();
+    }
+
+    private Payment createMockedRecurringDomesticPayment() {
+        ExactCurrencyAmount amount = ExactCurrencyAmount.of("0.3", "EUR");
+        LocalDate executionDate = LocalDate.now();
+        LocalDate startDate = LocalDate.now();
+        LocalDate endDate = startDate.plusWeeks(1);
+        String currency = "EUR";
+
+        RemittanceInformation remittanceInformation = new RemittanceInformation();
+        remittanceInformation.setValue("Periodic payment");
+        remittanceInformation.setType(RemittanceInformationType.REFERENCE);
+
+        return new Payment.Builder()
+                .withPaymentServiceType(PaymentServiceType.PERIODIC)
+                .withCreditor(
+                        new Creditor(
+                                AccountIdentifier.create(
+                                        AccountIdentifier.Type.IBAN, DESTINATION_IDENTIFIER),
+                                "Unknown person"))
+                .withDebtor(
+                        new Debtor(
+                                AccountIdentifier.create(
+                                        AccountIdentifier.Type.IBAN, SOURCE_IDENTIFIER)))
+                .withExactCurrencyAmount(amount)
+                .withExecutionDate(executionDate)
+                .withFrequency(Frequency.WEEKLY)
+                .withStartDate(startDate)
+                .withEndDate(endDate)
+                .withCurrency(currency)
+                .withRemittanceInformation(remittanceInformation)
                 .withUniqueId(RandomUtils.generateRandomHexEncoded(15))
                 .build();
     }
