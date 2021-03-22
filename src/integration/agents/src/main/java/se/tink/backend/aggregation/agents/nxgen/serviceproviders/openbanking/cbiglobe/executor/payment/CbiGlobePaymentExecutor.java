@@ -4,7 +4,9 @@ import static java.util.Objects.nonNull;
 
 import com.google.api.client.repackaged.com.google.common.base.Preconditions;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +14,7 @@ import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentValidationException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.FormValues;
@@ -184,6 +187,7 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
 
         PaymentMultiStepResponse paymentMultiStepResponse;
         String redirectUrl = sessionStorage.get(StorageKeys.LINK);
+        Map<String, String> supplementalInfo = null;
         if (redirectUrl != null) { // dont redirect if CBI globe dont provide redirect URL.
             openThirdPartyApp(new URL(redirectUrl));
             // after redirect is done remove old redirect link from session, because
@@ -191,7 +195,7 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
             // removed from session and TL again redirect to bank.
             sessionStorage.put(StorageKeys.LINK, null);
 
-            waitForSupplementalInformation();
+            supplementalInfo = waitForSupplementalInformation();
         }
 
         CreatePaymentResponse createPaymentResponse =
@@ -211,13 +215,15 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
             case ACWC:
             case ACWP:
                 paymentMultiStepResponse =
-                        handleSignedPayment(paymentMultiStepRequest, createPaymentResponse);
+                        handleSignedPayment(
+                                paymentMultiStepRequest, createPaymentResponse, supplementalInfo);
                 break;
                 // Before signing PIS
             case RCVD:
             case PDNG:
                 paymentMultiStepResponse =
-                        handleUnsignedPayment(paymentMultiStepRequest, createPaymentResponse);
+                        handleUnsignedPayment(
+                                paymentMultiStepRequest, createPaymentResponse, supplementalInfo);
                 break;
             case RJCT: // cancelled case
                 return handleReject(scaStatus, psuAuthenticationStatus);
@@ -253,21 +259,27 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
 
     private PaymentMultiStepResponse handleUnsignedPayment(
             PaymentMultiStepRequest paymentMultiStepRequest,
-            CreatePaymentResponse createPaymentResponse) {
+            CreatePaymentResponse createPaymentResponse,
+            Map<String, String> supplementalInfo)
+            throws PaymentValidationException {
 
         return createPaymentResponse.getLinks() == null
-                ? handleEmptyLinksInResponse(paymentMultiStepRequest, createPaymentResponse)
+                ? handleEmptyLinksInResponse(
+                        paymentMultiStepRequest, createPaymentResponse, supplementalInfo)
                 : handleRedirectURLs(paymentMultiStepRequest, createPaymentResponse);
     }
 
     private PaymentMultiStepResponse handleEmptyLinksInResponse(
             PaymentMultiStepRequest paymentMultiStepRequest,
-            CreatePaymentResponse createPaymentResponse) {
+            CreatePaymentResponse createPaymentResponse,
+            Map<String, String> supplementalInfo)
+            throws PaymentValidationException {
         sessionStorage.put(StorageKeys.LINK, null);
         // As for BPM payment is parked for 30 min at bank in RCVD state we need special handling.
         // Ref: https://tinkab.atlassian.net/browse/PAY2-734
         if (isBPMProvider()) {
-            return handleSignedPayment(paymentMultiStepRequest, createPaymentResponse);
+            return handleSignedPayment(
+                    paymentMultiStepRequest, createPaymentResponse, supplementalInfo);
         } else
             return new PaymentMultiStepResponse(
                     createPaymentResponse.toTinkPaymentResponse(
@@ -310,7 +322,9 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
 
     private PaymentMultiStepResponse handleSignedPayment(
             PaymentMultiStepRequest paymentMultiStepRequest,
-            CreatePaymentResponse createPaymentResponse) {
+            CreatePaymentResponse createPaymentResponse,
+            Map<String, String> supplementalInfo)
+            throws PaymentValidationException {
 
         if (CbiGlobeConstants.PSUAuthenticationStatus.AUTHENTICATED.equalsIgnoreCase(
                         createPaymentResponse.getPsuAuthenticationStatus())
@@ -324,6 +338,13 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
                             paymentMultiStepRequest.getPayment()),
                     AuthenticationStepConstants.STEP_FINALIZE,
                     new ArrayList<>());
+        } else if (supplementalInfo != null && supplementalInfo.isEmpty()) {
+            logger.error(
+                    "Payment is not verified and we did not receive a callback from ASPSP: psuAuthenticationStatus={} , scaStatus={} , transactionStatus={}",
+                    createPaymentResponse.getPsuAuthenticationStatus(),
+                    createPaymentResponse.getScaStatus(),
+                    createPaymentResponse.getTransactionStatus());
+            throw new PaymentValidationException(PaymentValidationException.DEFAULT_MESSAGE);
         } else {
             return handleIntermediatePaymentStates(paymentMultiStepRequest, createPaymentResponse);
         }
@@ -392,9 +413,11 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
         return ThirdPartyAppAuthenticationPayload.of(authorizeUrl);
     }
 
-    private void waitForSupplementalInformation() {
-        this.supplementalInformationHelper.waitForSupplementalInformation(
-                strongAuthenticationState.getSupplementalKey(), 9L, TimeUnit.MINUTES);
+    private Map<String, String> waitForSupplementalInformation() {
+        return this.supplementalInformationHelper
+                .waitForSupplementalInformation(
+                        strongAuthenticationState.getSupplementalKey(), 9L, TimeUnit.MINUTES)
+                .orElse(Collections.emptyMap());
     }
 
     protected PaymentType getPaymentType(PaymentRequest paymentRequest) {
