@@ -97,7 +97,6 @@ public class RateLimitedExecutorProxyTest {
 
         RateLimitedExecutorProxy executor =
                 new RateLimitedExecutorProxy(
-                        false,
                         Suppliers.<RateLimiter>ofInstance(fakeRateLimiter),
                         delegateExecutor,
                         new ThreadFactoryBuilder()

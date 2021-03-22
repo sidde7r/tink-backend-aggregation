@@ -21,7 +21,6 @@ import se.tink.libraries.tracing.lib.api.Tracing;
 public class RateLimitedExecutorProxy extends AbstractExecutorService {
     private final MetricRegistry metricRegistry;
     private final MetricId.MetricLabels metricLabels;
-    private boolean enableTracingExperimental;
 
     public interface RateLimiter {
         double acquire();
@@ -60,14 +59,12 @@ public class RateLimitedExecutorProxy extends AbstractExecutorService {
     private final BlockingQueue<Runnable> rateLimittedQueue;
 
     public RateLimitedExecutorProxy(
-            boolean enableTracingExperimental,
             Supplier<RateLimiter> rateLimiter,
             ListenableThreadPoolExecutor<Runnable> delegate,
             ThreadFactory threadFactory,
             MetricRegistry metricRegistry,
             MetricId.MetricLabels metricLabels,
             int maxQueueableItems) {
-        this.enableTracingExperimental = enableTracingExperimental;
         this.delegate = Preconditions.checkNotNull(delegate);
         this.rateLimiter = Preconditions.checkNotNull(rateLimiter);
         this.rateLimittedQueue = new LinkedBlockingQueue<>(maxQueueableItems);
@@ -96,12 +93,7 @@ public class RateLimitedExecutorProxy extends AbstractExecutorService {
                         new RateLimitedRunnable(
                                 Preconditions.checkNotNull(command), metricRegistry));
 
-        if (enableTracingExperimental) {
-            rateLimitedExecutorService.execute(Tracing.wrapRunnable(instrumentedRunnable));
-        } else {
-            rateLimitedExecutorService.execute(instrumentedRunnable);
-        }
-
+        rateLimitedExecutorService.execute(Tracing.wrapRunnable(instrumentedRunnable));
         instrumentedRunnable.submitted();
     }
 
