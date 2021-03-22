@@ -17,7 +17,7 @@ spec:
       labels:
         severity: urgent
         priority: P1
-        who: connectivity-teletubbies
+        who: connectivity-nazguls
       annotations:
         description:
         summary: Transfer success rate is below 20% actual % is <{ $value }> for <{ $labels.className }> the last 1h. More than 5 attempts.
@@ -34,7 +34,7 @@ spec:
       labels:
         severity: urgent
         priority: P1
-        who: connectivity-teletubbies
+        who: connectivity-nazguls
       annotations:
         description:
         summary: Transfer success rate is below 20% actual % is <{ $value }> for <{ $labels.className }> the last 1h. More than 5 attempts.
@@ -53,7 +53,7 @@ spec:
       labels:
         severity: urgent
         priority: P2
-        who: connectivity-teletubbies
+        who: connectivity-nazguls
       annotations:
         description: {{ .Values.kibanaLink }}
             {{ .Values.grafanaLink }}
@@ -73,7 +73,7 @@ spec:
       labels:
         severity: urgent
         priority: P2
-        who: connectivity-teletubbies
+        who: connectivity-nazguls
       annotations:
         description: {{ .Values.kibanaLink }}
           {{ .Values.grafanaLink }}
@@ -93,7 +93,7 @@ spec:
       labels:
         severity: urgent
         priority: P3
-        who: connectivity-teletubbies
+        who: connectivity-nazguls
       annotations:
         description: {{ .Values.kibanaLink }}
           {{ .Values.grafanaLink }}
@@ -113,7 +113,7 @@ spec:
       labels:
         severity: urgent
         priority: P3
-        who: connectivity-teletubbies
+        who: connectivity-nazguls
       annotations:
         description: {{ .Values.kibanaLink }}
             {{ .Values.grafanaLink }}
