@@ -20,6 +20,7 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 import se.tink.backend.aggregation.agentsplatform.agentsframework.common.authentication.Token;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AgentBankApiError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.SessionExpiredError;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.error.ThirdPartyAppTimedOutError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.http.AuthenticationPersistedDataCookieStoreAccessorFactory;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.http.ExternalApiCallResult;
 
@@ -112,11 +113,10 @@ public abstract class N26ValidateConsentBaseStep {
                             .atStartOfDay(ZoneId.systemDefault())
                             .toInstant();
             return Optional.of(new AgentSucceededAuthenticationResult(validUntil, persistedData));
-
         } else if (callResultResponse.isLoginExpired()) {
-            log.info("SessionExpired: Consent expired");
+            log.info("Login attempt expired. User has not confirmed in given time");
             return Optional.of(
-                    new AgentFailedAuthenticationResult(new SessionExpiredError(), persistedData));
+                    new AgentFailedAuthenticationResult(new ThirdPartyAppTimedOutError(), null));
         }
         return Optional.empty();
     }
