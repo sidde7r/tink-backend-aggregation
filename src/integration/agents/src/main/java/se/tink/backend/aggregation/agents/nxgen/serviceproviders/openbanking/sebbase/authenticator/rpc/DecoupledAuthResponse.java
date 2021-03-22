@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class DecoupledAuthResponse {
     private String authReqId;
-    private String autoStartToken;
+    private String autostartToken;
     private String hintCode;
     private String status;
     private int pollDelay;

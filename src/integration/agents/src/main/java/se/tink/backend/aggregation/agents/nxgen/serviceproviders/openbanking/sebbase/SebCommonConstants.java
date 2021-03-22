@@ -42,7 +42,12 @@ public class SebCommonConstants {
         public static final String START_FAILED = "start_failed";
         public static final String UNKNOWN_BANK_ID = "SEB_UNKNOWN_BANKID";
         public static final String REQUIRES_EXTRA_VERIFICATION =
-                "BANKID_REQUIRES_EXTRA_VERIFICATION";
+                "bankid_requires_extra_verification";
+    }
+
+    public static class HintCodes {
+        public static final String OUTSTANDING_TRANSACTION = "OUTSTANDING_TRANSACTION";
+        public static final String USER_SIGN = "USER_SIGN";
     }
 
     public static class QueryKeys {
@@ -119,6 +124,8 @@ public class SebCommonConstants {
         public static final String INVALID_CONFIGURATION =
                 "Invalid Configuration: %s cannot be empty or null";
         public static final String SEB_SPECIFIC_ERROR = "SEB specific error has occurred.";
+        public static final String REQUIRES_EXTRA_VERIFICATION =
+                "Message from SEB - SEB needs you to verify your BankID before you can continue using the service. Visit www.seb.se or open the SEB app to verify your BankID. Note that you must be a customer of SEB to be able to use the service.";
     }
 
     public static class HttpClient {

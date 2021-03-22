@@ -1,17 +1,18 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator;
 
 import com.google.api.client.repackaged.com.google.common.base.Strings;
-import java.lang.invoke.MethodHandles;
 import java.util.Optional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.bankid.status.BankIdStatus;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebBaseApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebCommonConstants.ErrorMessages;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebCommonConstants.HintCodes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebCommonConstants.PollResponses;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebCommonConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebCommonConstants.Urls;
@@ -25,11 +26,10 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.seb
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.libraries.i18n.LocalizableKey;
 
 public class SebDecoupledAuthenticator implements BankIdAuthenticator<String> {
-    private static final Logger logger =
-            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final SebBaseApiClient apiClient;
     private final SebConfiguration configuration;
@@ -37,6 +37,8 @@ public class SebDecoupledAuthenticator implements BankIdAuthenticator<String> {
     private OAuth2Token oAuth2Token;
     private String autoStartToken;
     private String ssn;
+    private String authRequestId;
+    private boolean isUserSign = false;
 
     public SebDecoupledAuthenticator(
             SebBaseApiClient apiClient, AgentConfiguration<SebConfiguration> agentConfiguration) {
@@ -49,51 +51,59 @@ public class SebDecoupledAuthenticator implements BankIdAuthenticator<String> {
     public String init(String ssn)
             throws BankServiceException, AuthorizationException, AuthenticationException {
         this.ssn = ssn;
-        String authRequestId =
+        authRequestId =
                 apiClient
                         .startDecoupledAuthorization(
                                 DecoupledAuthRequest.builder()
                                         .clientId(configuration.getClientId())
                                         .build())
                         .getAuthReqId();
-        autoStartToken = apiClient.getDecoupledAuthStatus(authRequestId).getAutoStartToken();
+        autoStartToken = apiClient.getDecoupledAuthStatus(authRequestId).getAutostartToken();
         return authRequestId;
     }
 
     @Override
     public BankIdStatus collect(String authRequestId)
             throws AuthenticationException, AuthorizationException {
-        DecoupledAuthResponse response = apiClient.getDecoupledAuthStatus(authRequestId);
+        DecoupledAuthResponse response;
+        try {
+            response = apiClient.getDecoupledAuthStatus(authRequestId);
+        } catch (HttpResponseException e) {
+            // SEB ends up with HTTP 500 after about 3 minutes for both cases of
+            // isUserSign=true and isUserSign=false
+            if (e.getResponse().getStatus() == HttpStatus.SC_INTERNAL_SERVER_ERROR) {
+                return BankIdStatus.TIMEOUT;
+            }
+            throw e;
+        }
+        String hintCode = Strings.nullToEmpty(response.getHintCode());
 
         switch (response.getStatus().toLowerCase()) {
             case PollResponses.COMPLETE:
-                if (Strings.nullToEmpty(response.getHintCode())
-                        .equalsIgnoreCase(PollResponses.UNKNOWN_BANK_ID)) {
-                    throw LoginError.NOT_SUPPORTED.exception(
-                            new LocalizableKey(
-                                    "Message from SEB - SEB needs you to verify your BankID before you can continue using the service. Visit www.seb.se or open the SEB app to verify your BankID. Note that you must be a customer of SEB to be able to use the service."));
+                //                startAuthorization();
+                return BankIdStatus.DONE;
+
+            case PollResponses.PENDING:
+                // SEB renews AST every 20 seconds (10 seconds before expiry)
+                if (!isUserSign && hintCode.equalsIgnoreCase(HintCodes.USER_SIGN)) {
+                    isUserSign = true;
+                } else if (hintCode.equalsIgnoreCase(HintCodes.OUTSTANDING_TRANSACTION)
+                        && !autoStartToken.equals(response.getAutostartToken())) {
+                    autoStartToken = response.getAutostartToken();
+                    return BankIdStatus.EXPIRED_AUTOSTART_TOKEN;
+                }
+                return BankIdStatus.WAITING;
+
+            case PollResponses.REQUIRES_EXTRA_VERIFICATION:
+                throw LoginError.NOT_SUPPORTED.exception(
+                        new LocalizableKey(ErrorMessages.REQUIRES_EXTRA_VERIFICATION));
+
+            case PollResponses.FAILED:
+                if (isUserSign) {
+                    return BankIdStatus.CANCELLED;
                 }
 
-                startAuthorization();
-                return BankIdStatus.DONE;
-            case PollResponses.PENDING:
-                return BankIdStatus.WAITING;
-            case PollResponses.FAILED:
-                switch (Strings.nullToEmpty(response.getHintCode()).toLowerCase()) {
-                    case PollResponses.EXPIRED_TRANSACTION:
-                    case PollResponses.START_FAILED:
-                        return BankIdStatus.EXPIRED_AUTOSTART_TOKEN;
-                    case PollResponses.CANCELLED:
-                    case PollResponses.USER_CANCEL:
-                        return BankIdStatus.CANCELLED;
-                    case PollResponses.NO_CLIENT:
-                        return BankIdStatus.NO_CLIENT;
-                    default:
-                        logger.warn("Unhandled BankID hint: " + response.getHintCode());
-                        return BankIdStatus.FAILED_UNKNOWN;
-                }
             default:
-                logger.warn("Unhandled BankID status: " + response.getStatus());
                 return BankIdStatus.FAILED_UNKNOWN;
         }
     }
@@ -121,8 +131,9 @@ public class SebDecoupledAuthenticator implements BankIdAuthenticator<String> {
 
     @Override
     public String refreshAutostartToken()
-            throws BankServiceException, AuthorizationException, AuthenticationException {
-        return init(ssn);
+            throws BankIdException, BankServiceException, AuthorizationException,
+                    AuthenticationException {
+        return authRequestId;
     }
 
     @Override
