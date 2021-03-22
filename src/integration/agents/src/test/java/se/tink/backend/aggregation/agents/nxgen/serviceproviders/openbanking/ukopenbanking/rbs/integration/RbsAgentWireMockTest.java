@@ -5,13 +5,13 @@ import static org.assertj.core.api.Assertions.catchThrowable;
 
 import java.time.LocalDate;
 import org.junit.Test;
+import se.tink.backend.aggregation.agents.exceptions.payment.CreditorValidationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.AgentWireMockPaymentTest;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.command.PaymentGBCommand;
 import se.tink.backend.aggregation.agents.utils.remittanceinformation.RemittanceInformationUtils;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationReader;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
-import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.amount.ExactCurrencyAmount;
@@ -48,11 +48,7 @@ public class RbsAgentWireMockTest {
         final Throwable thrown = catchThrowable(agentWireMockPaymentTest::executePayment);
 
         // then
-        assertThat(thrown)
-                .isExactlyInstanceOf(HttpResponseException.class)
-                .hasNoCause()
-                .hasMessage(
-                        "Response statusCode: 400 with body: {\"Code\":\"400 BadRequest\",\"Id\":\"38838199-e299-4c3a-ad16-d5058b6ced21\",\"Message\":\"Request error found.\",\"Errors\":[{\"ErrorCode\":\"UK.OBIE.Field.Invalid\",\"Message\":\"Creditor account failed to pass validation checks\"}]}");
+        assertThat(thrown).isExactlyInstanceOf(CreditorValidationException.class);
     }
 
     @Test

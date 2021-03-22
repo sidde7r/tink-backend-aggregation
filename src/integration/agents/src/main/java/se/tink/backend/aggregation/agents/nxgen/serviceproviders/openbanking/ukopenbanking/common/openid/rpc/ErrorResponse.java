@@ -46,6 +46,14 @@ public class ErrorResponse {
         return errors.stream().map(ErrorEntity::getErrorCode).collect(Collectors.toList());
     }
 
+    @JsonIgnore
+    public List<String> getErrorMessages() {
+        if (errors == null) {
+            return Collections.emptyList();
+        }
+        return errors.stream().map(ErrorEntity::getMessage).collect(Collectors.toList());
+    }
+
     @JsonObject
     @Setter
     @Getter
