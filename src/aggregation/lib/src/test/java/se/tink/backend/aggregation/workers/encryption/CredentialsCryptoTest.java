@@ -12,6 +12,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.io.BaseEncoding;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.Optional;
 import org.junit.Before;
@@ -89,7 +90,7 @@ public class CredentialsCryptoTest {
         user.setFlags(ImmutableList.of());
 
         CredentialsRequest request = requestFrom(credentials, user, provider);
-        assertTrue(crypto.encrypt(request, true));
+        assertTrue(crypto.encrypt(request, true, StandardCharsets.UTF_8));
 
         final Credentials clone = credentials.clone();
         clone.clearSensitiveInformation(provider);
@@ -107,7 +108,7 @@ public class CredentialsCryptoTest {
         CredentialsRequest decryptRequest = requestFrom(clone, user, provider);
         assertNotNull(v1);
         assertEquals(1, v1.getKeyId());
-        assertTrue(crypto.decrypt(decryptRequest));
+        assertTrue(crypto.decrypt(decryptRequest, StandardCharsets.UTF_8));
 
         final Map<String, String> decryptedPayload = clone.getSensitivePayloadAsMap();
         assertEquals("secret payload", decryptedPayload.get("superSecret"));
@@ -121,7 +122,7 @@ public class CredentialsCryptoTest {
         final User user = new User();
 
         CredentialsRequest request = requestFrom(credentials, user, provider);
-        assertTrue(crypto.encrypt(request, true));
+        assertTrue(crypto.encrypt(request, true, StandardCharsets.UTF_8));
 
         final Credentials clone = credentials.clone();
         clone.clearSensitiveInformation(provider);
@@ -141,7 +142,7 @@ public class CredentialsCryptoTest {
         assertEquals(0, v2.getKeyId());
         assertEquals(1, v2.getFields().getKeyId());
         assertEquals(1, v2.getPayload().getKeyId());
-        assertTrue(crypto.decrypt(decryptRequest));
+        assertTrue(crypto.decrypt(decryptRequest, StandardCharsets.UTF_8));
 
         final Map<String, String> decryptedPayload = clone.getSensitivePayloadAsMap();
         assertEquals("secret payload", decryptedPayload.get("superSecret"));
@@ -178,7 +179,7 @@ public class CredentialsCryptoTest {
                 SerializationUtils.deserializeFromString(
                         credentials.getSensitiveDataSerialized(), EncryptedPayloadV2.class);
         assertNotNull(v2);
-        assertTrue(crypto.encrypt(request, true));
+        assertTrue(crypto.encrypt(request, true, StandardCharsets.UTF_8));
 
         final Credentials clone = credentials.clone();
         clone.clearSensitiveInformation(provider);
@@ -187,7 +188,7 @@ public class CredentialsCryptoTest {
         CredentialsRequest decryptRequest = requestFrom(clone, user, provider);
 
         assertEquals(1, v2.getKeyId());
-        assertTrue(crypto.decrypt(decryptRequest));
+        assertTrue(crypto.decrypt(decryptRequest, StandardCharsets.UTF_8));
 
         final Map<String, String> decryptedPayload = clone.getSensitivePayloadAsMap();
         assertEquals("secret payload", decryptedPayload.get("superSecret"));

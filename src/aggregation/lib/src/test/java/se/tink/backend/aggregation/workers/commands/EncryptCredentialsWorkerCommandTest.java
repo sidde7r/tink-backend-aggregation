@@ -29,7 +29,8 @@ public class EncryptCredentialsWorkerCommandTest {
     @Test
     public void doExecuteShouldThrowExceptionWhenEncryptWasUnsuccessfull() {
         // given
-        given(credentialsCrypto.encrypt(context.getRequest(), true)).willReturn(false);
+        given(credentialsCrypto.encrypt(context.getRequest(), true, StandardCharsets.UTF_8))
+                .willReturn(false);
 
         // when
         Throwable t = catchThrowable(() -> command.doExecute());

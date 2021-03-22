@@ -9,6 +9,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import org.junit.Before;
 import org.junit.Test;
@@ -34,7 +35,8 @@ public class DecryptCredentialsWorkerCommandTest {
     @Test
     public void doExceuteShouldThrowExceptionWhenDidNotDecryptCredentials() {
         // given
-        given(credentialsCrypto.decrypt(context.getRequest())).willReturn(false);
+        given(credentialsCrypto.decrypt(context.getRequest(), StandardCharsets.UTF_8))
+                .willReturn(false);
 
         // when
         Throwable t = catchThrowable(() -> command.doExecute());
@@ -80,6 +82,7 @@ public class DecryptCredentialsWorkerCommandTest {
         command.doPostProcess();
 
         // then
-        verify(credentialsCrypto).encrypt(any(CredentialsRequest.class), eq(true));
+        verify(credentialsCrypto)
+                .encrypt(any(CredentialsRequest.class), eq(true), any(Charset.class));
     }
 }

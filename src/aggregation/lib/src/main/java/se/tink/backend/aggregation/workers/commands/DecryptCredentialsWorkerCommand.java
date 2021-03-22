@@ -45,6 +45,6 @@ public class DecryptCredentialsWorkerCommand extends AgentWorkerCommand {
 
         // Encrypt credential again.
         CredentialsRequest request = context.getRequest();
-        credentialsCrypto.encrypt(request, doUpdateCredential);
+        credentialsCrypto.encrypt(request, doUpdateCredential, this.charset);
     }
 }
