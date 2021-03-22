@@ -54,19 +54,8 @@ public class CredentialsCrypto {
         this.metricRegistry = metricRegistry;
     }
 
-    public boolean decrypt(CredentialsRequest request) {
-        return decrypt(request, null);
-    }
-
-    public boolean decrypt(Credentials credentials) {
-        return decrypt(credentials, null);
-    }
-
     public boolean decrypt(CredentialsRequest request, Charset charset) {
-        return decrypt(request.getCredentials(), charset);
-    }
-
-    public boolean decrypt(Credentials credentials, Charset charset) {
+        Credentials credentials = request.getCredentials();
         // See if there is any sensitive data in the cache
         String cachedSensitiveData =
                 (String)
@@ -179,10 +168,6 @@ public class CredentialsCrypto {
                             return true;
                         })
                 .handle(sensitiveData);
-    }
-
-    public boolean encrypt(CredentialsRequest request, boolean doUpdateCredential) {
-        return encrypt(request, doUpdateCredential, null);
     }
 
     public boolean encrypt(
