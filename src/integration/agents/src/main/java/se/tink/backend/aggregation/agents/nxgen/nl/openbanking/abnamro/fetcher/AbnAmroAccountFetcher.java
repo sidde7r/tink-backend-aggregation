@@ -4,7 +4,9 @@ import com.google.common.collect.Lists;
 import java.util.Collection;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.abnamro.AbnAmroApiClient;
+import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.abnamro.AbnAmroConstants;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.abnamro.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.abnamro.fetcher.rpc.AccountBalanceResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.abnamro.fetcher.rpc.AccountHolderResponse;
@@ -16,7 +18,9 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
+@Slf4j
 @RequiredArgsConstructor
 public class AbnAmroAccountFetcher implements AccountFetcher<TransactionalAccount> {
 
@@ -35,7 +39,7 @@ public class AbnAmroAccountFetcher implements AccountFetcher<TransactionalAccoun
                 TransactionalAccount.nxBuilder()
                         .withType(TransactionalAccountType.CHECKING)
                         .withPaymentAccountFlag()
-                        .withBalance(BalanceModule.of(balanceInfo.toAmount()))
+                        .withBalance(getBalanceModule(balanceInfo))
                         .withId(
                                 IdModule.builder()
                                         .withUniqueIdentifier(accountNumber)
@@ -59,5 +63,16 @@ public class AbnAmroAccountFetcher implements AccountFetcher<TransactionalAccoun
         String accountId = consent.getAccountId();
         AbnAmroUtils.putAccountIdInStorage(accountId, persistentStorage);
         return accountId;
+    }
+
+    private BalanceModule getBalanceModule(AccountBalanceResponse balance) {
+        // Added a log if bank return other balance type than "BOOKBALANCE"
+        if (!balance.getBalanceType().equals(AbnAmroConstants.BOOKED_BALANCE)) {
+            log.warn(
+                    "Found balance response with unknown balanceType: " + balance.getBalanceType());
+        }
+        return BalanceModule.builder()
+                .withBalance(ExactCurrencyAmount.of(balance.getAmount(), balance.getCurrency()))
+                .build();
     }
 }
