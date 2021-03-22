@@ -15,7 +15,7 @@ spec:
         (sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }},  {{ .Values.temporaryErrorsAuth }}, market="DE", provider_type!="test"}[60m])) by (action,className)
             / sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, market="DE", provider_type!="test"}[60m])) by (action,className) < 0.80)
         and (sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }},  {{ .Values.temporaryErrorsAuth }}, market="DE", provider_type!="test"}[60m])) by (action,className)
-                    / sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, market="DE", provider_type!="test"}[60m])) by (action,className) > 0.70)
+                    / sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, market="DE", provider_type!="test"}[60m])) by (action,className) >= 0.70)
         # At least this many attempts.
         and sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, market="DE", provider_type!="test"}[60m])) by (action,className) > 5
       for: {{ .Values.p4TimeWindow }}
@@ -35,7 +35,7 @@ spec:
         (sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }},  {{ .Values.temporaryErrorsAuth }}, market="DE", provider_type!="test"}[60m])) by (action,className)
             / sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, market="DE", provider_type!="test"}[60m])) by (action,className) < 0.70)
         and (sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }},  {{ .Values.temporaryErrorsAuth }}, market="DE", provider_type!="test"}[60m])) by (action,className)
-                    / sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, market="DE", provider_type!="test"}[60m])) by (action,className) > 0.60)
+                    / sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, market="DE", provider_type!="test"}[60m])) by (action,className) >= 0.60)
         # At least this many attempts.
         and sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, market="DE", provider_type!="test"}[60m])) by (action,className) > 5
       for: {{ .Values.p3TimeWindow }}
@@ -55,7 +55,7 @@ spec:
         (sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }},  {{ .Values.temporaryErrorsAuth }}, market="DE", provider_type!="test"}[60m])) by (action,className)
             / sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, market="DE", provider_type!="test"}[60m])) by (action,className) < 0.60)
         and (sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }},  {{ .Values.temporaryErrorsAuth }}, market="DE", provider_type!="test"}[60m])) by (action,className)
-                    / sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, market="DE", provider_type!="test"}[60m])) by (action,className) > 0.50)
+                    / sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, market="DE", provider_type!="test"}[60m])) by (action,className) >= 0.50)
         # At least this many attempts.
         and sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, market="DE", provider_type!="test"}[60m])) by (action,className) > 5
       for: {{ .Values.p2TimeWindow }}
@@ -93,11 +93,11 @@ spec:
       expr: |
         # Unavailable outcome above 50%
         (sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.bankErrorsAuth }} , market="DE", provider_type!="test"}[60m])) by (action,className)
-            / sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }} }[60m])) by (action,className) < 0.80)
+            / sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, market="DE" }[60m])) by (action,className) < 0.80)
         and (sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.bankErrorsAuth }} , market="DE", provider_type!="test"}[60m])) by (action,className)
-                        / sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }} }[60m])) by (action,className) < 0.70)
+                        / sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, market="DE" }[60m])) by (action,className) >= 0.70)
         # At least this many attempts.
-        and sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }} }[60m])) by (action,className) > 5
+        and sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, market="DE" }[60m])) by (action,className) > 5
       for: {{ .Values.p4TimeWindow }}
       labels:
         severity: urgent
@@ -114,11 +114,11 @@ spec:
       expr: |
         # Unavailable outcome above 50%
         (sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.bankErrorsAuth }} , market="DE", provider_type!="test"}[60m])) by (action,className)
-            / sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }} }[60m])) by (action,className) < 0.70)
+            / sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, market="DE" }[60m])) by (action,className) < 0.70)
         and (sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.bankErrorsAuth }} , market="DE", provider_type!="test"}[60m])) by (action,className)
-                    / sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }} }[60m])) by (action,className) < 0.60)
+                    / sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, market="DE" }[60m])) by (action,className) >= 0.60)
         # At least this many attempts.
-        and sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }} }[60m])) by (action,className) > 5
+        and sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, market="DE" }[60m])) by (action,className) > 5
       for: {{ .Values.p3TimeWindow }}
       labels:
         severity: urgent
@@ -135,11 +135,11 @@ spec:
       expr: |
         # Unavailable outcome above 50%
         (sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.bankErrorsAuth }} , market="DE", provider_type!="test"}[60m])) by (action,className)
-            / sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }} }[60m])) by (action,className) < 0.60)
+            / sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, market="DE" }[60m])) by (action,className) < 0.60)
         and (sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.bankErrorsAuth }} , market="DE", provider_type!="test"}[60m])) by (action,className)
-                        / sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }} }[60m])) by (action,className) < 0.50)
+                        / sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, market="DE" }[60m])) by (action,className) >= 0.50)
         # At least this many attempts.
-        and sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }} }[60m])) by (action,className) > 5
+        and sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, market="DE" }[60m])) by (action,className) > 5
       for: {{ .Values.p2TimeWindow }}
       labels:
         severity: urgent
@@ -156,9 +156,9 @@ spec:
       expr: |
         # Unavailable outcome above 50%
         (sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.bankErrorsAuth }} , market="DE", provider_type!="test"}[60m])) by (action,className)
-            / sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }} }[60m])) by (action,className) < 0.50)
+            / sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, market="DE" }[60m])) by (action,className) < 0.50)
         # At least this many attempts.
-        and sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }} }[60m])) by (action,className) > 5
+        and sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, market="DE" }[60m])) by (action,className) > 5
       for: {{ .Values.p1TimeWindow }}
       labels:
         severity: urgent
@@ -179,7 +179,7 @@ spec:
         sum(sum_over_time(tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.allErrorsAuth }}, market="DE"}[6h])) BY (className)
           / sum(sum_over_time(tink_agent_login_total{ {{ .Values.manualLoginActions }}, market="DE"}[6h])) BY (className) < 0.2
         and sum(sum_over_time(tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.allErrorsAuth }}", market="DE"}[6h])) BY (className)
-          / sum(sum_over_time(tink_agent_login_total{ {{ .Values.manualLoginActions }}, market="DE"}[6h])) BY (className) > 0.1
+          / sum(sum_over_time(tink_agent_login_total{ {{ .Values.manualLoginActions }}, market="DE"}[6h])) BY (className) >= 0.1
       for: 1h
       labels:
         severity: urgent
