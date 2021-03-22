@@ -49,8 +49,7 @@ public class BunqClientConfigurationValidatorTest {
                                 sensitiveSecretsNames,
                                 excludedSensitiveSecretsNames,
                                 agentConfigParamNames,
-                                excludedAgentConfigParamNames,
-                                "");
+                                excludedAgentConfigParamNames);
 
         assertThat(response.isValid()).isEqualTo(true);
         assertThat(response.getMissingSecretsNames()).isEmpty();
@@ -99,8 +98,7 @@ public class BunqClientConfigurationValidatorTest {
                                 sensitiveSecretsNames,
                                 excludedSensitiveSecretsNames,
                                 agentConfigParamNames,
-                                excludedAgentConfigParamNames,
-                                "");
+                                excludedAgentConfigParamNames);
 
         assertThat(response.isValid()).isEqualTo(false);
         assertThat(response.getMissingSecretsNames()).containsExactly("psd2InstallationKeyPair");
