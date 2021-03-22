@@ -1,0 +1,9 @@
+{
+    "tppMessages": [
+        {
+            "code": "SCA_METHOD_UNKNOWN",
+            "category": "ERROR"
+        }
+    ],
+    "transactionStatus": "RJCT"
+}

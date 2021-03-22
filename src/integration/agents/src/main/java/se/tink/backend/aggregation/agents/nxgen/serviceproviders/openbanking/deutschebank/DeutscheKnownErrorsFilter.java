@@ -40,7 +40,7 @@ public class DeutscheKnownErrorsFilter extends Filter {
         }
 
         ErrorResponse errorResponse = getBodyAsExpectedType(response);
-        if (errorResponse != null && errorResponse.getTppMessages() != null) {
+        if (errorResponse != null) {
             List<String> errorTextsInResponse =
                     errorResponse.getTppMessages().stream()
                             .map(ErrorTppMessage::getText)

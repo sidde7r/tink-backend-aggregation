@@ -5,6 +5,7 @@ import static org.assertj.core.api.Java6Assertions.catchThrowable;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
+import java.nio.file.Paths;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
@@ -19,11 +20,13 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class PostbankApiClientTest {
 
-    private static final String CONSENT_BAD_REQUEST_JSON =
-            "{\"tppMessages\": [{\"category\": \"ERROR\", \"code\": \"Bad Request\", \"text\": \"The system has encountered a Technical/Server Error. Hence cannot process the request at this time. Please try again after sometime.\"} ], \"transactionStatus\": \"RJCT\"}";
-    private static final String START_AUTHORISATION_INVALID_CREDENTIALS_JSON =
-            "{\"tppMessages\": [{\"category\": \"ERROR\", \"code\": \"PSU_CREDENTIALS_INVALID\", \"text\": \"The credentials/authentication information entered are invalid. Please retry the request with correct authentication information\"} ] }";
-    private static final String DIFFERENT_JSON = "{}";
+    private static final String TEST_DATA_PATH =
+            "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/de/openbanking/postbank/resources";
+
+    private static final String CONSENT_AUTH_CREDENTIALS_INVALID =
+            "consent_auth_credentials_invalid.json";
+    private static final String CONSENT_CREATION_BAD_REQUEST = "consent_creation_bad_request.json";
+    private static final String CONSENT_CREATION_SCA_UNKNOWN = "consent_creation_sca_unknown.json";
 
     private static final String TEST_URL = "https://URL_1_2_3.example.com";
     private TinkHttpClient tinkClient;
@@ -46,10 +49,9 @@ public class PostbankApiClientTest {
         HttpResponse mockHttpResponse = mock(HttpResponse.class);
         given(tinkClient.request(new URL(TEST_URL + "/v1/consents")))
                 .willThrow(new HttpResponseException(null, mockHttpResponse));
+        given(mockHttpResponse.hasBody()).willReturn(true);
         given(mockHttpResponse.getBody(ErrorResponse.class))
-                .willReturn(
-                        SerializationUtils.deserializeFromString(
-                                CONSENT_BAD_REQUEST_JSON, ErrorResponse.class));
+                .willReturn(getErrorResponse(CONSENT_CREATION_BAD_REQUEST));
         // when
         Throwable throwable = catchThrowable(() -> apiClient.getConsents("asdf"));
 
@@ -60,6 +62,24 @@ public class PostbankApiClientTest {
     }
 
     @Test
+    public void shouldHandleScaMethodUnknownInGetConsentCorrectly() {
+        // given
+        HttpResponse mockHttpResponse = mock(HttpResponse.class);
+        given(tinkClient.request(new URL(TEST_URL + "/v1/consents")))
+                .willThrow(new HttpResponseException(null, mockHttpResponse));
+        given(mockHttpResponse.hasBody()).willReturn(true);
+        given(mockHttpResponse.getBody(ErrorResponse.class))
+                .willReturn(getErrorResponse(CONSENT_CREATION_SCA_UNKNOWN));
+        // when
+        Throwable throwable = catchThrowable(() -> apiClient.getConsents("asdf"));
+
+        // then
+        assertThat(throwable)
+                .isInstanceOf(LoginException.class)
+                .hasMessage("Cause: LoginError.NO_AVAILABLE_SCA_METHODS");
+    }
+
+    @Test
     public void shouldThrowHttpResponseExceptionInGetConsentInOtherCases() {
         // given
         HttpResponse mockHttpResponse = mock(HttpResponse.class);
@@ -67,10 +87,7 @@ public class PostbankApiClientTest {
                 new HttpResponseException(null, mockHttpResponse);
         given(tinkClient.request(new URL(TEST_URL + "/v1/consents")))
                 .willThrow(httpResponseException);
-        given(mockHttpResponse.getBody(ErrorResponse.class))
-                .willReturn(
-                        SerializationUtils.deserializeFromString(
-                                DIFFERENT_JSON, ErrorResponse.class));
+        given(mockHttpResponse.getBody(ErrorResponse.class)).willReturn(new ErrorResponse());
         // when
         Throwable throwable = catchThrowable(() -> apiClient.getConsents("asdf"));
 
@@ -84,10 +101,9 @@ public class PostbankApiClientTest {
         HttpResponse mockHttpResponse = mock(HttpResponse.class);
         given(tinkClient.request(new URL(TEST_URL)))
                 .willThrow(new HttpResponseException(null, mockHttpResponse));
+        given(mockHttpResponse.hasBody()).willReturn(true);
         given(mockHttpResponse.getBody(ErrorResponse.class))
-                .willReturn(
-                        SerializationUtils.deserializeFromString(
-                                START_AUTHORISATION_INVALID_CREDENTIALS_JSON, ErrorResponse.class));
+                .willReturn(getErrorResponse(CONSENT_AUTH_CREDENTIALS_INVALID));
         // when
         Throwable throwable =
                 catchThrowable(
@@ -106,10 +122,7 @@ public class PostbankApiClientTest {
         HttpResponseException httpResponseException =
                 new HttpResponseException(null, mockHttpResponse);
         given(tinkClient.request(new URL(TEST_URL))).willThrow(httpResponseException);
-        given(mockHttpResponse.getBody(ErrorResponse.class))
-                .willReturn(
-                        SerializationUtils.deserializeFromString(
-                                DIFFERENT_JSON, ErrorResponse.class));
+        given(mockHttpResponse.getBody(ErrorResponse.class)).willReturn(new ErrorResponse());
         // when
         Throwable throwable =
                 catchThrowable(
@@ -117,5 +130,10 @@ public class PostbankApiClientTest {
 
         // then
         assertThat(throwable).isEqualTo(httpResponseException);
+    }
+
+    private ErrorResponse getErrorResponse(String filename) {
+        return SerializationUtils.deserializeFromString(
+                Paths.get(TEST_DATA_PATH, filename).toFile(), ErrorResponse.class);
     }
 }

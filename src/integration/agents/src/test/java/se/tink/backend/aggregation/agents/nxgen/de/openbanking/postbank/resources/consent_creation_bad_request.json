@@ -1,0 +1,9 @@
+{
+    "tppMessages": [
+        {
+            "code": "Bad Request",
+            "category": "ERROR"
+        }
+    ],
+    "transactionStatus": "RJCT"
+}
