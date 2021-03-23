@@ -100,7 +100,7 @@ public class DemobankPaymentExecutor implements PaymentExecutor, FetchablePaymen
 
         final PaymentStatus paymentStatus = apiClient.getPaymentStatus(paymentId);
 
-        if (paymentStatus != PaymentStatus.SIGNED) {
+        if (paymentStatus != PaymentStatus.SIGNED && paymentStatus != PaymentStatus.PAID) {
             throw new PaymentRejectedException(
                     "Unexpected payment status: " + paymentStatus.name());
         }
