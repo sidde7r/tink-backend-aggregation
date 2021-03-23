@@ -292,6 +292,7 @@ public final class LansforsakringarAgent extends AbstractAgent
     private final LansforsakringarBaseApiClient lansforsakringarBaseApiClient;
     private String ticket = null;
     private String token = null;
+    private String userSession = null;
     private String loginName = null;
     private String loginSsn = null;
     private long retrySleepMilliseconds = 500;
@@ -460,20 +461,23 @@ public final class LansforsakringarAgent extends AbstractAgent
     }
 
     private ClientResponse createPostRequest(String url, Object requestEntity) {
-        Builder request = lansforsakringarBaseApiClient.createClientRequest(url, token, ticket);
+        Builder request =
+                lansforsakringarBaseApiClient.createClientRequest(url, token, ticket, userSession);
         request.type(MediaType.APPLICATION_JSON);
         return request.post(ClientResponse.class, requestEntity);
     }
 
     private <T> T createGetRequest(String url, Class<T> returnClass)
             throws HttpStatusCodeErrorException {
-        Builder request = lansforsakringarBaseApiClient.createClientRequest(url, token, ticket);
+        Builder request =
+                lansforsakringarBaseApiClient.createClientRequest(url, token, ticket, userSession);
         ClientResponse response = request.get(ClientResponse.class);
         return handleRequestResponse(response, returnClass);
     }
 
     private ClientResponse createGetRequest(String url) {
-        Builder request = lansforsakringarBaseApiClient.createClientRequest(url, token, ticket);
+        Builder request =
+                lansforsakringarBaseApiClient.createClientRequest(url, token, ticket, userSession);
         return request.get(ClientResponse.class);
     }
 
@@ -1196,6 +1200,7 @@ public final class LansforsakringarAgent extends AbstractAgent
         Preconditions.checkNotNull(loginResponse);
 
         ticket = loginResponse.getTicket();
+        userSession = loginResponse.getEnterpriseServicesPrimarySession();
         credentials.setSensitivePayload(Key.ACCESS_TOKEN, ticket);
 
         return true;
@@ -1204,7 +1209,7 @@ public final class LansforsakringarAgent extends AbstractAgent
     @Override
     public void logout() throws Exception {
         lansforsakringarBaseApiClient
-                .createClientRequest(PASSWORD_LOGIN_URL, token, ticket)
+                .createClientRequest(PASSWORD_LOGIN_URL, token, ticket, null)
                 .delete();
     }
 
@@ -1286,6 +1291,7 @@ public final class LansforsakringarAgent extends AbstractAgent
         session.setLoginName(loginName);
         session.setLoginSsn(loginSsn);
         session.setCookiesFromClient(client);
+        session.setUserSession(userSession);
 
         credentials.setPersistentSession(session);
     }
@@ -1303,6 +1309,7 @@ public final class LansforsakringarAgent extends AbstractAgent
         ticket = session.getTicket();
         loginName = session.getLoginName();
         loginSsn = session.getLoginSsn();
+        userSession = session.getUserSession();
 
         addSessionCookiesToClient(client, session);
     }
@@ -1314,6 +1321,7 @@ public final class LansforsakringarAgent extends AbstractAgent
         ticket = null;
         loginName = null;
         loginSsn = null;
+        userSession = null;
 
         // Clean the persisted session
         credentials.removePersistentSession();
