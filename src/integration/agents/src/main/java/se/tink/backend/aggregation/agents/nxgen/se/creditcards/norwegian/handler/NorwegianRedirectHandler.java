@@ -17,6 +17,7 @@ import se.tink.backend.aggregation.nxgen.http.redirect.handler.RedirectHandler;
 @Slf4j
 public class NorwegianRedirectHandler extends RedirectHandler {
     TinkHttpClient client;
+    private String noDate = "No Expiry Date";
 
     public NorwegianRedirectHandler(TinkHttpClient client) {
         this.client = client;
@@ -50,9 +51,10 @@ public class NorwegianRedirectHandler extends RedirectHandler {
                                         + co.getName()
                                         + (co.getExpiryDate() != null
                                                 ? co.getExpiryDate().toString()
-                                                : "No Expiry Date"));
+                                                : noDate));
                     }
                     client.addCookie(parse.toArray(new Cookie[0]));
+                    showAllCookies(client.getCookies());
                     Cookie cookie1 = client.getCookies().get(client.getCookies().size() - 1);
                     logStuff(cookie1);
                 } catch (MalformedCookieException e) {
@@ -62,6 +64,18 @@ public class NorwegianRedirectHandler extends RedirectHandler {
             }
         }
         return true;
+    }
+
+    private void showAllCookies(List<Cookie> cookies) {
+        String str = "Cookies : ";
+        for (Cookie cookie : cookies) {
+            str += cookie.getName() + " Expire date = " + getExpireDate(cookie) + " : ";
+        }
+        log.info(str);
+    }
+
+    private String getExpireDate(Cookie cookie) {
+        return cookie.getExpiryDate() != null ? cookie.getExpiryDate().toString() : noDate;
     }
 
     private int getPort(CookieOrigin host) {
@@ -82,6 +96,6 @@ public class NorwegianRedirectHandler extends RedirectHandler {
                         + " Get expire date: "
                         + (cookie1.getExpiryDate() != null
                                 ? cookie1.getExpiryDate().toString()
-                                : "No Expiry Date"));
+                                : noDate));
     }
 }
