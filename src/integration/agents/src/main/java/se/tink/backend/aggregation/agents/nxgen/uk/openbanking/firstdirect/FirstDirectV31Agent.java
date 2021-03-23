@@ -16,6 +16,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountOwnershipType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAis;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingConstants.PartyEndpoint;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.module.JwtSignerModule;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.module.UkOpenBankingLocalKeySignerModuleForDecoupledMode;
@@ -47,9 +48,7 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 @AgentPisCapability(capabilities = PIS_UK_FASTER_PAYMENT, markets = "GB")
 public final class FirstDirectV31Agent extends UkOpenBankingBaseAgent {
 
-    private static final se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking
-                    .ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig
-            aisConfig;
+    private static final UkOpenBankingAisConfig aisConfig;
     private static final UkOpenBankingPisConfiguration pisConfig;
     private final LocalDateTimeSource localDateTimeSource;
     private final RandomValueGenerator randomValueGenerator;

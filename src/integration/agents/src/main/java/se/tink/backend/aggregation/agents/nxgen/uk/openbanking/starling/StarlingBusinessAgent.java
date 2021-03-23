@@ -25,6 +25,7 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 @AgentCapabilities({CHECKING_ACCOUNTS})
 public final class StarlingBusinessAgent extends SubsequentProgressiveGenerationAgent
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
+
     private final StarlingApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final OAuth2Authenticator authenticator;

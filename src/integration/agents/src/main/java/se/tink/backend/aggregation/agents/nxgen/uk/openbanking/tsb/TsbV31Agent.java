@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModul
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.UkOpenBankingBaseAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountOwnershipType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAis;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.module.JwtSignerModule;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.module.UkOpenBankingLocalKeySignerModuleForDecoupledMode;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.module.UkOpenBankingModule;
@@ -32,9 +33,7 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.dat
 @AgentPisCapability(capabilities = PIS_UK_FASTER_PAYMENT, markets = "GB")
 public final class TsbV31Agent extends UkOpenBankingBaseAgent {
 
-    private static final se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking
-                    .ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig
-            aisConfig;
+    private static final UkOpenBankingAisConfig aisConfig;
     private final LocalDateTimeSource localDateTimeSource;
 
     static {
