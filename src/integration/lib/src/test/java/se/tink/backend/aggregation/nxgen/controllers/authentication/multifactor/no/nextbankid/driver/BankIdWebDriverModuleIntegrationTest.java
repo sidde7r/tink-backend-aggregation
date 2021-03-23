@@ -29,7 +29,7 @@ public class BankIdWebDriverModuleIntegrationTest {
     @Test
     public void should_initialize_working_driver_with_proxy() {
         // given
-        proxyManager.listenForProxyResponseByResponseUrlSubstring("example.com");
+        proxyManager.setUrlSubstringToListenFor("example.com");
 
         // when
         webDriver.getUrl("https://example.com/");

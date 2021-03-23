@@ -29,10 +29,10 @@ public interface BankIdIframeInitializer {
      * @param webDriver - WebDriver which has to be used in the initialization process - it will
      *     later be reused to continue user authentication with an iframe. This way all possibly
      *     required cookies will automatically be ready for next steps.
-     * @return - what's the first expected authentication step in the BankID iframe that will be
-     *     open. Typically there are only 2 options - either user has to enter their SSN or, if they
-     *     did it already during initialization process (on bank's website), authenticate with their
-     *     default BankID method straight away.
+     * @return - what's the first expected authentication window in the BankID iframe that will be
+     *     open. Typically there are only 2 options - either user will see a window to enter their
+     *     SSN or, if they did it already during initialization process (on bank's website), a
+     *     window to authenticate with their default BankID method straight away.
      */
-    BankIdIframeFirstStep initializeIframe(BankIdWebDriver webDriver);
+    BankIdIframeFirstWindow initializeIframe(BankIdWebDriver webDriver);
 }

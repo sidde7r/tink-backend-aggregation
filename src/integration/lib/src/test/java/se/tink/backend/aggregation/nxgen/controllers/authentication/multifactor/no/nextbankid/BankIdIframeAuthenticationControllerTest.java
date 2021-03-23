@@ -75,10 +75,10 @@ public class BankIdIframeAuthenticationControllerTest {
     }
 
     @Test
-    @Parameters(method = "allFirstStepsForIframe")
-    public void should_run_manual_authentication(BankIdIframeFirstStep iframeFirstStep) {
+    @Parameters(method = "allFirstIframeWindows")
+    public void should_run_manual_authentication(BankIdIframeFirstWindow firstWindow) {
         // given
-        when(iframeInitializer.initializeIframe(webDriver)).thenReturn(iframeFirstStep);
+        when(iframeInitializer.initializeIframe(webDriver)).thenReturn(firstWindow);
 
         when(iframeAuthenticator.getSubstringOfUrlIndicatingAuthenticationFinish())
                 .thenReturn("part.of.some.url");
@@ -93,7 +93,7 @@ public class BankIdIframeAuthenticationControllerTest {
         // then
         verifyStartsListeningForResponseFromUrl("part.of.some.url");
         verifyIframeInitialization();
-        verifyAuthenticationWithIframeController(iframeFirstStep);
+        verifyAuthenticationWithIframeController(firstWindow);
         verifyWaitsForResponseFromUrl(10);
         verifyHandlesIframeAuthResult(
                 BankIdIframeAuthenticationResult.builder()
@@ -107,8 +107,8 @@ public class BankIdIframeAuthenticationControllerTest {
     }
 
     @SuppressWarnings("unused")
-    private static Object[] allFirstStepsForIframe() {
-        return BankIdIframeFirstStep.values();
+    private static Object[] allFirstIframeWindows() {
+        return BankIdIframeFirstWindow.values();
     }
 
     private void verifyIframeInitialization() {
@@ -117,13 +117,13 @@ public class BankIdIframeAuthenticationControllerTest {
 
     @SuppressWarnings("SameParameterValue")
     private void verifyStartsListeningForResponseFromUrl(String url) {
-        mocksToVerifyInOrder.verify(proxyManager).listenForProxyResponseByResponseUrlSubstring(url);
+        mocksToVerifyInOrder.verify(proxyManager).setUrlSubstringToListenFor(url);
     }
 
-    private void verifyAuthenticationWithIframeController(BankIdIframeFirstStep firstStep) {
+    private void verifyAuthenticationWithIframeController(BankIdIframeFirstWindow firstWindow) {
         mocksToVerifyInOrder
                 .verify(iframeController)
-                .authenticateWithCredentials(credentials, firstStep);
+                .authenticateWithCredentials(credentials, firstWindow);
     }
 
     @SuppressWarnings("SameParameterValue")

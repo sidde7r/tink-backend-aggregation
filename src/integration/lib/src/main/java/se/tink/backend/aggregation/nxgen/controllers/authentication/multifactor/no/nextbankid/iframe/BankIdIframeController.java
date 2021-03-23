@@ -4,7 +4,7 @@ import com.google.inject.Inject;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdIframeFirstStep;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdIframeFirstWindow;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.steps.BankIdEnterPasswordStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.steps.BankIdEnterSSNStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.steps.BankIdPerform2FAStep;
@@ -17,9 +17,9 @@ public class BankIdIframeController {
     private final BankIdEnterPasswordStep enterPrivatePasswordStep;
 
     public void authenticateWithCredentials(
-            Credentials credentials, BankIdIframeFirstStep firstStep) {
+            Credentials credentials, BankIdIframeFirstWindow firstWindow) {
 
-        if (firstStep == BankIdIframeFirstStep.ENTER_SSN) {
+        if (firstWindow == BankIdIframeFirstWindow.ENTER_SSN) {
             enterSSNStep.enterSSN(credentials);
         }
 

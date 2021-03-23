@@ -1,13 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.bankidtest;
 
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdIframeFirstStep;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdIframeFirstWindow;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdIframeInitializer;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.BankIdWebDriver;
 
 public class BankIdTestIframeInitializer implements BankIdIframeInitializer {
 
     @Override
-    public BankIdIframeFirstStep initializeIframe(BankIdWebDriver webDriver) {
+    public BankIdIframeFirstWindow initializeIframe(BankIdWebDriver webDriver) {
         /*
          * Examples
          *
@@ -28,6 +28,6 @@ public class BankIdTestIframeInitializer implements BankIdIframeInitializer {
          * - page reloads and now has a BankID iframe embedded
          * - Nordea doesn't initialize iframe with SSN parameter, so the first iframe step is to enter SSN
          */
-        return BankIdIframeFirstStep.AUTHENTICATE_WITH_DEFAULT_2FA_METHOD;
+        return BankIdIframeFirstWindow.AUTHENTICATE_WITH_DEFAULT_2FA_METHOD;
     }
 }

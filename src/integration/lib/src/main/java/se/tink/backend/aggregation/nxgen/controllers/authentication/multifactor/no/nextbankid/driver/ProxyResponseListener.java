@@ -5,12 +5,16 @@ import com.browserup.bup.util.HttpMessageContents;
 import com.browserup.bup.util.HttpMessageInfo;
 import io.netty.handler.codec.http.HttpResponse;
 import java.util.Optional;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
 
 public class ProxyResponseListener implements ResponseFilter {
 
-    private String responseUrlSubstring = null;
-    private ResponseFromProxy savedResponse = null;
+    private String urlSubstringToListenFor = null;
+    private ResponseSynchronizedContainer responseSynchronizedContainer =
+            new ResponseSynchronizedContainer();
 
     /**
      * NOTE: all responses for requests made by browser will go through this code first before they
@@ -35,27 +39,48 @@ public class ProxyResponseListener implements ResponseFilter {
             HttpResponse response, HttpMessageContents contents, HttpMessageInfo messageInfo) {
 
         String responseUrl = messageInfo.getUrl();
-        if (StringUtils.containsIgnoreCase(responseUrl, responseUrlSubstring)) {
+        if (StringUtils.containsIgnoreCase(responseUrl, urlSubstringToListenFor)) {
             ResponseFromProxy proxyResponse =
                     ResponseFromProxy.builder()
                             .response(response)
                             .contents(contents)
                             .messageInfo(messageInfo)
                             .build();
-            // we want to listen only for the very first response
-            if (savedResponse == null) {
-                savedResponse = proxyResponse;
-            }
+            responseSynchronizedContainer.saveResponse(proxyResponse);
         }
     }
 
-    public void listenByResponseUrlSubstring(String urlSubstring) {
-        responseUrlSubstring = urlSubstring;
+    public void changeUrlSubstringToListenFor(String urlSubstring) {
+        urlSubstringToListenFor = urlSubstring;
         // remove previously saved response if we change the url address that we listen to
-        savedResponse = null;
+        responseSynchronizedContainer = new ResponseSynchronizedContainer();
     }
 
-    public Optional<ResponseFromProxy> getResponseFromProxy() {
-        return Optional.ofNullable(savedResponse);
+    public Optional<ResponseFromProxy> waitForResponse(int waitFor, TimeUnit timeUnit) {
+        return responseSynchronizedContainer.waitForResponse(waitFor, timeUnit);
+    }
+
+    /**
+     * Object shared between main application thread and the thread that filters responses from
+     * proxy.
+     */
+    private static class ResponseSynchronizedContainer {
+
+        private final CountDownLatch countDownLatch = new CountDownLatch(1);
+        private ResponseFromProxy savedResponse;
+
+        private void saveResponse(ResponseFromProxy response) {
+            // we want to listen only for the very first response
+            if (savedResponse == null) {
+                savedResponse = response;
+                countDownLatch.countDown();
+            }
+        }
+
+        @SneakyThrows
+        private Optional<ResponseFromProxy> waitForResponse(int waitForSeconds, TimeUnit timeUnit) {
+            boolean hasResponse = countDownLatch.await(waitForSeconds, timeUnit);
+            return hasResponse ? Optional.of(savedResponse) : Optional.empty();
+        }
     }
 }

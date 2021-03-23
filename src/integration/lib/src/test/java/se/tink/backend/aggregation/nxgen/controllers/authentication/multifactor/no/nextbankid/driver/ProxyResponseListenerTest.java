@@ -8,6 +8,8 @@ import com.browserup.bup.util.HttpMessageContents;
 import com.browserup.bup.util.HttpMessageInfo;
 import io.netty.handler.codec.http.HttpResponse;
 import java.util.Optional;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 import org.junit.Before;
@@ -37,17 +39,56 @@ public class ProxyResponseListenerTest {
     }
 
     @Test
+    public void should_find_response_when_its_filtered_first_and_then_we_wait_for_it() {
+        // given
+        proxyResponseListener.changeUrlSubstringToListenFor("part.of.url");
+
+        // when
+        proxyResponseListener.filterResponse(
+                httpResponse, httpContents, httpMessageInfoWithUrl("https://www.part.of.url"));
+        Optional<ResponseFromProxy> response =
+                proxyResponseListener.waitForResponse(1, TimeUnit.MILLISECONDS);
+
+        // then
+        assertThat(response).isPresent();
+    }
+
+    @Test
+    public void should_find_response_when_we_wait_for_it_first_and_its_filtered_later() {
+        // given
+        proxyResponseListener.changeUrlSubstringToListenFor("another.part.of.url");
+
+        // when
+        ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(1);
+        executor.schedule(
+                () ->
+                        proxyResponseListener.filterResponse(
+                                httpResponse,
+                                httpContents,
+                                httpMessageInfoWithUrl("https://www.another.part.of.url")),
+                100,
+                TimeUnit.MILLISECONDS);
+
+        Optional<ResponseFromProxy> response =
+                proxyResponseListener.waitForResponse(200, TimeUnit.MILLISECONDS);
+
+        // then
+        assertThat(response).isPresent();
+    }
+
+    @Test
     @Parameters(method = "listenForUrlResponseTestParams")
     public void should_listen_by_response_url_substring(
             String responseUrl, String responseUrlSubstring, boolean shouldRegisterResponse) {
         // given
-        proxyResponseListener.listenByResponseUrlSubstring(responseUrlSubstring);
+        proxyResponseListener.changeUrlSubstringToListenFor(responseUrlSubstring);
 
         HttpMessageInfo responseMessageInfo = httpMessageInfoWithUrl(responseUrl);
 
         // when
         proxyResponseListener.filterResponse(httpResponse, httpContents, responseMessageInfo);
-        Optional<ResponseFromProxy> response = proxyResponseListener.getResponseFromProxy();
+        Optional<ResponseFromProxy> response =
+                proxyResponseListener.waitForResponse(1, TimeUnit.MILLISECONDS);
 
         // then
         if (shouldRegisterResponse) {
@@ -77,7 +118,7 @@ public class ProxyResponseListenerTest {
     @Test
     public void should_listen_only_to_the_very_first_response() {
         // given
-        proxyResponseListener.listenByResponseUrlSubstring("some.url");
+        proxyResponseListener.changeUrlSubstringToListenFor("some.url");
 
         HttpMessageInfo messageInfo1 = httpMessageInfoWithUrl("https://some.url?param=1");
         HttpMessageInfo messageInfo2 = httpMessageInfoWithUrl("https://some.url?param=2");
@@ -88,7 +129,8 @@ public class ProxyResponseListenerTest {
         proxyResponseListener.filterResponse(httpResponse, httpContents, messageInfo2);
         proxyResponseListener.filterResponse(httpResponse, httpContents, messageInfo3);
 
-        Optional<ResponseFromProxy> proxyResponse = proxyResponseListener.getResponseFromProxy();
+        Optional<ResponseFromProxy> proxyResponse =
+                proxyResponseListener.waitForResponse(1, TimeUnit.MILLISECONDS);
 
         // then
         assertThat(proxyResponse).isPresent();
