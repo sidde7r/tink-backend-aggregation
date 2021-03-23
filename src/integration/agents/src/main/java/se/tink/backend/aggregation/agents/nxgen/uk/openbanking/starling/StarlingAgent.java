@@ -52,6 +52,7 @@ public final class StarlingAgent extends AgentPlatformAgent
                 RefreshSavingsAccountsExecutor,
                 AgentPlatformAuthenticator,
                 AgentPlatformStorageMigration {
+
     private StarlingApiClient apiClient;
     private final TransferDestinationRefreshController transferDestinationRefreshController;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;

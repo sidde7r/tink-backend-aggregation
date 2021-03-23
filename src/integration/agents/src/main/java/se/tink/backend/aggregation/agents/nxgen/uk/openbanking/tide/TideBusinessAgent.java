@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModul
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModulesForProductionMode;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.UkOpenBankingBaseAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAis;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingConstants.PartyEndpoint;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.module.JwtSignerModule;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.module.UkOpenBankingLocalKeySignerModuleForDecoupledMode;
@@ -25,9 +26,7 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponen
 @AgentCapabilities({CHECKING_ACCOUNTS, IDENTITY_DATA})
 public class TideBusinessAgent extends UkOpenBankingBaseAgent {
 
-    private static final se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking
-                    .ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig
-            aisConfig;
+    private static final UkOpenBankingAisConfig aisConfig;
 
     static {
         aisConfig =

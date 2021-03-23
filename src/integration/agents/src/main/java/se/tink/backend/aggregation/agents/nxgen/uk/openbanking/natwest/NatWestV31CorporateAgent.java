@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModul
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.UkOpenBankingBaseAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountOwnershipType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAis;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.module.JwtSignerModule;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.module.UkOpenBankingLocalKeySignerModuleForDecoupledMode;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.module.UkOpenBankingModule;
@@ -31,9 +32,7 @@ import se.tink.libraries.mapper.PrioritizedValueExtractor;
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, CREDIT_CARDS})
 public final class NatWestV31CorporateAgent extends UkOpenBankingBaseAgent {
 
-    private static final se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking
-                    .ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig
-            aisConfig;
+    private static final UkOpenBankingAisConfig aisConfig;
     private final LocalDateTimeSource localDateTimeSource;
 
     static {
