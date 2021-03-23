@@ -30,7 +30,7 @@ public class LansforsakringarBaseApiClient {
         }
 
         if (ticket != null) {
-            request = request.header("Utoken", ticket);
+            request = request.header("utoken", ticket);
         }
 
         if (deviceId != null) {

@@ -236,7 +236,8 @@ public final class LansforsakringarAgent extends AbstractAgent
             BASE_URL + "/account/transferrablewithsavedrecipients";
     private static final String EINVOICE_AND_CREDIT_ALERTS_URL =
             BASE_URL + "/payment/einvoice/einvoiceandcreditalerts";
-    private static final String TRANSACTIONS_URL = BASE_URL + "/account/transaction/2.0";
+    private static final String TRANSACTIONS_URL =
+            "https://mobil.lansforsakringar.se/es/deposit/gettransactions/3.0";
     private static final String VALIDATE_PAYMENT_URL = BASE_URL + "/directpayment/validate";
     private static final String RECIPIENT_NAME_URL = BASE_URL + "/payment/recipientname";
     private static final String LIST_UNSIGNED_TRANSFERS_AND_PAYMENTS_URL =
@@ -244,7 +245,7 @@ public final class LansforsakringarAgent extends AbstractAgent
     private static final String DELETE_SIGNED_TRANSACTION_URL = BASE_URL + "/payment/signed/delete";
     private static final String FETCH_TOKEN_URL = BASE_URL + "/security/client";
     private static final String FETCH_UPCOMING_TRANSACTIONS_URL =
-            BASE_URL + "/account/upcoming/5.0";
+            BASE_URL + "/account/upcoming/7.0";
     private static final String FETCH_CARD_TRANSACTIONS_URL = BASE_URL + "/card/transaction";
     private static final String FETCH_LOANS_URL = BASE_URL + "/loan/loans/withtotal";
     private static final String FETCH_LOAN_DETAILS_URL = BASE_URL + "/loan/details";
@@ -1479,8 +1480,13 @@ public final class LansforsakringarAgent extends AbstractAgent
                                             createPostRequestWithResponseHandling(
                                                     TRANSACTIONS_URL,
                                                     DebitTransactionListResponse.class,
-                                                    new ListAccountTransactionRequest(
-                                                            currentPage, accountNumber));
+                                                    ListAccountTransactionRequest.of(
+                                                            accountNumber,
+                                                            credentials.getField(
+                                                                    Field.Key.USERNAME),
+                                                            "CUSTOMER",
+                                                            "BOOKED",
+                                                            currentPage));
                                 } catch (Exception e) {
                                     throw new IllegalStateException(e);
                                 }
@@ -1503,7 +1509,7 @@ public final class LansforsakringarAgent extends AbstractAgent
                                     hasMoreTransactions = false;
                                 } else {
                                     hasMoreTransactions = transactionListResponse.getHasMore();
-                                    currentPage = transactionListResponse.getNextSequenceNumber();
+                                    currentPage = currentPage + 1;
                                 }
                             } while (hasMoreTransactions);
                             accountTransactions.put(account, transactions);
