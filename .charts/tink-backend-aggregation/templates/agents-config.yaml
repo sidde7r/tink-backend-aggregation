@@ -29,19 +29,19 @@ data:
       countryProxies:
         es:
           host: "http://zproxy.lum-superproxy.io:22225"
-          username: "lum-customer-c_71e4c7e0-zone-spain-ip-178.171.89.169"
+          username: "lum-customer-c_71e4c7e0-zone-spain-ip-185.240.128.188"
           password: PROXY_PASSWORD_ES
         es-2:
           host: "http://zproxy.lum-superproxy.io:22225"
-          username: "lum-customer-c_71e4c7e0-zone-spain-ip-173.211.86.83"
+          username: "lum-customer-c_71e4c7e0-zone-spain-ip-84.252.66.102"
           password: PROXY_PASSWORD_ES
         es-3:
           host: "http://zproxy.lum-superproxy.io:22225"
-          username: "lum-customer-c_71e4c7e0-zone-spain-ip-173.211.81.238"
+          username: "lum-customer-c_71e4c7e0-zone-spain-ip-168.151.232.233"
           password: PROXY_PASSWORD_ES
         es-4:
           host: "http://zproxy.lum-superproxy.io:22225"
-          username: "lum-customer-c_71e4c7e0-zone-spain-ip-173.211.84.137"
+          username: "lum-customer-c_71e4c7e0-zone-spain-ip-195.216.130.111"
           password: PROXY_PASSWORD_ES
         be:
           host: "http://zproxy.lum-superproxy.io:22225"
