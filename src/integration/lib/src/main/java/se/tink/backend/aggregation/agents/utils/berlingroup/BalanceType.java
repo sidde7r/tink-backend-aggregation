@@ -10,7 +10,9 @@ import lombok.Getter;
 public enum BalanceType {
     // Values extracted from BerlinGroup specification, version 1.3.6
 
+    PREVIOUSLY_CLOSED_BOOKED("previouslyClosedBooked"),
     CLOSING_BOOKED("closingBooked"),
+    CLOSING_AVAILABLE("closingAvailable"),
     EXPECTED("expected"),
     OPENING_BOOKED("openingBooked"),
     INTERIM_AVAILABLE("interimAvailable"),

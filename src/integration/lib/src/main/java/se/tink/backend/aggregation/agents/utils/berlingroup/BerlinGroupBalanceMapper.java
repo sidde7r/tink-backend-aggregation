@@ -1,11 +1,13 @@
 package se.tink.backend.aggregation.agents.utils.berlingroup;
 
+import static se.tink.backend.aggregation.agents.utils.berlingroup.BalanceType.CLOSING_AVAILABLE;
 import static se.tink.backend.aggregation.agents.utils.berlingroup.BalanceType.CLOSING_BOOKED;
 import static se.tink.backend.aggregation.agents.utils.berlingroup.BalanceType.EXPECTED;
 import static se.tink.backend.aggregation.agents.utils.berlingroup.BalanceType.FORWARD_AVAILABLE;
 import static se.tink.backend.aggregation.agents.utils.berlingroup.BalanceType.INTERIM_AVAILABLE;
 import static se.tink.backend.aggregation.agents.utils.berlingroup.BalanceType.INTERIM_BOOKED;
 import static se.tink.backend.aggregation.agents.utils.berlingroup.BalanceType.OPENING_BOOKED;
+import static se.tink.backend.aggregation.agents.utils.berlingroup.BalanceType.PREVIOUSLY_CLOSED_BOOKED;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Ordering;
@@ -26,7 +28,13 @@ public class BerlinGroupBalanceMapper {
 
     private static final List<BalanceType> BOOKED_BALANCE_PREFERRED_TYPES =
             ImmutableList.of(
-                    INTERIM_BOOKED, OPENING_BOOKED, CLOSING_BOOKED, EXPECTED, INTERIM_AVAILABLE);
+                    INTERIM_BOOKED,
+                    OPENING_BOOKED,
+                    CLOSING_BOOKED,
+                    PREVIOUSLY_CLOSED_BOOKED,
+                    CLOSING_AVAILABLE,
+                    EXPECTED,
+                    INTERIM_AVAILABLE);
     private static final List<BalanceType> AVAILABLE_BALANCE_PREFERRED_TYPES =
             ImmutableList.of(INTERIM_AVAILABLE, EXPECTED, FORWARD_AVAILABLE);
 
