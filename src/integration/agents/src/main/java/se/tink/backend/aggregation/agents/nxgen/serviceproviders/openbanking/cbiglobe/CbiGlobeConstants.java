@@ -149,6 +149,7 @@ public final class CbiGlobeConstants {
         public static final String AUTHENTICATION_REQUIRED = "AUTHENTICATION_REQUIRED";
         public static final String AUTHENTICATED = "AUTHENTICATED";
         public static final String VERIFIED = "VERIFIED";
+        public static final String FAILED = "FAILED";
     }
 
     public static class PaymentStep {
