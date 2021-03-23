@@ -1,0 +1,102 @@
+{
+    "accounts" : [ {
+        "accountNumber" : "22222222222222",
+        "accountExclusion" : "NONE",
+        "exactAvailableCredit" : {
+            "currencyCode" : "GBP",
+            "unscaledValue" : 250000,
+            "scale" : 2,
+            "exactValue" : 2500.0,
+            "doubleValue" : 2500.0
+        },
+        "exactBalance" : {
+            "currencyCode" : "GBP",
+            "unscaledValue" : 288438,
+            "scale" : 2,
+            "exactValue" : 2884.38,
+            "doubleValue" : 2884.38
+        },
+        "currencyCode" : "GBP",
+        "availableBalance" : {
+            "currencyCode" : "GBP",
+            "unscaledValue" : 288438,
+            "scale" : 2,
+            "exactValue" : 2884.38,
+            "doubleValue" : 2884.38
+        },
+        "creditLimit" : {
+            "currencyCode" : "GBP",
+            "unscaledValue" : 250000,
+            "scale" : 2,
+            "exactValue" : 2500.0,
+            "doubleValue" : 2500.0
+        },
+        "bankId" : "22222222222222",
+        "excluded" : false,
+        "favored" : false,
+        "name" : "JANUSZ TRACZ",
+        "ownership" : 1.0,
+        "type" : "CHECKING",
+        "userModifiedExcluded" : false,
+        "userModifiedName" : false,
+        "userModifiedType" : false,
+        "identifiers" : "[\"sort-code://22222222222222\"]",
+        "closed" : false,
+        "holderName" : "Janusz Tracz",
+        "accountHolder" : {
+            "accountId" : null,
+            "type" : "PERSONAL",
+            "identities" : [ {
+                "name" : "Janusz Tracz",
+                "role" : "HOLDER"
+            } ]
+        },
+        "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
+        "balances" : [ ],
+        "availableCredit" : 2500.0,
+        "balance" : 2884.38
+    }, {
+        "accountNumber" : "11111111111111",
+        "accountExclusion" : "NONE",
+        "exactBalance" : {
+            "currencyCode" : "GBP",
+            "unscaledValue" : 325564,
+            "scale" : 2,
+            "exactValue" : 3255.64,
+            "doubleValue" : 3255.64
+        },
+        "currencyCode" : "GBP",
+        "availableBalance" : {
+            "currencyCode" : "GBP",
+            "unscaledValue" : 325564,
+            "scale" : 2,
+            "exactValue" : 3255.64,
+            "doubleValue" : 3255.64
+        },
+        "bankId" : "11111111111111",
+        "excluded" : false,
+        "favored" : false,
+        "name" : "JANUSZ TRACZ",
+        "ownership" : 1.0,
+        "type" : "SAVINGS",
+        "userModifiedExcluded" : false,
+        "userModifiedName" : false,
+        "userModifiedType" : false,
+        "identifiers" : "[\"sort-code://11111111111111\"]",
+        "closed" : false,
+        "holderName" : "Janusz Tracz",
+        "accountHolder" : {
+            "accountId" : null,
+            "type" : "PERSONAL",
+            "identities" : [ {
+                "name" : "Janusz Tracz",
+                "role" : "HOLDER"
+            } ]
+        },
+        "flags" : "[]",
+        "balances" : [ ],
+        "availableCredit" : 0.0,
+        "balance" : 3255.64
+    } ],
+    "transactions" : [ ]
+}

@@ -1,0 +1,119 @@
+
+REQUEST 1
+GET https://personal.secure1.ulsterbank.co.uk/.well-known/openid-configuration
+
+RESPONSE 1
+200
+Content-Type: application/json
+
+{
+    "version": "3.0",
+    "issuer": "https://secure1.ulsterbank.co.uk",
+    "authorization_endpoint": "https://personal.secure1.ulsterbank.co.uk/as/authorization.oauth2",
+    "token_endpoint": "https://secure1t.ulsterbank.co.uk/as/token.oauth2",
+    "revocation_endpoint": "https://secure1.ulsterbank.co.uk/as/revoke_token.oauth2",
+    "jwks_uri": "https://keystore.openbanking.org.uk/0015800000jfxrpAAA/57ilfAN22WYnhY7DJRjW7i.jwks",
+    "registration_endpoint": "https://secure1t.ulsterbank.co.uk/open-banking/v1.0/tpp/register",
+    "scopes_supported": [
+        "openid",
+        "payments",
+        "accounts",
+        "fundsconfirmations"
+    ],
+    "claims_supported": [
+        "aud",
+        "exp",
+        "iat",
+        "iss",
+        "openbanking_intent_id",
+        "sub",
+        "acr"
+    ],
+    "acr_values_supported": [
+        "urn:openbanking:psd2:ca"
+    ],
+    "response_types_supported": [
+        "code id_token"
+    ],
+    "response_modes_supported": [
+        "fragment",
+        "query",
+        "form_post"
+    ],
+    "grant_types_supported": [
+        "authorization_code",
+        "refresh_token",
+        "client_credentials"
+    ],
+    "subject_types_supported": [
+        "public"
+    ],
+    "id_token_signing_alg_values_supported": [
+        "HS256",
+        "HS384",
+        "HS512",
+        "RS256",
+        "PS256",
+        "RS384",
+        "RS512",
+        "ES256",
+        "ES384",
+        "ES512"
+    ],
+    "token_endpoint_auth_methods_supported": [
+        "tls_client_auth",
+        "private_key_jwt"
+    ],
+    "tls_client_certificate_bound_access_tokens": true,
+    "token_endpoint_auth_signing_alg_values_supported": [
+        "RS256",
+        "PS256",
+        "RS384",
+        "RS512",
+        "ES256",
+        "ES384",
+        "ES512"
+    ],
+    "claim_types_supported": [
+        "normal"
+    ],
+    "claims_parameter_supported": true,
+    "request_parameter_supported": true,
+    "request_uri_parameter_supported": false,
+    "request_object_signing_alg_values_supported": [
+        "RS256",
+        "PS256",
+        "RS384",
+        "RS512",
+        "ES256",
+        "ES384",
+        "ES512"
+    ],
+    "request_object_encryption_alg_values_supported": [],
+    "request_object_encryption_enc_values_supported": []
+}
+
+REQUEST 2
+POST https://secure1t.ulsterbank.co.uk/as/token.oauth2
+Content-Type: application/x-www-form-urlencoded
+Accept: application/json
+
+grant_type=refresh_token
+    &scope=accounts
+    &redirect_uri=https%3A%2F%2Fapi.tink.se%2Fapi%2Fv1%2Fcredentials%2Fthird-party%2Fcallback
+    &client_id=DUMMY_CLIENT_ID
+    &client_assertion_type=urn%3Aietf%3Aparams%3Aoauth%3Aclient-assertion-type%3Ajwt-bearer
+    &client_assertion=RkFLRV9TSUdOQVRVUkUK
+    &refresh_token=DUMMY_REFRESH_TOKEN
+
+RESPONSE 2
+200
+Content-Type: application/json;charset=utf-8
+
+{
+    "access_token": "DUMMY_ACCESS_TOKEN",
+    "refresh_token": "DUMMY_REFRESH_TOKEN",
+    "scope": "openid accounts",
+    "token_type": "bearer",
+    "expires_in": 599
+}

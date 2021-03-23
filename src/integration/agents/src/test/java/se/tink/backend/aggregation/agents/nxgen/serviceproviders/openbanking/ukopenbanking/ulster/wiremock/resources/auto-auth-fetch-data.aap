@@ -1,0 +1,173 @@
+
+REQUEST 1
+GET https://api.ulsterbank.co.uk/open-banking/v3.1/aisp/accounts
+Accept: application/json
+Authorization: Bearer DUMMY_ACCESS_TOKEN
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+RESPONSE 1
+200
+Content-Type: application/json; charset=utf-8
+Connection: keep-alive
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+{
+    "Data": {
+        "Account": [
+            {
+                "AccountId": "G2D1D0435A72E536337E3914E0983542",
+                "Currency": "GBP",
+                "AccountType": "Personal",
+                "AccountSubType": "Savings",
+                "Description": "LOYALTY SAVER",
+                "Account": [
+                    {
+                        "SchemeName": "UK.OBIE.SortCodeAccountNumber",
+                        "Identification": "11111111111111",
+                        "Name": "JANUSZ TRACZ"
+                    }
+                ]
+            },
+            {
+                "AccountId": "A435AFAB0E93D88ABDE56D062D9E6F47",
+                "Currency": "GBP",
+                "AccountType": "Personal",
+                "AccountSubType": "CurrentAccount",
+                "Description": "U FIRST GOLD",
+                "Account": [
+                    {
+                        "SchemeName": "UK.OBIE.SortCodeAccountNumber",
+                        "Identification": "22222222222222",
+                        "Name": "JANUSZ TRACZ"
+                    }
+                ]
+            }
+        ]
+    },
+    "Links": {
+        "Self": "https://api.ulsterbank.co.uk/open-banking/v3.1/aisp/accounts"
+    },
+    "Meta": {}
+}
+
+REQUEST 2
+GET https://api.ulsterbank.co.uk/open-banking/v3.1/aisp/accounts/G2D1D0435A72E536337E3914E0983542/balances
+Accept: application/json
+Authorization: Bearer DUMMY_ACCESS_TOKEN
+x-Fapi-Interaction-Id: 00000000-0000-4000-0000-000000000000
+
+RESPONSE 2
+200
+Content-Type: application/json; charset=utf-8
+Connection: keep-alive
+x-Fapi-Interaction-Id: 00000000-0000-4000-0000-000000000000
+
+{
+    "Data": {
+        "Balance": [
+            {
+                "AccountId": "G2D1D0435A72E536337E3914E0983542",
+                "Amount": {
+                    "Amount": "3255.64",
+                    "Currency": "GBP"
+                },
+                "CreditDebitIndicator": "Credit",
+                "Type": "Expected",
+                "DateTime": "2021-02-08T14:43:31.907Z"
+            },
+            {
+                "AccountId": "G2D1D0435A72E536337E3914E0983542",
+                "Amount": {
+                    "Amount": "3255.64",
+                    "Currency": "GBP"
+                },
+                "CreditDebitIndicator": "Credit",
+                "Type": "ForwardAvailable",
+                "DateTime": "2021-02-08T14:43:31.907Z"
+            }
+        ]
+    },
+    "Links": {
+        "Self": "https://api.ulsterbank.co.uk/open-banking/v3.1/aisp/accounts/G2D1D0435A72E536337E3914E0983542/balances"
+    },
+    "Meta": {}
+}
+
+REQUEST 3
+GET https://api.ulsterbank.co.uk/open-banking/v3.1/aisp/accounts/A435AFAB0E93D88ABDE56D062D9E6F47/balances
+Accept: application/json
+Authorization: Bearer DUMMY_ACCESS_TOKEN
+x-Fapi-Interaction-Id: 00000000-0000-4000-0000-000000000000
+
+RESPONSE 3
+200
+Content-Type: application/json; charset=utf-8
+Connection: keep-alive
+x-Fapi-Interaction-Id: 00000000-0000-4000-0000-000000000000
+
+{
+    "Data": {
+        "Balance": [
+            {
+                "AccountId": "A435AFAB0E93D88ABDE56D062D9E6F47",
+                "Amount": {
+                    "Amount": "2884.38",
+                    "Currency": "GBP"
+                },
+                "CreditDebitIndicator": "Credit",
+                "Type": "Expected",
+                "CreditLine": [
+                    {
+                        "Included": false,
+                        "Amount": {
+                            "Amount": "2500.00",
+                            "Currency": "GBP"
+                        },
+                        "Type": "Pre-Agreed"
+                    },
+                    {
+                        "Included": false,
+                        "Amount": {
+                            "Amount": "2500.00",
+                            "Currency": "GBP"
+                        },
+                        "Type": "Available"
+                    }
+                ],
+                "DateTime": "2021-02-08T14:43:32.971Z"
+            },
+            {
+                "AccountId": "A435AFAB0E93D88ABDE56D062D9E6F47",
+                "Amount": {
+                    "Amount": "3134.79",
+                    "Currency": "GBP"
+                },
+                "CreditDebitIndicator": "Credit",
+                "Type": "ForwardAvailable",
+                "CreditLine": [
+                    {
+                        "Included": false,
+                        "Amount": {
+                            "Amount": "2500.00",
+                            "Currency": "GBP"
+                        },
+                        "Type": "Pre-Agreed"
+                    },
+                    {
+                        "Included": false,
+                        "Amount": {
+                            "Amount": "2500.00",
+                            "Currency": "GBP"
+                        },
+                        "Type": "Available"
+                    }
+                ],
+                "DateTime": "2021-02-08T14:43:32.971Z"
+            }
+        ]
+    },
+    "Links": {
+        "Self": "https://api.ulsterbank.co.uk/open-banking/v3.1/aisp/accounts/A435AFAB0E93D88ABDE56D062D9E6F47/balances"
+    },
+    "Meta": {}
+}
