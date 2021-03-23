@@ -14,14 +14,9 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.seb
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebCommonConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebCommonConstants.HintCodes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebCommonConstants.PollResponses;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebCommonConstants.QueryValues;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebCommonConstants.Urls;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.AuthorizeRequest;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.AuthorizeResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.DecoupledAuthRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.DecoupledAuthResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.RefreshRequest;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.TokenRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.DecoupledTokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.configuration.SebConfiguration;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticator;
@@ -34,7 +29,6 @@ public class SebDecoupledAuthenticator implements BankIdAuthenticator<String> {
     private final SebBaseApiClient apiClient;
     private final SebConfiguration configuration;
     private final String redirectUrl;
-    private OAuth2Token oAuth2Token;
     private String autoStartToken;
     private String ssn;
     private String authRequestId;
@@ -80,7 +74,7 @@ public class SebDecoupledAuthenticator implements BankIdAuthenticator<String> {
 
         switch (response.getStatus().toLowerCase()) {
             case PollResponses.COMPLETE:
-                //                startAuthorization();
+                // TODO: check if we get SSN from the bank and verify if it matches the init one
                 return BankIdStatus.DONE;
 
             case PollResponses.PENDING:
@@ -108,27 +102,6 @@ public class SebDecoupledAuthenticator implements BankIdAuthenticator<String> {
         }
     }
 
-    private void startAuthorization() {
-        AuthorizeResponse response =
-                apiClient.getAuthorization(configuration.getClientId(), redirectUrl);
-        final String consentFormVerifier = response.getConsentFormVerifier();
-        String code = response.getCode();
-        if (!Strings.isNullOrEmpty(consentFormVerifier)) {
-            final String requestForm = new AuthorizeRequest(consentFormVerifier).toData();
-            AuthorizeResponse authorizeResponse = apiClient.postAuthorization(requestForm);
-            code = authorizeResponse.getCode();
-        }
-        TokenRequest request =
-                new TokenRequest(
-                        configuration.getClientId(),
-                        configuration.getClientSecret(),
-                        redirectUrl,
-                        QueryValues.AUTH_CODE_GRANT,
-                        code,
-                        QueryValues.SCOPE);
-        oAuth2Token = apiClient.getToken(request);
-    }
-
     @Override
     public String refreshAutostartToken()
             throws BankIdException, BankServiceException, AuthorizationException,
@@ -143,17 +116,29 @@ public class SebDecoupledAuthenticator implements BankIdAuthenticator<String> {
 
     @Override
     public Optional<OAuth2Token> getAccessToken() {
-        return Optional.ofNullable(oAuth2Token);
+        return Optional.ofNullable(
+                apiClient
+                        .getDecoupledToken(
+                                DecoupledTokenRequest.builder()
+                                        .authReqId(authRequestId)
+                                        .clientId(configuration.getClientId())
+                                        .clientSecret(configuration.getClientSecret())
+                                        .redirectUri(redirectUrl)
+                                        .build())
+                        .toTinkToken());
     }
 
     @Override
     public Optional<OAuth2Token> refreshAccessToken(String refreshToken) throws SessionException {
-        RefreshRequest requestForm =
-                new RefreshRequest(
-                        refreshToken,
-                        configuration.getClientId(),
-                        configuration.getClientSecret(),
-                        QueryValues.REFRESH_TOKEN_GRANT);
-        return Optional.ofNullable(apiClient.refreshToken(Urls.TOKEN, requestForm));
+        return Optional.ofNullable(
+                apiClient
+                        .getDecoupledToken(
+                                DecoupledTokenRequest.builder()
+                                        .refreshToken(refreshToken)
+                                        .clientId(configuration.getClientId())
+                                        .clientSecret(configuration.getClientSecret())
+                                        .redirectUri(redirectUrl)
+                                        .build())
+                        .toTinkToken());
     }
 }

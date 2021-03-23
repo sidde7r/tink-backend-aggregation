@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.seb
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.AuthorizeResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.DecoupledAuthRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.DecoupledAuthResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.DecoupledTokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.ErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.RefreshRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.TokenRequest;
@@ -71,6 +72,13 @@ public abstract class SebBaseApiClient {
                                 .concat(authRequestId))
                 .accept(MediaType.APPLICATION_JSON_TYPE)
                 .get(DecoupledAuthResponse.class);
+    }
+
+    public TokenResponse getDecoupledToken(DecoupledTokenRequest tokenRequest) {
+        return client.request(Urls.DECOUPLED_TOKEN)
+                .accept(MediaType.APPLICATION_JSON_TYPE)
+                .body(tokenRequest, MediaType.APPLICATION_JSON_TYPE)
+                .post(TokenResponse.class);
     }
 
     public abstract RequestBuilder getAuthorizeUrl();
