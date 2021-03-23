@@ -1,5 +1,6 @@
 package se.tink.libraries.signableoperation.enums;
 
 public enum SignableOperationTypes {
-    TRANSFER
+    TRANSFER,
+    RECURRING_PAYMENT
 }
