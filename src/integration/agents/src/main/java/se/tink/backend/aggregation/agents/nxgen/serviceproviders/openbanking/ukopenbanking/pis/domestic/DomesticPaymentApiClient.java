@@ -120,7 +120,9 @@ public class DomesticPaymentApiClient implements UkOpenBankingPaymentApiClient {
                         endToEndIdentification,
                         instructionIdentification);
         if (!areFundsAvailable(consentId)) {
-            throw new InsufficientFundsException("Funds Availablity are not confirmed by the bank");
+            throw new InsufficientFundsException(
+                    "Funds Availablity are not confirmed by the bank",
+                    InternalStatus.INSUFFICIENT_FUNDS);
         }
         try {
             final DomesticPaymentResponse response =
