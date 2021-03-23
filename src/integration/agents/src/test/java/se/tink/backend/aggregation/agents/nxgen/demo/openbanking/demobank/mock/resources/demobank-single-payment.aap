@@ -1,0 +1,190 @@
+
+REQUEST 1
+POST https://demobank.production.global.tink.se/api/payment/v1/payments/domestic/create
+X-Client-Header: sXVn6Lt9P3AYaK4YwuErsu4qn2AUW3AnSE4rMzcZdLFCM2vHn8JpbUfBUJc3e7VaB4ApgJLvYB2fd7GjwkBxauXbSaRx2w5WXeh3jKgeLFefhvQHeSewMLsDXAAU63Ax3B47EMPa2UiCWE6VmJkXKC4Uv6pfYsLTGqSnw3pR4kkec8d5Y5eJ5NWrCXXZ5gFjhbuBkeZpFvnsBTnHJYbK3XWAZ8jR9Qhbqb2vQkthGZm49U5eHQ5K7emuT9szTEv2
+Content-Type: application/json
+Accept: application/json
+X-Aggregator: Tink Testing
+
+{
+  "debtorAccount": {
+    "accountId": "IT76K2958239128VVJCLBIHVDAT",
+    "type": "IBAN",
+    "identifier": "IT76K2958239128VVJCLBIHVDAT"
+  },
+  "creditorAccount": {
+    "accountId": "IT12L8551867857UFGAYZF25O4M",
+    "type": "IBAN",
+    "identifier": "IT12L8551867857UFGAYZF25O4M"
+  },
+  "amount": {
+    "currency": "EUR",
+    "amountValue": "0.1"
+  },
+  "creditorName": "Unknown person",
+  "remittanceInformationUnstructured": "Message",
+  "remittanceInformationStructured": null,
+  "initiationDate": "2021-03-22"
+}
+
+RESPONSE 1
+200
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+X-Frame-Options: DENY
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Mon, 22 Mar 2021 08:33:27 GMT
+Keep-Alive: ***
+Connection: keep-alive
+
+{
+  "id": "dfa36078ac0043f89a1a5d686bc867a1",
+  "paymentProduct": "domestic",
+  "paymentInitiation": {
+    "debtorAccount": {
+      "accountId": null,
+      "type": "IBAN",
+      "identifier": "IT76K2958239128VVJCLBIHVDAT"
+    },
+    "creditorAccount": {
+      "accountId": null,
+      "type": "IBAN",
+      "identifier": "IT12L8551867857UFGAYZF25O4M"
+    },
+    "amount": {
+      "currency": "EUR",
+      "amountValue": "0.1"
+    },
+    "creditorName": "Unknown person",
+    "remittanceInformationUnstructured": "Message",
+    "remittanceInformationStructured": {
+      "reference": null,
+      "referenceType": null
+    },
+    "initiationDate": "2021-03-22"
+  },
+  "paymentStatus": "Received",
+  "_links": {
+    "scaRedirect": {
+      "href": "/oauth/authorize?response_type=code&client_id=aggregation&scope=payment:write&payment_id=dfa36078ac0043f89a1a5d686bc867a1&payment_type=payments"
+    }
+  }
+}
+
+REQUEST 2
+POST https://demobank.production.global.tink.se/oauth/token
+Content-Type: application/x-www-form-urlencoded
+Accept: application/json
+X-Aggregator: Tink Testing
+
+grant_type=authorization_code&code=DUMMY_CODE&redirect_uri=https%3A%2F%2Fapi.preprod.oxford.tink.com%2Fapi%2Fv1%2Fcredentials%2Fthird-party%2Fcallback
+
+RESPONSE 2
+200
+Cache-Control: no-store
+Pragma: no-cache
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+X-Frame-Options: DENY
+Content-Type: application/json;charset=UTF-8
+Transfer-Encoding: chunked
+Date: Mon, 22 Mar 2021 08:33:38 GMT
+Keep-Alive: ***
+Connection: keep-alive
+
+{
+  "access_token": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MTY0MDU2MTgsInVzZXJfbmFtZSI6InU5NjAyNDc1OSIsImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdLCJqdGkiOiI1YTFUSXBwdkkxMjhYdDJ4ekE5WkJiQUU4bk09IiwiY2xpZW50X2lkIjoiYWdncmVnYXRpb24iLCJzY29wZSI6WyJwYXltZW50OndyaXRlIl19.tHmUsi0H0qcgzIUgxd2Nw2ONDRoHEg-86_s1iswquAz8G2sheC26RLbZtcAHM3WDaoOTO_YfMHbcoDbcgr97rzslM9Z5xHLCzzhIQms1X49xj0zrzw59wl34OvDFBWwSdOVsHXXYdv1IpjKB3HIX-OGm63cQ6EprKi3KuaLH10pRv8X44Y5TEBeAiJIDtBPOOe_gRZIl66ealCV3bwof9CypreedATAqTa48yNcEPxqXnqH66fwo-wEqvAhU9b5xTHceNkzqZ1Su0DvYCSpFHTSn6-kfPUs-aLaj_R0fL7BRTyZGJ1X_ZI82gi2Ajj07ynH0E6y6zdIO9Hw8FI5B2A",
+  "token_type": "bearer",
+  "refresh_token": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX25hbWUiOiJ1OTYwMjQ3NTkiLCJzY29wZSI6WyJwYXltZW50OndyaXRlIl0sImF0aSI6IjVhMVRJcHB2STEyOFh0Mnh6QTlaQmJBRThuTT0iLCJleHAiOjE2MjQxNzgwMTgsImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdLCJqdGkiOiIwd3VQdml5Wi82U0xibUliNTRLcWdoS0Uza2c9IiwiY2xpZW50X2lkIjoiYWdncmVnYXRpb24ifQ.fvYko8KDNM28_Wce543KZkI1wYqCg2up4asUyDQUaC4bhgcLerRv-3d58OSKlzgKaQEr5UfYAxSLMWe8ns8kMIYVdgbH5Y-jcCqXnQtNl0epu9lg2VSbQ0xB7eQWTmsJ8YhI9V3pdGq33i99tyQvraVEHcZKkk8HqMha9LY6DKpBx1V1ErSvSNFsQUgNi-jd_irYYxOffYwnz7V5ZYP4v_NwBvOBROn-Su1XvjgKpTl-2-s6fh2koPGCZW0Ax71WpCwbZZydnNN6jeOqznoLD9-m5s00tK6VQTy8xeNfBQ1Kg1BuP0zpO1Xm_lBux_KQXfY49aWvGX0dy7CIq3tKiQ",
+  "expires_in": 3599,
+  "scope": "payment:write",
+  "jti": "5a1TIppvI128Xt2xzA9ZBbAE8nM=",
+  "refresh_expires_in": 7775999
+}
+
+REQUEST 3
+GET https://demobank.production.global.tink.se/api/payment/v1/status/dfa36078ac0043f89a1a5d686bc867a1
+Accept: application/json
+X-Aggregator: Tink Testing
+
+
+RESPONSE 3
+200
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+X-Frame-Options: DENY
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Mon, 22 Mar 2021 08:33:38 GMT
+Keep-Alive: ***
+Connection: keep-alive
+
+{
+  "id": "dfa36078ac0043f89a1a5d686bc867a1",
+  "status": "ACTC"
+}
+
+REQUEST 4
+GET https://demobank.production.global.tink.se/api/payment/v1/payments/dfa36078ac0043f89a1a5d686bc867a1
+Accept: application/json
+X-Aggregator: Tink Testing
+Authorization: ***
+
+RESPONSE 4
+200
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+X-Frame-Options: DENY
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Mon, 22 Mar 2021 08:33:38 GMT
+Keep-Alive: ***
+Connection: keep-alive
+
+{
+  "id": "dfa36078ac0043f89a1a5d686bc867a1",
+  "paymentProduct": "domestic",
+  "paymentInitiation": {
+    "debtorAccount": {
+      "accountId": null,
+      "type": "IBAN",
+      "identifier": "IT76K2958239128VVJCLBIHVDAT"
+    },
+    "creditorAccount": {
+      "accountId": null,
+      "type": "IBAN",
+      "identifier": "IT12L8551867857UFGAYZF25O4M"
+    },
+    "amount": {
+      "currency": "EUR",
+      "amountValue": "0.1"
+    },
+    "creditorName": "Unknown person",
+    "remittanceInformationUnstructured": "Message",
+    "remittanceInformationStructured": {
+      "reference": null,
+      "referenceType": null
+    },
+    "initiationDate": "2021-03-22"
+  },
+  "paymentStatus": "AcceptedTechnicalValidation",
+  "_links": {
+    "scaRedirect": {
+      "href": "/oauth/authorize?response_type=code&client_id=aggregation&scope=payment:write&payment_id=dfa36078ac0043f89a1a5d686bc867a1&payment_type=payments"
+    }
+  }
+}
