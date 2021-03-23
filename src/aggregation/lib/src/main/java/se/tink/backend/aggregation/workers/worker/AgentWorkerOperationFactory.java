@@ -841,7 +841,7 @@ public class AgentWorkerOperationFactory {
     }
 
     private boolean isSendDataForProcessingEnabled() {
-        double skipRatio = 0.30;
+        double skipRatio = 0.60;
         return random.nextDouble() > skipRatio;
     }
 
