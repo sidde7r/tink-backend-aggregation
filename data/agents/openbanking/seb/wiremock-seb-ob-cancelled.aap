@@ -1,121 +1,63 @@
-
 REQUEST 1a
-POST https://tpp-auth.seb.se/auth/bid/v2/authentications
+POST https://authorize.sebgroup.com/auth/v3/authorizations
 Accept: application/json
+Content-Type: application/json
 
-RESPONSE 1a SET AUTH_1
+{"client_id":"dummyId","scope":"psd2_accounts psd2_payments","start_mode":"ast"}
+
+RESPONSE 1a
 201
-Date: Tue, 19 Jan 2021 09:58:27 GMT
-Date: Tue, 19 Jan 2021 09:58:27 GMT
-x-seb-csrf: CSRF_TOKEN
-Content-Language: en-US
 Content-Type: application/json
-Cache-Control: no-store, no-cache
-Expires: Thu, 01 Dec 1994 16:00:00 GMT
-Content-Length: 33
-Server: Jetty(9.4.z-SNAPSHOT)
+Content-Length: 59
 
-{"auto_start_token":"dummyToken"}
+{"auth_req_id":"AUTH-0a9021b6-d022-439e-a22a-7c49429d731e"}
 
-REQUEST 1b MATCH AUTH_1
-GET https://tpp-auth.seb.se/auth/bid/v2/authentications
+REQUEST 1b
+GET https://authorize.sebgroup.com/auth/v3/authorizations/AUTH-0a9021b6-d022-439e-a22a-7c49429d731e
 Accept: application/json
 
-RESPONSE 1b SET AUTH_2
+RESPONSE ab SET AUTH_01
 200
-Date: Tue, 19 Jan 2021 09:58:27 GMT
-Date: Tue, 19 Jan 2021 09:58:27 GMT
-x-seb-csrf: CSRF_TOKEN
-Content-Language: en-US
 Content-Type: application/json
-Content-Length: 58
-Server: Jetty(9.4.z-SNAPSHOT)
+Content-Length: 132
 
-{"hint_code":"OUTSTANDING_TRANSACTION","status":"PENDING"}
+{"status":"PENDING","hint_code":"OUTSTANDING_TRANSACTION","autostart_token":"59a1b676-2ea1-41ba-b4f9-725634f2dcd1","poll_delay":500}
 
-REQUEST 1c MATCH AUTH_2
-GET https://tpp-auth.seb.se/auth/bid/v2/authentications
+REQUEST 1c MATCH AUTH_01
+GET https://authorize.sebgroup.com/auth/v3/authorizations/AUTH-0a9021b6-d022-439e-a22a-7c49429d731e
 Accept: application/json
 
-RESPONSE 1c SET AUTH_3
+RESPONSE 1c SET AUTH_02
 200
-Date: Tue, 19 Jan 2021 09:58:29 GMT
-Date: Tue, 19 Jan 2021 09:58:30 GMT
-x-seb-csrf: CSRF_TOKEN
-Content-Language: en-US
 Content-Type: application/json
-Content-Length: 44
-Server: Jetty(9.4.z-SNAPSHOT)
+Content-Length: 61
 
-{"hint_code":"USER_SIGN","status":"PENDING"}
+{"status":"PENDING","hint_code":"USER_SIGN","poll_delay":500}
 
-REQUEST 1d MATCH AUTH_3
-GET https://tpp-auth.seb.se/auth/bid/v2/authentications
+REQUEST 1d MATCH AUTH_02
+GET https://authorize.sebgroup.com/auth/v3/authorizations/AUTH-0a9021b6-d022-439e-a22a-7c49429d731e
 Accept: application/json
 
 RESPONSE 1d
 200
-Date: Tue, 19 Jan 2021 09:58:32 GMT
-Date: Tue, 19 Jan 2021 09:58:32 GMT
-x-seb-csrf: CSRF_TOKEN
-Content-Language: en-US
 Content-Type: application/json
-Cache-Control: no-store, no-cache
-Pragma: no-cache
-Strict-Transport-Security: max-age=15552000; includeSubDomains
-Content-Length: 21
-Server: Jetty(9.4.z-SNAPSHOT)
+Content-Length: 38
 
-{"status":"COMPLETE"}
+{"status":"COMPLETE","poll_delay":500}
 
 REQUEST 1e
-GET https://tpp-auth.seb.se/mga/sps/oauth/oauth20/dpsd2/authorize?client_id=dummyId&response_type=code&scope=psd2_accounts+psd2_payments&redirect_uri=https%3A%2F%2F127.0.0.1%3A7357%2Fapi%2Fv1%2Fthirdparty%2Fcallback
+POST https://authorize.sebgroup.com/auth/v3/tokens
 Accept: application/json
+Content-Type: application/json
+
+{"auth_req_id":"AUTH-0a9021b6-d022-439e-a22a-7c49429d731e","client_id":"dummyId","client_secret":"dummySecret","redirect_uri":"https://127.0.0.1:7357/api/v1/thirdparty/callback"}
 
 RESPONSE 1e
 200
-Date: Tue, 19 Jan 2021 09:58:32 GMT
 Content-Type: application/json
-Cache-Control: no-cache, no-store
-Content-Length: 48
-Server: Jetty(9.4.z-SNAPSHOT)
+Content-Length: 175
 
-{"CONSENT_FORM_VERIFIER":"0qfduE9veTM7FcNMofbs"}
-
-REQUEST 1f
-POST https://tpp-auth.seb.se/mga/sps/oauth/oauth20/dpsd2/authorize
-Accept: application/json
-Content-Type: application/x-www-form-urlencoded
-
-scope=psd2_accounts+psd2_payments&trust_level=permit&consent_form_verifier=0qfduE9veTM7FcNMofbs
-
-RESPONSE 1f
-200
-Date: Tue, 19 Jan 2021 09:58:33 GMT
-Content-Type: application/json
-Cache-Control: no-cache, no-store
-Set-Cookie: ***
-Content-Length: 38
-Server: Jetty(9.4.z-SNAPSHOT)
-
-{"code": "dummyCode", "state": "null"}
-
-REQUEST 1g
-POST https://tpp-api.sebgroup.com/mga/sps/oauth/oauth20/dpsd2/token
-Accept: application/json
-Content-Type: application/x-www-form-urlencoded
-
-client_id=dummyId&client_secret=dummySecret&redirect_uri=https%3A%2F%2F127.0.0.1%3A7357%2Fapi%2Fv1%2Fthirdparty%2Fcallback&grant_type=authorization_code&code=dummyCode&scope=psd2_accounts+psd2_payments
-
-RESPONSE 1g
-200
-Date: Tue, 19 Jan 2021 09:58:33 GMT
-Content-Type: application/json
-Cache-Control: no-cache, no-store
-Content-Length: 140
-Server: Jetty(9.4.z-SNAPSHOT)
-
-{"access_token":"ACCESS_TOKEN","refresh_token":"REFRESH_TOKEN","scope":"psd2_accounts psd2_payments","token_type":"Bearer","expires_in":599}
+{"scope":"psd2_accounts psd2_payments","access_token":"iKoyt6TjdQb67zgn2uhy","refresh_token":"e5l1Ai8XZI4ud12jH1X88z4SN11P3Jrwi0oPVN4X","token_type":"bearer","expires_in":599}
 
 REQUEST 1
 POST https://tpp-api.sebgroup.com/tpp/pis/v6/identified2/payments/swedish-domestic-private-bankgiros
