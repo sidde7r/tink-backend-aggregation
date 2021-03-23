@@ -296,6 +296,12 @@ public class CbiGlobeApiClient {
                                 getRedirectUrl(
                                         sessionStorage.get(QueryKeys.STATE),
                                         HeaderKeys.CODE,
+                                        HeaderValues.CODE))
+                        .header(
+                                HeaderKeys.TPP_NOK_REDIRECT_URI,
+                                getRedirectUrl(
+                                        sessionStorage.get(QueryKeys.STATE),
+                                        HeaderKeys.CODE,
                                         HeaderValues.CODE));
         return addPsuIpAddressHeaderIfNeeded(requestBuilder)
                 .post(CreatePaymentResponse.class, createPaymentRequest);

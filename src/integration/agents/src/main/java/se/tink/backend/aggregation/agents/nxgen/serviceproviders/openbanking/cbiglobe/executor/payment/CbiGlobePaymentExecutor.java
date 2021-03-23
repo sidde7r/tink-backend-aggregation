@@ -12,9 +12,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthenticationException;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentCancelledException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
-import se.tink.backend.aggregation.agents.exceptions.payment.PaymentValidationException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.FormValues;
@@ -261,7 +262,7 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
             PaymentMultiStepRequest paymentMultiStepRequest,
             CreatePaymentResponse createPaymentResponse,
             Map<String, String> supplementalInfo)
-            throws PaymentValidationException {
+            throws PaymentException {
 
         return createPaymentResponse.getLinks() == null
                 ? handleEmptyLinksInResponse(
@@ -273,7 +274,7 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
             PaymentMultiStepRequest paymentMultiStepRequest,
             CreatePaymentResponse createPaymentResponse,
             Map<String, String> supplementalInfo)
-            throws PaymentValidationException {
+            throws PaymentException {
         sessionStorage.put(StorageKeys.LINK, null);
         // As for BPM payment is parked for 30 min at bank in RCVD state we need special handling.
         // Ref: https://tinkab.atlassian.net/browse/PAY2-734
@@ -324,30 +325,53 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
             PaymentMultiStepRequest paymentMultiStepRequest,
             CreatePaymentResponse createPaymentResponse,
             Map<String, String> supplementalInfo)
-            throws PaymentValidationException {
+            throws PaymentException {
 
         if (CbiGlobeConstants.PSUAuthenticationStatus.AUTHENTICATED.equalsIgnoreCase(
                         createPaymentResponse.getPsuAuthenticationStatus())
                 && CbiGlobeConstants.PSUAuthenticationStatus.VERIFIED.equalsIgnoreCase(
                         createPaymentResponse.getScaStatus())) {
-            if (isBPMProvider()) {
-                paymentMultiStepRequest.getPayment().setStatus(PaymentStatus.SIGNED);
-            }
-            return new PaymentMultiStepResponse(
-                    createPaymentResponse.toTinkPaymentResponse(
-                            paymentMultiStepRequest.getPayment()),
-                    AuthenticationStepConstants.STEP_FINALIZE,
-                    new ArrayList<>());
+            return getSuccessfulPaymentMultiStepResponse(
+                    paymentMultiStepRequest, createPaymentResponse);
+        } else if (CbiGlobeConstants.PSUAuthenticationStatus.FAILED.equalsIgnoreCase(
+                createPaymentResponse.getScaStatus())) {
+            return logAndThrowPaymentCancelledException(createPaymentResponse);
         } else if (supplementalInfo != null && supplementalInfo.isEmpty()) {
-            logger.error(
-                    "Payment is not verified and we did not receive a callback from ASPSP: psuAuthenticationStatus={} , scaStatus={} , transactionStatus={}",
-                    createPaymentResponse.getPsuAuthenticationStatus(),
-                    createPaymentResponse.getScaStatus(),
-                    createPaymentResponse.getTransactionStatus());
-            throw new PaymentValidationException(PaymentValidationException.DEFAULT_MESSAGE);
+            return logAndThrowPaymentAuthorizationException(createPaymentResponse);
         } else {
             return handleIntermediatePaymentStates(paymentMultiStepRequest, createPaymentResponse);
         }
+    }
+
+    private PaymentMultiStepResponse getSuccessfulPaymentMultiStepResponse(
+            PaymentMultiStepRequest paymentMultiStepRequest,
+            CreatePaymentResponse createPaymentResponse) {
+        if (isBPMProvider()) {
+            paymentMultiStepRequest.getPayment().setStatus(PaymentStatus.SIGNED);
+        }
+        return new PaymentMultiStepResponse(
+                createPaymentResponse.toTinkPaymentResponse(paymentMultiStepRequest.getPayment()),
+                AuthenticationStepConstants.STEP_FINALIZE,
+                new ArrayList<>());
+    }
+
+    private PaymentMultiStepResponse logAndThrowPaymentCancelledException(
+            CreatePaymentResponse createPaymentResponse) throws PaymentCancelledException {
+        logger.error(
+                "Payment cancelled by user: psuAuthenticationStatus={} , scaStatus={}",
+                createPaymentResponse.getPsuAuthenticationStatus(),
+                createPaymentResponse.getScaStatus());
+        throw new PaymentCancelledException();
+    }
+
+    private PaymentMultiStepResponse logAndThrowPaymentAuthorizationException(
+            CreatePaymentResponse createPaymentResponse) throws PaymentAuthorizationException {
+        logger.error(
+                "Payment is not verified and we did not receive a callback from ASPSP: psuAuthenticationStatus={} , scaStatus={} , transactionStatus={}",
+                createPaymentResponse.getPsuAuthenticationStatus(),
+                createPaymentResponse.getScaStatus(),
+                createPaymentResponse.getTransactionStatus());
+        throw new PaymentAuthorizationException();
     }
 
     private PaymentMultiStepResponse handleIntermediatePaymentStates(
