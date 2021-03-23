@@ -54,10 +54,12 @@ junit_test(
         "//third_party:ch_qos_logback_logback_classic",
     ],
     deps = [
+        ":api",
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/credentials:service",
         "//src/integration/user:rpc",
         "//src/libraries/api_annotations/testlib",
+        "//src/libraries/serialization",
         "//third_party:com_sun_jersey_jersey_client",
         "//third_party:org_assertj_assertj_core",
         "//third_party:org_reflections_reflections",
