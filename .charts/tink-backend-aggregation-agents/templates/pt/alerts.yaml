@@ -107,7 +107,7 @@ spec:
     - alert: LongTermAuthenticationCancelledOver90%PT
       expr: |
         # Login cancelled the last 6 hours. Very useful for integrations with low use statistic
-        sum(sum_over_time(tink_agent_login_total{action="login",outcome="cancelled|cancelled_due_to_third_party_app_timeout", market="PT"}[6h])) BY (className,provider)
+        sum(sum_over_time(tink_agent_login_total{action="login",outcome="cancelled", market="PT"}[6h])) BY (className,provider)
         # All login attempts the last 6 hours
           / sum(sum_over_time(tink_agent_login_total{action="login", market="PT"}[6h])) BY (className,provider) > 10
         # Login cancelled the last 6 hours
@@ -123,4 +123,21 @@ spec:
         description: {{ .Values.kibanaLink }}
           {{ .Values.grafanaLink }}
         summary: Login success rate is below 10% ( <{ $value }> ) the last 6 hours.
+        tags: {{ .Values.tags }}
+
+    - alert: LongTermAuthenticationCancelledDueToThirdPartyAppTimeoutOver90%PT
+      expr: |
+        # Login cancelled due to third party timeout only
+        sum(sum_over_time(tink_agent_login_total{action="login",outcome="cancelled_due_to_third_party_app_timeout", market="PT"}[6h])) BY (className,provider)
+        # All login attempts the last 6 hours
+          / sum(sum_over_time(tink_agent_login_total{action="login", market="PT"}[6h])) BY (className,provider) > 0.90
+      for: 1h
+      labels:
+        severity: urgent
+        priority: P2
+        who: integration-minions
+      annotations:
+        description: {{ .Values.kibanaLink }}
+          {{ .Values.grafanaLink }}
+        summary: Login success rate through a third party app is below 10% ( <{ $value }> ) the last 6h.
         tags: {{ .Values.tags }}
