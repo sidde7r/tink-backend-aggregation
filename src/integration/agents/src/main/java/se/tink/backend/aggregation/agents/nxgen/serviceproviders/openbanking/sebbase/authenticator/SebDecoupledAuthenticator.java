@@ -30,7 +30,6 @@ public class SebDecoupledAuthenticator implements BankIdAuthenticator<String> {
     private final SebConfiguration configuration;
     private final String redirectUrl;
     private String autoStartToken;
-    private String ssn;
     private String authRequestId;
     private boolean isUserSign = false;
 
@@ -44,7 +43,6 @@ public class SebDecoupledAuthenticator implements BankIdAuthenticator<String> {
     @Override
     public String init(String ssn)
             throws BankServiceException, AuthorizationException, AuthenticationException {
-        this.ssn = ssn;
         authRequestId =
                 apiClient
                         .startDecoupledAuthorization(
@@ -74,7 +72,6 @@ public class SebDecoupledAuthenticator implements BankIdAuthenticator<String> {
 
         switch (response.getStatus().toLowerCase()) {
             case PollResponses.COMPLETE:
-                // TODO: check if we get SSN from the bank and verify if it matches the init one
                 return BankIdStatus.DONE;
 
             case PollResponses.PENDING:
@@ -93,9 +90,7 @@ public class SebDecoupledAuthenticator implements BankIdAuthenticator<String> {
                         new LocalizableKey(ErrorMessages.REQUIRES_EXTRA_VERIFICATION));
 
             case PollResponses.FAILED:
-                if (isUserSign) {
-                    return BankIdStatus.CANCELLED;
-                }
+                return (isUserSign ? BankIdStatus.CANCELLED : BankIdStatus.FAILED_UNKNOWN);
 
             default:
                 return BankIdStatus.FAILED_UNKNOWN;

@@ -36,11 +36,8 @@ public class SebCommonConstants {
         public static final String PENDING = "pending";
         public static final String FAILED = "failed";
         public static final String NO_CLIENT = "no_client";
-        public static final String EXPIRED_TRANSACTION = "expired_transaction";
         public static final String USER_CANCEL = "user_cancel";
         public static final String CANCELLED = "cancelled";
-        public static final String START_FAILED = "start_failed";
-        public static final String UNKNOWN_BANK_ID = "SEB_UNKNOWN_BANKID";
         public static final String REQUIRES_EXTRA_VERIFICATION =
                 "bankid_requires_extra_verification";
     }
@@ -88,7 +85,6 @@ public class SebCommonConstants {
     public static class HeaderKeys {
         public static final String X_REQUEST_ID = "X-Request-ID";
         public static final String PSU_IP_ADDRESS = "PSU-IP-Address";
-        public static final String X_SEB_CSRF = "x-seb-csrf";
         public static final String PSU_CORPORATE_ID = "PSU-CORPORATE-ID";
     }
 
