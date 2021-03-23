@@ -1,0 +1,285 @@
+
+REQUEST 1
+GET https://personal.secure1.ulsterbank.co.uk/.well-known/openid-configuration
+
+RESPONSE 1
+200
+Content-Type: application/json
+
+{
+    "version": "3.0",
+    "issuer": "https://secure1.ulsterbank.co.uk",
+    "authorization_endpoint": "https://personal.secure1.ulsterbank.co.uk/as/authorization.oauth2",
+    "token_endpoint": "https://secure1t.ulsterbank.co.uk/as/token.oauth2",
+    "revocation_endpoint": "https://secure1.ulsterbank.co.uk/as/revoke_token.oauth2",
+    "jwks_uri": "https://keystore.openbanking.org.uk/0015800000jfxrpAAA/57ilfAN22WYnhY7DJRjW7i.jwks",
+    "registration_endpoint": "https://secure1t.ulsterbank.co.uk/open-banking/v1.0/tpp/register",
+    "scopes_supported": [
+        "openid",
+        "payments",
+        "accounts",
+        "fundsconfirmations"
+    ],
+    "claims_supported": [
+        "aud",
+        "exp",
+        "iat",
+        "iss",
+        "openbanking_intent_id",
+        "sub",
+        "acr"
+    ],
+    "acr_values_supported": [
+        "urn:openbanking:psd2:ca"
+    ],
+    "response_types_supported": [
+        "code id_token"
+    ],
+    "response_modes_supported": [
+        "fragment",
+        "query",
+        "form_post"
+    ],
+    "grant_types_supported": [
+        "authorization_code",
+        "refresh_token",
+        "client_credentials"
+    ],
+    "subject_types_supported": [
+        "public"
+    ],
+    "id_token_signing_alg_values_supported": [
+        "HS256",
+        "HS384",
+        "HS512",
+        "RS256",
+        "PS256",
+        "RS384",
+        "RS512",
+        "ES256",
+        "ES384",
+        "ES512"
+    ],
+    "token_endpoint_auth_methods_supported": [
+        "tls_client_auth",
+        "private_key_jwt"
+    ],
+    "tls_client_certificate_bound_access_tokens": true,
+    "token_endpoint_auth_signing_alg_values_supported": [
+        "RS256",
+        "PS256",
+        "RS384",
+        "RS512",
+        "ES256",
+        "ES384",
+        "ES512"
+    ],
+    "claim_types_supported": [
+        "normal"
+    ],
+    "claims_parameter_supported": true,
+    "request_parameter_supported": true,
+    "request_uri_parameter_supported": false,
+    "request_object_signing_alg_values_supported": [
+        "RS256",
+        "PS256",
+        "RS384",
+        "RS512",
+        "ES256",
+        "ES384",
+        "ES512"
+    ],
+    "request_object_encryption_alg_values_supported": [],
+    "request_object_encryption_enc_values_supported": []
+}
+
+
+REQUEST 2
+POST https://secure1t.ulsterbank.co.uk/as/token.oauth2
+Content-Type: application/x-www-form-urlencoded
+Accept: application/json
+
+grant_type=client_credentials
+    &scope=accounts
+    &redirect_uri=https%3A%2F%2Fapi.tink.se%2Fapi%2Fv1%2Fcredentials%2Fthird-party%2Fcallback
+    &client_id=DUMMY_CLIENT_ID
+    &client_assertion_type=urn%3Aietf%3Aparams%3Aoauth%3Aclient-assertion-type%3Ajwt-bearer
+    &client_assertion=RkFLRV9TSUdOQVRVUkUK
+
+RESPONSE 2
+200
+Content-Type: application/json;charset=utf-8
+
+{
+    "access_token": "DUMMY_INIT_ACCESS_TOKEN",
+    "token_type": "bearer",
+    "expires_in": 599
+}
+
+REQUEST 3
+POST https://api.ulsterbank.co.uk/open-banking/v3.1/aisp/account-access-consents
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer DUMMY_INIT_ACCESS_TOKEN
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+{
+    "Data": {
+        "Permissions": [
+            "ReadAccountsDetail",
+            "ReadTransactionsCredits",
+            "ReadDirectDebits",
+            "ReadTransactionsDebits",
+            "ReadBeneficiariesDetail",
+            "ReadBalances",
+            "ReadStandingOrdersDetail",
+            "ReadTransactionsDetail"
+        ]
+    },
+    "Risk": {}
+}
+
+RESPONSE 3
+201
+Content-Type: application/json; charset=utf-8
+Connection: keep-alive
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+{
+    "Data": {
+        "ConsentId": "**HASHED:Nb**",
+        "Permissions": [
+                    "ReadAccountsDetail",
+                    "ReadTransactionsCredits",
+                    "ReadDirectDebits",
+                    "ReadTransactionsDebits",
+                    "ReadBeneficiariesDetail",
+                    "ReadBalances",
+                    "ReadStandingOrdersDetail",
+                    "ReadTransactionsDetail"
+        ],
+        "CreationDateTime": "2021-02-18T14:40:42.485Z",
+        "StatusUpdateDateTime": "2021-02-18T14:40:42.485Z",
+        "Status": "AwaitingAuthorisation"
+    },
+    "Risk": {},
+    "Links": {
+        "Self": "https://api.ulsterbank.co.uk/open-banking/v3.1/aisp/account-access-consents/**HASHED:Nb**"
+    },
+    "Meta": {}
+}
+
+REQUEST 4
+GET https://keystore.openbanking.org.uk/0015800000jfxrpAAA/57ilfAN22WYnhY7DJRjW7i.jwks
+
+RESPONSE 4
+200
+Content-Type: application/jwk+json
+Connection: keep-alive
+
+{
+    "keys": [
+        {
+            "kid": "Kp0zIp3WsPsgWR149rlSbugeSPM",
+            "kty": "RSA",
+            "n": "zxcJHlKEjpt0tKntW_yv8FFMw_QFxZFmC2JPn4u14nxetb6BQQcTZPOttRXBwb5ng5nE6p3zfoK-V0BUitxaqn8ADo6tEenkLPP32CnaO747q-ZJcvJVXC1BWUSKWcE4tboEW3OTJ4AVsqudJzYxRAi29qqq9zdHUNhDJsLPPy1-M-HIsw7DDlO726tmc89FaUE3s8GJr0IFixPq2ZXJCUQxHb-2NK8YrQ89Qg0DqFrNd9LEvJJfJSl0oHckXlTe2Hyw4FJxuXszQsirxRjeKCirmP1xvVvo3GDV46RltMnJKXKnmQCo8wOySGtEcFp4l_9AbH0Rg9RTFjHgxtAEVQ",
+            "e": "AQAB",
+            "use": "sig",
+            "x5c": [
+                "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"
+            ],
+            "x5t": "Kp0zIp3WsPsgWR149rlSbugeSPM=",
+            "x5u": "https://keystore.openbanking.org.uk/0015800000jfxrpAAA/revoked/Kp0zIp3WsPsgWR149rlSbugeSPM.pem",
+            "x5t#S256": "IFYZ2FNFGLUoa6SqMyA-O8BQDScjtauzf9ZK0xNVI8c="
+        },
+        {
+            "kid": "yMY8nlyu4W84i1x7-Odod8nw0II",
+            "kty": "RSA",
+            "n": "qQbGzjkoF0cTpQvtTN_XsMjFgx8ZmmewU-2oLQ_JNjtkmcEkAXZY8U_04Vz3ca2ZAWv71gFSZqnSNOcCnr3e3CZKuvZoHNM05QUXWDSwX6xee7vsgumJTBpTGpFHyoDwSvw40aEcuww6OOto7rveMNfql53snOX63314-PrnxNloAw0ltk9rpDPTSEk1TevFQufgp0sNGUV5ee6EGwtsu-r7F3-Zs8e0UZAZuBtLYCKY90JFQxT0fUKnmSSp-mNzrS3xqMtCisR4TmIT1JE6RNQapmAX6skfxAfuvxLPbb-1c2KU4bDgCt-cx0gv7XstKImEe6sMlsGFdfdtaRo-CQ",
+            "e": "AQAB",
+            "use": "sig",
+            "x5c": [
+                "MIIFyDCCBLCgAwIBAgIEWf+tkjANBgkqhkiG9w0BAQsFADBEMQswCQYDVQQGEwJHQjEUMBIGA1UEChMLT3BlbkJhbmtpbmcxHzAdBgNVBAMTFk9wZW5CYW5raW5nIElzc3VpbmcgQ0EwHhcNMjAwNjA4MTM0MzAxWhcNMjEwNzA4MTQxMzAxWjBhMQswCQYDVQQGEwJHQjEUMBIGA1UEChMLT3BlbkJhbmtpbmcxGzAZBgNVBAsTEjAwMTU4MDAwMDBqZnhycEFBQTEfMB0GA1UEAxMWNTdpbGZBTjIyV1luaFk3REpSalc3aTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAKkGxs45KBdHE6UL7Uzf17DIxYMfGZpnsFPtqC0PyTY7ZJnBJAF2WPFP9OFc93GtmQFr+9YBUmap0jTnAp693twmSrr2aBzTNOUFF1g0sF+sXnu77ILpiUwaUxqRR8qA8Er8ONGhHLsMOjjraO673jDX6ped7Jzl+t99ePj658TZaAMNJbZPa6Qz00hJNU3rxULn4KdLDRlFeXnuhBsLbLvq+xd/mbPHtFGQGbgbS2AimPdCRUMU9H1Cp5kkqfpjc60t8ajLQorEeE5iE9SROkTUGqZgF+rJH8QH7r8Sz22/tXNilOGw4ArfnMdIL+17LSiJhHurDJbBhXX3bWkaPgkCAwEAAaOCAqMwggKfMCsGA1UdEQQkMCKCIGh0dHBzOi8vc2VjdXJlMS51bHN0ZXJiYW5rLmNvLnVrMA4GA1UdDwEB/wQEAwIGwDAVBgNVHSUEDjAMBgorBgEEAYI3CgMMMIIBUgYDVR0gBIIBSTCCAUUwggFBBgsrBgEEAah1gQYBATCCATAwNQYIKwYBBQUHAgEWKWh0dHA6Ly9vYi50cnVzdGlzLmNvbS9wcm9kdWN0aW9uL3BvbGljaWVzMIH2BggrBgEFBQcCAjCB6QyB5lRoaXMgQ2VydGlmaWNhdGUgaXMgc29sZWx5IGZvciB1c2Ugd2l0aCBPcGVuIEJhbmtpbmcgTGltaXRlZCBhbmQgYXNzb2NpYXRlZCBPcGVuIEJhbmtpbmcgU2VydmljZXMuIEl0cyByZWNlaXB0LCBwb3NzZXNzaW9uIG9yIHVzZSBjb25zdGl0dXRlcyBhY2NlcHRhbmNlIG9mIHRoZSBPcGVuIEJhbmtpbmcgTGltaXRlZCBDZXJ0aWZpY2F0ZSBQb2xpY3kgYW5kIHJlbGF0ZWQgZG9jdW1lbnRzIHRoZXJlaW4uMHIGCCsGAQUFBwEBBGYwZDAmBggrBgEFBQcwAYYaaHR0cDovL29iLnRydXN0aXMuY29tL29jc3AwOgYIKwYBBQUHMAKGLmh0dHA6Ly9vYi50cnVzdGlzLmNvbS9wcm9kdWN0aW9uL2lzc3VpbmdjYS5jcnQwPwYDVR0fBDgwNjA0oDKgMIYuaHR0cDovL29iLnRydXN0aXMuY29tL3Byb2R1Y3Rpb24vaXNzdWluZ2NhLmNybDAfBgNVHSMEGDAWgBSfSb9ONqesww8ryEf0HykbwHkLBTAdBgNVHQ4EFgQUHUC6U44aRSLl2m6TbmqCWdIBrHYwDQYJKoZIhvcNAQELBQADggEBAHUPyeGqdoNqGfxV4Cm+eQaMw5ee7lVKWUTI2hjDKFagvAorJ5p9Cj3tEFVkGrY+FPn0roMvhT+HAc41tmxPLN8nZLD09tr0ekuCenhJarYLFjq83DGmXDfiJymNCDUQb40cSWMYD40d2A75OEqAYEtTgxTjmZDkpqensTUTUHBFRXdjjVJyI9axpxpAFYe2uHxG5Ny6zYt+P7E0Jkumji9nWaMhv35Pat7ebgHtNMq0VLWo7nTyT2ZG8HoIDKe5PRh1yxb5jDhnXGiwohkJNX61IJoK0v1QYV3geeKPYJ03JlWmDIRJkoK+WheVh151sT1YRvJ3aERGzeDyRF6xjcg="
+            ],
+            "x5t": "8_l_D9IrBaM7Js2aPq6Im9b3pI8=",
+            "x5u": "https://keystore.openbanking.org.uk/0015800000jfxrpAAA/yMY8nlyu4W84i1x7-Odod8nw0II.pem",
+            "x5t#S256": "m_GF-wDBzhkF1xW9JVd14fjEDCqBfvNONHAsHUGOUis="
+        },
+        {
+            "kid": "l07RVSqV5dj2N5ND7QtV6biC-yg",
+            "kty": "RSA",
+            "n": "2EPeBGnOgzqAo0TTaN4T_DOpxkmnIwNI2MWQWT7FntHANoeoqQoJPDwK4lB_-oGhsNUq8SKNv7zsVkOHX30fwTWGy8pf4L5ggKdOcB4YfZ0xjP9LIMmHKz8EOZwVN39lFc_BXpYB-rG2T42MZmetPuAP9HIp_9CCEOFb8Fv8uEaEK_GL8pGtc_98BlHjolciTziCoPGlD1sdaSvfrDN_YMghVuz5MxiOxZbyTg1Z-GJ9nr7UAK7KjXXzqfLmlDHsmtNEg7l_pBx14U_OhD3NLU-YyLk4Ngm22rgFFKyIEdcURiv3RmkQ5Tnqyh1NuDksoEIwTbEpRwAZKdJLirROyw",
+            "e": "AQAB",
+            "use": "tls",
+            "x5c": [
+                "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"
+            ],
+            "x5t": "mEMRPPVRGP2JLQvvK3YP6aUynGk=",
+            "x5u": "https://keystore.openbanking.org.uk/0015800000jfxrpAAA/l07RVSqV5dj2N5ND7QtV6biC-yg.pem",
+            "x5t#S256": "8IDz2EoFH7IPVwATycj4f7fWpXLDG2aqaLRCtNN83qM="
+        },
+        {
+            "kid": "VWISbGpPhOiqgZnGTF_KweHDFFI",
+            "kty": "RSA",
+            "n": "tbrm4oyKgGuhyFauIXQNKxFjJ1RpV3IQ1uWE4hmOO3IKtpEHjhedCP6d5sUivsThuXBTnNWdLgozc1jYIgGfSObKL_7MgYRhcSo0lR2kMAdWlCpEkfkxKixlgvSj0Y7P_EJ2xxELv_fDHZt4pwkxeQtm8CD9nHziHQdh3ar9SZD7fKUHJSk-8iQgwIhudfSJ-8zL0ROX83SDrZxqRr_54qEqnJQQnhg1O-oSEGHN8til4ePZlQNZ2-mH2dwK7FVdq_Q2-2PBackr8o2EYa6UkJGEDH1ASUniEYNtC-Us4YZRsJ0Dm3ucqoPyipwiIM9ka6TLehchetQ7TaStAWKfnw",
+            "e": "AQAB",
+            "use": "tls",
+            "x5c": [
+                "MIIFzDCCBLSgAwIBAgIEWf/FrTANBgkqhkiG9w0BAQsFADBEMQswCQYDVQQGEwJHQjEUMBIGA1UEChMLT3BlbkJhbmtpbmcxHzAdBgNVBAMTFk9wZW5CYW5raW5nIElzc3VpbmcgQ0EwHhcNMjAxMDE1MTA1NTU2WhcNMjIxMDE1MTEyNTU2WjBhMQswCQYDVQQGEwJHQjEUMBIGA1UEChMLT3BlbkJhbmtpbmcxGzAZBgNVBAsTEjAwMTU4MDAwMDBqZnhycEFBQTEfMB0GA1UEAxMWNTdpbGZBTjIyV1luaFk3REpSalc3aTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBALW65uKMioBrochWriF0DSsRYydUaVdyENblhOIZjjtyCraRB44XnQj+nebFIr7E4blwU5zVnS4KM3NY2CIBn0jmyi/+zIGEYXEqNJUdpDAHVpQqRJH5MSosZYL0o9GOz/xCdscRC7/3wx2beKcJMXkLZvAg/Zx84h0HYd2q/UmQ+3ylByUpPvIkIMCIbnX0ifvMy9ETl/N0g62caka/+eKhKpyUEJ4YNTvqEhBhzfLYpeHj2ZUDWdvph9ncCuxVXav0NvtjwWnJK/KNhGGulJCRhAx9QElJ4hGDbQvlLOGGUbCdA5t7nKqD8oqcIiDPZGuky3oXIXrUO02krQFin58CAwEAAaOCAqcwggKjMCQGA1UdEQQdMBuCGXNlY3VyZTF0LnVsc3RlcmJhbmsuY28udWswDgYDVR0PAQH/BAQDAgeAMCAGA1UdJQEB/wQWMBQGCCsGAQUFBwMBBggrBgEFBQcDAjCCAVIGA1UdIASCAUkwggFFMIIBQQYLKwYBBAGodYEGAQEwggEwMDUGCCsGAQUFBwIBFilodHRwOi8vb2IudHJ1c3Rpcy5jb20vcHJvZHVjdGlvbi9wb2xpY2llczCB9gYIKwYBBQUHAgIwgekMgeZUaGlzIENlcnRpZmljYXRlIGlzIHNvbGVseSBmb3IgdXNlIHdpdGggT3BlbiBCYW5raW5nIExpbWl0ZWQgYW5kIGFzc29jaWF0ZWQgT3BlbiBCYW5raW5nIFNlcnZpY2VzLiBJdHMgcmVjZWlwdCwgcG9zc2Vzc2lvbiBvciB1c2UgY29uc3RpdHV0ZXMgYWNjZXB0YW5jZSBvZiB0aGUgT3BlbiBCYW5raW5nIExpbWl0ZWQgQ2VydGlmaWNhdGUgUG9saWN5IGFuZCByZWxhdGVkIGRvY3VtZW50cyB0aGVyZWluLjByBggrBgEFBQcBAQRmMGQwJgYIKwYBBQUHMAGGGmh0dHA6Ly9vYi50cnVzdGlzLmNvbS9vY3NwMDoGCCsGAQUFBzAChi5odHRwOi8vb2IudHJ1c3Rpcy5jb20vcHJvZHVjdGlvbi9pc3N1aW5nY2EuY3J0MD8GA1UdHwQ4MDYwNKAyoDCGLmh0dHA6Ly9vYi50cnVzdGlzLmNvbS9wcm9kdWN0aW9uL2lzc3VpbmdjYS5jcmwwHwYDVR0jBBgwFoAUn0m/TjanrMMPK8hH9B8pG8B5CwUwHQYDVR0OBBYEFHykxLEK4iBCm+DGsfRQEIvE8whDMA0GCSqGSIb3DQEBCwUAA4IBAQBMMjmkGMgIMK6xtmCVs9PKorHEc6vEs6u6WlvKTSWt/MtBIB/Y+umWHhlpelkyPFOaA203mMJuATUE3xLpKwLsBi1qXOkKjZ6x1zbacgdAygUBQpUruUojoAFsgNbAQLPTNP6aUhWIyr4P6rhzD28J9FZvKXOvwXlkKCpw39zJIVLFqjuOoWSAIRcimlh7hkKB2zAUwGeBBu7a7A1XzBFiFigxd7mowd9W3MPN2NGBHd+l49eUzcMS4R38TxUBDANC0lIVRETmoGGuH1gGpeY09gZ6KZHWQFni4lxYDdEbgm8xSsn/AGFFsOY26Vk3rB0u4jCUAHYvVyiFDcP0A08l"
+            ],
+            "x5t": "u1lyoOeqVNGmPH9JNphwp1QZyGc=",
+            "x5u": "https://keystore.openbanking.org.uk/0015800000jfxrpAAA/VWISbGpPhOiqgZnGTF_KweHDFFI.pem",
+            "x5t#S256": "xPgl0VC9u7DxVu2v4jZKHFkKMtheO27oDsSu2mUNqNg="
+        },
+        {
+            "kid": "tkqteqnD9hKmw1J-WXlLyomcTUo",
+            "kty": "RSA",
+            "n": "xnyUgtjFhbMyr7ArPriXgAtGVojVMtbXwVtYA68ZPySVrwYbQEYa8h0jyCriMoZGbR9W0TtkI6tTrCT4725QsDD13fsERCHl_lPIInfkE-qd4NNFsqBEyu78OvzAryxcIiyKdbpXkhxEczkgJbRh1x7f1Rk8y3NbesVwRm1l3pGn3DqQnCzYARl2z2mZLGmT_eDGUNkXpGrZfUMr3aClrRdl-uXDTq4F7CqpdgtynCULYlrsATU4ZGlxjzrpZ1SpDzJxH1VM_E6bA9-TQijInoLWFZ6JP_XPV60zXKfdZ1Zxfsg0nime5eStHW22o8ZDAws2cf-NIJe-HTGtkaZE3w",
+            "e": "AQAB",
+            "use": "tls",
+            "x5c": [
+                "MIII/zCCBuegAwIBAgIUNqzpL36Qkpi2vIMTI7SmLj3hhk0wDQYJKoZIhvcNAQELBQAwVzELMAkGA1UEBhMCTkwxIDAeBgNVBAoMF1F1b1ZhZGlzIFRydXN0bGluayBCLlYuMSYwJAYDVQQDDB1RdW9WYWRpcyBRdWFsaWZpZWQgV2ViIElDQSBHMjAeFw0yMDEwMTYxNjAwMDZaFw0yMTEwMTcwMDAwMDBaMIHUMRMwEQYLKwYBBAGCNzwCAQMTAkdCMR0wGwYDVQQPDBRQcml2YXRlIE9yZ2FuaXphdGlvbjERMA8GA1UEBRMIUjAwMDA3MzMxCzAJBgNVBAYTAkdCMRAwDgYDVQQIDAdCZWxmYXN0MRAwDgYDVQQHDAdCZWxmYXN0MRkwFwYDVQRhDBBQU0RHQi1GQ0EtMTIyMzE1MRwwGgYDVQQKDBNVbHN0ZXIgQmFuayBMaW1pdGVkMSEwHwYDVQQDDBhkaWdpdGFsLnVsc3RlcmJhbmsuY28udWswggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDGfJSC2MWFszKvsCs+uJeAC0ZWiNUy1tfBW1gDrxk/JJWvBhtARhryHSPIKuIyhkZtH1bRO2Qjq1OsJPjvblCwMPXd+wREIeX+U8gid+QT6p3g00WyoETK7vw6/MCvLFwiLIp1uleSHERzOSAltGHXHt/VGTzLc1t6xXBGbWXekafcOpCcLNgBGXbPaZksaZP94MZQ2Rekatl9QyvdoKWtF2X65cNOrgXsKql2C3KcJQtiWuwBNThkaXGPOulnVKkPMnEfVUz8TpsD35NCKMiegtYVnok/9c9XrTNcp91nVnF+yDSeKZ7l5K0dbbajxkMDCzZx/40gl74dMa2RpkTfAgMBAAGjggRDMIIEPzAfBgNVHSMEGDAWgBS861772A3ogq6GRr07fLJv0Sx/CjCBhQYIKwYBBQUHAQEEeTB3MEkGCCsGAQUFBzAChj1odHRwOi8vdHJ1c3QucXVvdmFkaXNnbG9iYWwuY29tL3F1b3ZhZGlzcXVhbGlmaWVkd2ViaWNhZzIuY3J0MCoGCCsGAQUFBzABhh5odHRwOi8vb2NzcC5xdW92YWRpc2dsb2JhbC5jb20wVAYDVR0RBE0wS4IYZGlnaXRhbC51bHN0ZXJiYW5rLmNvLnVrghRhcGkudWxzdGVyYmFuay5jby51a4IZc2VjdXJlMXQudWxzdGVyYmFuay5jby51azB/BgNVHSAEeDB2MAkGBwQAi+xAAQQwCQYHBACBmCcDATAOBgwrBgEEAb5YAAJkAQIwRQYKKwYBBAG+WAGDQjA3MDUGCCsGAQUFBwIBFilodHRwczovL3d3dy5xdW92YWRpc2dsb2JhbC5jb20vcmVwb3NpdG9yeTAHBgVngQwBATAdBgNVHSUEFjAUBggrBgEFBQcDAgYIKwYBBQUHAwEwgfcGCCsGAQUFBwEDBIHqMIHnMAoGCCsGAQUFBwsCMAgGBgQAjkYBATATBgYEAI5GAQYwCQYHBACORgEGAzA7BgYEAI5GAQUwMTAvFilodHRwczovL3d3dy5xdW92YWRpc2dsb2JhbC5jb20vcmVwb3NpdG9yeRMCZW4wfQYGBACBmCcCMHMwTDARBgcEAIGYJwEBDAZQU1BfQVMwEQYHBACBmCcBAgwGUFNQX1BJMBEGBwQAgZgnAQMMBlBTUF9BSTARBgcEAIGYJwEEDAZQU1BfSUMMG0ZpbmFuY2lhbCBDb25kdWN0IEF1dGhvcml0eQwGR0ItRkNBMCAGBWeBDAMBBBcwFRMDUFNEEwJHQgwKRkNBLTEyMjMxNTBMBgNVHR8ERTBDMEGgP6A9hjtodHRwOi8vY3JsLnF1b3ZhZGlzZ2xvYmFsLmNvbS9xdW92YWRpc3F1YWxpZmllZHdlYmljYWcyLmNybDAdBgNVHQ4EFgQUOVqH8Svjtk8uAoEimKdo9fbp7OowDgYDVR0PAQH/BAQDAgWgMIIBAwYKKwYBBAHWeQIEAgSB9ASB8QDvAHUA9lyUL9F3MCIUVBgIMJRWjuNNExkzv98MLyALzE7xZOMAAAF1MizxswAABAMARjBEAiBra2Cj9QPfWst1hkPxyH2e82f+0vGiv77Tw6+oGuWjCAIgdgGFdhbVOUZV8TbIq9VD680QEmZpe5bO8wnYWJFW6VQAdgCUILwejtWNbIhzH4KLIiwN0dpNXmxPlD1h204vWE2iwgAAAXUyLPINAAAEAwBHMEUCIQCbder2xFJORZMcs7pjtb892uxIqpn/A0dWAKNwMZgnLAIgVTNegRJzr59Z/IySp9d1iIWBJbmzdaHkAJEIvKqtr5owDQYJKoZIhvcNAQELBQADggIBACyYR6Ky727kHkdNGpdoe2y7pKX1GzAFycsKAvsohriL0K5yqYshQglmLLzYavHUKSC/mp67+rzfVa9Kj54idouppicQDT+uXRpXBZcA9AmhvztHxsbQMwHBlMSMzMuOruJrhpHANw572Y1Rkj3eVP8cQhPIYbw+5OGOKr8QOx7JCvmcNBGaiaPLcAWoTlTVIVOhfb5DMDdE29AZizJ0AzrgeLN6FxzbQzxGLxmc7W6Dtv4SoNitTBJ+WovWeH9+nTk8w2du8V75foIEqKD6rsuGSKNvTEK/CrzBN5Jm33nY6JrRrnmI46Jrp1buMwHL1hMvzvof4gMWJ16ZFBxIafh8MvwNyaYYNSssORxDffA28tDfAGR2CIL6s8p89CSAKSjtYypbgj/LZmQw1prd9QN3jVW/pCSTDM6E8tKk7UeFt4TFpX/7QFBmgzqeNMF1UqrWPhQ7RdUhr7eAZD4IlsdNhloVoRgKhDLe1Do5y2UgqfU52DQlQySZcQUPCyX0KS7PROVpEPGujmtHrPMnbu0WlLd3bNTkFFyzKqBLA778vP83SC62Uf8Gk5sR3u4hANDWHS/l0ldbB/dp+3Yc4a1p24Gwb4yXd7toUI4l1PHBSiug7Si5aPLeoFUuUbpts4LrCBs2eFjAp5wuamV+sjvElHtV0k77RKfCSgonApEZ"
+            ],
+            "x5t": "tkqteqnD9hKmw1J-WXlLyomcTUo=",
+            "x5u": "https://keystore.openbanking.org.uk/0015800000jfxrpAAA/tkqteqnD9hKmw1J-WXlLyomcTUo.pem",
+            "x5t#S256": "vDjxTzacj0Ro7_QQ6sLirnRjivDx4gLgVwJBqt85U9k="
+        },
+        {
+            "kid": "_UO_AuZ9Tt6DxY025f5eCZqZCd4",
+            "kty": "RSA",
+            "n": "surDaBoN4n8fYBBPSZyO1GrZftOvq4djLeGNK99L3UsKrktQQBB5TK27lUDKpviHHHF-WcJkIp50JXWCjCdkIIn_iDId1JXf2e1QpOrR7H3-fnIp2Zv5Rr9-kh1Lusdl3VWYeLbkcWyvgWdqckD05rFw7X1bdUR3WuCnun4Y3Uw3Gmfmxz-llWAC7gBZ60BIl8_sFm7Mixk5FgFAtaqoi6tuZXrsTQGGpOG4rrLsyPyfO-KVHEJRV3n4v3ovKaPkUXdMF5mq6GdouKqqLocyhk-4X_Cq4sFCdoxB55w_dIydonQFkvHTI9Osd7WTHrqcwpCRbxKwulEYuJ94zgEZDw",
+            "e": "AQAB",
+            "use": "sig",
+            "x5c": [
+                "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"
+            ],
+            "x5t": "_UO_AuZ9Tt6DxY025f5eCZqZCd4=",
+            "x5u": "https://keystore.openbanking.org.uk/0015800000jfxrpAAA/_UO_AuZ9Tt6DxY025f5eCZqZCd4.pem",
+            "x5t#S256": "pE6BOhvdY-HIrRWN6yV3C8DkDDWFnm2LGS5-wkayI3U="
+        }
+    ]
+}
+
+REQUEST 5
+POST https://secure1t.ulsterbank.co.uk/as/token.oauth2
+Content-Type: application/x-www-form-urlencoded
+Accept: application/json
+
+grant_type=authorization_code
+    &redirect_uri=https%3A%2F%2Fapi.tink.se%2Fapi%2Fv1%2Fcredentials%2Fthird-party%2Fcallback
+    &client_id=DUMMY_CLIENT_ID
+    &client_assertion_type=urn%3Aietf%3Aparams%3Aoauth%3Aclient-assertion-type%3Ajwt-bearer
+    &code=DUMMY_CODE
+
+RESPONSE 5
+200
+Content-Type: application/json;charset=utf-8
+
+{
+    "access_token": "DUMMY_ACCESS_TOKEN",
+    "refresh_token": "DUMMY_REFRESH_TOKEN",
+    "scope": "openid accounts",
+    "id_token": "DUMMY_ID_TOKEN",
+    "token_type": "bearer",
+    "expires_in": 599
+}
