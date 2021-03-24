@@ -1321,9 +1321,9 @@ RULES_NIXPKGS_COMMIT = "6178f2aae7a90370f2132abafa977701afc6fb4e"
 
 http_archive(
     name = "io_tweag_rules_nixpkgs",
+    sha256 = "e721c383b3d5ca51ad123001d3fb26602aa330ddd9cf2a55d25ddd956c98030a",
     strip_prefix = "rules_nixpkgs-{}".format(RULES_NIXPKGS_COMMIT),
     urls = ["https://github.com/tweag/rules_nixpkgs/archive/{}.tar.gz".format(RULES_NIXPKGS_COMMIT)],
-    sha256 = "e721c383b3d5ca51ad123001d3fb26602aa330ddd9cf2a55d25ddd956c98030a",
 )
 
 load("@io_tweag_rules_nixpkgs//nixpkgs:nixpkgs.bzl", "nixpkgs_git_repository", "nixpkgs_python_configure")
@@ -1344,28 +1344,28 @@ load("//tools/bzl:download_extract_archive.bzl", "download_extract_archive")
 
 download_extract_archive(
     name = "chromedriver",
+    linux_path_to_binary = "/chromedriver",
     linux_sha256 =
         "d55d3141a6d9dbff3db6289ff6c6301e1d4ea1248b1cc901376ba0520dfe37b9",
     linux_url =
         "https://chromedriver.storage.googleapis.com/72.0.3626.69/chromedriver_linux64.zip",
-    linux_path_to_binary = "/chromedriver",
+    macos_path_to_binary = "/chromedriver",
     macos_sha256 =
         "eab0cc3deb77966ed1b1c6569a33f26ee316de7e2063d2200422f7be3667009b",
     macos_url =
         "https://chromedriver.storage.googleapis.com/72.0.3626.69/chromedriver_mac64.zip",
-    macos_path_to_binary = "/chromedriver",
 )
 
 download_extract_archive(
     name = "chromium",
+    linux_path_to_binary = "/chrome-linux/",
     linux_sha256 =
         "9bb83c07e5b67a6d032e6b9e22500f11e34f86551971f4892dfa68e3544ac39a",
     linux_url =
         "https://commondatastorage.googleapis.com/chromium-browser-snapshots/Linux_x64/612434/chrome-linux.zip",
-    linux_path_to_binary = "/chrome-linux/",
+    macos_path_to_binary = "/chrome-mac/Chromium.app/Contents/MacOS/",
     macos_sha256 =
         "ab1a75f0d918a0e266f85e43517db5bd701f34544377e3d6aa89f035b508667d",
     macos_url =
         "https://commondatastorage.googleapis.com/chromium-browser-snapshots/Mac/612398/chrome-mac.zip",
-    macos_path_to_binary = "/chrome-mac/Chromium.app/Contents/MacOS/",
 )
