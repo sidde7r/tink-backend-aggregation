@@ -1,7 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.es.openbanking.abanca.authenticator;
 
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.abanca.AbancaApiClient;
@@ -14,15 +16,22 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.libraries.credentials.service.UserAvailability;
 
+@Slf4j
 public class AbancaAuthenticator implements OAuth2Authenticator {
 
     private final AbancaApiClient apiClient;
     private final AbancaConfiguration abancaConfiguration;
+    private final UserAvailability userAvailability;
 
-    public AbancaAuthenticator(AbancaApiClient apiClient, AbancaConfiguration configuration) {
+    public AbancaAuthenticator(
+            AbancaApiClient apiClient,
+            AbancaConfiguration configuration,
+            UserAvailability userAvailability) {
         this.apiClient = apiClient;
         this.abancaConfiguration = configuration;
+        this.userAvailability = userAvailability;
     }
 
     @Override
@@ -42,6 +51,7 @@ public class AbancaAuthenticator implements OAuth2Authenticator {
                                 .build());
 
         // Trigger SCA now to prevent authentication errors during UPDATING
+        abortIfUserNotAvailableForInteraction();
         triggerSCA(token);
 
         return token;
@@ -60,6 +70,17 @@ public class AbancaAuthenticator implements OAuth2Authenticator {
     @Override
     public void useAccessToken(OAuth2Token accessToken) {
         apiClient.setTokenToSession(accessToken);
+    }
+
+    private void abortIfUserNotAvailableForInteraction() {
+        if (isUserUnavailableForInteraction()) {
+            throw BankServiceError.SESSION_TERMINATED.exception(
+                    "SCA request during auto refresh, aborting authentication");
+        }
+    }
+
+    private boolean isUserUnavailableForInteraction() {
+        return !userAvailability.isUserAvailableForInteraction();
     }
 
     private void triggerSCA(OAuth2Token token) {

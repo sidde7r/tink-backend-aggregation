@@ -5,9 +5,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.ws.rs.core.MediaType;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.httpclient.HttpStatus;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.abanca.AbancaConstants.ChallengeType;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.abanca.AbancaConstants.HeaderKeys;
@@ -36,16 +35,17 @@ import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestB
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.libraries.credentials.service.UserAvailability;
 
-public final class AbancaApiClient {
-    private static final Logger log = LoggerFactory.getLogger(AbancaApiClient.class);
+@Slf4j
+public class AbancaApiClient {
     private final TinkHttpClient client;
     private final AbancaConfiguration configuration;
     private final String redirectUrl;
     private final SessionStorage sessionStorage;
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final Map<String, Field> supplementalFields;
-    private final boolean isManualRequest;
+    private final UserAvailability userAvailability;
 
     public AbancaApiClient(
             TinkHttpClient client,
@@ -53,7 +53,7 @@ public final class AbancaApiClient {
             SessionStorage sessionStorage,
             SupplementalInformationHelper supplementalInformationHelper,
             List<Field> supplementalFields,
-            boolean isManualRequest) {
+            UserAvailability userAvailability) {
         this.client = client;
         this.configuration = agentConfiguration.getProviderSpecificConfiguration();
         this.redirectUrl = agentConfiguration.getRedirectUrl();
@@ -62,7 +62,7 @@ public final class AbancaApiClient {
         this.supplementalFields =
                 supplementalFields.stream()
                         .collect(Collectors.toMap(Field::getName, field -> field));
-        this.isManualRequest = isManualRequest;
+        this.userAvailability = userAvailability;
     }
 
     private String getRedirectUrl() {
@@ -105,7 +105,7 @@ public final class AbancaApiClient {
                                 .getChallengeError()
                                 .orElseThrow(() -> e);
 
-                if (!isManualRequest) {
+                if (isUserNotAvailableForInteraction()) {
                     log.warn("SCA request in non-manual refresh, this will time out");
                 }
                 String challengeSolution = requestChallengeSolution(challengeError.getDetails());
@@ -118,6 +118,10 @@ public final class AbancaApiClient {
             }
             throw e;
         }
+    }
+
+    private boolean isUserNotAvailableForInteraction() {
+        return !this.userAvailability.isUserAvailableForInteraction();
     }
 
     private String requestChallengeSolution(DetailsEntity challengeDetails) {
