@@ -5,7 +5,6 @@ java_library(
     deps = [
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/fropenbanking/base",
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
-        "//src/integration/credentials/src/main/java/se/tink/libraries/credentials/service",
         "//src/integration/lib",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/annotations",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/core/authentication",
