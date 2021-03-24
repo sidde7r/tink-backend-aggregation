@@ -10,8 +10,11 @@ import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebCommonConstants.HttpClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.AuthResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebCommonConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.AuthorizeResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.DecoupledAuthRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.DecoupledAuthResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.DecoupledTokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.ErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.RefreshRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.TokenRequest;
@@ -54,11 +57,31 @@ public abstract class SebBaseApiClient {
         this.configuration = configuration;
     }
 
+    public DecoupledAuthResponse startDecoupledAuthorization(
+            DecoupledAuthRequest authorizationRequest) {
+        return client.request(Urls.DECOUPLED_AUTHORIZATION)
+                .accept(MediaType.APPLICATION_JSON_TYPE)
+                .body(authorizationRequest, MediaType.APPLICATION_JSON_TYPE)
+                .post(DecoupledAuthResponse.class);
+    }
+
+    public DecoupledAuthResponse getDecoupledAuthStatus(String authRequestId) {
+        return client.request(
+                        Urls.DECOUPLED_AUTHORIZATION
+                                .concat(URL.URL_SEPARATOR)
+                                .concat(authRequestId))
+                .accept(MediaType.APPLICATION_JSON_TYPE)
+                .get(DecoupledAuthResponse.class);
+    }
+
+    public TokenResponse getDecoupledToken(DecoupledTokenRequest tokenRequest) {
+        return client.request(Urls.DECOUPLED_TOKEN)
+                .accept(MediaType.APPLICATION_JSON_TYPE)
+                .body(tokenRequest, MediaType.APPLICATION_JSON_TYPE)
+                .post(TokenResponse.class);
+    }
+
     public abstract RequestBuilder getAuthorizeUrl();
-
-    public abstract AuthResponse initBankId();
-
-    public abstract AuthResponse collectBankId(String csrfToken);
 
     public abstract AuthorizeResponse getAuthorization(String clientId, String redirectUri);
 

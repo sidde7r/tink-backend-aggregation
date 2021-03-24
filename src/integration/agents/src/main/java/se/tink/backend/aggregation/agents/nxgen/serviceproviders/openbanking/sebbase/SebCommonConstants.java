@@ -18,9 +18,12 @@ public class SebCommonConstants {
     }
 
     public static class Urls {
-        public static final String BASE_AUTH_URL = "https://tpp-auth.seb.se";
+        public static final String BASE_AUTH_URL = "https://authorize.sebgroup.com";
         public static final String BASE_URL = "https://tpp-api.sebgroup.com";
 
+        public static final String DECOUPLED_AUTHORIZATION =
+                BASE_AUTH_URL + "/auth/v3/authorizations";
+        public static final String DECOUPLED_TOKEN = BASE_AUTH_URL + "/auth/v3/tokens";
         public static final String INIT_BANKID = BASE_AUTH_URL + "/auth/bid/v2/authentications";
         private static final String BASE_OAUTH = BASE_AUTH_URL + "/mga/sps/oauth";
         public static final String OAUTH = BASE_OAUTH + "/oauth20/dpsd2/authorize";
@@ -33,11 +36,15 @@ public class SebCommonConstants {
         public static final String PENDING = "pending";
         public static final String FAILED = "failed";
         public static final String NO_CLIENT = "no_client";
-        public static final String EXPIRED_TRANSACTION = "expired_transaction";
         public static final String USER_CANCEL = "user_cancel";
         public static final String CANCELLED = "cancelled";
-        public static final String START_FAILED = "start_failed";
-        public static final String UNKNOWN_BANK_ID = "SEB_UNKNOWN_BANKID";
+        public static final String REQUIRES_EXTRA_VERIFICATION =
+                "bankid_requires_extra_verification";
+    }
+
+    public static class HintCodes {
+        public static final String OUTSTANDING_TRANSACTION = "OUTSTANDING_TRANSACTION";
+        public static final String USER_SIGN = "USER_SIGN";
     }
 
     public static class QueryKeys {
@@ -70,10 +77,14 @@ public class SebCommonConstants {
         public static final String PENDING = "pending";
     }
 
+    public static class BodyValues {
+        public static final String AST = "ast";
+        public static final String QR = "qr";
+    }
+
     public static class HeaderKeys {
         public static final String X_REQUEST_ID = "X-Request-ID";
         public static final String PSU_IP_ADDRESS = "PSU-IP-Address";
-        public static final String X_SEB_CSRF = "x-seb-csrf";
         public static final String PSU_CORPORATE_ID = "PSU-CORPORATE-ID";
     }
 
@@ -109,6 +120,8 @@ public class SebCommonConstants {
         public static final String INVALID_CONFIGURATION =
                 "Invalid Configuration: %s cannot be empty or null";
         public static final String SEB_SPECIFIC_ERROR = "SEB specific error has occurred.";
+        public static final String REQUIRES_EXTRA_VERIFICATION =
+                "Message from SEB - SEB needs you to verify your BankID before you can continue using the service. Visit www.seb.se or open the SEB app to verify your BankID. Note that you must be a customer of SEB to be able to use the service.";
     }
 
     public static class HttpClient {

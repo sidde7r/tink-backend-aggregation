@@ -5,7 +5,6 @@ import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebCommonConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebCommonConstants.HeaderKeys;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.AuthResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.AuthorizeResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.TokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.TokenResponse;
@@ -37,16 +36,6 @@ public class SebBrandedCardsApiClient extends SebBaseApiClient {
         return client.request(new URL(SebBrandedCardsConstants.Urls.AUTH))
                 .queryParam(SebBrandedCardsConstants.QueryKey.BRAND_ID, brandId)
                 .header(HeaderKeys.X_REQUEST_ID, Psd2Headers.getRequestId());
-    }
-
-    @Override
-    public AuthResponse initBankId() {
-        return null;
-    }
-
-    @Override
-    public AuthResponse collectBankId(String csrfToken) {
-        return null;
     }
 
     @Override

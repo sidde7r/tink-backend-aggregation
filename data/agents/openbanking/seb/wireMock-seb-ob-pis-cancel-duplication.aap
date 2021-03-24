@@ -1,137 +1,65 @@
-
-REQUEST 1
-POST https://tpp-auth.seb.se/auth/bid/v2/authentications
+REQUEST 1a
+POST https://authorize.sebgroup.com/auth/v3/authorizations
 Accept: application/json
+Content-Type: application/json
 
-RESPONSE 1 SET A0
+{"client_id":"dummyId","scope":"psd2_accounts psd2_payments","start_mode":"ast"}
+
+RESPONSE 1a
 201
-Date: Tue, 02 Mar 2021 10:07:41 GMT
-Date: Tue, 02 Mar 2021 10:07:41 GMT
 Content-Type: application/json
-x-seb-csrf: CSRF_TOKEN
+Content-Length: 59
 
-{
-    "auto_start_token": "a7b3a1cc-e673-4184-b34d-11aa9c0c5276"
-}
+{"auth_req_id":"AUTH-0a9021b6-d022-439e-a22a-7c49429d731e"}
 
-REQUEST 2 MATCH A0
-GET https://tpp-auth.seb.se/auth/bid/v2/authentications
+REQUEST 1b
+GET https://authorize.sebgroup.com/auth/v3/authorizations/AUTH-0a9021b6-d022-439e-a22a-7c49429d731e
 Accept: application/json
 
-RESPONSE 2 SET A1
+RESPONSE ab SET AUTH_01
 200
-Date: Tue, 02 Mar 2021 10:07:41 GMT
-Date: Tue, 02 Mar 2021 10:07:41 GMT
 Content-Type: application/json
-x-seb-csrf: CSRF_TOKEN
+Content-Length: 132
 
-{
-    "hint_code": "OUTSTANDING_TRANSACTION",
-    "status": "PENDING"
-}
+{"status":"PENDING","hint_code":"OUTSTANDING_TRANSACTION","autostart_token":"59a1b676-2ea1-41ba-b4f9-725634f2dcd1","poll_delay":500}
 
-REQUEST 3 MATCH A1
-GET https://tpp-auth.seb.se/auth/bid/v2/authentications
-Accept: application/json
-x-seb-csrf: CSRF_TOKEN
-
-RESPONSE 3 SET STATE3
-200
-Date: Tue, 02 Mar 2021 10:07:46 GMT
-Date: Tue, 02 Mar 2021 10:07:46 GMT
-Content-Type: application/json
-x-seb-csrf: CSRF_TOKEN
-
-{
-    "hint_code": "OUTSTANDING_TRANSACTION",
-    "status": "PENDING"
-}
-
-REQUEST 4 MATCH STATE3
-GET https://tpp-auth.seb.se/auth/bid/v2/authentications
+REQUEST 1c MATCH AUTH_01
+GET https://authorize.sebgroup.com/auth/v3/authorizations/AUTH-0a9021b6-d022-439e-a22a-7c49429d731e
 Accept: application/json
 
-RESPONSE 4 SET STATE4
+RESPONSE 1c SET AUTH_02
 200
-Date: Tue, 02 Mar 2021 10:07:51 GMT
-Date: Tue, 02 Mar 2021 10:07:51 GMT
 Content-Type: application/json
-x-seb-csrf: CSRF_TOKEN
+Content-Length: 61
 
-{
-    "hint_code": "USER_SIGN",
-    "status": "PENDING"
-}
+{"status":"PENDING","hint_code":"USER_SIGN","poll_delay":500}
 
-REQUEST 5 MATCH STATE4
-GET https://tpp-auth.seb.se/auth/bid/v2/authentications
+REQUEST 1d MATCH AUTH_02
+GET https://authorize.sebgroup.com/auth/v3/authorizations/AUTH-0a9021b6-d022-439e-a22a-7c49429d731e
 Accept: application/json
 
-RESPONSE 5 SET STATE5
+RESPONSE 1d
 200
-Date: Tue, 02 Mar 2021 10:08:00 GMT
-Date: Tue, 02 Mar 2021 10:08:00 GMT
 Content-Type: application/json
-x-seb-csrf: CSRF_TOKEN
+Content-Length: 38
 
-{
-    "status": "COMPLETE"
-}
+{"status":"COMPLETE","poll_delay":500}
 
-REQUEST 6 MATCH STATE5
-GET https://tpp-auth.seb.se/mga/sps/oauth/oauth20/dpsd2/authorize?client_id=dummyId&response_type=code&scope=psd2_accounts+psd2_payments&redirect_uri=https://127.0.0.1:7357/api/v1/thirdparty/callback
+REQUEST 1e
+POST https://authorize.sebgroup.com/auth/v3/tokens
 Accept: application/json
-
-RESPONSE 6 SET STATE6
-200
-Date: Tue, 02 Mar 2021 10:08:01 GMT
 Content-Type: application/json
-x-seb-csrf: CSRF_TOKEN
 
-{
-    "CONSENT_FORM_VERIFIER": "I1H596ojtYZQA8NcbSA4"
-}
+{"auth_req_id":"AUTH-0a9021b6-d022-439e-a22a-7c49429d731e","client_id":"dummyId","client_secret":"dummySecret","redirect_uri":"https://127.0.0.1:7357/api/v1/thirdparty/callback"}
 
-REQUEST 7 MATCH STATE6
-POST https://tpp-auth.seb.se/mga/sps/oauth/oauth20/dpsd2/authorize
-Accept: application/json
-Content-Type: application/x-www-form-urlencoded
-
-scope=psd2_accounts+psd2_payments&trust_level=permit&consent_form_verifier=I1H596ojtYZQA8NcbSA4
-
-RESPONSE 7 SET STATE7
+RESPONSE 1e
 200
-Date: Tue, 02 Mar 2021 10:08:01 GMT
 Content-Type: application/json
-x-seb-csrf: CSRF_TOKEN
+Content-Length: 175
 
-{
-    "code": "eHk31TFKeCI9uc0SOw5ihUAb3Wxav6",
-    "state": "null"
-}
+{"scope":"psd2_accounts psd2_payments","access_token":"iKoyt6TjdQb67zgn2uhy","refresh_token":"e5l1Ai8XZI4ud12jH1X88z4SN11P3Jrwi0oPVN4X","token_type":"bearer","expires_in":599}
 
-REQUEST 8 MATCH STATE7
-POST https://tpp-api.sebgroup.com/mga/sps/oauth/oauth20/dpsd2/token
-Accept: application/json
-Content-Type: application/x-www-form-urlencoded
-
-client_id=dummyId&client_secret=dummySecret&redirect_uri=https%3A%2F%2F127.0.0.1%3A7357%2Fapi%2Fv1%2Fthirdparty%2Fcallback&grant_type=authorization_code&code=eHk31TFKeCI9uc0SOw5ihUAb3Wxav6&scope=psd2_accounts+psd2_payments
-
-RESPONSE 8 SET STATE8
-200
-Date: Tue, 02 Mar 2021 10:08:01 GMT
-Content-Type: application/json
-x-seb-csrf: CSRF_TOKEN
-
-{
-    "access_token": "**MASKEDEh**",
-    "expires_in": 599,
-    "refresh_token": "**MASKEDtN**",
-    "scope": "psd2_accounts psd2_payments",
-    "token_type": "**MASKEDJF**"
-}
-
-REQUEST 9 MATCH STATE8
+REQUEST 9
 POST https://tpp-api.sebgroup.com/tpp/pis/v6/identified2/payments/swedish-domestic-private-bankgiros
 Accept: application/json
 Content-Type: application/json
