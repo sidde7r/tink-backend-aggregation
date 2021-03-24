@@ -62,8 +62,7 @@ public final class AgentConfigurationController implements AgentConfigurationCon
     private static final String QWAC_KEY = "qwac";
     private static final String QSEALC_KEY = "qsealc";
 
-    private static final Pattern UK_OB_PROVIDER_PATTERN =
-            Pattern.compile("^uk-.*-(ob|oauth2)$");
+    private static final Pattern UK_OB_PROVIDER_PATTERN = Pattern.compile("^uk-.*-(ob|oauth2)$");
 
     // Package private for testing purposes.
     AgentConfigurationController() {
