@@ -1231,32 +1231,6 @@ maven_install(
 )
 
 maven_install(
-    name = "standalone_agent_deps",
-    artifacts = [
-        "org.springframework:spring-aop:5.2.1.RELEASE",
-        "org.springframework:spring-context:5.2.1.RELEASE",
-        "org.springframework:spring-core:5.2.1.RELEASE",
-        "org.springframework:spring-expression:5.2.1.RELEASE",
-        "org.springframework:spring-beans:5.2.1.RELEASE",
-        "org.springframework:spring-web:5.2.1.RELEASE",
-        "org.springframework:spring-test:5.2.1.RELEASE",
-        "commons-codec:commons-codec:1.11",
-        "commons-logging:commons-logging:1.2",
-        "org.apache.httpcomponents:httpclient:4.5.10",
-        "org.apache.httpcomponents:httpcore:4.4.12",
-        "org.slf4j:jcl-over-slf4j:1.7.29",
-        "org.slf4j:slf4j-api:1.7.29",
-        "org.slf4j:jul-to-slf4j:1.7.29",
-        "org.slf4j:jcl-over-slf4j:1.7.29",
-        "org.slf4j:log4j-over-slf4j:1.7.29",
-        "ch.qos.logback:logback-core:1.2.3",
-        "ch.qos.logback:logback-classic:1.2.3",
-    ],
-    fetch_sources = True,
-    repositories = MAVEN_REPOS,
-)
-
-maven_install(
     name = "selenium",
     artifacts = [
         "com.codeborne:phantomjsdriver:1.4.4",
