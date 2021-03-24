@@ -10,6 +10,7 @@ public class LoginResponse {
     protected String ticket;
     protected int ticketLifetime;
     protected String pinPadAvailable;
+    protected String enterpriseServicesPrimarySession;
 
     public String getPinPadAvailable() {
         return pinPadAvailable;
@@ -37,6 +38,10 @@ public class LoginResponse {
 
     public String getLfCompanyBelonging() {
         return lfCompanyBelonging;
+    }
+
+    public String getEnterpriseServicesPrimarySession() {
+        return enterpriseServicesPrimarySession;
     }
 
     public void setLfCompanyBelonging(String lfCompanyBelonging) {

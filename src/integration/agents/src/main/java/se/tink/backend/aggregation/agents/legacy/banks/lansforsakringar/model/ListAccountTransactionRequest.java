@@ -1,30 +1,27 @@
 package se.tink.backend.aggregation.agents.banks.lansforsakringar.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
+import se.tink.backend.aggregation.annotations.JsonObject;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonObject
+@AllArgsConstructor
 public class ListAccountTransactionRequest {
-    protected String accountNumber;
-    protected int requestedPage;
+    private ResponseControlEntity responseControl;
+    private String accountNumber;
+    private String customerId;
 
-    public ListAccountTransactionRequest(int requestedPage, String accountNumber) {
-        this.requestedPage = requestedPage;
-        this.accountNumber = accountNumber;
-    }
+    @JsonIgnore
+    public static ListAccountTransactionRequest of(
+            String accountNumber,
+            String customerId,
+            String profileType,
+            String transactionStatus,
+            int page) {
 
-    public String getAccountNumber() {
-        return accountNumber;
-    }
-
-    public int getRequestedPage() {
-        return requestedPage;
-    }
-
-    public void setAccountNumber(String accountNumber) {
-        this.accountNumber = accountNumber;
-    }
-
-    public void setRequestedPage(int requestedPage) {
-        this.requestedPage = requestedPage;
+        return new ListAccountTransactionRequest(
+                ResponseControlEntity.of(profileType, customerId, transactionStatus, page),
+                accountNumber,
+                customerId);
     }
 }

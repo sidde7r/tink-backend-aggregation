@@ -237,7 +237,8 @@ public final class LansforsakringarAgent extends AbstractAgent
             BASE_URL + "/account/transferrablewithsavedrecipients";
     private static final String EINVOICE_AND_CREDIT_ALERTS_URL =
             BASE_URL + "/payment/einvoice/einvoiceandcreditalerts";
-    private static final String TRANSACTIONS_URL = BASE_URL + "/account/transaction/2.0";
+    private static final String TRANSACTIONS_URL =
+            "https://mobil.lansforsakringar.se/es/deposit/gettransactions/3.0";
     private static final String VALIDATE_PAYMENT_URL = BASE_URL + "/directpayment/validate";
     private static final String RECIPIENT_NAME_URL = BASE_URL + "/payment/recipientname";
     private static final String LIST_UNSIGNED_TRANSFERS_AND_PAYMENTS_URL =
@@ -245,7 +246,7 @@ public final class LansforsakringarAgent extends AbstractAgent
     private static final String DELETE_SIGNED_TRANSACTION_URL = BASE_URL + "/payment/signed/delete";
     private static final String FETCH_TOKEN_URL = BASE_URL + "/security/client";
     private static final String FETCH_UPCOMING_TRANSACTIONS_URL =
-            BASE_URL + "/account/upcoming/5.0";
+            BASE_URL + "/account/upcoming/7.0";
     private static final String FETCH_CARD_TRANSACTIONS_URL = BASE_URL + "/card/transaction";
     private static final String FETCH_LOANS_URL = BASE_URL + "/loan/loans/withtotal";
     private static final String FETCH_LOAN_DETAILS_URL = BASE_URL + "/loan/details";
@@ -293,6 +294,7 @@ public final class LansforsakringarAgent extends AbstractAgent
     private final LansforsakringarBaseApiClient lansforsakringarBaseApiClient;
     private String ticket = null;
     private String token = null;
+    private String userSession = null;
     private String loginName = null;
     private String loginSsn = null;
     private long retrySleepMilliseconds = 500;
@@ -461,20 +463,23 @@ public final class LansforsakringarAgent extends AbstractAgent
     }
 
     private ClientResponse createPostRequest(String url, Object requestEntity) {
-        Builder request = lansforsakringarBaseApiClient.createClientRequest(url, token, ticket);
+        Builder request =
+                lansforsakringarBaseApiClient.createClientRequest(url, token, ticket, userSession);
         request.type(MediaType.APPLICATION_JSON);
         return request.post(ClientResponse.class, requestEntity);
     }
 
     private <T> T createGetRequest(String url, Class<T> returnClass)
             throws HttpStatusCodeErrorException {
-        Builder request = lansforsakringarBaseApiClient.createClientRequest(url, token, ticket);
+        Builder request =
+                lansforsakringarBaseApiClient.createClientRequest(url, token, ticket, userSession);
         ClientResponse response = request.get(ClientResponse.class);
         return handleRequestResponse(response, returnClass);
     }
 
     private ClientResponse createGetRequest(String url) {
-        Builder request = lansforsakringarBaseApiClient.createClientRequest(url, token, ticket);
+        Builder request =
+                lansforsakringarBaseApiClient.createClientRequest(url, token, ticket, userSession);
         return request.get(ClientResponse.class);
     }
 
@@ -1197,6 +1202,7 @@ public final class LansforsakringarAgent extends AbstractAgent
         Preconditions.checkNotNull(loginResponse);
 
         ticket = loginResponse.getTicket();
+        userSession = loginResponse.getEnterpriseServicesPrimarySession();
         credentials.setSensitivePayload(Key.ACCESS_TOKEN, ticket);
 
         return true;
@@ -1205,7 +1211,7 @@ public final class LansforsakringarAgent extends AbstractAgent
     @Override
     public void logout() throws Exception {
         lansforsakringarBaseApiClient
-                .createClientRequest(PASSWORD_LOGIN_URL, token, ticket)
+                .createClientRequest(PASSWORD_LOGIN_URL, token, ticket, null)
                 .delete();
     }
 
@@ -1287,6 +1293,7 @@ public final class LansforsakringarAgent extends AbstractAgent
         session.setLoginName(loginName);
         session.setLoginSsn(loginSsn);
         session.setCookiesFromClient(client);
+        session.setUserSession(userSession);
 
         credentials.setPersistentSession(session);
     }
@@ -1304,6 +1311,7 @@ public final class LansforsakringarAgent extends AbstractAgent
         ticket = session.getTicket();
         loginName = session.getLoginName();
         loginSsn = session.getLoginSsn();
+        userSession = session.getUserSession();
 
         addSessionCookiesToClient(client, session);
     }
@@ -1315,6 +1323,7 @@ public final class LansforsakringarAgent extends AbstractAgent
         ticket = null;
         loginName = null;
         loginSsn = null;
+        userSession = null;
 
         // Clean the persisted session
         credentials.removePersistentSession();
@@ -1472,8 +1481,13 @@ public final class LansforsakringarAgent extends AbstractAgent
                                             createPostRequestWithResponseHandling(
                                                     TRANSACTIONS_URL,
                                                     DebitTransactionListResponse.class,
-                                                    new ListAccountTransactionRequest(
-                                                            currentPage, accountNumber));
+                                                    ListAccountTransactionRequest.of(
+                                                            accountNumber,
+                                                            credentials.getField(
+                                                                    Field.Key.USERNAME),
+                                                            "CUSTOMER",
+                                                            "BOOKED",
+                                                            currentPage));
                                 } catch (Exception e) {
                                     throw new IllegalStateException(e);
                                 }
@@ -1496,7 +1510,7 @@ public final class LansforsakringarAgent extends AbstractAgent
                                     hasMoreTransactions = false;
                                 } else {
                                     hasMoreTransactions = transactionListResponse.getHasMore();
-                                    currentPage = transactionListResponse.getNextSequenceNumber();
+                                    currentPage = currentPage + 1;
                                 }
                             } while (hasMoreTransactions);
                             accountTransactions.put(account, transactions);

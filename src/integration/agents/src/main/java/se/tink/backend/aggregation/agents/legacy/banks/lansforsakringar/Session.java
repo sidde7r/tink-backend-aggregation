@@ -9,6 +9,7 @@ public class Session extends CookieContainer {
     private String ticket;
     private String loginName;
     private String loginSsn;
+    private String userSession;
 
     public String getToken() {
         return token;
@@ -40,5 +41,13 @@ public class Session extends CookieContainer {
 
     public void setLoginSsn(String loginSsn) {
         this.loginSsn = loginSsn;
+    }
+
+    public String getUserSession() {
+        return userSession;
+    }
+
+    public void setUserSession(String userSession) {
+        this.userSession = userSession;
     }
 }

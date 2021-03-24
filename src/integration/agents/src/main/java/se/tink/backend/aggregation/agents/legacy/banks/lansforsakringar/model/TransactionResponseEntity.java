@@ -5,16 +5,16 @@ import java.util.List;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class DebitTransactionListResponse {
-    private TransactionResponseEntity response;
+public class TransactionResponseEntity {
+    protected boolean moreExists;
+    protected List<TransactionEntity> transactions;
 
     @JsonIgnore
-    public boolean getHasMore() {
-        return response.hasMore();
+    public boolean hasMore() {
+        return moreExists;
     }
 
-    @JsonIgnore
     public List<TransactionEntity> getTransactions() {
-        return response.getTransactions();
+        return transactions;
     }
 }

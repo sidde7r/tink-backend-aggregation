@@ -22,16 +22,17 @@ public class LansforsakringarAgentTest {
     private final ArgumentManager<ToAccountFromAccountArgumentEnum> accountManager =
             new ArgumentManager<>(ToAccountFromAccountArgumentEnum.values());
 
-    private AgentIntegrationTest.Builder builder =
-            new AgentIntegrationTest.Builder("se", "lansforsakringar-bankid")
-                    .addCredentialField(Field.Key.USERNAME, ssnManager.get(SsnArgumentEnum.SSN))
-                    .loadCredentialsBefore(false)
-                    .saveCredentialsAfter(false);
+    private AgentIntegrationTest.Builder builder;
 
     @Before
     public void setUp() throws Exception {
         ssnManager.before();
         accountManager.before();
+        builder =
+                new AgentIntegrationTest.Builder("se", "lansforsakringar-bankid")
+                        .addCredentialField(Field.Key.USERNAME, ssnManager.get(SsnArgumentEnum.SSN))
+                        .loadCredentialsBefore(false)
+                        .saveCredentialsAfter(false);
     }
 
     @AfterClass
