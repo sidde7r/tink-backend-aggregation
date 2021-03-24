@@ -20,7 +20,6 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/response",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
         "//src/integration/models",
-        "//src/libraries/account_identifier",
         "//third_party:com_github_rholder_guava_retrying",
         "//third_party:com_google_code_findbugs_jsr305",
         "//third_party:com_google_inject_guice",
@@ -33,5 +32,6 @@ java_library(
         "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
         "@aggregation//:com_kjetland_mbknor_jackson_jsonschema_2_12",
         "@com_google_guava_guava",
+        "@tink_backend//src/libraries/account_identifier",
     ],
 )

@@ -7,7 +7,7 @@ import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
 import se.tink.backend.aggregation.agents.utils.remittanceinformation.RemittanceInformationUtils;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.payment.rpc.Creditor;
@@ -56,9 +56,13 @@ public class DanskebankAgentTest {
         return new Payment.Builder()
                 .withCreditor(
                         new Creditor(
-                                AccountIdentifier.create(Type.SORT_CODE, DESTINATION_IDENTIFIER),
+                                AccountIdentifier.create(
+                                        AccountIdentifierType.SORT_CODE, DESTINATION_IDENTIFIER),
                                 "Unknown Person"))
-                .withDebtor(new Debtor(AccountIdentifier.create(Type.SORT_CODE, SOURCE_IDENTIFIER)))
+                .withDebtor(
+                        new Debtor(
+                                AccountIdentifier.create(
+                                        AccountIdentifierType.SORT_CODE, SOURCE_IDENTIFIER)))
                 .withExactCurrencyAmount(amount)
                 .withExecutionDate(executionDate)
                 .withCurrency(currency)

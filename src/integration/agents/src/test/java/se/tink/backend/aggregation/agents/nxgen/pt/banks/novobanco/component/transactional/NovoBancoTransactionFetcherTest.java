@@ -27,6 +27,7 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.pair.Pair;
 
@@ -122,7 +123,7 @@ public class NovoBancoTransactionFetcherTest {
                         .withAccountName(accountId)
                         .addIdentifier(
                                 AccountIdentifier.create(
-                                        AccountIdentifier.Type.COUNTRY_SPECIFIC, accountId))
+                                        AccountIdentifierType.COUNTRY_SPECIFIC, accountId))
                         .build();
         BalanceModule balance =
                 BalanceModule.builder().withBalance(ExactCurrencyAmount.zero(currency)).build();

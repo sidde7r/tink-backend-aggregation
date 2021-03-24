@@ -12,7 +12,7 @@ import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager.SsnArgumentEnum;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager.ToAccountFromAccountArgumentEnum;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.transfer.enums.RemittanceInformationType;
 import se.tink.libraries.transfer.enums.TransferType;
@@ -90,10 +90,12 @@ public final class DanskeBankSEAgentTransferTest {
         Transfer transfer = new Transfer();
         transfer.setSource(
                 AccountIdentifier.create(
-                        Type.SE, toFromManager.get(ToAccountFromAccountArgumentEnum.FROM_ACCOUNT)));
+                        AccountIdentifierType.SE,
+                        toFromManager.get(ToAccountFromAccountArgumentEnum.FROM_ACCOUNT)));
         transfer.setDestination(
                 AccountIdentifier.create(
-                        Type.SE, toFromManager.get(ToAccountFromAccountArgumentEnum.TO_ACCOUNT)));
+                        AccountIdentifierType.SE,
+                        toFromManager.get(ToAccountFromAccountArgumentEnum.TO_ACCOUNT)));
         transfer.setAmount(ExactCurrencyAmount.inSEK(1d));
         if (futurePayment) {
             transfer.setDueDate(getDueDateFuture());
@@ -112,10 +114,11 @@ public final class DanskeBankSEAgentTransferTest {
         Transfer transfer = new Transfer();
         transfer.setSource(
                 AccountIdentifier.create(
-                        Type.SE, toFromManager.get(ToAccountFromAccountArgumentEnum.FROM_ACCOUNT)));
+                        AccountIdentifierType.SE,
+                        toFromManager.get(ToAccountFromAccountArgumentEnum.FROM_ACCOUNT)));
         transfer.setDestination(
                 AccountIdentifier.create(
-                        Type.SE_BG,
+                        AccountIdentifierType.SE_BG,
                         toFromManager.get(ToAccountFromAccountArgumentEnum.TO_ACCOUNT)));
         transfer.setAmount(ExactCurrencyAmount.inSEK(1d));
         if (futurePayment) {

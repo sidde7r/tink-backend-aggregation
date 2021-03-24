@@ -32,7 +32,7 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepRes
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.rpc.Payment;
 
@@ -69,7 +69,8 @@ public class SwedbankPaymentExecutor implements PaymentExecutor, FetchablePaymen
                                 remittanceInformationUtil.getRemittanceInformationUnStructured())
                         .debtorAccountStatementText(payment.getCreditor().getName());
 
-        if (Type.SE.equals(paymentRequest.getPayment().getCreditor().getAccountIdentifierType())) {
+        if (AccountIdentifierType.SE.equals(
+                paymentRequest.getPayment().getCreditor().getAccountIdentifierType())) {
             builder.creditorFriendlyName(payment.getCreditor().getName());
         }
         CreatePaymentRequest createPaymentRequest = builder.build();

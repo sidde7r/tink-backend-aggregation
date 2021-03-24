@@ -9,7 +9,7 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
@@ -47,7 +47,9 @@ public class AccountEntity {
                                 .withUniqueIdentifier(accountNumber)
                                 .withAccountNumber(accountNumber)
                                 .withAccountName(productType + " " + label)
-                                .addIdentifier(AccountIdentifier.create(Type.IBAN, accountNumber))
+                                .addIdentifier(
+                                        AccountIdentifier.create(
+                                                AccountIdentifierType.IBAN, accountNumber))
                                 .build())
                 .addHolderName(holder)
                 .setApiIdentifier(id)

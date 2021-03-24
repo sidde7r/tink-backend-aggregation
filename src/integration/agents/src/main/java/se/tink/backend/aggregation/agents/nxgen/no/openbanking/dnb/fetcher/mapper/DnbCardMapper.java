@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccou
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.creditcard.CreditCardModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @Slf4j
@@ -37,7 +38,7 @@ public class DnbCardMapper {
                                             .withAccountName(cardAccountEntity.getName())
                                             .addIdentifier(
                                                     AccountIdentifier.create(
-                                                            AccountIdentifier.Type
+                                                            AccountIdentifierType
                                                                     .PAYMENT_CARD_NUMBER,
                                                             cardAccountEntity.getMaskedPan()))
                                             .build())

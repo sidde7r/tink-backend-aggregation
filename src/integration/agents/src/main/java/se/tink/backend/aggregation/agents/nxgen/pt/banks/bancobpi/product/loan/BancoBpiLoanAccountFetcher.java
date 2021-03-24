@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.loan.LoanModule;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class BancoBpiLoanAccountFetcher implements AccountFetcher<LoanAccount> {
@@ -61,7 +62,7 @@ public class BancoBpiLoanAccountFetcher implements AccountFetcher<LoanAccount> {
                                             .withAccountName(loan.getName())
                                             .addIdentifier(
                                                     AccountIdentifier.create(
-                                                            AccountIdentifier.Type.PT_BPI,
+                                                            AccountIdentifierType.PT_BPI,
                                                             loan.getNumber()))
                                             .build())
                             .build());

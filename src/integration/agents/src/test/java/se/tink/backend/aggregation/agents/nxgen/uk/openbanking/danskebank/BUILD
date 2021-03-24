@@ -12,11 +12,11 @@ junit_test(
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/ais/v31/fixtures",
         "//src/integration/amount",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/core/account",
-        "//src/libraries/account_identifier",
         "//src/libraries/mapper",
         "//third_party:com_fasterxml_jackson_core_jackson_databind",
         "//third_party:com_google_guava_guava",
         "//third_party:org_assertj_assertj_core",
         "//third_party:org_mockito_mockito_core",
+        "@tink_backend//src/libraries/account_identifier",
     ],
 )

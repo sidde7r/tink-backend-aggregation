@@ -19,7 +19,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fro
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.transfer.dto.TrustedBeneficiariesResponseDtoBase;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.transfer.entity.BeneficiaryEntity;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationFetcher;
-import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 
 @RequiredArgsConstructor
@@ -70,8 +70,8 @@ public abstract class FrTransferDestinationFetcher implements TransferDestinatio
                 .setSourceAccounts(ownAccountList)
                 .setDestinationAccounts(destinationAccountList)
                 .setTinkAccounts(accounts)
-                .matchDestinationAccountsOn(AccountIdentifier.Type.IBAN, IbanIdentifier.class)
-                .addMultiMatchPattern(AccountIdentifier.Type.IBAN, TransferDestinationPattern.ALL)
+                .matchDestinationAccountsOn(AccountIdentifierType.IBAN, IbanIdentifier.class)
+                .addMultiMatchPattern(AccountIdentifierType.IBAN, TransferDestinationPattern.ALL)
                 .build();
     }
 

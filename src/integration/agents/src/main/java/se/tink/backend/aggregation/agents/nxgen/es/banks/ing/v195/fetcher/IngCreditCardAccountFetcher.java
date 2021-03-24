@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.nxgen.core.account.entity.Party;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.creditcard.CreditCardModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class IngCreditCardAccountFetcher implements AccountFetcher<CreditCardAccount> {
@@ -75,7 +76,7 @@ public class IngCreditCardAccountFetcher implements AccountFetcher<CreditCardAcc
                 .withAccountName(product.getName())
                 .addIdentifier(
                         AccountIdentifier.create(
-                                AccountIdentifier.Type.PAYMENT_CARD_NUMBER,
+                                AccountIdentifierType.PAYMENT_CARD_NUMBER,
                                 product.getProductNumber()))
                 .build();
     }

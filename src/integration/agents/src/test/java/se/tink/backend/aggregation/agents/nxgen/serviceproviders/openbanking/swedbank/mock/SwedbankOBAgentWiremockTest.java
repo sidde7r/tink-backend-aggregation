@@ -7,7 +7,7 @@ import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockp
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationReader;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.enums.MarketCode;
 import se.tink.libraries.payment.rpc.Creditor;
@@ -42,9 +42,11 @@ public class SwedbankOBAgentWiremockTest {
 
     private Payment createMockedDomesticPayment() {
         Debtor debtor =
-                new Debtor(AccountIdentifier.create(AccountIdentifier.Type.SE, "10987654321"));
+                new Debtor(AccountIdentifier.create(AccountIdentifierType.SE, "10987654321"));
         Creditor creditor =
-                new Creditor(AccountIdentifier.create(Type.SE, "12345678901"), "TinkTest");
+                new Creditor(
+                        AccountIdentifier.create(AccountIdentifierType.SE, "12345678901"),
+                        "TinkTest");
         RemittanceInformation remittanceInformation = new RemittanceInformation();
         remittanceInformation.setType(RemittanceInformationType.UNSTRUCTURED);
         remittanceInformation.setValue("tinkTest");

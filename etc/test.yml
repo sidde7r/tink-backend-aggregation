@@ -4606,6 +4606,9 @@ agentsServiceConfiguration:
         clientId: dummyClientId
         clientSecret: dummyClientSecret
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+    bc19bb84118f44d0b472e31561fa1e98:
+      tink:
+        redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
     dcb2014413114386a8d12de071e778e8:
       tink:
         clientId: dummyClientId

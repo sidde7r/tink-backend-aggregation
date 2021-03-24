@@ -8,6 +8,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Creditor;
@@ -34,13 +35,12 @@ public class PaymentControllerTest {
                         .withCreditor(
                                 new Creditor(
                                         AccountIdentifier.create(
-                                                AccountIdentifier.Type.BBAN,
-                                                DESTINATION_IDENTIFIER),
+                                                AccountIdentifierType.BBAN, DESTINATION_IDENTIFIER),
                                         "Test Person"))
                         .withDebtor(
                                 new Debtor(
                                         AccountIdentifier.create(
-                                                AccountIdentifier.Type.BBAN,
+                                                AccountIdentifierType.BBAN,
                                                 SOURCE_IDENTIFIER_BBAN)))
                         .withCurrency("SEK")
                         .withExecutionDate(LocalDate.now())
@@ -63,13 +63,12 @@ public class PaymentControllerTest {
                         .withCreditor(
                                 new Creditor(
                                         AccountIdentifier.create(
-                                                AccountIdentifier.Type.IBAN,
-                                                DESTINATION_IDENTIFIER),
+                                                AccountIdentifierType.IBAN, DESTINATION_IDENTIFIER),
                                         "Test Person"))
                         .withDebtor(
                                 new Debtor(
                                         AccountIdentifier.create(
-                                                AccountIdentifier.Type.BBAN,
+                                                AccountIdentifierType.BBAN,
                                                 SOURCE_IDENTIFIER_BBAN)))
                         .withCurrency("SEK")
                         .withExecutionDate(LocalDate.now().plusDays(2))
@@ -92,13 +91,12 @@ public class PaymentControllerTest {
                         .withCreditor(
                                 new Creditor(
                                         AccountIdentifier.create(
-                                                AccountIdentifier.Type.IBAN,
-                                                DESTINATION_IDENTIFIER),
+                                                AccountIdentifierType.IBAN, DESTINATION_IDENTIFIER),
                                         "Test Person"))
                         .withDebtor(
                                 new Debtor(
                                         AccountIdentifier.create(
-                                                AccountIdentifier.Type.IBAN,
+                                                AccountIdentifierType.IBAN,
                                                 SOURCE_IDENTIFIER_IBAN_SE)))
                         .withCurrency("SEK")
                         .withExecutionDate(LocalDate.now())
@@ -121,13 +119,12 @@ public class PaymentControllerTest {
                         .withCreditor(
                                 new Creditor(
                                         AccountIdentifier.create(
-                                                AccountIdentifier.Type.IBAN,
-                                                DESTINATION_IDENTIFIER),
+                                                AccountIdentifierType.IBAN, DESTINATION_IDENTIFIER),
                                         "Test Person"))
                         .withDebtor(
                                 new Debtor(
                                         AccountIdentifier.create(
-                                                AccountIdentifier.Type.IBAN,
+                                                AccountIdentifierType.IBAN,
                                                 SOURCE_IDENTIFIER_IBAN_GB)))
                         .withCurrency("£")
                         .withExecutionDate(LocalDate.now())
@@ -151,13 +148,12 @@ public class PaymentControllerTest {
                         .withCreditor(
                                 new Creditor(
                                         AccountIdentifier.create(
-                                                AccountIdentifier.Type.IBAN,
-                                                DESTINATION_IDENTIFIER),
+                                                AccountIdentifierType.IBAN, DESTINATION_IDENTIFIER),
                                         "Test Person"))
                         .withDebtor(
                                 new Debtor(
                                         AccountIdentifier.create(
-                                                AccountIdentifier.Type.BE,
+                                                AccountIdentifierType.BE,
                                                 SOURCE_IDENTIFIER_IBAN_GB)))
                         .withCurrency("£")
                         .withExecutionDate(LocalDate.now())
@@ -179,8 +175,7 @@ public class PaymentControllerTest {
                         .withCreditor(
                                 new Creditor(
                                         AccountIdentifier.create(
-                                                AccountIdentifier.Type.BBAN,
-                                                DESTINATION_IDENTIFIER),
+                                                AccountIdentifierType.BBAN, DESTINATION_IDENTIFIER),
                                         "Test Person"))
                         .withDebtor(
                                 new Debtor(

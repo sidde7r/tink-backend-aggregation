@@ -31,7 +31,6 @@ junit_test(
         "//src/integration/signableoperation/src/main/java/se/tink/libraries/signableoperation/enums",
         "//src/integration/transfer:enums",
         "//src/integration/transfer:rpc",
-        "//src/libraries/account_identifier",
         "//src/libraries/pair",
         "//third_party:lombok_libs",
         "//third_party:org_assertj_assertj_core",
@@ -39,5 +38,6 @@ junit_test(
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
         "@aggregation//:org_apache_httpcomponents_httpcore",
         "@tink_backend//src/aggregation-controller/api/src/main/java/se/tink/backend/aggregationcontroller/v1/rpc/enums",
+        "@tink_backend//src/libraries/account_identifier",
     ],
 )

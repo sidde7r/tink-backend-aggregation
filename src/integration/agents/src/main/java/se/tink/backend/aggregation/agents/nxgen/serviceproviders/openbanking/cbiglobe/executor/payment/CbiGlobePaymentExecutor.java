@@ -47,8 +47,7 @@ import se.tink.backend.aggregation.nxgen.core.account.GenericTypeMapper;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.pair.Pair;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.enums.PaymentType;
@@ -445,7 +444,7 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
     }
 
     protected PaymentType getPaymentType(PaymentRequest paymentRequest) {
-        Pair<AccountIdentifier.Type, AccountIdentifier.Type> accountIdentifiersKey =
+        Pair<AccountIdentifierType, AccountIdentifierType> accountIdentifiersKey =
                 paymentRequest.getPayment().getCreditorAndDebtorAccountType();
 
         return accountIdentifiersToPaymentTypeMapper
@@ -461,11 +460,15 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
         return "it-bpm-oauth2".equalsIgnoreCase(provider.getName());
     }
 
-    private static final GenericTypeMapper<PaymentType, Pair<Type, Type>>
+    private static final GenericTypeMapper<
+                    PaymentType, Pair<AccountIdentifierType, AccountIdentifierType>>
             accountIdentifiersToPaymentTypeMapper =
                     GenericTypeMapper
-                            .<PaymentType, Pair<AccountIdentifier.Type, AccountIdentifier.Type>>
+                            .<PaymentType, Pair<AccountIdentifierType, AccountIdentifierType>>
                                     genericBuilder()
-                            .put(PaymentType.SEPA, new Pair<>(Type.IBAN, Type.IBAN))
+                            .put(
+                                    PaymentType.SEPA,
+                                    new Pair<>(
+                                            AccountIdentifierType.IBAN, AccountIdentifierType.IBAN))
                             .build();
 }

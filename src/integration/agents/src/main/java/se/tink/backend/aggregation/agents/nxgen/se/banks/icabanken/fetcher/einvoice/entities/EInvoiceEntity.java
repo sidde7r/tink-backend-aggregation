@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.executor.IcaB
 import se.tink.backend.aggregation.annotations.JsonDouble;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.transfer.enums.RemittanceInformationType;
@@ -89,7 +90,7 @@ public class EInvoiceEntity {
     @JsonIgnore
     private AccountIdentifier getIdentifier() {
 
-        AccountIdentifier.Type type =
+        AccountIdentifierType type =
                 IcaBankenExecutorUtils.paymentTypeToIdentifierType(recipientType);
         Preconditions.checkNotNull(type, "Invalid identifier type. It must not be null.");
 

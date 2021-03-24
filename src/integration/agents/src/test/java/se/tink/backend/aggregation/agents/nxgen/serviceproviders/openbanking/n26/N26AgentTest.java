@@ -6,6 +6,7 @@ import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
 import se.tink.backend.aggregation.agents.utils.remittanceinformation.RemittanceInformationUtils;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
@@ -48,13 +49,13 @@ public class N26AgentTest {
                         new Creditor(
                                 AccountIdentifier.create(
                                         // This is FR IBAN example
-                                        AccountIdentifier.Type.IBAN, "FR1420041010050500013M02606"),
+                                        AccountIdentifierType.IBAN, "FR1420041010050500013M02606"),
                                 "Recipient Name"))
                 .withDebtor(
                         new Debtor(
                                 AccountIdentifier.create(
                                         // This is just DE IBAN example
-                                        AccountIdentifier.Type.IBAN, "DE89370400440532013000")))
+                                        AccountIdentifierType.IBAN, "DE89370400440532013000")))
                 .withExactCurrencyAmount(amount)
                 .withExecutionDate(executionDate)
                 .withCurrency(currency)

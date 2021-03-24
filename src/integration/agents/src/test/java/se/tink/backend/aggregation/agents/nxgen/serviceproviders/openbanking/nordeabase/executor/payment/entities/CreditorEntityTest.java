@@ -7,7 +7,7 @@ import org.junit.Test;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.account.identifiers.BankGiroIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
@@ -22,11 +22,17 @@ public class CreditorEntityTest {
 
     private static final String CURRENCY = "SEK";
     private static final SwedishIdentifier SOURCE_ACCOUNT =
-            (SwedishIdentifier) AccountIdentifier.create(Type.SE, "6666123456789", "Sven Svensson");
+            (SwedishIdentifier)
+                    AccountIdentifier.create(
+                            AccountIdentifierType.SE, "6666123456789", "Sven Svensson");
     private static final SwedishIdentifier DESTINATION_ACCOUNT_SE =
-            (SwedishIdentifier) AccountIdentifier.create(Type.SE, "66661111111", "Test Testsson");
+            (SwedishIdentifier)
+                    AccountIdentifier.create(
+                            AccountIdentifierType.SE, "66661111111", "Test Testsson");
     private static final BankGiroIdentifier ACCOUNT_BG =
-            (BankGiroIdentifier) AccountIdentifier.create(Type.SE_BG, "51707560", "Test Company");
+            (BankGiroIdentifier)
+                    AccountIdentifier.create(
+                            AccountIdentifierType.SE_BG, "51707560", "Test Company");
 
     private static final String TINK_TEST = "TinkTest";
     private static final String VALID_OCR = "202091953424";

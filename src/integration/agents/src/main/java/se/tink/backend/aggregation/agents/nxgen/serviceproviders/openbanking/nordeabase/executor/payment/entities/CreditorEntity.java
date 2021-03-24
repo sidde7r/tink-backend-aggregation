@@ -5,7 +5,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nor
 import se.tink.backend.aggregation.agents.utils.remittanceinformation.RemittanceInformationValidator;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
-import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.transfer.enums.RemittanceInformationType;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
@@ -109,7 +109,7 @@ public class CreditorEntity {
     }
 
     @JsonIgnore
-    private static boolean isTypeBgPg(AccountIdentifier.Type accountIdentifierType) {
+    private static boolean isTypeBgPg(AccountIdentifierType accountIdentifierType) {
         switch (accountIdentifierType) {
             case SE_BG:
             case SE_PG:

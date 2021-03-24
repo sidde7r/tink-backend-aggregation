@@ -9,9 +9,9 @@ junit_test(
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/lib",
         "//src/integration/models",
-        "//src/libraries/account_identifier",
         "//src/libraries/serialization",
         "//third_party:lombok_libs",
         "//third_party:org_assertj_assertj_core",
+        "@tink_backend//src/libraries/account_identifier",
     ],
 )

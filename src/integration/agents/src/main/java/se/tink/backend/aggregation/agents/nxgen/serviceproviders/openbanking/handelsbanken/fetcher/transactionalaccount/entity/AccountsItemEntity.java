@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdMo
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
@@ -69,10 +70,10 @@ public class AccountsItemEntity {
                                 .withAccountNumber(getAccountNumberWithClearing())
                                 .withAccountName(Optional.ofNullable(name).orElse(accountType))
                                 .addIdentifier(
-                                        AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban))
+                                        AccountIdentifier.create(AccountIdentifierType.IBAN, iban))
                                 .addIdentifier(
                                         AccountIdentifier.create(
-                                                AccountIdentifier.Type.SE,
+                                                AccountIdentifierType.SE,
                                                 clearingNumber.concat(bban)))
                                 .build())
                 .addHolderName(ownerName)

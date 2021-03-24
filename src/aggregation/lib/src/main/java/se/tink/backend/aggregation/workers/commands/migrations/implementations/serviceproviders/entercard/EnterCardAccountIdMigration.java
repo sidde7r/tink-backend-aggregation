@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.workers.commands.migrations.implementations.
 
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.workers.commands.migrations.AgentVersionMigration;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class EnterCardAccountIdMigration extends AgentVersionMigration {
@@ -26,13 +26,14 @@ public class EnterCardAccountIdMigration extends AgentVersionMigration {
                 .forEach(
                         account ->
                                 account.setBankId(
-                                        account.getIdentifier(Type.PAYMENT_CARD_NUMBER)
+                                        account.getIdentifier(
+                                                        AccountIdentifierType.PAYMENT_CARD_NUMBER)
                                                 .getIdentifier()));
     }
 
     private boolean shouldChangeBankId(Account account) {
         if (!account.getIdentifiers().isEmpty()) {
-            return !account.getIdentifier(Type.PAYMENT_CARD_NUMBER)
+            return !account.getIdentifier(AccountIdentifierType.PAYMENT_CARD_NUMBER)
                     .getIdentifier()
                     .equals(account.getBankId());
         }

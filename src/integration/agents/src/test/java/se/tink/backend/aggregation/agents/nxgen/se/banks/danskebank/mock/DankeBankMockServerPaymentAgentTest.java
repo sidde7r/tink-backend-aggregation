@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockp
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationReader;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
@@ -64,8 +65,8 @@ public class DankeBankMockServerPaymentAgentTest {
 
     private Transfer createMockedDomesticTransfer() {
         Transfer transfer = new Transfer();
-        transfer.setSource(AccountIdentifier.create(AccountIdentifier.Type.SE, "3300123456"));
-        transfer.setDestination(AccountIdentifier.create(AccountIdentifier.Type.SE_BG, "5961111"));
+        transfer.setSource(AccountIdentifier.create(AccountIdentifierType.SE, "3300123456"));
+        transfer.setDestination(AccountIdentifier.create(AccountIdentifierType.SE_BG, "5961111"));
         transfer.setAmount(ExactCurrencyAmount.inSEK(7138));
         transfer.setType(TransferType.PAYMENT);
         RemittanceInformation remittanceInformation = new RemittanceInformation();
@@ -76,8 +77,8 @@ public class DankeBankMockServerPaymentAgentTest {
 
     private Transfer createMockedNonNullDueDatePayment() {
         Transfer transfer = new Transfer();
-        transfer.setSource(AccountIdentifier.create(AccountIdentifier.Type.SE, "3300123456"));
-        transfer.setDestination(AccountIdentifier.create(AccountIdentifier.Type.SE_BG, "5961111"));
+        transfer.setSource(AccountIdentifier.create(AccountIdentifierType.SE, "3300123456"));
+        transfer.setDestination(AccountIdentifier.create(AccountIdentifierType.SE_BG, "5961111"));
         transfer.setAmount(ExactCurrencyAmount.inSEK(7138d));
         transfer.setType(TransferType.PAYMENT);
         RemittanceInformation remittanceInformation = new RemittanceInformation();

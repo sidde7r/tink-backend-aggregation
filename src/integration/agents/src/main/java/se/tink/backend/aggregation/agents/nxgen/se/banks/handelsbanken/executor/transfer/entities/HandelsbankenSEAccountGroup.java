@@ -7,6 +7,7 @@ import java.util.stream.Stream;
 import se.tink.backend.aggregation.agents.general.models.GeneralAccountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.account.identifiers.formatters.DefaultAccountIdentifierFormatter;
 import se.tink.libraries.transfer.rpc.Transfer;
@@ -40,7 +41,7 @@ public class HandelsbankenSEAccountGroup {
         if (paymentAccount.isPresent()) {
             return paymentAccount;
         }
-        if (identifier.getType() == AccountIdentifier.Type.SE) {
+        if (identifier.getType() == AccountIdentifierType.SE) {
             SwedishIdentifier swedish = identifier.to(SwedishIdentifier.class);
             return findPaymentAccount(swedish.getAccountNumber());
         }

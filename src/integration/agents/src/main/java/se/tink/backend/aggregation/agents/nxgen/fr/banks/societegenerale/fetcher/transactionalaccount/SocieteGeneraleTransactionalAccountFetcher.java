@@ -23,6 +23,7 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 
 public class SocieteGeneraleTransactionalAccountFetcher
         implements AccountFetcher<TransactionalAccount>,
@@ -76,7 +77,7 @@ public class SocieteGeneraleTransactionalAccountFetcher
                                 .withAccountName(entity.getLabel())
                                 .addIdentifier(
                                         AccountIdentifier.create(
-                                                AccountIdentifier.Type.IBAN, entity.getNumber()))
+                                                AccountIdentifierType.IBAN, entity.getNumber()))
                                 .build())
                 .setApiIdentifier(entity.getTechnicalId())
                 .putInTemporaryStorage(

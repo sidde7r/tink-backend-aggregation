@@ -11,7 +11,7 @@ import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.loan.LoanModule;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.i18n.Catalog;
 
@@ -49,7 +49,7 @@ public class LoanGenerator {
                                         .withAccountName(accountDefinition.getMortgageLoanName())
                                         .addIdentifier(
                                                 AccountIdentifier.create(
-                                                        Type.IBAN,
+                                                        AccountIdentifierType.IBAN,
                                                         accountDefinition.getMortgageId()))
                                         .setProductName(
                                                 catalog.getString(
@@ -81,7 +81,8 @@ public class LoanGenerator {
                                         .withAccountName(accountDefinition.getBlancoLoanName())
                                         .addIdentifier(
                                                 AccountIdentifier.create(
-                                                        Type.IBAN, accountDefinition.getBlancoId()))
+                                                        AccountIdentifierType.IBAN,
+                                                        accountDefinition.getBlancoId()))
                                         .setProductName(
                                                 catalog.getString(
                                                         accountDefinition.getMortgageLoanName()))

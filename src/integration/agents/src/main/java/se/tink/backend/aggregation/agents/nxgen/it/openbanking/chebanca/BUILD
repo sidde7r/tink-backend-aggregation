@@ -24,7 +24,6 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/response",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
-        "//src/libraries/account_identifier",
         "//src/libraries/date",
         "//src/libraries/serialization",
         "//src/libraries/uuid",
@@ -38,5 +37,6 @@ java_library(
         "@aggregation//:com_google_code_gson_gson",
         "@aggregation//:com_google_guava_guava",
         "@aggregation//:com_kjetland_mbknor_jackson_jsonschema_2_12",
+        "@tink_backend//src/libraries/account_identifier",
     ],
 )

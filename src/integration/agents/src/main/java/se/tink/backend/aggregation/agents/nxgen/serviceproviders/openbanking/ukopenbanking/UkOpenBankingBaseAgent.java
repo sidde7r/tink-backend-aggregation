@@ -82,7 +82,7 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.ServiceUnavailableBankServiceErrorFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.iface.Filter;
 import se.tink.backend.aggregation.nxgen.instrumentation.FetcherInstrumentationRegistry;
-import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.account.identifiers.SortCodeIdentifier;
 import se.tink.libraries.concurrency.RunnableMdcWrapper;
 import se.tink.libraries.identitydata.IdentityData;
@@ -306,7 +306,7 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
                 metricRefreshController,
                 new UkOpenBankingTransferDestinationFetcher(
                         new NoOpTransferDestinationAccountsProvider(),
-                        AccountIdentifier.Type.SORT_CODE,
+                        AccountIdentifierType.SORT_CODE,
                         SortCodeIdentifier.class));
     }
 

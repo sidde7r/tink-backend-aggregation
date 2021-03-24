@@ -7,7 +7,7 @@ import com.google.common.base.Strings;
 import java.util.Date;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.transfer.enums.TransferPayloadType;
 import se.tink.libraries.transfer.enums.TransferType;
@@ -54,9 +54,11 @@ public class EInvoicesEntity {
         Preconditions.checkState(!Strings.isNullOrEmpty(giroType), "Null or empty giro type");
         if (giroType.equalsIgnoreCase("bg")) {
             // Wouldn't BankGiroIdentifier be a better choice?
-            return AccountIdentifier.create(Type.SE_BG, giroNumber, eInvoiceIssuerName);
+            return AccountIdentifier.create(
+                    AccountIdentifierType.SE_BG, giroNumber, eInvoiceIssuerName);
         } else {
-            return AccountIdentifier.create(Type.SE_PG, giroNumber, eInvoiceIssuerName);
+            return AccountIdentifier.create(
+                    AccountIdentifierType.SE_PG, giroNumber, eInvoiceIssuerName);
         }
     }
 

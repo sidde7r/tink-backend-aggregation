@@ -26,7 +26,7 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdMo
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.account.identifiers.SwedishSHBInternalIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
@@ -112,7 +112,8 @@ public class HandelsbankenSEAccount extends HandelsbankenAccount {
         identifiers.add(new SwedishSHBInternalIdentifier(number));
         if (iban != null) {
             identifiers.add(
-                    AccountIdentifier.create(Type.IBAN, StringUtils.removeNonAlphaNumeric(iban)));
+                    AccountIdentifier.create(
+                            AccountIdentifierType.IBAN, StringUtils.removeNonAlphaNumeric(iban)));
         }
         return identifiers;
     }

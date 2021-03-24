@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager.SsnArgumentEnum;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager.ToAccountFromAccountArgumentEnum;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
@@ -57,14 +57,14 @@ public class LansforsakringarAgentPaymentTest {
                         .withCreditor(
                                 new Creditor(
                                         AccountIdentifier.create(
-                                                Type.SE_BG,
+                                                AccountIdentifierType.SE_BG,
                                                 toFromManager.get(
                                                         ToAccountFromAccountArgumentEnum
                                                                 .TO_ACCOUNT))))
                         .withDebtor(
                                 new Debtor(
                                         AccountIdentifier.create(
-                                                Type.SE,
+                                                AccountIdentifierType.SE,
                                                 toFromManager.get(
                                                         ToAccountFromAccountArgumentEnum
                                                                 .FROM_ACCOUNT))))

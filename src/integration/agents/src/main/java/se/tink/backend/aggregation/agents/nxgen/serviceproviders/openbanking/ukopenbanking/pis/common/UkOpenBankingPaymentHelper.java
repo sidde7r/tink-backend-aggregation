@@ -4,7 +4,7 @@ import java.time.Clock;
 import java.time.LocalDate;
 import java.util.Objects;
 import se.tink.backend.aggregation.nxgen.core.account.GenericTypeMapper;
-import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.pair.Pair;
 import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Payment;
@@ -14,26 +14,25 @@ public class UkOpenBankingPaymentHelper {
     // TODO: add all possible permutations
     @SuppressWarnings("unchecked")
     private static final GenericTypeMapper<
-                    PaymentType, Pair<AccountIdentifier.Type, AccountIdentifier.Type>>
+                    PaymentType, Pair<AccountIdentifierType, AccountIdentifierType>>
             PAYMENT_TYPE_MAPPER =
                     GenericTypeMapper
-                            .<PaymentType, Pair<AccountIdentifier.Type, AccountIdentifier.Type>>
+                            .<PaymentType, Pair<AccountIdentifierType, AccountIdentifierType>>
                                     genericBuilder()
                             .put(
                                     PaymentType.DOMESTIC,
-                                    new Pair<>(null, AccountIdentifier.Type.SORT_CODE),
+                                    new Pair<>(null, AccountIdentifierType.SORT_CODE),
                                     new Pair<>(
-                                            AccountIdentifier.Type.SORT_CODE,
-                                            AccountIdentifier.Type.SORT_CODE),
+                                            AccountIdentifierType.SORT_CODE,
+                                            AccountIdentifierType.SORT_CODE),
                                     new Pair<>(
-                                            AccountIdentifier.Type.PAYM_PHONE_NUMBER,
-                                            AccountIdentifier.Type.PAYM_PHONE_NUMBER))
+                                            AccountIdentifierType.PAYM_PHONE_NUMBER,
+                                            AccountIdentifierType.PAYM_PHONE_NUMBER))
                             .put(
                                     PaymentType.SEPA,
-                                    new Pair<>(null, AccountIdentifier.Type.IBAN),
+                                    new Pair<>(null, AccountIdentifierType.IBAN),
                                     new Pair<>(
-                                            AccountIdentifier.Type.IBAN,
-                                            AccountIdentifier.Type.IBAN))
+                                            AccountIdentifierType.IBAN, AccountIdentifierType.IBAN))
                             .build();
 
     public static PaymentType getPaymentType(Payment payment) {

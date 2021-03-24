@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.fetcher.mapper.DefaultPartnerAccountMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.fetcher.transactional.entity.AccountEntity;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.account.identifiers.NDAPersonalNumberIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 
@@ -24,7 +24,8 @@ public class NordeaPartnerSeAccountMapper extends DefaultPartnerAccountMapper {
         final String formattedAccountNumber = formatAccountNumber(account.getAccountId());
         if (formattedAccountNumber.length() == NDAPersonalNumberIdentifier.LENGTH) {
             final AccountIdentifier ssnIdentifier =
-                    AccountIdentifier.create(Type.SE_NDA_SSN, formattedAccountNumber);
+                    AccountIdentifier.create(
+                            AccountIdentifierType.SE_NDA_SSN, formattedAccountNumber);
             if (ssnIdentifier.isValid()) {
                 return ssnIdentifier.to(NDAPersonalNumberIdentifier.class).toSwedishIdentifier();
             }

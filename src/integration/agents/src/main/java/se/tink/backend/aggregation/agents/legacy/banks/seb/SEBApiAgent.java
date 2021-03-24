@@ -176,6 +176,7 @@ import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageLengthConfig;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.enums.AccountFlag;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.RefreshableItem;
@@ -1781,7 +1782,7 @@ public final class SEBApiAgent extends AbstractAgent
                 .setSourceAccounts(accountEntities)
                 .setDestinationAccounts(seAccounts)
                 .setTinkAccounts(updatedAccounts)
-                .addMultiMatchPattern(AccountIdentifier.Type.SE, TransferDestinationPattern.ALL)
+                .addMultiMatchPattern(AccountIdentifierType.SE, TransferDestinationPattern.ALL)
                 .build();
     }
 
@@ -1812,8 +1813,8 @@ public final class SEBApiAgent extends AbstractAgent
                 .setSourceAccounts(accountEntities)
                 .setDestinationAccounts(bgOrPgAccounts)
                 .setTinkAccounts(updatedAccounts)
-                .addMultiMatchPattern(AccountIdentifier.Type.SE_BG, TransferDestinationPattern.ALL)
-                .addMultiMatchPattern(AccountIdentifier.Type.SE_PG, TransferDestinationPattern.ALL)
+                .addMultiMatchPattern(AccountIdentifierType.SE_BG, TransferDestinationPattern.ALL)
+                .addMultiMatchPattern(AccountIdentifierType.SE_PG, TransferDestinationPattern.ALL)
                 .build();
     }
 
@@ -2059,9 +2060,9 @@ public final class SEBApiAgent extends AbstractAgent
     }
 
     private boolean isBgOrPg(Transfer transfer) {
-        AccountIdentifier.Type destinationType = transfer.getDestination().getType();
-        return Objects.equal(destinationType, AccountIdentifier.Type.SE_BG)
-                || Objects.equal(destinationType, AccountIdentifier.Type.SE_PG);
+        AccountIdentifierType destinationType = transfer.getDestination().getType();
+        return Objects.equal(destinationType, AccountIdentifierType.SE_BG)
+                || Objects.equal(destinationType, AccountIdentifierType.SE_PG);
     }
 
     /** Ensure we only find one entity for a given destination of the same type as the transfer. */
@@ -2127,9 +2128,9 @@ public final class SEBApiAgent extends AbstractAgent
         SebGiroRequest giroRequest = SebGiroRequest.create(destination);
 
         String searchUrl;
-        if (destination.is(AccountIdentifier.Type.SE_BG)) {
+        if (destination.is(AccountIdentifierType.SE_BG)) {
             searchUrl = FIND_BG_URL;
-        } else if (destination.is(AccountIdentifier.Type.SE_PG)) {
+        } else if (destination.is(AccountIdentifierType.SE_PG)) {
             searchUrl = FIND_PG_URL;
         } else {
             throw new IllegalStateException("Not a valid bgpg destination type");
@@ -2137,7 +2138,7 @@ public final class SEBApiAgent extends AbstractAgent
 
         SebResponse sebResponse = postAsJSON(searchUrl, giroRequest, SebResponse.class);
 
-        if (destination.is(AccountIdentifier.Type.SE_BG)) {
+        if (destination.is(AccountIdentifierType.SE_BG)) {
             return Optional.ofNullable(sebResponse.d.VODB.FindBGResult);
         } else {
             return Optional.ofNullable(sebResponse.d.VODB.FindPGResult);

@@ -21,7 +21,6 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
         "//src/integration/models",
-        "//src/libraries/account_identifier",
         "//src/libraries/retrypolicy",
         "//src/libraries/serialization",
         "//third_party:com_amazonaws_aws_java_sdk_sqs",
@@ -41,5 +40,6 @@ java_library(
         "@aggregation//:com_google_code_gson_gson",
         "@aggregation//:com_google_guava_guava",
         "@aggregation//:org_bitbucket_b_c_jose4j",
+        "@tink_backend//src/libraries/account_identifier",
     ],
 )

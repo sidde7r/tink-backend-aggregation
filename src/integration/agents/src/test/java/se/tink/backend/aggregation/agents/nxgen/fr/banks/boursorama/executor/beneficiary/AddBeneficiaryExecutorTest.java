@@ -39,7 +39,7 @@ import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.payment.enums.CreateBeneficiaryStatus;
 import se.tink.libraries.payment.rpc.Beneficiary;
 import se.tink.libraries.payment.rpc.CreateBeneficiary;
@@ -138,7 +138,7 @@ public class AddBeneficiaryExecutorTest {
                 .isNotNull()
                 .hasAccountNumber(IBAN)
                 .hasName(FULL_NAME)
-                .hasAccountNumberType(AccountIdentifier.Type.IBAN);
+                .hasAccountNumberType(AccountIdentifierType.IBAN);
     }
 
     private void givenSupplementalInfoHelperMocks() {
@@ -173,7 +173,7 @@ public class AddBeneficiaryExecutorTest {
         Beneficiary beneficiary =
                 Beneficiary.builder()
                         .accountNumber(IBAN)
-                        .accountNumberType(AccountIdentifier.Type.IBAN)
+                        .accountNumberType(AccountIdentifierType.IBAN)
                         .name(FULL_NAME)
                         .build();
         return CreateBeneficiary.builder().beneficiary(beneficiary).ownerAccountNumber("").build();

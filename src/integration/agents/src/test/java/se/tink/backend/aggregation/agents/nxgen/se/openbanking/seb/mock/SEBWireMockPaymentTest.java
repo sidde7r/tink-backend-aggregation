@@ -11,7 +11,7 @@ import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockp
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationReader;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.enums.MarketCode;
 import se.tink.libraries.payment.rpc.Creditor;
@@ -118,9 +118,14 @@ public class SEBWireMockPaymentTest {
         remittanceInformation.setValue("1047514784933");
 
         return new Payment.Builder()
-                .withCreditor(new Creditor(AccountIdentifier.create(Type.SE_PG, "5768353"), "Tink"))
+                .withCreditor(
+                        new Creditor(
+                                AccountIdentifier.create(AccountIdentifierType.SE_PG, "5768353"),
+                                "Tink"))
                 .withDebtor(
-                        new Debtor(AccountIdentifier.create(Type.IBAN, "SE4550000000058398257466")))
+                        new Debtor(
+                                AccountIdentifier.create(
+                                        AccountIdentifierType.IBAN, "SE4550000000058398257466")))
                 .withExactCurrencyAmount(ExactCurrencyAmount.inSEK(585.57))
                 .withCurrency("SEK")
                 .withRemittanceInformation(remittanceInformation)
@@ -134,9 +139,14 @@ public class SEBWireMockPaymentTest {
         remittanceInformation.setValue("1047514784933");
 
         return new Payment.Builder()
-                .withCreditor(new Creditor(AccountIdentifier.create(Type.SE_BG, "5768353"), "Tink"))
+                .withCreditor(
+                        new Creditor(
+                                AccountIdentifier.create(AccountIdentifierType.SE_BG, "5768353"),
+                                "Tink"))
                 .withDebtor(
-                        new Debtor(AccountIdentifier.create(Type.IBAN, "SE4550000000058398257466")))
+                        new Debtor(
+                                AccountIdentifier.create(
+                                        AccountIdentifierType.IBAN, "SE4550000000058398257466")))
                 .withExactCurrencyAmount(ExactCurrencyAmount.inSEK(585.57))
                 .withCurrency("SEK")
                 .withRemittanceInformation(remittanceInformation)
@@ -151,9 +161,13 @@ public class SEBWireMockPaymentTest {
 
         return new Payment.Builder()
                 .withCreditor(
-                        new Creditor(AccountIdentifier.create(Type.SE, "56242222222"), "Joe Doe"))
+                        new Creditor(
+                                AccountIdentifier.create(AccountIdentifierType.SE, "56242222222"),
+                                "Joe Doe"))
                 .withDebtor(
-                        new Debtor(AccountIdentifier.create(Type.IBAN, "SE4550000000058398257466")))
+                        new Debtor(
+                                AccountIdentifier.create(
+                                        AccountIdentifierType.IBAN, "SE4550000000058398257466")))
                 .withExactCurrencyAmount(ExactCurrencyAmount.inSEK(1000.0))
                 .withCurrency("SEK")
                 .withRemittanceInformation(remittanceInformation)

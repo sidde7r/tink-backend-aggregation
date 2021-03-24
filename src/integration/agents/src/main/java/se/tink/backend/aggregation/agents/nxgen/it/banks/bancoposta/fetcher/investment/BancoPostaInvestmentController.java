@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @RequiredArgsConstructor
@@ -54,8 +55,7 @@ public class BancoPostaInvestmentController implements AccountFetcher<Investment
                 .withUniqueIdentifier(id)
                 .withAccountNumber(id)
                 .withAccountName(description)
-                .addIdentifier(
-                        AccountIdentifier.create(AccountIdentifier.Type.COUNTRY_SPECIFIC, id))
+                .addIdentifier(AccountIdentifier.create(AccountIdentifierType.COUNTRY_SPECIFIC, id))
                 .build();
     }
 }

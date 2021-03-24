@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.agents.utils.remittanceinformation.Remittance
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationReader;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.enums.MarketCode;
@@ -130,7 +131,7 @@ public class LloydsAgentWireMockTest {
                 .withCreditor(
                         new Creditor(
                                 AccountIdentifier.create(
-                                        AccountIdentifier.Type.SORT_CODE, "12345678912345"),
+                                        AccountIdentifierType.SORT_CODE, "12345678912345"),
                                 "Creditor Name"))
                 .withExactCurrencyAmount(amount)
                 .withExecutionDate(executionDate)

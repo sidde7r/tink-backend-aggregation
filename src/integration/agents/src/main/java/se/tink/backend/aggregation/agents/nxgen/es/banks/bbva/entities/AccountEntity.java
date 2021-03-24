@@ -21,7 +21,7 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.account.identifiers.formatters.DisplayAccountIdentifierFormatter;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
@@ -61,7 +61,8 @@ public class AccountEntity extends AbstractContractDetailsEntity {
             return Optional.empty();
         }
 
-        final AccountIdentifier ibanIdentifier = AccountIdentifier.create(Type.IBAN, iban);
+        final AccountIdentifier ibanIdentifier =
+                AccountIdentifier.create(AccountIdentifierType.IBAN, iban);
         final DisplayAccountIdentifierFormatter formatter = new DisplayAccountIdentifierFormatter();
         final String formattedIban = ibanIdentifier.getIdentifier(formatter);
 

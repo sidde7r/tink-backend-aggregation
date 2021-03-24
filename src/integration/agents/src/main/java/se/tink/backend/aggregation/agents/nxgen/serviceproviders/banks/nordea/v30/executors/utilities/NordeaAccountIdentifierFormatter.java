@@ -4,6 +4,7 @@ import com.google.common.base.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.account.identifiers.formatters.AccountIdentifierFormatter;
 import se.tink.libraries.account.identifiers.formatters.DefaultAccountIdentifierFormatter;
@@ -18,7 +19,7 @@ public class NordeaAccountIdentifierFormatter implements AccountIdentifierFormat
 
     @Override
     public String apply(AccountIdentifier identifier) {
-        if (identifier.is(AccountIdentifier.Type.SE)) {
+        if (identifier.is(AccountIdentifierType.SE)) {
             SwedishIdentifier swedishIdentifier = identifier.to(SwedishIdentifier.class);
 
             try {

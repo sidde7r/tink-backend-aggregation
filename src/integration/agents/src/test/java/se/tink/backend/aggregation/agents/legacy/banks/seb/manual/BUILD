@@ -32,8 +32,6 @@ junit_test(
         "//src/integration/transfer:enums",
         "//src/integration/transfer:mocks",
         "//src/integration/transfer:rpc",
-        "//src/libraries/account_identifier",
-        "//src/libraries/account_identifier/src/test/java/se/tink/libraries/account/identifiers/account",
         "//src/libraries/date",
         "//src/libraries/social_security_number/src/test/java/se/tink/libraries/social/security/ssn",
         "//src/libraries/social_security_number/src/test/java/se/tink/libraries/social/security/time",
@@ -48,5 +46,7 @@ junit_test(
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
         "@aggregation//:com_google_guava_guava",
         "@aggregation//:joda_time_joda_time",
+        "@tink_backend//src/libraries/account_identifier",
+        "@tink_backend//src/libraries/account_identifier/src/test/java/se/tink/libraries/account/identifiers/account",
     ],
 )

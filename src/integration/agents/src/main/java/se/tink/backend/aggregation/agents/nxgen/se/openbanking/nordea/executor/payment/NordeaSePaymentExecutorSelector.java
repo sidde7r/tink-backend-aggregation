@@ -9,7 +9,7 @@ import se.tink.backend.aggregation.nxgen.controllers.signing.multifactor.bankid.
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.core.account.GenericTypeMapper;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
-import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.pair.Pair;
 import se.tink.libraries.payment.enums.PaymentType;
 
@@ -18,23 +18,20 @@ public class NordeaSePaymentExecutorSelector extends NordeaBasePaymentExecutor {
     // The mapping follows the instructions in:
     // https://developer.nordeaopenbanking.com/app/documentation?api=Payments%20API%20Domestic%20transfer&version=3.3#payment_types_field_combinations
     private static final GenericTypeMapper<
-                    PaymentType, Pair<AccountIdentifier.Type, AccountIdentifier.Type>>
+                    PaymentType, Pair<AccountIdentifierType, AccountIdentifierType>>
             accountIdentifiersToPaymentTypeMapper =
                     GenericTypeMapper
-                            .<PaymentType, Pair<AccountIdentifier.Type, AccountIdentifier.Type>>
+                            .<PaymentType, Pair<AccountIdentifierType, AccountIdentifierType>>
                                     genericBuilder()
                             .put(
                                     PaymentType.DOMESTIC,
+                                    new Pair<>(AccountIdentifierType.SE, AccountIdentifierType.SE),
                                     new Pair<>(
-                                            AccountIdentifier.Type.SE, AccountIdentifier.Type.SE),
+                                            AccountIdentifierType.SE, AccountIdentifierType.IBAN),
                                     new Pair<>(
-                                            AccountIdentifier.Type.SE, AccountIdentifier.Type.IBAN),
+                                            AccountIdentifierType.SE, AccountIdentifierType.SE_BG),
                                     new Pair<>(
-                                            AccountIdentifier.Type.SE,
-                                            AccountIdentifier.Type.SE_BG),
-                                    new Pair<>(
-                                            AccountIdentifier.Type.SE,
-                                            AccountIdentifier.Type.SE_PG))
+                                            AccountIdentifierType.SE, AccountIdentifierType.SE_PG))
                             .build();
 
     private final SupplementalInformationController supplementalInformationController;
@@ -48,7 +45,7 @@ public class NordeaSePaymentExecutorSelector extends NordeaBasePaymentExecutor {
 
     @Override
     protected PaymentType getPaymentType(PaymentRequest paymentRequest) {
-        Pair<AccountIdentifier.Type, AccountIdentifier.Type> accountIdentifiersKey =
+        Pair<AccountIdentifierType, AccountIdentifierType> accountIdentifiersKey =
                 paymentRequest.getPayment().getCreditorAndDebtorAccountType();
 
         return accountIdentifiersToPaymentTypeMapper

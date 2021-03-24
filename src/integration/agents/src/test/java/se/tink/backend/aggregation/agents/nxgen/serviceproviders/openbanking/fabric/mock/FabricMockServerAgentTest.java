@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockr
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationReader;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
@@ -79,13 +80,12 @@ public class FabricMockServerAgentTest {
                 .withCreditor(
                         new Creditor(
                                 AccountIdentifier.create(
-                                        AccountIdentifier.Type.IBAN, "IT07W0326843450000354472850"),
+                                        AccountIdentifierType.IBAN, "IT07W0326843450000354472850"),
                                 "Translation"))
                 .withDebtor(
                         new Debtor(
                                 AccountIdentifier.create(
-                                        AccountIdentifier.Type.IBAN,
-                                        "IT60X0542811101000000123456")))
+                                        AccountIdentifierType.IBAN, "IT60X0542811101000000123456")))
                 .withExactCurrencyAmount(amount)
                 .withCurrency(currency)
                 .withRemittanceInformation(remittanceInformation)

@@ -17,7 +17,7 @@ import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.StarlingApiClient;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transfer.entity.PayeeAccountEntity;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationFetcher;
-import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.account.identifiers.SortCodeIdentifier;
 
 public class StarlingTransferDestinationFetcher implements TransferDestinationFetcher {
@@ -44,9 +44,9 @@ public class StarlingTransferDestinationFetcher implements TransferDestinationFe
                         .setDestinationAccounts(getSourceAccounts(accounts))
                         .setSourceAccounts(getSourceAccounts(accounts))
                         .addMultiMatchPattern(
-                                AccountIdentifier.Type.SORT_CODE, TransferDestinationPattern.ALL)
+                                AccountIdentifierType.SORT_CODE, TransferDestinationPattern.ALL)
                         .matchDestinationAccountsOn(
-                                AccountIdentifier.Type.SORT_CODE, SortCodeIdentifier.class)
+                                AccountIdentifierType.SORT_CODE, SortCodeIdentifier.class)
                         .build();
 
         return new TransferDestinationsResponse(destinations);

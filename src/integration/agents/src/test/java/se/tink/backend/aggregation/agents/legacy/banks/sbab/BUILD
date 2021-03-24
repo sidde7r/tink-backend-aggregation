@@ -14,9 +14,9 @@ junit_test(
         "//src/integration/credentials:service",
         "//src/integration/lib",
         "//src/integration/models",
-        "//src/libraries/account_identifier",
         "//src/libraries/date",
         "//third_party:org_assertj_assertj_core",
         "//third_party:org_jsoup_jsoup",
+        "@tink_backend//src/libraries/account_identifier",
     ],
 )

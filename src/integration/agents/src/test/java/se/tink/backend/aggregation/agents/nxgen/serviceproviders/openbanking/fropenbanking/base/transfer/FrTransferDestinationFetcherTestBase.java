@@ -12,6 +12,7 @@ import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.TransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 
 @Ignore
 public abstract class FrTransferDestinationFetcherTestBase {
@@ -23,12 +24,12 @@ public abstract class FrTransferDestinationFetcherTestBase {
 
         assertThat(returnedResponse.getDestinations()).containsOnlyKeys(account1, account2);
 
-        final AccountIdentifier identifier1 = account1.getIdentifier(AccountIdentifier.Type.IBAN);
-        final AccountIdentifier identifier2 = account2.getIdentifier(AccountIdentifier.Type.IBAN);
+        final AccountIdentifier identifier1 = account1.getIdentifier(AccountIdentifierType.IBAN);
+        final AccountIdentifier identifier2 = account2.getIdentifier(AccountIdentifierType.IBAN);
         final AccountIdentifier beneficiaryIdentifier1 =
-                createBeneficiary1Account().getIdentifier(AccountIdentifier.Type.IBAN);
+                createBeneficiary1Account().getIdentifier(AccountIdentifierType.IBAN);
         final AccountIdentifier beneficiaryIdentifier2 =
-                createBeneficiary2Account().getIdentifier(AccountIdentifier.Type.IBAN);
+                createBeneficiary2Account().getIdentifier(AccountIdentifierType.IBAN);
 
         assertThat(getAccountIdentifiers(returnedResponse, account1))
                 .containsExactlyInAnyOrder(
@@ -45,8 +46,8 @@ public abstract class FrTransferDestinationFetcherTestBase {
 
         assertThat(returnedResponse.getDestinations()).containsOnlyKeys(account1, account2);
 
-        final AccountIdentifier identifier1 = account1.getIdentifier(AccountIdentifier.Type.IBAN);
-        final AccountIdentifier identifier2 = account2.getIdentifier(AccountIdentifier.Type.IBAN);
+        final AccountIdentifier identifier1 = account1.getIdentifier(AccountIdentifierType.IBAN);
+        final AccountIdentifier identifier2 = account2.getIdentifier(AccountIdentifierType.IBAN);
 
         assertThat(getAccountIdentifiers(returnedResponse, account1)).containsExactly(identifier2);
         assertThat(getAccountIdentifiers(returnedResponse, account2)).containsExactly(identifier1);

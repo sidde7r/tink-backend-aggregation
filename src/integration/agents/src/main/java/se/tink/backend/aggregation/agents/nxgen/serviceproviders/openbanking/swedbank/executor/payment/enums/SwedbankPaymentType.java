@@ -4,7 +4,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swe
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.util.AccountTypePair;
 import se.tink.backend.aggregation.nxgen.core.account.GenericTypeMapper;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.payment.enums.PaymentType;
 
 public enum SwedbankPaymentType {
@@ -46,12 +46,17 @@ public enum SwedbankPaymentType {
                     GenericTypeMapper.<SwedbankPaymentType, AccountTypePair>genericBuilder()
                             .put(
                                     SwedbankPaymentType.SE_DOMESTIC_CREDIT_TRANSFERS,
-                                    new AccountTypePair(Type.SE, Type.SE),
-                                    new AccountTypePair(Type.SE, Type.IBAN),
-                                    new AccountTypePair(Type.SE, Type.SE_BG),
-                                    new AccountTypePair(Type.SE, Type.SE_PG))
+                                    new AccountTypePair(
+                                            AccountIdentifierType.SE, AccountIdentifierType.SE),
+                                    new AccountTypePair(
+                                            AccountIdentifierType.SE, AccountIdentifierType.IBAN),
+                                    new AccountTypePair(
+                                            AccountIdentifierType.SE, AccountIdentifierType.SE_BG),
+                                    new AccountTypePair(
+                                            AccountIdentifierType.SE, AccountIdentifierType.SE_PG))
                             .put(
                                     SwedbankPaymentType.SE_INTERNATIONAL_CREDIT_TRANSFERS,
-                                    new AccountTypePair(Type.IBAN, Type.IBAN))
+                                    new AccountTypePair(
+                                            AccountIdentifierType.IBAN, AccountIdentifierType.IBAN))
                             .build();
 }

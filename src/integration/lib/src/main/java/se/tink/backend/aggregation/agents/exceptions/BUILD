@@ -6,7 +6,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions/agent",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions/transfer",
         "//src/integration/signableoperation/src/main/java/se/tink/libraries/signableoperation/enums",
-        "//src/libraries/account_identifier",
         "//src/libraries/i18n",
+        "@tink_backend//src/libraries/account_identifier",
     ],
 )

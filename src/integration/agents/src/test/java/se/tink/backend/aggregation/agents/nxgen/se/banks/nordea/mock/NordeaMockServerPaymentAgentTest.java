@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockp
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationReader;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.transfer.enums.RemittanceInformationType;
 import se.tink.libraries.transfer.enums.TransferType;
@@ -112,8 +113,8 @@ public class NordeaMockServerPaymentAgentTest {
 
     private Transfer createMockPayment() {
         Transfer transfer = new Transfer();
-        transfer.setSource(AccountIdentifier.create(AccountIdentifier.Type.SE, "3300123456"));
-        transfer.setDestination(AccountIdentifier.create(AccountIdentifier.Type.SE_BG, "3228756"));
+        transfer.setSource(AccountIdentifier.create(AccountIdentifierType.SE, "3300123456"));
+        transfer.setDestination(AccountIdentifier.create(AccountIdentifierType.SE_BG, "3228756"));
         transfer.setAmount(ExactCurrencyAmount.inSEK(4246));
         transfer.setType(TransferType.PAYMENT);
         transfer.setDueDate(
@@ -127,9 +128,9 @@ public class NordeaMockServerPaymentAgentTest {
 
     private Transfer createMockTransfer() {
         Transfer transfer = new Transfer();
-        transfer.setSource(AccountIdentifier.create(AccountIdentifier.Type.SE, "3300123456"));
+        transfer.setSource(AccountIdentifier.create(AccountIdentifierType.SE, "3300123456"));
         transfer.setDestination(
-                AccountIdentifier.create(AccountIdentifier.Type.SE, "9252123456", "Tink Name"));
+                AccountIdentifier.create(AccountIdentifierType.SE, "9252123456", "Tink Name"));
         transfer.setAmount(ExactCurrencyAmount.inSEK(150000));
         transfer.setType(TransferType.BANK_TRANSFER);
         transfer.setDueDate(
@@ -143,9 +144,9 @@ public class NordeaMockServerPaymentAgentTest {
 
     private Transfer createOcrPayment() {
         Transfer transfer = new Transfer();
-        transfer.setSource(AccountIdentifier.create(AccountIdentifier.Type.SE, "3300123456"));
+        transfer.setSource(AccountIdentifier.create(AccountIdentifierType.SE, "3300123456"));
         transfer.setDestination(
-                AccountIdentifier.create(AccountIdentifier.Type.SE_BG, "4624292", "Tink Name"));
+                AccountIdentifier.create(AccountIdentifierType.SE_BG, "4624292", "Tink Name"));
         transfer.setAmount(ExactCurrencyAmount.inSEK(244.55));
         transfer.setType(TransferType.PAYMENT);
         transfer.setDueDate(

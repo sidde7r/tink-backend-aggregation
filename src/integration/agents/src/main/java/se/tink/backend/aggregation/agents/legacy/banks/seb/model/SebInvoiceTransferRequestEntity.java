@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.List;
 import se.tink.backend.aggregation.agents.banks.seb.utilities.SEBDateUtil;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.transfer.enums.RemittanceInformationType;
 import se.tink.libraries.transfer.rpc.Transfer;
 
@@ -68,9 +69,9 @@ public class SebInvoiceTransferRequestEntity extends SebTransferRequestEntity {
     }
 
     private static String getAccountType(AccountIdentifier destination) {
-        if (destination.is(AccountIdentifier.Type.SE_PG)) {
+        if (destination.is(AccountIdentifierType.SE_PG)) {
             return SE_PG_ID;
-        } else if (destination.is(AccountIdentifier.Type.SE_BG)) {
+        } else if (destination.is(AccountIdentifierType.SE_BG)) {
             return SE_BG_ID;
         }
 

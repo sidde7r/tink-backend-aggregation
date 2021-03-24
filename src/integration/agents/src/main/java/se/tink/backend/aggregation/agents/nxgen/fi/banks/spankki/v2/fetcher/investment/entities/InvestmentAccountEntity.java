@@ -14,7 +14,7 @@ import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccou
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.portfolio.PortfolioModule;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 
 @JsonObject
 public class InvestmentAccountEntity {
@@ -45,7 +45,7 @@ public class InvestmentAccountEntity {
                 .withUniqueIdentifier(Investments.ACCOUNT_ID_PREFIX + customerUserId)
                 .withAccountNumber(Investments.ACCOUNT_ID_PREFIX + customerUserId)
                 .withAccountName(getAccountName())
-                .addIdentifier(AccountIdentifier.create(Type.TINK, customerUserId))
+                .addIdentifier(AccountIdentifier.create(AccountIdentifierType.TINK, customerUserId))
                 .build();
     }
 

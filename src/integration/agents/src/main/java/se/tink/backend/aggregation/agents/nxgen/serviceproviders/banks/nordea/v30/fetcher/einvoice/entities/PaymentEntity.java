@@ -13,7 +13,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v3
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.UpcomingTransaction;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.account.identifiers.NDAPersonalNumberIdentifier;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.amount.ExactCurrencyAmount;
@@ -117,7 +117,7 @@ public class PaymentEntity {
         AccountIdentifier destination =
                 AccountIdentifier.create(
                         getRecipientTinkType(), recipientAccountNumber, getDestinationName());
-        if (destination.is(Type.SE_NDA_SSN)) {
+        if (destination.is(AccountIdentifierType.SE_NDA_SSN)) {
             return destination.to(NDAPersonalNumberIdentifier.class).toSwedishIdentifier();
         }
         return destination;
@@ -125,11 +125,12 @@ public class PaymentEntity {
 
     @JsonIgnore
     private AccountIdentifier getSource() {
-        AccountIdentifier ssnIdentifier = AccountIdentifier.create(Type.SE_NDA_SSN, from);
+        AccountIdentifier ssnIdentifier =
+                AccountIdentifier.create(AccountIdentifierType.SE_NDA_SSN, from);
         if (ssnIdentifier.isValid()) {
             return ssnIdentifier.to(NDAPersonalNumberIdentifier.class).toSwedishIdentifier();
         } else {
-            return AccountIdentifier.create(Type.SE, from);
+            return AccountIdentifier.create(AccountIdentifierType.SE, from);
         }
     }
 
@@ -145,19 +146,19 @@ public class PaymentEntity {
     }
 
     @JsonIgnore
-    private AccountIdentifier.Type getRecipientTinkType() {
+    private AccountIdentifierType getRecipientTinkType() {
         switch (toAccountNumberType.toUpperCase()) {
             case NordeaBaseConstants.PaymentAccountTypes.BANKGIRO:
-                return AccountIdentifier.Type.SE_BG;
+                return AccountIdentifierType.SE_BG;
             case NordeaBaseConstants.PaymentAccountTypes.PLUSGIRO:
-                return AccountIdentifier.Type.SE_PG;
+                return AccountIdentifierType.SE_PG;
             case NordeaBaseConstants.PaymentAccountTypes.LBAN:
-                return AccountIdentifier.Type.SE;
+                return AccountIdentifierType.SE;
             case NordeaBaseConstants.PaymentAccountTypes.NDASE:
                 if (new SocialSecurityNumber.Sweden(recipientAccountNumber).isValid()) {
-                    return AccountIdentifier.Type.SE_NDA_SSN;
+                    return AccountIdentifierType.SE_NDA_SSN;
                 } else {
-                    return AccountIdentifier.Type.SE;
+                    return AccountIdentifierType.SE;
                 }
             default:
                 throw new IllegalArgumentException(

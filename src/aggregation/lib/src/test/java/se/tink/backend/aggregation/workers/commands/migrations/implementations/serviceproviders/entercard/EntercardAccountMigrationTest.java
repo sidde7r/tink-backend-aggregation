@@ -9,7 +9,7 @@ import org.junit.Test;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.credentials.service.CreateCredentialsRequest;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
@@ -89,7 +89,9 @@ public class EntercardAccountMigrationTest {
         account.setType(AccountTypes.CREDIT_CARD);
         account.setBankId(bankid);
         account.setIdentifiers(
-                Stream.of(AccountIdentifier.create(Type.PAYMENT_CARD_NUMBER, cardNumber))
+                Stream.of(
+                                AccountIdentifier.create(
+                                        AccountIdentifierType.PAYMENT_CARD_NUMBER, cardNumber))
                         .collect(Collectors.toList()));
 
         return account;

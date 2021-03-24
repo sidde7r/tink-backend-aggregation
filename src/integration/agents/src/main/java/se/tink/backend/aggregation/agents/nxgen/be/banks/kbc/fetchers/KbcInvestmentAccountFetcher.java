@@ -26,6 +26,7 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdMo
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.portfolio.PortfolioModule;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class KbcInvestmentAccountFetcher implements AccountFetcher<InvestmentAccount> {
@@ -126,7 +127,7 @@ public class KbcInvestmentAccountFetcher implements AccountFetcher<InvestmentAcc
                 .withUniqueIdentifier(iban)
                 .withAccountNumber(investmentPlan.toNumber())
                 .withAccountName(name)
-                .addIdentifier(AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban))
+                .addIdentifier(AccountIdentifier.create(AccountIdentifierType.IBAN, iban))
                 .setProductName(name)
                 .build();
     }

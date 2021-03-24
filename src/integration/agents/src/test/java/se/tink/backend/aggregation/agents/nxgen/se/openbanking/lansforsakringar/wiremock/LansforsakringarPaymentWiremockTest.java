@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.agents.utils.remittanceinformation.Remittance
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationReader;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.enums.MarketCode;
 import se.tink.libraries.payment.rpc.Creditor;
@@ -133,7 +133,9 @@ public class LansforsakringarPaymentWiremockTest {
         ExactCurrencyAmount amount = ExactCurrencyAmount.of("1.00", "SEK");
         return new Payment.Builder()
                 .withCreditor(creditor)
-                .withDebtor(new Debtor(AccountIdentifier.create(Type.SE, "90251234567")))
+                .withDebtor(
+                        new Debtor(
+                                AccountIdentifier.create(AccountIdentifierType.SE, "90251234567")))
                 .withExactCurrencyAmount(amount)
                 .withExecutionDate(LocalDate.parse("2021-01-21"))
                 .withCurrency("SEK")
@@ -143,10 +145,14 @@ public class LansforsakringarPaymentWiremockTest {
     }
 
     private Creditor getSeCreditor(String accountNumber) {
-        return new Creditor(AccountIdentifier.create(Type.SE, accountNumber), "Recipient Name");
+        return new Creditor(
+                AccountIdentifier.create(AccountIdentifierType.SE, accountNumber),
+                "Recipient Name");
     }
 
     private Creditor getSeBgCreditor() {
-        return new Creditor(AccountIdentifier.create(Type.SE_BG, "991-2148"), "Recipient Name");
+        return new Creditor(
+                AccountIdentifier.create(AccountIdentifierType.SE_BG, "991-2148"),
+                "Recipient Name");
     }
 }

@@ -15,7 +15,7 @@ junit_test(
         "//src/integration/credentials/src/main/java/se/tink/libraries/credentials/service",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
         "//src/integration/payment:rpc",
-        "//src/libraries/account_identifier",
         "//third_party:org_assertj_assertj_core",
+        "@tink_backend//src/libraries/account_identifier",
     ],
 )

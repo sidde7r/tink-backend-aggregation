@@ -5,7 +5,7 @@ import com.google.common.collect.ImmutableMap;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.banks.seb.SebAccountIdentifierFormatter;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.account.identifiers.formatters.AccountIdentifierFormatter;
 import se.tink.libraries.account.identifiers.se.ClearingNumber;
@@ -68,7 +68,8 @@ public class BankPrefix {
 
     public static String fromAccountIdentifier(AccountIdentifier identifier) {
         Preconditions.checkArgument(
-                identifier.is(Type.SE), "Only swedish banks are handled at the moment.");
+                identifier.is(AccountIdentifierType.SE),
+                "Only swedish banks are handled at the moment.");
 
         if (identifier.getIdentifier(formatter).matches("^(4993|336[3-7])\\d{6}$")
                 || identifier

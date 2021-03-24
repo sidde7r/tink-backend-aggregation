@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.strings.StringUtils;
 
@@ -70,7 +71,7 @@ public class VolksbankCheckingAccountFetcher implements AccountFetcher<Transacti
                                                                     .PRODUCT_NAME))
                                             .addIdentifier(
                                                     AccountIdentifier.create(
-                                                            AccountIdentifier.Type.IBAN, iban))
+                                                            AccountIdentifierType.IBAN, iban))
                                             .build())
                             .build()
                             .orElse(null);

@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdMo
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 
 public class TransactionalAccountMapper {
 
@@ -21,7 +22,7 @@ public class TransactionalAccountMapper {
                         .withAccountName(accountEntity.getName())
                         .addIdentifier(
                                 AccountIdentifier.create(
-                                        AccountIdentifier.Type.IBAN, accountEntity.getIban()))
+                                        AccountIdentifierType.IBAN, accountEntity.getIban()))
                         .build();
 
         return TransactionalAccount.nxBuilder()

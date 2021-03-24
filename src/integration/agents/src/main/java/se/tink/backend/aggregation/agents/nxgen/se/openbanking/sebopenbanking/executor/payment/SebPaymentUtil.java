@@ -11,7 +11,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.ut
 import se.tink.backend.aggregation.agents.utils.giro.validation.GiroMessageValidator;
 import se.tink.backend.aggregation.agents.utils.remittanceinformation.RemittanceInformationValidator;
 import se.tink.backend.aggregation.utils.accountidentifier.IntraBankChecker;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.giro.validation.OcrValidationConfiguration;
 import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Payment;
@@ -21,14 +21,14 @@ import se.tink.libraries.transfer.rpc.RemittanceInformation;
 public class SebPaymentUtil {
 
     public static PaymentType getPaymentType(Payment payment) {
-        return payment.getCreditor().getAccountIdentifierType().equals(Type.IBAN)
+        return payment.getCreditor().getAccountIdentifierType().equals(AccountIdentifierType.IBAN)
                         && !payment.getCreditor().getAccountNumber().startsWith(SebConstants.MARKET)
                 ? PaymentType.SEPA
                 : PaymentType.DOMESTIC;
     }
 
     public static PaymentProduct getPaymentProduct(
-            PaymentType paymentType, Type creditorAccountType) {
+            PaymentType paymentType, AccountIdentifierType creditorAccountType) {
         switch (paymentType) {
             case SEPA:
                 return PaymentProduct.SEPA_CREDIT_TRANSFER;
@@ -89,7 +89,8 @@ public class SebPaymentUtil {
         }
     }
 
-    private static PaymentProduct getDomesticPaymentProduct(Type creditorAccountType) {
+    private static PaymentProduct getDomesticPaymentProduct(
+            AccountIdentifierType creditorAccountType) {
         switch (creditorAccountType) {
             case SE_BG:
                 return PaymentProduct.SWEDISH_DOMESTIC_PRIVATE_BANKGIROS;

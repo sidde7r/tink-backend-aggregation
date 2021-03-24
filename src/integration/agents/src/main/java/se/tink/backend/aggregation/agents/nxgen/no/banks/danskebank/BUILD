@@ -19,7 +19,6 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
         "//src/integration/models",
         "//src/integration/webdriver/src/main/java/se/tink/integration/webdriver",
-        "//src/libraries/account_identifier",
         "//src/libraries/uuid",
         "//third_party:com_google_inject_guice",
         "//third_party:com_sun_jersey_jersey_core",
@@ -35,5 +34,6 @@ java_library(
         "@aggregation//:com_fasterxml_jackson_dataformat_jackson_dataformat_xml",
         "@aggregation//:com_google_guava_guava",
         "@selenium//:org_seleniumhq_selenium_selenium_api",
+        "@tink_backend//src/libraries/account_identifier",
     ],
 )

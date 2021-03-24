@@ -31,7 +31,7 @@ import se.tink.backend.aggregation.client.provider_configuration.rpc.PisCapabili
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
-import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.mapper.PrioritizedValueExtractor;
 
@@ -78,7 +78,7 @@ public final class RevolutV31Agent extends UkOpenBankingBaseAgent {
                 metricRefreshController,
                 new UkOpenBankingTransferDestinationFetcher(
                         new RevolutTransferDestinationAccountsProvider(apiClient),
-                        AccountIdentifier.Type.IBAN,
+                        AccountIdentifierType.IBAN,
                         IbanIdentifier.class));
     }
 

@@ -134,8 +134,8 @@ f.write( "import java.time.LocalDate;\n" +
                 "\n" +
                 "    private Transfer createMockPayment() {\n" +
                 "        Transfer transfer = new Transfer();\n" +
-                "        transfer.setSource(AccountIdentifier.create(AccountIdentifier.Type.A_TPYE, \"\"));\n" +
-                "        transfer.setDestination(AccountIdentifier.create(AccountIdentifier.Type.A_TYPE, \"\"));\n" +
+                "        transfer.setSource(AccountIdentifier.create(AccountIdentifierType.A_TPYE, \"\"));\n" +
+                "        transfer.setDestination(AccountIdentifier.create(AccountIdentifierType.A_TYPE, \"\"));\n" +
                 "        transfer.setAmount(ExactCurrencyAmount.in);\n" +
                 "        transfer.setType(TransferType.PAYMENT);\n" +
                 "        transfer.setDueDate(\n" +
@@ -155,9 +155,9 @@ f.write( "import java.time.LocalDate;\n" +
                 "                .withCreditor(\n" +
                 "                        new Creditor(\n" +
                 "                                AccountIdentifier.create(\n" +
-                "                                        AccountIdentifier.Type.A_TYPE, \"\"),\n" +
+                "                                        AccountIdentifierType.A_TYPE, \"\"),\n" +
                 "                                \"Recipient Name\"))\n" +
-                "                .withDebtor(new Debtor(AccountIdentifier.create(AccountIdentifier.Type.A_TYPE, \"\")))\n" +
+                "                .withDebtor(new Debtor(AccountIdentifier.create(AccountIdentifierType.A_TYPE, \"\")))\n" +
                 "                .withExactCurrencyAmount(amount)\n" +
                 "                .withExecutionDate(executionDate)\n" +
                 "                .withCurrency(currency)\n" +

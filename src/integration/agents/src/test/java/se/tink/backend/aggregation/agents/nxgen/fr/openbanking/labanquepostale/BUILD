@@ -20,7 +20,6 @@ junit_test(
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/identity_data",
         "//src/integration/lib",
-        "//src/libraries/account_identifier",
         "//src/libraries/mapper",
         "//src/libraries/serialization",
         "//third_party:com_sun_jersey_jersey_core",
@@ -29,5 +28,6 @@ junit_test(
         "//third_party:org_hamcrest_hamcrest_library",
         "//third_party:org_mockito_mockito_core",
         "@aggregation//:com_google_guava_guava",
+        "@tink_backend//src/libraries/account_identifier",
     ],
 )

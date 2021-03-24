@@ -14,7 +14,7 @@ import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager.IbanArgumentEnum;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager.PsuIdArgumentEnum;
-import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Creditor;
@@ -58,7 +58,7 @@ public class UnicreditAgentPaymentTest {
 
         for (int i = 0; i < numberOfMockedPayments; ++i) {
             Creditor creditor = mock(Creditor.class);
-            doReturn(AccountIdentifier.Type.IBAN).when(creditor).getAccountIdentifierType();
+            doReturn(AccountIdentifierType.IBAN).when(creditor).getAccountIdentifierType();
             doReturn("HU06109180010000009347760008").when(creditor).getAccountNumber();
             doReturn("Creditor Name").when(creditor).getName();
 
@@ -66,7 +66,7 @@ public class UnicreditAgentPaymentTest {
             doReturn("Message").when(reference).getValue();
 
             Debtor debtor = mock(Debtor.class);
-            doReturn(AccountIdentifier.Type.IBAN).when(debtor).getAccountIdentifierType();
+            doReturn(AccountIdentifierType.IBAN).when(debtor).getAccountIdentifierType();
             doReturn("HU47109180010000007941740002").when(debtor).getAccountNumber();
 
             ExactCurrencyAmount amount = ExactCurrencyAmount.inSEK(new Random().nextInt(1000));

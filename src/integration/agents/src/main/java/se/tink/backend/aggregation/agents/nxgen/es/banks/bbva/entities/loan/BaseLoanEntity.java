@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.AmountEnt
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 
 @JsonObject
 public abstract class BaseLoanEntity extends AbstractContractDetailsEntity {
@@ -28,7 +29,7 @@ public abstract class BaseLoanEntity extends AbstractContractDetailsEntity {
                 .withAccountName(getAccountName())
                 .addIdentifier(
                         AccountIdentifier.create(
-                                AccountIdentifier.Type.BBAN, getFormats().getBocf()))
+                                AccountIdentifierType.BBAN, getFormats().getBocf()))
                 .setProductName(getProduct().getName())
                 .build();
     }

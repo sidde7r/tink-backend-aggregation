@@ -50,7 +50,6 @@ java_library(
         "//src/integration/transfer:enums",
         "//src/integration/transfer:rpc",
         "//src/integration/user:rpc",
-        "//src/libraries/account_identifier",
         "//src/libraries/date",
         "//src/libraries/giro_validation",
         "//src/libraries/i18n",
@@ -121,6 +120,7 @@ java_library(
         "@aggregation//:io_netty_netty_codec_http",
         "@aggregation//:joda_time_joda_time",
         "@tink_backend//src/aggregation-controller/api/src/main/java/se/tink/backend/aggregationcontroller/v1/rpc/enums",
+        "@tink_backend//src/libraries/account_identifier",
     ],
 )
 
@@ -194,8 +194,6 @@ junit_test(
         "//src/integration/transfer:rpc",
         "//src/integration/user:rpc",
         "//src/libraries/account_data_cache",
-        "//src/libraries/account_identifier",
-        "//src/libraries/account_identifier/src/test/java/se/tink/libraries/account/identifiers/account",
         "//src/libraries/creditsafe_consumer_monitoring",
         "//src/libraries/date",
         "//src/libraries/i18n",
@@ -232,5 +230,7 @@ junit_test(
         "@aggregation//:com_google_guava_guava",
         "@aggregation//:joda_time_joda_time",
         "@tink_backend//src/aggregation-controller/api/src/main/java/se/tink/backend/aggregationcontroller/v1/rpc/enums",
+        "@tink_backend//src/libraries/account_identifier",
+        "@tink_backend//src/libraries/account_identifier/src/test/java/se/tink/libraries/account/identifiers/account",
     ],
 )

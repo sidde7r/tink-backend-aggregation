@@ -34,7 +34,7 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.AccessExceededFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.BadGatewayFilter;
 import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
-import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.payloadparser.PayloadParser;
 
 public abstract class CbiGlobeAgent extends SubsequentProgressiveGenerationAgent
@@ -170,6 +170,6 @@ public abstract class CbiGlobeAgent extends SubsequentProgressiveGenerationAgent
     @Override
     public FetchTransferDestinationsResponse fetchTransferDestinations(List<Account> accounts) {
         return InferredTransferDestinations.forPaymentAccounts(
-                accounts, AccountIdentifier.Type.IBAN);
+                accounts, AccountIdentifierType.IBAN);
     }
 }

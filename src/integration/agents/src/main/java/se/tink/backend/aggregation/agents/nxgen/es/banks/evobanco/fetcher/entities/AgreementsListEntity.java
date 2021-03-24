@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
@@ -85,7 +86,7 @@ public class AgreementsListEntity {
                                                         .withAccountName(aliasbe)
                                                         .addIdentifier(
                                                                 AccountIdentifier.create(
-                                                                        AccountIdentifier.Type.IBAN,
+                                                                        AccountIdentifierType.IBAN,
                                                                         iban))
                                                         .setProductName(accountType)
                                                         .build())

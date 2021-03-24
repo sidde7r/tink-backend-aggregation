@@ -14,7 +14,6 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/instrumentation",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
         "//src/integration/models",
-        "//src/libraries/account_identifier",
         "//src/libraries/mapper",
         "//src/libraries/pair",
         "//src/libraries/strings",
@@ -41,5 +40,6 @@ java_library(
         "@aggregation//:com_fasterxml_jackson_datatype_jackson_datatype_jsr310",
         "@aggregation//:com_google_guava_guava",
         "@aggregation//:io_reactivex_rxjava3_rxjava",
+        "@tink_backend//src/libraries/account_identifier",
     ],
 )

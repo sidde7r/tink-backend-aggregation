@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -14,7 +14,7 @@ public class AccountIdentifierDto {
 
     private String accountId;
 
-    private AccountIdentifier.Type type;
+    private AccountIdentifierType type;
 
     private String identifier;
 }

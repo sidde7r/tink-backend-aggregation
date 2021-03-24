@@ -9,7 +9,7 @@ import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccou
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.creditcard.CreditCardModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
@@ -55,7 +55,9 @@ public class AccountEntity {
                                 .withUniqueIdentifier(accountNumber)
                                 .withAccountNumber(accountNumber)
                                 .withAccountName(product)
-                                .addIdentifier(AccountIdentifier.create(Type.TINK, accountNumber))
+                                .addIdentifier(
+                                        AccountIdentifier.create(
+                                                AccountIdentifierType.TINK, accountNumber))
                                 .setProductName(product)
                                 .build())
                 .putInTemporaryStorage(VolvoFinansConstants.StorageKeys.ACCOUNT_ID, resourceId)

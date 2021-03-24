@@ -23,12 +23,12 @@ junit_test(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
         "//src/integration/transfer:rpc",
         "//src/integration/webdriver/src/main/java/se/tink/integration/webdriver",
-        "//src/libraries/account_identifier",
         "//src/libraries/pair",
         "//third_party:com_sun_jersey_jersey_core",
         "//third_party:org_assertj_assertj_core",
         "//third_party:org_mockito_mockito_core",
         "@selenium//:org_seleniumhq_selenium_selenium_api",
+        "@tink_backend//src/libraries/account_identifier",
     ],
 )
 

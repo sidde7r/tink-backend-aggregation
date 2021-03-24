@@ -36,7 +36,7 @@ import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformati
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.Storage;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.enums.PaymentType;
@@ -68,8 +68,10 @@ public class LansforsakringarPaymentExecutorTest {
     @Test
     public void testCreateDomesticPayment() {
         // given
-        Creditor creditor = new Creditor(AccountIdentifier.create(Type.SE, "90255481251"));
-        Debtor debtor = new Debtor(AccountIdentifier.create(Type.SE, "90255481251"));
+        Creditor creditor =
+                new Creditor(AccountIdentifier.create(AccountIdentifierType.SE, "90255481251"));
+        Debtor debtor =
+                new Debtor(AccountIdentifier.create(AccountIdentifierType.SE, "90255481251"));
         ExactCurrencyAmount amount = ExactCurrencyAmount.inSEK(0.02);
         String currency = "SEK";
         LocalDate executionDate = LocalDate.now().plusDays(7);
@@ -114,7 +116,7 @@ public class LansforsakringarPaymentExecutorTest {
                 .isEqualTo("90255481251");
         Assertions.assertThat(
                         paymentResponse.getPayment().getCreditor().getAccountIdentifier().getType())
-                .isEqualTo(Type.SE);
+                .isEqualTo(AccountIdentifierType.SE);
         Assertions.assertThat(
                         paymentResponse.getPayment().getExactCurrencyAmount().getDoubleValue())
                 .isEqualTo(0.02);
@@ -127,8 +129,10 @@ public class LansforsakringarPaymentExecutorTest {
     @Test
     public void testCreateDomesticGirosPayment() {
         // given
-        Creditor creditor = new Creditor(AccountIdentifier.create(Type.SE_BG, "900-8004"));
-        Debtor debtor = new Debtor(AccountIdentifier.create(Type.SE, "90255481251"));
+        Creditor creditor =
+                new Creditor(AccountIdentifier.create(AccountIdentifierType.SE_BG, "900-8004"));
+        Debtor debtor =
+                new Debtor(AccountIdentifier.create(AccountIdentifierType.SE, "90255481251"));
         ExactCurrencyAmount exactCurrencyAmount = ExactCurrencyAmount.inSEK(0.02);
         String currency = "SEK";
         LocalDate executionDate = LocalDate.now().plusDays(7);
@@ -148,7 +152,7 @@ public class LansforsakringarPaymentExecutorTest {
 
         final DomesticGirosPaymentRequest domesticGirosPaymentRequest =
                 new DomesticGirosPaymentRequest(
-                        new GirosCreditorAccountEntity("900-8004", Type.SE_BG),
+                        new GirosCreditorAccountEntity("900-8004", AccountIdentifierType.SE_BG),
                         new AccountEntity(debtor.getAccountNumber(), currency),
                         new AmountEntity(exactCurrencyAmount),
                         executionDate.format(DateTimeFormatter.ISO_DATE),
@@ -174,7 +178,7 @@ public class LansforsakringarPaymentExecutorTest {
                 .isEqualTo("9008004");
         Assertions.assertThat(
                         paymentResponse.getPayment().getCreditor().getAccountIdentifier().getType())
-                .isEqualTo(Type.SE_BG);
+                .isEqualTo(AccountIdentifierType.SE_BG);
         Assertions.assertThat(
                         paymentResponse.getPayment().getExactCurrencyAmount().getDoubleValue())
                 .isEqualTo(0.02);
@@ -186,8 +190,10 @@ public class LansforsakringarPaymentExecutorTest {
     @Test
     public void testUnknownPaymentSchemeForPayment() {
         // given
-        Creditor creditor = new Creditor(AccountIdentifier.create(Type.BBAN, "900-8004"));
-        Debtor debtor = new Debtor(AccountIdentifier.create(Type.SE, "90255481251"));
+        Creditor creditor =
+                new Creditor(AccountIdentifier.create(AccountIdentifierType.BBAN, "900-8004"));
+        Debtor debtor =
+                new Debtor(AccountIdentifier.create(AccountIdentifierType.SE, "90255481251"));
         ExactCurrencyAmount amount = ExactCurrencyAmount.inSEK(0.02);
         PaymentRequest paymentRequest =
                 new PaymentRequest(

@@ -10,6 +10,7 @@ import se.tink.backend.integration.agent_data_availability_tracker.common.serial
 import se.tink.backend.integration.agent_data_availability_tracker.common.serialization.TrackingList;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.enums.AccountFlag;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 
 public class AccountTrackingSerializerTest {
 
@@ -62,9 +63,9 @@ public class AccountTrackingSerializerTest {
 
         Account account = new Account();
 
-        account.putIdentifier(AccountIdentifier.create(AccountIdentifier.Type.IBAN, EXAMPLE_IBAN));
+        account.putIdentifier(AccountIdentifier.create(AccountIdentifierType.IBAN, EXAMPLE_IBAN));
         account.putIdentifier(
-                AccountIdentifier.create(AccountIdentifier.Type.SORT_CODE, EXAMPLE_SORTCODE));
+                AccountIdentifier.create(AccountIdentifierType.SORT_CODE, EXAMPLE_SORTCODE));
 
         List<FieldEntry> entries = new AccountTrackingSerializer(account).buildList();
 
@@ -86,7 +87,7 @@ public class AccountTrackingSerializerTest {
 
         // this account has no iban
         account.putIdentifier(
-                AccountIdentifier.create(AccountIdentifier.Type.SORT_CODE, EXAMPLE_SORTCODE));
+                AccountIdentifier.create(AccountIdentifierType.SORT_CODE, EXAMPLE_SORTCODE));
 
         List<FieldEntry> entries = new AccountTrackingSerializer(account).buildList();
 

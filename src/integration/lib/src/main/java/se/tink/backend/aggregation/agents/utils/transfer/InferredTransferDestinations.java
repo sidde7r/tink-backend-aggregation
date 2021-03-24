@@ -8,8 +8,8 @@ import java.util.stream.Collectors;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
-import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.enums.AccountFlag;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 
 public class InferredTransferDestinations {
 
@@ -19,7 +19,7 @@ public class InferredTransferDestinations {
      * destination type will receive {@link TransferDestinationPattern#ALL}.
      */
     public static FetchTransferDestinationsResponse forPaymentAccounts(
-            List<Account> accounts, AccountIdentifier.Type... destinationTypes) {
+            List<Account> accounts, AccountIdentifierType... destinationTypes) {
 
         final Map<Account, List<TransferDestinationPattern>> destinations =
                 accounts.stream()

@@ -4,6 +4,7 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import java.util.List;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.account.identifiers.formatters.DefaultAccountIdentifierFormatter;
 
 public class SebGiroRequest extends SebRequest {
@@ -27,7 +28,7 @@ public class SebGiroRequest extends SebRequest {
         List<ServiceInput> serviceInputs = Lists.newArrayList();
         serviceInputs.add(new ServiceInput(name, searchFormattedDestination));
 
-        if (bgOrPgDestination.is(AccountIdentifier.Type.SE_PG)) {
+        if (bgOrPgDestination.is(AccountIdentifierType.SE_PG)) {
             serviceInputs.add(new ServiceInput("TERM_CLNR", "5695"));
         }
 
@@ -35,7 +36,7 @@ public class SebGiroRequest extends SebRequest {
     }
 
     private static String getName(AccountIdentifier bgOrPgDestination) {
-        if (bgOrPgDestination.is(AccountIdentifier.Type.SE_BG)) {
+        if (bgOrPgDestination.is(AccountIdentifierType.SE_BG)) {
             return BG_VARIABLE_NAME;
         } else {
             return PG_VARIABLE_NAME;

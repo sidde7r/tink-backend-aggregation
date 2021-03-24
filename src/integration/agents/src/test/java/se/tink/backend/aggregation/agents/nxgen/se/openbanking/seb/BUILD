@@ -19,8 +19,8 @@ junit_test(
         "//src/integration/payment:enums",
         "//src/integration/payment:rpc",
         "//src/integration/transfer:rpc",
-        "//src/libraries/account_identifier",
         "//third_party:org_iban4j_iban4j",
         "//third_party:org_mockito_mockito_core",
+        "@tink_backend//src/libraries/account_identifier",
     ],
 )

@@ -19,6 +19,7 @@ import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.client
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.fetcher.transfer.dto.TrustedBeneficiariesResponseDto;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.transfer.FrTransferDestinationFetcherTestBase;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 
 public class BoursoramaTransferDestinationFetcherTest extends FrTransferDestinationFetcherTestBase {
 
@@ -53,10 +54,10 @@ public class BoursoramaTransferDestinationFetcherTest extends FrTransferDestinat
         // then
         assertThat(returnedResponse.getDestinations()).containsOnlyKeys(account1, account2);
 
-        final AccountIdentifier identifier1 = account1.getIdentifier(AccountIdentifier.Type.IBAN);
-        final AccountIdentifier identifier2 = account2.getIdentifier(AccountIdentifier.Type.IBAN);
+        final AccountIdentifier identifier1 = account1.getIdentifier(AccountIdentifierType.IBAN);
+        final AccountIdentifier identifier2 = account2.getIdentifier(AccountIdentifierType.IBAN);
         final AccountIdentifier beneficiaryIdentifier =
-                createBeneficiaryAccount().getIdentifier(AccountIdentifier.Type.IBAN);
+                createBeneficiaryAccount().getIdentifier(AccountIdentifierType.IBAN);
 
         assertThat(getAccountIdentifiers(returnedResponse, account1))
                 .containsExactlyInAnyOrder(identifier2, beneficiaryIdentifier);

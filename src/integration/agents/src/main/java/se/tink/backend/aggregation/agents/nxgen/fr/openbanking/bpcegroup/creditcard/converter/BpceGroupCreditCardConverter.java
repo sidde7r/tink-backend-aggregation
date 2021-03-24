@@ -11,7 +11,7 @@ import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccou
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.creditcard.CreditCardModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class BpceGroupCreditCardConverter {
@@ -50,7 +50,9 @@ public class BpceGroupCreditCardConverter {
                 .withUniqueIdentifier(accountEntity.getResourceId())
                 .withAccountNumber(accountEntity.getLinkedAccount())
                 .withAccountName(accountEntity.getName())
-                .addIdentifier(AccountIdentifier.create(Type.PAYMENT_CARD_NUMBER, cardNumber))
+                .addIdentifier(
+                        AccountIdentifier.create(
+                                AccountIdentifierType.PAYMENT_CARD_NUMBER, cardNumber))
                 .build();
     }
 

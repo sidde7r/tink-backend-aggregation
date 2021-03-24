@@ -25,8 +25,8 @@ junit_test(
         "//src/integration/payment:rpc",
         "//src/integration/transfer:enums",
         "//src/integration/transfer:rpc",
-        "//src/libraries/account_identifier",
         "//src/libraries/serialization",
         "//third_party:com_github_tomakehurst_wiremock",
+        "@tink_backend//src/libraries/account_identifier",
     ],
 )

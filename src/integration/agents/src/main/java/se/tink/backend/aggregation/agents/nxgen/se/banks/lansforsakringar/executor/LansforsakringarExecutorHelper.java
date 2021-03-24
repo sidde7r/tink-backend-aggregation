@@ -4,7 +4,7 @@ import com.google.common.base.Objects;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.LansforsakringarApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.executor.rpc.DirectTransferRequest;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.transfer.rpc.Transfer;
 
@@ -28,7 +28,7 @@ public class LansforsakringarExecutorHelper {
     }
 
     boolean isDestinationValid(Transfer transfer) {
-        return transfer.getDestination().is(Type.SE);
+        return transfer.getDestination().is(AccountIdentifierType.SE);
     }
 
     // No bankId signature needed

@@ -14,7 +14,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBa
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.UpcomingTransaction;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.transfer.rpc.Transfer;
 
@@ -117,7 +117,9 @@ public class UpcomingPaymentEntity {
 
     private AccountIdentifier getSenderAccountIdentifier() {
         return AccountIdentifier.create(
-                Type.SE, sender.getBankAccount().getBankAccountNumber(), sender.getName());
+                AccountIdentifierType.SE,
+                sender.getBankAccount().getBankAccountNumber(),
+                sender.getName());
     }
 
     private Transfer toTransfer() {

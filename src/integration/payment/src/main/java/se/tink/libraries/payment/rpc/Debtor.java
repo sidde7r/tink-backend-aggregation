@@ -1,6 +1,7 @@
 package se.tink.libraries.payment.rpc;
 
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 
 public class Debtor {
     private AccountIdentifier accountIdentifier;
@@ -9,7 +10,7 @@ public class Debtor {
         this.accountIdentifier = accountIdentifier;
     }
 
-    public AccountIdentifier.Type getAccountIdentifierType() {
+    public AccountIdentifierType getAccountIdentifierType() {
         return accountIdentifier.getType();
     }
 

@@ -6,6 +6,7 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdMo
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.pair.Pair;
 
@@ -18,7 +19,7 @@ public class TransactionalAccountMapper {
                         .withBalance(ExactCurrencyAmount.of(balance, currency))
                         .build();
 
-        Pair<String, AccountIdentifier.Type> accountId =
+        Pair<String, AccountIdentifierType> accountId =
                 AccountIdentifierProvider.getAccountIdentifierData(internalAccountId, iban);
 
         IdModule idModule =

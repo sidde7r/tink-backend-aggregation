@@ -13,7 +13,6 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/source_info",
         "//src/integration/models",
         "//src/integration/user:rpc",
-        "//src/libraries/account_identifier",
         "//src/libraries/date",
         "//src/libraries/pair",
         "//src/libraries/serialization",
@@ -25,6 +24,7 @@ java_library(
         "//third_party:lombok_libs",
         "//third_party:org_apache_commons_commons_lang",
         "//third_party:org_slf4j_slf4j_api",
+        "@tink_backend//src/libraries/account_identifier",
         "@tink_backend//src/libraries/strings",
     ],
 )

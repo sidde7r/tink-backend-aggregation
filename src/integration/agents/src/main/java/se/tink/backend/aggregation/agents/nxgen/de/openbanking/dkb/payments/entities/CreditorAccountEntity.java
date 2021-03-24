@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.payment.rpc.Creditor;
 
@@ -28,7 +28,8 @@ public class CreditorAccountEntity {
     @JsonIgnore
     public static CreditorAccountEntity of(PaymentRequest paymentRequest) {
         String accountNumber = paymentRequest.getPayment().getCreditor().getAccountNumber();
-        if (paymentRequest.getPayment().getCreditor().getAccountIdentifierType() == Type.IBAN) {
+        if (paymentRequest.getPayment().getCreditor().getAccountIdentifierType()
+                == AccountIdentifierType.IBAN) {
             return new CreditorAccountEntity(accountNumber, null);
         } else {
             return new CreditorAccountEntity(null, accountNumber);
@@ -41,6 +42,7 @@ public class CreditorAccountEntity {
                 ? new Creditor(new IbanIdentifier(iban))
                 : new Creditor(
                         AccountIdentifier.create(
-                                Type.DK, bban)); // should be DE but there isn't one for DE
+                                AccountIdentifierType.DK,
+                                bban)); // should be DE but there isn't one for DE
     }
 }

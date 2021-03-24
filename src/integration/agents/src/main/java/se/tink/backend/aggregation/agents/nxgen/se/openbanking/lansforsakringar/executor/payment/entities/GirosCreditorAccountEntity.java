@@ -6,7 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.payment.rpc.Creditor;
 
 @EqualsAndHashCode
@@ -17,7 +17,7 @@ public class GirosCreditorAccountEntity implements TinkCreditorConstructor {
 
     private String number;
 
-    @JsonIgnore private Type type;
+    @JsonIgnore private AccountIdentifierType type;
 
     @Override
     public Creditor toTinkCreditor() {

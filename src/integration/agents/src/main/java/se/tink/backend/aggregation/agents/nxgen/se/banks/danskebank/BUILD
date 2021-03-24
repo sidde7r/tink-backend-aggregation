@@ -23,7 +23,6 @@ java_library(
         "//src/integration/transfer:enums",
         "//src/integration/transfer:rpc",
         "//src/integration/webdriver/src/main/java/se/tink/integration/webdriver",
-        "//src/libraries/account_identifier",
         "//src/libraries/date",
         "//src/libraries/giro_validation",
         "//src/libraries/strings",
@@ -36,5 +35,6 @@ java_library(
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
         "@com_google_guava_guava",
         "@selenium//:org_seleniumhq_selenium_selenium_api",
+        "@tink_backend//src/libraries/account_identifier",
     ],
 )

@@ -13,7 +13,7 @@ import se.tink.backend.aggregation.agents.utils.remittanceinformation.Remittance
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationReader;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.enums.MarketCode;
 import se.tink.libraries.payment.rpc.Creditor;
@@ -99,7 +99,8 @@ public class RbsAgentWireMockTest {
         return new Payment.Builder()
                 .withCreditor(
                         new Creditor(
-                                AccountIdentifier.create(Type.SORT_CODE, DESTINATION_IDENTIFIER),
+                                AccountIdentifier.create(
+                                        AccountIdentifierType.SORT_CODE, DESTINATION_IDENTIFIER),
                                 "Dummy name"))
                 .withExactCurrencyAmount(amount)
                 .withExecutionDate(executionDate)

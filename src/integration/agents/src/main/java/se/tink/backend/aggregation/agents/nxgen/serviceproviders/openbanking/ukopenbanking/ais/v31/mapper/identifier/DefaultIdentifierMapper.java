@@ -9,30 +9,38 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountIdentifierEntity;
 import se.tink.backend.aggregation.nxgen.core.account.GenericTypeMapper;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.mapper.PrioritizedValueExtractor;
 
 @RequiredArgsConstructor
 public class DefaultIdentifierMapper implements IdentifierMapper {
 
-    private static final GenericTypeMapper<Type, ExternalAccountIdentification4Code> typeMapper =
-            GenericTypeMapper.<Type, ExternalAccountIdentification4Code>genericBuilder()
-                    .put(
-                            Type.SORT_CODE,
-                            ExternalAccountIdentification4Code.SORT_CODE_ACCOUNT_NUMBER)
-                    .put(Type.IBAN, ExternalAccountIdentification4Code.IBAN)
-                    .put(
-                            Type.BBAN,
-                            ExternalAccountIdentification4Code.BBAN,
-                            ExternalAccountIdentification4Code.SAVINGS_ROLL_NUMBER)
-                    .put(Type.PAYMENT_CARD_NUMBER, ExternalAccountIdentification4Code.PAN)
-                    .build();
+    private static final GenericTypeMapper<
+                    AccountIdentifierType, ExternalAccountIdentification4Code>
+            typeMapper =
+                    GenericTypeMapper
+                            .<AccountIdentifierType, ExternalAccountIdentification4Code>
+                                    genericBuilder()
+                            .put(
+                                    AccountIdentifierType.SORT_CODE,
+                                    ExternalAccountIdentification4Code.SORT_CODE_ACCOUNT_NUMBER)
+                            .put(
+                                    AccountIdentifierType.IBAN,
+                                    ExternalAccountIdentification4Code.IBAN)
+                            .put(
+                                    AccountIdentifierType.BBAN,
+                                    ExternalAccountIdentification4Code.BBAN,
+                                    ExternalAccountIdentification4Code.SAVINGS_ROLL_NUMBER)
+                            .put(
+                                    AccountIdentifierType.PAYMENT_CARD_NUMBER,
+                                    ExternalAccountIdentification4Code.PAN)
+                            .build();
 
     protected final PrioritizedValueExtractor valueExtractor;
 
     @Override
     public AccountIdentifier mapIdentifier(AccountIdentifierEntity id) {
-        Type type =
+        AccountIdentifierType type =
                 typeMapper
                         .translate(id.getIdentifierType())
                         .orElseThrow(

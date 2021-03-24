@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.fetcher.data.
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.fetcher.data.rpc.BalancesResponse;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
@@ -65,7 +66,7 @@ public class DnbCardMapperTest {
         assertThat(cardAccount.getIdentifiers().get(0))
                 .isEqualTo(
                         AccountIdentifier.create(
-                                AccountIdentifier.Type.PAYMENT_CARD_NUMBER, TEST_MASKED_PAN));
+                                AccountIdentifierType.PAYMENT_CARD_NUMBER, TEST_MASKED_PAN));
 
         assertThat(cardAccount.getApiIdentifier()).isEqualTo(TEST_RESOURCE_ID);
     }

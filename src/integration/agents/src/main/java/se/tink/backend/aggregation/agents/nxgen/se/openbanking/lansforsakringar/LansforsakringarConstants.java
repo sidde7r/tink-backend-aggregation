@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar
 import se.tink.backend.aggregation.nxgen.core.account.GenericTypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.pair.Pair;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.enums.PaymentType;
@@ -24,11 +24,20 @@ public abstract class LansforsakringarConstants {
                     .put(PaymentStatus.CANCELLED, "CANC")
                     .build();
 
-    public static final GenericTypeMapper<PaymentType, Pair<Type, Type>> PAYMENT_TYPE_MAPPER =
-            GenericTypeMapper.<PaymentType, Pair<Type, Type>>genericBuilder()
-                    .put(PaymentType.DOMESTIC, new Pair<>(Type.SE, Type.SE))
-                    .put(PaymentType.SEPA, new Pair<>(Type.SE, Type.IBAN))
-                    .build();
+    public static final GenericTypeMapper<
+                    PaymentType, Pair<AccountIdentifierType, AccountIdentifierType>>
+            PAYMENT_TYPE_MAPPER =
+                    GenericTypeMapper
+                            .<PaymentType, Pair<AccountIdentifierType, AccountIdentifierType>>
+                                    genericBuilder()
+                            .put(
+                                    PaymentType.DOMESTIC,
+                                    new Pair<>(AccountIdentifierType.SE, AccountIdentifierType.SE))
+                            .put(
+                                    PaymentType.SEPA,
+                                    new Pair<>(
+                                            AccountIdentifierType.SE, AccountIdentifierType.IBAN))
+                            .build();
 
     public static final TypeMapper<TransactionalAccountType> ACCOUNT_TYPE_MAPPER =
             TypeMapper.<TransactionalAccountType>builder()

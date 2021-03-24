@@ -20,7 +20,7 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrum
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.portfolio.PortfolioModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.portfolio.PortfolioModule.PortfolioType;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 
 public class CustodyAccountResponse extends BaseResponse {
 
@@ -48,7 +48,8 @@ public class CustodyAccountResponse extends BaseResponse {
                                 .withAccountName(title)
                                 .addIdentifier(
                                         AccountIdentifier.create(
-                                                Type.TINK, getAccountNumberBasedOnInvestmentType()))
+                                                AccountIdentifierType.TINK,
+                                                getAccountNumberBasedOnInvestmentType()))
                                 .build())
                 .build();
     }

@@ -8,7 +8,7 @@ import lombok.Builder;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.executor.beneficiary.entity.Balance;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.executor.beneficiary.entity.CreditorType;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryRequest;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.payment.rpc.Beneficiary;
 
 @Builder
@@ -43,7 +43,7 @@ public class CaisseEpargneCreateBeneficiaryRequest {
     public static <T extends CreateBeneficiaryRequest>
             Optional<CaisseEpargneCreateBeneficiaryRequest> of(T createBeneficiaryRequest) {
         Beneficiary beneficiary = createBeneficiaryRequest.getBeneficiary().getBeneficiary();
-        if (!Type.IBAN.equals(beneficiary.getAccountNumberType())) {
+        if (!AccountIdentifierType.IBAN.equals(beneficiary.getAccountNumberType())) {
             return Optional.empty();
         }
         return Optional.of(

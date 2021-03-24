@@ -7,7 +7,7 @@ import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager.UsernamePasswordArgumentEnum;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.payment.rpc.Beneficiary;
 import se.tink.libraries.payment.rpc.CreateBeneficiary;
@@ -66,7 +66,7 @@ public class CaisseEpargneAgentTest {
                                         Beneficiary.builder()
                                                 .name("Tink RED CROSS")
                                                 .accountNumber(redCrossIban)
-                                                .accountNumberType(Type.IBAN)
+                                                .accountNumberType(AccountIdentifierType.IBAN)
                                                 .build())
                                 .build());
     }

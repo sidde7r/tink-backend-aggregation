@@ -27,6 +27,7 @@ import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.loan.LoanModule;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class HandelsbankenNOLoanAccountFetcherTest {
@@ -346,7 +347,7 @@ public class HandelsbankenNOLoanAccountFetcherTest {
                                 .withAccountNumber(ACCOUNT_NUMBER)
                                 .withAccountName(description)
                                 .addIdentifier(
-                                        AccountIdentifier.create(AccountIdentifier.Type.NO, ID))
+                                        AccountIdentifier.create(AccountIdentifierType.NO, ID))
                                 .build())
                 .build();
     }

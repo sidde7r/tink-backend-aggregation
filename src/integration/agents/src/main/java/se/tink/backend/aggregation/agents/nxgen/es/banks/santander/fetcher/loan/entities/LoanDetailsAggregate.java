@@ -9,7 +9,7 @@ import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.loan.LoanModule;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 
 public class LoanDetailsAggregate {
     private final LoanEntity loanEntity;
@@ -47,7 +47,7 @@ public class LoanDetailsAggregate {
                 .withAccountName(loanEntity.getGeneralInfo().getAlias())
                 .addIdentifier(
                         AccountIdentifier.create(
-                                Type.TINK,
+                                AccountIdentifierType.TINK,
                                 loanEntity.getGeneralInfo().getContractId().getContractNumber()))
                 .build();
     }

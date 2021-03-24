@@ -16,9 +16,9 @@ junit_test(
         "//src/integration/payment:enums",
         "//src/integration/payment:rpc",
         "//src/integration/transfer:rpc",
-        "//src/libraries/account_identifier",
         "//src/libraries/serialization",
         "//third_party:org_mockito_mockito_core",
         "@aggregation//:joda_time_joda_time",
+        "@tink_backend//src/libraries/account_identifier",
     ],
 )

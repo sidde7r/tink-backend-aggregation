@@ -22,6 +22,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsba
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class HandelsbankenSEAccountTest {
@@ -153,7 +154,7 @@ public class HandelsbankenSEAccountTest {
                         tinkAccount.getIdentifiers().stream()
                                 .map(AccountIdentifier::getType)
                                 .collect(Collectors.toList()))
-                .contains(AccountIdentifier.Type.SE, AccountIdentifier.Type.SE_SHB_INTERNAL);
+                .contains(AccountIdentifierType.SE, AccountIdentifierType.SE_SHB_INTERNAL);
     }
 
     private static final String ACCOUNT_DATA =

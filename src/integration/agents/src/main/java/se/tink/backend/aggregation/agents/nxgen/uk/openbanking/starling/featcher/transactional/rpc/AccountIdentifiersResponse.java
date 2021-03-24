@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featche
 
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 
 @JsonObject
 public class AccountIdentifiersResponse {
@@ -28,12 +29,12 @@ public class AccountIdentifiersResponse {
     }
 
     public AccountIdentifier getIbanIdentifier() {
-        return AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban);
+        return AccountIdentifier.create(AccountIdentifierType.IBAN, iban);
     }
 
     // Required to reflect UK.OBIE.SortCodeAccountNumber format
     public AccountIdentifier getSortCodeAccountNumber() {
         return AccountIdentifier.create(
-                AccountIdentifier.Type.SORT_CODE, bankIdentifier + accountIdentifier);
+                AccountIdentifierType.SORT_CODE, bankIdentifier + accountIdentifier);
     }
 }

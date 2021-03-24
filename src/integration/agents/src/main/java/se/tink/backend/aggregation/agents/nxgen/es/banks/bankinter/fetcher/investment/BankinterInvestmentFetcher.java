@@ -19,7 +19,7 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrum
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.portfolio.PortfolioModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.portfolio.PortfolioModule.PortfolioType;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 
 public class BankinterInvestmentFetcher
         implements AccountFetcher<InvestmentAccount>,
@@ -88,7 +88,8 @@ public class BankinterInvestmentFetcher
                                 .withAccountName(response.getName())
                                 .addIdentifier(
                                         AccountIdentifier.create(
-                                                Type.BBAN, response.getFundAccount()))
+                                                AccountIdentifierType.BBAN,
+                                                response.getFundAccount()))
                                 .build())
                 .putInTemporaryStorage(StorageKeys.RESPONSE_BODY, response.getBody())
                 .build();

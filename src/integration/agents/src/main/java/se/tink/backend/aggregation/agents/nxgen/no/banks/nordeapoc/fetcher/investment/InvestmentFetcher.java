@@ -18,6 +18,7 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrum
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument.id.InstrumentIdModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.portfolio.PortfolioModule;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @AllArgsConstructor
@@ -48,7 +49,7 @@ public class InvestmentFetcher implements AccountFetcher<InvestmentAccount> {
                         .withAccountName(account.getName())
                         .addIdentifier(
                                 AccountIdentifier.create(
-                                        AccountIdentifier.Type.COUNTRY_SPECIFIC, account.getId()))
+                                        AccountIdentifierType.COUNTRY_SPECIFIC, account.getId()))
                         .build();
         PortfolioModule portfolioModule =
                 PortfolioModule.builder()

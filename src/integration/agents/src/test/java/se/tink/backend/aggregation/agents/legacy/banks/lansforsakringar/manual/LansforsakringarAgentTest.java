@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager.SsnArgumentEnum;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager.ToAccountFromAccountArgumentEnum;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.transfer.enums.TransferType;
@@ -53,11 +54,11 @@ public class LansforsakringarAgentTest {
         Transfer transfer = new Transfer();
         transfer.setSource(
                 AccountIdentifier.create(
-                        AccountIdentifier.Type.SE,
+                        AccountIdentifierType.SE,
                         accountManager.get(ToAccountFromAccountArgumentEnum.FROM_ACCOUNT)));
         transfer.setDestination(
                 AccountIdentifier.create(
-                        AccountIdentifier.Type.SE_BG,
+                        AccountIdentifierType.SE_BG,
                         accountManager.get(ToAccountFromAccountArgumentEnum.TO_ACCOUNT)));
         transfer.setAmount(ExactCurrencyAmount.inSEK(2d));
         transfer.setType(TransferType.PAYMENT);

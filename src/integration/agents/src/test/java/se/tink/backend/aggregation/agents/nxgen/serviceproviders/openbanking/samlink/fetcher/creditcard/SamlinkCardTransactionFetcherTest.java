@@ -20,7 +20,7 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.creditc
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
@@ -69,7 +69,8 @@ public class SamlinkCardTransactionFetcherTest {
                                         .withAccountName("Account name")
                                         .addIdentifier(
                                                 AccountIdentifier.create(
-                                                        Type.PAYMENT_CARD_NUMBER, "x"))
+                                                        AccountIdentifierType.PAYMENT_CARD_NUMBER,
+                                                        "x"))
                                         .build())
                         .setApiIdentifier("resource-id")
                         .build();

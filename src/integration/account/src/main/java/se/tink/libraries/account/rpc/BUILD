@@ -11,10 +11,10 @@ java_library(
         "//src/integration/account/src/main/java/se/tink/libraries/account/iface",
         "//src/integration/amount",
         "//src/integration/transfer:rpc",
-        "//src/libraries/account_identifier",
         "//src/libraries/serialization",
         "//src/libraries/uuid",
         "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
         "@aggregation//:com_google_guava_guava",
+        "@tink_backend//src/libraries/account_identifier",
     ],
 )

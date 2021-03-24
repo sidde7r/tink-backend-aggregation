@@ -22,7 +22,7 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryRe
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.payment.enums.CreateBeneficiaryStatus;
 import se.tink.libraries.payment.rpc.CreateBeneficiary;
 
@@ -40,7 +40,7 @@ public class AddBeneficiaryExecutor implements CreateBeneficiaryExecutor {
     public CreateBeneficiaryResponse createBeneficiary(
             CreateBeneficiaryRequest createBeneficiaryRequest) throws BeneficiaryException {
         CreateBeneficiary beneficiary = createBeneficiaryRequest.getBeneficiary();
-        if (beneficiary.getBeneficiary().getAccountNumberType() != AccountIdentifier.Type.IBAN) {
+        if (beneficiary.getBeneficiary().getAccountNumberType() != AccountIdentifierType.IBAN) {
             throw new BeneficiaryException(
                     "Cannot add beneficiary with account identifier different than IBAN");
         }

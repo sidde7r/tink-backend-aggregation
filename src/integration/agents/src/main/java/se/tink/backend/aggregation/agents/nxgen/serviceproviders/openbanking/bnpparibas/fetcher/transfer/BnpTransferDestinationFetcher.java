@@ -13,7 +13,7 @@ import se.tink.backend.aggregation.agents.general.models.GeneralAccountEntity;
 import se.tink.backend.aggregation.agents.general.models.GeneralAccountEntityImpl;
 import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationFetcher;
-import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 
 @RequiredArgsConstructor
@@ -37,8 +37,8 @@ public class BnpTransferDestinationFetcher implements TransferDestinationFetcher
                 .setSourceAccounts(ownAccountList)
                 .setDestinationAccounts(ownAccountList)
                 .setTinkAccounts(accounts)
-                .matchDestinationAccountsOn(AccountIdentifier.Type.IBAN, IbanIdentifier.class)
-                .addMultiMatchPattern(AccountIdentifier.Type.IBAN, TransferDestinationPattern.ALL)
+                .matchDestinationAccountsOn(AccountIdentifierType.IBAN, IbanIdentifier.class)
+                .addMultiMatchPattern(AccountIdentifierType.IBAN, TransferDestinationPattern.ALL)
                 .build();
     }
 

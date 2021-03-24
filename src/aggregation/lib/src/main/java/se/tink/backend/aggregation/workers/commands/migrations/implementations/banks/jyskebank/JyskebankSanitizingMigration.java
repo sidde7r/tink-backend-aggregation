@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.workers.commands.migrations.implementations.
 
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.workers.commands.migrations.ClusterSafeAgentVersionMigration;
-import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class JyskebankSanitizingMigration extends ClusterSafeAgentVersionMigration {
@@ -25,23 +25,21 @@ public class JyskebankSanitizingMigration extends ClusterSafeAgentVersionMigrati
     @Override
     public boolean isDataMigrated(CredentialsRequest request) {
         return request.getAccounts().stream()
-                .filter(account -> account.getIdentifier(AccountIdentifier.Type.IBAN) != null)
+                .filter(account -> account.getIdentifier(AccountIdentifierType.IBAN) != null)
                 .anyMatch(
                         account ->
                                 account.getBankId()
-                                        .equals(
-                                                account.getIdentifier(
-                                                        AccountIdentifier.Type.IBAN)));
+                                        .equals(account.getIdentifier(AccountIdentifierType.IBAN)));
     }
 
     @Override
     public void migrateData(CredentialsRequest request) {
         request.getAccounts().stream()
-                .filter(account -> account.getIdentifier(AccountIdentifier.Type.IBAN) != null)
+                .filter(account -> account.getIdentifier(AccountIdentifierType.IBAN) != null)
                 .forEach(
                         account ->
                                 account.setBankId(
-                                        account.getIdentifier(AccountIdentifier.Type.IBAN)
+                                        account.getIdentifier(AccountIdentifierType.IBAN)
                                                 .getIdentifier()));
     }
 }

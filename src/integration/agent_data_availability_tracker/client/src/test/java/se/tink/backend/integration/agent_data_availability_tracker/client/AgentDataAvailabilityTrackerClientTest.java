@@ -18,6 +18,7 @@ import se.tink.backend.integration.agent_data_availability_tracker.module.TlsCha
 import se.tink.backend.integration.agent_data_availability_tracker.serialization.AccountTrackingSerializer;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.enums.AccountFlag;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @Ignore
@@ -85,9 +86,9 @@ public class AgentDataAvailabilityTrackerClientTest {
         account.setName("AccountName");
         account.setBankId("uid-456-132");
         account.putIdentifier(
-                AccountIdentifier.create(AccountIdentifier.Type.IBAN, "DE89370400440532013000"));
+                AccountIdentifier.create(AccountIdentifierType.IBAN, "DE89370400440532013000"));
         account.putIdentifier(
-                AccountIdentifier.create(AccountIdentifier.Type.SORT_CODE, "40478470872490"));
+                AccountIdentifier.create(AccountIdentifierType.SORT_CODE, "40478470872490"));
         account.putFlag(AccountFlag.BUSINESS);
         account.putFlag(AccountFlag.MANDATE);
 

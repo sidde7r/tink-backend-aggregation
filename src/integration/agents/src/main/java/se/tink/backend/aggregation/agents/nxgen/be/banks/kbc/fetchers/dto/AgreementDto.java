@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.enums.AccountFlag;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
@@ -231,7 +232,7 @@ public class AgreementDto implements GeneralAccountEntity {
     @Override
     public AccountIdentifier generalGetAccountIdentifier() {
         return AccountIdentifier.create(
-                AccountIdentifier.Type.SEPA_EUR, agreementNo.getValue(), agreementName.getValue());
+                AccountIdentifierType.SEPA_EUR, agreementNo.getValue(), agreementName.getValue());
     }
 
     @Override

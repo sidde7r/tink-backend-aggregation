@@ -22,6 +22,7 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.loan.Lo
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
@@ -61,7 +62,7 @@ public class AccountEntity {
                         .withUniqueIdentifier(iban)
                         .withAccountNumber(iban)
                         .withAccountName(name)
-                        .addIdentifier(AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban))
+                        .addIdentifier(AccountIdentifier.create(AccountIdentifierType.IBAN, iban))
                         .build();
         return TransactionalAccount.nxBuilder()
                 .withType(TransactionalAccountType.CHECKING)
@@ -81,7 +82,7 @@ public class AccountEntity {
                         .withAccountName(name)
                         .addIdentifier(
                                 AccountIdentifier.create(
-                                        AccountIdentifier.Type.COUNTRY_SPECIFIC, number))
+                                        AccountIdentifierType.COUNTRY_SPECIFIC, number))
                         .build();
         return InvestmentAccount.nxBuilder()
                 .withoutPortfolios()
@@ -116,7 +117,7 @@ public class AccountEntity {
                         .withAccountName(name)
                         .addIdentifier(
                                 AccountIdentifier.create(
-                                        AccountIdentifier.Type.COUNTRY_SPECIFIC, number))
+                                        AccountIdentifierType.COUNTRY_SPECIFIC, number))
                         .build();
         return Optional.of(
                 LoanAccount.nxBuilder()

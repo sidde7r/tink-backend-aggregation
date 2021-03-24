@@ -4,6 +4,7 @@ import com.google.common.base.Objects;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.banks.seb.model.ExternalAccount;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.account.identifiers.BankGiroIdentifier;
 import se.tink.libraries.account.identifiers.PlusGiroIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
@@ -22,7 +23,7 @@ public class SebAccountIdentifierFormatter implements AccountIdentifierFormatter
 
     @Override
     public String apply(AccountIdentifier identifier) {
-        if (identifier.is(AccountIdentifier.Type.SE)) {
+        if (identifier.is(AccountIdentifierType.SE)) {
             return applySwedish(identifier.to(SwedishIdentifier.class));
         }
 

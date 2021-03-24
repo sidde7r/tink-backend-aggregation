@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.loan.LoanModule;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
@@ -80,9 +81,9 @@ public class LoanEntity {
     }
 
     @JsonIgnore
-    private AccountIdentifier.Type getAccountIdentifierType(String marketCode) {
-        return Optional.ofNullable(AccountIdentifier.Type.fromScheme(marketCode.toLowerCase()))
-                .orElse(AccountIdentifier.Type.COUNTRY_SPECIFIC);
+    private AccountIdentifierType getAccountIdentifierType(String marketCode) {
+        return Optional.ofNullable(AccountIdentifierType.fromScheme(marketCode.toLowerCase()))
+                .orElse(AccountIdentifierType.COUNTRY_SPECIFIC);
     }
 
     /**

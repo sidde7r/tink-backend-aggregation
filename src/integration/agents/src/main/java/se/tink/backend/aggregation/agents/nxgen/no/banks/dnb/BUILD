@@ -23,7 +23,6 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/response",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
         "//src/integration/models",
-        "//src/libraries/account_identifier",
         "//src/libraries/date",
         "//src/libraries/i18n",
         "//third_party:com_google_code_findbugs_jsr305",
@@ -44,6 +43,7 @@ java_library(
         "@aggregation//:com_fasterxml_jackson_core_jackson_core",
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
         "@aggregation//:com_google_guava_guava",
+        "@tink_backend//src/libraries/account_identifier",
         "@tink_backend//src/libraries/strings",
     ],
 )

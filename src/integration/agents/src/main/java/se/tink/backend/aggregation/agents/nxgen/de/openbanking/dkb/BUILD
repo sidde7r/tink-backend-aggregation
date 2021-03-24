@@ -29,7 +29,6 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
         "//src/integration/payment:enums",
         "//src/integration/payment:rpc",
-        "//src/libraries/account_identifier",
         "//src/libraries/date",
         "//third_party:com_sun_jersey_jersey_core",
         "//third_party:lombok_libs",
@@ -40,5 +39,6 @@ java_library(
         "@aggregation//:com_fasterxml_jackson_datatype_jackson_datatype_jsr310",
         "@aggregation//:com_google_guava_guava",
         "@aggregation//:com_kjetland_mbknor_jackson_jsonschema_2_12",
+        "@tink_backend//src/libraries/account_identifier",
     ],
 )

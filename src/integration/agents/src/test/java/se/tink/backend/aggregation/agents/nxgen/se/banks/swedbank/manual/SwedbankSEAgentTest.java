@@ -15,7 +15,7 @@ import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager.SsnArgumentEnum;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager.ToAccountFromAccountArgumentEnum;
-import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.credentials.service.RefreshableItem;
@@ -70,13 +70,13 @@ public class SwedbankSEAgentTest {
 
         for (int i = 0; i < numberOfMockedPayments; ++i) {
             Creditor creditor = mock(Creditor.class);
-            doReturn(AccountIdentifier.Type.SE).when(creditor).getAccountIdentifierType();
+            doReturn(AccountIdentifierType.SE).when(creditor).getAccountIdentifierType();
             doReturn(toAccountFromAccountManager.get(ToAccountFromAccountArgumentEnum.TO_ACCOUNT))
                     .when(creditor)
                     .getAccountNumber();
 
             Debtor debtor = mock(Debtor.class);
-            doReturn(AccountIdentifier.Type.SE).when(debtor).getAccountIdentifierType();
+            doReturn(AccountIdentifierType.SE).when(debtor).getAccountIdentifierType();
             doReturn(toAccountFromAccountManager.get(ToAccountFromAccountArgumentEnum.FROM_ACCOUNT))
                     .when(debtor)
                     .getAccountNumber();

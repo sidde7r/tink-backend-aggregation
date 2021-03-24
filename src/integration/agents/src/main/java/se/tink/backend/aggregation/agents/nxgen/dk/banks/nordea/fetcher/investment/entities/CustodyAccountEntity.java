@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdMo
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument.InstrumentModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.portfolio.PortfolioModule;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
@@ -75,8 +76,7 @@ public class CustodyAccountEntity {
                 .withUniqueIdentifier(id)
                 .withAccountNumber(accountNumber)
                 .withAccountName(name)
-                .addIdentifier(
-                        AccountIdentifier.create(AccountIdentifier.Type.COUNTRY_SPECIFIC, id))
+                .addIdentifier(AccountIdentifier.create(AccountIdentifierType.COUNTRY_SPECIFIC, id))
                 .build();
     }
 

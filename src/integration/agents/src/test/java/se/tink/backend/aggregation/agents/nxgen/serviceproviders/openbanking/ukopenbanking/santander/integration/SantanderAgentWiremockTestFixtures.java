@@ -5,6 +5,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.junit.Ignore;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Payment;
@@ -48,7 +49,7 @@ public final class SantanderAgentWiremockTestFixtures {
 
     private static Creditor createCreditor() {
         return new Creditor(
-                AccountIdentifier.create(AccountIdentifier.Type.SORT_CODE, DESTINATION_IDENTIFIER),
+                AccountIdentifier.create(AccountIdentifierType.SORT_CODE, DESTINATION_IDENTIFIER),
                 CREDITOR_NAME);
     }
 

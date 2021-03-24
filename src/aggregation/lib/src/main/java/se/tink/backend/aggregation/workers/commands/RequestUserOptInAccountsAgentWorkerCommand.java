@@ -33,7 +33,7 @@ import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
 import se.tink.eventproducerservice.events.grpc.AgentLoginCompletedEventProto;
 import se.tink.eventproducerservice.events.grpc.AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResult;
-import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.account_data_cache.FilterReason;
 import se.tink.libraries.pair.Pair;
 
@@ -346,8 +346,8 @@ public class RequestUserOptInAccountsAgentWorkerCommand extends AgentWorkerComma
         additionalInfo.addProperty("holderName", account.getHolderName());
         additionalInfo.addProperty(
                 "iban",
-                Objects.nonNull(account.getIdentifier(AccountIdentifier.Type.IBAN))
-                        ? account.getIdentifier(AccountIdentifier.Type.IBAN).getIdentifier()
+                Objects.nonNull(account.getIdentifier(AccountIdentifierType.IBAN))
+                        ? account.getIdentifier(AccountIdentifierType.IBAN).getIdentifier()
                         : null);
 
         if (accountFeatures == null || account.getType() != AccountTypes.INVESTMENT) {

@@ -8,6 +8,7 @@ import org.junit.Test;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoSavingsAccount;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoTransactionAccount;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 
 public class ItDemoAccountGeneratorTest {
@@ -24,7 +25,7 @@ public class ItDemoAccountGeneratorTest {
         IbanIdentifier expectedRecipientAccount = new IbanIdentifier("IT12X0542811101000700088930");
         AccountIdentifier expectedIdentifier =
                 AccountIdentifier.create(
-                        AccountIdentifier.Type.IBAN, expectedRecipientAccount.getIban());
+                        AccountIdentifierType.IBAN, expectedRecipientAccount.getIban());
         Assert.assertEquals("Savings Account Tink", savingsAccount.getAccountName());
         assertThat(savingsAccount.getIdentifiers()).contains(expectedIdentifier);
 
@@ -41,7 +42,7 @@ public class ItDemoAccountGeneratorTest {
         IbanIdentifier expectedRecipientAccount = new IbanIdentifier("IT04X0542811101001285970723");
         AccountIdentifier expectedIdentifier =
                 AccountIdentifier.create(
-                        AccountIdentifier.Type.IBAN, expectedRecipientAccount.getIban());
+                        AccountIdentifierType.IBAN, expectedRecipientAccount.getIban());
         Assert.assertEquals("Checking Account Tink", transactionAccount.getAccountName());
         assertThat(transactionAccount.getIdentifiers()).contains(expectedIdentifier);
         Assert.assertEquals(686.0, transactionAccount.getBalance(), 0.0001);

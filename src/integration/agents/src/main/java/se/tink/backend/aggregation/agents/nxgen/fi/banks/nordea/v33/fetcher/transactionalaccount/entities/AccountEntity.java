@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33.NordeaFICons
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
@@ -87,7 +88,7 @@ public class AccountEntity {
                 .setName(nickname)
                 .setExactBalance(
                         ExactCurrencyAmount.of(availableBalance, NordeaFIConstants.CURRENCY))
-                .addIdentifier(AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban))
+                .addIdentifier(AccountIdentifier.create(AccountIdentifierType.IBAN, iban))
                 .setAccountNumber(displayAccountNumber)
                 .setBankIdentifier(accountId)
                 .build();

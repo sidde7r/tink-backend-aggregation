@@ -7,7 +7,7 @@ import com.google.common.base.Strings;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 
@@ -19,7 +19,7 @@ public class AccountEntity {
 
     public AccountEntity() {}
 
-    public AccountEntity(Type accountType, String accountNumber) {
+    public AccountEntity(AccountIdentifierType accountType, String accountNumber) {
         switch (accountType) {
             case IBAN:
                 this.iban = accountNumber;
@@ -56,7 +56,7 @@ public class AccountEntity {
     }
 
     @JsonIgnore
-    public Type getAccountType() {
-        return Strings.isNullOrEmpty(bban) ? Type.IBAN : Type.NO;
+    public AccountIdentifierType getAccountType() {
+        return Strings.isNullOrEmpty(bban) ? AccountIdentifierType.IBAN : AccountIdentifierType.NO;
     }
 }

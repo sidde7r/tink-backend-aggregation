@@ -17,7 +17,7 @@ import se.tink.backend.aggregation.agents.utils.giro.validation.GiroMessageValid
 import se.tink.backend.aggregation.agents.utils.remittanceinformation.RemittanceInformationValidator;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.PaymentExecutor;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.giro.validation.OcrValidationConfiguration;
 import se.tink.libraries.transfer.enums.RemittanceInformationType;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
@@ -86,7 +86,7 @@ public class DanskeBankSEPaymentExecutor implements PaymentExecutor {
     }
 
     private String getPayType(Transfer transfer) {
-        return transfer.getDestination().is(Type.SE_BG)
+        return transfer.getDestination().is(AccountIdentifierType.SE_BG)
                 ? TransferPayType.BANK_GIRO
                 : TransferPayType.PLUS_GIRO;
     }

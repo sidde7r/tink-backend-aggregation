@@ -67,6 +67,7 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.identitydata.NameElement;
 
@@ -407,7 +408,7 @@ public final class RedirectAuthenticationDemoAgent extends NextGenerationDemoAge
             public List<AccountIdentifier> getIdentifiers() {
                 return Lists.newArrayList(
                         AccountIdentifier.create(
-                                AccountIdentifier.Type.SORT_CODE,
+                                AccountIdentifierType.SORT_CODE,
                                 getAccountId(),
                                 StaticAccountUK.ACCOUNT_IDENTIFIERS));
             }

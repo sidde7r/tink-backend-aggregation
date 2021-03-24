@@ -26,8 +26,8 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.backend.aggregation.source_info.AccountSourceInfo;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.account.enums.AccountFlag;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
@@ -255,14 +255,14 @@ public class AccountEntityMapper {
                 AccountIdentifier.create(
                         getAccountIdentifierType(marketCode), accountEntity.getAccountNoExt()));
         if (iban != null) {
-            identifiers.add(AccountIdentifier.create(Type.IBAN, iban));
+            identifiers.add(AccountIdentifier.create(AccountIdentifierType.IBAN, iban));
         }
         return identifiers;
     }
 
-    protected AccountIdentifier.Type getAccountIdentifierType(String marketCode) {
-        return Optional.ofNullable(AccountIdentifier.Type.fromScheme(marketCode.toLowerCase()))
-                .orElse(AccountIdentifier.Type.COUNTRY_SPECIFIC);
+    protected AccountIdentifierType getAccountIdentifierType(String marketCode) {
+        return Optional.ofNullable(AccountIdentifierType.fromScheme(marketCode.toLowerCase()))
+                .orElse(AccountIdentifierType.COUNTRY_SPECIFIC);
     }
 
     public Optional<TransactionalAccount> toSavingsAccount(

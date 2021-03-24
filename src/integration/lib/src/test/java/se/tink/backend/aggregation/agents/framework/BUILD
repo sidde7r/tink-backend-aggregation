@@ -40,7 +40,6 @@ java_library(
         "//src/integration/tpp_secrets_service/client/src/main/java/se/tink/backend/integration/tpp_secrets_service/client:tpp-secrets-service-client",
         "//src/integration/transfer:rpc",
         "//src/integration/user:rpc",
-        "//src/libraries/account_identifier",
         "//src/libraries/metrics:registry",
         "//src/libraries/pair",
         "//src/libraries/serialization",
@@ -62,5 +61,6 @@ java_library(
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
         "@aggregation//:com_google_guava_guava",
         "@tink_backend//src/aggregation-controller/api/src/main/java/se/tink/backend/aggregationcontroller/v1/rpc/enums",
+        "@tink_backend//src/libraries/account_identifier",
     ],
 )

@@ -4,7 +4,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
-import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.payment.rpc.Beneficiary;
 import se.tink.libraries.payment.rpc.CreateBeneficiary;
@@ -46,7 +46,7 @@ public class CreditAgricoleAgentTest {
                                 .beneficiary(
                                         Beneficiary.builder()
                                                 .accountNumber(BENEFICIARY_ACCOUNT)
-                                                .accountNumberType(AccountIdentifier.Type.IBAN)
+                                                .accountNumberType(AccountIdentifierType.IBAN)
                                                 .name("Tink Tester")
                                                 .build())
                                 .build());

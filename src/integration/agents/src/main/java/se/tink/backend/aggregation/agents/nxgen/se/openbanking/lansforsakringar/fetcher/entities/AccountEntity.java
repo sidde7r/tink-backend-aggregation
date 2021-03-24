@@ -16,6 +16,7 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdMo
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
@@ -78,7 +79,7 @@ public class AccountEntity {
                                 .withAccountNumber(bban)
                                 .withAccountName(getName())
                                 .addIdentifier(
-                                        AccountIdentifier.create(AccountIdentifier.Type.SE, bban))
+                                        AccountIdentifier.create(AccountIdentifierType.SE, bban))
                                 .addIdentifier(new SwedishIdentifier(bban).toIbanIdentifer())
                                 .setProductName(product)
                                 .build())
@@ -102,7 +103,7 @@ public class AccountEntity {
                                 .withAccountNumber(getPan())
                                 .withAccountName(product)
                                 .addIdentifier(
-                                        AccountIdentifier.create(AccountIdentifier.Type.BBAN, bban))
+                                        AccountIdentifier.create(AccountIdentifierType.BBAN, bban))
                                 .setProductName(product)
                                 .build())
                 .setApiIdentifier(resourceId)

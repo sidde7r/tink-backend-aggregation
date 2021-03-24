@@ -26,6 +26,6 @@ junit_test(
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/compositeagenttest/wiremockrefresh",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/configuration",
         "//src/integration/payment:rpc",
-        "//src/libraries/account_identifier",
+        "@tink_backend//src/libraries/account_identifier",
     ],
 )

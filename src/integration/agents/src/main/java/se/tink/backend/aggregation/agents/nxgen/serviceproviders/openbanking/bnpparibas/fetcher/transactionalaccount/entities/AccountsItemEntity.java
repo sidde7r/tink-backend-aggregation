@@ -15,7 +15,7 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdMo
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
@@ -112,7 +112,8 @@ public class AccountsItemEntity {
                                 .withAccountName(this.name)
                                 .addIdentifier(
                                         AccountIdentifier.create(
-                                                Type.PAYMENT_CARD_NUMBER, this.accountId.getIban()))
+                                                AccountIdentifierType.PAYMENT_CARD_NUMBER,
+                                                this.accountId.getIban()))
                                 .setProductName(this.product)
                                 .build())
                 .setApiIdentifier(this.resourceId)

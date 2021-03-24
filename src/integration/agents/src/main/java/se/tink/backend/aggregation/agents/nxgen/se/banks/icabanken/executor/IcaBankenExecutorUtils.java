@@ -19,6 +19,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.utils.IcaBank
 import se.tink.backend.aggregation.agents.utils.giro.validation.GiroMessageValidator;
 import se.tink.backend.aggregation.utils.accountidentifier.IntraBankChecker;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.date.CountryDateHelper;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 import se.tink.libraries.giro.validation.OcrValidationConfiguration;
@@ -131,12 +132,12 @@ public class IcaBankenExecutorUtils {
         }
     }
 
-    public static String getRecipientType(AccountIdentifier.Type type, Catalog catalog) {
-        if (Objects.equals(type, AccountIdentifier.Type.SE)) {
+    public static String getRecipientType(AccountIdentifierType type, Catalog catalog) {
+        if (Objects.equals(type, AccountIdentifierType.SE)) {
             return IcaBankenConstants.Transfers.BANK_TRANSFER;
-        } else if (Objects.equals(type, AccountIdentifier.Type.SE_BG)) {
+        } else if (Objects.equals(type, AccountIdentifierType.SE_BG)) {
             return IcaBankenConstants.Transfers.PAYMENT_BG;
-        } else if (Objects.equals(type, AccountIdentifier.Type.SE_PG)) {
+        } else if (Objects.equals(type, AccountIdentifierType.SE_PG)) {
             return IcaBankenConstants.Transfers.PAYMENT_PG;
         }
 
@@ -145,12 +146,12 @@ public class IcaBankenExecutorUtils {
                 .build();
     }
 
-    public static AccountIdentifier.Type paymentTypeToIdentifierType(String type) {
+    public static AccountIdentifierType paymentTypeToIdentifierType(String type) {
         switch (type.toLowerCase()) {
             case IcaBankenConstants.AccountTypes.PAYMENT_BG:
-                return AccountIdentifier.Type.SE_BG;
+                return AccountIdentifierType.SE_BG;
             case IcaBankenConstants.AccountTypes.PAYMENT_PG:
-                return AccountIdentifier.Type.SE_PG;
+                return AccountIdentifierType.SE_PG;
             default:
                 throw new IllegalArgumentException(
                         String.format("Unused payment type identifier: %s", type));

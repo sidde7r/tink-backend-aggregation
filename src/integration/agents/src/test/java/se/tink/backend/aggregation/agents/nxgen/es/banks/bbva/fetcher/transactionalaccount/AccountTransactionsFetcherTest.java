@@ -34,7 +34,7 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class AccountTransactionsFetcherTest {
@@ -62,7 +62,8 @@ public class AccountTransactionsFetcherTest {
                                         .withAccountName("Cuentas Personales")
                                         .addIdentifier(
                                                 AccountIdentifier.create(
-                                                        Type.IBAN, "ES0201821048600000000000"))
+                                                        AccountIdentifierType.IBAN,
+                                                        "ES0201821048600000000000"))
                                         .build())
                         .setApiIdentifier("ES0XXXXXXXXXXXXXXXXXXXXXXXXXXX")
                         .addParties(Arrays.asList(new Party("OWNER", Role.HOLDER)))

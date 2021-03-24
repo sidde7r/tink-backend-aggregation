@@ -11,7 +11,7 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.client.FetcherCl
 import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.fetcher.creditcard.rpc.CreditCardDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.fetcher.creditcard.rpc.CreditCardsResponse;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
-import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
@@ -51,7 +51,7 @@ public class CreditCardFetcherTest {
         assertThat(card.getApiIdentifier()).isEqualTo("2218836201");
         assertThat(card.getIdentifiers()).hasSize(1);
         assertThat(card.getIdentifiers().get(0).getType())
-                .isEqualTo(AccountIdentifier.Type.PAYMENT_CARD_NUMBER);
+                .isEqualTo(AccountIdentifierType.PAYMENT_CARD_NUMBER);
         assertThat(card.getIdentifiers().get(0).getIdentifier()).isEqualTo(MASKED_PAN);
 
         assertThat(card.getName()).isEqualTo(MASKED_PAN);

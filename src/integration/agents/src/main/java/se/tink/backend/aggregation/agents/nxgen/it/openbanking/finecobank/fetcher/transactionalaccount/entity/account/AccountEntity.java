@@ -9,8 +9,8 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdMo
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.account.enums.AccountFlag;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 
 @JsonObject
 public class AccountEntity {
@@ -35,7 +35,8 @@ public class AccountEntity {
                                 .withUniqueIdentifier(iban)
                                 .withAccountNumber(iban)
                                 .withAccountName(name)
-                                .addIdentifier(AccountIdentifier.create(Type.IBAN, iban))
+                                .addIdentifier(
+                                        AccountIdentifier.create(AccountIdentifierType.IBAN, iban))
                                 .build())
                 .setApiIdentifier(resourceId)
                 .setBankIdentifier(iban)

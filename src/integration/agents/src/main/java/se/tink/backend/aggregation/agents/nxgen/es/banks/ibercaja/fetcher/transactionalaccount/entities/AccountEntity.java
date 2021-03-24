@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccou
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
@@ -68,7 +69,7 @@ public class AccountEntity {
                         iban,
                         ExactCurrencyAmount.inEUR(balance))
                 .setAccountNumber(iban)
-                .addIdentifier(AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban))
+                .addIdentifier(AccountIdentifier.create(AccountIdentifierType.IBAN, iban))
                 .setBankIdentifier(number)
                 .setExactBalance(ExactCurrencyAmount.inEUR(balance))
                 .setName(alias)
@@ -81,7 +82,7 @@ public class AccountEntity {
 
         return InvestmentAccount.builder(iban)
                 .setAccountNumber(number)
-                .addIdentifier(AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban))
+                .addIdentifier(AccountIdentifier.create(AccountIdentifierType.IBAN, iban))
                 .setBankIdentifier(number)
                 .setName(alias)
                 .setPortfolios(Collections.singletonList(portfolio))

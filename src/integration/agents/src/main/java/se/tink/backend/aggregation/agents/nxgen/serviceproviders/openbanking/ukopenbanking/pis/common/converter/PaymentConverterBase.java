@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.nxgen.core.account.GenericTypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.account.identifiers.PaymPhoneNumberIdentifier;
 import se.tink.libraries.account.identifiers.PaymentCardNumberIdentifier;
@@ -25,13 +26,13 @@ import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 public abstract class PaymentConverterBase {
 
-    private static final GenericTypeMapper<String, AccountIdentifier.Type>
+    private static final GenericTypeMapper<String, AccountIdentifierType>
             PAYMENT_SCHEME_TYPE_MAPPER =
-                    GenericTypeMapper.<String, AccountIdentifier.Type>genericBuilder()
-                            .put("UK.OBIE.Paym", AccountIdentifier.Type.PAYM_PHONE_NUMBER)
-                            .put("UK.OBIE.PAN", AccountIdentifier.Type.PAYMENT_CARD_NUMBER)
-                            .put("UK.OBIE.SortCodeAccountNumber", AccountIdentifier.Type.SORT_CODE)
-                            .put("UK.OBIE.IBAN", AccountIdentifier.Type.IBAN)
+                    GenericTypeMapper.<String, AccountIdentifierType>genericBuilder()
+                            .put("UK.OBIE.Paym", AccountIdentifierType.PAYM_PHONE_NUMBER)
+                            .put("UK.OBIE.PAN", AccountIdentifierType.PAYMENT_CARD_NUMBER)
+                            .put("UK.OBIE.SortCodeAccountNumber", AccountIdentifierType.SORT_CODE)
+                            .put("UK.OBIE.IBAN", AccountIdentifierType.IBAN)
                             .build();
 
     private static final TypeMapper<PaymentStatus> PAYMENT_STATUS_TYPE_MAPPER =
@@ -175,7 +176,7 @@ public abstract class PaymentConverterBase {
         }
     }
 
-    private static String getSchemeName(AccountIdentifier.Type accountIdentifier) {
+    private static String getSchemeName(AccountIdentifierType accountIdentifier) {
         return PAYMENT_SCHEME_TYPE_MAPPER
                 .translate(accountIdentifier)
                 .orElseThrow(() -> new IllegalArgumentException("Scheme name cannot be null!"));

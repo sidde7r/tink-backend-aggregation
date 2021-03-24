@@ -27,6 +27,7 @@ import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails.Type;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.loan.LoanModule;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class SantanderLoanAccountFetcher implements AccountFetcher<LoanAccount> {
@@ -84,7 +85,7 @@ public class SantanderLoanAccountFetcher implements AccountFetcher<LoanAccount> 
                                 .withAccountName(loanProductName)
                                 .addIdentifier(
                                         AccountIdentifier.create(
-                                                AccountIdentifier.Type.IBAN,
+                                                AccountIdentifierType.IBAN,
                                                 loan.get(ACCOUNT_NUMBER)))
                                 .build())
                 .build();

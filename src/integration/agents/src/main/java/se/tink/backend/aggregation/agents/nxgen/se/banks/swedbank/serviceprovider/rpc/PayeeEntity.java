@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.general.models.GeneralAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankBaseConstants;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 
 public class PayeeEntity extends AbstractPayeeEntity implements GeneralAccountEntity {
     @JsonIgnore private static final Logger log = LoggerFactory.getLogger(PayeeEntity.class);
@@ -29,7 +30,7 @@ public class PayeeEntity extends AbstractPayeeEntity implements GeneralAccountEn
 
     @Override
     public AccountIdentifier generalGetAccountIdentifier() {
-        Optional<AccountIdentifier.Type> tinkType = getTinkType();
+        Optional<AccountIdentifierType> tinkType = getTinkType();
         if (!tinkType.isPresent()) {
             return AccountIdentifier.create(null);
         }
@@ -47,16 +48,16 @@ public class PayeeEntity extends AbstractPayeeEntity implements GeneralAccountEn
         return this.name;
     }
 
-    private Optional<AccountIdentifier.Type> getTinkType() {
+    private Optional<AccountIdentifierType> getTinkType() {
         if (this.type == null) {
             return Optional.empty();
         }
 
         switch (this.type.toUpperCase()) {
             case SwedbankBaseConstants.PaymentAccountType.BGACCOUNT:
-                return Optional.of(AccountIdentifier.Type.SE_BG);
+                return Optional.of(AccountIdentifierType.SE_BG);
             case SwedbankBaseConstants.PaymentAccountType.PGACCOUNT:
-                return Optional.of(AccountIdentifier.Type.SE_PG);
+                return Optional.of(AccountIdentifierType.SE_PG);
             default:
                 log.warn("Unknown payee entity type: {}", this.type);
                 return Optional.empty();

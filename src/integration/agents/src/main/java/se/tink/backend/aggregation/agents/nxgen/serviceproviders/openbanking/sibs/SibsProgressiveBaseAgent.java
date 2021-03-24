@@ -38,7 +38,7 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.BankServiceInternalErrorFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.ExecutionTimeLoggingFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.ServiceUnavailableBankServiceErrorFilter;
-import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 
 public abstract class SibsProgressiveBaseAgent extends SubsequentProgressiveGenerationAgent
         implements RefreshTransferDestinationExecutor,
@@ -154,7 +154,7 @@ public abstract class SibsProgressiveBaseAgent extends SubsequentProgressiveGene
     @Override
     public FetchTransferDestinationsResponse fetchTransferDestinations(List<Account> accounts) {
         return InferredTransferDestinations.forPaymentAccounts(
-                accounts, AccountIdentifier.Type.SEPA_EUR, AccountIdentifier.Type.IBAN);
+                accounts, AccountIdentifierType.SEPA_EUR, AccountIdentifierType.IBAN);
     }
 
     @Override

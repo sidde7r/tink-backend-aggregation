@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.fetcher.data.
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.fetcher.data.rpc.BalancesResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
@@ -93,7 +94,7 @@ public class DnbAccountMapperTest {
         assertThat(account.getName()).isEqualTo(TEST_NAME);
         assertThat(account.getIdentifiers()).hasSize(1);
         assertThat(account.getIdentifiers().get(0))
-                .isEqualTo(AccountIdentifier.create(AccountIdentifier.Type.NO, TEST_BBAN));
+                .isEqualTo(AccountIdentifier.create(AccountIdentifierType.NO, TEST_BBAN));
         assertThat(account.getApiIdentifier()).isEqualTo(TEST_BBAN);
         assertThat(account.getExactBalance()).isEqualTo(ExactCurrencyAmount.of(1234.0, "NOK"));
     }

@@ -53,7 +53,6 @@ junit_test(
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/fakelogmasker",
         "//src/integration/tpp_secrets_service/client/src/main/java/se/tink/backend/integration/tpp_secrets_service/client/iface",
         "//src/integration/user:rpc",
-        "//src/libraries/account_identifier",
         "//src/libraries/date",
         "//src/libraries/metrics:core",
         "//src/libraries/metrics:counters",
@@ -70,5 +69,6 @@ junit_test(
         "@aggregation//:com_fasterxml_jackson_core_jackson_core",
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
         "@tink_backend//src/aggregation-controller/api/src/main/java/se/tink/backend/aggregationcontroller/v1/rpc/enums",
+        "@tink_backend//src/libraries/account_identifier",
     ],
 )

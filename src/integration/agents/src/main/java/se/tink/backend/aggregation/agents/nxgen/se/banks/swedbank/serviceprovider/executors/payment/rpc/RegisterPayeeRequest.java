@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovid
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankBaseConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.account.identifiers.formatters.DefaultAccountIdentifierFormatter;
 
 @JsonObject
@@ -23,7 +24,7 @@ public class RegisterPayeeRequest {
 
     public static RegisterPayeeRequest create(AccountIdentifier accountIdentifier, String name) {
         String type =
-                accountIdentifier.is(AccountIdentifier.Type.SE_BG)
+                accountIdentifier.is(AccountIdentifierType.SE_BG)
                         ? SwedbankBaseConstants.PaymentAccountType.BGACCOUNT
                         : SwedbankBaseConstants.PaymentAccountType.PGACCOUNT;
         String accountNumber =

@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdMo
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
@@ -69,7 +70,7 @@ public class SavingsAccountEntity {
                 .withUniqueIdentifier(accountId)
                 .withAccountNumber(accountNumber)
                 .withAccountName(name)
-                .addIdentifier(AccountIdentifier.create(AccountIdentifier.Type.TINK, accountNumber))
+                .addIdentifier(AccountIdentifier.create(AccountIdentifierType.TINK, accountNumber))
                 .setProductName(product)
                 .build();
     }

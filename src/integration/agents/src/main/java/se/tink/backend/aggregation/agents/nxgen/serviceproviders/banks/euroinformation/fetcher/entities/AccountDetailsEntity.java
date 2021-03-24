@@ -17,6 +17,7 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.transactional.T
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 
 @JsonObject
 @XmlRootElement(name = "compte")
@@ -158,7 +159,7 @@ public class AccountDetailsEntity {
                                 .withAccountNumber(accountNumber)
                                 .withAccountName(accountName)
                                 .addIdentifier(
-                                        AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban))
+                                        AccountIdentifier.create(AccountIdentifierType.IBAN, iban))
                                 .build())
                 .putInTemporaryStorage(EuroInformationConstants.Tags.WEB_ID, webId);
     }

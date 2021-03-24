@@ -8,7 +8,7 @@ import java.util.Date;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.fetcher.einvoice.entities.PaymentEntity;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
@@ -38,8 +38,9 @@ public class PaymentEntityTest {
 
     private Transfer createTransfer() {
         Transfer transfer = new Transfer();
-        transfer.setSource(AccountIdentifier.create(Type.SE, SOURCE_ACCOUNT));
-        transfer.setDestination(AccountIdentifier.create(Type.SE_BG, DESTINATION_ACCOUNT));
+        transfer.setSource(AccountIdentifier.create(AccountIdentifierType.SE, SOURCE_ACCOUNT));
+        transfer.setDestination(
+                AccountIdentifier.create(AccountIdentifierType.SE_BG, DESTINATION_ACCOUNT));
         transfer.setAmount(ExactCurrencyAmount.inSEK(1));
         transfer.setType(TransferType.PAYMENT);
         RemittanceInformation remittanceInformation = new RemittanceInformation();

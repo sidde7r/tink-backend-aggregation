@@ -6,15 +6,19 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ban
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.PersistentStorageKeys;
 import se.tink.backend.aggregation.nxgen.core.account.GenericTypeMapper;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.payment.enums.PaymentType;
 
 public final class BankdataConstants {
 
     public static final GenericTypeMapper<PaymentType, TypePair> PAYMENT_TYPE_MAPPER =
             GenericTypeMapper.<PaymentType, TypePair>genericBuilder()
-                    .put(PaymentType.DOMESTIC, new TypePair(Type.DK, Type.DK))
-                    .put(PaymentType.SEPA, new TypePair(Type.IBAN, Type.IBAN))
+                    .put(
+                            PaymentType.DOMESTIC,
+                            new TypePair(AccountIdentifierType.DK, AccountIdentifierType.DK))
+                    .put(
+                            PaymentType.SEPA,
+                            new TypePair(AccountIdentifierType.IBAN, AccountIdentifierType.IBAN))
                     .build();
 
     private BankdataConstants() {

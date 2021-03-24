@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.un
 
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 
@@ -13,10 +13,10 @@ public class AccountInfoEntity {
     private String currency;
 
     public Creditor toTinkCreditor() {
-        return new Creditor(AccountIdentifier.create(Type.IBAN, iban));
+        return new Creditor(AccountIdentifier.create(AccountIdentifierType.IBAN, iban));
     }
 
     public Debtor toTinkDebtor() {
-        return new Debtor(AccountIdentifier.create(Type.IBAN, iban));
+        return new Debtor(AccountIdentifier.create(AccountIdentifierType.IBAN, iban));
     }
 }

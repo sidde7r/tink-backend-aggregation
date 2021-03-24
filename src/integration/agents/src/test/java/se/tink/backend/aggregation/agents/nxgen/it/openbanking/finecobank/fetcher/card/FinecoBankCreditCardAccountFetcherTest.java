@@ -34,7 +34,7 @@ import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccou
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
@@ -119,7 +119,8 @@ public class FinecoBankCreditCardAccountFetcherTest {
                 .isEqualTo(
                         Collections.singleton(
                                 AccountIdentifier.create(
-                                        Type.PAYMENT_CARD_NUMBER, "1234 **** **** 1000")));
+                                        AccountIdentifierType.PAYMENT_CARD_NUMBER,
+                                        "1234 **** **** 1000")));
         assertThat(card1.getApiIdentifier()).isEqualTo("2218836100");
 
         CreditCardAccount card2 = getCardByCardNumber(creditCardAccounts, "1234 **** **** 1001");
@@ -135,7 +136,8 @@ public class FinecoBankCreditCardAccountFetcherTest {
                 .isEqualTo(
                         Collections.singleton(
                                 AccountIdentifier.create(
-                                        Type.PAYMENT_CARD_NUMBER, "1234 **** **** 1001")));
+                                        AccountIdentifierType.PAYMENT_CARD_NUMBER,
+                                        "1234 **** **** 1001")));
         assertThat(card2.getApiIdentifier()).isEqualTo("2218836101");
     }
 

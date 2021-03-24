@@ -5,6 +5,7 @@ import se.tink.backend.aggregation.agents.general.models.GeneralAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.StarlingConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.account.identifiers.SortCodeIdentifier;
 
 @JsonObject
@@ -53,7 +54,7 @@ public class PayeeAccountEntity {
 
     public Optional<PayeeGeneralAccount> toGeneralAccountEntity() {
 
-        Optional<AccountIdentifier.Type> type =
+        Optional<AccountIdentifierType> type =
                 StarlingConstants.ACCOUNT_IDENTIFIER_MAPPER.translate(bankIdentifierType);
 
         // Returns empty if identifier is not one supported by Tink

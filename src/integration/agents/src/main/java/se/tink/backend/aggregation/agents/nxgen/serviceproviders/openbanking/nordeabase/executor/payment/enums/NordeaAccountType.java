@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.no
 import com.google.common.collect.EnumHashBiMap;
 import java.util.Arrays;
 import java.util.Optional;
-import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 
 public enum NordeaAccountType {
     IBAN,
@@ -19,16 +19,16 @@ public enum NordeaAccountType {
     DK_73,
     DK_75;
 
-    private static final EnumHashBiMap<AccountIdentifier.Type, NordeaAccountType>
-            tinkToNordeaAccountTypeBiMapper = EnumHashBiMap.create(AccountIdentifier.Type.class);
+    private static final EnumHashBiMap<AccountIdentifierType, NordeaAccountType>
+            tinkToNordeaAccountTypeBiMapper = EnumHashBiMap.create(AccountIdentifierType.class);
 
     static {
-        tinkToNordeaAccountTypeBiMapper.put(AccountIdentifier.Type.IBAN, IBAN);
-        tinkToNordeaAccountTypeBiMapper.put(AccountIdentifier.Type.SE, BBAN_SE);
-        tinkToNordeaAccountTypeBiMapper.put(AccountIdentifier.Type.SE_BG, BGNR);
-        tinkToNordeaAccountTypeBiMapper.put(AccountIdentifier.Type.SE_PG, PGNR);
-        tinkToNordeaAccountTypeBiMapper.put(AccountIdentifier.Type.NO, BBAN_NO);
-        tinkToNordeaAccountTypeBiMapper.put(AccountIdentifier.Type.DK, BBAN_DK);
+        tinkToNordeaAccountTypeBiMapper.put(AccountIdentifierType.IBAN, IBAN);
+        tinkToNordeaAccountTypeBiMapper.put(AccountIdentifierType.SE, BBAN_SE);
+        tinkToNordeaAccountTypeBiMapper.put(AccountIdentifierType.SE_BG, BGNR);
+        tinkToNordeaAccountTypeBiMapper.put(AccountIdentifierType.SE_PG, PGNR);
+        tinkToNordeaAccountTypeBiMapper.put(AccountIdentifierType.NO, BBAN_NO);
+        tinkToNordeaAccountTypeBiMapper.put(AccountIdentifierType.DK, BBAN_DK);
     }
 
     public String toString() {
@@ -45,7 +45,7 @@ public enum NordeaAccountType {
                                         "Unrecognized Nordea account type : " + text));
     }
 
-    public static NordeaAccountType mapToNordeaAccountType(AccountIdentifier.Type tinkAccountType) {
+    public static NordeaAccountType mapToNordeaAccountType(AccountIdentifierType tinkAccountType) {
         return Optional.ofNullable(tinkToNordeaAccountTypeBiMapper.get(tinkAccountType))
                 .orElseThrow(
                         () ->
@@ -55,7 +55,7 @@ public enum NordeaAccountType {
                                                 + " to a Nordea account type."));
     }
 
-    public AccountIdentifier.Type mapToTinkAccountType() {
+    public AccountIdentifierType mapToTinkAccountType() {
         return Optional.ofNullable(tinkToNordeaAccountTypeBiMapper.inverse().get(this))
                 .orElseThrow(
                         () ->

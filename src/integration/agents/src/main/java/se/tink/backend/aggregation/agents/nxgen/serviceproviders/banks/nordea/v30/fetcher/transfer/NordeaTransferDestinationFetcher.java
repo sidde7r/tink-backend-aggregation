@@ -16,7 +16,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v3
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.fetcher.transfer.entities.BeneficiariesEntity;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationFetcher;
-import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 
 public class NordeaTransferDestinationFetcher implements TransferDestinationFetcher {
     private final NordeaBaseApiClient apiClient;
@@ -55,8 +55,8 @@ public class NordeaTransferDestinationFetcher implements TransferDestinationFetc
                 .setSourceAccounts(paymentSourceAccounts)
                 .setDestinationAccounts(paymentDestinationAccounts)
                 .setTinkAccounts(accounts)
-                .addMultiMatchPattern(AccountIdentifier.Type.SE_BG, TransferDestinationPattern.ALL)
-                .addMultiMatchPattern(AccountIdentifier.Type.SE_PG, TransferDestinationPattern.ALL)
+                .addMultiMatchPattern(AccountIdentifierType.SE_BG, TransferDestinationPattern.ALL)
+                .addMultiMatchPattern(AccountIdentifierType.SE_PG, TransferDestinationPattern.ALL)
                 .build();
     }
 
@@ -89,7 +89,7 @@ public class NordeaTransferDestinationFetcher implements TransferDestinationFetc
                 .setTinkAccounts(accounts)
                 .setSourceAccounts(sourceAccounts)
                 .setDestinationAccounts(destinationAccounts)
-                .addMultiMatchPattern(AccountIdentifier.Type.SE, TransferDestinationPattern.ALL)
+                .addMultiMatchPattern(AccountIdentifierType.SE, TransferDestinationPattern.ALL)
                 .build();
     }
 }

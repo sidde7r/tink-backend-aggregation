@@ -8,6 +8,7 @@ import se.tink.backend.agents.rpc.BalanceType;
 import se.tink.backend.integration.agent_data_availability_tracker.common.serialization.TrackingList;
 import se.tink.backend.integration.agent_data_availability_tracker.common.serialization.TrackingMapSerializer;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 
 public class AccountTrackingSerializer extends TrackingMapSerializer {
 
@@ -37,7 +38,7 @@ public class AccountTrackingSerializer extends TrackingMapSerializer {
             for (AccountIdentifier id : account.getIdentifiers()) {
                 String key = "identifiers." + id.getType().toString();
                 listBuilder.putRedacted(key, id.getIdentifier());
-                if (id.getType() == AccountIdentifier.Type.IBAN) {
+                if (id.getType() == AccountIdentifierType.IBAN) {
                     sawIban = true;
                 }
             }
@@ -46,7 +47,7 @@ public class AccountTrackingSerializer extends TrackingMapSerializer {
         }
         if (!sawIban) {
             // Specifically always track IBAN
-            String key = "identifiers." + AccountIdentifier.Type.IBAN.toString();
+            String key = "identifiers." + AccountIdentifierType.IBAN.toString();
             listBuilder.putNull(key);
         }
 

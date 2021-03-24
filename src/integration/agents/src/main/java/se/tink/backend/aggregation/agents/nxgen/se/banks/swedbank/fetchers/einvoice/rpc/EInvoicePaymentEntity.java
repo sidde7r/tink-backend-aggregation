@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.agents.AgentParsingUtils;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.ReferenceEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.transfer.enums.TransferPayloadType;
 import se.tink.libraries.transfer.enums.TransferType;
@@ -56,7 +57,7 @@ public class EInvoicePaymentEntity {
 
     public Optional<Transfer> toTinkTransfer(String currency, String providerUniqueId) {
         Optional<Amount> tinkAmount = getTinkAmount(currency);
-        Optional<AccountIdentifier.Type> tinkType =
+        Optional<AccountIdentifierType> tinkType =
                 Optional.ofNullable(this.payee).flatMap(EInvoicePayeeEntity::getTinkType);
         Optional<String> referenceValue =
                 Optional.ofNullable(this.reference).map(ReferenceEntity::getValue);

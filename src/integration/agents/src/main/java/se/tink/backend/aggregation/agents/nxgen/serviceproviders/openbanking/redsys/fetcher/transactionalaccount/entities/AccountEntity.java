@@ -19,7 +19,7 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.transactional.T
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.account.identifiers.formatters.DisplayAccountIdentifierFormatter;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
@@ -60,7 +60,8 @@ public class AccountEntity {
             throw new IllegalStateException("Did not find balance for account.");
         }
 
-        final AccountIdentifier ibanIdentifier = AccountIdentifier.create(Type.IBAN, iban);
+        final AccountIdentifier ibanIdentifier =
+                AccountIdentifier.create(AccountIdentifierType.IBAN, iban);
         final String formattedIban = IBAN_FORMATTER.apply(ibanIdentifier);
         final IdModule idModule =
                 IdModule.builder()

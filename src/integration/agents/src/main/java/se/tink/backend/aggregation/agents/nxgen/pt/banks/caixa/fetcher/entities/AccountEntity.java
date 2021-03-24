@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdMo
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
@@ -53,7 +54,7 @@ public final class AccountEntity {
                         .withUniqueIdentifier(id)
                         .withAccountNumber(id)
                         .withAccountName(description)
-                        .addIdentifier(AccountIdentifier.create(AccountIdentifier.Type.IBAN, id))
+                        .addIdentifier(AccountIdentifier.create(AccountIdentifierType.IBAN, id))
                         .build();
 
         TransactionalAccountType accountType = getTinkAccountType();

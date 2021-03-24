@@ -10,7 +10,6 @@ java_library(
         "//src/integration/models",
         "//src/integration/transfer:enums",
         "//src/integration/transfer:rpc",
-        "//src/libraries/account_identifier",
         "//src/libraries/date",
         "//src/libraries/giro_validation",
         "//src/libraries/net/src/main/java/se/tink/libraries/net/client",
@@ -26,6 +25,7 @@ java_library(
         "@aggregation//:com_fasterxml_jackson_core_jackson_core",
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
         "@com_google_guava_guava",
+        "@tink_backend//src/libraries/account_identifier",
         "@tink_backend//src/libraries/strings",
     ],
 )
