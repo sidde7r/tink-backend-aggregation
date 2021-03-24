@@ -22,11 +22,11 @@ public class PasswordAuthenticator implements TypedAuthenticator {
                     "tink2",
                     "tink-2345",
                     "tink3",
-                    "tink-3456",
+                    "tink-äöü",
+                    "tink-äöü",
                     "tink4",
-                    "tink-äöü",
-                    "tink-äöü",
-                    "tink5");
+                    "!#$&()*+,-./:;=?@[] ^_%§äöüÄÖÜßåæéø",
+                    "äöüÄÖ,Üß!$%&/() =?+#,.-:@+!*åæéø");
 
     public PasswordAuthenticator() {}
 
@@ -41,15 +41,15 @@ public class PasswordAuthenticator implements TypedAuthenticator {
         String username = credentials.getField(Field.Key.USERNAME);
         String password = credentials.getField(Field.Key.PASSWORD);
 
-        int filedsSerializedHash = 0;
+        int fieldsSerializedHash = 0;
         if (credentials.getFieldsSerialized() != null) {
-            filedsSerializedHash = credentials.getFieldsSerialized().hashCode();
+            fieldsSerializedHash = credentials.getFieldsSerialized().hashCode();
         }
 
         log.info(
                 "Credentials Id {} fieldSerializedHash {}",
                 credentials.getId(),
-                filedsSerializedHash);
+                fieldsSerializedHash);
         log.info(
                 "Credentials Id {} password {} for username {}",
                 credentials.getId(),
