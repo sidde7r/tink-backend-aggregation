@@ -74,6 +74,21 @@ public class RemittanceInfoUtilTest {
     }
 
     @Test
+    public void testValidateRemittanceInfoForGiros_TypeNotPresent() {
+
+        RemittanceInformation remittanceInformation = getRemittanceInformation(null, "Reference");
+
+        Throwable thrown =
+                catchThrowable(
+                        () ->
+                                RemittanceInfoUtil.validateRemittanceInfoForGiros(
+                                        remittanceInformation));
+
+        Assertions.assertThat(thrown).isInstanceOf(ReferenceValidationException.class);
+        Assertions.assertThat(thrown).hasMessage(EndUserMessage.INVALID_MESSAGE.getKey().get());
+    }
+
+    @Test
     public void testValidateRemittanceInfoForGiros_UnstructuredMessageToLong() {
 
         RemittanceInformation remittanceInformation =

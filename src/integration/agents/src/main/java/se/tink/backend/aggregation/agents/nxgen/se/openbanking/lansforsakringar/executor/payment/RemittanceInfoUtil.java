@@ -12,7 +12,7 @@ public class RemittanceInfoUtil {
     public static void validateRemittanceInfoForGiros(RemittanceInformation remittanceInformation)
             throws ReferenceValidationException {
 
-        if (remittanceInformation == null) {
+        if (remittanceInformation == null || remittanceInformation.getType() == null) {
             throw new ReferenceValidationException(EndUserMessage.INVALID_MESSAGE.getKey().get());
         }
 
