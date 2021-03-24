@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator;
 
 import com.google.api.client.repackaged.com.google.common.base.Strings;
+import java.util.Locale;
 import java.util.Optional;
 import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.bankid.status.BankIdStatus;
@@ -29,15 +30,19 @@ public class SebDecoupledAuthenticator implements BankIdAuthenticator<String> {
     private final SebBaseApiClient apiClient;
     private final SebConfiguration configuration;
     private final String redirectUrl;
+    private final String locale;
     private String autoStartToken;
     private String authRequestId;
     private boolean isUserSign = false;
 
     public SebDecoupledAuthenticator(
-            SebBaseApiClient apiClient, AgentConfiguration<SebConfiguration> agentConfiguration) {
+            SebBaseApiClient apiClient,
+            AgentConfiguration<SebConfiguration> agentConfiguration,
+            String locale) {
         this.apiClient = apiClient;
         this.configuration = agentConfiguration.getProviderSpecificConfiguration();
         this.redirectUrl = agentConfiguration.getRedirectUrl();
+        this.locale = locale;
     }
 
     @Override
@@ -48,6 +53,10 @@ public class SebDecoupledAuthenticator implements BankIdAuthenticator<String> {
                         .startDecoupledAuthorization(
                                 DecoupledAuthRequest.builder()
                                         .clientId(configuration.getClientId())
+                                        // Locale example: sv_SE
+                                        .lang(
+                                                Locale.forLanguageTag(locale.replace('_', '-'))
+                                                        .getLanguage())
                                         .build())
                         .getAuthReqId();
         autoStartToken = apiClient.getDecoupledAuthStatus(authRequestId).getAutostartToken();

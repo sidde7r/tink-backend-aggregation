@@ -54,7 +54,8 @@ public abstract class SebBaseAgent<C extends SebBaseApiClient> extends NextGener
         BankIdAuthenticationController bankIdAuthenticationController =
                 new BankIdAuthenticationController<>(
                         supplementalInformationController,
-                        new SebDecoupledAuthenticator(apiClient, agentConfiguration),
+                        new SebDecoupledAuthenticator(
+                                apiClient, agentConfiguration, request.getUser().getLocale()),
                         persistentStorage,
                         credentials);
         return new AutoAuthenticationController(
