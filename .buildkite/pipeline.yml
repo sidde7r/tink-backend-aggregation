@@ -101,8 +101,6 @@ steps:
           image: gcr.io/tink-containers/detect-secrets:latest
           always-pull: true
 
-  - wait
-
   - name: ':docker: tink-backend-aggregation'
     branches: 'staging'
     command: .buildkite/build-and-push-docker.sh //docker:aggregation_push
