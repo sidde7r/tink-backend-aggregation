@@ -1654,42 +1654,6 @@ java_plugin(
 )
 
 java_library(
-    name = "standalone_agent_libs",
-    licenses = ["notice"],
-    visibility = ["//visibility:public"],
-    exports = [
-        "//third_party:lombok_plugin",
-        "//third_party:netty",
-        "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
-        "@aggregation//:com_fasterxml_jackson_core_jackson_core",
-        "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
-        "@aggregation//:com_fasterxml_jackson_jaxrs_jackson_jaxrs_base",
-        "@aggregation//:com_fasterxml_jackson_module_jackson_module_jaxb_annotations",
-        "@aggregation//:com_google_protobuf_protobuf_java",
-        "@aggregation//:commons_io_commons_io",
-        "@aggregation//:io_perfmark_perfmark_api",
-        "@aggregation//:org_apache_commons_commons_collections4",
-        "@aggregation//:org_apache_commons_commons_lang3",
-        "@lombok//:org_projectlombok_lombok",
-        "@standalone_agent_deps//:ch_qos_logback_logback_classic",
-        "@standalone_agent_deps//:ch_qos_logback_logback_core",
-        "@standalone_agent_deps//:commons_codec_commons_codec",
-        "@standalone_agent_deps//:commons_logging_commons_logging",
-        "@standalone_agent_deps//:org_apache_httpcomponents_httpclient",
-        "@standalone_agent_deps//:org_apache_httpcomponents_httpcore",
-        "@standalone_agent_deps//:org_slf4j_jcl_over_slf4j",
-        "@standalone_agent_deps//:org_slf4j_jul_to_slf4j",
-        "@standalone_agent_deps//:org_slf4j_slf4j_api",
-        "@standalone_agent_deps//:org_springframework_spring_aop",
-        "@standalone_agent_deps//:org_springframework_spring_beans",
-        "@standalone_agent_deps//:org_springframework_spring_context",
-        "@standalone_agent_deps//:org_springframework_spring_core",
-        "@standalone_agent_deps//:org_springframework_spring_expression",
-        "@standalone_agent_deps//:org_springframework_spring_web",
-    ],
-)
-
-java_library(
     name = "lombok_libs",
     licenses = ["notice"],
     visibility = ["//visibility:public"],
