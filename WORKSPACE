@@ -69,11 +69,15 @@ http_archive(
     ],
 )
 
-git_repository(
+TINK_HTTPCLIENT_COMMIT = "1ed65fa09a4b7bc9f469fbb3625ac5b087f9cc3e"
+
+http_archive(
     name = "tink_httpclient_4_5_5",
-    commit = "1ed65fa09a4b7bc9f469fbb3625ac5b087f9cc3e",
-    remote = "git@github.com:tink-ab/httpcomponents-client.git",
-    shallow_since = "1537529121 +0200",
+    sha256 = "fa8d45d3e10db9e8a52dc30515931e93be6f7ad33ffd2aa1976a62a86aa75e73",
+    strip_prefix = "httpcomponents-client-{}".format(TINK_HTTPCLIENT_COMMIT),
+    urls = [
+        "https://github.com/tink-ab/httpcomponents-client/archive/{}.tar.gz".format(TINK_HTTPCLIENT_COMMIT),
+    ],
 )
 
 git_repository(
