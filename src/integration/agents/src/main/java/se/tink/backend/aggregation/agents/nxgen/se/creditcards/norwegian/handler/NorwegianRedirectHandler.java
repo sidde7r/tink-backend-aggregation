@@ -9,7 +9,7 @@ import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.cookie.Cookie;
 import org.apache.http.cookie.CookieOrigin;
 import org.apache.http.cookie.MalformedCookieException;
-import org.apache.http.impl.cookie.BestMatchSpec;
+import org.apache.http.impl.cookie.RFC2965Spec;
 import org.apache.http.protocol.HttpContext;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.redirect.handler.RedirectHandler;
@@ -25,26 +25,25 @@ public class NorwegianRedirectHandler extends RedirectHandler {
 
     @Override
     public boolean allowRedirect(HttpRequest request, HttpResponse response, HttpContext context) {
-        CookieOrigin cookie = ((HttpClientContext) context).getCookieOrigin();
+
         Header[] headers = response.getHeaders("Set-cookie");
         if (headers != null) {
-            CookieOrigin cookieOrigin =
-                    new CookieOrigin(
-                            cookie.getHost(), getPort(cookie), cookie.getPath(), cookie.isSecure());
+            CookieOrigin cookieOrigin = ((HttpClientContext) context).getCookieOrigin();
+
             log.info(
                     "CookieHost: "
-                            + cookie.getHost()
+                            + cookieOrigin.getHost()
                             + " GetPort: "
-                            + getPort(cookie)
+                            + getPort(cookieOrigin)
                             + " GetPath "
-                            + cookie.getPath()
+                            + cookieOrigin.getPath()
                             + " GetSecure : "
-                            + cookie.isSecure());
+                            + cookieOrigin.isSecure());
 
             for (Header header : headers) {
                 try {
 
-                    List<Cookie> parse = new BestMatchSpec().parse(header, cookieOrigin);
+                    List<Cookie> parse = new RFC2965Spec().parse(header, cookieOrigin);
                     for (Cookie co : parse) {
                         log.info(
                                 "Get Cookie Name: "
@@ -53,6 +52,7 @@ public class NorwegianRedirectHandler extends RedirectHandler {
                                                 ? co.getExpiryDate().toString()
                                                 : noDate));
                     }
+
                     client.addCookie(parse.toArray(new Cookie[0]));
                     showAllCookies(client.getCookies());
                     Cookie cookie1 = client.getCookies().get(client.getCookies().size() - 1);

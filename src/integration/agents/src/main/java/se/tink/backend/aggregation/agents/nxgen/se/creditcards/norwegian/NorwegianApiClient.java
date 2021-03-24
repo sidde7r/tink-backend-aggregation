@@ -11,6 +11,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import org.apache.http.HttpHeaders;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -50,6 +51,7 @@ public final class NorwegianApiClient {
     public NorwegianApiClient(TinkHttpClient client) {
         this.client = client;
         client.addRedirectHandler(new NorwegianRedirectHandler(client));
+        client.setCookieSpec(CookieSpecs.STANDARD);
     }
 
     private RequestBuilder createRequest(String url) {
