@@ -58,11 +58,15 @@ new_git_repository(
     shallow_since = "1490898663 +0200",
 )
 
-git_repository(
+TINK_HTTPCORE_COMMIT = "0f72fa2c392fee8388d327cb3462cd10d675c2e2"
+
+http_archive(
     name = "tink_httpcore_4_4_9",
-    commit = "0f72fa2c392fee8388d327cb3462cd10d675c2e2",
-    remote = "git@github.com:tink-ab/httpcomponents-core.git",
-    shallow_since = "1537528950 +0200",
+    sha256 = "781ef2bb54bff4189b2dc6dc3e7dadab24908952f0310d7584443cb9336878b5",
+    strip_prefix = "httpcomponents-core-{}".format(TINK_HTTPCORE_COMMIT),
+    urls = [
+        "https://github.com/tink-ab/httpcomponents-core/archive/{}.tar.gz".format(TINK_HTTPCORE_COMMIT),
+    ],
 )
 
 git_repository(
