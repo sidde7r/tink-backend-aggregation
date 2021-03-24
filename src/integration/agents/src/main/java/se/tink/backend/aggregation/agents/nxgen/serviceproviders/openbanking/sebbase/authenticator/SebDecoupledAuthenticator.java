@@ -15,9 +15,12 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.seb
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebCommonConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebCommonConstants.HintCodes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebCommonConstants.PollResponses;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebCommonConstants.QueryValues;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebCommonConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.DecoupledAuthRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.DecoupledAuthResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.DecoupledTokenRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.RefreshRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.configuration.SebConfiguration;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticator;
@@ -134,15 +137,12 @@ public class SebDecoupledAuthenticator implements BankIdAuthenticator<String> {
 
     @Override
     public Optional<OAuth2Token> refreshAccessToken(String refreshToken) throws SessionException {
-        return Optional.ofNullable(
-                apiClient
-                        .getDecoupledToken(
-                                DecoupledTokenRequest.builder()
-                                        .refreshToken(refreshToken)
-                                        .clientId(configuration.getClientId())
-                                        .clientSecret(configuration.getClientSecret())
-                                        .redirectUri(redirectUrl)
-                                        .build())
-                        .toTinkToken());
+        RefreshRequest requestForm =
+                new RefreshRequest(
+                        refreshToken,
+                        configuration.getClientId(),
+                        configuration.getClientSecret(),
+                        QueryValues.REFRESH_TOKEN_GRANT);
+        return Optional.ofNullable(apiClient.refreshToken(Urls.TOKEN, requestForm));
     }
 }
