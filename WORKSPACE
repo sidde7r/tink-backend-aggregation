@@ -613,9 +613,9 @@ load("@io_grpc_grpc_java//:repositories.bzl", "grpc_java_repositories")
 
 grpc_java_repositories()
 
-RULES_JVM_EXTERNAL_TAG = "3.2"
+RULES_JVM_EXTERNAL_TAG = "4.0"
 
-RULES_JVM_EXTERNAL_SHA = "82262ff4223c5fda6fb7ff8bd63db8131b51b413d26eb49e3131037e79e324af"
+RULES_JVM_EXTERNAL_SHA = "31701ad93dbfe544d597dbe62c9a1fdd76d81d8a9150c2bf1ecf928ecdf97169"
 
 http_archive(
     name = "rules_jvm_external",
@@ -729,7 +729,6 @@ maven_install(
         "com.fasterxml.jackson.module:jackson-module-afterburner:2.9.9",
         "com.fasterxml.jackson.module:jackson-module-jaxb-annotations:2.9.9",
         "com.fasterxml.jackson.module:jackson-module-jsonSchema:2.9.9",
-        "com.kjetland:mbknor-jackson-jsonschema_2.12:1.0.34",
         "com.fasterxml.uuid:java-uuid-generator:3.1.5",
         "com.fasterxml:classmate:1.0.0",
         "com.flipkart.zjsonpatch:zjsonpatch:0.2.1",
@@ -755,6 +754,7 @@ maven_install(
         "com.googlecode.gettext-commons:gettext-commons:0.9.8",
         "com.jayway.jsonpath:json-path:2.4.0",
         "com.jcraft:jzlib:1.1.3",
+        "com.kjetland:mbknor-jackson-jsonschema_2.12:1.0.34",
         "com.kjetland:mbknor-jackson-jsonschema_2.12:1.0.34",
         "com.lambdaworks:scrypt:1.3.2",
         "com.netflix.governator:governator-api:1.17.2",
