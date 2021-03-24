@@ -1,0 +1,200 @@
+
+REQUEST 1
+POST https://demobank.production.global.tink.se/api/payment/v1/recurring-payment/domestic/create
+X-Client-Header: sXVn6Lt9P3AYaK4YwuErsu4qn2AUW3AnSE4rMzcZdLFCM2vHn8JpbUfBUJc3e7VaB4ApgJLvYB2fd7GjwkBxauXbSaRx2w5WXeh3jKgeLFefhvQHeSewMLsDXAAU63Ax3B47EMPa2UiCWE6VmJkXKC4Uv6pfYsLTGqSnw3pR4kkec8d5Y5eJ5NWrCXXZ5gFjhbuBkeZpFvnsBTnHJYbK3XWAZ8jR9Qhbqb2vQkthGZm49U5eHQ5K7emuT9szTEv2
+Content-Type: application/json
+Accept: application/json
+X-Aggregator: Tink Testing
+
+{
+  "debtorAccount": {
+    "accountId": "IT76K2958239128VVJCLBIHVDAT",
+    "type": "IBAN",
+    "identifier": "IT76K2958239128VVJCLBIHVDAT"
+  },
+  "creditorAccount": {
+    "accountId": "IT12L8551867857UFGAYZF25O4M",
+    "type": "IBAN",
+    "identifier": "IT12L8551867857UFGAYZF25O4M"
+  },
+  "amount": {
+    "currency": "EUR",
+    "amountValue": "0.3"
+  },
+  "creditorName": "Unknown person",
+  "remittanceInformationUnstructured": null,
+  "remittanceInformationStructured": {
+    "reference": "Periodic payment",
+    "referenceType": "REFERENCE"
+  },
+  "startDate": "2021-03-23",
+  "endDate": "2021-03-30",
+  "frequency": "Weekly",
+  "dayOfExecution": null
+}
+
+RESPONSE 1
+200
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+X-Frame-Options: DENY
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Tue, 23 Mar 2021 09:00:39 GMT
+Keep-Alive: ***
+Connection: keep-alive
+
+{
+  "id": "a84c1fc1befd4e1ca4070c35fd498461",
+  "paymentProduct": "domestic",
+  "recurringPaymentInitiation": {
+    "debtorAccount": {
+      "accountId": null,
+      "type": "IBAN",
+      "identifier": "IT12L8551867857UFGAYZF25O4M"
+    },
+    "creditorAccount": {
+      "accountId": null,
+      "type": "IBAN",
+      "identifier": "IT76K2958239128VVJCLBIHVDAT"
+    },
+    "amount": {
+      "currency": "EUR",
+      "amountValue": "0.3"
+    },
+    "creditorName": "Unknown person",
+    "remittanceInformationUnstructured": null,
+    "remittanceInformationStructured": {
+      "reference": "Periodic payment",
+      "referenceType": "REFERENCE"
+    },
+    "startDate": "2021-03-23",
+    "frequency": "Weekly",
+    "dayOfExecution": null,
+    "endDate": "2021-03-30"
+  },
+  "paymentStatus": "Received",
+  "_links": {
+    "scaRedirect": {
+      "href": "/oauth/authorize?response_type=code&client_id=aggregation&scope=payment:write&payment_id=a84c1fc1befd4e1ca4070c35fd498461&payment_type=recurring-payments"
+    }
+  }
+}
+
+REQUEST 2
+POST https://demobank.production.global.tink.se/oauth/token
+Content-Type: application/x-www-form-urlencoded
+Accept: application/json
+X-Aggregator: Tink Testing
+
+grant_type=authorization_code&code=DUMMY_CODE&redirect_uri=https%3A%2F%2Fapi.preprod.oxford.tink.com%2Fapi%2Fv1%2Fcredentials%2Fthird-party%2Fcallback
+
+RESPONSE 2
+200
+Cache-Control: no-store
+Pragma: no-cache
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+X-Frame-Options: DENY
+Content-Type: application/json;charset=UTF-8
+Transfer-Encoding: chunked
+Date: Tue, 23 Mar 2021 09:01:01 GMT
+Keep-Alive: ***
+Connection: keep-alive
+
+{
+  "access_token": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MTY0OTM2NjEsInVzZXJfbmFtZSI6InU5NjAyNDc1OSIsImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdLCJqdGkiOiJ1bUMzRlgzaEZ2aWdtRThsT205UE1oMlExMXc9IiwiY2xpZW50X2lkIjoiYWdncmVnYXRpb24iLCJzY29wZSI6WyJwYXltZW50OndyaXRlIl19.LWzT9hHGRC3Zk9ew8xcqx3M8zX1oWhWKgV6fzQ5Jx4-iveqonhXibGgA-g6VJY66HFLeGwGo7tIdyaCd1gaXYUxhfHNWVN_x5O0zTpVe3f3jkJG4t9JFKluTCYTv4VfuzzO4QioSUxd6MRo9iFHTzh1tfO8FRGDkVIBsW2WCih0X-VtwVEi-sqY1uXOvxwq6prcn75e4tX8nfoIdrKR3JIiFJ5AEbG0YnhOylbNVc1TuDO1l-XECkGGWximU86leSAkVytYz9DzHMpE3bzHYcsjpQ_2z8DOdzolkXPt-6WsBf46iwTLa4MKQvP0ns22ZoVyt8zdINwQmMcoJrZSBMA",
+  "token_type": "bearer",
+  "refresh_token": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX25hbWUiOiJ1OTYwMjQ3NTkiLCJzY29wZSI6WyJwYXltZW50OndyaXRlIl0sImF0aSI6InVtQzNGWDNoRnZpZ21FOGxPbTlQTWgyUTExdz0iLCJleHAiOjE2MjQyNjYwNjEsImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdLCJqdGkiOiJ1Nm9UMlNBWlB0aCthVHdXNUptejJ1QUpCNEE9IiwiY2xpZW50X2lkIjoiYWdncmVnYXRpb24ifQ.bGBSz2PJZX_HZ1iHDeIPwRrIA-6mNrxn9iTwABJHstecP-wMoK53ZkzPZciIuvvyqyd-gyNOmmM5p_DK6N81ocx88O_CkUgTlOVyDbjWhJqfDT2yhgBgwmZQzIXdLJeUGs021OnNH3OwHf-YtFbrgF6PuWyxssUql0ZY9HO-1F8XBVfS2BHvFV6Lh8m4-hclkROpQQLdeMJDss6LI0RsoHIw6pdc6RrCYrp4-rp_yZ9TPsISEVFAQ4QdvmibdfFqsLQ--jE8Fti7G0u0Hr01yCP95ko6RL7u7rjOK2ai-zamLJzYoNM065QM2zteXgGJKLIgT7Ge9HYvB6DFPtZyig",
+  "expires_in": 3599,
+  "scope": "payment:write",
+  "jti": "umC3FX3hFvigmE8lOm9PMh2Q11w=",
+  "refresh_expires_in": 7775999
+}
+
+REQUEST 3
+GET https://demobank.production.global.tink.se/api/payment/v1/recurring-payment/status/a84c1fc1befd4e1ca4070c35fd498461
+Accept: application/json
+X-Aggregator: Tink Testing
+
+RESPONSE 3
+200
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+X-Frame-Options: DENY
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Tue, 23 Mar 2021 09:01:01 GMT
+Keep-Alive: ***
+Connection: keep-alive
+
+{
+  "id": "a84c1fc1befd4e1ca4070c35fd498461",
+  "status": "ACTC"
+}
+
+REQUEST 4
+GET https://demobank.production.global.tink.se/api/payment/v1/recurring-payment/a84c1fc1befd4e1ca4070c35fd498461
+Accept: application/json
+X-Aggregator: Tink Testing
+
+RESPONSE 4
+200
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+X-Frame-Options: DENY
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Tue, 23 Mar 2021 09:01:01 GMT
+Keep-Alive: ***
+Connection: keep-alive
+
+{
+  "id": "a84c1fc1befd4e1ca4070c35fd498461",
+  "paymentProduct": "domestic",
+  "recurringPaymentInitiation": {
+    "debtorAccount": {
+      "accountId": null,
+      "type": "IBAN",
+      "identifier": "IT76K2958239128VVJCLBIHVDAT"
+    },
+    "creditorAccount": {
+      "accountId": null,
+      "type": "IBAN",
+      "identifier": "IT12L8551867857UFGAYZF25O4M"
+    },
+    "amount": {
+      "currency": "EUR",
+      "amountValue": "0.3"
+    },
+    "creditorName": "Unknown person",
+    "remittanceInformationUnstructured": null,
+    "remittanceInformationStructured": {
+      "reference": "Periodic payment",
+      "referenceType": "REFERENCE"
+    },
+    "startDate": "2021-03-23",
+    "frequency": "Weekly",
+    "dayOfExecution": null,
+    "endDate": "2021-03-30"
+  },
+  "paymentStatus": "AcceptedTechnicalValidation",
+  "_links": {
+    "scaRedirect": {
+      "href": "/oauth/authorize?response_type=code&client_id=aggregation&scope=payment:write&payment_id=a84c1fc1befd4e1ca4070c35fd498461&payment_type=recurring-payments"
+    }
+  }
+}
