@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
@@ -60,6 +61,9 @@ public final class AgentConfigurationController implements AgentConfigurationCon
     private static final String REDIRECT_URL_KEY = "redirectUrl";
     private static final String QWAC_KEY = "qwac";
     private static final String QSEALC_KEY = "qsealc";
+
+    private static final Pattern UK_OB_PROVIDER_PATTERN =
+            Pattern.compile("^uk-.*-(ob|oauth2)$");
 
     // Package private for testing purposes.
     AgentConfigurationController() {
@@ -151,8 +155,13 @@ public final class AgentConfigurationController implements AgentConfigurationCon
         if (tppSecretsServiceEnabled && isOpenBankingAgent && !isTestProvider) {
             try {
                 // TPA-525: needs to know what certId to use
+                // Temporary workaround to set certId to "UKOB" for UK OB provider
+                String certId = "";
+                if (UK_OB_PROVIDER_PATTERN.matcher(providerId).matches()) {
+                    certId = "UKOB";
+                }
                 Optional<SecretsEntityCore> allSecretsOpt =
-                        tppSecretsServiceClient.getAllSecrets(appId, clusterId, "", providerId);
+                        tppSecretsServiceClient.getAllSecrets(appId, clusterId, certId, providerId);
 
                 // TODO: Remove if once Access team confirms there are no null appIds around.
                 if (!allSecretsOpt.isPresent()) {
