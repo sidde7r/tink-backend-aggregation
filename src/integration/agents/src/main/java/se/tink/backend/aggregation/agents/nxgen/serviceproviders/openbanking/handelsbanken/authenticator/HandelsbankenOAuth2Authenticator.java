@@ -84,7 +84,7 @@ public class HandelsbankenOAuth2Authenticator implements OAuth2Authenticator {
             throws SessionException, BankServiceException {
 
         TokenResponse newAccessToken = apiClient.getRefreshToken(refreshToken);
-        return toTinkToken(newAccessToken);
+        return toTinkToken(newAccessToken, refreshToken);
     }
 
     @Override
@@ -92,8 +92,8 @@ public class HandelsbankenOAuth2Authenticator implements OAuth2Authenticator {
         persistentStorage.put(PersistentStorageKeys.OAUTH_2_TOKEN, accessToken);
     }
 
-    private OAuth2Token toTinkToken(TokenResponse token) {
+    private OAuth2Token toTinkToken(TokenResponse token, String oldRefreshToken) {
         return OAuth2Token.createBearer(
-                token.getAccessToken(), token.getAccessToken(), token.getExpiresIn());
+                token.getAccessToken(), oldRefreshToken, token.getExpiresIn());
     }
 }
