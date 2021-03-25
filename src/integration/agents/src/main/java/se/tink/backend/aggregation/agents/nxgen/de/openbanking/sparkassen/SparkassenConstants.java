@@ -16,14 +16,21 @@ public final class SparkassenConstants {
                 "Could not parse transactions description";
         public static final String COULD_NOT_INITIALIZE_JAXBCONTEXT =
                 "Could not initialize JAXBContext";
+        public static final String STARTCODE_NOT_FOUND = "Startcode fo Chip tan not found";
+
         static final String PSU_CREDENTIALS_INVALID = "PSU_CREDENTIALS_INVALID";
+        static final String FORMAT_ERROR = "FORMAT_ERROR";
+        static final String PSU_ID_TOO_LONG = "PSU-ID zu lang";
+        static final String OTP_FORMAT_ERROR =
+                "scaAuthenticationData muss auf Ausdruck \"[0-9]{6}\" passen";
         static final String CHALLENGE_FORMAT_INVALID =
                 "Format of certain request fields are not matching the XS2A requirements.";
-        public static final String STARTCODE_NOT_FOUND = "Startcode fo Chip tan not found";
-        public static final String TEMPORARILY_BLOCKED_ACCOUNT =
+        static final String TEMPORARILY_BLOCKED_ACCOUNT =
                 "Ihr Zugang ist vorläufig gesperrt - Bitte PIN-Sperre aufheben";
-        public static final String BLOCKED_ACCOUNT =
+        static final String BLOCKED_ACCOUNT =
                 "Ihr Zugang ist gesperrt - Bitte informieren Sie Ihren Berater";
+        static final String NO_ACTIVE_TAN_MEDIUM = "Kein aktives TAN-Medium gefunden.";
+        static final String PLEASE_CHANGE_PIN = "Bitte führen Sie eine PIN-Änderung durch.";
     }
 
     static class Urls {
