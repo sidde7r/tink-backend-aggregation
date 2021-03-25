@@ -733,6 +733,7 @@ maven_install(
         "com.codahale.metrics:metrics-jvm:3.0.2",
         "com.codahale.metrics:metrics-logback:3.0.2",
         "com.codahale.metrics:metrics-servlets:3.0.2",
+        "com.codeborne:phantomjsdriver:1.2.1",
         "com.fasterxml.jackson.core:jackson-annotations:2.9.9",
         "com.fasterxml.jackson.core:jackson-core:2.9.9",
         "com.fasterxml.jackson.core:jackson-databind:2.9.9",
