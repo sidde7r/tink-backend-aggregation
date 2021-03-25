@@ -4,7 +4,7 @@ public abstract class SebConstants {
     public static final String MARKET = "SE";
 
     public static class Urls {
-        public static final String BASE_AIS = "/tpp/ais/v6/identified2";
+        public static final String BASE_AIS = "/tpp/ais/v7/identified2";
 
         // Urls for Checking accounts
         public static final String ACCOUNTS = BASE_AIS + "/accounts";
