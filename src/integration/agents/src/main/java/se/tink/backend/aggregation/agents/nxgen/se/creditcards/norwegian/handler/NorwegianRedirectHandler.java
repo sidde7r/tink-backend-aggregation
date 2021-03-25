@@ -34,7 +34,7 @@ public class NorwegianRedirectHandler extends RedirectHandler {
                                     .parse(header, ((HttpClientContext) context).getCookieOrigin());
                     client.addCookie(parse.toArray(new Cookie[0]));
                 } catch (MalformedCookieException e) {
-                    log.error("Error: " + e.getMessage());
+                    log.error("Error: {}", e.getMessage());
                 }
             }
         }
