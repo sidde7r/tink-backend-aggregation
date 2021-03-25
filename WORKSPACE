@@ -911,6 +911,7 @@ maven_install(
         "org.slf4j:slf4j-api:1.7.30",
         "org.slf4j:slf4j-log4j12:1.7.5",
         "org.slf4j:slf4j-simple:1.7.5",
+        "org.springframework:spring-core:4.3.7.RELEASE",
         "org.w3c.css:sac:1.3",
         "org.xerial.snappy:snappy-java:1.0.5-M2",
         "org.xmlunit:xmlunit-core:2.1.1",
