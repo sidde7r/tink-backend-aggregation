@@ -201,8 +201,6 @@ java_library(
         "@aggregation//:org_slf4j_slf4j_api",
         "@aggregation//:org_xmlunit_xmlunit_core",
         "@aggregation//:org_xmlunit_xmlunit_legacy",
-        "@aggregation_temp//:org_eclipse_jetty_jetty_webapp",
-        "@aggregation_temp//:org_eclipse_jetty_jetty_xml",
     ],
 )
 
