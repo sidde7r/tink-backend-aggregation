@@ -643,7 +643,14 @@ maven_deps(
     "//third_party/maven:maven_install.json",
     IO_NETTY_VERSION,
     IO_NETTY_BORINGSSL_VERSION,
-    artifact_versions = {"javax.validation:validation-api": "2.0.1.Final"},
+    artifact_versions = {
+        "javax.validation:validation-api": "2.0.1.Final",
+        "org.springframework:spring-beans": "4.3.9.RELEASE",
+        "org.springframework:spring-context": "4.3.9.RELEASE",
+        "org.springframework:spring-expression": "4.3.9.RELEASE",
+        "org.springframework:spring-aop": "4.3.9.RELEASE",
+        "org.springframework:spring-core": "4.3.9.RELEASE",
+    },
 )
 
 load("@maven//:defs.bzl", "pinned_maven_install")
@@ -986,17 +993,6 @@ maven_install(
         "org.eclipse.jetty:jetty-webapp:%s" % ALT_ECLIPSE_JETTY_VERSION,
         "org.eclipse.jetty:jetty-xml:%s" % ALT_ECLIPSE_JETTY_VERSION,
         "org.slf4j:slf4j-simple:1.7.27",
-        "org.springframework.data:spring-data-commons:1.13.1.RELEASE",
-        "org.springframework.data:spring-data-jpa:1.11.1.RELEASE",
-        "org.springframework.security:spring-security-core:4.2.3.RELEASE",
-        "org.springframework:spring-aop:4.3.7.RELEASE",
-        "org.springframework:spring-beans:4.3.7.RELEASE",
-        "org.springframework:spring-context:4.3.7.RELEASE",
-        "org.springframework:spring-core:4.3.7.RELEASE",
-        "org.springframework:spring-expression:4.3.7.RELEASE",
-        "org.springframework:spring-jdbc:4.3.7.RELEASE",
-        "org.springframework:spring-orm:4.3.7.RELEASE",
-        "org.springframework:spring-tx:4.3.7.RELEASE",
         "cglib:cglib:2.2",
         "org.hibernate:hibernate-entitymanager:3.5.4-Final",
     ],

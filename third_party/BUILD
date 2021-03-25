@@ -201,8 +201,6 @@ java_library(
         "@aggregation//:org_slf4j_slf4j_api",
         "@aggregation//:org_xmlunit_xmlunit_core",
         "@aggregation//:org_xmlunit_xmlunit_legacy",
-        "@aggregation_temp//:org_eclipse_jetty_jetty_webapp",
-        "@aggregation_temp//:org_eclipse_jetty_jetty_xml",
     ],
 )
 
@@ -1183,9 +1181,9 @@ java_library(
     visibility = ["//visibility:public"],
     exports = [
         "@aggregation//:org_slf4j_slf4j_api",
-        "@aggregation_temp//:org_springframework_data_spring_data_commons",
-        "@aggregation_temp//:org_springframework_spring_beans",
-        "@aggregation_temp//:org_springframework_spring_core",
+        "@aggregation//:org_springframework_data_spring_data_commons",
+        "@aggregation//:org_springframework_spring_beans",
+        "@aggregation//:org_springframework_spring_core",
     ],
 )
 
@@ -1193,15 +1191,15 @@ java_library(
     name = "org_springframework_data_spring_data_jpa",
     visibility = ["//visibility:public"],
     exports = [
-        "@aggregation_temp//:org_springframework_data_spring_data_commons",
-        "@aggregation_temp//:org_springframework_data_spring_data_jpa",
-        "@aggregation_temp//:org_springframework_spring_aop",
-        "@aggregation_temp//:org_springframework_spring_beans",
-        "@aggregation_temp//:org_springframework_spring_context",
-        "@aggregation_temp//:org_springframework_spring_core",
-        "@aggregation_temp//:org_springframework_spring_jdbc",
-        "@aggregation_temp//:org_springframework_spring_orm",
-        "@aggregation_temp//:org_springframework_spring_tx",
+        "@aggregation//:org_springframework_data_spring_data_commons",
+        "@aggregation//:org_springframework_data_spring_data_jpa",
+        "@aggregation//:org_springframework_spring_aop",
+        "@aggregation//:org_springframework_spring_beans",
+        "@aggregation//:org_springframework_spring_context",
+        "@aggregation//:org_springframework_spring_core",
+        "@aggregation//:org_springframework_spring_jdbc",
+        "@aggregation//:org_springframework_spring_orm",
+        "@aggregation//:org_springframework_spring_tx",
     ],
     runtime_deps = [
         "@aggregation//:org_aspectj_aspectjrt",
@@ -1213,7 +1211,7 @@ java_library(
     name = "org_springframework_security",
     visibility = ["//visibility:public"],
     exports = [
-        "@aggregation_temp//:org_springframework_security_spring_security_core",
+        "@aggregation//:org_springframework_security_spring_security_core",
     ],
 )
 
@@ -1221,7 +1219,7 @@ java_library(
     name = "org_springframework_spring_core",
     visibility = ["//visibility:public"],
     exports = [
-        "@aggregation_temp//:org_springframework_spring_core",
+        "@aggregation//:org_springframework_spring_core",
     ],
     runtime_deps = [
         "@aggregation//:commons_logging_commons_logging",
@@ -1232,10 +1230,10 @@ java_library(
     name = "org_springframework_spring_expression",
     visibility = ["//visibility:public"],
     exports = [
-        "@aggregation_temp//:org_springframework_spring_expression",
+        "@aggregation//:org_springframework_spring_expression",
     ],
     runtime_deps = [
-        "@aggregation_temp//:org_springframework_spring_core",
+        "@aggregation//:org_springframework_spring_core",
     ],
 )
 
