@@ -112,7 +112,8 @@ public abstract class SwedbankBaseAgent extends NextGenerationAgent
                         new SwedbankDecoupledAuthenticator(
                                 apiClient,
                                 supplementalInformationHelper,
-                                transactionalAccountFetcher),
+                                transactionalAccountFetcher,
+                                persistentStorage),
                         persistentStorage,
                         credentials);
 

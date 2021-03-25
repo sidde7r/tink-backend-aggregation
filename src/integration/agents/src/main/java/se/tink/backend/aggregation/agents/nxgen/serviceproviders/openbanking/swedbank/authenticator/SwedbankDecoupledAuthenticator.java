@@ -23,15 +23,18 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swe
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.fetcher.transactionalaccount.SwedbankTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.rpc.GenericResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.PersistentStorageKeys;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 @RequiredArgsConstructor
 public class SwedbankDecoupledAuthenticator implements BankIdAuthenticator<String> {
     private final SwedbankApiClient apiClient;
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final SwedbankTransactionalAccountFetcher transactionalAccountFetcher;
+    private final PersistentStorage persistentStorage;
     private String ssn;
     private String autoStartToken;
     private OAuth2Token accessToken;
@@ -83,9 +86,12 @@ public class SwedbankDecoupledAuthenticator implements BankIdAuthenticator<Strin
                                 authenticationStatusResponse.getAuthorizationCode());
                 // Handle the case where the user has single engagement at Swedbank and selects
                 // Savingsbank provider by mistake
-                if (transactionalAccountFetcher.isCrossLogin()) {
-                    throw LoginError.NOT_CUSTOMER.exception(
-                            SwedbankConstants.EndUserMessage.WRONG_BANK_SAVINGSBANK.getKey());
+                if (!apiClient.isSwedbank()) {
+                    persistentStorage.put(PersistentStorageKeys.OAUTH_2_TOKEN, accessToken);
+                    if (transactionalAccountFetcher.isCrossLogin()) {
+                        throw LoginError.NOT_CUSTOMER.exception(
+                                SwedbankConstants.EndUserMessage.WRONG_BANK_SAVINGSBANK.getKey());
+                    }
                 }
                 return BankIdStatus.DONE;
             case AuthStatus.FAILED:
