@@ -912,6 +912,8 @@ maven_install(
         "org.slf4j:slf4j-log4j12:1.7.5",
         "org.slf4j:slf4j-simple:1.7.5",
         "org.springframework:spring-aop:4.3.7.RELEASE",
+        "org.springframework:spring-beans:4.3.7.RELEASE",
+        "org.springframework:spring-context:4.3.7.RELEASE",
         "org.springframework:spring-core:4.3.7.RELEASE",
         "org.springframework:spring-expression:4.3.7.RELEASE",
         "org.w3c.css:sac:1.3",
