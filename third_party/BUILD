@@ -434,7 +434,7 @@ java_library(
     name = "io_dropwizard_dropwizard_client",
     visibility = ["//visibility:public"],
     exports = [
-        "@aggregation_temp//:io_dropwizard_dropwizard_client",
+        "@aggregation//:io_dropwizard_dropwizard_client",
     ],
     runtime_deps = [
         "@aggregation//:com_codahale_metrics_metrics_core",
@@ -442,9 +442,9 @@ java_library(
         "@aggregation//:com_sun_jersey_contribs_jersey_apache_client4",
         "@aggregation//:com_sun_jersey_jersey_client",
         "@aggregation//:commons_codec_commons_codec",
+        "@aggregation//:io_dropwizard_dropwizard_core",
         "@aggregation//:org_apache_httpcomponents_httpclient",
         "@aggregation//:org_apache_httpcomponents_httpcore",
-        "@aggregation_temp//:io_dropwizard_dropwizard_core",
     ],
 )
 
@@ -467,7 +467,7 @@ java_library(
     name = "io_dropwizard_dropwizard_core",
     visibility = ["//visibility:public"],
     exports = [
-        "@aggregation_temp//:io_dropwizard_dropwizard_core",
+        "@aggregation//:io_dropwizard_dropwizard_core",
     ],
     runtime_deps = [
         ":io_dropwizard_dropwizard_jersey",
