@@ -2,6 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.si
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
+import java.util.Objects;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.entities.SibsAmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.entities.SibsChallengeDataEntity;
@@ -17,6 +20,8 @@ import se.tink.libraries.payment.rpc.Payment;
 
 @JsonObject
 public class SibsPaymentInitiationResponse {
+
+    private final Logger logger = LoggerFactory.getLogger(SibsPaymentInitiationResponse.class);
 
     private SibsTransactionStatus transactionStatus;
     private String paymentId;
@@ -74,6 +79,13 @@ public class SibsPaymentInitiationResponse {
 
     public PaymentResponse toTinkPaymentResponse(PaymentRequest paymentRequest, String state) {
 
+        if (Objects.equals(Boolean.TRUE, this.transactionFeeIndicator)
+                && this.transactionFees != null) {
+            logger.info(
+                    String.format(
+                            "Fee Indicator True with content: %s",
+                            this.transactionFees.getContent()));
+        }
         Payment.Builder buildingPaymentResponse =
                 new Payment.Builder()
                         .withCreditor(paymentRequest.getPayment().getCreditor())
