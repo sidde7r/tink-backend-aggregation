@@ -1647,7 +1647,7 @@ java_plugin(
     processor_class = "lombok.launch.AnnotationProcessorHider$AnnotationProcessor",
     visibility = ["//visibility:public"],
     deps = [
-        "@lombok//:org_projectlombok_lombok",
+        "@aggregation//:org_projectlombok_lombok",
     ],
 )
 
@@ -1657,6 +1657,6 @@ java_library(
     visibility = ["//visibility:public"],
     exports = [
         "//third_party:lombok_plugin",
-        "@lombok//:org_projectlombok_lombok",
+        "@aggregation//:org_projectlombok_lombok",
     ],
 )

@@ -7,7 +7,7 @@ java_library(
     ],
     deps = [
         "//third_party:lombok_plugin",
-        "@lombok//:org_projectlombok_lombok",
+        "@aggregation//:org_projectlombok_lombok",
         "@org_slf4j_slf4j_api",
         "@system_tests//:com_fasterxml_jackson_core_jackson_databind",
         "@system_tests//:com_google_guava_guava",
