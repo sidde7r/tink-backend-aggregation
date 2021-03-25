@@ -984,8 +984,6 @@ maven_install(
         "com.google.googlejavaformat:google-java-format:1.7",
         "com.nimbusds:nimbus-jose-jwt:8.20.1",
         "com.oracle.substratevm:svm:19.0.0",
-        "io.dropwizard:dropwizard-client:0.7.1",
-        "io.dropwizard:dropwizard-core:0.7.1",
         "io.grpc:grpc-api:%s" % GRPC_JAVA_VERSION,
         "io.grpc:grpc-auth:%s" % GRPC_JAVA_VERSION,
         "io.grpc:grpc-core:%s" % GRPC_JAVA_VERSION,
