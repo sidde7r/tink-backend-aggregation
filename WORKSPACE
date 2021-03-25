@@ -643,7 +643,14 @@ maven_deps(
     "//third_party/maven:maven_install.json",
     IO_NETTY_VERSION,
     IO_NETTY_BORINGSSL_VERSION,
-    artifact_versions = {"javax.validation:validation-api": "2.0.1.Final"},
+    artifact_versions = {
+        "javax.validation:validation-api": "2.0.1.Final",
+        "org.springframework:spring-beans": "4.3.9.RELEASE",
+        "org.springframework:spring-context": "4.3.9.RELEASE",
+        "org.springframework:spring-expression": "4.3.9.RELEASE",
+        "org.springframework:spring-aop": "4.3.9.RELEASE",
+        "org.springframework:spring-core": "4.3.9.RELEASE",
+    },
 )
 
 load("@maven//:defs.bzl", "pinned_maven_install")
