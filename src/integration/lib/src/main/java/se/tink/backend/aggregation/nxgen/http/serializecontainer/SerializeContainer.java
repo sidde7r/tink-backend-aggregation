@@ -7,6 +7,7 @@ import com.google.common.collect.Sets;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.cookie.BasicClientCookie;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.persistent.Header;
@@ -46,13 +47,26 @@ public class SerializeContainer {
 
             for (HashMap<String, Object> row : inputList) {
                 BasicClientCookie cookie =
-                        new BasicClientCookie((String) row.get("name"), (String) row.get("value"));
+                        new BasicClientCookie(
+                                (String) row.get(SerializeConstants.NAME),
+                                (String) row.get(SerializeConstants.VALUE));
 
-                cookie.setDomain((String) row.get("domain"));
-                cookie.setPath((String) row.get("path"));
-                cookie.setVersion((int) row.get("version"));
-                cookie.setSecure((boolean) row.get("secure"));
-                cookie.setComment((String) row.get("comment"));
+                cookie.setDomain((String) row.get(SerializeConstants.DOMAIN));
+                cookie.setPath((String) row.get(SerializeConstants.PATH));
+                cookie.setVersion((int) row.get(SerializeConstants.VERSION));
+                cookie.setSecure((boolean) row.get(SerializeConstants.SECURE));
+                cookie.setComment((String) row.get(SerializeConstants.COMMENT));
+                Optional.ofNullable((String) row.get(SerializeConstants.PATH))
+                        .ifPresent(path -> cookie.setAttribute(SerializeConstants.PATH, path));
+                Optional.ofNullable((String) row.get(SerializeConstants.DOMAIN))
+                        .ifPresent(
+                                domain -> cookie.setAttribute(SerializeConstants.DOMAIN, domain));
+                cookie.setAttribute(SerializeConstants.HTTP_ONLY, null);
+                cookie.setAttribute(
+                        SerializeConstants.SECURE,
+                        (boolean) row.get(SerializeConstants.SECURE)
+                                ? SerializeConstants.TRUE
+                                : null);
 
                 this.cookies.add(cookie);
             }
