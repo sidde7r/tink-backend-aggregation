@@ -12,14 +12,14 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
-public class InvalidConsentErrorFilter extends Filter {
+public class ConsentErrorFilter extends Filter {
 
     private static final String MESSAGE_PATTERN =
-            "The consentId has been expired for path `%s` with HTTP status `%s` and ErrorCodes `%s`";
+            "The consent error occurred for path `%s` with HTTP status `%s` and ErrorCodes `%s`";
 
     private final PersistentStorage persistentStorage;
 
-    public InvalidConsentErrorFilter(PersistentStorage persistentStorage) {
+    public ConsentErrorFilter(PersistentStorage persistentStorage) {
         this.persistentStorage = persistentStorage;
     }
 
@@ -31,8 +31,8 @@ public class InvalidConsentErrorFilter extends Filter {
         if (OpenIdConsentValidator.hasInvalidConsent(response)) {
             persistentStorage.put(
                     OpenIdConstants.PersistentStorageKeys.AIS_ACCOUNT_CONSENT_ID,
-                    OpenIdAuthenticatorConstants.UNSPECIFIED_CONSENT_ID);
-            throw SessionError.CONSENT_EXPIRED.exception(
+                    OpenIdAuthenticatorConstants.CONSENT_ERROR_OCCURRED);
+            throw SessionError.CONSENT_INVALID.exception(
                     String.format(
                             MESSAGE_PATTERN,
                             response.getStatus(),
