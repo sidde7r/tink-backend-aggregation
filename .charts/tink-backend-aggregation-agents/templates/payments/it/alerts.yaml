@@ -17,7 +17,7 @@ spec:
       labels:
         severity: urgent
         priority: P1
-        who: connectivity-teletubbies
+        who: connectivity-nazguls
       annotations:
         description: {{ .Values.kibanaLink }}
             {{ .Values.grafanaLink }}
@@ -35,7 +35,7 @@ spec:
       labels:
         severity: urgent
         priority: P1
-        who: connectivity-teletubbies
+        who: connectivity-nazguls
       annotations:
         description: {{ .Values.kibanaLink }}
             {{ .Values.grafanaLink }}
@@ -55,7 +55,7 @@ spec:
       labels:
         severity: urgent
         priority: P2
-        who: connectivity-teletubbies
+        who: connectivity-nazguls
       annotations:
         description: {{ .Values.kibanaLink }}
             {{ .Values.grafanaLink }}
@@ -75,7 +75,7 @@ spec:
       labels:
         severity: urgent
         priority: P2
-        who: connectivity-teletubbies
+        who: connectivity-nazguls
       annotations:
         description: {{ .Values.kibanaLink }}
             {{ .Values.grafanaLink }}
@@ -95,7 +95,7 @@ spec:
       labels:
         severity: urgent
         priority: P3
-        who: connectivity-teletubbies
+        who: connectivity-nazguls
       annotations:
         description: {{ .Values.kibanaLink }}
             {{ .Values.grafanaLink }}
@@ -115,7 +115,7 @@ spec:
       labels:
         severity: urgent
         priority: P3
-        who: connectivity-teletubbies
+        who: connectivity-nazguls
       annotations:
         description: {{ .Values.kibanaLink }}
             {{ .Values.grafanaLink }}

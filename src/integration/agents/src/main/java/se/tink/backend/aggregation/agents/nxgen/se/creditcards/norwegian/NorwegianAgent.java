@@ -17,7 +17,6 @@ import se.tink.backend.aggregation.agents.nxgen.se.creditcards.norwegian.fetcher
 import se.tink.backend.aggregation.agents.nxgen.se.creditcards.norwegian.fetcher.creditcard.NorwegianDatePaginationController;
 import se.tink.backend.aggregation.agents.nxgen.se.creditcards.norwegian.fetcher.identity.NorwegianIdentityFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.creditcards.norwegian.fetcher.savingsaccount.NorwegianSavingsAccountFetcher;
-import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -27,7 +26,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
-import se.tink.backend.aggregation.nxgen.http.MultiIpGateway;
 
 @AgentCapabilities({SAVINGS_ACCOUNTS, CREDIT_CARDS, IDENTITY_DATA})
 public final class NorwegianAgent extends NextGenerationAgent
@@ -41,18 +39,12 @@ public final class NorwegianAgent extends NextGenerationAgent
     private final NorwegianIdentityFetcher identityFetcher;
 
     @Inject
-    public NorwegianAgent(
-            AgentComponentProvider componentProvider,
-            AgentsServiceConfiguration agentsServiceConfiguration) {
+    public NorwegianAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
         apiClient = new NorwegianApiClient(client);
         creditCardRefreshController = constructCreditCardRefreshController();
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
         identityFetcher = new NorwegianIdentityFetcher(apiClient, request);
-
-        final MultiIpGateway gateway =
-                new MultiIpGateway(client, credentials.getUserId(), credentials.getId());
-        gateway.setMultiIpGateway(agentsServiceConfiguration.getIntegrations());
     }
 
     @Override

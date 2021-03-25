@@ -22,7 +22,7 @@ spec:
       labels:
         severity: urgent
         priority: P4
-        who: integration-teletubbies
+        who: integration-nazguls
       annotations:
         description: {{ .Values.kibanaLink }}
           {{ .Values.grafanaLink }}
@@ -42,7 +42,7 @@ spec:
       labels:
         severity: urgent
         priority: P3
-        who: integration-teletubbies
+        who: integration-nazguls
       annotations:
         description: {{ .Values.kibanaLink }}
           {{ .Values.grafanaLink }}
@@ -62,7 +62,7 @@ spec:
       labels:
         severity: urgent
         priority: P2
-        who: integration-teletubbies
+        who: integration-nazguls
       annotations:
         description: {{ .Values.kibanaLink }}
           {{ .Values.grafanaLink }}
@@ -80,7 +80,7 @@ spec:
       labels:
         severity: urgent
         priority: P1
-        who: integration-teletubbies
+        who: integration-nazguls
       annotations:
         description: {{ .Values.kibanaLink }}
           {{ .Values.grafanaLink }}
@@ -102,7 +102,7 @@ spec:
       labels:
         severity: urgent
         priority: P4
-        who: integration-teletubbies
+        who: integration-nazguls
       annotations:
         description: {{ .Values.kibanaClassLink }}
           {{ .Values.grafanaLink }}
@@ -123,7 +123,7 @@ spec:
       labels:
         severity: urgent
         priority: P3
-        who: integration-teletubbies
+        who: integration-nazguls
       annotations:
         description: {{ .Values.kibanaClassLink }}
           {{ .Values.grafanaLink }}
@@ -144,7 +144,7 @@ spec:
       labels:
         severity: urgent
         priority: P2
-        who: integration-teletubbies
+        who: integration-nazguls
       annotations:
         description: {{ .Values.kibanaClassLink }}
           {{ .Values.grafanaLink }}
@@ -163,7 +163,7 @@ spec:
       labels:
         severity: urgent
         priority: P1
-        who: integration-teletubbies
+        who: integration-nazguls
       annotations:
         description: {{ .Values.kibanaClassLink }}
           {{ .Values.grafanaLink }}
@@ -184,7 +184,7 @@ spec:
       labels:
         severity: urgent
         priority: P4
-        who: integration-teletubbies
+        who: integration-nazguls
       annotations:
         description: {{ .Values.kibanaLink }}
           {{ .Values.grafanaLink }}
@@ -201,7 +201,7 @@ spec:
       labels:
         severity: urgent
         priority: P1
-        who: integration-teletubbies
+        who: integration-nazguls
       annotations:
         description: {{ .Values.kibanaLink }}
           {{ .Values.grafanaLink }}
@@ -218,7 +218,7 @@ spec:
       labels:
         severity: urgent
         priority: P4
-        who: integration-teletubbies
+        who: integration-nazguls
       annotations:
         description: {{ .Values.kibanaLink }}
           {{ .Values.grafanaLink }}
@@ -235,7 +235,7 @@ spec:
       labels:
         severity: urgent
         priority: P1
-        who: integration-teletubbies
+        who: integration-nazguls
       annotations:
         description: {{ .Values.kibanaLink }}
           {{ .Values.grafanaLink }}
@@ -256,7 +256,7 @@ spec:
       labels:
         severity: urgent
         priority: P4
-        who: integration-teletubbies
+        who: integration-nazguls
       annotations:
         description: {{ .Values.kibanaClassLink }}
           {{ .Values.grafanaLink }}
@@ -275,7 +275,7 @@ spec:
       labels:
         severity: urgent
         priority: P3
-        who: integration-teletubbies
+        who: integration-nazguls
       annotations:
         description: {{ .Values.kibanaClassLink }}
           {{ .Values.grafanaLink }}
@@ -294,7 +294,7 @@ spec:
       labels:
         severity: urgent
         priority: P2
-        who: integration-teletubbies
+        who: integration-nazguls
       annotations:
         description: {{ .Values.kibanaClassLink }}
           {{ .Values.grafanaLink }}
@@ -311,7 +311,7 @@ spec:
       labels:
         severity: urgent
         priority: P1
-        who: integration-teletubbies
+        who: integration-nazguls
       annotations:
         description: {{ .Values.kibanaClassLink }}
           {{ .Values.grafanaLink }}
@@ -334,7 +334,7 @@ spec:
       labels:
         severity: urgent
         priority: P4
-        who: integration-teletubbies
+        who: integration-nazguls
       annotations:
         description: {{ .Values.kibanaClassLink }}
           {{ .Values.grafanaLink }}
@@ -353,7 +353,7 @@ spec:
       labels:
         severity: urgent
         priority: P3
-        who: integration-teletubbies
+        who: integration-nazguls
       annotations:
         description: {{ .Values.kibanaClassLink }}
           {{ .Values.grafanaLink }}
@@ -372,7 +372,7 @@ spec:
       labels:
         severity: urgent
         priority: P2
-        who: integration-teletubbies
+        who: integration-nazguls
       annotations:
         description: {{ .Values.kibanaClassLink }}
           {{ .Values.grafanaLink }}
@@ -389,7 +389,7 @@ spec:
       labels:
         severity: urgent
         priority: P1
-        who: integration-teletubbies
+        who: integration-nazguls
       annotations:
         description: {{ .Values.kibanaClassLink }}
           {{ .Values.grafanaLink }}
