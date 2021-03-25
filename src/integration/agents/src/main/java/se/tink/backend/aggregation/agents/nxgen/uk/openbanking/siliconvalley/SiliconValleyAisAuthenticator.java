@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.authenticator;
+package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.siliconvalley;
 
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticator;
@@ -8,12 +8,12 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.rpc.WellKnownResponse;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
-public class OpenIdAisAuthenticator implements OpenIdAuthenticator {
+public class SiliconValleyAisAuthenticator implements OpenIdAuthenticator {
 
     private final UkOpenBankingApiClient apiClient;
     private final ClientInfo clientInfo;
 
-    public OpenIdAisAuthenticator(UkOpenBankingApiClient apiClient) {
+    public SiliconValleyAisAuthenticator(UkOpenBankingApiClient apiClient) {
         this.apiClient = apiClient;
         this.clientInfo = apiClient.getProviderConfiguration();
     }
@@ -37,7 +37,6 @@ public class OpenIdAisAuthenticator implements OpenIdAuthenticator {
                         .withCallbackUri(callbackUri)
                         .withWellKnownConfiguration(wellKnownConfiguration)
                         .withIntentId(intentId)
-                        .withMaxAge(OpenIdAuthenticatorConstants.MAX_AGE)
                         .build(apiClient.getSigner()));
     }
 }

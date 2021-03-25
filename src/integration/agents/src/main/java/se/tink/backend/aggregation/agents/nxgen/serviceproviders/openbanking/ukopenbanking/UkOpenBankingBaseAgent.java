@@ -32,6 +32,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.InvalidConsentErrorFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticationController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticationValidator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.configuration.ClientInfo;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.configuration.SoftwareStatementAssertion;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.signer.iface.JwtSigner;
@@ -365,12 +366,16 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
                 this.persistentStorage,
                 this.supplementalInformationHelper,
                 this.apiClient,
-                new OpenIdAisAuthenticator(this.apiClient),
+                getAisAuthenticator(),
                 this.credentials,
                 this.strongAuthenticationState,
                 this.request.getCallbackUri(),
                 this.randomValueGenerator,
                 new OpenIdAuthenticationValidator(this.apiClient));
+    }
+
+    protected OpenIdAuthenticator getAisAuthenticator() {
+        return new OpenIdAisAuthenticator(this.apiClient);
     }
 
     @Override
