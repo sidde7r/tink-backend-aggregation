@@ -1276,23 +1276,6 @@ load("@selenium//:defs.bzl", pin_selenium = "pinned_maven_install")
 
 pin_selenium()
 
-maven_install(
-    name = "com_salesforce_servicelibs_grpc_testing_contrib",
-    artifacts = [
-        "com.salesforce.servicelibs:grpc-testing-contrib:0.8.1",
-    ],
-    excluded_artifacts = [
-        "io.netty:*",
-    ],
-    fetch_sources = True,
-    maven_install_json = "//third_party:com_salesforce_servicelibs_grpc_testing_contrib_install.json",
-    repositories = MAVEN_REPOS,
-)
-
-load("@com_salesforce_servicelibs_grpc_testing_contrib//:defs.bzl", com_salesforce_servicelibs_grpc_testing_contrib_pin = "pinned_maven_install")
-
-com_salesforce_servicelibs_grpc_testing_contrib_pin()
-
 http_archive(
     name = "bazel_sonarqube",
     sha256 = "53c8eb6ede402a6cc1e9d38bbf8b7285d13cc86e3b30875f2969582adc918afb",
