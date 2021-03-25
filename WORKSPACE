@@ -733,6 +733,7 @@ maven_install(
         "com.codahale.metrics:metrics-jvm:3.0.2",
         "com.codahale.metrics:metrics-logback:3.0.2",
         "com.codahale.metrics:metrics-servlets:3.0.2",
+        "com.codeborne:phantomjsdriver:1.2.1",
         "com.fasterxml.jackson.core:jackson-annotations:2.9.9",
         "com.fasterxml.jackson.core:jackson-core:2.9.9",
         "com.fasterxml.jackson.core:jackson-databind:2.9.9",
@@ -756,6 +757,7 @@ maven_install(
         "com.github.javafaker:javafaker:1.0.2",
         "com.github.rholder:guava-retrying:2.0.0",
         "com.github.stephenc.jcip:jcip-annotations:1.0-1",
+        "com.github.tomakehurst:wiremock-standalone:2.27.1",
         "com.google.api.grpc:proto-google-common-protos:0.1.9",
         "com.google.code.findbugs:jsr305:3.0.2",
         "com.google.code.gson:gson:2.8.2",
@@ -774,7 +776,6 @@ maven_install(
         "com.googlecode.gettext-commons:gettext-commons:0.9.8",
         "com.jayway.jsonpath:json-path:2.4.0",
         "com.jcraft:jzlib:1.1.3",
-        "com.kjetland:mbknor-jackson-jsonschema_2.12:1.0.34",
         "com.kjetland:mbknor-jackson-jsonschema_2.12:1.0.34",
         "com.lambdaworks:scrypt:1.3.2",
         "com.netflix.governator:governator-api:1.17.2",
@@ -799,7 +800,9 @@ maven_install(
         "de.jollyday:jollyday:0.4.7",
         "dom4j:dom4j:1.6.1",
         "eu.geekplace.javapinning:java-pinning-jar:1.0.1",
+        "io.dropwizard:dropwizard-client:0.7.1",
         "io.dropwizard:dropwizard-configuration:0.7.1",
+        "io.dropwizard:dropwizard-core:0.7.1",
         "io.dropwizard:dropwizard-jackson:0.7.1",
         "io.dropwizard:dropwizard-jetty:0.7.1",
         "io.dropwizard:dropwizard-lifecycle:0.7.1",
@@ -915,6 +918,14 @@ maven_install(
         "org.projectlombok:lombok:1.18.16",
         "org.reactivestreams:reactive-streams:1.0.3",
         "org.reflections:reflections:0.9.11",
+        "org.seleniumhq.selenium:selenium-api:2.44.0",
+        "org.seleniumhq.selenium:selenium-chrome-driver:2.44.0",
+        "org.seleniumhq.selenium:selenium-firefox-driver:2.44.0",
+        "org.seleniumhq.selenium:selenium-ie-driver:2.44.0",
+        "org.seleniumhq.selenium:selenium-java:2.44.0",
+        "org.seleniumhq.selenium:selenium-remote-driver:2.44.0",
+        "org.seleniumhq.selenium:selenium-safari-driver:2.44.0",
+        "org.seleniumhq.selenium:selenium-support:2.44.0",
         "org.slf4j:jcl-over-slf4j:1.7.24",
         "org.slf4j:jul-to-slf4j:1.7.6",
         "org.slf4j:slf4j-api:1.7.30",
@@ -968,14 +979,11 @@ maven_install(
         "com.amazonaws:aws-java-sdk-sqs:1.11.381",
         "com.amazonaws:jmespath-java:1.11.381",
         "com.auth0:java-jwt:3.3.0",
-        "com.github.tomakehurst:wiremock-standalone:2.27.1",
         "com.google.crypto.tink:tink:1.2.2",
         "com.google.errorprone:javac-shaded:9+181-r4173-1",
         "com.google.googlejavaformat:google-java-format:1.7",
         "com.nimbusds:nimbus-jose-jwt:8.20.1",
         "com.oracle.substratevm:svm:19.0.0",
-        "io.dropwizard:dropwizard-client:0.7.1",
-        "io.dropwizard:dropwizard-core:0.7.1",
         "io.grpc:grpc-api:%s" % GRPC_JAVA_VERSION,
         "io.grpc:grpc-auth:%s" % GRPC_JAVA_VERSION,
         "io.grpc:grpc-core:%s" % GRPC_JAVA_VERSION,
@@ -1275,23 +1283,6 @@ maven_install(
 load("@selenium//:defs.bzl", pin_selenium = "pinned_maven_install")
 
 pin_selenium()
-
-maven_install(
-    name = "com_salesforce_servicelibs_grpc_testing_contrib",
-    artifacts = [
-        "com.salesforce.servicelibs:grpc-testing-contrib:0.8.1",
-    ],
-    excluded_artifacts = [
-        "io.netty:*",
-    ],
-    fetch_sources = True,
-    maven_install_json = "//third_party:com_salesforce_servicelibs_grpc_testing_contrib_install.json",
-    repositories = MAVEN_REPOS,
-)
-
-load("@com_salesforce_servicelibs_grpc_testing_contrib//:defs.bzl", com_salesforce_servicelibs_grpc_testing_contrib_pin = "pinned_maven_install")
-
-com_salesforce_servicelibs_grpc_testing_contrib_pin()
 
 http_archive(
     name = "bazel_sonarqube",
