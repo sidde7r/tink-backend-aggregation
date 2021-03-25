@@ -161,10 +161,12 @@ public class SparkassenAuthenticator implements MultiFactorAuthenticator, AutoAu
                         .substring(0, 6),
                 ENCODER.encodeToString(Hash.sha512(password + STATIC_SALT)).substring(0, 6));
 
-        if (password.length() <= 5) {
-            log.info("[Sparkassen Auth] Pass length <= 5");
+        if (password.length() < 5) {
+            log.info("[Sparkassen Auth] Pass length to short < 5");
+        } else if (password.length() > 38) {
+            log.info("[Sparkassen Auth] Pass length to long > 38");
         } else {
-            log.info("[Sparkassen Auth] Pass length > 5");
+            log.info("[Sparkassen Auth] Pass length correct");
         }
     }
 
