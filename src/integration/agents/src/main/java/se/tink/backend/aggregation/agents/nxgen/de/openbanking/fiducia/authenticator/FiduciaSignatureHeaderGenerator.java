@@ -5,10 +5,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaConstants;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 
 @RequiredArgsConstructor
+@Slf4j
 public class FiduciaSignatureHeaderGenerator {
 
     private static final String SIGNATURE_HEADER_FORMAT =
@@ -28,6 +30,8 @@ public class FiduciaSignatureHeaderGenerator {
         String signedHeaders = getSignedHeaders(headers);
         String signedHeadersWithValues = getSignedHeadersWithValues(headers);
         String signature = qsealcSigner.getSignatureBase64(signedHeadersWithValues.getBytes());
+
+        log.info(String.format("[FIDUCIA] SIGNATURE: %s", signature));
 
         return String.format(SIGNATURE_HEADER_FORMAT, signedHeaders, signature);
     }
