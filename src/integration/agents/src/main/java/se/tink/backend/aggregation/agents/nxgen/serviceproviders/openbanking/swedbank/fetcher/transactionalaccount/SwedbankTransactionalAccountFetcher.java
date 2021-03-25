@@ -103,8 +103,7 @@ public class SwedbankTransactionalAccountFetcher implements AccountFetcher<Trans
     }
 
     public boolean isCrossLogin() {
-        return !apiClient.isSwedbank()
-                && !getAccounts().getAccountList().isEmpty()
+        return !getAccounts().getAccountList().isEmpty()
                 && SwedbankConstants.BANK_IDS
                         .get(0)
                         .equals(fetchAccountResponse.getAccountList().get(0).getBankId().trim());
