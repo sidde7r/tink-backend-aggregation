@@ -327,6 +327,10 @@ public class DataStudioLoginEventPublisherService {
                                     NemIdError.RENEW_NEMID,
                                     AgentLoginCompletedEventProto.AgentLoginCompletedEvent
                                             .LoginResult.AUTHORIZATION_ERROR_ACCOUNT_BLOCKED)
+                            .put(
+                                    NemIdError.TIMEOUT,
+                                    AgentLoginCompletedEventProto.AgentLoginCompletedEvent
+                                            .LoginResult.THIRD_PARTY_APP_ERROR_TIMED_OUT)
                             .build();
 
     private final LoginAgentEventProducer eventPublisher;
