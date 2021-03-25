@@ -912,6 +912,7 @@ maven_install(
         "org.objenesis:objenesis:2.6",
         "org.ow2.asm:asm:5.0.4",
         "org.pojava:pojava:2.8.1",
+        "org.projectlombok:lombok:1.18.16",
         "org.reactivestreams:reactive-streams:1.0.3",
         "org.reflections:reflections:0.9.11",
         "org.slf4j:jcl-over-slf4j:1.7.24",
@@ -1243,15 +1244,6 @@ maven_install(
 load("@jetty_server9//:defs.bzl", pin_jetty_server9 = "pinned_maven_install")
 
 pin_jetty_server9()
-
-maven_install(
-    name = "lombok",
-    artifacts = [
-        "org.projectlombok:lombok:1.18.16",
-    ],
-    fetch_sources = True,
-    repositories = MAVEN_REPOS,
-)
 
 maven_install(
     name = "selenium",
