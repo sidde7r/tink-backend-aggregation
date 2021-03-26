@@ -140,18 +140,17 @@ public class OpenIdAuthenticationController
                 OAuth2Token refreshedToken = refreshAccessToken(oAuth2Token);
                 saveAccessToken(refreshedToken);
                 oAuth2Token = refreshedToken;
-                persistentStorage
-                        .get(
-                                OpenIdConstants.PersistentStorageKeys.AIS_ACCOUNT_CONSENT_ID,
-                                String.class)
-                        .filter(OpenIdAuthenticatorConstants.UNSPECIFIED_CONSENT_ID::equals)
-                        .ifPresent(
-                                s -> {
-                                    log.error(
-                                            "The consentId is an unspecified. Expiring the session.");
-                                    cleanAuthenticationPersistentStorage();
-                                    throw SessionError.CONSENT_EXPIRED.exception();
-                                });
+
+                String consentId =
+                        persistentStorage
+                                .get(PersistentStorageKeys.AIS_ACCOUNT_CONSENT_ID, String.class)
+                                .orElse("");
+
+                if (consentId.equals(OpenIdAuthenticatorConstants.CONSENT_ERROR_OCCURRED)) {
+                    cleanAuthenticationPersistentStorage();
+                    throw SessionError.CONSENT_INVALID.exception(
+                            "These credentials were marked with CONSENT_ERROR_OCCURRED flag in the past. Expiring the session.");
+                }
             }
         }
 
