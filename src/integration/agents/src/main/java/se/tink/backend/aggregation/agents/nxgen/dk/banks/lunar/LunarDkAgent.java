@@ -4,6 +4,7 @@ import static se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.LunarConst
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.IDENTITY_DATA;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.INVESTMENTS;
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.LOANS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
 
 import com.google.inject.Inject;
@@ -11,10 +12,12 @@ import java.time.Clock;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.agentplatform.AgentPlatformHttpClient;
@@ -28,6 +31,7 @@ import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.cli
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.persistance.LunarDataAccessorFactory;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.client.FetcherApiClient;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.investment.LunarInvestmentsFetcher;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.loan.LunarLoansFetcher;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.transactionalaccount.LunarIdentityDataFetcher;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.transactionalaccount.LunarTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.transactionalaccount.LunarTransactionalAccountFetcher;
@@ -35,6 +39,7 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.loan.LoanRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
@@ -42,16 +47,18 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.TimeoutRetryFilter;
 
-@AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, INVESTMENTS, IDENTITY_DATA})
+@AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, LOANS, INVESTMENTS, IDENTITY_DATA})
 public final class LunarDkAgent extends AgentPlatformAgent
         implements RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor,
+                RefreshLoanAccountsExecutor,
                 RefreshInvestmentAccountsExecutor,
                 RefreshIdentityDataExecutor,
                 AgentPlatformAuthenticator {
 
     private final FetcherApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
+    private final LoanRefreshController loanRefreshController;
     private final InvestmentRefreshController investmentRefreshController;
     private final LunarAuthenticationConfig lunarAuthenticationConfig;
     private final RandomValueGenerator randomValueGenerator;
@@ -84,7 +91,9 @@ public final class LunarDkAgent extends AgentPlatformAgent
         this.transactionalAccountRefreshController =
                 constructTransactionalAccountRefreshController();
 
-        investmentRefreshController = constructInvestmentRefreshController();
+        this.loanRefreshController = constructLoanRefreshController();
+
+        this.investmentRefreshController = constructInvestmentRefreshController();
 
         this.lunarAuthenticationConfig =
                 createLunarAuthenticationConfig(agentComponentProvider, authenticationApiClient);
@@ -100,6 +109,15 @@ public final class LunarDkAgent extends AgentPlatformAgent
                         transactionPaginationHelper,
                         new TransactionKeyPaginationController<>(
                                 new LunarTransactionFetcher(apiClient))));
+    }
+
+    private LoanRefreshController constructLoanRefreshController() {
+        LunarLoansFetcher lunarLoansFetcher = new LunarLoansFetcher(apiClient, identityDataFetcher);
+        return new LoanRefreshController(
+                metricRefreshController,
+                updateController,
+                lunarLoansFetcher,
+                new TransactionFetcherController<>(transactionPaginationHelper, lunarLoansFetcher));
     }
 
     private InvestmentRefreshController constructInvestmentRefreshController() {
@@ -150,6 +168,16 @@ public final class LunarDkAgent extends AgentPlatformAgent
     @Override
     public FetchTransactionsResponse fetchSavingsTransactions() {
         return transactionalAccountRefreshController.fetchSavingsTransactions();
+    }
+
+    @Override
+    public FetchLoanAccountsResponse fetchLoanAccounts() {
+        return loanRefreshController.fetchLoanAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchLoanTransactions() {
+        return loanRefreshController.fetchLoanTransactions();
     }
 
     @Override

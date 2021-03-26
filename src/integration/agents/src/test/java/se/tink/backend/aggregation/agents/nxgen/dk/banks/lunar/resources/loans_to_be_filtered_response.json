@@ -1,0 +1,30 @@
+{
+    "loans": [
+        {
+            "applicationID": "af69c369-29fb-4ac9-9d65-f097111fe0e9",
+            "categoryColor": "#000000",
+            "categoryName": "Indskud",
+            "categoryUrl": "https://cdn.prod.lunarway.com/credit/categories/downpayment.png",
+            "currency": "DKK",
+            "deleted": true,
+            "firstPaymentDate": "2020-09-01",
+            "id": "5f2c4f6f-b144-4ef4-8db6-d203b47cc5c2",
+            "interestRate": 0.16,
+            "loanAmount": 25000,
+            "loanCompletedDate": "2025-02-01",
+            "loanMaturityPeriod": 0,
+            "loanProduct": "Lån",
+            "monthlyDownpaymentAmount": 650,
+            "nextPaymentDate": "0001-01-01",
+            "offerValidUntilDate": "2020-08-29",
+            "paymentProgressPercentAmount": 0,
+            "remainingAmount": 34965.112299718196,
+            "state": "inProgress",
+            "totalCostAmount": 9965.112299718196,
+            "totalLoanWithInterestAmount": 34965.112299718196,
+            "transactions": [],
+            "updated": 1597449650929042116,
+            "yearlyCostInterest": 0.16
+        }
+    ]
+}

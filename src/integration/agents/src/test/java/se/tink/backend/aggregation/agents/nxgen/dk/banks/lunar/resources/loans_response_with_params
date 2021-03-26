@@ -1,0 +1,31 @@
+{
+    "loans": [
+        {
+            "accountId": "8079351c-c729-481f-9145-82ddf3befe2e",
+            "applicationID": "ed74e696-b19a-4b8a-9e09-1f61c8ea66dc",
+            "categoryColor": "#000000",
+            "categoryName": "Uforudset udgift",
+            "categoryUrl": "https://cdn.prod.lunarway.com/credit/categories/expense.png",
+            "currency": "DKK",
+            "deleted": false,
+            "firstPaymentDate": "2021-03-01",
+            "id": "8a9cab1a-8023-4c15-80ea-11b68ff74a53",
+            "interestRate": 0.17,
+            "loanAmount": %s,
+            "loanCompletedDate": "2022-01-01",
+            "loanMaturityPeriod": 11,
+            "loanProduct": "Lån",
+            "monthlyDownpaymentAmount": 1000,
+            "nextPaymentDate": "2021-03-31",
+            "offerValidUntilDate": "2021-02-16",
+            "paymentProgressPercentAmount": 9,
+            "remainingAmount": %s,
+            "state": "inProgress",
+            "totalCostAmount": 856,
+            "totalLoanWithInterestAmount": %s,
+            "transactions": %s,
+            "updated": 1614783075357671692,
+            "yearlyCostInterest": 0.17
+        }
+    ]
+}

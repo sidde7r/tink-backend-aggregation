@@ -19,8 +19,6 @@ import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.ent
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.rpc.AccessTokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.rpc.AccessTokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.rpc.NemIdParamsResponse;
-import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.loan.rpc.CreditApplicationsResponse;
-import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.loan.rpc.LoansResponse;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.libraries.serialization.utils.SerializationUtils;
@@ -78,25 +76,6 @@ public class AuthenticationApiClient {
                         .header(Headers.AUTHORIZATION, token)
                         .contentType(MediaType.APPLICATION_JSON);
         return send(requestBuilder.build(), AccountsResponse.class, null);
-    }
-
-    public LoansResponse fetchLoans(String token, String deviceId) {
-        BodyBuilder requestBuilder =
-                getDefaultBodyBuilder(HttpMethod.GET, Uri.LOAN, deviceId)
-                        .header(Headers.AUTHORIZATION, token)
-                        .contentType(MediaType.APPLICATION_JSON);
-        return send(requestBuilder.build(), LoansResponse.class, new LoansResponse());
-    }
-
-    public CreditApplicationsResponse fetchCreditApplications(String token, String deviceId) {
-        BodyBuilder requestBuilder =
-                getDefaultBodyBuilder(HttpMethod.GET, Uri.CREDIT_APPLICATIONS, deviceId)
-                        .header(Headers.AUTHORIZATION, token)
-                        .contentType(MediaType.APPLICATION_JSON);
-        return send(
-                requestBuilder.build(),
-                CreditApplicationsResponse.class,
-                new CreditApplicationsResponse());
     }
 
     private <T, R> T send(
