@@ -92,8 +92,4 @@ public class AccountsEntity {
                 .map(BalancesEntity::toAmount)
                 .orElseThrow(() -> new IllegalStateException("Could not get balance"));
     }
-
-    private String getName() {
-        return Strings.isNullOrEmpty(name) ? bban : name;
-    }
 }
