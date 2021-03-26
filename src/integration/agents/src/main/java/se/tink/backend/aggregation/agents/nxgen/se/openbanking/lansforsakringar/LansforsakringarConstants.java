@@ -97,7 +97,7 @@ public abstract class LansforsakringarConstants {
 
     public static class StorageKeys {
         public static final String ACCOUNTS = "accounts";
-        public static final String AUTHORISATION_ID = "authorisationId";
+        public static final String ACCOUNT_NUMBERS = "account_numbers";
         public static final String CONSENT_ID = "consentId";
     }
 

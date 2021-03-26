@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar
 
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.executor.payment.entities.AccountNumbersResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.fetcher.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.fetcher.rpc.GetBalancesResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants;
@@ -29,6 +30,11 @@ public class LansforsakringarStorageHelper {
         persistentStorage.put(resourceId, balanceResponse);
     }
 
+    public void storeAccountNumbers(AccountNumbersResponse accountNumbersResponse) {
+        persistentStorage.put(
+                LansforsakringarConstants.StorageKeys.ACCOUNT_NUMBERS, accountNumbersResponse);
+    }
+
     public String getConsentId() {
         return persistentStorage.get(LansforsakringarConstants.StorageKeys.CONSENT_ID);
     }
@@ -45,6 +51,12 @@ public class LansforsakringarStorageHelper {
 
     public Optional<GetBalancesResponse> getStoredBalanceResponse(String resourceId) {
         return persistentStorage.get(resourceId, GetBalancesResponse.class);
+    }
+
+    public Optional<AccountNumbersResponse> getStoredAccountNumbers() {
+        return persistentStorage.get(
+                LansforsakringarConstants.StorageKeys.ACCOUNT_NUMBERS,
+                AccountNumbersResponse.class);
     }
 
     public void removeBalanceResponseFromStorage(String resourceId) {
