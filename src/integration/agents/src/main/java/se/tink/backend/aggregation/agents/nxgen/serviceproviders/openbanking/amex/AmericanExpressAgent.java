@@ -42,6 +42,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.core.authentication.HmacToken;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.BankServiceInternalErrorFilter;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.GatewayTimeoutFilter;
 import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
 
 @AgentCapabilities({CREDIT_CARDS})
@@ -92,6 +93,7 @@ public final class AmericanExpressAgent extends SubsequentProgressiveGenerationA
                         AmericanExpressConstants.HttpClient.MAX_ATTEMPTS,
                         AmericanExpressConstants.HttpClient.RETRY_SLEEP_MILLISECONDS));
         client.addFilter(new BankServiceInternalErrorFilter());
+        client.addFilter(new GatewayTimeoutFilter());
     }
 
     @Override
