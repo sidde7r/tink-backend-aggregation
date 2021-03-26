@@ -8,6 +8,7 @@ import java.util.Optional;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.FiduciaSignatureHeaderGenerator;
@@ -18,6 +19,7 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 @RequiredArgsConstructor
+@Slf4j
 public class FiduciaRequestBuilder {
 
     private final TinkHttpClient client;
@@ -31,6 +33,11 @@ public class FiduciaRequestBuilder {
 
     public RequestBuilder createRequest(URL url, String body) {
         Map<String, Object> headers = getHeaders(body);
+
+        log.info(
+                String.format(
+                        "[FIDUCIA]: REQUEST: TPP_SIGNATURE_CERTIFICATE: %s",
+                        headers.getOrDefault(HeaderKeys.TPP_SIGNATURE_CERTIFICATE, "")));
 
         return client.request(url)
                 .headers(headers)
