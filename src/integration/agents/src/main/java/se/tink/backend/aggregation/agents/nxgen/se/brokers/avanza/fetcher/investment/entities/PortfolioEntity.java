@@ -8,7 +8,6 @@ import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaConstants.PortfolioTypes;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument.InstrumentModule;
@@ -98,7 +97,7 @@ public class PortfolioEntity {
     }
 
     public InvestmentAccount toTinkInvestmentAccount(
-            HolderName holderName,
+            String holderName,
             String clearingNumber,
             List<InstrumentModule> instruments,
             String clusterId) {
@@ -107,10 +106,7 @@ public class PortfolioEntity {
     }
 
     private InvestmentAccount toTinkInvestmentAccount(
-            HolderName holderName,
-            String clearingNumber,
-            PortfolioModule portfolio,
-            String clusterId) {
+            String holderName, String clearingNumber, PortfolioModule portfolio, String clusterId) {
         final double interestPayable = totalOwnCapital - portfolio.getTotalValue() - totalBalance;
         final String accountNumber =
                 clearingNumber != null
@@ -130,7 +126,7 @@ public class PortfolioEntity {
                                                 AccountIdentifierType.SE, accountId))
                                 .setProductName(portfolio.getRawType())
                                 .build())
-                .addHolderName(holderName.toString())
+                .addHolderName(holderName)
                 .setApiIdentifier(getAccountId())
                 .build();
     }

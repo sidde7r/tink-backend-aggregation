@@ -27,7 +27,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
-import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument.InstrumentModule;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
@@ -62,8 +61,7 @@ public class AvanzaInvestmentFetcher
                         .flatMap(getSessionAccountPairs())
                         .collect(Collectors.toList());
 
-        return getInvestmentAccounts(
-                new HolderName(temporaryStorage.get(StorageKeys.HOLDER_NAME)), sessionAccountPairs);
+        return getInvestmentAccounts(sessionAccountPairs);
     }
 
     private Function<String, Stream<? extends SessionAccountPair>> getSessionAccountPairs() {
@@ -75,14 +73,13 @@ public class AvanzaInvestmentFetcher
     }
 
     private Set<InvestmentAccount> getInvestmentAccounts(
-            HolderName holder, List<SessionAccountPair> sessionAccountPairs) {
+            List<SessionAccountPair> sessionAccountPairs) {
         return sessionAccountPairs.stream()
-                .map(sessionAccountPair -> aggregatePortfolioIsinPair(holder, sessionAccountPair))
+                .map(sessionAccountPair -> aggregatePortfolioIsinPair(sessionAccountPair))
                 .collect(Collectors.toSet());
     }
 
-    private InvestmentAccount aggregatePortfolioIsinPair(
-            HolderName holder, SessionAccountPair sessionAccount) {
+    private InvestmentAccount aggregatePortfolioIsinPair(SessionAccountPair sessionAccount) {
         final String authSession = sessionAccount.getAuthSession();
         final String account = sessionAccount.getAccountId();
         final String date = localDateTimeSource.now().toLocalDate().toString();
@@ -92,14 +89,11 @@ public class AvanzaInvestmentFetcher
         IsinMap isinMap =
                 apiClient.fetchInvestmentTransactions(account, date, authSession).toIsinMap();
 
-        return aggregateInvestmentAccount(holder, sessionAccount, portfolio, isinMap);
+        return aggregateInvestmentAccount(sessionAccount, portfolio, isinMap);
     }
 
     private InvestmentAccount aggregateInvestmentAccount(
-            HolderName holder,
-            SessionAccountPair sessionAccount,
-            PortfolioEntity portfolio,
-            IsinMap isinMap) {
+            SessionAccountPair sessionAccount, PortfolioEntity portfolio, IsinMap isinMap) {
         final String authSession = sessionAccount.getAuthSession();
 
         final List<InstrumentModule> instruments =
@@ -107,11 +101,13 @@ public class AvanzaInvestmentFetcher
                         .flatMap(getInstruments(authSession, isinMap))
                         .collect(Collectors.toList());
 
+        String holderName = temporaryStorage.getOrDefault(StorageKeys.HOLDER_NAME, null);
+
         AccountDetailsResponse accountDetails =
                 apiClient.fetchAccountDetails(sessionAccount.getAccountId(), authSession);
 
         return portfolio.toTinkInvestmentAccount(
-                holder, accountDetails.getClearingNumber(), instruments, clusterId);
+                holderName, accountDetails.getClearingNumber(), instruments, clusterId);
     }
 
     private Function<InstrumentEntity, Stream<? extends InstrumentModule>> getInstruments(
