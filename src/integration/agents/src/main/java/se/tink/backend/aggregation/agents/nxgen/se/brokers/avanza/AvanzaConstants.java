@@ -115,6 +115,8 @@ public class AvanzaConstants {
         private static final String INVESTMENT_TRANSACTIONS_LIST =
                 TRANSACTIONS
                         + "/{accountId}/options?from={fromDate}&includeInstrumentsWithNoOrderbook=1&to={toDate}";
+        private static final String PENSION_DETAILS =
+                API + "/account-details/pension-details/{accountId}";
 
         public static String logout(String authSession) {
             return new UriTemplate(LOGOUT).createURI(authSession);
@@ -156,6 +158,10 @@ public class AvanzaConstants {
                 String accountId, String fromDate, String toDate) {
             return new UriTemplate(INVESTMENT_TRANSACTIONS_LIST)
                     .createURI(accountId, fromDate, toDate);
+        }
+
+        public static String pensionDetails(String accountId) {
+            return new UriTemplate(PENSION_DETAILS).createURI(accountId);
         }
     }
 

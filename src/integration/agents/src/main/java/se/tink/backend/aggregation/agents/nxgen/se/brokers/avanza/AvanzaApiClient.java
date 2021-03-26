@@ -26,6 +26,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.invest
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.investment.rpc.InvestmentAccountPortfolioResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.investment.rpc.InvestmentTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.investment.rpc.MarketInfoResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.investment.rpc.PensionDetailResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.investment.rpc.StockMarketInfoResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.investment.rpc.WarrantMarketInfoResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.transactionalaccount.entities.AccountEntity;
@@ -206,6 +207,12 @@ public class AvanzaApiClient {
             }
             return null;
         }
+    }
+
+    public PensionDetailResponse fetchHolderNameFromPensionDetails(
+            String accountId, String authSession) {
+        return createRequestInSession(AvanzaConstants.Urls.pensionDetails(accountId), authSession)
+                .get(PensionDetailResponse.class);
     }
 
     public String logout(String authSession) {
