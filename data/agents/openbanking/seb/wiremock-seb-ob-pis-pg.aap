@@ -60,7 +60,7 @@ Content-Length: 175
 {"scope":"psd2_accounts psd2_payments","access_token":"iKoyt6TjdQb67zgn2uhy","refresh_token":"e5l1Ai8XZI4ud12jH1X88z4SN11P3Jrwi0oPVN4X","token_type":"bearer","expires_in":599}
 
 REQUEST 9
-GET https://tpp-api.sebgroup.com/tpp/ais/v6/identified2/accounts?withBalance=true
+GET https://tpp-api.sebgroup.com/tpp/ais/v7/identified2/accounts?withBalance=true
 Accept: application/json
 Content-Type: application/json
 
@@ -78,7 +78,7 @@ Server: Jetty(9.4.z-SNAPSHOT)
 {"accounts":[{"resourceId":"resourceId_1","iban":"SE8050000000000000000646","bban":"00000000646","status":"enabled","currency":"SEK","ownerName":"FirstName LastName","creditLine":"20000.000","product":"Privatkonto","name":"accountName","balances":[{"balanceType":"interimAvailable","creditLimitIncluded":true,"balanceAmount":{"amount":"40055.940","currency":"SEK"}},{"balanceType":"interimBooked","balanceAmount":{"amount":"20094.94","currency":"SEK"}}],"_links":{"transactions":{"href":"/accounts/resourceId_1/transactions?bookingStatus=booked"}}}]}
 
 REQUEST 10
-GET https://tpp-api.sebgroup.com/tpp/ais/v6/identified2/accounts/resourceId_1
+GET https://tpp-api.sebgroup.com/tpp/ais/v7/identified2/accounts/resourceId_1
 Accept: application/json
 Content-Type: application/json
 
@@ -95,7 +95,7 @@ Server: Jetty(9.4.z-SNAPSHOT)
 {"resourceId":"resourceId_1","iban":"SE6350000000057212985236","bban":"57212985236","bic":"ESSESESS","status":"enabled","currency":"SEK","ownerName":"Name Namesson","creditLine":"0.000","product":"Enkla sparkontot","name":"Sparkonto","bicAddress":"SEB, 106 40 Stockholm","cardLinkedToAccount":false,"paymentService":false,"accountInterest":"0.0","_links":{"transactions":{"href":"/accounts/6af9a660-e877-432c-b866-827531314112/transactions?bookingStatus=booked"}}}
 
 REQUEST 11
-GET https://tpp-api.sebgroup.com/tpp/ais/v6/identified2/accounts/37807a5c-417c-47b3-854c-0d457cf529db
+GET https://tpp-api.sebgroup.com/tpp/ais/v7/identified2/accounts/37807a5c-417c-47b3-854c-0d457cf529db
 Accept: application/json
 Content-Type: application/json
 
