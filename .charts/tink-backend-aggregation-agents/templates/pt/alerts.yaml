@@ -8,20 +8,38 @@ spec:
 
     - alert: LoginSuccessRateLowWithAttemptLimitPT
       expr: |
-        # Successful/Cancelled attempts above 80%
-        (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled|unavailable|cancelled_due_to_third_party_app_timeout", market="PT", provider_type!="test"}[60m])) by (action,className,provider)
-            / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="PT", provider_type!="test"}[60m])) by (action,className,provider) < 0.80)
+        # Failed logins (due to unknown RuntimeException) over 5%
+        (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome="failed", market="PT", provider_type!="test"}[60m])) by (action,className,provider)
+            / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="PT", provider_type!="test"}[60m])) by (action,className,provider) > 0.05)
         # At least this many attempts.
         and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="PT", provider_type!="test"}[60m])) by (action,className,provider) > 10
       for: 5m
       labels:
         severity: urgent
+        priority: P1
         who: integration-minions
       annotations:
         description: {{ .Values.kibanaLink }}
           {{ .Values.grafanaLink }}
         summary: Login success rate is below 80% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
           the last hour.
+        tags: {{ .Values.tags }}
+
+    - alert: LoginSuccessRateLowDueToBankSiteErrorOver90%PT
+      expr: |
+        # Login failed do to bank site error
+        sum(sum_over_time(tink_agent_login_total{action="login",outcome="unavailable", market="PT"}[3h])) BY (className,provider)
+        # All login attempts the last 3 hours
+          / sum(sum_over_time(tink_agent_login_total{action="login", market="PT"}[3h])) BY (className,provider) > 0.90
+      for: 1h
+      labels:
+        severity: urgent
+        priority: P2
+        who: integration-minions
+      annotations:
+        description: {{ .Values.kibanaLink }}
+          {{ .Values.grafanaLink }}
+        summary: Login success rate through a third party app is below 10% ( <{ $value }> ) the last 3h.
         tags: {{ .Values.tags }}
 
     - alert: RefreshSuccessRateLowWithAttemptLimitPT
@@ -139,5 +157,5 @@ spec:
       annotations:
         description: {{ .Values.kibanaLink }}
           {{ .Values.grafanaLink }}
-        summary: Login success rate through a third party app is below 10% ( <{ $value }> ) the last 6h.
+        summary: Login success rate through a third party app is below 10% ( <{ $value }> ) the last 6h. Please check if a third party redirect url works.
         tags: {{ .Values.tags }}
