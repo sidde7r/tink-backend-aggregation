@@ -179,6 +179,10 @@ public class SignableOperation implements SafelyLoggable {
         this.signableObject = signableObject;
     }
 
+    public void setSignableObject(Object object) {
+        setSignableObject(SerializationUtils.serializeToString(object));
+    }
+
     public String getInternalStatus() {
         return internalStatus;
     }

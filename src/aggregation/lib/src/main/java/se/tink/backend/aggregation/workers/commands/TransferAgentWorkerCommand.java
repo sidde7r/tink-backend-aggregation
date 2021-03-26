@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.workers.commands;
 
+import static java.util.Optional.empty;
+
 import com.google.common.base.Objects;
 import com.google.common.base.Strings;
 import java.util.ArrayList;
@@ -91,7 +93,7 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
         MetricAction metricAction =
                 metrics.buildAction(
                         new MetricId.MetricLabels().add("action", MetricName.EXECUTE_TRANSFER));
-        Optional<String> operationStatusMessage = Optional.empty();
+        Optional<String> operationStatusMessage = empty();
         try {
             log.info(
                     "[transferId: {}] {}",
@@ -99,36 +101,37 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
                     getTransferExecuteLogInfo(transfer));
             String market = transferRequest.getProvider().getMarket();
 
+            Optional<Payment> payment = empty();
+
             if (transferRequest instanceof RecurringPaymentRequest) {
-                handleRecurringPayment(agent, (RecurringPaymentRequest) transferRequest);
+                payment = handleRecurringPayment(agent, (RecurringPaymentRequest) transferRequest);
             } else {
                 if (agent instanceof TransferExecutor) {
                     TransferExecutor transferExecutor = (TransferExecutor) agent;
                     transferExecutor.execute(transfer);
                 } else if (agent instanceof TypedPaymentControllerable) {
-                    TypedPaymentControllerable paymentControllerable =
-                            (TypedPaymentControllerable) agent;
-                    handlePayment(
-                            paymentControllerable
-                                    .getPaymentController(
-                                            PaymentRequest.of(transfer, market).getPayment())
-                                    .get(),
-                            transfer,
-                            market);
+                    payment =
+                            Optional.of(
+                                    handlePayment(
+                                            transfer, market, (TypedPaymentControllerable) agent));
                 } else if (agent instanceof PaymentControllerable) {
                     PaymentControllerable paymentControllerable = (PaymentControllerable) agent;
 
                     if (paymentControllerable.getPaymentController().isPresent()) {
-                        handlePayment(
-                                paymentControllerable.getPaymentController().get(),
-                                transfer,
-                                market);
+                        payment =
+                                Optional.of(handlePayment(transfer, market, paymentControllerable));
                     } else {
                         TransferExecutorNxgen transferExecutorNxgen = (TransferExecutorNxgen) agent;
                         operationStatusMessage = transferExecutorNxgen.execute(transfer);
                     }
                 }
             }
+
+            // work around for PAYM-663, to transfer payment response back to system
+            payment.ifPresent(
+                    paym ->
+                            updateSignableOperationTransfer(
+                                    paym, transferRequest, signableOperation));
 
             metricAction.completed();
             if (operationStatusMessage.isPresent()) {
@@ -428,7 +431,24 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
         }
     }
 
-    private void handleRecurringPayment(
+    private Payment handlePayment(
+            Transfer transfer, String market, TypedPaymentControllerable paymentControllerable)
+            throws PaymentException {
+        return handlePayment(
+                paymentControllerable
+                        .getPaymentController(PaymentRequest.of(transfer, market).getPayment())
+                        .get(),
+                transfer,
+                market);
+    }
+
+    private Payment handlePayment(
+            Transfer transfer, String market, PaymentControllerable paymentControllerable)
+            throws PaymentException {
+        return handlePayment(paymentControllerable.getPaymentController().get(), transfer, market);
+    }
+
+    private Optional<Payment> handleRecurringPayment(
             Agent agent, RecurringPaymentRequest recurringPaymentRequestRequest)
             throws PaymentException {
         if (agent instanceof PaymentControllerable) {
@@ -447,12 +467,15 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
                         paymentController.create(
                                 PaymentRequest.ofRecurringPayment(recurringPayment));
 
-                handleRecurringPaymentSigning(paymentController, createPaymentResponse);
+                return Optional.of(
+                        handleRecurringPaymentSigning(paymentController, createPaymentResponse));
             }
         }
+
+        return empty();
     }
 
-    private void handleRecurringPaymentSigning(
+    private Payment handleRecurringPaymentSigning(
             PaymentController paymentController, PaymentResponse createPaymentResponse)
             throws PaymentException {
         PaymentMultiStepResponse signPaymentMultiStepResponse =
@@ -490,6 +513,8 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
                     signPaymentMultiStepResponse.getStep(),
                     credentials.getStatus());
         }
+
+        return payment;
     }
 
     private void handleRemittanceInformation(Transfer transfer) {
@@ -513,7 +538,7 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
         }
     }
 
-    private void handlePayment(
+    private Payment handlePayment(
             PaymentController paymentController, Transfer transfer, String market)
             throws PaymentException {
         PaymentResponse createPaymentResponse =
@@ -553,6 +578,30 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
             log.info("Next step - {}", signPaymentMultiStepResponse.getStep());
             log.info("Credentials contain - status: {}", credentials.getStatus());
         }
+
+        return payment;
+    }
+
+    private void updateSignableOperationTransfer(
+            Payment payment, TransferRequest transferRequest, SignableOperation signableOperation) {
+        try {
+            Transfer transfer = getTransfer(transferRequest, signableOperation);
+            transfer.setSource(payment.getDebtor().getAccountIdentifier());
+            signableOperation.setSignableObject(transfer);
+        } catch (Exception e) {
+            log.error("Unable to update source account from signed payment {}", payment.getId(), e);
+        }
+    }
+
+    private Transfer getTransfer(
+            TransferRequest transferRequest, SignableOperation signableOperation) {
+        Transfer transfer;
+        if (transferRequest instanceof RecurringPaymentRequest) {
+            transfer = signableOperation.getSignableObject(RecurringPayment.class);
+        } else {
+            transfer = signableOperation.getSignableObject(Transfer.class);
+        }
+        return transfer;
     }
 
     @Override
