@@ -98,21 +98,6 @@ public class AccountTrackingSerializerTest {
     }
 
     @Test
-    public void ensureEmptyIdentifiersList_resultInNullValue() {
-
-        ImmutableSet<String> expectedIdentifiers =
-                ImmutableSet.<String>builder().add("null").build();
-
-        Account account = new Account();
-        List<FieldEntry> entries = new AccountTrackingSerializer(account).buildList();
-
-        Assert.assertTrue(
-                "Failed: has entries 'identifiers' with values [null]",
-                TrackingSerializationTestHelper.hasFieldWithValues(
-                        "Account<null>.identifiers", expectedIdentifiers, entries));
-    }
-
-    @Test
     public void ensureFlags_areTracked() {
 
         ImmutableSet<String> expectedFlags =
