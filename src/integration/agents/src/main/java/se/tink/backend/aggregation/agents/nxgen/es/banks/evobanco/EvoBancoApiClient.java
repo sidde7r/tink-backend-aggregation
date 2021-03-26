@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.EvoBancoConstants.CookieKeys;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.EvoBancoConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.authenticator.rpc.EELoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.authenticator.rpc.EELoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.authenticator.rpc.GlobalPositionFirstTimeResponse;
@@ -14,6 +16,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.authenticator.
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.authenticator.rpc.LoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.authenticator.rpc.LoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.creditcard.rpc.CardTransactionsResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.identitydata.rpc.EvoBancoIdentityDataResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.investments.rpc.InvestmentsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.rpc.GlobalPositionResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.transactionalaccount.rpc.TransactionsPaginationRequest;
@@ -63,6 +66,11 @@ public class EvoBancoApiClient {
                         .body(loginRequest, MediaType.APPLICATION_FORM_URLENCODED_TYPE)
                         .post(LoginResponse.class);
 
+        LoginResponse loginResponseFromEvoBancoApi =
+                createRequest(Urls.LOGIN_API_V1)
+                        .body(loginRequest, MediaType.APPLICATION_FORM_URLENCODED_TYPE)
+                        .post(LoginResponse.class);
+
         // Needed for other requests
         sessionStorage.put(
                 EvoBancoConstants.Storage.AGREEMENT_BE,
@@ -80,7 +88,7 @@ public class EvoBancoApiClient {
                         + loginResponse.getUserinfo().getSurname1Client()
                         + " "
                         + loginResponse.getUserinfo().getSurname2Client());
-        sessionStorage.put(EvoBancoConstants.Storage.USER_INFO, loginResponse.getUserinfo());
+        sessionStorage.put(CookieKeys.ACCESS_TOKEN, loginResponseFromEvoBancoApi.getAccessToken());
 
         return loginResponse;
     }
@@ -197,6 +205,12 @@ public class EvoBancoApiClient {
         setNextCodSecIpHeader(response);
 
         return response.getBody(InvestmentsResponse.class);
+    }
+
+    public EvoBancoIdentityDataResponse fetchIdentityData() {
+        return createRequest(Urls.FETCH_IDENTITY)
+                .cookie(CookieKeys.ACCESS_TOKEN, sessionStorage.get(CookieKeys.ACCESS_TOKEN))
+                .post(EvoBancoIdentityDataResponse.class);
     }
 
     private Map<String, Object> getEEHeaders() {

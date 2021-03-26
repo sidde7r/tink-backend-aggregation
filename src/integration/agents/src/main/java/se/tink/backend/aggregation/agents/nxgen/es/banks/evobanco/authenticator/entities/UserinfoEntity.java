@@ -2,8 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.authenticator
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.libraries.identitydata.IdentityData;
-import se.tink.libraries.identitydata.countries.EsIdentityData;
 
 @JsonObject
 public class UserinfoEntity {
@@ -98,15 +96,5 @@ public class UserinfoEntity {
 
     public String getSurname2Client() {
         return surname2Client;
-    }
-
-    public IdentityData toTinkIdentity() {
-        return EsIdentityData.builder()
-                .setDocumentNumber(externalId)
-                .addFirstNameElement(clientName)
-                .addSurnameElement(surname1Client)
-                .addSurnameElement(surname2Client)
-                .setDateOfBirth(null)
-                .build();
     }
 }

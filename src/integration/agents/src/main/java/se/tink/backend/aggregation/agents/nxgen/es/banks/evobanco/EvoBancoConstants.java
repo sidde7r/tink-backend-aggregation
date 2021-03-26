@@ -14,6 +14,7 @@ public class EvoBancoConstants {
         private ApiService() {}
 
         static final String LOGIN_INIT_PATH = "login_be";
+        static final String LOGIN_PATH = "evobanco/v1/login";
         static final String EE_LOGIN_PATH = "SOA_RVIA/Empresa/PS/rest/v3/SE_RVA_Login";
         static final String KEEP_ALIVE_PATH =
                 "SOA_RVIA/Empresa/PS/rest/v1/SE_RVA_MantenimientoSesion";
@@ -28,6 +29,7 @@ public class EvoBancoConstants {
         static final String FETCH_CARD_TRANSACTIONS_PATH =
                 "SOA_RVIA/Empresa/PS/rest/v1/SE_RVA_ConsultaMovimientosTarjetaBE";
         static final String INVESTMENTS_PATH = "EVO_PAI/v1/api/investments";
+        static final String IDENTITY_DATA = "evobanco/apis/evo-consola-api/console/validate";
     }
 
     public static class Urls {
@@ -37,6 +39,7 @@ public class EvoBancoConstants {
         private static final String BASE_MOBILE_SERVICES = "https://serviciosmoviles.evobanco.com/";
 
         public static final URL LOGIN = new URL(BASE_API + ApiService.LOGIN_INIT_PATH);
+        public static final URL LOGIN_API_V1 = new URL(BASE_API + ApiService.LOGIN_PATH);
         public static final URL EE_LOGIN = new URL(BASE_MOBILE_SERVICES + ApiService.EE_LOGIN_PATH);
         public static final URL KEEP_ALIVE =
                 new URL(BASE_MOBILE_SERVICES + ApiService.KEEP_ALIVE_PATH);
@@ -52,6 +55,7 @@ public class EvoBancoConstants {
                 new URL(BASE_MOBILE_SERVICES + ApiService.FETCH_CARD_TRANSACTIONS_PATH);
         public static final URL FETCH_INVESTMENTS =
                 new URL(BASE_MOBILE_SERVICES + ApiService.INVESTMENTS_PATH);
+        public static final URL FETCH_IDENTITY = new URL(BASE_API + ApiService.IDENTITY_DATA);
     }
 
     public static class ReturnCodes {
@@ -103,6 +107,10 @@ public class EvoBancoConstants {
         public static final String COD_SEC_IP = "10.1.245.2";
         public static final String COD_CANAL = "18";
         public static final String COD_APL = "BDP";
+    }
+
+    public static class CookieKeys {
+        public static final String ACCESS_TOKEN = "atoken";
     }
 
     // TODO: Remove this as soon as we find out how to get these values from their backend
