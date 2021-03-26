@@ -382,8 +382,21 @@ public class LansforsakringarApiClient {
     }
 
     public AccountNumbersResponse getAccountNumbers() {
-        return createRequestInSession(new URL(Urls.GET_ACCOUNT_NUMBERS))
-                .header("Consent-ID", storageHelper.getConsentId())
-                .get(AccountNumbersResponse.class);
+        if (!userIpInformation.isManualRequest()) {
+            Optional<AccountNumbersResponse> storedAccountNumbers =
+                    storageHelper.getStoredAccountNumbers();
+
+            if (storedAccountNumbers.isPresent()) {
+                return storedAccountNumbers.get();
+            }
+        }
+
+        AccountNumbersResponse accountNumbersResponse =
+                createRequestInSession(new URL(Urls.GET_ACCOUNT_NUMBERS))
+                        .header("Consent-ID", storageHelper.getConsentId())
+                        .get(AccountNumbersResponse.class);
+
+        storageHelper.storeAccountNumbers(accountNumbersResponse);
+        return accountNumbersResponse;
     }
 }
