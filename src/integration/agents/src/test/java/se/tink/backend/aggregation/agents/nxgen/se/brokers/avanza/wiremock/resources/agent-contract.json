@@ -21,12 +21,12 @@
     "userModifiedType" : false,
     "identifiers" : "[]",
     "closed" : false,
-    "holderName" : "Firstname",
+    "holderName" : "Firstname Surname",
     "accountHolder" : {
       "accountId" : null,
       "type" : "PERSONAL",
       "identities" : [ {
-        "name" : "Firstname",
+        "name" : "Firstname Surname",
         "role" : "HOLDER"
       } ]
     },
@@ -56,12 +56,12 @@
     "userModifiedType" : false,
     "identifiers" : "[]",
     "closed" : false,
-    "holderName" : "Firstname",
+    "holderName" : "Firstname Surname",
     "accountHolder" : {
       "accountId" : null,
       "type" : "PERSONAL",
       "identities" : [ {
-        "name" : "Firstname",
+        "name" : "Firstname Surname",
         "role" : "HOLDER"
       } ]
     },
@@ -91,12 +91,12 @@
     "userModifiedType" : false,
     "identifiers" : "[]",
     "closed" : false,
-    "holderName" : "Firstname",
+    "holderName" : "Firstname Surname",
     "accountHolder" : {
       "accountId" : null,
       "type" : "PERSONAL",
       "identities" : [ {
-        "name" : "Firstname",
+        "name" : "Firstname Surname",
         "role" : "HOLDER"
       } ]
     },
@@ -126,12 +126,12 @@
     "userModifiedType" : false,
     "identifiers" : "[]",
     "closed" : false,
-    "holderName" : "Firstname",
+    "holderName" : "Firstname Surname",
     "accountHolder" : {
       "accountId" : null,
       "type" : "PERSONAL",
       "identities" : [ {
-        "name" : "Firstname",
+        "name" : "Firstname Surname",
         "role" : "HOLDER"
       } ]
     },
@@ -161,12 +161,12 @@
     "userModifiedType" : false,
     "identifiers" : "[]",
     "closed" : false,
-    "holderName" : "Firstname",
+    "holderName" : "Firstname Surname",
     "accountHolder" : {
       "accountId" : null,
       "type" : "PERSONAL",
       "identities" : [ {
-        "name" : "Firstname",
+        "name" : "Firstname Surname",
         "role" : "HOLDER"
       } ]
     },
@@ -196,12 +196,12 @@
     "userModifiedType" : false,
     "identifiers" : "[]",
     "closed" : false,
-    "holderName" : "Firstname",
+    "holderName" : "Firstname Surname",
     "accountHolder" : {
       "accountId" : null,
       "type" : "PERSONAL",
       "identities" : [ {
-        "name" : "Firstname",
+        "name" : "Firstname Surname",
         "role" : "HOLDER"
       } ]
     },
@@ -231,12 +231,12 @@
     "userModifiedType" : false,
     "identifiers" : "[]",
     "closed" : false,
-    "holderName" : "Firstname",
+    "holderName" : "Firstname Surname",
     "accountHolder" : {
       "accountId" : null,
       "type" : "PERSONAL",
       "identities" : [ {
-        "name" : "Firstname",
+        "name" : "Firstname Surname",
         "role" : "HOLDER"
       } ]
     },
@@ -873,21 +873,21 @@
   "identityData" : {
     "nameElements" : [ {
       "type" : "FULLNAME",
-      "value" : ""
+      "value" : "Firstname Surname"
     } ],
     "dateOfBirth" : {
       "year" : 1999,
       "month" : "SEPTEMBER",
+      "monthValue" : 9,
+      "dayOfMonth" : 9,
+      "era" : "CE",
       "dayOfWeek" : "THURSDAY",
       "leapYear" : false,
       "dayOfYear" : 252,
       "chronology" : {
         "calendarType" : "iso8601",
         "id" : "ISO"
-      },
-      "era" : "CE",
-      "monthValue" : 9,
-      "dayOfMonth" : 9
+      }
     }
   }
 }

@@ -768,6 +768,23 @@ Vary: Accept-Encoding
 
 {"courtageClass":"MINI","depositable":false,"accountType":"AvtalsPension","accountName":"Avtalspension SAF-LO","withdrawable":false,"accountId":"1000075","externalActor":"SAF-LO","accountTypeName":"Avtalspension","instrumentTransferPossible":false,"internalTransferPossible":false,"jointlyOwned":false,"interestRate":0.00,"numberOfOrders":0,"numberOfDeals":0,"performanceSinceOneWeek":80.58000000000175,"performanceSinceOneMonth":179.7400000000016,"performanceSinceThreeMonths":1068.0800000000017,"performanceSinceSixMonths":-898.7599999999984,"performanceSinceOneYear":698.1400000000012,"performanceSinceThreeYears":3148.370000000001,"performanceSinceOneWeekPercent":0.47939574005306795,"performanceSinceOneMonthPercent":1.0756755139292196,"performanceSinceThreeMonthsPercent":6.750958842461685,"performanceSinceSixMonthsPercent":-5.052619743647247,"performanceSinceOneYearPercent":4.31187504246171,"performanceSinceThreeYearsPercent":22.91320946156501,"currencyAccounts":[{"currency":"SEK","balance":1.66}],"creditLimit":0.00,"forwardBalance":0.00,"reservedAmount":0.00,"totalCollateralValue":0.00,"totalPositionsValue":16884.0100,"buyingPower":1.66,"totalProfitPercent":6.97,"availableSuperLoanAmount":0.00,"allowMonthlySaving":false,"totalProfit":1099.95,"totalBalance":1.66,"ownCapital":16885.67,"performancePercent":-2.280230557287999,"accruedInterest":0.00,"overdrawn":false,"creditAfterInterest":1.66,"performance":-394.09999999999854,"overMortgaged":false,"numberOfTransfers":0,"numberOfIntradayTransfers":0,"sharpeRatio":0.25048553647162536,"standardDeviation":18.936764872517227}
 
+REQUEST 45a
+GET https://www.avanza.se/_api/account-details/pension-details/1000075
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 45a
+200
+Content-Type: application/json;charset=utf-8
+Connection: keep-alive
+Date: Tue, 21 Jul 2020 07:15:27 GMT
+Server: Apache
+Cache-Control: no-cache, no-store, must-revalidate, private
+Pragma: no-cache
+Vary: Accept-Encoding
+
+{"accountType":"AvtalsPension","insured":{"name":"Firstname Surname","insuranceCustomerId":"11223344","type":"PERSON"},"policyOwner":{"name":"Company AB","insuranceCustomerId":"1234567","type":"COMPANY"},"startDate":"2018-09-30","managementForm":"ACCOUNT_INSURANCE","repaymentProtection":{"has":true},"beneficiaries":{"text":["Maka/make/registrerad partner/sambo eller, om sådan saknas, barn."],"type":"STANDARD","beneficiaries":[],"choice":"PARTNER"},"tax":null,"companyOwnedDetails":{"directPension":false,"pawned":false},"paymentPlan":{"status":"NO_ACTIVE_PLAN"}}
+
 REQUEST 46
 GET https://www.avanza.se/_mobile/account/1000011/positions?autoPortfolio=1&sort=name
 Accept: application/json
@@ -819,6 +836,23 @@ Vary: Accept-Encoding
 
 {"courtageClass":"MINI","depositable":false,"accountType":"IPS","accountName":"IPS","withdrawable":false,"accountId":"1000011","accountTypeName":"IPS","instrumentTransferPossible":false,"internalTransferPossible":false,"jointlyOwned":false,"interestRate":0.00,"numberOfOrders":0,"numberOfDeals":0,"performanceSinceOneWeek":349.41999999999825,"performanceSinceOneMonth":714.1999999999971,"performanceSinceThreeMonths":2763.0,"performanceSinceSixMonths":-1400.9900000000016,"performanceSinceOneYear":1064.329999999998,"performanceSinceThreeYears":3731.9699999999993,"performanceSinceOneWeekPercent":1.5073434570630262,"performanceSinceOneMonthPercent":3.130204589681096,"performanceSinceThreeMonthsPercent":13.304377973381708,"performanceSinceSixMonthsPercent":-5.619336753091087,"performanceSinceOneYearPercent":4.737457530778411,"performanceSinceThreeYearsPercent":18.848956900348135,"currencyAccounts":[{"currency":"SEK","balance":33.60}],"creditLimit":0.00,"forwardBalance":0.00,"reservedAmount":0.00,"totalCollateralValue":0.00,"totalPositionsValue":23331.2600,"buyingPower":33.60,"totalProfitPercent":2.57,"totalProfit":584.39,"availableSuperLoanAmount":0.00,"allowMonthlySaving":true,"totalBalance":33.60,"ownCapital":23364.86,"performancePercent":-2.328571920740752,"accruedInterest":0.00,"overMortgaged":false,"overdrawn":false,"performance":-560.9900000000016,"creditAfterInterest":33.60,"numberOfTransfers":0,"numberOfIntradayTransfers":0,"sharpeRatio":0.2712174866199109,"standardDeviation":20.79225702780942}
 
+REQUEST 48a
+GET https://www.avanza.se/_api/account-details/pension-details/1000011
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 48a
+200
+Content-Type: application/json;charset=utf-8
+Connection: keep-alive
+Date: Tue, 21 Jul 2020 07:15:27 GMT
+Server: Apache
+Cache-Control: no-cache, no-store, must-revalidate, private
+Pragma: no-cache
+Vary: Accept-Encoding
+
+{"accountType":"IPS","insured":{"name":"Firstname Surname","insuranceCustomerId":"11223344","type":"PERSON"},"policyOwner":{"name":"Company AB","insuranceCustomerId":"1234567","type":"COMPANY"},"startDate":"2018-09-30","managementForm":"ACCOUNT_INSURANCE","repaymentProtection":{"has":true},"beneficiaries":{"text":["Maka/make/registrerad partner/sambo eller, om sådan saknas, barn."],"type":"STANDARD","beneficiaries":[],"choice":"PARTNER"},"tax":null,"companyOwnedDetails":{"directPension":false,"pawned":false},"paymentPlan":{"status":"NO_ACTIVE_PLAN"}}
+
 REQUEST 49
 GET https://www.avanza.se/_mobile/account/1000093/positions?autoPortfolio=1&sort=name
 Accept: application/json
@@ -834,7 +868,7 @@ Cache-Control: no-cache, no-store, must-revalidate, private
 Pragma: no-cache
 Vary: Accept-Encoding
 
-{"instrumentPositions":[{"instrumentType":"STOCK","positions":[],"totalValue":259858.6,"totalProfitValue":102728.69,"totalProfitPercent":65.38,"todaysProfitPercent":3.7},{"instrumentType":"FUND","positions":[],"totalValue":40917.18,"totalProfitValue":3510.99,"totalProfitPercent":9.39,"todaysProfitPercent":0.06},{"instrumentType":"SUBSCRIPTION_OPTION","positions":[],"totalValue":841.19,"totalProfitValue":0,"totalProfitPercent":0,"todaysProfitPercent":3.99},{"instrumentType":"UNKNOWN","positions":[{"value":101,"volume":500,"averageAcquiredPrice":3.96,"profitPercent":-94.9,"acquiredValue":1980,"profit":-1879,"name":"Matra Petroleum AB","currency":"SEK"}],"totalValue":100,"totalProfitValue":50,"totalProfitPercent":100,"todaysProfitPercent":0}],"totalBalance":312278.52,"totalProfitPercent":54.61,"totalProfit":0,"totalBuyingPower":312278.52,"totalOwnCapital":312378.52,"accountName":"Custom account name","accountType":"Tjanstepension","depositable":false,"withdrawable":false,"accountId":"1000093"}
+{"instrumentPositions":[{"instrumentType":"STOCK","positions":[],"totalValue":259858.6,"totalProfitValue":102728.69,"totalProfitPercent":65.38,"todaysProfitPercent":3.7},{"instrumentType":"FUND","positions":[],"totalValue":40917.18,"totalProfitValue":3510.99,"totalProfitPercent":9.39,"todaysProfitPercent":0.06},{"instrumentType":"SUBSCRIPTION_OPTION","positions":[],"totalValue":841.19,"totalProfitValue":0,"totalProfitPercent":0,"todaysProfitPercent":3.99}],"totalBalance":312278.52,"totalProfitPercent":54.61,"totalProfit":0,"totalBuyingPower":312278.52,"totalOwnCapital":312378.52,"accountName":"Custom account name","accountType":"Tjanstepension","depositable":false,"withdrawable":false,"accountId":"1000093"}
 
 REQUEST 50
 GET https://www.avanza.se/_mobile/account/transactions/1000093/options?from=2000-01-01&includeInstrumentsWithNoOrderbook=1&to=1992-04-10
@@ -869,6 +903,23 @@ Pragma: no-cache
 Vary: Accept-Encoding
 
 {"courtageClass":"MINI","depositable":false,"accountType":"Tjanstepension","accountName":"Custom account name","withdrawable":false,"accountId":"1000093","accountTypeName":"tjanstepension","instrumentTransferPossible":false,"internalTransferPossible":false,"jointlyOwned":false,"interestRate":0,"numberOfOrders":3,"numberOfDeals":2,"performanceSinceOneWeek":24155.010000000017,"performanceSinceOneMonth":48372.950000000026,"performanceSinceThreeMonths":109547.57000000004,"performanceSinceSixMonths":80146.25000000003,"performanceSinceOneYear":79835.81000000004,"performanceSinceThreeYears":67607.34000000004,"performanceSinceOneWeekPercent":8.66890250447736,"performanceSinceOneMonthPercent":19.209220454443642,"performanceSinceThreeMonthsPercent":58.343519835202784,"performanceSinceSixMonthsPercent":34.457209143710266,"performanceSinceOneYearPercent":33.13256438144163,"performanceSinceThreeYearsPercent":23.53952477439276,"currencyAccounts":[{"currency":"SEK","balance":10661.55}],"creditLimit":0,"forwardBalance":0,"reservedAmount":0,"totalCollateralValue":0,"totalPositionsValue":301629.97,"buyingPower":11.55,"totalProfitPercent":54.62,"allowMonthlySaving":false,"totalProfit":106252.68,"availableSuperLoanAmount":0,"totalBalance":10661.55,"ownCapital":312291.52,"overdrawn":false,"creditAfterInterest":10661.55,"accruedInterest":0,"overMortgaged":false,"performancePercent":38.983829347722754,"performance":86469.60000000003,"numberOfTransfers":0,"numberOfIntradayTransfers":0,"sharpeRatio":1.0923274238747496,"standardDeviation":32.619006650991004}
+
+REQUEST 51a
+GET https://www.avanza.se/_api/account-details/pension-details/1000093
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 51a
+200
+Content-Type: application/json;charset=utf-8
+Connection: keep-alive
+Date: Tue, 21 Jul 2020 07:15:27 GMT
+Server: Apache
+Cache-Control: no-cache, no-store, must-revalidate, private
+Pragma: no-cache
+Vary: Accept-Encoding
+
+{"accountType":"Tjanstepension","insured":{"name":"Firstname Surname","insuranceCustomerId":"11223344","type":"PERSON"},"policyOwner":{"name":"Company AB","insuranceCustomerId":"1234567","type":"COMPANY"},"startDate":"2018-09-30","managementForm":"ACCOUNT_INSURANCE","repaymentProtection":{"has":true},"beneficiaries":{"text":["Maka/make/registrerad partner/sambo eller, om sådan saknas, barn."],"type":"STANDARD","beneficiaries":[],"choice":"PARTNER"},"tax":null,"companyOwnedDetails":{"directPension":false,"pawned":false},"paymentPlan":{"status":"NO_ACTIVE_PLAN"}}
 
 REQUEST 52
 GET https://www.avanza.se/_mobile/account/transactions/7000040?from=1992-01-10&to=1992-04-10
