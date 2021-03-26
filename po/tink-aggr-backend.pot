@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-03-19 13:05+0100\n"
+"POT-Creation-Date: 2021-03-26 09:48+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1728,4 +1728,16 @@ msgid ""
 msgstr ""
 
 msgid "You do not have any accounts available for online access."
+msgstr ""
+
+msgid "There may be a lock on the TAN procedure. Please contact your bank."
+msgstr ""
+
+msgid "MobileTAN is blocked. Please contact your bank."
+msgstr ""
+
+msgid "No valid TAN procedure registered. Please contact your bank."
+msgstr ""
+
+msgid "SecureGo usage blocked. Please contact your bank."
 msgstr ""

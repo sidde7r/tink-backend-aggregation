@@ -38,8 +38,28 @@ public class ErrorChecker {
                         FiduciaConstants.EndUserErrorMessageKeys.UNAVAILABLE_ACCOUNT_MESSAGE));
 
         exceptionMap.put(
+                FiduciaConstants.ErrorMessageKeys.ORDER_NOT_PROCESSED_OR_REJECTED,
+                LoginError.DEFAULT_MESSAGE.exception(
+                        FiduciaConstants.EndUserErrorMessageKeys.ORDER_NOT_PROCESSED_MESSAGE));
+
+        exceptionMap.put(
+                FiduciaConstants.ErrorMessageKeys.PHONE_TAN_BLOCKED,
+                LoginError.NO_ACCESS_TO_MOBILE_BANKING.exception(
+                        FiduciaConstants.EndUserErrorMessageKeys.PHONE_TAN_BLOCKED_MESSAGE));
+
+        exceptionMap.put(
                 FiduciaConstants.ErrorMessageKeys.PSU_CREDENTIALS_INVALID,
                 LoginError.INCORRECT_CREDENTIALS.exception());
+
+        exceptionMap.put(
+                FiduciaConstants.ErrorMessageKeys.SECURE_GO_BLOCKED,
+                LoginError.NO_ACCESS_TO_MOBILE_BANKING.exception(
+                        FiduciaConstants.EndUserErrorMessageKeys.SECURE_GO_BLOCKED_MESSAGE));
+
+        exceptionMap.put(
+                FiduciaConstants.ErrorMessageKeys.TAN_NOT_VALID,
+                LoginError.NO_AVAILABLE_SCA_METHODS.exception(
+                        FiduciaConstants.EndUserErrorMessageKeys.TAN_NOT_VALID_MESSAGE));
     }
 
     public static RuntimeException errorChecker(HttpResponseException httpResponseException) {
