@@ -103,6 +103,14 @@ public final class FiduciaConstants {
                 "Online access blocked. Please contact your bank (SERVICE_BLOCKED)";
         public static final String PIN_CHANGE_REQUIRED = "PIN change required (SERVICE_BLOCKED)";
         public static final String ERROR_KONF = "ERR_KONF_CSV_BANK_MISS";
+        public static final String SECURE_GO_BLOCKED =
+                "SecureGo usage blocked. Please contact your bank (SERVICE_BLOCKED)";
+        public static final String TAN_NOT_VALID =
+                "No valid TAN procedure registered. Please contact your bank (SERVICE_BLOCKED)";
+        public static final String PHONE_TAN_BLOCKED =
+                "Phone locked for mobileTAN. Please contact your bank (SERVICE_BLOCKED)";
+        public static final String ORDER_NOT_PROCESSED_OR_REJECTED =
+                "Order could not be processed and was rejected. (SERVICE_BLOCKED)";
     }
 
     public static class EndUserErrorMessageKeys {
@@ -115,5 +123,14 @@ public final class FiduciaConstants {
                 new LocalizableKey("Sm@rt-TAN plus blocked. Please contact your bank.");
         public static final LocalizableKey BANK_NO_LONGER_AVAILABLE_MESSAGE =
                 new LocalizableKey("Bank is no longer available.");
+        public static final LocalizableKey ORDER_NOT_PROCESSED_MESSAGE =
+                new LocalizableKey(
+                        "There may be a lock on the TAN procedure. Please contact your bank.");
+        public static final LocalizableKey PHONE_TAN_BLOCKED_MESSAGE =
+                new LocalizableKey("MobileTAN is blocked. Please contact your bank.");
+        public static final LocalizableKey TAN_NOT_VALID_MESSAGE =
+                new LocalizableKey("No valid TAN procedure registered. Please contact your bank.");
+        public static final LocalizableKey SECURE_GO_BLOCKED_MESSAGE =
+                new LocalizableKey("SecureGo usage blocked. Please contact your bank.");
     }
 }
