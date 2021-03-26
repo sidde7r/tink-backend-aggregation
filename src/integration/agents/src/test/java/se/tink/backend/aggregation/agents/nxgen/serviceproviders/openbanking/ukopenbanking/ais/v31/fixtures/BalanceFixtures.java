@@ -6,10 +6,20 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class BalanceFixtures {
 
+    private static final String UPPERCASE_BALANCE_CREDIT =
+            "{\"AccountId\":\"4cc\",\"Amount\":{\"Amount\":\"111.05\",\"Currency\":\"GBP\"},\"CreditDebitIndicator\":\"CREDIT\",\"Type\":\"InterimAvailable\",\"DateTime\":\"2019-11-20T14:24:56Z\"}";
+    private static final String LOWERCASE_BALANCE_CREDIT =
+            "{\"AccountId\":\"4cc\",\"Amount\":{\"Amount\":\"111.05\",\"Currency\":\"GBP\"},\"CreditDebitIndicator\":\"credit\",\"Type\":\"InterimAvailable\",\"DateTime\":\"2019-11-20T14:24:56Z\"}";
     private static final String BALANCE_CREDIT =
             "{\"AccountId\":\"4cc\",\"Amount\":{\"Amount\":\"111.05\",\"Currency\":\"GBP\"},\"CreditDebitIndicator\":\"Credit\",\"Type\":\"InterimAvailable\",\"DateTime\":\"2019-11-20T14:24:56Z\"}";
+    private static final String BALANCE_EMPTY =
+            "{\"AccountId\":\"4cc\",\"Amount\":{\"Amount\":\"111.05\",\"Currency\":\"GBP\"},\"Type\":\"InterimAvailable\",\"DateTime\":\"2019-11-20T14:24:56Z\"}";
     private static final String BALANCE_DEBIT =
             "{\"AccountId\":\"4cc\",\"Amount\":{\"Amount\":\"222.051234\",\"Currency\":\"EUR\"},\"CreditDebitIndicator\":\"Debit\",\"Type\":\"ClosingBooked\",\"DateTime\":\"2019-11-20T14:24:56Z\"}";
+    private static final String UPPERCASE_BALANCE_DEBIT =
+            "{\"AccountId\":\"4cc\",\"Amount\":{\"Amount\":\"222.051234\",\"Currency\":\"EUR\"},\"CreditDebitIndicator\":\"DEBIT\",\"Type\":\"ClosingBooked\",\"DateTime\":\"2019-11-20T14:24:56Z\"}";
+    private static final String LOWERCASE_BALANCE_DEBIT =
+            "{\"AccountId\":\"4cc\",\"Amount\":{\"Amount\":\"222.051234\",\"Currency\":\"EUR\"},\"CreditDebitIndicator\":\"debit\",\"Type\":\"ClosingBooked\",\"DateTime\":\"2019-11-20T14:24:56Z\"}";
 
     private static final String BALANCE_TYPE_INTERIM_AVAILABLE =
             "{\"AccountId\":\"4cc\",\"Amount\":{\"Amount\":\"333.05\",\"Currency\":\"GBP\"},\"CreditDebitIndicator\":\"Credit\",\"Type\":\"InterimAvailable\",\"DateTime\":\"2019-11-20T14:24:56Z\"}";
@@ -47,8 +57,32 @@ public class BalanceFixtures {
         return SerializationUtils.deserializeFromString(BALANCE_DEBIT, AccountBalanceEntity.class);
     }
 
+    public static AccountBalanceEntity balanceUppercaseDebit() {
+        return SerializationUtils.deserializeFromString(
+                UPPERCASE_BALANCE_DEBIT, AccountBalanceEntity.class);
+    }
+
+    public static AccountBalanceEntity balanceLowercaseDebit() {
+        return SerializationUtils.deserializeFromString(
+                LOWERCASE_BALANCE_DEBIT, AccountBalanceEntity.class);
+    }
+
     public static AccountBalanceEntity balanceCredit() {
         return SerializationUtils.deserializeFromString(BALANCE_CREDIT, AccountBalanceEntity.class);
+    }
+
+    public static AccountBalanceEntity balanceEmpty() {
+        return SerializationUtils.deserializeFromString(BALANCE_EMPTY, AccountBalanceEntity.class);
+    }
+
+    public static AccountBalanceEntity balanceUppercaseCredit() {
+        return SerializationUtils.deserializeFromString(
+                UPPERCASE_BALANCE_CREDIT, AccountBalanceEntity.class);
+    }
+
+    public static AccountBalanceEntity balanceLowercaseCredit() {
+        return SerializationUtils.deserializeFromString(
+                LOWERCASE_BALANCE_CREDIT, AccountBalanceEntity.class);
     }
 
     public static AccountBalanceEntity interimAvailableBalance() {

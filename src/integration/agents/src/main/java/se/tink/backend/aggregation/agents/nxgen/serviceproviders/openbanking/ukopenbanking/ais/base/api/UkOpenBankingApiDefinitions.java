@@ -256,10 +256,7 @@ public class UkOpenBankingApiDefinitions {
 
         @JsonCreator
         private static CreditDebitIndicator fromString(String key) {
-            return (key != null)
-                    ? CreditDebitIndicator.valueOf(
-                            CaseFormat.UPPER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, key))
-                    : null;
+            return key != null ? CreditDebitIndicator.valueOf(key.toUpperCase()) : null;
         }
     }
 
