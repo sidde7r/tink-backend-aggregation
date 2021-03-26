@@ -12,7 +12,7 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenApiClient;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenPersistentStorage;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenStorage;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
@@ -20,7 +20,7 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 public class SparkassenTransactionsFetcherTest {
 
     private SparkassenApiClient apiClient;
-    private SparkassenPersistentStorage persistentStorage;
+    private SparkassenStorage persistentStorage;
     private SparkassenTransactionsFetcher transactionsFetcher;
     private TransactionalAccount account;
 
@@ -30,7 +30,7 @@ public class SparkassenTransactionsFetcherTest {
     @Before
     public void setup() {
         apiClient = mock(SparkassenApiClient.class);
-        persistentStorage = new SparkassenPersistentStorage(new PersistentStorage());
+        persistentStorage = new SparkassenStorage(new PersistentStorage());
         persistentStorage.saveConsentId(TEST_CONSENT_ID);
         transactionsFetcher = new SparkassenTransactionsFetcher(apiClient, persistentStorage);
         account = mock(TransactionalAccount.class);

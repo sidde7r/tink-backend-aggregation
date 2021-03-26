@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenApiClient;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenPersistentStorage;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenStorage;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.fetcher.detail.TransactionMapper;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -13,19 +13,18 @@ import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction
 
 public class SparkassenTransactionsFetcher implements TransactionFetcher<TransactionalAccount> {
     private final SparkassenApiClient apiClient;
-    private final SparkassenPersistentStorage persistentStorage;
+    private final SparkassenStorage storage;
 
-    public SparkassenTransactionsFetcher(
-            SparkassenApiClient apiClient, SparkassenPersistentStorage persistentStorage) {
+    public SparkassenTransactionsFetcher(SparkassenApiClient apiClient, SparkassenStorage storage) {
         this.apiClient = apiClient;
-        this.persistentStorage = persistentStorage;
+        this.storage = storage;
     }
 
     @Override
     public List<AggregationTransaction> fetchTransactionsFor(TransactionalAccount account) {
         return TransactionMapper.tryParseXmlResponse(
                         apiClient.fetchTransactions(
-                                persistentStorage.getConsentId(),
+                                storage.getConsentId(),
                                 account.getApiIdentifier(),
                                 getFetchStartDate()))
                 .map(
@@ -43,9 +42,9 @@ public class SparkassenTransactionsFetcher implements TransactionFetcher<Transac
 
     private LocalDate getFetchStartDate() {
         LocalDate startDate;
-        if (persistentStorage.isFirstFetch()) {
+        if (storage.isFirstFetch()) {
             startDate = LocalDate.ofEpochDay(0);
-            persistentStorage.markFirstFetchAsDone();
+            storage.markFirstFetchAsDone();
         } else {
             startDate = LocalDate.now().minusDays(90);
         }

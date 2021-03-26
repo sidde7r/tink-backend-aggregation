@@ -18,14 +18,13 @@ import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
-import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenApiClient;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants.AuthMethods;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants.ErrorMessages;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenPersistentStorage;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenStorage;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.detail.FieldBuilder;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.entities.ChallengeDataEntity;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.entities.ScaMethodEntity;
@@ -39,7 +38,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.au
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
-import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.i18n.Catalog;
 
@@ -57,7 +55,7 @@ public class SparkassenAuthenticator implements MultiFactorAuthenticator, AutoAu
 
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final SparkassenApiClient apiClient;
-    private final SparkassenPersistentStorage persistentStorage;
+    private final SparkassenStorage storage;
     private final FieldBuilder fieldBuilder;
     private final Credentials credentials;
 
@@ -65,12 +63,12 @@ public class SparkassenAuthenticator implements MultiFactorAuthenticator, AutoAu
             Catalog catalog,
             SupplementalInformationHelper supplementalInformationHelper,
             SparkassenApiClient apiClient,
-            SparkassenPersistentStorage persistentStorage,
+            SparkassenStorage storage,
             Credentials credentials) {
         this.supplementalInformationHelper =
                 Preconditions.checkNotNull(supplementalInformationHelper);
         this.apiClient = apiClient;
-        this.persistentStorage = persistentStorage;
+        this.storage = storage;
         this.fieldBuilder = new FieldBuilder(Preconditions.checkNotNull(catalog));
         this.credentials = credentials;
     }
@@ -83,7 +81,7 @@ public class SparkassenAuthenticator implements MultiFactorAuthenticator, AutoAu
     @Override
     public void autoAuthenticate()
             throws SessionException, LoginException, BankServiceException, AuthorizationException {
-        String consentId = persistentStorage.getConsentId();
+        String consentId = storage.getConsentId();
         if (Strings.isNullOrEmpty(consentId)) {
             throw SessionError.SESSION_EXPIRED.exception();
         }
@@ -91,20 +89,11 @@ public class SparkassenAuthenticator implements MultiFactorAuthenticator, AutoAu
     }
 
     private void verifyConsentValidity(String consentId) {
-        try {
-            ConsentDetailsResponse consentDetailsResponse = apiClient.getConsentDetails(consentId);
-            if (!consentDetailsResponse.isValid()) {
-                throw SessionError.SESSION_EXPIRED.exception();
-            }
-            credentials.setSessionExpiryDate(consentDetailsResponse.getValidUntil());
-        } catch (HttpResponseException e) {
-            log.info("Caught exception during autoAuth, finishing with TEMP_ERROR", e);
-            if (e.getResponse().getStatus() == 503) {
-                throw BankServiceError.NO_BANK_SERVICE.exception(e);
-            } else {
-                throw e;
-            }
+        ConsentDetailsResponse consentDetailsResponse = apiClient.getConsentDetails(consentId);
+        if (!consentDetailsResponse.isValid()) {
+            throw SessionError.SESSION_EXPIRED.exception();
         }
+        credentials.setSessionExpiryDate(consentDetailsResponse.getValidUntil());
     }
 
     @Override
@@ -170,7 +159,7 @@ public class SparkassenAuthenticator implements MultiFactorAuthenticator, AutoAu
 
     private ConsentResponse initializeProcess() throws LoginException {
         ConsentResponse consentResponse = apiClient.createConsent();
-        persistentStorage.saveConsentId(consentResponse.getConsentId());
+        storage.saveConsentId(consentResponse.getConsentId());
         return consentResponse;
     }
 
@@ -190,7 +179,7 @@ public class SparkassenAuthenticator implements MultiFactorAuthenticator, AutoAu
 
         AuthenticationMethodResponse initAuthorizationResponse =
                 apiClient.initializeAuthorization(url, username, password);
-        persistentStorage.saveAuthorizationId(initAuthorizationResponse.getAuthorisationId());
+        storage.saveAuthorizationId(initAuthorizationResponse.getAuthorisationId());
         return initAuthorizationResponse;
     }
 
@@ -230,8 +219,8 @@ public class SparkassenAuthenticator implements MultiFactorAuthenticator, AutoAu
         ScaMethodEntity chosenScaMethod = collectScaMethod(scaMethods);
         AuthenticationMethodResponse authenticationMethodResponse =
                 apiClient.selectAuthorizationMethod(
-                        persistentStorage.getConsentId(),
-                        persistentStorage.getAuthorizationId(),
+                        storage.getConsentId(),
+                        storage.getAuthorizationId(),
                         chosenScaMethod.getAuthenticationMethodId());
 
         if (authenticationMethodResponse.getChallengeData() == null) {
@@ -262,9 +251,7 @@ public class SparkassenAuthenticator implements MultiFactorAuthenticator, AutoAu
         String otp = collectOtp(scaMethod, challengeData);
         FinalizeAuthorizationResponse finalizeAuthorizationResponse =
                 apiClient.finalizeAuthorization(
-                        persistentStorage.getConsentId(),
-                        persistentStorage.getAuthorizationId(),
-                        otp);
+                        storage.getConsentId(), storage.getAuthorizationId(), otp);
 
         switch (finalizeAuthorizationResponse.getScaStatus()) {
             case FINALISED:
