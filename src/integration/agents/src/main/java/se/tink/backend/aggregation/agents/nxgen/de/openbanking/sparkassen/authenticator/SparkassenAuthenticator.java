@@ -154,20 +154,24 @@ public class SparkassenAuthenticator implements MultiFactorAuthenticator, AutoAu
         // unsuccessful and successful authentications for the same credentialsId / userId and check
         // whether username hash or credentials hash changed.
         String password = credentials.getField(Field.Key.PASSWORD);
+        String username = credentials.getField(Field.Key.USERNAME);
+        String passwordHash =
+                ENCODER.encodeToString(Hash.sha512(password + STATIC_SALT)).substring(0, 6);
+        String usernameHash =
+                ENCODER.encodeToString(Hash.sha512(username + STATIC_SALT)).substring(0, 6);
         log.info(
-                "[Sparkassen Auth] Hashes: {}, {}",
-                ENCODER.encodeToString(
-                                Hash.sha512(credentials.getField(Field.Key.USERNAME) + STATIC_SALT))
-                        .substring(0, 6),
-                ENCODER.encodeToString(Hash.sha512(password + STATIC_SALT)).substring(0, 6));
-
-        if (password.length() < 5) {
-            log.info("[Sparkassen Auth] Pass length to short < 5");
-        } else if (password.length() > 38) {
-            log.info("[Sparkassen Auth] Pass length to long > 38");
-        } else {
-            log.info("[Sparkassen Auth] Pass length correct");
-        }
+                "[Sparkassen Auth] HashV1 {} , {} , {}, {}",
+                usernameHash,
+                username.length(),
+                passwordHash,
+                password.length());
+        String passwordLengthGreaterThan5 = password.length() > 5 ? "GreaterThan5" : "Equals5";
+        log.info(
+                "[Sparkassen Auth] HashV2 {} , {} , {} , {}",
+                usernameHash,
+                username.length(),
+                passwordHash,
+                passwordLengthGreaterThan5);
     }
 
     private ConsentResponse initializeProcess() throws LoginException {
