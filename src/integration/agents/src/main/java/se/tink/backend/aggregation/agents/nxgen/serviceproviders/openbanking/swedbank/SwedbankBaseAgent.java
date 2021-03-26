@@ -169,7 +169,8 @@ public abstract class SwedbankBaseAgent extends NextGenerationAgent
                 metricRefreshController,
                 updateController,
                 transactionalAccountFetcher,
-                new SwedbankTransactionFetcher(apiClient, sessionStorage));
+                new SwedbankTransactionFetcher(
+                        apiClient, sessionStorage, request.getProvider().getMarket()));
     }
 
     @Override
