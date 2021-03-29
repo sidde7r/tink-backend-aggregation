@@ -20,12 +20,10 @@ export SONAR_SCANNER_OPTS="-server"
 set +e
 
 ./bazel-wrapper coverage \
-  --config=ci \
   --curses=yes \
   --color=yes \
   --keep_going \
   --test_lang_filters=java \
-  --test_tag_filters=-systemtests,-jdk11-incompatible,-this-depends-on-main-and-system \
   --test_size_filters=-large,-enormous \
   --collect_code_coverage \
   --combined_report=lcov \
