@@ -14,9 +14,6 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
 @JsonObject
 public class FetchTransactionsResponse {
-    private String iban;
-
-    private String bban;
 
     private TransactionsEntity transactions;
 

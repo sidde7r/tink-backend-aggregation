@@ -9,7 +9,7 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 public class BalancesEntity {
 
     private String balanceType;
-    private String creditLimitIncluded;
+    private boolean creditLimitIncluded;
     private BalanceAmountEntity balanceAmount;
 
     public boolean isAvailableBalance() {
