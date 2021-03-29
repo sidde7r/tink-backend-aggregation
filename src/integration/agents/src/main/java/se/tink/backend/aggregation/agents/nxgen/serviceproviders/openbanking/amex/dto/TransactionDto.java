@@ -57,7 +57,7 @@ public class TransactionDto {
 
     private ExtendedDetailsDto extendedDetails;
 
-    private ForeignDetailsDto foreignDetails;
+    private Object foreignDetails;
 
     public Optional<Transaction> toTinkTransaction(String providerMarket) {
 
