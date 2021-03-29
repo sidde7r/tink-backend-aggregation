@@ -25,6 +25,7 @@ java_library(
         "//src/integration/webdriver/src/main/java/se/tink/integration/webdriver",
         "//src/libraries/date",
         "//src/libraries/giro_validation",
+        "//src/libraries/social_security_number",
         "//src/libraries/strings",
         "//third_party:com_google_inject_guice",
         "//third_party:lombok_libs",
