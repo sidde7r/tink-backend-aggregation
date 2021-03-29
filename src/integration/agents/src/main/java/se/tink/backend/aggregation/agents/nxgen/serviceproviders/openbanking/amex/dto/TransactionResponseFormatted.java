@@ -34,6 +34,8 @@ public class TransactionResponseFormatted implements TransactionKeyPaginatorResp
     public Collection<? extends Transaction> getTinkTransactions() {
         return transactions.stream()
                 .map(transactionDto -> transactionDto.toTinkTransaction(providerMarket))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .collect(Collectors.toList());
     }
 

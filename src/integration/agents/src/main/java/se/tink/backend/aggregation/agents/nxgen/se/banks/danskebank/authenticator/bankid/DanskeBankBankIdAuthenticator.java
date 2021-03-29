@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.authenticat
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Objects;
 import java.util.Optional;
+import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -30,7 +31,9 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.integration.webdriver.WebDriverInitializer;
+import se.tink.libraries.social.security.SocialSecurityNumber;
 
+@Slf4j
 public class DanskeBankBankIdAuthenticator implements BankIdAuthenticator<String> {
     private static final ObjectMapper mapper = new ObjectMapper();
     private final DanskeBankSEApiClient apiClient;
@@ -56,6 +59,13 @@ public class DanskeBankBankIdAuthenticator implements BankIdAuthenticator<String
 
     @Override
     public String init(String ssn) throws BankIdException, AuthorizationException {
+        SocialSecurityNumber.Sweden formattedSsn = new SocialSecurityNumber.Sweden(ssn);
+
+        if (!formattedSsn.isValid()) {
+            log.info("User has provided an invalid SSN.");
+            throw LoginError.INCORRECT_CREDENTIALS.exception();
+        }
+
         // Get the dynamic logon javascript
         HttpResponse getResponse =
                 apiClient.collectDynamicLogonJavascript(
