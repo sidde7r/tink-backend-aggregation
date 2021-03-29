@@ -27,6 +27,19 @@ steps:
         config: "docker/docker-compose.bazel.yml"
     retry: {"automatic": [{"exit_status": -1, "limit": 2}, {"exit_status": 255, "limit": 2}]}
 
+  - name: ":sonarqube: Sonarqube - coverage"
+    if: |
+      build.branch == 'master'
+    command: .buildkite/run-sonar-coverage.sh
+    timeout_in_minutes: 30
+    agents:
+      queue: default
+    plugins:
+      docker-compose#v3.0.3:
+        run: "app"
+        config: "docker/docker-compose.bazel.yml"
+    retry: {"automatic": [{"exit_status": -1, "limit": 2}, {"exit_status": 255, "limit": 2}]}
+
   - name: ":kubernetes: Helm Lint"
     branches: '!master'
     command: /go/bin/kubernetes-generator --mode lint --repo .
