@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import javax.ws.rs.core.MediaType;
 import lombok.extern.slf4j.Slf4j;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.authenticator.rpc.AccountPermissionRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.authenticator.rpc.AccountPermissionResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountBalanceEntity;
@@ -26,6 +27,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
@@ -159,14 +161,21 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
     public String fetchIntentIdString() {
         AccountPermissionRequest accountPermissionRequest =
                 AccountPermissionRequest.create(aisConfig.getPermissions());
-
-        String intentId =
-                aisConfig.getIntentId(
-                        createAisRequest(aisConfig.createConsentRequestURL())
-                                .type(MediaType.APPLICATION_JSON_TYPE)
-                                .body(accountPermissionRequest)
-                                .post(aisConfig.getIntentIdResponseType()));
-
+        String intentId;
+        try {
+            intentId =
+                    aisConfig.getIntentId(
+                            createAisRequest(aisConfig.createConsentRequestURL())
+                                    .type(MediaType.APPLICATION_JSON_TYPE)
+                                    .body(accountPermissionRequest)
+                                    .post(aisConfig.getIntentIdResponseType()));
+        } catch (HttpResponseException e) {
+            HttpResponse errorResponse = e.getResponse();
+            if (errorResponse.getStatus() >= 500) {
+                throw BankServiceError.BANK_SIDE_FAILURE.exception();
+            }
+            throw e;
+        }
         saveIntentId(intentId);
         saveAppliedPermissions(aisConfig.getPermissions());
 
