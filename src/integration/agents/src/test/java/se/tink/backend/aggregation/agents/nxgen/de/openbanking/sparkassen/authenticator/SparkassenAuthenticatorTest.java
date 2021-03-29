@@ -47,10 +47,9 @@ import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
-import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenApiClient;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenPersistentStorage;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenStorage;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.entities.ScaMethodEntity;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.rpc.AuthenticationMethodResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.rpc.FinalizeAuthorizationResponse;
@@ -58,7 +57,6 @@ import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentDetai
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentResponse;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
-import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.i18n.Catalog;
@@ -69,7 +67,7 @@ public class SparkassenAuthenticatorTest {
 
     private SupplementalInformationHelper supplementalInformationHelper;
     private SparkassenApiClient apiClient;
-    private SparkassenPersistentStorage persistentStorage;
+    private SparkassenStorage persistentStorage;
 
     private SparkassenAuthenticator authenticator;
     private Credentials credentials;
@@ -79,7 +77,7 @@ public class SparkassenAuthenticatorTest {
         Catalog catalog = mock(Catalog.class);
         supplementalInformationHelper = mock(SupplementalInformationHelper.class);
         apiClient = mock(SparkassenApiClient.class);
-        persistentStorage = new SparkassenPersistentStorage(new PersistentStorage());
+        persistentStorage = new SparkassenStorage(new PersistentStorage());
 
         credentials = new Credentials();
         credentials.setType(CredentialsTypes.PASSWORD);
@@ -134,26 +132,6 @@ public class SparkassenAuthenticatorTest {
         // then
         verify(apiClient).getConsentDetails(any());
         verifyNoMoreInteractions(apiClient);
-    }
-
-    @Test
-    public void shouldThrowBankExceptionWhenCheckingConsentValidtyReturns503() {
-        // given
-        persistentStorage.saveConsentId(TEST_CONSENT_ID);
-        HttpResponse mockHttpResponse = mock(HttpResponse.class);
-        when(mockHttpResponse.getStatus()).thenReturn(503);
-        when(apiClient.getConsentDetails(TEST_CONSENT_ID))
-                .thenThrow(new HttpResponseException(null, mockHttpResponse));
-
-        // when
-        Throwable throwable = catchThrowable(authenticator::autoAuthenticate);
-
-        // then
-        verify(apiClient).getConsentDetails(any());
-        verifyNoMoreInteractions(apiClient);
-        assertThat(throwable)
-                .isInstanceOf(BankServiceException.class)
-                .hasMessage("Cause: BankServiceError.NO_BANK_SERVICE");
     }
 
     @Test

@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenApiClient;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenPersistentStorage;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenStorage;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.fetcher.detail.TransactionalAccountMapper;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.fetcher.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.fetcher.rpc.FetchBalancesResponse;
@@ -16,17 +16,16 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 public class SparkassenAccountsFetcher implements AccountFetcher<TransactionalAccount> {
 
     private final SparkassenApiClient apiClient;
-    private final SparkassenPersistentStorage persistentStorage;
+    private final SparkassenStorage storage;
 
-    public SparkassenAccountsFetcher(
-            SparkassenApiClient apiClient, SparkassenPersistentStorage persistentStorage) {
+    public SparkassenAccountsFetcher(SparkassenApiClient apiClient, SparkassenStorage storage) {
         this.apiClient = apiClient;
-        this.persistentStorage = persistentStorage;
+        this.storage = storage;
     }
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
-        return apiClient.fetchAccounts(persistentStorage.getConsentId()).getAccounts().stream()
+        return apiClient.fetchAccounts(storage.getConsentId()).getAccounts().stream()
                 .map(this::enrichWithBalance)
                 .map(
                         pair ->
@@ -41,7 +40,6 @@ public class SparkassenAccountsFetcher implements AccountFetcher<TransactionalAc
             AccountEntity accountEntity) {
         return new ImmutablePair<>(
                 accountEntity,
-                apiClient.getAccountBalance(
-                        persistentStorage.getConsentId(), accountEntity.getResourceId()));
+                apiClient.getAccountBalance(storage.getConsentId(), accountEntity.getResourceId()));
     }
 }

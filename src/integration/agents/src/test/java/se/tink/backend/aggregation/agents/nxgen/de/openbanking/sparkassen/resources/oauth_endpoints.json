@@ -1,0 +1,5 @@
+{
+    "issuer": "https://xs2a.f-i-apim.de:8443",
+    "authorization_endpoint": "https://www.sparkasse-regensburg.de/services/xs2a/authorize",
+    "token_endpoint": "https://xs2a.f-i-apim.de:8443/fixs2aop-env/oauth/75050000/token"
+}

@@ -11,7 +11,7 @@ import java.util.Collection;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenApiClient;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenPersistentStorage;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenStorage;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.fetcher.rpc.FetchAccountsResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
@@ -21,13 +21,13 @@ public class SparkassenAccountsFetcherTest {
     private static final String TEST_CONSENT_ID = "CONSENT_ID";
 
     private SparkassenApiClient apiClient;
-    private SparkassenPersistentStorage persistentStorage;
+    private SparkassenStorage persistentStorage;
     private SparkassenAccountsFetcher accountsFetcher;
 
     @Before
     public void setup() {
         apiClient = mock(SparkassenApiClient.class);
-        persistentStorage = new SparkassenPersistentStorage(new PersistentStorage());
+        persistentStorage = new SparkassenStorage(new PersistentStorage());
         persistentStorage.saveConsentId(TEST_CONSENT_ID);
         accountsFetcher = new SparkassenAccountsFetcher(apiClient, persistentStorage);
 
