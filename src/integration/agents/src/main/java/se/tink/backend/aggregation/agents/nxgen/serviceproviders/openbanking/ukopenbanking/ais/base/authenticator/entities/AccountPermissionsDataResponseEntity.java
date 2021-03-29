@@ -1,36 +1,28 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.authenticator.entities;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
+@JsonNaming(PropertyNamingStrategy.UpperCamelCaseStrategy.class)
 public class AccountPermissionsDataResponseEntity extends AccountPermissionDataEntity {
 
-    @JsonProperty("AccountRequestId")
     private String accountRequestId;
-
-    @JsonProperty("CreationDateTime")
     private String creationDateTime;
-
-    @JsonProperty("Status")
-    private String status;
-
-    @JsonProperty("StatusUpdateDateTime")
+    private UkOpenBankingApiDefinitions.ConsentStatus status;
     private String statusUpdateDateTime;
 
-    public String getAccountRequestId() {
-        return accountRequestId;
+    public boolean isAuthorised() {
+        return this.status.equals(UkOpenBankingApiDefinitions.ConsentStatus.AUTHORISED);
     }
 
-    public String getCreationDateTime() {
-        return creationDateTime;
+    public boolean isNotAuthorised() {
+        return !isAuthorised();
     }
 
-    public String getStatus() {
-        return status;
-    }
-
-    public String getStatusUpdateDateTime() {
-        return statusUpdateDateTime;
+    public boolean isAwaitingAuthorisation() {
+        return this.status.equals(UkOpenBankingApiDefinitions.ConsentStatus.AWAITING_AUTHORISATION);
     }
 }

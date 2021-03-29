@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
@@ -144,7 +145,7 @@ public class OpenIdAuthenticationController
                 String consentId =
                         persistentStorage
                                 .get(PersistentStorageKeys.AIS_ACCOUNT_CONSENT_ID, String.class)
-                                .orElse("");
+                                .orElse(StringUtils.EMPTY);
 
                 if (consentId.equals(OpenIdAuthenticatorConstants.CONSENT_ERROR_OCCURRED)) {
                     cleanAuthenticationPersistentStorage();

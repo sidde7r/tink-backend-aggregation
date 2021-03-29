@@ -12,6 +12,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import java.util.List;
 import java.util.Optional;
+import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.nxgen.core.account.GenericTypeMapper;
 import se.tink.libraries.strings.StringUtils;
 
@@ -273,6 +274,23 @@ public class UkOpenBankingApiDefinitions {
             return (key != null)
                     ? PartyType.valueOf(CaseFormat.UPPER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, key))
                     : null;
+        }
+    }
+
+    public enum ConsentStatus {
+        AUTHORISED,
+        AWAITING_AUTHORISATION,
+        REJECTED,
+        REVOKED;
+
+        @JsonCreator
+        public static ConsentStatus fromString(String key) {
+            return Optional.ofNullable(key)
+                    .map(k -> valueOf(CaseFormat.UPPER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, key)))
+                    .orElseThrow(
+                            () ->
+                                    SessionError.CONSENT_INVALID.exception(
+                                            "Unknown consent status: " + key));
         }
     }
 }

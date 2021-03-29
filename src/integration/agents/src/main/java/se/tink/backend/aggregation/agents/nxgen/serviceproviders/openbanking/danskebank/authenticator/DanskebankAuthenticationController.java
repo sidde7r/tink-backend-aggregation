@@ -5,7 +5,7 @@ import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingV31Constants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.authenticator.OpenIdAisAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.authenticator.rpc.AccountPermissionResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.authenticator.entities.AccountPermissionsDataResponseEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticatedHttpFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticationController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticationValidator;
@@ -17,8 +17,6 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class DanskebankAuthenticationController extends OpenIdAuthenticationController {
-
-    private static final String AUTHORISED = "Authorised";
 
     private UkOpenBankingApiClient apiClient;
 
@@ -66,10 +64,10 @@ public class DanskebankAuthenticationController extends OpenIdAuthenticationCont
                 apiClient.requestClientCredentials(ClientMode.ACCOUNTS);
         apiClient.instantiateAisAuthFilter(clientCredentialsToken);
 
-        AccountPermissionResponse accountPermissionResponse =
-                apiClient.fetchIntentDetails(consentId);
+        AccountPermissionsDataResponseEntity consent =
+                apiClient.fetchIntentDetails(consentId).getData();
 
-        if (!AUTHORISED.equalsIgnoreCase(accountPermissionResponse.getData().getStatus())) {
+        if (consent.isNotAuthorised()) {
             throw SessionError.SESSION_EXPIRED.exception();
         }
 
