@@ -7,6 +7,7 @@ import java.util.Optional;
 import javax.ws.rs.core.MediaType;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
+import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.authenticator.rpc.AccountPermissionRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.authenticator.rpc.AccountPermissionResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountBalanceEntity;
@@ -153,9 +154,14 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
     }
 
     public AccountPermissionResponse fetchIntentDetails(String consentId) {
-        return createAisRequest(aisConfig.getConsentDetailsRequestURL(consentId))
-                .type(MediaType.APPLICATION_JSON_TYPE)
-                .get(AccountPermissionResponse.class);
+        return Optional.ofNullable(
+                        createAisRequest(aisConfig.getConsentDetailsRequestURL(consentId))
+                                .type(MediaType.APPLICATION_JSON_TYPE)
+                                .get(AccountPermissionResponse.class))
+                .orElseThrow(
+                        () ->
+                                SessionError.CONSENT_INVALID.exception(
+                                        "Failed to fetch consent by id " + consentId));
     }
 
     public String fetchIntentIdString() {
