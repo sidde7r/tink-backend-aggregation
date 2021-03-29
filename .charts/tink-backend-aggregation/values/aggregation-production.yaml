@@ -446,7 +446,7 @@ clients:
     aggregatorIdentifier: "PayPal Inc"
   paypal-inc-production:
     aggregatorIdentifier: "PayPal Inc"
-  paypal-inc-cert-validation:
+  paypal-inc-certificate-validation:
     aggregatorIdentifier: "PayPal Inc"
   anyfin-production:
     aggregatorIdentifier: "Anyfin"
