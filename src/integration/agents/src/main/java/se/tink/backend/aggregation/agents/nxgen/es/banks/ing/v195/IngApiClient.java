@@ -18,17 +18,20 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.entity
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.rpc.MovementsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.rpc.ProductsResponse;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.ServiceUnavailableBankServiceErrorFilter;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.iface.Filter;
 import se.tink.backend.aggregation.nxgen.http.form.Form;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class IngApiClient {
 
     private final TinkHttpClient client;
-
     private ProductsResponse cachedProductsResponse;
 
     public IngApiClient(TinkHttpClient client) {
         this.client = client;
+        Filter serviceUnavailable = new ServiceUnavailableBankServiceErrorFilter();
+        client.addFilter(serviceUnavailable);
     }
 
     public CreateSessionResponse postLoginRestSession(CreateSessionRequest request) {
