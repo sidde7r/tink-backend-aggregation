@@ -18,14 +18,16 @@ export SONAR_SCANNER_OPTS="-server"
 
 # contain errors from bazel
 set +e
-./bazel-wrapper build \
+echo "--- Build tink-backend-aggregation"
+time ./bazel-wrapper build \
     --build_manual_tests \
     --workspace_status_command $(pwd)/stamp.sh \
     --deleted_packages=deb,docker \
     --curses=yes \
     --color=yes
 
-./bazel-wrapper coverage \
+echo "--- Run coverage on tink-backend-aggregation"
+time ./bazel-wrapper coverage \
   --curses=yes \
   --color=yes \
   --keep_going \
