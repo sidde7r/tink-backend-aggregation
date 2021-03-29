@@ -14,7 +14,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.creditcard.CreditCardModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
-import se.tink.libraries.account.identifiers.IbanIdentifier;
+import se.tink.libraries.account.identifiers.MaskedPanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
@@ -30,16 +30,15 @@ public class AccountsResponseDto {
 
     public CreditCardAccount toCreditCardAccount(
             List<BalanceDto> balances, StatementPeriodsDto statementPeriods) {
-        final String iban =
-                identifiers
-                        .getDisplayAccountNumber()
-                        .substring(identifiers.getDisplayAccountNumber().length() - 9);
+        final String pan = identifiers.getDisplayAccountNumber();
+        final String uniqueId =
+                AmericanExpressUtils.formatAccountId(identifiers.getDisplayAccountNumber());
         final String cardName =
-                product.getDigitalInfo().getProductDesc() + " - " + iban.substring(4);
+                product.getDigitalInfo().getProductDesc() + " - " + uniqueId.substring(4);
         return CreditCardAccount.nxBuilder()
                 .withCardDetails(
                         CreditCardModule.builder()
-                                .withCardNumber(iban)
+                                .withCardNumber(pan)
                                 .withBalance(getBalance(balances))
                                 .withAvailableCredit(
                                         new ExactCurrencyAmount(
@@ -53,10 +52,10 @@ public class AccountsResponseDto {
                 .withPaymentAccountFlag()
                 .withId(
                         IdModule.builder()
-                                .withUniqueIdentifier(iban)
-                                .withAccountNumber(iban)
+                                .withUniqueIdentifier(uniqueId)
+                                .withAccountNumber(pan)
                                 .withAccountName(cardName)
-                                .addIdentifier(new IbanIdentifier(iban.replace("-", "")))
+                                .addIdentifier(new MaskedPanIdentifier(pan))
                                 .build())
                 .addHolderName(holder.getProfile().getEmbossedName())
                 .putInTemporaryStorage(

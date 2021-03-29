@@ -10,7 +10,6 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.tuple.Pair;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.AmericanExpressUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.AmexApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.dto.AccountsResponseDto;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.dto.BalanceDto;
@@ -153,13 +152,11 @@ public class AmexCreditCardFetcher implements AccountFetcher<CreditCardAccount> 
     }
 
     private String getSubAccountId(SupplementaryAccountsItem supplementaryAccountsItem) {
-        return AmericanExpressUtils.formatAccountId(
-                supplementaryAccountsItem.getIdentifiers().getDisplayAccountNumber());
+        return supplementaryAccountsItem.getIdentifiers().getDisplayAccountNumber();
     }
 
     private String getAccountId(AccountsResponseDto accountsResponse) {
-        return AmericanExpressUtils.formatAccountId(
-                accountsResponse.getIdentifiers().getDisplayAccountNumber());
+        return accountsResponse.getIdentifiers().getDisplayAccountNumber();
     }
 
     private static boolean isAccountActive(AccountsResponseDto accountsResponse) {
