@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.loan.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.Instant;
@@ -31,7 +32,10 @@ public class LoanEntity {
     private BigDecimal loanAmount;
     private String loanProduct;
     private BigDecimal monthlyDownpaymentAmount;
-    private BigDecimal remainingAmount;
+
+    @JsonProperty("remainingAmount")
+    private BigDecimal remainingAmountWithInterestAmount;
+
     private BigDecimal totalLoanWithInterestAmount;
     private List<TransactionEntity> transactions;
 
@@ -75,7 +79,9 @@ public class LoanEntity {
 
     private ExactCurrencyAmount getBalance() {
         return ExactCurrencyAmount.of(
-                remainingAmount.setScale(MONEY_DECIMAL_SCALE, RoundingMode.HALF_EVEN).negate(),
+                remainingAmountWithInterestAmount
+                        .setScale(MONEY_DECIMAL_SCALE, RoundingMode.HALF_EVEN)
+                        .negate(),
                 currency);
     }
 
@@ -88,7 +94,7 @@ public class LoanEntity {
     private ExactCurrencyAmount getAmortized() {
         return ExactCurrencyAmount.of(
                 totalLoanWithInterestAmount
-                        .subtract(remainingAmount)
+                        .subtract(remainingAmountWithInterestAmount)
                         .setScale(MONEY_DECIMAL_SCALE, RoundingMode.HALF_EVEN),
                 currency);
     }

@@ -189,17 +189,6 @@ public class LunarLoansFetcherTest {
                         .get(0)
             },
             new Object[] {
-                SerializationUtils.deserializeFromString(
-                        Paths.get(TEST_DATA_PATH, "loans_response.json").toFile(),
-                        LoansResponse.class),
-                Collections.emptyList(),
-                new ExpectedLoanAccounts.Builder()
-                        .accountId("different account id")
-                        .build()
-                        .accounts
-                        .get(0)
-            },
-            new Object[] {
                 getTestLoansResponse(1, 1, 1, Collections.emptyList()),
                 Collections.emptyList(),
                 new ExpectedLoanAccounts.Builder().build().accounts.get(0)

@@ -46,13 +46,13 @@ public class LunarLoansFetcher
     public PaginatorResponse fetchTransactionsFor(LoanAccount account) {
         List<Transaction> transactions =
                 lunarLoans.stream()
-                        .filter(loanEntity -> accountIdEquals(account, loanEntity))
+                        .filter(loanEntity -> areTransactionsForLoanAccount(account, loanEntity))
                         .flatMap(this::getAccountTransactions)
                         .collect(Collectors.toList());
         return PaginatorResponseImpl.create(transactions, false);
     }
 
-    private boolean accountIdEquals(LoanAccount account, LoanEntity loanEntity) {
+    private boolean areTransactionsForLoanAccount(LoanAccount account, LoanEntity loanEntity) {
         return account.getAccountNumber().equals(loanEntity.getAccountId());
     }
 
