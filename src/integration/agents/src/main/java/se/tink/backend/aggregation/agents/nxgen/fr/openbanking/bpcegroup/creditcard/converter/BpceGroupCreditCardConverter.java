@@ -55,9 +55,9 @@ public class BpceGroupCreditCardConverter {
     }
 
     private ExactCurrencyAmount getBalance(List<BalanceEntity> balances) {
-        return findBalanceByType(balances, BalanceType.INSTANT)
+        return findBalanceByType(balances, BalanceType.CLBD)
                 .map(Optional::of)
-                .orElseGet(() -> findBalanceByType(balances, BalanceType.ACCOUNTING))
+                .orElseGet(() -> findBalanceByType(balances, BalanceType.XPCD))
                 .map(BalanceEntity::getBalanceAmount)
                 .map(AmountEntity::toTinkAmount)
                 .orElseThrow(() -> new IllegalStateException("No balance found"));
@@ -65,8 +65,6 @@ public class BpceGroupCreditCardConverter {
 
     private static Optional<BalanceEntity> findBalanceByType(
             List<BalanceEntity> balances, BalanceType type) {
-        return balances.stream()
-                .filter(b -> type.getType().equalsIgnoreCase(b.getBalanceType()))
-                .findAny();
+        return balances.stream().filter(b -> type == b.getBalanceType()).findAny();
     }
 }
