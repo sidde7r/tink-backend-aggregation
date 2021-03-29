@@ -13,8 +13,8 @@ import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
+import se.tink.libraries.account.identifiers.MaskedPanIdentifier;
 import se.tink.libraries.account.identifiers.PaymPhoneNumberIdentifier;
-import se.tink.libraries.account.identifiers.PaymentCardNumberIdentifier;
 import se.tink.libraries.account.identifiers.SortCodeIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.enums.PaymentStatus;
@@ -166,7 +166,7 @@ public abstract class PaymentConverterBase {
             case "UK.OBIE.IBAN":
                 return new IbanIdentifier(identification);
             case "PAN":
-                return new PaymentCardNumberIdentifier(identification);
+                return new MaskedPanIdentifier(identification);
 
             default:
                 throw new IllegalArgumentException(

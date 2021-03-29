@@ -4,8 +4,8 @@ import java.util.Base64;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingConstants;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
+import se.tink.libraries.account.identifiers.MaskedPanIdentifier;
 import se.tink.libraries.account.identifiers.PaymPhoneNumberIdentifier;
-import se.tink.libraries.account.identifiers.PaymentCardNumberIdentifier;
 import se.tink.libraries.account.identifiers.SortCodeIdentifier;
 
 public class UkOpenBankingV31Constants implements UkOpenBankingConstants {
@@ -29,7 +29,7 @@ public class UkOpenBankingV31Constants implements UkOpenBankingConstants {
             case "UK.OBIE.IBAN":
                 return new IbanIdentifier(identification);
             case "PAN":
-                return new PaymentCardNumberIdentifier(identification);
+                return new MaskedPanIdentifier(identification);
 
             default:
                 throw new IllegalStateException(
