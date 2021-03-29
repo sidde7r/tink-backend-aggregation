@@ -65,6 +65,17 @@ public class ErrorResponse {
                 .orElse(Collections.emptyList());
     }
 
+    @JsonIgnore
+    public List<String> getErrorPaths() {
+        return Optional.ofNullable(errors)
+                .map(
+                        listOfErrors ->
+                                listOfErrors.stream()
+                                        .map(ErrorEntity::getPath)
+                                        .collect(Collectors.toList()))
+                .orElse(Collections.emptyList());
+    }
+
     @JsonObject
     @Setter
     @Getter
@@ -74,5 +85,7 @@ public class ErrorResponse {
         private String errorCode;
 
         private String message;
+
+        private String path;
     }
 }

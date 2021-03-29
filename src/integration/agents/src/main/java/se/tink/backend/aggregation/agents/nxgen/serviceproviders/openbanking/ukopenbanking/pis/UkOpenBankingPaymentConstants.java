@@ -12,5 +12,6 @@ public class UkOpenBankingPaymentConstants {
                 "Debtor account failed to pass validation checks";
         public static final String EXCEED_DAILY_LIMIT_FAILURE =
                 "Forbidden: This payment exceeds the daily payment limit";
+        public static final String INVALID_CLAIM_FAILURE = "Invalid Claims";
     }
 }

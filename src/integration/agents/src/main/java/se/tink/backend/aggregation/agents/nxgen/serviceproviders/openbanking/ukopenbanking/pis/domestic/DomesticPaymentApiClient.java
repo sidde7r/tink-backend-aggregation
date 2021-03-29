@@ -77,6 +77,11 @@ public class DomesticPaymentApiClient implements UkOpenBankingPaymentApiClient {
                         CreditorValidationException.DEFAULT_MESSAGE,
                         InternalStatus.INVALID_DESTINATION_ACCOUNT);
             }
+            if (body.getErrorMessages().contains(ErrorMessage.INVALID_CLAIM_FAILURE)) {
+                throw new PaymentRejectedException(
+                        ErrorMessage.INVALID_CLAIM_FAILURE + ", Path = " + body.getErrorPaths(),
+                        InternalStatus.INVALID_CLAIM_ERROR);
+            }
 
             // To add more internal specific error exception
             throw e;
