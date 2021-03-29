@@ -6,7 +6,10 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Objects;
+import java.util.Optional;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.models.TransactionDateType;
 import se.tink.backend.aggregation.agents.models.TransactionExternalSystemIdType;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -20,6 +23,7 @@ import se.tink.libraries.chrono.AvailableDateInformation;
 @JsonObject
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 @Data
+@Slf4j
 public class TransactionDto {
 
     private String identifier;
@@ -53,10 +57,18 @@ public class TransactionDto {
 
     private ExtendedDetailsDto extendedDetails;
 
-    public Transaction toTinkTransaction(String providerMarket) {
+    private ForeignDetailsDto foreignDetails;
+
+    public Optional<Transaction> toTinkTransaction(String providerMarket) {
+
+        Optional<ExactCurrencyAmount> tinkAmount = getTinkTransactionAmount();
+        if (!tinkAmount.isPresent()) {
+            return Optional.empty();
+        }
+
         Builder builder =
                 Transaction.builder()
-                        .setAmount(convertTransactionEntityToExactCurrencyAmount())
+                        .setAmount(tinkAmount.get())
                         .setDescription(
                                 description.replaceAll("\\s{2,}", " ")) // to remove whitespaces
                         .setPending(isPending())
@@ -73,7 +85,29 @@ public class TransactionDto {
             builder.setMerchantName(extendedDetails.getMerchant().getName());
         }
 
-        return (Transaction) builder.build();
+        return Optional.of((Transaction) builder.build());
+    }
+
+    /**
+     * Pending foreign transactions does not have an amount. Assumption is that the transaction will
+     * have an amount when the transaction is booked. Won't parse amount from foreign details even
+     * if foreign amount and foreign currency is present as there's a risk that deduplication won't
+     * work and user will have two transactions; one in local and one in foreign currency. Amex
+     * support has been contacted about this since amount is a required field: TC-4417.
+     */
+    private Optional<ExactCurrencyAmount> getTinkTransactionAmount() {
+        if (Objects.nonNull((amount))) {
+            return Optional.of(new ExactCurrencyAmount(amount, isoAlphaCurrencyCode).negate());
+        }
+
+        if (Objects.nonNull(foreignDetails)) {
+            log.info("Foreign transaction without amount. Transaction will be ignored.");
+            return Optional.empty();
+        }
+
+        log.warn(
+                "Transaction has no amount or foreign details, needs to be investigated. Transaction will be ignored.");
+        return Optional.empty();
     }
 
     /** From documentation: Pending transactions will not have values for post_date */
@@ -104,9 +138,5 @@ public class TransactionDto {
         }
 
         return transactionDates;
-    }
-
-    private ExactCurrencyAmount convertTransactionEntityToExactCurrencyAmount() {
-        return new ExactCurrencyAmount(amount, isoAlphaCurrencyCode).negate();
     }
 }
