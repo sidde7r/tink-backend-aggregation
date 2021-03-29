@@ -138,7 +138,7 @@ steps:
     if: |
       build.branch == 'master'
     command: .buildkite/run-sonar-coverage.sh
-    timeout_in_minutes: 30
+    timeout_in_minutes: 120
     agents:
       queue: default
     plugins:
