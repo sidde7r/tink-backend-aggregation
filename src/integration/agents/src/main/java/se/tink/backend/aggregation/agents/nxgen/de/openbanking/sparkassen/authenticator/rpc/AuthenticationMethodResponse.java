@@ -2,12 +2,14 @@ package se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authe
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
+import lombok.Getter;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.entities.ChallengeDataEntity;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.entities.ScaAuthorizationLinksEntity;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.entities.ScaMethodEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
+@Getter
 public class AuthenticationMethodResponse {
 
     @JsonProperty("_links")

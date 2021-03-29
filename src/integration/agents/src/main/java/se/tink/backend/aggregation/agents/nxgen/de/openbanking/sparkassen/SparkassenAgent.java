@@ -2,29 +2,51 @@ package se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen;
 
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.TRANSFERS;
 
 import com.google.inject.Inject;
+import java.util.List;
 import java.util.Optional;
+import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
+import se.tink.backend.aggregation.agents.agentcapabilities.AgentPisCapability;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.SparkassenAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.SparkassenPaymentAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.fetcher.SparkassenAccountsFetcher;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.fetcher.SparkassenTransactionsFetcher;
+import se.tink.backend.aggregation.agents.utils.berlingroup.payment.BasePaymentExecutor;
+import se.tink.backend.aggregation.agents.utils.berlingroup.payment.PaymentAuthenticator;
+import se.tink.backend.aggregation.agents.utils.berlingroup.payment.enums.PaymentAuthenticationMode;
+import se.tink.backend.aggregation.agents.utils.transfer.InferredTransferDestinations;
+import se.tink.backend.aggregation.client.provider_configuration.rpc.PisCapability;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 
-@AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS})
+@AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, TRANSFERS})
+@AgentPisCapability(
+        capabilities = {
+            PisCapability.PIS_SEPA,
+            PisCapability.PIS_SEPA_ICT,
+            PisCapability.PIS_SEPA_RECURRING_PAYMENTS
+        })
 public class SparkassenAgent extends NextGenerationAgent
-        implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
+        implements RefreshCheckingAccountsExecutor,
+                RefreshSavingsAccountsExecutor,
+                RefreshTransferDestinationExecutor {
 
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
@@ -103,5 +125,30 @@ public class SparkassenAgent extends NextGenerationAgent
     @Override
     protected Optional<TransferController> constructTransferController() {
         return Optional.empty();
+    }
+
+    @Override
+    public Optional<PaymentController> constructPaymentController() {
+        PaymentAuthenticator sparkassenPaymentAuthenticator =
+                new SparkassenPaymentAuthenticator(
+                        catalog,
+                        supplementalInformationHelper,
+                        apiClient,
+                        sparkassenStorage,
+                        credentials);
+        BasePaymentExecutor paymentExecutor =
+                new BasePaymentExecutor(
+                        apiClient,
+                        sparkassenPaymentAuthenticator,
+                        credentials,
+                        PaymentAuthenticationMode.EMBEDDED);
+
+        return Optional.of(new PaymentController(paymentExecutor, paymentExecutor));
+    }
+
+    @Override
+    public FetchTransferDestinationsResponse fetchTransferDestinations(List<Account> accounts) {
+        return InferredTransferDestinations.forPaymentAccounts(
+                accounts, AccountIdentifierType.IBAN);
     }
 }

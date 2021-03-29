@@ -23,7 +23,7 @@ public class PaymentMultiStepResponse extends PaymentResponse {
     }
 
     public PaymentMultiStepResponse(
-            PaymentResponse paymentResponse, String step, ArrayList<Field> fields) {
+            PaymentResponse paymentResponse, String step, List<Field> fields) {
         super(paymentResponse.getPayment(), paymentResponse.getStorage());
         this.step = step;
         this.fields = fields;

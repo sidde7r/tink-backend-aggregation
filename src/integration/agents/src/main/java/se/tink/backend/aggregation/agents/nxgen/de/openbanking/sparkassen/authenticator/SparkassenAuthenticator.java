@@ -47,11 +47,11 @@ public class SparkassenAuthenticator implements MultiFactorAuthenticator, AutoAu
     private static final String STATIC_SALT = "AiQu/ai4eepie6vah3di";
     private static final Base64.Encoder ENCODER = Base64.getEncoder();
 
-    private static final String FINALISED = "finalised";
-    private static final String FAILED = "failed";
+    public static final String FINALISED = "finalised";
+    public static final String FAILED = "failed";
 
-    private static final String PSU_AUTHENTICATED = "psuAuthenticated";
-    private static final String SCA_METHOD_SELECTED = "scaMethodSelected";
+    public static final String PSU_AUTHENTICATED = "psuAuthenticated";
+    public static final String SCA_METHOD_SELECTED = "scaMethodSelected";
 
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final SparkassenApiClient apiClient;
@@ -118,7 +118,7 @@ public class SparkassenAuthenticator implements MultiFactorAuthenticator, AutoAu
         verifyConsentValidity(consentResponse.getConsentId());
     }
 
-    private void validateInput(Credentials credentials) throws LoginException {
+    protected void validateInput(Credentials credentials) throws LoginException {
         NotImplementedException.throwIf(
                 !Objects.equals(credentials.getType(), this.getType()),
                 String.format(
@@ -135,7 +135,7 @@ public class SparkassenAuthenticator implements MultiFactorAuthenticator, AutoAu
         }
     }
 
-    private void logDetails(Credentials credentials) {
+    protected void logDetails(Credentials credentials) {
         // There are a lot of invalid_credentials thrown.
         // Users often finally manages to provide correct credentials in 2nd or 3rd attempt.
         // We want to investigate if users have problems with providing username or password.
@@ -203,7 +203,7 @@ public class SparkassenAuthenticator implements MultiFactorAuthenticator, AutoAu
         }
     }
 
-    private List<ScaMethodEntity> getSupportedScaMethods(
+    protected List<ScaMethodEntity> getSupportedScaMethods(
             AuthenticationMethodResponse initAuthResponse) throws LoginException {
 
         List<ScaMethodEntity> methods =
@@ -236,7 +236,7 @@ public class SparkassenAuthenticator implements MultiFactorAuthenticator, AutoAu
         }
     }
 
-    private ScaMethodEntity collectScaMethod(List<ScaMethodEntity> scaMethods)
+    protected ScaMethodEntity collectScaMethod(List<ScaMethodEntity> scaMethods)
             throws SupplementalInfoException {
         if (scaMethods.size() == 1) {
             return scaMethods.get(0);
@@ -269,7 +269,7 @@ public class SparkassenAuthenticator implements MultiFactorAuthenticator, AutoAu
         }
     }
 
-    private String collectOtp(ScaMethodEntity scaMethod, ChallengeDataEntity challengeData) {
+    protected String collectOtp(ScaMethodEntity scaMethod, ChallengeDataEntity challengeData) {
         List<Field> fields = fieldBuilder.getOtpFields(scaMethod, challengeData);
         Map<String, String> supplementalInformation =
                 supplementalInformationHelper.askSupplementalInformation(
