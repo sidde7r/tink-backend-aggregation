@@ -1,11 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.fetcher.rpc;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
+import lombok.Getter;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.libraries.amount.ExactCurrencyAmount;
 
+@Getter
 @JsonObject
 public class BalanceResponse {
 
@@ -25,13 +25,5 @@ public class BalanceResponse {
                 + account
                 + '\''
                 + "}";
-    }
-
-    @JsonIgnore
-    public ExactCurrencyAmount toAmount() {
-        // TODO fix this
-        BalancesItem balance = balances.get(0);
-        return ExactCurrencyAmount.of(
-                balance.getBalanceAmount().getAmount(), balance.getBalanceAmount().getCurrency());
     }
 }
