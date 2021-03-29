@@ -17,7 +17,6 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 public class N26DevelopersTransactionDateFromFetcher<A extends Account>
         implements KeyWithInitiDateFromFetcher<A, String> {
 
-    private static final LocalDate START_DATE_89_DAYS = LocalDate.now().minusDays(89);
     private static final LocalDate START_DATE_ALL_HISTORY = LocalDate.ofEpochDay(0);
 
     private final Xs2aDevelopersForAgentPlatformApiClient apiClient;
@@ -59,8 +58,9 @@ public class N26DevelopersTransactionDateFromFetcher<A extends Account>
     }
 
     private TransactionKeyPaginatorResponse<String> fetchTransactionsForLast89Days(A account) {
+        LocalDate today = localDateTimeSource.now().toLocalDate();
         return apiClient.getTransactions(
-                account, START_DATE_89_DAYS, localDateTimeSource.now().toLocalDate());
+                account, today.minusDays(89), localDateTimeSource.now().toLocalDate());
     }
 
     private boolean isConsentTimeoutException(HttpResponseException ex) {
