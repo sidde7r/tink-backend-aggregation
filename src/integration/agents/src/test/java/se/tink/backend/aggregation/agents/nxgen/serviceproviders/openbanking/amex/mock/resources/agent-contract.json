@@ -1,6 +1,6 @@
 {
   "accounts" : [ {
-    "accountNumber" : "XXX-61001",
+    "accountNumber" : "XXXX-XXXXXX-61001",
     "accountExclusion" : "NONE",
     "exactAvailableCredit" : {
       "currencyCode" : "SEK",
@@ -26,7 +26,7 @@
     "userModifiedExcluded" : false,
     "userModifiedName" : false,
     "userModifiedType" : false,
-    "identifiers" : "[]",
+    "identifiers": "[\"masked-pan://XXXX-XXXXXX-61001\"]",
     "closed" : false,
     "holderName" : "Holder Name Last Name",
     "accountHolder" : {
