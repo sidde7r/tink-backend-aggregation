@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank;
 
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.fetcher.transactionalaccount.rpc.transactions.ErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.fetcher.transactionalaccount.rpc.transactions.ErrorTppMessage;
@@ -15,14 +16,26 @@ public class PostbankErrorHandler {
     enum ErrorSource {
         CONSENT_CREATION,
         AUTHORISATION_PASSWORD,
-        AUTHORISATION_OTP
+        AUTHORISATION_OTP,
+        AUTHORISATION_UPDATE,
+        AUTHORISATION_FETCH
     }
 
-    public static void handleKnownError(
+    public static void handleError(
             HttpResponseException httpResponseException, ErrorSource errorSource) {
         if (!httpResponseException.getResponse().hasBody()) {
             return;
         }
+
+        if (isInternalBankError(httpResponseException)) {
+            throw BankServiceError.BANK_SIDE_FAILURE.exception(httpResponseException.getCause());
+        }
+
+        handleKnownError(httpResponseException, errorSource);
+    }
+
+    private static void handleKnownError(
+            HttpResponseException httpResponseException, ErrorSource errorSource) {
 
         ErrorResponse errorResponse = getBodyAsExpectedType(httpResponseException.getResponse());
         if (errorResponse == null) {
@@ -52,6 +65,8 @@ public class PostbankErrorHandler {
                         ERR_CREDENTIALS_INVALID,
                         LoginError.INCORRECT_CHALLENGE_RESPONSE.exception(httpResponseException));
                 break;
+            default:
+                break;
         }
     }
 
@@ -72,5 +87,10 @@ public class PostbankErrorHandler {
         } catch (RuntimeException e) {
             return null;
         }
+    }
+
+    private static boolean isInternalBankError(HttpResponseException httpResponseException) {
+        int statusCode = httpResponseException.getResponse().getStatus();
+        return statusCode >= 500 && statusCode <= 511;
     }
 }
