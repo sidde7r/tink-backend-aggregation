@@ -40,6 +40,7 @@ public class OpenIdConstants {
         public static final String STATE = "state";
         public static final String NONCE = "nonce";
         public static final String SOFTWARE_JWKS_ENDPOINT = "software_jwks_endpoint";
+        public static final String ORG_JWKS_ENDPOINT = "org_jwks_endpoint";
     }
 
     public static final String CLIENT_ASSERTION_TYPE =

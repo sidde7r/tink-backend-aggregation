@@ -1,6 +1,6 @@
-package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.revolut;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.revolut.common;
 
-final class RevolutConstants {
+public final class RevolutConstants {
 
     public static final String ORGANISATION_ID = "001580000103UAvAAM";
 

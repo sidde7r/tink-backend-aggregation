@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Optional;
 import org.junit.Before;
 import org.junit.Test;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.revolut.common.RevolutTransactionalAccountMapper;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.revolut.common.RevolutTransactionalAccountMapperDecorator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.fixtures.TransactionalAccountFixtures;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;

@@ -24,6 +24,13 @@ public class ClientInfo {
     }
 
     public ClientInfo(
+            String clientId, String tokenEndpointAuthMethod, String tokenEndpointAuthSigningAlg) {
+        this.clientId = clientId;
+        this.tokenEndpointAuthMethod = tokenEndpointAuthMethod;
+        this.tokenEndpointAuthSigningAlg = tokenEndpointAuthSigningAlg;
+    }
+
+    public ClientInfo(
             String clientId,
             String clientSecret,
             String tokenEndpointAuthMethod,
