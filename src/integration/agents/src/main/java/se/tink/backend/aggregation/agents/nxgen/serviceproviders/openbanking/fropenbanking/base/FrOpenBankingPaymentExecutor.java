@@ -5,8 +5,10 @@ import com.github.rholder.retry.Retryer;
 import com.github.rholder.retry.RetryerBuilder;
 import com.github.rholder.retry.StopStrategies;
 import com.github.rholder.retry.WaitStrategies;
+import java.time.Clock;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
@@ -52,6 +54,7 @@ public class FrOpenBankingPaymentExecutor implements PaymentExecutor, FetchableP
     static final String PAYMENT_AUTHORIZATION_URL = "payment_authorization_url";
     private static final String CREDITOR_NAME = "Payment Creditor";
     private static final String STATE = "state";
+    private static final ZoneId DEFAULT_ZONE_ID = ZoneId.of("CET");
 
     private static final long WAIT_FOR_MINUTES = 9L;
     private static final long SLEEP_TIME = 10L;
@@ -93,7 +96,8 @@ public class FrOpenBankingPaymentExecutor implements PaymentExecutor, FetchableP
         Payment payment = paymentRequest.getPayment();
 
         LocalDate executionDate =
-                Optional.ofNullable(payment.getExecutionDate()).orElse(LocalDate.now());
+                Optional.ofNullable(payment.getExecutionDate())
+                        .orElse(LocalDate.now(Clock.system(DEFAULT_ZONE_ID)));
 
         PaymentType paymentType = PaymentType.SEPA;
         RemittanceInformation remittanceInformation = payment.getRemittanceInformation();
