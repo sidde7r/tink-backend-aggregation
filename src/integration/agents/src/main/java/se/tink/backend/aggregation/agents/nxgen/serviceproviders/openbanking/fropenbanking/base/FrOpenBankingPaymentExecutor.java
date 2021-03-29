@@ -14,7 +14,9 @@ import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import lombok.extern.slf4j.Slf4j;
+import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthenticationException;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.entities.AccountEntity;
@@ -174,11 +176,18 @@ public class FrOpenBankingPaymentExecutor implements PaymentExecutor, FetchableP
         return new PaymentMultiStepResponse(payment, nextStep, Collections.emptyList());
     }
 
-    private void openThirdPartyApp(URL authorizationUrl) {
+    private void openThirdPartyApp(URL authorizationUrl) throws PaymentAuthorizationException {
         this.supplementalInformationHelper.openThirdPartyApp(
                 ThirdPartyAppAuthenticationPayload.of(authorizationUrl));
-        this.supplementalInformationHelper.waitForSupplementalInformation(
-                strongAuthenticationState.getSupplementalKey(), WAIT_FOR_MINUTES, TimeUnit.MINUTES);
+        this.supplementalInformationHelper
+                .waitForSupplementalInformation(
+                        strongAuthenticationState.getSupplementalKey(),
+                        WAIT_FOR_MINUTES,
+                        TimeUnit.MINUTES)
+                .orElseThrow(
+                        () ->
+                                new PaymentAuthorizationException(
+                                        "SCA time-out.", ThirdPartyAppError.TIMED_OUT.exception()));
     }
 
     private PaymentStatus getAndVerifyStatus(String paymentId) throws PaymentException {
