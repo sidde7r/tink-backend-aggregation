@@ -213,6 +213,23 @@ public class PostbankAuthenticationControllerTest {
     }
 
     @Test
+    public void when_consentId_is_not_in_storage_auto_authenticate_throws_session_exception() {
+        // given
+        TinkHttpClient tinkHttpClient = mockHttpClient(CONSENT_DETAILS_EXPIRED);
+        PersistentStorage persistentStorage = new PersistentStorage();
+        Credentials credentials = createCredentials(new Date());
+
+        PostbankAuthenticator autoAuthenticator =
+                createPostbankAuthenticator(tinkHttpClient, persistentStorage, credentials);
+
+        // when
+        Throwable thrown = catchThrowable(autoAuthenticator::autoAuthenticate);
+
+        // then
+        assertThat(thrown).isInstanceOf(SessionException.class);
+    }
+
+    @Test
     public void when_auto_authenticate_then_session_expiry_date_should_be_set() {
         // given
         Date currentSessionExpiryDate = toDate("2029-01-01");

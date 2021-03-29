@@ -82,7 +82,9 @@ public class DeutscheBankApiClient {
     }
 
     public ConsentDetailsResponse getConsentDetails() {
-        String consentId = persistentStorage.get(StorageKeys.CONSENT_ID);
+        String consentId =
+                Optional.ofNullable(persistentStorage.get(StorageKeys.CONSENT_ID))
+                        .orElseThrow(SessionError.SESSION_EXPIRED::exception);
         return createRequest(
                         new URL(marketConfiguration.getBaseUrl() + Urls.CONSENT_DETAILS)
                                 .parameter(IdKeys.CONSENT_ID, consentId))
