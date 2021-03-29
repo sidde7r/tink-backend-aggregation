@@ -18,7 +18,7 @@ import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.TypedPaymentControllerable;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingV31Constants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingFlowFacade;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.authenticator.OpenIdAisAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.configuration.UkOpenBankingClientConfigurationAdapter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.configuration.UkOpenBankingConfiguration;
@@ -26,6 +26,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.fetcher.UkOpenBankingTransferDestinationFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAis;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.tls.LocalCertificateTlsConfigurationSetter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.tls.TlsConfigurationSetter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.PartyMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.ConsentErrorFilter;
@@ -98,28 +99,58 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
                 RefreshIdentityDataExecutor,
                 TypedPaymentControllerable {
     private final JwtSigner jwtSigner;
+    private TlsConfigurationSetter tlsConfigurationSetter;
+    private AgentConfiguration<? extends UkOpenBankingClientConfigurationAdapter>
+            agentConfiguration;
 
-    protected UkOpenBankingApiClient apiClient;
-    protected SoftwareStatementAssertion softwareStatement;
-    protected ClientInfo providerConfiguration;
+    private final UkOpenBankingAisConfig aisConfig;
+    private final UkOpenBankingPisConfig pisConfig;
 
+    private final FetcherInstrumentationRegistry fetcherInstrumentation;
+    private final UkOpenBankingPisRequestFilter pisRequestFilter;
+
+    protected final RandomValueGenerator randomValueGenerator;
+    protected final LocalDateTimeSource localDateTimeSource;
+    // Lazy loaded
+    private UkOpenBankingAis aisSupport;
+    private AccountFetcher<TransactionalAccount> transactionalAccountFetcher;
     private TransferDestinationRefreshController transferDestinationRefreshController;
     private CreditCardRefreshController creditCardRefreshController;
     private TransactionalAccountRefreshController transactionalAccountRefreshController;
 
-    // Lazy loaded
-    private UkOpenBankingAis aisSupport;
-    private final UkOpenBankingAisConfig aisConfig;
-    private final UkOpenBankingPisConfig pisConfig;
-    private AccountFetcher<TransactionalAccount> transactionalAccountFetcher;
+    protected UkOpenBankingApiClient apiClient;
+    protected SoftwareStatementAssertion softwareStatement;
+    protected ClientInfo providerConfiguration;
+    private String redirectUrl;
 
-    protected final RandomValueGenerator randomValueGenerator;
-    protected final LocalDateTimeSource localDateTimeSource;
+    public UkOpenBankingBaseAgent(
+            AgentComponentProvider componentProvider,
+            UkOpenBankingFlowFacade ukOpenBankingFlowFacade,
+            UkOpenBankingAisConfig aisConfig,
+            UkOpenBankingPisConfig pisConfig,
+            UkOpenBankingPisRequestFilter pisRequestFilter) {
+        super(componentProvider);
+        this.jwtSigner = ukOpenBankingFlowFacade.getJwtSinger();
+        this.agentConfiguration = ukOpenBankingFlowFacade.getAgentConfiguration();
+        this.tlsConfigurationSetter = ukOpenBankingFlowFacade.getTlsConfigurationSetter();
+        this.aisConfig = aisConfig;
+        this.pisConfig = pisConfig;
+        this.randomValueGenerator = componentProvider.getRandomValueGenerator();
+        this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
+        this.fetcherInstrumentation = new FetcherInstrumentationRegistry();
+        this.pisRequestFilter = pisRequestFilter;
+        configureMdcPropagation();
+    }
 
-    private final FetcherInstrumentationRegistry fetcherInstrumentation;
+    public UkOpenBankingBaseAgent(
+            AgentComponentProvider componentProvider,
+            UkOpenBankingFlowFacade ukOpenBankingFlowFacade,
+            UkOpenBankingAisConfig aisConfig) {
+        this(componentProvider, ukOpenBankingFlowFacade, aisConfig, null, null);
+    }
 
-    private final UkOpenBankingPisRequestFilter pisRequestFilter;
-
+    /** @deprecated please use new construction with {@link UkOpenBankingFlowFacade} */
+    @Deprecated
     public UkOpenBankingBaseAgent(
             AgentComponentProvider componentProvider,
             JwtSigner jwtSigner,
@@ -137,6 +168,8 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
         configureMdcPropagation();
     }
 
+    /** @deprecated please new construction with {@link UkOpenBankingFlowFacade} */
+    @Deprecated
     public UkOpenBankingBaseAgent(
             AgentComponentProvider componentProvider,
             JwtSigner jwtSigner,
@@ -144,15 +177,28 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
         this(componentProvider, jwtSigner, aisConfig, null, null);
     }
 
-    public void addFilter(Filter filter) {
+    private void addFilter(Filter filter) {
         client.addFilter(filter);
     }
 
+    /** @deprecated First step in the refactor, it's gonna be provided from IoC */
     // Different part between UkOpenBankingBaseAgent and this class
-    public AgentConfiguration<? extends UkOpenBankingClientConfigurationAdapter>
+    @Deprecated
+    protected AgentConfiguration<? extends UkOpenBankingClientConfigurationAdapter>
             getAgentConfiguration() {
-        return getAgentConfigurationController()
-                .getAgentConfiguration(getClientConfigurationFormat());
+        if (agentConfiguration != null) {
+            return agentConfiguration;
+        } else {
+            return getAgentConfigurationController()
+                    .getAgentConfiguration(getClientConfigurationFormat());
+        }
+    }
+
+    /** @deprecated First step in the refactor, it's gonna be provided from IoC */
+    @Deprecated
+    protected Class<? extends UkOpenBankingClientConfigurationAdapter>
+            getClientConfigurationFormat() {
+        return UkOpenBankingConfiguration.class;
     }
 
     @Override
@@ -164,10 +210,9 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
 
         softwareStatement = ukOpenBankingConfiguration.getSoftwareStatementAssertions();
         providerConfiguration = ukOpenBankingConfiguration.getProviderConfiguration();
+        redirectUrl = getAgentConfiguration().getRedirectUrl();
         configureTls(ukOpenBankingConfiguration);
         setSoftwareStatementForSignatureCreator(softwareStatement);
-
-        final String redirectUrl = getAgentConfiguration().getRedirectUrl();
 
         apiClient =
                 createApiClient(
@@ -185,22 +230,23 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
         addFilter(new ConsentErrorFilter(persistentStorage));
     }
 
+    /**
+     * @deprecated First step in the refactor, it's gonna be provided by IoC {@link
+     *     TlsConfigurationSetter}
+     */
+    @Deprecated
     protected void configureTls(
             UkOpenBankingClientConfigurationAdapter ukOpenBankingConfiguration) {
-        Optional<TlsConfigurationSetter> tlsConfigurationSetter =
-                ukOpenBankingConfiguration.getTlsConfigurationOverride();
-
-        /* There's a bug in Apache http client prior to 4.5 that breaks verification chain when there
-        is more than one trust store added. Therefore UK certs must be set only if we use custom
-        tls config (no eidas proxy and its certificates at all).
-        https://tink.slack.com/archives/CSURV2YDA/p1604673821171200
-        */
-        if (tlsConfigurationSetter.isPresent()) {
-            client.trustRootCaCertificate(
-                    UkOpenBankingV31Constants.UKOB_ROOT_CA_JKS,
-                    UkOpenBankingV31Constants.UKOB_ROOT_CA_JKS_PASSWORD);
-
-            tlsConfigurationSetter.get().applyConfiguration(client);
+        if (tlsConfigurationSetter != null) {
+            tlsConfigurationSetter.applyConfiguration(client);
+        } else if (getClientConfigurationFormat().equals(UkOpenBankingConfiguration.class)) {
+            UkOpenBankingConfiguration configuration =
+                    (UkOpenBankingConfiguration) ukOpenBankingConfiguration;
+            tlsConfigurationSetter =
+                    new LocalCertificateTlsConfigurationSetter(
+                            configuration.getTransportKey(),
+                            configuration.getTransportKeyPassword());
+            tlsConfigurationSetter.applyConfiguration(client);
         } else {
             client.setEidasProxy(configuration.getEidasProxy());
         }
@@ -355,11 +401,6 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
 
     protected abstract UkOpenBankingAis makeAis();
 
-    protected Class<? extends UkOpenBankingClientConfigurationAdapter>
-            getClientConfigurationFormat() {
-        return UkOpenBankingConfiguration.class;
-    }
-
     private OpenIdAuthenticationController createUkOpenBankingAuthenticationController() {
         return new OpenIdAuthenticationController(
                 this.persistentStorage,
@@ -427,7 +468,7 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
                 client,
                 jwtSigner,
                 softwareStatement,
-                getAgentConfiguration().getRedirectUrl(),
+                redirectUrl,
                 providerConfiguration,
                 randomValueGenerator,
                 pisConfig,

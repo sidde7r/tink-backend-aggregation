@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.jwt.signer.EidasJwsSigner;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.jwt.signer.EidasProxyJwtSigner;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.module.provider.UkOpenBankingConfigurationProvider;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.tls.EidasProxyTlsConfigurationSetter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.signer.iface.JwtSigner;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
@@ -42,5 +43,13 @@ public class UkOpenBankingQsealModule extends AbstractModule {
                         agentsServiceConfiguration.getEidasProxy().toInternalConfig(),
                         eidasIdentity);
         return new EidasProxyJwtSigner(openBankingConfiguration::getSigningKeyId, eidasJwsSigner);
+    }
+
+    @Provides
+    @Singleton
+    @Inject
+    public EidasProxyTlsConfigurationSetter tlsConfigurationSetter(
+            AgentsServiceConfiguration configuration) {
+        return new EidasProxyTlsConfigurationSetter(configuration);
     }
 }

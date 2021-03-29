@@ -26,6 +26,27 @@ public class JwksKidProvider implements KidProvider {
         this.signingCertificate = signingCertificate;
     }
 
+    @Override
+    @SneakyThrows
+    public String get() {
+        JWKSet jsonWebKeySet = jwksClient.get(jwksEndpoint);
+        JWK jwkPublicKey = JWK.parse(signingCertificate);
+        Base64URL thumbprint = jwkPublicKey.computeThumbprint();
+        String keyId = findMatchingPublicKeyId(jsonWebKeySet, thumbprint);
+        log.info("`{}` keyId has been found.", keyId);
+        return keyId;
+    }
+
+    private static String findMatchingPublicKeyId(JWKSet jsonWebKeySet, Base64URL thumbprint) {
+        return List.ofAll(jsonWebKeySet.getKeys())
+                .find(compareThumbprints(thumbprint))
+                .map(JWK::getKeyID)
+                .getOrElseThrow(
+                        () ->
+                                new NoSuchElementException(
+                                        "The JWKS doesn't contain matching thumbprint for public key of given signing certificate"));
+    }
+
     private static Predicate<JWK> compareThumbprints(Base64URL thumbprint) {
         return jwk -> {
             try {
@@ -34,23 +55,5 @@ public class JwksKidProvider implements KidProvider {
                 throw new IllegalStateException(e);
             }
         };
-    }
-
-    @Override
-    @SneakyThrows
-    public String get() {
-        JWKSet jsonWebKeySet = jwksClient.get(jwksEndpoint);
-        JWK jwkPublicKey = JWK.parse(signingCertificate);
-        Base64URL thumbprint = jwkPublicKey.computeThumbprint();
-        String keyId =
-                List.ofAll(jsonWebKeySet.getKeys())
-                        .find(compareThumbprints(thumbprint))
-                        .map(JWK::getKeyID)
-                        .getOrElseThrow(
-                                () ->
-                                        new NoSuchElementException(
-                                                "The JWKS doesn't contain matching thumbprint for given Private Key"));
-        log.info("KeyId has been found for: {}", keyId);
-        return keyId;
     }
 }

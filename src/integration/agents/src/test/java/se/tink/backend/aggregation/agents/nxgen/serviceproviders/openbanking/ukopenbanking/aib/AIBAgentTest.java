@@ -23,7 +23,7 @@ public class AIBAgentTest {
                 .loadCredentialsBefore(false)
                 .saveCredentialsAfter(true)
                 .expectLoggedIn(false)
-                .setFinancialInstitutionId("aib")
+                .setFinancialInstitutionId("eab9d48aca91445e9fbf2523564f4577")
                 .setAppId("tink")
                 .build()
                 .testRefresh();

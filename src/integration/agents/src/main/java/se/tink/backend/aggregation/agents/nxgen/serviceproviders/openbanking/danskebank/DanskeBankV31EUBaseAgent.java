@@ -25,7 +25,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticationController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticationValidator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.signer.iface.JwtSigner;
-import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
@@ -193,11 +192,9 @@ public abstract class DanskeBankV31EUBaseAgent extends NextGenerationAgent
                     openIdAuthenticationController);
         }
 
-        @Override
-        public AgentConfiguration<? extends UkOpenBankingClientConfigurationAdapter>
-                getAgentConfiguration() {
-            return getAgentConfigurationController()
-                    .getAgentConfiguration(DanskebankEUConfiguration.class);
+        protected Class<? extends UkOpenBankingClientConfigurationAdapter>
+                getClientConfigurationFormat() {
+            return DanskebankEUConfiguration.class;
         }
 
         @Override

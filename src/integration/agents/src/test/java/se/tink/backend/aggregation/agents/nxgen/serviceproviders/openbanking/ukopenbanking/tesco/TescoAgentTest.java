@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.tesco;
 
 import java.time.LocalDate;
-import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
@@ -13,7 +12,6 @@ import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
 
-@Ignore
 public class TescoAgentTest {
 
     private final String SOURCE_IDENTIFIER = "";
@@ -26,7 +24,7 @@ public class TescoAgentTest {
                 .saveCredentialsAfter(true)
                 .expectLoggedIn(false)
                 .setAppId("tink")
-                .setFinancialInstitutionId("tesco")
+                .setFinancialInstitutionId("2a96c078aa5e4722b076a096688f435d")
                 .build()
                 .testRefresh();
     }

@@ -11,7 +11,9 @@ import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.security.auth.x500.X500Principal;
 import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 import org.bouncycastle.asn1.x500.X500Name;
@@ -229,12 +231,22 @@ public class CertificateUtils {
 
     public static List<X509Certificate> getX509CertificatesFromBase64EncodedCert(
             String base64EncodedCertificates) throws CertificateException {
+        return X509CertificateToBytesStream(base64EncodedCertificates)
+                .collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    public static Optional<X509Certificate> getRootX509CertificateFromBase64EncodedString(
+            String base64EncodedCertificates) throws CertificateException {
+        return X509CertificateToBytesStream(base64EncodedCertificates).findFirst();
+    }
+
+    private static Stream<X509Certificate> X509CertificateToBytesStream(
+            String base64EncodedCertificates) throws CertificateException {
         return CertificateFactory.getInstance("X.509")
                 .generateCertificates(
                         new ByteArrayInputStream(
                                 Base64.getDecoder().decode(base64EncodedCertificates)))
                 .stream()
-                .map(c -> (X509Certificate) c)
-                .collect(Collectors.toCollection(ArrayList::new));
+                .map(X509Certificate.class::cast);
     }
 }
