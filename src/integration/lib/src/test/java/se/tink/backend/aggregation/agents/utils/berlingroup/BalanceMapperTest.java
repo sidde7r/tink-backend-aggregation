@@ -15,7 +15,7 @@ import org.junit.runner.RunWith;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @RunWith(JUnitParamsRunner.class)
-public class BerlinGroupBalanceMapperTest {
+public class BalanceMapperTest {
 
     private static final BalanceEntity CLOSING_BOOKED_WITHOUT_LIMIT =
             withoutCreditLimit(BalanceType.CLOSING_BOOKED.getType(), 111.11);
@@ -68,7 +68,7 @@ public class BerlinGroupBalanceMapperTest {
     @Test
     public void shouldReturnFirstSuppliedBalanceIfNoneFitsBookedBalancePriorities() {
         ExactCurrencyAmount bookedBalance =
-                BerlinGroupBalanceMapper.getBookedBalance(
+                BalanceMapper.getBookedBalance(
                         ImmutableList.of(
                                 CLOSING_BOOKED_WITH_LIMIT,
                                 EXPECTED_WITH_LIMIT,
@@ -111,8 +111,7 @@ public class BerlinGroupBalanceMapperTest {
     @Parameters(method = "bookedBalancePriorityParameters")
     public void bookedBalanceShouldPrioritizeCorrectly(
             BalanceEntity[] balances, BalanceEntity expected) {
-        ExactCurrencyAmount bookedBalance =
-                BerlinGroupBalanceMapper.getBookedBalance(Arrays.asList(balances));
+        ExactCurrencyAmount bookedBalance = BalanceMapper.getBookedBalance(Arrays.asList(balances));
 
         assertThat(bookedBalance).isEqualTo(expected.toTinkAmount());
     }
@@ -120,8 +119,7 @@ public class BerlinGroupBalanceMapperTest {
     @Test
     public void bookedBalanceShouldThrowIllegalArgumentExceptionWhenProvidedWithEmptyList() {
         Throwable throwable =
-                catchThrowable(
-                        () -> BerlinGroupBalanceMapper.getBookedBalance(Collections.emptyList()));
+                catchThrowable(() -> BalanceMapper.getBookedBalance(Collections.emptyList()));
 
         assertThat(throwable)
                 .isInstanceOf(IllegalArgumentException.class)
@@ -131,7 +129,7 @@ public class BerlinGroupBalanceMapperTest {
     @Test
     public void availableBalanceShouldReturnEmptyOptionalWhenProvidedWithEmptyList() {
         Optional<ExactCurrencyAmount> availableBalance =
-                BerlinGroupBalanceMapper.getAvailableBalance(Collections.emptyList());
+                BalanceMapper.getAvailableBalance(Collections.emptyList());
 
         assertThat(availableBalance.isPresent()).isFalse();
     }
@@ -139,35 +137,16 @@ public class BerlinGroupBalanceMapperTest {
     @Test
     public void creditLimitShouldReturnEmptyOptionalWhenProvidedWithEmptyList() {
         Optional<ExactCurrencyAmount> creditLimit =
-                BerlinGroupBalanceMapper.getCreditLimit(Collections.emptyList());
+                BalanceMapper.getCreditLimit(Collections.emptyList());
 
         assertThat(creditLimit.isPresent()).isFalse();
-    }
-
-    @Test
-    public void creditLimitShouldReturnSomeValueEvenFromUnknownTypeOfBalance() {
-        Optional<ExactCurrencyAmount> creditLimit =
-                BerlinGroupBalanceMapper.getCreditLimit(
-                        ImmutableList.of(
-                                CLOSING_BOOKED_WITHOUT_LIMIT,
-                                EXPECTED_WITHOUT_LIMIT,
-                                OPENING_BOOKED_WITHOUT_LIMIT,
-                                INTERIM_AVAILABLE_WITHOUT_LIMIT,
-                                INTERIM_BOOKED_WITHOUT_LIMIT,
-                                FORWARD_AVAILABLE_WITHOUT_LIMIT,
-                                NON_INVOICED_WITHOUT_LIMIT,
-                                UNKNOWN_WITHOUT_LIMIT,
-                                UNKNOWN_WITH_LIMIT));
-
-        assertThat(creditLimit.isPresent()).isTrue();
-        assertThat(creditLimit.get()).isEqualTo(ExactCurrencyAmount.of(800000.0, "EUR"));
     }
 
     @Test
     public void
             creditLimitShouldReturnEmptyOptionalWhenProvidedWithSameTypeOnMoreThanTwoBalances() {
         Optional<ExactCurrencyAmount> creditLimit =
-                BerlinGroupBalanceMapper.getCreditLimit(
+                BalanceMapper.getCreditLimit(
                         ImmutableList.of(
                                 CLOSING_BOOKED_WITHOUT_LIMIT,
                                 CLOSING_BOOKED_WITH_LIMIT,
@@ -181,7 +160,7 @@ public class BerlinGroupBalanceMapperTest {
             creditLimitShouldReturnEmptyOptionalWhenProvidedWithSameTypeBalancesWithSameFlags() {
 
         Optional<ExactCurrencyAmount> creditLimit =
-                BerlinGroupBalanceMapper.getCreditLimit(
+                BalanceMapper.getCreditLimit(
                         ImmutableList.of(
                                 CLOSING_BOOKED_WITHOUT_LIMIT, CLOSING_BOOKED_WITHOUT_LIMIT));
 
@@ -193,7 +172,7 @@ public class BerlinGroupBalanceMapperTest {
             creditLimitShouldReturnDifferenceBetweenTwoFoundBalancesOfSameTypeWithProperFlags() {
 
         Optional<ExactCurrencyAmount> creditLimit =
-                BerlinGroupBalanceMapper.getCreditLimit(
+                BalanceMapper.getCreditLimit(
                         ImmutableList.of(CLOSING_BOOKED_WITHOUT_LIMIT, CLOSING_BOOKED_WITH_LIMIT));
         assertThat(creditLimit.isPresent()).isTrue();
         assertThat(creditLimit.get()).isEqualTo(ExactCurrencyAmount.of("100000", "EUR"));
@@ -204,7 +183,7 @@ public class BerlinGroupBalanceMapperTest {
             creditLimitShouldReturnDifferenceBetweenTwoFoundBalancesOfSameTypeWhenWithExtraBalances() {
 
         Optional<ExactCurrencyAmount> creditLimit =
-                BerlinGroupBalanceMapper.getCreditLimit(
+                BalanceMapper.getCreditLimit(
                         ImmutableList.of(
                                 FORWARD_AVAILABLE_WITHOUT_LIMIT,
                                 INTERIM_AVAILABLE_WITH_LIMIT,
@@ -217,7 +196,7 @@ public class BerlinGroupBalanceMapperTest {
     @Test
     public void creditLimitShouldReturnEmptyOptionalIfNoTwoBalancesWithTheSameTypeProvided() {
         Optional<ExactCurrencyAmount> creditLimit =
-                BerlinGroupBalanceMapper.getCreditLimit(
+                BalanceMapper.getCreditLimit(
                         ImmutableList.of(
                                 INTERIM_AVAILABLE_WITH_LIMIT,
                                 EXPECTED_WITH_LIMIT,
