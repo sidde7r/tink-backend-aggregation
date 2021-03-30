@@ -46,6 +46,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.filter.UkOpenBankingPisRequestFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.signature.UkOpenBankingJwtSignatureHelper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.signature.UkOpenBankingPs256Base64SignatureCreator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.signature.UkOpenBankingPs256MinimalSignatureCreator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.signature.UkOpenBankingPs256SignatureCreator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.signature.UkOpenBankingPs256WithoutBase64SignatureCreator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.signature.UkOpenBankingRs256SignatureCreator;
@@ -493,6 +494,14 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
                     JwtSigner jwtSigner, RandomValueGenerator randomValueGenerator) {
         return createPisRequestFilter(
                 new UkOpenBankingPs256WithoutBase64SignatureCreator(jwtSigner),
+                jwtSigner,
+                randomValueGenerator);
+    }
+
+    protected static UkOpenBankingPisRequestFilter createPisRequestFilterUsingPs256MinimalSignature(
+            JwtSigner jwtSigner, RandomValueGenerator randomValueGenerator) {
+        return createPisRequestFilter(
+                new UkOpenBankingPs256MinimalSignatureCreator(jwtSigner),
                 jwtSigner,
                 randomValueGenerator);
     }
