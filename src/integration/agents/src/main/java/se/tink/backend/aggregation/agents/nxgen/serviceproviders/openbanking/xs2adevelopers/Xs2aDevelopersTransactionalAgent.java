@@ -7,6 +7,8 @@ import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.Xs2aDevelopersAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.Xs2aDevelopersAuthenticatorController;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.Xs2aDevelopersDecoupledAuthenticationController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.Xs2aDevelopersOAuth2AuthenticatorController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.configuration.Xs2aDevelopersConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.configuration.Xs2aDevelopersProviderConfiguration;
@@ -109,8 +111,7 @@ public abstract class Xs2aDevelopersTransactionalAgent extends NextGenerationAge
         this.client.addFilter(new TransactionFetchRetryFilter());
     }
 
-    @Override
-    protected Authenticator constructAuthenticator() {
+    private Xs2aDevelopersOAuth2AuthenticatorController constructRedirectAuthenticatorController() {
         final OAuth2AuthenticationController oAuth2Controller =
                 new OAuth2AuthenticationController(
                         persistentStorage,
@@ -118,14 +119,25 @@ public abstract class Xs2aDevelopersTransactionalAgent extends NextGenerationAge
                         authenticator,
                         credentials,
                         strongAuthenticationState);
-        final Xs2aDevelopersOAuth2AuthenticatorController controller =
-                new Xs2aDevelopersOAuth2AuthenticatorController(oAuth2Controller, authenticator);
+        return new Xs2aDevelopersOAuth2AuthenticatorController(
+                oAuth2Controller, supplementalInformationHelper, authenticator);
+    }
+
+    private Xs2aDevelopersDecoupledAuthenticationController
+            constructDecoupledAuthenticatorController() {
+        return new Xs2aDevelopersDecoupledAuthenticationController(
+                authenticator, supplementalInformationController, supplementalInformationFormer);
+    }
+
+    @Override
+    protected Authenticator constructAuthenticator() {
+        Xs2aDevelopersAuthenticatorController authenticationController =
+                new Xs2aDevelopersAuthenticatorController(
+                        constructRedirectAuthenticatorController(),
+                        constructDecoupledAuthenticatorController(),
+                        authenticator);
         return new AutoAuthenticationController(
-                request,
-                systemUpdater,
-                new ThirdPartyAppAuthenticationController<>(
-                        controller, supplementalInformationHelper),
-                oAuth2Controller);
+                request, systemUpdater, authenticationController, authenticationController);
     }
 
     @Override
