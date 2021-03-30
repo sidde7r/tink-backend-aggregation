@@ -9,6 +9,8 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import java.util.Arrays;
 import java.util.Collections;
@@ -59,10 +61,11 @@ public final class AgentWorkerOperationTest {
         AgentWorkerCommand command = mock(AgentWorkerCommand.class);
         when(credentialsRequest.getCredentials()).thenReturn(credentials);
         AgentWorkerOperationState state = mock(AgentWorkerOperationState.class);
-        LoadingCache<MetricId.MetricLabels, Timer> loadingCache = mock(LoadingCache.class);
-        doReturn(loadingCache).when(state).getCommandExecutionsTimers();
         Timer timer = new Timer(new MetricBuckets(Collections.emptyList()));
-        when(loadingCache.get(any())).thenReturn(timer);
+        LoadingCache<MetricId.MetricLabels, Timer> loadingCache =
+                CacheBuilder.newBuilder().build(CacheLoader.from(m -> timer));
+        doReturn(loadingCache).when(state).getCommandExecutionsTimers();
+
         AgentWorkerOperation operation =
                 new AgentWorkerOperation(
                         state,
@@ -86,8 +89,9 @@ public final class AgentWorkerOperationTest {
         CredentialsRequest credentialsRequest = mock(CredentialsRequest.class);
         AgentWorkerCommand command = mock(AgentWorkerCommand.class);
         AgentWorkerOperationState state = mock(AgentWorkerOperationState.class);
-        LoadingCache<MetricId.MetricLabels, Timer> loadingCache = mock(LoadingCache.class);
         Timer timer = new Timer(new MetricBuckets(Collections.emptyList()));
+        LoadingCache<MetricId.MetricLabels, Timer> loadingCache =
+                CacheBuilder.newBuilder().build(CacheLoader.from(m -> timer));
 
         Credentials credentials = new Credentials();
         credentials.setStatus(CredentialsStatus.UPDATING);
@@ -95,7 +99,6 @@ public final class AgentWorkerOperationTest {
         when(credentialsRequest.getCredentials()).thenReturn(credentials);
         when(command.execute()).thenThrow(new IllegalStateException("sample exception"));
         doReturn(loadingCache).when(state).getCommandExecutionsTimers();
-        when(loadingCache.get(any())).thenReturn(timer);
 
         AgentWorkerOperation operation =
                 new AgentWorkerOperation(
@@ -135,10 +138,11 @@ public final class AgentWorkerOperationTest {
         AgentWorkerCommand command2 = mock(AgentWorkerCommand.class);
         when(credentialsRequest.getCredentials()).thenReturn(credentials);
         AgentWorkerOperationState state = mock(AgentWorkerOperationState.class);
-        LoadingCache<MetricId.MetricLabels, Timer> loadingCache = mock(LoadingCache.class);
+        final Timer timer = new Timer(new MetricBuckets(Collections.emptyList()));
+        LoadingCache<MetricId.MetricLabels, Timer> loadingCache =
+                CacheBuilder.newBuilder().build(CacheLoader.from(m -> timer));
         doReturn(loadingCache).when(state).getCommandExecutionsTimers();
-        Timer timer = new Timer(new MetricBuckets(Collections.emptyList()));
-        when(loadingCache.get(any())).thenReturn(timer);
+
         AgentWorkerOperation operation =
                 new AgentWorkerOperation(
                         state,

@@ -1,14 +1,18 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale;
 
+import java.time.Clock;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.map.CaseInsensitiveMap;
+import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthenticationException;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.LaBanquePostaleConstants.CreditorAgentConstants;
@@ -53,6 +57,7 @@ public class LaBanquePostalePaymentExecutor implements PaymentExecutor, Fetchabl
     public static final String PSU_AUTHORIZATION_FACTOR_KEY = "psuAuthenticationFactor";
     private static final String CREDITOR_NAME = "Payment Creditor";
     private static final String STATE = "state";
+    private static final ZoneId DEFAULT_ZONE_ID = ZoneId.of("CET");
     PaymentType paymentType = PaymentType.SEPA;
 
     private static final long WAIT_FOR_MINUTES = 9L;
@@ -119,9 +124,7 @@ public class LaBanquePostalePaymentExecutor implements PaymentExecutor, Fetchabl
                                                         "Payment authentication failed. There is no authorization url!",
                                                         new PaymentRejectedException()));
                 Map<String, String> queryParametersMap =
-                        new CaseInsensitiveMap<>(
-                                openThirdPartyApp(
-                                        new URL(authorizationUrl), paymentMultiStepRequest));
+                        new CaseInsensitiveMap<>(openThirdPartyApp(new URL(authorizationUrl)));
                 String psuAuthenticationFactor =
                         queryParametersMap.get(PSU_AUTHORIZATION_FACTOR_KEY);
                 sessionStorage.put(PSU_AUTHORIZATION_FACTOR, psuAuthenticationFactor);
@@ -149,7 +152,8 @@ public class LaBanquePostalePaymentExecutor implements PaymentExecutor, Fetchabl
         Payment payment = paymentRequest.getPayment();
 
         LocalDate executionDate =
-                Optional.ofNullable(payment.getExecutionDate()).orElse(LocalDate.now());
+                Optional.ofNullable(payment.getExecutionDate())
+                        .orElse(LocalDate.now(Clock.system(DEFAULT_ZONE_ID)));
 
         RemittanceInformation remittanceInformation = payment.getRemittanceInformation();
         RemittanceInformationEntity remittanceInformationEntity =
@@ -199,9 +203,7 @@ public class LaBanquePostalePaymentExecutor implements PaymentExecutor, Fetchabl
         return paymentStatus;
     }
 
-    private Map<String, String> openThirdPartyApp(
-            URL authorizationUrl, PaymentMultiStepRequest paymentMultiStepRequest)
-            throws PaymentException {
+    private Map<String, String> openThirdPartyApp(URL authorizationUrl) throws PaymentException {
         this.supplementalInformationHelper.openThirdPartyApp(
                 ThirdPartyAppAuthenticationPayload.of(authorizationUrl));
         Optional<Map<String, String>> queryParameters =
@@ -212,9 +214,8 @@ public class LaBanquePostalePaymentExecutor implements PaymentExecutor, Fetchabl
 
         return queryParameters.orElseThrow(
                 () ->
-                        new PaymentException(
-                                "Missing payment request response for request: "
-                                        + paymentMultiStepRequest));
+                        new PaymentAuthorizationException(
+                                "SCA time-out.", ThirdPartyAppError.TIMED_OUT.exception()));
     }
 
     @Override
