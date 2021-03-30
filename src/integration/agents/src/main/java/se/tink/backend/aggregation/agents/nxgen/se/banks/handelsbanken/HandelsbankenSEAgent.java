@@ -154,7 +154,6 @@ public final class HandelsbankenSEAgent
                     supplementalInformationController,
                     new HandelsbankenBankIdAuthenticator(
                             bankClient,
-                            credentials,
                             handelsbankenPersistentStorage,
                             handelsbankenSessionStorage),
                     persistentStorage,

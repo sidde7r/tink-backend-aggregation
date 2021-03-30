@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.authenticator.validators;
 
 import com.google.common.base.Strings;
-import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
@@ -12,11 +11,9 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsba
 import se.tink.libraries.i18n.LocalizableKey;
 
 public class BankidAuthenticationValidator extends HandelsbankenValidator<BaseResponse> {
-    private final Credentials credentials;
 
-    public BankidAuthenticationValidator(Credentials credentials, AuthorizeResponse response) {
+    public BankidAuthenticationValidator(AuthorizeResponse response) {
         super(response);
-        this.credentials = credentials;
     }
 
     public void validate() throws AuthorizationException, LoginException {

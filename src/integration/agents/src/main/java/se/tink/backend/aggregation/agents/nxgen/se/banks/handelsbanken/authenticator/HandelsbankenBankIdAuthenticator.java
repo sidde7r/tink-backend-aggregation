@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.authenti
 import com.google.common.base.Strings;
 import java.util.List;
 import java.util.Optional;
-import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.bankid.status.BankIdStatus;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
@@ -31,7 +30,6 @@ import se.tink.libraries.identitydata.IdentityData;
 
 public class HandelsbankenBankIdAuthenticator implements BankIdAuthenticator<InitBankIdResponse> {
     private final HandelsbankenSEApiClient client;
-    private final Credentials credentials;
     private final HandelsbankenPersistentStorage persistentStorage;
     private final HandelsbankenSessionStorage sessionStorage;
     private int pollCount;
@@ -41,11 +39,9 @@ public class HandelsbankenBankIdAuthenticator implements BankIdAuthenticator<Ini
 
     public HandelsbankenBankIdAuthenticator(
             HandelsbankenSEApiClient client,
-            Credentials credentials,
             HandelsbankenPersistentStorage persistentStorage,
             HandelsbankenSessionStorage sessionStorage) {
         this.client = client;
-        this.credentials = credentials;
         this.persistentStorage = persistentStorage;
         this.sessionStorage = sessionStorage;
     }
@@ -75,7 +71,7 @@ public class HandelsbankenBankIdAuthenticator implements BankIdAuthenticator<Ini
             case DONE:
                 AuthorizeResponse authorize = client.authorize(authenticate);
 
-                new BankidAuthenticationValidator(credentials, authorize).validate();
+                new BankidAuthenticationValidator(authorize).validate();
 
                 // If SSN is given, check that it matches the logged in user
                 if (!Strings.isNullOrEmpty(this.givenSsn)) {
