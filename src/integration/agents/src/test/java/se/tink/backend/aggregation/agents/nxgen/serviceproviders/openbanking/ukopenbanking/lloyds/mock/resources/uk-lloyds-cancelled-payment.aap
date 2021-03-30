@@ -64,7 +64,7 @@ x-fapi-financial-id: 0015800000jf9GgAAI
 Authorization: Bearer DUMMY_ACCESS_TOKEN
 x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
 
-{"Risk":{"PaymentContextCode":"Other"},"Data":{"Initiation":{"RemittanceInformation":{"Unstructured":"DUMMY_REMITTANCE","Reference":"DUMMY_REMITTANCE"},"EndToEndIdentification":"0b57b778df264b21bb3cfab3a20841d","InstructionIdentification":"0b57b778df264b21bb3cfab3a20841d2","CreditorAccount":{"SchemeName":"UK.OBIE.SortCodeAccountNumber","Identification":"12345678912345","Name":"Creditor Name"},"InstructedAmount":{"Amount":"1.00","Currency":"GBP"}}}}
+{"Risk":{"PaymentContextCode":"Other"},"Data":{"Initiation":{"RemittanceInformation":{"Unstructured":"DUMMY_REMITTANCE"},"EndToEndIdentification":"0b57b778df264b21bb3cfab3a20841d","InstructionIdentification":"0b57b778df264b21bb3cfab3a20841d2","CreditorAccount":{"SchemeName":"UK.OBIE.SortCodeAccountNumber","Identification":"12345678912345","Name":"Creditor Name"},"InstructedAmount":{"Amount":"1.00","Currency":"GBP"}}}}
 
 RESPONSE 3
 201
@@ -95,4 +95,4 @@ Content-Length: 807
 Date: Tue, 01 Dec 2020 20:55:01 GMT
 Connection: keep-alive
 
-{"Data":{"ConsentId":"b63291eb-0f2d-460f-a4f1-0aa43e831b6f","CreationDateTime":"2020-12-01T20:55:00.947Z","Status":"AwaitingAuthorisation","StatusUpdateDateTime":"2020-12-01T20:55:00.947Z","Initiation":{"InstructionIdentification":"0b57b778df264b21bb3cfab3a20841d2","EndToEndIdentification":"0b57b778df264b21bb3cfab3a20841d","InstructedAmount":{"Amount":"1.00","Currency":"GBP"},"CreditorAccount":{"SchemeName":"UK.OBIE.SortCodeAccountNumber","Identification":"12345678912345","Name":"Creditor Name"},"RemittanceInformation":{"Unstructured":"DUMMY_REMITTANCE","Reference":"DUMMY_REMITTANCE"}}},"Risk":{"PaymentContextCode":"Other"},"Links":{"Self":"https://secure-api.lloydsbank.com/prod01/lbg/lyds/open-banking/v3.1/pisp/domestic-payment-consents/b63291eb-0f2d-460f-a4f1-0aa43e831b6f"},"Meta":{}}
+{"Data":{"ConsentId":"b63291eb-0f2d-460f-a4f1-0aa43e831b6f","CreationDateTime":"2020-12-01T20:55:00.947Z","Status":"AwaitingAuthorisation","StatusUpdateDateTime":"2020-12-01T20:55:00.947Z","Initiation":{"InstructionIdentification":"0b57b778df264b21bb3cfab3a20841d2","EndToEndIdentification":"0b57b778df264b21bb3cfab3a20841d","InstructedAmount":{"Amount":"1.00","Currency":"GBP"},"CreditorAccount":{"SchemeName":"UK.OBIE.SortCodeAccountNumber","Identification":"12345678912345","Name":"Creditor Name"},"RemittanceInformation":{"Unstructured":"DUMMY_REMITTANCE"}}},"Risk":{"PaymentContextCode":"Other"},"Links":{"Self":"https://secure-api.lloydsbank.com/prod01/lbg/lyds/open-banking/v3.1/pisp/domestic-payment-consents/b63291eb-0f2d-460f-a4f1-0aa43e831b6f"},"Meta":{}}
