@@ -19,6 +19,7 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.error.InvalidC
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.ServerError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.SessionExpiredError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.ThirdPartyAppNoClientError;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.error.ThirdPartyAppUnknownError;
 import se.tink.backend.aggregation.agentsplatform.framework.error.Error;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
@@ -29,6 +30,8 @@ public class LunarAuthExceptionHandler {
     private static final String LAST_ATTEMPT = "USER_PASSWORD_INCORRECT_RESET_APP";
     private static final String NOT_A_LUNAR_USER = "USER_NOT_FOUND";
     private static final String TOKEN_REVOKED = "ACCESS_TOKEN_REVOKED_BY_CUSTOMER_SUPPORT";
+    private static final String NEMID_WRONG_TYPE = "NEMID_WRONG_TYPE";
+    private static final String USE_YOUR_PRIVATE_NEMID = "Please use your private NemID to log in.";
 
     private static final Map<String, AgentBankApiError> KNOWN_ERRORS =
             ImmutableMap.<String, AgentBankApiError>builder()
@@ -39,21 +42,28 @@ public class LunarAuthExceptionHandler {
                             new ThirdPartyAppNoClientError(
                                     getErrorWithChangedUserMessage(
                                             AgentError.THIRD_PARTY_APP_NO_CLIENT.getCode(),
-                                            LoginError.NOT_CUSTOMER)))
+                                            LoginError.NOT_CUSTOMER.userMessage().get())))
                     .put(
                             TOKEN_REVOKED,
                             new AccountBlockedError(
                                     getErrorWithChangedUserMessage(
                                             AgentError.ACCOUNT_BLOCKED.getCode(),
-                                            LoginError.INVALIDATED_CREDENTIALS)))
+                                            LoginError.INVALIDATED_CREDENTIALS
+                                                    .userMessage()
+                                                    .get())))
+                    .put(
+                            NEMID_WRONG_TYPE,
+                            new ThirdPartyAppUnknownError(
+                                    getErrorWithChangedUserMessage(
+                                            AgentError.THIRD_PARTY_APP_UNKNOWN_ERROR.getCode(),
+                                            USE_YOUR_PRIVATE_NEMID)))
                     .build();
 
-    private static Error getErrorWithChangedUserMessage(
-            String errorCode, se.tink.backend.aggregation.agents.exceptions.agent.AgentError e) {
+    private static Error getErrorWithChangedUserMessage(String errorCode, String errorMessage) {
         return Error.builder()
                 .uniqueId(UUID.randomUUID().toString())
                 .errorCode(errorCode)
-                .errorMessage(e.userMessage().get())
+                .errorMessage(errorMessage)
                 .build();
     }
 
@@ -83,12 +93,13 @@ public class LunarAuthExceptionHandler {
             case 500:
                 return getErrorWithChangedUserMessage(
                         AgentError.HTTP_RESPONSE_ERROR.getCode(),
-                        BankServiceError.BANK_SIDE_FAILURE);
+                        BankServiceError.BANK_SIDE_FAILURE.userMessage().get());
             case 502:
             case 503:
             case 504:
                 return getErrorWithChangedUserMessage(
-                        AgentError.HTTP_RESPONSE_ERROR.getCode(), BankServiceError.NO_BANK_SERVICE);
+                        AgentError.HTTP_RESPONSE_ERROR.getCode(),
+                        BankServiceError.NO_BANK_SERVICE.userMessage().get());
             default:
                 return new ServerError().getDetails();
         }

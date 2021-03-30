@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import agents_platform_framework.org.springframework.http.HttpStatus;
 import agents_platform_framework.org.springframework.web.server.ResponseStatusException;
+import java.util.UUID;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 import org.junit.Test;
@@ -25,6 +26,8 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.error.InvalidC
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.ServerError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.SessionExpiredError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.ThirdPartyAppNoClientError;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.error.ThirdPartyAppUnknownError;
+import se.tink.backend.aggregation.agentsplatform.framework.error.Error;
 
 @RunWith(JUnitParamsRunner.class)
 public class LunarAuthExceptionHandlerTest {
@@ -127,6 +130,27 @@ public class LunarAuthExceptionHandlerTest {
                         LunarTestUtils.getExpectedErrorDetails(
                                 AgentError.HTTP_RESPONSE_ERROR.getCode(),
                                 BankServiceError.NO_BANK_SERVICE))
+            },
+            new Object[] {
+                new ResponseStatusException(
+                        HttpStatus.BAD_REQUEST,
+                        "{\"reasonCode\": \"NEMID_WRONG_TYPE\", \"reasonDisplayMessage\": \"Brug venligst dit private NemID til at logge ind\"}"),
+                new ThirdPartyAppUnknownError(
+                        Error.builder()
+                                .uniqueId(UUID.randomUUID().toString())
+                                .errorCode(AgentError.THIRD_PARTY_APP_UNKNOWN_ERROR.getCode())
+                                .errorMessage("Please use your private NemID to log in.")
+                                .build())
+            },
+            new Object[] {
+                new ResponseStatusException(
+                        HttpStatus.BAD_REQUEST, "{\"reasonCode\": \"NEMID_WRONG_TYPE\"}"),
+                new ThirdPartyAppUnknownError(
+                        Error.builder()
+                                .uniqueId(UUID.randomUUID().toString())
+                                .errorCode(AgentError.THIRD_PARTY_APP_UNKNOWN_ERROR.getCode())
+                                .errorMessage("Please use your private NemID to log in.")
+                                .build())
             },
         };
     }

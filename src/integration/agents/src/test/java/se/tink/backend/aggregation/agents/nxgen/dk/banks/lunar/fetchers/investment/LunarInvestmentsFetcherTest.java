@@ -20,6 +20,7 @@ import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.client.F
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.investment.rpc.InstrumentsResponse;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.investment.rpc.InvestmentsResponse;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.investment.rpc.PortfolioPerformanceResponse;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.transactionalaccount.LunarIdentityDataFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument.InstrumentModule;
@@ -38,6 +39,7 @@ public class LunarInvestmentsFetcherTest {
     private static final String INVEST_ACCOUNT_NO = "1212-0101123456";
     private static final String INVEST_ACCOUNT_NO_WITH_QUOTES = "\"1212-0101123456\"";
     private static final String CURRENCY = "DKK";
+    private static final String HOLDER_NAME = "Account Holder";
     private static final double CASH_VALUE = 1.02;
     private static final double TOTAL_PROFIT = -61.15;
     private static final double TOTAL_VALUE = 15.84;
@@ -45,11 +47,13 @@ public class LunarInvestmentsFetcherTest {
 
     private LunarInvestmentsFetcher investmentsFetcher;
     private FetcherApiClient apiClient;
+    private LunarIdentityDataFetcher identityDataFetcher;
 
     @Before
     public void setup() {
         apiClient = mock(FetcherApiClient.class);
-        investmentsFetcher = new LunarInvestmentsFetcher(apiClient);
+        identityDataFetcher = mock(LunarIdentityDataFetcher.class);
+        investmentsFetcher = new LunarInvestmentsFetcher(apiClient, identityDataFetcher);
     }
 
     @Test
@@ -58,11 +62,13 @@ public class LunarInvestmentsFetcherTest {
             InvestmentsResponse investmentsResponse,
             InstrumentsResponse instrumentsResponse,
             PortfolioPerformanceResponse performanceResponse,
-            List<InvestmentAccount> expected) {
+            List<InvestmentAccount> expected,
+            String accountHolder) {
         // given
         when(apiClient.fetchInvestments()).thenReturn(investmentsResponse);
         when(apiClient.fetchInstruments()).thenReturn(instrumentsResponse);
         when(apiClient.fetchPerformanceData()).thenReturn(performanceResponse);
+        when(identityDataFetcher.getAccountHolder()).thenReturn(accountHolder);
 
         // when
         List<InvestmentAccount> result =
@@ -84,18 +90,9 @@ public class LunarInvestmentsFetcherTest {
                         TOTAL_PROFIT,
                         TOTAL_OPEN_POSITIONS_VALUE,
                         1.9,
-                        buildTestInstruments())
-            },
-            new Object[] {
-                deserialize("invest_portfolio.json", InvestmentsResponse.class),
-                deserialize("invest_instruments.json", InstrumentsResponse.class),
-                deserialize("investment_performance_data.json", PortfolioPerformanceResponse.class),
-                buildExpectedInvestmentAccounts(
-                        CASH_VALUE,
-                        TOTAL_PROFIT,
-                        TOTAL_OPEN_POSITIONS_VALUE,
-                        1.9,
-                        buildTestInstruments())
+                        buildTestInstruments(),
+                        HOLDER_NAME),
+                HOLDER_NAME
             },
             new Object[] {
                 getTestInvestmentsResponse(
@@ -106,7 +103,8 @@ public class LunarInvestmentsFetcherTest {
                 deserialize(
                         "invest_performance_data_empty.json", PortfolioPerformanceResponse.class),
                 buildExpectedInvestmentAccounts(
-                        CASH_VALUE, 0.0, TOTAL_VALUE, 0.0, Collections.emptyList())
+                        CASH_VALUE, 0.0, TOTAL_VALUE, 0.0, Collections.emptyList(), HOLDER_NAME),
+                HOLDER_NAME
             },
             new Object[] {
                 getTestInvestmentsResponse(
@@ -114,7 +112,13 @@ public class LunarInvestmentsFetcherTest {
                 new InstrumentsResponse(),
                 deserialize("investment_performance_data.json", PortfolioPerformanceResponse.class),
                 buildExpectedInvestmentAccounts(
-                        CASH_VALUE, TOTAL_PROFIT, TOTAL_VALUE, 0.0, Collections.emptyList())
+                        CASH_VALUE,
+                        TOTAL_PROFIT,
+                        TOTAL_VALUE,
+                        0.0,
+                        Collections.emptyList(),
+                        HOLDER_NAME),
+                HOLDER_NAME
             },
             new Object[] {
                 getTestInvestmentsResponse(
@@ -123,33 +127,47 @@ public class LunarInvestmentsFetcherTest {
                         "{\"instruments\": []}", InstrumentsResponse.class),
                 deserialize("investment_performance_data.json", PortfolioPerformanceResponse.class),
                 buildExpectedInvestmentAccounts(
-                        CASH_VALUE, TOTAL_PROFIT, TOTAL_VALUE, 0.0, Collections.emptyList())
+                        CASH_VALUE,
+                        TOTAL_PROFIT,
+                        TOTAL_VALUE,
+                        0.0,
+                        Collections.emptyList(),
+                        HOLDER_NAME),
+                HOLDER_NAME
             },
             new Object[] {
                 getTestInvestmentsResponse(INVEST_ACCOUNT_NO_WITH_QUOTES, null, null, null),
                 new InstrumentsResponse(),
                 new PortfolioPerformanceResponse(),
-                buildExpectedInvestmentAccounts(0.0, 0.0, 0.0, 0.0, Collections.emptyList()),
+                buildExpectedInvestmentAccounts(
+                        0.0, 0.0, 0.0, 0.0, Collections.emptyList(), HOLDER_NAME),
+                HOLDER_NAME
             },
             new Object[] {
                 getTestInvestmentsResponse(INVEST_ACCOUNT_NO_WITH_QUOTES, null, null, null),
                 new InstrumentsResponse(),
                 deserialize(
                         "invest_performance_data_empty.json", PortfolioPerformanceResponse.class),
-                buildExpectedInvestmentAccounts(0.0, 0.0, 0.0, 0.0, Collections.emptyList()),
+                buildExpectedInvestmentAccounts(
+                        0.0, 0.0, 0.0, 0.0, Collections.emptyList(), HOLDER_NAME),
+                HOLDER_NAME
             },
             new Object[] {
                 getTestInvestmentsResponse(INVEST_ACCOUNT_NO_WITH_QUOTES, 0.0, 0.0, 0.0),
                 new InstrumentsResponse(),
                 deserialize(
                         "invest_performance_data_empty.json", PortfolioPerformanceResponse.class),
-                buildExpectedInvestmentAccounts(0.0, 0.0, 0.0, 0.0, Collections.emptyList()),
+                buildExpectedInvestmentAccounts(
+                        0.0, 0.0, 0.0, 0.0, Collections.emptyList(), HOLDER_NAME),
+                HOLDER_NAME
             },
             new Object[] {
                 getTestInvestmentsResponse(INVEST_ACCOUNT_NO_WITH_QUOTES, 0.0, 0.0, 0.0),
                 new InstrumentsResponse(),
                 new PortfolioPerformanceResponse(),
-                buildExpectedInvestmentAccounts(0.0, 0.0, 0.0, 0.0, Collections.emptyList()),
+                buildExpectedInvestmentAccounts(
+                        0.0, 0.0, 0.0, 0.0, Collections.emptyList(), HOLDER_NAME),
+                HOLDER_NAME
             },
             new Object[] {
                 getTestInvestmentsResponse(
@@ -157,14 +175,21 @@ public class LunarInvestmentsFetcherTest {
                 deserialize("invest_instruments.json", InstrumentsResponse.class),
                 deserialize("investment_performance_data.json", PortfolioPerformanceResponse.class),
                 buildExpectedInvestmentAccounts(
-                        0.0, TOTAL_PROFIT, TOTAL_OPEN_POSITIONS_VALUE, 0.0, buildTestInstruments())
+                        0.0,
+                        TOTAL_PROFIT,
+                        TOTAL_OPEN_POSITIONS_VALUE,
+                        0.0,
+                        buildTestInstruments(),
+                        HOLDER_NAME),
+                HOLDER_NAME
             },
             new Object[] {
                 getTestInvestmentsResponse(INVEST_ACCOUNT_NO_WITH_QUOTES, 2.0, 30.0, 25.0),
                 deserialize("invest_instruments.json", InstrumentsResponse.class),
                 deserialize("investment_performance_data.json", PortfolioPerformanceResponse.class),
                 buildExpectedInvestmentAccounts(
-                        2.0, TOTAL_PROFIT, 30.0, -5.0, buildTestInstruments())
+                        2.0, TOTAL_PROFIT, 30.0, -5.0, buildTestInstruments(), null),
+                null
             },
         };
     }
@@ -204,7 +229,8 @@ public class LunarInvestmentsFetcherTest {
             Double totalProfit,
             Double totalValue,
             Double cashBalance,
-            List<InstrumentModule> instruments) {
+            List<InstrumentModule> instruments,
+            String accountHolder) {
         return Collections.singletonList(
                 InvestmentAccount.nxBuilder()
                         .withPortfolios(
@@ -224,6 +250,7 @@ public class LunarInvestmentsFetcherTest {
                                         .withAccountName(INVEST_ACCOUNT_NO)
                                         .addIdentifier(new DanishIdentifier(INVEST_ACCOUNT_NO))
                                         .build())
+                        .addHolderName(accountHolder)
                         .build());
     }
 

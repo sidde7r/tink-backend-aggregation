@@ -122,7 +122,9 @@ public final class LunarDkAgent extends AgentPlatformAgent
 
     private InvestmentRefreshController constructInvestmentRefreshController() {
         return new InvestmentRefreshController(
-                metricRefreshController, updateController, new LunarInvestmentsFetcher(apiClient));
+                metricRefreshController,
+                updateController,
+                new LunarInvestmentsFetcher(apiClient, identityDataFetcher));
     }
 
     private LunarAuthenticationConfig createLunarAuthenticationConfig(

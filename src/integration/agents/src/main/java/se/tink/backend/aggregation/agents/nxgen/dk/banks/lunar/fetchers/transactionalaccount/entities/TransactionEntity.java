@@ -12,6 +12,9 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 @JsonObject
 @Setter
 public class TransactionEntity extends BaseResponseEntity {
+
+    private static final String UPCOMING_TRANSACTION_STATUS = "future";
+
     private BigDecimal amount;
     private String currency;
     @Getter private String status;
@@ -24,6 +27,7 @@ public class TransactionEntity extends BaseResponseEntity {
                 .setAmount(ExactCurrencyAmount.of(amount, currency))
                 .setDate(new Date(timestamp))
                 .setDescription(title)
+                .setPending(UPCOMING_TRANSACTION_STATUS.equalsIgnoreCase(status))
                 .build();
     }
 }

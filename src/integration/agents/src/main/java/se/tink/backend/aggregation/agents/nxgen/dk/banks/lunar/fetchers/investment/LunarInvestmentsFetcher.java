@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.client.F
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.investment.entities.InstrumentEntity;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.investment.entities.PortfolioEntity;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.investment.rpc.InvestmentsResponse;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.transactionalaccount.LunarIdentityDataFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 
@@ -21,6 +22,7 @@ import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccou
 public class LunarInvestmentsFetcher implements AccountFetcher<InvestmentAccount> {
 
     private final FetcherApiClient apiClient;
+    private final LunarIdentityDataFetcher identityDataFetcher;
 
     @Override
     public Collection<InvestmentAccount> fetchAccounts() {
@@ -37,7 +39,9 @@ public class LunarInvestmentsFetcher implements AccountFetcher<InvestmentAccount
 
     private List<InvestmentAccount> getInvestmentAccounts(PortfolioEntity portfolio) {
         return portfolio.toInvestmentAccounts(
-                apiClient.fetchPerformanceData().getPerformanceData(), getUserLunarInstruments());
+                apiClient.fetchPerformanceData().getPerformanceData(),
+                getUserLunarInstruments(),
+                identityDataFetcher.getAccountHolder());
     }
 
     private List<InstrumentEntity> getUserLunarInstruments() {

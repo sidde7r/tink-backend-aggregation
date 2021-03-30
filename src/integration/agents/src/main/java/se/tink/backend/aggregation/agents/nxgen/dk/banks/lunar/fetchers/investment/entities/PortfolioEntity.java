@@ -27,13 +27,16 @@ public class PortfolioEntity {
 
     @JsonIgnore
     public List<InvestmentAccount> toInvestmentAccounts(
-            PerformanceDataEntity performanceData, List<InstrumentEntity> instruments) {
+            PerformanceDataEntity performanceData,
+            List<InstrumentEntity> instruments,
+            String holderName) {
         return Collections.singletonList(
                 InvestmentAccount.nxBuilder()
                         .withPortfolios(buildPortfolioModule(performanceData, instruments))
                         .withCashBalance(
                                 ExactCurrencyAmount.of(calculateCashBalanceRest(), currency))
                         .withId(buildIdModule())
+                        .addHolderName(holderName)
                         .build());
     }
 
