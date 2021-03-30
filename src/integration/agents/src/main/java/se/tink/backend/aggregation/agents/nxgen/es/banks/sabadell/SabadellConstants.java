@@ -120,6 +120,7 @@ public final class SabadellConstants {
         public static final String INCORRECT_CREDENTIALS = "CDSO031";
         public static final String NO_PRODUCTS = "CDSO114";
         public static final String NO_TRANSACTIONS = "CDSO602";
+        public static final String EXPIRED_CARD = "Z67273";
     }
 
     public static final class Tags {

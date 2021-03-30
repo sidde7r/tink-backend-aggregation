@@ -1,0 +1,49 @@
+REQUEST 1
+GET https://www.bancsabadell.mobi/bsmobil/api/cards?filter=CTA_CARD_ALL
+Content-Type: application/json
+Accept: application/vnd.idk.bsmobil-v1933+json
+
+RESPONSE 1
+403
+Content-Type: application/vnd.idk.bsmobil-v1933+json;charset=UTF-8
+
+{
+    "errorMessage": "La sesión ha expirado por seguridad. Si lo desea conéctese de nuevo.",
+    "code": "100",
+    "errorMessageTitle": "¡Vaya! Algo no ha ido bien...",
+    "errorMessageDetail": "",
+    "errorCode": "100",
+    "severity": "FATAL",
+    "labelCta": "",
+    "operationCta": "",
+    "clickToCall": "",
+    "evento": "",
+    "nombreOperativa": "",
+    "idCanal": ""
+}
+
+REQUEST 2
+POST https://www.bancsabadell.mobi/bsmobil/api/session
+Content-Type: application/json
+Accept: application/vnd.idk.bsmobil-v1933+json
+
+{"deviceInfo":"en-US GEO() IOS 13.3.1 iPhone9,3 NATIVE_APP 20.1.0 STANDARD","lastRequestDate":"","brand":"SAB","geolocationData":"","newDevice":false,"requestId":"SDK","userName":"dummyUsername","loginType":1,"compilationType":"release","password":"dummyPassword","contract":"","devicePrint":"","lastKnownBrand":0,"csid":"00000000-0000-4000-0000-000000000000","trusteer":""}
+
+RESPONSE 2
+500
+Content-Type: application/vnd.idk.bsmobil-v1933+json;charset=UTF-8
+
+{
+	"errorMessage": "Z67273: Lo sentimos",
+	"code": "",
+	"errorMessageTitle": "Lo sentimos",
+	"errorMessageDetail": "Los testos",
+	"errorCode": "Z67273",
+	"severity": "ORDINARY",
+	"labelCta": "",
+	"operationCta": "",
+	"clickToCall": "0",
+	"evento": "false",
+	"nombreOperativa": "ZZZ",
+	"idCanal": "INT"
+}
