@@ -41,6 +41,14 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.fetche
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.fetcher.rpc.FetchBalancesResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentDetailsResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentResponse;
+import se.tink.backend.aggregation.agents.utils.berlingroup.payment.PaymentApiClient;
+import se.tink.backend.aggregation.agents.utils.berlingroup.payment.PaymentConstants;
+import se.tink.backend.aggregation.agents.utils.berlingroup.payment.enums.PaymentProduct;
+import se.tink.backend.aggregation.agents.utils.berlingroup.payment.enums.PaymentService;
+import se.tink.backend.aggregation.agents.utils.berlingroup.payment.rpc.CreatePaymentRequest;
+import se.tink.backend.aggregation.agents.utils.berlingroup.payment.rpc.CreatePaymentResponse;
+import se.tink.backend.aggregation.agents.utils.berlingroup.payment.rpc.FetchPaymentStatusResponse;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
@@ -48,7 +56,7 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 @RequiredArgsConstructor
-public class SparkassenApiClient {
+public class SparkassenApiClient implements PaymentApiClient {
 
     private final TinkHttpClient client;
     private final SparkassenHeaderValues headerValues;
@@ -212,5 +220,69 @@ public class SparkassenApiClient {
         return createRequest(new URL(tokenEndpoint))
                 .type(MediaType.APPLICATION_FORM_URLENCODED)
                 .post(TokenResponse.class, tokenEntity);
+    }
+
+    public CreatePaymentResponse createPayment(
+            CreatePaymentRequest request, PaymentRequest paymentRequest) {
+        return createRequest(
+                        SparkassenConstants.Urls.PAYMENT_INITIATION
+                                .parameter(
+                                        PaymentConstants.PathVariables.PAYMENT_SERVICE,
+                                        PaymentService.getPaymentService(
+                                                paymentRequest
+                                                        .getPayment()
+                                                        .getPaymentServiceType()))
+                                .parameter(
+                                        PaymentConstants.PathVariables.PAYMENT_PRODUCT,
+                                        PaymentProduct.getPaymentProduct(
+                                                paymentRequest.getPayment().getPaymentScheme())))
+                .header(PaymentConstants.HeaderKeys.TPP_REJECTION_NOFUNDS_PREFERRED, true)
+                .header(SparkassenConstants.HeaderKeys.TPP_REDIRECT_PREFERRED, false)
+                .post(CreatePaymentResponse.class, request);
+    }
+
+    public FetchPaymentStatusResponse fetchPaymentStatus(PaymentRequest paymentRequest) {
+
+        String paymentId = paymentRequest.getPayment().getUniqueId();
+        return createRequest(
+                        SparkassenConstants.Urls.FETCH_PAYMENT_STATUS
+                                .parameter(
+                                        PaymentConstants.PathVariables.PAYMENT_SERVICE,
+                                        PaymentService.getPaymentService(
+                                                paymentRequest
+                                                        .getPayment()
+                                                        .getPaymentServiceType()))
+                                .parameter(
+                                        PaymentConstants.PathVariables.PAYMENT_PRODUCT,
+                                        PaymentProduct.getPaymentProduct(
+                                                paymentRequest.getPayment().getPaymentScheme()))
+                                .parameter(PaymentConstants.PathVariables.PAYMENT_ID, paymentId))
+                .get(FetchPaymentStatusResponse.class);
+    }
+
+    public FinalizeAuthorizationResponse finalizePaymentAuthorization(
+            String transactionAuthorizationUrl, String otp) {
+        try {
+            return createRequest(new URL(transactionAuthorizationUrl))
+                    .put(
+                            FinalizeAuthorizationResponse.class,
+                            new FinalizeAuthorizationRequest(otp));
+        } catch (HttpResponseException e) {
+            String errorBody = e.getResponse().getBody(String.class);
+            if (errorBody.contains(PSU_CREDENTIALS_INVALID)
+                    || errorBody.contains(CHALLENGE_FORMAT_INVALID)
+                    || (errorBody.contains(FORMAT_ERROR) && errorBody.contains(OTP_FORMAT_ERROR))) {
+                throw LoginError.INCORRECT_CHALLENGE_RESPONSE.exception(e);
+            }
+            throw e;
+        }
+    }
+
+    public AuthenticationMethodResponse selectPaymentAuthorizationMethod(
+            String url, String methodId) {
+        return createRequest(new URL(url))
+                .put(
+                        AuthenticationMethodResponse.class,
+                        new SelectAuthenticationMethodRequest(methodId));
     }
 }

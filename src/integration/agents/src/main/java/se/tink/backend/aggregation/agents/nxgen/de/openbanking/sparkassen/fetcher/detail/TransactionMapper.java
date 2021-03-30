@@ -31,7 +31,7 @@ public class TransactionMapper {
         try {
             context = JAXBContext.newInstance(FetchTransactionsResponse.class);
         } catch (JAXBException e) {
-            logger.error(ErrorMessages.COULD_NOT_INITIALIZE_JAXBCONTEXT);
+            logger.error(ErrorMessages.COULD_NOT_INITIALIZE_JAXBCONTEXT, e);
             throw new IllegalStateException(ErrorMessages.COULD_NOT_INITIALIZE_JAXBCONTEXT);
         }
     }

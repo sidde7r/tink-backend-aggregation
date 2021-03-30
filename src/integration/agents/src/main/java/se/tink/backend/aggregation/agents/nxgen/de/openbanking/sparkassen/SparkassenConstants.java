@@ -29,12 +29,13 @@ public final class SparkassenConstants {
                 "Ihr Zugang ist vorläufig gesperrt - Bitte PIN-Sperre aufheben";
         static final String BLOCKED_ACCOUNT =
                 "Ihr Zugang ist gesperrt - Bitte informieren Sie Ihren Berater";
+        public static final String MISSING_LINKS_ENTITY = "Response missing links entity";
         static final String NO_ACTIVE_TAN_MEDIUM = "Kein aktives TAN-Medium gefunden.";
         static final String PLEASE_CHANGE_PIN = "Bitte führen Sie eine PIN-Änderung durch.";
     }
 
-    static class Urls {
-        static final String BASE_URL = "https://xs2a.f-i-apim.de:8443/fixs2aop-env";
+    public static class Urls {
+        public static final String BASE_URL = "https://xs2a.f-i-apim.de:8443/fixs2aop-env";
         static final URL CONSENT = new URL(BASE_URL + "/xs2a-api/{bankCode}/v1/consents");
         static final URL UPDATE_SCA_METHOD =
                 new URL(CONSENT + "/{consentId}/authorisations/{authorizationId}");
@@ -45,6 +46,15 @@ public final class SparkassenConstants {
         static final URL FETCH_ACCOUNTS = new URL(BASE_URL + "/xs2a-api/{bankCode}/v1/accounts");
         static final URL FETCH_BALANCES = new URL(FETCH_ACCOUNTS + "/{accountId}/balances");
         static final URL FETCH_TRANSACTIONS = new URL(FETCH_ACCOUNTS + "/{accountId}/transactions");
+
+        public static final URL PAYMENT_INITIATION =
+                new URL(
+                        SparkassenConstants.Urls.BASE_URL
+                                + "/xs2a-api/{bankCode}/v1/{payment-service}/{payment-product}");
+        public static final URL FETCH_PAYMENT_STATUS =
+                new URL(
+                        SparkassenConstants.Urls.BASE_URL
+                                + "/xs2a-api/{bankCode}/v1/{payment-service}/{payment-product}/{paymentId}/status");
     }
 
     static class PathVariables {
