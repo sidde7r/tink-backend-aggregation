@@ -21,6 +21,7 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.error.SessionE
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.ThirdPartyAppNoClientError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.ThirdPartyAppUnknownError;
 import se.tink.backend.aggregation.agentsplatform.framework.error.Error;
+import se.tink.libraries.i18n.LocalizableKey;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @Slf4j
@@ -31,7 +32,8 @@ public class LunarAuthExceptionHandler {
     private static final String NOT_A_LUNAR_USER = "USER_NOT_FOUND";
     private static final String TOKEN_REVOKED = "ACCESS_TOKEN_REVOKED_BY_CUSTOMER_SUPPORT";
     private static final String NEMID_WRONG_TYPE = "NEMID_WRONG_TYPE";
-    private static final String USE_YOUR_PRIVATE_NEMID = "Please use your private NemID to log in.";
+    private static final LocalizableKey USE_YOUR_PRIVATE_NEMID =
+            new LocalizableKey("Please use your private NemID to log in.");
 
     private static final Map<String, AgentBankApiError> KNOWN_ERRORS =
             ImmutableMap.<String, AgentBankApiError>builder()
@@ -56,7 +58,7 @@ public class LunarAuthExceptionHandler {
                             new ThirdPartyAppUnknownError(
                                     getErrorWithChangedUserMessage(
                                             AgentError.THIRD_PARTY_APP_UNKNOWN_ERROR.getCode(),
-                                            USE_YOUR_PRIVATE_NEMID)))
+                                            USE_YOUR_PRIVATE_NEMID.get())))
                     .build();
 
     private static Error getErrorWithChangedUserMessage(String errorCode, String errorMessage) {
