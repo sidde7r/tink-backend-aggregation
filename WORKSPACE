@@ -873,7 +873,7 @@ maven_install(
         "org.apache.commons:commons-lang3:3.9",
         "org.apache.commons:commons-math3:3.2",
         "org.apache.commons:commons-text:1.8",
-        "org.apache.httpcomponents:httpclient:4.3.4",
+        "org.apache.httpcomponents:httpclient:4.5.12",
         "org.apache.httpcomponents:httpcore:4.4.13",
         "org.apache.logging.log4j:log4j-api:2.11.1",
         "org.apache.logging.log4j:log4j-core:2.11.1",
