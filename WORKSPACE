@@ -879,6 +879,7 @@ maven_install(
         "org.apache.mahout.commons:commons-cli:2.0-mahout",
         "org.apache.pdfbox:fontbox:2.0.6",
         "org.apache.pdfbox:pdfbox:2.0.6",
+        "org.apache.zookeeper:zookeeper:3.5.3-beta",
         "org.aspectj:aspectjrt:1.8.10",
         "org.assertj:assertj-core:3.8.0",
         "org.bitbucket.b_c:jose4j:0.6.5",
