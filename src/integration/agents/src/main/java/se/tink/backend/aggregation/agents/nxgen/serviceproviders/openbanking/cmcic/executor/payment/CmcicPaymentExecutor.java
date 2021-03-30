@@ -19,6 +19,7 @@ import java.util.concurrent.TimeUnit;
 import org.apache.commons.collections4.map.CaseInsensitiveMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentCancelledException;
@@ -442,7 +443,7 @@ public class CmcicPaymentExecutor implements PaymentExecutor, FetchablePaymentEx
         return ThirdPartyAppAuthenticationPayload.of(authorizeUrl);
     }
 
-    private void waitForSupplementalInformation() throws PaymentAuthenticationException {
+    private void waitForSupplementalInformation() throws PaymentException {
         Map<String, String> callbackData =
                 this.supplementalInformationHelper
                         .waitForSupplementalInformation(
@@ -451,9 +452,9 @@ public class CmcicPaymentExecutor implements PaymentExecutor, FetchablePaymentEx
                                 TimeUnit.MINUTES)
                         .orElseThrow(
                                 () ->
-                                        new PaymentAuthenticationException(
-                                                "Payment authentication failed. There is no authorization url!",
-                                                new PaymentRejectedException()));
+                                        new PaymentAuthorizationException(
+                                                "SCA time-out.",
+                                                ThirdPartyAppError.TIMED_OUT.exception()));
 
         // Query parameters can be case insesitive returned by bank,this is to take care of that
         // situation and we avoid failing the payment.
