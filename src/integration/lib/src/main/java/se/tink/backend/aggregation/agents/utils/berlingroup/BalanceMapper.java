@@ -1,19 +1,5 @@
 package se.tink.backend.aggregation.agents.utils.berlingroup;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Ordering;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections4.ComparatorUtils;
-import se.tink.libraries.amount.ExactCurrencyAmount;
-
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
 import static se.tink.backend.aggregation.agents.utils.berlingroup.BalanceType.CLOSING_AVAILABLE;
 import static se.tink.backend.aggregation.agents.utils.berlingroup.BalanceType.CLOSING_BOOKED;
 import static se.tink.backend.aggregation.agents.utils.berlingroup.BalanceType.EXPECTED;
@@ -22,6 +8,19 @@ import static se.tink.backend.aggregation.agents.utils.berlingroup.BalanceType.I
 import static se.tink.backend.aggregation.agents.utils.berlingroup.BalanceType.INTERIM_BOOKED;
 import static se.tink.backend.aggregation.agents.utils.berlingroup.BalanceType.OPENING_BOOKED;
 import static se.tink.backend.aggregation.agents.utils.berlingroup.BalanceType.PREVIOUSLY_CLOSED_BOOKED;
+
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Ordering;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.ComparatorUtils;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
