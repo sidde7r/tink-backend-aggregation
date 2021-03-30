@@ -2,10 +2,13 @@ package se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius;
 
 import com.fasterxml.jackson.core.JsonParser.Feature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.api.client.http.HttpStatusCodes;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import javax.ws.rs.core.MediaType;
+import se.tink.backend.aggregation.agents.exceptions.refresh.AccountRefreshException;
+import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusConstants.ErrorCodes;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusConstants.QueryKeys;
@@ -14,6 +17,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusCo
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.configuration.BelfiusConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.fetcher.transactionalaccount.rpc.ErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.fetcher.transactionalaccount.rpc.FetchAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.fetcher.transactionalaccount.rpc.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.utils.CryptoUtils;
@@ -23,6 +27,7 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.utils.json.JsonUtils;
 
@@ -87,12 +92,24 @@ public final class BelfiusApiClient {
     }
 
     public FetchAccountResponse fetchAccountById(OAuth2Token oAuth2Token, String logicalId) {
-
-        return createRequestInSession(
-                        new URL(configuration.getBaseUrl() + Urls.FETCH_ACCOUNT_PATH + logicalId))
-                .header(HeaderKeys.ACCEPT, HeaderValues.ACCOUNT_ACCEPT)
-                .addBearerToken(oAuth2Token)
-                .get(FetchAccountResponse.class);
+        try {
+            return createRequestInSession(
+                            new URL(
+                                    configuration.getBaseUrl()
+                                            + Urls.FETCH_ACCOUNT_PATH
+                                            + logicalId))
+                    .header(HeaderKeys.ACCEPT, HeaderValues.ACCOUNT_ACCEPT)
+                    .addBearerToken(oAuth2Token)
+                    .get(FetchAccountResponse.class);
+        } catch (HttpResponseException e) {
+            HttpResponse response = e.getResponse();
+            ErrorResponse responseBody = response.getBody(ErrorResponse.class);
+            if (response.getStatus() == HttpStatusCodes.STATUS_CODE_FORBIDDEN
+                    && ErrorCodes.NOT_SUPPORTED.equals(responseBody.getError())) {
+                throw new AccountRefreshException(responseBody.getErrorDescription());
+            }
+            throw e;
+        }
     }
 
     public FetchTransactionsResponse fetchTransactionsForAccount(
