@@ -1,6 +1,5 @@
 package se.tink.backend.integration.agent_data_availability_tracker.serialization;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -102,11 +101,10 @@ public class TransactionTrackingSerializer extends TrackingMapSerializer {
                     getTransactionDateByType(transaction.getTransactionDates(), type);
             boolean isDateFound = false;
             if (maybeTransactionDate.isPresent()) {
-                Optional<LocalDate> maybeLocalDate =
-                        Optional.ofNullable(maybeTransactionDate)
+                Optional<AvailableDateInformation> maybeLocalDate =
+                        Optional.of(maybeTransactionDate)
                                 .map(Optional::get)
-                                .map(TransactionDate::getValue)
-                                .map(AvailableDateInformation::getDate);
+                                .map(TransactionDate::getValue);
                 if (maybeLocalDate.isPresent()) {
                     isDateFound = true;
                     listBuilder.putRedacted(key, maybeLocalDate.get().toString());
