@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.revolut;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.revolut.common;
 
 import java.util.Collection;
 import java.util.Optional;

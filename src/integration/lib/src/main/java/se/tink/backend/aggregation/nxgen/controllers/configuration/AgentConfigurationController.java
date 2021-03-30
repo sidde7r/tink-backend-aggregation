@@ -298,6 +298,19 @@ public final class AgentConfigurationController implements AgentConfigurationCon
         return agentConfiguration;
     }
 
+    @Override
+    public String getQsealc() {
+        // For local development we can use the development.yml file
+        if (!tppSecretsServiceEnabled) {
+            return EIdasTinkCert.QSEALC;
+        }
+
+        return Optional.ofNullable(
+                        OBJECT_MAPPER.convertValue(allSecretsMapObj, AgentConfiguration.class))
+                .map(AgentConfiguration::getQsealc)
+                .orElse("");
+    }
+
     private void notifySecretValues(Set<String> newSecretValues) {
         newSecretValues.remove(null);
         if (!secretValues.containsAll(newSecretValues)) {

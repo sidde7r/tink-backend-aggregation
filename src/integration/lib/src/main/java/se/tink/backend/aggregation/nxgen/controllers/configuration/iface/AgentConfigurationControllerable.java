@@ -28,4 +28,6 @@ public interface AgentConfigurationControllerable {
 
     <T extends ClientConfiguration> Optional<T> getAgentConfigurationFromK8sAsOptional(
             String integrationName, Class<T> clientConfigClass);
+
+    String getQsealc();
 }
