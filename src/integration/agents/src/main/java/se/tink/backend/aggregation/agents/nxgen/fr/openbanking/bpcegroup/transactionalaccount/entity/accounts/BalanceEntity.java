@@ -7,7 +7,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 @Data
 public class BalanceEntity {
-    private String balanceType;
+    private BalanceType balanceType;
     private String name;
     private AmountEntity balanceAmount;
     private String referenceDate;

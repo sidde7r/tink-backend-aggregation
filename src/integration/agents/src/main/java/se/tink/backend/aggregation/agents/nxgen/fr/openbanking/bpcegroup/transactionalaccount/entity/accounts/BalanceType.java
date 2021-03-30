@@ -6,9 +6,10 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Getter
 public enum BalanceType {
-    ACCOUNTING("CLBD"),
-    VALUE_DATE("VALU"),
-    INSTANT("OTHR");
+    CLBD("CLBD"),
+    XPCD("XPCD"),
+    VALU("VALU"),
+    OTHR("OTHR");
 
     private final String type;
 }
