@@ -524,6 +524,7 @@ public final class AgentWireMockRefreshTest {
         @Override
         public RefreshOrAuthOnlyStep testAutoAuthentication() {
             this.forceAutoAuthentication = true;
+            this.requestFlagManual = false;
             return this;
         }
 
