@@ -561,13 +561,8 @@ java_library(
     ],
 )
 
-java_import(
+java_library(
     name = "io_dropwizard_dropwizard_jersey",
-    jars = [
-        # This should be a java_librar w/ exports instead, see:
-        # https://github.com/bazelbuild/intellij/issues/66
-        "@dropwizard_jersey//:libdropwizard-jersey.jar",
-    ],
     visibility = ["//visibility:public"],
     exports = [
         "@aggregation//:com_codahale_metrics_metrics_annotation",
@@ -580,6 +575,7 @@ java_import(
         "@aggregation//:com_sun_jersey_jersey_server",
         "@aggregation//:com_sun_jersey_jersey_servlet",
         "@aggregation//:io_dropwizard_dropwizard_jackson",
+        "@aggregation//:io_dropwizard_dropwizard_jersey",
         "@aggregation//:io_dropwizard_dropwizard_logging",
         "@aggregation//:io_dropwizard_dropwizard_validation",
         "@aggregation//:org_eclipse_jetty_orbit_javax_servlet",
