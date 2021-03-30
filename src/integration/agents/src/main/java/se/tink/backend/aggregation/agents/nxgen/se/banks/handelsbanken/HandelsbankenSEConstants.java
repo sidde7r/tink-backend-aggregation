@@ -38,7 +38,7 @@ public class HandelsbankenSEConstants {
 
     public static final class BankIdAuthentication {
         public static final String UNKNOWN_BANKID = "102";
-        public static final String BANKID_UNAUTHORIZED = "104";
+        public static final String INSUFFICIENT_PERMISSIONS = "104";
         public static final String TIMEOUT = "110";
         public static final String CANCELLED = "111";
         public static final String FAILED_UNKNOWN = "100";

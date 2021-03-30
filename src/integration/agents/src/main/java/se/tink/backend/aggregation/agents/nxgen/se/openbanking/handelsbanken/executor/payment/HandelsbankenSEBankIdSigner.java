@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.bankid.status.BankIdStatus;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
-import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
+import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.handelsbanken.HandelsbankenSEConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.handelsbanken.HandelsbankenSEConstants.CredentialKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseApiClient;
@@ -66,9 +66,9 @@ public class HandelsbankenSEBankIdSigner implements BankIdSigner<PaymentRequest>
                 case (Errors.MBID_MAX_POLLING):
                     return BankIdStatus.TIMEOUT;
                 case (Errors.NOT_SHB_APPROVED):
-                case (Errors.NOT_SHB_ACTIVATED):
+                case (Errors.BANKID_NOT_SHB_ACTIVATED):
                     try {
-                        throw AuthorizationError.UNAUTHORIZED.exception(
+                        throw BankIdError.AUTHORIZATION_REQUIRED.exception(
                                 HandelsbankenSEConstants.BankIdUserMessage.ACTIVATION_NEEDED);
                     } catch (AuthorizationException e) {
                         logger.error("BankId Authorization error.");

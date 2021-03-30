@@ -4,7 +4,6 @@ import com.google.common.base.Strings;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
-import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.HandelsbankenSEConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.rpc.auto.AuthorizeResponse;
@@ -24,8 +23,8 @@ public class BankidAuthenticationValidator extends HandelsbankenValidator<BaseRe
         String code = getCode();
         if (!Strings.isNullOrEmpty(code)) {
             switch (code) {
-                case HandelsbankenSEConstants.BankIdAuthentication.BANKID_UNAUTHORIZED:
-                    throw AuthorizationError.UNAUTHORIZED.exception(
+                case HandelsbankenSEConstants.BankIdAuthentication.INSUFFICIENT_PERMISSIONS:
+                    throw LoginError.NO_ACCESS_TO_MOBILE_BANKING.exception(
                             new LocalizableKey(
                                     "You lack the sufficient permissions for this service."));
                 default:

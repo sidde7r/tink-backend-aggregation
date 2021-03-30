@@ -13,7 +13,6 @@ import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
-import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
@@ -99,8 +98,8 @@ public class HandelsbankenBankIdAuthenticator implements BankIdAuthenticator<Ses
                     return BankIdStatus.TIMEOUT;
                 case (Errors.NOT_SHB_APPROVED):
                     throw LoginError.NOT_CUSTOMER.exception();
-                case (Errors.NOT_SHB_ACTIVATED):
-                    throw AuthorizationError.UNAUTHORIZED.exception(
+                case (Errors.BANKID_NOT_SHB_ACTIVATED):
+                    throw BankIdError.AUTHORIZATION_REQUIRED.exception(
                             HandelsbankenBaseConstants.BankIdUserMessage.ACTIVATION_NEEDED);
                 default:
                     logger.warn(
