@@ -60,8 +60,6 @@ public class FetchAccountsToConfirmLoginStep
 
         authData.setAccountsResponse(accountsResponse);
 
-        tryToFetchLoans(token, deviceId);
-
         return new AgentSucceededAuthenticationResult(authDataAccessor.storeData(authData));
     }
 
@@ -70,25 +68,5 @@ public class FetchAccountsToConfirmLoginStep
             return new SessionExpiredError();
         }
         return new AuthorizationError();
-    }
-
-    private void tryToFetchLoans(String token, String deviceId) {
-        // Wiski delete this or create loan fetcher after getting more data
-        // Trying to get more information about loans since we don't have an ambassador
-        try {
-            if (!apiClient.fetchLoans(token, deviceId).getLoans().isEmpty()) {
-                log.info("Found Lunar account with loans!");
-            }
-        } catch (RuntimeException e) {
-            log.info("Failed to fetch Lunar loans!", e);
-        }
-
-        try {
-            if (!apiClient.fetchCreditApplications(token, deviceId).getApplications().isEmpty()) {
-                log.info("Found Lunar account with credit applications!");
-            }
-        } catch (RuntimeException e) {
-            log.info("Failed to fetch Lunar credit applications!", e);
-        }
     }
 }

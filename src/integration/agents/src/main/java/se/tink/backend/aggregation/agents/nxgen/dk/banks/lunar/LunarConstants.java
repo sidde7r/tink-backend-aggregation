@@ -15,8 +15,6 @@ public class LunarConstants {
         public static final URI NEM_ID_AUTHENTICATE =
                 toLunarUri("authentication/authenticate/nemid");
         public static final URI ACCOUNTS_VIEW = toLunarUri("accounts-view/accounts");
-        public static final URI LOAN = toLunarUri("credit-loan/loan");
-        public static final URI CREDIT_APPLICATIONS = toLunarUri("credit-engine/applications");
 
         private static URI toLunarUri(String endpoint) {
             return URI.create(LUNAR_BASE_URL + endpoint);
@@ -35,6 +33,7 @@ public class LunarConstants {
         public static final URL INSTRUMENTS = toLunarUrl("invest/instruments");
         public static final URL PORTFOLIO_PERFORMANCE_DATA =
                 toLunarUrl("invest/portfolio/performancedata");
+        public static final URL LOAN = toLunarUrl("credit-loan/loan");
 
         private static URL toLunarUrl(String endpoint) {
             return URL.of(LUNAR_BASE_URL + endpoint);

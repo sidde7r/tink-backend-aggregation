@@ -1,0 +1,54 @@
+{
+    "loans": [
+        {
+            "accountId": "8079351c-c729-481f-9145-82ddf3befe2e",
+            "applicationID": "ed74e696-b19a-4b8a-9e09-1f61c8ea66dc",
+            "categoryColor": "#000000",
+            "categoryName": "Uforudset udgift",
+            "categoryUrl": "https://cdn.prod.lunarway.com/credit/categories/expense.png",
+            "currency": "DKK",
+            "deleted": false,
+            "firstPaymentDate": "2021-03-01",
+            "id": "8a9cab1a-8023-4c15-80ea-11b68ff74a53",
+            "interestRate": 0.17,
+            "loanAmount": 10000,
+            "loanCompletedDate": "2022-01-01",
+            "loanMaturityPeriod": 11,
+            "loanProduct": "Lån",
+            "monthlyDownpaymentAmount": 1000,
+            "nextPaymentDate": "2021-03-31",
+            "offerValidUntilDate": "2021-02-16",
+            "paymentProgressPercentAmount": 9,
+            "remainingAmount": 9856,
+            "state": "inProgress",
+            "totalCostAmount": 856,
+            "totalLoanWithInterestAmount": 10856,
+            "transactions": [
+                {
+                    "amount": 10000,
+                    "created": 1614698661000000000,
+                    "currency": "DKK",
+                    "displayDate": "2021-03-02T15:24:21Z",
+                    "iconUrl": "https://cdn.prod.lunarway.com/transaction-default-icons/Lunar+Way.png",
+                    "id": "0f8ca3f8-093f-487d-9d3b-a48d52a37e6e",
+                    "receiverAccount": "88e8e670-a1f6-43a6-903d-817facf3d283",
+                    "senderAccount": "8079351c-c729-481f-9145-82ddf3befe2e",
+                    "title": "Lån modtaget"
+                },
+                {
+                    "amount": 1000,
+                    "created": 1614573266231329909,
+                    "currency": "DKK",
+                    "displayDate": "2021-03-01T04:34:26Z",
+                    "iconUrl": "https://cdn.prod.lunarway.com/transaction-badges/badge_recurring.png",
+                    "id": "575ca4f7-3505-4521-a0ef-539f4dc05e3d",
+                    "receiverAccount": "8079351c-c729-481f-9145-82ddf3befe2e",
+                    "senderAccount": "88e8e670-a1f6-43a6-903d-817facf3d283",
+                    "title": "Afbetaling"
+                }
+            ],
+            "updated": 1614783075357671692,
+            "yearlyCostInterest": 0.17
+        }
+    ]
+}

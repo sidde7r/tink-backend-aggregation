@@ -17,6 +17,7 @@ import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.per
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.investment.rpc.InstrumentsResponse;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.investment.rpc.InvestmentsResponse;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.investment.rpc.PortfolioPerformanceResponse;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.loan.rpc.LoansResponse;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.transactionalaccount.rpc.CardsResponse;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.transactionalaccount.rpc.GoalDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.transactionalaccount.rpc.GoalsResponse;
@@ -77,6 +78,10 @@ public class FetcherApiClient {
 
     public InstrumentsResponse fetchInstruments() {
         return get(Url.INSTRUMENTS, InstrumentsResponse.class);
+    }
+
+    public LoansResponse fetchLoans() {
+        return get(LunarConstants.Url.LOAN, LoansResponse.class);
     }
 
     private <T> T get(URL url, Class<T> responseClass) {
