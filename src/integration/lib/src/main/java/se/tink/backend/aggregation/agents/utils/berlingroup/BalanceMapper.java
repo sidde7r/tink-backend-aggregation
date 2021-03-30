@@ -7,7 +7,6 @@ import static se.tink.backend.aggregation.agents.utils.berlingroup.BalanceType.F
 import static se.tink.backend.aggregation.agents.utils.berlingroup.BalanceType.INTERIM_AVAILABLE;
 import static se.tink.backend.aggregation.agents.utils.berlingroup.BalanceType.INTERIM_BOOKED;
 import static se.tink.backend.aggregation.agents.utils.berlingroup.BalanceType.OPENING_BOOKED;
-import static se.tink.backend.aggregation.agents.utils.berlingroup.BalanceType.PREVIOUSLY_CLOSED_BOOKED;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Ordering;
@@ -24,21 +23,20 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class BerlinGroupBalanceMapper {
+public class BalanceMapper {
 
     private static final List<BalanceType> BOOKED_BALANCE_PREFERRED_TYPES =
             ImmutableList.of(
                     INTERIM_BOOKED,
                     OPENING_BOOKED,
                     CLOSING_BOOKED,
-                    PREVIOUSLY_CLOSED_BOOKED,
-                    CLOSING_AVAILABLE,
                     EXPECTED,
-                    INTERIM_AVAILABLE);
+                    INTERIM_AVAILABLE,
+                    CLOSING_AVAILABLE);
     private static final List<BalanceType> AVAILABLE_BALANCE_PREFERRED_TYPES =
-            ImmutableList.of(INTERIM_AVAILABLE, EXPECTED, FORWARD_AVAILABLE);
+            ImmutableList.of(INTERIM_AVAILABLE, EXPECTED, FORWARD_AVAILABLE, CLOSING_AVAILABLE);
 
-    public static ExactCurrencyAmount getBookedBalance(List<BalanceMappable> balances) {
+    public static ExactCurrencyAmount getBookedBalance(List<? extends BalanceMappable> balances) {
         // Booked balance is required, so we cannot continue with no way to determine it.
         if (balances.isEmpty()) {
             throw new IllegalArgumentException(
@@ -59,11 +57,16 @@ public class BerlinGroupBalanceMapper {
         if (!balanceEntity.isPresent()) {
             log.warn(
                     "Couldn't determine booked balance of known type, and no credit limit included. Defaulting to first provided balance.");
+            Optional<? extends BalanceMappable> balance = balances.stream().findFirst();
+            if (balance.isPresent()) {
+                return balance.get().toTinkAmount();
+            }
         }
-        return balanceEntity.orElse(balances.stream().findFirst().get()).toTinkAmount();
+        return balanceEntity.get().toTinkAmount();
     }
 
-    public static Optional<ExactCurrencyAmount> getAvailableBalance(List<BalanceEntity> balances) {
+    public static Optional<ExactCurrencyAmount> getAvailableBalance(
+            List<? extends BalanceMappable> balances) {
 
         // We are only interested in balances without included credit limit
         Optional<BalanceMappable> balanceEntity =
@@ -75,7 +78,8 @@ public class BerlinGroupBalanceMapper {
         return balanceEntity.map(BalanceMappable::toTinkAmount);
     }
 
-    public static Optional<ExactCurrencyAmount> getCreditLimit(List<BalanceMappable> balances) {
+    public static Optional<ExactCurrencyAmount> getCreditLimit(
+            List<? extends BalanceMappable> balances) {
         // In this method we only log the unknown types, but proceed with all of the balances.
         // Credit limit should appear the same in all types of balances, so there is no one type
         // that is better than other
@@ -90,15 +94,13 @@ public class BerlinGroupBalanceMapper {
                         .collect(Collectors.toList());
 
         if (listOfMultipleBalancesPerType.isEmpty()) {
-            log.info(
-                    "Weren't able to find balance type that came with both credit limit included + not included. Cannot determine credit limit.");
-            return Optional.empty();
+            throw new IllegalStateException("Unexpected balance type");
         }
 
         return listOfMultipleBalancesPerType.stream()
-                .filter(BerlinGroupBalanceMapper::isProperPairForDeterminingCreditLimit)
+                .filter(BalanceMapper::isProperPairForDeterminingCreditLimit)
                 .findFirst()
-                .map(BerlinGroupBalanceMapper::calculateCreditLimit);
+                .map(BalanceMapper::calculateCreditLimit);
     }
 
     private static boolean isProperPairForDeterminingCreditLimit(
