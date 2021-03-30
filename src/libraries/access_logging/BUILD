@@ -1,5 +1,20 @@
-alias(
+java_library(
     name = "access_logging",
-    actual = "@tink_backend//src/libraries/access_logging",
+    srcs = ["@tink_backend//src/libraries/access_logging:access_logging_srcjar"],
     visibility = ["//visibility:public"],
+    deps = [
+        "//third_party:com_google_guava_guava",
+        "//third_party:com_lambdaworks_scrypt",
+        "//third_party:com_sun_jersey_contribs_jersey_apache_client4",
+        "//third_party:com_sun_jersey_jersey_client",
+        "//third_party:com_sun_jersey_jersey_core",
+        "//third_party:com_sun_jersey_jersey_server",
+        "//third_party:com_yubico_yubico_validation_client2",
+        "//third_party:org_apache_commons_commons_lang3",
+        "//third_party:org_springframework_security",
+        "@aggregation//:com_google_guava_guava",
+        "@aggregation//:javax_servlet_javax_servlet_api",
+        "@aggregation//:javax_validation_validation_api",
+        "@tink_backend//third_party:org_slf4j_jul_to_slf4j",
+    ],
 )
