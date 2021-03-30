@@ -1263,6 +1263,7 @@ maven_install(
         "commons-codec:commons-codec:1.11",
         "commons-io:commons-io:2.5",
         "net.bytebuddy:byte-buddy:1.10.1",
+        "org.apache.httpcomponents:httpcore:4.4.12",
         "org.seleniumhq.selenium:selenium-android-driver:2.39.0",
         "org.seleniumhq.selenium:selenium-api:3.8.1",
         "org.seleniumhq.selenium:selenium-chrome-driver:3.8.1",
