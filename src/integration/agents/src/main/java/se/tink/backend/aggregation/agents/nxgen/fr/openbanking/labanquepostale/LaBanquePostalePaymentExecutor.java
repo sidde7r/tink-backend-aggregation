@@ -1,7 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale;
 
+import java.time.Clock;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
@@ -53,6 +55,7 @@ public class LaBanquePostalePaymentExecutor implements PaymentExecutor, Fetchabl
     public static final String PSU_AUTHORIZATION_FACTOR_KEY = "psuAuthenticationFactor";
     private static final String CREDITOR_NAME = "Payment Creditor";
     private static final String STATE = "state";
+    private static final ZoneId DEFAULT_ZONE_ID = ZoneId.of("CET");
     PaymentType paymentType = PaymentType.SEPA;
 
     private static final long WAIT_FOR_MINUTES = 9L;
@@ -149,7 +152,8 @@ public class LaBanquePostalePaymentExecutor implements PaymentExecutor, Fetchabl
         Payment payment = paymentRequest.getPayment();
 
         LocalDate executionDate =
-                Optional.ofNullable(payment.getExecutionDate()).orElse(LocalDate.now());
+                Optional.ofNullable(payment.getExecutionDate())
+                        .orElse(LocalDate.now(Clock.system(DEFAULT_ZONE_ID)));
 
         RemittanceInformation remittanceInformation = payment.getRemittanceInformation();
         RemittanceInformationEntity remittanceInformationEntity =
