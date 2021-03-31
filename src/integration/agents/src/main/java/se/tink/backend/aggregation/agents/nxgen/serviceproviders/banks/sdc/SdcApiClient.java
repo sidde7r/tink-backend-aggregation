@@ -165,6 +165,7 @@ public class SdcApiClient {
 
     public TotalKreditLoanResponse listTotalKreditLoans() {
         return createApiRequest(agentConfiguration.getUrlForTotalKreditLoans())
+                .overrideHeader(SdcConstants.Headers.X_SDC_LOCALE, NemIdSupportedLanguageCode.DA)
                 .get(TotalKreditLoanResponse.class);
     }
 
