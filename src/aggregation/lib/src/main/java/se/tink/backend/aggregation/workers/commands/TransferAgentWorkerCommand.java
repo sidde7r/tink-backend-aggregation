@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.workers.commands;
 
 import static java.util.Optional.empty;
+import static java.util.Optional.ofNullable;
 
 import com.google.common.base.Objects;
 import com.google.common.base.Strings;
@@ -46,6 +47,7 @@ import se.tink.backend.aggregation.workers.metrics.MetricAction;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.metrics.core.MetricId;
+import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.signableoperation.enums.InternalStatus;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
@@ -586,7 +588,13 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
             Payment payment, TransferRequest transferRequest, SignableOperation signableOperation) {
         try {
             Transfer transfer = getTransfer(transferRequest, signableOperation);
-            transfer.setSource(payment.getDebtor().getAccountIdentifier());
+            ofNullable(payment.getDebtor())
+                    .map(Debtor::getAccountIdentifier)
+                    .ifPresent(
+                            debtorId -> {
+                                log.info("Source account set for returned signable operation");
+                                transfer.setSource(debtorId);
+                            });
             signableOperation.setSignableObject(transfer);
         } catch (Exception e) {
             log.error("Unable to update source account from signed payment {}", payment.getId(), e);
