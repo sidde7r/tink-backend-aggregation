@@ -13,6 +13,7 @@ import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
+import org.junit.Ignore;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenApiClient;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.entities.ScaMethodEntity;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.rpc.AuthenticationMethodResponse;
@@ -35,6 +36,7 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.transfer.enums.RemittanceInformationType;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
+@Ignore
 public class PaymentTestUtil {
 
     private SupplementalInformationHelper supplementalInformationHelper;
