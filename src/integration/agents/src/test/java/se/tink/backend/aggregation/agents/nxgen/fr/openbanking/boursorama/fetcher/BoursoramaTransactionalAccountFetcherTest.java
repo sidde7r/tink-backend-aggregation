@@ -95,9 +95,7 @@ public class BoursoramaTransactionalAccountFetcherTest {
 
         // then
         Throwable thrown = catchThrowable(accountFetcher::fetchAccounts);
-        Assertions.assertThat(thrown)
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("3B9F0FCF487ECF9FCDC4CBAFDD0A2E6D");
+        Assertions.assertThat(thrown).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
