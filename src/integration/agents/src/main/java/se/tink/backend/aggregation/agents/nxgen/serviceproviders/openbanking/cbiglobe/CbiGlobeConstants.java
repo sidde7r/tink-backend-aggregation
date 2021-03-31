@@ -43,9 +43,9 @@ public final class CbiGlobeConstants {
     public static class ApiServices {
         public static final String TOKEN = "/auth/oauth/v2/token";
         public static final String CONSENTS =
-                "/platform/enabler/psd2orchestrator/ais/2.3.2/consents";
+                "/platform/enabler/psd2orchestrator/ais/3.0.0/consents";
         public static final String ACCOUNTS =
-                "/platform/enabler/psd2orchestrator/ais/2.3.2/accounts";
+                "/platform/enabler/psd2orchestrator/ais/3.0.0/accounts";
         public static final String BALANCES =
                 "/platform/enabler/psd2orchestrator/ais/2.3.2/accounts/{accountId}/balances";
         public static final String TRANSACTIONS =
@@ -55,11 +55,11 @@ public final class CbiGlobeConstants {
         private static final String PAYMENT =
                 "/platform/enabler/psd2orchestrator/pis/2.3.2/{payment-service}/{payment-product}";
         private static final String FETCH_PAYMENT =
-                "/platform/enabler/psd2orchestrator/pis/2.3.2/{payment-service}/{payment-product}/{payment-id}";
+                "/platform/enabler/psd2orchestrator/pis/3.0.0/{payment-service}/{payment-product}/{payment-id}";
         private static final String FETCH_PAYMENT_STATUS =
                 "/platform/enabler/psd2orchestrator/pis/2.3.2/{payment-service}/{payment-product}/{payment-id}/status";
         public static final String CARD_ACCOUNTS =
-                "/platform/enabler/psd2orchestrator/ais/2.3.2/card-accounts";
+                "/platform/enabler/psd2orchestrator/ais/3.0.0/card-accounts";
         public static final String CARD_BALANCES =
                 "/platform/enabler/psd2orchestrator/ais/2.3.2/card-accounts/{accountId}/balances";
         public static final String CARD_TRANSACTIONS =
