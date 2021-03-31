@@ -1,0 +1,16 @@
+{
+  "transactionStatus": "RCVD",
+  "paymentId": "433018b6-0929-454b-8d35-a276bbfd7b1e",
+  "_links": {
+    "self": {
+      "href": "https://xs2a.f-i-apim.de:8443/fixs2aop-env/xs2a-api/70150000/v1/payments/sepa-credit-transfers/433018b6-0929-454b-8d35-a276bbfd7b1e"
+    },
+    "status": {
+      "href": "https://xs2a.f-i-apim.de:8443/fixs2aop-env/xs2a-api/70150000/v1/payments/sepa-credit-transfers/433018b6-0929-454b-8d35-a276bbfd7b1e/status"
+    },
+    "startAuthorisationWithPsuAuthentication": {
+      "href": "https://xs2a.f-i-apim.de:8443/fixs2aop-env/xs2a-api/70150000/v1/payments/sepa-credit-transfers/433018b6-0929-454b-8d35-a276bbfd7b1e/authorisations"
+    }
+  },
+  "psuMessage": "Bitte geben Sie Ihren Anmeldenamen/Legitimations-ID und Ihre PIN ein."
+}
