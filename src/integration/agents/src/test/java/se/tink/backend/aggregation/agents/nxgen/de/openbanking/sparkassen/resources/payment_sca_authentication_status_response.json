@@ -1,0 +1,12 @@
+{
+  "scaStatus": "finalised",
+  "_links": {
+    "scaStatus": {
+      "href": "https://xs2a.f-i-apim.de:8443/fixs2aop-env/xs2a-api/70150000/v1/payments/sepa-credit-transfers/433018b6-0929-454b-8d35-a276bbfd7b1e/authorisations/**HASHED:B3**"
+    },
+    "status": {
+      "href": "https://xs2a.f-i-apim.de:8443/fixs2aop-env/xs2a-api/70150000/v1/payments/sepa-credit-transfers/433018b6-0929-454b-8d35-a276bbfd7b1e/status"
+    }
+  },
+  "psuMessage": "0010- Der Auftrag wurde entgegengenommen."
+}

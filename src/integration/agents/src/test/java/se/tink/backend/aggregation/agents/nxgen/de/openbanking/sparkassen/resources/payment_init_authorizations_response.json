@@ -1,0 +1,25 @@
+{
+  "scaStatus": "psuAuthenticated",
+  "authorisationId": "**HASHED:B3**",
+  "scaMethods": [
+    {
+      "authenticationType": "PUSH_OTP",
+      "authenticationMethodId": "Classic - nummer1",
+      "name": "pushTAN | nummer1"
+    },
+    {
+      "authenticationType": "PUSH_OTP",
+      "authenticationMethodId": "Classic - nummer2",
+      "name": "pushTAN | nummer2"
+    }
+  ],
+  "_links": {
+    "scaStatus": {
+      "href": "https://xs2a.f-i-apim.de:8443/fixs2aop-env/xs2a-api/70150000/v1/payments/sepa-credit-transfers/433018b6-0929-454b-8d35-a276bbfd7b1e/authorisations/**HASHED:B3**"
+    },
+    "selectAuthenticationMethod": {
+      "href": "https://xs2a.f-i-apim.de:8443/fixs2aop-env/xs2a-api/70150000/v1/payments/sepa-credit-transfers/433018b6-0929-454b-8d35-a276bbfd7b1e/authorisations/**HASHED:B3**"
+    }
+  },
+  "psuMessage": "Bitte wählen Sie Ihr mobiles Endgerät für den pushTAN-Versand."
+}
