@@ -931,7 +931,6 @@ maven_install(
         "org.slf4j:jcl-over-slf4j:1.7.24",
         "org.slf4j:jul-to-slf4j:1.7.6",
         "org.slf4j:slf4j-api:1.7.30",
-        "org.slf4j:slf4j-log4j12:1.7.5",
         "org.slf4j:slf4j-simple:1.7.5",
         "org.springframework.boot:spring-boot-test:1.5.3.RELEASE",
         "org.springframework.data:spring-data-jpa:1.11.1.RELEASE",
@@ -958,7 +957,7 @@ maven_install(
         "xml-apis:xml-apis:1.4.01",
     ],
     excluded_artifacts = [
-        # Keep this list empty please
+        "org.slf4j:slf4j-log4j12",  # log4j-over-slf4j and slf4j-log4j12 cannot coexist on the classpath
     ],
     fetch_sources = True,
     generate_compat_repositories = False,  # Tempting, but provided that we depend on tink-backend, let's be explicit in our naming of deps
