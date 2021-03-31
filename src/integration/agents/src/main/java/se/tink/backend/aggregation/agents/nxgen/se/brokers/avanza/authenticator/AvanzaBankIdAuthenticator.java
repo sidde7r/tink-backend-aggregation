@@ -100,8 +100,6 @@ public class AvanzaBankIdAuthenticator implements BankIdAuthenticator<BankIdInit
                 bankIdResponse
                         .getLogins()
                         .forEach(loginEntity -> completeAuthentication(loginEntity, transactionId));
-
-                temporaryStorage.put(StorageKeys.HOLDER_NAME, bankIdResponse.getName());
             }
 
             return status;
