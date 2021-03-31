@@ -5,7 +5,9 @@ import java.util.Objects;
 import javax.annotation.Nullable;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
+import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.SabadellConstants.ErrorCodes;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.authenticator.entities.InitiateSessionRequestEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.authenticator.entities.SecurityInputEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.authenticator.entities.SessionResponse;
@@ -35,6 +37,7 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.BankServiceInternalErrorFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.iface.Filter;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
@@ -74,20 +77,25 @@ public class SabadellApiClient {
                     .removeFilter(bankServiceErrorFilter)
                     .post(SessionResponse.class, requestEntity);
         } catch (HttpResponseException e) {
-            ErrorResponse response = e.getResponse().getBody(ErrorResponse.class);
-            String errorCode = response.getErrorCode();
+            HttpResponse httpResponse = e.getResponse();
+            ErrorResponse errorResponse = httpResponse.getBody(ErrorResponse.class);
+            String errorCode = errorResponse.getErrorCode();
 
-            if (SabadellConstants.ErrorCodes.INCORRECT_CREDENTIALS.equalsIgnoreCase(errorCode)) {
-                throw LoginError.INCORRECT_CREDENTIALS.exception(e);
+            switch (errorCode) {
+                case ErrorCodes.INCORRECT_CREDENTIALS:
+                    throw LoginError.INCORRECT_CREDENTIALS.exception();
+                case ErrorCodes.EXPIRED_CARD:
+                    throw AuthorizationError.ACCOUNT_BLOCKED.exception();
+                default:
+                    String message =
+                            String.format(
+                                    "%s: Login failed with http status: %s, error code: %s, error message: %s",
+                                    SabadellConstants.Tags.LOGIN_ERROR,
+                                    httpResponse.getStatus(),
+                                    errorCode,
+                                    errorResponse.getErrorMessage());
+                    throw LoginError.DEFAULT_MESSAGE.exception(message);
             }
-
-            throw new IllegalStateException(
-                    String.format(
-                            "%s: Login failed with error code: %s, error message: %s",
-                            SabadellConstants.Tags.LOGIN_ERROR,
-                            response.getErrorCode(),
-                            response.getErrorMessage()),
-                    e);
         }
     }
 
