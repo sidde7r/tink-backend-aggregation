@@ -5258,6 +5258,19 @@ agentsServiceConfiguration:
         clientSecret: dummyClientSecret
         eidasQwac: Tink
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+    bda10c7cd3a94adda16a986b29c3f8fb:
+      tink:
+        signingKey: dummyKey
+        signingKeyId: dummyId
+        softwareStatementAssertion: dummy
+        clientId: dummyClientId
+        transportKey: dummyKey
+        tokenEndpointAuthSigningAlg: PS256
+        tokenEndpointAuthMethod: private_key_jwt
+        redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+        clientSecret: dummyClientSecret
+        transportKeyPassword: dummyPassword
+        signingKeyPassword: dummyPassword
     c53d19d78f8a443cb1a7e5b06a81e98f:
       tink:
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback

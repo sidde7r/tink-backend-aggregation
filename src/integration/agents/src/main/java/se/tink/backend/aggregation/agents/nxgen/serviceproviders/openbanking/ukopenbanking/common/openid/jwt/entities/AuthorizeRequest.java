@@ -37,6 +37,7 @@ public class AuthorizeRequest {
         private String callbackUri;
         private ImmutableList.Builder<String> scopes =
                 ImmutableList.<String>builder().add(OpenIdConstants.Scopes.OPEN_ID);
+        private Long maxAge;
 
         public Builder withAccountsScope() {
             this.scopes.add(OpenIdConstants.Scopes.ACCOUNTS);
@@ -88,6 +89,11 @@ public class AuthorizeRequest {
             return this;
         }
 
+        public Builder withMaxAge(Long maxAge) {
+            this.maxAge = maxAge;
+            return this;
+        }
+
         public String build(JwtSigner signer) {
             Preconditions.checkNotNull(
                     wellKnownConfiguration, "WellKnownConfiguration must be specified.");
@@ -135,9 +141,7 @@ public class AuthorizeRequest {
                     .withClaim(OpenIdConstants.Params.SCOPE, scope)
                     .withClaim(OpenIdConstants.Params.STATE, state)
                     .withClaim(OpenIdConstants.Params.NONCE, nonce)
-                    .withClaim(
-                            OpenIdAuthenticatorConstants.Params.MAX_AGE,
-                            OpenIdAuthenticatorConstants.MAX_AGE)
+                    .withClaim(OpenIdAuthenticatorConstants.Params.MAX_AGE, maxAge)
                     .withClaim(OpenIdAuthenticatorConstants.Params.CLAIMS, authorizeRequestClaims)
                     .signAttached(Algorithm.valueOf(preferredAlgorithm), signer);
         }

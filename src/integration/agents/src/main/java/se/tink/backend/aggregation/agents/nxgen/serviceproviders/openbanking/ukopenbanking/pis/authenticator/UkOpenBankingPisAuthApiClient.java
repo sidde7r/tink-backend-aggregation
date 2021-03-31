@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 import java.util.Arrays;
 import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticatorConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.configuration.ClientInfo;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.configuration.SoftwareStatementAssertion;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.entities.ClientMode;
@@ -64,6 +65,7 @@ public class UkOpenBankingPisAuthApiClient extends OpenIdApiClient {
                         .withNonce(nonce)
                         .withWellKnownConfiguration(getWellKnownConfiguration())
                         .withIntentId(intentId)
+                        .withMaxAge(OpenIdAuthenticatorConstants.MAX_AGE)
                         .build(getSigner()));
     }
 
