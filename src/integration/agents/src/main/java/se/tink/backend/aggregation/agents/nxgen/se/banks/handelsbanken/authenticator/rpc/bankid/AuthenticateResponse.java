@@ -7,7 +7,6 @@ import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.bankid.status.BankIdStatus;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
-import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.HandelsbankenSEConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.HandelsbankenSEConstants.BankIdErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenConstants;
@@ -26,7 +25,7 @@ public class AuthenticateResponse extends BaseResponse {
         }
         if (HandelsbankenSEConstants.BankIdAuthentication.MUST_ACTIVATE.equalsIgnoreCase(
                 authenticateResult)) {
-            throw LoginError.INCORRECT_CREDENTIALS.exception(
+            throw BankIdError.AUTHORIZATION_REQUIRED.exception(
                     HandelsbankenSEConstants.BankIdUserMessages.ACTIVATION_NEEDED);
         }
 

@@ -143,7 +143,7 @@ public final class HandelsbankenBaseConstants {
         public static final String INTENT_EXPIRED = "intent_expired";
         public static final String INVALID_REQUEST = "invalid_request";
         public static final String NOT_SHB_APPROVED = "not_shb_approved";
-        public static final String NOT_SHB_ACTIVATED = "mbid_not_shb_activated";
+        public static final String BANKID_NOT_SHB_ACTIVATED = "mbid_not_shb_activated";
         public static final String MBID_MAX_POLLING = "mbid_max_polling";
         public static final String TOKEN_NOT_ACTIVE = "Token is not active";
         public static final String PROXY_ERROR = "proxyError";

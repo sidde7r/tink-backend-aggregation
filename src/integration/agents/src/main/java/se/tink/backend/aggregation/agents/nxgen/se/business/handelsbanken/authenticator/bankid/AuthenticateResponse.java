@@ -5,7 +5,6 @@ import java.lang.invoke.MethodHandles;
 import se.tink.backend.aggregation.agents.bankid.status.BankIdStatus;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
-import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.se.business.handelsbanken.HandelsbankenSEConstants.BankIdAuthentication;
 import se.tink.backend.aggregation.agents.nxgen.se.business.handelsbanken.HandelsbankenSEConstants.BankIdErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.se.business.handelsbanken.HandelsbankenSEConstants.BankIdUserMessages;
@@ -23,7 +22,7 @@ public class AuthenticateResponse extends BaseResponse {
             return BankIdStatus.DONE;
         }
         if (BankIdAuthentication.MUST_ACTIVATE.equalsIgnoreCase(authenticateResult)) {
-            throw LoginError.NO_ACCESS_TO_MOBILE_BANKING.exception(
+            throw BankIdError.AUTHORIZATION_REQUIRED.exception(
                     BankIdUserMessages.ACTIVATION_NEEDED);
         }
 
