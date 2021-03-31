@@ -50,18 +50,6 @@ rules_java_toolchains()
 # These are repositories under Tink control. They are trusted, and imported
 # as a part of tink-backend's repository (not checksumed).
 
-TINK_DROPWIZARD_JERSEY = "7db4131bd3a50be24cc8bb9a4a2801c7342775bc"
-
-http_archive(
-    name = "dropwizard_jersey",
-    build_file = "//third_party:dropwizard_jersey.BUILD",
-    sha256 = "0019bcb50351906968b707770d2427852b25fd4e6cfdf52c585f07bca97fd011",
-    strip_prefix = "dropwizard-{}".format(TINK_DROPWIZARD_JERSEY),
-    urls = [
-        "https://github.com/tink-ab/dropwizard/archive/{}.tar.gz".format(TINK_DROPWIZARD_JERSEY),
-    ],
-)
-
 TINK_HTTPCORE_COMMIT = "0f72fa2c392fee8388d327cb3462cd10d675c2e2"
 
 http_archive(
