@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.entities;
 
 import lombok.Data;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.CreditAgricoleBaseConstants.BalanceTypes;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
@@ -17,10 +16,5 @@ public class BalanceEntity {
 
     public ExactCurrencyAmount toAmount() {
         return balanceAmount.toAmount();
-    }
-
-    public boolean isAvailablebalance() {
-        return balanceType.equalsIgnoreCase(BalanceTypes.CLBD)
-                || balanceType.equalsIgnoreCase(BalanceTypes.XPCD);
     }
 }

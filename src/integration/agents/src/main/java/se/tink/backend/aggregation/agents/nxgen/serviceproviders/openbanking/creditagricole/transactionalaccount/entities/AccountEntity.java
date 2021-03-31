@@ -2,15 +2,16 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cr
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.math.BigDecimal;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import lombok.Data;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.CreditAgricoleBaseConstants.ErrorMessages;
+import lombok.extern.slf4j.Slf4j;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.CreditAgricoleBaseConstants.BalanceTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.AccountTypeMapperBuilder;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.builder.BalanceBuilderStep;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.creditcard.CreditCardModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -20,6 +21,7 @@ import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
+@Slf4j
 @JsonObject
 @Data
 public class AccountEntity {
@@ -60,7 +62,7 @@ public class AccountEntity {
                         AccountTypeMapperBuilder.build(),
                         cashAccountType.toString(),
                         TransactionalAccountType.OTHER)
-                .withBalance(BalanceModule.of(getAvailableBalance()))
+                .withBalance(getBalanceModule())
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(iban)
@@ -97,12 +99,43 @@ public class AccountEntity {
                 .build();
     }
 
-    private ExactCurrencyAmount getAvailableBalance() {
-        return Optional.ofNullable(balances).orElse(Collections.emptyList()).stream()
-                .filter(BalanceEntity::isAvailablebalance)
-                .findFirst()
-                .orElseThrow(() -> new IllegalStateException(ErrorMessages.INVALID_BALANCE_TYPE))
-                .toAmount();
+    private BalanceModule getBalanceModule() {
+        BalanceBuilderStep balanceBuilderStep =
+                BalanceModule.builder().withBalance(getBookedBalance());
+        getAvailableBalance().ifPresent(balanceBuilderStep::setAvailableBalance);
+        return balanceBuilderStep.build();
+    }
+
+    private ExactCurrencyAmount getBookedBalance() {
+        if (balances.isEmpty()) {
+            throw new IllegalArgumentException(
+                    "Cannot determine booked balance from empty list of balances.");
+        }
+
+        Optional<BalanceEntity> balanceEntity =
+                balances.stream()
+                        .filter(b -> BalanceTypes.CLBD.equalsIgnoreCase(b.getBalanceType()))
+                        .findAny();
+
+        if (balanceEntity.isPresent()) {
+            log.warn(
+                    "Couldn't determine booked balance of known type, and no credit limit included. Defaulting to first provided balance.");
+        }
+
+        return balanceEntity
+                .map(Optional::of)
+                .orElseGet(() -> balances.stream().findFirst())
+                .map(BalanceEntity::getBalanceAmount)
+                .map(AmountEntity::toAmount)
+                .get();
+    }
+
+    private Optional<ExactCurrencyAmount> getAvailableBalance() {
+        return balances.stream()
+                .filter(b -> BalanceTypes.XPCD.equalsIgnoreCase(b.getBalanceType()))
+                .findAny()
+                .map(BalanceEntity::getBalanceAmount)
+                .map(AmountEntity::toAmount);
     }
 
     private ExactCurrencyAmount getBalanceCreditCards() {
