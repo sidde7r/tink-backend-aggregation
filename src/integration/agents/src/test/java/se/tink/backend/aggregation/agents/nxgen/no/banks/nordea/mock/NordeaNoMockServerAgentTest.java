@@ -29,6 +29,8 @@ public class NordeaNoMockServerAgentTest {
                         .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
                         .dumpContentForContractFile()
                         .withHttpDebugTrace()
+                        .withAgentModule(
+                                new BankIdIframeAuthenticationControllerProviderMockModule())
                         .build();
 
         final AgentContractEntity expected =

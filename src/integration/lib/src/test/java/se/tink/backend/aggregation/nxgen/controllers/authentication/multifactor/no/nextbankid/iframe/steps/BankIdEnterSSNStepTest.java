@@ -45,7 +45,7 @@ public class BankIdEnterSSNStepTest {
         screensManager = mock(BankIdScreensManager.class);
 
         credentials = mock(Credentials.class);
-        when(credentials.getField(Field.Key.DATE_OF_BIRTH)).thenReturn(SAMPLE_USER_SSN);
+        when(credentials.getField(Field.Key.USERNAME)).thenReturn(SAMPLE_USER_SSN);
 
         mocksToVerifyInOrder = inOrder(webDriver, screensManager, credentials);
 

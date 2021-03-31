@@ -17,6 +17,8 @@ import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
+import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModules;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.authenticator.NordeaBankIdIFrameInitializer;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.authenticator.NordeaNoAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.client.AuthenticationClient;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.client.BaseClient;
@@ -30,9 +32,12 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.fetcher.loan.Loa
 import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.fetcher.transactionalaccount.TransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.fetcher.transactionalaccount.TransactionalAccountTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.filters.NordeaNoRetryFilter;
-import se.tink.backend.aggregation.nxgen.agents.SubsequentProgressiveGenerationAgent;
+import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.StatelessProgressiveAuthenticator;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdIframeAuthenticationControllerProvider;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdIframeAuthenticationControllerProviderModule;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.loan.LoanRefreshController;
@@ -44,19 +49,21 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, CREDIT_CARDS, LOANS, MORTGAGE_AGGREGATION})
-public final class NordeaNoAgent extends SubsequentProgressiveGenerationAgent
+@AgentDependencyModules(modules = BankIdIframeAuthenticationControllerProviderModule.class)
+public final class NordeaNoAgent extends NextGenerationAgent
         implements RefreshIdentityDataExecutor,
                 RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor,
                 RefreshCreditCardAccountsExecutor,
                 RefreshLoanAccountsExecutor {
 
+    private final BankIdIframeAuthenticationControllerProvider authenticationControllerProvider;
+
     private final NordeaNoStorage storage;
+    private final RandomValueGenerator randomValueGenerator;
 
     private final AuthenticationClient authenticationClient;
     private final FetcherClient fetcherClient;
-
-    private final NordeaNoAuthenticator authenticator;
 
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final CreditCardRefreshController creditCardRefreshController;
@@ -64,9 +71,14 @@ public final class NordeaNoAgent extends SubsequentProgressiveGenerationAgent
     private final LoanRefreshController loanRefreshController;
 
     @Inject
-    public NordeaNoAgent(AgentComponentProvider componentProvider) {
+    public NordeaNoAgent(
+            AgentComponentProvider componentProvider,
+            BankIdIframeAuthenticationControllerProvider authenticationControllerProvider) {
         super(componentProvider);
+        this.authenticationControllerProvider = authenticationControllerProvider;
+
         this.storage = new NordeaNoStorage(persistentStorage, sessionStorage);
+        this.randomValueGenerator = componentProvider.getRandomValueGenerator();
 
         TinkHttpClient httpClient = componentProvider.getTinkHttpClient();
         httpClient.addFilter(new ExceptionFilter());
@@ -79,14 +91,6 @@ public final class NordeaNoAgent extends SubsequentProgressiveGenerationAgent
         this.authenticationClient = new AuthenticationClient(baseClient, storage);
         this.fetcherClient = new FetcherClient(baseClient);
 
-        this.authenticator =
-                new NordeaNoAuthenticator(
-                        authenticationClient,
-                        storage,
-                        componentProvider.getRandomValueGenerator(),
-                        supplementalInformationController,
-                        catalog);
-
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
         creditCardRefreshController = constructCreditCardRefreshController();
 
@@ -98,6 +102,23 @@ public final class NordeaNoAgent extends SubsequentProgressiveGenerationAgent
         loanRefreshController =
                 new LoanRefreshController(
                         metricRefreshController, updateController, new LoanFetcher(fetcherClient));
+    }
+
+    @Override
+    protected Authenticator constructAuthenticator() {
+        NordeaBankIdIFrameInitializer iframeInitializer =
+                new NordeaBankIdIFrameInitializer(
+                        authenticationClient, storage, randomValueGenerator);
+
+        NordeaNoAuthenticator authenticator =
+                new NordeaNoAuthenticator(authenticationClient, storage);
+
+        return authenticationControllerProvider.createAuthController(
+                catalog,
+                context,
+                supplementalInformationController,
+                iframeInitializer,
+                authenticator);
     }
 
     private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {
@@ -129,12 +150,7 @@ public final class NordeaNoAgent extends SubsequentProgressiveGenerationAgent
 
     @Override
     protected SessionHandler constructSessionHandler() {
-        return new NordeaNoSessionHandler(authenticationClient, storage);
-    }
-
-    @Override
-    public StatelessProgressiveAuthenticator getAuthenticator() {
-        return authenticator;
+        return SessionHandler.alwaysFail();
     }
 
     @Override

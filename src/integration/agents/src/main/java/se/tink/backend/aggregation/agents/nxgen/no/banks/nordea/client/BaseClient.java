@@ -45,7 +45,6 @@ public class BaseClient {
                 .header(HeaderKeys.APP_LANGUAGE, HeaderValues.APP_LANGUAGE)
                 .header(HeaderKeys.PLATFORM_VERSION, HeaderValues.PLATFORM_VERSION)
                 .header(HeaderKeys.APP_SEGMENT, HeaderValues.HOUSEHOLD_APP_SEGMENT)
-                .header(HeaderKeys.DEVICE_ID, storage.retrieveDeviceId())
                 .header(HeaderKeys.DEVICE_MODEL, HeaderValues.DEVICE_MODEL)
                 .header(HeaderKeys.APP_COUNTRY, HeaderValues.APP_COUNTRY)
                 .header(HeaderKeys.APP_VERSION, HeaderValues.APP_VERSION_SHORT)

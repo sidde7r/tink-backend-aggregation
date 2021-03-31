@@ -1,0 +1,9 @@
+{
+    "access_token": "SAMPLE_ACCESS_TOKEN",
+    "expires_in": 180,
+    "token_type": "Bearer",
+    "id_token": "SAMPLE_ID_TOKEN",
+    "refresh_token": "SAMPLE_REFRESH_TOKEN",
+    "scope": "ndf agreement openid offline_access",
+    "uh": "SAMPLE_UH"
+}
