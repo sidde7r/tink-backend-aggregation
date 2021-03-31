@@ -915,7 +915,7 @@ java_library(
     name = "org_apache_zookeeper_zookeeper",
     visibility = ["//visibility:public"],
     exports = [
-        "@aggregation_temp//:org_apache_zookeeper_zookeeper",
+        "@aggregation//:org_apache_zookeeper_zookeeper",
     ],
     runtime_deps = [],
 )
@@ -931,8 +931,8 @@ java_library(
         "@aggregation//:com_google_guava_guava",
         "@aggregation//:jline_jline",
         "@aggregation//:log4j_log4j",
+        "@aggregation//:org_apache_zookeeper_zookeeper",
         "@aggregation//:org_slf4j_slf4j_api",
-        "@aggregation_temp//:org_apache_zookeeper_zookeeper",
     ],
 )
 
@@ -947,9 +947,9 @@ java_library(
         "@aggregation//:com_google_guava_guava",
         "@aggregation//:jline_jline",
         "@aggregation//:log4j_log4j",
+        "@aggregation//:org_apache_zookeeper_zookeeper",
         "@aggregation//:org_slf4j_slf4j_api",
         "@aggregation_temp//:org_apache_curator_curator_client",
-        "@aggregation_temp//:org_apache_zookeeper_zookeeper",
     ],
 )
 
@@ -964,10 +964,10 @@ java_library(
         "@aggregation//:com_google_guava_guava",
         "@aggregation//:jline_jline",
         "@aggregation//:log4j_log4j",
+        "@aggregation//:org_apache_zookeeper_zookeeper",
         "@aggregation//:org_slf4j_slf4j_api",
         "@aggregation_temp//:org_apache_curator_curator_client",
         "@aggregation_temp//:org_apache_curator_curator_framework",
-        "@aggregation_temp//:org_apache_zookeeper_zookeeper",
     ],
 )
 
@@ -982,12 +982,12 @@ java_library(
         "@aggregation//:com_google_guava_guava",
         "@aggregation//:jline_jline",
         "@aggregation//:log4j_log4j",
+        "@aggregation//:org_apache_zookeeper_zookeeper",
         "@aggregation//:org_codehaus_jackson_jackson_mapper_asl",
         "@aggregation//:org_slf4j_slf4j_api",
         "@aggregation_temp//:org_apache_curator_curator_client",
         "@aggregation_temp//:org_apache_curator_curator_framework",
         "@aggregation_temp//:org_apache_curator_curator_recipes",
-        "@aggregation_temp//:org_apache_zookeeper_zookeeper",
     ],
 )
 

@@ -329,6 +329,132 @@
             "type": "automaticTransfer",
             "updated": 1611973768091,
             "year": 1
+        },
+        {
+            "amount": -132.99,
+            "appReference": {
+                "created": 1614611968014,
+                "deleted": true,
+                "id": "fd922614-768d-4dae-bf2e-c7ed4c441b38-appReference",
+                "updated": 1614611968014
+            },
+            "attachments": [],
+            "badgeUrl": "https://s3-eu-west-1.amazonaws.com/lunarway-prod-cdn/transaction-badges/badge_betalingsservice.png",
+            "canAddNote": true,
+            "canAttach": true,
+            "canCategorize": true,
+            "canExclude": true,
+            "canHide": true,
+            "canReact": true,
+            "categoryId": "other",
+            "color": "#687990",
+            "conversion": {
+                "created": 1614611968014,
+                "deleted": true,
+                "id": "fd922614-768d-4dae-bf2e-c7ed4c441b38-conversion",
+                "updated": 1614611968014
+            },
+            "created": 1613783835800,
+            "currency": "DKK",
+            "deleted": true,
+            "details": [
+                {
+                    "label": "Mandatnummer",
+                    "sort": 1,
+                    "type": "mandateNumber",
+                    "value": "987654321"
+                }
+            ],
+            "displayDate": "2021-03-01T00:00:00Z",
+            "groupId": "987654321-directdebit-mandate",
+            "groupSpend": {
+                "id": "987654321-directdebit-mandate",
+                "updated": 0
+            },
+            "iconUrl": "https://s3-eu-west-1.amazonaws.com/lunarway-prod-cdn/pfm/category_other.png",
+            "id": "fd922614-768d-4dae-bf2e-c7ed4c441b38",
+            "location": {
+                "created": 1614611968014,
+                "deleted": true,
+                "id": "fd922614-768d-4dae-bf2e-c7ed4c441b38-location",
+                "updated": 1614611968014
+            },
+            "month": 3,
+            "reactions": null,
+            "sort": 1614556800000,
+            "status": "future",
+            "title": "DEMOBANK AS",
+            "transactionOrigin": "dklb",
+            "transactionOriginGroupId": "833293fc-282c-4b99-8b86-2035218abeac",
+            "transactionOriginType": "account",
+            "type": "directDebit",
+            "updated": 1614611968014,
+            "year": 2021
+        },
+        {
+            "amount": -250,
+            "appReference": {
+                "created": 1614574951128,
+                "deleted": true,
+                "id": "a61bad4f-bd0e-4e82-86f6-b43400cf3c1c-appReference",
+                "updated": 1614574951128
+            },
+            "attachments": [],
+            "badgeUrl": "https://s3-eu-west-1.amazonaws.com/lunarway-prod-cdn/transaction-badges/badge_recurring.png",
+            "canEdit": true,
+            "canHide": true,
+            "canReact": true,
+            "categoryId": "other",
+            "color": "#ffffff",
+            "conversion": {
+                "created": 1614574951128,
+                "deleted": true,
+                "id": "a61bad4f-bd0e-4e82-86f6-b43400cf3c1c-conversion",
+                "updated": 1614574951128
+            },
+            "created": 1610146120585,
+            "currency": "DKK",
+            "deleted": null,
+            "details": [
+                {
+                    "label": "Til",
+                    "sort": 1,
+                    "type": "to",
+                    "value": "61500000118981"
+                },
+                {
+                    "label": "Hyppighed",
+                    "sort": 2,
+                    "type": "recurring",
+                    "value": "Første dag i måneden"
+                }
+            ],
+            "displayDate": "2021-04-01T05:00:00Z",
+            "editableType": "automaticTransfer",
+            "groupId": "fd541d47-4bc3-4e1a-a296-b3c5c545be2b-12300000123456-friend",
+            "groupSpend": {
+                "id": "fd541d47-4bc3-4e1a-a296-b3c5c545be2b-12300000123456-friend",
+                "updated": 0
+            },
+            "iconUrl": "https://s3-eu-west-1.amazonaws.com/lunarway-prod-cdn/transaction-default-icons/Bank.png",
+            "id": "a61bad4f-bd0e-4e82-86f6-b43400cf3c1c",
+            "location": {
+                "created": 1614574951128,
+                "deleted": true,
+                "id": "a61bad4f-bd0e-4e82-86f6-b43400cf3c1c-location",
+                "updated": 1614574951128
+            },
+            "month": 4,
+            "reactions": null,
+            "sort": 1617253200000,
+            "status": "future",
+            "title": "Future transaction",
+            "transactionOrigin": "dklb",
+            "transactionOriginGroupId": "833293fc-282c-4b99-8b86-2035218abeac",
+            "transactionOriginType": "account",
+            "type": "automaticTransfer",
+            "updated": 1614574951128,
+            "year": 2021
         }
     ]
 }

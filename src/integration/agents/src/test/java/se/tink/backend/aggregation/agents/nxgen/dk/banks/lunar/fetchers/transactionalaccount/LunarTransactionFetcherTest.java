@@ -207,6 +207,12 @@ public class LunarTransactionFetcherTest {
                                 .setAmount(ExactCurrencyAmount.of(12345.12, CURRENCY))
                                 .setDate(new Date(1591343356490L))
                                 .setDescription("Transaction before last")
+                                .build(),
+                        Transaction.builder()
+                                .setAmount(ExactCurrencyAmount.of(-250, CURRENCY))
+                                .setDate(new Date(1617253200000L))
+                                .setDescription("Future transaction")
+                                .setPending(true)
                                 .build());
         return new TransactionKeyPaginatorResponseImpl<>(expectedTransactions, null);
     }

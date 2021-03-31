@@ -879,6 +879,7 @@ maven_install(
         "org.apache.mahout.commons:commons-cli:2.0-mahout",
         "org.apache.pdfbox:fontbox:2.0.6",
         "org.apache.pdfbox:pdfbox:2.0.6",
+        "org.apache.zookeeper:zookeeper:3.5.3-beta",
         "org.aspectj:aspectjrt:1.8.10",
         "org.assertj:assertj-core:3.8.0",
         "org.bitbucket.b_c:jose4j:0.6.5",
@@ -903,6 +904,7 @@ maven_install(
         "org.hibernate:hibernate-annotations:3.5.4-Final",
         "org.hibernate:hibernate-commons-annotations:3.2.0.Final",
         "org.hibernate:hibernate-core:3.5.4-Final",
+        "org.hibernate:hibernate-entitymanager:3.5.4-Final",
         "org.hibernate:hibernate-validator:5.1.1.Final",
         "org.iban4j:iban4j:3.1.0",
         "org.javassist:javassist:3.26.0-GA",
@@ -929,7 +931,6 @@ maven_install(
         "org.slf4j:jcl-over-slf4j:1.7.24",
         "org.slf4j:jul-to-slf4j:1.7.6",
         "org.slf4j:slf4j-api:1.7.30",
-        "org.slf4j:slf4j-log4j12:1.7.5",
         "org.slf4j:slf4j-simple:1.7.5",
         "org.springframework.boot:spring-boot-test:1.5.3.RELEASE",
         "org.springframework.data:spring-data-jpa:1.11.1.RELEASE",
@@ -956,7 +957,7 @@ maven_install(
         "xml-apis:xml-apis:1.4.01",
     ],
     excluded_artifacts = [
-        # Keep this list empty please
+        "org.slf4j:slf4j-log4j12",  # log4j-over-slf4j and slf4j-log4j12 cannot coexist on the classpath
     ],
     fetch_sources = True,
     generate_compat_repositories = False,  # Tempting, but provided that we depend on tink-backend, let's be explicit in our naming of deps
