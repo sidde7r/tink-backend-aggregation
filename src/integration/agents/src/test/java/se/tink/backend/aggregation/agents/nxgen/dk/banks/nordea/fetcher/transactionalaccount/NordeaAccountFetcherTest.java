@@ -55,7 +55,7 @@ public class NordeaAccountFetcherTest {
         fetcher = new NordeaAccountFetcher(client);
 
         transactionalAccount = getTransactionalAccount();
-        now = LocalDate.now();
+        now = LocalDate.of(2021, 3, 30);
         dateTo = parseLocalDate(now);
         dateFrom = parseLocalDate(now.minusMonths(12));
     }
