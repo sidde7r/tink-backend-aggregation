@@ -35,7 +35,6 @@ public final class VersionConflictTest {
                     "jetty-io",
                     "jetty-util",
                     "jetty-http",
-                    "httpclient",
                     "log4j");
 
     /**
