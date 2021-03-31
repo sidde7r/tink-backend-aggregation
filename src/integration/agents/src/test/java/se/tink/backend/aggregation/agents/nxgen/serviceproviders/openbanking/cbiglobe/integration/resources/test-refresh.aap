@@ -16,7 +16,7 @@ Content-Type: application/json;charset=utf-8
 {"access_token":"dummyToken", "token_type":"Bearer", "expires_in":0, "scope":"production"}
 
 REQUEST 2
-POST https://cbiglobeopenbankingapigateway.nexi.it/platform/enabler/psd2orchestrator/ais/2.3.2/consents
+POST https://cbiglobeopenbankingapigateway.nexi.it/platform/enabler/psd2orchestrator/ais/3.0.0/consents
 Content-Type: application/json
 Authorization: Bearer dummyToken
 aspsp-code: 03032
@@ -47,7 +47,7 @@ Content-Type: application/json
 {"access":{"availableAccounts":"allAccounts"},"recurringIndicator":"false","frequencyPerDay":"1","lastActionDate":"2020-11-30","consentStatus":"valid","scaStatus":"VERIFIED"}
 
 REQUEST 4
-GET https://cbiglobeopenbankingapigateway.nexi.it/platform/enabler/psd2orchestrator/ais/2.3.2/accounts
+GET https://cbiglobeopenbankingapigateway.nexi.it/platform/enabler/psd2orchestrator/ais/3.0.0/accounts
 Content-Type: application/json
 Authorization: Bearer dummyToken
 aspsp-code: 03032
@@ -61,7 +61,7 @@ Content-Type: application/json
 {"accounts":[{"iban":"dummyIban","bban":"dummyBban","currency":"EUR","resourceId":"dummyAccountId","name":"dummyName","product":"dummyProduct","bic":"dummyBic","usage":"PRIV","_links":{"account":{"href":"/accounts/dummyResourceId"},"balances":{"href":"/accounts/dummyResourceId/balances"},"transactions":{"href":"/accounts/dummyResourceId/transactions"}}}]}
 
 REQUEST 5
-POST https://cbiglobeopenbankingapigateway.nexi.it/platform/enabler/psd2orchestrator/ais/2.3.2/consents
+POST https://cbiglobeopenbankingapigateway.nexi.it/platform/enabler/psd2orchestrator/ais/3.0.0/consents
 Content-Type: application/json
 Authorization: Bearer dummyToken
 aspsp-code: 03032
