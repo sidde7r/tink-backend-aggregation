@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
+import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.KnabApiClient;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.KnabConstants;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.KnabConstants.ErrorMessages;
@@ -90,11 +91,7 @@ public class KnabAuthenticator implements OAuth2Authenticator {
                                 strongAuthenticationState.getSupplementalKey(),
                                 ThirdPartyAppConstants.WAIT_FOR_MINUTES,
                                 TimeUnit.MINUTES)
-                        .orElseThrow(
-                                () ->
-                                        new IllegalStateException(
-                                                KnabConstants.ErrorMessages
-                                                        .NO_SUPPLEMENTAL_INFORMATION));
+                        .orElseThrow(ThirdPartyAppError.TIMED_OUT::exception);
 
         String codeValue = queryMap.get(KnabConstants.QueryKeys.CODE);
         OAuth2Token oAuth2Token =
