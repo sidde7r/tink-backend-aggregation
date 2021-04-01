@@ -1276,6 +1276,20 @@ load("@selenium//:defs.bzl", pin_selenium = "pinned_maven_install")
 
 pin_selenium()
 
+maven_install(
+    name = "browserup_proxy_core",
+    artifacts = [
+        "com.browserup:browserup-proxy-core:2.1.2",
+    ],
+    fetch_sources = True,
+    maven_install_json = "//third_party/browserup_proxy_core:browserup_proxy_core_install.json",
+    repositories = MAVEN_REPOS,
+)
+
+load("@browserup_proxy_core//:defs.bzl", pin_browserup_proxy_core = "pinned_maven_install")
+
+pin_browserup_proxy_core()
+
 http_archive(
     name = "bazel_sonarqube",
     sha256 = "53c8eb6ede402a6cc1e9d38bbf8b7285d13cc86e3b30875f2969582adc918afb",
