@@ -5,13 +5,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import lombok.extern.slf4j.Slf4j;
+import org.openqa.selenium.Proxy;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.remote.CapabilityType;
+import org.openqa.selenium.remote.DesiredCapabilities;
 
 @Slf4j
 public class ChromeDriverInitializer {
-    private static final String CHROMEDRIVER_PATH = "external/chromedriver/file/chromedriver/";
+    private static final String CHROMEDRIVER_PATH =
+            "external/chromedriver/file/chromedriver/chromedriver";
     private static final String BASE_CHROME_PATH = "external/chromium/file/chromium/";
     private static final String MAC_CHROME_PATH =
             BASE_CHROME_PATH + "chrome-mac/Chromium.app/Contents/MacOS/Chromium";
@@ -25,14 +29,19 @@ public class ChromeDriverInitializer {
     private static final long DEFAULT_TIMEOUT_SECONDS = 30;
 
     public static ChromeDriver constructChromeDriver() {
-        return constructChromeDriver(DEFAULT_USER_AGENT, DEFAULT_ACCEPT_LANGUAGE);
+        return constructChromeDriver(DEFAULT_USER_AGENT, DEFAULT_ACCEPT_LANGUAGE, null);
+    }
+
+    public static ChromeDriver constructChromeDriver(Proxy proxy) {
+        return constructChromeDriver(DEFAULT_USER_AGENT, DEFAULT_ACCEPT_LANGUAGE, proxy);
     }
 
     public static ChromeDriver constructChromeDriver(String userAgent) {
-        return constructChromeDriver(userAgent, DEFAULT_ACCEPT_LANGUAGE);
+        return constructChromeDriver(userAgent, DEFAULT_ACCEPT_LANGUAGE, null);
     }
 
-    public static ChromeDriver constructChromeDriver(String userAgent, String acceptLanguage) {
+    public static ChromeDriver constructChromeDriver(
+            String userAgent, String acceptLanguage, Proxy proxy) {
         File chromeFile = new File(getChromePath());
         log.info("chrome exists: " + chromeFile.exists());
         log.info("chrome path: " + chromeFile.getAbsolutePath());
@@ -42,8 +51,16 @@ public class ChromeDriverInitializer {
         log.info("chromedriver path: " + chromedriverFile.getAbsolutePath());
         System.setProperty("webdriver.chrome.driver", CHROMEDRIVER_PATH);
         ChromeOptions options = new ChromeOptions();
+
+        DesiredCapabilities desiredCapabilities = new DesiredCapabilities();
+        if (proxy != null) {
+            desiredCapabilities.setCapability(CapabilityType.PROXY, proxy);
+        }
+
+        options.merge(desiredCapabilities);
         options.addArguments(getListArguments(userAgent, acceptLanguage));
         options.setBinary(getChromePath());
+
         ChromeDriver driver = new ChromeDriver(options);
 
         driver.manage().timeouts().pageLoadTimeout(DEFAULT_TIMEOUT_SECONDS, TimeUnit.SECONDS);
@@ -70,7 +87,6 @@ public class ChromeDriverInitializer {
         // Unfortunately doesn't work for linux. Remember to uncomment when pushing on prod.
         arguments.add("--headless");
         arguments.add("--blink-settings=imagesEnabled=false");
-        arguments.add("--disable-dev-shm-usage");
 
         return arguments;
     }

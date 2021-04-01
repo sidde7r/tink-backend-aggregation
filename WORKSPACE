@@ -1337,28 +1337,28 @@ load("//tools/bzl:download_extract_archive.bzl", "download_extract_archive")
 
 download_extract_archive(
     name = "chromedriver",
-    linux_path_to_binary = "/chromedriver",
     linux_sha256 =
-        "d55d3141a6d9dbff3db6289ff6c6301e1d4ea1248b1cc901376ba0520dfe37b9",
+        "1a0cd0913d2e92899576491b36871f7218a13c90c85eee9cead6295070016b03",
     linux_url =
-        "https://chromedriver.storage.googleapis.com/72.0.3626.69/chromedriver_linux64.zip",
-    macos_path_to_binary = "/chromedriver",
+                "https://commondatastorage.googleapis.com/chromium-browser-snapshots/Linux_x64/843981/chromedriver_linux64.zip",
+    linux_path_to_binary = "/chromedriver_linux64",
     macos_sha256 =
-        "eab0cc3deb77966ed1b1c6569a33f26ee316de7e2063d2200422f7be3667009b",
+        "bb4b63dc8ad5056504846088751cf20fe1b64832bb8f8ac0328de4c2c0649955",
     macos_url =
-        "https://chromedriver.storage.googleapis.com/72.0.3626.69/chromedriver_mac64.zip",
+            "https://commondatastorage.googleapis.com/chromium-browser-snapshots/Mac/843982/chromedriver_mac64.zip",
+    macos_path_to_binary = "/chromedriver_mac64",
 )
 
 download_extract_archive(
     name = "chromium",
-    linux_path_to_binary = "/chrome-linux/",
     linux_sha256 =
-        "9bb83c07e5b67a6d032e6b9e22500f11e34f86551971f4892dfa68e3544ac39a",
+        "073ab34347bf84fe8edc909ce7a7c698c0efc9bed472945b7ae6c7ae4b0e36f7",
     linux_url =
-        "https://commondatastorage.googleapis.com/chromium-browser-snapshots/Linux_x64/612434/chrome-linux.zip",
-    macos_path_to_binary = "/chrome-mac/Chromium.app/Contents/MacOS/",
+        "https://commondatastorage.googleapis.com/chromium-browser-snapshots/Linux_x64/843981/chrome-linux.zip",
+    linux_path_to_binary = "/",
     macos_sha256 =
-        "ab1a75f0d918a0e266f85e43517db5bd701f34544377e3d6aa89f035b508667d",
+        "51fe6bc1188dfe51c78c008d05bb59fe4f0ae6d7ce88b0f1e08ae23be7c92fcd",
     macos_url =
-        "https://commondatastorage.googleapis.com/chromium-browser-snapshots/Mac/612398/chrome-mac.zip",
+        "https://commondatastorage.googleapis.com/chromium-browser-snapshots/Mac/843982/chrome-mac.zip",
+    macos_path_to_binary = "/",
 )
