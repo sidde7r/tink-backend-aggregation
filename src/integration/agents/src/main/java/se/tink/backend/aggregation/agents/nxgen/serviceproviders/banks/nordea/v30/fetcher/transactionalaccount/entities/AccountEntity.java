@@ -18,6 +18,7 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdMo
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.transactional.TransactionalBuildStep;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
+import se.tink.backend.aggregation.source_info.AccountSourceInfo;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
@@ -105,6 +106,7 @@ public class AccountEntity implements GeneralAccountEntity {
                                                 AccountIdentifier.create(
                                                         AccountIdentifierType.IBAN, iban))
                                         .build())
+                        .sourceInfo(createAccountSourceInfo())
                         .setApiIdentifier(accountId)
                         .putInTemporaryStorage(NordeaBaseConstants.PROUDCT_CODE, productCode);
 
@@ -112,6 +114,14 @@ public class AccountEntity implements GeneralAccountEntity {
             transactionalBuildStep.addHolderName(generalGetName());
         }
         return transactionalBuildStep.build();
+    }
+
+    private AccountSourceInfo createAccountSourceInfo() {
+        return AccountSourceInfo.builder()
+                .bankProductCode(productCode)
+                .bankAccountType(productType)
+                .bankProductName(productName)
+                .build();
     }
 
     private Optional<TransactionalAccount> toBusinessTransactionalAccount() {

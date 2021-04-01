@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.loan.LoanModule;
+import se.tink.backend.aggregation.source_info.AccountSourceInfo;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 
 @JsonObject
@@ -46,7 +47,15 @@ public class LoansEntity {
                                         .addIdentifier(new SwedishIdentifier(loanId))
                                         .setProductName(group)
                                         .build())
+                        .sourceInfo(createAccountSourceInfo())
                         .build());
+    }
+
+    private AccountSourceInfo createAccountSourceInfo() {
+        return AccountSourceInfo.builder()
+                .bankProductCode(productCode)
+                .bankAccountType(group)
+                .build();
     }
 
     private LoanModule getLoanModule() {
