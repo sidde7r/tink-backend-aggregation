@@ -8,9 +8,7 @@ import com.kjetland.jackson.jsonSchema.annotations.JsonSchemaInt;
 import com.kjetland.jackson.jsonSchema.annotations.JsonSchemaString;
 import com.kjetland.jackson.jsonSchema.annotations.JsonSchemaTitle;
 import java.util.Base64;
-import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.configuration.UkOpenBankingClientConfigurationAdapter;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.tls.TlsConfigurationSetter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.configuration.ClientInfo;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.configuration.SoftwareStatementAssertion;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -61,10 +59,5 @@ public class DanskebankEUConfiguration implements UkOpenBankingClientConfigurati
     public SoftwareStatementAssertion getSoftwareStatementAssertions() {
         return SoftwareStatementAssertion.fromJson(
                 new String(Base64.getDecoder().decode(softwareStatementAssertion)));
-    }
-
-    @Override
-    public Optional<TlsConfigurationSetter> getTlsConfigurationOverride() {
-        return Optional.empty();
     }
 }

@@ -29,6 +29,7 @@ import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.agents.rpc.Provider.AccessType;
 import se.tink.backend.aggregation.configuration.IntegrationsConfiguration;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration.Builder;
 import se.tink.backend.aggregation.configuration.agents.ClientConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.configuration.iface.AgentConfigurationControllerable;
 import se.tink.backend.integration.tpp_secrets_service.client.entities.SecretsEntityCore;
@@ -156,7 +157,7 @@ public final class AgentConfigurationController implements AgentConfigurationCon
                 // TPA-525: needs to know what certId to use
                 // Temporary workaround to set certId to "UKOB" for UK OB provider
                 String certId = "";
-                if (UK_OB_PROVIDER_PATTERN.matcher(providerId).matches()) {
+                if (isUkOpenBankingProvider()) {
                     certId = "UKOB";
                 }
                 Optional<SecretsEntityCore> allSecretsOpt =
@@ -203,6 +204,10 @@ public final class AgentConfigurationController implements AgentConfigurationCon
                 }
             }
         }
+    }
+
+    private boolean isUkOpenBankingProvider() {
+        return UK_OB_PROVIDER_PATTERN.matcher(providerId).matches();
     }
 
     private void initCertsData(String qwac, String qsealc) {
@@ -439,9 +444,8 @@ public final class AgentConfigurationController implements AgentConfigurationCon
                                                         + ". In the development.yml and test.yml file."));
 
         extractSensitiveValues(clientConfigurationAsObject);
-
-        AgentConfiguration<T> agentConfiguration =
-                new AgentConfiguration.Builder()
+        Builder<T> configurationBuilder =
+                new Builder<T>()
                         .setProviderSpecificConfiguration(
                                 OBJECT_MAPPER.convertValue(
                                         clientConfigurationAsObject, clientConfigClass))
@@ -452,11 +456,17 @@ public final class AgentConfigurationController implements AgentConfigurationCon
                                                         AgentConfiguration.class))
                                         .filter(config -> !config.isRedirectUrlNullOrEmpty())
                                         .map(AgentConfiguration::getRedirectUrl)
-                                        .orElse(null))
-                        .setQwac(EIdasTinkCert.QWAC)
-                        .setQsealc(EIdasTinkCert.QSEALC)
-                        .build();
-
-        return agentConfiguration;
+                                        .orElse(null));
+        if (isUkOpenBankingProvider()) {
+            return configurationBuilder
+                    .setQwac(EIdasTinkCert.OBWAC)
+                    .setQsealc(EIdasTinkCert.OBSEAL)
+                    .build();
+        } else {
+            return configurationBuilder
+                    .setQwac(EIdasTinkCert.QWAC)
+                    .setQsealc(EIdasTinkCert.QSEALC)
+                    .build();
+        }
     }
 }

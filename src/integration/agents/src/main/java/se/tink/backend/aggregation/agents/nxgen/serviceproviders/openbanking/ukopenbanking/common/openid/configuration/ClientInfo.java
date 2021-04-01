@@ -4,30 +4,14 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class ClientInfo {
-
-    private String clientId;
-    private String clientSecret;
-    private String tokenEndpointAuthSigningAlg;
-    private String tokenEndpointAuthMethod;
-
-    public String getTokenEndpointAuthMethod() {
-        return tokenEndpointAuthMethod;
-    }
-
-    public String getTokenEndpointAuthSigningAlg() {
-        return tokenEndpointAuthSigningAlg;
-    }
-
-    public ClientInfo(String clientId, String clientSecret) {
-        this.clientId = clientId;
-        this.clientSecret = clientSecret;
-    }
+    private final String clientId;
+    private final String tokenEndpointAuthSigningAlg;
+    private final String tokenEndpointAuthMethod;
+    private final String clientSecret;
 
     public ClientInfo(
             String clientId, String tokenEndpointAuthMethod, String tokenEndpointAuthSigningAlg) {
-        this.clientId = clientId;
-        this.tokenEndpointAuthMethod = tokenEndpointAuthMethod;
-        this.tokenEndpointAuthSigningAlg = tokenEndpointAuthSigningAlg;
+        this(clientId, null, tokenEndpointAuthMethod, tokenEndpointAuthSigningAlg);
     }
 
     public ClientInfo(
@@ -39,6 +23,14 @@ public class ClientInfo {
         this.clientSecret = clientSecret;
         this.tokenEndpointAuthMethod = tokenEndpointAuthMethod;
         this.tokenEndpointAuthSigningAlg = tokenEndpointAuthSigningAlg;
+    }
+
+    public String getTokenEndpointAuthMethod() {
+        return tokenEndpointAuthMethod;
+    }
+
+    public String getTokenEndpointAuthSigningAlg() {
+        return tokenEndpointAuthSigningAlg;
     }
 
     public String getClientId() {
