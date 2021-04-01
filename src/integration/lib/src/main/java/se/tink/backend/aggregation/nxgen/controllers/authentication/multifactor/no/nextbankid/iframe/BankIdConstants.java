@@ -7,6 +7,8 @@ import org.openqa.selenium.By;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class BankIdConstants {
 
+    public static final String BANK_ID_LOG_PREFIX = "[BankID]";
+
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class HtmlElements {
 
