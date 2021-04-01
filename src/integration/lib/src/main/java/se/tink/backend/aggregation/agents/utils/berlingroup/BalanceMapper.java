@@ -94,7 +94,9 @@ public class BalanceMapper {
                         .collect(Collectors.toList());
 
         if (listOfMultipleBalancesPerType.isEmpty()) {
-            throw new IllegalStateException("Unexpected balance type");
+            log.info(
+                    "Weren't able to find balance type that came with both credit limit included + not included. Cannot determine credit limit.");
+            return Optional.empty();
         }
 
         return listOfMultipleBalancesPerType.stream()
