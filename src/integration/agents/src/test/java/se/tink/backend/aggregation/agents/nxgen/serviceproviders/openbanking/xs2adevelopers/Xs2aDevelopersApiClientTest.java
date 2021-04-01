@@ -20,6 +20,7 @@ import static se.tink.libraries.serialization.utils.SerializationUtils.deseriali
 import com.google.common.collect.Lists;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import javax.ws.rs.core.MediaType;
 import org.junit.Before;
@@ -79,6 +80,7 @@ public class Xs2aDevelopersApiClientTest {
         when(requestBuilder.accept(MediaType.APPLICATION_JSON_TYPE)).thenReturn(requestBuilder);
         when(requestBuilder.type(MediaType.APPLICATION_JSON)).thenReturn(requestBuilder);
         when(requestBuilder.addBearerToken(oauth2Token)).thenReturn(requestBuilder);
+        when(requestBuilder.headers(any(Map.class))).thenReturn(requestBuilder);
         when(requestBuilder.header(anyString(), anyString())).thenReturn(requestBuilder);
         when(requestBuilder.header(anyString(), any(Object.class))).thenReturn(requestBuilder);
         when(requestBuilder.body(any(Object.class), anyString())).thenReturn(requestBuilder);
@@ -98,6 +100,7 @@ public class Xs2aDevelopersApiClientTest {
     @Test(expected = SessionException.class)
     public void should_throw_session_exception_when_token_does_not_exists_in_storage_during_ais() {
         when(storage.get(OAUTH_TOKEN, OAuth2Token.class)).thenReturn(Optional.empty());
+        when(tinkHttpClient.request(any(URL.class))).thenReturn(requestBuilder);
         apiClient.getAccounts();
     }
 
@@ -225,15 +228,17 @@ public class Xs2aDevelopersApiClientTest {
         // given
         URL url = new URL(BASE_URL + CONSENT);
         ConsentResponse consentResponse = deserializeFromString(JSON_MOCK, ConsentResponse.class);
+        HttpResponse httpResponse = mock(HttpResponse.class);
+        when(httpResponse.getBody(ConsentResponse.class)).thenReturn(consentResponse);
         when(tinkHttpClient.request(url)).thenReturn(requestBuilder);
-        when(requestBuilder.post(ConsentResponse.class)).thenReturn(consentResponse);
+        when(requestBuilder.post(HttpResponse.class)).thenReturn(httpResponse);
         ConsentRequest consentRequest = mock(ConsentRequest.class);
 
         // when
-        ConsentResponse result = apiClient.createConsent(consentRequest);
+        HttpResponse result = apiClient.createConsent(consentRequest, anyString());
 
         // then
-        assertThat(result).isEqualTo(consentResponse);
+        assertThat(result.getBody(ConsentResponse.class)).isEqualTo(consentResponse);
         verify(tinkHttpClient).request(url);
         verifyNoMoreInteractions(tinkHttpClient);
     }

@@ -10,7 +10,6 @@ import se.tink.libraries.account.enums.AccountFlag;
 import se.tink.libraries.payment.enums.PaymentStatus;
 
 public final class Xs2aDevelopersConstants {
-
     public static final List<String> CHECKING_ACCOUNT_KEYS =
             ImmutableList.of(
                     "SAC",
@@ -50,6 +49,11 @@ public final class Xs2aDevelopersConstants {
         throw new AssertionError();
     }
 
+    public static class PollStatus {
+        public static final String VALID = "valid";
+        public static final String FAILED = "failed";
+    }
+
     public static class ErrorMessages {
         public static final String PARSING_URL = "Could not parse URL";
     }
@@ -77,6 +81,12 @@ public final class Xs2aDevelopersConstants {
         public static final String PIS_TOKEN = "pis_token";
         public static final String CODE_VERIFIER = "code_verifier";
         public static final String AUTHORISATION_URL = "authorisation_url";
+        public static final String SCA_APPROACH = "sca_approach";
+        public static final String LINKS = "links";
+    }
+
+    public static class StorageValues {
+        public static final String DECOUPLED_APPROACH = "DECOUPLED";
     }
 
     public static class QueryKeys {
@@ -105,6 +115,13 @@ public final class Xs2aDevelopersConstants {
         public static final String TPP_REDIRECT_URI = "TPP-Redirect-URI";
         public static final String PSU_IP_ADDRESS = "PSU-IP-ADDRESS";
         public static final String X_REQUEST_ID = "X-Request-ID";
+        public static final String TPP_REDIRECT_PREFFERED = "TPP-Redirect-Preferred";
+        public static final String PSU_ID = "PSU-ID";
+        public static final String PSU_ID_TYPE = "PSU-ID-TYPE";
+    }
+
+    public static class HeaderValues {
+        public static final String RETAIL = "retail";
     }
 
     public static class FormKeys {
@@ -146,5 +163,9 @@ public final class Xs2aDevelopersConstants {
         public static final int ERROR_CODE_CONSENT_INVALID = 401;
         public static final int DEFAULT_AMOUNT_TO_FETCH = 15;
         public static final int DEFAULT_CONSECUTIVE_EMPTY_PAGES_LIMIT = 4;
+    }
+
+    public static class SupplementalInfo {
+        public static final String CONSENT_CONFIRMATION_FIELD = "consent-confirmation";
     }
 }

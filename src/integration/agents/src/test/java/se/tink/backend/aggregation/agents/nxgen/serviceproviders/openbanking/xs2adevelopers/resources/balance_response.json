@@ -1,0 +1,18 @@
+{
+    "balances": [
+        {
+            "balanceType": "authorised",
+            "balanceAmount": {
+                "currency": "EUR",
+                "amount": 12.12
+            }
+        },
+        {
+            "balanceType": "authorised",
+            "balanceAmount": {
+                "currency": "EUR",
+                "amount": 12.12
+            }
+        }
+    ]
+}

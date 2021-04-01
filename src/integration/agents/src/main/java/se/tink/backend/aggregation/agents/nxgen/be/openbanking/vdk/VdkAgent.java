@@ -7,7 +7,7 @@ import com.google.inject.Inject;
 import java.time.temporal.ChronoUnit;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersTransactionalAgent;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.Xs2aDevelopersAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.Xs2aDevelopersAuthenticatorHelper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.transactionalaccount.Xs2aDevelopersTransactionalAccountFetcher;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
@@ -23,9 +23,9 @@ public final class VdkAgent extends Xs2aDevelopersTransactionalAgent {
     }
 
     @Override
-    protected Xs2aDevelopersAuthenticator constructXs2aAuthenticator(
+    protected Xs2aDevelopersAuthenticatorHelper constructXs2aAuthenticator(
             AgentComponentProvider componentProvider) {
-        return new VdkAuthenticator(
+        return new VdkAuthenticatorHelper(
                 apiClient,
                 persistentStorage,
                 configuration,
@@ -37,7 +37,7 @@ public final class VdkAgent extends Xs2aDevelopersTransactionalAgent {
     protected TransactionalAccountRefreshController constructTransactionalAccountRefreshController(
             AgentComponentProvider agentComponentProvider) {
         final Xs2aDevelopersTransactionalAccountFetcher accountFetcher =
-                new Xs2aDevelopersTransactionalAccountFetcher(apiClient, authenticator);
+                new Xs2aDevelopersTransactionalAccountFetcher(apiClient, authenticatorHelper);
 
         return new TransactionalAccountRefreshController(
                 metricRefreshController,

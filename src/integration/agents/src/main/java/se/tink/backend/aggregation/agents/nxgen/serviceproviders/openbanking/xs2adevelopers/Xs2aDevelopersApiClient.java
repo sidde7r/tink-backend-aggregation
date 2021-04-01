@@ -1,12 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers;
 
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.StorageValues.DECOUPLED_APPROACH;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.utils.CryptoUtils.getCodeChallenge;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.utils.CryptoUtils.getCodeVerifier;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import javax.ws.rs.core.MediaType;
 import lombok.extern.slf4j.Slf4j;
@@ -14,13 +17,13 @@ import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceErro
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.ApiServices;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.HeaderKeys;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.IdTags;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.ConsentDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.ConsentRequest;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.ConsentStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.TokenForm;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.TokenResponse;
@@ -40,6 +43,7 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
@@ -79,8 +83,12 @@ public class Xs2aDevelopersApiClient {
     }
 
     private RequestBuilder createRequestInSession(URL url) {
-        final OAuth2Token authToken = getTokenFromStorage(StorageKeys.OAUTH_TOKEN);
-        return createRequest(url).addBearerToken(authToken);
+        String scaApproach = persistentStorage.get(StorageKeys.SCA_APPROACH);
+        RequestBuilder requestBuilder = createRequest(url);
+        if (!DECOUPLED_APPROACH.equals(scaApproach)) {
+            requestBuilder.addBearerToken(getTokenFromStorage(StorageKeys.OAUTH_TOKEN));
+        }
+        return requestBuilder;
     }
 
     private RequestBuilder createFetchingRequest(URL url) {
@@ -103,16 +111,28 @@ public class Xs2aDevelopersApiClient {
                 .orElseThrow(SessionError.SESSION_EXPIRED::exception);
     }
 
-    public ConsentResponse createConsent(ConsentRequest consentRequest) {
+    public HttpResponse createConsent(ConsentRequest consentRequest, String psuId) {
         return createRequest(new URL(configuration.getBaseUrl() + ApiServices.CONSENT))
-                .header(HeaderKeys.TPP_REDIRECT_URI, configuration.getRedirectUrl())
-                .header(HeaderKeys.PSU_IP_ADDRESS, userIp)
-                .header(HeaderKeys.X_REQUEST_ID, randomValueGenerator.getUUID())
+                .headers(prepareConsentCreationHeaders(psuId))
                 .body(consentRequest)
-                .post(ConsentResponse.class);
+                .post(HttpResponse.class);
+    }
+
+    private Map<String, Object> prepareConsentCreationHeaders(String psuId) {
+        Map<String, Object> headers = new HashMap<>();
+        headers.put(HeaderKeys.TPP_REDIRECT_URI, configuration.getRedirectUrl());
+        headers.put(HeaderKeys.X_REQUEST_ID, randomValueGenerator.getUUID());
+        headers.put(HeaderKeys.PSU_IP_ADDRESS, userIp);
+        if (psuId != null) {
+            headers.put(HeaderKeys.PSU_ID, psuId);
+            headers.put(HeaderKeys.TPP_REDIRECT_PREFFERED, "false");
+            headers.put(HeaderKeys.PSU_ID_TYPE, HeaderValues.RETAIL);
+        }
+        return headers;
     }
 
     public ConsentDetailsResponse getConsentDetails() {
+
         String consentId =
                 Optional.ofNullable(persistentStorage.get(StorageKeys.CONSENT_ID))
                         .orElseThrow(SessionError.SESSION_EXPIRED::exception);

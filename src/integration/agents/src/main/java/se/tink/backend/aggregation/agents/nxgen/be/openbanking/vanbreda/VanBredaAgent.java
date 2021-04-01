@@ -25,7 +25,7 @@ public final class VanBredaAgent extends Xs2aDevelopersTransactionalAgent {
     protected TransactionalAccountRefreshController constructTransactionalAccountRefreshController(
             AgentComponentProvider agentComponentProvider) {
         final Xs2aDevelopersTransactionalAccountFetcher accountFetcher =
-                new Xs2aDevelopersTransactionalAccountFetcher(apiClient, authenticator);
+                new Xs2aDevelopersTransactionalAccountFetcher(apiClient, authenticatorHelper);
 
         return new TransactionalAccountRefreshController(
                 metricRefreshController,
