@@ -67,11 +67,7 @@ public class AccountsResponseDto {
     public List<CreditCardAccount> toSubCreditCardAccount(StatementPeriodsDto statementPeriods) {
         return supplementaryAccounts.stream()
                 .filter(Objects::nonNull)
-                .map(
-                        t ->
-                                t.toCreditCardAccount(
-                                        AmericanExpressUtils.createEmptyAmount(),
-                                        getStatementMap(statementPeriods)))
+                .map(t -> t.toCreditCardAccount(getStatementMap(statementPeriods)))
                 .collect(Collectors.toList());
     }
 
