@@ -84,11 +84,11 @@ public class Xs2aDevelopersApiClient {
 
     private RequestBuilder createRequestInSession(URL url) {
         String scaApproach = persistentStorage.get(StorageKeys.SCA_APPROACH);
-        if (DECOUPLED_APPROACH.equals(scaApproach)) {
-            return createRequest(url);
+        RequestBuilder requestBuilder = createRequest(url);
+        if (!DECOUPLED_APPROACH.equals(scaApproach)) {
+            requestBuilder.addBearerToken(getTokenFromStorage(StorageKeys.OAUTH_TOKEN));
         }
-        final OAuth2Token authToken = getTokenFromStorage(StorageKeys.OAUTH_TOKEN);
-        return createRequest(url).addBearerToken(authToken);
+        return requestBuilder;
     }
 
     private RequestBuilder createFetchingRequest(URL url) {

@@ -6,21 +6,13 @@ import org.junit.Test;
 import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
-import se.tink.backend.aggregation.agents.framework.ArgumentManager.ArgumentManagerEnum;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.UsernameArgumentEnum;
 
 public class CommerzBankAgentTest {
     private AgentIntegrationTest.Builder builder;
 
-    private enum Arg implements ArgumentManagerEnum {
-        USERNAME;
-
-        @Override
-        public boolean isOptional() {
-            return false;
-        }
-    }
-
-    private final ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());
+    private final ArgumentManager<ArgumentManager.UsernameArgumentEnum> manager =
+            new ArgumentManager<>(UsernameArgumentEnum.values());;
 
     @AfterClass
     public static void afterClass() {
@@ -34,7 +26,8 @@ public class CommerzBankAgentTest {
                 new AgentIntegrationTest.Builder("de", "de-commerzbank-ob")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
-                        .addCredentialField(Key.USERNAME, manager.get(Arg.USERNAME))
+                        .addCredentialField(
+                                Key.USERNAME, manager.get(UsernameArgumentEnum.USERNAME))
                         .saveCredentialsAfter(false)
                         .setFinancialInstitutionId("commerzbank")
                         .setAppId("tink");

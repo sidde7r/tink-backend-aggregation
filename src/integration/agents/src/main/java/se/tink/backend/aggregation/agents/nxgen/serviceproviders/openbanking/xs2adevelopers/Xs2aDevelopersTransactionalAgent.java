@@ -7,9 +7,9 @@ import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.Xs2aDevelopersAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.Xs2aDevelopersAuthenticatorController;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.Xs2aDevelopersDecoupledAuthenticationController;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.Xs2aDevelopersOAuth2AuthenticatorController;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.Xs2aDevelopersAuthenticatorHelper;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.Xs2aDevelopersDecoupledAuthenticatior;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.Xs2aDevelopersRedirectAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.configuration.Xs2aDevelopersConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.configuration.Xs2aDevelopersProviderConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.executor.payment.Xs2aDevelopersPaymentAuthenticator;
@@ -38,7 +38,7 @@ public abstract class Xs2aDevelopersTransactionalAgent extends NextGenerationAge
 
     protected final Xs2aDevelopersProviderConfiguration configuration;
     protected final Xs2aDevelopersApiClient apiClient;
-    protected final Xs2aDevelopersAuthenticator authenticator;
+    protected final Xs2aDevelopersAuthenticatorHelper authenticatorHelper;
     protected final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
     protected Xs2aDevelopersTransactionalAgent(
@@ -46,7 +46,7 @@ public abstract class Xs2aDevelopersTransactionalAgent extends NextGenerationAge
         super(componentProvider);
         configuration = getConfiguration(baseUrl);
         apiClient = constructApiClient(componentProvider);
-        authenticator = constructXs2aAuthenticator(componentProvider);
+        authenticatorHelper = constructXs2aAuthenticator(componentProvider);
         transactionalAccountRefreshController =
                 constructTransactionalAccountRefreshController(componentProvider);
     }
@@ -77,9 +77,9 @@ public abstract class Xs2aDevelopersTransactionalAgent extends NextGenerationAge
                 componentProvider.getRandomValueGenerator());
     }
 
-    protected Xs2aDevelopersAuthenticator constructXs2aAuthenticator(
+    protected Xs2aDevelopersAuthenticatorHelper constructXs2aAuthenticator(
             AgentComponentProvider componentProvider) {
-        return new Xs2aDevelopersAuthenticator(
+        return new Xs2aDevelopersAuthenticatorHelper(
                 apiClient,
                 persistentStorage,
                 configuration,
@@ -90,7 +90,7 @@ public abstract class Xs2aDevelopersTransactionalAgent extends NextGenerationAge
     protected TransactionalAccountRefreshController constructTransactionalAccountRefreshController(
             AgentComponentProvider agentComponentProvider) {
         final Xs2aDevelopersTransactionalAccountFetcher accountFetcher =
-                new Xs2aDevelopersTransactionalAccountFetcher(apiClient, authenticator);
+                new Xs2aDevelopersTransactionalAccountFetcher(apiClient, authenticatorHelper);
 
         final TransactionFetcher<TransactionalAccount> transactionFetcher =
                 new TransactionKeyWithInitDateFromFetcherController<>(
@@ -111,33 +111,34 @@ public abstract class Xs2aDevelopersTransactionalAgent extends NextGenerationAge
         this.client.addFilter(new TransactionFetchRetryFilter());
     }
 
-    private Xs2aDevelopersOAuth2AuthenticatorController constructRedirectAuthenticatorController() {
+    private Xs2aDevelopersRedirectAuthenticator constructRedirectAuthenticator() {
         final OAuth2AuthenticationController oAuth2Controller =
                 new OAuth2AuthenticationController(
                         persistentStorage,
                         supplementalInformationHelper,
-                        authenticator,
+                        authenticatorHelper,
                         credentials,
                         strongAuthenticationState);
-        return new Xs2aDevelopersOAuth2AuthenticatorController(
-                oAuth2Controller, supplementalInformationHelper, authenticator);
+        return new Xs2aDevelopersRedirectAuthenticator(
+                oAuth2Controller, supplementalInformationHelper, authenticatorHelper);
     }
 
-    private Xs2aDevelopersDecoupledAuthenticationController
-            constructDecoupledAuthenticatorController() {
-        return new Xs2aDevelopersDecoupledAuthenticationController(
-                authenticator, supplementalInformationController, supplementalInformationFormer);
+    private Xs2aDevelopersDecoupledAuthenticatior constructDecoupledAuthenticator() {
+        return new Xs2aDevelopersDecoupledAuthenticatior(
+                authenticatorHelper,
+                supplementalInformationController,
+                supplementalInformationFormer);
     }
 
     @Override
     protected Authenticator constructAuthenticator() {
-        Xs2aDevelopersAuthenticatorController authenticationController =
-                new Xs2aDevelopersAuthenticatorController(
-                        constructRedirectAuthenticatorController(),
-                        constructDecoupledAuthenticatorController(),
-                        authenticator);
+        Xs2aDevelopersAuthenticator authenticator =
+                new Xs2aDevelopersAuthenticator(
+                        constructRedirectAuthenticator(),
+                        constructDecoupledAuthenticator(),
+                        this.authenticatorHelper);
         return new AutoAuthenticationController(
-                request, systemUpdater, authenticationController, authenticationController);
+                request, systemUpdater, authenticator, authenticator);
     }
 
     @Override

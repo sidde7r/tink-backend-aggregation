@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs
 import com.google.common.util.concurrent.Uninterruptibles;
 import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
@@ -20,9 +21,10 @@ import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformati
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationFormer;
 
 @RequiredArgsConstructor
-public class Xs2aDevelopersDecoupledAuthenticationController {
+@Slf4j
+public class Xs2aDevelopersDecoupledAuthenticatior {
 
-    private final Xs2aDevelopersAuthenticator authenticator;
+    private final Xs2aDevelopersAuthenticatorHelper authenticator;
     private final SupplementalInformationController controller;
     private final SupplementalInformationFormer supplementalInformationFormer;
 
@@ -31,7 +33,6 @@ public class Xs2aDevelopersDecoupledAuthenticationController {
     public void authenticate() throws AuthenticationException, AuthorizationException {
         displayMessageAndWait();
         pollForConsentStatus();
-        authenticator.storeConsentDetails();
     }
 
     public void autoAuthenticate()
@@ -64,8 +65,7 @@ public class Xs2aDevelopersDecoupledAuthenticationController {
         try {
             controller.askSupplementalInformationSync(field);
         } catch (SupplementalInfoException e) {
-            // ignore empty response!
-            // we're actually not interested in response at all, we just show a text!
+            log.info("Suppelmental Exception: " + e.getMessage());
         }
     }
 }

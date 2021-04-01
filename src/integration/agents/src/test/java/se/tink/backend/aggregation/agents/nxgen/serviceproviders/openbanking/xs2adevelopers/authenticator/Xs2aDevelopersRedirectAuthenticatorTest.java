@@ -51,7 +51,7 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @RunWith(JUnitParamsRunner.class)
-public class Xs2aDevelopersOAuth2AuthenticatorControllerTest {
+public class Xs2aDevelopersRedirectAuthenticatorTest {
 
     private static final String TEST_DATA_PATH =
             "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/xs2adevelopers/resources/";
@@ -97,7 +97,7 @@ public class Xs2aDevelopersOAuth2AuthenticatorControllerTest {
 
     private Xs2aDevelopersApiClient apiClient;
     private LocalDateTimeSource localDateTimeSource;
-    private Xs2aDevelopersAuthenticator authenticator;
+    private Xs2aDevelopersAuthenticatorHelper authenticator;
     private PersistentStorage storage;
 
     @Before
@@ -110,7 +110,7 @@ public class Xs2aDevelopersOAuth2AuthenticatorControllerTest {
                 .thenReturn(Optional.of(CONSENT_LINKS_ENTITY));
         when(storage.get(StorageKeys.CONSENT_ID, String.class)).thenReturn(Optional.of(CONSENT_ID));
         authenticator =
-                new Xs2aDevelopersAuthenticator(
+                new Xs2aDevelopersAuthenticatorHelper(
                         apiClient,
                         storage,
                         xs2aDevelopersProviderConfiguration,
@@ -184,11 +184,11 @@ public class Xs2aDevelopersOAuth2AuthenticatorControllerTest {
         persistentStorage.put(StorageKeys.CONSENT_ID, CONSENT_ID);
         Credentials credentials = createCredentials(new Date());
 
-        Xs2aDevelopersAuthenticator xs2ADevelopersAuthenticator =
+        Xs2aDevelopersAuthenticatorHelper xs2ADevelopersAuthenticatorHelper =
                 createXs2aDevelopersAuthenticator(tinkHttpClient, persistentStorage, credentials);
-        Xs2aDevelopersOAuth2AuthenticatorController authenticationController =
-                createXs2aDevelopersOuath2AuthenticationController(
-                        xs2ADevelopersAuthenticator, credentials, persistentStorage);
+        Xs2aDevelopersRedirectAuthenticator authenticationController =
+                createXs2aDevelopersRedirectAuthenticatior(
+                        xs2ADevelopersAuthenticatorHelper, credentials, persistentStorage);
 
         // when
         Throwable thrown = catchThrowable(() -> authenticationController.autoAuthenticate());
@@ -219,8 +219,8 @@ public class Xs2aDevelopersOAuth2AuthenticatorControllerTest {
         persistentStorage.put(StorageKeys.CONSENT_ID, CONSENT_ID);
         Credentials credentials = new Credentials();
         credentials.setType(CredentialsTypes.THIRD_PARTY_APP);
-        Xs2aDevelopersAuthenticator authenticatiorWithRequestForWellKnownUrlNeeded =
-                new Xs2aDevelopersAuthenticator(
+        Xs2aDevelopersAuthenticatorHelper authenticatiorWithRequestForWellKnownUrlNeeded =
+                new Xs2aDevelopersAuthenticatorHelper(
                         apiClient,
                         persistentStorage,
                         xs2aDevelopersProviderConfiguration,
@@ -241,11 +241,10 @@ public class Xs2aDevelopersOAuth2AuthenticatorControllerTest {
         return credentials;
     }
 
-    public Xs2aDevelopersOAuth2AuthenticatorController
-            createXs2aDevelopersOuath2AuthenticationController(
-                    Xs2aDevelopersAuthenticator xs2ADevelopersAuthenticator,
-                    Credentials credentials,
-                    PersistentStorage persistentStorage) {
+    public Xs2aDevelopersRedirectAuthenticator createXs2aDevelopersRedirectAuthenticatior(
+            Xs2aDevelopersAuthenticatorHelper xs2ADevelopersAuthenticatorHelper,
+            Credentials credentials,
+            PersistentStorage persistentStorage) {
         SupplementalInformationHelper supplementalInformationHelper =
                 createSupplementalInformationHelper();
 
@@ -255,12 +254,12 @@ public class Xs2aDevelopersOAuth2AuthenticatorControllerTest {
                 new OAuth2AuthenticationController(
                         persistentStorage,
                         supplementalInformationHelper,
-                        xs2ADevelopersAuthenticator,
+                        xs2ADevelopersAuthenticatorHelper,
                         credentials,
                         strongAuthenticationState);
 
-        return new Xs2aDevelopersOAuth2AuthenticatorController(
-                oAuth2Controller, supplementalInformationHelper, xs2ADevelopersAuthenticator);
+        return new Xs2aDevelopersRedirectAuthenticator(
+                oAuth2Controller, supplementalInformationHelper, xs2ADevelopersAuthenticatorHelper);
     }
 
     private StrongAuthenticationState createStrongAuthenticationState() {
@@ -279,7 +278,7 @@ public class Xs2aDevelopersOAuth2AuthenticatorControllerTest {
         return supplementalInformationHelper;
     }
 
-    private Xs2aDevelopersAuthenticator createXs2aDevelopersAuthenticator(
+    private Xs2aDevelopersAuthenticatorHelper createXs2aDevelopersAuthenticator(
             TinkHttpClient tinkHttpClient,
             PersistentStorage persistentStorage,
             Credentials credentials) {
@@ -292,7 +291,7 @@ public class Xs2aDevelopersOAuth2AuthenticatorControllerTest {
                         true,
                         "userIp",
                         new MockRandomValueGenerator());
-        return new Xs2aDevelopersAuthenticator(
+        return new Xs2aDevelopersAuthenticatorHelper(
                 xs2aDevelopersApiClient,
                 persistentStorage,
                 xs2aDevelopersProviderConfiguration,

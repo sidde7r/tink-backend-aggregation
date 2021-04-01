@@ -100,6 +100,7 @@ public class Xs2aDevelopersApiClientTest {
     @Test(expected = SessionException.class)
     public void should_throw_session_exception_when_token_does_not_exists_in_storage_during_ais() {
         when(storage.get(OAUTH_TOKEN, OAuth2Token.class)).thenReturn(Optional.empty());
+        when(tinkHttpClient.request(any(URL.class))).thenReturn(requestBuilder);
         apiClient.getAccounts();
     }
 

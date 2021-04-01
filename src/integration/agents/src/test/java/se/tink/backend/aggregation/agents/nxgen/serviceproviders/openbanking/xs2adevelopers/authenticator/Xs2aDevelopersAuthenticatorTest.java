@@ -1,189 +1,123 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
-import com.sun.jersey.core.util.MultivaluedMapImpl;
-import java.nio.file.Paths;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.Date;
-import java.util.Map;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedMap;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field.Key;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.StorageKeys;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.StorageValues;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.entities.ConsentLinksEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.ConsentDetailsResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.ConsentResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.TokenResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.configuration.Xs2aDevelopersProviderConfiguration;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.MockRandomValueGenerator;
-import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
-import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
-import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
-import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class Xs2aDevelopersAuthenticatorTest {
-    private static final String TEST_DATA_PATH =
-            "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/xs2adevelopers/resources/";
-    private static final String EXPECTED_SCA_URL =
-            "https://psd.xs2a-api.com/public/berlingroup/authorize/55d7b2c8-d120-441c-ab3c-ca930e2f6ec9";
-    private static final String CLIENT_ID = "CLIENT_ID";
-    private static final String BASE_URL = "BASE_URL";
-    private static final String REDIRECT_URL = "REDIRECT_URL";
-    private static final Xs2aDevelopersProviderConfiguration xs2aDevelopersProviderConfiguration =
-            new Xs2aDevelopersProviderConfiguration(CLIENT_ID, BASE_URL, REDIRECT_URL);
-    private static LocalDateTimeSource localDateTimeSource;
+    private Xs2aDevelopersAuthenticator authenticatorController;
+    private Xs2aDevelopersAuthenticatorHelper authenticator;
+    private Xs2aDevelopersRedirectAuthenticator redirectAuthenticator;
+    private Xs2aDevelopersDecoupledAuthenticatior decoupledAuthenticator;
 
     @Before
     public void init() {
-        localDateTimeSource = mock(LocalDateTimeSource.class);
-        when(localDateTimeSource.now()).thenReturn(LocalDateTime.of(1234, 5, 12, 12, 30, 40));
+
+        authenticator = mock(Xs2aDevelopersAuthenticatorHelper.class);
+        redirectAuthenticator = mock(Xs2aDevelopersRedirectAuthenticator.class);
+        decoupledAuthenticator = mock(Xs2aDevelopersDecoupledAuthenticatior.class);
+        authenticatorController =
+                new Xs2aDevelopersAuthenticator(
+                        redirectAuthenticator, decoupledAuthenticator, authenticator);
     }
 
     @Test
-    public void requestForConsent_should_store_consent_details_in_persistent_storage() {
+    public void route_authentication_to_decoupled_if_possible() {
         // given
-        HttpResponse consentResponse = getConsentResponseHttpResponse();
-        MultivaluedMap<String, String> headersMap = new MultivaluedMapImpl();
-        headersMap.putSingle("ASPSP-SCA-Approach", "DECOUPLED");
-        when(consentResponse.getHeaders()).thenReturn(headersMap);
-        TinkHttpClient httpClient = mockHttpClient(consentResponse);
-        PersistentStorage persistentStorage = new PersistentStorage();
         Credentials credentials = mock(Credentials.class);
-        Xs2aDevelopersAuthenticator authenticator =
-                createXs2aDevelopersAuthenticator(httpClient, persistentStorage, credentials);
+        when(credentials.getField(Key.USERNAME)).thenReturn("dummyUsername");
+        when(authenticator.isDecoupledAuthenticationPossible()).thenReturn(true);
+
         // when
-        authenticator.requestForConsent();
+        authenticatorController.authenticate(credentials);
 
         // then
-        assertThat(persistentStorage.get(StorageKeys.CONSENT_ID)).isEqualTo("1604575204-ba78d90");
-        assertThat(
-                        persistentStorage
-                                .get(StorageKeys.LINKS, ConsentLinksEntity.class)
-                                .get()
-                                .getScaOAuth())
-                .isEqualTo(EXPECTED_SCA_URL);
-        assertThat(persistentStorage.get(StorageKeys.SCA_APPROACH))
-                .isEqualTo(StorageValues.DECOUPLED_APPROACH);
+        verify(decoupledAuthenticator).authenticate();
+        verifyNoMoreInteractions(redirectAuthenticator);
     }
 
     @Test
-    public void
-            requestForConsent_should_store_consent_details_wo_sca_approach_info_in_persistent_storage_if_not_available() {
+    public void route_authentication_to_oauth2_if_decoupled_not_possible() {
         // given
-        HttpResponse consentResponse = getConsentResponseHttpResponse();
-        MultivaluedMap<String, String> headersMap = new MultivaluedMapImpl();
-        when(consentResponse.getHeaders()).thenReturn(headersMap);
-        TinkHttpClient httpClient = mockHttpClient(consentResponse);
-        PersistentStorage persistentStorage = new PersistentStorage();
         Credentials credentials = mock(Credentials.class);
-        Xs2aDevelopersAuthenticator authenticator =
-                createXs2aDevelopersAuthenticator(httpClient, persistentStorage, credentials);
+        when(credentials.getField(Key.USERNAME)).thenReturn("dummyUsername");
+        when(authenticator.isDecoupledAuthenticationPossible()).thenReturn(false);
+
         // when
-        authenticator.requestForConsent();
+        authenticatorController.authenticate(credentials);
 
         // then
-        assertThat(persistentStorage.get(StorageKeys.CONSENT_ID)).isEqualTo("1604575204-ba78d90");
-        assertThat(
-                        persistentStorage
-                                .get(StorageKeys.LINKS, ConsentLinksEntity.class)
-                                .get()
-                                .getScaOAuth())
-                .isEqualTo(EXPECTED_SCA_URL);
-        assertThat(persistentStorage.get(StorageKeys.SCA_APPROACH)).isNull();
+        verify(redirectAuthenticator).authenticate(credentials);
+        verifyNoMoreInteractions(decoupledAuthenticator);
     }
 
     @Test
-    public void storeConsentDetails_should_set_expiry_date() {
+    public void route_authentication_to_oauth2_if_username_is_null() {
         // given
-        TinkHttpClient httpClient = mockHttpClient(mock(HttpResponse.class));
-        PersistentStorage persistentStorage = mock(PersistentStorage.class);
-        when(persistentStorage.get(StorageKeys.CONSENT_ID)).thenReturn("dummyConsentId");
-        Credentials credentials = new Credentials();
-        credentials.setField(Key.USERNAME, "dummyUsername");
-        Xs2aDevelopersAuthenticator authenticator =
-                createXs2aDevelopersAuthenticator(httpClient, persistentStorage, credentials);
-        Date date = toDate("2030-01-01");
+        Credentials credentials = mock(Credentials.class);
+        when(credentials.getField(Key.USERNAME)).thenReturn(null);
+
         // when
-        authenticator.storeConsentDetails();
+        authenticatorController.authenticate(credentials);
 
         // then
-        assertThat(credentials.getSessionExpiryDate()).isEqualTo(date);
+        verify(redirectAuthenticator).authenticate(credentials);
+        verifyNoMoreInteractions(decoupledAuthenticator);
     }
 
-    private Xs2aDevelopersAuthenticator createXs2aDevelopersAuthenticator(
-            TinkHttpClient tinkHttpClient,
-            PersistentStorage persistentStorage,
-            Credentials credentials) {
+    @Test
+    public void route_auto_authentication_to_decoupled_if_possible() {
+        // given
+        when(authenticator.isDecoupledAuthenticationPossible()).thenReturn(true);
 
-        Xs2aDevelopersApiClient xs2aDevelopersApiClient =
-                new Xs2aDevelopersApiClient(
-                        tinkHttpClient,
-                        persistentStorage,
-                        xs2aDevelopersProviderConfiguration,
-                        true,
-                        "userIp",
-                        new MockRandomValueGenerator());
-        return new Xs2aDevelopersAuthenticator(
-                xs2aDevelopersApiClient,
-                persistentStorage,
-                xs2aDevelopersProviderConfiguration,
-                localDateTimeSource,
-                credentials);
+        // when
+        authenticatorController.autoAuthenticate();
+
+        // then
+        verify(decoupledAuthenticator).autoAuthenticate();
+        verifyNoMoreInteractions(redirectAuthenticator);
     }
 
-    public TinkHttpClient mockHttpClient(HttpResponse consentResponse) {
-        TinkHttpClient tinkHttpClient = mock(TinkHttpClient.class);
-        RequestBuilder requestBuilder = mock(RequestBuilder.class);
-        when(tinkHttpClient.request(any(URL.class))).thenReturn(requestBuilder);
-        when(tinkHttpClient.request(any(String.class))).thenReturn(requestBuilder);
-        when(requestBuilder.accept(any(MediaType.class))).thenReturn(requestBuilder);
-        when(requestBuilder.type(any(String.class))).thenReturn(requestBuilder);
-        when(requestBuilder.header(any(), any())).thenReturn(requestBuilder);
-        when(requestBuilder.headers(any(Map.class))).thenReturn(requestBuilder);
-        when(requestBuilder.body(any(Object.class))).thenReturn(requestBuilder);
-        when(requestBuilder.body(any(Object.class), anyString())).thenReturn(requestBuilder);
-        when(requestBuilder.post(HttpResponse.class)).thenReturn(consentResponse);
-        when(requestBuilder.post(TokenResponse.class))
-                .thenReturn(
-                        SerializationUtils.deserializeFromString(
-                                Paths.get(TEST_DATA_PATH, "token_response.json").toFile(),
-                                TokenResponse.class));
-        when(requestBuilder.get(ConsentDetailsResponse.class))
-                .thenReturn(
-                        SerializationUtils.deserializeFromString(
-                                Paths.get(TEST_DATA_PATH, "consent_details_response.json").toFile(),
-                                ConsentDetailsResponse.class));
-        return tinkHttpClient;
+    @Test
+    public void route_auto_authentication_to_oauth2_if_decoupled_not_possible() {
+        // given
+        Credentials credentials = mock(Credentials.class);
+        when(credentials.getField(Key.USERNAME)).thenReturn("dummyUsername");
+        when(authenticator.isDecoupledAuthenticationPossible()).thenReturn(false);
+
+        // when
+        authenticatorController.autoAuthenticate();
+
+        // then
+        verify(redirectAuthenticator).autoAuthenticate();
+        verifyNoMoreInteractions(decoupledAuthenticator);
     }
 
-    private HttpResponse getConsentResponseHttpResponse() {
-        HttpResponse response = mock(HttpResponse.class);
-        when(response.getBody(ConsentResponse.class))
-                .thenReturn(
-                        SerializationUtils.deserializeFromString(
-                                Paths.get(TEST_DATA_PATH, "thirdparty_callback_response.json")
-                                        .toFile(),
-                                ConsentResponse.class));
-        return response;
+    @Test
+    public void when_user_is_authenticated_then_session_expiry_date_is_set() {
+        // given
+        Credentials credentials = mock(Credentials.class);
+
+        // when
+        authenticatorController.authenticate(credentials);
+
+        // then
+        verify(authenticator).storeConsentDetails();
     }
 
-    private Date toDate(String date) {
-        return Date.from(
-                LocalDate.parse(date).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
+    @Test
+    public void when_autoAuthenticate_then_session_expiry_date_should_be_set() {
+        // given
+        // when
+        authenticatorController.autoAuthenticate();
+
+        // then
+        verify(authenticator).storeConsentDetails();
     }
 }

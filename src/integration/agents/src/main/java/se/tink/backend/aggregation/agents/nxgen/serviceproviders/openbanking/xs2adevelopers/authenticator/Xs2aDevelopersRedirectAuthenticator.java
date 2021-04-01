@@ -7,23 +7,22 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 
-public class Xs2aDevelopersOAuth2AuthenticatorController
-        extends ThirdPartyAppAuthenticationController {
+public class Xs2aDevelopersRedirectAuthenticator extends ThirdPartyAppAuthenticationController {
 
     private final OAuth2AuthenticationController oAuth2AuthenticationController;
-    private final Xs2aDevelopersAuthenticator xs2ADevelopersAuthenticator;
+    private final Xs2aDevelopersAuthenticatorHelper xs2ADevelopersAuthenticatorHelper;
 
-    public Xs2aDevelopersOAuth2AuthenticatorController(
+    public Xs2aDevelopersRedirectAuthenticator(
             OAuth2AuthenticationController authenticator,
             SupplementalInformationHelper supplementalInformationHelper,
-            Xs2aDevelopersAuthenticator xs2ADevelopersAuthenticator) {
+            Xs2aDevelopersAuthenticatorHelper xs2ADevelopersAuthenticatorHelper) {
         super(authenticator, supplementalInformationHelper);
         this.oAuth2AuthenticationController = authenticator;
-        this.xs2ADevelopersAuthenticator = xs2ADevelopersAuthenticator;
+        this.xs2ADevelopersAuthenticatorHelper = xs2ADevelopersAuthenticatorHelper;
     }
 
     public void autoAuthenticate() throws SessionException, BankServiceException {
-        if (xs2ADevelopersAuthenticator.getConsentStatus().isValid()) {
+        if (xs2ADevelopersAuthenticatorHelper.getConsentStatus().isValid()) {
             oAuth2AuthenticationController.autoAuthenticate();
         } else {
             throw SessionError.SESSION_EXPIRED.exception();

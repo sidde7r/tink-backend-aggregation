@@ -30,7 +30,7 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
-public class Xs2aDevelopersDecoupledAuthenticationControllerTest {
+public class Xs2aDevelopersDecoupledAuthenticatorTest {
     private Credentials credentials;
     private SupplementalInformationController supplementalInformationController;
     private SupplementalInformationFormer supplementalInformationFormer;
@@ -50,7 +50,7 @@ public class Xs2aDevelopersDecoupledAuthenticationControllerTest {
         credentials = new Credentials();
     }
 
-    private Xs2aDevelopersAuthenticator createXs2aDevelopersAuthenticator(
+    private Xs2aDevelopersAuthenticatorHelper createXs2aDevelopersAuthenticatorHelper(
             TinkHttpClient tinkHttpClient,
             PersistentStorage persistentStorage,
             Credentials credentials) {
@@ -66,7 +66,7 @@ public class Xs2aDevelopersDecoupledAuthenticationControllerTest {
                         true,
                         "userIp",
                         new MockRandomValueGenerator());
-        return new Xs2aDevelopersAuthenticator(
+        return new Xs2aDevelopersAuthenticatorHelper(
                 xs2aDevelopersApiClient,
                 persistentStorage,
                 xs2aDevelopersProviderConfiguration,
@@ -85,11 +85,11 @@ public class Xs2aDevelopersDecoupledAuthenticationControllerTest {
                                 ConsentStatusResponse.class));
         TinkHttpClient httpClient = mockHttpClient(requestBuilder);
 
-        Xs2aDevelopersAuthenticator authenticator =
-                createXs2aDevelopersAuthenticator(
+        Xs2aDevelopersAuthenticatorHelper authenticator =
+                createXs2aDevelopersAuthenticatorHelper(
                         httpClient, createPersistentStorage(), credentials);
-        Xs2aDevelopersDecoupledAuthenticationController decoupledAuthenticationController =
-                new Xs2aDevelopersDecoupledAuthenticationController(
+        Xs2aDevelopersDecoupledAuthenticatior decoupledAuthenticationController =
+                new Xs2aDevelopersDecoupledAuthenticatior(
                         authenticator,
                         supplementalInformationController,
                         supplementalInformationFormer);
@@ -100,11 +100,10 @@ public class Xs2aDevelopersDecoupledAuthenticationControllerTest {
 
         // then
         assertThat(throwable).isNull();
-        assertThat(credentials.getSessionExpiryDate()).isNotNull();
     }
 
     @Test
-    public void authenticate_should_not_throw_exception_if_consent_status_failed() {
+    public void authenticate_should_throw_exception_if_consent_status_failed() {
         // given
         RequestBuilder requestBuilder = mockRequestBuilder();
         when(requestBuilder.get(ConsentStatusResponse.class))
@@ -115,11 +114,11 @@ public class Xs2aDevelopersDecoupledAuthenticationControllerTest {
                                 ConsentStatusResponse.class));
         TinkHttpClient httpClient = mockHttpClient(requestBuilder);
 
-        Xs2aDevelopersAuthenticator authenticator =
-                createXs2aDevelopersAuthenticator(
+        Xs2aDevelopersAuthenticatorHelper authenticator =
+                createXs2aDevelopersAuthenticatorHelper(
                         httpClient, createPersistentStorage(), credentials);
-        Xs2aDevelopersDecoupledAuthenticationController decoupledAuthenticationController =
-                new Xs2aDevelopersDecoupledAuthenticationController(
+        Xs2aDevelopersDecoupledAuthenticatior decoupledAuthenticationController =
+                new Xs2aDevelopersDecoupledAuthenticatior(
                         authenticator,
                         supplementalInformationController,
                         supplementalInformationFormer);
@@ -144,11 +143,11 @@ public class Xs2aDevelopersDecoupledAuthenticationControllerTest {
                                 ConsentStatusResponse.class));
         TinkHttpClient httpClient = mockHttpClient(requestBuilder);
 
-        Xs2aDevelopersAuthenticator authenticator =
-                createXs2aDevelopersAuthenticator(
+        Xs2aDevelopersAuthenticatorHelper authenticator =
+                createXs2aDevelopersAuthenticatorHelper(
                         httpClient, createPersistentStorage(), credentials);
-        Xs2aDevelopersDecoupledAuthenticationController decoupledAuthenticationController =
-                new Xs2aDevelopersDecoupledAuthenticationController(
+        Xs2aDevelopersDecoupledAuthenticatior decoupledAuthenticationController =
+                new Xs2aDevelopersDecoupledAuthenticatior(
                         authenticator,
                         supplementalInformationController,
                         supplementalInformationFormer);

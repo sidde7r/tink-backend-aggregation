@@ -4,10 +4,10 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 
 import com.google.inject.Inject;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
-import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bpost.authenticator.BPostAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bpost.authenticator.BPostAuthenticatorHelper;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bpost.fetcher.BpostTransactionsFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersTransactionalAgent;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.Xs2aDevelopersAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.Xs2aDevelopersAuthenticatorHelper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.transactionalaccount.Xs2aDevelopersTransactionalAccountFetcher;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcher;
@@ -24,9 +24,9 @@ public final class BpostAgent extends Xs2aDevelopersTransactionalAgent {
     }
 
     @Override
-    protected Xs2aDevelopersAuthenticator constructXs2aAuthenticator(
+    protected Xs2aDevelopersAuthenticatorHelper constructXs2aAuthenticator(
             AgentComponentProvider componentProvider) {
-        return new BPostAuthenticator(
+        return new BPostAuthenticatorHelper(
                 apiClient,
                 persistentStorage,
                 configuration,
@@ -37,7 +37,7 @@ public final class BpostAgent extends Xs2aDevelopersTransactionalAgent {
     protected TransactionalAccountRefreshController constructTransactionalAccountRefreshController(
             AgentComponentProvider agentComponentProvider) {
         final Xs2aDevelopersTransactionalAccountFetcher accountFetcher =
-                new Xs2aDevelopersTransactionalAccountFetcher(apiClient, authenticator);
+                new Xs2aDevelopersTransactionalAccountFetcher(apiClient, authenticatorHelper);
 
         final TransactionFetcher<TransactionalAccount> transactionFetcher =
                 new TransactionKeyWithInitDateFromFetcherController<>(

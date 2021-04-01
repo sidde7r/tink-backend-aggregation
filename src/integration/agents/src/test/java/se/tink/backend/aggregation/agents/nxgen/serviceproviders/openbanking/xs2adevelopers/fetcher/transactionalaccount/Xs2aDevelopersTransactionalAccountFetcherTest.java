@@ -6,6 +6,7 @@ import static org.mockito.Mockito.mock;
 import static se.tink.backend.agents.rpc.AccountTypes.CHECKING;
 import static se.tink.backend.agents.rpc.AccountTypes.SAVINGS;
 
+import java.nio.file.Paths;
 import java.util.Collection;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
@@ -14,7 +15,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.Xs2aDevelopersAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.Xs2aDevelopersAuthenticatorHelper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.transactionalaccount.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.transactionalaccount.rpc.GetBalanceResponse;
@@ -25,13 +26,15 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 @RunWith(JUnitParamsRunner.class)
 public class Xs2aDevelopersTransactionalAccountFetcherTest {
 
+    private static final String TEST_DATA_PATH =
+            "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/xs2adevelopers/resources/";
     private static final GetBalanceResponse BALANCE_RESPONSE =
             SerializationUtils.deserializeFromString(
-                    "{\"balances\" : [ {\"balanceType\" : \"authorised\", \"balanceAmount\" : {\"currency\" : \"EUR\", \"amount\" : 12.12 }}, {\"balanceType\" : \"authorised\", \"balanceAmount\" : {\"currency\" : \"EUR\", \"amount\" : 12.12 }} ] }",
+                    Paths.get(TEST_DATA_PATH, "balance_response.json").toFile(),
                     GetBalanceResponse.class);
     private Xs2aDevelopersApiClient apiClient = mock(Xs2aDevelopersApiClient.class);
-    private Xs2aDevelopersAuthenticator oauth2Authenticator =
-            Mockito.mock(Xs2aDevelopersAuthenticator.class);
+    private Xs2aDevelopersAuthenticatorHelper oauth2Authenticator =
+            Mockito.mock(Xs2aDevelopersAuthenticatorHelper.class);
     private Xs2aDevelopersTransactionalAccountFetcher accountFetcher =
             new Xs2aDevelopersTransactionalAccountFetcher(apiClient, oauth2Authenticator);
 
