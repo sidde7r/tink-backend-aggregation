@@ -9,11 +9,11 @@ import static org.mockito.Mockito.when;
 import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.AuthenticatorTestData.PASSWORD;
 import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.AuthenticatorTestData.SELECT_AUTH_METHOD_OK;
 import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.AuthenticatorTestData.USERNAME;
-import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.payment.PaymentTestUtil.PAYMENT_AUTHORIZATION_RESPONSE;
-import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.payment.PaymentTestUtil.PAYMENT_CREATE_RESPONSE;
-import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.payment.PaymentTestUtil.PAYMENT_SCA_AUTHENTICATION_FAILED_STATUS_RESPONSE;
-import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.payment.PaymentTestUtil.PAYMENT_SCA_AUTHENTICATION_STATUS_RESPONSE;
-import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.payment.PaymentTestUtil.PAYMENT_SCA_METHOD_SELECTION_RESPONSE;
+import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.payment.PaymentTestHelper.PAYMENT_AUTHORIZATION_RESPONSE;
+import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.payment.PaymentTestHelper.PAYMENT_CREATE_RESPONSE;
+import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.payment.PaymentTestHelper.PAYMENT_SCA_AUTHENTICATION_FAILED_STATUS_RESPONSE;
+import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.payment.PaymentTestHelper.PAYMENT_SCA_AUTHENTICATION_STATUS_RESPONSE;
+import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.payment.PaymentTestHelper.PAYMENT_SCA_METHOD_SELECTION_RESPONSE;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -23,7 +23,7 @@ import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenApiClient;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenStorage;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.payment.PaymentTestUtil;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.payment.PaymentTestHelper;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.i18n.Catalog;
@@ -37,7 +37,7 @@ public class PaymentAuthenticatorTest {
 
     private SparkassenPaymentAuthenticator authenticator;
     private Credentials credentials;
-    PaymentTestUtil paymentTestUtil;
+    PaymentTestHelper paymentTestHelper;
 
     @Before
     public void setup() {
@@ -58,27 +58,27 @@ public class PaymentAuthenticatorTest {
                         apiClient,
                         persistentStorage,
                         credentials);
-        paymentTestUtil = new PaymentTestUtil(supplementalInformationHelper, apiClient);
+        paymentTestHelper = new PaymentTestHelper(supplementalInformationHelper, apiClient);
     }
 
     @Test
     public void shouldCompletePaymentAuthenticationWithSelectingSCAMethod() {
         // given
-        paymentTestUtil.whenCreatePaymentAuthorizationReturn(PAYMENT_AUTHORIZATION_RESPONSE);
-        paymentTestUtil.whenSelectPaymentAuthorizationMethodReturn(
+        paymentTestHelper.whenCreatePaymentAuthorizationReturn(PAYMENT_AUTHORIZATION_RESPONSE);
+        paymentTestHelper.whenSelectPaymentAuthorizationMethodReturn(
                 PAYMENT_SCA_METHOD_SELECTION_RESPONSE);
-        paymentTestUtil.whenCreatePaymentFinalizeAuthorizationReturn(
+        paymentTestHelper.whenCreatePaymentFinalizeAuthorizationReturn(
                 PAYMENT_SCA_AUTHENTICATION_STATUS_RESPONSE);
-        paymentTestUtil.whenSupplementalInformationHelperReturn(SELECT_AUTH_METHOD_OK);
+        paymentTestHelper.whenSupplementalInformationHelperReturn(SELECT_AUTH_METHOD_OK);
 
         // when
         authenticator.authenticatePayment(credentials, PAYMENT_CREATE_RESPONSE);
 
         // then
-        paymentTestUtil.verifyInitializePaymentAuthorizationCalled();
-        paymentTestUtil.verifySelectPaymentAuthorizationMethodCalled();
-        paymentTestUtil.verifyFinalizePaymentAuthorizationCalled();
-        paymentTestUtil.verifyAskSupplementalInformationCalled(2);
+        paymentTestHelper.verifyInitializePaymentAuthorizationCalled();
+        paymentTestHelper.verifySelectPaymentAuthorizationMethodCalled();
+        paymentTestHelper.verifyFinalizePaymentAuthorizationCalled();
+        paymentTestHelper.verifyAskSupplementalInformationCalled(2);
         verifyNoMoreInteractions(apiClient);
         verifyNoMoreInteractions(supplementalInformationHelper);
     }
@@ -86,12 +86,12 @@ public class PaymentAuthenticatorTest {
     @Test
     public void shouldThrowPaymentAuthenticationErrorWhenScaAuthenticationFailed() {
         // given
-        paymentTestUtil.whenCreatePaymentAuthorizationReturn(PAYMENT_AUTHORIZATION_RESPONSE);
-        paymentTestUtil.whenSelectPaymentAuthorizationMethodReturn(
+        paymentTestHelper.whenCreatePaymentAuthorizationReturn(PAYMENT_AUTHORIZATION_RESPONSE);
+        paymentTestHelper.whenSelectPaymentAuthorizationMethodReturn(
                 PAYMENT_SCA_METHOD_SELECTION_RESPONSE);
-        paymentTestUtil.whenCreatePaymentFinalizeAuthorizationReturn(
+        paymentTestHelper.whenCreatePaymentFinalizeAuthorizationReturn(
                 PAYMENT_SCA_AUTHENTICATION_FAILED_STATUS_RESPONSE);
-        paymentTestUtil.whenSupplementalInformationHelperReturn(SELECT_AUTH_METHOD_OK);
+        paymentTestHelper.whenSupplementalInformationHelperReturn(SELECT_AUTH_METHOD_OK);
 
         // when
         Throwable throwable =

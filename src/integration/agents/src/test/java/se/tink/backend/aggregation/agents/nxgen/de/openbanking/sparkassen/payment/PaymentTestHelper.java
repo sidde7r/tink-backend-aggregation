@@ -37,12 +37,12 @@ import se.tink.libraries.transfer.enums.RemittanceInformationType;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 @Ignore
-public class PaymentTestUtil {
+public class PaymentTestHelper {
 
     private SupplementalInformationHelper supplementalInformationHelper;
     private SparkassenApiClient apiClient;
 
-    public PaymentTestUtil(
+    public PaymentTestHelper(
             SupplementalInformationHelper supplementalInformationHelper,
             SparkassenApiClient apiClient) {
         this.supplementalInformationHelper = supplementalInformationHelper;

@@ -9,13 +9,14 @@ import static org.mockito.Mockito.when;
 import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.AuthenticatorTestData.PASSWORD;
 import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.AuthenticatorTestData.SELECT_AUTH_METHOD_OK;
 import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.AuthenticatorTestData.USERNAME;
-import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.payment.PaymentTestUtil.PAYMENT_AUTHORIZATION_RESPONSE;
-import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.payment.PaymentTestUtil.PAYMENT_SCA_AUTHENTICATION_STATUS_RESPONSE;
-import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.payment.PaymentTestUtil.PAYMENT_SCA_METHOD_SELECTION_RESPONSE;
-import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.payment.PaymentTestUtil.PAYMENT_STATUS_CANCELED_RESPONSE;
-import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.payment.PaymentTestUtil.PAYMENT_STATUS_REJECTED_RESPONSE;
-import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.payment.PaymentTestUtil.PAYMENT_STATUS_SIGNED_RESPONSE;
+import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.payment.PaymentTestHelper.PAYMENT_AUTHORIZATION_RESPONSE;
+import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.payment.PaymentTestHelper.PAYMENT_SCA_AUTHENTICATION_STATUS_RESPONSE;
+import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.payment.PaymentTestHelper.PAYMENT_SCA_METHOD_SELECTION_RESPONSE;
+import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.payment.PaymentTestHelper.PAYMENT_STATUS_CANCELED_RESPONSE;
+import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.payment.PaymentTestHelper.PAYMENT_STATUS_REJECTED_RESPONSE;
+import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.payment.PaymentTestHelper.PAYMENT_STATUS_SIGNED_RESPONSE;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Credentials;
@@ -30,7 +31,9 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authen
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.BasePaymentExecutor;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.PaymentAuthenticator;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.enums.PaymentAuthenticationMode;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepRequest;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
@@ -46,7 +49,7 @@ public class SparkassenPaymentExecutorTest {
 
     private SupplementalInformationHelper supplementalInformationHelper;
     private SparkassenStorage persistentStorage;
-    PaymentTestUtil paymentTestUtil;
+    PaymentTestHelper paymentTestHelper;
 
     @Before
     public void setup() {
@@ -68,7 +71,7 @@ public class SparkassenPaymentExecutorTest {
                         persistentStorage,
                         credentials);
         when(catalog.getString(any(LocalizableKey.class))).thenReturn("");
-        paymentTestUtil = new PaymentTestUtil(supplementalInformationHelper, apiClient);
+        paymentTestHelper = new PaymentTestHelper(supplementalInformationHelper, apiClient);
 
         paymentExecutor =
                 new BasePaymentExecutor(
@@ -79,53 +82,56 @@ public class SparkassenPaymentExecutorTest {
     }
 
     @Test
-    public void testPaymentCreate() throws PaymentException {
+    public void shouldCreatePayment() throws PaymentException {
         // given
-        paymentTestUtil.whenCreatePaymentAuthorizationReturn(PAYMENT_AUTHORIZATION_RESPONSE);
-        paymentTestUtil.whenSelectPaymentAuthorizationMethodReturn(
+        paymentTestHelper.whenCreatePaymentAuthorizationReturn(PAYMENT_AUTHORIZATION_RESPONSE);
+        paymentTestHelper.whenSelectPaymentAuthorizationMethodReturn(
                 PAYMENT_SCA_METHOD_SELECTION_RESPONSE);
-        paymentTestUtil.whenCreatePaymentFinalizeAuthorizationReturn(
+        paymentTestHelper.whenCreatePaymentFinalizeAuthorizationReturn(
                 PAYMENT_SCA_AUTHENTICATION_STATUS_RESPONSE);
-        paymentTestUtil.whenSupplementalInformationHelperReturn(SELECT_AUTH_METHOD_OK);
+        paymentTestHelper.whenSupplementalInformationHelperReturn(SELECT_AUTH_METHOD_OK);
 
-        PaymentRequest paymentRequest = paymentTestUtil.createPaymentRequest();
-        paymentTestUtil.whenCreatePaymentReturn(paymentRequest);
+        PaymentRequest paymentRequest = paymentTestHelper.createPaymentRequest();
+        paymentTestHelper.whenCreatePaymentReturn(paymentRequest);
 
         // when
         paymentExecutor.create(paymentRequest);
 
         // then
-        paymentTestUtil.verifyInitializePaymentAuthorizationCalled();
-        paymentTestUtil.verifySelectPaymentAuthorizationMethodCalled();
-        paymentTestUtil.verifyFinalizePaymentAuthorizationCalled();
-        paymentTestUtil.verifyAskSupplementalInformationCalled(2);
-        paymentTestUtil.verifyCreatePaymentCalled();
+        paymentTestHelper.verifyInitializePaymentAuthorizationCalled();
+        paymentTestHelper.verifySelectPaymentAuthorizationMethodCalled();
+        paymentTestHelper.verifyFinalizePaymentAuthorizationCalled();
+        paymentTestHelper.verifyAskSupplementalInformationCalled(2);
+        paymentTestHelper.verifyCreatePaymentCalled();
         verifyNoMoreInteractions(apiClient);
         verifyNoMoreInteractions(supplementalInformationHelper);
     }
 
     @Test
-    public void testPaymentSignSuccess() throws PaymentException {
+    public void shouldSignAndPaymentIsSuccessful() throws PaymentException {
         // given
-        PaymentRequest paymentRequest = paymentTestUtil.createPaymentRequest();
-        paymentTestUtil.whenFetchPaymentStatusReturn(
+        PaymentRequest paymentRequest = paymentTestHelper.createPaymentRequest();
+        paymentTestHelper.whenFetchPaymentStatusReturn(
                 paymentRequest, PAYMENT_STATUS_SIGNED_RESPONSE);
 
         // when
-        paymentExecutor.sign(PaymentMultiStepRequest.of(paymentTestUtil.createPaymentResponse()));
-
+        PaymentMultiStepResponse paymentMultiStepResponse =
+                paymentExecutor.sign(
+                        PaymentMultiStepRequest.of(paymentTestHelper.createPaymentResponse()));
+        Assert.assertEquals(
+                AuthenticationStepConstants.STEP_FINALIZE, paymentMultiStepResponse.getStep());
         // then
 
-        paymentTestUtil.verifyFetchPaymentStatusCalled();
+        paymentTestHelper.verifyFetchPaymentStatusCalled();
         verifyNoMoreInteractions(apiClient);
         verifyNoMoreInteractions(supplementalInformationHelper);
     }
 
     @Test
-    public void testPaymentSignRejected() throws PaymentException {
+    public void shouldSignAndPaymentIsRejected() throws PaymentException {
         // given
-        PaymentRequest paymentRequest = paymentTestUtil.createPaymentRequest();
-        paymentTestUtil.whenFetchPaymentStatusReturn(
+        PaymentRequest paymentRequest = paymentTestHelper.createPaymentRequest();
+        paymentTestHelper.whenFetchPaymentStatusReturn(
                 paymentRequest, PAYMENT_STATUS_REJECTED_RESPONSE);
 
         // when
@@ -134,21 +140,21 @@ public class SparkassenPaymentExecutorTest {
                         () ->
                                 paymentExecutor.sign(
                                         PaymentMultiStepRequest.of(
-                                                paymentTestUtil.createPaymentResponse())));
+                                                paymentTestHelper.createPaymentResponse())));
 
         // then
 
         assertThat(throwable).isInstanceOf(PaymentRejectedException.class);
-        paymentTestUtil.verifyFetchPaymentStatusCalled();
+        paymentTestHelper.verifyFetchPaymentStatusCalled();
         verifyNoMoreInteractions(apiClient);
         verifyNoMoreInteractions(supplementalInformationHelper);
     }
 
     @Test
-    public void testPaymentSignCancelled() throws PaymentException {
+    public void shouldSignAndPaymentIsCancelled() throws PaymentException {
         // given
-        PaymentRequest paymentRequest = paymentTestUtil.createPaymentRequest();
-        paymentTestUtil.whenFetchPaymentStatusReturn(
+        PaymentRequest paymentRequest = paymentTestHelper.createPaymentRequest();
+        paymentTestHelper.whenFetchPaymentStatusReturn(
                 paymentRequest, PAYMENT_STATUS_CANCELED_RESPONSE);
 
         // when
@@ -157,12 +163,12 @@ public class SparkassenPaymentExecutorTest {
                         () ->
                                 paymentExecutor.sign(
                                         PaymentMultiStepRequest.of(
-                                                paymentTestUtil.createPaymentResponse())));
+                                                paymentTestHelper.createPaymentResponse())));
 
         // then
 
         assertThat(throwable).isInstanceOf(PaymentCancelledException.class);
-        paymentTestUtil.verifyFetchPaymentStatusCalled();
+        paymentTestHelper.verifyFetchPaymentStatusCalled();
         verifyNoMoreInteractions(apiClient);
         verifyNoMoreInteractions(supplementalInformationHelper);
     }
