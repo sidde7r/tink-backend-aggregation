@@ -18,13 +18,13 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 @Ignore
 public class AuthenticatorTestData {
 
-    private static final String TEST_DATA_PATH =
+    public static final String TEST_DATA_PATH =
             "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/de/openbanking/sparkassen/resources/";
 
-    static final String USERNAME = "username";
-    static final String PASSWORD = "password";
+    public static final String USERNAME = "username";
+    public static final String PASSWORD = "password";
 
-    static final String TEST_OTP = "OTP_1";
+    public static final String TEST_OTP = "OTP_1";
     static final String TEST_SCA_METHOD_ID = "METHOD_1";
 
     static final String TEST_CONSENT_ID = "147852369";
@@ -34,7 +34,6 @@ public class AuthenticatorTestData {
                     "https://xs2a.f-i-apim.de:8443/fixs2aop-env/xs2a-api/75050000/v1/consents/147852369/authorisations");
     static final String TEST_SCA_OAUTH_URL =
             "https://xs2a.f-i-apim.de:8443/fixs2aop-env/oauth/75050000/.well-known";
-
     static final HttpResponseException HTTP_RESPONSE_EXCEPTION =
             new HttpResponseException(null, null);
 
@@ -86,7 +85,7 @@ public class AuthenticatorTestData {
                     Paths.get(TEST_DATA_PATH, "init_auth_response_ok_two_methods.json").toFile(),
                     AuthenticationMethodResponse.class);
 
-    static final AuthenticationMethodResponse SELECT_AUTH_METHOD_OK =
+    public static final AuthenticationMethodResponse SELECT_AUTH_METHOD_OK =
             SerializationUtils.deserializeFromString(
                     Paths.get(TEST_DATA_PATH, "select_auth_method_ok.json").toFile(),
                     AuthenticationMethodResponse.class);

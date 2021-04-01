@@ -1,0 +1,22 @@
+{
+  "scaStatus": "scaMethodSelected",
+  "chosenScaMethod": {
+    "authenticationType": "PUSH_OTP",
+    "authenticationMethodId": "Classic - nummer1",
+    "name": "pushTAN | nummer1"
+  },
+  "challengeData": {
+    "otpMaxLength": 6,
+    "otpFormat": "integer",
+    "additionalInformation": "Bitte geben Sie die pushTAN ein."
+  },
+  "_links": {
+    "scaStatus": {
+      "href": "https://xs2a.f-i-apim.de:8443/fixs2aop-env/xs2a-api/70150000/v1/payments/sepa-credit-transfers/433018b6-0929-454b-8d35-a276bbfd7b1e/authorisations/**HASHED:B3**"
+    },
+    "authoriseTransaction": {
+      "href": "https://xs2a.f-i-apim.de:8443/fixs2aop-env/xs2a-api/70150000/v1/payments/sepa-credit-transfers/433018b6-0929-454b-8d35-a276bbfd7b1e/authorisations/**HASHED:B3**"
+    }
+  },
+  "psuMessage": "0030- Auftrag empfangen - Bitte die empfangene TAN eingeben."
+}
