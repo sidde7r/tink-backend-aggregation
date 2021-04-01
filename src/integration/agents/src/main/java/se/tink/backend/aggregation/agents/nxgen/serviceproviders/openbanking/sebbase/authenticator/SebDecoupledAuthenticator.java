@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
-import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
+import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebCommonConstants.ErrorMessages;
@@ -100,7 +100,7 @@ public class SebDecoupledAuthenticator implements BankIdAuthenticator<String> {
                 return BankIdStatus.WAITING;
 
             case PollResponses.REQUIRES_EXTRA_VERIFICATION:
-                throw LoginError.NOT_SUPPORTED.exception(
+                throw BankIdError.AUTHORIZATION_REQUIRED.exception(
                         new LocalizableKey(ErrorMessages.REQUIRES_EXTRA_VERIFICATION));
 
             case PollResponses.FAILED:
