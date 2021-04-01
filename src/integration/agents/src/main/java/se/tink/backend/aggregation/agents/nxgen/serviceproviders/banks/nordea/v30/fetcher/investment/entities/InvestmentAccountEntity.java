@@ -127,9 +127,9 @@ public class InvestmentAccountEntity {
 
     private PortfolioType getTinkPortfolioType() {
 
-        final String type = id.substring(0, id.indexOf(":"));
+        final String portfolioType = id.substring(0, id.indexOf(":"));
         return NordeaBaseConstants.PORTFOLIO_TYPE_MAPPER
-                .translate(type)
+                .translate(portfolioType)
                 .orElse(PortfolioType.OTHER);
     }
 
