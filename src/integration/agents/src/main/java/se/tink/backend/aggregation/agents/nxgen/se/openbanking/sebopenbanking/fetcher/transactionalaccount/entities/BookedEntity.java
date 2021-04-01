@@ -1,22 +1,32 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.fetcher.transactionalaccount.entities;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.Date;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
+import se.tink.backend.aggregation.agents.models.TransactionDateType;
+import se.tink.backend.aggregation.agents.models.TransactionExternalSystemIdType;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.SebApiClient;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.SebConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction.Builder;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
+import se.tink.backend.aggregation.nxgen.core.transaction.TransactionDate;
+import se.tink.backend.aggregation.utils.json.deserializers.LocalDateDeserializer;
+import se.tink.libraries.chrono.AvailableDateInformation;
 
 @JsonObject
 public class BookedEntity {
     private String transactionId;
 
-    private String valueDate;
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    private LocalDate valueDate;
 
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    private Date bookingDate;
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    private LocalDate bookingDate;
 
     private String entryReference;
 
@@ -35,12 +45,20 @@ public class BookedEntity {
 
     @JsonIgnore
     public Transaction toTinkTransaction(SebApiClient apiClient) {
-        return Transaction.builder()
-                .setAmount(transactionAmount.getAmount())
-                .setDate(bookingDate)
-                .setDescription(getDescription(apiClient))
-                .setPending(false)
-                .build();
+        Builder builder =
+                Transaction.builder()
+                        .setAmount(transactionAmount.getAmount())
+                        .setDate(bookingDate)
+                        .setDescription(getDescription(apiClient))
+                        .setPending(false)
+                        .addExternalSystemIds(
+                                TransactionExternalSystemIdType.PROVIDER_GIVEN_TRANSACTION_ID,
+                                transactionId)
+                        .addTransactionDates(getTinkTransactionDates())
+                        .setProprietaryFinancialInstitutionType(proprietaryBankTransactionCodeText)
+                        .setProviderMarket(SebConstants.MARKET);
+
+        return (Transaction) builder.build();
     }
 
     @JsonIgnore
@@ -53,5 +71,23 @@ public class BookedEntity {
         } else {
             return descriptiveText;
         }
+    }
+
+    private List<TransactionDate> getTinkTransactionDates() {
+        List<TransactionDate> transactionDates = new ArrayList<>();
+
+        transactionDates.add(
+                TransactionDate.builder()
+                        .type(TransactionDateType.VALUE_DATE)
+                        .value(new AvailableDateInformation().setDate(valueDate))
+                        .build());
+
+        transactionDates.add(
+                TransactionDate.builder()
+                        .type(TransactionDateType.BOOKING_DATE)
+                        .value(new AvailableDateInformation().setDate(bookingDate))
+                        .build());
+
+        return transactionDates;
     }
 }

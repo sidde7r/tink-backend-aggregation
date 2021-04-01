@@ -32,16 +32,18 @@ public class AvailableDateInformation {
         return date;
     }
 
-    public void setDate(LocalDate date) {
+    public AvailableDateInformation setDate(LocalDate date) {
         this.date = date;
+        return this;
     }
 
     public Instant getInstant() {
         return instant;
     }
 
-    public void setInstant(Instant instant) {
+    public AvailableDateInformation setInstant(Instant instant) {
         this.instant = instant;
+        return this;
     }
 
     @Override
