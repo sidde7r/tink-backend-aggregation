@@ -58,7 +58,7 @@ public final class SebAgent extends SebBaseAgent<SebApiClient>
     @Inject
     public SebAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
-        connfigureHttpClient(client);
+        configureHttpClient(client);
         this.apiClient = new SebApiClient(client, persistentStorage, request.isManual());
         this.instanceStorage = new SebStorage();
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
@@ -71,7 +71,7 @@ public final class SebAgent extends SebBaseAgent<SebApiClient>
                 metricRefreshController, new SebTransferDestinationFetcher(apiClient));
     }
 
-    private void connfigureHttpClient(TinkHttpClient client) {
+    private void configureHttpClient(TinkHttpClient client) {
         client.addFilter(
                 new AccessExceededFilter(this.provider != null ? this.provider.getName() : null));
     }
