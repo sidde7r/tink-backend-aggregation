@@ -315,7 +315,7 @@ PROTOBUF_VERSION = "3.11.3"
 # https://github.com/grpc/grpc-java/blob/master/SECURITY.md#netty
 GRPC_JAVA_VERSION = "1.29.0"
 
-IO_NETTY_VERSION = "4.1.48.Final"
+IO_NETTY_VERSION = "4.1.50.Final"
 
 IO_NETTY_BORINGSSL_VERSION = "2.0.30.Final"
 
@@ -632,6 +632,13 @@ maven_deps(
     IO_NETTY_VERSION,
     IO_NETTY_BORINGSSL_VERSION,
     artifact_versions = {
+        "io.netty:netty-buffer": IO_NETTY_VERSION,
+        "io.netty:netty-codec-http": IO_NETTY_VERSION,
+        "io.netty:netty-codec-http2": IO_NETTY_VERSION,
+        "io.netty:netty-common": IO_NETTY_VERSION,
+        "io.netty:netty-handler": IO_NETTY_VERSION,
+        "io.netty:netty-resolver": IO_NETTY_VERSION,
+        "io.netty:netty-transport": IO_NETTY_VERSION,
         "javax.validation:validation-api": "2.0.1.Final",
         "org.apache.httpcomponents:httpcore": "4.4.13",
         "org.springframework:spring-aop": "4.3.9.RELEASE",
