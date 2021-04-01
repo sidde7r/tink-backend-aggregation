@@ -45,7 +45,8 @@ public class BbvaAuthenticator implements MultiFactorAuthenticator {
             LoginResponse loginResponse = apiClient.login(loginRequest);
             String authenticationState = loginResponse.getAuthenticationState();
             log.info("Authentication state: {}", authenticationState);
-            if (isTwoFactorAuthenticationNeeded(authenticationState)) {
+            if (isTwoFactorAuthNeeded(authenticationState)) {
+                abortIfUserNotAvailableForInteraction();
                 loginWithOtp(loginResponse.getMultistepProcessId(), userCredentials);
             }
         } catch (HttpResponseException ex) {
@@ -69,14 +70,19 @@ public class BbvaAuthenticator implements MultiFactorAuthenticator {
         apiClient.login(otpRequest);
     }
 
-    private boolean isTwoFactorAuthenticationNeeded(String authenticationState) {
-        if (!request.isManual()
-                && authenticationState.equalsIgnoreCase(AuthenticationStates.GO_ON)) {
+    private boolean isTwoFactorAuthNeeded(String authenticationState) {
+        return authenticationState.equalsIgnoreCase(AuthenticationStates.GO_ON);
+    }
+
+    private void abortIfUserNotAvailableForInteraction() {
+        if (userNotAvailableForInteraction()) {
             throw BankServiceError.SESSION_TERMINATED.exception(
                     "SCA request during auto refresh, aborting authentication");
         }
-        return authenticationState.equalsIgnoreCase(AuthenticationStates.GO_ON)
-                && request.isManual();
+    }
+
+    private boolean userNotAvailableForInteraction() {
+        return !request.getUserAvailability().isUserAvailableForInteraction();
     }
 
     private void mapHttpErrors(HttpResponseException e) throws LoginException {
