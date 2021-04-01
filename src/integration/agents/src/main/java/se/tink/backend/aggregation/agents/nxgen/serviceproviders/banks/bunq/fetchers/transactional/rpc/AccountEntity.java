@@ -123,7 +123,7 @@ public class AccountEntity {
                                         TransactionalAccount.nxBuilder()
                                                 .withType(accountType)
                                                 .withPaymentAccountFlag()
-                                                .withBalance(BalanceModule.of(balance))
+                                                .withBalance(getBalanceModule())
                                                 .withId(getIdModule(account.getValue()))
                                                 .addHolderName(account.getName())
                                                 .setApiIdentifier(accountId)
@@ -138,5 +138,10 @@ public class AccountEntity {
                 .withAccountName(description)
                 .addIdentifier(new IbanIdentifier(accountNumber))
                 .build();
+    }
+
+    // Use default balance from the bank
+    private BalanceModule getBalanceModule() {
+        return BalanceModule.builder().withBalance(balance.getAsTinkAmount()).build();
     }
 }
