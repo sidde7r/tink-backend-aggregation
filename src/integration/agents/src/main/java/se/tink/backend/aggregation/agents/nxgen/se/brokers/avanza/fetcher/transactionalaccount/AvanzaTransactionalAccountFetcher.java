@@ -17,7 +17,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
-import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
@@ -41,7 +40,7 @@ public class AvanzaTransactionalAccountFetcher
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
-        final HolderName holderName = new HolderName(temporaryStorage.get(StorageKeys.HOLDER_NAME));
+        String holderName = temporaryStorage.getOrDefault(StorageKeys.HOLDER_NAME, null);
 
         return authSessionStorage.keySet().stream()
                 .flatMap(getAccounts(holderName))
@@ -49,7 +48,7 @@ public class AvanzaTransactionalAccountFetcher
     }
 
     private Function<String, Stream<? extends TransactionalAccount>> getAccounts(
-            HolderName holderName) {
+            String holderName) {
         return authSession ->
                 apiClient.fetchAccounts(authSession).getAccounts().stream()
                         .filter(AccountEntity::isTransactionalAccount)
