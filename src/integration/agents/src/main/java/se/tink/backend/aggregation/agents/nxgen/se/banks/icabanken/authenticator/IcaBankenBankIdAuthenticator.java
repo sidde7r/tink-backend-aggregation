@@ -7,7 +7,6 @@ import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
-import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.IcaBankenApiClient;
@@ -74,7 +73,7 @@ public class IcaBankenBankIdAuthenticator implements BankIdAuthenticator<String>
             }
 
             if (!customer.isUpdatedKDK()) {
-                throw AuthorizationError.ACCOUNT_BLOCKED.exception(
+                throw LoginError.NO_ACCESS_TO_MOBILE_BANKING.exception(
                         IcaBankenConstants.UserMessage.KNOW_YOUR_CUSTOMER.getKey());
             }
 

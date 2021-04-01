@@ -14,7 +14,6 @@ import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
-import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.IcaBankenApiClient;
@@ -197,7 +196,7 @@ public class IcaBankenAuthenticator implements OAuth2Authenticator {
                     e.getResponse().getBody(AccountsErrorResponse.class);
 
             if (errorResponse.isOldKycInfoError()) {
-                throw AuthorizationError.ACCOUNT_BLOCKED.exception(
+                throw LoginError.NO_ACCESS_TO_MOBILE_BANKING.exception(
                         IcaBankenConstants.EndUserMessage.MUST_ANSWER_KYC.getKey(), e);
             }
 
