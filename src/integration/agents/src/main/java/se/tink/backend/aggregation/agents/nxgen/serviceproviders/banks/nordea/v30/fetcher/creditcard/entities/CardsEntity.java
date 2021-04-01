@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v3
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
+import se.tink.backend.aggregation.source_info.AccountSourceInfo;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
@@ -54,7 +55,12 @@ public class CardsEntity {
                 .setAccountNumber(credit.getMaskedCreditCardNumber())
                 .setHolderName(new HolderName(cardholderName))
                 .setBankIdentifier(cardId)
+                .sourceInfo(createAccountSourceInfo())
                 .build();
+    }
+
+    private AccountSourceInfo createAccountSourceInfo() {
+        return AccountSourceInfo.builder().bankProductCode(productCode).build();
     }
 
     @JsonIgnore

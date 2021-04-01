@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdMo
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument.InstrumentModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.portfolio.PortfolioModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.portfolio.PortfolioModule.PortfolioType;
+import se.tink.backend.aggregation.source_info.AccountSourceInfo;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.enums.AccountIdentifierType;
 
@@ -45,6 +46,8 @@ public class InvestmentAccountEntity {
 
     @JsonProperty private List<HoldingEntity> holdings;
 
+    @JsonProperty private String type;
+
     public InvestmentAccount toTinkInvestmentAccount() {
 
         // TODO: create pension account builder
@@ -62,6 +65,7 @@ public class InvestmentAccountEntity {
                                             AccountIdentifier.create(
                                                     AccountIdentifierType.TINK, id))
                                     .build())
+                    .sourceInfo(createAccountSourceInfo())
                     .build();
         }
 
@@ -76,6 +80,13 @@ public class InvestmentAccountEntity {
                                 .addIdentifier(
                                         AccountIdentifier.create(AccountIdentifierType.TINK, id))
                                 .build())
+                .build();
+    }
+
+    private AccountSourceInfo createAccountSourceInfo() {
+        return AccountSourceInfo.builder()
+                .bankProductCode(type)
+                .bankAccountType(classification)
                 .build();
     }
 
