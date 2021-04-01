@@ -147,6 +147,10 @@ public final class AvanzaAccountTypeMappers {
         return verify(accountTypeKey, AccountTypes.LOAN);
     }
 
+    public boolean isPensionAccount(String accountTypeKey) {
+        return verify(accountTypeKey, AccountTypes.PENSION);
+    }
+
     private class AvanzaAccountTypeMapperExecutor implements AccountTypeMapperExecutor<String> {
         private final Logger LOGGER =
                 LoggerFactory.getLogger(AvanzaAccountTypeMapperExecutor.class);

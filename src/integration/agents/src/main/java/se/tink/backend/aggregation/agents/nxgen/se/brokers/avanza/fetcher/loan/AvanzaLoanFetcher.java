@@ -10,7 +10,6 @@ import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaAuthSess
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
-import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
 
@@ -31,14 +30,14 @@ public class AvanzaLoanFetcher implements AccountFetcher<LoanAccount> {
 
     @Override
     public Collection<LoanAccount> fetchAccounts() {
-        final HolderName holderName = new HolderName(temporaryStorage.get(StorageKeys.HOLDER_NAME));
+        String holderName = temporaryStorage.getOrDefault(StorageKeys.HOLDER_NAME, null);
 
         return authSessionStorage.keySet().stream()
                 .flatMap(getAccounts(holderName))
                 .collect(Collectors.toList());
     }
 
-    private Function<String, Stream<? extends LoanAccount>> getAccounts(HolderName holderName) {
+    private Function<String, Stream<? extends LoanAccount>> getAccounts(String holderName) {
         return authSession ->
                 apiClient.fetchAccounts(authSession).getAccounts().stream()
                         .filter(AccountEntity::isLoanAccount)

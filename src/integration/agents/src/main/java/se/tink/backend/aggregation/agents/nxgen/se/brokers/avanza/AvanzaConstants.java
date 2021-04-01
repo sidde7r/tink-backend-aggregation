@@ -115,47 +115,53 @@ public class AvanzaConstants {
         private static final String INVESTMENT_TRANSACTIONS_LIST =
                 TRANSACTIONS
                         + "/{accountId}/options?from={fromDate}&includeInstrumentsWithNoOrderbook=1&to={toDate}";
+        private static final String PENSION_DETAILS =
+                API + "/account-details/pension-details/{accountId}";
 
-        public static String LOGOUT(String authSession) {
+        public static String logout(String authSession) {
             return new UriTemplate(LOGOUT).createURI(authSession);
         }
 
-        public static String BANK_ID_INIT() {
+        public static String bankIdInit() {
             return new UriTemplate(BANK_ID_INIT).createURI();
         }
 
-        public static String BANK_ID_COLLECT(String transactionId) {
+        public static String bankIdCollect(String transactionId) {
             return new UriTemplate(BANK_ID_COLLECT).createURI(transactionId);
         }
 
-        public static String BANK_ID_COMPLETE(String transactionId, String customerId) {
+        public static String bankIdComplete(String transactionId, String customerId) {
             return new UriTemplate(BANK_ID_COMPLETE).createURI(transactionId, customerId);
         }
 
-        public static String MARKET_INFO(String instrumentType, String orderbookId) {
+        public static String marketInfo(String instrumentType, String orderbookId) {
             return new UriTemplate(MARKET_INFO).createURI(instrumentType, orderbookId);
         }
 
-        public static String ACCOUNTS_OVERVIEW() {
+        public static String accountsOverview() {
             return new UriTemplate(ACCOUNTS_OVERVIEW).createURI();
         }
 
-        public static String ACCOUNT_DETAILS(String accountId) {
+        public static String accountDetails(String accountId) {
             return new UriTemplate(ACCOUNT_DETAILS).createURI(accountId);
         }
 
-        public static String INVESTMENT_PORTFOLIO_POSITIONS(String accountId) {
+        public static String investmentPortfolioPositions(String accountId) {
             return new UriTemplate(INVESTMENT_PORTFOLIO_POSITIONS).createURI(accountId);
         }
 
-        public static String TRANSACTIONS_LIST(String accountId, String fromDate, String toDate) {
+        public static String transactionsList(String accountId, String fromDate, String toDate) {
             return new UriTemplate(TRANSACTIONS_LIST).createURI(accountId, fromDate, toDate);
         }
 
-        public static String INVESTMENT_TRANSACTIONS_LIST(
+        public static String investmentTransactionsList(
                 String accountId, String fromDate, String toDate) {
             return new UriTemplate(INVESTMENT_TRANSACTIONS_LIST)
                     .createURI(accountId, fromDate, toDate);
+        }
+
+        public static String pensionDetails(String accountId) {
+            return new UriTemplate(PENSION_DETAILS).createURI(accountId);
         }
     }
 

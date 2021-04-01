@@ -1,6 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.authenticator;
 
+import com.google.common.base.Strings;
+import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +25,8 @@ import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.authenticator.
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.authenticator.rpc.BankIdInitRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.authenticator.rpc.BankIdInitResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.authenticator.rpc.ErrorResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.investment.entities.SessionAccountPair;
+import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
@@ -93,8 +100,6 @@ public class AvanzaBankIdAuthenticator implements BankIdAuthenticator<BankIdInit
                 bankIdResponse
                         .getLogins()
                         .forEach(loginEntity -> completeAuthentication(loginEntity, transactionId));
-
-                temporaryStorage.put(StorageKeys.HOLDER_NAME, bankIdResponse.getName());
             }
 
             return status;
@@ -151,6 +156,47 @@ public class AvanzaBankIdAuthenticator implements BankIdAuthenticator<BankIdInit
 
         maskAuthCredentialsFromLogging(bankIdCompleteResponse);
         putAuthCredentialsInAuthSessionStorage(bankIdCompleteResponse);
+
+        try {
+            // The try/catch is only used temporarily to log if we fail at fetching the holder name.
+            // This should be removed at the latest 2020-05-01.
+            storeHolderNameIfAvailable();
+        } catch (Exception e) {
+            LOGGER.info("Could not fetch holder name with the exception: ", e);
+        }
+    }
+
+    private void storeHolderNameIfAvailable() {
+        List<SessionAccountPair> sessionAccountPairs =
+                authSessionStorage.keySet().stream()
+                        .flatMap(getSessionAccountPairs())
+                        .collect(Collectors.toList());
+
+        storeHolderNameInTemporaryStorage(sessionAccountPairs);
+    }
+
+    private Function<String, Stream<? extends SessionAccountPair>> getSessionAccountPairs() {
+        return authSession ->
+                apiClient.fetchAccounts(authSession).getAccounts().stream()
+                        // The holdername is only available from a pension detail endpoint.
+                        .filter(AccountEntity::isPensionAccount)
+                        .map(AccountEntity::getAccountId)
+                        .map(accountId -> new SessionAccountPair(authSession, accountId));
+    }
+
+    private void storeHolderNameInTemporaryStorage(List<SessionAccountPair> sessionAccountPairs) {
+        for (SessionAccountPair sessionAccount : sessionAccountPairs) {
+            String holderName =
+                    apiClient
+                            .fetchHolderNameFromPensionDetails(
+                                    sessionAccount.getAccountId(), sessionAccount.getAuthSession())
+                            .getInsuranceEntity()
+                            .getName();
+            if (!Strings.isNullOrEmpty(holderName)) {
+                temporaryStorage.put(StorageKeys.HOLDER_NAME, holderName);
+                return;
+            }
+        }
     }
 
     private void putAuthCredentialsInAuthSessionStorage(BankIdCompleteResponse response) {

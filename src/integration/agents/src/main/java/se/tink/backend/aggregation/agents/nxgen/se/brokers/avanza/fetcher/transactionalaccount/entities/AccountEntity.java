@@ -112,4 +112,9 @@ public class AccountEntity {
     public boolean isInvestmentAccount() {
         return MAPPERS.isInvestmentAccount(getAccountType());
     }
+
+    @JsonIgnore
+    public boolean isPensionAccount() {
+        return MAPPERS.isPensionAccount(getAccountType());
+    }
 }

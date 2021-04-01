@@ -16,7 +16,6 @@ import se.tink.backend.aggregation.agents.AgentParsingUtils;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaConstants.Currencies;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.transactionalaccount.entities.CurrencyAccountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
@@ -307,7 +306,7 @@ public class AccountDetailsResponse {
     }
 
     @JsonIgnore
-    public Optional<LoanAccount> toLoanAccount(HolderName holderName) {
+    public Optional<LoanAccount> toLoanAccount(String holderName) {
         return Optional.of(
                 LoanAccount.nxBuilder()
                         .withLoanDetails(getLoanDetails())
@@ -319,7 +318,7 @@ public class AccountDetailsResponse {
                                         .addIdentifier(new SwedishIdentifier(getAccountNumber()))
                                         .setProductName(accountType)
                                         .build())
-                        .addHolderName(holderName.toString())
+                        .addHolderName(holderName)
                         .setApiIdentifier(accountId)
                         .build());
     }
@@ -364,7 +363,7 @@ public class AccountDetailsResponse {
     }
 
     @JsonIgnore
-    public Optional<TransactionalAccount> toTinkAccount(HolderName holderName) {
+    public Optional<TransactionalAccount> toTinkAccount(String holderName) {
         final String accountName =
                 Strings.isNullOrEmpty(externalActor) ? accountType : accountType + externalActor;
         final String accountNumber = getAccountNumber();
@@ -380,7 +379,7 @@ public class AccountDetailsResponse {
                                 .withAccountName(accountName)
                                 .addIdentifier(new SwedishIdentifier(accountId))
                                 .build())
-                .addHolderName(holderName.toString())
+                .addHolderName(holderName)
                 .setApiIdentifier(accountId)
                 .build();
     }
