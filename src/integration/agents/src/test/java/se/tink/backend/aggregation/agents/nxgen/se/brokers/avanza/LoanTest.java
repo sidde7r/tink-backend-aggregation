@@ -6,7 +6,6 @@ import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.transactionalaccount.rpc.AccountDetailsResponse;
-import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.serialization.utils.SerializationUtils;
@@ -102,7 +101,7 @@ public class LoanTest {
     public void testLoanParsing() {
         AccountDetailsResponse deets =
                 SerializationUtils.deserializeFromString(data, AccountDetailsResponse.class);
-        Optional<LoanAccount> account = deets.toLoanAccount(new HolderName("Some Name"));
+        Optional<LoanAccount> account = deets.toLoanAccount("Some Name");
         Assert.assertTrue(account.isPresent());
         LoanAccount loanAccount = account.get();
         Assert.assertEquals(
@@ -112,7 +111,7 @@ public class LoanTest {
                 BigDecimal.valueOf(loanAccount.getInterestRate()));
 
         deets = SerializationUtils.deserializeFromString(data2, AccountDetailsResponse.class);
-        account = deets.toLoanAccount(new HolderName("Some Name"));
+        account = deets.toLoanAccount("Some Name");
         Assert.assertTrue(account.isPresent());
         loanAccount = account.get();
         Assert.assertEquals(
@@ -128,7 +127,7 @@ public class LoanTest {
         AccountDetailsResponse deets =
                 SerializationUtils.deserializeFromString(
                         SUPER_BOLAN_DATA, AccountDetailsResponse.class);
-        Optional<LoanAccount> account = deets.toLoanAccount(new HolderName("Some Name"));
+        Optional<LoanAccount> account = deets.toLoanAccount("Some Name");
         Assert.assertTrue(account.isPresent());
         LoanAccount loanAccount = account.get();
         Assert.assertEquals(
