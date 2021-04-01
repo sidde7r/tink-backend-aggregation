@@ -1,10 +1,10 @@
 load("//tools/bzl:junit.bzl", "junit_test")
 
 junit_test(
-    name = "mock",
+    name = "wiremock",
     srcs = glob(["*.java"]),
     data = [
-        "//data:agents",
+        "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/openbanking/seb/wiremock/resources",
     ],
     visibility = ["//visibility:public"],
     deps = [
