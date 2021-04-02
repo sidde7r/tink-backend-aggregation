@@ -4,10 +4,10 @@
       "accountExclusion":"NONE",
       "exactBalance":{
         "currencyCode":"EUR",
-        "doubleValue":789.01,
+        "doubleValue":123.45,
         "scale":2,
-        "unscaledValue":78901,
-        "exactValue":789.01
+        "unscaledValue":12345,
+        "exactValue":123.45
       },
       "currencyCode":"EUR",
       "name":"DUMMY_NAME",
@@ -18,7 +18,7 @@
       "holderName": null,
       "flags":"[\"PSD2_PAYMENT_ACCOUNT\"]",
       "availableCredit":0.0,
-      "balance":789.01
+      "balance":123.45
     }
   ],
   "transactions": [
