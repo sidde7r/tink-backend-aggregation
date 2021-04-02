@@ -17,17 +17,12 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.module.UkOpenBankingLocalKeySignerModuleForDecoupledMode;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.module.UkOpenBankingModule;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.signer.iface.JwtSigner;
-import se.tink.backend.aggregation.client.provider_configuration.rpc.PisCapability;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 
 @AgentDependencyModulesForProductionMode(modules = {UkOpenBankingModule.class})
 @AgentDependencyModulesForDecoupledMode(
         modules = UkOpenBankingLocalKeySignerModuleForDecoupledMode.class)
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, TRANSFERS, LIST_BENEFICIARIES})
-// TODO: remove EEA PIS capabilities after switch to EEA agent
-@AgentPisCapability(
-        capabilities = PisCapability.PIS_SEPA,
-        markets = {"FR", "IT", "ES", "DE", "PT"})
 @AgentPisCapability(capabilities = PIS_UK_FASTER_PAYMENT, markets = "GB")
 public final class RevolutV31Agent extends RevolutBaseAgent {
 
