@@ -26,6 +26,7 @@ public final class CbiGlobeConstants {
 
         public static final URL TOKEN = new URL(BASE_URL + ApiServices.TOKEN);
         public static final URL CONSENTS = new URL(BASE_URL + ApiServices.CONSENTS);
+        public static final URL UPDATE_CONSENTS = new URL(BASE_URL + ApiServices.UPDATE_CONSENTS);
         public static final URL ACCOUNTS = new URL(BASE_URL + ApiServices.ACCOUNTS);
         public static final URL BALANCES = new URL(BASE_URL + ApiServices.BALANCES);
         public static final URL TRANSACTIONS = new URL(BASE_URL + ApiServices.TRANSACTIONS);
@@ -44,6 +45,8 @@ public final class CbiGlobeConstants {
         public static final String TOKEN = "/auth/oauth/v2/token";
         public static final String CONSENTS =
                 "/platform/enabler/psd2orchestrator/ais/3.0.0/consents";
+        public static final String UPDATE_CONSENTS =
+                "/platform/enabler/psd2orchestrator/ais/2.3.2/consents";
         public static final String ACCOUNTS =
                 "/platform/enabler/psd2orchestrator/ais/3.0.0/accounts";
         public static final String BALANCES =
