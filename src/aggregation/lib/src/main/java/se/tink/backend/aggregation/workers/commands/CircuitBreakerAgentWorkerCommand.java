@@ -16,7 +16,9 @@ import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
+import se.tink.connectivity.errors.ConnectivityErrorDetails.ProviderErrors;
 import se.tink.libraries.i18n.Catalog;
+import src.libraries.connectivity_errors.ConnectivityErrorFactory;
 
 /**
  * A command that makes sure to stop continuing an operation if it has failed too many times
@@ -77,14 +79,15 @@ public class CircuitBreakerAgentWorkerCommand extends AgentWorkerCommand {
             if (!rateLimiter.tryAcquire()) {
                 if (Objects.equal(
                         circuitBreakerConfiguration.getMode(), CircuitBreakerMode.ENABLED)) {
-                    statusUpdater.updateStatus(
+                    statusUpdater.updateStatusWithError(
                             CredentialsStatus.TEMPORARY_ERROR,
                             Catalog.format(
                                     context.getCatalog()
                                             .getString(
                                                     "We are currently having technical issues with {0}. Please try again later."),
                                     provider.getDisplayName()),
-                            false);
+                            ConnectivityErrorFactory.providerError(
+                                    ProviderErrors.PROVIDER_UNAVAILABLE));
                     wasCircuitBreaked = true;
                     return AgentWorkerCommandResult.ABORT;
                 } else if (Objects.equal(
