@@ -1,15 +1,17 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.fetcher.transactionalaccount.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.Href;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.BnpParibasBaseConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.BnpParibasBaseConstants.ResponseValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.fetcher.transactionalaccount.rpc.BalanceResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.builder.BalanceBuilderStep;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.creditcard.CreditCardModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -19,6 +21,7 @@ import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
+@Slf4j
 @JsonObject
 public class AccountsItemEntity {
 
@@ -83,7 +86,7 @@ public class AccountsItemEntity {
                         BnpParibasBaseConstants.ACCOUNT_TYPE_MAPPER,
                         cashAccountType.toString(),
                         TransactionalAccountType.OTHER)
-                .withBalance(BalanceModule.of(getAvailableBalance(balanceResponse)))
+                .withBalance(getBalanceModule(balanceResponse.getBalances()))
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(accountId.getIban())
@@ -120,26 +123,47 @@ public class AccountsItemEntity {
                 .build();
     }
 
-    private ExactCurrencyAmount getAvailableBalance(BalanceResponse balanceResponse) {
-        List<BalancesItemEntity> balancesList =
-                Optional.ofNullable(balanceResponse.getBalances()).orElse(Collections.emptyList());
+    private BalanceModule getBalanceModule(List<BalancesItemEntity> balances) {
+        BalanceBuilderStep balanceBuilderStep =
+                BalanceModule.builder().withBalance(getBookedBalance(balances));
+        getAvailableBalance(balances).ifPresent(balanceBuilderStep::setAvailableBalance);
+        return balanceBuilderStep.build();
+    }
 
-        Optional<BalancesItemEntity> futureBalance =
-                balancesList.stream().filter(BalancesItemEntity::isFutureBalance).findFirst();
-
-        Optional<BalancesItemEntity> closingBalance =
-                balancesList.stream().filter(BalancesItemEntity::isClosingBalance).findFirst();
-
-        BalancesItemEntity availableBalance;
-        if (futureBalance.isPresent()) {
-            availableBalance = futureBalance.get();
-        } else if (closingBalance.isPresent()) {
-            availableBalance = closingBalance.get();
-        } else {
-            throw new IllegalStateException();
+    private ExactCurrencyAmount getBookedBalance(List<BalancesItemEntity> balances) {
+        if (balances.isEmpty()) {
+            throw new IllegalArgumentException(
+                    "Cannot determine booked balance from empty list of balances.");
         }
+        Optional<BalancesItemEntity> balanceEntity =
+                balances.stream()
+                        .filter(
+                                b ->
+                                        ResponseValues.BALANCE_TYPE_CLOSING.equalsIgnoreCase(
+                                                b.getBalanceType()))
+                        .findAny();
 
-        return availableBalance.getAmountEntity().toAmount();
+        if (!balanceEntity.isPresent()) {
+            log.warn(
+                    "Couldn't determine booked balance of known type, and no credit limit included. Defaulting to first provided balance.");
+        }
+        return balanceEntity
+                .map(Optional::of)
+                .orElseGet(() -> balances.stream().findFirst())
+                .map(BalancesItemEntity::getAmountEntity)
+                .map(AmountEntity::toAmount)
+                .get();
+    }
+
+    private Optional<ExactCurrencyAmount> getAvailableBalance(List<BalancesItemEntity> balances) {
+        return balances.stream()
+                .filter(
+                        b ->
+                                ResponseValues.BALANCE_TYPE_EXPECTED.equalsIgnoreCase(
+                                        b.getBalanceType()))
+                .findAny()
+                .map(BalancesItemEntity::getAmountEntity)
+                .map(AmountEntity::toAmount);
     }
 
     private ExactCurrencyAmount getBalanceCard(BalanceResponse balanceResponse) {

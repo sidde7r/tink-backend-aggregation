@@ -31,6 +31,7 @@ java_library(
         "//third_party:lombok_libs",
         "//third_party:org_apache_commons_commons_lang",
         "//third_party:org_apache_httpcomponents_httpcore",
+        "//third_party:org_slf4j_slf4j_api",
         "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
         "@tink_backend//src/libraries/account_identifier",
     ],
