@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sw
 import java.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
+import se.tink.backend.aggregation.agents.exceptions.payment.InsufficientFundsException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.AgentWireMockPaymentTest;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.command.PaymentCommand;
@@ -26,6 +27,8 @@ public class SwedbankOBAgentWiremockTest {
             RESOURCES_PATH + "/wireMock-swedbank-ob-pis.aap";
     private static final String WIRE_MOCK_CANCELLED_PAYMENT_WITH_NEW_RECIPIENT =
             RESOURCES_PATH + "/wiremock-swedbank-ob-pis-cancelled.aap";
+    private static final String WIRE_MOCK_FAILED_PAYMENT_WITH_NEW_RECIPIENT =
+            RESOURCES_PATH + "/wiremock-swedbank-ob-pis-failed.aap";
 
     private AgentsServiceConfiguration configuration;
 
@@ -56,6 +59,21 @@ public class SwedbankOBAgentWiremockTest {
                                 MarketCode.SE,
                                 "se-swedbank-ob",
                                 WIRE_MOCK_CANCELLED_PAYMENT_WITH_NEW_RECIPIENT)
+                        .withConfigurationFile(configuration)
+                        .withHttpDebugTrace()
+                        .withPayment(createMockedDomesticPayment())
+                        .buildWithLogin(PaymentCommand.class);
+
+        agentWireMockPaymentTest.executePayment();
+    }
+
+    @Test(expected = InsufficientFundsException.class)
+    public void testFailedPaymentWithNewRecipient() throws Exception {
+        AgentWireMockPaymentTest agentWireMockPaymentTest =
+                AgentWireMockPaymentTest.builder(
+                                MarketCode.SE,
+                                "se-swedbank-ob",
+                                WIRE_MOCK_FAILED_PAYMENT_WITH_NEW_RECIPIENT)
                         .withConfigurationFile(configuration)
                         .withHttpDebugTrace()
                         .withPayment(createMockedDomesticPayment())
