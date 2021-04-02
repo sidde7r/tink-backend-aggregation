@@ -1,7 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.mock;
 
 import java.time.LocalDate;
+import org.junit.Before;
 import org.junit.Test;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.AgentWireMockPaymentTest;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.command.PaymentCommand;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationReader;
@@ -17,21 +19,43 @@ import se.tink.libraries.transfer.enums.RemittanceInformationType;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 public class SwedbankOBAgentWiremockTest {
-    private static final String CONFIGURATION_PATH =
-            "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/swedbank/mock/resources/configuration.yml";
+    private static final String RESOURCES_PATH =
+            "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/swedbank/mock/resources";
+    private static final String CONFIGURATION_PATH = RESOURCES_PATH + "/configuration.yml";
     private static final String WIRE_MOCK_PAYMENT_WITH_NEW_RECIPIENT =
-            "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/swedbank/mock/resources/wireMock-swedbank-ob-pis.aap";
+            RESOURCES_PATH + "/wireMock-swedbank-ob-pis.aap";
+    private static final String WIRE_MOCK_CANCELLED_PAYMENT_WITH_NEW_RECIPIENT =
+            RESOURCES_PATH + "/wiremock-swedbank-ob-pis-cancelled.aap";
+
+    private AgentsServiceConfiguration configuration;
+
+    @Before
+    public void setup() throws Exception {
+        configuration = AgentsServiceConfigurationReader.read(CONFIGURATION_PATH);
+    }
 
     @Test
     public void testPaymentWithNewRecipient() throws Exception {
-        final AgentsServiceConfiguration configuration =
-                AgentsServiceConfigurationReader.read(CONFIGURATION_PATH);
-
         AgentWireMockPaymentTest agentWireMockPaymentTest =
                 AgentWireMockPaymentTest.builder(
                                 MarketCode.SE,
                                 "se-swedbank-ob",
                                 WIRE_MOCK_PAYMENT_WITH_NEW_RECIPIENT)
+                        .withConfigurationFile(configuration)
+                        .withHttpDebugTrace()
+                        .withPayment(createMockedDomesticPayment())
+                        .buildWithLogin(PaymentCommand.class);
+
+        agentWireMockPaymentTest.executePayment();
+    }
+
+    @Test(expected = PaymentAuthorizationException.class)
+    public void testCancelledPaymentWithNewRecipient() throws Exception {
+        AgentWireMockPaymentTest agentWireMockPaymentTest =
+                AgentWireMockPaymentTest.builder(
+                                MarketCode.SE,
+                                "se-swedbank-ob",
+                                WIRE_MOCK_CANCELLED_PAYMENT_WITH_NEW_RECIPIENT)
                         .withConfigurationFile(configuration)
                         .withHttpDebugTrace()
                         .withPayment(createMockedDomesticPayment())
