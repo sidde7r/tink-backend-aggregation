@@ -6,13 +6,14 @@ import java.time.Clock;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.client.BoursoramaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.entity.AccountEntity;
-import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.entity.BalanceAmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.entity.BalanceEntity;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.entity.TransactionEntity;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
@@ -20,6 +21,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.builder.BalanceBuilderStep;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
@@ -27,6 +29,7 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
+@Slf4j
 @RequiredArgsConstructor
 public class BoursoramaTransactionalAccountFetcher
         implements AccountFetcher<TransactionalAccount>,
@@ -34,6 +37,7 @@ public class BoursoramaTransactionalAccountFetcher
 
     private static final String INSTANT_BALANCE = "XPCD";
     private static final String ACCOUNTING_BALANCE = "CLBD";
+    private static final String OTHER_BALANCE = "OTHR";
 
     private static final String DEBIT_TRANSACTION_CODE = "DBIT";
     private static final String CASH_ACCOUNT = "CACC";
@@ -76,23 +80,13 @@ public class BoursoramaTransactionalAccountFetcher
 
     private Optional<TransactionalAccount> mapAccountEntityToTransactionalAccount(
             AccountEntity account) {
-        BalanceAmountEntity balance =
-                apiClient.fetchBalances(account.getResourceId()).getBalances().stream()
-                        .filter((this::isAvailableBalance))
-                        .findAny()
-                        .map(BalanceEntity::getBalanceAmount)
-                        .orElseThrow(
-                                () ->
-                                        new IllegalArgumentException(
-                                                "Could not find right type balance for account with id: "
-                                                        + account.getResourceId()));
+        List<BalanceEntity> balances =
+                apiClient.fetchBalances(account.getResourceId()).getBalances();
 
         return TransactionalAccount.nxBuilder()
                 .withType(TransactionalAccountType.CHECKING)
                 .withInferredAccountFlags()
-                .withBalance(
-                        BalanceModule.of(
-                                ExactCurrencyAmount.of(balance.getAmount(), balance.getCurrency())))
+                .withBalance(getBalanceModule(balances))
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(account.getResourceId())
@@ -106,11 +100,6 @@ public class BoursoramaTransactionalAccountFetcher
                                 .build())
                 .setApiIdentifier(account.getResourceId())
                 .build();
-    }
-
-    private boolean isAvailableBalance(BalanceEntity balanceEntity) {
-        return INSTANT_BALANCE.equals(balanceEntity.getBalanceType())
-                || ACCOUNTING_BALANCE.equals(balanceEntity.getBalanceType());
     }
 
     private Transaction mapTransaction(TransactionEntity transaction) {
@@ -140,5 +129,51 @@ public class BoursoramaTransactionalAccountFetcher
 
     private LocalDate getLocalDateFromDate(Date date) {
         return date.toInstant().atZone(clock.getZone()).toLocalDate();
+    }
+
+    private BalanceModule getBalanceModule(List<BalanceEntity> balances) {
+        BalanceBuilderStep balanceBuilderStep =
+                BalanceModule.builder().withBalance(getBookedBalance(balances));
+        getAvailableBalance(balances).ifPresent(balanceBuilderStep::setAvailableBalance);
+        return balanceBuilderStep.build();
+    }
+
+    private ExactCurrencyAmount getBookedBalance(List<BalanceEntity> balances) {
+        if (balances.isEmpty()) {
+            throw new IllegalArgumentException(
+                    "Cannot determine booked balance from empty list of balances.");
+        }
+
+        Optional<BalanceEntity> balanceEntity =
+                balances.stream()
+                        .filter(b -> ACCOUNTING_BALANCE.equals(b.getBalanceType()))
+                        .findAny();
+
+        if (!balanceEntity.isPresent()) {
+            log.warn(
+                    "Couldn't determine booked balance of known type, and no credit limit included. Defaulting to first provided balance.");
+        }
+
+        return balanceEntity
+                .map(Optional::of)
+                .orElseGet(() -> balances.stream().findFirst())
+                .map(BalanceEntity::getBalanceAmount)
+                .map(
+                        balanceAmount ->
+                                ExactCurrencyAmount.of(
+                                        balanceAmount.getAmount(), balanceAmount.getCurrency()))
+                .get();
+    }
+
+    private Optional<ExactCurrencyAmount> getAvailableBalance(List<BalanceEntity> balances) {
+        return balances.stream()
+                .filter(b -> INSTANT_BALANCE.equals(b.getBalanceType()))
+                .findAny()
+                .map(BalanceEntity::getBalanceAmount)
+                .map(
+                        balanceAmountEntity ->
+                                ExactCurrencyAmount.of(
+                                        balanceAmountEntity.getAmount(),
+                                        balanceAmountEntity.getCurrency()));
     }
 }

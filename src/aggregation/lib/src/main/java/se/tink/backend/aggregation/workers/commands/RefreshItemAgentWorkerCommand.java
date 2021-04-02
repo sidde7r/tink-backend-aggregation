@@ -125,8 +125,8 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
                 log.info("Refreshing item: {}", item.name());
 
                 Agent agent = context.getAgent();
-                boolean fullSuccessfulRefresh = executeRefresh(agent);
-                markRefreshAsSuccessful(action, agent, fullSuccessfulRefresh);
+                boolean allItemsRefreshedSuccessfully = executeRefresh(agent);
+                markRefreshAsSuccessful(action, agent, allItemsRefreshedSuccessfully);
             } catch (BankServiceException e) {
                 handleFailedRefreshDueToBankError(action, e);
                 return AgentWorkerCommandResult.ABORT;
@@ -172,7 +172,7 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
     }
 
     /*
-     * returns if refresh was fully successful
+     * returns if all items were successfully refreshed
      */
     private boolean executeRefresh(Agent agent) throws Exception {
         if (agent instanceof DeprecatedRefreshExecutor) {
@@ -184,9 +184,9 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
     }
 
     private void markRefreshAsSuccessful(
-            MetricAction action, Agent agent, boolean fullSuccessfulRefresh) {
+            MetricAction action, Agent agent, boolean allItemsRefreshedSuccessfully) {
         if (isAbleToRefreshItem(agent, item)) {
-            if (fullSuccessfulRefresh) {
+            if (allItemsRefreshedSuccessfully) {
                 action.completed();
             } else {
                 action.partiallyCompleted();
