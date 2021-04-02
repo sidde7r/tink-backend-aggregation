@@ -118,14 +118,19 @@ public class SparkassenApiClient implements PaymentApiClient {
             SparkassenExperimentalLoginErrorHandling.handleIncorrectLogin(e, provider);
             String errorBody = e.getResponse().getBody(String.class);
 
-            if (errorBody.contains(PSU_CREDENTIALS_INVALID)
-                    || (errorBody.contains(FORMAT_ERROR) && errorBody.contains(PSU_ID_TOO_LONG))) {
+            if (errorBody.contains(PSU_CREDENTIALS_INVALID)) {
+                if (errorBody.contains(TEMPORARILY_BLOCKED_ACCOUNT)
+                        || errorBody.contains(BLOCKED_ACCOUNT)) {
+                    throw AuthorizationError.ACCOUNT_BLOCKED.exception(e);
+                } else {
+                    throw LoginError.INCORRECT_CREDENTIALS.exception(e);
+                }
+            }
+
+            if (errorBody.contains(FORMAT_ERROR) && errorBody.contains(PSU_ID_TOO_LONG)) {
                 throw LoginError.INCORRECT_CREDENTIALS.exception(e);
             }
-            if (errorBody.contains(TEMPORARILY_BLOCKED_ACCOUNT)
-                    || errorBody.contains(BLOCKED_ACCOUNT)) {
-                throw AuthorizationError.ACCOUNT_BLOCKED.exception(e);
-            }
+
             if (errorBody.contains(NO_ACTIVE_TAN_MEDIUM)) {
                 throw LoginError.NO_AVAILABLE_SCA_METHODS.exception(e);
             }
