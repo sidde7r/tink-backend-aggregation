@@ -605,7 +605,8 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
             TransferRequest transferRequest, SignableOperation signableOperation) {
         Transfer transfer;
         if (transferRequest instanceof RecurringPaymentRequest) {
-            transfer = signableOperation.getSignableObject(RecurringPayment.class);
+            transfer = new RecurringPayment();
+            transfer.setId(signableOperation.getUnderlyingId());
         } else {
             transfer = signableOperation.getSignableObject(Transfer.class);
         }

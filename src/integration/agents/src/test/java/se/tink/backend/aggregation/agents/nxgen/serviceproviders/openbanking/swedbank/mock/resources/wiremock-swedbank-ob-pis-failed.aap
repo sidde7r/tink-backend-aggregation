@@ -1,0 +1,232 @@
+
+REQUEST 1
+POST https://psd2.api.swedbank.com/psd2/v3/authorize-decoupled?bic=SWEDSESS
+Accept: application/json
+Content-Type: application/json
+
+{
+    "authenticationMethodId": "MOBILE_ID",
+    "clientID": "dummyClientId",
+    "psuData": {
+        "bankID": "08999"
+    },
+    "redirectUri": "https://127.0.0.1:7357/api/v1/thirdparty/callback",
+    "scope": "PSD2 PSD2account_balances PSD2account_transactions PSD2account_transactions_over90"
+}
+
+RESPONSE 1
+200
+Date: Thu, 01 Apr 2021 12:43:41 GMT
+Date: Thu, 01 Apr 2021 12:43:41 GMT
+Content-Type: application/json;charset=utf-8
+
+{
+
+    "authorizeId" : "7bd029a9-b439-43b3-ae33-ea5adf04f206",
+
+    "chosenScaMethod" : {
+
+    		"authenticationType" : "Mobile BankID",
+
+    		"authenticationMethodId" : "MOBILE_ID"
+
+    }, 
+
+    "challengeData": { "autoStartToken": "d00ab6c0-86c0-4791-ab7b-f8fda5ceb225" },
+
+    "psuMessage" : "Loging via Tink_org",
+
+    "_links": {
+
+         "scaStatus": {
+
+         	    "href": "/psd2/v3/authorize-decoupled/authorize/7bd029a9-b439-43b3-ae33-ea5adf04f206"
+
+         }
+
+    }
+
+}
+
+REQUEST 2
+GET https://psd2.api.swedbank.com/psd2/v3/authorize-decoupled/authorize/7bd029a9-b439-43b3-ae33-ea5adf04f206?bic=SWEDSESS&client_id=dummyClientId
+Accept: application/json
+
+RESPONSE 2 SET STATE3
+200
+Date: Thu, 01 Apr 2021 12:43:42 GMT
+Date: Thu, 01 Apr 2021 12:43:43 GMT
+Content-Type: application/json;charset=utf-8
+
+{
+
+	"scaStatus": "started"
+
+}
+
+REQUEST 3 MATCH STATE3
+GET https://psd2.api.swedbank.com/psd2/v3/authorize-decoupled/authorize/7bd029a9-b439-43b3-ae33-ea5adf04f206?bic=SWEDSESS&client_id=dummyClientId
+Accept: application/json
+
+RESPONSE 3 SET STATE4
+200
+Date: Thu, 01 Apr 2021 12:43:45 GMT
+Date: Thu, 01 Apr 2021 12:43:45 GMT
+Content-Type: application/json;charset=utf-8
+
+{
+
+	"scaStatus": "started"
+
+}
+
+REQUEST 4 MATCH STATE4
+GET https://psd2.api.swedbank.com/psd2/v3/authorize-decoupled/authorize/7bd029a9-b439-43b3-ae33-ea5adf04f206?bic=SWEDSESS&client_id=dummyClientId
+Accept: application/json
+
+RESPONSE 4 SET STATE5
+200
+Date: Thu, 01 Apr 2021 12:44:00 GMT
+Date: Thu, 01 Apr 2021 12:44:01 GMT
+Content-Type: application/json;charset=utf-8
+
+{
+
+  "scaStatus": "finalised",
+
+  "authorizationCode": "ab8cc22f-56b7-433a-91c6-9f37f732d8fa"
+
+}
+
+REQUEST 5 MATCH STATE5
+POST https://psd2.api.swedbank.com/psd2/token?bic=SWEDSESS&code=ab8cc22f-56b7-433a-91c6-9f37f732d8fa&grant_type=authorization_code&client_secret=dummyClientSecret&redirect_uri=https%3A%2F%2F127.0.0.1%3A7357%2Fapi%2Fv1%2Fthirdparty%2Fcallback&client_id=dummyClientId
+Accept: application/json
+Content-Type: application/x-www-form-urlencoded
+
+RESPONSE 5 SET STATE6
+200
+Date: Thu, 01 Apr 2021 12:44:01 GMT
+Date: Thu, 01 Apr 2021 12:44:01 GMT
+Content-Type: application/json;charset=utf-8
+
+{
+
+  "access_token":"59c76df2-03a5-4368-bdb0-ec042657cd28",
+
+  "token_type":"Bearer",
+
+  "expires_in":3600,
+
+  "refresh_token":"edc50b81-50c8-44b6-b462-f5d6ed102008",
+
+  "scope":"PSD2 PSD2account_balances PSD2account_transactions PSD2account_transactions_over90 PSD2account_list"
+
+}
+
+REQUEST 6 MATCH STATE6
+POST https://psd2.api.swedbank.com/v3/payments/se-domestic-credit-transfers?bic=SWEDSESS
+Content-Type: application/json
+Accept: application/json
+
+{
+    "creditorAccount": {
+        "bban": "12345678901"
+    },
+    "creditorFriendlyName": "TinkTest",
+    "debtorAccount": {
+        "bban": "10987654321"
+    },
+    "debtorAccountStatementText": "TinkTest",
+    "executionDate": "2021-01-25",
+    "instructedAmount": {
+        "amount": "1.0",
+        "currency": "SEK"
+    },
+    "remittanceInformationUnstructured": "tinkTest"
+}
+
+RESPONSE 6 SET STATE7
+201
+Date: Thu, 01 Apr 2021 12:44:03 GMT
+Date: Thu, 01 Apr 2021 12:44:03 GMT
+Content-Type: application/json;charset=utf-8
+
+{
+    "_links": {
+        "scaRedirect": {
+            "href": "https://psd2.swedbank.se/app/consent/login-open-banking?token=ad14f0b15836d803e43de0bff0cb3e1e14895df55f46ac20afd7f998116412c4&ns=1"
+        },
+        "scaStatus": {
+            "href": "/v3/payments/se-domestic-credit-transfers/f0b6227b-94e1-4c5a-9531-c9b95bf9ecd8/authorisations/9da194e6-5f12-4d8a-a789-41d6abbce4ac"
+        },
+        "self": {
+            "href": "/v3/payments/se-domestic-credit-transfers/f0b6227b-94e1-4c5a-9531-c9b95bf9ecd8"
+        },
+        "status": {
+            "href": "/v3/payments/se-domestic-credit-transfers/f0b6227b-94e1-4c5a-9531-c9b95bf9ecd8/status"
+        }
+    },
+    "paymentId": "f0b6227b-94e1-4c5a-9531-c9b95bf9ecd8",
+    "transactionStatus": "ACTC"
+}
+
+REQUEST 7 MATCH STATE7
+GET https://psd2.api.swedbank.com/v3/payments/se-domestic-credit-transfers/f0b6227b-94e1-4c5a-9531-c9b95bf9ecd8/status?bic=SWEDSESS
+Accept: application/json
+
+RESPONSE 7 SET STATE8
+200
+Date: Thu, 01 Apr 2021 12:44:04 GMT
+Date: Thu, 01 Apr 2021 12:44:03 GMT
+Content-Type: application/json;charset=utf-8
+
+{
+    "creditorAccount": {
+        "bban": "12345678901"
+    },
+    "creditorFriendlyName": "TinkTest",
+    "debtorAccount": {
+        "bban": "10987654321"
+    },
+    "debtorAccountStatementText": "TinkTest",
+    "executionDate": "2021-01-25",
+    "instructedAmount": {
+        "amount": "10.00",
+        "currency": "SEK"
+    },
+    "remittanceInformationUnstructured": "tinkTest"
+}
+
+REQUEST 8 MATCH STATE8
+GET https://psd2.api.swedbank.com/v3/payments/se-domestic-credit-transfers/f0b6227b-94e1-4c5a-9531-c9b95bf9ecd8/status?bic=SWEDSESS
+Accept: application/json
+
+RESPONSE 8 SET STATE9
+200
+Date: Thu, 01 Apr 2021 12:44:04 GMT
+Date: Thu, 01 Apr 2021 12:44:04 GMT
+Content-Type: application/json;charset=utf-8
+
+{
+    "transactionStatus": "ACTC"
+}
+
+REQUEST 9 MATCH STATE9
+POST https://psd2.api.swedbank.com/v3/payments/se-domestic-credit-transfers/f0b6227b-94e1-4c5a-9531-c9b95bf9ecd8/authorisations?bic=SWEDSESS
+Accept: application/json
+
+RESPONSE 9 SET STATE10
+401
+Date: Thu, 01 Apr 2021 12:44:06 GMT
+Date: Thu, 01 Apr 2021 12:44:06 GMT
+Content-Type: application/json;charset=utf-8
+
+{
+    "tppMessages": [
+        {
+            "category": "ERROR",
+            "code": "INSUFFICIENT_FUNDS",
+            "text": "The payment/transfer could not be completed because of insufficient funds "
+        }
+    ]
+}

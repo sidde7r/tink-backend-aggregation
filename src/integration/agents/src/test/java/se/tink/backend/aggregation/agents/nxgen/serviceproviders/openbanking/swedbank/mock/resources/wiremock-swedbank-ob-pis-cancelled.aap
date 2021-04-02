@@ -1,0 +1,485 @@
+
+REQUEST 1
+POST https://psd2.api.swedbank.com/psd2/v3/authorize-decoupled?bic=SWEDSESS
+Accept: application/json
+Content-Type: application/json
+
+{
+    "authenticationMethodId": "MOBILE_ID",
+    "clientID": "dummyClientId",
+    "psuData": {
+        "bankID": "08999"
+    },
+    "redirectUri": "https://127.0.0.1:7357/api/v1/thirdparty/callback",
+    "scope": "PSD2 PSD2account_balances PSD2account_transactions PSD2account_transactions_over90"
+}
+
+RESPONSE 1
+200
+Date: Fri, 22 Jan 2021 11:00:46 GMT
+Date: Fri, 22 Jan 2021 11:00:46 GMT
+Content-Type: application/json;charset=utf-8
+
+{
+
+    "authorizeId" : "39875ca1-4c46-4027-a85e-9b9d427d7cc0",
+
+    "chosenScaMethod" : {
+
+    		"authenticationType" : "Mobile BankID",
+
+    		"authenticationMethodId" : "MOBILE_ID"
+
+    }, 
+
+    "challengeData": { "autoStartToken": "cad241c2-769e-40cd-b964-c7a865db76e8" },
+
+    "psuMessage" : "Loging via Tink_org",
+
+    "_links": {
+
+         "scaStatus": {
+
+         	    "href": "/psd2/v3/authorize-decoupled/authorize/39875ca1-4c46-4027-a85e-9b9d427d7cc0"
+
+         }
+
+    }
+
+}
+
+REQUEST 2
+GET https://psd2.api.swedbank.com/psd2/v3/authorize-decoupled/authorize/39875ca1-4c46-4027-a85e-9b9d427d7cc0?bic=SWEDSESS&client_id=dummyClientId
+Accept: application/json
+
+RESPONSE 2 SET STATE3
+200
+Date: Fri, 22 Jan 2021 11:00:47 GMT
+Date: Fri, 22 Jan 2021 11:00:47 GMT
+Content-Type: application/json;charset=utf-8
+
+{
+
+	"scaStatus": "started"
+
+}
+
+REQUEST 3 MATCH STATE3
+GET https://psd2.api.swedbank.com/psd2/v3/authorize-decoupled/authorize/39875ca1-4c46-4027-a85e-9b9d427d7cc0?bic=SWEDSESS&client_id=dummyClientId
+Accept: application/json
+
+RESPONSE 3 SET STATE4
+200
+Date: Fri, 22 Jan 2021 11:00:50 GMT
+Date: Fri, 22 Jan 2021 11:00:50 GMT
+Content-Type: application/json;charset=utf-8
+
+{
+
+	"scaStatus": "started"
+
+}
+
+REQUEST 4 MATCH STATE4
+GET https://psd2.api.swedbank.com/psd2/v3/authorize-decoupled/authorize/39875ca1-4c46-4027-a85e-9b9d427d7cc0?bic=SWEDSESS&client_id=dummyClientId
+Accept: application/json
+
+RESPONSE 4 SET STATE5
+200
+Date: Fri, 22 Jan 2021 11:01:04 GMT
+Date: Fri, 22 Jan 2021 11:01:04 GMT
+Content-Type: application/json;charset=utf-8
+
+{
+
+  "scaStatus": "finalised",
+
+  "authorizationCode": "41751638-8ed7-4d7e-96d2-63a1e1f313bc"
+
+}
+
+REQUEST 5 MATCH STATE5
+POST https://psd2.api.swedbank.com/psd2/token?bic=SWEDSESS&code=41751638-8ed7-4d7e-96d2-63a1e1f313bc&grant_type=authorization_code&client_secret=dummyClientSecret&redirect_uri=https%3A%2F%2F127.0.0.1%3A7357%2Fapi%2Fv1%2Fthirdparty%2Fcallback&client_id=dummyClientId
+Accept: application/json
+Content-Type: application/x-www-form-urlencoded
+
+RESPONSE 5 SET STATE6
+200
+Date: Fri, 22 Jan 2021 11:01:05 GMT
+Date: Fri, 22 Jan 2021 11:01:05 GMT
+Content-Type: application/json;charset=utf-8
+
+{
+
+  "access_token":"c1c9bfdf-2e3e-4008-9bb7-fb31d8583a5e",
+
+  "token_type":"Bearer",
+
+  "expires_in":3600,
+
+  "refresh_token":"290fb091-5b93-4516-b92f-2c5d6fe8ddc5",
+
+  "scope":"PSD2 PSD2account_balances PSD2account_transactions PSD2account_transactions_over90 PSD2account_list"
+
+}
+
+REQUEST 6 MATCH STATE6
+POST https://psd2.api.swedbank.com/v3/payments/se-domestic-credit-transfers?bic=SWEDSESS
+Content-Type: application/json
+Accept: application/json
+
+{
+    "creditorAccount": {
+        "bban": "12345678901"
+    },
+    "creditorFriendlyName": "TinkTest",
+    "debtorAccount": {
+        "bban": "10987654321"
+    },
+    "debtorAccountStatementText": "TinkTest",
+    "executionDate":"2021-01-25",
+    "instructedAmount": {
+        "amount": "1.0",
+        "currency": "SEK"
+    },
+    "remittanceInformationUnstructured": "tinkTest"
+}
+
+RESPONSE 6 SET STATE7
+201
+Date: Fri, 22 Jan 2021 11:01:07 GMT
+Date: Fri, 22 Jan 2021 11:01:06 GMT
+Content-Type: application/json;charset=utf-8
+
+{
+    "_links": {
+        "scaRedirect": {
+            "href": "https://psd2.swedbank.se/app/consent/login-open-banking?token=20a9ab02438100c7ebc2b965063bb109dd79ae594f30b14e80288b8c85c0a45c&ns=1"
+        },
+        "scaStatus": {
+            "href": "/v3/payments/se-domestic-credit-transfers/e2273b6d-34a7-4771-9a38-7e8a224088e6/authorisations/850a2007-2d59-45d3-8bbd-d4e285df367f"
+        },
+        "self": {
+            "href": "/v3/payments/se-domestic-credit-transfers/e2273b6d-34a7-4771-9a38-7e8a224088e6"
+        },
+        "status": {
+            "href": "/v3/payments/se-domestic-credit-transfers/e2273b6d-34a7-4771-9a38-7e8a224088e6/status"
+        }
+    },
+    "paymentId": "e2273b6d-34a7-4771-9a38-7e8a224088e6",
+    "transactionStatus": "ACTC"
+}
+
+REQUEST 7 MATCH STATE7
+GET https://psd2.api.swedbank.com/v3/payments/se-domestic-credit-transfers/e2273b6d-34a7-4771-9a38-7e8a224088e6/status?bic=SWEDSESS
+Accept: application/json
+
+RESPONSE 7 SET STATE8
+200
+Date: Fri, 22 Jan 2021 11:01:07 GMT
+Date: Fri, 22 Jan 2021 11:01:07 GMT
+Content-Type: application/json;charset=utf-8
+
+{
+    "creditorAccount": {
+        "bban": "12345678901"
+    },
+    "creditorFriendlyName": "TinkTest",
+    "debtorAccount": {
+        "bban": "10987654321"
+    },
+    "debtorAccountStatementText": "TinkTest",
+    "executionDate":"2021-01-25",
+    "instructedAmount": {
+        "amount": "10.00",
+        "currency": "SEK"
+    },
+    "remittanceInformationUnstructured": "tinkTest"
+}
+
+REQUEST 8 MATCH STATE8
+GET https://psd2.api.swedbank.com/v3/payments/se-domestic-credit-transfers/e2273b6d-34a7-4771-9a38-7e8a224088e6/status?bic=SWEDSESS
+Accept: application/json
+
+RESPONSE 8 SET STATE9
+200
+Date: Fri, 22 Jan 2021 11:01:08 GMT
+Date: Fri, 22 Jan 2021 11:01:07 GMT
+Content-Type: application/json;charset=utf-8
+
+{
+    "transactionStatus": "ACTC"
+}
+
+REQUEST 9 MATCH STATE9
+POST https://psd2.api.swedbank.com/v3/payments/se-domestic-credit-transfers/e2273b6d-34a7-4771-9a38-7e8a224088e6/authorisations?bic=SWEDSESS
+Accept: application/json
+
+RESPONSE 9 SET STATE10
+201
+Date: Fri, 22 Jan 2021 11:01:10 GMT
+Date: Fri, 22 Jan 2021 11:01:10 GMT
+Content-Type: application/json;charset=utf-8
+
+{
+    "_links": {
+        "scaStatus": {
+            "href": "/v3/payments/se-domestic-credit-transfers/e2273b6d-34a7-4771-9a38-7e8a224088e6/authorisations/877d7d4c-ccc3-450e-a12b-ff3356d4eab8"
+        },
+        "selectAuthenticationMethod": {
+            "href": "/v3/payments/se-domestic-credit-transfers/e2273b6d-34a7-4771-9a38-7e8a224088e6/authorisations/877d7d4c-ccc3-450e-a12b-ff3356d4eab8"
+        }
+    },
+    "authorisationId": "877d7d4c-ccc3-450e-a12b-ff3356d4eab8",
+    "chosenScaMethod": {
+        "authenticationMethodId": "MOBILE_ID",
+        "authenticationType": "Mobile BankID"
+    },
+    "scaMethods": [
+        {
+            "authenticationMethodId": "MOBILE_ID",
+            "authenticationType": "Mobile BankID"
+        }
+    ],
+    "scaStatus": "received"
+}
+
+REQUEST 10 MATCH STATE10
+PUT https://psd2.api.swedbank.com/v3/payments/se-domestic-credit-transfers/e2273b6d-34a7-4771-9a38-7e8a224088e6/authorisations/877d7d4c-ccc3-450e-a12b-ff3356d4eab8?bic=SWEDSESS
+Accept: application/json
+Content-Type: application/json
+
+{
+    "authenticationMethodId": "MOBILE_ID",
+    "clientID": "dummyClientId",
+    "psuData": {
+        "bankID": "08999"
+    },
+    "redirectUri": "https://127.0.0.1:7357/api/v1/thirdparty/callback",
+    "scope": "PSD2 PSD2account_balances PSD2account_transactions PSD2account_transactions_over90"
+}
+
+RESPONSE 10 SET STATE11
+201
+Date: Fri, 22 Jan 2021 11:01:10 GMT
+Date: Fri, 22 Jan 2021 11:01:11 GMT
+Content-Type: application/json;charset=utf-8
+
+{
+    "_links": {
+        "scaStatus": {
+            "href": "/v3/payments/se-domestic-credit-transfers/e2273b6d-34a7-4771-9a38-7e8a224088e6/authorisations/877d7d4c-ccc3-450e-a12b-ff3356d4eab8"
+        }
+    },
+    "challengeData": {
+        "autoStartToken": "771cecc8-d56d-404d-b95a-f7fd08bad3a8"
+    },
+    "chosenScaMethod": {
+        "authenticationMethodId": "MOBILE_ID",
+        "authenticationType": "Mobile BankID"
+    },
+    "psuMessage": "Please confirm the recipient to make the payment. When you have added the recipient, the payment can be made. The recipient will thereafter be stored in your recipient list",
+    "scaStatus": "started",
+    "tppMessages": [
+        {
+            "category": "INFO",
+            "code": "RECIPIENT_MISSING",
+            "text": "PSU must add recipient to recipient list first."
+        }
+    ]
+}
+
+REQUEST 11 MATCH STATE11
+GET https://psd2.api.swedbank.com/v3/payments/se-domestic-credit-transfers/e2273b6d-34a7-4771-9a38-7e8a224088e6/authorisations/877d7d4c-ccc3-450e-a12b-ff3356d4eab8?bic=SWEDSESS
+Accept: application/json
+
+RESPONSE 11 SET STATE12
+200
+Date: Fri, 22 Jan 2021 11:01:11 GMT
+Date: Fri, 22 Jan 2021 11:01:12 GMT
+Content-Type: application/json;charset=utf-8
+
+{
+    "scaStatus": "started"
+}
+
+REQUEST 12 MATCH STATE12
+GET https://psd2.api.swedbank.com/v3/payments/se-domestic-credit-transfers/e2273b6d-34a7-4771-9a38-7e8a224088e6/authorisations/877d7d4c-ccc3-450e-a12b-ff3356d4eab8?bic=SWEDSESS
+Accept: application/json
+
+RESPONSE 12 SET STATE13
+200
+Date: Fri, 22 Jan 2021 11:01:14 GMT
+Date: Fri, 22 Jan 2021 11:01:14 GMT
+Content-Type: application/json;charset=utf-8
+
+{
+    "scaStatus": "started"
+}
+
+REQUEST 13 MATCH STATE13
+GET https://psd2.api.swedbank.com/v3/payments/se-domestic-credit-transfers/e2273b6d-34a7-4771-9a38-7e8a224088e6/authorisations/877d7d4c-ccc3-450e-a12b-ff3356d4eab8?bic=SWEDSESS
+Accept: application/json
+
+RESPONSE 13 SET STATE14
+200
+Date: Fri, 22 Jan 2021 11:01:48 GMT
+Date: Fri, 22 Jan 2021 11:01:48 GMT
+Content-Type: application/json;charset=utf-8
+
+{
+    "_links": {
+        "startAuthorisation": {
+            "href": "/v3/payments/se-domestic-credit-transfers/e2273b6d-34a7-4771-9a38-7e8a224088e6/authorisations"
+        }
+    },
+    "scaStatus": "finalised"
+}
+
+REQUEST 14 MATCH STATE14
+GET https://psd2.api.swedbank.com/v3/payments/se-domestic-credit-transfers/e2273b6d-34a7-4771-9a38-7e8a224088e6/status?bic=SWEDSESS
+Accept: application/json
+
+RESPONSE 14 SET STATE15
+200
+Date: Fri, 22 Jan 2021 11:01:49 GMT
+Date: Fri, 22 Jan 2021 11:01:48 GMT
+Content-Type: application/json;charset=utf-8
+
+{
+    "transactionStatus": "ACTC"
+}
+
+REQUEST 15 MATCH STATE15
+GET https://psd2.api.swedbank.com/v3/payments/se-domestic-credit-transfers/e2273b6d-34a7-4771-9a38-7e8a224088e6/status?bic=SWEDSESS
+Accept: application/json
+
+RESPONSE 15 SET STATE16
+200
+Date: Fri, 22 Jan 2021 11:01:50 GMT
+Date: Fri, 22 Jan 2021 11:01:49 GMT
+Content-Type: application/json;charset=utf-8
+
+{
+    "transactionStatus": "ACTC"
+}
+
+REQUEST 16 MATCH STATE16
+POST https://psd2.api.swedbank.com/v3/payments/se-domestic-credit-transfers/e2273b6d-34a7-4771-9a38-7e8a224088e6/authorisations?bic=SWEDSESS
+Accept: application/json
+
+RESPONSE 16 SET STATE17
+201
+Date: Fri, 22 Jan 2021 11:01:50 GMT
+Date: Fri, 22 Jan 2021 11:01:50 GMT
+Content-Type: application/json;charset=utf-8
+
+{
+    "_links": {
+        "scaStatus": {
+            "href": "/v3/payments/se-domestic-credit-transfers/e2273b6d-34a7-4771-9a38-7e8a224088e6/authorisations/a329e087-fbc2-4191-9de1-0caee3b76c64"
+        },
+        "selectAuthenticationMethod": {
+            "href": "/v3/payments/se-domestic-credit-transfers/e2273b6d-34a7-4771-9a38-7e8a224088e6/authorisations/a329e087-fbc2-4191-9de1-0caee3b76c64"
+        }
+    },
+    "authorisationId": "a329e087-fbc2-4191-9de1-0caee3b76c64",
+    "chosenScaMethod": {
+        "authenticationMethodId": "MOBILE_ID",
+        "authenticationType": "Mobile BankID"
+    },
+    "scaMethods": [
+        {
+            "authenticationMethodId": "MOBILE_ID",
+            "authenticationType": "Mobile BankID"
+        }
+    ],
+    "scaStatus": "received"
+}
+
+REQUEST 17 MATCH STATE17
+PUT https://psd2.api.swedbank.com/v3/payments/se-domestic-credit-transfers/e2273b6d-34a7-4771-9a38-7e8a224088e6/authorisations/a329e087-fbc2-4191-9de1-0caee3b76c64?bic=SWEDSESS
+Accept: application/json
+Content-Type: application/json
+
+{
+    "authenticationMethodId": "MOBILE_ID",
+    "clientID": "dummyClientId",
+    "psuData": {
+        "bankID": "08999"
+    },
+    "redirectUri": "https://127.0.0.1:7357/api/v1/thirdparty/callback",
+    "scope": "PSD2 PSD2account_balances PSD2account_transactions PSD2account_transactions_over90"
+}
+
+RESPONSE 17 SET STATE18
+201
+Date: Fri, 22 Jan 2021 11:01:51 GMT
+Date: Fri, 22 Jan 2021 11:01:51 GMT
+Content-Type: application/json;charset=utf-8
+
+{
+    "_links": {
+        "scaStatus": {
+            "href": "/v3/payments/se-domestic-credit-transfers/e2273b6d-34a7-4771-9a38-7e8a224088e6/authorisations/a329e087-fbc2-4191-9de1-0caee3b76c64"
+        }
+    },
+    "challengeData": {
+        "autoStartToken": "b8b5814c-2c17-44de-a95c-a07fd0bb20f4"
+    },
+    "chosenScaMethod": {
+        "authenticationMethodId": "MOBILE_ID",
+        "authenticationType": "Mobile BankID"
+    },
+    "psuMessage": "Approve payment of 10 SEK to 33824238 by using your MOBILE_ID device",
+    "scaStatus": "started"
+}
+
+REQUEST 18 MATCH STATE18
+GET https://psd2.api.swedbank.com/v3/payments/se-domestic-credit-transfers/e2273b6d-34a7-4771-9a38-7e8a224088e6/authorisations/a329e087-fbc2-4191-9de1-0caee3b76c64?bic=SWEDSESS
+Accept: application/json
+
+RESPONSE 18 SET STATE19
+200
+Date: Fri, 22 Jan 2021 11:01:52 GMT
+Date: Fri, 22 Jan 2021 11:01:51 GMT
+Content-Type: application/json;charset=utf-8
+
+{
+    "scaStatus": "started"
+}
+
+REQUEST 19 MATCH STATE19
+GET https://psd2.api.swedbank.com/v3/payments/se-domestic-credit-transfers/e2273b6d-34a7-4771-9a38-7e8a224088e6/authorisations/a329e087-fbc2-4191-9de1-0caee3b76c64?bic=SWEDSESS
+Accept: application/json
+
+RESPONSE 19 SET STATE20
+200
+Date: Fri, 22 Jan 2021 11:01:55 GMT
+Date: Fri, 22 Jan 2021 11:01:55 GMT
+Content-Type: application/json;charset=utf-8
+
+{
+    "scaStatus": "started"
+}
+
+REQUEST 20 MATCH STATE20
+GET https://psd2.api.swedbank.com/v3/payments/se-domestic-credit-transfers/e2273b6d-34a7-4771-9a38-7e8a224088e6/authorisations/a329e087-fbc2-4191-9de1-0caee3b76c64?bic=SWEDSESS
+Accept: application/json
+
+RESPONSE 20 SET STATE21
+200
+Date: Fri, 22 Jan 2021 11:02:14 GMT
+Date: Fri, 22 Jan 2021 11:02:15 GMT
+Content-Type: application/json;charset=utf-8
+
+{
+    "scaStatus": "failed",
+    "tppMessages": [
+        {
+            "category": "ERROR",
+            "code": "USER_INTERUPTION",
+            "text": "Interrupted by user"
+        }
+    ]
+}
