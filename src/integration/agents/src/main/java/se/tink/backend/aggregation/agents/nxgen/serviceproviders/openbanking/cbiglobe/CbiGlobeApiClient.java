@@ -173,14 +173,14 @@ public class CbiGlobeApiClient {
     }
 
     public ConsentResponse updateConsent(String consentId, UpdateConsentRequest body) {
-        return createRequestInSession(Urls.CONSENTS.concat("/" + consentId))
+        return createRequestInSession(Urls.UPDATE_CONSENTS.concat("/" + consentId))
                 .header(HeaderKeys.OPERATION_NAME, HeaderValues.UPDATE_PSU_DATA)
                 .put(ConsentResponse.class, body);
     }
 
     public ConsentResponse updateConsentPsuCredentials(
             String consentId, UpdateConsentPsuCredentialsRequest body) {
-        return createRequestInSession(Urls.CONSENTS.concat("/" + consentId))
+        return createRequestInSession(Urls.UPDATE_CONSENTS.concat("/" + consentId))
                 .header(HeaderKeys.OPERATION_NAME, HeaderValues.UPDATE_PSU_DATA)
                 .put(ConsentResponse.class, body);
     }
