@@ -93,7 +93,6 @@ Content-Type: application/json
     "request_object_encryption_enc_values_supported": []
 }
 
-
 REQUEST 2
 POST https://secure1t.ulsterbank.co.uk/as/token.oauth2
 Content-Type: application/x-www-form-urlencoded
@@ -147,7 +146,7 @@ x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
 
 {
     "Data": {
-        "ConsentId": "**HASHED:Nb**",
+        "ConsentId": "DUMMY_CONSENT_ID",
         "Permissions": [
                     "ReadAccountsDetail",
                     "ReadTransactionsCredits",
@@ -164,15 +163,15 @@ x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
     },
     "Risk": {},
     "Links": {
-        "Self": "https://api.ulsterbank.co.uk/open-banking/v3.1/aisp/account-access-consents/**HASHED:Nb**"
+        "Self": "https://api.ulsterbank.co.uk/open-banking/v3.1/aisp/account-access-consents/DUMMY_CONSENT_ID"
     },
     "Meta": {}
 }
 
-REQUEST 4
+REQUEST 5
 GET https://keystore.openbanking.org.uk/0015800000jfxrpAAA/57ilfAN22WYnhY7DJRjW7i.jwks
 
-RESPONSE 4
+RESPONSE 5
 200
 Content-Type: application/jwk+json
 Connection: keep-alive
@@ -260,7 +259,7 @@ Connection: keep-alive
     ]
 }
 
-REQUEST 5
+REQUEST 6
 POST https://secure1t.ulsterbank.co.uk/as/token.oauth2
 Content-Type: application/x-www-form-urlencoded
 Accept: application/json
@@ -271,7 +270,7 @@ grant_type=authorization_code
     &client_assertion_type=urn%3Aietf%3Aparams%3Aoauth%3Aclient-assertion-type%3Ajwt-bearer
     &code=DUMMY_CODE
 
-RESPONSE 5
+RESPONSE 6
 200
 Content-Type: application/json;charset=utf-8
 
@@ -282,4 +281,41 @@ Content-Type: application/json;charset=utf-8
     "id_token": "DUMMY_ID_TOKEN",
     "token_type": "bearer",
     "expires_in": 599
+}
+
+REQUEST 7
+GET https://api.ulsterbank.co.uk/open-banking/v3.1/aisp/account-access-consents/DUMMY_CONSENT_ID
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer DUMMY_ACCESS_TOKEN
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+RESPONSE 7
+201
+Content-Type: application/json; charset=utf-8
+Connection: keep-alive
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+{
+    "Data": {
+        "ConsentId": "DUMMY_CONSENT_ID",
+        "Permissions": [
+                    "ReadAccountsDetail",
+                    "ReadTransactionsCredits",
+                    "ReadDirectDebits",
+                    "ReadTransactionsDebits",
+                    "ReadBeneficiariesDetail",
+                    "ReadBalances",
+                    "ReadStandingOrdersDetail",
+                    "ReadTransactionsDetail"
+        ],
+        "CreationDateTime": "2021-02-18T14:40:42.485Z",
+        "StatusUpdateDateTime": "2021-02-18T14:40:42.485Z",
+        "Status": "Authorised"
+    },
+    "Risk": {},
+    "Links": {
+        "Self": "https://api.ulsterbank.co.uk/open-banking/v3.1/aisp/account-access-consents/DUMMY_CONSENT_ID"
+    },
+    "Meta": {}
 }

@@ -9,9 +9,12 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.PisC
 import com.google.inject.Inject;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentPisCapability;
+import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
+import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModulesForDecoupledMode;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModulesForProductionMode;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.UkOpenBankingBaseAgent;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.authenticator.UkOpenBankingAisAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountOwnershipType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAis;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig;
@@ -19,10 +22,16 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.module.UkOpenBankingModule;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.UkOpenBankingAisConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.UkOpenBankingV31Ais;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.authenticator.ConsentStatusValidator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.authenticator.UkOpenBankingAisAuthenticationController;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticationValidator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.signer.iface.JwtSigner;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.configuration.UkOpenBankingPisConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
 
 @AgentDependencyModulesForProductionMode(modules = {UkOpenBankingModule.class})
 @AgentDependencyModulesForDecoupledMode(
@@ -32,6 +41,7 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.dat
 public final class UlsterV31Agent extends UkOpenBankingBaseAgent {
 
     private static final UkOpenBankingAisConfig aisConfig;
+    private ConsentStatusValidator consentValidator;
     private final LocalDateTimeSource localDateTimeSource;
 
     static {
@@ -60,5 +70,45 @@ public final class UlsterV31Agent extends UkOpenBankingBaseAgent {
     @Override
     protected UkOpenBankingAis makeAis() {
         return new UkOpenBankingV31Ais(aisConfig, persistentStorage, localDateTimeSource);
+    }
+
+    @Override
+    public Authenticator constructAuthenticator() {
+        UkOpenBankingAisAuthenticationController authController = createUkObAuthController();
+
+        return createAutoAuthController(authController);
+    }
+
+    @Override
+    public boolean login() throws AuthenticationException, AuthorizationException {
+        super.login();
+        this.consentValidator.validate();
+        return true;
+    }
+
+    public UkOpenBankingAisAuthenticationController createUkObAuthController() {
+        this.consentValidator = new ConsentStatusValidator(this.apiClient, this.persistentStorage);
+
+        return new UkOpenBankingAisAuthenticationController(
+                this.persistentStorage,
+                this.supplementalInformationHelper,
+                this.apiClient,
+                new UkOpenBankingAisAuthenticator(this.apiClient),
+                this.credentials,
+                this.strongAuthenticationState,
+                this.request.getCallbackUri(),
+                this.randomValueGenerator,
+                new OpenIdAuthenticationValidator(this.apiClient),
+                this.consentValidator);
+    }
+
+    public AutoAuthenticationController createAutoAuthController(
+            UkOpenBankingAisAuthenticationController authController) {
+        return new AutoAuthenticationController(
+                this.request,
+                this.systemUpdater,
+                new ThirdPartyAppAuthenticationController<>(
+                        authController, this.supplementalInformationHelper),
+                authController);
     }
 }
