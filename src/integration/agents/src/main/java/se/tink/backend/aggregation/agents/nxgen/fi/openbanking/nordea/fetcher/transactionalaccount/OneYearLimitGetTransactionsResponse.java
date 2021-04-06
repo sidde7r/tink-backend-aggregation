@@ -1,10 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.openbanking.nordea.fetcher.transactionalaccount;
 
 import com.google.common.collect.Iterables;
-import java.time.Instant;
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.fetcher.transactionalaccount.rpc.GetTransactionsResponse;
@@ -27,9 +24,7 @@ public class OneYearLimitGetTransactionsResponse
         return isDateOlderThanOneYear(Iterables.getLast(transactions).getValueDate());
     }
 
-    private boolean isDateOlderThanOneYear(Date date) {
-        LocalDate dateToCheck =
-                Instant.ofEpochMilli(date.getTime()).atZone(ZoneId.systemDefault()).toLocalDate();
+    private boolean isDateOlderThanOneYear(LocalDate dateToCheck) {
         return dateToCheck.isBefore(LocalDate.now().minusYears(1));
     }
 }
