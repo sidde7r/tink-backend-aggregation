@@ -46,6 +46,10 @@ public class AuthenticationClient {
                 .post(AuthenticationsResponse.class, request);
     }
 
+    public HttpResponse getUrl(String url) {
+        return baseClient.request(url).get(HttpResponse.class);
+    }
+
     public HttpResponse initializeOidcSession(
             String codeChallenge,
             String state,
