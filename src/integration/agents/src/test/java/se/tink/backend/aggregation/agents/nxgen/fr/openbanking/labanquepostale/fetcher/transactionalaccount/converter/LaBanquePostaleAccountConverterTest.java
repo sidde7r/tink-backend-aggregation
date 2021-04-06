@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.LaBanquePostaleTestFixtures.AMOUNT_1;
@@ -14,12 +13,12 @@ import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepo
 
 import com.google.common.collect.ImmutableList;
 import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.backend.aggregation.agents.exceptions.refresh.AccountRefreshException;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.fetcher.transactionalaccount.rpc.AccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants;
@@ -30,20 +29,15 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ber
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
-import se.tink.libraries.mapper.PrioritizedValueExtractor;
 
 public class LaBanquePostaleAccountConverterTest {
 
     private LaBanquePostaleAccountConverter laBanquePostaleAccountConverter;
 
-    private PrioritizedValueExtractor prioritizedValueExtractorMock;
-
     @Before
     public void setUp() {
-        prioritizedValueExtractorMock = mock(PrioritizedValueExtractor.class);
 
-        laBanquePostaleAccountConverter =
-                new LaBanquePostaleAccountConverter(prioritizedValueExtractorMock);
+        laBanquePostaleAccountConverter = new LaBanquePostaleAccountConverter();
     }
 
     @Test
@@ -54,16 +48,13 @@ public class LaBanquePostaleAccountConverterTest {
                 createBalanceBaseEntity(BerlinGroupConstants.Accounts.CLBD, AMOUNT_1);
         final BalanceBaseEntity xpcdBalance =
                 createBalanceBaseEntity(BerlinGroupConstants.Accounts.XPCD, AMOUNT_2);
-        final List<BalanceBaseEntity> balances = ImmutableList.of(clbdBalance, xpcdBalance);
+        final List<BalanceBaseEntity> balances = Arrays.asList(clbdBalance, xpcdBalance);
 
         when(accountEntity.getBalances()).thenReturn(balances);
 
         final AccountResponse accountResponse = mock(AccountResponse.class);
 
-        when(accountResponse.getAccounts()).thenReturn(ImmutableList.of(accountEntity));
-
-        when(prioritizedValueExtractorMock.pickByValuePriority(any(), any(), any()))
-                .thenReturn(Optional.of(clbdBalance));
+        when(accountResponse.getAccounts()).thenReturn(Collections.singletonList(accountEntity));
 
         // when
         final List<TransactionalAccount> result =
@@ -88,17 +79,13 @@ public class LaBanquePostaleAccountConverterTest {
     public void shouldThrowExceptionWhenNoBalancePresent() {
         // given
         final AccountEntity accountEntity = createAccountEntityMock();
-        final BalanceBaseEntity otherBalance = createBalanceBaseEntity("OTHER", AMOUNT_1);
-        final List<BalanceBaseEntity> balances = ImmutableList.of(otherBalance);
+        final List<BalanceBaseEntity> balances = Collections.emptyList();
 
         when(accountEntity.getBalances()).thenReturn(balances);
 
         final AccountResponse accountResponse = mock(AccountResponse.class);
 
         when(accountResponse.getAccounts()).thenReturn(ImmutableList.of(accountEntity));
-
-        when(prioritizedValueExtractorMock.pickByValuePriority(any(), any(), any()))
-                .thenReturn(Optional.empty());
 
         // when
         final Throwable thrown =
@@ -107,9 +94,8 @@ public class LaBanquePostaleAccountConverterTest {
 
         // then
         assertThat(thrown)
-                .isExactlyInstanceOf(AccountRefreshException.class)
-                .hasMessage(
-                        "Could not extract account balance. No available balance with type of: CLBD, XPCD");
+                .isExactlyInstanceOf(IllegalArgumentException.class)
+                .hasMessage("Cannot determine booked balance from empty list of balances.");
     }
 
     private static AccountEntity createAccountEntityMock() {
@@ -140,6 +126,8 @@ public class LaBanquePostaleAccountConverterTest {
         when(balanceBaseEntity.getBalanceAmount()).thenReturn(balanceAmountBaseEntity);
         when(balanceBaseEntity.getBalanceType()).thenReturn(balanceType);
         when(balanceBaseEntity.isInCurrency(CURRENCY)).thenReturn(Boolean.TRUE);
+        when(balanceBaseEntity.toAmount())
+                .thenReturn(new ExactCurrencyAmount(new BigDecimal(amount), CURRENCY));
 
         return balanceBaseEntity;
     }
