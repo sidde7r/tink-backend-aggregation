@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.fetcher.transactionalaccount.entities;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import java.math.BigDecimal;
 import java.util.Date;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants;
@@ -9,61 +10,49 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
+@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class TransactionEntity {
 
     private BigDecimal amount;
 
-    @JsonProperty("booking_date")
     private Date bookingDate;
 
-    @JsonProperty("card_number")
     private String cardNumber;
 
-    @JsonProperty("counterparty_account")
-    private String counterPartyAccount;
+    private String counterpartyAccount;
 
-    @JsonProperty("counterparty_name")
-    private String counterPartyName;
+    private String counterpartyName;
 
     private String currency;
 
-    @JsonProperty("currency_rate")
     private String currencyRate;
 
     private String message;
 
     private String narrative;
 
-    @JsonProperty("original_currency")
     private String originalCurrency;
 
-    @JsonProperty("original_currency_amount")
     private String originalCurrencyAmount;
 
-    @JsonProperty("own_message")
     private String ownMessage;
 
-    @JsonProperty("payment_date")
     private Date paymentDate;
 
     private String reference;
 
     private String status;
 
-    @JsonProperty("transaction_date")
     private Date transactionDate;
 
-    @JsonProperty("transaction_id")
     private String transactionId;
 
-    @JsonProperty("type_description")
     private String typeDescription;
 
-    @JsonProperty("value_date")
     private Date valueDate;
 
-    public String getCounterPartyName() {
-        return counterPartyName;
+    public String getCounterpartyName() {
+        return counterpartyName;
     }
 
     public String getNarrative() {
