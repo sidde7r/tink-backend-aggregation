@@ -6,8 +6,8 @@ import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import lombok.SneakyThrows;
 import se.tink.backend.aggregation.agents.contexts.CompositeAgentContext;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.jwt.kid.EidasKidProvider;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.jwt.kid.KidProvider;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.jwt.kid.EidasKeyIdProvider;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.jwt.kid.KeyIdProvider;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.jwt.signer.EidasJwsSigner;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.jwt.signer.EidasProxyJwtSigner;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.signer.iface.JwtSigner;
@@ -27,8 +27,8 @@ public class UkOpenBankingEidasSignerModule extends AbstractModule {
         EidasIdentity eidasIdentity = createEidasIdentity(context);
         EidasJwsSigner eidasJwsSigner =
                 createEidasJwsSigner(eidasIdentity, agentsServiceConfiguration);
-        KidProvider kidProvider = createKidProvider(context);
-        return new EidasProxyJwtSigner(kidProvider, eidasJwsSigner);
+        KeyIdProvider keyIdProvider = createKidProvider(context);
+        return new EidasProxyJwtSigner(keyIdProvider, eidasJwsSigner);
     }
 
     private EidasIdentity createEidasIdentity(CompositeAgentContext context) {
@@ -42,7 +42,7 @@ public class UkOpenBankingEidasSignerModule extends AbstractModule {
     }
 
     @SneakyThrows
-    private KidProvider createKidProvider(CompositeAgentContext context) {
-        return new EidasKidProvider(context.getAgentConfigurationController().getQsealc());
+    private KeyIdProvider createKidProvider(CompositeAgentContext context) {
+        return new EidasKeyIdProvider(context.getAgentConfigurationController().getQsealc());
     }
 }

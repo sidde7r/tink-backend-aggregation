@@ -18,19 +18,19 @@ import se.tink.backend.aggregation.configuration.agents.utils.CertificateUtils;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 @RunWith(MockitoJUnitRunner.class)
-public class JwksKidProviderTest {
+public class JwksKeyIdProviderTest {
 
     private static final URL JWKS_ENDPOINT = new URL("https://localhost:8888/keys.jwks");
 
     @Mock private JwksClient jwksClient;
 
-    private JwksKidProvider jwksKidProvider;
+    private JwksKeyIdProvider jwksKidProvider;
 
     @Before
     public void setUp() throws Exception {
 
         jwksKidProvider =
-                new JwksKidProvider(
+                new JwksKeyIdProvider(
                         jwksClient,
                         JWKS_ENDPOINT,
                         CertificateUtils.getX509CertificatesFromBase64EncodedCert(

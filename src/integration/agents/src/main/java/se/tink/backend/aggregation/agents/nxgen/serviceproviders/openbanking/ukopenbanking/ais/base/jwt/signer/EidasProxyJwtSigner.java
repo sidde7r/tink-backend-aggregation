@@ -3,13 +3,13 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.jwt.kid.KidProvider;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.jwt.kid.KeyIdProvider;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.signer.iface.JwtSigner;
 
 @RequiredArgsConstructor
 public class EidasProxyJwtSigner implements JwtSigner {
 
-    private final KidProvider kidProvider;
+    private final KeyIdProvider keyIdProvider;
     private final EidasJwsSigner signer;
 
     @Override
@@ -19,7 +19,7 @@ public class EidasProxyJwtSigner implements JwtSigner {
             Map<String, Object> headerClaims,
             Map<String, Object> payloadClaims,
             boolean detachedPayload) {
-        return TinkJwtSigner.builder(kidProvider, signer)
+        return TinkJwtSigner.builder(keyIdProvider, signer)
                 .withAlgorithm(algorithm)
                 .withHeaderClaims(headerClaims)
                 .withPayloadClaims(payloadClaims)
