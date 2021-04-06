@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.mock;
+package se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.wiremock;
 
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesJsonFileParser;
@@ -12,14 +12,16 @@ import se.tink.libraries.enums.MarketCode;
 public class SEBWireMockTest {
 
     private static final String CONFIGURATION_PATH =
-            "data/agents/openbanking/seb/configuration.yml";
+            "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/openbanking/seb/wiremock/resources/configuration.yml";
 
     @Test
     public void testRefresh() throws Exception {
 
         // given
-        final String wireMockServerFilePath = "data/agents/openbanking/seb/wireMock-seb-ob.aap";
-        final String contractFilePath = "data/agents/openbanking/seb/agent-contract.json";
+        final String wireMockServerFilePath =
+                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/openbanking/seb/wiremock/resources/wireMock-seb-ob.aap";
+        final String contractFilePath =
+                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/openbanking/seb/wiremock/resources/agent-contract.json";
 
         final AgentsServiceConfiguration configuration =
                 AgentsServiceConfigurationReader.read(CONFIGURATION_PATH);

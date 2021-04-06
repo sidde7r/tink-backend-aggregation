@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.mock;
+package se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.wiremock;
 
 import java.time.LocalDate;
 import org.junit.Assert;
@@ -23,13 +23,14 @@ import se.tink.libraries.transfer.rpc.RemittanceInformation;
 public class SEBWireMockPaymentTest {
 
     private static final String CONFIGURATION_PATH =
-            "data/agents/openbanking/seb/configuration.yml";
+            "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/openbanking/seb/wiremock/resources/configuration.yml";
 
     @Test
     public void testPayment() throws Exception {
 
         // given
-        final String wireMockFilePath = "data/agents/openbanking/seb/wiremock-seb-ob-pis-pg.aap";
+        final String wireMockFilePath =
+                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/openbanking/seb/wiremock/resources/wiremock-seb-ob-pis-pg.aap";
         final AgentsServiceConfiguration configuration =
                 AgentsServiceConfigurationReader.read(CONFIGURATION_PATH);
 
@@ -49,7 +50,8 @@ public class SEBWireMockPaymentTest {
     public void testPaymentIncorrectlyCancelled() throws Exception {
 
         // given
-        final String wireMockFilePath = "data/agents/openbanking/seb/wiremock-seb-ob-cancelled.aap";
+        final String wireMockFilePath =
+                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/openbanking/seb/wiremock/resources/wiremock-seb-ob-cancelled.aap";
         final AgentsServiceConfiguration configuration =
                 AgentsServiceConfigurationReader.read(CONFIGURATION_PATH);
 
@@ -74,7 +76,7 @@ public class SEBWireMockPaymentTest {
 
         // given
         final String wireMockFilePath =
-                "data/agents/openbanking/seb/wireMock-seb-ob-pis-transfer.aap";
+                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/openbanking/seb/wiremock/resources/wireMock-seb-ob-pis-transfer.aap";
         final AgentsServiceConfiguration configuration =
                 AgentsServiceConfigurationReader.read(CONFIGURATION_PATH);
 
@@ -92,7 +94,7 @@ public class SEBWireMockPaymentTest {
     @Test
     public void testCancelDueToDuplication() throws Exception {
         final String wireMockFilePath =
-                "data/agents/openbanking/seb/wireMock-seb-ob-pis-cancel-duplication.aap";
+                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/openbanking/seb/wiremock/resources/wireMock-seb-ob-pis-cancel-duplication.aap";
         final AgentsServiceConfiguration configuration =
                 AgentsServiceConfigurationReader.read(CONFIGURATION_PATH);
 

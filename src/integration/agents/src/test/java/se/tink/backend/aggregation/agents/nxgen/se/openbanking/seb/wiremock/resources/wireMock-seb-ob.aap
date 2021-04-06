@@ -1,0 +1,220 @@
+REQUEST 1a
+POST https://authorize.sebgroup.com/auth/v3/authorizations
+Accept: application/json
+Content-Type: application/json
+
+{"client_id":"dummyId","scope":"psd2_accounts psd2_payments","start_mode":"ast"}
+
+RESPONSE 1a
+201
+Content-Type: application/json
+Content-Length: 59
+
+{"auth_req_id":"AUTH-0a9021b6-d022-439e-a22a-7c49429d731e"}
+
+REQUEST 1b
+GET https://authorize.sebgroup.com/auth/v3/authorizations/AUTH-0a9021b6-d022-439e-a22a-7c49429d731e
+Accept: application/json
+
+RESPONSE ab SET AUTH_01
+200
+Content-Type: application/json
+Content-Length: 132
+
+{"status":"PENDING","hint_code":"OUTSTANDING_TRANSACTION","autostart_token":"59a1b676-2ea1-41ba-b4f9-725634f2dcd1","poll_delay":500}
+
+REQUEST 1c MATCH AUTH_01
+GET https://authorize.sebgroup.com/auth/v3/authorizations/AUTH-0a9021b6-d022-439e-a22a-7c49429d731e
+Accept: application/json
+
+RESPONSE 1c SET AUTH_02
+200
+Content-Type: application/json
+Content-Length: 61
+
+{"status":"PENDING","hint_code":"USER_SIGN","poll_delay":500}
+
+REQUEST 1d MATCH AUTH_02
+GET https://authorize.sebgroup.com/auth/v3/authorizations/AUTH-0a9021b6-d022-439e-a22a-7c49429d731e
+Accept: application/json
+
+RESPONSE 1d
+200
+Content-Type: application/json
+Content-Length: 38
+
+{"status":"COMPLETE","poll_delay":500}
+
+REQUEST 1e
+POST https://authorize.sebgroup.com/auth/v3/tokens
+Accept: application/json
+Content-Type: application/json
+
+{"auth_req_id":"AUTH-0a9021b6-d022-439e-a22a-7c49429d731e","client_id":"dummyId","client_secret":"dummySecret","redirect_uri":"https://127.0.0.1:7357/api/v1/thirdparty/callback"}
+
+RESPONSE 1e
+200
+Content-Type: application/json
+Content-Length: 175
+
+{"scope":"psd2_accounts psd2_payments","access_token":"iKoyt6TjdQb67zgn2uhy","refresh_token":"e5l1Ai8XZI4ud12jH1X88z4SN11P3Jrwi0oPVN4X","token_type":"bearer","expires_in":599}
+
+REQUEST 15
+GET https://tpp-api.sebgroup.com/tpp/ais/v7/identified2/accounts?withBalance=true
+Accept: application/json
+Content-Type: application/json
+
+
+RESPONSE 15
+200
+Date: Thu, 25 Jun 2020 08:38:54 GMT
+Date: Thu, 25 Jun 2020 08:38:54 GMT
+Content-Type: application/json;charset=utf-8
+Cache-Control: private
+Content-Length: 2711
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"accounts":[{"resourceId":"resourceId_1","iban":"SE8050000000000000000646","bban":"00000000646","status":"enabled","currency":"SEK","ownerName":"FirstName LastName","creditLine":"20000.000","product":"Privatkonto","name":"accountName","balances":[{"balanceType":"interimAvailable","creditLimitIncluded":true,"balanceAmount":{"amount":"40055.940","currency":"SEK"}},{"balanceType":"interimBooked","balanceAmount":{"amount":"20094.94","currency":"SEK"}}],"_links":{"transactions":{"href":"/accounts/resourceId_1/transactions?bookingStatus=booked"}}}]}
+
+REQUEST 16pending
+GET https://tpp-api.sebgroup.com/tpp/ais/v7/identified2/accounts/resourceId_1/transactions?bookingStatus=pending
+Accept: application/json
+Content-Type: application/json
+
+
+RESPONSE 16pending
+200
+Date: Thu, 25 Jun 2020 08:39:01 GMT
+Date: Thu, 25 Jun 2020 08:39:02 GMT
+Content-Type: application/json;charset=utf-8
+Transfer-Encoding: chunked
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"iban":"SE8050000000000000000646","bban":"00000000646","transactions":{"pending":[{"creditorName":"UPCOMING_TRANSACTION","transactionAmount":{"amount":"-21670.0","currency":"SEK"},"valueDate":"2020-06-26","pendingType":"upcoming"},{"creditorName":"UPCOMING_TRANSACTION","transactionAmount":{"amount":"-5000.0","currency":"SEK"},"valueDate":"2020-06-27","pendingType":"upcoming"},{"creditorName":"UPCOMING_TRANSACTION","transactionAmount":{"amount":"-2000.0","currency":"SEK"},"valueDate":"2020-06-27","pendingType":"upcoming"},{"creditorName":"UPCOMING_TRANSACTION","transactionAmount":{"amount":"-299.0","currency":"SEK"},"valueDate":"2020-06-28","pendingType":"upcoming"},{"creditorName":"UPCOMING_TRANSACTION","transactionAmount":{"amount":"-35.0","currency":"SEK"},"valueDate":"2020-06-29","pendingType":"upcoming"},{"creditorName":"UPCOMING_TRANSACTION","transactionAmount":{"amount":"-137.0","currency":"SEK"},"valueDate":"2020-06-30","pendingType":"upcoming"},{"creditorName":"UPCOMING_TRANSACTION","transactionAmount":{"amount":"-493.0","currency":"SEK"},"valueDate":"2020-06-30","pendingType":"upcoming"},{"creditorName":"UPCOMING_TRANSACTION","transactionAmount":{"amount":"-1276.0","currency":"SEK"},"valueDate":"2020-06-30","pendingType":"upcoming"},{"creditorName":"UPCOMING_TRANSACTION","transactionAmount":{"amount":"-16228.0","currency":"SEK"},"valueDate":"2020-06-30","pendingType":"upcoming"},{"creditorName":"UPCOMING_TRANSACTION","transactionAmount":{"amount":"-25579.17","currency":"SEK"},"valueDate":"2020-06-30","pendingType":"upcoming"},{"creditorName":"UPCOMING_TRANSACTION","transactionAmount":{"amount":"-235.0","currency":"SEK"},"valueDate":"2020-06-30","pendingType":"upcoming"},{"creditorName":"UPCOMING_TRANSACTION","transactionAmount":{"amount":"-112.0","currency":"SEK"},"valueDate":"2020-06-30","pendingType":"upcoming"},{"creditorName":"UPCOMING_TRANSACTION","transactionAmount":{"amount":"-15359.54","currency":"SEK"},"valueDate":"2020-07-06","pendingType":"upcoming"},{"creditorName":"UPCOMING_TRANSACTION","transactionAmount":{"amount":"-155.0","currency":"SEK"},"valueDate":"2020-07-31","pendingType":"upcoming"},{"creditorName":"UPCOMING_TRANSACTION","transactionAmount":{"amount":"-1950.0","currency":"SEK"},"valueDate":"2020-08-28","pendingType":"upcoming"},{"transactionAmount":{"amount":"1000000.0","currency":"SEK"},"valueDate":"2020-06-25","descriptiveText": "PENDING_TRANSACTION","pendingType":"reserved"}]},"_links":{"account":{"href":"/accounts/resourceId_1"}}}
+
+REQUEST 16
+GET https://tpp-api.sebgroup.com/tpp/ais/v7/identified2/accounts/resourceId_1/transactions?bookingStatus=both
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 16
+200
+Date: Thu, 25 Jun 2020 08:39:01 GMT
+Date: Thu, 25 Jun 2020 08:39:02 GMT
+Content-Type: application/json;charset=utf-8
+Transfer-Encoding: chunked
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"iban":"SE8050000000000000000646","bban":"00000000646","transactions":{"booked":[{"transactionId":"MTQ7OTkwMDAwMDAwMDtMT047MjAyMC0wNi0yNTsyMDIwLTA2LTI1OzM5NTQzOzs7Ozs7MjQyNjg=","valueDate":"2020-06-25","bookingDate":"2020-06-25","entryReference":"9900000000","descriptiveText":"TransactionDetails","transactionAmount":{"amount":"39543.0","currency":"SEK"},"balanceAfterTransaction":"20094.94","proprietaryBankTransactionCode":"14","proprietaryBankTransactionCodeText":"Övrigt"},{"transactionId":"OTs1NDg0MTkxNDAzO0hBTkRMQVJOIE1LIC8yMC0wNi0yMjsyMDIwLTA2LTIzOzIwMjAtMDYtMjM7LTYzOzs7Ozs7MjQyNjU=","valueDate":"2020-06-23","bookingDate":"2020-06-23","entryReference":"5484191403","descriptiveText":"TransactionDetails","transactionAmount":{"amount":"-63.0","currency":"SEK"},"balanceAfterTransaction":"-19448.06","proprietaryBankTransactionCode":"9","proprietaryBankTransactionCodeText":"Korttransaktion","_links":{"transactionDetails":{"href":"/accounts/resourceId_1/transactions/OTs1NDg0MTkxNDAzO0hBTkRMQVJOIE1LIC8yMC0wNi0yMjsyMDIwLTA2LTIzOzIwMjAtMDYtMjM7LTYzOzs7Ozs7MjQyNjU="}}},{"transactionId":"NDs1NDkwOTkwNzg5OzQ2NzA0NjE2MjYxOzIwMjAtMDYtMjI7MjAyMC0wNi0yMTs7OzBERjQ4MjBEMTE0NjQwMjU4QzFENDc4RTg1NEYzNjJFO0Q7OzsyNDI2MQ==","valueDate":"2020-06-21","bookingDate":"2020-06-22","entryReference":"5490990789","descriptiveText":"TransactionDetails","transactionAmount":{"amount":"-482.0","currency":"SEK"},"balanceAfterTransaction":"-19385.06","proprietaryBankTransactionCode":"4","proprietaryBankTransactionCodeText":"Swishbetalning","_links":{"transactionDetails":{"href":"/accounts/resourceId_1/transactions/NDs1NDkwOTkwNzg5OzQ2NzA0NjE2MjYxOzIwMjAtMDYtMjI7MjAyMC0wNi0yMTs7OzBERjQ4MjBEMTE0NjQwMjU4QzFENDc4RTg1NEYzNjJFO0Q7OzsyNDI2MQ=="}}},{"transactionId":"NDs1NDkwOTkwNzg5OzQ2NzA1NDQ5MTY3OzIwMjAtMDQtMDc7MjAyMC0wNC0wNzs7OzdCNzI3ODBENDhDRjQ5MUI4MTZFQjQ3QThFRjNCQTEyO0M7Ozsx","valueDate":"2020-04-07","bookingDate":"2020-04-07","entryReference":"5490990789","descriptiveText":"TransactionDetails","transactionAmount":{"amount":"340.0","currency":"SEK"},"balanceAfterTransaction":"-3030.79","proprietaryBankTransactionCode":"4","proprietaryBankTransactionCodeText":"Swishbetalning","_links":{"transactionDetails":{"href":"/accounts/resourceId_1/transactions/NDs1NDkwOTkwNzg5OzQ2NzA1NDQ5MTY3OzIwMjAtMDQtMDc7MjAyMC0wNC0wNzs7OzdCNzI3ODBENDhDRjQ5MUI4MTZFQjQ3QThFRjNCQTEyO0M7Ozsx"}}}],"pending":[{"creditorName":"UPCOMING_TRANSACTION","transactionAmount":{"amount":"-21670.0","currency":"SEK"},"valueDate":"2020-06-26","pendingType":"upcoming"},{"creditorName":"UPCOMING_TRANSACTION","transactionAmount":{"amount":"-5000.0","currency":"SEK"},"valueDate":"2020-06-27","pendingType":"upcoming"},{"transactionAmount":{"amount":"1000000.0","currency":"SEK"},"valueDate":"2020-06-25","descriptiveText":"PENDING_TRANSACTION","pendingType":"reserved"}]},"_links":{"account":{"href":"/accounts/resourceId_1"},"next":{"href":"/accounts/resourceId_1/transactions?bookingStatus=booked&dateFrom=2020-04-07&transactionSequenceNumber=2"}}}
+
+REQUEST 17
+GET https://tpp-api.sebgroup.com/tpp/ais/v7/identified2/accounts/resourceId_1/transactions?bookingStatus=booked&dateFrom=2020-04-07&transactionSequenceNumber=2
+Accept: application/json
+Content-Type: application/json
+
+
+RESPONSE 17
+200
+Date: Thu, 25 Jun 2020 08:39:03 GMT
+Date: Thu, 25 Jun 2020 08:39:04 GMT
+Content-Type: application/json;charset=utf-8
+Transfer-Encoding: chunked
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"iban":"SE8050000000000000000646","bban":"00000000646","transactions":{"booked":[{"transactionId":"MTQ7OTkwMDAwMDEwMDtTSzc4MDkxMzYwMzQ7MjAyMC0wNC0wNzsyMDIwLTA0LTA3OzI4ODU7Ozs7Ozsy","valueDate":"2020-04-07","bookingDate":"2020-04-07","entryReference":"9900000100","descriptiveText":"TransactionDetails","transactionAmount":{"amount":"2885.0","currency":"SEK"},"balanceAfterTransaction":"-3370.79","proprietaryBankTransactionCode":"14","proprietaryBankTransactionCodeText":"Övrigt"},{"transactionId":"NzswMDg3OTAxODE2Uzs7OzIwMjAtMDQtMDY7OzswMDg3OTAxODE2Uzs7Ozsx","valueDate":"2020-04-06","bookingDate":"2020-04-06","entryReference":"0087901816S","descriptiveText":"TransactionDetails","transactionAmount":{"amount":"-9848.53","currency":"SEK"},"balanceAfterTransaction":"-6255.79","proprietaryBankTransactionCode":"7","proprietaryBankTransactionCodeText":"Betalning","_links":{"transactionDetails":{"href":"/accounts/resourceId_1/transactions/NzswMDg3OTAxODE2Uzs7OzIwMjAtMDQtMDY7OzswMDg3OTAxODE2Uzs7Ozsx"}}},{"transactionId":"OTs1NDg0NjExMTY4O0hBV0FJSSBQT0tFIC8yMC0wNC0wMTsyMDIwLTA0LTAzOzIwMjAtMDQtMDM7LTEyNTs7Ozs7OzE=","valueDate":"2020-04-03","bookingDate":"2020-04-03","entryReference":"5484611168","descriptiveText":"TransactionDetails","transactionAmount":{"amount":"-125.0","currency":"SEK"},"balanceAfterTransaction":"3592.74","proprietaryBankTransactionCode":"9","proprietaryBankTransactionCodeText":"Korttransaktion","_links":{"transactionDetails":{"href":"/accounts/resourceId_1/transactions/OTs1NDg0NjExMTY4O0hBV0FJSSBQT0tFIC8yMC0wNC0wMTsyMDIwLTA0LTAzOzIwMjAtMDQtMDM7LTEyNTs7Ozs7OzE="}}},{"transactionId":"OTs1NDg0NDA3NTA3O09IIFBPS0UgSEFNTS8yMC0wNC0wMjsyMDIwLTA0LTAzOzIwMjAtMDQtMDM7LTk5Ozs7Ozs7Mg==","valueDate":"2020-04-03","bookingDate":"2020-04-03","entryReference":"5484407507","descriptiveText":"TransactionDetails","transactionAmount":{"amount":"-99.0","currency":"SEK"},"balanceAfterTransaction":"3717.74","proprietaryBankTransactionCode":"9","proprietaryBankTransactionCodeText":"Korttransaktion","_links":{"transactionDetails":{"href":"/accounts/resourceId_1/transactions/OTs1NDg0NDA3NTA3O09IIFBPS0UgSEFNTS8yMC0wNC0wMjsyMDIwLTA0LTAzOzIwMjAtMDQtMDM7LTk5Ozs7Ozs7Mg=="}}}]},"_links":{"account":{"href":"/accounts/resourceId_1"}}}
+
+REQUEST 18
+GET https://tpp-api.sebgroup.com/tpp/ais/v7/identified2/accounts/resourceId_1/transactions/MTA7NTQ4NDEyNDgxNTtFRElOQlVSR0ggICAvMjAtMDItMjg7MjAyMC0wMy0wMjsyMDIwLTAzLTAyOy0zMSw4OTtMT1RISUFOIEJVU0VTIExJTUlURUQgICBGR0JQMSAgICAgICAgICAgICAyLDUwLTgyIEtVUlMgMTIsNzU2MDs7Ozs7Mw==
+Accept: application/json
+Content-Type: application/json
+
+
+RESPONSE 18
+200
+Date: Thu, 25 Jun 2020 08:39:04 GMT
+Date: Thu, 25 Jun 2020 08:39:04 GMT
+Content-Type: application/json;charset=utf-8
+Content-Length: 404
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"transactionAmount":{"amount":"31.89","currency":"SEK"},"proprietaryBankTransactionCode":"10","valueDate":"2020-03-02","bookingDate":"2020-03-02","debtorAccount":{"bban":"00000000646"},"remittanceInformationUnstructured":"Edinburgh","currencyExchange":{"exchangeRate":"12.7560"},"cardAcceptorId":"cardAcceptorId","transactionDate":"2020-02-28","originalAmount":{"amount":"2.50","currency":"GBP"}}
+
+REQUEST 19
+GET https://tpp-api.sebgroup.com/tpp/ais/v7/identified2/accounts/resourceId_1/transactions/MTA7NTQ4NDYyODI0OTtFRElOQlVSR0ggICAvMjAtMDItMjc7MjAyMC0wMi0yODsyMDIwLTAyLTI4Oy0zMCw3NDtHT0dBUkJVUk4gUkVTVEFVUkFOVCAgICA5R0JQRSAgICAgICAgICAgICAyLDQwLTYwIEtVUlMgMTIsODA4Mzs7Ozs7MQ==
+Accept: application/json
+Content-Type: application/json
+
+
+RESPONSE 19
+200
+Date: Thu, 25 Jun 2020 08:39:05 GMT
+Date: Thu, 25 Jun 2020 08:39:05 GMT
+Content-Type: application/json;charset=utf-8
+Content-Length: 403
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"transactionAmount":{"amount":"30.74","currency":"SEK"},"proprietaryBankTransactionCode":"10","valueDate":"2020-02-28","bookingDate":"2020-02-28","debtorAccount":{"bban":"00000000646"},"remittanceInformationUnstructured":"Edinburgh","currencyExchange":{"exchangeRate":"12.8083"},"cardAcceptorId":"cardAcceptorId","transactionDate":"2020-02-27","originalAmount":{"amount":"2.40","currency":"GBP"}}
+
+REQUEST 20
+GET https://tpp-api.sebgroup.com/tpp/ais/v7/identified2/accounts/resourceId_1/transactions/MTA7NTQ4NDU3OTQ3MztFRElOQlVSR0ggICAvMjAtMDItMjc7MjAyMC0wMi0yODsyMDIwLTAyLTI4Oy05OCw2MjtDT1NUQSBDT0ZGRUUgNDMwNDY3MDUgICA5R0JQRSAgICAgICAgICAgICA3LDcwLTYwIEtVUlMgMTIsODA3Nzs7Ozs7Mg==
+Accept: application/json
+Content-Type: application/json
+
+
+RESPONSE 20
+200
+Date: Thu, 25 Jun 2020 08:39:06 GMT
+Date: Thu, 25 Jun 2020 08:39:06 GMT
+Content-Type: application/json;charset=utf-8
+Content-Length: 404
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"transactionAmount":{"amount":"98.62","currency":"SEK"},"proprietaryBankTransactionCode":"10","valueDate":"2020-02-28","bookingDate":"2020-02-28","debtorAccount":{"bban":"00000000646"},"remittanceInformationUnstructured":"Edinburgh","currencyExchange":{"exchangeRate":"12.8077"},"cardAcceptorId":"cardAcceptorId","transactionDate":"2020-02-27","originalAmount":{"amount":"7.70","currency":"GBP"}}
+
+REQUEST 21
+GET https://tpp-api.sebgroup.com/tpp/ais/v7/identified2/accounts/resourceId_1/transactions/MTA7NTQ4NDQ5MDE1MjtJTlRFUk5FVCAgICAvMjAtMDItMjc7MjAyMC0wMi0yODsyMDIwLTAyLTI4Oy04OTEsMzg7V1dXIEYxIENPTSAgICAgICAgICAgICAgOUVVUkUgICAgICAgICAgICA4Miw0OS02MCBLVVJTIDEwLDgwNTk7Ozs7OzM=
+Accept: application/json
+Content-Type: application/json
+
+
+RESPONSE 21
+200
+Date: Thu, 25 Jun 2020 08:39:06 GMT
+Date: Thu, 25 Jun 2020 08:39:06 GMT
+Content-Type: application/json;charset=utf-8
+Content-Length: 394
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"transactionAmount":{"amount":"891.38","currency":"SEK"},"proprietaryBankTransactionCode":"10","valueDate":"2020-02-28","bookingDate":"2020-02-28","debtorAccount":{"bban":"00000000646"},"remittanceInformationUnstructured":"Internet","currencyExchange":{"exchangeRate":"10.8059"},"cardAcceptorId":"cardAcceptorId","transactionDate":"2020-02-27","originalAmount":{"amount":"82.49","currency":"EUR"}}
+
+REQUEST 22
+GET https://tpp-api.sebgroup.com/tpp/ais/v7/identified2/accounts/resourceId_1/transactions/MTA7NTQ4NDIxODI3NjtBTVpOIENPTS9CSUwvMTktMTItMjc7MjAxOS0xMi0zMDsyMDE5LTEyLTI4Oy0yNjksMzM7QU1BWk9OIENPTSA0UDBYNTdTMDMgICAgOFVTRDMgICAgICAgICAgICAyOCwwMC05NiBLVVJTIDksNjE4OTs7Ozs7MTk=
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 22
+200
+Date: Thu, 25 Jun 2020 08:39:07 GMT
+Date: Thu, 25 Jun 2020 08:39:07 GMT
+Content-Type: application/json;charset=utf-8
+Content-Length: 403
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"transactionAmount":{"amount":"269.33","currency":"SEK"},"proprietaryBankTransactionCode":"10","valueDate":"2019-12-30","bookingDate":"2019-12-28","debtorAccount":{"bban":"00000000646"},"remittanceInformationUnstructured":"Amzn com","currencyExchange":{"exchangeRate":"9.6189"},"cardAcceptorId":"cardAcceptorId","transactionDate":"2019-12-27","originalAmount":{"amount":"28.00","currency":"USD"}}
+
+REQUEST 23
+GET https://tpp-api.sebgroup.com/tpp/ais/v7/identified2/accounts/resourceId_1
+Accept: application/json
+Content-Type: application/json
+
+
+RESPONSE 23
+200
+Date: Thu, 25 Jun 2020 08:38:54 GMT
+Date: Thu, 25 Jun 2020 08:38:54 GMT
+Content-Type: application/json;charset=utf-8
+Cache-Control: private
+Content-Length: 2711
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"resourceId":"resourceId_1","iban":"SE8050000000000000000646","bban":"00000000646","bic":"ESSESESS","status":"enabled","currency":"SEK","ownerName":"FirstName LastName","creditLine":"20000.000","product":"Privatkonto","name":"accountName","bicAddress":"SEB, 106 40 Stockholm","cardLinkedToAccount":true,"paymentService":true,"accountInterest":"0.0","_links":{"transactions":{"href":"/accounts/resourceId_1/transactions?bookingStatus=booked"}}}
