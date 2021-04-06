@@ -14,6 +14,7 @@ import se.tink.libraries.payment.rpc.Payment;
 
 public class AIBAgentTest {
 
+    private static final String FINANCIAL_INSTITUTION_ID = "eab9d48aca91445e9fbf2523564f4577";
     private final String SOURCE_IDENTIFIER = "";
     private final String DESTINATION_IDENTIFIER = "";
 
@@ -23,7 +24,7 @@ public class AIBAgentTest {
                 .loadCredentialsBefore(false)
                 .saveCredentialsAfter(true)
                 .expectLoggedIn(false)
-                .setFinancialInstitutionId("eab9d48aca91445e9fbf2523564f4577")
+                .setFinancialInstitutionId(FINANCIAL_INSTITUTION_ID)
                 .setAppId("tink")
                 .build()
                 .testRefresh();
@@ -36,7 +37,7 @@ public class AIBAgentTest {
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
-                        .setFinancialInstitutionId("aib")
+                        .setFinancialInstitutionId(FINANCIAL_INSTITUTION_ID)
                         .setAppId("tink");
 
         builder.build().testGenericPaymentUKOB(createMockedDomesticPayment());

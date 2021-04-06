@@ -109,8 +109,8 @@ class DanskeJwtSignerProvider implements Provider<JwtSigner> {
                         configuration.getSoftwareStatementAssertions().getJwksEndpoint(),
                         certificate);
         EidasProxyJwtSigner eidasProxyJwtSigner =
-                getEidasProxyJwtSigner(internalEidasProxyConfiguration, eidasIdentity,
-                    keyIdProvider);
+                getEidasProxyJwtSigner(
+                        internalEidasProxyConfiguration, eidasIdentity, keyIdProvider);
         return new EidasProxyWithFallbackJwtSigner(eidasProxyJwtSigner, eidasFallbackJwtSigner);
     }
 }

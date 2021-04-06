@@ -57,6 +57,8 @@ public class AgentsServiceConfiguration {
     @JsonProperty
     private Map<String, PasswordBasedProxyConfiguration> countryProxies = new HashMap<>();
 
+    @JsonProperty private UnleashConfiguration unleash = new UnleashConfiguration();
+
     public TppSecretsServiceConfiguration getTppSecretsServiceConfiguration() {
         return tppSecretsServiceConfiguration;
     }
@@ -108,6 +110,10 @@ public class AgentsServiceConfiguration {
 
     public TestConfiguration getTestConfiguration() {
         return testConfiguration;
+    }
+
+    public UnleashConfiguration getUnleashConfiguration() {
+        return unleash;
     }
 
     @JsonIgnore
