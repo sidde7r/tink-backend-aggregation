@@ -42,4 +42,34 @@ public class Xs2aMockServerAgentTest {
         // then
         agentWireMockRefreshTest.assertExpectedData(expected);
     }
+
+    @Test
+    public void test_refresh_with_a_lot_of_pages() throws Exception {
+
+        // given
+        final String wireMockFilePath =
+                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/xs2adevelopers/mock/resources/comdirect-many-pages-refresh.aap";
+
+        final String contractFilePath =
+                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/xs2adevelopers/mock/resources/comdirect-many-pages-result.json";
+
+        final AgentsServiceConfiguration configuration =
+                AgentsServiceConfigurationReader.read(CONFIGURATION_PATH);
+
+        final AgentWireMockRefreshTest agentWireMockRefreshTest =
+                AgentWireMockRefreshTest.builder(DE, "de-comdirect-ob", wireMockFilePath)
+                        .withConfigurationFile(configuration)
+                        .addCallbackData("code", "woot")
+                        .build();
+
+        final AgentContractEntity expected =
+                new AgentContractEntitiesJsonFileParser()
+                        .parseContractOnBasisOfFile(contractFilePath);
+
+        // when
+        agentWireMockRefreshTest.executeRefresh();
+
+        // then
+        agentWireMockRefreshTest.assertExpectedData(expected);
+    }
 }

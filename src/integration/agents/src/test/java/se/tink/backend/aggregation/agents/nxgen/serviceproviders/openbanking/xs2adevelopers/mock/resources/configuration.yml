@@ -3,6 +3,9 @@ agentsServiceConfiguration:
     fadaee91c1f3453eb844c0b9e7a77c81:
       tink:
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+    5a86a5830c51e3230ed2f5e460f51b39:
+      tink:
+        redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
   eidasProxy:
     host: https://eidas-proxy.staging.aggregation.tink.network
     localEidasDev: true
