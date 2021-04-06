@@ -55,6 +55,7 @@ public final class HttpLoggingConstants {
                     "vary",
                     "via",
                     "x-aggregator",
+                    "x-amex-request-id",
                     "x-amz-apigw-id",
                     "x-amzn-requestid",
                     "x-amzn-trace-id",
