@@ -67,6 +67,9 @@ import se.tink.libraries.transfer.rpc.PaymentServiceType;
 @AgentPisCapability(
         capabilities = PisCapability.PIS_SEPA_RECURRING_PAYMENTS,
         markets = {"IT"})
+@AgentPisCapability(
+        capabilities = {PisCapability.PIS_SEPA, PisCapability.PIS_SEPA_ICT},
+        markets = {"DE", "ES", "FR", "IT"})
 public final class DemobankAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor,
