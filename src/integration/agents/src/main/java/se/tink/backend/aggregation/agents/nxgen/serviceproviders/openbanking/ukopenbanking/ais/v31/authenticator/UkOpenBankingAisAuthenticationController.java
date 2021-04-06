@@ -1,13 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.authenticator;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
-import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingV31Constants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticationController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticationValidator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticator;
@@ -66,7 +63,7 @@ public class UkOpenBankingAisAuthenticationController extends OpenIdAuthenticati
     // Prepare third party app payload containing authentication url
     @Override
     public ThirdPartyAppAuthenticationPayload getAppPayload() {
-        String intentId = createConsent();
+        String intentId = apiClient.fetchIntentIdString();
 
         String nonce = randomValueGenerator.generateRandomHexEncoded(8);
         ClientInfo info = apiClient.getProviderConfiguration();
@@ -100,45 +97,7 @@ public class UkOpenBankingAisAuthenticationController extends OpenIdAuthenticati
     @Override
     public void autoAuthenticate() throws SessionException, BankServiceException {
         super.autoAuthenticate();
-        validateConsentStatus();
-    }
-
-    private String createConsent() {
-        String intentId = apiClient.fetchIntentIdString();
-        validateConsentStatus();
-        return intentId;
-    }
-
-    void validateConsentStatus() {
-        String consentId =
-                persistentStorage
-                        .get(
-                                UkOpenBankingV31Constants.PersistentStorageKeys
-                                        .AIS_ACCOUNT_CONSENT_ID,
-                                String.class)
-                        .orElse(StringUtils.EMPTY);
-
-        // To be removed when consent management becomes stable
-        if (consentId.equals(OpenIdAuthenticatorConstants.CONSENT_ERROR_OCCURRED)) {
-            cleanUpAndExpireSession(
-                    "These credentials were marked with CONSENT_ERROR_OCCURRED flag in the past. Expiring the session.");
-        }
-
-        if (StringUtils.isNotEmpty(consentId)
-                && consentStatusValidator.isInvalidWithRetry(consentId, 2)) {
-            cleanUpAndExpireSession("Invalid consent status. Expiring the session.");
-        }
-    }
-
-    private void cleanUpAndExpireSession(String errorMsg) {
-
-        // PLACEHOLDER: Delete invalid consent
-
-        persistentStorage.remove(
-                UkOpenBankingV31Constants.PersistentStorageKeys.AIS_ACCOUNT_CONSENT_ID);
-        persistentStorage.remove(UkOpenBankingV31Constants.PersistentStorageKeys.AIS_ACCESS_TOKEN);
-
-        throw SessionError.CONSENT_INVALID.exception(errorMsg);
+        consentStatusValidator.validate();
     }
 
     private ThirdPartyAppAuthenticationPayload getThirdPartyAppAuthenticationPayload(

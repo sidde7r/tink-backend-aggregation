@@ -241,7 +241,8 @@ public class OpenIdApiClient {
 
         String responseType = String.join(" ", OpenIdConstants.MANDATORY_RESPONSE_TYPES);
         String clientId = providerConfiguration.getClientId();
-        List<String> requiredScopes = Arrays.asList(OpenIdConstants.Scopes.OPEN_ID, mode.getValue());
+        List<String> requiredScopes =
+                Arrays.asList(OpenIdConstants.Scopes.OPEN_ID, mode.getValue());
         String scopeArray =
                 wellKnownConfiguration
                         .verifyAndGetScopes(requiredScopes)

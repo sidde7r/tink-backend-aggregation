@@ -1,41 +1,55 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.authenticator;
 
+import org.apache.commons.lang3.StringUtils;
+import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.authenticator.entities.AccountPermissionsDataResponseEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingV31Constants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticatorConstants;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class ConsentStatusValidator {
 
     private final UkOpenBankingApiClient apiClient;
+    private final PersistentStorage storage;
 
-    public ConsentStatusValidator(UkOpenBankingApiClient apiClient) {
+    public ConsentStatusValidator(UkOpenBankingApiClient apiClient, PersistentStorage storage) {
         this.apiClient = apiClient;
+        this.storage = storage;
     }
 
-    public boolean isInvalid(String consentId) {
-        return isInvalidWithRetry(consentId, 1);
+    public void validate() {
+        String consentId =
+                storage.get(
+                                UkOpenBankingV31Constants.PersistentStorageKeys
+                                        .AIS_ACCOUNT_CONSENT_ID,
+                                String.class)
+                        .orElse(StringUtils.EMPTY);
+
+        // To be removed when consent management becomes stable
+        if (consentId.equals(OpenIdAuthenticatorConstants.CONSENT_ERROR_OCCURRED)) {
+            cleanUpAndExpireSession(
+                    "These credentials were marked with CONSENT_ERROR_OCCURRED flag in the past. Expiring the session.");
+        }
+
+        if (StringUtils.isNotEmpty(consentId) && isNotAuthorised(consentId)) {
+            cleanUpAndExpireSession("Invalid consent status. Expiring the session.");
+        }
     }
 
-    public boolean isInvalidWithRetry(String consentId, int maxAttempts) {
-        return awaitAuthorisation(consentId, maxAttempts).isNotAuthorised();
+    private boolean isNotAuthorised(String consentId) {
+
+        // PLACEHOLDER: Add permissions vs refresh items validation
+
+        return apiClient.fetchIntentDetails(consentId).getData().isNotAuthorised();
     }
 
-    public AccountPermissionsDataResponseEntity awaitAuthorisation(
-            String consentId, int maxAttempts) {
+    private void cleanUpAndExpireSession(String errorMsg) {
 
-        int attemptsLeft = maxAttempts;
-        AccountPermissionsDataResponseEntity consent;
+        // PLACEHOLDER: Delete invalid consent
 
-        do {
-            consent = apiClient.fetchIntentDetails(consentId).getData();
+        storage.remove(UkOpenBankingV31Constants.PersistentStorageKeys.AIS_ACCOUNT_CONSENT_ID);
+        storage.remove(UkOpenBankingV31Constants.PersistentStorageKeys.AIS_ACCESS_TOKEN);
 
-            if (consent.isAuthorised()) {
-                break;
-            }
-
-            attemptsLeft--;
-
-        } while (consent.isAwaitingAuthorisation() && attemptsLeft > 0);
-
-        return consent;
+        throw SessionError.CONSENT_INVALID.exception(errorMsg);
     }
 }
