@@ -20,9 +20,9 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.Strong
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
-public class UkOpenBankingAuthenticationControllerTest {
+public class UkOpenBankingAisAuthenticationControllerTest {
 
-    private UkOpenBankingAuthenticationController controller;
+    private UkOpenBankingAisAuthenticationController controller;
     private PersistentStorage storage;
 
     private ConsentStatusValidator mockedValidator;
@@ -36,7 +36,7 @@ public class UkOpenBankingAuthenticationControllerTest {
 
         this.storage = new PersistentStorage();
         this.controller =
-                new UkOpenBankingAuthenticationController(
+                new UkOpenBankingAisAuthenticationController(
                         storage,
                         mock(SupplementalInformationHelper.class),
                         mock(UkOpenBankingApiClient.class),

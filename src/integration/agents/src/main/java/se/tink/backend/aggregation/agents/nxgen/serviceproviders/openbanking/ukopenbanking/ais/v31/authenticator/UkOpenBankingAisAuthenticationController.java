@@ -18,11 +18,11 @@ import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformati
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 @Slf4j
-public class UkOpenBankingAuthenticationController extends OpenIdAuthenticationController {
+public class UkOpenBankingAisAuthenticationController extends OpenIdAuthenticationController {
 
     private final ConsentStatusValidator consentStatusValidator;
 
-    public UkOpenBankingAuthenticationController(
+    public UkOpenBankingAisAuthenticationController(
             PersistentStorage persistentStorage,
             SupplementalInformationHelper supplementalInformationHelper,
             UkOpenBankingApiClient apiClient,
