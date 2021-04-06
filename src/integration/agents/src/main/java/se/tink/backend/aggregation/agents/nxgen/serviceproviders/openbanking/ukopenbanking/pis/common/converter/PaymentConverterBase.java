@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 
 import java.math.BigDecimal;
 import java.util.Optional;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.dto.BaseAccount;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.dto.CreditorAccount;
@@ -24,6 +25,7 @@ import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.transfer.enums.RemittanceInformationType;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
+@Slf4j
 public abstract class PaymentConverterBase {
 
     private static final GenericTypeMapper<String, AccountIdentifierType>
@@ -95,7 +97,12 @@ public abstract class PaymentConverterBase {
 
     public Debtor convertDebtorAccountToDebtor(DebtorAccount debtorAccount) {
         return Optional.ofNullable(debtorAccount)
-                .map(this::createAccountIdentifier)
+                .map(
+                        account -> {
+                            log.info(
+                                    "Received Valid Debtor and Converting to Tink Account Identifier");
+                            return createAccountIdentifier(account);
+                        })
                 .map(Debtor::new)
                 .orElse(null);
     }
@@ -128,11 +135,14 @@ public abstract class PaymentConverterBase {
     private DebtorAccount convertDebtorToDebtorAccount(Debtor debtor) {
         return Optional.ofNullable(debtor.getAccountIdentifier())
                 .map(
-                        accountIdentifier ->
-                                DebtorAccount.builder()
-                                        .schemeName(getSchemeName(accountIdentifier.getType()))
-                                        .identification(accountIdentifier.getIdentifier())
-                                        .build())
+                        accountIdentifier -> {
+                            log.info(
+                                    "Received Valid Debtor and Converting to Tink Account Identifier");
+                            return DebtorAccount.builder()
+                                    .schemeName(getSchemeName(accountIdentifier.getType()))
+                                    .identification(accountIdentifier.getIdentifier())
+                                    .build();
+                        })
                 .orElse(null);
     }
 
