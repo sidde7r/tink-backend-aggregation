@@ -8,12 +8,12 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.rpc.WellKnownResponse;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
-public class OpenIdAisAuthenticator implements OpenIdAuthenticator {
+public class UkOpenBankingAisAuthenticator implements OpenIdAuthenticator {
 
     private final UkOpenBankingApiClient apiClient;
     private final ClientInfo clientInfo;
 
-    public OpenIdAisAuthenticator(UkOpenBankingApiClient apiClient) {
+    public UkOpenBankingAisAuthenticator(UkOpenBankingApiClient apiClient) {
         this.apiClient = apiClient;
         this.clientInfo = apiClient.getProviderConfiguration();
     }
