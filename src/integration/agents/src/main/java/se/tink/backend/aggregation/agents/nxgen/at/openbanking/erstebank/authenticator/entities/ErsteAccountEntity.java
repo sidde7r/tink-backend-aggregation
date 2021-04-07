@@ -63,7 +63,7 @@ public class ErsteAccountEntity implements BerlinGroupAccountEntity {
         return Optional.ofNullable(balances).orElse(Collections.emptyList()).stream()
                 .filter(this::doesMatchWithAccountCurrency)
                 .findFirst()
-                .map(BalanceBaseEntity::toAmount)
+                .map(BalanceBaseEntity::toTinkAmount)
                 .orElse(getDefaultAmount());
     }
 

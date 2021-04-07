@@ -45,7 +45,7 @@ public class CardEntity {
         return Optional.ofNullable(balances).orElse(Collections.emptyList()).stream()
                 .filter(b -> "interimBooked".equals(b.getBalanceType()))
                 .findFirst()
-                .map(BalanceBaseEntity::toAmount)
+                .map(BalanceBaseEntity::toTinkAmount)
                 .orElse(getZero())
                 .abs();
     }
@@ -54,7 +54,7 @@ public class CardEntity {
         return Optional.ofNullable(balances).orElse(Collections.emptyList()).stream()
                 .filter(b -> "interimAvailable".equals(b.getBalanceType()))
                 .findFirst()
-                .map(BalanceBaseEntity::toAmount)
+                .map(BalanceBaseEntity::toTinkAmount)
                 .orElse(getZero())
                 .abs();
     }
