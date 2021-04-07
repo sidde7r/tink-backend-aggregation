@@ -19,7 +19,8 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
  */
 public abstract class AbstractRetryFilter extends Filter {
 
-    private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    protected static final Logger log =
+            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final int maxNumRetries;
     private final long retrySleepMilliseconds;
