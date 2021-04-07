@@ -68,8 +68,8 @@ public class BankIdElementLocator {
             return this;
         }
 
-        public Builder mustContainText(String text) {
-            this.additionalFilters.add(BankIdElementFilters.ElementContainsTextFilter.of(text));
+        public Builder mustContainOneOfTexts(String... texts) {
+            this.additionalFilters.add(BankIdElementFilters.ElementContainsTextFilter.of(texts));
             return this;
         }
 

@@ -27,6 +27,11 @@ public class BankIdIframeController {
                 BANK_ID_LOG_PREFIX,
                 firstWindow);
 
+        log.info(
+                "{} Starting iframe authentication with window: {}",
+                BANK_ID_LOG_PREFIX,
+                firstWindow);
+
         if (firstWindow == BankIdIframeFirstWindow.ENTER_SSN) {
             enterSSNStep.enterSSN(credentials);
             log.info("{} SSN entered successfully", BANK_ID_LOG_PREFIX);
