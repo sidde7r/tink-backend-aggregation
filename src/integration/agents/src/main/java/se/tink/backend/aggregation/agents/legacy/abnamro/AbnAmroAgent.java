@@ -314,6 +314,7 @@ public final class AbnAmroAgent extends AbstractAgent
 
     @Override
     public FetchAccountsResponse fetchCheckingAccounts() {
+        log.info("fetchCheckingAccounts start");
         return fetchAccountPerType(RefreshableItem.CHECKING_ACCOUNTS);
     }
 
@@ -368,10 +369,12 @@ public final class AbnAmroAgent extends AbstractAgent
     }
 
     private FetchAccountsResponse fetchAccountPerType(RefreshableItem type) {
+        log.info("Start fetchAccountPerType: ");
         List<Account> accounts = new ArrayList<>();
         getAccounts().stream()
                 .filter(account -> type.isAccountType(account.getType()))
                 .forEach(accounts::add);
+        log.info("fetchAccountPerType number of accounts:  " + accounts.size());
         return new FetchAccountsResponse(accounts);
     }
 }
