@@ -9,8 +9,6 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.PisC
 import com.google.inject.Inject;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentPisCapability;
-import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
-import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModulesForDecoupledMode;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModulesForProductionMode;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.UkOpenBankingBaseAgent;
@@ -77,13 +75,6 @@ public final class UlsterV31Agent extends UkOpenBankingBaseAgent {
         UkOpenBankingAisAuthenticationController authController = createUkObAuthController();
 
         return createAutoAuthController(authController);
-    }
-
-    @Override
-    public boolean login() throws AuthenticationException, AuthorizationException {
-        super.login();
-        this.consentValidator.validate();
-        return true;
     }
 
     public UkOpenBankingAisAuthenticationController createUkObAuthController() {

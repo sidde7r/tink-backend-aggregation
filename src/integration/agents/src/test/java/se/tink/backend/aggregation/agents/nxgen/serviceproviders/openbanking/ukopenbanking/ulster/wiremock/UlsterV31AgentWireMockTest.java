@@ -27,8 +27,6 @@ public class UlsterV31AgentWireMockTest {
     private static final String AUTO_AUTH_FETCH_DATA_CONTRACT =
             RESOURCES_PATH + "auto-auth-fetch-data.json";
     private static final String REFRESH_TOKEN_TRAFFIC = RESOURCES_PATH + "refresh-token.aap";
-    private static final String AUTO_AUTH_CONSENT_ID_STORED_TRAFFIC =
-            RESOURCES_PATH + "auto-auth-consent-id-stored.aap";
     private static final String AUTO_AUTH_CONSENT_ID_STORED_REVOKED_TRAFFIC =
             RESOURCES_PATH + "auto-auth-consent-id-stored-revoked.aap";
 
@@ -108,27 +106,6 @@ public class UlsterV31AgentWireMockTest {
                                 OPEN_ID_ACCESS_TOKEN_STORAGE_KEY, createOpenIdExpiredAccessToken())
                         .addCallbackData(CODE_PARAM, DUMMY_CODE)
                         .enableHttpDebugTrace()
-                        .build();
-
-        // expected
-        Assertions.assertThatCode(test::executeRefresh).doesNotThrowAnyException();
-    }
-
-    @Test
-    public void shouldRunAutoAuthWithConsentIdStoredSuccessfully() throws Exception {
-        final AgentWireMockRefreshTest test =
-                AgentWireMockRefreshTest.nxBuilder()
-                        .withMarketCode(MarketCode.UK)
-                        .withProviderName(PROVIDER_NAME)
-                        .withWireMockFilePath(AUTO_AUTH_CONSENT_ID_STORED_TRAFFIC)
-                        .withConfigFile(AgentsServiceConfigurationReader.read(CONFIGURATION_PATH))
-                        .testAutoAuthentication()
-                        .testOnlyAuthentication()
-                        .addPersistentStorageData(
-                                OPEN_ID_ACCESS_TOKEN_STORAGE_KEY, createOpenIdAccessToken())
-                        .addPersistentStorageData(AIS_ACCOUNT_CONSENT_ID, DUMMY_CONSENT_ID)
-                        .enableHttpDebugTrace()
-                        .enableDataDumpForContractFile()
                         .build();
 
         // expected
