@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.rpc;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
 import se.tink.backend.agents.rpc.Credentials;
@@ -26,7 +27,8 @@ public class RecurringPaymentRequest extends TransferRequest {
     private String creditorId;
     private AccountIdentifierType debtorType;
     private String debtorId;
-    private ExactCurrencyAmount amount;
+    private BigDecimal amount;
+    private String currency;
     private RemittanceInformation remittanceInformation;
     private PaymentScheme paymentScheme;
     private String originatingUserIp;
@@ -59,7 +61,7 @@ public class RecurringPaymentRequest extends TransferRequest {
         recurringPayment.setCredentialsId(credentialsId);
         recurringPayment.setDestination(creditorType, creditorId);
         recurringPayment.setSource(debtorType, debtorId);
-        recurringPayment.setAmount(amount);
+        recurringPayment.setAmount(amount, currency);
         recurringPayment.setRemittanceInformation(remittanceInformation);
         recurringPayment.setPaymentScheme(paymentScheme);
         recurringPayment.setOriginatingUserIp(originatingUserIp);
