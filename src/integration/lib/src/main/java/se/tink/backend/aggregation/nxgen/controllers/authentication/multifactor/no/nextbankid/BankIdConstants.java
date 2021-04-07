@@ -1,7 +1,7 @@
-package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe;
+package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid;
 
-import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.BankIdConstants.HtmlSelectors.BY_IFRAME;
-import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.BankIdConstants.HtmlSelectors.BY_IFRAME_SHADOW_HOST;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants.HtmlSelectors.BY_IFRAME;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants.HtmlSelectors.BY_IFRAME_SHADOW_HOST;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -18,6 +18,8 @@ public class BankIdConstants {
 
         public static final By BY_IFRAME = By.xpath("//iframe[contains(@src, 'csfe')]");
         static final By BY_IFRAME_SHADOW_HOST = By.xpath("//div[@class='full_width_height']");
+
+        static final By.ByCssSelector BY_SSN_INPUT = new By.ByCssSelector("input[type=tel]");
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -26,10 +28,7 @@ public class BankIdConstants {
         enter social number screen
         */
         public static final BankIdElementLocator LOC_SSN_INPUT =
-                inIframeLocator()
-                        .element(new By.ByCssSelector("input[type=tel]"))
-                        .mustBeDisplayed()
-                        .build();
+                inIframeLocator().element(HtmlSelectors.BY_SSN_INPUT).mustBeDisplayed().build();
 
         private static BankIdElementLocator.Builder inIframeLocator() {
             return BankIdElementLocator.builder()

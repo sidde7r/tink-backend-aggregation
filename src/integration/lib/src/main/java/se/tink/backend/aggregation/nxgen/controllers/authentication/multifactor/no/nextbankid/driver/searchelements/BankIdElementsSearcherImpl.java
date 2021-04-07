@@ -39,7 +39,7 @@ public class BankIdElementsSearcherImpl implements BankIdElementsSearcher {
 
             BankIdElementsSearchResult searchResult =
                     searchForFirstMatchingLocator(query.getLocators());
-            if (searchResult.notEmpty()) {
+            if (searchResult.isNotEmpty()) {
                 return searchResult;
             }
             sleeper.sleepFor(1_000);
@@ -53,7 +53,7 @@ public class BankIdElementsSearcherImpl implements BankIdElementsSearcher {
         for (BankIdElementLocator locator : locators) {
 
             BankIdElementsSearchResult searchResult = searchForLocator(locator);
-            if (searchResult.notEmpty()) {
+            if (searchResult.isNotEmpty()) {
                 return searchResult;
             }
         }
@@ -109,7 +109,7 @@ public class BankIdElementsSearcherImpl implements BankIdElementsSearcher {
             SearchContext searchContext, BankIdElementLocator locator) {
 
         return searchContext.findElements(locator.getElementSelector()).stream()
-                .filter(locator::matchesFilters)
+                .filter(locator::matchesAdditionalFilters)
                 .collect(Collectors.toList());
     }
 

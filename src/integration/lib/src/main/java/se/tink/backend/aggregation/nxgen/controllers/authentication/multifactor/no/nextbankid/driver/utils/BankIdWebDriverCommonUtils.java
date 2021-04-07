@@ -8,6 +8,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchFrameException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants;
 
 @Slf4j
 @RequiredArgsConstructor(onConstructor = @__({@Inject}))
@@ -29,7 +30,7 @@ public class BankIdWebDriverCommonUtils {
                             })
                     .orElse(false);
         } catch (NoSuchFrameException e) {
-            log.warn("[BankID] Couldn't switch to iFrame");
+            log.warn("{} Couldn't switch to iFrame", BankIdConstants.BANK_ID_LOG_PREFIX);
             return false;
         }
     }

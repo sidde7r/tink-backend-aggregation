@@ -32,7 +32,7 @@ public class BankIdElementLocator {
         return new Builder();
     }
 
-    public boolean matchesFilters(WebElement element) {
+    public boolean matchesAdditionalFilters(WebElement element) {
         return additionalFilters.stream().allMatch(filter -> filter.matches(element));
     }
 

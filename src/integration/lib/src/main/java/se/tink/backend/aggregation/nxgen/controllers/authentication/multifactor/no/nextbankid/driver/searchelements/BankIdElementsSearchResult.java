@@ -34,7 +34,7 @@ public class BankIdElementsSearchResult {
         return new BankIdElementsSearchResult(EMPTY_LOCATOR, emptyList());
     }
 
-    public boolean notEmpty() {
+    public boolean isNotEmpty() {
         return !isEmpty();
     }
 
