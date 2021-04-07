@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata;
 
+import java.util.Base64;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
@@ -27,6 +29,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher.BankdataTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.filter.KnownErrorsFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.storage.BankdataStorage;
+import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -49,6 +52,7 @@ import se.tink.backend.aggregation.nxgen.http.filter.filters.iface.Filter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.TimeoutRetryFilter;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
+@Slf4j
 public class BankdataAgent extends NextGenerationAgent
         implements RefreshInvestmentAccountsExecutor,
                 RefreshCreditCardAccountsExecutor,
@@ -56,6 +60,10 @@ public class BankdataAgent extends NextGenerationAgent
                 RefreshSavingsAccountsExecutor,
                 RefreshLoanAccountsExecutor,
                 RefreshIdentityDataExecutor {
+
+    private static final String STATIC_SALT = "Aiceimee;l9ikaesae1U";
+    private static final Base64.Encoder ENCODER = Base64.getEncoder();
+
     private final BankdataApiClient bankClient;
     private final InvestmentRefreshController investmentRefreshController;
     private final CreditCardRefreshController creditCardRefreshController;
@@ -125,8 +133,29 @@ public class BankdataAgent extends NextGenerationAgent
                         nemIdAuthenticator,
                         bankdataPersistentStorage);
 
+        logHashes();
         return new AutoAuthenticationController(
                 request, systemUpdater, nemidAuthenticationController, passwordAuthenticator);
+    }
+
+    private void logHashes() {
+        // There are a lot of invalid_credentials thrown.
+        // Users often finally manages to provide correct credentials in 2nd or 3rd attempt.
+        // We want to investigate if users have problems with providing username or password.
+        // To achieve that - this logging will be helpful. We will check the hashes from
+        // unsuccessful and successful authentications for the same credentialsId / userId and check
+        // whether username hash or credentials hash changed.
+        log.info(
+                "[Bankdata NemId] Hashes: {}, {}, {}",
+                ENCODER.encodeToString(
+                                Hash.sha512(credentials.getField(Key.USERNAME) + STATIC_SALT))
+                        .substring(0, 6),
+                ENCODER.encodeToString(
+                                Hash.sha512(credentials.getField(Key.PASSWORD) + STATIC_SALT))
+                        .substring(0, 6),
+                ENCODER.encodeToString(
+                                Hash.sha512(credentials.getField(Key.ACCESS_PIN) + STATIC_SALT))
+                        .substring(0, 6));
     }
 
     @Override

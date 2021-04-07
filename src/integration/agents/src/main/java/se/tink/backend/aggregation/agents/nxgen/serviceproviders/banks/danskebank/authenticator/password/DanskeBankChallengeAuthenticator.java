@@ -2,17 +2,16 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeba
 
 import com.google.common.base.Strings;
 import com.google.common.util.concurrent.Uninterruptibles;
-import java.lang.invoke.MethodHandles;
 import java.util.Base64;
 import java.util.concurrent.TimeUnit;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Field;
@@ -47,6 +46,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeban
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password.rpc.MoreInformationEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.rpc.FinalizeAuthenticationRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.rpc.FinalizeAuthenticationResponse;
+import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.authenticator.AutoAuthenticator;
@@ -66,11 +66,13 @@ import se.tink.libraries.i18n.LocalizableEnum;
 import se.tink.libraries.i18n.LocalizableKey;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
+@Slf4j
+@RequiredArgsConstructor
 public class DanskeBankChallengeAuthenticator
         implements TypedAuthenticator, AutoAuthenticator, KeyCardAuthenticator {
-    private static final Logger logger =
-            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private static final Base64.Encoder BASE64_ENCODER = Base64.getEncoder();
+    private static final String STATIC_SALT = "iex5gei5aicoh$v*iXu1";
+
     private final Catalog catalog;
     private final SupplementalInformationController supplementalInformationController;
     private final DanskeBankApiClient apiClient;
@@ -79,30 +81,12 @@ public class DanskeBankChallengeAuthenticator
     private final Credentials credentials;
     private final String deviceId;
     private final DanskeBankConfiguration configuration;
+
     private String bindChallengeResponseBody;
     private String finalizePackage;
     private WebDriver driver;
     private String keyCardOtpChallenge;
     private String userId;
-
-    public DanskeBankChallengeAuthenticator(
-            Catalog catalog,
-            SupplementalInformationController supplementalInformationController,
-            DanskeBankApiClient apiClient,
-            TinkHttpClient client,
-            PersistentStorage persistentStorage,
-            Credentials credentials,
-            String deviceId,
-            DanskeBankConfiguration configuration) {
-        this.catalog = catalog;
-        this.supplementalInformationController = supplementalInformationController;
-        this.apiClient = apiClient;
-        this.client = client;
-        this.persistentStorage = persistentStorage;
-        this.credentials = credentials;
-        this.deviceId = deviceId;
-        this.configuration = configuration;
-    }
 
     @Override
     public CredentialsTypes getType() {
@@ -122,6 +106,8 @@ public class DanskeBankChallengeAuthenticator
         if (Strings.isNullOrEmpty(username) || Strings.isNullOrEmpty(password)) {
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
+
+        logHashes(credentials);
 
         // Do normal service code login
         logonStepOne(username, password);
@@ -164,6 +150,25 @@ public class DanskeBankChallengeAuthenticator
             throw new IllegalStateException(
                     String.format("Unknown device type: %s.", preferredDevice.getDeviceType()));
         }
+    }
+
+    private void logHashes(Credentials credentials) {
+        // There are a lot of invalid_credentials thrown.
+        // Users often finally manages to provide correct credentials in 2nd or 3rd attempt.
+        // We want to investigate if users have problems with providing username or password.
+        // To achieve that - this logging will be helpful. We will check the hashes from
+        // unsuccessful and successful authentications for the same credentialsId / userId and check
+        // whether username hash or credentials hash changed.
+        log.info(
+                "[Danske DK] Hashes: {}, {}",
+                BASE64_ENCODER
+                        .encodeToString(
+                                Hash.sha512(credentials.getField(Field.Key.USERNAME) + STATIC_SALT))
+                        .substring(0, 6),
+                BASE64_ENCODER
+                        .encodeToString(
+                                Hash.sha512(credentials.getField(Field.Key.PASSWORD) + STATIC_SALT))
+                        .substring(0, 6));
     }
 
     // +++ KeyCardAuthenticator +++
@@ -293,7 +298,7 @@ public class DanskeBankChallengeAuthenticator
         } catch (HttpResponseException e) {
             HttpResponse response = e.getResponse();
             if (response.getStatus() != 401) {
-                logger.warn(
+                log.warn(
                         "tag={} Could not auto authenticate user, status {}",
                         DanskeBankConstants.LogTags.AUTHENTICATION_AUTO,
                         response.getStatus(),
@@ -348,7 +353,7 @@ public class DanskeBankChallengeAuthenticator
                     driver.findElement(By.tagName("body")).getAttribute("trustedChallengeInfo");
             // if no challengeInfo available, force a new device pinning
             if (Strings.isNullOrEmpty(challengeInfo)) {
-                logger.info(
+                log.info(
                         "tag={} Attribute 'trustedChallengeInfo' not found",
                         LogTag.from("danskebank_autherror"));
                 throw SessionError.SESSION_EXPIRED.exception();
