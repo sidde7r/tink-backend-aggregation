@@ -10,10 +10,12 @@ import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen
 import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants.ErrorMessages.PSU_ID_TOO_LONG;
 import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants.ErrorMessages.TEMPORARILY_BLOCKED_ACCOUNT;
 
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
@@ -55,6 +57,7 @@ import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestB
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
+@Slf4j
 @RequiredArgsConstructor
 public class SparkassenApiClient implements PaymentApiClient {
 
@@ -108,12 +111,18 @@ public class SparkassenApiClient implements PaymentApiClient {
     public AuthenticationMethodResponse initializeAuthorization(
             URL url, String username, String password) throws AuthenticationException {
         try {
-            return createRequest(url)
-                    .header(HeaderKeys.PSU_ID, username)
-                    .post(
-                            AuthenticationMethodResponse.class,
-                            new InitAuthorizationRequest(new PsuDataEntity(password)));
+            AuthenticationMethodResponse authenticationMethodResponse =
+                    createRequest(url)
+                            .header(HeaderKeys.PSU_ID, username)
+                            .post(
+                                    AuthenticationMethodResponse.class,
+                                    new InitAuthorizationRequest(new PsuDataEntity(password)));
+            // NZG-283 temporary login
+            logSpecialCharacters(username, password, "SUCCESS_LOGIN");
+            return authenticationMethodResponse;
         } catch (HttpResponseException e) {
+            // NZG-283 temporary login
+            logSpecialCharacters(username, password, "FAILED_LOGIN");
             // ITE-2489 - temporary experiment
             SparkassenExperimentalLoginErrorHandling.handleIncorrectLogin(e, provider);
             String errorBody = e.getResponse().getBody(String.class);
@@ -140,6 +149,21 @@ public class SparkassenApiClient implements PaymentApiClient {
 
             throw e;
         }
+    }
+
+    public void logSpecialCharacters(String username, String password, String outcome) {
+        if (isNotPureIso(username) || isNotPureIso(password)) {
+            log.info(
+                    outcome
+                            + " has special character, username: "
+                            + isNotPureIso(username)
+                            + " password: "
+                            + isNotPureIso(password));
+        }
+    }
+
+    private static boolean isNotPureIso(String v) {
+        return !StandardCharsets.ISO_8859_1.newEncoder().canEncode(v);
     }
 
     public AuthenticationMethodResponse selectAuthorizationMethod(
