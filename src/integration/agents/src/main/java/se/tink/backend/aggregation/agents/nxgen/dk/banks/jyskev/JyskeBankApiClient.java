@@ -7,20 +7,25 @@ import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskev.JyskeConstants.H
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskev.JyskeConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskev.JyskeConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskev.JyskeConstants.QueryValues;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskev.JyskeConstants.Storage;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskev.JyskeConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskev.authenticator.rpc.ClientRegistrationRequest;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskev.authenticator.rpc.ClientRegistrationResponse;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskev.authenticator.rpc.OAuthResponse;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskev.fetcher.identity.rpc.IdentityResponse;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.form.Form;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class JyskeBankApiClient {
     private final TinkHttpClient client;
+    private final SessionStorage sessionStorage;
 
-    public JyskeBankApiClient(TinkHttpClient client) {
+    public JyskeBankApiClient(TinkHttpClient client, SessionStorage sessionStorage) {
         this.client = client;
+        this.sessionStorage = sessionStorage;
     }
 
     public HttpResponse nemIdInit(String codeChallenge) {
@@ -86,6 +91,20 @@ public class JyskeBankApiClient {
                 .type(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
                 .addBasicAuth(clientId, clientSecret)
                 .post(OAuthResponse.class, oauthForm.serialize());
+    }
+
+    public IdentityResponse fetchIdentityData() {
+        final UUID corrId = UUID.randomUUID();
+
+        return client.request(Urls.FETCH_IDENTITY)
+                .header(HeaderKeys.BD_CORRELATION, corrId)
+                .header(HeaderKeys.API_KEY, HeaderValues.API_KEY)
+                .header(HeaderKeys.APP_VERSION, HeaderValues.APP_VERSION)
+                .header(
+                        HeaderKeys.AUTHORIZATION,
+                        "Bearer " + sessionStorage.get(Storage.ACCESS_TOKEN))
+                .accept(MediaType.WILDCARD_TYPE)
+                .get(IdentityResponse.class);
     }
 
     public String validateVersion(String correlationId) {

@@ -11,6 +11,7 @@ public class JyskeConstants {
                 AUTH_HOST + "/authentication/nemid_bank_twofactor";
         public static final String CLIENT_SECRET = AUTH_HOST + "/client-registration";
         public static final String OAUTH_TOKEN = AUTH_HOST + "/oauth-token";
+        public static final String FETCH_IDENTITY = HOST + "/rel/general/userprofiles/name";
         public static final String VALIDATE_VERSION = HOST + "/rel/unauth/version/validate/51";
         public static final String SERVER_STATUS = HOST + "/rel/unauth/server/status";
         public static final String GENERAL_HEALTH = HOST + "/rel/general/health";
@@ -24,6 +25,9 @@ public class JyskeConstants {
         public static final String API_KEY = "x-api-key";
         public static final String KEY_ID = "proc-enrollmentKeyId";
         public static final String CORR_ID = "corrid";
+        public static final String APP_VERSION = "x-app-version";
+        public static final String BD_CORRELATION = "bd-correlation-id";
+        public static final String AUTHORIZATION = "Authorization";
     }
 
     public static class HeaderValues {
@@ -35,6 +39,7 @@ public class JyskeConstants {
         public static final String USER_AGENT = "JyskeBank/2.21.0 (iPhone; iOS 13.3.1; Scale/3.00)";
         public static final String BUILD_NUMBER = "111";
         public static final String API_KEY = "w6FW248sXt42WZaaq8boFmXMGGTu06AG";
+        public static final String APP_VERSION = "2.21.0.111";
     }
 
     public static class QueryKeys {
