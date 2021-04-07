@@ -369,9 +369,8 @@ spec:
 
     - alert: AllLoginSuccessRatesBelow60WithTemporaryErrorsAndAttemptLimitES_OB
       expr: |
-          (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="ES"}))
-                      / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="ES"})) <= 0.6
-          and sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="ES"}) > 4
+            sum(sum_over_time(tink_agent_login_total{ {{ .Values.obAgents }}, {{ .Values.temporaryErrorsAuth }}, market="ES"}[60m])) by (provider)
+              / sum(sum_over_time(tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="ES"}[60m])) by (provider) < 0.6
       for: {{ .Values.p1TimeWindow }}
       labels:
         severity: urgent
@@ -381,7 +380,7 @@ spec:
         description: {{ .Values.kibanaLink }}
              {{ .Values.grafanaLink }}
         summary: Login success rate for OB agents and for all authentication types with temporary errors is below 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
-             the last {{ .Values.p1TimeWindow }}.
+             the last 60m.
         tags: {{ .Values.tags }}
 
     #########################################################
@@ -390,9 +389,8 @@ spec:
 
     - alert: SplitLoginSuccessRatesBelow60WithTemporaryErrorsAndAttemptLimitES_OB
       expr: |
-          (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="ES"}))
-                      / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="ES"})) <= 0.6
-          and sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="ES"}) > 4
+        sum(sum_over_time(tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="ES"}[60m])) by (provider, action)
+          / sum(sum_over_time(tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="ES"}[60m])) by (provider, action) < 0.6
       for: {{ .Values.p1TimeWindow }}
       labels:
         severity: urgent
@@ -402,7 +400,7 @@ spec:
         description: {{ .Values.kibanaLink }}
              {{ .Values.grafanaLink }}
         summary: Login success rate for OB agents and for one of login type with temporary errors is below 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
-             the last {{ .Values.p1TimeWindow }}.
+             the last 60m.
         tags: {{ .Values.tags }}
 
     ############################################################
@@ -411,9 +409,8 @@ spec:
 
     - alert: AllLoginSuccessRatesBelow60WithAuthenticationErrorsAndAttemptLimitES_OB
       expr: |
-          (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="ES"}))
-                      / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="ES"})) <= 0.6
-          and sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="ES"}) > 4
+          sum(sum_over_time(tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="ES"}[60m])) by (provider)
+                      / sum(sum_over_time(tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="ES"}[60m])) by (provider) < 0.6
       for: {{ .Values.p1TimeWindow }}
       labels:
         severity: urgent
@@ -423,7 +420,7 @@ spec:
         description: {{ .Values.kibanaLink }}
              {{ .Values.grafanaLink }}
         summary: Login success rate for OB agents and for all authentication types with authentication errors is below 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
-             the last {{ .Values.p1TimeWindow }}.
+             the last 60m.
         tags: {{ .Values.tags }}
 
     ##############################################################
@@ -432,9 +429,8 @@ spec:
 
     - alert: SplitLoginSuccessRatesBelow60WithAuthenticationErrorsAndAttemptLimitES_OB
       expr: |
-          (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="ES"}))
-                        / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="ES"})) <= 0.6
-          and sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="ES"}) > 4
+          sum(sum_over_time(tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="ES"}[60m])) by (provider, action)
+            / sum(sum_over_time(tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="ES"}[60m])) by (provider, action) < 0.6
       for: {{ .Values.p1TimeWindow }}
       labels:
         severity: urgent
@@ -444,7 +440,7 @@ spec:
         description: {{ .Values.kibanaLink }}
              {{ .Values.grafanaLink }}
         summary: Login success rate for OB agents and for one of login type with authentication errors is below 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
-             the last {{ .Values.p1TimeWindow }}.
+             the last 60m.
         tags: {{ .Values.tags }}
 
     ##################################################
@@ -453,9 +449,8 @@ spec:
 
     - alert: AllLoginSuccessRatesBelow60WithBankErrorsAndAttemptLimitES_OB
       expr: |
-          (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="ES"}))
-                        / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="ES"})) <= 0.6
-          and sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="ES"}) > 4
+          sum(sum_over_time(tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="ES"}[60m])) by (provider)
+            / sum(sum_over_time(tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="ES"}[60m])) by (provider) < 0.6
       for: {{ .Values.p1TimeWindow }}
       labels:
         severity: urgent
@@ -465,7 +460,7 @@ spec:
         description: {{ .Values.kibanaLink }}
              {{ .Values.grafanaLink }}
         summary: Login success rate for OB agents and for all Bank types with Bank errors is below 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
-             the last {{ .Values.p1TimeWindow }}.
+             the last 60m.
         tags: {{ .Values.tags }}
 
     ####################################################
@@ -474,9 +469,8 @@ spec:
 
     - alert: SplitLoginSuccessRatesBelow60WithBankErrorsAndAttemptLimitES_OB
       expr: |
-          (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="ES"}))
-                        / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="ES"})) <= 0.6
-          and sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="ES"}) > 4
+          sum(sum_over_time(tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="ES"}[60m])) by (provider, action)
+            / sum(sum_over_time(tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="ES"}[60m])) by (provider, action) < 0.6
       for: {{ .Values.p1TimeWindow }}
       labels:
         severity: urgent
@@ -486,7 +480,7 @@ spec:
         description: {{ .Values.kibanaLink }}
              {{ .Values.grafanaLink }}
         summary: Login success rate for OB agents and for one of login type with Bank errors is below 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
-             the last {{ .Values.p1TimeWindow }}.
+             the last 60m.
         tags: {{ .Values.tags }}
 
     #################################################
@@ -495,9 +489,8 @@ spec:
 
     - alert: AllLoginSuccessRatesBelow60WithAllErrorsAndAttemptLimitES_OB
       expr: |
-          (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="ES"}))
-                        / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="ES"})) <= 0.6
-          and sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="ES"}) > 4
+          sum(sum_over_time(tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="ES"}[60m])) by (provider)
+            / sum(sum_over_time(tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="ES"}[60m])) by (provider) < 0.6
       for: {{ .Values.p1TimeWindow }}
       labels:
         severity: urgent
@@ -507,7 +500,7 @@ spec:
         description: {{ .Values.kibanaLink }}
              {{ .Values.grafanaLink }}
         summary: Login success rate for OB agents and for all Agent types with All Errors is below 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
-             the last {{ .Values.p1TimeWindow }}.
+             the last 60m.
         tags: {{ .Values.tags }}
 
     ###################################################
@@ -516,9 +509,8 @@ spec:
 
     - alert: SplitLoginSuccessRatesBelow60WithAllErrorsAndAttemptLimitES_OB
       expr: |
-          (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="ES"}))
-                        / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="ES"})) <= 0.6
-          and sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="ES"}) > 4
+          sum(sum_over_time(tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="ES"}[60m])) by (provider, action)
+            / sum(sum_over_time(tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="ES"}[60m])) by (provider, action) < 0.6
       for: {{ .Values.p1TimeWindow }}
       labels:
         severity: urgent
@@ -528,7 +520,7 @@ spec:
         description: {{ .Values.kibanaLink }}
              {{ .Values.grafanaLink }}
         summary: Login success rate for OB agents and for one of login type with All Errors is below 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
-             the last {{ .Values.p1TimeWindow }}.
+             the last 60m.
         tags: {{ .Values.tags }}
 
     #### Agent refresh ####
