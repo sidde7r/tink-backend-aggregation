@@ -2,11 +2,11 @@ package se.tink.backend.aggregation.agents.nxgen.no.openbanking.danskebank.mappe
 
 import java.util.regex.Pattern;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.danskebank.DanskeNoConstants;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.danskebank.mapper.DanskeIdentifierMapper;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.danskebank.mapper.DanskeDkNoIdentifierMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountIdentifierEntity;
 import se.tink.libraries.mapper.PrioritizedValueExtractor;
 
-public class DanskeNoIdentifierMapper extends DanskeIdentifierMapper {
+public class DanskeNoIdentifierMapper extends DanskeDkNoIdentifierMapper {
 
     public DanskeNoIdentifierMapper(PrioritizedValueExtractor valueExtractor) {
         super(valueExtractor);

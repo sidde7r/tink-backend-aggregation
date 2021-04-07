@@ -7,7 +7,6 @@ import java.util.Collections;
 import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountIdentifierEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.identifier.DefaultIdentifierMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.identifier.IdentifierMapper;
@@ -44,18 +43,15 @@ public class DanskeFiIdentifierMapperTest {
         // given
         ImmutableList<AccountIdentifierEntity> identifierEntities =
                 ImmutableList.of(getIbanIdentifierEntity(), getBbanIdentifierEntity());
-        List<UkOpenBankingApiDefinitions.ExternalAccountIdentification4Code> allowedCodes =
-                Collections.singletonList(
-                        UkOpenBankingApiDefinitions.ExternalAccountIdentification4Code.IBAN);
         // when
         AccountIdentifierEntity result =
-                objectUnderTest.getTransactionalAccountPrimaryIdentifier(
-                        identifierEntities, allowedCodes);
+                objectUnderTest.getTransactionalAccountPrimaryIdentifier(identifierEntities);
         AccountIdentifierEntity expectedResult =
                 defaultIdentifierMapper.getTransactionalAccountPrimaryIdentifier(
-                        identifierEntities, allowedCodes);
+                        identifierEntities);
         // then
         assertThat(result).isEqualToComparingFieldByField(expectedResult);
+        assertThat(result).isEqualToComparingFieldByField(getIbanIdentifierEntity());
     }
 
     private static AccountIdentifierEntity getIbanIdentifierEntity() {
