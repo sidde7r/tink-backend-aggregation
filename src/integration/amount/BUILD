@@ -6,6 +6,7 @@ java_library(
     visibility = [
         "//src/aggregation/aggregationcontroller_api/src/main/java/se/tink/backend/aggregation/aggregationcontroller:__subpackages__",
         "//src/aggregation/aggregationcontroller_api/src/test/java/se/tink/backend/aggregation/aggregationcontroller/fake:__subpackages__",
+        "//src/aggregation/api:__subpackages__",
         "//src/integration:__subpackages__",
     ],
     deps = [
