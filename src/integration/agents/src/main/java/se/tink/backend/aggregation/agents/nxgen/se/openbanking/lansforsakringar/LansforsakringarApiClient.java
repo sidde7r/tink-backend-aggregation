@@ -381,14 +381,11 @@ public class LansforsakringarApiClient {
                 .post(SignBasketResponse.class, BodyValues.EMPTY_BODY);
     }
 
-    public AccountNumbersResponse getAccountNumbers() {
+    public Optional<AccountNumbersResponse> getAccountNumbers() {
+        // Return stored account numbers if user isn't present. Can't call endpoint due to PSU IP
+        // address being required.
         if (!userIpInformation.isManualRequest()) {
-            Optional<AccountNumbersResponse> storedAccountNumbers =
-                    storageHelper.getStoredAccountNumbers();
-
-            if (storedAccountNumbers.isPresent()) {
-                return storedAccountNumbers.get();
-            }
+            return storageHelper.getStoredAccountNumbers();
         }
 
         AccountNumbersResponse accountNumbersResponse =
@@ -397,6 +394,6 @@ public class LansforsakringarApiClient {
                         .get(AccountNumbersResponse.class);
 
         storageHelper.storeAccountNumbers(accountNumbersResponse);
-        return accountNumbersResponse;
+        return Optional.of(accountNumbersResponse);
     }
 }

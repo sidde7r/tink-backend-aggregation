@@ -116,7 +116,13 @@ public class LansforsakringarPaymentExecutor implements PaymentExecutor, Fetchab
     private void validateDebtorAccount(
             AccountEntity debtor, AccountIdentifierType accountIdentifierType)
             throws DebtorValidationException {
-        AccountNumbersResponse accountNumbers = apiClient.getAccountNumbers();
+        AccountNumbersResponse accountNumbers =
+                apiClient
+                        .getAccountNumbers()
+                        .orElseThrow(
+                                () ->
+                                        new IllegalStateException(
+                                                "Could not fetch accounts to validate debtor account."));
         accountNumbers.checkIfTransactionTypeIsAllowed(debtor.getBban(), accountIdentifierType);
     }
 

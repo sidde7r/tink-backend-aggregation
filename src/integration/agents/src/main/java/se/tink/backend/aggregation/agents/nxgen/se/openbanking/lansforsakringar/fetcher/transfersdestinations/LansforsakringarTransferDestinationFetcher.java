@@ -26,13 +26,21 @@ public class LansforsakringarTransferDestinationFetcher implements TransferDesti
     @Override
     public TransferDestinationsResponse fetchTransferDestinationsFor(Collection<Account> accounts) {
 
-        AccountNumbersResponse accountNumbers = apiClient.getAccountNumbers();
+        Optional<AccountNumbersResponse> accountNumbers = apiClient.getAccountNumbers();
+
+        // Return empty transfer destinations response if accountNumbers isn't present. This only
+        // happens during BG refreshes where customer haven't refreshed transfer destinations
+        // when user was present.
+        if (!accountNumbers.isPresent()) {
+            return new TransferDestinationsResponse();
+        }
+
         Map<Account, List<TransferDestinationPattern>> transferDestinations = new HashMap<>();
 
         accounts.forEach(
                 account -> {
                     Optional<AccountInfoEntity> accountInfoEntity =
-                            accountNumbers.findAccountInfoEntity(account.getAccountNumber());
+                            accountNumbers.get().findAccountInfoEntity(account.getAccountNumber());
 
                     accountInfoEntity.ifPresent(
                             a -> {

@@ -7,6 +7,7 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Account;
@@ -33,8 +34,9 @@ public class LansforsakringarTransferDestinationFetcherTest {
 
         when(apiClient.getAccountNumbers())
                 .thenReturn(
-                        AccountNumbersUtil.getDomesticAccountNumbersResponse(
-                                "12345", "1234", "4321"));
+                        Optional.of(
+                                AccountNumbersUtil.getDomesticAccountNumbersResponse(
+                                        "12345", "1234", "4321")));
 
         List<Account> accounts = getAccounts();
         TransferDestinationsResponse transferDestinationsResponse =
