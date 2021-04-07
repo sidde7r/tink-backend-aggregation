@@ -100,4 +100,8 @@ public final class BelfiusConstants {
         public static final String NEXT = "next";
         public static final String SCOPE = "scope";
     }
+
+    public static class ErrorCodes {
+        public static final String NOT_SUPPORTED = "20004";
+    }
 }
