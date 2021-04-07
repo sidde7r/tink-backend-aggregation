@@ -1,6 +1,6 @@
 {
   "accounts" : [ {
-    "accountNumber" : "XXX-61001",
+    "accountNumber" : "XXXX-XXXXXX-61001",
     "accountExclusion" : "NONE",
     "exactAvailableCredit" : {
       "currencyCode" : "SEK",
@@ -26,7 +26,7 @@
     "userModifiedExcluded" : false,
     "userModifiedName" : false,
     "userModifiedType" : false,
-    "identifiers" : "[]",
+    "identifiers": "[\"masked-pan://XXXX-XXXXXX-61001\"]",
     "closed" : false,
     "holderName" : "Holder Name Last Name",
     "accountHolder" : {
@@ -41,6 +41,48 @@
     "balances" : [ ],
     "availableCredit" : 0.0,
     "balance" : -3864.98
+  }, {
+    "accountNumber" : "XXXX-XXXXXX-12345",
+    "accountExclusion" : "NONE",
+    "exactAvailableCredit" : {
+      "currencyCode" : "SEK",
+      "unscaledValue" : 0,
+      "scale" : 0,
+      "doubleValue" : 0.0,
+      "exactValue" : 0
+    },
+    "exactBalance" : {
+      "currencyCode" : "SEK",
+      "unscaledValue" : 0,
+      "scale" : 0,
+      "doubleValue" : 0.0,
+      "exactValue" : 0
+    },
+    "currencyCode" : "SEK",
+    "bankId" : "XXX12345",
+    "excluded" : false,
+    "favored" : false,
+    "name" : "American Express Platinum Card - 12345",
+    "ownership" : 1.0,
+    "type" : "CREDIT_CARD",
+    "userModifiedExcluded" : false,
+    "userModifiedName" : false,
+    "userModifiedType" : false,
+    "identifiers" : "[\"masked-pan://XXXX-XXXXXX-12345\"]",
+    "closed" : false,
+    "holderName" : "Supplementary Holder Name Last Name",
+    "accountHolder" : {
+      "accountId" : null,
+      "type" : "PERSONAL",
+      "identities" : [ {
+        "name" : "Supplementary Holder Name Last Name",
+        "role" : "HOLDER"
+      } ]
+    },
+    "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
+    "balances" : [ ],
+    "availableCredit" : 0.0,
+    "balance" : 0.0
   } ],
   "transactions" : [ {
     "amount" : -176.87,

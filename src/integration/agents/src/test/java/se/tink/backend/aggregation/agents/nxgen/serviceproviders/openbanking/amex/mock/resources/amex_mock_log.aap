@@ -88,7 +88,63 @@ Server: Jetty(9.4.z-SNAPSHOT)
 		"account_status": [
 			"Active"
 		]
+	},
+	"supplementary_accounts": [
+	{
+		"identifiers": {
+  		"display_account_number": "XXXX-XXXXXX-12345",
+  		"is_basic": true,
+  		"account_key": "987653E95B9BE005D70FA7834952205D"
+  	},
+  	"holder": {
+  		"profile": {
+  			"first_name": "Supplementary Holder Name",
+  			"last_name": "Supplementary Last Name",
+  			"embossed_name": "Supplementary Holder Name Last Name"
+  		},
+  		"localization_preferences": {
+  			"localization_id": "sv-SE-revolve",
+  			"home_country_locale": "sv-SE",
+  			"currency_locale": "sv-SE",
+  			"date_locale": "sv-SE",
+  			"language_preference": "sv-SE",
+  			"language_preference_code": "SV",
+  			"geo_country_locale": "sv-SE"
+  		}
+  	},
+  	"product": {
+  		"digital_info": {
+  			"product_desc": "American Express Platinum Card",
+  			"digital_asset_url": "https://secure.cmax.americanexpress.com/Internet/CardArt/EMEA/se-cardasset-config/images/GSEGOLD0SA02.jpg"
+  		},
+  		"account_types": {
+  			"plastic_types": [
+  				"Platinum"
+  			],
+  			"line_of_business_type": "ConsumerCard",
+  			"payment_type": "ChargeCard"
+  		},
+  		"account_eligibilities": [
+  			"IntlAllEstmServiceEligible",
+  			"MembershipRewardsEligible",
+  			"ProdIDInfoAvailableEligible",
+  			"EStatementEligible"
+  		],
+  		"program_enrollments": [
+  			"PaperlessEnrolled"
+  		],
+  		"account_features": {
+  		},
+  		"line_of_business": {
+  		}
+  	},
+  	"status": {
+  		"account_status": [
+  			"Active"
+  		]
+  	}
 	}
+	]
 }
 
 
