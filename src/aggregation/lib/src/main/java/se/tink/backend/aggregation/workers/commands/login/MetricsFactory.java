@@ -5,7 +5,6 @@ import se.tink.backend.aggregation.workers.metrics.AgentWorkerCommandMetricState
 import se.tink.backend.aggregation.workers.metrics.MetricAction;
 import se.tink.backend.aggregation.workers.metrics.MetricActionComposite;
 import se.tink.backend.aggregation.workers.metrics.MetricActionIface;
-import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsRequestType;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.metrics.core.MetricId;
 import src.libraries.interaction_counter.InteractionCounter;
@@ -46,9 +45,7 @@ public class MetricsFactory {
             CredentialsRequest credentialsRequest,
             InteractionCounter supplementalInformationInteractionCounter) {
         int interactions = supplementalInformationInteractionCounter.getNumberInteractions();
-        return credentialsRequest.getType() == CredentialsRequestType.CREATE
-                || credentialsRequest.getType() == CredentialsRequestType.UPDATE
-                || interactions > 0;
+        return credentialsRequest.isCreate() || credentialsRequest.isUpdate() || interactions > 0;
     }
 
     private MetricId.MetricLabels metricForAction(String action) {
