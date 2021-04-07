@@ -9,8 +9,8 @@ public class NordeaFiTransactionEntity extends TransactionEntity {
 
     @Override
     public String getDescription() {
-        if (!Strings.isNullOrEmpty(getCounterPartyName())) {
-            return getCounterPartyName();
+        if (!Strings.isNullOrEmpty(getCounterpartyName())) {
+            return getCounterpartyName();
         }
         return (!Strings.isNullOrEmpty(getNarrative())) ? getNarrative() : getTypeDescription();
     }
