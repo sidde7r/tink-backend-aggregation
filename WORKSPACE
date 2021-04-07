@@ -1337,28 +1337,28 @@ load("//tools/bzl:download_extract_archive.bzl", "download_extract_archive")
 
 download_extract_archive(
     name = "chromedriver",
+    linux_path_to_binary = "/chromedriver_linux64",
     linux_sha256 =
         "1a0cd0913d2e92899576491b36871f7218a13c90c85eee9cead6295070016b03",
     linux_url =
-                "https://commondatastorage.googleapis.com/chromium-browser-snapshots/Linux_x64/843981/chromedriver_linux64.zip",
-    linux_path_to_binary = "/chromedriver_linux64",
+        "https://commondatastorage.googleapis.com/chromium-browser-snapshots/Linux_x64/843981/chromedriver_linux64.zip",
+    macos_path_to_binary = "/chromedriver_mac64",
     macos_sha256 =
         "bb4b63dc8ad5056504846088751cf20fe1b64832bb8f8ac0328de4c2c0649955",
     macos_url =
-            "https://commondatastorage.googleapis.com/chromium-browser-snapshots/Mac/843982/chromedriver_mac64.zip",
-    macos_path_to_binary = "/chromedriver_mac64",
+        "https://commondatastorage.googleapis.com/chromium-browser-snapshots/Mac/843982/chromedriver_mac64.zip",
 )
 
 download_extract_archive(
     name = "chromium",
+    linux_path_to_binary = "/",
     linux_sha256 =
         "073ab34347bf84fe8edc909ce7a7c698c0efc9bed472945b7ae6c7ae4b0e36f7",
     linux_url =
         "https://commondatastorage.googleapis.com/chromium-browser-snapshots/Linux_x64/843981/chrome-linux.zip",
-    linux_path_to_binary = "/",
+    macos_path_to_binary = "/",
     macos_sha256 =
         "51fe6bc1188dfe51c78c008d05bb59fe4f0ae6d7ce88b0f1e08ae23be7c92fcd",
     macos_url =
         "https://commondatastorage.googleapis.com/chromium-browser-snapshots/Mac/843982/chrome-mac.zip",
-    macos_path_to_binary = "/",
 )
