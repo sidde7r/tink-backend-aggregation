@@ -122,8 +122,6 @@ public class UlsterV31AgentWireMockTest {
                         .withConfigFile(AgentsServiceConfigurationReader.read(CONFIGURATION_PATH))
                         .testAutoAuthentication()
                         .testOnlyAuthentication()
-                        .addPersistentStorageData(
-                                OPEN_ID_ACCESS_TOKEN_STORAGE_KEY, createOpenIdAccessToken())
                         .addPersistentStorageData(AIS_ACCOUNT_CONSENT_ID, DUMMY_CONSENT_ID)
                         .enableHttpDebugTrace()
                         .enableDataDumpForContractFile()

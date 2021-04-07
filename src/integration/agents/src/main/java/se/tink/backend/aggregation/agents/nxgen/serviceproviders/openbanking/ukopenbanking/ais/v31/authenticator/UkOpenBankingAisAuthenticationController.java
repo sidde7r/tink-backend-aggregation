@@ -19,6 +19,7 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.ran
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
+import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
@@ -96,8 +97,15 @@ public class UkOpenBankingAisAuthenticationController extends OpenIdAuthenticati
 
     @Override
     public void autoAuthenticate() throws SessionException, BankServiceException {
-        super.autoAuthenticate();
+        OAuth2Token clientOAuth2Token = apiClient.requestClientCredentials(ClientMode.ACCOUNTS);
+        if (!clientOAuth2Token.isValid()) {
+            throw new IllegalArgumentException("Client access token is not valid.");
+        }
+
+        apiClient.instantiateAisAuthFilter(clientOAuth2Token);
+
         consentStatusValidator.validate();
+        super.autoAuthenticate();
     }
 
     private ThirdPartyAppAuthenticationPayload getThirdPartyAppAuthenticationPayload(
