@@ -452,6 +452,8 @@ clients:
     aggregatorIdentifier: "Anyfin"
   anyfin-testing:
     aggregatorIdentifier: "Anyfin"
+  fr-mitrust-production:
+    aggregatorIdentifier: "Mi-Trust"
 
 tppSecretsServiceConfiguration:
   certificatesLocation: "cluster"
