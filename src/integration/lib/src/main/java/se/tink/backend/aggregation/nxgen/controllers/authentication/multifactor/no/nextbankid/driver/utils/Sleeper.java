@@ -1,4 +1,4 @@
-package se.tink.integration.webdriver.utils;
+package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.utils;
 
 public class Sleeper {
     public void sleepFor(final long millis) {

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .hidden {
+            visibility: hidden;
+        }
+    </style>
+    <script>
+        const shadowDomStyle = `
+            .hidden {
+                visibility: hidden;
+            }
+        `;
+
+        function createShadowHost1() {
+            const shadowHost = document.getElementById("IFRAME_SHADOW_HOST_1");
+            const shadowRoot = shadowHost.attachShadow({mode: 'open'});
+
+            const style = document.createElement("style");
+            style.textContent = shadowDomStyle;
+
+            const div = document.createElement("div");
+            div.id = "IFRAME_SHADOW_HOST_1_ROOT";
+            div.innerHTML = `
+                <div class="mainElementSelector" id="IFRAME_SHADOW_HOST_1_MAIN_ELEMENT_VISIBLE">main element visible</div>
+                <div class="mainElementSelector hidden" id="IFRAME_SHADOW_HOST_1_MAIN_ELEMENT_HIDDEN">main element hidden</div>
+                <div class="otherElementSelector" id="IFRAME_SHADOW_HOST_1_OTHER_ELEMENT">other element</div>
+            `;
+
+            shadowRoot.appendChild(style);
+            shadowRoot.appendChild(div);
+        }
+
+        function createShadowHost2() {
+            const shadowHost = document.getElementById("IFRAME_SHADOW_HOST_2");
+            const shadowRoot = shadowHost.attachShadow({mode: 'open'});
+
+            const style = document.createElement("style");
+            style.textContent = shadowDomStyle;
+
+            const div = document.createElement("div");
+            div.id = "IFRAME_SHADOW_HOST_2_ROOT";
+            div.innerHTML = `
+                <div class="mainElementSelector" id="IFRAME_SHADOW_HOST_2_MAIN_ELEMENT_VISIBLE">main element visible</div>
+                <div class="mainElementSelector hidden" id="IFRAME_SHADOW_HOST_2_MAIN_ELEMENT_HIDDEN">main element hidden</div>
+                <div class="otherElementSelector" id="IFRAME_SHADOW_HOST_2_OTHER_ELEMENT">other element</div>
+            `;
+
+            shadowRoot.appendChild(style);
+            shadowRoot.appendChild(div);
+        }
+
+        window.addEventListener("load", function () {
+            createShadowHost1();
+            createShadowHost2();
+        });
+    </script>
+</head>
+
+<body>
+
+<div class="mainElementSelector" id="IFRAME_MAIN_ELEMENT_VISIBLE">main element visible</div>
+<div class="mainElementSelector hidden" id="IFRAME_MAIN_ELEMENT_HIDDEN">main element hidden</div>
+<div class="otherElementSelector" id="IFRAME_OTHER_ELEMENT">other element</div>
+
+<div class="shadowHost1" id="IFRAME_SHADOW_HOST_1"></div>
+<div class="shadowHost2" id="IFRAME_SHADOW_HOST_2"></div>
+<div class="shadowHostWithoutRoot"></div>
+
+</body>
+</html>
+
+

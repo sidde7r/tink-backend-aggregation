@@ -6,12 +6,14 @@ import com.browserup.bup.BrowserUpProxy;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.proxy.ProxyManager;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.BankIdElementsSearcher;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.BankIdElementsSearcherImpl;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.utils.Sleeper;
 import se.tink.integration.webdriver.ChromeDriverInitializer;
 import se.tink.integration.webdriver.ProxyInitializer;
-import se.tink.integration.webdriver.utils.Sleeper;
-import se.tink.integration.webdriver.utils.WebDriverWrapper;
-import se.tink.integration.webdriver.utils.WebDriverWrapperImpl;
 
 public class BankIdWebDriverModule extends AbstractModule {
 
@@ -21,13 +23,13 @@ public class BankIdWebDriverModule extends AbstractModule {
     private final Sleeper sleeper;
     private final BrowserUpProxy proxy;
     private final WebDriver webDriver;
-    private final WebDriverWrapper driverWrapper;
+    private final JavascriptExecutor javascriptExecutor;
 
     private BankIdWebDriverModule() {
         sleeper = new Sleeper();
         proxy = ProxyInitializer.startProxyServer();
         webDriver = ChromeDriverInitializer.constructChromeDriver(toSeleniumProxy(proxy));
-        driverWrapper = new WebDriverWrapperImpl(webDriver, sleeper);
+        javascriptExecutor = (JavascriptExecutor) webDriver;
     }
 
     /**
@@ -49,6 +51,9 @@ public class BankIdWebDriverModule extends AbstractModule {
         bind(Sleeper.class).toInstance(sleeper);
         bind(BrowserUpProxy.class).toInstance(proxy);
         bind(WebDriver.class).toInstance(webDriver);
-        bind(WebDriverWrapper.class).toInstance(driverWrapper);
+        bind(JavascriptExecutor.class).toInstance(javascriptExecutor);
+
+        bind(BankIdWebDriver.class).to(BankIdWebDriverImpl.class);
+        bind(BankIdElementsSearcher.class).to(BankIdElementsSearcherImpl.class);
     }
 }
