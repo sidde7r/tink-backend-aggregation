@@ -41,7 +41,7 @@ public class ConsentStatusValidatorTest {
     public void shouldValidateConsentSuccessfully() {
         // given
         given(mockedConsentResponse.getData()).willReturn(mockedConsent);
-        given(mockedApiClient.fetchIntentDetails(DUMMY_CONSENT_ID))
+        given(mockedApiClient.fetchConsent(DUMMY_CONSENT_ID))
                 .willReturn(mockedConsentResponse);
         storage.put(
                 UkOpenBankingV31Constants.PersistentStorageKeys.AIS_ACCOUNT_CONSENT_ID,
@@ -56,7 +56,7 @@ public class ConsentStatusValidatorTest {
         // given
         given(mockedConsent.isNotAuthorised()).willReturn(Boolean.TRUE);
         given(mockedConsentResponse.getData()).willReturn(mockedConsent);
-        given(mockedApiClient.fetchIntentDetails(DUMMY_CONSENT_ID))
+        given(mockedApiClient.fetchConsent(DUMMY_CONSENT_ID))
                 .willReturn(mockedConsentResponse);
         storage.put(
                 UkOpenBankingV31Constants.PersistentStorageKeys.AIS_ACCOUNT_CONSENT_ID,
