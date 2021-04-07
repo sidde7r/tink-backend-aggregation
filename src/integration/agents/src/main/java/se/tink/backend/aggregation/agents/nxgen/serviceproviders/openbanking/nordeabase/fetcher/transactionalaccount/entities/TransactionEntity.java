@@ -81,6 +81,10 @@ public class TransactionEntity {
                         .addTransactionDates(getTinkTransactionDates())
                         .setProprietaryFinancialInstitutionType(typeDescription);
 
+        if (Objects.nonNull(reference)) {
+            builder.setTransactionReference(reference);
+        }
+
         return (Transaction) builder.build();
     }
 

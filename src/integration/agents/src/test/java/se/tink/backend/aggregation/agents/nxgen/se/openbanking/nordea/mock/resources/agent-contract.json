@@ -4166,7 +4166,8 @@
                     }
                 }
             ],
-            "proprietaryFinancialInstitutionType": "type_description"
+            "proprietaryFinancialInstitutionType": "type_description",
+            "transactionReference": "6107915363569666"
         },
         {
             "amount": 30.0,
@@ -4230,7 +4231,8 @@
                     }
                 }
             ],
-            "proprietaryFinancialInstitutionType": "type_description"
+            "proprietaryFinancialInstitutionType": "type_description",
+            "transactionReference": "6107433072839073"
         },
         {
             "amount": -200.0,
@@ -7622,7 +7624,8 @@
                     }
                 }
             ],
-            "proprietaryFinancialInstitutionType": "type_description"
+            "proprietaryFinancialInstitutionType": "type_description",
+            "transactionReference": "6059505695179736"
         },
         {
             "amount": -2250.0,
@@ -7654,7 +7657,8 @@
                     }
                 }
             ],
-            "proprietaryFinancialInstitutionType": "type_description"
+            "proprietaryFinancialInstitutionType": "type_description",
+            "transactionReference": "6059505517459055"
         },
         {
             "amount": -2250.0,
@@ -8198,7 +8202,8 @@
                     }
                 }
             ],
-            "proprietaryFinancialInstitutionType": "type_description"
+            "proprietaryFinancialInstitutionType": "type_description",
+            "transactionReference": "6050400586619008"
         },
         {
             "amount": -400.0,
@@ -8646,7 +8651,8 @@
                     }
                 }
             ],
-            "proprietaryFinancialInstitutionType": "type_description"
+            "proprietaryFinancialInstitutionType": "type_description",
+            "transactionReference": "6046371657769171"
         },
         {
             "amount": -850.0,
@@ -9158,7 +9164,8 @@
                     }
                 }
             ],
-            "proprietaryFinancialInstitutionType": "type_description"
+            "proprietaryFinancialInstitutionType": "type_description",
+            "transactionReference": "6040079269799473"
         },
         {
             "amount": -1528.0,
@@ -9318,7 +9325,8 @@
                     }
                 }
             ],
-            "proprietaryFinancialInstitutionType": "type_description"
+            "proprietaryFinancialInstitutionType": "type_description",
+            "transactionReference": "6035396221019234"
         },
         {
             "amount": -28.0,
@@ -9478,7 +9486,8 @@
                     }
                 }
             ],
-            "proprietaryFinancialInstitutionType": "type_description"
+            "proprietaryFinancialInstitutionType": "type_description",
+            "transactionReference": "6030710582228739"
         },
         {
             "amount": -159.8,
@@ -9542,7 +9551,8 @@
                     }
                 }
             ],
-            "proprietaryFinancialInstitutionType": "type_description"
+            "proprietaryFinancialInstitutionType": "type_description",
+            "transactionReference": "6029925679698360"
         },
         {
             "amount": -260.0,
@@ -11174,7 +11184,8 @@
                     }
                 }
             ],
-            "proprietaryFinancialInstitutionType": "type_description"
+            "proprietaryFinancialInstitutionType": "type_description",
+            "transactionReference": "6011124102358289"
         },
         {
             "amount": 317.0,
@@ -11334,7 +11345,8 @@
                     }
                 }
             ],
-            "proprietaryFinancialInstitutionType": "type_description"
+            "proprietaryFinancialInstitutionType": "type_description",
+            "transactionReference": "6007479522178641"
         },
         {
             "amount": -25.0,
@@ -15814,7 +15826,8 @@
                     }
                 }
             ],
-            "proprietaryFinancialInstitutionType": "type_description"
+            "proprietaryFinancialInstitutionType": "type_description",
+            "transactionReference": "5936318030436709"
         },
         {
             "amount": -500.0,
@@ -15846,7 +15859,8 @@
                     }
                 }
             ],
-            "proprietaryFinancialInstitutionType": "type_description"
+            "proprietaryFinancialInstitutionType": "type_description",
+            "transactionReference": "5935076368406786"
         },
         {
             "amount": -20.0,
@@ -16134,7 +16148,8 @@
                     }
                 }
             ],
-            "proprietaryFinancialInstitutionType": "type_description"
+            "proprietaryFinancialInstitutionType": "type_description",
+            "transactionReference": "5930397839466515"
         },
         {
             "amount": -800.0,
