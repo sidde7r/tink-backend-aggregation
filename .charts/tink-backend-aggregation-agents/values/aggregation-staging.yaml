@@ -27,7 +27,7 @@ manualLoginActions: action=~"login-manual|is-logged-in"
 obAgents: provider=~".*-ob|.*-oauth2"
 reAgents: provider!~".*-ob|.*-oauth2"
 
-p4TimeWindow: 30m
-p3TimeWindow: 20m
-p2TimeWindow: 10m
-p1TimeWindow: 5m
+p4WaitTimeBeforeFiringAlert: 30m
+p3WaitTimeBeforeFiringAlert: 20m
+p2WaitTimeBeforeFiringAlert: 10m
+p1WaitTimeBeforeFiringAlert: 5m

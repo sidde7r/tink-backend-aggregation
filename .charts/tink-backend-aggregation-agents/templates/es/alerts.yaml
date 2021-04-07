@@ -18,7 +18,7 @@ spec:
                 and (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="ES"}))
                                / (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"})) >= 0.9
                and sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"}) > 3
-      for: {{ .Values.p4TimeWindow }}
+      for: {{ .Values.p4WaitTimeBeforeFiringAlert }}
       labels:
         severity: urgent
         priority: P4
@@ -27,7 +27,7 @@ spec:
         description: {{ .Values.kibanaLink }}
              {{ .Values.grafanaLink }}
         summary: Login success rate for RE agents and all authentication types with temporary errors is between 95 - 90% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
-                      the last {{ .Values.p4TimeWindow }}.
+                      the last {{ .Values.p4WaitTimeBeforeFiringAlert }}.
         tags: {{ .Values.tags }}
 
     - alert: AllLoginSuccessRatesBelow90AndGreater80WithTemporaryErrorsAndAttemptLimitES_RE
@@ -37,7 +37,7 @@ spec:
                  and (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="ES"}))
                                 / (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"})) >= 0.8
                 and sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"}) > 3
-      for: {{ .Values.p3TimeWindow }}
+      for: {{ .Values.p3WaitTimeBeforeFiringAlert }}
       labels:
         severity: urgent
         priority: P3
@@ -46,7 +46,7 @@ spec:
         description: {{ .Values.kibanaLink }}
              {{ .Values.grafanaLink }}
         summary: Login success rate for RE agents and for all authentication types with temporary errors is between 90 - 80% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
-             the last {{ .Values.p3TimeWindow }}.
+             the last {{ .Values.p3WaitTimeBeforeFiringAlert }}.
         tags: {{ .Values.tags }}
 
     - alert: AllLoginSuccessRatesBelow80AndGreater60WithTemporaryErrorsAndAttemptLimitES_RE
@@ -56,7 +56,7 @@ spec:
                  and (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="ES"}))
                                 / (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"})) >= 0.6
                 and sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"}) > 3
-      for: {{ .Values.p2TimeWindow }}
+      for: {{ .Values.p2WaitTimeBeforeFiringAlert }}
       labels:
         severity: urgent
         priority: P2
@@ -65,7 +65,7 @@ spec:
         description: {{ .Values.kibanaLink }}
              {{ .Values.grafanaLink }}
         summary: Login success rate for RE agents and for all authentication types with temporary errors is between 80 - 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
-             the last {{ .Values.p2TimeWindow }}.
+             the last {{ .Values.p2WaitTimeBeforeFiringAlert }}.
         tags: {{ .Values.tags }}
 
     - alert: AllLoginSuccessRatesBelow60WithTemporaryErrorsAndAttemptLimitES_RE
@@ -73,7 +73,7 @@ spec:
           (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="ES"}))
                                 / (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"})) < 0.60
                 and sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"}) > 3
-      for: {{ .Values.p1TimeWindow }}
+      for: {{ .Values.p1WaitTimeBeforeFiringAlert }}
       labels:
         severity: urgent
         priority: P1
@@ -82,7 +82,7 @@ spec:
         description: {{ .Values.kibanaLink }}
              {{ .Values.grafanaLink }}
         summary: Login success rate for RE agents and for all authentication types with temporary errors is below 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
-             the last {{ .Values.p1TimeWindow }}.
+             the last {{ .Values.p1WaitTimeBeforeFiringAlert }}.
         tags: {{ .Values.tags }}
 
     #########################################################
@@ -96,7 +96,7 @@ spec:
                  and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="ES"}))
                                 / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"})) >= 0.9
           and sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"}) > 3
-      for: {{ .Values.p4TimeWindow }}
+      for: {{ .Values.p4WaitTimeBeforeFiringAlert }}
       labels:
         severity: urgent
         priority: P4
@@ -105,7 +105,7 @@ spec:
         description: {{ .Values.kibanaLink }}
              {{ .Values.grafanaLink }}
         summary: Login success rate for RE agents and for one of login type with temporary errors is between 95 - 90% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
-             the last {{ .Values.p4TimeWindow }}.
+             the last {{ .Values.p4WaitTimeBeforeFiringAlert }}.
         tags: {{ .Values.tags }}
 
     - alert: SplitLoginSuccessRatesBelow90AndGreater80WithTemporaryErrorsAndAttemptLimitES_RE
@@ -115,7 +115,7 @@ spec:
                  and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="ES"}))
                           / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"})) >= 0.8
           and sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"}) > 3
-      for: {{ .Values.p3TimeWindow }}
+      for: {{ .Values.p3WaitTimeBeforeFiringAlert }}
       labels:
         severity: urgent
         priority: P3
@@ -124,7 +124,7 @@ spec:
         description: {{ .Values.kibanaLink }}
              {{ .Values.grafanaLink }}
         summary: Login success rate for RE agents and for one of login type with temporary errors is between 90 - 80% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
-             the last {{ .Values.p3TimeWindow }}.
+             the last {{ .Values.p3WaitTimeBeforeFiringAlert }}.
         tags: {{ .Values.tags }}
 
     - alert: SplitLoginSuccessRatesBelow80AndGreater60WithTemporaryErrorsAndAttemptLimitES_RE
@@ -134,7 +134,7 @@ spec:
                  and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="ES"}))
                           / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"})) >= 0.6
                 and sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"}) > 3
-      for: {{ .Values.p2TimeWindow }}
+      for: {{ .Values.p2WaitTimeBeforeFiringAlert }}
       labels:
         severity: urgent
         priority: P2
@@ -143,7 +143,7 @@ spec:
         description: {{ .Values.kibanaLink }}
              {{ .Values.grafanaLink }}
         summary: Login success rate for RE agents and for one of login type with temporary errors is between 80 - 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
-             the last {{ .Values.p2TimeWindow }}.
+             the last {{ .Values.p2WaitTimeBeforeFiringAlert }}.
         tags: {{ .Values.tags }}
 
     - alert: SplitLoginSuccessRatesBelow60WithTemporaryErrorsAndAttemptLimitES_RE
@@ -151,7 +151,7 @@ spec:
           (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="ES"}))
                           / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"})) < 0.6
                 and sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"}) > 3
-      for: {{ .Values.p1TimeWindow }}
+      for: {{ .Values.p1WaitTimeBeforeFiringAlert }}
       labels:
         severity: urgent
         priority: P1
@@ -160,7 +160,7 @@ spec:
         description: {{ .Values.kibanaLink }}
              {{ .Values.grafanaLink }}
         summary: Login success rate for RE agents and for one of login type with temporary errors is below 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
-                        the last {{ .Values.p1TimeWindow }}.
+                        the last {{ .Values.p1WaitTimeBeforeFiringAlert }}.
         tags: {{ .Values.tags }}
 
     ##################################################
@@ -174,7 +174,7 @@ spec:
                  and (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="ES"}))
                           / (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"})) >= 0.9
                 and sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"}) > 3
-      for: {{ .Values.p4TimeWindow }}
+      for: {{ .Values.p4WaitTimeBeforeFiringAlert }}
       labels:
         severity: urgent
         priority: P4
@@ -183,7 +183,7 @@ spec:
         description: {{ .Values.kibanaLink }}
              {{ .Values.grafanaLink }}
         summary: Login success rate for RE agents and all Bank types with Bank errors is between 95 - 90% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
-             the last {{ .Values.p4TimeWindow }}.
+             the last {{ .Values.p4WaitTimeBeforeFiringAlert }}.
         tags: {{ .Values.tags }}
 
     - alert: AllLoginSuccessRatesBelow90AndGreater80WithBankErrorsAndAttemptLimitES_RE
@@ -193,7 +193,7 @@ spec:
                  and (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="ES"}))
                       / (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"})) >= 0.8
           and sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"}) > 3
-      for: {{ .Values.p3TimeWindow }}
+      for: {{ .Values.p3WaitTimeBeforeFiringAlert }}
       labels:
         severity: urgent
         priority: P3
@@ -202,7 +202,7 @@ spec:
         description: {{ .Values.kibanaLink }}
              {{ .Values.grafanaLink }}
         summary: Login success rate for RE agents and for all Bank types with Bank errors is between 90 - 80% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
-             the last {{ .Values.p3TimeWindow }}.
+             the last {{ .Values.p3WaitTimeBeforeFiringAlert }}.
         tags: {{ .Values.tags }}
 
     - alert: AllLoginSuccessRatesBelow80AndGreater60WithBankErrorsAndAttemptLimitES_RE
@@ -212,7 +212,7 @@ spec:
            and (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="ES"}))
                       / (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"})) >= 0.6
           and sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"}) > 3
-      for: {{ .Values.p2TimeWindow }}
+      for: {{ .Values.p2WaitTimeBeforeFiringAlert }}
       labels:
         severity: urgent
         priority: P2
@@ -221,7 +221,7 @@ spec:
         description: {{ .Values.kibanaLink }}
              {{ .Values.grafanaLink }}
         summary: Login success rate for RE agents and for all Bank types with Bank errors is between 80 - 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
-             the last {{ .Values.p2TimeWindow }}.
+             the last {{ .Values.p2WaitTimeBeforeFiringAlert }}.
         tags: {{ .Values.tags }}
 
     - alert: AllLoginSuccessRatesBelow60WithBankErrorsAndAttemptLimitES_RE
@@ -229,7 +229,7 @@ spec:
           (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="ES"}))
                       / (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"})) < 0.6
           and sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"}) > 3
-      for: {{ .Values.p1TimeWindow }}
+      for: {{ .Values.p1WaitTimeBeforeFiringAlert }}
       labels:
         severity: urgent
         priority: P1
@@ -238,7 +238,7 @@ spec:
         description: {{ .Values.kibanaLink }}
              {{ .Values.grafanaLink }}
         summary: Login success rate for RE agents and for all Bank types with Bank errors is below 50% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
-             the last {{ .Values.p1TimeWindow }}.
+             the last {{ .Values.p1WaitTimeBeforeFiringAlert }}.
         tags: {{ .Values.tags }}
 
     ####################################################
@@ -252,7 +252,7 @@ spec:
            and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="ES"}))
                 / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"})) >= 0.9
           and sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"}) > 3
-      for: {{ .Values.p4TimeWindow }}
+      for: {{ .Values.p4WaitTimeBeforeFiringAlert }}
       labels:
         severity: urgent
         priority: P4
@@ -261,7 +261,7 @@ spec:
         description: {{ .Values.kibanaLink }}
              {{ .Values.grafanaLink }}
         summary: Login success rate for RE agents and for one of login type with Bank errors is between 95 - 90% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
-             the last {{ .Values.p4TimeWindow }}.
+             the last {{ .Values.p4WaitTimeBeforeFiringAlert }}.
         tags: {{ .Values.tags }}
 
     - alert: SplitLoginSuccessRatesBelow90AndGreater80WithBankErrorsAndAttemptLimitES_RE
@@ -271,7 +271,7 @@ spec:
            and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="ES"}))
                  / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"})) >= 0.8
           and sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"}) > 3
-      for: {{ .Values.p3TimeWindow }}
+      for: {{ .Values.p3WaitTimeBeforeFiringAlert }}
       labels:
         severity: urgent
         priority: P3
@@ -280,7 +280,7 @@ spec:
         description: {{ .Values.kibanaLink }}
              {{ .Values.grafanaLink }}
         summary: Login success rate for RE agents and for one of login type with Bank errors is between 90 - 80% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
-             the last {{ .Values.p3TimeWindow }}.
+             the last {{ .Values.p3WaitTimeBeforeFiringAlert }}.
         tags: {{ .Values.tags }}
 
     - alert: SplitLoginSuccessRatesBelow80AndGreater60WithBankErrorsAndAttemptLimitES_RE
@@ -290,7 +290,7 @@ spec:
            and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="ES"}))
                  / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"})) >= 0.6
           and sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"}) > 3
-      for: {{ .Values.p2TimeWindow }}
+      for: {{ .Values.p2WaitTimeBeforeFiringAlert }}
       labels:
         severity: urgent
         priority: P2
@@ -299,7 +299,7 @@ spec:
         description: {{ .Values.kibanaLink }}
              {{ .Values.grafanaLink }}
         summary: Login success rate for RE agents and for one of login type with Bank errors is between 80 - 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
-             the last {{ .Values.p2TimeWindow }}.
+             the last {{ .Values.p2WaitTimeBeforeFiringAlert }}.
         tags: {{ .Values.tags }}
 
     - alert: SplitLoginSuccessRatesBelow60WithBankErrorsAndAttemptLimitES_RE
@@ -307,7 +307,7 @@ spec:
           (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="ES"}))
                       / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"})) < 0.6
           and sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"}) > 3
-      for: {{ .Values.p1TimeWindow }}
+      for: {{ .Values.p1WaitTimeBeforeFiringAlert }}
       labels:
         severity: urgent
         priority: P1
@@ -316,7 +316,7 @@ spec:
         description: {{ .Values.kibanaLink }}
              {{ .Values.grafanaLink }}
         summary: Login success rate for RE agents and for one of login type with Bank errors is below 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
-             the last {{ .Values.p1TimeWindow }}.
+             the last {{ .Values.p1WaitTimeBeforeFiringAlert }}.
         tags: {{ .Values.tags }}
 
     #################################################
@@ -328,7 +328,7 @@ spec:
           (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="ES"}))
                  / (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"})) < 0.5
           and sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"}) > 4
-      for: {{ .Values.p1TimeWindow }}
+      for: {{ .Values.p1WaitTimeBeforeFiringAlert }}
       labels:
         severity: urgent
         priority: P1
@@ -337,7 +337,7 @@ spec:
         description: {{ .Values.kibanaLink }}
              {{ .Values.grafanaLink }}
         summary: Login success rate for RE agents and for all Agent types with All Errors is below 50% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
-             the last {{ .Values.p1TimeWindow }}.
+             the last {{ .Values.p1WaitTimeBeforeFiringAlert }}.
         tags: {{ .Values.tags }}
 
     ###################################################
@@ -349,7 +349,7 @@ spec:
           (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="ES"}))
                 / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"})) < 0.5
           and sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"}) > 4
-      for: {{ .Values.p1TimeWindow }}
+      for: {{ .Values.p1WaitTimeBeforeFiringAlert }}
       labels:
         severity: urgent
         priority: P1
@@ -358,7 +358,7 @@ spec:
         description: {{ .Values.kibanaLink }}
              {{ .Values.grafanaLink }}
         summary: Login success rate for RE agents and for one of login type with All Errors is below 50% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
-             the last {{ .Values.p1TimeWindow }}.
+             the last {{ .Values.p1WaitTimeBeforeFiringAlert }}.
         tags: {{ .Values.tags }}
 
     ##### OpenBanking #####
@@ -371,7 +371,7 @@ spec:
       expr: |
             sum(sum_over_time(tink_agent_login_total{ {{ .Values.obAgents }}, {{ .Values.temporaryErrorsAuth }}, market="ES"}[60m])) by (provider)
               / sum(sum_over_time(tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="ES"}[60m])) by (provider) < 0.6
-      for: {{ .Values.p1TimeWindow }}
+      for: 10m
       labels:
         severity: urgent
         priority: P1
@@ -391,7 +391,7 @@ spec:
       expr: |
         sum(sum_over_time(tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="ES"}[60m])) by (provider, action)
           / sum(sum_over_time(tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="ES"}[60m])) by (provider, action) < 0.6
-      for: {{ .Values.p1TimeWindow }}
+      for: 10m
       labels:
         severity: urgent
         priority: P1
@@ -403,46 +403,6 @@ spec:
              the last 60m.
         tags: {{ .Values.tags }}
 
-    ############################################################
-    ### All login success rates - Authentication Errors - OB ###
-    ############################################################
-
-    - alert: AllLoginSuccessRatesBelow60WithAuthenticationErrorsAndAttemptLimitES_OB
-      expr: |
-          sum(sum_over_time(tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="ES"}[60m])) by (provider)
-                      / sum(sum_over_time(tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="ES"}[60m])) by (provider) < 0.6
-      for: {{ .Values.p1TimeWindow }}
-      labels:
-        severity: urgent
-        priority: P1
-        who: integration-fluffy
-      annotations:
-        description: {{ .Values.kibanaLink }}
-             {{ .Values.grafanaLink }}
-        summary: Login success rate for OB agents and for all authentication types with authentication errors is below 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
-             the last 60m.
-        tags: {{ .Values.tags }}
-
-    ##############################################################
-    ### Split login success rates - Authentication Errors - OB ###
-    ##############################################################
-
-    - alert: SplitLoginSuccessRatesBelow60WithAuthenticationErrorsAndAttemptLimitES_OB
-      expr: |
-          sum(sum_over_time(tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="ES"}[60m])) by (provider, action)
-            / sum(sum_over_time(tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="ES"}[60m])) by (provider, action) < 0.6
-      for: {{ .Values.p1TimeWindow }}
-      labels:
-        severity: urgent
-        priority: P1
-        who: integration-fluffy
-      annotations:
-        description: {{ .Values.kibanaLink }}
-             {{ .Values.grafanaLink }}
-        summary: Login success rate for OB agents and for one of login type with authentication errors is below 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
-             the last 60m.
-        tags: {{ .Values.tags }}
-
     ##################################################
     ### All login success rates - Bank Errors - OB ###
     ##################################################
@@ -451,7 +411,7 @@ spec:
       expr: |
           sum(sum_over_time(tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="ES"}[60m])) by (provider)
             / sum(sum_over_time(tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="ES"}[60m])) by (provider) < 0.6
-      for: {{ .Values.p1TimeWindow }}
+      for: 10m
       labels:
         severity: urgent
         priority: P1
@@ -471,7 +431,7 @@ spec:
       expr: |
           sum(sum_over_time(tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="ES"}[60m])) by (provider, action)
             / sum(sum_over_time(tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="ES"}[60m])) by (provider, action) < 0.6
-      for: {{ .Values.p1TimeWindow }}
+      for: 10m
       labels:
         severity: urgent
         priority: P1
@@ -487,11 +447,11 @@ spec:
     ### All login success rates - All Errors - OB ###
     #################################################
 
-    - alert: AllLoginSuccessRatesBelow60WithAllErrorsAndAttemptLimitES_OB
+    - alert: AllLoginSuccessRatesBelow50WithAllErrorsAndAttemptLimitES_OB
       expr: |
           sum(sum_over_time(tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="ES"}[60m])) by (provider)
-            / sum(sum_over_time(tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="ES"}[60m])) by (provider) < 0.6
-      for: {{ .Values.p1TimeWindow }}
+            / sum(sum_over_time(tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="ES"}[60m])) by (provider) < 0.5
+      for: 10m
       labels:
         severity: urgent
         priority: P1
@@ -499,7 +459,7 @@ spec:
       annotations:
         description: {{ .Values.kibanaLink }}
              {{ .Values.grafanaLink }}
-        summary: Login success rate for OB agents and for all Agent types with All Errors is below 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+        summary: Login success rate for OB agents and for all Agent types with All Errors is below 50% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
              the last 60m.
         tags: {{ .Values.tags }}
 
@@ -507,11 +467,11 @@ spec:
     ### Split login success rates - All Errors - OB ###
     ###################################################
 
-    - alert: SplitLoginSuccessRatesBelow60WithAllErrorsAndAttemptLimitES_OB
+    - alert: SplitLoginSuccessRatesBelow50WithAllErrorsAndAttemptLimitES_OB
       expr: |
           sum(sum_over_time(tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="ES"}[60m])) by (provider, action)
-            / sum(sum_over_time(tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="ES"}[60m])) by (provider, action) < 0.6
-      for: {{ .Values.p1TimeWindow }}
+            / sum(sum_over_time(tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="ES"}[60m])) by (provider, action) < 0.5
+      for: 10m
       labels:
         severity: urgent
         priority: P1
@@ -519,7 +479,7 @@ spec:
       annotations:
         description: {{ .Values.kibanaLink }}
              {{ .Values.grafanaLink }}
-        summary: Login success rate for OB agents and for one of login type with All Errors is below 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+        summary: Login success rate for OB agents and for one of login type with All Errors is below 50% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
              the last 60m.
         tags: {{ .Values.tags }}
 
@@ -536,7 +496,7 @@ spec:
                      and (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.bankErrorsRefresh }}, market="ES"}))
               / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="ES"})) >= 0.65
           and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="ES"}) > 4
-      for: {{ .Values.p4TimeWindow }}
+      for: {{ .Values.p4WaitTimeBeforeFiringAlert }}
       labels:
         severity: urgent
         priority: P4
@@ -545,7 +505,7 @@ spec:
         description: {{ .Values.kibanaClassLink }}
              {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is between 70 - 65% because of bank issues ( <{ $value }> ) for <{ $labels.className }>
-                      the last {{ .Values.p4TimeWindow }} for <{ $labels.type }>
+                      the last {{ .Values.p4WaitTimeBeforeFiringAlert }} for <{ $labels.type }>
         tags: {{ .Values.tags }}
 
     - alert: AgentRefreshesBelow65Greater55DueToBankServerErrorWithRateLimitES
@@ -555,7 +515,7 @@ spec:
                    and (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.bankErrorsRefresh }}, market="ES"}))
               / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="ES"})) >= 0.55
           and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="ES"}) > 4
-      for: {{ .Values.p3TimeWindow }}
+      for: {{ .Values.p3WaitTimeBeforeFiringAlert }}
       labels:
         severity: urgent
         priority: P3
@@ -564,7 +524,7 @@ spec:
         description: {{ .Values.kibanaClassLink }}
              {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is between 65 - 55% because of bank issues ( <{ $value }> ) for <{ $labels.className }>
-                    the last {{ .Values.p3TimeWindow }} for <{ $labels.type }>
+                    the last {{ .Values.p3WaitTimeBeforeFiringAlert }} for <{ $labels.type }>
         tags: {{ .Values.tags }}
 
     - alert: AgentRefreshesBelow55Greater50DueToBankServerErrorWithRateLimitES
@@ -574,7 +534,7 @@ spec:
                      and (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.bankErrorsRefresh }}, market="ES"}))
                 / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="ES"})) >= 0.5
           and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="ES"}) > 4
-      for: {{ .Values.p2TimeWindow }}
+      for: {{ .Values.p2WaitTimeBeforeFiringAlert }}
       labels:
         severity: urgent
         priority: P2
@@ -583,7 +543,7 @@ spec:
         description: {{ .Values.kibanaClassLink }}
              {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is between 55 - 50% because of bank issues ( <{ $value }> ) for <{ $labels.className }>
-                    the last {{ .Values.p2TimeWindow }} for <{ $labels.type }>
+                    the last {{ .Values.p2WaitTimeBeforeFiringAlert }} for <{ $labels.type }>
         tags: {{ .Values.tags }}
 
     - alert: AgentRefreshesBelow50DueToBankServerErrorWithRateLimitES
@@ -591,7 +551,7 @@ spec:
           (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.bankErrorsRefresh }}, market="ES"}))
                 / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="ES"})) < 0.5
           and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="ES"}) > 4
-      for: {{ .Values.p1TimeWindow }}
+      for: {{ .Values.p1WaitTimeBeforeFiringAlert }}
       labels:
         severity: urgent
         priority: P1
@@ -600,7 +560,7 @@ spec:
         description: {{ .Values.kibanaClassLink }}
              {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is below 50% because of bank issues ( <{ $value }> ) for <{ $labels.className }>
-            the last {{ .Values.p1TimeWindow }} for <{ $labels.type }>
+            the last {{ .Values.p1WaitTimeBeforeFiringAlert }} for <{ $labels.type }>
         tags: {{ .Values.tags }}
 
     #########################################
@@ -614,7 +574,7 @@ spec:
                      and (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.agentErrorsRefresh }}, market="ES"}))
                 / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="ES"})) >= 0.65
           and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="ES"}) > 4
-      for: {{ .Values.p4TimeWindow }}
+      for: {{ .Values.p4WaitTimeBeforeFiringAlert }}
       labels:
         severity: urgent
         priority: P4
@@ -623,7 +583,7 @@ spec:
         description: {{ .Values.kibanaClassLink }}
              {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is between 70 - 65% because of agent issues ( <{ $value }> ) for <{ $labels.className }>
-            the last {{ .Values.p4TimeWindow }} for <{ $labels.type }>
+            the last {{ .Values.p4WaitTimeBeforeFiringAlert }} for <{ $labels.type }>
         tags:  {{ .Values.tags }}
 
     - alert: AgentRefreshesBelow65Greater55DueToAgentServerErrorWithRateLimitES
@@ -633,7 +593,7 @@ spec:
                    and (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.agentErrorsRefresh }}, market="ES"}))
               / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="ES"})) >= 0.55
           and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="ES"}) > 4
-      for: {{ .Values.p3TimeWindow }}
+      for: {{ .Values.p3WaitTimeBeforeFiringAlert }}
       labels:
         severity: urgent
         priority: P3
@@ -642,7 +602,7 @@ spec:
         description: {{ .Values.kibanaClassLink }}
              {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is between 65 - 55% because of agent issues ( <{ $value }> ) for <{ $labels.className }>
-            the last {{ .Values.p3TimeWindow }} for <{ $labels.type }>
+            the last {{ .Values.p3WaitTimeBeforeFiringAlert }} for <{ $labels.type }>
         tags:  {{ .Values.tags }}
 
     - alert: AgentRefreshesBelow55Greater50DueToAgentServerErrorWithRateLimitES
@@ -652,7 +612,7 @@ spec:
                    and (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.agentErrorsRefresh }}, market="ES"}))
               / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="ES"})) >= 0.5
           and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="ES"}) > 4
-      for: {{ .Values.p2TimeWindow }}
+      for: {{ .Values.p2WaitTimeBeforeFiringAlert }}
       labels:
         severity: urgent
         priority: P2
@@ -661,7 +621,7 @@ spec:
         description: {{ .Values.kibanaClassLink }}
              {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is between 55 - 50% because of agent issues ( <{ $value }> ) for <{ $labels.className }>
-            the last {{ .Values.p2TimeWindow }} for <{ $labels.type }>
+            the last {{ .Values.p2WaitTimeBeforeFiringAlert }} for <{ $labels.type }>
         tags: {{ .Values.tags }}
 
     - alert: AgentRefreshesBelow50DueToAgentServerErrorWithRateLimitES
@@ -669,7 +629,7 @@ spec:
           (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.agentErrorsRefresh }}, market="ES"}))
                 / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="ES"})) < 0.5
           and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="ES"}) > 4
-      for: {{ .Values.p1TimeWindow }}
+      for: {{ .Values.p1WaitTimeBeforeFiringAlert }}
       labels:
         severity: urgent
         priority: P1
@@ -678,7 +638,7 @@ spec:
         description: {{ .Values.kibanaClassLink }}
              {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is below 50% because of agent issues ( <{ $value }> ) for <{ $labels.className }>
-            the last {{ .Values.p1TimeWindow }} for <{ $labels.type }>
+            the last {{ .Values.p1WaitTimeBeforeFiringAlert }} for <{ $labels.type }>
         tags: {{ .Values.tags }}
 
     #################################
@@ -692,7 +652,7 @@ spec:
                    and (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.allErrorsRefresh }}, market="ES"}))
                 / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="ES"})) >= 0.65
            and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="ES"}) > 4
-      for: {{ .Values.p4TimeWindow }}
+      for: {{ .Values.p4WaitTimeBeforeFiringAlert }}
       labels:
         severity: urgent
         priority: P4
@@ -701,7 +661,7 @@ spec:
         description: {{ .Values.kibanaClassLink }}
              {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is between 70 - 65% because of all issues ( <{ $value }> ) for <{ $labels.className }>
-            the last {{ .Values.p4TimeWindow }} for <{ $labels.type }>
+            the last {{ .Values.p4WaitTimeBeforeFiringAlert }} for <{ $labels.type }>
         tags: {{ .Values.tags }}
 
     - alert: AgentRefreshesBelow65Greater55DueToAllErrorWithRateLimitES
@@ -711,7 +671,7 @@ spec:
                  and (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.allErrorsRefresh }}, market="ES"}))
               / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="ES"})) >= 0.55
            and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="ES"}) > 4
-      for: {{ .Values.p3TimeWindow }}
+      for: {{ .Values.p3WaitTimeBeforeFiringAlert }}
       labels:
         severity: urgent
         priority: P3
@@ -720,7 +680,7 @@ spec:
         description: {{ .Values.kibanaClassLink }}
              {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is between 65 - 55% because of all issues ( <{ $value }> ) for <{ $labels.className }>
-              the last {{ .Values.p3TimeWindow }} for <{ $labels.type }>
+              the last {{ .Values.p3WaitTimeBeforeFiringAlert }} for <{ $labels.type }>
         tags: {{ .Values.tags }}
 
     - alert: AgentRefreshesBelow55Greater50DueToAllErrorWithRateLimitES
@@ -730,7 +690,7 @@ spec:
                    and (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.allErrorsRefresh }}, market="ES"}))
                 / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="ES"})) >= 0.5
            and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="ES"}) > 4
-      for: {{ .Values.p2TimeWindow }}
+      for: {{ .Values.p2WaitTimeBeforeFiringAlert }}
       labels:
         severity: urgent
         priority: P2
@@ -739,7 +699,7 @@ spec:
         description: {{ .Values.kibanaClassLink }}
              {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is between 55 - 50% because of all issues ( <{ $value }> ) for <{ $labels.className }>
-              the last {{ .Values.p2TimeWindow }} for <{ $labels.type }>
+              the last {{ .Values.p2WaitTimeBeforeFiringAlert }} for <{ $labels.type }>
         tags: {{ .Values.tags }}
 
     - alert: AgentRefreshesBelow50DueToAllErrorWithRateLimitES
@@ -747,7 +707,7 @@ spec:
           (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.allErrorsRefresh }}, market="ES"}))
               / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="ES"})) < 0.5
            and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="ES"}) > 4
-      for: {{ .Values.p1TimeWindow }}
+      for: {{ .Values.p1WaitTimeBeforeFiringAlert }}
       labels:
         severity: urgent
         priority: P1
@@ -756,7 +716,7 @@ spec:
         description: {{ .Values.kibanaClassLink }}
              {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is below 50% because of all issues ( <{ $value }> ) for <{ $labels.className }>
-              the last {{ .Values.p1TimeWindow }} for <{ $labels.type }>
+              the last {{ .Values.p1WaitTimeBeforeFiringAlert }} for <{ $labels.type }>
         tags: {{ .Values.tags }}
 
     ###############################################
@@ -770,7 +730,7 @@ spec:
                    and (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.partiallyCompletedErrorRefresh }}, market="ES"}))
                 / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="ES"})) >= 0.65
            and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="ES"}) > 4
-      for: {{ .Values.p4TimeWindow }}
+      for: {{ .Values.p4WaitTimeBeforeFiringAlert }}
       labels:
         severity: urgent
         priority: P4
@@ -779,7 +739,7 @@ spec:
         description: {{ .Values.kibanaClassLink }}
              {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is between 70 - 65% because of all issues ( <{ $value }> ) for <{ $labels.className }>
-               the last {{ .Values.p4TimeWindow }}.
+               the last {{ .Values.p4WaitTimeBeforeFiringAlert }}.
         tags: {{ .Values.tags }}
 
     - alert: AgentRefreshesBelow65Greater55DueToPartiallyCompletedErrorWithRateLimitES
@@ -789,7 +749,7 @@ spec:
                    and (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.partiallyCompletedErrorRefresh }}, market="ES"}))
                 / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="ES"})) >= 0.55
            and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="ES"}) > 4
-      for: {{ .Values.p3TimeWindow }}
+      for: {{ .Values.p3WaitTimeBeforeFiringAlert }}
       labels:
         severity: urgent
         priority: P3
@@ -798,7 +758,7 @@ spec:
         description: {{ .Values.kibanaClassLink }}
              {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is between 65 - 55% because of all issues ( <{ $value }> ) for <{ $labels.className }>
-               the last {{ .Values.p3TimeWindow }}.
+               the last {{ .Values.p3WaitTimeBeforeFiringAlert }}.
         tags: {{ .Values.tags }}
 
     - alert: AgentRefreshesBelow55Greater50DueToPartiallyCompletedErrorWithRateLimitES
@@ -808,7 +768,7 @@ spec:
                    and (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.partiallyCompletedErrorRefresh }}, market="ES"}))
                 / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="ES"})) >= 0.5
            and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="ES"}) > 4
-      for: {{ .Values.p2TimeWindow }}
+      for: {{ .Values.p2WaitTimeBeforeFiringAlert }}
       labels:
         severity: urgent
         priority: P2
@@ -817,7 +777,7 @@ spec:
         description: {{ .Values.kibanaClassLink }}
              {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is between 55 - 50% because of all issues ( <{ $value }> ) for <{ $labels.className }>
-               the last {{ .Values.p2TimeWindow }}.
+               the last {{ .Values.p2WaitTimeBeforeFiringAlert }}.
         tags: {{ .Values.tags }}
 
     - alert: AgentRefreshesBelow50DueToPartiallyCompletedErrorWithRateLimitES
@@ -825,7 +785,7 @@ spec:
           (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.partiallyCompletedErrorRefresh }}, market="ES"}))
                 / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="ES"})) < 0.5
            and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="ES"}) > 4
-      for: {{ .Values.p1TimeWindow }}
+      for: {{ .Values.p1WaitTimeBeforeFiringAlert }}
       labels:
         severity: urgent
         priority: P1
@@ -834,5 +794,5 @@ spec:
         description: {{ .Values.kibanaClassLink }}
              {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is below 50% because of all issues ( <{ $value }> ) for <{ $labels.className }>
-               the last {{ .Values.p1TimeWindow }}.
+               the last {{ .Values.p1WaitTimeBeforeFiringAlert }}.
         tags: {{ .Values.tags }}
