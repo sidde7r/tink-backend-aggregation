@@ -115,6 +115,11 @@ public class LoginExecutor {
     private void logUserInteractionStatus(
             CredentialsRequest request, InteractionCounter interactionCounter) {
         LOGGER.info(
+                "Request type: {}, isCreate: {}, isUpdate: {}",
+                request.getType(),
+                request.isCreate(),
+                request.isUpdate());
+        LOGGER.info(
                 "Authentication required user intervention: {}",
                 MetricsFactory.wasAnyUserInteraction(request, interactionCounter));
     }
