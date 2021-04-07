@@ -4,7 +4,9 @@ import java.util.Arrays;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @AllArgsConstructor
 @Getter
 public enum BalanceType {
@@ -24,10 +26,11 @@ public enum BalanceType {
     private static BalanceType[] values = BalanceType.values();
 
     public static Optional<BalanceType> findByStringType(String balanceType) {
-        return Arrays.stream(values).filter(x -> x.type.equalsIgnoreCase(balanceType)).findAny();
-    }
-
-    public static boolean isKnownType(String balanceType) {
-        return findByStringType(balanceType).isPresent();
+        Optional<BalanceType> balType =
+                Arrays.stream(values).filter(x -> x.type.equalsIgnoreCase(balanceType)).findAny();
+        if (!balType.isPresent()) {
+            log.warn("Found balance entities with unknown balance type: " + balanceType);
+        }
+        return balType;
     }
 }

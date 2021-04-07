@@ -18,7 +18,7 @@ spec:
                     / sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, market="DE", provider_type!="test"}[60m])) by (action,className) >= 0.70)
         # At least this many attempts.
         and sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, market="DE", provider_type!="test"}[60m])) by (action,className) > 5
-      for: {{ .Values.p4TimeWindow }}
+      for: {{ .Values.p4WaitTimeBeforeFiringAlert }}
       labels:
         severity: urgent
         priority: P4
@@ -27,7 +27,7 @@ spec:
         description: {{ .Values.kibanaLink }}
           {{ .Values.grafanaLink }}
         summary: Login success rate is between 70 - 80% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
-          the last {{ .Values.p4TimeWindow }} minutes..
+          the last {{ .Values.p4WaitTimeBeforeFiringAlert }} minutes..
         tags: {{ .Values.tags }}
 
     - alert: login_success_rate_between_60_and_70_de
@@ -38,7 +38,7 @@ spec:
                     / sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, market="DE", provider_type!="test"}[60m])) by (action,className) >= 0.60)
         # At least this many attempts.
         and sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, market="DE", provider_type!="test"}[60m])) by (action,className) > 5
-      for: {{ .Values.p3TimeWindow }}
+      for: {{ .Values.p3WaitTimeBeforeFiringAlert }}
       labels:
         severity: urgent
         priority: P3
@@ -47,7 +47,7 @@ spec:
         description: {{ .Values.kibanaLink }}
           {{ .Values.grafanaLink }}
         summary: Login success rate is between 60 - 70% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
-          the {{ .Values.p3TimeWindow }} minutes.
+          the {{ .Values.p3WaitTimeBeforeFiringAlert }} minutes.
         tags: {{ .Values.tags }}
 
     - alert: login_success_rate_between_50_and_60_de
@@ -58,7 +58,7 @@ spec:
                     / sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, market="DE", provider_type!="test"}[60m])) by (action,className) >= 0.50)
         # At least this many attempts.
         and sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, market="DE", provider_type!="test"}[60m])) by (action,className) > 5
-      for: {{ .Values.p2TimeWindow }}
+      for: {{ .Values.p2WaitTimeBeforeFiringAlert }}
       labels:
         severity: urgent
         priority: P2
@@ -67,7 +67,7 @@ spec:
         description: {{ .Values.kibanaLink }}
           {{ .Values.grafanaLink }}
         summary: Login success rate is between 50 - 60 % ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
-          the last {{ .Values.p2TimeWindow }} minutes.
+          the last {{ .Values.p2WaitTimeBeforeFiringAlert }} minutes.
         tags: {{ .Values.tags }}
 
     - alert: login_success_rate_below_50_de
@@ -76,7 +76,7 @@ spec:
             / sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, market="DE", provider_type!="test"}[60m])) by (action,className) < 0.50)
         # At least this many attempts.
         and sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, market="DE", provider_type!="test"}[60m])) by (action,className) > 5
-      for: {{ .Values.p1TimeWindow }}
+      for: {{ .Values.p1WaitTimeBeforeFiringAlert }}
       labels:
         severity: urgent
         priority: P1
@@ -85,7 +85,7 @@ spec:
         description: {{ .Values.kibanaLink }}
           {{ .Values.grafanaLink }}
         summary: Login success rate is below 50% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
-          the last {{ .Values.p1TimeWindow }} minutes.
+          the last {{ .Values.p1WaitTimeBeforeFiringAlert }} minutes.
         tags: {{ .Values.tags }}
 
     ### Bank side failures
@@ -98,7 +98,7 @@ spec:
                         / sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, market="DE" }[60m])) by (action,className) >= 0.70)
         # At least this many attempts.
         and sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, market="DE" }[60m])) by (action,className) > 5
-      for: {{ .Values.p4TimeWindow }}
+      for: {{ .Values.p4WaitTimeBeforeFiringAlert }}
       labels:
         severity: urgent
         priority: P4
@@ -107,7 +107,7 @@ spec:
         description: {{ .Values.kibanaClassLink }}
           {{ .Values.grafanaLink }}
         summary: Bank errors rate is between 20 - 30% ( <{ $value }> ) for <{ $labels.className }>
-          the last {{ .Values.p4TimeWindow }} minutes.
+          the last {{ .Values.p4WaitTimeBeforeFiringAlert }} minutes.
         tags: {{ .Values.tags }}
 
     - alert: bank_success_rate_between_60_and_70_de
@@ -119,7 +119,7 @@ spec:
                     / sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, market="DE" }[60m])) by (action,className) >= 0.60)
         # At least this many attempts.
         and sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, market="DE" }[60m])) by (action,className) > 5
-      for: {{ .Values.p3TimeWindow }}
+      for: {{ .Values.p3WaitTimeBeforeFiringAlert }}
       labels:
         severity: urgent
         priority: P3
@@ -128,7 +128,7 @@ spec:
         description: {{ .Values.kibanaClassLink }}
           {{ .Values.grafanaLink }}
         summary: Bank errors rate is between 30 - 40% ( <{ $value }> ) for <{ $labels.className }>
-          the last {{ .Values.p3TimeWindow }} minutes.
+          the last {{ .Values.p3WaitTimeBeforeFiringAlert }} minutes.
         tags: {{ .Values.tags }}
 
     - alert: bank_success_rate_between_50_and_60_de
@@ -140,7 +140,7 @@ spec:
                         / sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, market="DE" }[60m])) by (action,className) >= 0.50)
         # At least this many attempts.
         and sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, market="DE" }[60m])) by (action,className) > 5
-      for: {{ .Values.p2TimeWindow }}
+      for: {{ .Values.p2WaitTimeBeforeFiringAlert }}
       labels:
         severity: urgent
         priority: P2
@@ -149,7 +149,7 @@ spec:
         description: {{ .Values.kibanaClassLink }}
           {{ .Values.grafanaLink }}
         summary: Bank errors rate is between 40 - 50% ( <{ $value }> ) for <{ $labels.className }>
-          the {{ .Values.p2TimeWindow }} 30 minutes.
+          the {{ .Values.p2WaitTimeBeforeFiringAlert }} 30 minutes.
         tags: {{ .Values.tags }}
 
     - alert: bank_success_rate_below_50_de
@@ -159,7 +159,7 @@ spec:
             / sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, market="DE" }[60m])) by (action,className) < 0.50)
         # At least this many attempts.
         and sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, market="DE" }[60m])) by (action,className) > 5
-      for: {{ .Values.p1TimeWindow }}
+      for: {{ .Values.p1WaitTimeBeforeFiringAlert }}
       labels:
         severity: urgent
         priority: P1
@@ -168,7 +168,7 @@ spec:
         description: {{ .Values.kibanaClassLink }}
           {{ .Values.grafanaLink }}
         summary: Bank errors rate is above 50% ( <{ $value }> ) for <{ $labels.className }>
-          the last {{ .Values.p1TimeWindow }} minutes.
+          the last {{ .Values.p1WaitTimeBeforeFiringAlert }} minutes.
         tags: {{ .Values.tags }}
         
         

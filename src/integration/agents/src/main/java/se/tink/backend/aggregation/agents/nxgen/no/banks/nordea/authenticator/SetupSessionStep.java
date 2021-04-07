@@ -58,7 +58,14 @@ public class SetupSessionStep implements AuthenticationStep {
         String sessionId = authenticationResponse.getSessionId();
         storage.storeSessionId(sessionId);
 
-        HttpResponse bankIdInitializationResponse =
+        /*
+        This request redirects user from Nordea to OIDC service (one of BankID providers) where the OIDC session
+        will be initialized. The first response from OIDC sets a session activation cookie that is required in
+        later steps. Since user may have disabled cookies in their browser, this response contains some JS to check
+        if that's the case and prompt user to enable cookies if required. Since our client accepts all cookies we
+        just need to continue authentication with url that's embedded in response meta tags.
+         */
+        HttpResponse oidcSessionActivationResponse =
                 authenticationClient.initializeOidcSession(
                         codeChallenge,
                         state,
@@ -66,6 +73,11 @@ public class SetupSessionStep implements AuthenticationStep {
                         authenticationResponse.getBankidIntegrationUrl(),
                         sessionId,
                         credentials);
+        String continueOidcAuthenticationUrl =
+                OidcSessionHelper.extractContinueOidcAuthUrl(oidcSessionActivationResponse);
+
+        HttpResponse bankIdInitializationResponse =
+                authenticationClient.getUrl(continueOidcAuthenticationUrl);
 
         OidcSessionDetails oidcSessionDetails =
                 OidcSessionHelper.extractBankIdSessionDetails(bankIdInitializationResponse);

@@ -12,6 +12,7 @@ import static se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.NordeaNoC
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -27,6 +28,19 @@ import se.tink.libraries.i18n.LocalizableKey;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 class OidcSessionHelper {
+
+    static String extractContinueOidcAuthUrl(HttpResponse response) {
+        Document responseDocument = Jsoup.parse(response.getBody(String.class));
+
+        return responseDocument.getElementsByTag("meta").stream()
+                .filter(tag -> Objects.equals(tag.attr("name"), "cookie-activation-authUrl"))
+                .map(tag -> tag.attr("content"))
+                .findFirst()
+                .orElseThrow(
+                        () ->
+                                new IllegalStateException(
+                                        "Could not find authentication url in oidc activation response page"));
+    }
 
     static OidcSessionDetails extractBankIdSessionDetails(HttpResponse bankIdResponse) {
         Document oidcSessionInfo = Jsoup.parse(bankIdResponse.getBody(String.class));

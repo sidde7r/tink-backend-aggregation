@@ -181,18 +181,24 @@ public class SibsBaseApiClient {
             String state) {
         URL createPaymentUrl = createUrl(SibsConstants.Urls.PAYMENT_INITIATION);
 
-        return client.request(
-                        createPaymentUrl.parameter(
-                                PathParameterKeys.PAYMENT_PRODUCT, sibsPaymentType.getValue()))
-                .header(SibsConstants.HeaderKeys.PSU_IP_ADDRESS, PSU_IP_ADDRESS)
-                .accept(MediaType.APPLICATION_JSON)
-                .type(MediaType.APPLICATION_JSON)
-                .header(HeaderKeys.CONSENT_ID, userState.getConsentId())
-                .header(
-                        HeaderKeys.TPP_REDIRECT_URI,
-                        new URL(redirectUrl).queryParam(QueryKeys.STATE, state))
-                .queryParam(SibsConstants.QueryKeys.TPP_REDIRECT_PREFERRED, TRUE)
-                .post(SibsPaymentInitiationResponse.class, sibsPaymentRequest);
+        RequestBuilder request =
+                client.request(
+                                createPaymentUrl.parameter(
+                                        PathParameterKeys.PAYMENT_PRODUCT,
+                                        sibsPaymentType.getValue()))
+                        .header(SibsConstants.HeaderKeys.PSU_IP_ADDRESS, PSU_IP_ADDRESS)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .type(MediaType.APPLICATION_JSON)
+                        .header(
+                                HeaderKeys.TPP_REDIRECT_URI,
+                                new URL(redirectUrl).queryParam(QueryKeys.STATE, state))
+                        .queryParam(SibsConstants.QueryKeys.TPP_REDIRECT_PREFERRED, TRUE);
+
+        if (sibsPaymentRequest.getDebtorAccount() != null) {
+            request.header(HeaderKeys.CONSENT_ID, userState.getConsentId());
+        }
+
+        return request.post(SibsPaymentInitiationResponse.class, sibsPaymentRequest);
     }
 
     public SibsGetPaymentResponse getPayment(String uniqueId, SibsPaymentType sibsPaymentType) {
@@ -204,7 +210,7 @@ public class SibsBaseApiClient {
                                         sibsPaymentType.getValue())
                                 .parameter(PathParameterKeys.PAYMENT_ID, uniqueId))
                 .accept(MediaType.APPLICATION_JSON)
-                .header(HeaderKeys.CONSENT_ID, userState.getConsentId())
+                .header(HeaderKeys.CONSENT_ID, getPaymentConsent())
                 .get(SibsGetPaymentResponse.class);
     }
 
@@ -221,7 +227,7 @@ public class SibsBaseApiClient {
                                         PathParameterKeys.PAYMENT_PRODUCT,
                                         sibsPaymentType.getValue())
                                 .parameter(PathParameterKeys.PAYMENT_ID, uniqueId))
-                .header(HeaderKeys.CONSENT_ID, userState.getConsentId())
+                .header(HeaderKeys.CONSENT_ID, getPaymentConsent())
                 .accept(MediaType.APPLICATION_JSON)
                 .type(MediaType.APPLICATION_JSON)
                 .put(SibsPaymentUpdateResponse.class, sibsPaymentUpdateRequest);
@@ -238,7 +244,7 @@ public class SibsBaseApiClient {
                                         sibsPaymentType.getValue())
                                 .parameter(PathParameterKeys.PAYMENT_ID, uniqueId))
                 .header(SibsConstants.HeaderKeys.PSU_IP_ADDRESS, PSU_IP_ADDRESS)
-                .header(HeaderKeys.CONSENT_ID, userState.getConsentId())
+                .header(HeaderKeys.CONSENT_ID, getPaymentConsent())
                 .delete(SibsCancelPaymentResponse.class);
     }
 
@@ -265,7 +271,7 @@ public class SibsBaseApiClient {
                                         PathParameterKeys.PAYMENT_PRODUCT,
                                         sibsPaymentType.getValue())
                                 .parameter(PathParameterKeys.PAYMENT_ID, uniqueId))
-                .header(HeaderKeys.CONSENT_ID, userState.getConsentId())
+                .header(HeaderKeys.CONSENT_ID, getPaymentConsent())
                 .get(SibsGetPaymentStatusResponse.class);
     }
 
@@ -283,5 +289,9 @@ public class SibsBaseApiClient {
             requestBuilder.header(HeaderKeys.PSU_IP_ADDRESS, userIp);
         }
         return requestBuilder;
+    }
+
+    private String getPaymentConsent() {
+        return userState.hasConsentId() ? userState.getConsentId() : "";
     }
 }

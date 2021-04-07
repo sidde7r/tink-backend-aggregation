@@ -8,7 +8,7 @@ import java.util.stream.Stream;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.utils.berlingroup.BalanceEntity;
-import se.tink.backend.aggregation.agents.utils.berlingroup.BerlinGroupBalanceMapper;
+import se.tink.backend.aggregation.agents.utils.berlingroup.BalanceMapper;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.builder.BalanceBuilderStep;
@@ -58,12 +58,10 @@ public class AccountEntity {
 
     private BalanceModule getBalanceModule() {
         BalanceBuilderStep balanceBuilderStep =
-                BalanceModule.builder()
-                        .withBalance(BerlinGroupBalanceMapper.getBookedBalance(balances));
-        BerlinGroupBalanceMapper.getAvailableBalance(balances)
+                BalanceModule.builder().withBalance(BalanceMapper.getBookedBalance(balances));
+        BalanceMapper.getAvailableBalance(balances)
                 .ifPresent(balanceBuilderStep::setAvailableBalance);
-        BerlinGroupBalanceMapper.getCreditLimit(balances)
-                .ifPresent(balanceBuilderStep::setCreditLimit);
+        BalanceMapper.getCreditLimit(balances).ifPresent(balanceBuilderStep::setCreditLimit);
         return balanceBuilderStep.build();
     }
 

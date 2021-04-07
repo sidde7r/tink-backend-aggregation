@@ -49,4 +49,8 @@ public class SibsUserState {
     public void finishManualAuthentication() {
         persistentStorage.put(SibsSignSteps.SIBS_MANUAL_AUTHENTICATION_IN_PROGRESS, false);
     }
+
+    public boolean hasConsentId() {
+        return persistentStorage.containsKey(CONSENT_ID);
+    }
 }
