@@ -325,10 +325,9 @@ spec:
 
     - alert: AllLoginSuccessRatesBelow50WithAllErrorsAndAttemptLimitES_RE
       expr: |
-          (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="ES"}))
-                 / (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"})) < 0.5
-          and sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"}) > 4
-      for: {{ .Values.p1WaitTimeBeforeFiringAlert }}
+          sum(sum_over_time(tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="ES"}[60m])) by (provider)
+                 / sum(sum_over_time(tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"}[60m])) by (provider) < 0.5
+      for: 5m
       labels:
         severity: urgent
         priority: P1
@@ -337,19 +336,18 @@ spec:
         description: {{ .Values.kibanaLink }}
              {{ .Values.grafanaLink }}
         summary: Login success rate for RE agents and for all Agent types with All Errors is below 50% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
-             the last {{ .Values.p1WaitTimeBeforeFiringAlert }}.
+             the last 60m.
         tags: {{ .Values.tags }}
 
     ###################################################
     ### Split login success rates - All Errors - RE ###
     ###################################################
 
-    - alert: SplitLoginSuccessRatesBelow50WithAllErrorsAndAttemptLimitES_RE
+    - alert: SplitLoginSuccessRatesBelow50WithAllErrorsAndAttemptLimitWithForOn30MinES_RE
       expr: |
-          (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="ES"}))
-                / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"})) < 0.5
-          and sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"}) > 4
-      for: {{ .Values.p1WaitTimeBeforeFiringAlert }}
+          sum(sum_over_time(tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="ES"}[60m])) by (provider, action)
+                / sum(sum_over_time(tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"}[60m])) by (provider, action) < 0.5
+      for: 30m
       labels:
         severity: urgent
         priority: P1
@@ -358,7 +356,23 @@ spec:
         description: {{ .Values.kibanaLink }}
              {{ .Values.grafanaLink }}
         summary: Login success rate for RE agents and for one of login type with All Errors is below 50% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
-             the last {{ .Values.p1WaitTimeBeforeFiringAlert }}.
+             the last 60m.
+        tags: {{ .Values.tags }}
+
+    - alert: SplitLoginSuccessRatesBelow50WithAllErrorsAndAttemptLimitWithForOn5MinES_RE
+      expr: |
+        sum(sum_over_time(tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="ES"}[60m])) by (provider, action)
+              / sum(sum_over_time(tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"}[60m])) by (provider, action) < 0.5
+      for: 5m
+      labels:
+        severity: urgent
+        priority: P1
+        who: integration-fluffy
+      annotations:
+        description: {{ .Values.kibanaLink }}
+          {{ .Values.grafanaLink }}
+        summary: Login success rate for RE agents and for one of login type with All Errors is below 50% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+          the last 60m.
         tags: {{ .Values.tags }}
 
     ##### OpenBanking #####

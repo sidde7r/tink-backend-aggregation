@@ -42,7 +42,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
-import se.tink.libraries.mapper.PrioritizedValueExtractor;
 
 public abstract class CmcicAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor,
@@ -169,9 +168,8 @@ public abstract class CmcicAgent extends NextGenerationAgent
     }
 
     private TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
-        PrioritizedValueExtractor prioritizedValueExtractor = new PrioritizedValueExtractor();
         CmcicTransactionalAccountConverter transactionalAccountConverter =
-                new CmcicTransactionalAccountConverter(prioritizedValueExtractor);
+                new CmcicTransactionalAccountConverter();
 
         final CmcicTransactionalAccountFetcher accountFetcher =
                 new CmcicTransactionalAccountFetcher(apiClient, transactionalAccountConverter);

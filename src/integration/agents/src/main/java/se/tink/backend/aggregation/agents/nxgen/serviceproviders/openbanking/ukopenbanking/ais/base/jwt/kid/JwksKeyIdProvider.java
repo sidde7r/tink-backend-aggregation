@@ -14,12 +14,12 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 @Slf4j
-public class JwksKidProvider implements KidProvider {
+public class JwksKeyIdProvider implements KeyIdProvider {
     private final JwksClient jwksClient;
     private final URL jwksEndpoint;
     private final X509Certificate signingCertificate;
 
-    public JwksKidProvider(
+    public JwksKeyIdProvider(
             JwksClient jwksClient, URL jwksEndpoint, X509Certificate signingCertificate) {
         this.jwksClient = jwksClient;
         this.jwksEndpoint = jwksEndpoint;

@@ -108,6 +108,9 @@ data:
           supportIndividualAccountsRefresh: {{ $featureFlagsConfig.supportIndividualAccountsRefresh | default false }}
         {{- end }}
 
+      unleash:
+          baseApiUrl: http://unleash-api.unleash.svc.cluster.local:4242/api/
+
       integrations:
         {{- if $agentsConfig.collectorSubscriptionKey }}
         collector:

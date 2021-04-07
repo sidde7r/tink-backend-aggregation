@@ -9,7 +9,7 @@ import com.nimbusds.jose.Payload;
 import java.util.Map;
 import java.util.Objects;
 import net.minidev.json.JSONObject;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.jwt.kid.KidProvider;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.jwt.kid.KeyIdProvider;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.signer.iface.JwtSigner.Algorithm;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
@@ -26,8 +26,8 @@ public class TinkJwtSigner {
         this.signer = builder.signer;
     }
 
-    public static Builder builder(KidProvider kidProvider, JWSSigner signer) {
-        return new Builder(kidProvider.get(), signer);
+    public static Builder builder(KeyIdProvider keyIdProvider, JWSSigner signer) {
+        return new Builder(keyIdProvider.get(), signer);
     }
 
     public String sign() {

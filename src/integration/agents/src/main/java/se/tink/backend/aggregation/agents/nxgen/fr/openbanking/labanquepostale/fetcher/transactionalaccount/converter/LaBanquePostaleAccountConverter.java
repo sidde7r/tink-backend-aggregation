@@ -1,32 +1,26 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.fetcher.transactionalaccount.converter;
 
-import com.google.common.collect.ImmutableList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.StringUtils;
-import se.tink.backend.aggregation.agents.exceptions.refresh.AccountRefreshException;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.fetcher.transactionalaccount.rpc.AccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.Accounts;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.entities.BalanceBaseEntity;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.builder.BalanceBuilderStep;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
-import se.tink.libraries.mapper.PrioritizedValueExtractor;
 
+@Slf4j
 @RequiredArgsConstructor
 public class LaBanquePostaleAccountConverter {
-
-    private static final List<String> BALANCE_PREFERRED_TYPES =
-            ImmutableList.of(
-                    BerlinGroupConstants.Accounts.CLBD, BerlinGroupConstants.Accounts.XPCD);
-
-    private final PrioritizedValueExtractor valueExtractor;
 
     public List<TransactionalAccount> toTinkAccounts(AccountResponse accountsResponse) {
         return Optional.ofNullable(accountsResponse.getAccounts()).orElse(Collections.emptyList())
@@ -48,7 +42,7 @@ public class LaBanquePostaleAccountConverter {
         return TransactionalAccount.nxBuilder()
                 .withType(type)
                 .withPaymentAccountFlag()
-                .withBalance(BalanceModule.of(getBalance(accountEntity)))
+                .withBalance(getBalanceModule(accountEntity.getBalances()))
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(accountEntity.getUniqueIdentifier())
@@ -65,23 +59,38 @@ public class LaBanquePostaleAccountConverter {
                 .build();
     }
 
-    public ExactCurrencyAmount getBalance(AccountEntity accountEntity) {
-        return valueExtractor
-                .pickByValuePriority(
-                        accountEntity.getBalances(),
-                        BalanceBaseEntity::getBalanceType,
-                        BALANCE_PREFERRED_TYPES)
-                .filter(balance -> doesMatchWithAccountCurrency(accountEntity, balance))
-                .map(balance -> balance.getBalanceAmount().toAmount())
-                .orElseThrow(
-                        () ->
-                                new AccountRefreshException(
-                                        "Could not extract account balance. No available balance with type of: "
-                                                + StringUtils.join(BALANCE_PREFERRED_TYPES, ", ")));
+    private BalanceModule getBalanceModule(List<BalanceBaseEntity> balances) {
+        BalanceBuilderStep balanceBuilderStep =
+                BalanceModule.builder().withBalance(getBookedBalance(balances));
+        getAvailableBalance(balances).ifPresent(balanceBuilderStep::setAvailableBalance);
+        return balanceBuilderStep.build();
     }
 
-    private static boolean doesMatchWithAccountCurrency(
-            AccountEntity accountEntity, BalanceBaseEntity balance) {
-        return balance.isInCurrency(accountEntity.getAccountId().getCurrency());
+    private ExactCurrencyAmount getBookedBalance(List<BalanceBaseEntity> balances) {
+        if (balances.isEmpty()) {
+            throw new IllegalArgumentException(
+                    "Cannot determine booked balance from empty list of balances.");
+        }
+        Optional<BalanceBaseEntity> balanceEntity =
+                balances.stream()
+                        .filter(b -> Accounts.CLBD.equalsIgnoreCase(b.getBalanceType()))
+                        .findAny();
+
+        if (!balanceEntity.isPresent()) {
+            log.warn(
+                    "Couldn't determine booked balance of known type, and no credit limit included. Defaulting to first provided balance.");
+        }
+        return balanceEntity
+                .map(Optional::of)
+                .orElseGet(() -> balances.stream().findFirst())
+                .map(BalanceBaseEntity::toAmount)
+                .get();
+    }
+
+    private Optional<ExactCurrencyAmount> getAvailableBalance(List<BalanceBaseEntity> balances) {
+        return balances.stream()
+                .filter(b -> Accounts.XPCD.equalsIgnoreCase(b.getBalanceType()))
+                .findAny()
+                .map(BalanceBaseEntity::toAmount);
     }
 }

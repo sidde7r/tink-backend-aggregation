@@ -1,9 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.module;
 
-import com.google.inject.AbstractModule;
-import com.google.inject.Inject;
-import com.google.inject.Provides;
-import com.google.inject.Singleton;
 import se.tink.backend.aggregation.agents.contexts.CompositeAgentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingFlowFacade;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.configuration.UkOpenBankingClientConfigurationAdapter;
@@ -14,15 +10,18 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.signer.iface.JwtSigner;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 
-public class SecretServiceFlowModule extends AbstractModule {
+public class SecretServiceFlow implements UkOpenBankingFlowStrategy {
 
     private static final Class<UkOpenBankingConfiguration> CONFIGURATION_CLASS =
             UkOpenBankingConfiguration.class;
+    private final CompositeAgentContext context;
 
-    @Provides
-    @Singleton
-    @Inject
-    public UkOpenBankingFlowFacade ukOpenBankingFlowFacade(CompositeAgentContext context) {
+    public SecretServiceFlow(CompositeAgentContext context) {
+        this.context = context;
+    }
+
+    @Override
+    public UkOpenBankingFlowFacade get() {
         AgentConfiguration<? extends UkOpenBankingClientConfigurationAdapter> configuration =
                 agentConfiguration(context);
         UkOpenBankingConfiguration providerSpecificConfiguration =

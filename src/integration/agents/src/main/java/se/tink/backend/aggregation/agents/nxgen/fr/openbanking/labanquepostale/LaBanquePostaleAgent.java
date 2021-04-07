@@ -45,7 +45,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCa
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
-import se.tink.libraries.mapper.PrioritizedValueExtractor;
 
 @AgentDependencyModules(modules = QSealcSignerModuleRSASHA256.class)
 @AgentCapabilities({CHECKING_ACCOUNTS, IDENTITY_DATA, LIST_BENEFICIARIES, TRANSFERS, CREDIT_CARDS})
@@ -131,9 +130,8 @@ public final class LaBanquePostaleAgent
 
     @Override
     protected BerlinGroupAccountFetcher getAccountFetcher() {
-        PrioritizedValueExtractor prioritizedValueExtractor = new PrioritizedValueExtractor();
         LaBanquePostaleAccountConverter laBanquePostaleAccountConverter =
-                new LaBanquePostaleAccountConverter(prioritizedValueExtractor);
+                new LaBanquePostaleAccountConverter();
 
         return new LaBanquePostaleAccountFetcher(apiClient, laBanquePostaleAccountConverter);
     }

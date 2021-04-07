@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cm
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicTestFixtures.AMOUNT_1;
@@ -13,8 +12,8 @@ import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbank
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.transfer.FrTransferDestinationFetcherTestFixtures.CURRENCY;
 
 import com.google.common.collect.ImmutableList;
+import java.util.Collections;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,20 +25,15 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmc
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.entity.CashAccountTypeEnumEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.entity.PsuAccountIdentificationEntity;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.libraries.mapper.PrioritizedValueExtractor;
 
 public class CmcicTransactionalAccountConverterTest {
 
     private CmcicTransactionalAccountConverter cmcicTransactionalAccountConverter;
 
-    private PrioritizedValueExtractor prioritizedValueExtractorMock;
-
     @Before
     public void setUp() {
-        prioritizedValueExtractorMock = mock(PrioritizedValueExtractor.class);
 
-        cmcicTransactionalAccountConverter =
-                new CmcicTransactionalAccountConverter(prioritizedValueExtractorMock);
+        cmcicTransactionalAccountConverter = new CmcicTransactionalAccountConverter();
     }
 
     @Test
@@ -54,9 +48,6 @@ public class CmcicTransactionalAccountConverterTest {
 
         when(accountResourceDto.getBalances()).thenReturn(balances);
 
-        when(prioritizedValueExtractorMock.pickByValuePriority(any(), any(), any()))
-                .thenReturn(Optional.of(xpcdBalance));
-
         // when
         final Optional<TransactionalAccount> result =
                 cmcicTransactionalAccountConverter.convertAccountResourceToTinkAccount(
@@ -68,9 +59,9 @@ public class CmcicTransactionalAccountConverterTest {
                 transactionalAccount -> {
                     assertThat(transactionalAccount.getType()).isEqualTo(AccountTypes.CHECKING);
                     assertThat(transactionalAccount.getExactBalance().getExactValue().toString())
-                            .isEqualTo(xpcdBalance.getBalanceAmount().getAmount());
+                            .isEqualTo(clbdBalance.getBalanceAmount().getAmount());
                     assertThat(transactionalAccount.getExactBalance().getCurrencyCode())
-                            .isEqualTo(xpcdBalance.getBalanceAmount().getCurrency());
+                            .isEqualTo(clbdBalance.getBalanceAmount().getCurrency());
                     assertThat(transactionalAccount.getApiIdentifier()).isEqualTo(RESOURCE_ID);
                     assertThat(transactionalAccount.getIdModule().getAccountName()).isEqualTo(NAME);
                     assertThat(transactionalAccount.getIdModule().getAccountNumber())
@@ -83,14 +74,9 @@ public class CmcicTransactionalAccountConverterTest {
     public void shouldThrowExceptionWhenNoBalancePresent() {
         // given
         final AccountResourceDto accountResourceDto = createAccountResourceDtoMock();
-        final BalanceResourceDto otherBalance =
-                createBalanceResourceDto(BalanceStatusEntity.OTHR, AMOUNT_1);
-        final List<BalanceResourceDto> balances = ImmutableList.of(otherBalance);
+        final List<BalanceResourceDto> balances = Collections.emptyList();
 
         when(accountResourceDto.getBalances()).thenReturn(balances);
-
-        when(prioritizedValueExtractorMock.pickByValuePriority(any(), any(), any()))
-                .thenReturn(Optional.empty());
 
         // when
         final Throwable thrown =
@@ -101,9 +87,8 @@ public class CmcicTransactionalAccountConverterTest {
 
         // then
         assertThat(thrown)
-                .isExactlyInstanceOf(NoSuchElementException.class)
-                .hasMessage(
-                        "Could not extract account balance. No available balance with type of: XPCD, CLBD");
+                .isExactlyInstanceOf(IllegalArgumentException.class)
+                .hasMessage("Cannot determine booked balance from empty list of balances.");
     }
 
     @Test

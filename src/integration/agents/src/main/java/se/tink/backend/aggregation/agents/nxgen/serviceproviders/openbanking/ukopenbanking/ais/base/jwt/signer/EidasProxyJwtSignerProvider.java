@@ -7,8 +7,8 @@ import se.tink.backend.aggregation.agents.contexts.AgentConfigurationControllerC
 import se.tink.backend.aggregation.agents.contexts.EidasContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.configuration.UkOpenBankingClientConfigurationAdapter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.jwt.JwksClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.jwt.kid.JwksKidProvider;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.jwt.kid.KidProvider;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.jwt.kid.JwksKeyIdProvider;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.jwt.kid.KeyIdProvider;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.signer.iface.JwtSigner;
 import se.tink.backend.aggregation.configuration.agents.utils.CertificateUtils;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
@@ -58,8 +58,8 @@ public final class EidasProxyJwtSignerProvider {
     }
 
     private JwtSigner constructEidasProxyJwtSigner(String appId, X509Certificate certificate) {
-        KidProvider kidProvider =
-                new JwksKidProvider(
+        KeyIdProvider keyIdProvider =
+                new JwksKeyIdProvider(
                         new JwksClient(agentComponentProvider.getTinkHttpClient()),
                         configuration.getSoftwareStatementAssertions().getJwksEndpoint(),
                         certificate);
@@ -67,7 +67,7 @@ public final class EidasProxyJwtSignerProvider {
                 "Initializing eIDAS JWT signer for appId '{}' with '{}' certificate",
                 appId,
                 certificate.getSubjectDN().getName());
-        return new EidasProxyJwtSigner(kidProvider, createEidasJwsSigner());
+        return new EidasProxyJwtSigner(keyIdProvider, createEidasJwsSigner());
     }
 
     private EidasJwsSigner createEidasJwsSigner() {

@@ -1,9 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.module;
 
-import com.google.inject.AbstractModule;
-import com.google.inject.Inject;
-import com.google.inject.Provides;
-import com.google.inject.Singleton;
 import se.tink.backend.aggregation.agents.contexts.CompositeAgentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingFlowFacade;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.configuration.UkOpenBankingClientConfigurationAdapter;
@@ -16,21 +12,28 @@ import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 
-public class EidasProxyFlowModule extends AbstractModule {
+public class EidasProxyFlow implements UkOpenBankingFlowStrategy {
 
     private static final Class<UkOpenBankingConfiguration> CONFIGURATION_CLASS =
             UkOpenBankingConfiguration.class;
+    private final CompositeAgentContext context;
+    private final AgentComponentProvider agentComponentProvider;
+    private final AgentsServiceConfiguration agentsServiceConfiguration;
 
-    @Singleton
-    @Provides
-    @Inject
-    public UkOpenBankingFlowFacade ukOpenBankingFlowFacade(
+    public EidasProxyFlow(
             CompositeAgentContext context,
             AgentComponentProvider agentComponentProvider,
             AgentsServiceConfiguration agentsServiceConfiguration) {
+        this.context = context;
+        this.agentComponentProvider = agentComponentProvider;
+        this.agentsServiceConfiguration = agentsServiceConfiguration;
+    }
 
+    @Override
+    public UkOpenBankingFlowFacade get() {
         AgentConfiguration<? extends UkOpenBankingClientConfigurationAdapter> configuration =
                 getAgentConfiguration(context);
+
         return new UkOpenBankingFlowFacade(
                 createEidasProxyTlsConfigurationSetter(agentsServiceConfiguration),
                 createJwtSigner(

@@ -3,11 +3,11 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 import lombok.SneakyThrows;
 import se.tink.backend.aggregation.configuration.agents.utils.CertificateUtils;
 
-public class EidasKidProvider implements KidProvider {
+public class EidasKeyIdProvider implements KeyIdProvider {
 
     private final String base64EncodedSigningCerts;
 
-    public EidasKidProvider(String base64EncodedSigningCerts) {
+    public EidasKeyIdProvider(String base64EncodedSigningCerts) {
         this.base64EncodedSigningCerts = base64EncodedSigningCerts;
     }
 

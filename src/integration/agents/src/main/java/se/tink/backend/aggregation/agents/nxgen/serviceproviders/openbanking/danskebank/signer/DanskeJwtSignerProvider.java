@@ -10,8 +10,8 @@ import se.tink.backend.aggregation.agents.contexts.AgentConfigurationControllerC
 import se.tink.backend.aggregation.agents.contexts.CompositeAgentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.danskebank.configuration.DanskebankEUConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.jwt.JwksClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.jwt.kid.JwksKidProvider;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.jwt.kid.KidProvider;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.jwt.kid.JwksKeyIdProvider;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.jwt.kid.KeyIdProvider;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.jwt.signer.EidasJwsSigner;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.jwt.signer.EidasProxyJwtSigner;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.jwt.signer.EidasProxyWithFallbackJwtSigner;
@@ -89,10 +89,10 @@ class DanskeJwtSignerProvider implements Provider<JwtSigner> {
     private EidasProxyJwtSigner getEidasProxyJwtSigner(
             InternalEidasProxyConfiguration internalEidasProxyConfiguration,
             EidasIdentity identity,
-            KidProvider kidProvider) {
+            KeyIdProvider keyIdProvider) {
         EidasJwsSigner eidasJwsSigner =
                 new EidasJwsSigner(internalEidasProxyConfiguration, identity);
-        return new EidasProxyJwtSigner(kidProvider, eidasJwsSigner);
+        return new EidasProxyJwtSigner(keyIdProvider, eidasJwsSigner);
     }
 
     private JwtSigner getJwtSignerWithFallback(
@@ -103,13 +103,14 @@ class DanskeJwtSignerProvider implements Provider<JwtSigner> {
                 "[Danske JWT Signer] Initializing eIDAS JWT signer for appId '{}' with '{}' certificate",
                 appId,
                 certificate.getSubjectDN().getName());
-        KidProvider kidProvider =
-                new JwksKidProvider(
+        KeyIdProvider keyIdProvider =
+                new JwksKeyIdProvider(
                         new JwksClient(agentComponentProvider.getTinkHttpClient()),
                         configuration.getSoftwareStatementAssertions().getJwksEndpoint(),
                         certificate);
         EidasProxyJwtSigner eidasProxyJwtSigner =
-                getEidasProxyJwtSigner(internalEidasProxyConfiguration, eidasIdentity, kidProvider);
+                getEidasProxyJwtSigner(
+                        internalEidasProxyConfiguration, eidasIdentity, keyIdProvider);
         return new EidasProxyWithFallbackJwtSigner(eidasProxyJwtSigner, eidasFallbackJwtSigner);
     }
 }
