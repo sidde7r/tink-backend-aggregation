@@ -198,6 +198,7 @@ public final class AbnAmroAgent extends AbstractAgent
 
     private List<Account> getAccounts() {
         if (accounts != null) {
+            logger.info("We got accounts size = " + accounts.size());
             return accounts;
         }
 
@@ -205,13 +206,21 @@ public final class AbnAmroAgent extends AbstractAgent
 
         Preconditions.checkState(AbnAmroUtils.isValidBcNumberFormat(bcNumber));
         try {
+            logger.info("getAccounts: Inside try/catch:");
             List<PfmContractEntity> contracts = subscriptionClient.getContracts(bcNumber);
             if (Optional.ofNullable(contracts).isPresent()) {
+                logger.info("getAccounts: Optional.ofNullable(contracts).isPresent():");
+                logger.info("getAccounts: contract size: " + contracts.size());
                 accounts = new AccountConverter().convert(contracts);
+                logger.info(
+                        "getAccounts: after new AccountConverter().convert(contracts): with size : "
+                                + accounts.size());
                 return accounts;
             }
+            logger.info("getAccounts: We return empty list");
             return Collections.emptyList();
         } catch (Exception e) {
+            logger.info("getAccounts: IllegalStateException");
             throw new IllegalStateException(e);
         }
     }
