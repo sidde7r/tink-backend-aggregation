@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator;
 
 import com.google.common.collect.ImmutableList;
-import java.util.Base64;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -28,7 +27,6 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authentic
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.rpc.ScaResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.rpc.ScaStatusResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentDetailsResponse;
-import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.CommonFields;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.GermanFields;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.authenticator.AutoAuthenticator;
@@ -41,9 +39,6 @@ import se.tink.libraries.i18n.Catalog;
 @AllArgsConstructor
 @Slf4j
 public class FiduciaAuthenticator implements MultiFactorAuthenticator, AutoAuthenticator {
-
-    private static final String STATIC_SALT = "laet<iecu7aYuPhee8Oe";
-    private static final Base64.Encoder ENCODER = Base64.getEncoder();
 
     private static final Pattern STARTCODE_CHIP_PATTERN = Pattern.compile("Startcode\\s\\\"(\\d+)");
 
@@ -87,7 +82,6 @@ public class FiduciaAuthenticator implements MultiFactorAuthenticator, AutoAuthe
         String username = credentials.getField(CredentialKeys.PSU_ID);
         validateUsername(username);
         String password = credentials.getField(CredentialKeys.PASSWORD);
-        logHashes(credentials);
         sessionStorage.put(StorageKeys.PSU_ID, username);
 
         String consentId = apiClient.createConsent();
@@ -112,26 +106,6 @@ public class FiduciaAuthenticator implements MultiFactorAuthenticator, AutoAuthe
         if (StringUtils.isBlank(username) || username.length() > PSU_ID_MAX_ALLOWED_LENGTH) {
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
-    }
-
-    private void logHashes(Credentials credentials) {
-        // There are a lot of invalid_credentials thrown.
-        // Users often finally manages to provide correct credentials in 2nd or 3rd attempt.
-        // We want to investigate if users have problems with providing username or password.
-        // To achieve that - this logging will be helpful. We will check the hashes from
-        // unsuccessful and successful authentications for the same credentialsId / userId and check
-        // whether username hash or credentials hash changed.
-        log.info(
-                "[Fiducia Auth] Hashes: {}, {}",
-                ENCODER.encodeToString(
-                                Hash.sha512(
-                                        credentials.getField(CredentialKeys.PSU_ID) + STATIC_SALT))
-                        .substring(0, 6),
-                ENCODER.encodeToString(
-                                Hash.sha512(
-                                        credentials.getField(CredentialKeys.PASSWORD)
-                                                + STATIC_SALT))
-                        .substring(0, 6));
     }
 
     private ScaStatusResponse authorizeWithSca(ScaResponse scaResponse) {

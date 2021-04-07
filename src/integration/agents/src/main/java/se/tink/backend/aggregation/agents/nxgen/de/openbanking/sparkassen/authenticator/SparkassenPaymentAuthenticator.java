@@ -26,7 +26,7 @@ import se.tink.libraries.i18n.Catalog;
 
 public class SparkassenPaymentAuthenticator extends SparkassenAuthenticator
         implements PaymentAuthenticator {
-    private SparkassenApiClient apiClient;
+    private final SparkassenApiClient apiClient;
 
     public SparkassenPaymentAuthenticator(
             Catalog catalog,
@@ -42,7 +42,6 @@ public class SparkassenPaymentAuthenticator extends SparkassenAuthenticator
             Credentials credentials, CreatePaymentResponse createPaymentResponse)
             throws AuthenticationException, AuthorizationException {
         validateInput(credentials);
-        logDetails(credentials);
 
         AuthenticationMethodResponse initAuthorizationResponse =
                 initializeAuthorizationOfPayment(

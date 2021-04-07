@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authent
 
 import com.google.common.base.Strings;
 import com.google.common.util.concurrent.Uninterruptibles;
-import java.util.Base64;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -29,7 +28,6 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.Postbank
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenticator.entities.ChallengeData;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenticator.entities.ScaMethod;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenticator.rpc.AuthorisationResponse;
-import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.CommonFields;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.GermanFields;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
@@ -40,9 +38,6 @@ import se.tink.libraries.i18n.Catalog;
 @RequiredArgsConstructor
 @Slf4j
 public class PostbankAuthenticationController implements TypedAuthenticator {
-
-    private static final String STATIC_SALT = "ce#phouph{ei5roo1eeX";
-    private static final Base64.Encoder ENCODER = Base64.getEncoder();
 
     private static final Pattern STARTCODE_CHIP_PATTERN = Pattern.compile("Startcode:\\s(\\d+)");
 
@@ -63,7 +58,6 @@ public class PostbankAuthenticationController implements TypedAuthenticator {
         validateReceivedCredentials(credentials);
         String username = credentials.getField(Field.Key.USERNAME);
         String password = credentials.getField(Field.Key.PASSWORD);
-        logHashes(credentials);
 
         AuthorisationResponse initValues = authenticator.init(username, password);
 
@@ -90,23 +84,6 @@ public class PostbankAuthenticationController implements TypedAuthenticator {
 
         authenticateUsingChosenScaMethod(username, initValues, chosenScaMethod);
         authenticator.storeConsentDetails();
-    }
-
-    private void logHashes(Credentials credentials) {
-        // There are a lot of invalid_credentials thrown.
-        // Users often finally manages to provide correct credentials in 2nd or 3rd attempt.
-        // We want to investigate if users have problems with providing username or password.
-        // To achieve that - this logging will be helpful. We will check the hashes from
-        // unsuccessful and successful authentications for the same credentialsId / userId and check
-        // whether username hash or credentials hash changed.
-        log.info(
-                "[Postbank Auth] Hashes: {}, {}",
-                ENCODER.encodeToString(
-                                Hash.sha512(credentials.getField(Field.Key.USERNAME) + STATIC_SALT))
-                        .substring(0, 6),
-                ENCODER.encodeToString(
-                                Hash.sha512(credentials.getField(Field.Key.PASSWORD) + STATIC_SALT))
-                        .substring(0, 6));
     }
 
     private void authenticateUsingChosenScaMethod(
