@@ -1,10 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.fetchers.credit.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.ICSConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.fetchers.credit.rpc.CreditBalanceResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.creditcard.CreditCardModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
+import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 
 @JsonObject
 public class AccountEntity {
@@ -37,13 +40,30 @@ public class AccountEntity {
     }
 
     public CreditCardAccount toCreditCardAccount(CreditBalanceResponse balanceResponse) {
-        return CreditCardAccount.builder(
-                        creditCardEntity.getCustomerNumber(),
-                        balanceResponse.toTinkBalanceAmount(accountId),
-                        balanceResponse.toTinkAvailableCreditAmount(accountId))
-                .setName(productEntity.getProductName())
-                .setAccountNumber(creditCardEntity.getCustomerNumber())
-                .putInTemporaryStorage(StorageKeys.ACCOUNT_ID, accountId)
+        final String customerNumber = creditCardEntity.getCustomerNumber();
+
+        // CC data from the bank do not returned any CardNumber or Alias
+        return CreditCardAccount.nxBuilder()
+                .withCardDetails(
+                        CreditCardModule.builder()
+                                .withCardNumber(customerNumber)
+                                .withBalance(balanceResponse.toTinkBalanceAmount(accountId))
+                                .withAvailableCredit(
+                                        balanceResponse.toTinkAvailableCreditAmount(accountId))
+                                .withCardAlias(productEntity.getProductName())
+                                .build())
+                .withInferredAccountFlags()
+                .withId(
+                        IdModule.builder()
+                                .withUniqueIdentifier(customerNumber)
+                                .withAccountNumber(customerNumber)
+                                .withAccountName(productEntity.getProductName())
+                                .addIdentifier(
+                                        AccountIdentifier.create(
+                                                AccountIdentifierType.OTHER, customerNumber))
+                                .build())
+                .setBankIdentifier(accountId)
+                .setApiIdentifier(accountId)
                 .build();
     }
 }
