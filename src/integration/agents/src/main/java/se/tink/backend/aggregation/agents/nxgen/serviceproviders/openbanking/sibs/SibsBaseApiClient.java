@@ -196,6 +196,8 @@ public class SibsBaseApiClient {
 
         if (sibsPaymentRequest.getDebtorAccount() != null) {
             request.header(HeaderKeys.CONSENT_ID, userState.getConsentId());
+        } else {
+            log.info("Creating payment without CONSENT_ID, DebtorAccount does not exists");
         }
 
         return request.post(SibsPaymentInitiationResponse.class, sibsPaymentRequest);
@@ -203,15 +205,17 @@ public class SibsBaseApiClient {
 
     public SibsGetPaymentResponse getPayment(String uniqueId, SibsPaymentType sibsPaymentType) {
         URL getPayment = createUrl(SibsConstants.Urls.PAYMENT_REQUEST);
-        return client.request(
-                        getPayment
-                                .parameter(
-                                        PathParameterKeys.PAYMENT_PRODUCT,
-                                        sibsPaymentType.getValue())
-                                .parameter(PathParameterKeys.PAYMENT_ID, uniqueId))
-                .accept(MediaType.APPLICATION_JSON)
-                .header(HeaderKeys.CONSENT_ID, getPaymentConsent())
-                .get(SibsGetPaymentResponse.class);
+        RequestBuilder request =
+                client.request(
+                                getPayment
+                                        .parameter(
+                                                PathParameterKeys.PAYMENT_PRODUCT,
+                                                sibsPaymentType.getValue())
+                                        .parameter(PathParameterKeys.PAYMENT_ID, uniqueId))
+                        .accept(MediaType.APPLICATION_JSON);
+        addConsentIdToRequestIfExists(request);
+
+        return request.get(SibsGetPaymentResponse.class);
     }
 
     public SibsPaymentUpdateResponse updatePayment(
@@ -220,32 +224,34 @@ public class SibsBaseApiClient {
             SibsPaymentUpdateRequest sibsPaymentUpdateRequest) {
 
         URL updatePaymentUrl = createUrl(SibsConstants.Urls.PAYMENT_REQUEST);
+        RequestBuilder request =
+                client.request(
+                                updatePaymentUrl
+                                        .parameter(
+                                                PathParameterKeys.PAYMENT_PRODUCT,
+                                                sibsPaymentType.getValue())
+                                        .parameter(PathParameterKeys.PAYMENT_ID, uniqueId))
+                        .accept(MediaType.APPLICATION_JSON)
+                        .type(MediaType.APPLICATION_JSON);
+        addConsentIdToRequestIfExists(request);
 
-        return client.request(
-                        updatePaymentUrl
-                                .parameter(
-                                        PathParameterKeys.PAYMENT_PRODUCT,
-                                        sibsPaymentType.getValue())
-                                .parameter(PathParameterKeys.PAYMENT_ID, uniqueId))
-                .header(HeaderKeys.CONSENT_ID, getPaymentConsent())
-                .accept(MediaType.APPLICATION_JSON)
-                .type(MediaType.APPLICATION_JSON)
-                .put(SibsPaymentUpdateResponse.class, sibsPaymentUpdateRequest);
+        return request.put(SibsPaymentUpdateResponse.class, sibsPaymentUpdateRequest);
     }
 
     public SibsCancelPaymentResponse cancelPayment(
             String uniqueId, SibsPaymentType sibsPaymentType) {
         URL cancelPaymentUrl = createUrl(SibsConstants.Urls.PAYMENT_REQUEST);
+        RequestBuilder request =
+                client.request(
+                                cancelPaymentUrl
+                                        .parameter(
+                                                PathParameterKeys.PAYMENT_PRODUCT,
+                                                sibsPaymentType.getValue())
+                                        .parameter(PathParameterKeys.PAYMENT_ID, uniqueId))
+                        .header(SibsConstants.HeaderKeys.PSU_IP_ADDRESS, PSU_IP_ADDRESS);
+        addConsentIdToRequestIfExists(request);
 
-        return client.request(
-                        cancelPaymentUrl
-                                .parameter(
-                                        PathParameterKeys.PAYMENT_PRODUCT,
-                                        sibsPaymentType.getValue())
-                                .parameter(PathParameterKeys.PAYMENT_ID, uniqueId))
-                .header(SibsConstants.HeaderKeys.PSU_IP_ADDRESS, PSU_IP_ADDRESS)
-                .header(HeaderKeys.CONSENT_ID, getPaymentConsent())
-                .delete(SibsCancelPaymentResponse.class);
+        return request.delete(SibsCancelPaymentResponse.class);
     }
 
     public SibsGetPaymentStatusResponse getPaymentStatus(
@@ -265,14 +271,17 @@ public class SibsBaseApiClient {
 
     public SibsGetPaymentStatusResponse getSibsGetPaymentStatusResponse(
             String uniqueId, SibsPaymentType sibsPaymentType, URL paymentStatusUrl) {
-        return client.request(
+
+        RequestBuilder request =
+                client.request(
                         paymentStatusUrl
                                 .parameter(
                                         PathParameterKeys.PAYMENT_PRODUCT,
                                         sibsPaymentType.getValue())
-                                .parameter(PathParameterKeys.PAYMENT_ID, uniqueId))
-                .header(HeaderKeys.CONSENT_ID, getPaymentConsent())
-                .get(SibsGetPaymentStatusResponse.class);
+                                .parameter(PathParameterKeys.PAYMENT_ID, uniqueId));
+        addConsentIdToRequestIfExists(request);
+
+        return request.get(SibsGetPaymentStatusResponse.class);
     }
 
     private SessionException mapHttpException(HttpResponseException exception) {
@@ -291,7 +300,11 @@ public class SibsBaseApiClient {
         return requestBuilder;
     }
 
-    private String getPaymentConsent() {
-        return userState.hasConsentId() ? userState.getConsentId() : "";
+    private void addConsentIdToRequestIfExists(RequestBuilder request) {
+        if (userState.hasConsentId()) {
+            request.header(HeaderKeys.CONSENT_ID, userState.getConsentId());
+        } else {
+            log.info("Sending request to {} without CONSENT_ID", request.getUrl().toString());
+        }
     }
 }

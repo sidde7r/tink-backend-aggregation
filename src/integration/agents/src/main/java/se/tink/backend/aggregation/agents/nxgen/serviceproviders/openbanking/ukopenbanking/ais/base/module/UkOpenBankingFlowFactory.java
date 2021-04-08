@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import se.tink.backend.aggregation.agents.contexts.CompositeAgentContext;
+import se.tink.backend.aggregation.agents.module.agentclass.AgentClass;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingFlowFacade;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.module.toggle.UkOpenBankingFlow;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.module.toggle.UkOpenBankingFlowToggle;
@@ -15,17 +16,20 @@ public class UkOpenBankingFlowFactory implements Provider<UkOpenBankingFlowFacad
     private final CompositeAgentContext context;
     private final AgentComponentProvider agentComponentProvider;
     private final AgentsServiceConfiguration agentsServiceConfiguration;
+    private final Class<?> agentClass;
 
     @Inject
     public UkOpenBankingFlowFactory(
             UkOpenBankingFlowToggle ukOpenBankingFlowToggle,
             CompositeAgentContext context,
             AgentComponentProvider agentComponentProvider,
-            AgentsServiceConfiguration agentsServiceConfiguration) {
+            AgentsServiceConfiguration agentsServiceConfiguration,
+            @AgentClass Class agentClass) {
         this.ukOpenBankingFlowToggle = ukOpenBankingFlowToggle;
         this.context = context;
         this.agentComponentProvider = agentComponentProvider;
         this.agentsServiceConfiguration = agentsServiceConfiguration;
+        this.agentClass = agentClass;
     }
 
     @Override
@@ -33,8 +37,11 @@ public class UkOpenBankingFlowFactory implements Provider<UkOpenBankingFlowFacad
         UkOpenBankingFlowStrategy flow =
                 ukOpenBankingFlowToggle.takeFlow() == UkOpenBankingFlow.EIDAS_PROXY
                         ? new EidasProxyFlow(
-                                context, agentComponentProvider, agentsServiceConfiguration)
-                        : new SecretServiceFlow(context);
+                                context,
+                                agentComponentProvider,
+                                agentsServiceConfiguration,
+                                agentClass)
+                        : new SecretServiceFlow(context, agentClass);
         return flow.get();
     }
 }

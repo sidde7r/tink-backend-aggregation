@@ -4,6 +4,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.tls.TlsConfigurationSetter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.signer.iface.JwtSigner;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
+import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
 
 public class UkOpenBankingFlowFacade {
 
@@ -11,15 +12,18 @@ public class UkOpenBankingFlowFacade {
     private final JwtSigner jwtSigner;
     private final AgentConfiguration<? extends UkOpenBankingClientConfigurationAdapter>
             agentConfiguration;
+    private final EidasIdentity ukEidasIdentity;
 
     public UkOpenBankingFlowFacade(
             TlsConfigurationSetter tlsConfigurationSetter,
             JwtSigner jwtSigner,
             AgentConfiguration<? extends UkOpenBankingClientConfigurationAdapter>
-                    agentConfiguration) {
+                    agentConfiguration,
+            EidasIdentity ukEidasIdentity) {
         this.tlsConfigurationSetter = tlsConfigurationSetter;
         this.jwtSigner = jwtSigner;
         this.agentConfiguration = agentConfiguration;
+        this.ukEidasIdentity = ukEidasIdentity;
     }
 
     public TlsConfigurationSetter getTlsConfigurationSetter() {
@@ -33,5 +37,9 @@ public class UkOpenBankingFlowFacade {
     public AgentConfiguration<? extends UkOpenBankingClientConfigurationAdapter>
             getAgentConfiguration() {
         return this.agentConfiguration;
+    }
+
+    public EidasIdentity getUkEidasIdentity() {
+        return ukEidasIdentity;
     }
 }

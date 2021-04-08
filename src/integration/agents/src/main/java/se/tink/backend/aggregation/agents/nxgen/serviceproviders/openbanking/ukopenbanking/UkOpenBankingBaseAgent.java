@@ -63,6 +63,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.validator.UkOpenBankingPaymentRequestValidator;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
+import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
@@ -99,6 +100,7 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
                 RefreshIdentityDataExecutor,
                 TypedPaymentControllerable {
     private final JwtSigner jwtSigner;
+    private EidasIdentity eidasIdentity;
     private TlsConfigurationSetter tlsConfigurationSetter;
     private AgentConfiguration<? extends UkOpenBankingClientConfigurationAdapter>
             agentConfiguration;
@@ -133,6 +135,7 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
         this.jwtSigner = ukOpenBankingFlowFacade.getJwtSinger();
         this.agentConfiguration = ukOpenBankingFlowFacade.getAgentConfiguration();
         this.tlsConfigurationSetter = ukOpenBankingFlowFacade.getTlsConfigurationSetter();
+        this.eidasIdentity = ukOpenBankingFlowFacade.getUkEidasIdentity();
         this.aisConfig = aisConfig;
         this.pisConfig = pisConfig;
         this.randomValueGenerator = componentProvider.getRandomValueGenerator();
@@ -250,6 +253,14 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
         } else {
             client.setEidasProxy(configuration.getEidasProxy());
         }
+    }
+
+    @Override
+    protected EidasIdentity getEidasIdentity() {
+        if (eidasIdentity != null) {
+            return eidasIdentity;
+        }
+        return super.getEidasIdentity();
     }
 
     protected UkOpenBankingApiClient createApiClient(
