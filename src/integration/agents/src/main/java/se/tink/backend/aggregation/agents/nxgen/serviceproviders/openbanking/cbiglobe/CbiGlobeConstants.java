@@ -167,6 +167,7 @@ public final class CbiGlobeConstants {
     public static class HttpClient {
         public static final int MAX_RETRIES = 5;
         public static final int RETRY_SLEEP_MILLISECONDS = 1000;
+        public static final int RETRY_SLEEP_MILLISECONDS_SLOW_AUTHENTICATION = 3000;
     }
 
     public static class HttpClientParams {
