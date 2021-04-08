@@ -27,13 +27,11 @@ public class ClientConfigurationTemplateBuilder {
     private static final int NUM_SPACES_INDENT = 10;
     private static final String PRETTY_PRINTING_INDENT_PADDING =
             new String(new char[NUM_SPACES_INDENT]).replace((char) 0, ' ');
-    private static final String FIN_IDS_KEY = "finId";
     private static final String PROVIDER_NAME_KEY = "providerId";
     private static final String KEY_DESCRIPTION = "description";
     private static final String KEY_EXAMPLES = "examples";
     private final boolean includeDescriptions;
     private final boolean includeExamples;
-    private final String financialInstitutionId;
     private final String providerName;
     private final ClientConfigurationMetaInfoHandler clientConfigurationMetaInfoHandler;
 
@@ -41,12 +39,11 @@ public class ClientConfigurationTemplateBuilder {
             Provider provider, boolean includeDescriptions, boolean includeExamples) {
         this.includeDescriptions = includeDescriptions;
         this.includeExamples = includeExamples;
-        this.financialInstitutionId = provider.getFinancialInstitutionId();
         this.providerName = provider.getName();
         this.clientConfigurationMetaInfoHandler = new ClientConfigurationMetaInfoHandler(provider);
         Preconditions.checkNotNull(
-                Strings.emptyToNull(this.financialInstitutionId),
-                "financialInstitutionId in requested provider cannot be null.");
+                Strings.emptyToNull(this.providerName),
+                "providerName in requested provider cannot be null.");
     }
 
     public String buildTemplate() {
@@ -108,10 +105,6 @@ public class ClientConfigurationTemplateBuilder {
 
         JsonObject jsonConfigurationTemplate = new JsonObject();
         jsonConfigurationTemplates.add(jsonConfigurationTemplate);
-
-        JsonArray jsonFinancialInstitutionIdsArray = new JsonArray();
-        jsonConfigurationTemplate.add(FIN_IDS_KEY, jsonFinancialInstitutionIdsArray);
-        jsonFinancialInstitutionIdsArray.add(new JsonPrimitive(financialInstitutionId));
 
         JsonArray jsonProviderNamesArray = new JsonArray();
         jsonConfigurationTemplate.add(PROVIDER_NAME_KEY, jsonProviderNamesArray);
