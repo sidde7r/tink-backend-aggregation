@@ -20,6 +20,8 @@ import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 
@@ -71,7 +73,12 @@ public class JyskeBankAgent extends NextGenerationAgent
         final JyskeBankAccountFetcher fetcher = new JyskeBankAccountFetcher(apiClient);
 
         return new TransactionalAccountRefreshController(
-                metricRefreshController, updateController, fetcher, null);
+                metricRefreshController,
+                updateController,
+                fetcher,
+                new TransactionFetcherController<>(
+                        transactionPaginationHelper,
+                        new TransactionPagePaginationController<>(fetcher, 0)));
     }
 
     @Override
