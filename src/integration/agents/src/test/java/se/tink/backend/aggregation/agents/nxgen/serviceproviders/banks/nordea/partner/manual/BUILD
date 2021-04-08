@@ -13,6 +13,9 @@ junit_test(
     ],
     visibility = ["//visibility:public"],
     runtime_deps = [
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/dk/banks/nordeapartner",
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/fi/banks/nordea/partner",
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/no/banks/nordeapartner",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/se/banks/nordea/partner",
     ],
     deps = [
