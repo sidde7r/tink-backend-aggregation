@@ -26,7 +26,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.signer.iface.JwtSigner;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.configuration.UkOpenBankingPisConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
@@ -39,8 +38,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 public final class UlsterV31Agent extends UkOpenBankingBaseAgent {
 
     private static final UkOpenBankingAisConfig aisConfig;
-    private ConsentStatusValidator consentValidator;
-    private final LocalDateTimeSource localDateTimeSource;
 
     static {
         aisConfig =
@@ -62,7 +59,6 @@ public final class UlsterV31Agent extends UkOpenBankingBaseAgent {
                         UlsterConstants.PIS_API_URL, UlsterConstants.WELL_KNOWN_URL),
                 createPisRequestFilterUsingPs256WithoutBase64Signature(
                         jwtSigner, componentProvider.getRandomValueGenerator()));
-        this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
     }
 
     @Override
@@ -78,8 +74,6 @@ public final class UlsterV31Agent extends UkOpenBankingBaseAgent {
     }
 
     public UkOpenBankingAisAuthenticationController createUkObAuthController() {
-        this.consentValidator = new ConsentStatusValidator(this.apiClient, this.persistentStorage);
-
         return new UkOpenBankingAisAuthenticationController(
                 this.persistentStorage,
                 this.supplementalInformationHelper,
@@ -90,7 +84,7 @@ public final class UlsterV31Agent extends UkOpenBankingBaseAgent {
                 this.request.getCallbackUri(),
                 this.randomValueGenerator,
                 new OpenIdAuthenticationValidator(this.apiClient),
-                this.consentValidator);
+                new ConsentStatusValidator(this.apiClient, this.persistentStorage));
     }
 
     public AutoAuthenticationController createAutoAuthController(
