@@ -335,10 +335,13 @@ spec:
     ### Split login success rates - All Errors - RE ###
     ###################################################
 
+    # As there is a lot of errors for incorrect credentials and blocked account for Spanish market login-manual action is excluded from this alert
+    # to decrease the number of non-actionable alerts. If something will be really wrong it will be covered by `All login success rates` alert
+
     - alert: SplitLoginSuccessRatesBelow50WithAllErrorsAndAttemptLimitES_RE
       expr: |
-          sum(sum_over_time(tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="ES"}[60m])) by (provider, action)
-                / sum(sum_over_time(tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"}[60m])) by (provider, action) < 0.5
+          sum(sum_over_time(tink_agent_login_total{ {{ .Values.loginActionsWithoutManual }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="ES"}[60m])) by (provider, action)
+                / sum(sum_over_time(tink_agent_login_total{ {{ .Values.loginActionsWithoutManual }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"}[60m])) by (provider, action) < 0.5
       for: 30m
       labels:
         severity: urgent

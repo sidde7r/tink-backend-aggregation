@@ -25,6 +25,7 @@ allErrorsRefresh: outcome!~"failed|unavailable|partially_completed"
 
 allLoginActions: action=~"login-auto|login-manual|login-cron|is-logged-in|persist-login-session"
 manualLoginActions: action=~"login-manual|is-logged-in"
+loginActionsWithoutManual: action=~"login-auto|login-cron|is-logged-in|persist-login-session"
 
 obAgents: provider=~".*-ob|.*-oauth2"
 reAgents: provider!~".*-ob|.*-oauth2"
