@@ -114,11 +114,12 @@ public class FrOpenBankingPaymentExecutor implements PaymentExecutor, FetchableP
                         .withCreditorName(new CreditorEntity(CREDITOR_NAME))
                         .withDebtorAccount(debtor)
                         .withExecutionDate(executionDate)
-                        .withCreationDateTime(LocalDateTime.now())
+                        .withCreationDateTime(LocalDateTime.now(Clock.system(DEFAULT_ZONE_ID)))
                         .withRedirectUrl(
                                 new URL(redirectUrl)
                                         .queryParam(STATE, strongAuthenticationState.getState()))
                         .withRemittanceInformation(remittanceInformation.getValue())
+                        .withPaymentScheme(payment.getPaymentScheme())
                         .build();
 
         CreatePaymentResponse paymentResponse = apiClient.createPayment(createPaymentRequest);

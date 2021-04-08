@@ -21,6 +21,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fro
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.payment.enums.PaymentType;
+import se.tink.libraries.payments.common.model.PaymentScheme;
 
 @Getter
 @JsonObject
@@ -57,7 +58,11 @@ public class CreatePaymentRequest {
         initiatingParty = new InitiatingPartyEntity("TINK");
         paymentTypeInformation =
                 new PaymentTypeInformationEntity(
-                        builder.paymentType.toString().toUpperCase(), "CASH");
+                        builder.paymentType.toString().toUpperCase(),
+                        PaymentScheme.SEPA_INSTANT_CREDIT_TRANSFER == builder.paymentScheme
+                                ? "INST"
+                                : null,
+                        "CASH");
         debtorAccount = builder.debtorAccount;
         beneficiary = new BeneficiaryEntity(builder.creditorEntity, builder.creditorAccount);
         creditTransferTransaction =
@@ -83,6 +88,7 @@ public class CreatePaymentRequest {
         private PaymentType paymentType;
         private String redirectUrl;
         private String remittanceInformation;
+        private PaymentScheme paymentScheme;
 
         public Builder withPaymentType(PaymentType paymentType) {
             this.paymentType = paymentType;
@@ -128,6 +134,11 @@ public class CreatePaymentRequest {
 
         public Builder withRemittanceInformation(String remittanceInformation) {
             this.remittanceInformation = remittanceInformation;
+            return this;
+        }
+
+        public Builder withPaymentScheme(PaymentScheme paymentScheme) {
+            this.paymentScheme = paymentScheme;
             return this;
         }
 
