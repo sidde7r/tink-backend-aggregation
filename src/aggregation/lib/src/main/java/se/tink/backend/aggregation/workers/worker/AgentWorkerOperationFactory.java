@@ -487,7 +487,7 @@ public class AgentWorkerOperationFactory {
         ControllerWrapper controllerWrapper =
                 controllerWrapperProvider.createControllerWrapper(clientInfo.getClusterId());
 
-        final String correlationId = UUIDUtils.generateUUID();
+        final String correlationId = generateOrGetCorrelationId(request.getOperationId());
 
         AgentWorkerCommandContext context =
                 new AgentWorkerCommandContext(
