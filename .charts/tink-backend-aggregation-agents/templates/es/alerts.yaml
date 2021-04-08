@@ -17,7 +17,7 @@ spec:
             / sum(sum_over_time(tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"}[60m])) by (provider) < 0.95
           and sum(sum_over_time(tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="ES"}[60m])) by (provider)
             / sum(sum_over_time(tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"}[60m])) by (provider) >= 0.9
-      for: 5m
+      for: 15m
       labels:
         severity: urgent
         priority: P4
@@ -25,8 +25,8 @@ spec:
       annotations:
         description: {{ .Values.kibanaLink }}
              {{ .Values.grafanaLink }}
-        summary: Login success rate for RE agents and all authentication types with temporary errors is between 95 - 90% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
-                      the last 60 minutes.
+        summary: Login success rate for RE agents and all authentication types with temporary errors is between 95 - 90% with the value ( <{ $value }> ) for the last the last 60 minutes
+            for <{ $labels.className }> ( <{ $labels.provider }> ) and it was belov for last 75 minutes.
         tags: {{ .Values.tags }}
 
     - alert: AllLoginSuccessRatesBelow90AndGreater80WithTemporaryErrorsAndAttemptLimitES_RE
@@ -35,7 +35,7 @@ spec:
             / sum(sum_over_time(tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"}[60m])) by (provider) < 0.9
           and sum(sum_over_time(tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="ES"}[60m])) by (provider)
             / sum(sum_over_time(tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"}[60m])) by (provider) >= 0.8
-      for: 5m
+      for: 15m
       labels:
         severity: urgent
         priority: P3
@@ -43,8 +43,8 @@ spec:
       annotations:
         description: {{ .Values.kibanaLink }}
              {{ .Values.grafanaLink }}
-        summary: Login success rate for RE agents and for all authentication types with temporary errors is between 90 - 80% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
-             the last 60 minutes.
+        summary: Login success rate for RE agents and for all authentication types with temporary errors is between 90 - 80% with the value ( <{ $value }> ) for the last the last 60 minutes
+          for <{ $labels.className }> ( <{ $labels.provider }> ) and it was belov for last 75 minutes.
         tags: {{ .Values.tags }}
 
     - alert: AllLoginSuccessRatesBelow80AndGreater60WithTemporaryErrorsAndAttemptLimitES_RE
@@ -91,7 +91,7 @@ spec:
             / sum(sum_over_time(tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"}[60m])) by (provider, action) < 0.95
           and sum(sum_over_time(tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="ES"}[60m])) by (provider, action)
             / sum(sum_over_time(tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"}[60m])) by (provider, action) >= 0.9
-      for: 5m
+      for: 15m
       labels:
         severity: urgent
         priority: P4
@@ -99,8 +99,8 @@ spec:
       annotations:
         description: {{ .Values.kibanaLink }}
              {{ .Values.grafanaLink }}
-        summary: Login success rate for RE agents and for one of login type with temporary errors is between 95 - 90% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
-             the last 60 minutes.
+        summary: Login success rate for RE agents and for one of login type with temporary errors is between 95 - 90% with the value ( <{ $value }> ) for the last the last 60 minutes
+          for <{ $labels.className }> ( <{ $labels.provider }> ) and it was belov for last 75 minutes.
         tags: {{ .Values.tags }}
 
     - alert: SplitLoginSuccessRatesBelow90AndGreater80WithTemporaryErrorsAndAttemptLimitES_RE
@@ -109,7 +109,7 @@ spec:
             / sum(sum_over_time(tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"}[60m])) by (provider, action) < 0.9
           and sum(sum_over_time(tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="ES"}[60m])) by (provider, action)
             / sum(sum_over_time(tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"}[60m])) by (provider, action) >= 0.8
-      for: 5m
+      for: 15m
       labels:
         severity: urgent
         priority: P3
@@ -117,8 +117,8 @@ spec:
       annotations:
         description: {{ .Values.kibanaLink }}
              {{ .Values.grafanaLink }}
-        summary: Login success rate for RE agents and for one of login type with temporary errors is between 90 - 80% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
-             the last 60 minutes.
+        summary: Login success rate for RE agents and for one of login type with temporary errors is between 90 - 80% with the value ( <{ $value }> ) for the last the last 60 minutes
+              for <{ $labels.className }> ( <{ $labels.provider }> ) and it was belov for last 75 minutes.
         tags: {{ .Values.tags }}
 
     - alert: SplitLoginSuccessRatesBelow80AndGreater60WithTemporaryErrorsAndAttemptLimitES_RE
