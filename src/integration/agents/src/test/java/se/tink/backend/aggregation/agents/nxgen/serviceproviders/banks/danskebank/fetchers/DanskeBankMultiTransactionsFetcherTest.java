@@ -5,6 +5,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConstants.Transactions.ZONE_ID;
 
 import java.io.File;
 import java.math.BigDecimal;
@@ -12,9 +13,13 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.stream.IntStream;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
+import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.ListTransactionsRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.ListTransactionsResponse;
@@ -27,11 +32,13 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class DanskeBankMultiTransactionsFetcherTest {
 
     private static final String TRANSACTIONS_CONTINUATION_KEY = "xyz";
+    private static final String ACCOUNT_NUMBER = "4899999999";
 
     private static final String ENTITIES_FILE_PATH =
             "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/banks/danskebank/resources/";
@@ -42,7 +49,8 @@ public class DanskeBankMultiTransactionsFetcherTest {
             ENTITIES_FILE_PATH + "accountTransactionsWithContinuation.json";
 
     private DanskeBankApiClient client;
-    private DanskeBankMultiTransactionsFetcher<TransactionalAccount> fetcher;
+    private DanskeBankMultiTransactionsFetcher<TransactionalAccount> fetcherForInitialRequest;
+    private DanskeBankMultiTransactionsFetcher<TransactionalAccount> fetcherForNotInitialRefresh;
 
     private TransactionalAccount transactionalAccount;
     private Date dateTo;
@@ -52,12 +60,34 @@ public class DanskeBankMultiTransactionsFetcherTest {
     @Before
     public void before() {
         client = mock(DanskeBankApiClient.class);
-        fetcher = new DanskeBankMultiTransactionsFetcher<>(client, "en");
-
         transactionalAccount = getTransactionalAccount();
         now = LocalDate.of(2021, 3, 30);
+
         dateTo = parseLocalDate(now);
         dateFrom = parseLocalDate(now.minusDays(89));
+
+        mockSituationWhenThereIsNoAccountInContext();
+        mockSituationWhenThereIsAccountWithCertainDateInContext();
+    }
+
+    private void mockSituationWhenThereIsNoAccountInContext() {
+        CredentialsRequest credentialsRequest = Mockito.mock(CredentialsRequest.class);
+        List<Account> credentialsRequestAccounts = new LinkedList<>();
+        Mockito.when(credentialsRequest.getAccounts()).thenReturn(credentialsRequestAccounts);
+        fetcherForInitialRequest =
+                new DanskeBankMultiTransactionsFetcher<>(client, "en", credentialsRequest);
+    }
+
+    private void mockSituationWhenThereIsAccountWithCertainDateInContext() {
+        CredentialsRequest credentialsRequest = Mockito.mock(CredentialsRequest.class);
+        List<Account> credentialsRequestAccounts = new LinkedList<>();
+        Account account = new Account();
+        account.setCertainDate(Date.from(now.minusDays(10).atStartOfDay(ZONE_ID).toInstant()));
+        account.setBankId(ACCOUNT_NUMBER);
+        credentialsRequestAccounts.add(account);
+        Mockito.when(credentialsRequest.getAccounts()).thenReturn(credentialsRequestAccounts);
+        fetcherForNotInitialRefresh =
+                new DanskeBankMultiTransactionsFetcher<>(client, "en", credentialsRequest);
     }
 
     @Test
@@ -93,9 +123,35 @@ public class DanskeBankMultiTransactionsFetcherTest {
 
         // when
         PaginatorResponse paginatorResponse =
-                fetcher.getTransactionsFor(transactionalAccount, dateFrom, dateTo);
+                fetcherForInitialRequest.getTransactionsFor(transactionalAccount, dateFrom, dateTo);
         // then
         assertThat(paginatorResponse.getTinkTransactions()).hasSize(12);
+        // and
+        Transaction transaction1 =
+                paginatorResponse.getTinkTransactions().stream()
+                        .filter(
+                                transaction ->
+                                        "Til Allan konto".equals(transaction.getDescription()))
+                        .findAny()
+                        .orElseThrow(() -> new IllegalStateException("Transaction not found"));
+        assertThat(transaction1.getExactAmount().getCurrencyCode()).isEqualTo("DKK");
+        assertThat(transaction1.getExactAmount().getExactValue())
+                .isEqualByComparingTo(new BigDecimal("-200.00"));
+        assertThat(transaction1.getDate()).isEqualToIgnoringHours("2020-01-13");
+    }
+
+    @Test
+    public void shouldFetchTransactionsForAccountAndMapCorrectlyForNotInitialRefresh() {
+        // given
+        mockAccountTransactionsQueriedByDate(
+                "", ACCOUNT_TRANSACTIONS_WITHOUT_CONTINUATION_PATH, now.minusDays(89), now);
+
+        // when
+        PaginatorResponse paginatorResponse =
+                fetcherForNotInitialRefresh.getTransactionsFor(
+                        transactionalAccount, dateFrom, dateTo);
+        // then
+        assertThat(paginatorResponse.getTinkTransactions()).hasSize(2);
         // and
         Transaction transaction1 =
                 paginatorResponse.getTinkTransactions().stream()
@@ -116,7 +172,7 @@ public class DanskeBankMultiTransactionsFetcherTest {
         mockAllTransactionsResponse(ACCOUNT_TRANSACTIONS_WITHOUT_CONTINUATION_PATH);
 
         // when
-        fetcher.getTransactionsFor(transactionalAccount, dateFrom, dateTo);
+        fetcherForInitialRequest.getTransactionsFor(transactionalAccount, dateFrom, dateTo);
 
         // then
         IntStream.range(0, 4)
@@ -174,13 +230,13 @@ public class DanskeBankMultiTransactionsFetcherTest {
                 .withBalance(BalanceModule.of(ExactCurrencyAmount.inDKK(1)))
                 .withId(
                         IdModule.builder()
-                                .withUniqueIdentifier("UNIQUE_IDENTIFIER")
-                                .withAccountNumber("4899999999")
+                                .withUniqueIdentifier(ACCOUNT_NUMBER)
+                                .withAccountNumber(ACCOUNT_NUMBER)
                                 .withAccountName("")
                                 .addIdentifier(
                                         AccountIdentifier.create(AccountIdentifierType.IBAN, ""))
                                 .build())
-                .setApiIdentifier("4899999999")
+                .setApiIdentifier(ACCOUNT_NUMBER)
                 .build()
                 .orElseThrow(IllegalStateException::new);
     }

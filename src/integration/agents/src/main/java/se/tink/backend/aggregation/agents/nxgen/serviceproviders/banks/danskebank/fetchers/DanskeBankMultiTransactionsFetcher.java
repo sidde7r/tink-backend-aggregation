@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers;
 
+import static java.time.temporal.ChronoUnit.DAYS;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConstants.Transactions.NUM_DAYS_IN_PARTITION;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConstants.Transactions.PARTITION_COUNT;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConstants.Transactions.ZONE_ID;
@@ -31,6 +32,7 @@ import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.nxgen.core.transaction.UpcomingTransaction;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 
 @RequiredArgsConstructor
 public class DanskeBankMultiTransactionsFetcher<A extends Account>
@@ -38,13 +40,21 @@ public class DanskeBankMultiTransactionsFetcher<A extends Account>
 
     private final DanskeBankApiClient apiClient;
     private final String languageCode;
+    private final CredentialsRequest credentialsRequest;
 
     @Override
     public PaginatorResponse getTransactionsFor(A account, Date fromDate, Date toDate) {
         LocalDate to = toDate.toInstant().atZone(ZONE_ID).toLocalDate();
 
+        LocalDate updateDate = getCertainDate(account);
+        int partitionCount = 1;
+        if (updateDate == null
+                || DAYS.between(updateDate, LocalDate.now()) > NUM_DAYS_IN_PARTITION - 1) {
+            partitionCount = PARTITION_COUNT;
+        }
+
         List<Transaction> transactions =
-                Observable.range(0, PARTITION_COUNT)
+                Observable.range(0, partitionCount)
                         .map(partitionNumber -> calculatePartitionDates(partitionNumber, to))
                         .concatMapEager(
                                 partitionPeriod ->
@@ -55,7 +65,20 @@ public class DanskeBankMultiTransactionsFetcher<A extends Account>
                         .toList()
                         .blockingGet();
 
+        if (partitionCount == 0) {
+            return PaginatorResponseImpl.create(transactions, false);
+        }
+
         return PaginatorResponseImpl.create(transactions);
+    }
+
+    private LocalDate getCertainDate(Account account) {
+        return credentialsRequest.getAccounts().stream()
+                .filter(rpcAccount -> account.isUniqueIdentifierEqual(rpcAccount.getBankId()))
+                .findAny()
+                .map(se.tink.backend.agents.rpc.Account::getCertainDate)
+                .map(d -> new java.sql.Date(d.getTime()).toLocalDate())
+                .orElse(null);
     }
 
     private Pair<String, String> calculatePartitionDates(Integer partitionNumber, LocalDate now) {

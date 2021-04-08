@@ -187,7 +187,7 @@ public final class DanskeBankDKAgent extends DanskeBankAgent
     private TransactionFetcherController createTransactionFetcherController() {
         DanskeBankMultiTransactionsFetcher<? extends Account> transactionFetcher =
                 new DanskeBankMultiTransactionsFetcher<>(
-                        this.apiClient, this.configuration.getLanguageCode());
+                        this.apiClient, this.configuration.getLanguageCode(), request);
         return new TransactionFetcherController<>(
                 this.transactionPaginationHelper,
                 new TransactionDatePaginationController.Builder<>(transactionFetcher)
