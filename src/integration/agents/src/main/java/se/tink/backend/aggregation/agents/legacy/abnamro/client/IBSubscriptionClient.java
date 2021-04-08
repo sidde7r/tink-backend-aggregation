@@ -22,7 +22,6 @@ import se.tink.backend.aggregation.agents.abnamro.client.model.creditcards.Credi
 import se.tink.backend.aggregation.agents.abnamro.client.rpc.ErrorResponse;
 import se.tink.backend.aggregation.agents.abnamro.client.rpc.PfmContractResponse;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
-import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.configuration.integrations.abnamro.AbnAmroConfiguration;
 import se.tink.backend.aggregation.configuration.integrations.abnamro.AbnAmroInternetBankingConfiguration;
 import se.tink.libraries.metrics.core.MetricId;
@@ -53,7 +52,12 @@ public class IBSubscriptionClient extends IBClient {
         ClientResponse response = new IBClientRequestBuilder(url).build().get(ClientResponse.class);
 
         if (response.getStatus() == 403) {
-            throw LoginError.INVALIDATED_CREDENTIALS.exception(response.getEntity(String.class));
+            log.info("List<PfmContractEntity> getContracts: 403 error");
+            try {
+                throw new IllegalStateException(response.getEntity(String.class));
+            } catch (Exception e) {
+                throw new IllegalStateException(e.getMessage());
+            }
         }
 
         validateContentType(response, MediaType.APPLICATION_JSON_TYPE);
