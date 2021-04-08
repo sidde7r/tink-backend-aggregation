@@ -68,6 +68,7 @@ junit_test(
         "//third_party:org_assertj_assertj_core",
         "//third_party:org_mockito_mockito_core",
         "//third_party:org_modelmapper_modelmapper",
+        "//third_party:pl_pragmatists_junitparams",
         "//third_party:prometheus",
         "@com_google_http_client_google_http_client",
         "@com_google_protobuf//:protobuf_java",
