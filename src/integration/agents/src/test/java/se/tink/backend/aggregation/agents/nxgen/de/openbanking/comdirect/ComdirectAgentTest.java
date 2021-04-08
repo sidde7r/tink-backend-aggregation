@@ -13,7 +13,7 @@ public class ComdirectAgentTest {
     private AgentIntegrationTest.Builder builder;
 
     private final ArgumentManager<ArgumentManager.UsernameArgumentEnum> manager =
-            new ArgumentManager<>(UsernameArgumentEnum.values());;
+            new ArgumentManager<>(UsernameArgumentEnum.values());
 
     @AfterClass
     public static void afterClass() {
@@ -28,7 +28,7 @@ public class ComdirectAgentTest {
                         .addCredentialField(
                                 Key.USERNAME, manager.get(UsernameArgumentEnum.USERNAME))
                         .expectLoggedIn(false)
-                        .loadCredentialsBefore(true)
+                        .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
                         .setFinancialInstitutionId("comdirect")
                         .setAppId("tink");
