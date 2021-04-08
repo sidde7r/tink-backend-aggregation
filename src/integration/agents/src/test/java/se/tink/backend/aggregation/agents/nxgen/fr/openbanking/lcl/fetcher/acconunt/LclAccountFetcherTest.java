@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.fetcher.acco
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.LclTestFixtures.IBAN;
@@ -14,13 +13,12 @@ import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.LclTes
 import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.LclTestFixtures.createLclDataConverterMock;
 
 import com.google.common.collect.ImmutableList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.backend.aggregation.agents.exceptions.refresh.AccountRefreshException;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.apiclient.LclApiClient;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.apiclient.dto.account.AccountResourceDto;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.apiclient.dto.account.AccountsResponseDto;
@@ -31,7 +29,6 @@ import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.fecther.accou
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.fecther.converter.LclDataConverter;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.amount.ExactCurrencyAmount;
-import se.tink.libraries.mapper.PrioritizedValueExtractor;
 
 public class LclAccountFetcherTest {
 
@@ -39,18 +36,13 @@ public class LclAccountFetcherTest {
 
     private LclApiClient apiClientMock;
 
-    private PrioritizedValueExtractor prioritizedValueExtractorMock;
-
     @Before
     public void setUp() {
         final LclDataConverter dataConverterMock = createLclDataConverterMock();
 
         apiClientMock = mock(LclApiClient.class);
-        prioritizedValueExtractorMock = mock(PrioritizedValueExtractor.class);
 
-        lclAccountFetcher =
-                new LclAccountFetcher(
-                        apiClientMock, prioritizedValueExtractorMock, dataConverterMock);
+        lclAccountFetcher = new LclAccountFetcher(apiClientMock, dataConverterMock);
     }
 
     @Test
@@ -58,12 +50,9 @@ public class LclAccountFetcherTest {
         // given
         final AccountsResponseDto accountsResponseDtoMock = createAccountsResponseDto();
         final BalanceResourceDto clbdBalance = createBalanceResourceDtoMock(BalanceType.CLBD);
-        setUpAccountsResponseForCaccAccount(accountsResponseDtoMock, ImmutableList.of(clbdBalance));
+        setUpAccountsResponseForCaccAccount(accountsResponseDtoMock, Arrays.asList(clbdBalance));
 
         when(apiClientMock.getAccountsResponse()).thenReturn(accountsResponseDtoMock);
-
-        when(prioritizedValueExtractorMock.pickByValuePriority(any(), any(), any()))
-                .thenReturn(Optional.of(clbdBalance));
 
         // when
         final List<TransactionalAccount> returnedResult = lclAccountFetcher.fetchAccounts();
@@ -106,12 +95,9 @@ public class LclAccountFetcherTest {
         final BalanceResourceDto clbdBalance = createBalanceResourceDtoMock(BalanceType.CLBD);
         final BalanceResourceDto xpcdBalance = createBalanceResourceDtoMock(BalanceType.XPCD);
         setUpAccountsResponseForCaccAccount(
-                accountsResponseDtoMock, ImmutableList.of(clbdBalance, xpcdBalance));
+                accountsResponseDtoMock, Arrays.asList(clbdBalance, xpcdBalance));
 
         when(apiClientMock.getAccountsResponse()).thenReturn(accountsResponseDtoMock);
-
-        when(prioritizedValueExtractorMock.pickByValuePriority(any(), any(), any()))
-                .thenReturn(Optional.of(clbdBalance));
 
         // when
         final List<TransactionalAccount> returnedResult = lclAccountFetcher.fetchAccounts();
@@ -137,22 +123,17 @@ public class LclAccountFetcherTest {
         // given
         final AccountsResponseDto accountsResponseDtoMock = createAccountsResponseDto();
         final BalanceResourceDto otherBalance = createBalanceResourceDtoMock(BalanceType.OTHR);
-        setUpAccountsResponseForCaccAccount(
-                accountsResponseDtoMock, ImmutableList.of(otherBalance));
+        setUpAccountsResponseForCaccAccount(accountsResponseDtoMock, Collections.emptyList());
 
         when(apiClientMock.getAccountsResponse()).thenReturn(accountsResponseDtoMock);
-
-        when(prioritizedValueExtractorMock.pickByValuePriority(any(), any(), any()))
-                .thenReturn(Optional.empty());
 
         // when
         final Throwable thrown = catchThrowable(lclAccountFetcher::fetchAccounts);
 
         // then
         assertThat(thrown)
-                .isExactlyInstanceOf(AccountRefreshException.class)
-                .hasMessage(
-                        "Could not extract account balance. No available balance with type of: CLBD, XPCD");
+                .isExactlyInstanceOf(IllegalArgumentException.class)
+                .hasMessage("Cannot determine booked balance from empty list of balances.");
     }
 
     private static void setUpAccountsResponseForCaccAccount(

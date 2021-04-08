@@ -63,7 +63,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
-import se.tink.libraries.mapper.PrioritizedValueExtractor;
 
 @AgentDependencyModules(modules = QSealcSignerModuleRSASHA256.class)
 @AgentCapabilities({CHECKING_ACCOUNTS, IDENTITY_DATA, LIST_BENEFICIARIES, TRANSFERS, CREDIT_CARDS})
@@ -219,10 +218,8 @@ public final class LclAgent extends SubsequentProgressiveGenerationAgent
     }
 
     private TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
-        final PrioritizedValueExtractor prioritizedValueExtractor = new PrioritizedValueExtractor();
         final LclAccountFetcher accountFetcher =
-                new LclAccountFetcher(
-                        this.lclApiClient, prioritizedValueExtractor, this.dataConverter);
+                new LclAccountFetcher(this.lclApiClient, this.dataConverter);
         final LclTransactionFetcher transactionFetcher =
                 new LclTransactionFetcher(this.lclApiClient, this.dataConverter);
 
