@@ -242,6 +242,10 @@ public class WireMockTestServer {
             return WireMock.patch(urlPattern);
         }
 
+        if ("delete".equalsIgnoreCase(method)) {
+            return WireMock.delete(urlPattern);
+        }
+
         throw new RuntimeException(
                 "The following HTTP method cannot be handled by the test framework : " + method);
     }

@@ -91,11 +91,16 @@ public class AapFileParser implements RequestResponseParser {
         return httpResponseBuilder.build();
     }
 
+    /**
+     * Headers start at third line Headers end before empty line If request/response has no body (no
+     * content), there is no empty line - headers continue till the end
+     */
     private ImmutableSet<Pair<String, String>> parseHeaders(List<String> rawData) {
-        /*
-         * Starting from third line, we have response headers. Headers continue until empty line
-         */
         int firstEmptyLineIndex = rawData.indexOf("");
+        if (firstEmptyLineIndex == -1) {
+            firstEmptyLineIndex = rawData.size();
+        }
+
         return rawData.subList(2, firstEmptyLineIndex).stream()
                 .map(this::parseHeader)
                 .collect(ImmutableSet.toImmutableSet());
