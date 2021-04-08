@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank;
 
+import java.time.temporal.ChronoUnit;
+import java.util.TimeZone;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
@@ -191,6 +193,9 @@ public abstract class DanskeBankAgent<MarketSpecificApiClient extends DanskeBank
                 this.transactionPaginationHelper,
                 new TransactionDatePaginationController.Builder<>(transactionFetcher)
                         .setLocalDateTimeSource(localDateTimeSource)
+                        .setConsecutiveEmptyPagesLimit(1)
+                        .setAmountAndUnitToFetch(359, ChronoUnit.DAYS)
+                        .setZoneId(TimeZone.getTimeZone("Europe/Stockholm").toZoneId())
                         .build(),
                 transactionFetcher);
     }

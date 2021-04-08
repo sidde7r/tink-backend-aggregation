@@ -48,6 +48,8 @@ junit_test(
         "//src/integration/enums",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions/bankservice",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/compliance/account_capabilities",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/refresh",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/core/account",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/exceptions/client",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/response",
@@ -59,5 +61,6 @@ junit_test(
         "//third_party:org_mockito_mockito_core",
         "//third_party:pl_pragmatists_junitparams",
         "@aggregation//:com_fasterxml_jackson_core_jackson_core",
+        "@tink_backend//src/libraries/account_identifier",
     ],
 )

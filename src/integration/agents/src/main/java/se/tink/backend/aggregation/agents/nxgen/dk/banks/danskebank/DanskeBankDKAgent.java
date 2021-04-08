@@ -9,6 +9,8 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
 
 import com.google.inject.Inject;
+import java.time.temporal.ChronoUnit;
+import java.util.TimeZone;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
@@ -58,7 +60,7 @@ public final class DanskeBankDKAgent extends DanskeBankAgent
                 RefreshSavingsAccountsExecutor,
                 RefreshIdentityDataExecutor {
 
-    private static final int DK_MAX_CONSECUTIVE_EMPTY_PAGES = 8;
+    private static final int DK_MAX_CONSECUTIVE_EMPTY_PAGES = 1;
     private final LoanRefreshController loanRefreshController;
     private final CreditCardRefreshController creditCardRefreshController;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
@@ -189,6 +191,8 @@ public final class DanskeBankDKAgent extends DanskeBankAgent
                 this.transactionPaginationHelper,
                 new TransactionDatePaginationController.Builder<>(transactionFetcher)
                         .setConsecutiveEmptyPagesLimit(DK_MAX_CONSECUTIVE_EMPTY_PAGES)
+                        .setAmountAndUnitToFetch(359, ChronoUnit.DAYS)
+                        .setZoneId(TimeZone.getTimeZone("Europe/Stockholm").toZoneId())
                         .build(),
                 transactionFetcher);
     }
