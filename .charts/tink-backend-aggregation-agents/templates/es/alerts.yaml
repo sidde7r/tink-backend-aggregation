@@ -13,12 +13,11 @@ spec:
 
     - alert: AllLoginSuccessRatesBelow95AndGreater90WithTemporaryErrorsAndAttemptLimitES_RE
       expr: |
-          (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }}  , market="ES"}))
-                               / (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"})) < 0.95
-                and (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="ES"}))
-                               / (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"})) >= 0.9
-               and sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"}) > 3
-      for: {{ .Values.p4WaitTimeBeforeFiringAlert }}
+          sum(sum_over_time(tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }}  , market="ES"}[60m])) by (provider)
+            / sum(sum_over_time(tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"}[60m])) by (provider) < 0.95
+          and sum(sum_over_time(tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="ES"}[60m])) by (provider)
+            / sum(sum_over_time(tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"}[60m])) by (provider) >= 0.9
+      for: 5m
       labels:
         severity: urgent
         priority: P4
@@ -27,17 +26,16 @@ spec:
         description: {{ .Values.kibanaLink }}
              {{ .Values.grafanaLink }}
         summary: Login success rate for RE agents and all authentication types with temporary errors is between 95 - 90% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
-                      the last {{ .Values.p4WaitTimeBeforeFiringAlert }}.
+                      the last 60 minutes.
         tags: {{ .Values.tags }}
 
     - alert: AllLoginSuccessRatesBelow90AndGreater80WithTemporaryErrorsAndAttemptLimitES_RE
       expr: |
-          (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="ES"}))
-                                / (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"})) < 0.9
-                 and (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="ES"}))
-                                / (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"})) >= 0.8
-                and sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"}) > 3
-      for: {{ .Values.p3WaitTimeBeforeFiringAlert }}
+          sum(sum_over_time(tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="ES"}[60m])) by (provider)
+            / sum(sum_over_time(tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"}[60m])) by (provider) < 0.9
+          and sum(sum_over_time(tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="ES"}[60m])) by (provider)
+            / sum(sum_over_time(tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"}[60m])) by (provider) >= 0.8
+      for: 5m
       labels:
         severity: urgent
         priority: P3
@@ -46,17 +44,16 @@ spec:
         description: {{ .Values.kibanaLink }}
              {{ .Values.grafanaLink }}
         summary: Login success rate for RE agents and for all authentication types with temporary errors is between 90 - 80% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
-             the last {{ .Values.p3WaitTimeBeforeFiringAlert }}.
+             the last 60 minutes.
         tags: {{ .Values.tags }}
 
     - alert: AllLoginSuccessRatesBelow80AndGreater60WithTemporaryErrorsAndAttemptLimitES_RE
       expr: |
-          (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="ES"}))
-                            / (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"})) < 0.8
-                 and (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="ES"}))
-                                / (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"})) >= 0.6
-                and sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"}) > 3
-      for: {{ .Values.p2WaitTimeBeforeFiringAlert }}
+          sum(sum_over_time(tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="ES"}[60m])) by (provider)
+            / sum(sum_over_time(tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"}[60m])) by (provider) < 0.8
+          and sum(sum_over_time(tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="ES"}[60m])) by (provider)
+            / sum(sum_over_time(tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"}[60m])) by (provider) >= 0.6
+      for: 5m
       labels:
         severity: urgent
         priority: P2
@@ -65,15 +62,14 @@ spec:
         description: {{ .Values.kibanaLink }}
              {{ .Values.grafanaLink }}
         summary: Login success rate for RE agents and for all authentication types with temporary errors is between 80 - 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
-             the last {{ .Values.p2WaitTimeBeforeFiringAlert }}.
+             the last 60 minutes.
         tags: {{ .Values.tags }}
 
     - alert: AllLoginSuccessRatesBelow60WithTemporaryErrorsAndAttemptLimitES_RE
       expr: |
-          (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="ES"}))
-                                / (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"})) < 0.60
-                and sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"}) > 3
-      for: {{ .Values.p1WaitTimeBeforeFiringAlert }}
+          sum(sum_over_time(tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="ES"}[60m])) by (provider)
+            / sum(sum_over_time(tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"}[60m])) by (provider) < 0.60
+      for: 5m
       labels:
         severity: urgent
         priority: P1
@@ -82,7 +78,7 @@ spec:
         description: {{ .Values.kibanaLink }}
              {{ .Values.grafanaLink }}
         summary: Login success rate for RE agents and for all authentication types with temporary errors is below 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
-             the last {{ .Values.p1WaitTimeBeforeFiringAlert }}.
+             the last 60 minutes.
         tags: {{ .Values.tags }}
 
     #########################################################
@@ -91,12 +87,11 @@ spec:
 
     - alert: SplitLoginSuccessRatesBelow95AndGreater90WithTemporaryErrorsAndAttemptLimitES_RE
       expr: |
-          (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="ES"}))
-                                / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"})) < 0.95
-                 and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="ES"}))
-                                / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"})) >= 0.9
-          and sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"}) > 3
-      for: {{ .Values.p4WaitTimeBeforeFiringAlert }}
+          sum(sum_over_time(tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="ES"}[60m])) by (provider, action)
+            / sum(sum_over_time(tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"}[60m])) by (provider, action) < 0.95
+          and sum(sum_over_time(tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="ES"}[60m])) by (provider, action)
+            / sum(sum_over_time(tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"}[60m])) by (provider, action) >= 0.9
+      for: 5m
       labels:
         severity: urgent
         priority: P4
@@ -105,17 +100,16 @@ spec:
         description: {{ .Values.kibanaLink }}
              {{ .Values.grafanaLink }}
         summary: Login success rate for RE agents and for one of login type with temporary errors is between 95 - 90% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
-             the last {{ .Values.p4WaitTimeBeforeFiringAlert }}.
+             the last 60 minutes.
         tags: {{ .Values.tags }}
 
     - alert: SplitLoginSuccessRatesBelow90AndGreater80WithTemporaryErrorsAndAttemptLimitES_RE
       expr: |
-          (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="ES"}))
-                          / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"})) < 0.9
-                 and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="ES"}))
-                          / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"})) >= 0.8
-          and sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"}) > 3
-      for: {{ .Values.p3WaitTimeBeforeFiringAlert }}
+          sum(sum_over_time(tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="ES"}[60m])) by (provider, action)
+            / sum(sum_over_time(tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"}[60m])) by (provider, action) < 0.9
+          and sum(sum_over_time(tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="ES"}[60m])) by (provider, action)
+            / sum(sum_over_time(tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"}[60m])) by (provider, action) >= 0.8
+      for: 5m
       labels:
         severity: urgent
         priority: P3
@@ -124,17 +118,16 @@ spec:
         description: {{ .Values.kibanaLink }}
              {{ .Values.grafanaLink }}
         summary: Login success rate for RE agents and for one of login type with temporary errors is between 90 - 80% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
-             the last {{ .Values.p3WaitTimeBeforeFiringAlert }}.
+             the last 60 minutes.
         tags: {{ .Values.tags }}
 
     - alert: SplitLoginSuccessRatesBelow80AndGreater60WithTemporaryErrorsAndAttemptLimitES_RE
       expr: |
-          (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="ES"}))
-                          / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"})) < 0.8
-                 and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="ES"}))
-                          / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"})) >= 0.6
-                and sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"}) > 3
-      for: {{ .Values.p2WaitTimeBeforeFiringAlert }}
+          sum(sum_over_time(tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="ES"}[60m])) by (provider, action)
+            / sum(sum_over_time(tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"}[60m])) by (provider, action) < 0.8
+          and sum(sum_over_time(tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="ES"}[60m])) by (provider, action)
+            / sum(sum_over_time(tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"}[60m])) by (provider, action) >= 0.6
+      for: 5m
       labels:
         severity: urgent
         priority: P2
@@ -143,15 +136,14 @@ spec:
         description: {{ .Values.kibanaLink }}
              {{ .Values.grafanaLink }}
         summary: Login success rate for RE agents and for one of login type with temporary errors is between 80 - 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
-             the last {{ .Values.p2WaitTimeBeforeFiringAlert }}.
+             the last 60 minutes.
         tags: {{ .Values.tags }}
 
     - alert: SplitLoginSuccessRatesBelow60WithTemporaryErrorsAndAttemptLimitES_RE
       expr: |
-          (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="ES"}))
-                          / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"})) < 0.6
-                and sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"}) > 3
-      for: {{ .Values.p1WaitTimeBeforeFiringAlert }}
+          sum(sum_over_time(tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="ES"}[60m])) by (provider, action)
+            / sum(sum_over_time(tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"}[60m])) by (provider, action) < 0.6
+      for: 5m
       labels:
         severity: urgent
         priority: P1
@@ -160,7 +152,7 @@ spec:
         description: {{ .Values.kibanaLink }}
              {{ .Values.grafanaLink }}
         summary: Login success rate for RE agents and for one of login type with temporary errors is below 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
-                        the last {{ .Values.p1WaitTimeBeforeFiringAlert }}.
+              the last 60 minutes.
         tags: {{ .Values.tags }}
 
     ##################################################
