@@ -5,14 +5,19 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Objects;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.ObjectUtils;
+import se.tink.backend.aggregation.agents.models.TransactionDateType;
 import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
+import se.tink.backend.aggregation.nxgen.core.transaction.TransactionDate;
 import se.tink.backend.aggregation.utils.json.deserializers.LocalDateDeserializer;
 import se.tink.libraries.amount.ExactCurrencyAmount;
+import se.tink.libraries.chrono.AvailableDateInformation;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @JsonObject
@@ -32,7 +37,8 @@ public class TransactionsItemEntity {
     @JsonAlias("transactionDetails")
     private String remittanceInformation;
 
-    private String bookingDate;
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    private LocalDate bookingDate;
 
     private String debtorName;
 
@@ -58,7 +64,7 @@ public class TransactionsItemEntity {
         return remittanceInformation;
     }
 
-    public String getBookingDate() {
+    public LocalDate getBookingDate() {
         return bookingDate;
     }
 
@@ -92,16 +98,48 @@ public class TransactionsItemEntity {
 
     public Transaction toTinkTransaction() {
 
-        return Transaction.builder()
-                .setDate(ObjectUtils.firstNonNull(ledgerDate, transactionDate, valueDate))
-                .setAmount(creditOrDebit())
-                .setDescription(remittanceInformation)
-                .setPending(
-                        HandelsbankenBaseConstants.Transactions.IS_PENDING.equalsIgnoreCase(status))
-                .setPayload(
-                        TransactionPayloadTypes.DETAILS,
-                        SerializationUtils.serializeToString(getTransactionDetails()))
-                .build();
+        return (Transaction)
+                Transaction.builder()
+                        .setDate(ObjectUtils.firstNonNull(ledgerDate, transactionDate, valueDate))
+                        .setAmount(creditOrDebit())
+                        .setDescription(remittanceInformation)
+                        .setPending(
+                                HandelsbankenBaseConstants.Transactions.IS_PENDING.equalsIgnoreCase(
+                                        status))
+                        .setPayload(
+                                TransactionPayloadTypes.DETAILS,
+                                SerializationUtils.serializeToString(getTransactionDetails()))
+                        .setProprietaryFinancialInstitutionType(creditDebit)
+                        .addTransactionDates(getTransactionDates())
+                        .build();
+    }
+
+    private ArrayList<TransactionDate> getTransactionDates() {
+        ArrayList<TransactionDate> transactionDates = new ArrayList<>();
+
+        transactionDates.add(
+                TransactionDate.builder()
+                        .type(TransactionDateType.VALUE_DATE)
+                        .value(new AvailableDateInformation().setDate(getTinkValueDate()))
+                        .build());
+
+        if (Objects.nonNull(bookingDate)) {
+            transactionDates.add(
+                    TransactionDate.builder()
+                            .type(TransactionDateType.BOOKING_DATE)
+                            .value(new AvailableDateInformation().setDate(bookingDate))
+                            .build());
+        }
+
+        return transactionDates;
+    }
+
+    /**
+     * transactionDate is not set for all transactions. In those cases valueDate corresponds to what
+     * we classify as value date at Tink so we use that instead.
+     */
+    private LocalDate getTinkValueDate() {
+        return Objects.nonNull(ledgerDate) ? ledgerDate : transactionDate;
     }
 
     @JsonIgnore
