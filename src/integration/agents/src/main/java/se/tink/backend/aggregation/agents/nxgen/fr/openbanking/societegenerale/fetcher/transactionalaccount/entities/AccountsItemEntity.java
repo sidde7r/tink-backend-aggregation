@@ -5,11 +5,14 @@ import com.google.common.base.Strings;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.SocieteGeneraleConstants;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.SocieteGeneraleConstants.BalanceTypes;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.SocieteGeneraleConstants.CardDetails;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.builder.BalanceBuilderStep;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.creditcard.CreditCardModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -19,6 +22,7 @@ import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
+@Slf4j
 @JsonObject
 public class AccountsItemEntity {
 
@@ -58,7 +62,7 @@ public class AccountsItemEntity {
         return TransactionalAccount.nxBuilder()
                 .withType(getAccountType())
                 .withInferredAccountFlags()
-                .withBalance(BalanceModule.of(getBalance()))
+                .withBalance(getBalanceModule())
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(accountIdEntity.getIban())
@@ -110,6 +114,43 @@ public class AccountsItemEntity {
         }
     }
 
+    private BalanceModule getBalanceModule() {
+        BalanceBuilderStep balanceBuilderStep =
+                BalanceModule.builder().withBalance(getBookedBalance());
+        getAvailableBalance().ifPresent(balanceBuilderStep::setAvailableBalance);
+        return balanceBuilderStep.build();
+    }
+
+    private ExactCurrencyAmount getBookedBalance() {
+        if (balances.isEmpty()) {
+            throw new IllegalArgumentException(
+                    "Cannot determine booked balance from empty list of balances.");
+        }
+        Optional<BalancesItemEntity> balanceEntity =
+                balances.stream()
+                        .filter(b -> BalanceTypes.CLBD.equalsIgnoreCase(b.getBalanceType()))
+                        .findAny();
+
+        if (!balanceEntity.isPresent()) {
+            log.warn(
+                    "Couldn't determine booked balance of known type, and no credit limit included. Defaulting to first provided balance.");
+        }
+        return balanceEntity
+                .map(Optional::of)
+                .orElseGet(() -> balances.stream().findFirst())
+                .map(BalancesItemEntity::getBalanceAmount)
+                .map(BalanceAmountEntity::getAmount)
+                .get();
+    }
+
+    private Optional<ExactCurrencyAmount> getAvailableBalance() {
+        return balances.stream()
+                .filter(b -> BalanceTypes.XPCD.equalsIgnoreCase(b.getBalanceType()))
+                .map(BalancesItemEntity::getBalanceAmount)
+                .map(BalanceAmountEntity::getAmount)
+                .findAny();
+    }
+
     private ExactCurrencyAmount getBalance() {
         return Optional.ofNullable(balances).orElse(Collections.emptyList()).stream()
                 .findFirst()
@@ -124,10 +165,6 @@ public class AccountsItemEntity {
     public boolean isCreditCard() {
         return CashAccountTypeEntity.CARD == cashAccountType
                 && CardDetails.CREDIT_CARD.equals(details);
-    }
-
-    public AccountIdEntity getAccountIdEntity() {
-        return accountIdEntity;
     }
 
     public LinksEntity getLinks() {

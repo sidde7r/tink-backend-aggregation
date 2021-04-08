@@ -124,4 +124,9 @@ public final class SocieteGeneraleConstants {
     public static class CardDetails {
         public static final String CREDIT_CARD = "Carte à débit différé";
     }
+
+    public static class BalanceTypes {
+        public static final String CLBD = "CLBD";
+        public static final String XPCD = "XPCD";
+    }
 }
