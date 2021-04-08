@@ -19,6 +19,10 @@ public final class CbiGlobeConstants {
         public static final String BALANCE_NOT_FOUND = "Balance cannot be found.";
         public static final String MAPPING =
                 "Cannot map payment status: %s to Tink payment status.";
+        public static final String RESOURCE_UNKNOWN =
+                "The addressed resource is unknown relative to the TPP";
+        public static final String CBI_BAD_GATEWAY = "Controllo titolarita' conto fallito";
+        public static final String PSU_CREDENTIALS_INVALID = "PSU_CREDENTIALS_INVALID";
     }
 
     public static class Urls {
@@ -171,6 +175,21 @@ public final class CbiGlobeConstants {
 
     public static class HttpClientParams {
         public static final int CLIENT_TIMEOUT = 60 * 1000;
+    }
+
+    public enum RequestContext {
+        ACCOUNTS_GET,
+        BALANCES_GET,
+        CONSENT_CREATE,
+        CONSENT_UPDATE,
+        CONSENT_DETAILS,
+        CONSENT_PSU_CREDENTIALS_UPDATE,
+        PAYMENT_CREATE,
+        PAYMENT_GET,
+        PAYMENT_STATUS_GET,
+        TOKEN_GET,
+        TOKEN_IS_VALID,
+        TRANSACTIONS_GET
     }
 
     public static final TransactionalAccountTypeMapper ACCOUNT_TYPE_MAPPER =

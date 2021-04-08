@@ -33,6 +33,7 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.AccessExceededFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.BadGatewayFilter;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.ForbiddenRetryFilter;
 import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
 import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.payloadparser.PayloadParser;
@@ -70,6 +71,9 @@ public abstract class CbiGlobeAgent extends SubsequentProgressiveGenerationAgent
     }
 
     private void applyFilters(TinkHttpClient client) {
+        client.addFilter(
+                new ForbiddenRetryFilter(
+                        HttpClient.MAX_RETRIES, HttpClient.RETRY_SLEEP_MILLISECONDS));
         client.addFilter(
                 new AccessExceededFilter(this.provider != null ? this.provider.getName() : null));
         client.addFilter(new BadGatewayFilter());
