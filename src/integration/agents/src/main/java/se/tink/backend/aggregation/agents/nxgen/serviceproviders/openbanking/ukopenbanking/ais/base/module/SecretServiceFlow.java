@@ -9,15 +9,18 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.tls.TlsConfigurationSetter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.signer.iface.JwtSigner;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
+import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
 
 public class SecretServiceFlow implements UkOpenBankingFlowStrategy {
 
     private static final Class<UkOpenBankingConfiguration> CONFIGURATION_CLASS =
             UkOpenBankingConfiguration.class;
     private final CompositeAgentContext context;
+    private final Class<?> agentClass;
 
-    public SecretServiceFlow(CompositeAgentContext context) {
+    public SecretServiceFlow(CompositeAgentContext context, Class<?> agentClass) {
         this.context = context;
+        this.agentClass = agentClass;
     }
 
     @Override
@@ -29,7 +32,8 @@ public class SecretServiceFlow implements UkOpenBankingFlowStrategy {
         return new UkOpenBankingFlowFacade(
                 tlsConfigurationSetter(providerSpecificConfiguration),
                 secretServiceJwtSigner(providerSpecificConfiguration),
-                configuration);
+                configuration,
+                eidasIdentity());
     }
 
     private TlsConfigurationSetter tlsConfigurationSetter(
@@ -45,5 +49,9 @@ public class SecretServiceFlow implements UkOpenBankingFlowStrategy {
     private AgentConfiguration<? extends UkOpenBankingClientConfigurationAdapter>
             agentConfiguration(CompositeAgentContext context) {
         return context.getAgentConfigurationController().getAgentConfiguration(CONFIGURATION_CLASS);
+    }
+
+    private EidasIdentity eidasIdentity() {
+        return new EidasIdentity(context.getClusterId(), context.getAppId(), "UKOB", agentClass);
     }
 }
