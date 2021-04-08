@@ -91,8 +91,8 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
         CreatePaymentRequest createPaymentRequest =
                 PaymentServiceType.PERIODIC.equals(
                                 paymentRequest.getPayment().getPaymentServiceType())
-                        ? getCreateRecurringPaymentResponse(paymentRequest.getPayment())
-                        : getCreatePaymentResponse(paymentRequest.getPayment());
+                        ? getCreateRecurringPaymentRequest(paymentRequest.getPayment())
+                        : getCreatePaymentRequest(paymentRequest.getPayment());
 
         CreatePaymentResponse createPaymentResponse =
                 apiClient.createPayment(createPaymentRequest, paymentRequest.getPayment());
@@ -103,7 +103,7 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
         return createPaymentResponse.toTinkPaymentResponse(paymentRequest.getPayment());
     }
 
-    private CreatePaymentRequest getCreatePaymentResponse(Payment payment) {
+    private CreatePaymentRequest getCreatePaymentRequest(Payment payment) {
         return CreatePaymentRequest.builder()
                 .debtorAccount(getAccountEntity(payment.getDebtor().getAccountNumber()))
                 .instructedAmount(getInstructedAmountEntity(payment))
@@ -114,7 +114,7 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
                 .build();
     }
 
-    private CreatePaymentRequest getCreateRecurringPaymentResponse(Payment payment) {
+    private CreatePaymentRequest getCreateRecurringPaymentRequest(Payment payment) {
 
         return CreateRecurringPaymentRequest.builder()
                 .debtorAccount(getAccountEntity(payment.getDebtor().getAccountNumber()))
