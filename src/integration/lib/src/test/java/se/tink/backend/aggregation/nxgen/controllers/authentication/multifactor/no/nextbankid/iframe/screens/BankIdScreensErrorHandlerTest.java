@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.screens;
 
+import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.ArgumentMatchers.any;
@@ -23,12 +24,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.WebElement;
+import se.tink.backend.aggregation.agents.exceptions.bankidno.BankIdNOError;
+import se.tink.backend.aggregation.agents.exceptions.bankidno.BankIdNOErrorCode;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.BankIdWebDriver;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.BankIdElementLocator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.BankIdElementsSearchQuery;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.BankIdElementsSearchResult;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.exceptions.BankIdNOError;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.exceptions.BankIdNOErrorCode;
 
 @RunWith(JUnitParamsRunner.class)
 public class BankIdScreensErrorHandlerTest {
@@ -54,12 +55,16 @@ public class BankIdScreensErrorHandlerTest {
     public void should_throw_correct_exception_when_unexpected_screen_is_null() {
         // when
         Throwable throwable =
-                catchThrowable(() -> errorHandler.throwUnexpectedScreenException(null));
+                catchThrowable(
+                        () -> errorHandler.throwUnexpectedScreenException(null, emptyList()));
 
         // then
         assertThat(throwable)
                 .isInstanceOf(IllegalStateException.class)
-                .hasMessage(BANK_ID_LOG_PREFIX + " Could not find any known screen.");
+                .hasMessage(
+                        BANK_ID_LOG_PREFIX
+                                + " Could not find any known screen. (expectedScreens: %s)",
+                        emptyList());
     }
 
     @Test
@@ -68,14 +73,16 @@ public class BankIdScreensErrorHandlerTest {
             BankIdScreen screen) {
         // when
         Throwable throwable =
-                catchThrowable(() -> errorHandler.throwUnexpectedScreenException(screen));
+                catchThrowable(
+                        () -> errorHandler.throwUnexpectedScreenException(screen, emptyList()));
 
         // then
         assertThat(throwable)
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage(
                         String.format(
-                                "%s Unexpected non error screen: %s", BANK_ID_LOG_PREFIX, screen));
+                                "%s Unexpected non error screen: %s (expectedScreens: %s)",
+                                BANK_ID_LOG_PREFIX, screen, emptyList()));
     }
 
     @SuppressWarnings("unused")
@@ -93,7 +100,10 @@ public class BankIdScreensErrorHandlerTest {
 
         // when
         Throwable throwable =
-                catchThrowable(() -> errorHandler.throwUnexpectedScreenException(errorScreen));
+                catchThrowable(
+                        () ->
+                                errorHandler.throwUnexpectedScreenException(
+                                        errorScreen, emptyList()));
 
         // then
         verifyThatFromUsersPerspectiveThrowableIsTheSameAsGivenAgentException(
@@ -127,7 +137,10 @@ public class BankIdScreensErrorHandlerTest {
 
         // when
         Throwable throwable =
-                catchThrowable(() -> errorHandler.throwUnexpectedScreenException(errorScreen));
+                catchThrowable(
+                        () ->
+                                errorHandler.throwUnexpectedScreenException(
+                                        errorScreen, emptyList()));
 
         // then
         verifyThatFromUsersPerspectiveThrowableIsTheSameAsGivenAgentException(
@@ -158,7 +171,9 @@ public class BankIdScreensErrorHandlerTest {
         // when
         Throwable throwable =
                 catchThrowable(
-                        () -> errorHandler.throwUnexpectedScreenException(exampleErrorScreen));
+                        () ->
+                                errorHandler.throwUnexpectedScreenException(
+                                        exampleErrorScreen, emptyList()));
 
         // then
         verifyThatFromUsersPerspectiveThrowableIsTheSameAsGivenAgentException(

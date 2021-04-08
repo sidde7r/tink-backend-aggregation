@@ -6,15 +6,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import lombok.AccessLevel;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import lombok.ToString;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants;
 
-@Getter
-@ToString
-@EqualsAndHashCode
+@Data
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class BankIdElementsSearchQuery {
 

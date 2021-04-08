@@ -154,7 +154,9 @@ public class BankIdScreensManagerTest {
                 .thenReturn(screenLocatorFoundResult(otherScreenDetected));
 
         RuntimeException notExpectedScreenError = mock(RuntimeException.class);
-        doThrow(notExpectedScreenError).when(errorHandler).throwUnexpectedScreenException(any());
+        doThrow(notExpectedScreenError)
+                .when(errorHandler)
+                .throwUnexpectedScreenException(any(), any());
 
         // when
         BankIdScreensQuery searchQuery =
@@ -193,7 +195,8 @@ public class BankIdScreensManagerTest {
 
         mocksToVerifyInOrder
                 .verify(errorHandler)
-                .throwUnexpectedScreenException(otherScreenDetected);
+                .throwUnexpectedScreenException(
+                        otherScreenDetected, singletonList(screenToSearchFor));
         mocksToVerifyInOrder.verifyNoMoreInteractions();
     }
 

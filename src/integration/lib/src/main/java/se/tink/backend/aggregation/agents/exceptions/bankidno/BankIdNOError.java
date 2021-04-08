@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.exceptions;
+package se.tink.backend.aggregation.agents.exceptions.bankidno;
 
 import se.tink.backend.aggregation.agents.exceptions.agent.AgentError;
 import se.tink.libraries.i18n.LocalizableKey;

@@ -32,7 +32,8 @@ public class BankIdScreensManager {
 
         if (searchResult.isEmpty()) {
             BankIdScreen otherScreenFound = tryDetectCurrentScreen().orElse(null);
-            errorHandler.throwUnexpectedScreenException(otherScreenFound);
+            errorHandler.throwUnexpectedScreenException(
+                    otherScreenFound, screensQuery.getScreensToWaitFor());
         }
 
         return BankIdScreen.findScreenByItsLocator(searchResult.getLocatorFound());

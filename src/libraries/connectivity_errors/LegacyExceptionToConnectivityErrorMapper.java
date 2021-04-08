@@ -15,6 +15,8 @@ import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.exceptions.ThirdPartyAppException;
+import se.tink.backend.aggregation.agents.exceptions.bankidno.BankIdNOError;
+import se.tink.backend.aggregation.agents.exceptions.bankidno.BankIdNOException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
@@ -187,6 +189,17 @@ class LegacyExceptionToConnectivityErrorMapper {
                             ConnectivityErrorFactory.authorizationError(
                                     ConnectivityErrorDetails.AuthorizationErrors
                                             .ACTION_NOT_PERMITTED))
+                    .build();
+
+    static final ImmutableMap<BankIdNOError, ConnectivityError> BANKID_NO_ERROR_MAPPER =
+            ImmutableMap.<BankIdNOError, ConnectivityError>builder()
+                    .put(
+                            BankIdNOError.INITIALIZATION_ERROR,
+                            ConnectivityErrorFactory.userLoginError(
+                                    UserLoginErrors.THIRD_PARTY_AUTHENTICATION_UNAVAILABLE))
+                    .put(
+                            BankIdNOError.UNKNOWN_BANK_ID_ERROR,
+                            ConnectivityErrorFactory.userLoginError(UserLoginErrors.UNRECOGNIZED))
                     .build();
 
     static final ImmutableMap<ThirdPartyAppError, ConnectivityError> THIRD_PARTY_APP_ERROR_MAPPER =
@@ -406,6 +419,9 @@ class LegacyExceptionToConnectivityErrorMapper {
             if (exception instanceof BankIdException) {
                 BankIdError error = ((BankIdException) exception).getError();
                 builder = BANKID_ERROR_MAPPER.get(error).toBuilder();
+            } else if (exception instanceof BankIdNOException) {
+                BankIdNOError error = ((BankIdNOException) exception).getError();
+                builder = BANKID_NO_ERROR_MAPPER.get(error).toBuilder();
             } else if (exception instanceof BankServiceException) {
                 BankServiceError error = ((BankServiceException) exception).getError();
                 builder = BANK_SERVICE_ERROR_MAPPER.get(error).toBuilder();
