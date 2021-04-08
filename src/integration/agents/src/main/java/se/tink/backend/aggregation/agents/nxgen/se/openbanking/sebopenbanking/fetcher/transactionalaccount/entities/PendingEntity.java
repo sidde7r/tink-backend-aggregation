@@ -2,15 +2,12 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.f
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.time.LocalDate;
-import java.util.Collections;
-import java.util.List;
-import se.tink.backend.aggregation.agents.models.TransactionDateType;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.SebConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebCommonConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction.Builder;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.backend.aggregation.nxgen.core.transaction.TransactionDate;
+import se.tink.backend.aggregation.nxgen.core.transaction.TransactionDates;
 import se.tink.backend.aggregation.utils.json.deserializers.LocalDateDeserializer;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.chrono.AvailableDateInformation;
@@ -51,19 +48,17 @@ public class PendingEntity {
                         .setDate(valueDate)
                         .setDescription(isReserved() ? descriptiveText : creditorName)
                         .setPending(true)
-                        .addTransactionDates(getTinkTransactionDates())
+                        .setTransactionDates(getTinkTransactionDates())
                         .setProprietaryFinancialInstitutionType(pendingType)
                         .setProviderMarket(SebConstants.MARKET);
 
         return (Transaction) builder.build();
     }
 
-    private List<TransactionDate> getTinkTransactionDates() {
-        return Collections.singletonList(
-                TransactionDate.builder()
-                        .type(TransactionDateType.VALUE_DATE)
-                        .value(new AvailableDateInformation().setDate(valueDate))
-                        .build());
+    private TransactionDates getTinkTransactionDates() {
+        return TransactionDates.builder()
+                .setValueDate(new AvailableDateInformation().setDate(valueDate))
+                .build();
     }
 
     private ExactCurrencyAmount getAmount() {

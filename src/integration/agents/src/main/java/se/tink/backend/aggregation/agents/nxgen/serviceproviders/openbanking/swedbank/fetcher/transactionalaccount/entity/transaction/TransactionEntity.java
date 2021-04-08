@@ -1,12 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.fetcher.transactionalaccount.entity.transaction;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import se.tink.backend.aggregation.agents.models.TransactionDateType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.fetcher.transactionalaccount.entity.common.TransactionAmountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.core.transaction.TransactionDate;
+import se.tink.backend.aggregation.nxgen.core.transaction.TransactionDates;
 import se.tink.libraries.chrono.AvailableDateInformation;
 
 @JsonObject
@@ -15,29 +12,15 @@ public class TransactionEntity {
     protected String remittanceInformationUnstructured;
     protected String remittanceInformationStructured;
 
-    public List<TransactionDate> getTinkTransactionDates(
-            LocalDate valueDate, LocalDate bookingDate) {
-        List<TransactionDate> transactionDates = new ArrayList<>();
+    public TransactionDates getTinkTransactionDates(LocalDate valueDate, LocalDate bookingDate) {
+        TransactionDates.Builder builder = TransactionDates.builder();
 
-        AvailableDateInformation valueDateInformation = new AvailableDateInformation();
-        valueDateInformation.setDate(valueDate);
-
-        transactionDates.add(
-                TransactionDate.builder()
-                        .type(TransactionDateType.VALUE_DATE)
-                        .value(valueDateInformation)
-                        .build());
+        builder.setValueDate(new AvailableDateInformation().setDate(valueDate));
 
         if (bookingDate != null) {
-            AvailableDateInformation bookingDateInformation = new AvailableDateInformation();
-            bookingDateInformation.setDate(bookingDate);
-            transactionDates.add(
-                    TransactionDate.builder()
-                            .type(TransactionDateType.BOOKING_DATE)
-                            .value(bookingDateInformation)
-                            .build());
+            builder.setBookingDate(new AvailableDateInformation().setDate(bookingDate));
         }
 
-        return transactionDates;
+        return builder.build();
     }
 }

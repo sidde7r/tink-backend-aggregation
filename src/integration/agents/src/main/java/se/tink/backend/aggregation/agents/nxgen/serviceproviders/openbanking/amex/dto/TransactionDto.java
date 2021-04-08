@@ -5,17 +5,15 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Optional;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import se.tink.backend.aggregation.agents.models.TransactionDateType;
 import se.tink.backend.aggregation.agents.models.TransactionExternalSystemIdType;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction.Builder;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.backend.aggregation.nxgen.core.transaction.TransactionDate;
+import se.tink.backend.aggregation.nxgen.core.transaction.TransactionDates;
 import se.tink.backend.aggregation.utils.json.deserializers.LocalDateDeserializer;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.chrono.AvailableDateInformation;
@@ -73,7 +71,7 @@ public class TransactionDto {
                                 description.replaceAll("\\s{2,}", " ")) // to remove whitespaces
                         .setPending(isPending())
                         .setDate(chargeDate)
-                        .addTransactionDates(getTransactionDates())
+                        .setTransactionDates(getTransactionDates())
                         .setProprietaryFinancialInstitutionType(type)
                         .setTransactionReference(referenceNumber)
                         .setProviderMarket(providerMarket)
@@ -115,28 +113,15 @@ public class TransactionDto {
         return postDate == null;
     }
 
-    private ArrayList<TransactionDate> getTransactionDates() {
-        ArrayList<TransactionDate> transactionDates = new ArrayList<>();
+    private TransactionDates getTransactionDates() {
+        TransactionDates.Builder builder = TransactionDates.builder();
 
-        AvailableDateInformation valueDateInformation = new AvailableDateInformation();
-        valueDateInformation.setDate(chargeDate);
-
-        transactionDates.add(
-                TransactionDate.builder()
-                        .type(TransactionDateType.VALUE_DATE)
-                        .value(valueDateInformation)
-                        .build());
+        builder.setValueDate(new AvailableDateInformation().setDate(chargeDate));
 
         if (postDate != null) {
-            AvailableDateInformation bookingDateInformation = new AvailableDateInformation();
-            bookingDateInformation.setDate(postDate);
-            transactionDates.add(
-                    TransactionDate.builder()
-                            .type(TransactionDateType.BOOKING_DATE)
-                            .value(bookingDateInformation)
-                            .build());
+            builder.setBookingDate(new AvailableDateInformation().setDate(postDate));
         }
 
-        return transactionDates;
+        return builder.build();
     }
 }

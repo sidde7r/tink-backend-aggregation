@@ -5,7 +5,6 @@ import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 import se.tink.backend.aggregation.agents.models.TransactionExternalSystemIdType;
 import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
@@ -25,7 +24,7 @@ public class Transaction extends AggregationTransaction {
             boolean pending,
             Map<TransactionExternalSystemIdType, String> externalSystemIds,
             Boolean mutable,
-            List<TransactionDate> transactionDates,
+            TransactionDates transactionDates,
             String proprietaryFinancialInstitutionType,
             String merchantName,
             String merchantCategoryCode,
@@ -63,7 +62,7 @@ public class Transaction extends AggregationTransaction {
             Map<TransactionPayloadTypes, String> payload,
             Map<TransactionExternalSystemIdType, String> externalSystemIds,
             Boolean mutable,
-            List<TransactionDate> transactionDates,
+            TransactionDates transactionDates,
             String proprietaryFinancialInstitutionType,
             String merchantName,
             String merchantCategoryCode,

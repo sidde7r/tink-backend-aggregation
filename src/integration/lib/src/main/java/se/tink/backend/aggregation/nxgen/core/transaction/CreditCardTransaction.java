@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -29,7 +28,7 @@ public final class CreditCardTransaction extends Transaction {
             CreditCard creditCard,
             Map<TransactionExternalSystemIdType, String> externalSystemIds,
             Boolean mutable,
-            List<TransactionDate> transactionDates,
+            TransactionDates transactionDates,
             String proprietaryFinancialInstitutionType,
             String merchantName,
             String merchantCategoryCode,

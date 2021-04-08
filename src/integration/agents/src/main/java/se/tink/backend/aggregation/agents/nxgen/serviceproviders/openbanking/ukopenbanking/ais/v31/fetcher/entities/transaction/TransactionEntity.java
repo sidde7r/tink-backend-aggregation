@@ -7,9 +7,7 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.Date;
-import se.tink.backend.aggregation.agents.models.TransactionDateType;
 import se.tink.backend.aggregation.agents.models.TransactionExternalSystemIdType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.EntryStatusCode;
@@ -21,7 +19,7 @@ import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccou
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction.Builder;
 import se.tink.backend.aggregation.nxgen.core.transaction.CreditCardTransaction;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.backend.aggregation.nxgen.core.transaction.TransactionDate;
+import se.tink.backend.aggregation.nxgen.core.transaction.TransactionDates;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.chrono.AvailableDateInformation;
 
@@ -104,7 +102,7 @@ public class TransactionEntity {
                         .setPending(status == EntryStatusCode.PENDING)
                         .setMutable(isMutable())
                         .setDate(getDateOfTransaction())
-                        .addTransactionDates(getTransactionDates())
+                        .setTransactionDates(getTransactionDates())
                         .setTransactionReference(transactionReference)
                         .setProviderMarket(PROVIDER_MARKET);
 
@@ -122,7 +120,7 @@ public class TransactionEntity {
                         .setPending(status == EntryStatusCode.PENDING)
                         .setMutable(isMutable())
                         .setDate(getDateOfTransaction())
-                        .addTransactionDates(getTransactionDates())
+                        .setTransactionDates(getTransactionDates())
                         .setTransactionReference(transactionReference)
                         .setProviderMarket(PROVIDER_MARKET);
 
@@ -146,26 +144,16 @@ public class TransactionEntity {
         }
     }
 
-    private ArrayList<TransactionDate> getTransactionDates() {
-        ArrayList<TransactionDate> transactionDates = new ArrayList<>();
-        AvailableDateInformation bookingDateInformation = new AvailableDateInformation();
-        bookingDateInformation.setInstant(bookingDateTime);
-        transactionDates.add(
-                TransactionDate.builder()
-                        .type(TransactionDateType.BOOKING_DATE)
-                        .value(bookingDateInformation)
-                        .build());
+    private TransactionDates getTransactionDates() {
+        TransactionDates.Builder builder = TransactionDates.builder();
+
+        builder.setBookingDate(new AvailableDateInformation().setInstant(bookingDateTime));
 
         if (valueDateTime != null) {
-            AvailableDateInformation valueDateInformation = new AvailableDateInformation();
-            valueDateInformation.setInstant(valueDateTime);
-            transactionDates.add(
-                    TransactionDate.builder()
-                            .type(TransactionDateType.VALUE_DATE)
-                            .value(valueDateInformation)
-                            .build());
+            builder.setValueDate(new AvailableDateInformation().setInstant(valueDateTime));
         }
-        return transactionDates;
+
+        return builder.build();
     }
 
     private Boolean isMutable() {
