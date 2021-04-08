@@ -30,6 +30,7 @@ java_library(
         "//src/integration/models",
         "//src/integration/nemid",
         "//src/integration/webdriver/src/main/java/se/tink/integration/webdriver",
+        "//src/libraries/concurrency",
         "//src/libraries/date",
         "//src/libraries/i18n",
         "//src/libraries/serialization",
