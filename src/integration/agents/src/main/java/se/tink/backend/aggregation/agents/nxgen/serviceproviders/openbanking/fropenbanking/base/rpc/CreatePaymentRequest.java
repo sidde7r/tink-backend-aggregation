@@ -27,6 +27,8 @@ import se.tink.libraries.payments.common.model.PaymentScheme;
 @JsonObject
 public class CreatePaymentRequest {
 
+    public static final String INST = "INST";
+
     private String paymentInformationId;
 
     private String creationDateTime;
@@ -60,7 +62,7 @@ public class CreatePaymentRequest {
                 new PaymentTypeInformationEntity(
                         builder.paymentType.toString().toUpperCase(),
                         PaymentScheme.SEPA_INSTANT_CREDIT_TRANSFER == builder.paymentScheme
-                                ? "INST"
+                                ? INST
                                 : null,
                         "CASH");
         debtorAccount = builder.debtorAccount;
