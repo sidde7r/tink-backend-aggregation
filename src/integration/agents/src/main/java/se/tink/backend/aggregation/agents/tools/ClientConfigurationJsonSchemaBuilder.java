@@ -26,7 +26,6 @@ public class ClientConfigurationJsonSchemaBuilder {
     private static final String KEY_PROPERTIES = "properties";
     private static final String PROVIDER_NAME_KEY = "providerId";
 
-    private final String financialInstitutionId;
     private final String providerName;
     private final ClientConfigurationMetaInfoHandler clientConfigurationMetaInfoHandler;
 
@@ -34,12 +33,11 @@ public class ClientConfigurationJsonSchemaBuilder {
     private Set<String> encryptedSecretsFieldName = new HashSet<>();
 
     public ClientConfigurationJsonSchemaBuilder(Provider provider) {
-        this.financialInstitutionId = provider.getFinancialInstitutionId();
         this.providerName = provider.getName();
         this.clientConfigurationMetaInfoHandler = new ClientConfigurationMetaInfoHandler(provider);
         Preconditions.checkNotNull(
-                Strings.emptyToNull(this.financialInstitutionId),
-                "financialInstitutionId in requested provider cannot be null.");
+                Strings.emptyToNull(this.providerName),
+                "providerName in requested provider cannot be null.");
         Set<Field> secrets = clientConfigurationMetaInfoHandler.getSecretFields();
         for (Field field : secrets) {
             secretsFieldName.add(clientConfigurationMetaInfoHandler.fieldToFieldName.apply(field));
@@ -65,8 +63,6 @@ public class ClientConfigurationJsonSchemaBuilder {
 
             Iterator<String> fieldNames = flatSchemaFromConf.fieldNames();
             ObjectNode finalNode = mapper.createObjectNode();
-            finalNode.put("id", this.financialInstitutionId);
-            // TPA-730: switch id with providerName when it is finished, inform console about that.
             finalNode.put(PROVIDER_NAME_KEY, this.providerName);
 
             JsonNode propertiesNode = null;
