@@ -1,16 +1,18 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers;
 
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConstants.Transactions.NUM_DAYS_IN_PARTITION;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConstants.Transactions.PARTITION_COUNT;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConstants.Transactions.ZONE_ID;
+
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.tuple.Pair;
@@ -34,16 +36,12 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 public class DanskeBankMultiTransactionsFetcher<A extends Account>
         implements TransactionDatePaginator<A>, UpcomingTransactionFetcher<A> {
 
-    private static final ZoneId TIMEZONE = TimeZone.getTimeZone("Europe/Stockholm").toZoneId();
-    private static final int PARTITION_COUNT = 4;
-    private static final long NUM_DAYS_IN_PARTITION = 90;
-
     private final DanskeBankApiClient apiClient;
     private final String languageCode;
 
     @Override
     public PaginatorResponse getTransactionsFor(A account, Date fromDate, Date toDate) {
-        LocalDate to = toDate.toInstant().atZone(TIMEZONE).toLocalDate();
+        LocalDate to = toDate.toInstant().atZone(ZONE_ID).toLocalDate();
 
         List<Transaction> transactions =
                 Observable.range(0, PARTITION_COUNT)

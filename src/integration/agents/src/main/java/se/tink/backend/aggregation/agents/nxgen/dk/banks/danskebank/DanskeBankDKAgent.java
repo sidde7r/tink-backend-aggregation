@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.dk.banks.danskebank;
 
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConstants.Transactions.AMOUNT_TO_FETCH;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConstants.Transactions.ZONE_ID;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CREDIT_CARDS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.IDENTITY_DATA;
@@ -10,7 +12,6 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 
 import com.google.inject.Inject;
 import java.time.temporal.ChronoUnit;
-import java.util.TimeZone;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
@@ -191,8 +192,8 @@ public final class DanskeBankDKAgent extends DanskeBankAgent
                 this.transactionPaginationHelper,
                 new TransactionDatePaginationController.Builder<>(transactionFetcher)
                         .setConsecutiveEmptyPagesLimit(DK_MAX_CONSECUTIVE_EMPTY_PAGES)
-                        .setAmountAndUnitToFetch(359, ChronoUnit.DAYS)
-                        .setZoneId(TimeZone.getTimeZone("Europe/Stockholm").toZoneId())
+                        .setAmountAndUnitToFetch(AMOUNT_TO_FETCH, ChronoUnit.DAYS)
+                        .setZoneId(ZONE_ID)
                         .build(),
                 transactionFetcher);
     }
