@@ -1,5 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskev;
 
+import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
+
 public class JyskeConstants {
 
     public static class Urls {
@@ -11,6 +14,7 @@ public class JyskeConstants {
                 AUTH_HOST + "/authentication/nemid_bank_twofactor";
         public static final String CLIENT_SECRET = AUTH_HOST + "/client-registration";
         public static final String OAUTH_TOKEN = AUTH_HOST + "/oauth-token";
+        public static final String FETCH_ACCOUNTS = HOST + "/rel/micro/accounts";
         public static final String FETCH_IDENTITY = HOST + "/rel/general/userprofiles/name";
         public static final String VALIDATE_VERSION = HOST + "/rel/unauth/version/validate/51";
         public static final String SERVER_STATUS = HOST + "/rel/unauth/server/status";
@@ -72,6 +76,7 @@ public class JyskeConstants {
         public static final String AES_KEY = "aesKey";
         public static final String ACCESS_TOKEN = "accessToken";
         public static final String REFRESH_TOKEN = "refreshToken";
+        public static final String PUBLIC_ID = "publicId";
     }
 
     public static class Crypto {
@@ -101,4 +106,7 @@ public class JyskeConstants {
         public static final String AOS = "iPhone web 13.3.1";
         public static final String TYPE = "enrollment";
     }
+
+    public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
+            TypeMapper.<AccountTypes>builder().put(AccountTypes.CHECKING, "7248").build();
 }

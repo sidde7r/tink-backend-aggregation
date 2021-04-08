@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskev;
 import java.util.UUID;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
+import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskev.JyskeConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskev.JyskeConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskev.JyskeConstants.QueryKeys;
@@ -13,20 +14,19 @@ import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskev.authenticator.rp
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskev.authenticator.rpc.ClientRegistrationResponse;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskev.authenticator.rpc.OAuthResponse;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskev.fetcher.identity.rpc.IdentityResponse;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskev.fetcher.transactionalaccount.rpc.AccountResponse;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.form.Form;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
+@RequiredArgsConstructor
 public class JyskeBankApiClient {
     private final TinkHttpClient client;
     private final SessionStorage sessionStorage;
-
-    public JyskeBankApiClient(TinkHttpClient client, SessionStorage sessionStorage) {
-        this.client = client;
-        this.sessionStorage = sessionStorage;
-    }
+    private String bidCorrId = "";
 
     public HttpResponse nemIdInit(String codeChallenge) {
         HttpResponse httpResponse =
@@ -94,17 +94,26 @@ public class JyskeBankApiClient {
     }
 
     public IdentityResponse fetchIdentityData() {
-        final UUID corrId = UUID.randomUUID();
+        return buildRequest(Urls.FETCH_IDENTITY).get(IdentityResponse.class);
+    }
 
-        return client.request(Urls.FETCH_IDENTITY)
-                .header(HeaderKeys.BD_CORRELATION, corrId)
+    public AccountResponse fetchAccounts() {
+        return buildRequest(Urls.FETCH_ACCOUNTS).get(AccountResponse.class);
+    }
+
+    private RequestBuilder buildRequest(String url) {
+        if (bidCorrId.isEmpty()) {
+            bidCorrId = UUID.randomUUID().toString();
+        }
+
+        return client.request(url)
+                .header(HeaderKeys.BD_CORRELATION, bidCorrId)
                 .header(HeaderKeys.API_KEY, HeaderValues.API_KEY)
                 .header(HeaderKeys.APP_VERSION, HeaderValues.APP_VERSION)
                 .header(
                         HeaderKeys.AUTHORIZATION,
                         "Bearer " + sessionStorage.get(Storage.ACCESS_TOKEN))
-                .accept(MediaType.WILDCARD_TYPE)
-                .get(IdentityResponse.class);
+                .accept(MediaType.WILDCARD_TYPE);
     }
 
     public String validateVersion(String correlationId) {
