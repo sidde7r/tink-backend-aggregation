@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.screens;
 
+import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -10,10 +11,10 @@ import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
-import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.screens.BankIdScreen.BANK_ID_APP_METHOD_SCREEN;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.screens.BankIdScreen.ENTER_SSN_SCREEN;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 import org.junit.Before;
@@ -29,6 +30,8 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 
 @RunWith(JUnitParamsRunner.class)
 public class BankIdScreensManagerTest {
+
+    private static RuntimeException unexpectedScreenException;
 
     /*
     Mocks
@@ -46,7 +49,12 @@ public class BankIdScreensManagerTest {
     @Before
     public void setup() {
         driver = mock(BankIdWebDriver.class);
+
+        unexpectedScreenException = mock(RuntimeException.class);
         errorHandler = mock(BankIdScreensErrorHandler.class);
+        doThrow(unexpectedScreenException)
+                .when(errorHandler)
+                .throwUnexpectedScreenException(any(), any());
 
         mocksToVerifyInOrder = inOrder(driver, errorHandler);
 
@@ -54,23 +62,18 @@ public class BankIdScreensManagerTest {
     }
 
     @Test
-    @Parameters(method = "searchOnlyForScreenElementsTestParams")
-    public void should_search_only_for_screens_defined_in_query(
-            List<BankIdScreen> screensToSearchFor,
-            List<BankIdElementLocator> expectedLocatorToSearchFor) {
+    @Parameters(method = "shouldMakeCorrectElementsSearchQuery")
+    public void should_make_correct_elements_search_query_for_screen_locators(
+            BankIdScreensQuery screensQuery,
+            BankIdElementsSearchQuery expectedElementsSearchQuery) {
         // given
         // let's just find any screen, e.g. the first one - the exact screen doesn't matter
-        BankIdScreen screenToBeFound = screensToSearchFor.get(0);
+        BankIdScreen screenToBeFound = screensQuery.getScreensToWaitFor().get(0);
         when(driver.searchForFirstMatchingLocator(any()))
                 .thenReturn(screenLocatorFoundResult(screenToBeFound));
 
         // when
-        BankIdScreen screen =
-                screensManager.waitForAnyScreenFromQuery(
-                        BankIdScreensQuery.builder()
-                                .waitForScreens(screensToSearchFor)
-                                .waitForSeconds(10)
-                                .build());
+        BankIdScreen screen = screensManager.waitForAnyScreenFromQuery(screensQuery);
 
         // then
         assertThat(screen).isEqualTo(screenToBeFound);
@@ -78,65 +81,99 @@ public class BankIdScreensManagerTest {
         ArgumentCaptor<BankIdElementsSearchQuery> captor =
                 ArgumentCaptor.forClass(BankIdElementsSearchQuery.class);
         mocksToVerifyInOrder.verify(driver).searchForFirstMatchingLocator(captor.capture());
-
         assertThat(captor.getAllValues().size()).isEqualTo(1);
         assertThat(captor.getAllValues().get(0))
-                .isEqualToComparingFieldByFieldRecursively(
-                        BankIdElementsSearchQuery.builder()
-                                .searchFor(expectedLocatorToSearchFor)
-                                .searchForSeconds(10)
-                                .build());
+                .isEqualToComparingFieldByFieldRecursively(expectedElementsSearchQuery);
 
         mocksToVerifyInOrder.verifyNoMoreInteractions();
     }
 
     @SuppressWarnings("unused")
-    private Object[] searchOnlyForScreenElementsTestParams() {
+    private Object[] shouldMakeCorrectElementsSearchQuery() {
         return new Object[] {
             array(
-                    singletonList(ENTER_SSN_SCREEN),
-                    singletonList(ENTER_SSN_SCREEN.getLocatorToDetectScreen())),
+                    BankIdScreensQuery.builder()
+                            .waitForScreens(ENTER_SSN_SCREEN)
+                            .waitForSeconds(10)
+                            .build(),
+                    BankIdElementsSearchQuery.builder()
+                            .searchFor(getScreensLocators(ENTER_SSN_SCREEN))
+                            .waitForSeconds(10)
+                            .build()),
             array(
-                    singletonList(BANK_ID_APP_METHOD_SCREEN),
-                    singletonList(BANK_ID_APP_METHOD_SCREEN.getLocatorToDetectScreen())),
+                    BankIdScreensQuery.builder()
+                            .waitForScreens(ENTER_SSN_SCREEN)
+                            .waitForSeconds(11)
+                            .verifyNoErrorScreens(true)
+                            .build(),
+                    BankIdElementsSearchQuery.builder()
+                            .searchFor(getScreensLocators(ENTER_SSN_SCREEN))
+                            .searchFor(getScreensLocators(BankIdScreen.getAllErrorScreens()))
+                            .waitForSeconds(11)
+                            .build()),
             array(
-                    BankIdScreen.getAll2FAMethodScreens(),
-                    BankIdScreen.getAll2FAMethodScreens().stream()
-                            .map(BankIdScreen::getLocatorToDetectScreen)
-                            .collect(toList()))
+                    BankIdScreensQuery.builder()
+                            .waitForScreens(BankIdScreen.getAll2FAMethodScreens())
+                            .waitForSeconds(123)
+                            .build(),
+                    BankIdElementsSearchQuery.builder()
+                            .searchFor(getScreensLocators(BankIdScreen.getAll2FAMethodScreens()))
+                            .waitForSeconds(123)
+                            .build())
         };
     }
 
     @Test
-    @Parameters(value = {"10", "15", "20"})
-    public void should_search_for_screens_for_seconds_defined_in_query(int waitForSeconds) {
+    @Parameters(method = "allScreens")
+    public void
+            should_throw_unexpected_error_screen_exception_when_verify_no_error_screens_flag_is_on(
+                    BankIdScreen screenToSearchFor) {
         // given
+        BankIdScreen errorScreenToBeFound = BankIdScreen.getAllErrorScreens().get(0);
         when(driver.searchForFirstMatchingLocator(any()))
-                .thenReturn(screenLocatorFoundResult(ENTER_SSN_SCREEN));
+                .thenReturn(screenLocatorFoundResult(errorScreenToBeFound));
 
         // when
-        BankIdScreen screen =
+        Throwable throwable =
+                catchThrowable(
+                        () ->
+                                screensManager.waitForAnyScreenFromQuery(
+                                        BankIdScreensQuery.builder()
+                                                .waitForScreens(screenToSearchFor)
+                                                .verifyNoErrorScreens(true)
+                                                .build()));
+
+        // then
+        assertThat(throwable).isEqualTo(unexpectedScreenException);
+
+        mocksToVerifyInOrder
+                .verify(errorHandler)
+                .throwUnexpectedScreenException(
+                        errorScreenToBeFound, singletonList(screenToSearchFor));
+        mocksToVerifyInOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    @Parameters(method = "allErrorScreens")
+    public void
+            should_not_throw_unexpected_error_screen_exception_when_verify_no_error_screens_flag_is_off(
+                    BankIdScreen errorScreenToSearchFor) {
+        // given
+        when(driver.searchForFirstMatchingLocator(any()))
+                .thenReturn(screenLocatorFoundResult(errorScreenToSearchFor));
+
+        // when
+        BankIdScreen screenFound =
                 screensManager.waitForAnyScreenFromQuery(
                         BankIdScreensQuery.builder()
-                                .waitForScreens(ENTER_SSN_SCREEN)
-                                .waitForSeconds(waitForSeconds)
+                                .waitForScreens(errorScreenToSearchFor)
+                                .verifyNoErrorScreens(false)
                                 .build());
 
         // then
-        assertThat(screen).isEqualTo(ENTER_SSN_SCREEN);
+        assertThat(screenFound).isEqualTo(errorScreenToSearchFor);
 
-        ArgumentCaptor<BankIdElementsSearchQuery> captor =
-                ArgumentCaptor.forClass(BankIdElementsSearchQuery.class);
-        mocksToVerifyInOrder.verify(driver).searchForFirstMatchingLocator(captor.capture());
-
-        assertThat(captor.getAllValues().size()).isEqualTo(1);
-        assertThat(captor.getAllValues().get(0))
-                .isEqualToComparingFieldByFieldRecursively(
-                        BankIdElementsSearchQuery.builder()
-                                .searchFor(ENTER_SSN_SCREEN.getLocatorToDetectScreen())
-                                .searchForSeconds(waitForSeconds)
-                                .build());
-
+        mocksToVerifyInOrder.verify(driver).searchForFirstMatchingLocator(any());
         mocksToVerifyInOrder.verifyNoMoreInteractions();
     }
 
@@ -181,7 +218,7 @@ public class BankIdScreensManagerTest {
                 .isEqualToComparingFieldByFieldRecursively(
                         BankIdElementsSearchQuery.builder()
                                 .searchFor(screenToSearchFor.getLocatorToDetectScreen())
-                                .searchForSeconds(15)
+                                .waitForSeconds(15)
                                 .build());
         assertThat(captor.getAllValues().get(1))
                 .isEqualToComparingFieldByFieldRecursively(
@@ -190,7 +227,7 @@ public class BankIdScreensManagerTest {
                                         BankIdScreen.getAllScreens().stream()
                                                 .map(BankIdScreen::getLocatorToDetectScreen)
                                                 .collect(toList()))
-                                .searchOnlyOnce(true)
+                                .waitForSeconds(0)
                                 .build());
 
         mocksToVerifyInOrder
@@ -203,6 +240,21 @@ public class BankIdScreensManagerTest {
     @SuppressWarnings("unused")
     private static Object[] allScreens() {
         return BankIdScreen.getAllScreens().toArray();
+    }
+
+    @SuppressWarnings("unused")
+    private static Object[] allErrorScreens() {
+        return BankIdScreen.getAllErrorScreens().toArray();
+    }
+
+    private static List<BankIdElementLocator> getScreensLocators(BankIdScreen... screens) {
+        return getScreensLocators(asList(screens));
+    }
+
+    private static List<BankIdElementLocator> getScreensLocators(List<BankIdScreen> screens) {
+        return screens.stream()
+                .map(BankIdScreen::getLocatorToDetectScreen)
+                .collect(Collectors.toList());
     }
 
     private BankIdElementsSearchResult screenLocatorFoundResult(BankIdScreen bankIdScreen) {

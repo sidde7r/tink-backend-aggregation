@@ -113,7 +113,7 @@ public class BankIdScreensErrorHandlerTest {
                 .searchForFirstMatchingLocator(
                         BankIdElementsSearchQuery.builder()
                                 .searchFor(errorTextLocator)
-                                .searchForSeconds(10)
+                                .waitForSeconds(10)
                                 .build());
         verifyNoMoreInteractions(webDriver);
     }
@@ -150,7 +150,7 @@ public class BankIdScreensErrorHandlerTest {
                 .searchForFirstMatchingLocator(
                         BankIdElementsSearchQuery.builder()
                                 .searchFor(errorTextLocator)
-                                .searchForSeconds(10)
+                                .waitForSeconds(10)
                                 .build());
         verifyNoMoreInteractions(webDriver);
     }
@@ -183,7 +183,7 @@ public class BankIdScreensErrorHandlerTest {
                 .searchForFirstMatchingLocator(
                         BankIdElementsSearchQuery.builder()
                                 .searchFor(errorTextLocator)
-                                .searchForSeconds(10)
+                                .waitForSeconds(10)
                                 .build());
         verifyNoMoreInteractions(webDriver);
     }

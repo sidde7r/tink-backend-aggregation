@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.steps.BankIdEnterPasswordStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.steps.BankIdEnterSSNStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.steps.BankIdPerform2FAStep;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.steps.BankIdVerifyAuthenticationStep;
 
 public class BankIdIframeControllerTest {
 
@@ -20,6 +21,7 @@ public class BankIdIframeControllerTest {
     private BankIdEnterSSNStep enterSSNStep;
     private BankIdPerform2FAStep perform2FAStep;
     private BankIdEnterPasswordStep enterPrivatePasswordStep;
+    private BankIdVerifyAuthenticationStep verifyAuthenticationStep;
 
     private Credentials credentials;
     private InOrder mocksToVerifyInOrder;
@@ -34,12 +36,22 @@ public class BankIdIframeControllerTest {
         enterSSNStep = mock(BankIdEnterSSNStep.class);
         perform2FAStep = mock(BankIdPerform2FAStep.class);
         enterPrivatePasswordStep = mock(BankIdEnterPasswordStep.class);
+        verifyAuthenticationStep = mock(BankIdVerifyAuthenticationStep.class);
 
         credentials = mock(Credentials.class);
-        mocksToVerifyInOrder = inOrder(enterSSNStep, perform2FAStep, enterPrivatePasswordStep);
+        mocksToVerifyInOrder =
+                inOrder(
+                        enterSSNStep,
+                        perform2FAStep,
+                        enterPrivatePasswordStep,
+                        verifyAuthenticationStep);
 
         iframeController =
-                new BankIdIframeController(enterSSNStep, perform2FAStep, enterPrivatePasswordStep);
+                new BankIdIframeController(
+                        enterSSNStep,
+                        perform2FAStep,
+                        enterPrivatePasswordStep,
+                        verifyAuthenticationStep);
     }
 
     @Test
@@ -52,6 +64,7 @@ public class BankIdIframeControllerTest {
         mocksToVerifyInOrder.verify(enterSSNStep).enterSSN(credentials);
         mocksToVerifyInOrder.verify(perform2FAStep).perform2FA();
         mocksToVerifyInOrder.verify(enterPrivatePasswordStep).enterPrivatePassword(credentials);
+        mocksToVerifyInOrder.verify(verifyAuthenticationStep).verify();
 
         mocksToVerifyInOrder.verifyNoMoreInteractions();
     }
@@ -65,6 +78,7 @@ public class BankIdIframeControllerTest {
         // then
         mocksToVerifyInOrder.verify(perform2FAStep).perform2FA();
         mocksToVerifyInOrder.verify(enterPrivatePasswordStep).enterPrivatePassword(credentials);
+        mocksToVerifyInOrder.verify(verifyAuthenticationStep).verify();
 
         mocksToVerifyInOrder.verifyNoMoreInteractions();
     }

@@ -20,4 +20,6 @@ public interface BankIdWebDriver extends BankIdElementsSearcher {
     void clickButton(BankIdElementLocator selector);
 
     void setValueToElement(String value, BankIdElementLocator selector);
+
+    void sleepFor(int millis);
 }

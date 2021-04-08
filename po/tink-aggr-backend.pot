@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-04-08 10:56+0200\n"
+"POT-Creation-Date: 2021-04-12 16:21+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1749,4 +1749,37 @@ msgid "Could not initialize BankID authentication."
 msgstr ""
 
 msgid "BankID authentication error."
+msgstr ""
+
+msgid "Enter code from code chip"
+msgstr ""
+
+msgid "Confirm BankID authentication in your mobile BankID app."
+msgstr ""
+
+msgid "The provided social security number is incorrect."
+msgstr ""
+
+msgid "Invalid social security number or code chip code."
+msgstr ""
+
+msgid "There was a technical error when connecting with your mobile operator."
+msgstr ""
+
+msgid "Your BankID app is blocked"
+msgstr ""
+
+msgid "BankID app timeout"
+msgstr ""
+
+msgid "User password is invalid"
+msgstr ""
+
+msgid "The BankID password is invalid"
+msgstr ""
+
+msgid "Chip code"
+msgstr ""
+
+msgid "Please enter code generated using your code chip."
 msgstr ""

@@ -11,7 +11,10 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum BankIdNOErrorCode {
-    BID_20A1("BID-20a1", BankIdNOError.INITIALIZATION_ERROR);
+    BID_20A1("BID-20a1", BankIdNOError.INITIALIZATION_ERROR),
+    BID_20B1("BID-20b1", BankIdNOError.MOBILE_BANK_ID_TIMEOUT),
+    BID_14A4("BID-14a4", BankIdNOError.BANK_ID_APP_BLOCKED),
+    BID_14B1("BID-14b1", BankIdNOError.BANK_ID_APP_TIMEOUT);
 
     private final String code;
     private final BankIdNOError error;

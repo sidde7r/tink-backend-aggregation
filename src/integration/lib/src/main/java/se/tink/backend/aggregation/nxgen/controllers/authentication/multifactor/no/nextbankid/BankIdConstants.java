@@ -20,6 +20,14 @@ public class BankIdConstants {
 
     public static final String BANK_ID_LOG_PREFIX = "[BankID]";
     public static final int DEFAULT_WAIT_FOR_ELEMENT_TIMEOUT_IN_SECONDS = 10;
+    /*
+    Those values are based on timeouts observed in tests with ambassadors.
+    Every value is rounded up to multiple of 30s + there is 30s added just to be sure.
+     */
+    public static final int MOBILE_BANK_ID_TIMEOUT_IN_SECONDS = 120;
+    public static final int BANK_ID_APP_TIMEOUT_IN_SECONDS = 150;
+
+    public static final int WAIT_FOR_AUTHENTICATION_FINISH_SIGNS_IN_SECONDS = 5;
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class HtmlSelectors {
@@ -41,6 +49,8 @@ public class BankIdConstants {
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class HtmlLocators {
 
+        public static final BankIdElementLocator LOC_IFRAME =
+                BankIdElementLocator.builder().iframe(BY_IFRAME).build();
         public static final BankIdElementLocator LOC_SUBMIT_BUTTON =
                 inIframeLocator().element(BY_SUBMIT_BUTTON).mustBeDisplayed().build();
 
@@ -59,6 +69,11 @@ public class BankIdConstants {
                 nonErrorScreenLocator()
                         .mustContainOneOfTexts("BankID på mobil", "BankID on mobile")
                         .build();
+        public static final BankIdElementLocator LOC_REFERENCE_WORDS =
+                inIframeLocator()
+                        .element(new ByCssSelector("span[data-bind='text: reference']"))
+                        .mustBeDisplayed()
+                        .build();
 
         /*
         chip code screen
@@ -67,12 +82,19 @@ public class BankIdConstants {
                 nonErrorScreenLocator()
                         .mustContainOneOfTexts("Engangskode", "One Time Code")
                         .build();
+        public static final BankIdElementLocator LOC_CHIP_CODE_INPUT =
+                inIframeLocator()
+                        .element(new By.ByCssSelector("input[type=password]"))
+                        .mustBeDisplayed()
+                        .build();
 
         /*
         BankID app screen
         */
         public static final BankIdElementLocator LOC_BANK_ID_APP_METHOD_SCREEN =
-                nonErrorScreenLocator().mustContainOneOfTexts("Engangskode på mobil app").build();
+                nonErrorScreenLocator()
+                        .mustContainOneOfTexts("Engangskode på mobil app", "BankID-app")
+                        .build();
 
         /*
         error screens
@@ -94,6 +116,21 @@ public class BankIdConstants {
                         .build();
         public static final BankIdElementLocator LOC_BANK_ID_ERROR_NO_HEADING_TEXT =
                 LOC_BANK_ID_ERROR_NO_HEADING_SCREEN;
+
+        /*
+        enter password screen
+        */
+        public static final BankIdElementLocator LOC_PRIVATE_PASSWORD_SCREEN =
+                nonErrorScreenLocator()
+                        .mustContainOneOfTexts("Personlig passord", "Personal password")
+                        .build();
+        public static final BankIdElementLocator LOC_PRIVATE_PASSWORD_INPUT =
+                inIframeLocator()
+                        .element(new By.ByCssSelector("input[type=password][data-type=password]"))
+                        .mustBeDisplayed()
+                        .build();
+        public static final BankIdElementLocator LOC_PRIVATE_PASSWORD_ERROR_BUBBLE =
+                inIframeLocator().element(new ByCssSelector(".infobubble_wrapper .text")).build();
 
         /*
         common 2FA elements

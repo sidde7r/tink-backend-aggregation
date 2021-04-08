@@ -70,13 +70,14 @@ public class BankIdEnterSSNStepTest {
                         BankIdScreensQuery.builder()
                                 .waitForScreens(BankIdScreen.ENTER_SSN_SCREEN)
                                 .waitForSeconds(10)
+                                .verifyNoErrorScreens(true)
                                 .build());
         mocksToVerifyInOrder
                 .verify(webDriver)
                 .searchForFirstMatchingLocator(
                         BankIdElementsSearchQuery.builder()
                                 .searchFor(LOC_SSN_INPUT)
-                                .searchForSeconds(10)
+                                .waitForSeconds(10)
                                 .build());
         mocksToVerifyInOrder.verify(webDriver).setValueToElement(SAMPLE_USER_SSN, LOC_SSN_INPUT);
         mocksToVerifyInOrder.verify(webDriver).clickButton(LOC_SUBMIT_BUTTON);

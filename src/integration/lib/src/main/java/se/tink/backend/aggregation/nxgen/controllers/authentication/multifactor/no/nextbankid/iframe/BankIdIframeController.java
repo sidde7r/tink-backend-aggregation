@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.steps.BankIdEnterPasswordStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.steps.BankIdEnterSSNStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.steps.BankIdPerform2FAStep;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.steps.BankIdVerifyAuthenticationStep;
 
 @Slf4j
 @RequiredArgsConstructor(access = AccessLevel.PACKAGE, onConstructor = @__({@Inject}))
@@ -19,6 +20,7 @@ public class BankIdIframeController {
     private final BankIdEnterSSNStep enterSSNStep;
     private final BankIdPerform2FAStep perform2FAStep;
     private final BankIdEnterPasswordStep enterPrivatePasswordStep;
+    private final BankIdVerifyAuthenticationStep verifyAuthenticationStep;
 
     public void authenticateWithCredentials(
             Credentials credentials, BankIdIframeFirstWindow firstWindow) {
@@ -41,6 +43,9 @@ public class BankIdIframeController {
         log.info("{} 2FA completed", BANK_ID_LOG_PREFIX);
 
         enterPrivatePasswordStep.enterPrivatePassword(credentials);
-        log.info("{} Private password entered successfully", BANK_ID_LOG_PREFIX);
+        log.info("{} Private password entered", BANK_ID_LOG_PREFIX);
+
+        verifyAuthenticationStep.verify();
+        log.info("{} Iframe authentication finished", BANK_ID_LOG_PREFIX);
     }
 }

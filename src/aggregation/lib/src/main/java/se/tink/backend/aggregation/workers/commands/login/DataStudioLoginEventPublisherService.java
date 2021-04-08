@@ -151,6 +151,26 @@ public class DataStudioLoginEventPublisherService {
                                     AgentLoginCompletedEventProto.AgentLoginCompletedEvent
                                             .LoginResult>
                                     builder()
+                            .put(
+                                    BankIdNOError.INVALID_SSN_OR_CHIP_CODE,
+                                    AgentLoginCompletedEventProto.AgentLoginCompletedEvent
+                                            .LoginResult.LOGIN_ERROR_INCORRECT_CREDENTIALS)
+                            .put(
+                                    BankIdNOError.MOBILE_BANK_ID_TIMEOUT,
+                                    AgentLoginCompletedEventProto.AgentLoginCompletedEvent
+                                            .LoginResult.BANKID_ERROR_TIMEOUT)
+                            .put(
+                                    BankIdNOError.BANK_ID_APP_BLOCKED,
+                                    AgentLoginCompletedEventProto.AgentLoginCompletedEvent
+                                            .LoginResult.BANKID_ERROR_BLOCKED)
+                            .put(
+                                    BankIdNOError.BANK_ID_APP_TIMEOUT,
+                                    AgentLoginCompletedEventProto.AgentLoginCompletedEvent
+                                            .LoginResult.BANKID_ERROR_TIMEOUT)
+                            .put(
+                                    BankIdNOError.INVALID_BANK_ID_PASSWORD,
+                                    AgentLoginCompletedEventProto.AgentLoginCompletedEvent
+                                            .LoginResult.LOGIN_ERROR_INCORRECT_CREDENTIALS)
                             .build();
 
     private static final ImmutableMap<

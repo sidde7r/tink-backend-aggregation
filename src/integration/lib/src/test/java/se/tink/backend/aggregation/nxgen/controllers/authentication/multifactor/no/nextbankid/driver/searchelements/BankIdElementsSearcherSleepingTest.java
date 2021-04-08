@@ -76,7 +76,7 @@ public class BankIdElementsSearcherSleepingTest {
                 elementsSearcher.searchForFirstMatchingLocator(
                         BankIdElementsSearchQuery.builder()
                                 .searchFor(notExistingLocator)
-                                .searchForSeconds(waitForSeconds)
+                                .waitForSeconds(waitForSeconds)
                                 .build());
         // then
         assertThat(searchResult.isEmpty()).isTrue();
@@ -97,8 +97,8 @@ public class BankIdElementsSearcherSleepingTest {
                 elementsSearcher.searchForFirstMatchingLocator(
                         BankIdElementsSearchQuery.builder()
                                 .searchFor(notExistingLocator)
-                                .searchForSeconds(10)
-                                .searchOnlyOnce(true)
+                                .waitForSeconds(10)
+                                .waitForSeconds(0)
                                 .build());
         // then
         assertThat(searchResult.isEmpty()).isTrue();
@@ -129,7 +129,7 @@ public class BankIdElementsSearcherSleepingTest {
                 elementsSearcher.searchForFirstMatchingLocator(
                         BankIdElementsSearchQuery.builder()
                                 .searchFor(elementLocator)
-                                .searchForSeconds(20)
+                                .waitForSeconds(20)
                                 .build());
         // then
         assertThat(searchResult.isEmpty()).isFalse();

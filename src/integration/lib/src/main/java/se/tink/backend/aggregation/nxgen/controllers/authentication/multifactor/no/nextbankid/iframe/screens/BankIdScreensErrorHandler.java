@@ -88,7 +88,7 @@ public class BankIdScreensErrorHandler {
                 .searchForFirstMatchingLocator(
                         BankIdElementsSearchQuery.builder()
                                 .searchFor(elementSelector)
-                                .searchForSeconds(10)
+                                .waitForSeconds(10)
                                 .build())
                 .getFirstFoundElement()
                 .map(WebElement::getText)

@@ -15,9 +15,12 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 public class BankIdElementsSearchQuery {
 
     private final List<BankIdElementLocator> locators;
-
-    private final boolean searchOnlyOnce;
-    private final Integer timeoutInSeconds;
+    /**
+     * Defines how many seconds should we wait while searching for elements. If this value is 0,
+     * there will be only one search performed. If this value is > 0, number of searches depends of
+     * how many searches per second are run by {@link BankIdElementsSearcher}.
+     */
+    private final Integer waitForSeconds;
 
     public static ElementsSearchQueryBuilder builder() {
         return new ElementsSearchQueryBuilder();
@@ -26,9 +29,7 @@ public class BankIdElementsSearchQuery {
     public static class ElementsSearchQueryBuilder {
 
         private final List<BankIdElementLocator> elements = new ArrayList<>();
-
-        private boolean searchOnlyOnce = false;
-        private Integer timeoutInSeconds =
+        private Integer waitForSeconds =
                 BankIdConstants.DEFAULT_WAIT_FOR_ELEMENT_TIMEOUT_IN_SECONDS;
 
         public ElementsSearchQueryBuilder searchFor(BankIdElementLocator... locators) {
@@ -41,18 +42,13 @@ public class BankIdElementsSearchQuery {
             return this;
         }
 
-        public ElementsSearchQueryBuilder searchForSeconds(Integer seconds) {
-            timeoutInSeconds = seconds;
-            return this;
-        }
-
-        public ElementsSearchQueryBuilder searchOnlyOnce(boolean searchOnlyOnce) {
-            this.searchOnlyOnce = searchOnlyOnce;
+        public ElementsSearchQueryBuilder waitForSeconds(Integer seconds) {
+            waitForSeconds = seconds;
             return this;
         }
 
         public BankIdElementsSearchQuery build() {
-            return new BankIdElementsSearchQuery(elements, searchOnlyOnce, timeoutInSeconds);
+            return new BankIdElementsSearchQuery(elements, waitForSeconds);
         }
     }
 }
