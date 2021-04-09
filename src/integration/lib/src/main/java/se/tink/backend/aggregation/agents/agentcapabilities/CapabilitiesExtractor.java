@@ -71,32 +71,17 @@ public class CapabilitiesExtractor {
         AgentPisCapability[] pisCapabilitiesArray =
                 klass.getAnnotationsByType(AgentPisCapability.class);
         Map<String, Set<String>> map = new HashMap<>();
-        Set<String> processedMarkets = new HashSet<>();
         for (AgentPisCapability agentPisCapability : pisCapabilitiesArray) {
             List<String> markets = Arrays.asList(agentPisCapability.markets());
             if (markets.isEmpty()) {
-                for (String market :
+                markets =
                         Arrays.stream(MarketCode.values())
                                 .map(marketCode -> marketCode.name())
-                                .collect(Collectors.toList())) {
-                    map.computeIfAbsent(
-                            market,
-                            k ->
-                                    new HashSet<>(
-                                            readPisCapabilitiesFromAnnotation(agentPisCapability)));
-                }
-            } else {
-                for (String market : markets) {
-                    if (processedMarkets.contains(market)) {
-                        throw new IllegalStateException(
-                                "PIS Capabilities for market "
-                                        + market
-                                        + " configured more than once!");
-                    }
-                    processedMarkets.add(market);
-                    map.computeIfAbsent(market, k -> new HashSet<>());
-                    map.put(market, readPisCapabilitiesFromAnnotation(agentPisCapability));
-                }
+                                .collect(Collectors.toList());
+            }
+            for (String market : markets) {
+                map.computeIfAbsent(market, k -> new HashSet<>())
+                        .addAll(readPisCapabilitiesFromAnnotation(agentPisCapability));
             }
         }
         return map;

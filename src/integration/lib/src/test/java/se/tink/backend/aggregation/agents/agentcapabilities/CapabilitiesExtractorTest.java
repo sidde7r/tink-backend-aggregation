@@ -58,4 +58,16 @@ public class CapabilitiesExtractorTest {
         assertThat(pisCapabilities.get(MARKET))
                 .containsOnly(PisCapability.PIS_UK_FASTER_PAYMENT.name());
     }
+
+    @Test
+    public void shouldExtractRepeatedMarketSpecificPisCapabilitiesFromMultipleAnnotations() {
+        final Map<String, Set<String>> pisCapabilities =
+                CapabilitiesExtractor.readPisCapabilities(
+                        TestAgentWithListedPisCapabilitiesWithRepeatedMarket.class);
+        assertThat(pisCapabilities).hasSize(1);
+        assertThat(pisCapabilities.containsKey(MARKET)).isTrue();
+        assertThat(pisCapabilities.get(MARKET))
+                .containsExactlyInAnyOrder(
+                        PisCapability.PIS_SEPA.name(), PisCapability.PIS_SEPA_ICT.name());
+    }
 }
