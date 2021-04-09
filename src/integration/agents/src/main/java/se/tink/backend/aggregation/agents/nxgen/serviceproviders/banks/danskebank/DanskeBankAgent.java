@@ -190,8 +190,9 @@ public abstract class DanskeBankAgent<MarketSpecificApiClient extends DanskeBank
         return loanRefreshController.fetchLoanTransactions();
     }
 
-    private <A extends Account> TransactionFetcherController<A> createTransactionFetcherController(
-            LocalDateTimeSource localDateTimeSource) {
+    protected <A extends Account>
+            TransactionFetcherController<A> createTransactionFetcherController(
+                    LocalDateTimeSource localDateTimeSource) {
         DanskeBankMultiTransactionsFetcher<A> transactionFetcher =
                 new DanskeBankMultiTransactionsFetcher<>(
                         this.apiClient, this.configuration.getLanguageCode(), request);

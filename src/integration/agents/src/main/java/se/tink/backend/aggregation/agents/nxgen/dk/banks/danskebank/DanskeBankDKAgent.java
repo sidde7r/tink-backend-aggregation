@@ -1,7 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.dk.banks.danskebank;
 
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConstants.Transactions.AMOUNT_TO_FETCH;
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConstants.Transactions.ZONE_ID;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CREDIT_CARDS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.IDENTITY_DATA;
@@ -11,7 +9,6 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
 
 import com.google.inject.Inject;
-import java.time.temporal.ChronoUnit;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
@@ -31,18 +28,15 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeban
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password.DanskeBankChallengeAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.DanskeBankAccountLoanFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.DanskeBankCreditCardFetcher;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.DanskeBankMultiTransactionsFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.DanskeBankTransactionalAccountFetcher;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.loan.LoanRefreshController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
-import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 
 @AgentCapabilities({
@@ -61,7 +55,6 @@ public final class DanskeBankDKAgent extends DanskeBankAgent
                 RefreshSavingsAccountsExecutor,
                 RefreshIdentityDataExecutor {
 
-    private static final int DK_MAX_CONSECUTIVE_EMPTY_PAGES = 1;
     private final LoanRefreshController loanRefreshController;
     private final CreditCardRefreshController creditCardRefreshController;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
@@ -81,10 +74,11 @@ public final class DanskeBankDKAgent extends DanskeBankAgent
                                 true,
                                 accountDetailsFetcher));
 
-        this.creditCardRefreshController = constructCreditCardRefreshController();
-
+        LocalDateTimeSource localDateTimeSource = componentProvider.getLocalDateTimeSource();
+        this.creditCardRefreshController =
+                constructCreditCardRefreshController(localDateTimeSource);
         this.transactionalAccountRefreshController =
-                constructTransactionalAccountRefreshController();
+                constructTransactionalAccountRefreshController(localDateTimeSource);
         this.client.setTimeout(HttpClientParams.CLIENT_TIMEOUT);
     }
 
@@ -150,7 +144,8 @@ public final class DanskeBankDKAgent extends DanskeBankAgent
         return transactionalAccountRefreshController.fetchSavingsTransactions();
     }
 
-    private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {
+    private TransactionalAccountRefreshController constructTransactionalAccountRefreshController(
+            LocalDateTimeSource localDateTimeSource) {
         return new TransactionalAccountRefreshController(
                 this.metricRefreshController,
                 this.updateController,
@@ -159,7 +154,7 @@ public final class DanskeBankDKAgent extends DanskeBankAgent
                         this.configuration,
                         new DkAccountEntityMapper(),
                         accountDetailsFetcher),
-                createTransactionFetcherController());
+                createTransactionFetcherController(localDateTimeSource));
     }
 
     @Override
@@ -172,7 +167,8 @@ public final class DanskeBankDKAgent extends DanskeBankAgent
         return creditCardRefreshController.fetchCreditCardTransactions();
     }
 
-    private CreditCardRefreshController constructCreditCardRefreshController() {
+    private CreditCardRefreshController constructCreditCardRefreshController(
+            LocalDateTimeSource localDateTimeSource) {
         return new CreditCardRefreshController(
                 this.metricRefreshController,
                 this.updateController,
@@ -181,21 +177,7 @@ public final class DanskeBankDKAgent extends DanskeBankAgent
                         this.configuration,
                         new DkAccountEntityMapper(),
                         accountDetailsFetcher),
-                createTransactionFetcherController());
-    }
-
-    private TransactionFetcherController createTransactionFetcherController() {
-        DanskeBankMultiTransactionsFetcher<? extends Account> transactionFetcher =
-                new DanskeBankMultiTransactionsFetcher<>(
-                        this.apiClient, this.configuration.getLanguageCode(), request);
-        return new TransactionFetcherController<>(
-                this.transactionPaginationHelper,
-                new TransactionDatePaginationController.Builder<>(transactionFetcher)
-                        .setConsecutiveEmptyPagesLimit(DK_MAX_CONSECUTIVE_EMPTY_PAGES)
-                        .setAmountAndUnitToFetch(AMOUNT_TO_FETCH, ChronoUnit.DAYS)
-                        .setZoneId(ZONE_ID)
-                        .build(),
-                transactionFetcher);
+                createTransactionFetcherController(localDateTimeSource));
     }
 
     @Override
