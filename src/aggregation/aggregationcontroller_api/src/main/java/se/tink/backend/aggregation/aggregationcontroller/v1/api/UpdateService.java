@@ -100,7 +100,7 @@ public interface UpdateService {
 
     @POST
     @Path("/transfer/process")
-    @TeamOwnership(Team.PAYMENTS)
+    @TeamOwnership(Team.AGGREGATION_AGENT_PLATFORM)
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     Response processEinvoices(UpdateTransfersRequest request);
