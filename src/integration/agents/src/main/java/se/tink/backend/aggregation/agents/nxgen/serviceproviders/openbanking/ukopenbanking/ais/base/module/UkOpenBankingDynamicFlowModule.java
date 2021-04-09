@@ -5,7 +5,7 @@ import com.google.inject.Scopes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingFlowFacade;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.module.toggle.UkOpenBankingToggleModule;
 
-public final class DynamicUkOpenBankingFlowSwitcherModule extends AbstractModule {
+public final class UkOpenBankingDynamicFlowModule extends AbstractModule {
 
     @Override
     protected void configure() {
