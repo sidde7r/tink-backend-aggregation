@@ -67,7 +67,7 @@ public class CircuitBreakerStatistics {
             String market,
             Ticker ticker) {
         Preconditions.checkArgument(timeLimit > 0);
-        Preconditions.checkArgument(rateLimitMultiplicationFactors.size() > 0);
+        Preconditions.checkArgument(!rateLimitMultiplicationFactors.isEmpty());
         Preconditions.checkArgument(errorRatioThreshold > 0);
         Preconditions.checkArgument(circuitBreakerThreshold > 0);
         Preconditions.checkArgument(breakCircuitBreakerThreshold > 0);
