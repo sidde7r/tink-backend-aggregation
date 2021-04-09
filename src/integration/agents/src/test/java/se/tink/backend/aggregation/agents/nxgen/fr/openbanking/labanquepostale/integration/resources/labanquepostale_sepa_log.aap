@@ -1,0 +1,200 @@
+REQUEST 1
+POST https://oauth2.labanquepostale.com/token
+Content-Type: application/x-www-form-urlencoded
+Accept: application/json
+X-Aggregator: Tink Testing
+
+RESPONSE 1
+200
+Content-Type: application/json
+
+{"token_type":"bearer","access_token":"DUMMY_ACCESS_TOKEN","expires_in":900,"consented_on":0, "scope":"pisp"}
+
+REQUEST 2
+POST https://api.labanquepostale.com/v1/payment-requests
+Content-Type: application/json
+Authorization: Bearer DUMMY_ACCESS_TOKEN
+X-Aggregator: Tink Testing
+
+{
+    "requestedExecutionDate": "2021-01-01T00:01:00.000+01:00",
+    "numberOfTransactions": 1,
+    "initiatingParty": {
+        "name": "Tink"
+    },
+    "paymentTypeInformation": {
+        "serviceLevel": "SEPA",
+        "localInstrument": "",
+        "categoryPurpose": "CASH"
+    },
+    "beneficiary": {
+        "creditorAgent": {
+            "bicFi": "BNKAFRPPXXX",
+            "name": "CreditorAgentName"
+        },
+        "creditor": {
+            "name": "Payment Creditor"
+        },
+        "creditorAccount": {
+            "iban": "FR1420041010050500013M02606"
+        }
+    },
+    "creditTransferTransaction": [
+        {
+            "requestedExecutionDate": "2021-01-01T00:01:00.000+01:00",
+            "remittanceInformation": {
+                "structured": null,
+                "unstructured": [
+                    "Message"
+                ]
+            },
+            "beneficiary": {
+                "creditorAgent": {
+                    "bicFi": "BNKAFRPPXXX",
+                    "name": "CreditorAgentName"
+                },
+                "creditor": {
+                    "name": "Payment Creditor"
+                },
+                "creditorAccount": {
+                    "iban": "FR1420041010050500013M02606"
+                }
+            },
+            "instructedAmount": {
+                "amount": "2.0",
+                "currency": "EUR"
+            }
+        }
+    ],
+    "chargeBearer" : "SLEV",
+    "supplementaryData": {
+        "acceptedAuthenticationApproach": [
+            "REDIRECT"
+        ],
+        "successfulReportUrl": "https://api.tink.com/api/v1/credentials/third-party/callback?state=00000000-0000-4000-0000-000000000000",
+        "unsuccessfulReportUrl": "https://api.tink.com/api/v1/credentials/third-party/callback?state=00000000-0000-4000-0000-000000000000"
+    }
+}
+
+RESPONSE 2
+201
+Content-Type: application/json
+
+{"appliedAuthenticationApproach":"REDIRECT","_links":{"consentApproval":{"href":"https://m.labanquepostale.fr/ws_qhb/routing/accueil_paiement?origin=tpp&paymentRequestResourceId=003bf418-3189-4de9-9579-e84b2249ca1d"}}}
+
+REQUEST 3
+POST https://api.labanquepostale.com/v1/payment-requests/003bf418-3189-4de9-9579-e84b2249ca1d/confirmation
+X-Aggregator: Tink Testing
+Authorization: Bearer DUMMY_ACCESS_TOKEN
+Content-Type: application/json
+
+{"psuAuthenticationFactor":"DUMMY_PSU_AUTH_CODE"}
+
+RESPONSE 3
+200
+Content-Type: application/json
+
+{
+    "_links": {
+        "request": {
+            "href": "https://api.labanquepostale.com/v1/payment-requests/003bf418-3189-4de9-9579-e84b2249ca1d"
+        },
+        "confirmation": {
+            "href": "https://api.labanquepostale.com/v1/payment-requests/003bf418-3189-4de9-9579-e84b2249ca1d/confirmation"
+        }
+    },
+    "paymentRequest": {
+        "resourceId": "003bf418-3189-4de9-9579-e84b2249ca1d",
+        "paymentInformationId": "92b5e0c49e524f20a15b7d891237ffdd",
+        "batchBooking": null,
+        "creationDateTime": "2021-01-01T00:00:00.000+01:00",
+        "numberOfTransactions": 1,
+        "initiatingParty": {
+            "name": "Tink"
+        },
+        "acceptDebtorAccountChange": null,
+        "acceptChargeHandlingChange": null,
+        "paymentTypeInformation": {
+            "instructionPriority": null,
+            "serviceLevel": "SEPA",
+            "localInstrument": "",
+            "categoryPurpose": "CASH"
+        },
+        "debtor": null,
+        "debtorAccount": {
+            "iban": "FR1261401750597365134612940",
+            "currency": "EUR"
+        },
+        "debtorAgent": null,
+        "beneficiary": {
+            "creditorAgent": {
+                "bicFi": "BNKAFRPPXXX",
+                "name": "CreditorAgentName"
+            },
+            "creditor": {
+                "name": "Payment Creditor"
+            },
+            "creditorAccount": {
+                "iban": "FR1420041010050500013M02606"
+            }
+        },
+        "chargeBearer" : "SLEV",
+        "paymentInformationStatus": "ACSP",
+        "statusReasonInformation": "",
+        "fundsAvailability": null,
+        "booking": null,
+        "requestedExecutionDate": "2021-01-01T00:01:00.000+01:00",
+        "creditTransferTransaction": [
+            {
+                "paymentId": {
+                    "instructionId": "92b5e0c49e524f20a15b7d891237ffdd",
+                    "resourceIdPSU": "028020210319997581001209650300000000",
+                    "endToEndId": "92b5e0c49e524f20a15b7d891237ffdd"
+                },
+                "requestedExecutionDate": "2021-01-01T00:01:00.000+01:00",
+                "endDate": null,
+                "executionRule": null,
+                "frequency": null,
+                "instructedAmount": {
+                    "amount": "2.0",
+                    "currency": "EUR"
+                },
+                "equivalentAmount": null,
+                "exchangeRateInformation": null,
+                "ultimateDebtor": null,
+                "intermediaryAgent": null,
+                "beneficiary": {
+                    "creditorAgent": {
+                        "bicFi": "BNKAFRPPXXX",
+                        "name": "CreditorAgentName"
+                    },
+                    "creditor": {
+                        "name": "Payment Creditor"
+                    },
+                    "creditorAccount": {
+                        "iban": "FR1420041010050500013M02606"
+                    }
+                },
+                "ultimateCreditor": null,
+                "instructionForCreditorAgent": null,
+                "purpose": null,
+                "regulatoryReportingCodes": null,
+                "remittanceInformation": {
+                    "unstructured": [
+                        "Message"
+                    ]
+                },
+                "transactionStatus": null,
+                "statusReasonInformation": null
+            }
+        ],
+        "supplementaryData": {
+            "acceptedAuthenticationApproach": [
+                "REDIRECT"
+            ],
+            "appliedAuthenticationApproach": "REDIRECT",
+            "successfulReportUrl": "https%3A%2F%2Fapi.tink.com%2Fapi%2Fv1%2Fcredentials%2Fthird-party%2Fcallback%3Fstate%3D10f966e6-70bf-4d48-805a-dc9593c1feed",
+            "unsuccessfulReportUrl": "https%3A%2F%2Fapi.tink.com%2Fapi%2Fv1%2Fcredentials%2Fthird-party%2Fcallback%3Fstate%3D10f966e6-70bf-4d48-805a-dc9593c1feed"
+        }
+    }
+}

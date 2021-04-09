@@ -6,13 +6,6 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.LaBanquePostaleConstants.CHANGE_BEARER;
-import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.LaBanquePostaleConstants.PaymentTypeInformation.CATEGORY_PURPOSE;
-import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.LaBanquePostaleConstants.PaymentTypeInformation.LOCAL_INSTRUMENT;
-import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.LaBanquePostalePaymentExecutor.CONFIRM_PAYMENT;
-import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.LaBanquePostalePaymentExecutor.PAYMENT_AUTHORIZATION_URL;
-import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.LaBanquePostalePaymentExecutor.PSU_AUTHORIZATION_FACTOR;
-import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.LaBanquePostalePaymentExecutor.PSU_AUTHORIZATION_FACTOR_KEY;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -20,6 +13,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
+import lombok.SneakyThrows;
 import org.assertj.core.api.Assertions;
 import org.iban4j.CountryCode;
 import org.iban4j.Iban;
@@ -28,7 +22,9 @@ import org.junit.Test;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.LaBanquePostaleConstants;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.LaBanquePostaleConstants.CreditorAgentConstants;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.LaBanquePostaleConstants.PaymentTypeInformation;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.LaBanquePostalePaymentApiClient;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.LaBanquePostalePaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.authenticator.rpc.ConfirmPaymentResponse;
@@ -159,7 +155,8 @@ public class LaBanquePostalePaymentExecutorTest {
                                 .get(0))
                 .isEqualTo("ReferenceToCreditor");
 
-        Assertions.assertThat(result.getChargeBearer()).isEqualTo(CHANGE_BEARER);
+        Assertions.assertThat(result.getChargeBearer())
+                .isEqualTo(LaBanquePostaleConstants.CHANGE_BEARER);
         Assertions.assertThat(result.getSupplementaryData().getSuccessfulReportUrl())
                 .isEqualTo(SOME_URL);
         Assertions.assertThat(result.getSupplementaryData().getUnsuccessfulReportUrl())
@@ -169,13 +166,14 @@ public class LaBanquePostalePaymentExecutorTest {
                 .isEqualTo("REDIRECT");
 
         Assertions.assertThat(result.getPaymentTypeInformation().getCategoryPurpose())
-                .isEqualTo(CATEGORY_PURPOSE);
+                .isEqualTo(PaymentTypeInformation.CATEGORY_PURPOSE);
         Assertions.assertThat(result.getPaymentTypeInformation().getLocalInstrument())
-                .isEqualTo(LOCAL_INSTRUMENT);
+                .isEqualTo(PaymentTypeInformation.SEPA_INSTANT_CREDIT_TRANSFER);
         Assertions.assertThat(result.getPaymentTypeInformation().getServiceLevel())
                 .isEqualTo(PaymentType.SEPA.toString().toUpperCase());
     }
 
+    @SneakyThrows
     @Test
     public void createShouldCallApiClientAndReturnPaymentResponse() {
         // given
@@ -229,7 +227,8 @@ public class LaBanquePostalePaymentExecutorTest {
                 .isEqualTo(AccountIdentifierType.IBAN);
         Assertions.assertThat(paymentResponse.getPayment().getDebtor()).isEqualTo(null);
 
-        verify(sessionStorage).put(PAYMENT_AUTHORIZATION_URL, AUTHORIZATION_URL);
+        verify(sessionStorage)
+                .put(LaBanquePostalePaymentExecutor.PAYMENT_AUTHORIZATION_URL, AUTHORIZATION_URL);
         verify(apiClient).createPayment(any());
     }
 
@@ -246,7 +245,9 @@ public class LaBanquePostalePaymentExecutorTest {
 
         Map<String, String> queryMap = new HashMap<>();
         String psuAuthenticationFactor = "psuAuthenticationFactor";
-        queryMap.put(PSU_AUTHORIZATION_FACTOR_KEY, psuAuthenticationFactor);
+        queryMap.put(
+                LaBanquePostalePaymentExecutor.PSU_AUTHORIZATION_FACTOR_KEY,
+                psuAuthenticationFactor);
         Optional<Map<String, String>> paramOptional = Optional.of(queryMap);
 
         when(sessionStorage.get(LaBanquePostalePaymentExecutor.PAYMENT_AUTHORIZATION_URL))
@@ -263,9 +264,13 @@ public class LaBanquePostalePaymentExecutorTest {
         PaymentMultiStepResponse response = paymentExecutor.sign(paymentRequest);
 
         // then
-        Assertions.assertThat(response.getStep()).isEqualTo(CONFIRM_PAYMENT);
+        Assertions.assertThat(response.getStep())
+                .isEqualTo(LaBanquePostalePaymentExecutor.CONFIRM_PAYMENT);
         verify(sessionStorage).get(LaBanquePostalePaymentExecutor.PAYMENT_AUTHORIZATION_URL);
-        verify(sessionStorage).put(eq(PSU_AUTHORIZATION_FACTOR), eq(psuAuthenticationFactor));
+        verify(sessionStorage)
+                .put(
+                        eq(LaBanquePostalePaymentExecutor.PSU_AUTHORIZATION_FACTOR),
+                        eq(psuAuthenticationFactor));
         verify(supplementalInformationHelper).openThirdPartyApp(any());
     }
 
@@ -283,7 +288,9 @@ public class LaBanquePostalePaymentExecutorTest {
 
         Map<String, String> queryMap = new HashMap<>();
         String psuAuthenticationFactor = "psuAuthenticationFactor";
-        queryMap.put(PSU_AUTHORIZATION_FACTOR_KEY.toLowerCase(), psuAuthenticationFactor);
+        queryMap.put(
+                LaBanquePostalePaymentExecutor.PSU_AUTHORIZATION_FACTOR_KEY.toLowerCase(),
+                psuAuthenticationFactor);
         Optional<Map<String, String>> paramOptional = Optional.of(queryMap);
 
         when(sessionStorage.get(LaBanquePostalePaymentExecutor.PAYMENT_AUTHORIZATION_URL))
@@ -300,9 +307,13 @@ public class LaBanquePostalePaymentExecutorTest {
         PaymentMultiStepResponse response = paymentExecutor.sign(paymentRequest);
 
         // then
-        Assertions.assertThat(response.getStep()).isEqualTo(CONFIRM_PAYMENT);
+        Assertions.assertThat(response.getStep())
+                .isEqualTo(LaBanquePostalePaymentExecutor.CONFIRM_PAYMENT);
         verify(sessionStorage).get(LaBanquePostalePaymentExecutor.PAYMENT_AUTHORIZATION_URL);
-        verify(sessionStorage).put(eq(PSU_AUTHORIZATION_FACTOR), eq(psuAuthenticationFactor));
+        verify(sessionStorage)
+                .put(
+                        eq(LaBanquePostalePaymentExecutor.PSU_AUTHORIZATION_FACTOR),
+                        eq(psuAuthenticationFactor));
         verify(supplementalInformationHelper).openThirdPartyApp(any());
     }
 
@@ -313,12 +324,13 @@ public class LaBanquePostalePaymentExecutorTest {
                 new PaymentMultiStepRequest(
                         mock(Payment.class),
                         sessionStorage,
-                        CONFIRM_PAYMENT,
+                        LaBanquePostalePaymentExecutor.CONFIRM_PAYMENT,
                         Collections.emptyList(),
                         Collections.emptyList());
 
         String psuAuthorizationFactor = "psuAuthorizationFactor";
-        when(sessionStorage.get(PSU_AUTHORIZATION_FACTOR)).thenReturn(psuAuthorizationFactor);
+        when(sessionStorage.get(LaBanquePostalePaymentExecutor.PSU_AUTHORIZATION_FACTOR))
+                .thenReturn(psuAuthorizationFactor);
 
         when(apiClient.confirmPayment(null, psuAuthorizationFactor))
                 .thenReturn(new ConfirmPaymentResponse(new PaymentStatusEntity("ACSC")));
@@ -339,12 +351,13 @@ public class LaBanquePostalePaymentExecutorTest {
                 new PaymentMultiStepRequest(
                         mock(Payment.class),
                         sessionStorage,
-                        CONFIRM_PAYMENT,
+                        LaBanquePostalePaymentExecutor.CONFIRM_PAYMENT,
                         Collections.emptyList(),
                         Collections.emptyList());
 
         String psuAuthorizationFactor = "psuAuthorizationFactor";
-        when(sessionStorage.get(PSU_AUTHORIZATION_FACTOR)).thenReturn(psuAuthorizationFactor);
+        when(sessionStorage.get(LaBanquePostalePaymentExecutor.PSU_AUTHORIZATION_FACTOR))
+                .thenReturn(psuAuthorizationFactor);
 
         when(apiClient.confirmPayment(null, psuAuthorizationFactor))
                 .thenReturn(new ConfirmPaymentResponse(new PaymentStatusEntity("RCVD")));
@@ -364,12 +377,13 @@ public class LaBanquePostalePaymentExecutorTest {
                 new PaymentMultiStepRequest(
                         mock(Payment.class),
                         sessionStorage,
-                        CONFIRM_PAYMENT,
+                        LaBanquePostalePaymentExecutor.CONFIRM_PAYMENT,
                         Collections.emptyList(),
                         Collections.emptyList());
 
         String psuAuthorizationFactor = "psuAuthorizationFactor";
-        when(sessionStorage.get(PSU_AUTHORIZATION_FACTOR)).thenReturn(psuAuthorizationFactor);
+        when(sessionStorage.get(LaBanquePostalePaymentExecutor.PSU_AUTHORIZATION_FACTOR))
+                .thenReturn(psuAuthorizationFactor);
 
         when(apiClient.confirmPayment(null, psuAuthorizationFactor))
                 .thenReturn(new ConfirmPaymentResponse(new PaymentStatusEntity("RJCT")));

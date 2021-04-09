@@ -1,11 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.authenticator.rpc;
 
-import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.LaBanquePostaleConstants.CHANGE_BEARER;
-import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.LaBanquePostaleConstants.DEVICE_NAME;
-import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.LaBanquePostaleConstants.PaymentTypeInformation.CATEGORY_PURPOSE;
-import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.LaBanquePostaleConstants.PaymentTypeInformation.SEPA_INSTANT;
-import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.LaBanquePostaleConstants.PaymentTypeInformation.SEPA_STANDARD;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -14,6 +8,8 @@ import java.util.Collections;
 import java.util.List;
 import lombok.Getter;
 import org.apache.commons.lang.RandomStringUtils;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.LaBanquePostaleConstants;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.LaBanquePostaleConstants.PaymentTypeInformation;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.entities.BeneficiaryEntity;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.entities.CreditTransferTransactionEntity;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.entities.CreditorAgentEntity;
@@ -59,14 +55,14 @@ public class CreatePaymentRequest {
         creationDateTime = builder.creationDateTime;
         requestedExecutionDate = builder.requestedExecutionDate;
         numberOfTransactions = 1;
-        initiatingParty = new InitiatingPartyEntity(DEVICE_NAME);
+        initiatingParty = new InitiatingPartyEntity(LaBanquePostaleConstants.DEVICE_NAME);
         paymentTypeInformation =
                 new PaymentTypeInformationEntity(
                         builder.paymentType.toString().toUpperCase(),
                         PaymentScheme.SEPA_INSTANT_CREDIT_TRANSFER == builder.paymentScheme
-                                ? SEPA_INSTANT
-                                : SEPA_STANDARD,
-                        CATEGORY_PURPOSE);
+                                ? PaymentTypeInformation.SEPA_INSTANT_CREDIT_TRANSFER
+                                : PaymentTypeInformation.SEPA_STANDARD_CREDIT_TRANSFER,
+                        PaymentTypeInformation.CATEGORY_PURPOSE);
         beneficiary =
                 new BeneficiaryEntity(
                         builder.creditorAgentEntity,
@@ -80,7 +76,7 @@ public class CreatePaymentRequest {
                                 builder.amount,
                                 builder.remittanceInformation,
                                 beneficiary));
-        chargeBearer = CHANGE_BEARER;
+        chargeBearer = LaBanquePostaleConstants.CHANGE_BEARER;
         supplementaryData = new SupplementaryDataEntity(builder.redirectUrl);
     }
 
