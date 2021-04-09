@@ -7,6 +7,7 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.PisCapability.PIS_UK_FASTER_PAYMENT;
 
 import com.google.inject.Inject;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentPisCapability;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModulesForDecoupledMode;
@@ -29,7 +30,9 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponen
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
+import se.tink.libraries.credentials.service.RefreshInformationRequest;
 
+@Slf4j
 @AgentDependencyModulesForProductionMode(modules = {UkOpenBankingModule.class})
 @AgentDependencyModulesForDecoupledMode(
         modules = UkOpenBankingLocalKeySignerModuleForDecoupledMode.class)
@@ -59,6 +62,12 @@ public final class UlsterV31Agent extends UkOpenBankingBaseAgent {
                         UlsterConstants.PIS_API_URL, UlsterConstants.WELL_KNOWN_URL),
                 createPisRequestFilterUsingPs256WithoutBase64Signature(
                         jwtSigner, componentProvider.getRandomValueGenerator()));
+
+        if (request instanceof RefreshInformationRequest) {
+            log.debug(
+                    "Items to refresh: "
+                            + ((RefreshInformationRequest) request).getItemsToRefresh());
+        }
     }
 
     @Override
