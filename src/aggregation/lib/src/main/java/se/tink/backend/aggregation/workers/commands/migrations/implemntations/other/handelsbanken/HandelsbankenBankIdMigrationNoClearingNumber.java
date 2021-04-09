@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.workers.commands.migrations.implemntations.o
 import com.google.common.base.Strings;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.workers.commands.migrations.AgentVersionMigration;
@@ -15,42 +14,27 @@ public class HandelsbankenBankIdMigrationNoClearingNumber extends AgentVersionMi
     static final String OLD_HANDELSBANKEN_AGENT = "banks.handelsbanken.v6.HandelsbankenV6Agent";
     static final String NEW_AGENT_NAME =
             "se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.HandelsbankenSEAgent";
-    private Predicate<Account> checkIfAccountIsProperTypeToBeMigrated =
-            a -> {
-                // only migrate Transactional accounts and CREDIT_CARD of type "Allkort"
-                if (a.getType() != AccountTypes.SAVINGS
-                        && a.getType() != AccountTypes.CHECKING
-                        && a.getType() != AccountTypes.OTHER
-                        && a.getType() != AccountTypes.CREDIT_CARD) {
-                    return false;
-                }
-                return true;
-            };
+    private final Predicate<Account> checkIfAccountIsProperTypeToBeMigrated =
+            a -> // only migrate Transactional accounts and CREDIT_CARD of type "Allkort"
+            a.getType() == AccountTypes.SAVINGS
+                            || a.getType() == AccountTypes.CHECKING
+                            || a.getType() == AccountTypes.OTHER
+                            || a.getType() == AccountTypes.CREDIT_CARD;
 
     @Override
     public boolean shouldChangeRequest(CredentialsRequest request) {
-
         String agentName = request.getProvider().getClassName();
-        if (agentName.endsWith("HandelsbankenSEAgent")
-                || agentName.endsWith(OLD_HANDELSBANKEN_AGENT)) {
-            return true;
-        }
-        return false;
+        return agentName.endsWith("HandelsbankenSEAgent")
+                || agentName.endsWith(OLD_HANDELSBANKEN_AGENT);
     }
 
     @Override
     public boolean shouldMigrateData(CredentialsRequest request) {
-        return !request.getAccounts().stream()
+        return request.getAccounts().stream()
                 .filter(checkIfAccountIsProperTypeToBeMigrated)
                 .filter(a -> !Strings.isNullOrEmpty(a.getAccountNumber()))
-                // Filter out dupicated acounts
                 .filter(a -> !a.getBankId().endsWith("-duplicate"))
-                // Longer than the account without clearing number
-                .filter(a -> a.getBankId().length() > 9)
-                //        .filter(a ->
-                // CLEARING_NUMBER_PATTERN.matcher(a.getAccountNumber()).matches())
-                .collect(Collectors.toList())
-                .isEmpty();
+                .anyMatch(a -> a.getBankId().length() > 9);
     }
 
     @Override
