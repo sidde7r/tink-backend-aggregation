@@ -1,0 +1,132 @@
+REQUEST 1
+POST https://api-dsp2.boursorama.com/services/api/v1.7/_public_/authentication/oauth/consumeauthorizationcode
+Content-Type: application/json
+X-Aggregator : Tink Testing
+
+{"grantType":"authorization_code","authorizationCode":"DUMMY_AUTH_CODE","clientId":"PSDSE-FINA-44059"}
+
+RESPONSE 1
+200
+Content-Type: application/json
+
+{"token_type":"bearer","access_token":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiIsImtpZCI6IkhTMjU2In0.eyJqdGkiOiJjZTdiNTVmNzlmY2ZlIiwic3ViIjoiZHNwMiIsImF1ZCI6Ii4qXFwuYm91cnNvcmFtYVxcLmNvbSIsImV4cCI6MTg2NDIyNDY1NCwiaWF0IjoxNTQ4ODY0NjU0LCJuYmYiOjE1NDg4NjQ2NTQsInNlc3Npb24iOnsidXNlcklkIjoiMDAwMDAwMDAiLCJsZXZlbCI6IkNVU1RPTUVSIn0sImlzcyI6IkFkbWluIEpXVCBCb3Vyc29yYW1hIiwidXNlckhhc2giOiI3MDM1MmY0MTA2MWVkYTQiLCJvcmciOiJCMTkiLCJvYXV0aCI6ImM2OTdjOWUxZTUxZjg4Y2U2NWJjOGM4NWNmMjhkMDcyYWNmMDQyNTQifQ.3sewgdSK4OJfcsrVK2eqa8FF2jvDfdpiyBuIOh0CMRI","expires_in":86400,"refresh_token":"DUMMY_REFRESH_TOKEN"}
+
+REQUEST 2
+POST https://api-dsp2.boursorama.com/services/api/v1.7/_public_/dsp2/payment-requests
+Accept: application/json
+Content-Type: application/json
+X-Aggregator: Tink Testing
+
+{
+    "requestedExecutionDate": "2021-04-07T00:01:00.000+02:00",
+    "numberOfTransactions": 1,
+    "initiatingParty": {
+        "name": "TINK"
+    },
+    "paymentTypeInformation": {
+        "serviceLevel": "SEPA",
+        "localInstrument":"INST",
+        "categoryPurpose": "CASH"
+    },
+    "debtorAccount": {
+        "iban": "FR1261401750597365134612940"
+    },
+    "beneficiary": {
+        "creditor": {
+            "name": "Payment Creditor"
+        },
+        "creditorAccount": {
+            "iban": "FR1420041010050500013M02606"
+        }
+    },
+    "creditTransferTransaction": [
+        {
+            "remittanceInformation": [
+                "Message"
+            ],
+            "instructedAmount": {
+                "amount": "1.0",
+                "currency": "EUR"
+            }
+        }
+    ],
+    "chargeBearer": "SLEV",
+    "supplementaryData": {
+        "acceptedAuthenticationApproach": [
+            "REDIRECT"
+        ],
+        "successfulReportUrl": "https://api.tink.com/api/v1/credentials/third-party/callback?state=00000000-0000-4000-0000-000000000000",
+        "unsuccessfulReportUrl": "https://api.tink.com/api/v1/credentials/third-party/callback?state=00000000-0000-4000-0000-000000000000"
+    }
+}
+
+RESPONSE 2
+201
+Content-Type: application/json
+
+{"appliedAuthenticationApproach":"REDIRECT","_links":{"consentApproval":{"href":"https:\/\/clients.boursorama.com\/finalisation-virement\/606db85d725c3"}}}
+
+REQUEST 3
+GET https://api-dsp2.boursorama.com/services/api/v1.7/_public_/dsp2/payment-requests/606db85d725c3
+Accept: application/json
+Content-Type: application/json
+X-Aggregator: Tink Testing
+
+RESPONSE 3
+200
+Content-Type: application/json
+
+{
+    "paymentRequest": {
+        "requestedExecutionDate": "2021-04-07T00:01:00.000+02:00",
+        "numberOfTransactions": 1,
+        "initiatingParty": {
+            "name": "TINK"
+        },
+        "paymentTypeInformation": {
+            "serviceLevel": "SEPA",
+            "localInstrument":"INST",
+            "categoryPurpose": "CASH"
+        },
+        "debtorAccount": {
+            "iban": "FR1261401750597365134612940"
+        },
+        "beneficiary": {
+            "creditor": {
+                "name": "Payment Creditor"
+            },
+            "creditorAccount": {
+                "iban": "FR1420041010050500013M02606"
+            }
+        },
+        "creditTransferTransaction": [
+            {
+                "remittanceInformation": [
+                    "Message"
+                ],
+                "instructedAmount": {
+                    "amount": "1.0",
+                    "currency": "EUR"
+                }
+            }
+        ],
+        "chargeBearer": "SLEV",
+        "supplementaryData": {
+            "acceptedAuthenticationApproach": [
+                "REDIRECT"
+            ],
+            "successfulReportUrl": "https:\/\/127.0.0.1:7357\/api\/v1\/thirdparty\/callback?state=ce451ea8-3c7c-4211-82b3-59331956feed",
+            "unsuccessfulReportUrl": "https:\/\/127.0.0.1:7357\/api\/v1\/thirdparty\/callback?state=ce451ea8-3c7c-4211-82b3-59331956feed",
+            "appliedAuthenticationApproach": "REDIRECT"
+        },
+        "paymentInformationStatus": "PDNG",
+        "resourceId": "606db85d725c3",
+        "booking": false,
+        "fundsAvailability": true
+    },
+    "_links": {
+        "request": {
+            "href": "\/services\/api\/v1.7\/_public_\/dsp2\/payment-requests\/606db85d725c3"
+        }
+    }
+}

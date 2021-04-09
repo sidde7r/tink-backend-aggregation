@@ -5,7 +5,6 @@ import com.github.rholder.retry.Retryer;
 import com.github.rholder.retry.RetryerBuilder;
 import com.github.rholder.retry.StopStrategies;
 import com.github.rholder.retry.WaitStrategies;
-import java.time.Clock;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -99,7 +98,7 @@ public class FrOpenBankingPaymentExecutor implements PaymentExecutor, FetchableP
 
         LocalDate executionDate =
                 Optional.ofNullable(payment.getExecutionDate())
-                        .orElse(LocalDate.now(Clock.system(DEFAULT_ZONE_ID)));
+                        .orElse(LocalDate.now((DEFAULT_ZONE_ID)));
 
         PaymentType paymentType = PaymentType.SEPA;
         RemittanceInformation remittanceInformation = payment.getRemittanceInformation();
@@ -114,11 +113,12 @@ public class FrOpenBankingPaymentExecutor implements PaymentExecutor, FetchableP
                         .withCreditorName(new CreditorEntity(CREDITOR_NAME))
                         .withDebtorAccount(debtor)
                         .withExecutionDate(executionDate)
-                        .withCreationDateTime(LocalDateTime.now())
+                        .withCreationDateTime(LocalDateTime.now(DEFAULT_ZONE_ID))
                         .withRedirectUrl(
                                 new URL(redirectUrl)
                                         .queryParam(STATE, strongAuthenticationState.getState()))
                         .withRemittanceInformation(remittanceInformation.getValue())
+                        .withPaymentScheme(payment.getPaymentScheme())
                         .build();
 
         CreatePaymentResponse paymentResponse = apiClient.createPayment(createPaymentRequest);

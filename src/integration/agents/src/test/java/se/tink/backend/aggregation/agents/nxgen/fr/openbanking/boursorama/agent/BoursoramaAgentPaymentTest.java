@@ -13,6 +13,7 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
+import se.tink.libraries.payments.common.model.PaymentScheme;
 
 public class BoursoramaAgentPaymentTest {
 
@@ -35,14 +36,25 @@ public class BoursoramaAgentPaymentTest {
     }
 
     @Test
-    public void testPayments() throws Exception {
+    public void testSepaPayment() throws Exception {
         manager.before();
         creditorDebtorManager.before();
 
-        builder.build().testTinkLinkPayment(createRealDomesticPayment());
+        builder.build()
+                .testTinkLinkPayment(createRealDomesticPayment(PaymentScheme.SEPA_CREDIT_TRANSFER));
     }
 
-    private Payment createRealDomesticPayment() {
+    @Test
+    public void testSepaInstantPayment() throws Exception {
+        manager.before();
+        creditorDebtorManager.before();
+
+        builder.build()
+                .testTinkLinkPayment(
+                        createRealDomesticPayment(PaymentScheme.SEPA_INSTANT_CREDIT_TRANSFER));
+    }
+
+    private Payment createRealDomesticPayment(PaymentScheme paymentScheme) {
         AccountIdentifier creditorAccountIdentifier =
                 new IbanIdentifier(
                         creditorDebtorManager.get(BoursoramaAgentPaymentTest.Arg.CREDITOR_ACCOUNT));
@@ -60,6 +72,7 @@ public class BoursoramaAgentPaymentTest {
                         RemittanceInformationUtils.generateUnstructuredRemittanceInformation(
                                 "Message"))
                 .withUniqueId(UUID.randomUUID().toString())
+                .withPaymentScheme(paymentScheme)
                 .build();
     }
 

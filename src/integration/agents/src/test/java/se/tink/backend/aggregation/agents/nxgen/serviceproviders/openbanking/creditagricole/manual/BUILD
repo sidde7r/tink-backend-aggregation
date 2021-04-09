@@ -4,6 +4,7 @@ junit_test(
     name = "creditagricole_manual",
     srcs = glob(
         ["*.java"],
+        exclude = ["integration/**/*.java"],
     ),
     data = ["//:agent_test_data"],
     tags = [
@@ -21,5 +22,6 @@ junit_test(
         "//third_party:org_iban4j_iban4j",
         "//third_party:org_mockito_mockito_core",
         "@tink_backend//src/libraries/account_identifier",
+        "@tink_backend//src/libraries/payments_common/src/java/se/tink/libraries/payments/common/model:payments_common_model",
     ],
 )
