@@ -10,13 +10,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountBalanceEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountIdentifierEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.PartyV31Entity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.AccountMapper;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.identifier.DefaultIdentifierMapper;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.identifier.IdentifierMapper;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.builder.BalanceBuilderStep;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
@@ -28,7 +27,7 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 @Slf4j
 public class TransactionalAccountMapper implements AccountMapper<TransactionalAccount> {
     private final TransactionalAccountBalanceMapper balanceMapper;
-    private final DefaultIdentifierMapper identifierMapper;
+    private final IdentifierMapper identifierMapper;
 
     @Override
     public boolean supportsAccountType(AccountTypes type) {
@@ -43,8 +42,7 @@ public class TransactionalAccountMapper implements AccountMapper<TransactionalAc
         List<AccountIdentifierEntity> accountIdentifiers = account.getIdentifiers();
 
         AccountIdentifierEntity primaryIdentifier =
-                identifierMapper.getTransactionalAccountPrimaryIdentifier(
-                        accountIdentifiers, getAllowedTransactionalAccountIdentifiers());
+                identifierMapper.getTransactionalAccountPrimaryIdentifier(accountIdentifiers);
         String accountNumber = primaryIdentifier.getIdentification();
 
         TransactionalBuildStep builder =
@@ -54,7 +52,9 @@ public class TransactionalAccountMapper implements AccountMapper<TransactionalAc
                         .withBalance(buildBalanceModule(balances))
                         .withId(
                                 IdModule.builder()
-                                        .withUniqueIdentifier(accountNumber)
+                                        .withUniqueIdentifier(
+                                                identifierMapper.getUniqueIdentifier(
+                                                        primaryIdentifier))
                                         .withAccountNumber(accountNumber)
                                         .withAccountName(
                                                 pickDisplayName(account, primaryIdentifier))
@@ -68,15 +68,6 @@ public class TransactionalAccountMapper implements AccountMapper<TransactionalAc
         collectHolders(primaryIdentifier, parties).forEach(builder::addHolderName);
 
         return builder.build();
-    }
-
-    protected String getUniqueIdentifier(AccountIdentifierEntity primaryIdentifier) {
-        return primaryIdentifier.getIdentification();
-    }
-
-    protected List<UkOpenBankingApiDefinitions.ExternalAccountIdentification4Code>
-            getAllowedTransactionalAccountIdentifiers() {
-        return UkOpenBankingApiDefinitions.ALLOWED_TRANSACTIONAL_ACCOUNT_IDENTIFIERS;
     }
 
     private BalanceModule buildBalanceModule(Collection<AccountBalanceEntity> balances) {

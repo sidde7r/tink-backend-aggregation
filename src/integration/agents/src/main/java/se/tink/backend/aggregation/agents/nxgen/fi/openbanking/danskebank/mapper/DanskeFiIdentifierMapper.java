@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.openbanking.danskebank.mapper;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.NoSuchElementException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountIdentifierEntity;
@@ -12,7 +11,7 @@ import se.tink.libraries.mapper.PrioritizedValueExtractor;
 
 public class DanskeFiIdentifierMapper implements IdentifierMapper {
 
-    private DefaultIdentifierMapper defaultMapper;
+    private final DefaultIdentifierMapper defaultMapper;
 
     public DanskeFiIdentifierMapper(PrioritizedValueExtractor valueExtractor) {
         this.defaultMapper = new DefaultIdentifierMapper(valueExtractor);
@@ -25,11 +24,8 @@ public class DanskeFiIdentifierMapper implements IdentifierMapper {
 
     @Override
     public AccountIdentifierEntity getTransactionalAccountPrimaryIdentifier(
-            Collection<AccountIdentifierEntity> identifiers,
-            List<UkOpenBankingApiDefinitions.ExternalAccountIdentification4Code>
-                    allowedAccountIdentifiers) {
-        return defaultMapper.getTransactionalAccountPrimaryIdentifier(
-                identifiers, allowedAccountIdentifiers);
+            Collection<AccountIdentifierEntity> identifiers) {
+        return defaultMapper.getTransactionalAccountPrimaryIdentifier(identifiers);
     }
 
     @Override
@@ -42,5 +38,10 @@ public class DanskeFiIdentifierMapper implements IdentifierMapper {
                                         .equals(identifier.getIdentifierType()))
                 .findFirst()
                 .orElseThrow(() -> new NoSuchElementException("Missing IBAN card identifier"));
+    }
+
+    @Override
+    public String getUniqueIdentifier(AccountIdentifierEntity accountIdentifier) {
+        return accountIdentifier.getIdentification();
     }
 }

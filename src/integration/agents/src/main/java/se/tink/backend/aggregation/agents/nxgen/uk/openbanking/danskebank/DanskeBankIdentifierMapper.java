@@ -36,10 +36,8 @@ public class DanskeBankIdentifierMapper implements IdentifierMapper {
 
     @Override
     public AccountIdentifierEntity getTransactionalAccountPrimaryIdentifier(
-            Collection<AccountIdentifierEntity> identifiers,
-            List<ExternalAccountIdentification4Code> allowedAccountIdentifiers) {
-        return this.identifierMapper.getTransactionalAccountPrimaryIdentifier(
-                identifiers, allowedAccountIdentifiers);
+            Collection<AccountIdentifierEntity> identifiers) {
+        return this.identifierMapper.getTransactionalAccountPrimaryIdentifier(identifiers);
     }
 
     @Override
@@ -54,5 +52,10 @@ public class DanskeBankIdentifierMapper implements IdentifierMapper {
                         () ->
                                 new NoSuchElementException(
                                         "Missing allowed credit card account identifiers like SortCode, IBAN, PAN"));
+    }
+
+    @Override
+    public String getUniqueIdentifier(AccountIdentifierEntity accountIdentifier) {
+        return identifierMapper.getUniqueIdentifier(accountIdentifier);
     }
 }

@@ -47,6 +47,7 @@ public class CreditCardAccountMapperTest {
         when(identifierMapper.getCreditCardIdentifier(anyCollection()))
                 .thenReturn(IdentifierFixtures.panIdentifier());
         mapper = new CreditCardAccountMapper(balanceMapper, identifierMapper);
+        when(identifierMapper.getUniqueIdentifier(any())).thenCallRealMethod();
     }
 
     @Test

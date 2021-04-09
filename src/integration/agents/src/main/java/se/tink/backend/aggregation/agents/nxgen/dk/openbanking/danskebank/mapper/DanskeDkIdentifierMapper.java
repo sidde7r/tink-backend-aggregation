@@ -4,12 +4,12 @@ import com.google.api.client.repackaged.com.google.common.base.Strings;
 import java.util.regex.Pattern;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.nxgen.dk.openbanking.danskebank.DanskeDkConstants;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.danskebank.mapper.DanskeIdentifierMapper;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.danskebank.mapper.DanskeDkNoIdentifierMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountIdentifierEntity;
 import se.tink.libraries.mapper.PrioritizedValueExtractor;
 
 @Slf4j
-public class DanskeDkIdentifierMapper extends DanskeIdentifierMapper {
+public class DanskeDkIdentifierMapper extends DanskeDkNoIdentifierMapper {
 
     public DanskeDkIdentifierMapper(PrioritizedValueExtractor valueExtractor) {
         super(valueExtractor);

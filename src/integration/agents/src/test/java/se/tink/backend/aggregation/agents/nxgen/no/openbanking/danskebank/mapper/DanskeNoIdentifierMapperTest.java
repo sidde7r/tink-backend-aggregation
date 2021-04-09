@@ -30,7 +30,7 @@ public class DanskeNoIdentifierMapperTest {
     @Test
     public void shouldFormatBban() {
         // given when
-        String result = danskeNoIdentifierMapper.formatIdentificationNumber(danskeNoBban);
+        String result = danskeNoIdentifierMapper.getUniqueIdentifier(danskeNoBban);
 
         // then
         assertThat(result).isEqualTo(danskeNoBban.getIdentification());
@@ -39,7 +39,7 @@ public class DanskeNoIdentifierMapperTest {
     @Test
     public void shouldFormatIban() {
         // given when
-        String result = danskeNoIdentifierMapper.formatIdentificationNumber(danskeNoIban);
+        String result = danskeNoIdentifierMapper.getUniqueIdentifier(danskeNoIban);
 
         // then
         assertThat(result).hasSize((DanskeNoConstants.ACCOUNT_NO_MIN_LENGTH));
@@ -49,7 +49,7 @@ public class DanskeNoIdentifierMapperTest {
     @Test
     public void shouldFormatIbanIdentifierInWrongFormat() {
         // given when
-        String result = danskeNoIdentifierMapper.formatIdentificationNumber(otherIbanIdentifier);
+        String result = danskeNoIdentifierMapper.getUniqueIdentifier(otherIbanIdentifier);
 
         // then
         assertThat(result).hasSize((DanskeNoConstants.ACCOUNT_NO_MIN_LENGTH));
@@ -59,7 +59,7 @@ public class DanskeNoIdentifierMapperTest {
     @Test
     public void shouldFormatOtherIdentifier() {
         // given when
-        String result = danskeNoIdentifierMapper.formatIdentificationNumber(panIdentifier);
+        String result = danskeNoIdentifierMapper.getUniqueIdentifier(panIdentifier);
 
         // then
         assertThat(result).hasSize((DanskeNoConstants.ACCOUNT_NO_MIN_LENGTH));

@@ -59,7 +59,9 @@ public class CreditCardAccountMapper implements AccountMapper<CreditCardAccount>
                         .withInferredAccountFlags()
                         .withId(
                                 IdModule.builder()
-                                        .withUniqueIdentifier(getUniqueIdentifier(cardIdentifier))
+                                        .withUniqueIdentifier(
+                                                identifierMapper.getUniqueIdentifier(
+                                                        cardIdentifier))
                                         .withAccountNumber(cardIdentifier.getIdentification())
                                         .withAccountName(displayName)
                                         .addIdentifier(
@@ -69,10 +71,6 @@ public class CreditCardAccountMapper implements AccountMapper<CreditCardAccount>
 
         collectHolders(cardIdentifier, parties).forEach(builder::addHolderName);
         return Optional.of(builder.build());
-    }
-
-    protected String getUniqueIdentifier(AccountIdentifierEntity cardIdentifier) {
-        return cardIdentifier.getIdentification();
     }
 
     private String pickDisplayName(

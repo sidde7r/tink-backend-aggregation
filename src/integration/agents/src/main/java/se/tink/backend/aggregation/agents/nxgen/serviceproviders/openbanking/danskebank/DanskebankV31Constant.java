@@ -13,7 +13,7 @@ import se.tink.libraries.enums.MarketCode;
 public class DanskebankV31Constant {
 
     public static final List<UkOpenBankingApiDefinitions.ExternalAccountIdentification4Code>
-            ALLOWED_TRANSACTIONAL_ACCOUNT_IDENTIFIERS = ImmutableList.of(BBAN, IBAN);
+            ALLOWED_TRANSACTIONAL_ACCOUNT_IDENTIFIERS = ImmutableList.of(IBAN, BBAN);
 
     public static class Url {
 

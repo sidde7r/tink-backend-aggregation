@@ -11,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountBalanceEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountIdentifierEntity;
@@ -46,9 +45,7 @@ public class RevolutTransactionalAccountMapper implements AccountMapper<Transact
                 account.getIdentifiers().stream().distinct().collect(Collectors.toList());
 
         AccountIdentifierEntity primaryIdentifier =
-                identifierMapper.getTransactionalAccountPrimaryIdentifier(
-                        accountIdentifiers,
-                        UkOpenBankingApiDefinitions.ALLOWED_TRANSACTIONAL_ACCOUNT_IDENTIFIERS);
+                identifierMapper.getTransactionalAccountPrimaryIdentifier(accountIdentifiers);
         String accountNumber = primaryIdentifier.getIdentification();
         // unique identifier is not IBAN, because revolut can return multiple accounts with the same
         // IBAN and different currency.

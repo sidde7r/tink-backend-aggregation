@@ -12,8 +12,6 @@ import se.tink.backend.aggregation.agents.nxgen.no.openbanking.danskebank.mapper
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.danskebank.DanskeBankV31EUBaseAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.danskebank.DanskebankV31Constant.Url.V31;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.danskebank.configuration.DanskebankAisConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.danskebank.mapper.DanskeCreditCardAccountMapper;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.danskebank.mapper.DanskeTransactionalAccountMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.danskebank.signer.DanskeOpenBankingModule;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.module.UkOpenBankingLocalKeySignerModuleForDecoupledMode;
@@ -52,7 +50,7 @@ public final class DanskebankV31Agent extends DanskeBankV31EUBaseAgent {
 
     private static CreditCardAccountMapper getCreditCardAccountMapperWithDanskeIdentifierMapper() {
         PrioritizedValueExtractor valueExtractor = new PrioritizedValueExtractor();
-        return new DanskeCreditCardAccountMapper(
+        return new CreditCardAccountMapper(
                 getCreditCardBalanceMapper(valueExtractor),
                 new DanskeNoIdentifierMapper(valueExtractor));
     }
@@ -60,7 +58,7 @@ public final class DanskebankV31Agent extends DanskeBankV31EUBaseAgent {
     private static TransactionalAccountMapper
             getTransactionalAccountMapperWithDanskeIdentifierMapper() {
         PrioritizedValueExtractor valueExtractor = new PrioritizedValueExtractor();
-        return new DanskeTransactionalAccountMapper(
+        return new TransactionalAccountMapper(
                 new TransactionalAccountBalanceMapper(valueExtractor),
                 new DanskeNoIdentifierMapper(valueExtractor));
     }
