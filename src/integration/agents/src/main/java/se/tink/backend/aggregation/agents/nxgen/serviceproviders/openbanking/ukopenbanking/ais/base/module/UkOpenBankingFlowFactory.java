@@ -2,12 +2,13 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
+import se.tink.backend.aggregation.agents.agent.Agent;
 import se.tink.backend.aggregation.agents.contexts.CompositeAgentContext;
+import se.tink.backend.aggregation.agents.module.agentclass.AgentClass;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingFlowFacade;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.module.toggle.UkOpenBankingFlow;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.module.toggle.UkOpenBankingFlowToggle;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
-import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 
 public class UkOpenBankingFlowFactory implements Provider<UkOpenBankingFlowFacade> {
@@ -16,7 +17,7 @@ public class UkOpenBankingFlowFactory implements Provider<UkOpenBankingFlowFacad
     private final CompositeAgentContext context;
     private final AgentComponentProvider agentComponentProvider;
     private final AgentsServiceConfiguration agentsServiceConfiguration;
-    private final EidasIdentity eidasIdentity;
+    private final Class<? extends Agent> agentClass;
 
     @Inject
     public UkOpenBankingFlowFactory(
@@ -24,12 +25,12 @@ public class UkOpenBankingFlowFactory implements Provider<UkOpenBankingFlowFacad
             CompositeAgentContext context,
             AgentComponentProvider agentComponentProvider,
             AgentsServiceConfiguration agentsServiceConfiguration,
-            EidasIdentity eidasIdentity) {
+            @AgentClass Class<? extends Agent> agentClass) {
         this.ukOpenBankingFlowToggle = ukOpenBankingFlowToggle;
         this.context = context;
         this.agentComponentProvider = agentComponentProvider;
         this.agentsServiceConfiguration = agentsServiceConfiguration;
-        this.eidasIdentity = eidasIdentity;
+        this.agentClass = agentClass;
     }
 
     @Override
@@ -40,8 +41,8 @@ public class UkOpenBankingFlowFactory implements Provider<UkOpenBankingFlowFacad
                                 context,
                                 agentComponentProvider,
                                 agentsServiceConfiguration,
-                                eidasIdentity)
-                        : new SecretServiceFlow(context, eidasIdentity);
+                                agentClass)
+                        : new SecretServiceFlow(context, agentClass);
         return flow.get();
     }
 }
