@@ -62,7 +62,7 @@ public final class UlsterV31Agent extends UkOpenBankingBaseAgent {
                 new UkOpenBankingPisConfiguration(
                         UlsterConstants.PIS_API_URL, UlsterConstants.WELL_KNOWN_URL),
                 createPisRequestFilterUsingPs256WithoutBase64Signature(
-                    flowFacade.getJwtSinger(), componentProvider.getRandomValueGenerator()));
+                        flowFacade.getJwtSinger(), componentProvider.getRandomValueGenerator()));
 
         if (request instanceof RefreshInformationRequest) {
             log.debug(
