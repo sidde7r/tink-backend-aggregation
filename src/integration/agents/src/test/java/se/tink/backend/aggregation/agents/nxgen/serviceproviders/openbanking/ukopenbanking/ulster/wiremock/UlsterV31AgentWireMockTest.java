@@ -1,7 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ulster.wiremock;
 
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
+import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesJsonFileParser;
 import se.tink.backend.aggregation.agents.framework.assertions.entities.AgentContractEntity;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockrefresh.AgentWireMockRefreshTest;
@@ -24,6 +27,8 @@ public class UlsterV31AgentWireMockTest {
     private static final String AUTO_AUTH_FETCH_DATA_CONTRACT =
             RESOURCES_PATH + "auto-auth-fetch-data.json";
     private static final String REFRESH_TOKEN_TRAFFIC = RESOURCES_PATH + "refresh-token.aap";
+    private static final String AUTO_AUTH_CONSENT_ID_STORED_REVOKED_TRAFFIC =
+            RESOURCES_PATH + "auto-auth-consent-id-stored-revoked.aap";
 
     private static final String CONFIGURATION_PATH = RESOURCES_PATH + "config.yml";
 
@@ -35,6 +40,9 @@ public class UlsterV31AgentWireMockTest {
     private static final String DUMMY_EXPIRED_ACCESS_TOKEN = "DUMMY_EXPIRED_ACCESS_TOKEN";
     private static final String DUMMY_REFRESH_TOKEN = "DUMMY_REFRESH_TOKEN";
     private static final String OPEN_ID_ACCESS_TOKEN_STORAGE_KEY = "open_id_ais_access_token";
+
+    private static final String DUMMY_CONSENT_ID = "DUMMY_CONSENT_ID";
+    private static final String AIS_ACCOUNT_CONSENT_ID = "ais_account_consent_id";
 
     @Test
     public void shouldRunFullAuthSuccessfully() throws Exception {
@@ -102,6 +110,28 @@ public class UlsterV31AgentWireMockTest {
 
         // expected
         Assertions.assertThatCode(test::executeRefresh).doesNotThrowAnyException();
+    }
+
+    @Test
+    public void shouldThrowSessionExpRevokedConsent() throws Exception {
+        final AgentWireMockRefreshTest test =
+                AgentWireMockRefreshTest.nxBuilder()
+                        .withMarketCode(MarketCode.UK)
+                        .withProviderName(PROVIDER_NAME)
+                        .withWireMockFilePath(AUTO_AUTH_CONSENT_ID_STORED_REVOKED_TRAFFIC)
+                        .withConfigFile(AgentsServiceConfigurationReader.read(CONFIGURATION_PATH))
+                        .testAutoAuthentication()
+                        .testOnlyAuthentication()
+                        .addPersistentStorageData(AIS_ACCOUNT_CONSENT_ID, DUMMY_CONSENT_ID)
+                        .enableHttpDebugTrace()
+                        .enableDataDumpForContractFile()
+                        .enableWireMockServerLogs()
+                        .build();
+
+        // expected
+        assertThatExceptionOfType(SessionException.class)
+                .isThrownBy(test::executeRefresh)
+                .withMessage("Invalid consent status. Expiring the session.");
     }
 
     private String createOpenIdAccessToken() {

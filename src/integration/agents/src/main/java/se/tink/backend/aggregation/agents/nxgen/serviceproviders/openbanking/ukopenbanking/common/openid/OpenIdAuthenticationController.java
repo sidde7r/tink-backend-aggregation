@@ -220,6 +220,7 @@ public class OpenIdAuthenticationController
         return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.WAITING);
     }
 
+    // Prepare third party app payload containing authentication url
     @Override
     public ThirdPartyAppAuthenticationPayload getAppPayload() {
         String nonce = randomValueGenerator.generateRandomHexEncoded(8);

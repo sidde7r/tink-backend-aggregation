@@ -5,6 +5,7 @@ import java.lang.invoke.MethodHandles;
 import java.security.PublicKey;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -236,28 +237,30 @@ public class OpenIdApiClient {
     public URL buildAuthorizeUrl(String state, String nonce, ClientMode mode, String callbackUri) {
         WellKnownResponse wellKnownConfiguration = getWellKnownConfiguration();
 
-        String responseType = String.join(" ", OpenIdConstants.MANDATORY_RESPONSE_TYPES);
+        URL authorizationEndpointUrl = wellKnownConfiguration.getAuthorizationEndpoint();
 
-        String scope =
+        String responseType = String.join(" ", OpenIdConstants.MANDATORY_RESPONSE_TYPES);
+        String clientId = providerConfiguration.getClientId();
+        List<String> requiredScopes =
+                Arrays.asList(OpenIdConstants.Scopes.OPEN_ID, mode.getValue());
+        String scopeArray =
                 wellKnownConfiguration
-                        .verifyAndGetScopes(
-                                Arrays.asList(OpenIdConstants.Scopes.OPEN_ID, mode.getValue()))
+                        .verifyAndGetScopes(requiredScopes)
                         .orElseThrow(
                                 () ->
                                         new IllegalStateException(
-                                                "Provider does not support the mandatory scopes."));
-
+                                                "Provider does not support required scopes: "
+                                                        + String.join(" ", requiredScopes)));
         String redirectUri =
                 Optional.ofNullable(callbackUri).filter(s -> !s.isEmpty()).orElse(redirectUrl);
 
         /*  'response_type=id_token' only supports 'response_mode=fragment',
          *  setting 'response_mode=query' has no effect the the moment.
          */
-        return wellKnownConfiguration
-                .getAuthorizationEndpoint()
+        return authorizationEndpointUrl
                 .queryParam(OpenIdConstants.Params.RESPONSE_TYPE, responseType)
-                .queryParam(OpenIdConstants.Params.CLIENT_ID, providerConfiguration.getClientId())
-                .queryParam(OpenIdConstants.Params.SCOPE, scope)
+                .queryParam(OpenIdConstants.Params.CLIENT_ID, clientId)
+                .queryParam(OpenIdConstants.Params.SCOPE, scopeArray)
                 .queryParam(OpenIdConstants.Params.STATE, state)
                 .queryParam(OpenIdConstants.Params.NONCE, nonce)
                 .queryParam(OpenIdConstants.Params.REDIRECT_URI, redirectUri);

@@ -142,36 +142,11 @@ x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
         ],
         "CreationDateTime": "2021-02-18T14:40:42.485Z",
         "StatusUpdateDateTime": "2021-02-18T14:40:42.485Z",
-        "Status": "Authorised"
+        "Status": "Revoked"
     },
     "Risk": {},
     "Links": {
         "Self": "https://api.ulsterbank.co.uk/open-banking/v3.1/aisp/account-access-consents/DUMMY_CONSENT_ID"
     },
     "Meta": {}
-}
-
-REQUEST 4
-POST https://secure1t.ulsterbank.co.uk/as/token.oauth2
-Content-Type: application/x-www-form-urlencoded
-Accept: application/json
-
-grant_type=refresh_token
-    &scope=accounts
-    &redirect_uri=https%3A%2F%2Fapi.tink.se%2Fapi%2Fv1%2Fcredentials%2Fthird-party%2Fcallback
-    &client_id=DUMMY_CLIENT_ID
-    &client_assertion_type=urn%3Aietf%3Aparams%3Aoauth%3Aclient-assertion-type%3Ajwt-bearer
-    &client_assertion=RkFLRV9TSUdOQVRVUkUK
-    &refresh_token=DUMMY_REFRESH_TOKEN
-
-RESPONSE 4
-200
-Content-Type: application/json;charset=utf-8
-
-{
-    "access_token": "DUMMY_ACCESS_TOKEN",
-    "refresh_token": "DUMMY_REFRESH_TOKEN",
-    "scope": "openid accounts",
-    "token_type": "bearer",
-    "expires_in": 599
 }

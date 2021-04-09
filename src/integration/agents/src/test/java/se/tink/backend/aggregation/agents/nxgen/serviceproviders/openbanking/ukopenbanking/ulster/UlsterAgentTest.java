@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ulster;
 
 import java.time.LocalDate;
-import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
@@ -13,7 +12,6 @@ import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
 
-@Ignore
 public class UlsterAgentTest {
 
     private final String SOURCE_IDENTIFIER = "";
@@ -23,7 +21,7 @@ public class UlsterAgentTest {
     public void test() throws Exception {
         new AgentIntegrationTest.Builder("uk", "uk-ulster-oauth2")
                 .loadCredentialsBefore(false)
-                .saveCredentialsAfter(true)
+                .saveCredentialsAfter(false)
                 .expectLoggedIn(false)
                 .setFinancialInstitutionId("ulster")
                 .setAppId("tink")
