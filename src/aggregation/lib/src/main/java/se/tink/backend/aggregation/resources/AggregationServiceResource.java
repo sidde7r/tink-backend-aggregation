@@ -332,7 +332,7 @@ public class AggregationServiceResource implements AggregationService {
             boolean includeExamples,
             ClientInfo clientInfo) {
         return new ClientConfigurationTemplateBuilder(
-                        this.getProviderFromName(providerName),
+                        this.getProviderFromName(providerName, clientInfo),
                         includeDescriptions,
                         includeExamples)
                 .buildTemplate();
@@ -341,7 +341,8 @@ public class AggregationServiceResource implements AggregationService {
     @Override
     public String getSecretsJsonSchema(String providerName, ClientInfo clientInfo) {
 
-        return new ClientConfigurationJsonSchemaBuilder(this.getProviderFromName(providerName))
+        return new ClientConfigurationJsonSchemaBuilder(
+                        this.getProviderFromName(providerName, clientInfo))
                 .buildJsonSchema();
     }
 
@@ -420,10 +421,23 @@ public class AggregationServiceResource implements AggregationService {
         }
     }
 
-    private Provider getProviderFromName(String providerName) {
+    private Provider getProviderFromName(String providerName, ClientInfo clientInfo) {
         Preconditions.checkNotNull(
                 Strings.emptyToNull(providerName), "providerName cannot be empty/null.");
 
+        String clusterName = "";
+        String clusterEnvironment = "";
+        if (!Objects.isNull(clientInfo)) {
+            clusterName = clientInfo.getClusterName();
+            clusterEnvironment = clientInfo.getClusterEnvironment();
+            logger.info(
+                    "clusterName {} clusterEnvironment {} when getting provider ",
+                    clusterName,
+                    clusterEnvironment);
+        }
+
+        // will use getProviderByName(clusterName, clusterEnvironment, providerName) to replace
+        // listAll()
         List<ProviderConfiguration> allProviders = providerConfigurationService.listAll();
 
         List<ProviderConfiguration> filteredProviders =
