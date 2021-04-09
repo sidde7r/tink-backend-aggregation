@@ -157,8 +157,9 @@ public final class AgentConfigurationController implements AgentConfigurationCon
                 // TPA-525: needs to know what certId to use
                 // Temporary workaround to set certId to "UKOB" for UK OB provider
                 String certId = "";
-                if (isUkOpenBankingProvider()) {
-                    certId = "UKOB";
+                String ukOpenBankingCertId = ukOpenBankingCertId();
+                if (ukOpenBankingCertId != null) {
+                    certId = ukOpenBankingCertId;
                 }
                 Optional<SecretsEntityCore> allSecretsOpt =
                         tppSecretsServiceClient.getAllSecrets(appId, clusterId, certId, providerId);
@@ -205,9 +206,16 @@ public final class AgentConfigurationController implements AgentConfigurationCon
             }
         }
     }
-
-    private boolean isUkOpenBankingProvider() {
-        return UK_OB_PROVIDER_PATTERN.matcher(providerId).matches();
+    // TODO REVERT IT AFTER TEST !!!!!!!!!!!
+    private String ukOpenBankingCertId() {
+        if (UK_OB_PROVIDER_PATTERN.matcher(providerId).matches()) {
+            if (appId.equals("83f56ceed4c94792bfc0532acde5e713")) {
+                return "ukob";
+            } else {
+                return "UKOB";
+            }
+        }
+        return null;
     }
 
     private void initCertsData(String qwac, String qsealc) {
@@ -457,7 +465,8 @@ public final class AgentConfigurationController implements AgentConfigurationCon
                                         .filter(config -> !config.isRedirectUrlNullOrEmpty())
                                         .map(AgentConfiguration::getRedirectUrl)
                                         .orElse(null));
-        if (isUkOpenBankingProvider()) {
+        String ukOpenBankingCertId = ukOpenBankingCertId();
+        if (ukOpenBankingCertId != null) {
             return configurationBuilder
                     .setQwac(EIdasTinkCert.OBWAC)
                     .setQsealc(EIdasTinkCert.OBSEAL)

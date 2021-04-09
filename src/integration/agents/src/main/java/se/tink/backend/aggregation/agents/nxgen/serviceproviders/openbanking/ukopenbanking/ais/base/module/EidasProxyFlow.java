@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.module;
 
-import se.tink.backend.aggregation.agents.agent.Agent;
 import se.tink.backend.aggregation.agents.contexts.CompositeAgentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingFlowFacade;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.configuration.UkOpenBankingClientConfigurationAdapter;
@@ -21,17 +20,17 @@ public class EidasProxyFlow implements UkOpenBankingFlowStrategy {
     private final CompositeAgentContext context;
     private final AgentComponentProvider agentComponentProvider;
     private final AgentsServiceConfiguration agentsServiceConfiguration;
-    private final Class<? extends Agent> agentClass;
+    private final EidasIdentity eidasIdentity;
 
     public EidasProxyFlow(
             CompositeAgentContext context,
             AgentComponentProvider agentComponentProvider,
             AgentsServiceConfiguration agentsServiceConfiguration,
-            Class<? extends Agent> agentClass) {
+            EidasIdentity eidasIdentity) {
         this.context = context;
         this.agentComponentProvider = agentComponentProvider;
         this.agentsServiceConfiguration = agentsServiceConfiguration;
-        this.agentClass = agentClass;
+        this.eidasIdentity = eidasIdentity;
     }
 
     @Override
@@ -46,7 +45,7 @@ public class EidasProxyFlow implements UkOpenBankingFlowStrategy {
                         agentComponentProvider,
                         agentsServiceConfiguration),
                 configuration,
-                eidasIdentity());
+                eidasIdentity);
     }
 
     private TlsConfigurationSetter createEidasProxyTlsConfigurationSetter(
@@ -62,16 +61,13 @@ public class EidasProxyFlow implements UkOpenBankingFlowStrategy {
                         configuration,
                         agentComponentProvider,
                         agentsServiceConfiguration,
-                        CONFIGURATION_CLASS)
+                        CONFIGURATION_CLASS,
+                        eidasIdentity)
                 .get();
     }
 
     private AgentConfiguration<? extends UkOpenBankingClientConfigurationAdapter>
             getAgentConfiguration(CompositeAgentContext context) {
         return context.getAgentConfigurationController().getAgentConfiguration(CONFIGURATION_CLASS);
-    }
-
-    private EidasIdentity eidasIdentity() {
-        return new EidasIdentity(context.getClusterId(), context.getAppId(), "UKOB", agentClass);
     }
 }
