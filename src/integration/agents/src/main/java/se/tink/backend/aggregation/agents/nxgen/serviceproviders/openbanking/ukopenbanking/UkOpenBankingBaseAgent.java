@@ -189,12 +189,10 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
     @Deprecated
     protected AgentConfiguration<? extends UkOpenBankingClientConfigurationAdapter>
             getAgentConfiguration() {
-        if (agentConfiguration != null) {
-            return agentConfiguration;
-        } else {
-            return getAgentConfigurationController()
-                    .getAgentConfiguration(getClientConfigurationFormat());
-        }
+        return agentConfiguration != null
+                ? agentConfiguration
+                : getAgentConfigurationController()
+                        .getAgentConfiguration(getClientConfigurationFormat());
     }
 
     /** @deprecated First step in the refactor, it's gonna be provided from IoC */
@@ -257,10 +255,7 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
 
     @Override
     protected EidasIdentity getEidasIdentity() {
-        if (eidasIdentity != null) {
-            return eidasIdentity;
-        }
-        return super.getEidasIdentity();
+        return Optional.ofNullable(eidasIdentity).orElse(super.getEidasIdentity());
     }
 
     protected UkOpenBankingApiClient createApiClient(

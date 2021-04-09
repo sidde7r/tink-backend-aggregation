@@ -228,9 +228,15 @@ public class DkbAuthenticator implements AutoAuthenticator, MultiFactorAuthentic
         ConsentAuthorization consentAuth = authApiClient.startConsentAuthorization(consentId);
         ConsentAuthorization consentAuthWithSelectedMethod =
                 selectConsentAuthorizationMethodIfNeeded(consentId, consentAuth);
+        String authenticationType =
+                consentAuthWithSelectedMethod.getChosenScaMethod().getAuthenticationType();
+        log.info("[DKB 2FA] User for authenticationType {} started 2FA", authenticationType);
         consentAuthWithSelectedMethod.checkIfChallengeDataIsAllowed();
         provide2ndFactorConsentAuthorization(
                 consentId, consentAuth.getAuthorisationId(), consentAuthWithSelectedMethod);
+        log.info(
+                "[DKB 2FA] User for authenticationType {} successfully passed 2FA",
+                authenticationType);
     }
 
     private ConsentAuthorization selectConsentAuthorizationMethodIfNeeded(

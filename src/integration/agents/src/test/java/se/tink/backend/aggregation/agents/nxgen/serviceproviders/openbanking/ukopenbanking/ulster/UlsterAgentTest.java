@@ -23,7 +23,7 @@ public class UlsterAgentTest {
                 .loadCredentialsBefore(false)
                 .saveCredentialsAfter(false)
                 .expectLoggedIn(false)
-                .setFinancialInstitutionId("ulster")
+                .setFinancialInstitutionId("0c7ba941addb428c83d6ea554ecace56")
                 .setAppId("tink")
                 .build()
                 .testRefresh();

@@ -220,6 +220,8 @@ public class SparkassenAuthenticator implements MultiFactorAuthenticator, AutoAu
     private void authorizeConsentWithOtp(
             ScaMethodEntity scaMethod, ChallengeDataEntity challengeData)
             throws AuthenticationException {
+        String authenticationType = scaMethod.getAuthenticationType();
+        log.info("[Sparkassen 2FA] User for authenticationType {} started 2FA", authenticationType);
         String otp = collectOtp(scaMethod, challengeData);
         FinalizeAuthorizationResponse finalizeAuthorizationResponse =
                 apiClient.finalizeAuthorization(
@@ -227,6 +229,9 @@ public class SparkassenAuthenticator implements MultiFactorAuthenticator, AutoAu
 
         switch (finalizeAuthorizationResponse.getScaStatus()) {
             case FINALISED:
+                log.info(
+                        "[Sparkassen 2FA] User for authenticationType {} successfully passed 2FA",
+                        authenticationType);
                 break;
             case FAILED:
                 throw LoginError.INCORRECT_CHALLENGE_RESPONSE.exception();
