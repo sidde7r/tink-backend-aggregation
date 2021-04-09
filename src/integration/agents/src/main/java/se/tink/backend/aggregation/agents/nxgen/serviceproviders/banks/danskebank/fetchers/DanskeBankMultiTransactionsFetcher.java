@@ -65,7 +65,7 @@ public class DanskeBankMultiTransactionsFetcher<A extends Account>
                         .toList()
                         .blockingGet();
 
-        if (partitionCount == 0) {
+        if (partitionCount == 1) {
             return PaginatorResponseImpl.create(transactions, false);
         }
 
