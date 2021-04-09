@@ -1,0 +1,133 @@
+{
+	"CardDetailResponse": {
+		"cardDetail": {
+			"cardNumber": "909090909090",
+			"cardNumberDisplay": "MjBmNTkzOTQ4NTZmZGYwM2FkZmNmOGQwNTNjNTYzODQ2YzJkNmJiYzM4NmJhOGIxOTI4YjJkZGRkMjA0ZGMxNA\\u003d\\u003d",
+			"availableBalance": 2200,
+			"nameInCard": "JOHN DOE",
+			"activeCard": "N",
+			"cardLogo": "403",
+			"creditLine": 1700,
+			"usedBalance": 0,
+			"aditionals": [],
+			"additionalsCards": [],
+			"delinquenIndicator": 0,
+			"delinquent": false,
+			"cardHolderType": "1",
+			"paymntDueDate": "2020-04-30",
+			"cardOpenDate": "2017-12-27",
+			"expDate": "2021-12-31",
+			"lastAction": "1",
+			"accountNumber": "707070707070",
+			"blockCode": " ",
+			"lastMovementDate": "2020-04-01",
+			"lastStatementDate": "2020-04-16",
+			"org": 840,
+			"beginBalance": 0,
+			"currentBalance": 0,
+			"openedDate": "2017-12-27",
+			"virtualIban": "ES0000000000000000000222",
+			"prevexpdate": "",
+			"plasticid": "067",
+			"visible": true,
+			"embosserReplacement": "",
+			"principalCustomerName": "Señor JOHN DOE",
+			"paymentOption": "WZPRI.CardDetail.PaymentOption.MinPayment",
+			"haveMovements": false,
+			"haveMovementsInOpenCycle": false,
+			"haveAuthorizations": false,
+			"movementsAmount": 0,
+			"authorizationsAmount": 0,
+			"isNewCard": false,
+			"blockedCard": false,
+			"initBillingPeriod": "17/09",
+			"endBillingPeriod": "16/10",
+			"cardExpires": false,
+			"achamt": 0,
+			"achamtpct": 0,
+			"paymentOptionMinNom": 1,
+			"paymentOptionTypeNom": 0,
+			"memoCredit": 0,
+			"memoDebit": 0,
+			"fraudeffdt": "",
+			"active": false,
+			"principalCustomer": true,
+			"daysInactiveOpenCycle": 0,
+			"categoryGreatestExpense": "EFECTIVO",
+			"categoryGreatestExpenseValue": 0,
+			"transferAccount": false,
+			"accountReplacement": "0000000000000000000",
+			"cardBlocked": false,
+			"typeOfBlock": "",
+			"reasonBlockCode": "0",
+			"emblemId": "69",
+			"isGbpCard": false,
+			"phoneCallCenter": "91 787 47 47",
+			"randomDigit": "9",
+			"pmtCtd": 0,
+			"locTotalBalance": 0,
+			"receiptsAndOtherPayments": false,
+			"haveLastExtract": true,
+			"pinCard": false,
+			"pinOnOff": 0,
+			"accountNumberEncryptedDelinquent": "T9L9w5rMklUWtLRFOySa3Q\u003d\u003d",
+			"allowTpv": true,
+			"lastCurrentBillingPeriod": "2020-04-16",
+			"nextCurrentBillingPeriod": "2020-10-16",
+			"prevLastCurrentBillingPeriod": "2020-08-16",
+			"instStatus": "SPACE",
+			"instDate": "",
+			"digitalCrdInd": 0,
+			"cardAction": "0",
+			"pinOffSet": 1,
+			"blockCode1": " ",
+			"stateOfIss": "Z12",
+			"cashbackCode": "000"
+		},
+		"accountPlansDto": {
+			"rcnbroccur": 0,
+			"plantable": []
+		},
+		"accountSummaryList": [{
+			"category": "ALIMENTACION",
+			"monto": 0
+		}, {
+			"category": "CARGOS",
+			"monto": 0
+		}, {
+			"category": "CASA",
+			"monto": 0
+		}, {
+			"category": "COCHE",
+			"monto": 0
+		}, {
+			"category": "COMPRAS",
+			"monto": 0
+		}, {
+			"category": "EDUCACION",
+			"monto": 0
+		}, {
+			"category": "EFECTIVO",
+			"monto": 0
+		}, {
+			"category": "OCIO",
+			"monto": 0
+		}, {
+			"category": "OTROS",
+			"monto": 0
+		}, {
+			"category": "RESTAURACION",
+			"monto": 0
+		}, {
+			"category": "SERVICIOS",
+			"monto": 0
+		}, {
+			"category": "VIAJES",
+			"monto": 0
+		}],
+		"result": {
+			"code": "000",
+			"message": "OK"
+		}
+	}
+}
