@@ -1,8 +1,12 @@
 package src.libraries.connectivity_errors;
 
+import static java.util.Arrays.asList;
+
 import com.google.common.collect.ImmutableMap;
 import com.sun.jersey.api.client.ClientHandlerException;
 import com.sun.jersey.api.client.UniformInterfaceException;
+import java.util.List;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
@@ -11,6 +15,8 @@ import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.exceptions.ThirdPartyAppException;
+import se.tink.backend.aggregation.agents.exceptions.bankidno.BankIdNOError;
+import se.tink.backend.aggregation.agents.exceptions.bankidno.BankIdNOException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
@@ -27,7 +33,6 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.connectivity.errors.ConnectivityError;
 import se.tink.connectivity.errors.ConnectivityErrorDetails;
 import se.tink.connectivity.errors.ConnectivityErrorDetails.UserLoginErrors;
-import se.tink.connectivity.errors.ConnectivityErrorType;
 
 class LegacyExceptionToConnectivityErrorMapper {
     private static final Logger log = LoggerFactory.getLogger(ConnectivityErrorFactory.class);
@@ -184,6 +189,17 @@ class LegacyExceptionToConnectivityErrorMapper {
                             ConnectivityErrorFactory.authorizationError(
                                     ConnectivityErrorDetails.AuthorizationErrors
                                             .ACTION_NOT_PERMITTED))
+                    .build();
+
+    static final ImmutableMap<BankIdNOError, ConnectivityError> BANKID_NO_ERROR_MAPPER =
+            ImmutableMap.<BankIdNOError, ConnectivityError>builder()
+                    .put(
+                            BankIdNOError.INITIALIZATION_ERROR,
+                            ConnectivityErrorFactory.userLoginError(
+                                    UserLoginErrors.THIRD_PARTY_AUTHENTICATION_UNAVAILABLE))
+                    .put(
+                            BankIdNOError.UNKNOWN_BANK_ID_ERROR,
+                            ConnectivityErrorFactory.userLoginError(UserLoginErrors.UNRECOGNIZED))
                     .build();
 
     static final ImmutableMap<ThirdPartyAppError, ConnectivityError> THIRD_PARTY_APP_ERROR_MAPPER =
@@ -363,87 +379,131 @@ class LegacyExceptionToConnectivityErrorMapper {
 
     public static ConnectivityError from(Exception exception) {
 
-        ConnectivityError.Builder builder =
+        List<ConnectivityErrorCreator> connectivityErrorCreators =
+                asList(
+                        new AgentExceptionErrorCreator(),
+                        new HttpClientExceptionErrorCreator(),
+                        new JavaLangExceptionErrorCreator());
+
+        for (ConnectivityErrorCreator errorCreator : connectivityErrorCreators) {
+            Optional<ConnectivityError> maybeError =
+                    errorCreator.tryCreateConnectivityErrorForException(exception);
+            if (maybeError.isPresent()) {
+                return maybeError.get();
+            }
+        }
+
+        ConnectivityError unknownError =
                 ConnectivityErrorFactory.tinkSideError(
                                 ConnectivityErrorDetails.TinkSideErrors.UNKNOWN_ERROR)
-                        .toBuilder();
+                        .toBuilder()
+                        .build();
+        log.warn(
+                "[Login Result debugging]: Exception ({}) did not map to any Connectivity Error",
+                exception.getClass().getSimpleName(),
+                exception);
+        return unknownError;
+    }
 
-        /* Inherited from AgentException */
-        if (exception instanceof BankIdException) {
-            BankIdError error = ((BankIdException) exception).getError();
-            builder = BANKID_ERROR_MAPPER.get(error).toBuilder();
-        } else if (exception instanceof BankServiceException) {
-            BankServiceError error = ((BankServiceException) exception).getError();
-            builder = BANK_SERVICE_ERROR_MAPPER.get(error).toBuilder();
-        } else if (exception instanceof LoginException) {
-            LoginError error = ((LoginException) exception).getError();
-            builder = LOGIN_ERROR_MAPPER.get(error).toBuilder();
-        } else if (exception instanceof ThirdPartyAppException) {
-            ThirdPartyAppError error = ((ThirdPartyAppException) exception).getError();
-            builder = THIRD_PARTY_APP_ERROR_MAPPER.get(error).toBuilder();
-        } else if (exception instanceof SessionException) {
-            SessionError error = ((SessionException) exception).getError();
-            builder = SESSION_ERROR_MAPPER.get(error).toBuilder();
-        } else if (exception instanceof SupplementalInfoException) {
-            SupplementalInfoError error = ((SupplementalInfoException) exception).getError();
-            builder = SUPPLEMENTAL_INFORMATION_ERROR_MAPPER.get(error).toBuilder();
-        } else if (exception instanceof NemIdException) {
-            NemIdError error = ((NemIdException) exception).getError();
-            builder = NEM_ID_ERROR_MAPPER.get(error).toBuilder();
-        } else if (exception instanceof AuthorizationException) {
-            AuthorizationError error = ((AuthorizationException) exception).getError();
-            builder = AUTHORIZATION_ERROR_MAPPER.get(error).toBuilder();
+    private interface ConnectivityErrorCreator {
+        Optional<ConnectivityError> tryCreateConnectivityErrorForException(Exception exception);
+    }
+
+    private static class AgentExceptionErrorCreator implements ConnectivityErrorCreator {
+
+        public Optional<ConnectivityError> tryCreateConnectivityErrorForException(
+                Exception exception) {
+            ConnectivityError.Builder builder = null;
+
+            /* Inherited from AgentException */
+            if (exception instanceof BankIdException) {
+                BankIdError error = ((BankIdException) exception).getError();
+                builder = BANKID_ERROR_MAPPER.get(error).toBuilder();
+            } else if (exception instanceof BankIdNOException) {
+                BankIdNOError error = ((BankIdNOException) exception).getError();
+                builder = BANKID_NO_ERROR_MAPPER.get(error).toBuilder();
+            } else if (exception instanceof BankServiceException) {
+                BankServiceError error = ((BankServiceException) exception).getError();
+                builder = BANK_SERVICE_ERROR_MAPPER.get(error).toBuilder();
+            } else if (exception instanceof LoginException) {
+                LoginError error = ((LoginException) exception).getError();
+                builder = LOGIN_ERROR_MAPPER.get(error).toBuilder();
+            } else if (exception instanceof ThirdPartyAppException) {
+                ThirdPartyAppError error = ((ThirdPartyAppException) exception).getError();
+                builder = THIRD_PARTY_APP_ERROR_MAPPER.get(error).toBuilder();
+            } else if (exception instanceof SessionException) {
+                SessionError error = ((SessionException) exception).getError();
+                builder = SESSION_ERROR_MAPPER.get(error).toBuilder();
+            } else if (exception instanceof SupplementalInfoException) {
+                SupplementalInfoError error = ((SupplementalInfoException) exception).getError();
+                builder = SUPPLEMENTAL_INFORMATION_ERROR_MAPPER.get(error).toBuilder();
+            } else if (exception instanceof NemIdException) {
+                NemIdError error = ((NemIdException) exception).getError();
+                builder = NEM_ID_ERROR_MAPPER.get(error).toBuilder();
+            } else if (exception instanceof AuthorizationException) {
+                AuthorizationError error = ((AuthorizationException) exception).getError();
+                builder = AUTHORIZATION_ERROR_MAPPER.get(error).toBuilder();
+            }
+
+            return Optional.ofNullable(builder).map(ConnectivityError.Builder::build);
         }
+    }
 
-        /* Http Client Exceptions */
-        if (exception instanceof HttpClientException
-                || exception instanceof HttpResponseException
-                || exception instanceof ClientHandlerException
-                || exception instanceof UniformInterfaceException) {
-            log.warn(
-                    "Unhandled Http Client exceptions ({}) in agent. This should be fixed.",
-                    exception.getClass().getSimpleName(),
-                    exception);
-            builder =
-                    ConnectivityErrorFactory.tinkSideError(
-                                    ConnectivityErrorDetails.TinkSideErrors
-                                            .TINK_INTERNAL_SERVER_ERROR)
-                            .toBuilder();
+    private static class HttpClientExceptionErrorCreator implements ConnectivityErrorCreator {
+
+        public Optional<ConnectivityError> tryCreateConnectivityErrorForException(
+                Exception exception) {
+
+            /* Http Client Exceptions */
+            if (exception instanceof HttpClientException
+                    || exception instanceof HttpResponseException
+                    || exception instanceof ClientHandlerException
+                    || exception instanceof UniformInterfaceException) {
+                log.warn(
+                        "Unhandled Http Client exceptions ({}) in agent. This should be fixed.",
+                        exception.getClass().getSimpleName(),
+                        exception);
+                ConnectivityError.Builder builder =
+                        ConnectivityErrorFactory.tinkSideError(
+                                        ConnectivityErrorDetails.TinkSideErrors
+                                                .TINK_INTERNAL_SERVER_ERROR)
+                                .toBuilder();
+                return Optional.of(builder.build());
+            }
+
+            return Optional.empty();
         }
+    }
 
-        /* Java lang exceptions */
-        if (exception instanceof NullPointerException
-                || exception instanceof IndexOutOfBoundsException
-                || exception instanceof NumberFormatException
-                || exception instanceof NotImplementedException) {
-            log.error(
-                    "Bug in agent code that throws {}. This should be fixed.",
-                    exception.getClass().getSimpleName(),
-                    exception);
-            builder =
-                    ConnectivityErrorFactory.tinkSideError(
-                                    ConnectivityErrorDetails.TinkSideErrors
-                                            .TINK_INTERNAL_SERVER_ERROR)
-                            .toBuilder();
-        } else if (exception instanceof IllegalStateException) {
-            builder =
-                    ConnectivityErrorFactory.tinkSideError(
-                                    ConnectivityErrorDetails.TinkSideErrors
-                                            .TINK_INTERNAL_SERVER_ERROR)
-                            .toBuilder();
+    private static class JavaLangExceptionErrorCreator implements ConnectivityErrorCreator {
+
+        public Optional<ConnectivityError> tryCreateConnectivityErrorForException(
+                Exception exception) {
+            ConnectivityError.Builder builder = null;
+
+            /* Java lang exceptions */
+            if (exception instanceof NullPointerException
+                    || exception instanceof IndexOutOfBoundsException
+                    || exception instanceof NumberFormatException
+                    || exception instanceof NotImplementedException) {
+                log.error(
+                        "Bug in agent code that throws {}. This should be fixed.",
+                        exception.getClass().getSimpleName(),
+                        exception);
+                builder =
+                        ConnectivityErrorFactory.tinkSideError(
+                                        ConnectivityErrorDetails.TinkSideErrors
+                                                .TINK_INTERNAL_SERVER_ERROR)
+                                .toBuilder();
+            } else if (exception instanceof IllegalStateException) {
+                builder =
+                        ConnectivityErrorFactory.tinkSideError(
+                                        ConnectivityErrorDetails.TinkSideErrors
+                                                .TINK_INTERNAL_SERVER_ERROR)
+                                .toBuilder();
+            }
+
+            return Optional.ofNullable(builder).map(ConnectivityError.Builder::build);
         }
-
-        ConnectivityError error = builder.build();
-
-        if (error.getType() == ConnectivityErrorType.TINK_SIDE_ERROR
-                && error.getDetails().getReason()
-                        == ConnectivityErrorDetails.TinkSideErrors.UNKNOWN_ERROR.name()) {
-            log.warn(
-                    "[Login Result debugging]: Exception ({}) did not map to any Connectivity Error",
-                    exception.getClass().getSimpleName(),
-                    exception);
-        }
-
-        return error;
     }
 }

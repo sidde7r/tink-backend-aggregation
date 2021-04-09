@@ -6,16 +6,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import lombok.AccessLevel;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants;
 
-@Getter
-@EqualsAndHashCode
+@Data
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class BankIdElementsSearchQuery {
-
-    private static final Integer DEFAULT_SEARCH_TIMEOUT_IN_SECONDS = 10;
 
     private final List<BankIdElementLocator> locators;
 
@@ -31,7 +28,8 @@ public class BankIdElementsSearchQuery {
         private final List<BankIdElementLocator> elements = new ArrayList<>();
 
         private boolean searchOnlyOnce = false;
-        private Integer timeoutInSeconds = DEFAULT_SEARCH_TIMEOUT_IN_SECONDS;
+        private Integer timeoutInSeconds =
+                BankIdConstants.DEFAULT_WAIT_FOR_ELEMENT_TIMEOUT_IN_SECONDS;
 
         public ElementsSearchQueryBuilder searchFor(BankIdElementLocator... locators) {
             this.elements.addAll(asList(locators));

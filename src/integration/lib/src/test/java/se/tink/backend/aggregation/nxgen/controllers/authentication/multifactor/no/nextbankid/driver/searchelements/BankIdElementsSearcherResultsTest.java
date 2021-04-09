@@ -277,14 +277,14 @@ public class BankIdElementsSearcherResultsTest {
                         .addLocator(
                                 BankIdElementLocator.builder()
                                         .element(BY_MAIN_ELEMENT)
-                                        .mustContainText("@!%^#@")
+                                        .mustContainOneOfTexts("@!%^#@")
                                         .build())
                         .build(),
                 TestParams.builder("d4aa6452-32f5-4d25-8abf-a494523961fe")
                         .addLocator(
                                 BankIdElementLocator.builder()
                                         .element(BY_MAIN_ELEMENT)
-                                        .mustContainText("main element")
+                                        .mustContainOneOfTexts("main element", "#@^#@^@")
                                         .build(),
                                 true)
                         .addIdToBeFound(PARENT_MAIN_ELEMENT_VISIBLE)
@@ -325,7 +325,7 @@ public class BankIdElementsSearcherResultsTest {
                                         .iframe(BY_IFRAME)
                                         .shadowHost(BY_SHADOW_HOST_1)
                                         .element(BY_MAIN_ELEMENT)
-                                        .mustContainText("----not existing text----")
+                                        .mustContainOneOfTexts("----not existing text----")
                                         .build())
                         .build(),
                 TestParams.builder("31767696-def0-477e-932c-2c228573106e")
@@ -334,7 +334,7 @@ public class BankIdElementsSearcherResultsTest {
                                         .iframe(BY_IFRAME)
                                         .shadowHost(BY_SHADOW_HOST_1)
                                         .element(BY_MAIN_ELEMENT)
-                                        .mustContainText("element")
+                                        .mustContainOneOfTexts("element")
                                         .build(),
                                 true)
                         .addIdToBeFound(IFRAME_SHADOW_HOST_1_MAIN_ELEMENT_VISIBLE)
@@ -346,7 +346,7 @@ public class BankIdElementsSearcherResultsTest {
                                         .iframe(BY_IFRAME)
                                         .shadowHost(BY_SHADOW_HOST_1)
                                         .element(BY_MAIN_ELEMENT)
-                                        .mustContainText("hidden")
+                                        .mustContainOneOfTexts("hidden")
                                         .build(),
                                 true)
                         .addIdToBeFound(IFRAME_SHADOW_HOST_1_MAIN_ELEMENT_HIDDEN)
@@ -368,7 +368,7 @@ public class BankIdElementsSearcherResultsTest {
                                         .iframe(BY_IFRAME)
                                         .shadowHost(BY_SHADOW_HOST_1)
                                         .element(BY_MAIN_ELEMENT)
-                                        .mustContainText("main element hidden")
+                                        .mustContainOneOfTexts("main element hidden")
                                         .mustBeDisplayed()
                                         .build())
                         .build());

@@ -1,5 +1,8 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements;
 
+import static java.util.Arrays.asList;
+
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -20,17 +23,18 @@ public class BankIdElementFilters {
     @RequiredArgsConstructor
     public static class ElementContainsTextFilter implements BankIdElementFilter {
 
-        private final String textToContain;
+        private final List<String> textsToContain;
 
-        static ElementContainsTextFilter of(String textToContain) {
-            return new ElementContainsTextFilter(textToContain);
+        static ElementContainsTextFilter of(String... textsToContain) {
+            return new ElementContainsTextFilter(asList(textsToContain));
         }
 
         @Override
         public boolean matches(WebElement element) {
             // in contrast to WebElement.getText(), the "textContent" attribute returns text also
             // for elements that are not displayed
-            return element.getAttribute("textContent").contains(textToContain);
+            String elementText = element.getAttribute("textContent");
+            return textsToContain.stream().anyMatch(elementText::contains);
         }
     }
 

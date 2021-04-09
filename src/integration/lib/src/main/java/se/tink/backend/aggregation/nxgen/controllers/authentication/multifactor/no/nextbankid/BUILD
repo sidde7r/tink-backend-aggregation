@@ -5,6 +5,7 @@ java_library(
     deps = [
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/lib",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions/agent",
         "//src/integration/webdriver/src/main/java/se/tink/integration/webdriver",
         "//third_party:com_google_code_findbugs_jsr305",
         "//third_party:com_google_inject_guice",

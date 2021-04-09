@@ -10,6 +10,8 @@ import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.exceptions.ThirdPartyAppException;
+import se.tink.backend.aggregation.agents.exceptions.bankidno.BankIdNOError;
+import se.tink.backend.aggregation.agents.exceptions.bankidno.BankIdNOException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
@@ -138,6 +140,17 @@ public class DataStudioLoginEventPublisherService {
                                     AgentLoginCompletedEventProto.AgentLoginCompletedEvent
                                             .LoginResult
                                             .BANKID_ERROR_INVALID_STATUS_OF_MOBILE_BANKID_CERTIFICATE)
+                            .build();
+
+    private static final ImmutableMap<
+                    BankIdNOError,
+                    AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResult>
+            BANKID_NO_ERROR_MAPPER =
+                    ImmutableMap
+                            .<BankIdNOError,
+                                    AgentLoginCompletedEventProto.AgentLoginCompletedEvent
+                                            .LoginResult>
+                                    builder()
                             .build();
 
     private static final ImmutableMap<
@@ -419,6 +432,15 @@ public class DataStudioLoginEventPublisherService {
                             ? reason
                             : AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResult
                                     .NEMID_ERROR_UNKNOWN);
+        } else if (authenticationException instanceof BankIdNOException) {
+            BankIdNOError error = ((BankIdNOException) authenticationException).getError();
+            AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResult reason =
+                    BANKID_NO_ERROR_MAPPER.get(error);
+            publishLoginResultEvent(
+                    reason != null
+                            ? reason
+                            : AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResult
+                                    .BANKID_ERROR_UNKNOWN);
         } else {
             publishLoginResultEvent(
                     AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResult
