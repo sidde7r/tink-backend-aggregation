@@ -12,10 +12,14 @@ import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen
 
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
+import java.util.Base64;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.ws.rs.core.MediaType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
@@ -111,18 +115,20 @@ public class SparkassenApiClient implements PaymentApiClient {
     public AuthenticationMethodResponse initializeAuthorization(
             URL url, String username, String password) throws AuthenticationException {
         try {
+            String base64username = Base64.getEncoder().encodeToString(username.getBytes());
+            String psuId = "=?ISO-8859-1?B?" + base64username + "?=";
             AuthenticationMethodResponse authenticationMethodResponse =
                     createRequest(url)
-                            .header(HeaderKeys.PSU_ID, username)
+                            .header(HeaderKeys.PSU_ID, psuId)
                             .post(
                                     AuthenticationMethodResponse.class,
                                     new InitAuthorizationRequest(new PsuDataEntity(password)));
             // NZG-283 temporary login
-            logSpecialCharacters(username, password, "SUCCESS_LOGIN");
+            logSpecialCharacters(username, "SUCCESS_LOGIN");
             return authenticationMethodResponse;
         } catch (HttpResponseException e) {
             // NZG-283 temporary login
-            logSpecialCharacters(username, password, "FAILED_LOGIN");
+            logSpecialCharacters(username, "FAILED_LOGIN");
             // ITE-2489 - temporary experiment
             SparkassenExperimentalLoginErrorHandling.handleIncorrectLogin(e, provider);
             String errorBody = e.getResponse().getBody(String.class);
@@ -151,19 +157,27 @@ public class SparkassenApiClient implements PaymentApiClient {
         }
     }
 
-    public void logSpecialCharacters(String username, String password, String outcome) {
-        if (isNotPureIso(username) || isNotPureIso(password)) {
-            log.info(
-                    outcome
-                            + " has special character, username: "
-                            + isNotPureIso(username)
-                            + " password: "
-                            + isNotPureIso(password));
-        }
+    public void logSpecialCharacters(String username, String outcome) {
+        log.info(outcome + " username encoding " + getEncoding(username));
     }
 
-    private static boolean isNotPureIso(String v) {
-        return !StandardCharsets.ISO_8859_1.newEncoder().canEncode(v);
+    private static String getEncoding(String v) {
+        String regex = "^[a-zA-Z0-9]+$";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(v);
+
+        if (StringUtils.isNumeric(v)) {
+            return "NUMERIC";
+        } else if (matcher.matches()) {
+            // simple alphanumeric
+            return "ALPHANUMERIC";
+        } else if (StandardCharsets.US_ASCII.newEncoder().canEncode(v)) {
+            return StandardCharsets.US_ASCII.displayName();
+        } else if (StandardCharsets.ISO_8859_1.newEncoder().canEncode(v)) {
+            return StandardCharsets.ISO_8859_1.displayName();
+        } else {
+            return "OTHER";
+        }
     }
 
     public AuthenticationMethodResponse selectAuthorizationMethod(
