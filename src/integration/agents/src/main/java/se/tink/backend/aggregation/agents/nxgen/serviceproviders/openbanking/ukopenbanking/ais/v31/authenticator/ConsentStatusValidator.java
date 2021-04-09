@@ -28,11 +28,12 @@ public class ConsentStatusValidator {
         // To be removed when consent management becomes stable
         if (consentId.equals(OpenIdAuthenticatorConstants.CONSENT_ERROR_OCCURRED)) {
             cleanUpAndExpireSession(
+                    consentId,
                     "These credentials were marked with CONSENT_ERROR_OCCURRED flag in the past. Expiring the session.");
         }
 
         if (StringUtils.isNotEmpty(consentId) && isNotAuthorised(consentId)) {
-            cleanUpAndExpireSession("Invalid consent status. Expiring the session.");
+            cleanUpAndExpireSession(consentId, "Invalid consent status. Expiring the session.");
         }
     }
 
@@ -40,12 +41,11 @@ public class ConsentStatusValidator {
 
         // PLACEHOLDER: Add permissions vs refresh items validation
 
-        return apiClient.fetchIntentDetails(consentId).getData().isNotAuthorised();
+        return apiClient.fetchConsent(consentId).getData().isNotAuthorised();
     }
 
-    private void cleanUpAndExpireSession(String errorMsg) {
-
-        // PLACEHOLDER: Delete invalid consent
+    private void cleanUpAndExpireSession(String consentId, String errorMsg) {
+        apiClient.deleteConsent(consentId);
 
         storage.remove(UkOpenBankingV31Constants.PersistentStorageKeys.AIS_ACCOUNT_CONSENT_ID);
         storage.remove(UkOpenBankingV31Constants.PersistentStorageKeys.AIS_ACCESS_TOKEN);
