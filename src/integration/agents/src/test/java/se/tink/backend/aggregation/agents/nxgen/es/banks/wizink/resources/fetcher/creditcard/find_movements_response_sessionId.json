@@ -1,0 +1,12 @@
+{
+	"FindMovementsResponse": {
+		"mobilePhone": "MjBmNTkzOTQ4NTZmZGYwM2FkZmNmOGQwNTNlZjQ5YWU0NjBkNDE5NjEyNmJhMmIxOTI4YjJkZDdjYTA1ZGQxNw\u003d\u003d",
+		"otp": {
+			"bharosaSessionId": "13215_45947c93a26111a86346b168c10533671ab3f7cf17fe3ade5d97442db8bd29de"
+		},
+		"result": {
+			"code": "000",
+			"message": "OK"
+		}
+	}
+}

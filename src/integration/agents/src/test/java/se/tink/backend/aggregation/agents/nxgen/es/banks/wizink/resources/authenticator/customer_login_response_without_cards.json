@@ -1,0 +1,105 @@
+{
+    "CustomerLoginResponse": {
+        "nif": "NDA4OWEwY2IwYzEyMDM3MDAxOTE4ZjE0YTQ2YzA3MzE5MmYyYTQyZDBiOTc1NzYyMmE3MGFjMWE1MTRjMWEwMA\u003d\u003d",
+        "nifMasked": "NDA4OWEwY2IwYzEyMDM3MDAxOTE4ZjE0YTQ2YzA3MzE5MmYyYTQyZDBiOTc1Nzc4MzA2MmI3MDQ0YzRjMWEwMA\u003d\u003d",
+        "loginInactivity": "",
+        "landingPage": "GLOBAL_POSITION",
+        "name": "Arturo Gonzalez Mac Dowell",
+        "numberOfCards": 3,
+        "lastLogin": "23/09/2020 14:22:16",
+        "documentType": "nif",
+        "globalPosition": {
+            "firstName": "John",
+            "middleName": "Loe",
+            "lastName": "Doe",
+            "cards": [],
+            "pendingActivation": false,
+            "delinquentIndicator": false,
+            "sumCreditLine": 6600,
+            "sumCreditLineAditional": 0,
+            "sumAvailableBalance": 6600,
+            "sumAvailableBalanceAditional": 0,
+            "sumUsedBalance": 0,
+            "sumUsedBalanceAditional": 0,
+            "numOfPrincipal": 3,
+            "sumAvailableDisposedAditional": 0,
+            "numVisibles": 3,
+            "products": [
+                {
+                    "productType": "AV",
+                    "internalKey": "_zLIbYO8SQ1E_HhHUpVkO9wJjapqaWrSQq24y6ejhUk",
+                    "alias": "",
+                    "balance": "5,08",
+                    "currency": "EUR",
+                    "formattedKey": "Vd0InFctmXhZvkt6FRqFVv2NBPjp6pUQjnnddEeNtHE",
+                    "formattedKeyDisplay": "NDA4OWEwOGU1ZjJiMzU1MDJiYmJhNTNlODQ0NjJkMWJiOGQyOGUwNzIxYmQ3Nzc4MzA2MmI3MGU1NzQ3MTI1Mw\u003d\u003d",
+                    "product": "Cuenta de ahorro WiZink",
+                    "interveners": [
+                        {
+                            "name": "John Loe Doe",
+                            "relTit": "01",
+                            "tradRelTir": "TITULAR"
+                        }
+                    ],
+                    "provisionKey": "INDISTINTA",
+                    "extract": "N",
+                    "haveDeposit": false,
+                    "coholderLink": true,
+                    "availableBalance": "5,08",
+                    "porcentajeAvanceInteres": 0.0
+                },
+                {
+                    "productType": "AV",
+                    "internalKey": "ZhsUmcpacr4eOjP1ZldLxEVTPPR8zHGBMAL045eQfmo",
+                    "alias": "Cuenta Ahorro Vista",
+                    "balance": "0",
+                    "currency": "EUR",
+                    "formattedKey": "bnCiMhDmhEfqBHQXK6_AR32-59fiJXko_V_NlImTgyo",
+                    "formattedKeyDisplay": "NDA4OWEwOGU1ZjIyM2I1MDJiYmJhNTNlODQ0NjJkMWJiOGQyOGUwNzIxYmQ3Nzc4MzA2MmI3MGU1ZTQ3MWI1YQ\u003d\u003d",
+                    "product": "Cuenta Ahorro Vista",
+                    "interveners": [
+                        {
+                            "name": "John Loe Doe",
+                            "relTit": "01",
+                            "tradRelTir": "TITULAR"
+                        }
+                    ],
+                    "provisionKey": "INDISTINTA",
+                    "extract": "N",
+                    "haveDeposit": false,
+                    "coholderLink": true,
+                    "availableBalance": "0",
+                    "porcentajeAvanceInteres": 0.0
+                }
+            ],
+            "saving": "5,08",
+            "totalProducts": "2",
+            "idGlobalBanking": "0000008726",
+            "idCMF": "50109867",
+            "mobileNumber": "NDA4OWEwY2IwYzEyMDM3MDAxOTE4ZjE0YTQ2YzA3MzE5MmYyYTQyZDBiYTQ2MzY0Mjg3OGFmMWY1NTQ3MTc1ZA\u003d\u003d",
+            "fechaNacimiento": "NDA4OWEwY2IwYzEyMDM3MDAxOTE4ZjE0YTQ2YzA3MzE5MmYyYTQyZDBiOTc1NzUyMmI3MWFiMWE1NjQ2MTM1ZQ\u003d\u003d",
+            "fechaNacimientoMasked": "NDA4OWEwY2IwYzEyMDM3MDAxOTE4ZjE0YTQ2YzA3MzE5MmYyYTQyZDBiOTc2Njc4MzU3OGI3MDE1NzRkMDg0MA\u003d\u003d",
+            "phoneCallCenterDeposit": "91 175 08 69",
+            "phoneCallCenterGeneric": "91 175 08 69",
+            "documentNumberEncryptedDelinquent": "8aleSjAXh40FHgeVKaq6RA\u003d\u003d",
+            "indRobinson": true,
+            "photoDate": "NOT_FOUND",
+            "instant": false,
+            "onlyInstant": false,
+            "numOfPrincipals": 3,
+            "numOfDeposit": 0,
+            "numOfSavings": 2
+        },
+        "eligibility": false,
+        "showContract": false,
+        "showValoration": true,
+        "specialist": false,
+        "isBanking": false,
+        "indigitallDevice": "ed1d4597-230e-45a1-9291-04d9ef9220cf",
+        "linkDeviceScreen": "OPTIONAL_SCREEN",
+        "result": {
+            "code": "000",
+            "message": "OK"
+        }
+    }
+}
