@@ -64,9 +64,11 @@ public final class UlsterV31Agent extends UkOpenBankingBaseAgent {
                 createPisRequestFilterUsingPs256WithoutBase64Signature(
                         flowFacade.getJwtSinger(), componentProvider.getRandomValueGenerator()));
 
+        log.info("UlsterV31Agent - request class:" + request.getClass());
+
         if (request instanceof RefreshInformationRequest) {
             log.info(
-                    "Items to refresh: "
+                    "UlsterV31Agent - items to refresh: "
                             + ((RefreshInformationRequest) request).getItemsToRefresh());
         }
     }
