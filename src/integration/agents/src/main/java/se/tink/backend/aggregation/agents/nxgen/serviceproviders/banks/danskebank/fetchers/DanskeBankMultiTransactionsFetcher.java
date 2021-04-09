@@ -59,7 +59,7 @@ public class DanskeBankMultiTransactionsFetcher<A extends Account>
                         .concatMapEager(
                                 partitionPeriod ->
                                         fetchFirstTransactionsPage(account, partitionPeriod))
-                        .flatMapSingle(this::collectTransactions)
+                        .concatMapSingle(this::collectTransactions)
                         .flatMapIterable(transactionEntities -> transactionEntities)
                         .map(TransactionEntity::toTinkTransaction)
                         .toList()
