@@ -172,13 +172,17 @@ public class FiduciaAuthenticator implements MultiFactorAuthenticator, AutoAuthe
         startcode.ifPresent(x -> fields.add(GermanFields.Startcode.build(catalog, x)));
 
         ChallengeData challengeData = scaResponse.getChallengeData();
+        String authenticationType =
+                chosenScaMethod != null ? chosenScaMethod.getAuthenticationType() : null;
         fields.add(
                 GermanFields.Tan.build(
                         catalog,
-                        chosenScaMethod != null ? chosenScaMethod.getAuthenticationType() : null,
+                        authenticationType,
                         chosenScaMethod != null ? chosenScaMethod.getName() : null,
                         challengeData != null ? challengeData.getOtpMaxLength() : null,
                         challengeData != null ? challengeData.getOtpFormat() : null));
+
+        log.info("[Fiducia 2FA] User for authenticationType {} started 2FA", authenticationType);
 
         String otpCode =
                 supplementalInformationHelper
@@ -186,7 +190,12 @@ public class FiduciaAuthenticator implements MultiFactorAuthenticator, AutoAuthe
                         .get(fields.get(fields.size() - 1).getName());
 
         String authoriseTransactionHref = scaResponse.getLinks().getAuthoriseTransaction();
-        return apiClient.authorizeWithOtpCode(authoriseTransactionHref, otpCode);
+        ScaStatusResponse scaStatusResponse =
+                apiClient.authorizeWithOtpCode(authoriseTransactionHref, otpCode);
+        log.info(
+                "[Fiducia 2FA] User for authenticationType {} successfully passed 2FA",
+                authenticationType);
+        return scaStatusResponse;
     }
 
     private Optional<String> extractStartcode(ScaResponse scaResponse) {

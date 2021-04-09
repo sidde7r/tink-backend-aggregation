@@ -178,6 +178,8 @@ public class PostbankAuthenticationController implements TypedAuthenticator {
 
     private void finishWithOtpAuthorisation(
             AuthorisationResponse previousResponse, String username) {
+        String authenticationType = previousResponse.getChosenScaMethod().getAuthenticationType();
+        log.info("[Postbank 2FA] User for authenticationType {} started 2FA", authenticationType);
         AuthorisationResponse response =
                 authenticator.authoriseWithOtp(
                         collectOtp(previousResponse),
@@ -186,6 +188,9 @@ public class PostbankAuthenticationController implements TypedAuthenticator {
 
         switch (response.getScaStatus()) {
             case PollStatus.FINALISED:
+                log.info(
+                        "[Postbank 2FA] User for authenticationType {} successfully passed 2FA",
+                        authenticationType);
                 break;
             case PollStatus.FAILED:
                 throw LoginError.INCORRECT_CHALLENGE_RESPONSE.exception();
