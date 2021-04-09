@@ -64,7 +64,7 @@ public final class UlsterV31Agent extends UkOpenBankingBaseAgent {
                         jwtSigner, componentProvider.getRandomValueGenerator()));
 
         if (request instanceof RefreshInformationRequest) {
-            log.debug(
+            log.info(
                     "Items to refresh: "
                             + ((RefreshInformationRequest) request).getItemsToRefresh());
         }
