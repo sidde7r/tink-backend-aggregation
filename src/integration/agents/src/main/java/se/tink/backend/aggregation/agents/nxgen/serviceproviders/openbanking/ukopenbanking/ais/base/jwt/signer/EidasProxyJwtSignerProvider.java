@@ -4,6 +4,7 @@ import java.security.cert.X509Certificate;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.contexts.AgentConfigurationControllerContext;
+import se.tink.backend.aggregation.agents.contexts.EidasContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.configuration.UkOpenBankingClientConfigurationAdapter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.jwt.JwksClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.jwt.kid.JwksKeyIdProvider;
@@ -17,26 +18,26 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponen
 
 @Slf4j
 public final class EidasProxyJwtSignerProvider {
+    private static final String CERT_ID = "UKOB";
     private final AgentComponentProvider agentComponentProvider;
     private final UkOpenBankingClientConfigurationAdapter configuration;
     private final AgentConfigurationControllerContext agentConfigurationControllerContext;
     private final InternalEidasProxyConfiguration internalEidasProxyConfiguration;
+    private final EidasContext eidasContext;
     private final Class<? extends UkOpenBankingClientConfigurationAdapter> configurationFormatClass;
-    private final EidasIdentity eidasIdentity;
 
     public EidasProxyJwtSignerProvider(
             UkOpenBankingClientConfigurationAdapter configuration,
             AgentComponentProvider agentComponentProvider,
             AgentsServiceConfiguration agentsServiceConfiguration,
-            Class<? extends UkOpenBankingClientConfigurationAdapter> configurationFormatClass,
-            EidasIdentity identity) {
+            Class<? extends UkOpenBankingClientConfigurationAdapter> configurationFormatClass) {
         this.configuration = configuration;
         this.agentComponentProvider = agentComponentProvider;
         this.agentConfigurationControllerContext = agentComponentProvider.getContext();
         this.internalEidasProxyConfiguration =
                 agentsServiceConfiguration.getEidasProxy().toInternalConfig();
+        this.eidasContext = agentComponentProvider.getContext();
         this.configurationFormatClass = configurationFormatClass;
-        eidasIdentity = identity;
     }
 
     @SneakyThrows
@@ -70,7 +71,10 @@ public final class EidasProxyJwtSignerProvider {
     }
 
     private EidasJwsSigner createEidasJwsSigner() {
-        log.info("Eidas Identity setting: `{}`", eidasIdentity);
-        return new EidasJwsSigner(internalEidasProxyConfiguration, eidasIdentity);
+        EidasIdentity identity =
+                new EidasIdentity(
+                        eidasContext.getClusterId(), eidasContext.getAppId(), CERT_ID, "");
+        log.info("Eidas Identity setting: `{}`", identity);
+        return new EidasJwsSigner(internalEidasProxyConfiguration, identity);
     }
 }
