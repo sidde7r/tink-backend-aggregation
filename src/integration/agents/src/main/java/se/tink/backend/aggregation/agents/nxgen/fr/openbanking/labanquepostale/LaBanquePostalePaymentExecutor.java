@@ -1,5 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale;
 
+import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.LaBanquePostaleConstants.MinimumValues.MINIMUM_AMOUNT_FOR_SEPA;
+
+import java.math.BigDecimal;
 import java.time.Clock;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -15,6 +18,7 @@ import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthenticati
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentValidationException;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.LaBanquePostaleConstants.CreditorAgentConstants;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.authenticator.rpc.ConfirmPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.authenticator.rpc.CreatePaymentRequest;
@@ -45,6 +49,7 @@ import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Payment;
+import se.tink.libraries.payments.common.model.PaymentScheme;
 import se.tink.libraries.transfer.enums.RemittanceInformationType;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
@@ -82,12 +87,14 @@ public class LaBanquePostalePaymentExecutor implements PaymentExecutor, Fetchabl
     }
 
     @Override
-    public PaymentResponse create(PaymentRequest paymentRequest) {
+    public PaymentResponse create(PaymentRequest paymentRequest) throws PaymentException {
         apiClient.fetchToken();
 
         AccountEntity creditor = AccountEntity.creditorOf(paymentRequest);
         AmountEntity amount = AmountEntity.amountOf(paymentRequest);
         AccountEntity debtor = AccountEntity.debtorOf(paymentRequest);
+
+        validatePayment(paymentRequest, amount);
 
         CreatePaymentRequest createPaymentRequest = getCreatePaymentRequest(paymentRequest);
 
@@ -170,12 +177,25 @@ public class LaBanquePostalePaymentExecutor implements PaymentExecutor, Fetchabl
                 .withCreditorAccount(creditor)
                 .withCreditorName(new CreditorEntity(CREDITOR_NAME))
                 .withExecutionDate(executionDate)
-                .withCreationDateTime(LocalDateTime.now())
+                .withCreationDateTime(LocalDateTime.now(Clock.system(DEFAULT_ZONE_ID)))
                 .withRedirectUrl(
                         new URL(redirectUrl)
                                 .queryParam(STATE, strongAuthenticationState.getState()))
                 .withRemittanceInformation(remittanceInformationEntity)
+                .withPaymentScheme(payment.getPaymentScheme())
                 .build();
+    }
+
+    private void validatePayment(PaymentRequest paymentRequest, AmountEntity amount)
+            throws PaymentValidationException {
+        if (paymentRequest.getPayment().getPaymentScheme()
+                        != PaymentScheme.SEPA_INSTANT_CREDIT_TRANSFER
+                && amount.toTinkAmount()
+                                .getExactValue()
+                                .compareTo(BigDecimal.valueOf(MINIMUM_AMOUNT_FOR_SEPA))
+                        < 0) {
+            throw new PaymentValidationException(PaymentValidationException.DEFAULT_MESSAGE);
+        }
     }
 
     private PaymentStatus confirmAndVerifyStatus(String paymentId) throws PaymentException {

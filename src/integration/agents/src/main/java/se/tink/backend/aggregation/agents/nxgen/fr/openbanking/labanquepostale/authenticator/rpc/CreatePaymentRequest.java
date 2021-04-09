@@ -3,7 +3,8 @@ package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.
 import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.LaBanquePostaleConstants.CHANGE_BEARER;
 import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.LaBanquePostaleConstants.DEVICE_NAME;
 import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.LaBanquePostaleConstants.PaymentTypeInformation.CATEGORY_PURPOSE;
-import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.LaBanquePostaleConstants.PaymentTypeInformation.LOCAL_INSTRUMENT;
+import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.LaBanquePostaleConstants.PaymentTypeInformation.SEPA_INSTANT;
+import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.LaBanquePostaleConstants.PaymentTypeInformation.SEPA_STANDARD;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -27,6 +28,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fro
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.payment.enums.PaymentType;
+import se.tink.libraries.payments.common.model.PaymentScheme;
 
 @Getter
 @JsonObject
@@ -61,7 +63,9 @@ public class CreatePaymentRequest {
         paymentTypeInformation =
                 new PaymentTypeInformationEntity(
                         builder.paymentType.toString().toUpperCase(),
-                        LOCAL_INSTRUMENT,
+                        PaymentScheme.SEPA_INSTANT_CREDIT_TRANSFER == builder.paymentScheme
+                                ? SEPA_INSTANT
+                                : SEPA_STANDARD,
                         CATEGORY_PURPOSE);
         beneficiary =
                 new BeneficiaryEntity(
@@ -93,6 +97,7 @@ public class CreatePaymentRequest {
         private PaymentType paymentType;
         private String redirectUrl;
         private RemittanceInformationEntity remittanceInformation;
+        private PaymentScheme paymentScheme;
 
         public Builder withPaymentType(PaymentType paymentType) {
             this.paymentType = paymentType;
@@ -139,6 +144,11 @@ public class CreatePaymentRequest {
         public Builder withRemittanceInformation(
                 RemittanceInformationEntity remittanceInformation) {
             this.remittanceInformation = remittanceInformation;
+            return this;
+        }
+
+        public Builder withPaymentScheme(PaymentScheme paymentScheme) {
+            this.paymentScheme = paymentScheme;
             return this;
         }
 
