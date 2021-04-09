@@ -121,7 +121,6 @@ public class TransactionalAccountBuilder
     }
 
     @Override
-    @Nullable
     public Optional<TransactionalAccount> build() {
         return accountType == null
                 ? Optional.empty()
