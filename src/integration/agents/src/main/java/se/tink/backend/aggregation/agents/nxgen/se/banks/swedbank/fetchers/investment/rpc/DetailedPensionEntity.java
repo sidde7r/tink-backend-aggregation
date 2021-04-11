@@ -19,6 +19,7 @@ import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccou
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument.InstrumentModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.portfolio.PortfolioModule;
+import se.tink.backend.aggregation.source_info.AccountSourceInfo;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
@@ -71,7 +72,12 @@ public class DetailedPensionEntity {
                                         AccountIdentifier.create(
                                                 AccountIdentifierType.SE, fullyFormattedNumber))
                                 .build())
+                .sourceInfo(createAccountSourceInfo())
                 .build();
+    }
+
+    private AccountSourceInfo createAccountSourceInfo() {
+        return AccountSourceInfo.builder().bankProductCode(productId).bankAccountType(type).build();
     }
 
     private String migrateAndGetUniqueIdentifier(

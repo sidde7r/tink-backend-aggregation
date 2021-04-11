@@ -30,6 +30,7 @@ public class CarLoanEntity extends BaseAbstractLoanEntity {
                 .setExactBalance(getAmount())
                 .setAccountNumber(getAccountNumber())
                 .setDetails(buildLoanDetails())
+                .sourceInfo(buildSourceInfo())
                 .build();
     }
 

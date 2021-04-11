@@ -23,6 +23,7 @@ public class DetailedCardAccountEntity {
     private boolean availableForPriorityAccount;
     private String cardNumber;
     private ExpenseControlEntity expenseControl;
+    private String creditCardProductId;
 
     public String getCardHolder() {
         return cardHolder;
@@ -94,5 +95,9 @@ public class DetailedCardAccountEntity {
 
     public ExpenseControlEntity getExpenseControl() {
         return expenseControl;
+    }
+
+    public String getCreditCardProductId() {
+        return creditCardProductId;
     }
 }

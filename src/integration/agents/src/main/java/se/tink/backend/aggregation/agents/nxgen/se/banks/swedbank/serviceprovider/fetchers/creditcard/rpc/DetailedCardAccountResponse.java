@@ -16,6 +16,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.transaction.CreditCardTransaction;
+import se.tink.backend.aggregation.source_info.AccountSourceInfo;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.strings.StringUtils;
 
@@ -87,7 +88,14 @@ public class DetailedCardAccountResponse {
                                 SwedbankBaseConstants.StorageKey.CREDIT_CARD_RESPONSE, this)
                         .putInTemporaryStorage(
                                 SwedbankBaseConstants.StorageKey.PROFILE, bankProfile)
+                        .sourceInfo(createAccountSourceInfo())
                         .build());
+    }
+
+    private AccountSourceInfo createAccountSourceInfo() {
+        return AccountSourceInfo.builder()
+                .bankProductCode(cardAccount.getCreditCardProductId())
+                .build();
     }
 
     public List<CreditCardTransaction> toTransactions(

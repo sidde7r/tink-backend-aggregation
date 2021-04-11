@@ -36,6 +36,7 @@ public class ConsumptionLoanEntity extends BaseAbstractLoanDetailedEntity {
                 .setName(getName())
                 .setInterestRate(getInterest())
                 .setDetails(buildLoanDetails(borrowers))
+                .sourceInfo(buildSourceInfo())
                 .build();
     }
 
