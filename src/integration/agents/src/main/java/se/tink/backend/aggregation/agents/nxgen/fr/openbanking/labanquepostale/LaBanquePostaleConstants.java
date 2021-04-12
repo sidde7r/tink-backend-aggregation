@@ -45,7 +45,8 @@ public final class LaBanquePostaleConstants {
 
     public static class PaymentTypeInformation {
         public static final String CATEGORY_PURPOSE = "CASH";
-        public static final String LOCAL_INSTRUMENT = "INST";
+        public static final String SEPA_INSTANT_CREDIT_TRANSFER = "INST";
+        public static final String SEPA_STANDARD_CREDIT_TRANSFER = "";
         public static final String SERVICE_LEVEL = "SEPA";
     }
 
@@ -78,5 +79,9 @@ public final class LaBanquePostaleConstants {
     public static class CreditorAgentConstants {
         public static final String BICFI = "BNKAFRPPXXX";
         public static final String NAME = "CreditorAgentName";
+    }
+
+    public static class MinimumValues {
+        public static final String MINIMUM_AMOUNT_FOR_SEPA = "1.5";
     }
 }

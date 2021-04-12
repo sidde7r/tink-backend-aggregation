@@ -48,7 +48,12 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDe
 
 @AgentDependencyModules(modules = QSealcSignerModuleRSASHA256.class)
 @AgentCapabilities({CHECKING_ACCOUNTS, IDENTITY_DATA, LIST_BENEFICIARIES, TRANSFERS, CREDIT_CARDS})
-@AgentPisCapability(capabilities = PisCapability.PIS_SEPA_ICT)
+@AgentPisCapability(
+        capabilities = {
+            PisCapability.PIS_SEPA_ICT,
+            PisCapability.PIS_SEPA,
+            PisCapability.PIS_FUTURE_DATE,
+        })
 public final class LaBanquePostaleAgent
         extends BerlinGroupAgent<LaBanquePostaleApiClient, LaBanquePostaleConfiguration>
         implements RefreshIdentityDataExecutor,

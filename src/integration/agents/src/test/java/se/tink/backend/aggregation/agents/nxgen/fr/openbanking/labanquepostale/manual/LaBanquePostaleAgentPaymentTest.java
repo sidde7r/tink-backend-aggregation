@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.manual;
 
-import java.util.UUID;
+import java.time.LocalDate;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,6 +13,7 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
+import se.tink.libraries.payments.common.model.PaymentScheme;
 
 public class LaBanquePostaleAgentPaymentTest {
 
@@ -35,15 +36,27 @@ public class LaBanquePostaleAgentPaymentTest {
     }
 
     @Test
-    public void testPayments() throws Exception {
+    public void testSepaPayment() throws Exception {
 
         manager.before();
         creditorDebtorManager.before();
 
-        builder.build().testTinkLinkPayment(createRealDomesticPayment());
+        builder.build()
+                .testTinkLinkPayment(createRealDomesticPayment(PaymentScheme.SEPA_CREDIT_TRANSFER));
     }
 
-    private Payment createRealDomesticPayment() {
+    @Test
+    public void testSepaInstantPayment() throws Exception {
+
+        manager.before();
+        creditorDebtorManager.before();
+
+        builder.build()
+                .testTinkLinkPayment(
+                        createRealDomesticPayment(PaymentScheme.SEPA_INSTANT_CREDIT_TRANSFER));
+    }
+
+    private Payment createRealDomesticPayment(PaymentScheme paymentScheme) {
         AccountIdentifier creditorAccountIdentifier =
                 new IbanIdentifier(
                         creditorDebtorManager.get(
@@ -57,12 +70,13 @@ public class LaBanquePostaleAgentPaymentTest {
         return new Payment.Builder()
                 .withCreditor(new Creditor(creditorAccountIdentifier))
                 .withDebtor(new Debtor(debtorAccountIdentifier))
-                .withExactCurrencyAmount(ExactCurrencyAmount.inEUR(0.1))
+                .withExactCurrencyAmount(ExactCurrencyAmount.inEUR(1.5000))
                 .withCurrency("EUR")
+                .withExecutionDate(LocalDate.now().plusDays(1))
                 .withRemittanceInformation(
                         RemittanceInformationUtils.generateUnstructuredRemittanceInformation(
                                 "Message"))
-                .withUniqueId(UUID.randomUUID().toString())
+                .withPaymentScheme(paymentScheme)
                 .build();
     }
 
