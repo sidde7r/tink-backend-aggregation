@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.rpc;
 
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebCommonConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
@@ -23,5 +24,9 @@ public class ErrorResponse {
 
     public String getCode() {
         return code;
+    }
+
+    public boolean isPollTimeout() {
+        return SebCommonConstants.PollResponses.TIMEOUT.equalsIgnoreCase(type);
     }
 }

@@ -21,9 +21,10 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.seb
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.DecoupledAuthRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.DecoupledAuthResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.DecoupledTokenRequest;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.ErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.RefreshRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.TokenErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.configuration.SebConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.rpc.ErrorResponse;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
@@ -75,11 +76,18 @@ public class SebDecoupledAuthenticator implements BankIdAuthenticator<String> {
         try {
             response = apiClient.getDecoupledAuthStatus(authRequestId);
         } catch (HttpResponseException e) {
+            int status = e.getResponse().getStatus();
             // SEB ends up with HTTP 500 after about 3 minutes for both cases of
             // isUserSign=true and isUserSign=false
-            if (e.getResponse().getStatus() == HttpStatus.SC_INTERNAL_SERVER_ERROR) {
+            if (status == HttpStatus.SC_INTERNAL_SERVER_ERROR) {
                 return BankIdStatus.TIMEOUT;
             }
+
+            if (status == HttpStatus.SC_BAD_REQUEST
+                    && e.getResponse().getBody(ErrorResponse.class).isPollTimeout()) {
+                return BankIdStatus.TIMEOUT;
+            }
+
             throw e;
         }
         String hintCode = Strings.nullToEmpty(response.getHintCode());
@@ -173,7 +181,7 @@ public class SebDecoupledAuthenticator implements BankIdAuthenticator<String> {
             return Optional.ofNullable(apiClient.refreshToken(Urls.TOKEN, requestForm));
         } catch (HttpResponseException e) {
             if (e.getResponse().getStatus() == HttpStatus.SC_UNAUTHORIZED
-                    || e.getResponse().getBody(ErrorResponse.class).isInvalidGrant()) {
+                    || e.getResponse().getBody(TokenErrorResponse.class).isInvalidGrant()) {
                 throw SessionError.SESSION_EXPIRED.exception();
             }
             throw e;

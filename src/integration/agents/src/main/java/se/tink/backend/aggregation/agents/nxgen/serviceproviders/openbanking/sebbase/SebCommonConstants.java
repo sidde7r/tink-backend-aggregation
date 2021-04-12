@@ -38,6 +38,7 @@ public class SebCommonConstants {
         public static final String NO_CLIENT = "no_client";
         public static final String USER_CANCEL = "user_cancel";
         public static final String CANCELLED = "cancelled";
+        public static final String TIMEOUT = "timeout";
         public static final String REQUIRES_EXTRA_VERIFICATION =
                 "bankid_requires_extra_verification";
     }
