@@ -1,13 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.fecther.account;
 
-import com.google.common.collect.ImmutableList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
-import se.tink.backend.aggregation.agents.exceptions.refresh.AccountRefreshException;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.apiclient.LclApiClient;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.apiclient.dto.account.AccountResourceDto;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.apiclient.dto.account.AccountUsage;
@@ -19,22 +16,18 @@ import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.fecther.conve
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.AccountHolderType;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.builder.BalanceBuilderStep;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
-import se.tink.libraries.mapper.PrioritizedValueExtractor;
 
 @RequiredArgsConstructor
 @Slf4j
 public class LclAccountFetcher implements AccountFetcher<TransactionalAccount> {
 
-    private static final List<BalanceType> BALANCE_PREFERRED_TYPES =
-            ImmutableList.of(BalanceType.CLBD, BalanceType.XPCD);
-
     private final LclApiClient apiClient;
-    private final PrioritizedValueExtractor prioritizedValueExtractor;
     private final LclDataConverter dataConverter;
 
     @Override
@@ -63,7 +56,7 @@ public class LclAccountFetcher implements AccountFetcher<TransactionalAccount> {
         return TransactionalAccount.nxBuilder()
                 .withType(TransactionalAccountType.CHECKING)
                 .withInferredAccountFlags()
-                .withBalance(BalanceModule.of(getBalance(account)))
+                .withBalance(getBalanceModule(account.getBalances()))
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(iban)
@@ -77,19 +70,39 @@ public class LclAccountFetcher implements AccountFetcher<TransactionalAccount> {
                 .build();
     }
 
-    private ExactCurrencyAmount getBalance(AccountResourceDto account) {
-        return prioritizedValueExtractor
-                .pickByValuePriority(
-                        account.getBalances(),
-                        BalanceResourceDto::getBalanceType,
-                        BALANCE_PREFERRED_TYPES)
+    private BalanceModule getBalanceModule(List<BalanceResourceDto> balances) {
+        BalanceBuilderStep balanceBuilderStep =
+                BalanceModule.builder().withBalance(getBookedBalance(balances));
+        getAvailableBalance(balances).ifPresent(balanceBuilderStep::setAvailableBalance);
+        return balanceBuilderStep.build();
+    }
+
+    private ExactCurrencyAmount getBookedBalance(List<BalanceResourceDto> balances) {
+        if (balances.isEmpty()) {
+            throw new IllegalArgumentException(
+                    "Cannot determine booked balance from empty list of balances.");
+        }
+        Optional<BalanceResourceDto> balanceEntity =
+                balances.stream().filter(b -> BalanceType.CLBD == b.getBalanceType()).findAny();
+
+        if (!balanceEntity.isPresent()) {
+            log.warn(
+                    "Couldn't determine booked balance of known type, and no credit limit included. Defaulting to first provided balance.");
+        }
+        return balanceEntity
+                .map(Optional::of)
+                .orElseGet(() -> balances.stream().findFirst())
                 .map(BalanceResourceDto::getBalanceAmount)
                 .map(dataConverter::convertAmountDtoToExactCurrencyAmount)
-                .orElseThrow(
-                        () ->
-                                new AccountRefreshException(
-                                        "Could not extract account balance. No available balance with type of: "
-                                                + StringUtils.join(BALANCE_PREFERRED_TYPES, ", ")));
+                .get();
+    }
+
+    private Optional<ExactCurrencyAmount> getAvailableBalance(List<BalanceResourceDto> balances) {
+        return balances.stream()
+                .filter(b -> BalanceType.XPCD == b.getBalanceType())
+                .findAny()
+                .map(BalanceResourceDto::getBalanceAmount)
+                .map(dataConverter::convertAmountDtoToExactCurrencyAmount);
     }
 
     private AccountHolderType getAccountHolderType(AccountResourceDto account) {
