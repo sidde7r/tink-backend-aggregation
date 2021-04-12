@@ -10,6 +10,7 @@ import javax.ws.rs.core.MediaType;
 import org.apache.http.HttpHeaders;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.ICSConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.ICSConstants.HeaderKeys;
+import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.ICSConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.ICSConstants.OAuthGrantTypes;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.ICSConstants.Permissions;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.ICSConstants.QueryKeys;
@@ -107,14 +108,13 @@ public class ICSApiClient {
     private RequestBuilder createRequestInSession(String url, OAuth2Token token) {
         final String clientId = getConfiguration().getClientId();
         final String clientSecret = getConfiguration().getClientSecret();
-        final String xFinancialID = ICSUtils.getFinancialId();
         final String xInteractionId = ICSUtils.getInteractionId();
 
         return createRequest(url)
                 .addBearerToken(token)
                 .header(HeaderKeys.CLIENT_ID, clientId)
                 .header(HeaderKeys.CLIENT_SECRET, clientSecret)
-                .header(HeaderKeys.X_FAPI_FINANCIAL_ID, xFinancialID)
+                .header(HeaderKeys.X_FAPI_FINANCIAL_ID, HeaderValues.FINANCIAL_ID)
                 .header(HeaderKeys.X_FAPI_CUSTOMER_IP_ADDRESS, customerIpAddress)
                 .header(HeaderKeys.X_FAPI_INTERACTION_ID, xInteractionId)
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)

@@ -71,6 +71,12 @@ public class ICSConstants {
         public static final String X_FAPI_INTERACTION_ID = "x-fapi-interaction-id";
     }
 
+    public static final class HeaderValues {
+
+        // Not required to send actual values, sending dummy data
+        public static final String FINANCIAL_ID = "e3213dfd-435fgrd5-e7edr4";
+    }
+
     public static final class Permissions {
         public static final String READ_ACCOUNT_BASIC = "ReadAccountsBasic";
         public static final String READ_ACCOUNTS_DETAIL = "ReadAccountsDetail";
