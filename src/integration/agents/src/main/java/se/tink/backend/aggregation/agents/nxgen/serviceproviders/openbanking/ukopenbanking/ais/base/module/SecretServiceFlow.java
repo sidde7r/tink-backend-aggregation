@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.module;
 
-import se.tink.backend.aggregation.agents.agent.Agent;
 import se.tink.backend.aggregation.agents.contexts.CompositeAgentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingFlowFacade;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.configuration.UkOpenBankingClientConfigurationAdapter;
@@ -17,11 +16,11 @@ public class SecretServiceFlow implements UkOpenBankingFlowStrategy {
     private static final Class<UkOpenBankingConfiguration> CONFIGURATION_CLASS =
             UkOpenBankingConfiguration.class;
     private final CompositeAgentContext context;
-    private final Class<? extends Agent> agentClass;
+    private final EidasIdentity eidasIdentity;
 
-    public SecretServiceFlow(CompositeAgentContext context, Class<? extends Agent> agentClass) {
+    public SecretServiceFlow(CompositeAgentContext context, EidasIdentity eidasIdentity) {
         this.context = context;
-        this.agentClass = agentClass;
+        this.eidasIdentity = eidasIdentity;
     }
 
     @Override
@@ -34,7 +33,7 @@ public class SecretServiceFlow implements UkOpenBankingFlowStrategy {
                 tlsConfigurationSetter(providerSpecificConfiguration),
                 secretServiceJwtSigner(providerSpecificConfiguration),
                 configuration,
-                eidasIdentity());
+                eidasIdentity);
     }
 
     private TlsConfigurationSetter tlsConfigurationSetter(
@@ -50,9 +49,5 @@ public class SecretServiceFlow implements UkOpenBankingFlowStrategy {
     private AgentConfiguration<? extends UkOpenBankingClientConfigurationAdapter>
             agentConfiguration(CompositeAgentContext context) {
         return context.getAgentConfigurationController().getAgentConfiguration(CONFIGURATION_CLASS);
-    }
-
-    private EidasIdentity eidasIdentity() {
-        return new EidasIdentity(context.getClusterId(), context.getAppId(), "UKOB", agentClass);
     }
 }

@@ -21,7 +21,7 @@ import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConf
 import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 
-public class RevolutEUModule extends AbstractModule {
+public class RevolutEEAModule extends AbstractModule {
 
     private static final Class<RevolutEEAClientConfiguration> CONFIGURATION_CLASS =
             RevolutEEAClientConfiguration.class;
