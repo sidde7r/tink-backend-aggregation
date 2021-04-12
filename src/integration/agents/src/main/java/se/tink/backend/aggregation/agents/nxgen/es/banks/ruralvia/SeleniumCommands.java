@@ -79,9 +79,10 @@ public abstract class SeleniumCommands {
 
     public void waitForLoad() {
         ExpectedCondition<Boolean> pageLoadCondition =
-            drive -> ((JavascriptExecutor) drive)
-                    .executeScript("return document.readyState")
-                    .equals("complete");
+                drive ->
+                        ((JavascriptExecutor) drive)
+                                .executeScript("return document.readyState")
+                                .equals("complete");
 
         WebDriverWait wait = new WebDriverWait(driver, 20);
         wait.until(pageLoadCondition);

@@ -38,12 +38,12 @@ public class RuralviaAgent extends NextGenerationAgent
                 new RuralviaTransactionalAccountFetcher(apiClient);
 
         return new TransactionalAccountRefreshController(
-            metricRefreshController,
-            updateController,
-            accountFetcher,
-            new TransactionFetcherController<>(
-                transactionPaginationHelper,
-                new TransactionKeyPaginationController<>(accountFetcher)));
+                metricRefreshController,
+                updateController,
+                accountFetcher,
+                new TransactionFetcherController<>(
+                        transactionPaginationHelper,
+                        new TransactionKeyPaginationController<>(accountFetcher)));
     }
 
     @Override

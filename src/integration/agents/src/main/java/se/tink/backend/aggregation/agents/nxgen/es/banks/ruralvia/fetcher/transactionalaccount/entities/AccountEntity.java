@@ -18,50 +18,48 @@ import se.tink.libraries.account.enums.AccountIdentifierType;
 @Data
 public class AccountEntity {
 
-  private static final Pattern AMOUNT_PATTERN =
-      Pattern.compile("(?<value>[\\+\\-]?[0-9\\.,]+)(?<currency>€|EUROS|\\$|\\w{3})?");
-  private static final Logger log =
-      LoggerFactory.getLogger(AccountEntity.class);
+    private static final Pattern AMOUNT_PATTERN =
+            Pattern.compile("(?<value>[\\+\\-]?[0-9\\.,]+)(?<currency>€|EUROS|\\$|\\w{3})?");
+    private static final Logger log = LoggerFactory.getLogger(AccountEntity.class);
 
-  private String accountAlias;
+    private String accountAlias;
 
-  private String accountNumber;
+    private String accountNumber;
 
-  private String balance;
+    private String balance;
 
-  private String currency;
+    private String currency;
 
-  private Element form;
+    private Element form;
 
-  public AccountEntity() {
-    this.setCurrency("EUR");
-  }
-
-  public Optional<TransactionalAccount> toTinkAccount(){
-    final AccountIdentifier accountIdentifier = getAccountIdentifier();
-
-    return TransactionalAccount.nxBuilder()
-        .withType(TransactionalAccountType.CHECKING)
-        .withFlags()
-        .withBalance(BalanceModule.of(parseAmount(getBalance(), getCurrency())))
-        .withId(
-            IdModule.builder()
-                .withUniqueIdentifier(accountIdentifier.getIdentifier())
-                .withAccountNumber(accountIdentifier.getIdentifier())
-                .withAccountName(getAccountAlias())
-                .addIdentifier(accountIdentifier)
-                .build())
-        .build();
-  }
-
-  protected AccountIdentifier getAccountIdentifier() {
-    AccountIdentifier identifier = AccountIdentifier.create(AccountIdentifierType.IBAN,
-        getAccountNumber());
-    identifier.setName(getAccountAlias());
-    if (!identifier.isValid()) {
-      throw new IllegalStateException("Found invalid account IBAN.");
+    public AccountEntity() {
+        this.setCurrency("EUR");
     }
-    return identifier;
-  }
 
+    public Optional<TransactionalAccount> toTinkAccount() {
+        final AccountIdentifier accountIdentifier = getAccountIdentifier();
+
+        return TransactionalAccount.nxBuilder()
+                .withType(TransactionalAccountType.CHECKING)
+                .withFlags()
+                .withBalance(BalanceModule.of(parseAmount(getBalance(), getCurrency())))
+                .withId(
+                        IdModule.builder()
+                                .withUniqueIdentifier(accountIdentifier.getIdentifier())
+                                .withAccountNumber(accountIdentifier.getIdentifier())
+                                .withAccountName(getAccountAlias())
+                                .addIdentifier(accountIdentifier)
+                                .build())
+                .build();
+    }
+
+    protected AccountIdentifier getAccountIdentifier() {
+        AccountIdentifier identifier =
+                AccountIdentifier.create(AccountIdentifierType.IBAN, getAccountNumber());
+        identifier.setName(getAccountAlias());
+        if (!identifier.isValid()) {
+            throw new IllegalStateException("Found invalid account IBAN.");
+        }
+        return identifier;
+    }
 }

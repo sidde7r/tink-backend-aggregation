@@ -33,18 +33,14 @@ public class GlobalPositionResponse {
                     AccountEntity accountEntity = new AccountEntity();
 
                     Element account =
-                            accountContainer
-                                    .siblingElements()
-                                    .select("tr td.totlistaC").first();
-                                    //.select("tr:contains(0198) td")
+                            accountContainer.siblingElements().select("tr td.totlistaC").first();
+                    // .select("tr:contains(0198) td")
 
                     Elements otherData =
-                        accountContainer
-                            .siblingElements()
-                            .select("tr td.totlistaC").nextAll();
+                            accountContainer.siblingElements().select("tr td.totlistaC").nextAll();
 
-                    accountEntity
-                        .setAccountNumber(account.ownText().replaceAll("[\\s\\u202F\\u00A0]", ""));
+                    accountEntity.setAccountNumber(
+                            account.ownText().replaceAll("[\\s\\u202F\\u00A0]", ""));
                     String alias = otherData.get(0).ownText();
                     if (alias.contains("|")) {
                         accountEntity.setAccountAlias(alias.split("\\|")[0].trim());
@@ -66,10 +62,6 @@ public class GlobalPositionResponse {
     public Elements findAccountsElementOnHtml() {
         return html.select("form[name*='form_a_']");
     }
-
-
-
-
 
     private String checkAliasCurrency(String alias) {
 

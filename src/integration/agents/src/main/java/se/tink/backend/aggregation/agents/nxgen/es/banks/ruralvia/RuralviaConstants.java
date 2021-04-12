@@ -36,7 +36,5 @@ public class RuralviaConstants {
         public static final String ATTRIBUTE_TAG_VALUE = "value";
         public static final String ATTRIBUTE_TAG_ACTION = "action";
         public static final String PARSE_CONSTANT_TAMANIOPAGINA = "tamanioPagina";
-
     }
-
 }

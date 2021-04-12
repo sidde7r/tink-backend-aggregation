@@ -60,7 +60,8 @@ public class RuralviaAuthenticator extends SeleniumCommands implements Authentic
         WebElement userField =
                 driver.findElement(By.id(LoginForm.USER_FIELD))
                         .findElement(By.tagName(Tags.TAG_INPUT));
-        WebElement nationalIdNumber = driver.findElement(By.id(ID_FIELD)).findElement(By.tagName(Tags.TAG_INPUT));
+        WebElement nationalIdNumber =
+                driver.findElement(By.id(ID_FIELD)).findElement(By.tagName(Tags.TAG_INPUT));
         WebElement passwordField =
                 driver.findElement(By.id(PASSWORD_FIELD)).findElement(By.tagName(Tags.TAG_INPUT));
 
@@ -75,16 +76,16 @@ public class RuralviaAuthenticator extends SeleniumCommands implements Authentic
         driver.findElement(By.cssSelector(LoginForm.WEB_VIEW)).click();
         driver.findElement(By.id(LoginForm.ACCEPT_BUTTON)).click();
 
-        //driver.findElement(By.xpath(".//input[@name='botoncico']")).sendKeys(Keys.ENTER);
+        // driver.findElement(By.xpath(".//input[@name='botoncico']")).sendKeys(Keys.ENTER);
 
         try {
             Thread.sleep(1000);
         } catch (InterruptedException e) {
-           log.error("Error in Authenticator Thread sleep", e);
-           Thread.currentThread().interrupt();
+            log.error("Error in Authenticator Thread sleep", e);
+            Thread.currentThread().interrupt();
         }
         waitForLoad();
-       // checkCorrectLogin();
+        // checkCorrectLogin();
     }
 
     /** Checks if appears a Login error in the DOM due a failed login */
@@ -102,5 +103,4 @@ public class RuralviaAuthenticator extends SeleniumCommands implements Authentic
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
     }
-
 }

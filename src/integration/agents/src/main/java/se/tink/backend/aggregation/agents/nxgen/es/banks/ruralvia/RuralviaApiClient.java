@@ -26,7 +26,7 @@ public class RuralviaApiClient {
         return client.request(url);
     }
 
-    public RequestBuilder createBodyFormRequest(URL url, String formToBody){
+    public RequestBuilder createBodyFormRequest(URL url, String formToBody) {
         return createRequest(url).body(formToBody, MediaType.APPLICATION_FORM_URLENCODED);
     }
 
@@ -68,5 +68,4 @@ public class RuralviaApiClient {
     public String navigateAccountTransactionsBetweenDates(RequestBuilder builder) {
         return builder.post(String.class);
     }
-
 }

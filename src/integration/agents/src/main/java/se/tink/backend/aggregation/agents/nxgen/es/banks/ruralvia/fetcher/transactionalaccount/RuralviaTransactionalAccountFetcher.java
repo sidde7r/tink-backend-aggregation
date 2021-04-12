@@ -90,7 +90,8 @@ public class RuralviaTransactionalAccountFetcher
         LocalDate toDate = LocalDate.now();
         LocalDate fromDate = toDate.minusMonths(3);
 
-        URL url = URL.of(Urls.RURALVIA_SECURE_HOST + accEntity.getForm().attr(ATTRIBUTE_TAG_ACTION));
+        URL url =
+                URL.of(Urls.RURALVIA_SECURE_HOST + accEntity.getForm().attr(ATTRIBUTE_TAG_ACTION));
         String bodyForm = createFormFirstRequestAccountTransaction(accEntity, fromDate, toDate);
         String html =
                 apiClient.navigateAccountTransactionFirstRequest(
