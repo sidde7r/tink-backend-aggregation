@@ -3,6 +3,7 @@ package se.tink.libraries.credentials.service;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableSortedMap;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -183,7 +184,9 @@ public abstract class CredentialsRequest {
         // That is why we must prefer using the appUriId (which is random)
         // as the state.
         // Last resort is to randomize it ourselves.
-        if (appUriId != null) return appUriId;
+        if (!Strings.isNullOrEmpty(appUriId)) {
+            return appUriId;
+        }
         // Beware! Some financial institutes have limitations on
         // the state parameter. Known limitations:
         // - SDC only allow UUID.
