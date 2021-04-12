@@ -18,6 +18,7 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
+import se.tink.backend.aggregation.source_info.AccountSourceInfo;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
@@ -115,6 +116,14 @@ public abstract class AccountEntity extends AbstractAccountEntity {
                 .putInTemporaryStorage(StorageKey.NEXT_LINK, getLinkOrNull())
                 .putInTemporaryStorage(SwedbankBaseConstants.StorageKey.PROFILE, bankProfile)
                 .addParties(new Party(bankProfile.getProfile().getHolderName(), Party.Role.HOLDER))
+                .sourceInfo(createAccountSourceInfo())
+                .build();
+    }
+
+    private AccountSourceInfo createAccountSourceInfo() {
+        return AccountSourceInfo.builder()
+                .bankAccountType(type)
+                .bankProductCode(productId) // ex. saving, 'SPP00103', "ISKPRV01"
                 .build();
     }
 

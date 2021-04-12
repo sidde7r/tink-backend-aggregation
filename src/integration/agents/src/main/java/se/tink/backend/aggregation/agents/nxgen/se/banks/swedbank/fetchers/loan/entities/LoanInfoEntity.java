@@ -6,7 +6,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class LoanInfoEntity {
     private String name;
     private AccountEntity account;
-    private AccountEntity accountForPeyment;
+    private AccountEntity accountForPayment;
 
     public String getName() {
         return name;
@@ -16,7 +16,7 @@ public class LoanInfoEntity {
         return account;
     }
 
-    public AccountEntity getAccountForPeyment() {
-        return accountForPeyment;
+    public AccountEntity getAccountForPayment() {
+        return accountForPayment;
     }
 }

@@ -12,6 +12,7 @@ public class LoanEntity {
     private String interestRate;
     private AmountEntity debt;
     private LinksEntity links;
+    private String type;
 
     public String getName() {
         return name;
@@ -35,5 +36,9 @@ public class LoanEntity {
 
     public LinksEntity getLinks() {
         return links;
+    }
+
+    public String getType() {
+        return type;
     }
 }

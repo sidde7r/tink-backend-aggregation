@@ -8,6 +8,7 @@ import java.util.Optional;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
+import se.tink.backend.aggregation.source_info.AccountSourceInfo;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.strings.StringUtils;
 
@@ -34,6 +35,7 @@ public class LoanAccountEntity extends AccountEntity {
                         .setDetails(loanDetails)
                         .setInterestRate(parsePercentageToDouble(interest))
                         .setName(name)
+                        .sourceInfo(createAccountSourceInfo())
                         .build());
     }
 
@@ -42,5 +44,9 @@ public class LoanAccountEntity extends AccountEntity {
         // Using BigDecimal for the division to not end up with stuff like 0.016200000000000003
         BigDecimal interest = new BigDecimal(StringUtils.parseAmount(interestString));
         return interest.divide(new BigDecimal(100)).setScale(6, RoundingMode.HALF_UP).doubleValue();
+    }
+
+    private AccountSourceInfo createAccountSourceInfo() {
+        return AccountSourceInfo.builder().bankAccountType(type).bankProductCode(productId).build();
     }
 }
