@@ -7,6 +7,7 @@ import static se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank
 import static se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants.Urls.BASE_URL;
 import static se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants.Urls.OAUTH_TOKEN;
 
+import java.time.LocalDate;
 import java.util.Optional;
 import javax.ws.rs.core.MediaType;
 import lombok.RequiredArgsConstructor;
@@ -129,7 +130,7 @@ public class DemobankSinglePaymentApiClient implements DemobankPaymentApiClient 
                 .remittanceInformationUnstructured(
                         mappers.createUnstructuredRemittanceInfo(payment))
                 .remittanceInformationStructured(mappers.createStructuredRemittanceInfo(payment))
-                .initiationDate(payment.getExecutionDate().toString())
+                .initiationDate(getNonNullExecutionDate(payment.getExecutionDate()))
                 .build();
     }
 
@@ -155,5 +156,9 @@ public class DemobankSinglePaymentApiClient implements DemobankPaymentApiClient 
 
         storage.storePaymentId(id);
         storage.storeAuthorizeUrl(authorizeUrl);
+    }
+
+    private String getNonNullExecutionDate(LocalDate date) {
+        return date != null ? date.toString() : LocalDate.now().toString();
     }
 }
