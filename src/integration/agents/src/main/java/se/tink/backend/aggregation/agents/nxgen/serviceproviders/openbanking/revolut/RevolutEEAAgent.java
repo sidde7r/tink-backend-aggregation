@@ -11,14 +11,12 @@ import se.tink.backend.aggregation.agents.agentcapabilities.AgentPisCapability;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModulesForDecoupledMode;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModulesForProductionMode;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.revolut.common.RevolutBaseAgent;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.configuration.UkOpenBankingClientConfigurationAdapter;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.module.UkOpenBankingEidasSignerModule;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingFlowFacade;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.module.UkOpenBankingLocalKeySignerModuleForDecoupledMode;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.signer.iface.JwtSigner;
 import se.tink.backend.aggregation.client.provider_configuration.rpc.PisCapability;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 
-@AgentDependencyModulesForProductionMode(modules = UkOpenBankingEidasSignerModule.class)
+@AgentDependencyModulesForProductionMode(modules = RevolutEUModule.class)
 @AgentDependencyModulesForDecoupledMode(
         modules = UkOpenBankingLocalKeySignerModuleForDecoupledMode.class)
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, TRANSFERS, LIST_BENEFICIARIES})
@@ -28,13 +26,8 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponen
 public final class RevolutEEAAgent extends RevolutBaseAgent {
 
     @Inject
-    public RevolutEEAAgent(AgentComponentProvider componentProvider, JwtSigner jwtSigner) {
-        super(componentProvider, jwtSigner);
-    }
-
-    @Override
-    protected Class<? extends UkOpenBankingClientConfigurationAdapter>
-            getClientConfigurationFormat() {
-        return RevolutEEAClientConfiguration.class;
+    public RevolutEEAAgent(
+            AgentComponentProvider componentProvider, UkOpenBankingFlowFacade flowFacade) {
+        super(componentProvider, flowFacade);
     }
 }
