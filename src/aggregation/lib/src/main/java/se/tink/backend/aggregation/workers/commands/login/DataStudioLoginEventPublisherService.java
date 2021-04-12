@@ -351,13 +351,15 @@ public class DataStudioLoginEventPublisherService {
     private final AgentWorkerCommandContext context;
 
     void publishLoginSuccessEvent() {
-        int interactions = context.getSupplementalInteractionCounter().getNumberInteractions();
+        boolean wasAnyUserInteraction =
+                MetricsFactory.wasAnyUserInteraction(
+                        context.getRequest(), context.getSupplementalInteractionCounter());
         AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResult result =
-                interactions == 0
+                wasAnyUserInteraction
                         ? AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResult
-                                .ALREADY_LOGGED_IN
+                                .SUCCESSFUL_LOGIN
                         : AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResult
-                                .SUCCESSFUL_LOGIN;
+                                .ALREADY_LOGGED_IN;
         publishLoginResultEvent(result);
     }
 
@@ -470,7 +472,8 @@ public class DataStudioLoginEventPublisherService {
                 userInteractionInformation =
                         AgentLoginCompletedEventUserInteractionInformationProvider
                                 .userInteractionInformation(
-                                        context.getSupplementalInteractionCounter());
+                                        context.getSupplementalInteractionCounter(),
+                                        context.getRequest());
         log.info(
                 String.format(
                         "Authentication finished with %s and %s",
