@@ -6,7 +6,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.seb
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class ErrorResponse {
+public class TokenErrorResponse {
     @JsonProperty("error_description")
     private String errorDescription;
 
