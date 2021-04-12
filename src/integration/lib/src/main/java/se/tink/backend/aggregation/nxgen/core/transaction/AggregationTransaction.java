@@ -7,11 +7,8 @@ import com.google.common.collect.Maps;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.models.Transaction;
@@ -35,7 +32,7 @@ public abstract class AggregationTransaction {
     private final Map<TransactionPayloadTypes, String> payload;
     private final Map<TransactionExternalSystemIdType, String> externalSystemIds;
     private final Boolean mutable;
-    private final List<TransactionDate> transactionDates;
+    private final TransactionDates transactionDates;
     private final String proprietaryFinancialInstitutionType;
     private final String merchantName;
     private final String merchantCategoryCode;
@@ -51,7 +48,7 @@ public abstract class AggregationTransaction {
             Map<TransactionPayloadTypes, String> payload,
             Map<TransactionExternalSystemIdType, String> externalSystemIds,
             Boolean mutable,
-            List<TransactionDate> transactionDates,
+            TransactionDates transactionDates,
             String proprietaryFinancialInstitutionType,
             String merchantName,
             String merchantCategoryCode,
@@ -109,7 +106,7 @@ public abstract class AggregationTransaction {
         return mutable;
     }
 
-    public List<TransactionDate> getTransactionDates() {
+    public TransactionDates getTransactionDates() {
         return transactionDates;
     }
 
@@ -163,12 +160,7 @@ public abstract class AggregationTransaction {
                         ? getExternalSystemIds().entrySet().stream()
                                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))
                         : null);
-        transaction.setTransactionDates(
-                getTransactionDates() != null
-                        ? getTransactionDates().stream()
-                                .map(TransactionDate::toSystemModel)
-                                .collect(Collectors.toList())
-                        : null);
+        transaction.setTransactionDates(this.transactionDates.toSystemModel());
 
         return transaction;
     }
@@ -202,7 +194,7 @@ public abstract class AggregationTransaction {
         private Map<TransactionPayloadTypes, String> payload = Maps.newHashMap();
         private Map<TransactionExternalSystemIdType, String> externalSystemIds = Maps.newHashMap();
         private Boolean mutable;
-        private List<TransactionDate> transactionDates = new ArrayList<>();
+        private TransactionDates transactionDates = TransactionDates.builder().build();
         private String proprietaryFinancialInstitutionType;
         private String merchantName;
         private String merchantCategoryCode;
@@ -313,18 +305,13 @@ public abstract class AggregationTransaction {
             return mutable;
         }
 
-        public Builder addTransactionDates(List<TransactionDate> transactionDates) {
+        public Builder setTransactionDates(TransactionDates transactionDates) {
             Preconditions.checkNotNull(transactionDates, "TransactionDates must not be null.");
-            this.transactionDates.addAll(transactionDates);
+            this.transactionDates = transactionDates;
             return this;
         }
 
-        public Builder addTransactionDates(TransactionDate... transactionDates) {
-            Preconditions.checkNotNull(transactionDates, "TransactionDates must not be null.");
-            return this.addTransactionDates(Arrays.asList(transactionDates));
-        }
-
-        public List<TransactionDate> getTransactionDates() {
+        public TransactionDates getTransactionDates() {
             return transactionDates;
         }
 

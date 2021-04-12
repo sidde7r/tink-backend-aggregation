@@ -14,12 +14,11 @@ public class TransactionDate {
     private TransactionDateType type;
     private AvailableDateInformation value;
 
-    public static se.tink.backend.aggregation.agents.models.TransactionDate toSystemModel(
-            TransactionDate source) {
+    public se.tink.backend.aggregation.agents.models.TransactionDate toSystemModel() {
         se.tink.backend.aggregation.agents.models.TransactionDate dest =
                 new se.tink.backend.aggregation.agents.models.TransactionDate();
-        dest.setType(source.getType());
-        dest.setValue(source.getValue());
+        dest.setType(this.getType());
+        dest.setValue(this.getValue());
         return dest;
     }
 }

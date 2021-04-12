@@ -4,17 +4,14 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
-import se.tink.backend.aggregation.agents.models.TransactionDateType;
 import se.tink.backend.aggregation.agents.models.TransactionExternalSystemIdType;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.SebApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.SebConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction.Builder;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.backend.aggregation.nxgen.core.transaction.TransactionDate;
+import se.tink.backend.aggregation.nxgen.core.transaction.TransactionDates;
 import se.tink.backend.aggregation.utils.json.deserializers.LocalDateDeserializer;
 import se.tink.libraries.chrono.AvailableDateInformation;
 
@@ -54,7 +51,7 @@ public class BookedEntity {
                         .addExternalSystemIds(
                                 TransactionExternalSystemIdType.PROVIDER_GIVEN_TRANSACTION_ID,
                                 transactionId)
-                        .addTransactionDates(getTinkTransactionDates())
+                        .setTransactionDates(getTinkTransactionDates())
                         .setProprietaryFinancialInstitutionType(proprietaryBankTransactionCodeText)
                         .setProviderMarket(SebConstants.MARKET);
 
@@ -73,21 +70,10 @@ public class BookedEntity {
         }
     }
 
-    private List<TransactionDate> getTinkTransactionDates() {
-        List<TransactionDate> transactionDates = new ArrayList<>();
-
-        transactionDates.add(
-                TransactionDate.builder()
-                        .type(TransactionDateType.VALUE_DATE)
-                        .value(new AvailableDateInformation().setDate(valueDate))
-                        .build());
-
-        transactionDates.add(
-                TransactionDate.builder()
-                        .type(TransactionDateType.BOOKING_DATE)
-                        .value(new AvailableDateInformation().setDate(bookingDate))
-                        .build());
-
-        return transactionDates;
+    private TransactionDates getTinkTransactionDates() {
+        return TransactionDates.builder()
+                .setValueDate(new AvailableDateInformation().setDate(valueDate))
+                .setBookingDate(new AvailableDateInformation().setDate(bookingDate))
+                .build();
     }
 }

@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.models.Transaction;
@@ -27,7 +26,7 @@ public final class UpcomingTransaction extends AggregationTransaction {
             Transfer upcomingTransfer,
             Map<TransactionExternalSystemIdType, String> externalSystemIds,
             Boolean mutable,
-            List<TransactionDate> transactionDates,
+            TransactionDates transactionDates,
             String proprietaryFinancialInstitutionType,
             String merchantName,
             String merchantCategoryCode,
@@ -61,7 +60,7 @@ public final class UpcomingTransaction extends AggregationTransaction {
             Map<TransactionPayloadTypes, String> payload,
             Map<TransactionExternalSystemIdType, String> externalSystemIds,
             Boolean mutable,
-            List<TransactionDate> transactionDates,
+            TransactionDates transactionDates,
             String proprietaryFinancialInstitutionType,
             String merchantName,
             String merchantCategoryCode,

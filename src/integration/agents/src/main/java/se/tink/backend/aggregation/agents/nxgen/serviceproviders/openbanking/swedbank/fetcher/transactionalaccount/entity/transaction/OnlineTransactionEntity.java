@@ -29,7 +29,7 @@ public class OnlineTransactionEntity extends TransactionEntity {
                                 Optional.ofNullable(remittanceInformationUnstructured)
                                         .orElse(remittanceInformationStructured))
                         .setPending(isPending)
-                        .addTransactionDates(
+                        .setTransactionDates(
                                 getTinkTransactionDates(
                                         getValueDateForTinkTransactionDates(), bookingDate))
                         .setProviderMarket(providerMarket);

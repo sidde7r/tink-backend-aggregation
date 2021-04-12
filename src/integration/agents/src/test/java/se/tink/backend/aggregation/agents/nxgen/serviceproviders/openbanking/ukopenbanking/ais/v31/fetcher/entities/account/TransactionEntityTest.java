@@ -21,8 +21,8 @@ public class TransactionEntityTest {
 
         // then
         assertThat(transaction.getMutable()).isTrue();
-        assertThat(transaction.getTransactionDates().size()).isEqualTo(1);
-        assertThat(transaction.getTransactionDates().get(0).getType())
+        assertThat(transaction.getTransactionDates().getDates().size()).isEqualTo(1);
+        assertThat(transaction.getTransactionDates().getDates().get(0).getType())
                 .isEqualTo(TransactionDateType.BOOKING_DATE);
     }
 
@@ -37,8 +37,8 @@ public class TransactionEntityTest {
 
         // then
         assertThat(transaction.getMutable()).isFalse();
-        assertThat(transaction.getTransactionDates().size()).isEqualTo(1);
-        assertThat(transaction.getTransactionDates().get(0).getType())
+        assertThat(transaction.getTransactionDates().getDates().size()).isEqualTo(1);
+        assertThat(transaction.getTransactionDates().getDates().get(0).getType())
                 .isEqualTo(TransactionDateType.BOOKING_DATE);
     }
 
@@ -53,8 +53,8 @@ public class TransactionEntityTest {
 
         // then
         assertThat(transaction.getMutable()).isTrue();
-        assertThat(transaction.getTransactionDates().size()).isEqualTo(1);
-        assertThat(transaction.getTransactionDates().get(0).getType())
+        assertThat(transaction.getTransactionDates().getDates().size()).isEqualTo(1);
+        assertThat(transaction.getTransactionDates().getDates().get(0).getType())
                 .isEqualTo(TransactionDateType.BOOKING_DATE);
     }
 
@@ -69,8 +69,8 @@ public class TransactionEntityTest {
 
         // then
         assertThat(transaction.getMutable()).isFalse();
-        assertThat(transaction.getTransactionDates().size()).isEqualTo(1);
-        assertThat(transaction.getTransactionDates().get(0).getType())
+        assertThat(transaction.getTransactionDates().getDates().size()).isEqualTo(1);
+        assertThat(transaction.getTransactionDates().getDates().get(0).getType())
                 .isEqualTo(TransactionDateType.BOOKING_DATE);
     }
 }

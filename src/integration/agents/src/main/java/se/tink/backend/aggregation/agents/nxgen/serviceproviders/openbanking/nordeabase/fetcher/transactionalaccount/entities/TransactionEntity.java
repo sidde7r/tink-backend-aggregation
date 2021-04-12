@@ -5,16 +5,13 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
-import se.tink.backend.aggregation.agents.models.TransactionDateType;
 import se.tink.backend.aggregation.agents.models.TransactionExternalSystemIdType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction.Builder;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.backend.aggregation.nxgen.core.transaction.TransactionDate;
+import se.tink.backend.aggregation.nxgen.core.transaction.TransactionDates;
 import se.tink.backend.aggregation.utils.json.deserializers.LocalDateDeserializer;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.chrono.AvailableDateInformation;
@@ -78,7 +75,7 @@ public class TransactionEntity {
                         .addExternalSystemIds(
                                 TransactionExternalSystemIdType.PROVIDER_GIVEN_TRANSACTION_ID,
                                 transactionId)
-                        .addTransactionDates(getTinkTransactionDates())
+                        .setTransactionDates(getTinkTransactionDates())
                         .setProprietaryFinancialInstitutionType(typeDescription);
 
         if (Objects.nonNull(reference)) {
@@ -88,24 +85,16 @@ public class TransactionEntity {
         return (Transaction) builder.build();
     }
 
-    private List<TransactionDate> getTinkTransactionDates() {
-        List<TransactionDate> transactionDates = new ArrayList<>();
+    private TransactionDates getTinkTransactionDates() {
+        TransactionDates.Builder builder = TransactionDates.builder();
 
-        transactionDates.add(
-                TransactionDate.builder()
-                        .type(TransactionDateType.VALUE_DATE)
-                        .value(new AvailableDateInformation().setDate(getTinkValueDate()))
-                        .build());
+        builder.setValueDate(new AvailableDateInformation().setDate(getTinkValueDate()));
 
         if (Objects.nonNull(bookingDate)) {
-            transactionDates.add(
-                    TransactionDate.builder()
-                            .type(TransactionDateType.BOOKING_DATE)
-                            .value(new AvailableDateInformation().setDate(bookingDate))
-                            .build());
+            builder.setBookingDate(new AvailableDateInformation().setDate(bookingDate));
         }
 
-        return transactionDates;
+        return builder.build();
     }
 
     /**
