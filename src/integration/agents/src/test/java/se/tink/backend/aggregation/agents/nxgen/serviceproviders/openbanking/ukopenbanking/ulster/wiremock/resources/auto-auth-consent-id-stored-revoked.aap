@@ -150,3 +150,13 @@ x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
     },
     "Meta": {}
 }
+
+REQUEST 4
+DELETE https://api.ulsterbank.co.uk/open-banking/v3.1/aisp/account-access-consents/DUMMY_CONSENT_ID
+Authorization: Bearer DUMMY_CLIENT_TOKEN
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+RESPONSE 4
+204
+Connection: keep-alive
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000

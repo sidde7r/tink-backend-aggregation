@@ -64,7 +64,7 @@ public class UkOpenBankingAisAuthenticationController extends OpenIdAuthenticati
     // Prepare third party app payload containing authentication url
     @Override
     public ThirdPartyAppAuthenticationPayload getAppPayload() {
-        String intentId = apiClient.fetchIntentIdString();
+        String intentId = apiClient.createConsent();
 
         String nonce = randomValueGenerator.generateRandomHexEncoded(8);
         ClientInfo info = apiClient.getProviderConfiguration();
