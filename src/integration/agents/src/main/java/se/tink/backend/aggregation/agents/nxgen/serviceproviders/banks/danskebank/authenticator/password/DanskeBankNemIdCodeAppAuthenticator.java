@@ -12,7 +12,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeban
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password.rpc.InitOtpResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.NemIdCodeAppAuthenticator;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
-import se.tink.integration.webdriver.WebDriverInitializer;
+import se.tink.integration.webdriver.ChromeDriverInitializer;
 
 public class DanskeBankNemIdCodeAppAuthenticator extends NemIdCodeAppAuthenticator<CodeAppEntity> {
 
@@ -66,7 +66,7 @@ public class DanskeBankNemIdCodeAppAuthenticator extends NemIdCodeAppAuthenticat
         driver = null;
         try {
             driver =
-                    WebDriverInitializer.constructWebDriver(
+                    ChromeDriverInitializer.constructChromeDriver(
                             DanskeBankConstants.Javascript.USER_AGENT);
             JavascriptExecutor js = (JavascriptExecutor) driver;
             js.executeScript(

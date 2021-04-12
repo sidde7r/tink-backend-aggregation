@@ -30,7 +30,7 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import se.tink.integration.webdriver.WebDriverInitializer;
+import se.tink.integration.webdriver.ChromeDriverInitializer;
 import se.tink.libraries.social.security.SocialSecurityNumber;
 
 @Slf4j
@@ -98,7 +98,7 @@ public class DanskeBankBankIdAuthenticator implements BankIdAuthenticator<String
         WebDriver driver = null;
         try {
             driver =
-                    WebDriverInitializer.constructWebDriver(
+                    ChromeDriverInitializer.constructChromeDriver(
                             DanskeBankConstants.Javascript.USER_AGENT);
             JavascriptExecutor js = (JavascriptExecutor) driver;
             js.executeScript(
