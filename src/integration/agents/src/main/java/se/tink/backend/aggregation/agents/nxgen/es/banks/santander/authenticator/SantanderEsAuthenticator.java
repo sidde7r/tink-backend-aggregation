@@ -35,22 +35,19 @@ public class SantanderEsAuthenticator implements PasswordAuthenticator {
             throws AuthenticationException, AuthorizationException {
         String responseString;
         try {
-            responseString = apiClient.authenticateCredentials( "user123", password);
+            responseString = apiClient.authenticateCredentials("user123", password);
         } catch (HttpResponseException e) {
 
-            Node n = SantanderEsXmlUtils.getTagNodeFromSoapString(
-                e.getResponse().getBody(String.class),
-                SantanderEsConstants.NodeTags.CODIGO_ERROR);
+            Node n =
+                    SantanderEsXmlUtils.getTagNodeFromSoapString(
+                            e.getResponse().getBody(String.class),
+                            SantanderEsConstants.NodeTags.CODIGO_ERROR);
 
-            if (n == null){
+            if (n == null) {
                 throw e;
             }
 
-            String errorCode =
-                            n.getFirstChild()
-                            .getTextContent()
-                            .trim()
-                            .toUpperCase();
+            String errorCode = n.getFirstChild().getTextContent().trim().toUpperCase();
 
             if (ErrorCodes.INCORRECT_CREDENTIALS.stream()
                     .anyMatch(code -> code.equalsIgnoreCase(errorCode))) {
