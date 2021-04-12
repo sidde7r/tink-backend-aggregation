@@ -69,7 +69,7 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
     TRANSFERS,
     CREDIT_CARDS
 })
-@AgentPisCapability(capabilities = PisCapability.PIS_SEPA)
+@AgentPisCapability(capabilities = {PisCapability.PIS_SEPA, PisCapability.PIS_SEPA_ICT})
 public final class BoursoramaAgent extends NextGenerationAgent
         implements RefreshIdentityDataExecutor,
                 RefreshCheckingAccountsExecutor,
