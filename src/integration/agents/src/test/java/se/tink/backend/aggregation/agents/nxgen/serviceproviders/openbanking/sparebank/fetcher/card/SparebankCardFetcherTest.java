@@ -10,6 +10,7 @@ import static org.mockito.Mockito.verify;
 import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.Optional;
+import org.apache.http.HttpStatus;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.SparebankApiClient;
@@ -18,6 +19,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.spa
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.fetcher.mapper.SparebankCardMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.fetcher.transactionalaccount.rpc.BalanceResponse;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class SparebankCardFetcherTest {
@@ -106,6 +109,21 @@ public class SparebankCardFetcherTest {
     private CardResponse getCardResponse() {
         return SerializationUtils.deserializeFromString(
                 Paths.get(TEST_DATA_PATH, "cardAccount.json").toFile(), CardResponse.class);
+    }
+
+    @Test
+    public void shouldReturnEmptyListWhenBankDoesNotSupportFetchingCC() {
+        // given
+        HttpResponse response = mock(HttpResponse.class);
+        given(response.getStatus()).willReturn(HttpStatus.SC_NOT_FOUND);
+        HttpResponseException httpResponseException = new HttpResponseException(null, response);
+        given(mockApiClient.fetchCards()).willThrow(httpResponseException);
+
+        // when
+        Collection<CreditCardAccount> creditCardAccounts = cardFetcher.fetchAccounts();
+
+        // then
+        assertThat(creditCardAccounts).hasSize(0);
     }
 
     private BalanceResponse getBalanceResponse() {
