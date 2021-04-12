@@ -14,7 +14,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @NoArgsConstructor
 public class AccessEntity {
     public static final String ALL_ACCOUNTS = "allAccounts";
-    public static final String ALL_ACCOUNTS_WITH_OWNER_NAME = "“allAccountsWithOwnerName”";
+    public static final String ALL_ACCOUNTS_WITH_OWNER_NAME = "allAccountsWithOwnerName";
 
     private String allPsd2;
     private String availableAccountsWithBalances;
