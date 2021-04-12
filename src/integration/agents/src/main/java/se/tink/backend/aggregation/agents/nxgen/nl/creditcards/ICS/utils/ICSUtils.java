@@ -13,11 +13,6 @@ public class ICSUtils {
         return UUID.randomUUID().toString();
     }
 
-    // Not required to send actual values, sending dummy data
-    public static String getFinancialId() {
-        return "e3213dfd-435fgrd5-e7edr4";
-    }
-
     // Can fetch transactions max 3 years back
     public static Date getFromDate() {
         Calendar c = Calendar.getInstance();
