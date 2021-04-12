@@ -60,7 +60,7 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.integration.webdriver.WebDriverInitializer;
+import se.tink.integration.webdriver.ChromeDriverInitializer;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.i18n.LocalizableEnum;
 import se.tink.libraries.i18n.LocalizableKey;
@@ -339,7 +339,7 @@ public class DanskeBankChallengeAuthenticator
         WebDriver driver = null;
         try {
             driver =
-                    WebDriverInitializer.constructWebDriver(
+                    ChromeDriverInitializer.constructChromeDriver(
                             DanskeBankConstants.Javascript.USER_AGENT);
             JavascriptExecutor js = (JavascriptExecutor) driver;
             // Initiate with username and OtpChallenge
@@ -462,7 +462,7 @@ public class DanskeBankChallengeAuthenticator
         WebDriver driver = null;
         try {
             driver =
-                    WebDriverInitializer.constructWebDriver(
+                    ChromeDriverInitializer.constructChromeDriver(
                             DanskeBankConstants.Javascript.USER_AGENT);
             JavascriptExecutor js = (JavascriptExecutor) driver;
             js.executeScript(
@@ -488,7 +488,7 @@ public class DanskeBankChallengeAuthenticator
     private <T> T decryptOtpChallenge(String username, String otpChallenge, Class<T> clazz) {
         try {
             this.driver =
-                    WebDriverInitializer.constructWebDriver(
+                    ChromeDriverInitializer.constructChromeDriver(
                             DanskeBankConstants.Javascript.USER_AGENT);
             JavascriptExecutor js = (JavascriptExecutor) driver;
             js.executeScript(

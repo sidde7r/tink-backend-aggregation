@@ -27,7 +27,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterCons
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.integration.webdriver.WebDriverInitializer;
+import se.tink.integration.webdriver.ChromeDriverInitializer;
 
 public class BankinterAuthenticator implements PasswordAuthenticator {
     private static final Logger logger =
@@ -51,7 +51,7 @@ public class BankinterAuthenticator implements PasswordAuthenticator {
 
     private WebDriver createWebDriver() {
         WebDriver driver =
-                WebDriverInitializer.constructWebDriver(
+                ChromeDriverInitializer.constructChromeDriver(
                         HeaderValues.USER_AGENT, HeaderValues.ACCEPT_LANGUAGE);
         driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
         return driver;

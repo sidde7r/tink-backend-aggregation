@@ -15,7 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.de.banks.fidor.FidorApiClient;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fidor.FidorConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticator;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.integration.webdriver.WebDriverInitializer;
+import se.tink.integration.webdriver.ChromeDriverInitializer;
 
 public class FidorPasswordAutenticator implements PasswordAuthenticator {
 
@@ -80,7 +80,7 @@ public class FidorPasswordAutenticator implements PasswordAuthenticator {
     @Override
     public void authenticate(String username, String password)
             throws AuthenticationException, AuthorizationException {
-        WebDriver driver = WebDriverInitializer.constructWebDriver();
+        WebDriver driver = ChromeDriverInitializer.constructChromeDriver();
         String code =
                 getCode(
                         driver,

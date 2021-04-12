@@ -40,6 +40,10 @@ public class ChromeDriverInitializer {
         return constructChromeDriver(userAgent, DEFAULT_ACCEPT_LANGUAGE, null);
     }
 
+    public static ChromeDriver constructChromeDriver(String userAgent, String acceptlanguage) {
+        return constructChromeDriver(userAgent, acceptlanguage, null);
+    }
+
     public static ChromeDriver constructChromeDriver(
             String userAgent, String acceptLanguage, Proxy proxy) {
         File chromeFile = new File(getChromePath());
