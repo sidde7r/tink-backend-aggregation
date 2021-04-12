@@ -26,7 +26,7 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponen
     TRANSFERS,
     CREDIT_CARDS
 })
-@AgentPisCapability(capabilities = PisCapability.PIS_SEPA)
+@AgentPisCapability(capabilities = {PisCapability.PIS_SEPA, PisCapability.PIS_SEPA_ICT})
 public final class CreditagricoleGuadeloupeAgent extends CreditAgricoleBaseAgent {
 
     @Inject

@@ -16,6 +16,7 @@ import se.tink.libraries.enums.MarketCode;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
+import se.tink.libraries.payments.common.model.PaymentScheme;
 import se.tink.libraries.transfer.enums.RemittanceInformationType;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
@@ -67,7 +68,8 @@ public class CreditAgricoleSavoieWireMockTest {
                 AgentWireMockPaymentTest.builder(
                                 MarketCode.FR, "fr-creditagricolesavoie-ob", wireMockFilePath)
                         .withConfigurationFile(configuration)
-                        .withPayment(createMockedDomesticPayment())
+                        .withPayment(
+                                createMockedDomesticPayment(PaymentScheme.SEPA_CREDIT_TRANSFER))
                         .withAgentModule(new CreditAgricoleSavoieWireMockTestModule())
                         .buildWithoutLogin(PaymentCommand.class);
 
@@ -75,7 +77,30 @@ public class CreditAgricoleSavoieWireMockTest {
         agentWireMockPaymentTest.executePayment();
     }
 
-    private Payment createMockedDomesticPayment() {
+    @Test
+    public void testInstantPayment() throws Exception {
+        // given
+        final String wireMockFilePath =
+                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/fr/openbanking/creditagricole/savoie/integration/resources/savoie_payment_instant_mock_log.aap";
+
+        final AgentsServiceConfiguration configuration =
+                AgentsServiceConfigurationReader.read(CONFIGURATION_PATH);
+
+        final AgentWireMockPaymentTest agentWireMockPaymentTest =
+                AgentWireMockPaymentTest.builder(
+                                MarketCode.FR, "fr-creditagricolesavoie-ob", wireMockFilePath)
+                        .withConfigurationFile(configuration)
+                        .withPayment(
+                                createMockedDomesticPayment(
+                                        PaymentScheme.SEPA_INSTANT_CREDIT_TRANSFER))
+                        .withAgentModule(new CreditAgricoleSavoieWireMockTestModule())
+                        .buildWithoutLogin(PaymentCommand.class);
+
+        // when / then (execution and assertion currently done in the same step)
+        agentWireMockPaymentTest.executePayment();
+    }
+
+    private Payment createMockedDomesticPayment(PaymentScheme paymentScheme) {
         String currency = "EUR";
         ExactCurrencyAmount amount = ExactCurrencyAmount.of("1.00", currency);
         RemittanceInformation remittanceInformation = new RemittanceInformation();
@@ -96,6 +121,7 @@ public class CreditAgricoleSavoieWireMockTest {
                 .withCurrency(currency)
                 .withRemittanceInformation(remittanceInformation)
                 .withUniqueId("paymentId")
+                .withPaymentScheme(paymentScheme)
                 .build();
     }
 }
