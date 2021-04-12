@@ -9,17 +9,14 @@ import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModul
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModulesForProductionMode;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.danskebank.DanskebankV31Constant.Url.V31;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.danskebank.configuration.DanskebankAisConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.danskebank.configuration.DanskebankEUConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.danskebank.signer.DanskeOpenBankingModule;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.UkOpenBankingBaseAgent;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.configuration.UkOpenBankingClientConfigurationAdapter;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingFlowFacade;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAis;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.module.UkOpenBankingLocalKeySignerModuleForDecoupledMode;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.UkOpenBankingV31Ais;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.signer.iface.JwtSigner;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.libraries.enums.MarketCode;
 
 @AgentDependencyModulesForProductionMode(modules = DanskeOpenBankingModule.class)
@@ -29,7 +26,6 @@ import se.tink.libraries.enums.MarketCode;
 public final class DanskebankBusinessAgent extends UkOpenBankingBaseAgent {
 
     private static final UkOpenBankingAisConfig aisConfig;
-    private final LocalDateTimeSource localDateTimeSource;
 
     static {
         aisConfig =
@@ -39,21 +35,13 @@ public final class DanskebankBusinessAgent extends UkOpenBankingBaseAgent {
     }
 
     @Inject
-    public DanskebankBusinessAgent(AgentComponentProvider componentProvider, JwtSigner jwtSigner) {
-        super(componentProvider, jwtSigner, aisConfig);
-        this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
-        // fixme make sure that cert is verified - add root ca to eidas proxy
-        componentProvider.getTinkHttpClient().disableSslVerification();
+    public DanskebankBusinessAgent(
+            AgentComponentProvider componentProvider, UkOpenBankingFlowFacade flowFacade) {
+        super(componentProvider, flowFacade, aisConfig);
     }
 
     @Override
     protected UkOpenBankingAis makeAis() {
         return new UkOpenBankingV31Ais(aisConfig, persistentStorage, localDateTimeSource);
-    }
-
-    @Override
-    protected Class<? extends UkOpenBankingClientConfigurationAdapter>
-            getClientConfigurationFormat() {
-        return DanskebankEUConfiguration.class;
     }
 }
