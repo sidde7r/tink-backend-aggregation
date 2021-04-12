@@ -145,7 +145,8 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
                 result,
                 elapsedTime,
                 AgentLoginCompletedEventUserInteractionInformationProvider
-                        .userInteractionInformation(context.getSupplementalInteractionCounter()));
+                        .userInteractionInformation(
+                                context.getSupplementalInteractionCounter(), context.getRequest()));
     }
 
     @Override
