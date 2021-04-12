@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsba
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
+import se.tink.backend.aggregation.source_info.AccountSourceInfo;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
@@ -46,7 +47,12 @@ public class HandelsbankenSELoan {
                                 .setNumMonthsBound(NumMonthBoundParser.parse(fixationdateText))
                                 .setMonthlyAmortization(monthlyAmortization())
                                 .build())
+                .sourceInfo(createAccountSourceInfo())
                 .build();
+    }
+
+    private AccountSourceInfo createAccountSourceInfo() {
+        return AccountSourceInfo.builder().bankProductName(lender).build();
     }
 
     private double calculateCurrentDebt() {

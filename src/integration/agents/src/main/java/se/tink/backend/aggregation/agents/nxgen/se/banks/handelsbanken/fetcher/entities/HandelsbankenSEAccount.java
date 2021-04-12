@@ -25,6 +25,7 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.backend.aggregation.source_info.AccountSourceInfo;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
@@ -75,7 +76,12 @@ public class HandelsbankenSEAccount extends HandelsbankenAccount {
                 .addHolderName(holderName)
                 .setApiIdentifier(number)
                 .setBankIdentifier(number)
+                .sourceInfo(createAccountSourceInfo(accountTypeName))
                 .build();
+    }
+
+    private AccountSourceInfo createAccountSourceInfo(String accountTypeName) {
+        return AccountSourceInfo.builder().bankProductName(accountTypeName).build();
     }
 
     public Optional<CreditCardAccount> toCreditCardAccount(
