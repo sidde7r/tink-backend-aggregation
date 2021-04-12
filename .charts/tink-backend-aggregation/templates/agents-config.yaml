@@ -1,6 +1,7 @@
 {{- $agentsConfig := .Values.agents | default dict }}
-  {{- $tppSecretsServiceConfig := .Values.tppSecretsServiceConfiguration | default dict }}
-  {{- $featureFlagsConfig := .Values.featureFlags | default dict }}
+{{- $eventProducerServiceConfiguration := .Values.eventProducerServiceConfiguration | default dict }}
+{{- $tppSecretsServiceConfig := .Values.tppSecretsServiceConfiguration | default dict }}
+{{- $featureFlagsConfig := .Values.featureFlags | default dict }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -12,6 +13,14 @@ data:
       excludedDebugClusters:
         excludedClusters:
           - local-development
+
+      {{ if $eventProducerServiceConfiguration }}
+      endpoints:
+        eventProducerServiceConfiguration:
+          url: {{ $eventProducerServiceConfiguration.url | default "event-producer-service.event-producer-service:443" }}
+          pinnedCertificates:
+            - /etc/tls-ca/ca.crt
+      {{ end }}
 
       {{- if $agentsConfig.mountSignatureKeyPair }}
       signatureKeyPair:

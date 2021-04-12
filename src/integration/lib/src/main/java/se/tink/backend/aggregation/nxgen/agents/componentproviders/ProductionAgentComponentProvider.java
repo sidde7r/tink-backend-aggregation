@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.dat
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGeneratorImpl;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.SupplementalInformationProviderImpl;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.tinkhttpclient.NextGenTinkHttpClientProvider;
+import se.tink.backend.aggregation.nxgen.http.event.FakeNextGenTinkHttpClientEventProducer;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 /**
@@ -23,8 +24,17 @@ public final class ProductionAgentComponentProvider {
             final AgentContext context,
             final SignatureKeyPair signatureKeyPair) {
 
+        /*
+           We are not planning to support raw bank data event emission
+           for agents that use deprecated ProductionAgentComponentProvider (at least initially).
+           This will be a good incentive to migrate them to use AgentComponentProvider constructor
+        */
         return new AgentComponentProvider(
-                new NextGenTinkHttpClientProvider(request, context, signatureKeyPair),
+                new NextGenTinkHttpClientProvider(
+                        request,
+                        context,
+                        signatureKeyPair,
+                        new FakeNextGenTinkHttpClientEventProducer()),
                 new SupplementalInformationProviderImpl(context, request),
                 new AgentContextProviderImpl(request, context),
                 new GeneratedValueProviderImpl(

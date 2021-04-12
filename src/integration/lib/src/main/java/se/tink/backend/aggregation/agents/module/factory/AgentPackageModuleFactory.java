@@ -12,6 +12,8 @@ import se.tink.backend.aggregation.agents.module.agentclass.AgentClassModule;
 import se.tink.backend.aggregation.agents.module.loader.AgentDependencyModuleLoader;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.libraries.credentials.service.CredentialsRequest;
+import se.tink.libraries.events.guice.EventsModule;
+import se.tink.libraries.events.guice.configuration.EventSubmitterConfiguration;
 
 public final class AgentPackageModuleFactory implements AgentModuleFactory {
 
@@ -44,6 +46,13 @@ public final class AgentPackageModuleFactory implements AgentModuleFactory {
         return ImmutableSet.<Module>builder()
                 .add(new AgentClassModule(agentClass))
                 .add(new AgentComponentProviderModule())
+                .add(
+                        new EventsModule(
+                                EventSubmitterConfiguration.of(
+                                        "aggregation",
+                                        configuration
+                                                .getEndpoints()
+                                                .getEventProducerServiceConfiguration())))
                 .add(new AgentRequestScopeModule(request, context, configuration))
                 .addAll(agentDependencyModuleLoader.getModulesFromAnnotation(agentClass))
                 .build();
