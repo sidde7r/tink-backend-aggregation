@@ -1,0 +1,62 @@
+{
+    "traceId": null,
+    "statusCode": 200,
+    "responseCode": 200,
+    "responseMessage": null,
+    "eupToken": null,
+    "totalPages": null,
+    "totalTransactions": 2,
+    "accountNo": "4899999999",
+    "request": {
+        "searchResultPage": null,
+        "searchTerm": null,
+        "bookingDateTo": "20200113",
+        "languageCode": "DA",
+        "accountNoInt": "4899999999"
+    },
+    "lastSearchPage": null,
+    "endOfList": false,
+    "transactions": [
+        {
+            "subPaymentType": "185",
+            "typeOfPayment": "BO",
+            "hasMoreDetails": true,
+            "transactionKey": "<pa>BO<pb>185<pc>014845352852DKK20200113  2020-01-13-16.48.17.171324 11ACE6KHJD1SI1FHDK2020-01-13-16.48.17.171324J185<pe>20200113<pd>CE6KHJD1SI1F<pf>4845352852<pg>2020-01-13-16.48.17.171324",
+            "pcatIdSub": "",
+            "pcatId": "OU010",
+            "reconciled": false,
+            "showReconciled": true,
+            "balanceDecimals": 2,
+            "balance": 1953.72,
+            "showBalance": true,
+            "status": null,
+            "currency": "DKK",
+            "amountDecimals": 2,
+            "amount": -200,
+            "advice": "1",
+            "text": "Til Allan konto",
+            "bookingDate": "20200113"
+        },
+        {
+            "subPaymentType": "180",
+            "typeOfPayment": "BO",
+            "hasMoreDetails": true,
+            "transactionKey": "<pa>BO<pb>180<pc>014845352852DKK20200113  2020-01-13-04.27.42.812391 0              HDK2020-01-13-04.27.42.812391J180<pe>20200113<pd><pf>4845352852<pg>2020-01-13-04.27.42.812391<pz>U02020-01-13-04.27.42.812391 20200113     4845352852",
+            "pcatIdSub": "",
+            "pcatId": "00001",
+            "reconciled": false,
+            "showReconciled": true,
+            "balanceDecimals": 2,
+            "balance": 2153.72,
+            "showBalance": true,
+            "status": null,
+            "currency": "DKK",
+            "amountDecimals": 2,
+            "amount": -40,
+            "advice": "0",
+            "text": "Jmv Handel og Servic",
+            "bookingDate": "20200113"
+        }
+    ],
+    "repositionKey": "xyz"
+}

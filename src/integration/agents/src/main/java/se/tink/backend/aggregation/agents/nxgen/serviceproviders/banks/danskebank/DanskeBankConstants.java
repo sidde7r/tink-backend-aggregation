@@ -2,6 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeba
 
 import com.google.common.base.Strings;
 import java.text.MessageFormat;
+import java.time.ZoneId;
+import java.util.TimeZone;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.utils.deviceprofile.DeviceProfileConfiguration;
@@ -153,6 +155,13 @@ public class DanskeBankConstants {
         public static final String CUSTODY_ACCOUNT_TYPE = "CustodyAccount";
         public static final String EN_CUSTODY_ACCOUNT_NAME = "Custody Account";
         public static final String DA_CUSTODY_ACCOUNT_NAME = "Opbevaringsdepot";
+    }
+
+    public static class Transactions {
+        public static final ZoneId ZONE_ID = TimeZone.getTimeZone(Javascript.TIMEZONE).toZoneId();
+        public static final int PARTITION_COUNT = 4;
+        public static final int NUM_DAYS_IN_PARTITION = 90;
+        public static final int AMOUNT_TO_FETCH = NUM_DAYS_IN_PARTITION * PARTITION_COUNT - 1;
     }
 
     public static class Investment {

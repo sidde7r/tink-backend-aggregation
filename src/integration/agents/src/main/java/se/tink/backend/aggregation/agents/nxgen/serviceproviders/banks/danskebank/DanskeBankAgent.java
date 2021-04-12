@@ -1,5 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank;
 
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConstants.Transactions.AMOUNT_TO_FETCH;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConstants.Transactions.ZONE_ID;
+
+import io.reactivex.rxjava3.plugins.RxJavaPlugins;
+import java.time.temporal.ChronoUnit;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
@@ -34,6 +39,7 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.ServiceUnavailableBankServiceErrorFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.TimeoutFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.GatewayTimeoutRetryFilter;
+import se.tink.libraries.concurrency.RunnableMdcWrapper;
 
 public abstract class DanskeBankAgent<MarketSpecificApiClient extends DanskeBankApiClient>
         extends NextGenerationAgent
@@ -99,6 +105,8 @@ public abstract class DanskeBankAgent<MarketSpecificApiClient extends DanskeBank
                 new GatewayTimeoutRetryFilter(
                         DanskeBankConstants.RetryFilter.NUM_TIMEOUT_RETRIES,
                         DanskeBankConstants.RetryFilter.RETRY_SLEEP_MILLISECONDS));
+
+        configureMdcPropagation();
     }
 
     protected abstract DanskeBankConfiguration createConfiguration();
@@ -182,15 +190,19 @@ public abstract class DanskeBankAgent<MarketSpecificApiClient extends DanskeBank
         return loanRefreshController.fetchLoanTransactions();
     }
 
-    private <A extends Account> TransactionFetcherController<A> createTransactionFetcherController(
-            LocalDateTimeSource localDateTimeSource) {
+    protected <A extends Account>
+            TransactionFetcherController<A> createTransactionFetcherController(
+                    LocalDateTimeSource localDateTimeSource) {
         DanskeBankMultiTransactionsFetcher<A> transactionFetcher =
                 new DanskeBankMultiTransactionsFetcher<>(
-                        this.apiClient, this.configuration.getLanguageCode());
+                        this.apiClient, this.configuration.getLanguageCode(), request);
         return new TransactionFetcherController<>(
                 this.transactionPaginationHelper,
                 new TransactionDatePaginationController.Builder<>(transactionFetcher)
                         .setLocalDateTimeSource(localDateTimeSource)
+                        .setConsecutiveEmptyPagesLimit(1)
+                        .setAmountAndUnitToFetch(AMOUNT_TO_FETCH, ChronoUnit.DAYS)
+                        .setZoneId(ZONE_ID)
                         .build(),
                 transactionFetcher);
     }
@@ -198,5 +210,9 @@ public abstract class DanskeBankAgent<MarketSpecificApiClient extends DanskeBank
     @Override
     protected SessionHandler constructSessionHandler() {
         return new DanskeBankSessionHandler(this.apiClient, this.configuration);
+    }
+
+    private void configureMdcPropagation() {
+        RxJavaPlugins.setScheduleHandler(RunnableMdcWrapper::wrap);
     }
 }
