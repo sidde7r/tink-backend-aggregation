@@ -13,11 +13,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sib
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.configuration.SibsConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.utils.SibsUtils;
 import se.tink.backend.aggregation.agents.utils.jersey.interceptor.MessageSignInterceptor;
-import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
-import se.tink.backend.aggregation.eidassigner.QsealcAlg;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
-import se.tink.backend.aggregation.eidassigner.QsealcSignerImpl;
-import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
 import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
 
 public class SibsMessageSignInterceptor extends MessageSignInterceptor {
@@ -33,16 +29,11 @@ public class SibsMessageSignInterceptor extends MessageSignInterceptor {
                     HeaderKeys.DATE);
 
     private SibsConfiguration configuration;
-    private EidasProxyConfiguration eidasConf;
-    private EidasIdentity eidasIdentity;
+    private final QsealcSigner qsealcSigner;
 
-    public SibsMessageSignInterceptor(
-            SibsConfiguration configuration,
-            EidasProxyConfiguration eidasConf,
-            EidasIdentity eidasIdentity) {
+    public SibsMessageSignInterceptor(SibsConfiguration configuration, QsealcSigner qsealcSigner) {
         this.configuration = configuration;
-        this.eidasConf = eidasConf;
-        this.eidasIdentity = eidasIdentity;
+        this.qsealcSigner = qsealcSigner;
     }
 
     @Override
@@ -115,10 +106,6 @@ public class SibsMessageSignInterceptor extends MessageSignInterceptor {
     }
 
     private String signMessage(String toSignString) {
-        QsealcSigner signer =
-                QsealcSignerImpl.build(
-                        eidasConf.toInternalConfig(), QsealcAlg.EIDAS_RSA_SHA256, eidasIdentity);
-
-        return signer.getSignatureBase64(toSignString.getBytes());
+        return qsealcSigner.getSignatureBase64(toSignString.getBytes());
     }
 }

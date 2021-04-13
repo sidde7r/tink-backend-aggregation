@@ -9,6 +9,7 @@ junit_test(
     visibility = ["//visibility:public"],
     runtime_deps = ["//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/pt/openbanking/santander"],
     deps = [
+        "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/pt/openbanking/module",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/utils/fixtures",
         "//src/integration/amount",
         "//src/integration/credentials/src/main/java/se/tink/libraries/credentials/service",
