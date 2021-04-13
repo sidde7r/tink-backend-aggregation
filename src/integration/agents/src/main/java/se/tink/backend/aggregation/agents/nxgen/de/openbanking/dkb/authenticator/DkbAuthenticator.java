@@ -56,8 +56,7 @@ public class DkbAuthenticator implements AutoAuthenticator, MultiFactorAuthentic
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
 
-        // Make sure the eidas cert is registered in DKB
-        preregister();
+        ensureEidasCertRegisteredInDkb();
 
         authenticateUser(username, password);
         createConsentAndAuthorize();
@@ -208,7 +207,7 @@ public class DkbAuthenticator implements AutoAuthenticator, MultiFactorAuthentic
         return storage.getConsentId().map(authApiClient::getConsentDetails);
     }
 
-    private void preregister() {
+    private void ensureEidasCertRegisteredInDkb() {
         try {
             authApiClient.createConsent(LocalDate.now());
         } catch (HttpResponseException e) {
