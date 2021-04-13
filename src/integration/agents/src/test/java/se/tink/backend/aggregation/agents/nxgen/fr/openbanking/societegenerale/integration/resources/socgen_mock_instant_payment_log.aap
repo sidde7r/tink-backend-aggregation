@@ -1,0 +1,214 @@
+REQUEST 1
+POST https://mtls.sg-signin.societegenerale.fr/oauth2/token
+Content-Type: application/x-www-form-urlencoded
+User-Agent : Tink (+https://www.tink.se/; noc@tink.se)
+Accept: application/json
+X-Aggregator : Tink Testing
+
+RESPONSE 1
+200
+Content-Type: application/json
+
+{"access_token":"DUMMY_ACCESS_TOKEN","token_type":"Bearer","expires_in":900,"state":"f2533843-785d-4499-b92f-61711101feed","scope":"aisp","refresh_token":"DUMMY_REFRESH_TOKEN"}
+
+REQUEST 2
+POST https://mtls.api.societegenerale.fr/sg/prod/dsp2/pisp/pri/v1.4.2.15/payment-requests
+Authorization: Bearer DUMMY_ACCESS_TOKEN
+Accept: application/json
+X-Aggregator: Tink Testing
+Content-Type: application/json
+
+{
+    "numberOfTransactions": 1,
+    "initiatingParty": {
+        "name": "Payment Initiator"
+    },
+    "paymentTypeInformation": {
+        "serviceLevel": "SEPA",
+        "localInstrument": "INST"
+    },
+    "debtorAccount": {
+        "iban": "FR1261401750597365134612940"
+    },
+    "beneficiary": {
+        "creditor": {
+            "name": "Payment Receiver"
+        },
+        "creditorAccount": {
+            "iban": "FR1420041010050500013M02606"
+        },
+        "creditorAgent": {
+            "bicFi": "SOGEFRPP"
+        }
+    },
+    "chargeBearer": "SLEV",
+    "creditTransferTransaction": [
+        {
+            "instructedAmount": {
+                "currency": "EUR",
+                "amount": 2.0
+            },
+            "remittanceInformation": {
+                "unstructured": [
+                    "Message"
+                ]
+            }
+        }
+    ],
+    "supplementaryData": {
+        "acceptedAuthenticationApproach": [
+            "REDIRECT"
+        ],
+        "successfulReportUrl": "https://api.tink.com/api/v1/credentials/third-party/callback?state=00000000-0000-4000-0000-000000000000&code=code",
+        "unsuccessfulReportUrl": "https://api.tink.com/api/v1/credentials/third-party/callback?state=00000000-0000-4000-0000-000000000000&code=code"
+    }
+}
+
+RESPONSE 2
+200
+Content-Type: application/json
+
+{"appliedAuthenticationApproach":"REDIRECT","_links":{"consentApproval":{"href":"https://applink.particuliers.societegenerale.fr/app/auth/icd/obu/index-authsec.html#obu/6d2d4c64-11ff-46c8-86c4-f8854a2eef7e","templated":true}}}
+
+REQUEST 3
+GET https://mtls.api.societegenerale.fr/sg/prod/dsp2/pisp/pri/v1.4.2.15/payment-requests/6d2d4c64-11ff-46c8-86c4-f8854a2eef7e
+Accept: application/json
+X-Aggregator: Tink Testing
+Authorization: Bearer DUMMY_ACCESS_TOKEN
+Content-Type: application/json
+
+RESPONSE 3
+200
+Content-Type: application/json
+
+{
+    "paymentRequest": {
+        "resourceId":"6d2d4c64-11ff-46c8-86c4-f8854a2eef7e",
+        "numberOfTransactions": 1,
+        "initiatingParty": {
+            "name": "Payment Initiator"
+        },
+        "paymentTypeInformation": {
+            "serviceLevel": "SEPA",
+            "localInstrument": "INST"
+        },
+        "debtorAccount": {
+            "iban": "FR1261401750597365134612940"
+        },
+        "beneficiary": {
+            "creditorAgent": {
+                "bicFi": "BOUSFRPP"
+            },
+            "creditor": {
+                "name": "Payment Receiver"
+            },
+            "creditorAccount": {
+                "iban": "FR1420041010050500013M02606"
+            }
+        },
+        "chargeBearer": "SLEV",
+        "paymentInformationStatus": "ACCP",
+        "creditTransferTransaction": [
+            {
+                "instructedAmount": {
+                    "amount": 2.0,
+                    "currency": "EUR"
+                },
+                "remittanceInformation": {
+                    "unstructured": [
+                        "Message"
+                    ]
+                }
+            }
+        ],
+        "supplementaryData": {
+            "acceptedAuthenticationApproach": [
+                "REDIRECT"
+            ],
+            "successfulReportUrl": "https://api.tink.com/api/v1/credentials/third-party/callback?state=00000000-0000-4000-0000-000000000000&code=code",
+            "unsuccessfulReportUrl": "https://api.tink.com/api/v1/credentials/third-party/callback?state=00000000-0000-4000-0000-000000000000&code=code"
+        }
+    },
+    "_links": {
+        "request": {
+            "href": "/payment-requests/6d2d4c64-11ff-46c8-86c4-f8854a2eef7e",
+            "templated": true
+        },
+        "confirmation": {
+            "href": "/payment-requests/6d2d4c64-11ff-46c8-86c4-f8854a2eef7e/confirmation",
+            "templated": true
+        }
+    }
+}
+
+REQUEST 4
+POST https://mtls.api.societegenerale.fr/sg/prod/dsp2/pisp/pri/v1.4.2.15/payment-requests/6d2d4c64-11ff-46c8-86c4-f8854a2eef7e/confirmation
+Accept: application/json
+X-Aggregator: Tink Testing
+Content-Type: application/json
+
+RESPONSE 4
+200
+Content-Type: application/json
+
+{
+    "paymentRequest": {
+    "resourceId":"6d2d4c64-11ff-46c8-86c4-f8854a2eef7e",
+        "numberOfTransactions": 1,
+        "initiatingParty": {
+            "name": "Payment Initiator"
+        },
+        "paymentTypeInformation": {
+            "serviceLevel": "SEPA",
+            "localInstrument": "INST"
+        },
+        "debtorAccount": {
+            "iban": "FR1261401750597365134612940"
+        },
+        "beneficiary": {
+            "creditorAgent": {
+                "bicFi": "BOUSFRPP"
+            },
+            "creditor": {
+                "name": "Payment Receiver"
+            },
+            "creditorAccount": {
+                "iban": "FR1420041010050500013M02606"
+            }
+        },
+        "chargeBearer": "SLEV",
+        "paymentInformationStatus": "ACSP",
+        "creditTransferTransaction": [
+            {
+                "instructedAmount": {
+                    "amount": 2.0,
+                    "currency": "EUR"
+                },
+                "remittanceInformation": {
+                    "unstructured": [
+                        "Message"
+                    ]
+                }
+            }
+        ],
+        "supplementaryData": {
+            "acceptedAuthenticationApproach": [
+                "REDIRECT"
+            ],
+            "successfulReportUrl": "https://api.tink.com/api/v1/credentials/third-party/callback?state=00000000-0000-4000-0000-000000000000&code=code",
+            "unsuccessfulReportUrl": "https://api.tink.com/api/v1/credentials/third-party/callback?state=00000000-0000-4000-0000-000000000000&code=code"
+        }
+    },
+    "_links": {
+        "request": {
+            "href": "/payment-requests/6d2d4c64-11ff-46c8-86c4-f8854a2eef7e",
+            "templated": true
+        },
+        "confirmation": {
+            "href": "/payment-requests/6d2d4c64-11ff-46c8-86c4-f8854a2eef7e/confirmation",
+            "templated": true
+        }
+    }
+}
+
+

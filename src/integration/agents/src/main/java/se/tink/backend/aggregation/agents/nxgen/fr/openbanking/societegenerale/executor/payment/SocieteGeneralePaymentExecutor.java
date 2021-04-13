@@ -23,6 +23,7 @@ import se.tink.backend.aggregation.agents.exceptions.payment.PaymentCancelledExc
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.SocieteGeneraleConstants;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.SocieteGeneraleConstants.PaymentTypeInformation;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.apiclient.SocieteGeneraleApiClient;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.executor.payment.entities.BeneficiaryEntity;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.executor.payment.entities.CreditTransferTransactionEntity;
@@ -55,6 +56,7 @@ import se.tink.libraries.i18n.LocalizableKey;
 import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
+import se.tink.libraries.payments.common.model.PaymentScheme;
 
 @RequiredArgsConstructor
 public class SocieteGeneralePaymentExecutor implements PaymentExecutor {
@@ -211,7 +213,11 @@ public class SocieteGeneralePaymentExecutor implements PaymentExecutor {
                                         .PAYMENT_INITIATION_DEFAULT_NAME))
                 .withPaymentTypeInformation(
                         new PaymentTypeInformationEntity(
-                                SocieteGeneraleConstants.PaymentTypeInformation.SERVICE_LEVEL))
+                                SocieteGeneraleConstants.PaymentTypeInformation.SERVICE_LEVEL,
+                                PaymentScheme.SEPA_INSTANT_CREDIT_TRANSFER
+                                                == payment.getPaymentScheme()
+                                        ? PaymentTypeInformation.SEPA_INSTANT_CREDIT_TRANSFER
+                                        : null))
                 .withDebtorAccount(
                         new DebtorAccountEntity(
                                 Optional.ofNullable(payment.getDebtor())

@@ -9,4 +9,5 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @Getter
 public class PaymentTypeInformationEntity {
     private String serviceLevel;
+    private String localInstrument;
 }

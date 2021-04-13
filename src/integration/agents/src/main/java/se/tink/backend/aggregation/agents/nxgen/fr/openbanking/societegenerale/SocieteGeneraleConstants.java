@@ -101,6 +101,7 @@ public final class SocieteGeneraleConstants {
 
     public static class PaymentTypeInformation {
         public static final String SERVICE_LEVEL = "SEPA";
+        public static final String SEPA_INSTANT_CREDIT_TRANSFER = "INST";
     }
 
     public static class FormValues {
