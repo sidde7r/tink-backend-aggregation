@@ -2,10 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.authenticato
 
 import static java.util.Collections.singletonList;
 import static javax.ws.rs.core.HttpHeaders.ACCEPT;
-import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
 import static javax.ws.rs.core.HttpHeaders.CONTENT_TYPE;
 import static javax.ws.rs.core.HttpHeaders.COOKIE;
-import static javax.ws.rs.core.MediaType.APPLICATION_FORM_URLENCODED_TYPE;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON_TYPE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.data.MapEntry.entry;
@@ -18,9 +16,9 @@ import static se.tink.backend.aggregation.nxgen.http.request.HttpMethod.POST;
 import static se.tink.backend.aggregation.nxgen.http.request.HttpMethod.PUT;
 
 import java.time.LocalDate;
+import java.util.Optional;
 import org.junit.Before;
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbStorage;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbUserIpInformation;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.authenticator.DkbAuthRequestsFactory.ConsentAuthorizationMethod;
@@ -34,7 +32,6 @@ import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
 public class DkbAuthRequestsFactoryTest {
 
     private static final String HTTP_BASE_URL = "http://base.url";
-    private static final String WSO2_TOKEN = "wso2Token";
     private static final String SESSION_ID = "sessionId";
     private static final String XSRF_TOKEN = "xsrfToken";
 
@@ -48,33 +45,9 @@ public class DkbAuthRequestsFactoryTest {
     @Before
     public void setupMocks() {
         when(configMock.getBaseUrl()).thenReturn(HTTP_BASE_URL);
-        when(configMock.getClientSecret()).thenReturn("clientSecret");
-        when(configMock.getClientId()).thenReturn("clientId");
-        when(configMock.getConsumerSecret()).thenReturn("consumerSecret");
-        when(configMock.getConsumerId()).thenReturn("consumerId");
 
-        when(storageMock.getWso2OAuthToken()).thenReturn(createBearer(WSO2_TOKEN, null, 0L));
         when(storageMock.getJsessionid()).thenReturn(SESSION_ID);
         when(storageMock.getXsrfToken()).thenReturn(XSRF_TOKEN);
-    }
-
-    @Test
-    public void generateWso2TokenRequestShouldReturnValidHttpRequest() {
-        // when
-        HttpRequest result = tested.generateWso2TokenRequest();
-
-        // then
-        assertThat(result.getUrl()).hasToString(HTTP_BASE_URL + "/oauth2/token");
-        assertThat(result.getMethod()).isEqualTo(POST);
-        assertThat(result.getBody()).isEqualTo("grant_type=client_credentials");
-        assertThat(result.getHeaders()).containsKeys(HeaderKeys.X_REQUEST_ID);
-        assertThat(result.getHeaders())
-                .contains(
-                        entry(CONTENT_TYPE, singletonList(APPLICATION_FORM_URLENCODED_TYPE)),
-                        entry(ACCEPT, singletonList(APPLICATION_JSON_TYPE)),
-                        entry(
-                                AUTHORIZATION,
-                                singletonList("Basic Y29uc3VtZXJJZDpjb25zdW1lclNlY3JldA==")));
     }
 
     @Test
@@ -94,11 +67,7 @@ public class DkbAuthRequestsFactoryTest {
         assertThat(result.getHeaders())
                 .contains(
                         entry(CONTENT_TYPE, singletonList(APPLICATION_JSON_TYPE)),
-                        entry(ACCEPT, singletonList(APPLICATION_JSON_TYPE)),
-                        entry(AUTHORIZATION, singletonList("Bearer " + WSO2_TOKEN)),
-                        entry(
-                                PSD_2_AUTHORIZATION_HEADER,
-                                singletonList("Basic Y2xpZW50SWQ6Y2xpZW50U2VjcmV0")));
+                        entry(ACCEPT, singletonList(APPLICATION_JSON_TYPE)));
     }
 
     @Test
@@ -118,11 +87,7 @@ public class DkbAuthRequestsFactoryTest {
                         entry(CONTENT_TYPE, singletonList(APPLICATION_JSON_TYPE)),
                         entry(ACCEPT, singletonList(APPLICATION_JSON_TYPE)),
                         entry(COOKIE, singletonList("JSESSIONID=" + SESSION_ID)),
-                        entry("X-XSRF-TOKEN", singletonList(XSRF_TOKEN)),
-                        entry(AUTHORIZATION, singletonList("Bearer " + WSO2_TOKEN)),
-                        entry(
-                                PSD_2_AUTHORIZATION_HEADER,
-                                singletonList("Basic Y2xpZW50SWQ6Y2xpZW50U2VjcmV0")));
+                        entry("X-XSRF-TOKEN", singletonList(XSRF_TOKEN)));
     }
 
     @Test
@@ -142,18 +107,15 @@ public class DkbAuthRequestsFactoryTest {
                         entry(CONTENT_TYPE, singletonList(APPLICATION_JSON_TYPE)),
                         entry(ACCEPT, singletonList(APPLICATION_JSON_TYPE)),
                         entry(COOKIE, singletonList("JSESSIONID=" + SESSION_ID)),
-                        entry("X-XSRF-TOKEN", singletonList(XSRF_TOKEN)),
-                        entry(AUTHORIZATION, singletonList("Bearer " + WSO2_TOKEN)),
-                        entry(
-                                PSD_2_AUTHORIZATION_HEADER,
-                                singletonList("Basic Y2xpZW50SWQ6Y2xpZW50U2VjcmV0")));
+                        entry("X-XSRF-TOKEN", singletonList(XSRF_TOKEN)));
     }
 
     @Test
     public void generateCreateConsentRequestShouldReturnValidHttpRequest() {
         // given
         String givenAccessToken = "accessToken";
-        when(storageMock.getAccessToken()).thenReturn(createBearer(givenAccessToken, null, 0));
+        when(storageMock.getAccessToken())
+                .thenReturn(Optional.of(createBearer(givenAccessToken, null, 0)));
         LocalDate givenDate = LocalDate.parse("2020-01-01");
 
         // when
@@ -166,7 +128,6 @@ public class DkbAuthRequestsFactoryTest {
                 .contains(
                         entry(CONTENT_TYPE, singletonList(APPLICATION_JSON_TYPE)),
                         entry(ACCEPT, singletonList(APPLICATION_JSON_TYPE)),
-                        entry(AUTHORIZATION, singletonList("Bearer " + WSO2_TOKEN)),
                         entry(
                                 PSD_2_AUTHORIZATION_HEADER,
                                 singletonList("Bearer " + givenAccessToken)));
@@ -177,7 +138,8 @@ public class DkbAuthRequestsFactoryTest {
         // given
         String givenConsentId = "consentId";
         String givenAccessToken = "accessToken";
-        when(storageMock.getAccessToken()).thenReturn(createBearer(givenAccessToken, null, 0));
+        when(storageMock.getAccessToken())
+                .thenReturn(Optional.of(createBearer(givenAccessToken, null, 0)));
 
         // whe
         HttpRequest result = tested.generateGetConsentRequest(givenConsentId);
@@ -190,7 +152,6 @@ public class DkbAuthRequestsFactoryTest {
                 .contains(
                         entry(CONTENT_TYPE, singletonList(APPLICATION_JSON_TYPE)),
                         entry(ACCEPT, singletonList(APPLICATION_JSON_TYPE)),
-                        entry(AUTHORIZATION, singletonList("Bearer " + WSO2_TOKEN)),
                         entry(
                                 PSD_2_AUTHORIZATION_HEADER,
                                 singletonList("Bearer " + givenAccessToken)));
@@ -201,7 +162,8 @@ public class DkbAuthRequestsFactoryTest {
         // given
         String givenConsentId = "consentId";
         String givenAccessToken = "accessToken";
-        when(storageMock.getAccessToken()).thenReturn(createBearer(givenAccessToken, null, 0));
+        when(storageMock.getAccessToken())
+                .thenReturn(Optional.of(createBearer(givenAccessToken, null, 0)));
 
         // when
         HttpRequest result = tested.generateConsentAuthorizationRequest(givenConsentId);
@@ -216,7 +178,6 @@ public class DkbAuthRequestsFactoryTest {
                 .contains(
                         entry(CONTENT_TYPE, singletonList(APPLICATION_JSON_TYPE)),
                         entry(ACCEPT, singletonList(APPLICATION_JSON_TYPE)),
-                        entry(AUTHORIZATION, singletonList("Bearer " + WSO2_TOKEN)),
                         entry(
                                 PSD_2_AUTHORIZATION_HEADER,
                                 singletonList("Bearer " + givenAccessToken)));
@@ -229,7 +190,8 @@ public class DkbAuthRequestsFactoryTest {
         String givenAuthorizationId = "authorisationId";
         String givenMethodId = "methodId";
         String givenAccessToken = "accessToken";
-        when(storageMock.getAccessToken()).thenReturn(createBearer(givenAccessToken, null, 0));
+        when(storageMock.getAccessToken())
+                .thenReturn(Optional.of(createBearer(givenAccessToken, null, 0)));
 
         // when
         HttpRequest result =
@@ -250,7 +212,6 @@ public class DkbAuthRequestsFactoryTest {
                 .contains(
                         entry(CONTENT_TYPE, singletonList(APPLICATION_JSON_TYPE)),
                         entry(ACCEPT, singletonList(APPLICATION_JSON_TYPE)),
-                        entry(AUTHORIZATION, singletonList("Bearer " + WSO2_TOKEN)),
                         entry(
                                 PSD_2_AUTHORIZATION_HEADER,
                                 singletonList("Bearer " + givenAccessToken)));
@@ -263,7 +224,8 @@ public class DkbAuthRequestsFactoryTest {
         String givenAuthorizationId = "authorisationId";
         String givenCode = "otpCode";
         String givenAccessToken = "accessToken";
-        when(storageMock.getAccessToken()).thenReturn(createBearer(givenAccessToken, null, 0));
+        when(storageMock.getAccessToken())
+                .thenReturn(Optional.of(createBearer(givenAccessToken, null, 0)));
 
         // when
         HttpRequest result =
@@ -284,7 +246,6 @@ public class DkbAuthRequestsFactoryTest {
                 .contains(
                         entry(CONTENT_TYPE, singletonList(APPLICATION_JSON_TYPE)),
                         entry(ACCEPT, singletonList(APPLICATION_JSON_TYPE)),
-                        entry(AUTHORIZATION, singletonList("Bearer " + WSO2_TOKEN)),
                         entry(
                                 PSD_2_AUTHORIZATION_HEADER,
                                 singletonList("Bearer " + givenAccessToken)));

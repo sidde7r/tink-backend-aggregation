@@ -6135,10 +6135,6 @@ agentsServiceConfiguration:
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
     dkb:
       tink:
-        clientId: dummyClientId
-        clientSecret: dummyClientSecret
-        consumerId: dummyConsumerId
-        consumerSecret: dummyConsumerSecret
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
     dnb:
       tink:
@@ -6578,7 +6574,7 @@ agentsServiceConfiguration:
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
     excludedDebugClusters:
       excludedClusters:
-      - local-development
+        - local-development
     f02443a8d74649269c13f2d544a7d574:
       tink:
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
@@ -7139,7 +7135,7 @@ agentsServiceConfiguration:
         clientSecret: dummySecret
         redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
         scopes:
-        - AIS
+          - AIS
     nordea-bankid:
       tink:
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
@@ -7508,7 +7504,7 @@ developmentMode: true
 distributedDatabase:
   enabled: true
   seeds:
-  - 172.16.42.2
+    - 172.16.42.2
 endpoints:
   aggregation:
     accessToken: devtoken
@@ -7534,16 +7530,16 @@ endpoints:
 flags:
   dynamicInheritance:
     APPLICATIONS:
-    - TRANSFERS
-    - BILLPAY
-    - SHOW_BANK_LOGO
-    - APPLICATIONS_INTERCOM_CHAT
-    - RESIDENCE_TAB
-    - IOS_MORTGAGE_TAKE_OVER
+      - TRANSFERS
+      - BILLPAY
+      - SHOW_BANK_LOGO
+      - APPLICATIONS_INTERCOM_CHAT
+      - RESIDENCE_TAB
+      - IOS_MORTGAGE_TAKE_OVER
     IOS_BETA:
-    - RESIDENCE_VALUATION
+      - RESIDENCE_VALUATION
     TINK_EMPLOYEE:
-    - RESIDENCE_VALUATION
+      - RESIDENCE_VALUATION
   register:
     SE:
       APPLICATIONS: 1
@@ -7553,11 +7549,11 @@ grpc:
   port: 9998
 logging:
   appenders:
-  - logFormat: '%magenta(%date{"yyyy-MM-dd HH:mm:ss,SSSXXX"}) %highlight(%level) [%thread]
+    - logFormat: '%magenta(%date{"yyyy-MM-dd HH:mm:ss,SSSXXX"}) %highlight(%level) [%thread]
       R:%X{requestId} %blue(%logger) %message%n%xException'
-    threshold: ALL
-    timeZone: Europe/Stockholm
-    type: console
+      threshold: ALL
+      timeZone: Europe/Stockholm
+      type: console
   level: INFO
   loggers:
     org.apache.hadoop: INFO
@@ -7583,19 +7579,19 @@ providerConfigurationServiceConfiguration:
   port: 9048
 server:
   adminConnectors:
-  - port: 8090
-    type: http
+    - port: 8090
+      type: http
   applicationConnectors:
-  - port: 9090
-    type: http
-  - certAlias: developer.internal.tink.se
-    keyStorePassword: changeme
-    keyStorePath: data/security/developer.keystore
-    port: 9091
-    trustStorePassword: changeme
-    trustStorePath: data/security/TinkCA.truststore
-    type: https
-    validateCerts: false
+    - port: 9090
+      type: http
+    - certAlias: developer.internal.tink.se
+      keyStorePassword: changeme
+      keyStorePath: data/security/developer.keystore
+      port: 9091
+      trustStorePassword: changeme
+      trustStorePath: data/security/TinkCA.truststore
+      type: https
+      validateCerts: false
   shutdownGracePeriod: 20s
 transfers:
   aggregationTime: 5

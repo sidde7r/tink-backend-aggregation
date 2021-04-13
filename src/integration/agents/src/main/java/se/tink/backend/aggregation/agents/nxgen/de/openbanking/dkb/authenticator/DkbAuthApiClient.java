@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.authenticato
 
 import static se.tink.backend.aggregation.agents.exceptions.errors.LoginError.INCORRECT_CHALLENGE_RESPONSE;
 import static se.tink.backend.aggregation.agents.exceptions.errors.LoginError.INCORRECT_CREDENTIALS;
-import static se.tink.backend.aggregation.agents.exceptions.errors.LoginError.NOT_SUPPORTED;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -31,11 +30,6 @@ public class DkbAuthApiClient {
         this.httpClient = httpClient;
         this.requestsFactory = requestsFactory;
         this.storage = storage;
-    }
-
-    Wso2Token getWso2Token() throws LoginException {
-        HttpRequest request = requestsFactory.generateWso2TokenRequest();
-        return executeHttpRequest(request, Wso2Token.class, NOT_SUPPORTED);
     }
 
     AuthResult authenticate1stFactor(String username, String password) {
