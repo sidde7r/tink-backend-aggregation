@@ -6,6 +6,7 @@ java_library(
         "//src/integration/account/src/main/java/se/tink/libraries/account/enums",
         "//src/integration/amount",
         "//src/integration/credentials:service",
+        "//src/integration/enums",
         "//src/integration/lib",
         "//src/integration/lib:annotations",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions/bankservice",
