@@ -18,6 +18,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.PaymentProduct;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.QueryValues;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.RequestContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.entities.ConsentType;
@@ -32,6 +33,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.configuration.CbiGlobeConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.configuration.CbiGlobeProviderConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.configuration.InstrumentType;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.errorhandle.CbiErrorHandler;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.entities.AccountEntity;
@@ -43,7 +45,9 @@ import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
+import se.tink.backend.aggregation.nxgen.http.request.HttpMethod;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
@@ -62,7 +66,7 @@ public class CbiGlobeApiClient {
     protected String redirectUrl;
     protected TemporaryStorage temporaryStorage;
     protected InstrumentType instrumentType;
-    private CbiGlobeProviderConfiguration providerConfiguration;
+    private final CbiGlobeProviderConfiguration providerConfiguration;
     protected final String psuIpAddress;
 
     public CbiGlobeApiClient(
@@ -136,12 +140,16 @@ public class CbiGlobeApiClient {
     }
 
     public GetTokenResponse getToken(String clientId, String clientSecret) {
-        return createRequest(Urls.TOKEN)
-                .addBasicAuth(clientId, clientSecret)
-                .queryParam(QueryKeys.GRANT_TYPE, QueryValues.CLIENT_CREDENTIALS)
-                .queryParam(QueryKeys.SCOPE, QueryValues.PRODUCTION)
-                .type(MediaType.APPLICATION_FORM_URLENCODED)
-                .post(GetTokenResponse.class);
+        return makeRequest(
+                createRequest(Urls.TOKEN)
+                        .addBasicAuth(clientId, clientSecret)
+                        .queryParam(QueryKeys.GRANT_TYPE, QueryValues.CLIENT_CREDENTIALS)
+                        .queryParam(QueryKeys.SCOPE, QueryValues.PRODUCTION)
+                        .type(MediaType.APPLICATION_FORM_URLENCODED),
+                HttpMethod.POST,
+                GetTokenResponse.class,
+                RequestContext.TOKEN_GET,
+                null);
     }
 
     public void getAndSaveToken() {
@@ -154,7 +162,12 @@ public class CbiGlobeApiClient {
     public ConsentResponse createConsent(
             String state, ConsentType consentType, ConsentRequest consentRequest) {
         RequestBuilder request = createConsentRequest(state, consentType);
-        return request.post(ConsentResponse.class, consentRequest);
+        return makeRequest(
+                request,
+                HttpMethod.POST,
+                ConsentResponse.class,
+                RequestContext.CONSENT_CREATE,
+                consentRequest);
     }
 
     protected RequestBuilder createConsentRequest(String state, ConsentType consentType) {
@@ -173,21 +186,35 @@ public class CbiGlobeApiClient {
     }
 
     public ConsentResponse updateConsent(String consentId, UpdateConsentRequest body) {
-        return createRequestInSession(Urls.UPDATE_CONSENTS.concat("/" + consentId))
-                .header(HeaderKeys.OPERATION_NAME, HeaderValues.UPDATE_PSU_DATA)
-                .put(ConsentResponse.class, body);
+        return makeRequest(
+                createRequestInSession(Urls.UPDATE_CONSENTS.concat("/" + consentId))
+                        .header(HeaderKeys.OPERATION_NAME, HeaderValues.UPDATE_PSU_DATA),
+                HttpMethod.PUT,
+                ConsentResponse.class,
+                RequestContext.CONSENT_UPDATE,
+                body);
     }
 
     public ConsentResponse updateConsentPsuCredentials(
             String consentId, UpdateConsentPsuCredentialsRequest body) {
-        return createRequestInSession(Urls.UPDATE_CONSENTS.concat("/" + consentId))
-                .header(HeaderKeys.OPERATION_NAME, HeaderValues.UPDATE_PSU_DATA)
-                .put(ConsentResponse.class, body);
+
+        return makeRequest(
+                createRequestInSession(Urls.UPDATE_CONSENTS.concat("/" + consentId))
+                        .header(HeaderKeys.OPERATION_NAME, HeaderValues.UPDATE_PSU_DATA),
+                HttpMethod.PUT,
+                ConsentResponse.class,
+                RequestContext.CONSENT_PSU_CREDENTIALS_UPDATE,
+                body);
     }
 
     public GetAccountsResponse getAccounts() {
         GetAccountsResponse getAccountsResponse =
-                createAccountsRequestWithConsent().get(GetAccountsResponse.class);
+                makeRequest(
+                        createAccountsRequestWithConsent(),
+                        HttpMethod.GET,
+                        GetAccountsResponse.class,
+                        RequestContext.ACCOUNTS_GET,
+                        null);
         getAccountsResponse.getAccounts().removeIf(AccountEntity::isEmptyAccountObject);
         log.info(
                 "Number of received checking accounts {}",
@@ -196,11 +223,15 @@ public class CbiGlobeApiClient {
     }
 
     public GetBalancesResponse getBalances(String resourceId) {
-        return addPsuIpAddressHeaderIfNeeded(
+        return makeRequest(
+                addPsuIpAddressHeaderIfNeeded(
                         createRequestWithConsent(
                                 getBalancesUrl()
-                                        .parameterNoEncoding(IdTags.ACCOUNT_ID, resourceId)))
-                .get(GetBalancesResponse.class);
+                                        .parameterNoEncoding(IdTags.ACCOUNT_ID, resourceId))),
+                HttpMethod.GET,
+                GetBalancesResponse.class,
+                RequestContext.BALANCES_GET,
+                null);
     }
 
     private URL getBalancesUrl() {
@@ -215,8 +246,10 @@ public class CbiGlobeApiClient {
             LocalDate toDate,
             String bookingType,
             int page) {
+
         HttpResponse response =
-                addPsuIpAddressHeaderIfNeeded(
+                makeRequest(
+                        addPsuIpAddressHeaderIfNeeded(
                                 createRequestWithConsent(
                                                 getTransactionsUrl()
                                                         .parameterNoEncoding(
@@ -224,8 +257,11 @@ public class CbiGlobeApiClient {
                                         .queryParam(QueryKeys.BOOKING_STATUS, bookingType)
                                         .queryParam(QueryKeys.DATE_FROM, fromDate.toString())
                                         .queryParam(QueryKeys.DATE_TO, toDate.toString())
-                                        .queryParam(QueryKeys.OFFSET, String.valueOf(page)))
-                        .get(HttpResponse.class);
+                                        .queryParam(QueryKeys.OFFSET, String.valueOf(page))),
+                        HttpMethod.GET,
+                        HttpResponse.class,
+                        RequestContext.TRANSACTIONS_GET,
+                        null);
 
         String totalPages = getTotalPages(response, apiIdentifier);
 
@@ -256,18 +292,32 @@ public class CbiGlobeApiClient {
     }
 
     public ConsentStatus getConsentStatus(String consentType) throws SessionException {
-        return createRequestInSession(
+        RequestBuilder requestBuilder =
+                createRequestInSession(
                         Urls.CONSENTS_STATUS.parameter(
-                                IdTags.CONSENT_ID, getConsentIdFromStorage(consentType)))
-                .get(ConsentResponse.class)
+                                IdTags.CONSENT_ID, getConsentIdFromStorage(consentType)));
+
+        return makeRequest(
+                        requestBuilder,
+                        HttpMethod.GET,
+                        ConsentResponse.class,
+                        RequestContext.TOKEN_IS_VALID,
+                        null)
                 .getConsentStatus();
     }
 
     public ConsentDetailsResponse getConsentDetails(String consentType) throws SessionException {
-        return createRequestInSession(
+        RequestBuilder requestBuilder =
+                createRequestInSession(
                         Urls.CONSENTS_STATUS.parameter(
-                                IdTags.CONSENT_ID, getConsentIdFromStorage(consentType)))
-                .get(ConsentDetailsResponse.class);
+                                IdTags.CONSENT_ID, getConsentIdFromStorage(consentType)));
+
+        return makeRequest(
+                requestBuilder,
+                HttpMethod.GET,
+                ConsentDetailsResponse.class,
+                RequestContext.CONSENT_DETAILS,
+                null);
     }
 
     private String getConsentIdFromStorage(String consentType) throws SessionException {
@@ -303,8 +353,13 @@ public class CbiGlobeApiClient {
                                         sessionStorage.get(QueryKeys.STATE),
                                         HeaderKeys.CODE,
                                         HeaderValues.CODE));
-        return addPsuIpAddressHeaderIfNeeded(requestBuilder)
-                .post(CreatePaymentResponse.class, createPaymentRequest);
+
+        return makeRequest(
+                addPsuIpAddressHeaderIfNeeded(requestBuilder),
+                HttpMethod.POST,
+                CreatePaymentResponse.class,
+                RequestContext.PAYMENT_CREATE,
+                createPaymentRequest);
     }
 
     private URL getRedirectUrl(String s, String code, String code2) {
@@ -325,11 +380,18 @@ public class CbiGlobeApiClient {
                         .header(
                                 HeaderKeys.ASPSP_PRODUCT_CODE,
                                 providerConfiguration.getAspspProductCode());
-        return addPsuIpAddressHeaderIfNeeded(requestBuilder).get(CreatePaymentResponse.class);
+
+        return makeRequest(
+                addPsuIpAddressHeaderIfNeeded(requestBuilder),
+                HttpMethod.GET,
+                CreatePaymentResponse.class,
+                RequestContext.PAYMENT_GET,
+                null);
     }
 
     public CreatePaymentResponse getPaymentStatus(Payment payment) {
-        return createRequestInSession(
+        RequestBuilder requestBuilder =
+                createRequestInSession(
                         Urls.FETCH_PAYMENT_STATUS
                                 .parameter(
                                         PathParameterKeys.PAYMENT_SERVICE,
@@ -337,8 +399,69 @@ public class CbiGlobeApiClient {
                                 .parameter(
                                         PathParameterKeys.PAYMENT_PRODUCT,
                                         getPaymentProduct(payment))
-                                .parameter(IdTags.PAYMENT_ID, payment.getUniqueId()))
-                .get(CreatePaymentResponse.class);
+                                .parameter(IdTags.PAYMENT_ID, payment.getUniqueId()));
+
+        return makeRequest(
+                requestBuilder,
+                HttpMethod.GET,
+                CreatePaymentResponse.class,
+                RequestContext.PAYMENT_STATUS_GET,
+                null);
+    }
+
+    private <T> T makeRequest(
+            RequestBuilder request,
+            HttpMethod method,
+            Class<T> returnType,
+            RequestContext context,
+            Object body) {
+
+        try {
+            if (body != null) {
+                return makeBodyRequest(request, method, returnType, body);
+            } else {
+                return makeNonBodyRequest(request, method, returnType);
+            }
+        } catch (HttpResponseException hre) {
+            CbiErrorHandler.handleError(hre, context);
+            throw hre;
+        }
+    }
+
+    private <T> T makeBodyRequest(
+            RequestBuilder request, HttpMethod method, Class<T> returnType, Object body) {
+        switch (method) {
+            case POST:
+                return request.post(returnType, body);
+            case PATCH:
+                return request.patch(returnType, body);
+            case PUT:
+                return request.put(returnType, body);
+            case DELETE:
+                return request.delete(returnType, body);
+            default:
+                log.error(String.format("Unknown HTTP method: %s", method.name()));
+                return request.post(returnType, body);
+        }
+    }
+
+    private <T> T makeNonBodyRequest(
+            RequestBuilder request, HttpMethod method, Class<T> returnType) {
+        switch (method) {
+            case GET:
+                return request.get(returnType);
+            case POST:
+                return request.post(returnType);
+            case PATCH:
+                return request.patch(returnType);
+            case PUT:
+                return request.put(returnType);
+            case DELETE:
+                return request.delete(returnType);
+            default:
+                log.error(String.format("Unknown HTTP method: %s", method.name()));
+                return request.get(returnType);
+        }
     }
 
     protected RequestBuilder addPsuIpAddressHeaderIfNeeded(RequestBuilder requestBuilder) {
