@@ -29,7 +29,6 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.AccessExceededFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.BankServiceInternalErrorFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.TimeoutFilter;
-import se.tink.backend.aggregation.nxgen.http.filter.filters.randomretry.RateLimitRetryFilter;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 @AgentCapabilities({CREDIT_CARDS})
@@ -68,9 +67,6 @@ public final class ICSAgent extends NextGenerationAgent
     }
 
     private void configureHttpClient(TinkHttpClient client) {
-        client.addFilter(
-                new RateLimitRetryFilter(
-                        HttpClient.MAX_RETRIES, HttpClient.RETRY_SLEEP_MILLISECONDS));
         client.addFilter(
                 new ICSRetryFilter(HttpClient.MAX_RETRIES, HttpClient.RETRY_SLEEP_MILLISECONDS));
         client.addFilter(new ICSBankFailureFilter());
