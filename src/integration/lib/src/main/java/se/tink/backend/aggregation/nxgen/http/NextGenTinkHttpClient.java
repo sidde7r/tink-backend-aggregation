@@ -845,10 +845,14 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
 
     // +++ Requests +++
     public RequestBuilder request(String url) {
+        // AAP-1103: This is temporary call, will be fixed in future PRs
+        eventProducer.dummyMethod();
         return request(new URL(url));
     }
 
     public RequestBuilder request(URL url) {
+        // AAP-1103: This is temporary call, will be fixed in future PRs
+        eventProducer.dummyMethod();
         final RequestBuilder builder =
                 new NextGenRequestBuilder(
                         new ArrayList<>(this.getFilters()),
