@@ -264,9 +264,9 @@ public class UkOpenBankingPaymentAuthenticatorTest {
 
         // then
         assertThat(thrown)
-                .isExactlyInstanceOf(IllegalArgumentException.class)
+                .isExactlyInstanceOf(PaymentAuthorizationException.class)
                 .hasNoCause()
-                .hasMessageStartingWith("Unknown error:");
+                .hasMessageStartingWith("Payment was not authorised. Please try again.");
 
         verifyThirdPartyAppWasOpened();
     }
