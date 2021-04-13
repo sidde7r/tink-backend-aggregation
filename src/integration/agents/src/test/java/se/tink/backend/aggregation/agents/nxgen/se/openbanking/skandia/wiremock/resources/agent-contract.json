@@ -1,0 +1,69 @@
+{
+    "accounts" : [ {
+        "accountNumber" : "SE7991500006025111111111",
+        "accountExclusion" : "NONE",
+        "exactBalance" : {
+            "currencyCode" : "SEK",
+            "doubleValue" : 5000.99,
+            "exactValue" : 5000.99,
+            "scale" : 2,
+            "unscaledValue" : 500099
+        },
+        "currencyCode" : "SEK",
+        "bankId" : "91591111111",
+        "excluded" : false,
+        "favored" : false,
+        "name" : "Allt-i-Ett konto",
+        "ownership" : 1.0,
+        "type" : "CHECKING",
+        "userModifiedExcluded" : false,
+        "userModifiedName" : false,
+        "userModifiedType" : false,
+        "identifiers" : "[]",
+        "closed" : false,
+        "flags" : "[]",
+        "balances" : [ ],
+        "availableCredit" : 0.0,
+        "balance" : 5000.99
+    } ],
+    "transactions" : [ {
+        "amount" : -50.0,
+        "date" : 1618221600000,
+        "description" : "Purchase",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : 350.0,
+        "date" : 1617703200000,
+        "description" : "Swish",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -99.0,
+        "date" : 1617271200000,
+        "description" : "Autogiro",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    } ]
+}

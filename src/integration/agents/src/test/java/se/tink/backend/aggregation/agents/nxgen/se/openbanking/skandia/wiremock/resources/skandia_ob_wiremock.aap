@@ -1,0 +1,93 @@
+
+REQUEST 1
+POST https://fsts.skandia.se/as/token.oauth2
+Content-Type: application/x-www-form-urlencoded
+
+redirect_uri=https%3A%2F%2F127.0.0.1%3A7357%2Fapi%2Fv1%2Fthirdparty%2Fcallback&grant_type=authorization_code&code=dummyCode&client_id=dummyClient&client_secret=dummySecret
+
+RESPONSE 1
+200
+Date: Tue, 13 Apr 2021 12:30:23 GMT
+Date: Tue, 13 Apr 2021 12:30:23 GMT
+X-Frame-Options: SAMEORIGIN
+Cache-Control: no-cache, no-store
+Pragma: no-cache
+Expires: Thu, 01 Jan 1970 00:00:00 GMT
+Content-Type: application/json;charset=utf-8
+Strict-Transport-Security: max-age=31536000; includeSubDomains
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"access_token":"dummyToken","refresh_token":"dummyRefreshToken","token_type":"Bearer","expires_in":299}
+
+REQUEST 2
+GET https://apis.skandia.se/open-banking/core-bank/v1/accounts
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 2
+200
+Date: Tue, 13 Apr 2021 12:30:23 GMT
+Date: Tue, 13 Apr 2021 12:30:25 GMT
+Content-Type: application/json;charset=utf-8
+Server: Kestrel
+X-XSS-Protection: 1; mode=block
+X-Frame-Options: Deny
+X-Content-Type-Options: nosniff
+X-Powered-By: ASP.NET
+
+{"accounts":[{"resourceId":"915011111111111","bban":"91591111111","bic":"SKIASESS","cashAccountType":"CACC","currency":"SEK","iban":"SE7991500006025111111111","name":"Allt-i-Ett konto","usage":"PRIV","_links":{"self":{"href":"/v1/accounts/915011111111111"},"balances":{"href":"/v1/accounts/915011111111111/balances"},"transactions":{"href":"/v1/accounts/915011111111111/transactions"}}}]}
+
+REQUEST 3
+GET https://apis.skandia.se/open-banking/core-bank/v1/accounts/915011111111111/balances
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 3
+200
+Date: Tue, 13 Apr 2021 12:30:25 GMT
+Date: Tue, 13 Apr 2021 12:30:26 GMT
+Content-Type: application/json;charset=utf-8
+Server: Kestrel
+X-XSS-Protection: 1; mode=block
+X-Frame-Options: Deny
+X-Content-Type-Options: nosniff
+X-Powered-By: ASP.NET
+
+{"account":{"iban":"SE7991500006025111111111","currency":"SEK"},"balances":[{"balanceAmount":{"amount":"5000.99","currency":"SEK"},"balanceType":"closingbooked","referenceDate":"2021-04-13T00:00:00"},{"balanceAmount":{"amount":"5000.99","currency":"SEK"},"balanceType":"available","referenceDate":"2021-04-13T00:00:00"}]}
+
+REQUEST 7
+GET https://apis.skandia.se/open-banking/core-bank/v1/accounts/915011111111111/transactions?bookingStatus=pending
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 7
+200
+Date: Tue, 13 Apr 2021 12:30:30 GMT
+Date: Tue, 13 Apr 2021 12:30:30 GMT
+Content-Type: application/json;charset=utf-8
+Server: Kestrel
+X-XSS-Protection: 1; mode=block
+X-Frame-Options: Deny
+X-Content-Type-Options: nosniff
+X-Powered-By: ASP.NET
+
+{"account":{"iban":"SE7991500006025111111111","currency":"SEK"},"transactions":{"pending":[{"transactionId":"9150000000000","bookingDate":"2021-04-28T00:00:00+02:00","transactionAmount":{"amount":"100","currency":"SEK"},"remittanceInformationUnstructured":"Pending purchase","_links":{"transactionDetails":{"href":"/v1/accounts/915011111111111/transactions/9150000000000"}}}],"_links":{"account":{"href":"/v1/accounts/915011111111111"}}}}
+
+REQUEST 8
+GET https://apis.skandia.se/open-banking/core-bank/v1/accounts/915011111111111/transactions?&bookingStatus=booked
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 8
+200
+Date: Tue, 13 Apr 2021 12:30:31 GMT
+Date: Tue, 13 Apr 2021 12:30:32 GMT
+Content-Type: application/json;charset=utf-8
+Server: Kestrel
+X-XSS-Protection: 1; mode=block
+X-Frame-Options: Deny
+X-Content-Type-Options: nosniff
+X-Powered-By: ASP.NET
+Transfer-Encoding: chunked
+
+{"account":{"iban":"SE7991500006025111111111","currency":"SEK"},"transactions":{"booked":[{"transactionId":"915011111111111@mocked@2021-04-12@2021-04-12-22.47.41.260165","entryReference":"2021-04-12-22.47.41.260165","bookingDate":"2021-04-12T00:00:00+02:00","valueDate":"2021-04-12T00:00:00+02:00","transactionAmount":{"amount":"-50","currency":"SEK"},"remittanceInformationUnstructured":"Purchase","_links":{"transactionDetails":{"href":"/v1/accounts/915011111111111/transactions/915011111111111@mocked@2021-04-12@2021-04-12-22.47.41.260165"}}},{"transactionId":"915011111111111@mocked@2021-04-06@2021-04-04-14.22.48.171251","entryReference":"2021-04-04-14.22.48.171251","bookingDate":"2021-04-06T00:00:00+02:00","valueDate":"2021-04-05T00:00:00+02:00","transactionAmount":{"amount":"350","currency":"SEK"},"remittanceInformationUnstructured":"Swish","_links":{"transactionDetails":{"href":"/v1/accounts/915011111111111/transactions/915011111111111@mocked@2021-04-06@2021-04-04-14.22.48.171251"}}},{"transactionId":"915011111111111@mocked@2021-04-01@2021-04-01-05.36.06.166182","entryReference":"2021-04-01-05.36.06.166182","bookingDate":"2021-04-01T00:00:00+02:00","valueDate":"2021-04-01T00:00:00+02:00","transactionAmount":{"amount":"-99","currency":"SEK"},"remittanceInformationUnstructured":"Autogiro","_links":{"transactionDetails":{"href":"/v1/accounts/915011111111111/transactions/915011111111111@mocked@2021-04-01@2021-04-01-05.36.06.166182"}}}],"_links":{"account":{"href":"/v1/accounts/915011111111111"}}}}
