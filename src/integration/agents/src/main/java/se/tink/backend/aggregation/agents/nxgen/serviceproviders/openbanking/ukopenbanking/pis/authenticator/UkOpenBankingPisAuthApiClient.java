@@ -25,6 +25,7 @@ public class UkOpenBankingPisAuthApiClient extends OpenIdApiClient {
 
     private final UkOpenBankingPaymentStorage paymentStorage;
     private final RandomValueGenerator randomValueGenerator;
+    private final UkOpenBankingPisConfig pisConfig;
 
     public UkOpenBankingPisAuthApiClient(
             TinkHttpClient httpClient,
@@ -46,6 +47,7 @@ public class UkOpenBankingPisAuthApiClient extends OpenIdApiClient {
 
         this.randomValueGenerator = randomValueGenerator;
         this.paymentStorage = paymentStorage;
+        this.pisConfig = pisConfig;
     }
 
     public URL buildAuthorizeUrl(
@@ -53,20 +55,35 @@ public class UkOpenBankingPisAuthApiClient extends OpenIdApiClient {
         final String nonce = randomValueGenerator.generateRandomHexEncoded(8);
         final URL authorizeUrl =
                 super.buildAuthorizeUrl(state, nonce, ClientMode.PAYMENTS, callbackUrl);
+        if (pisConfig.useMaxAge()) {
 
-        return authorizeUrl.queryParam(
-                "request",
-                AuthorizeRequest.create()
-                        .withClientInfo(clientInfo)
-                        .withPaymentsScope()
-                        .withSoftwareStatement(softwareStatement)
-                        .withRedirectUrl(getRedirectUrl())
-                        .withState(state)
-                        .withNonce(nonce)
-                        .withWellKnownConfiguration(getWellKnownConfiguration())
-                        .withIntentId(intentId)
-                        .withMaxAge(OpenIdAuthenticatorConstants.MAX_AGE)
-                        .build(getSigner()));
+            return authorizeUrl.queryParam(
+                    "request",
+                    AuthorizeRequest.create()
+                            .withClientInfo(clientInfo)
+                            .withPaymentsScope()
+                            .withSoftwareStatement(softwareStatement)
+                            .withRedirectUrl(getRedirectUrl())
+                            .withState(state)
+                            .withNonce(nonce)
+                            .withWellKnownConfiguration(getWellKnownConfiguration())
+                            .withIntentId(intentId)
+                            .withMaxAge(OpenIdAuthenticatorConstants.MAX_AGE)
+                            .build(getSigner()));
+        } else {
+            return authorizeUrl.queryParam(
+                    "request",
+                    AuthorizeRequest.create()
+                            .withClientInfo(clientInfo)
+                            .withPaymentsScope()
+                            .withSoftwareStatement(softwareStatement)
+                            .withRedirectUrl(getRedirectUrl())
+                            .withState(state)
+                            .withNonce(nonce)
+                            .withWellKnownConfiguration(getWellKnownConfiguration())
+                            .withIntentId(intentId)
+                            .build(getSigner()));
+        }
     }
 
     @Override

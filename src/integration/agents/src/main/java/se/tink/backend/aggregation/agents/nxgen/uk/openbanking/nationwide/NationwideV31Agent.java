@@ -32,9 +32,9 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.signature.UkOpenBankingPs256SignatureCreator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.signature.UkOpenBankingPs256WithoutBase64SignatureCreator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.signature.UkOpenBankingRs256SignatureCreator;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.configuration.UkOpenBankingPisConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.storage.UkOpenBankingPaymentStorage;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.nationwide.authenticator.NationwideAisAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.nationwide.pis.config.NationwidePisConfig;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.nationwide.pis.filter.NationwidePisRequestFilter;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
@@ -69,7 +69,7 @@ public final class NationwideV31Agent extends UkOpenBankingBaseAgent {
                 componentProvider,
                 flowFacade,
                 aisConfig,
-                new UkOpenBankingPisConfiguration(
+                new NationwidePisConfig(
                         NationwideConstants.PIS_API_URL, NationwideConstants.WELL_KNOWN_URL),
                 createPisRequestFilter(
                         flowFacade.getJwtSinger(), componentProvider.getRandomValueGenerator()));

@@ -7,4 +7,6 @@ public interface UkOpenBankingPisConfig {
     URL getWellKnownURL();
 
     String getBaseUrl();
+
+    boolean useMaxAge();
 }
