@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.revolut.common;
 
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.UkOpenBankingBaseAgent;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.configuration.UkOpenBankingClientConfigurationAdapter;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingFlowFacade;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountOwnershipType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.fetcher.UkOpenBankingTransferDestinationFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAis;
@@ -12,7 +12,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.creditcards.DefaultCreditCardBalanceMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.identifier.DefaultIdentifierMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.transactionalaccounts.TransactionalAccountBalanceMapper;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.signer.iface.JwtSigner;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.configuration.UkOpenBankingPisConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
@@ -36,15 +35,16 @@ public abstract class RevolutBaseAgent extends UkOpenBankingBaseAgent {
                         .build();
     }
 
-    public RevolutBaseAgent(AgentComponentProvider componentProvider, JwtSigner jwtSigner) {
+    public RevolutBaseAgent(
+            AgentComponentProvider componentProvider, UkOpenBankingFlowFacade flowFacade) {
         super(
                 componentProvider,
-                jwtSigner,
+                flowFacade,
                 aisConfig,
                 new UkOpenBankingPisConfiguration(
                         RevolutConstants.PIS_API_URL, RevolutConstants.WELL_KNOWN_URL),
                 createPisRequestFilterUsingPs256MinimalSignature(
-                        jwtSigner, componentProvider.getRandomValueGenerator()));
+                        flowFacade.getJwtSinger(), componentProvider.getRandomValueGenerator()));
         this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
     }
 
@@ -73,11 +73,5 @@ public abstract class RevolutBaseAgent extends UkOpenBankingBaseAgent {
                         new RevolutTransactionalAccountMapper(
                                 new TransactionalAccountBalanceMapper(valueExtractor),
                                 identifierMapper)));
-    }
-
-    @Override
-    protected Class<? extends UkOpenBankingClientConfigurationAdapter>
-            getClientConfigurationFormat() {
-        throw new IllegalStateException("This method need to be overridden in final class!");
     }
 }

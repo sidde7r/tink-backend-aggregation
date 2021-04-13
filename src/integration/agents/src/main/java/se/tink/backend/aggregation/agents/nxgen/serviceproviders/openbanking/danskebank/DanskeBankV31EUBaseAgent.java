@@ -12,11 +12,10 @@ import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.danskebank.authenticator.DanskebankAuthenticationController;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.danskebank.configuration.DanskebankEUConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.danskebank.mapper.DanskeCreditCardBalanceMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.UkOpenBankingBaseAgent;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingFlowFacade;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.authenticator.UkOpenBankingAisAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.configuration.UkOpenBankingClientConfigurationAdapter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAis;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.creditcards.CreditCardAccountMapper;
@@ -24,7 +23,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.transactionalaccounts.TransactionalAccountMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticationController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticationValidator;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.signer.iface.JwtSigner;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
@@ -45,19 +43,19 @@ public abstract class DanskeBankV31EUBaseAgent extends NextGenerationAgent
 
     public DanskeBankV31EUBaseAgent(
             AgentComponentProvider componentProvider,
-            JwtSigner jwtSigner,
+            UkOpenBankingFlowFacade flowFacade,
             UkOpenBankingAisConfig aisConfig,
             CreditCardAccountMapper creditCardAccountMapper) {
         super(componentProvider);
         ukOpenBankingBaseAgent =
                 new UkOpenBankingBaseAgentImpl(
-                        componentProvider, jwtSigner, aisConfig, creditCardAccountMapper);
+                        componentProvider, flowFacade, aisConfig, creditCardAccountMapper);
         this.aisConfig = aisConfig;
     }
 
     public DanskeBankV31EUBaseAgent(
             AgentComponentProvider componentProvider,
-            JwtSigner jwtSigner,
+            UkOpenBankingFlowFacade flowFacade,
             UkOpenBankingAisConfig aisConfig,
             CreditCardAccountMapper creditCardAccountMapper,
             TransactionalAccountMapper transactionalAccountMapper) {
@@ -65,7 +63,7 @@ public abstract class DanskeBankV31EUBaseAgent extends NextGenerationAgent
         ukOpenBankingBaseAgent =
                 new UkOpenBankingBaseAgentImpl(
                         componentProvider,
-                        jwtSigner,
+                        flowFacade,
                         aisConfig,
                         creditCardAccountMapper,
                         transactionalAccountMapper);
@@ -151,21 +149,21 @@ public abstract class DanskeBankV31EUBaseAgent extends NextGenerationAgent
 
         UkOpenBankingBaseAgentImpl(
                 AgentComponentProvider componentProvider,
-                JwtSigner jwtSigner,
+                UkOpenBankingFlowFacade flowFacade,
                 UkOpenBankingAisConfig agentConfig,
                 CreditCardAccountMapper creditCardAccountMapper) {
-            super(componentProvider, jwtSigner, agentConfig);
+            super(componentProvider, flowFacade, agentConfig);
             this.creditCardAccountMapper = creditCardAccountMapper;
             this.transactionalAccountMapper = defaultTransactionalAccountMapper();
         }
 
         UkOpenBankingBaseAgentImpl(
                 AgentComponentProvider componentProvider,
-                JwtSigner jwtSigner,
+                UkOpenBankingFlowFacade flowFacade,
                 UkOpenBankingAisConfig agentConfig,
                 CreditCardAccountMapper creditCardAccountMapper,
                 TransactionalAccountMapper transactionalAccountMapper) {
-            super(componentProvider, jwtSigner, agentConfig);
+            super(componentProvider, flowFacade, agentConfig);
             this.creditCardAccountMapper = creditCardAccountMapper;
             this.transactionalAccountMapper = transactionalAccountMapper;
         }
@@ -190,11 +188,6 @@ public abstract class DanskeBankV31EUBaseAgent extends NextGenerationAgent
                     new ThirdPartyAppAuthenticationController<>(
                             openIdAuthenticationController, this.supplementalInformationHelper),
                     openIdAuthenticationController);
-        }
-
-        protected Class<? extends UkOpenBankingClientConfigurationAdapter>
-                getClientConfigurationFormat() {
-            return DanskebankEUConfiguration.class;
         }
 
         @Override

@@ -7,7 +7,6 @@ import java.security.cert.X509Certificate;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.contexts.AgentConfigurationControllerContext;
-import se.tink.backend.aggregation.agents.contexts.CompositeAgentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.danskebank.configuration.DanskebankEUConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.jwt.JwksClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.jwt.kid.JwksKeyIdProvider;
@@ -27,33 +26,29 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponen
 class DanskeJwtSignerProvider implements Provider<JwtSigner> {
 
     private final AgentConfigurationControllerContext agentConfigurationControllerContext;
-    private final CompositeAgentContext agentContext;
     private final AgentComponentProvider agentComponentProvider;
     private final InternalEidasProxyConfiguration internalEidasProxyConfiguration;
     private final DanskebankEUConfiguration configuration;
     private final String appId;
+    private final EidasIdentity eidasIdentity;
 
     @Inject
     DanskeJwtSignerProvider(
             AgentComponentProvider agentComponentProvider,
             AgentsServiceConfiguration agentsServiceConfiguration,
-            DanskebankEUConfiguration configuration) {
+            DanskebankEUConfiguration configuration,
+            EidasIdentity eidasIdentity) {
         this.agentConfigurationControllerContext = agentComponentProvider.getContext();
-        this.agentContext = agentComponentProvider.getContext();
         this.agentComponentProvider = agentComponentProvider;
         this.internalEidasProxyConfiguration =
                 agentsServiceConfiguration.getEidasProxy().toInternalConfig();
         this.configuration = configuration;
         this.appId = agentComponentProvider.getContext().getAppId();
+        this.eidasIdentity = eidasIdentity;
     }
 
     @Override
     public JwtSigner get() {
-        EidasIdentity eidasIdentity =
-                new EidasIdentity(
-                        agentContext.getClusterId(),
-                        agentContext.getAppId(),
-                        DanskeJwtSignerProvider.class);
         EidasJwtSigner eidasFallbackJwtSigner =
                 new EidasJwtSigner(internalEidasProxyConfiguration, eidasIdentity);
 

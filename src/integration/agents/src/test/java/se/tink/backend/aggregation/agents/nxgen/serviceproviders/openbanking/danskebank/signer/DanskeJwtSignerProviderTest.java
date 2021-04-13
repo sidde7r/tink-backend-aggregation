@@ -19,6 +19,7 @@ import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.eidas.InternalEidasProxyConfiguration;
 import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
+import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.agentcontext.AgentContextProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.GeneratedValueProvider;
@@ -50,6 +51,8 @@ public class DanskeJwtSignerProviderTest {
                         mock(SupplementalInformationProvider.class),
                         mock(AgentContextProvider.class),
                         mock(GeneratedValueProvider.class));
+        EidasIdentity eidasIdentity =
+                new EidasIdentity("cluster_id", APP_ID, DanskebankEUConfiguration.class);
         when(agentComponentProvider.getContext()).thenReturn(context);
         when(context.getAppId()).thenReturn(APP_ID);
         when(agentsServiceConfiguration.getEidasProxy()).thenReturn(eidasProxyConfiguration);
@@ -67,7 +70,10 @@ public class DanskeJwtSignerProviderTest {
 
         danskeJwtSignerProvider =
                 new DanskeJwtSignerProvider(
-                        agentComponentProvider, agentsServiceConfiguration, configuration);
+                        agentComponentProvider,
+                        agentsServiceConfiguration,
+                        configuration,
+                        eidasIdentity);
     }
 
     @Test

@@ -11,14 +11,13 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Payment;
 
-// @Ignore
 public class RevolutAgentTest {
     private final String SOURCE_IDENTIFIER = "";
     private final String DESTINATION_IDENTIFIER = "";
 
     @Test
     public void test() throws Exception {
-        new AgentIntegrationTest.Builder("fr", "fr-revolut-ob")
+        new AgentIntegrationTest.Builder("uk", "uk-revolut-oauth2")
                 .loadCredentialsBefore(false)
                 .saveCredentialsAfter(true)
                 .expectLoggedIn(false)
