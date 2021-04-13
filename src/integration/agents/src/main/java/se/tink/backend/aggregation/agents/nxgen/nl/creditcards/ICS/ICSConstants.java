@@ -105,7 +105,6 @@ public class ICSConstants {
         public static final String MISSING_TOKEN = "Cannot find OAuth token.";
         public static final String MISSING_STATE = "OAuth state cannot be null or empty.";
         public static final String MISSING_PERMISSIONS = "Did not receive all permissions";
-        public static final String STATUS_CODE_500 = "Status Code: 500";
     }
 
     public static class ErrorCode {
@@ -122,7 +121,7 @@ public class ICSConstants {
     }
 
     public static class HttpClient {
-        public static final int MAX_RETRIES = 5;
-        public static final int RETRY_SLEEP_MILLISECONDS = 2000;
+        public static final int MAX_RETRIES = 3;
+        public static final int RETRY_SLEEP_MILLISECONDS = 3000;
     }
 }

@@ -12,7 +12,6 @@ import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.authenticator
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.configuration.ICSConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.fetchers.credit.ICSAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.fetchers.credit.ICSCreditCardFetcher;
-import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.filter.ICSBankFailureFilter;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.filter.ICSRetryFilter;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
@@ -29,7 +28,6 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.AccessExceededFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.BankServiceInternalErrorFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.TimeoutFilter;
-import se.tink.backend.aggregation.nxgen.http.filter.filters.randomretry.RateLimitRetryFilter;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 @AgentCapabilities({CREDIT_CARDS})
@@ -68,16 +66,12 @@ public final class ICSAgent extends NextGenerationAgent
     }
 
     private void configureHttpClient(TinkHttpClient client) {
-        client.addFilter(
-                new RateLimitRetryFilter(
-                        HttpClient.MAX_RETRIES, HttpClient.RETRY_SLEEP_MILLISECONDS));
+        client.addFilter(new BankServiceInternalErrorFilter());
         client.addFilter(
                 new ICSRetryFilter(HttpClient.MAX_RETRIES, HttpClient.RETRY_SLEEP_MILLISECONDS));
-        client.addFilter(new ICSBankFailureFilter());
         client.addFilter(
                 new AccessExceededFilter(this.provider != null ? this.provider.getName() : null));
         client.addFilter(new TimeoutFilter());
-        client.addFilter(new BankServiceInternalErrorFilter());
     }
 
     @Override
