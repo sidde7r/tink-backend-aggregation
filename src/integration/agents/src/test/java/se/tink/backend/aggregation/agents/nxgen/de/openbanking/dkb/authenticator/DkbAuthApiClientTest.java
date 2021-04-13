@@ -44,49 +44,6 @@ public class DkbAuthApiClientTest {
     }
 
     @Test
-    public void getWso2TokenShouldCallRequestFactoryAndExecuteRequest() throws LoginException {
-        // given
-        HttpRequest givenHttpRequest = dummyHttpRequest("wso2Url");
-        when(requestFactoryMock.generateWso2TokenRequest()).thenReturn(givenHttpRequest);
-
-        HttpResponse givenSuccessfulHttpResponse =
-                dummyHttpResponse(OK_REQUEST_STATUS, Wso2Token.class, new Wso2Token());
-        when(clientMock.request(HttpResponse.class, givenHttpRequest))
-                .thenReturn(givenSuccessfulHttpResponse);
-
-        // when
-        tested.getWso2Token();
-
-        // then
-        verify(requestFactoryMock).generateWso2TokenRequest();
-        verify(clientMock).request(HttpResponse.class, givenHttpRequest);
-    }
-
-    @Test
-    public void getWso2TokenShouldCallRequestFactoryAndExecuteRequestAndThrowException() {
-        // given
-        HttpRequest givenHttpRequest = dummyHttpRequest("wso2Url");
-        when(requestFactoryMock.generateWso2TokenRequest()).thenReturn(givenHttpRequest);
-
-        HttpResponse givenSuccessfulHttpResponse =
-                dummyHttpResponse(BAD_REQUEST_STATUS, Wso2Token.class, new Wso2Token());
-        when(clientMock.request(HttpResponse.class, givenHttpRequest))
-                .thenReturn(givenSuccessfulHttpResponse);
-
-        // when
-        Throwable throwable = catchThrowable(tested::getWso2Token);
-
-        // then
-        verify(requestFactoryMock).generateWso2TokenRequest();
-        verify(clientMock).request(HttpResponse.class, givenHttpRequest);
-
-        // and
-        assertThat(throwable)
-                .isExactlyInstanceOf(LoginException.class)
-                .hasMessage("Cause: LoginError.NOT_SUPPORTED");
-    }
-
-    @Test
     public void authenticate1stFactorShouldCallRequestFactoryAndExecuteRequest()
             throws LoginException {
         // given

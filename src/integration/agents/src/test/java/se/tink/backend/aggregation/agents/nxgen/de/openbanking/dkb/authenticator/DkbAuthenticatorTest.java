@@ -84,14 +84,6 @@ public class DkbAuthenticatorTest {
         mockRequest(
                 tinkHttpClient,
                 HttpMethod.POST,
-                "https://api.dkb.de/oauth2/token",
-                null,
-                Wso2Token.class,
-                "oauth2_token_response.json",
-                200);
-        mockRequest(
-                tinkHttpClient,
-                HttpMethod.POST,
                 "https://api.dkb.de/pre-auth/psd2-auth/v1/auth/token",
                 null,
                 AuthResult.class,
@@ -166,8 +158,6 @@ public class DkbAuthenticatorTest {
 
     static DkbStorage createDkbStorage() {
         DkbStorage dkbStorage = new DkbStorage(new PersistentStorage());
-        dkbStorage.setWso2OAuthToken(
-                OAuth2Token.create("refreshToken", "accessToken", "refreshToken", 1000));
         dkbStorage.setAccessToken(OAuth2Token.create("accessToken", "accessToken", null, 100));
         dkbStorage.setConsentId("consentId");
         return dkbStorage;
@@ -184,10 +174,6 @@ public class DkbAuthenticatorTest {
     static DkbAuthenticator createDkbAuthenticator(
             TinkHttpClient tinkHttpClient, Credentials credentials, DkbStorage dkbStorage) {
         DkbConfiguration dkbConfiguration = new DkbConfiguration();
-        dkbConfiguration.setConsumerId("consumerId");
-        dkbConfiguration.setConsumerSecret("consumerSecret");
-        dkbConfiguration.setClientId("clientId");
-        dkbConfiguration.setClientSecret("clientSecret");
 
         DkbUserIpInformation dkbUserIpInformation = new DkbUserIpInformation(true, "1.1.1.1");
         DkbAuthRequestsFactory dkbAuthRequestsFactory =

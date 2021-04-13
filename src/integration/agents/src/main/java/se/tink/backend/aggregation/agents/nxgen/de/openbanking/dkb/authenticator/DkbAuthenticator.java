@@ -56,7 +56,9 @@ public class DkbAuthenticator implements AutoAuthenticator, MultiFactorAuthentic
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
 
-        getWso2Token();
+        // Make sure the eidas cert is registered in DKB
+        preregister();
+
         authenticateUser(username, password);
         createConsentAndAuthorize();
     }
@@ -65,12 +67,6 @@ public class DkbAuthenticator implements AutoAuthenticator, MultiFactorAuthentic
     public void autoAuthenticate() {
         if (!storage.getConsentId().isPresent()) {
             throw SessionError.SESSION_EXPIRED.exception();
-        }
-
-        // Check validity of wsoToken, one that allows developer portal application to use APIs
-        // If not valid, get a new one
-        if (!storage.getWso2OAuthToken().isValid()) {
-            getWso2Token();
         }
 
         Optional<ConsentDetailsResponse> maybeConsent = Optional.empty();
@@ -116,11 +112,6 @@ public class DkbAuthenticator implements AutoAuthenticator, MultiFactorAuthentic
             // Save new accessToken so it will be used for subsequent calls.
             storage.setAccessToken(authResult.toOAuth2Token());
         }
-    }
-
-    private void getWso2Token() throws LoginException {
-        Wso2Token token = authApiClient.getWso2Token();
-        storage.setWso2OAuthToken(token.toOAuth2Token());
     }
 
     private void authenticateUser(String username, String password) throws AuthenticationException {
@@ -215,6 +206,19 @@ public class DkbAuthenticator implements AutoAuthenticator, MultiFactorAuthentic
 
     private Optional<ConsentDetailsResponse> getExistingConsent() {
         return storage.getConsentId().map(authApiClient::getConsentDetails);
+    }
+
+    private void preregister() {
+        try {
+            authApiClient.createConsent(LocalDate.now());
+        } catch (HttpResponseException e) {
+            // This is expected to throw an error of expected body.
+            if (!e.getResponse().hasBody()
+                    || !(e.getResponse().getBody(String.class) != null
+                            && e.getResponse().getBody(String.class).contains("TOKEN_UNKNOWN"))) {
+                log.warn("DKB returned unexpected error in preregister method!", e);
+            }
+        }
     }
 
     private ConsentResponse createNewConsent() {

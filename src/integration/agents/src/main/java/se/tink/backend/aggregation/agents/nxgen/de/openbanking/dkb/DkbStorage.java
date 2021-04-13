@@ -9,23 +9,12 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 @RequiredArgsConstructor
 public class DkbStorage {
 
-    private static final String WSO2_OAUTH_TOKEN_KEY = "WSO2_OAUTH_TOKEN_KEY";
     private static final String JSESSIONID_KEY = "JSESSIONID_KEY";
     private static final String XSRF_TOKEN_KEY = "XSRF_TOKEN_KEY";
     private static final String ACCESS_TOKEN_KEY = "ACCESS_TOKEN_KEY";
     private static final String CONSENT_ID_KEY = "CONSENT_KEY";
 
     private final PersistentStorage persistentStorage;
-
-    public void setWso2OAuthToken(OAuth2Token token) {
-        persistentStorage.put(WSO2_OAUTH_TOKEN_KEY, token);
-    }
-
-    public OAuth2Token getWso2OAuthToken() {
-        return persistentStorage
-                .get(WSO2_OAUTH_TOKEN_KEY, OAuth2Token.class)
-                .orElseThrow(() -> new NoSuchElementException("Can't obtain stored WSO2 token."));
-    }
 
     public void setJsessionid(String jsessionid) {
         persistentStorage.put(JSESSIONID_KEY, jsessionid);
@@ -51,10 +40,8 @@ public class DkbStorage {
         persistentStorage.put(ACCESS_TOKEN_KEY, accessToken);
     }
 
-    public OAuth2Token getAccessToken() {
-        return persistentStorage
-                .get(ACCESS_TOKEN_KEY, OAuth2Token.class)
-                .orElseThrow(() -> new NoSuchElementException("Can't obtain stored access token."));
+    public Optional<OAuth2Token> getAccessToken() {
+        return persistentStorage.get(ACCESS_TOKEN_KEY, OAuth2Token.class);
     }
 
     public void setConsentId(String consent) {

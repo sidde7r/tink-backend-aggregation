@@ -18,6 +18,7 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.payments.rpc.
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.payments.rpc.FetchPaymentResponse;
 import se.tink.backend.aggregation.api.Psd2Headers;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
@@ -41,10 +42,11 @@ public final class DkbApiClient {
     private RequestBuilder createRequestInSession(URL url) {
         RequestBuilder requestBuilder =
                 createRequest(url)
-                        .addBearerToken(storage.getWso2OAuthToken())
                         .header(
                                 HeaderKeys.PSD_2_AUTHORIZATION_HEADER,
-                                storage.getAccessToken().toAuthorizeHeader())
+                                storage.getAccessToken()
+                                        .map(OAuth2Token::toAuthorizeHeader)
+                                        .orElse(null))
                         .header(HeaderKeys.X_REQUEST_ID, Psd2Headers.getRequestId());
         addPsuIpAddressHeaderIfManualRefresh(requestBuilder);
         return requestBuilder;
