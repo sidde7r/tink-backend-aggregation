@@ -1,0 +1,150 @@
+{
+    "accounts": [
+        {
+            "accountNumber": "NL29INGB0428434142",
+            "accountExclusion": "NONE",
+            "exactBalance": {
+                "currencyCode": "EUR",
+                "doubleValue": 5.66,
+                "exactValue": 5.66,
+                "unscaledValue": 566,
+                "scale": 2
+            },
+            "currencyCode": "EUR",
+            "availableBalance": {
+                "currencyCode": "EUR",
+                "doubleValue": 5.66,
+                "exactValue": 5.66,
+                "unscaledValue": 566,
+                "scale": 2
+            },
+            "bankId": "NL29INGB0428434142",
+            "excluded": false,
+            "favored": false,
+            "name": "En/of betaalrekening",
+            "ownership": 1.0,
+            "type": "CHECKING",
+            "userModifiedExcluded": false,
+            "userModifiedName": false,
+            "userModifiedType": false,
+            "identifiers": "[\"iban://NL29INGB0428434142\"]",
+            "closed": false,
+            "holderName": "Mw L Dellouche",
+            "accountHolder": {
+                "accountId": null,
+                "type": "PERSONAL",
+                "identities": [
+                    {
+                        "name": "Mw L Dellouche",
+                        "role": "HOLDER"
+                    },
+                    {
+                        "name": "Hr Ts Schipper",
+                        "role": "HOLDER"
+                    }
+                ]
+            },
+            "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
+            "balances": [],
+            "availableCredit": 0.0,
+            "balance": 5.66
+        }
+    ],
+    "transactions": [
+        {
+            "amount": 1.35,
+            "date": 1618221600000,
+            "description": "Naam: Picnic B.V.\nOmschrijving: Terugbetaling\n07-04-2021/Terugbetaling 07-04-2021\nIBAN: NL81INGB0006882749\nKenmerk: 2104120094871889\nValutadatum: 12-04-2021",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Naam: Picnic B.V.\nOmschrijving: Terugbetaling\n07-04-2021/Terugbetaling 07-04-2021\nIBAN: NL81INGB0006882749\nKenmerk: 2104120094871889\nValutadatum: 12-04-2021",
+                "TRANSFER_ACCOUNT_EXTERNAL": "NL81INGB0006882749",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "Picnic B.V.",
+                "DETAILS": "Verzamelbetaling"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -21.05,
+            "date": 1618221600000,
+            "description": "ALBERT HEIJN 1078 UTRECHT NLD\nPasvolgnr: 001 10-04-2021 17:29\nTransactie: D0Q1F7 Term: 192X87\nValutadatum: 12-04-2021",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "ALBERT HEIJN 1078 UTRECHT NLD\nPasvolgnr: 001 10-04-2021 17:29\nTransactie: D0Q1F7 Term: 192X87\nValutadatum: 12-04-2021",
+                "TRANSFER_ACCOUNT_EXTERNAL": "",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "ALBERT HEIJN 1078",
+                "DETAILS": "Betaalautomaat"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -19.97,
+            "date": 1618221600000,
+            "description": "Kruidvat 0868 UTRECHT NLD\nPasvolgnr: 001 12-04-2021 17:53\nTransactie: H7A9A8 Term: 16VG02",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Kruidvat 0868 UTRECHT NLD\nPasvolgnr: 001 12-04-2021 17:53\nTransactie: H7A9A8 Term: 16VG02",
+                "TRANSFER_ACCOUNT_EXTERNAL": "",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "Kruidvat 0868",
+                "DETAILS": "Betaalautomaat"
+            },
+            "pending": true,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": 1200.0,
+            "date": 1617012000000,
+            "description": "Naam: L. Dellouche\nOmschrijving: Huur\nIBAN: NL03RABO0356344924\nValutadatum: 29-03-2021",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Naam: L. Dellouche\nOmschrijving: Huur\nIBAN: NL03RABO0356344924\nValutadatum: 29-03-2021",
+                "TRANSFER_ACCOUNT_EXTERNAL": "NL03RABO0356344924",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "L. Dellouche",
+                "DETAILS": "Overschrijving"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": 0.35,
+            "date": 1616756400000,
+            "description": "Naam: Picnic B.V.\nOmschrijving: Terugbetaling\n22-03-2021\nIBAN: NL81INGB0006882749\nKenmerk: 2103250094850909\nValutadatum: 26-03-2021",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Naam: Picnic B.V.\nOmschrijving: Terugbetaling\n22-03-2021\nIBAN: NL81INGB0006882749\nKenmerk: 2103250094850909\nValutadatum: 26-03-2021",
+                "TRANSFER_ACCOUNT_EXTERNAL": "NL81INGB0006882749",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "Picnic B.V.",
+                "DETAILS": "Verzamelbetaling"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        }
+    ]
+}

@@ -1,0 +1,392 @@
+
+REQUEST auth-01
+POST https://api.ing.com/oauth2/token
+Accept: application/json
+
+RESPONSE auth-01 set state-01
+200
+Content-Type: application/json
+
+{
+
+  "access_token": "**HASHED:mM**",
+
+  "expires_in": 905,
+
+  "scope": "payment-accounts:orders:create granting",
+
+  "token_type": "**HASHED:cQ**",
+
+  "keys": [
+
+    {
+
+      "kty": "RSA",
+
+      "n": "3l3rdz4hyJkMx5ChddZmQft6_YsRfBkyA2ftXy1cOcqSm6Wtywt1ztVYATFHBOaX_tr7C5LXtMcghjoRbUfUHoy-egpC2B4wZ45YxWbBvLtG6QyCQH8kqLqjeGzDgpnJfDuhZP8i0lXPZwkWpF8J9XuB0DgVDrDXiS0wPB_I4mCW9s4ZMOdMA7aJMN2qhGo4DJqTn2aPjnzyx1OaeiRZC6YiyLU9QJJpWanFk69bZRu9Lpox8j4y5O2TW8bDmkKb0P_WXZVcSYgkX0Ed9Da0jCBl9cbqXdp7Ww4B8f8y9oBgK58VHlPvaufORw8IyaJ4Q6WezsHSq_Dmp2WFbV4z_qNS-ZpEGGdpkPtaYODTXU1p_3gTmNGBuAN0jLE9DaQZJswKj9-oBJifpHbOMnv2f__jBdjNvtDxe_LJPMj1B6XUetqoq8k9fU_XiHxz3mSBvzRqf-d-fD_evr4i_nxqEvsT_5D1nGvts8XQaSPehtlpFTym35KR83qoo04VPkdV",
+
+      "e": "AQAB",
+
+      "use": "sig",
+
+      "alg": "RS256",
+
+      "x5t": "3c396700fc8cd709cf9cb5452a22bcde76985851"
+
+    }
+
+  ],
+
+  "client_id": "166c2ce0-eec0-4ee1-adcb-3e9f733e34ae"
+
+}
+
+REQUEST auth-02
+GET https://api.ing.com/oauth2/authorization-server-url?redirect_uri=https://127.0.0.1:7357/api/v1/thirdparty/callback&scope=payment-accounts%3Atransactions%3Aview+payment-accounts%3Abalances%3Aview&country_code=NL
+Accept: application/json
+
+RESPONSE auth-02
+200
+Content-Type: application/json
+
+{
+
+  "location": "https://myaccount.ing.com/granting/e0095f5585bb3712e30c1a6cffa9f6f0ef4f2377d559fdc34e00ee2cf0537094/NL"
+
+}
+
+REQUEST auth-03 match state-01
+POST https://api.ing.com/oauth2/token
+Accept: application/json
+
+RESPONSE auth-03
+200
+Content-Type: application/json;charset=utf-8
+
+{"access_token":"accessToken","refresh_token":"refreshToken","token_type":"bearer","expires_in":900,"scope":"payment-accounts:transactions:view payment-accounts:balances:view","refresh_token_expires_in":12345}
+
+REQUEST fetch-accounts
+GET https://api.ing.com/v3/accounts
+Accept: application/json
+
+RESPONSE fetch-accounts
+200
+Content-Type: application/json
+
+{
+
+  "accounts": [
+
+    {
+
+      "resourceId": "945bf522-2e2e-45ad-b83c-fcd75c446a5b",
+
+      "iban": "NL29INGB0428434142",
+
+      "maskedPan": "",
+
+      "name": "Mw L Dellouche, Hr TS Schipper",
+
+      "currency": "EUR",
+
+      "product": "En/of betaalrekening",
+
+      "_links": {
+
+        "balances": {
+
+          "href": "/v3/accounts/945bf522-2e2e-45ad-b83c-fcd75c446a5b/balances?currency=EUR"
+
+        },
+
+        "transactions": {
+
+          "href": "/v2/accounts/945bf522-2e2e-45ad-b83c-fcd75c446a5b/transactions?currency=EUR"
+
+        }
+
+      }
+
+    }
+
+  ]
+
+}
+
+REQUEST fetch-balance
+GET https://api.ing.com/v3/accounts/945bf522-2e2e-45ad-b83c-fcd75c446a5b/balances?currency=EUR
+Accept: application/json
+
+
+RESPONSE fetch-balance
+200
+Content-Type: application/json
+
+{
+
+  "account": {
+
+    "iban": "NL29INGB0428434142",
+
+    "maskedPan": "",
+
+    "currency": "EUR"
+
+  },
+
+  "balances": [
+
+    {
+
+      "balanceType": "expected",
+
+      "balanceAmount": {
+
+        "currency": "EUR",
+
+        "amount": 5.66
+
+      },
+
+      "lastChangeDateTime": "2021-04-12T16:40:06.376Z"
+
+    }
+
+  ]
+
+}
+
+REQUEST 6
+GET https://api.ing.com/v2/accounts/945bf522-2e2e-45ad-b83c-fcd75c446a5b/transactions?currency=EUR&limit=50
+Accept: application/json
+
+RESPONSE 6
+200
+Content-Type: application/json
+
+{
+
+  "account": {
+
+    "iban": "NL29INGB0428434142",
+
+    "currency": "EUR"
+
+  },
+
+  "transactions": {
+
+    "booked": [
+
+      {
+
+        "transactionId": "010303296052170260000000",
+
+        "endToEndId": "2104120094871889",
+
+        "bookingDate": "2021-04-12",
+
+        "executionDateTime": "2021-04-12T14:11:01Z",
+
+        "transactionAmount": {
+
+          "currency": "EUR",
+
+          "amount": 1.35
+
+        },
+
+        "debtorName": "Picnic B.V.",
+
+        "debtorAccount": {
+
+          "iban": "NL81INGB0006882749"
+
+        },
+
+        "transactionType": "Verzamelbetaling",
+
+        "remittanceInformationUnstructured": "Naam: Picnic B.V.<br>Omschrijving: Terugbetaling<br>07-04-2021/Terugbetaling 07-04-2021<br>IBAN: NL81INGB0006882749<br>Kenmerk: 2104120094871889<br>Valutadatum: 12-04-2021"
+
+      },
+
+      {
+
+        "transactionId": "010303294866242010000000",
+
+        "endToEndId": "NOTPROVIDED",
+
+        "bookingDate": "2021-04-12",
+
+        "executionDateTime": "2021-04-12T10:49:00Z",
+
+        "transactionAmount": {
+
+          "currency": "EUR",
+
+          "amount": -21.05
+
+        },
+
+        "creditorName": "ALBERT HEIJN 1078",
+
+        "creditorAccount": {},
+
+        "transactionType": "Betaalautomaat",
+
+        "remittanceInformationUnstructured": "ALBERT HEIJN 1078 UTRECHT NLD<br>Pasvolgnr: 001 10-04-2021 17:29<br>Transactie: D0Q1F7 Term: 192X87<br>Valutadatum: 12-04-2021"
+
+      }
+
+    ],
+
+    "pending": [
+
+      {
+
+        "transactionId": "010303296067962610000000",
+
+        "endToEndId": "NOTPROVIDED",
+
+        "executionDateTime": "2021-04-12T15:53:06Z",
+
+        "transactionAmount": {
+
+          "currency": "EUR",
+
+          "amount": -19.97
+
+        },
+
+        "creditorName": "Kruidvat 0868",
+
+        "creditorAccount": {},
+
+        "transactionType": "Betaalautomaat",
+
+        "remittanceInformationUnstructured": "Kruidvat 0868 UTRECHT NLD<br>Pasvolgnr: 001 12-04-2021 17:53<br>Transactie: H7A9A8 Term: 16VG02"
+
+      }
+
+    ],
+
+    "info": [],
+
+    "_links": {
+
+      "next": {
+
+        "href": "/v2/accounts/945bf522-2e2e-45ad-b83c-fcd75c446a5b/transactions?next=Wyjv5BzeAxKBgzAqEu-Yw3W-sou_K_1iuJNkQ2-9sZitDzxZmmoHgKr_AqrYcwK8RJ6LXMvknh6cU23zGc9U5pzyV8BvA9TS9Jb_pWXHPzpYjJY-AAzE8I5vtzpNx85N4sNb0aCXdbKcXEVdEx8VGckZFp-0Kq6rtb9MCauJ_LMsB8Vfm4crEhecXMHUlvv5blrwdeaIJtWjw-16_jE2NtRMXOmrLktHQJE4hZtrRpisSxTpwm8di1R__6G2XW6uBW9MByKQMK4oHyA0SoLZGfi6eZdEucUNsDwsn3t7Kz7TIo_sNvjgodRXef-d1OVQ6tgz6wPoXGvaMyOu2UGIlSFsxXytwwGJm_63Nxm5sRZNhGeoiWj6sXAMO25FgTFQEJND5TQPjtd4HZo-YTj1OU5avzbEgDG6nP4j0U_TE7QxkIpth9XvxJlpvJ1jXU8WDTODU1D8PoenatJ-i-C4lsK88Llp9omKUApJUdXVFgovYdXzddqCMjtFLJKQUfmlHTFuZal8UEY2G7CyhyjXc0RInK4LlY1ICkdV91JIhftqQ87vAbljZA8NqszBkkvzpBkXFUv0axcB1-eqcA-Pkc5g4rMuKgR9iUELhbKQE20y"
+
+      }
+
+    }
+
+  }
+
+}
+
+REQUEST 7
+GET https://api.ing.com/v2/accounts/945bf522-2e2e-45ad-b83c-fcd75c446a5b/transactions?next=Wyjv5BzeAxKBgzAqEu-Yw3W-sou_K_1iuJNkQ2-9sZitDzxZmmoHgKr_AqrYcwK8RJ6LXMvknh6cU23zGc9U5pzyV8BvA9TS9Jb_pWXHPzpYjJY-AAzE8I5vtzpNx85N4sNb0aCXdbKcXEVdEx8VGckZFp-0Kq6rtb9MCauJ_LMsB8Vfm4crEhecXMHUlvv5blrwdeaIJtWjw-16_jE2NtRMXOmrLktHQJE4hZtrRpisSxTpwm8di1R__6G2XW6uBW9MByKQMK4oHyA0SoLZGfi6eZdEucUNsDwsn3t7Kz7TIo_sNvjgodRXef-d1OVQ6tgz6wPoXGvaMyOu2UGIlSFsxXytwwGJm_63Nxm5sRZNhGeoiWj6sXAMO25FgTFQEJND5TQPjtd4HZo-YTj1OU5avzbEgDG6nP4j0U_TE7QxkIpth9XvxJlpvJ1jXU8WDTODU1D8PoenatJ-i-C4lsK88Llp9omKUApJUdXVFgovYdXzddqCMjtFLJKQUfmlHTFuZal8UEY2G7CyhyjXc0RInK4LlY1ICkdV91JIhftqQ87vAbljZA8NqszBkkvzpBkXFUv0axcB1-eqcA-Pkc5g4rMuKgR9iUELhbKQE20y
+Accept: application/json
+
+RESPONSE 7
+200
+Content-Type: application/json
+
+{
+
+  "account": {
+
+    "iban": "NL29INGB0428434142",
+
+    "currency": "EUR"
+
+  },
+
+  "transactions": {
+
+    "booked": [
+
+      {
+
+        "transactionId": "010303282338065670000000",
+
+        "endToEndId": "NOTPROVIDED",
+
+        "bookingDate": "2021-03-29",
+
+        "executionDateTime": "2021-03-29T07:03:46Z",
+
+        "transactionAmount": {
+
+          "currency": "EUR",
+
+          "amount": 1200.00
+
+        },
+
+        "debtorName": "L. Dellouche",
+
+        "debtorAccount": {
+
+          "iban": "NL03RABO0356344924"
+
+        },
+
+        "transactionType": "Overschrijving",
+
+        "remittanceInformationUnstructured": "Naam: L. Dellouche<br>Omschrijving: Huur<br>IBAN: NL03RABO0356344924<br>Valutadatum: 29-03-2021"
+
+      },
+
+      {
+
+        "transactionId": "010303280975667270000000",
+
+        "endToEndId": "2103250094850909",
+
+        "bookingDate": "2021-03-26",
+
+        "executionDateTime": "2021-03-26T09:40:55Z",
+
+        "transactionAmount": {
+
+          "currency": "EUR",
+
+          "amount": 0.35
+
+        },
+
+        "debtorName": "Picnic B.V.",
+
+        "debtorAccount": {
+
+          "iban": "NL81INGB0006882749"
+
+        },
+
+        "transactionType": "Verzamelbetaling",
+
+        "remittanceInformationUnstructured": "Naam: Picnic B.V.<br>Omschrijving: Terugbetaling<br>22-03-2021<br>IBAN: NL81INGB0006882749<br>Kenmerk: 2103250094850909<br>Valutadatum: 26-03-2021"
+
+      }
+
+    ],
+
+    "pending": [],
+
+    "info": [],
+
+    "_links": {
+
+      "next": {
+
+      }
+
+    }
+
+  }
+
+}
+
