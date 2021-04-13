@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
 import se.tink.backend.aggregation.cluster.identification.ClientInfo;
 import se.tink.backend.aggregation.workers.commands.migrations.AgentVersionMigration;
-import se.tink.backend.aggregation.workers.commands.migrations.implementations.banks.danskebankdk.DanskeBankDkAccountMigration;
 import se.tink.backend.aggregation.workers.commands.migrations.implementations.banks.icabanken.IcaBankenSanitizingMigration;
 import se.tink.backend.aggregation.workers.commands.migrations.implementations.banks.ics.ICSSanitizingMigration;
 import se.tink.backend.aggregation.workers.commands.migrations.implementations.banks.jyskebank.JyskebankSanitizingMigration;
@@ -70,7 +69,6 @@ public class MigrateCredentialsAndAccountsWorkerCommand extends AgentWorkerComma
                     .put("norwegian-bankid", new NorwegianSanitizingMigration())
                     .put("dk-jyskebank-codecard", new JyskebankSanitizingMigration())
                     .put("dk-nordea-nemid", new NordeaDkAccountMigration())
-                    .put("dk-danskebank-ob", new DanskeBankDkAccountMigration())
                     .put("coop-bankid", new EnterCardAccountIdMigration())
                     .put("remembermastercard-bankid", new EnterCardAccountIdMigration())
                     .put("moregolfmastercard-bankid", new EnterCardAccountIdMigration())
