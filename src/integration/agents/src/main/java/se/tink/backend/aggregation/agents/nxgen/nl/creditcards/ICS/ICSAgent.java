@@ -12,7 +12,6 @@ import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.authenticator
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.configuration.ICSConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.fetchers.credit.ICSAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.fetchers.credit.ICSCreditCardFetcher;
-import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.filter.ICSBankFailureFilter;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.filter.ICSRetryFilter;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
@@ -67,13 +66,12 @@ public final class ICSAgent extends NextGenerationAgent
     }
 
     private void configureHttpClient(TinkHttpClient client) {
+        client.addFilter(new BankServiceInternalErrorFilter());
         client.addFilter(
                 new ICSRetryFilter(HttpClient.MAX_RETRIES, HttpClient.RETRY_SLEEP_MILLISECONDS));
-        client.addFilter(new ICSBankFailureFilter());
         client.addFilter(
                 new AccessExceededFilter(this.provider != null ? this.provider.getName() : null));
         client.addFilter(new TimeoutFilter());
-        client.addFilter(new BankServiceInternalErrorFilter());
     }
 
     @Override
