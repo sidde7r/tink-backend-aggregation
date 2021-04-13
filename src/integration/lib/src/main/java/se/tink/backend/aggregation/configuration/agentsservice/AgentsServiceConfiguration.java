@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.configuration.integrations.abnamro.AbnAmroCon
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.integration.agent_data_availability_tracker.common.configuration.AgentDataAvailabilityTrackerConfiguration;
 import se.tink.backend.integration.tpp_secrets_service.client.configuration.TppSecretsServiceConfiguration;
+import se.tink.libraries.endpoints.dropwizard.EndpointsConfiguration;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AgentsServiceConfiguration {
@@ -57,6 +58,8 @@ public class AgentsServiceConfiguration {
     @JsonProperty
     private Map<String, PasswordBasedProxyConfiguration> countryProxies = new HashMap<>();
 
+    @JsonProperty private EndpointsConfiguration endpoints = new EndpointsConfiguration();
+
     @JsonProperty private UnleashConfiguration unleash = new UnleashConfiguration();
 
     public TppSecretsServiceConfiguration getTppSecretsServiceConfiguration() {
@@ -77,6 +80,10 @@ public class AgentsServiceConfiguration {
 
     public IntegrationsConfiguration getIntegrations() {
         return integrations;
+    }
+
+    public EndpointsConfiguration getEndpoints() {
+        return endpoints;
     }
 
     public AggregationWorkerConfiguration getAggregationWorker() {

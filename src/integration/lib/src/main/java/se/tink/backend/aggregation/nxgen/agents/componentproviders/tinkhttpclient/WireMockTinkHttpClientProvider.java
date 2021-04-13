@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.logmasker.LogMaskerImpl;
 import se.tink.backend.aggregation.nxgen.http.IntegrationWireMockTestTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.NextGenTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.event.FakeNextGenTinkHttpClientEventProducer;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public final class WireMockTinkHttpClientProvider implements TinkHttpClientProvider {
@@ -30,6 +31,7 @@ public final class WireMockTinkHttpClientProvider implements TinkHttpClientProvi
                         .setLogOutputStream(context.getLogOutputStream())
                         .setSignatureKeyPair(signatureKeyPair)
                         .setProvider(credentialsRequest.getProvider())
+                        .setEventProducer(new FakeNextGenTinkHttpClientEventProducer())
                         .build();
 
         httpClient.disableSslVerification();

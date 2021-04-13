@@ -15,6 +15,8 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementali
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.SupplementalInformationProviderImpl;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.tinkhttpclient.NextGenTinkHttpClientProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.tinkhttpclient.TinkHttpClientProvider;
+import se.tink.backend.aggregation.nxgen.http.event.DefaultNextGenTinkHttpClientEventProducer;
+import se.tink.backend.aggregation.nxgen.http.event.NextGenTinkHttpClientEventProducer;
 
 /** Module containing basic dependencies for running agent in production environment. */
 public final class AgentComponentProviderModule extends AbstractModule {
@@ -23,6 +25,8 @@ public final class AgentComponentProviderModule extends AbstractModule {
     protected void configure() {
 
         bind(TinkHttpClientProvider.class).to(NextGenTinkHttpClientProvider.class);
+        bind(NextGenTinkHttpClientEventProducer.class)
+                .to(DefaultNextGenTinkHttpClientEventProducer.class);
         bind(SupplementalInformationProvider.class).to(SupplementalInformationProviderImpl.class);
         bind(AgentContextProvider.class).to(AgentContextProviderImpl.class);
         bind(RandomValueGenerator.class).to(RandomValueGeneratorImpl.class);

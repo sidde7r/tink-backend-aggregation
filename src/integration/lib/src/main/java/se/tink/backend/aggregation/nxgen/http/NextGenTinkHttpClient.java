@@ -77,6 +77,8 @@ import se.tink.backend.aggregation.logmasker.LogMaskerImpl;
 import se.tink.backend.aggregation.logmasker.LogMaskerImpl.LoggingMode;
 import se.tink.backend.aggregation.nxgen.http.client.LoggingStrategy;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.event.FakeNextGenTinkHttpClientEventProducer;
+import se.tink.backend.aggregation.nxgen.http.event.NextGenTinkHttpClientEventProducer;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.filter.engine.FilterOrder;
 import se.tink.backend.aggregation.nxgen.http.filter.engine.FilterPhases;
@@ -154,6 +156,8 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
     private SSLContext sslContext;
 
     private HttpResponseStatusHandler responseStatusHandler;
+
+    private NextGenTinkHttpClientEventProducer eventProducer;
 
     private class DEFAULTS {
         private static final String DEFAULT_USER_AGENT = CommonHeaders.DEFAULT_USER_AGENT;
@@ -258,6 +262,11 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
         this.metricRegistry = builder.getMetricRegistry();
         this.provider = builder.getProvider();
 
+        this.eventProducer =
+                Objects.nonNull(builder.getEventProducer())
+                        ? builder.getEventProducer()
+                        : new FakeNextGenTinkHttpClientEventProducer();
+
         // Add an initial redirect handler to fix any illegal location paths
         addRedirectHandler(new FixRedirectHandler());
 
@@ -313,6 +322,7 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
         private Provider provider;
         private PrintStream printStream;
         private LogMasker logMasker;
+        private NextGenTinkHttpClientEventProducer eventProducer;
 
         public Builder(LogMasker logMasker, LoggingMode loggingMode) {
             this.logMasker = logMasker;
@@ -347,6 +357,10 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
             return printStream;
         }
 
+        public NextGenTinkHttpClientEventProducer getEventProducer() {
+            return eventProducer;
+        }
+
         public Builder setAggregatorInfo(AggregatorInfo aggregatorInfo) {
             this.aggregatorInfo = aggregatorInfo;
             return this;
@@ -374,6 +388,11 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
 
         public Builder setPrintStream(PrintStream printStream) {
             this.printStream = printStream;
+            return this;
+        }
+
+        public Builder setEventProducer(NextGenTinkHttpClientEventProducer eventProducer) {
+            this.eventProducer = eventProducer;
             return this;
         }
     }
@@ -844,12 +863,16 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
 
     public <T> T request(Class<T> c, HttpRequest request)
             throws HttpClientException, HttpResponseException {
+        // AAP-1103: This is temporary call, will be fixed in future PRs
+        eventProducer.dummyMethod();
         return new NextGenRequestBuilder(
                         this.getFilters(), getHeaderAggregatorIdentifier(), responseStatusHandler)
                 .raw(c, request);
     }
 
     public void request(HttpRequest request) throws HttpClientException, HttpResponseException {
+        // AAP-1103: This is temporary call, will be fixed in future PRs
+        eventProducer.dummyMethod();
         new NextGenRequestBuilder(
                         this.getFilters(), getHeaderAggregatorIdentifier(), responseStatusHandler)
                 .raw(request);
