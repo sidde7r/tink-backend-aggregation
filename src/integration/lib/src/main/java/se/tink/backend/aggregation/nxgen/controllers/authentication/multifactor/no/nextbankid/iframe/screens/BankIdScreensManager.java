@@ -26,6 +26,7 @@ public class BankIdScreensManager {
             BankIdScreen otherScreenFound = tryDetectCurrentScreen().orElse(null);
             errorHandler.throwUnexpectedScreenException(
                     otherScreenFound, screensQuery.getScreensToWaitFor());
+            // this is never reached, added to get rid of warnings
             return null;
         }
 
@@ -39,7 +40,7 @@ public class BankIdScreensManager {
                         .map(BankIdScreen::getLocatorToDetectScreen)
                         .collect(Collectors.toList());
 
-        if (screensQuery.isVerifyNoErrorScreens()) {
+        if (screensQuery.isShouldVerifyNoErrorScreens()) {
             screensLocators = addErrorScreenLocators(screensLocators);
         }
 
@@ -47,7 +48,7 @@ public class BankIdScreensManager {
                 driver.searchForFirstMatchingLocator(
                         BankIdElementsSearchQuery.builder()
                                 .searchFor(screensLocators)
-                                .waitForSeconds(screensQuery.getWaitForSeconds())
+                                .searchForSeconds(screensQuery.getWaitForSeconds())
                                 .build());
 
         if (searchResult.isEmpty()) {
@@ -57,7 +58,7 @@ public class BankIdScreensManager {
         BankIdScreen screenFound =
                 BankIdScreen.findScreenByItsLocator(searchResult.getLocatorFound());
 
-        if (screenFound.isErrorScreen() && screensQuery.isVerifyNoErrorScreens()) {
+        if (screenFound.isErrorScreen() && screensQuery.isShouldVerifyNoErrorScreens()) {
             errorHandler.throwUnexpectedScreenException(
                     screenFound, screensQuery.getScreensToWaitFor());
         }
@@ -66,14 +67,13 @@ public class BankIdScreensManager {
     }
 
     private List<BankIdElementLocator> addErrorScreenLocators(List<BankIdElementLocator> locators) {
-        List<BankIdElementLocator> errorScreensLocators =
-                BankIdScreen.getAllErrorScreens().stream()
-                        .map(BankIdScreen::getLocatorToDetectScreen)
-                        .collect(Collectors.toList());
-
         List<BankIdElementLocator> resultList = new ArrayList<>(locators);
-        resultList.removeAll(errorScreensLocators);
-        resultList.addAll(errorScreensLocators);
+
+        BankIdScreen.getAllErrorScreens().stream()
+                .map(BankIdScreen::getLocatorToDetectScreen)
+                .filter(errorScreenLocator -> !resultList.contains(errorScreenLocator))
+                .forEach(resultList::add);
+
         return resultList;
     }
 
@@ -88,7 +88,7 @@ public class BankIdScreensManager {
                 driver.searchForFirstMatchingLocator(
                         BankIdElementsSearchQuery.builder()
                                 .searchFor(screensLocators)
-                                .waitForSeconds(0)
+                                .searchOnlyOnce()
                                 .build());
 
         if (searchResult.isEmpty()) {

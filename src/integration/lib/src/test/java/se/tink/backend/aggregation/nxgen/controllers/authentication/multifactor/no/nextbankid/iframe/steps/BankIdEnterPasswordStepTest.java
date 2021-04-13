@@ -58,7 +58,7 @@ public class BankIdEnterPasswordStepTest {
                 .searchForFirstMatchingLocator(
                         BankIdElementsSearchQuery.builder()
                                 .searchFor(LOC_PRIVATE_PASSWORD_INPUT)
-                                .waitForSeconds(10)
+                                .searchForSeconds(10)
                                 .build());
         verify(webDriver).sleepFor(1_000);
         verify(webDriver)

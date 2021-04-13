@@ -66,7 +66,7 @@ public class BankIdWebDriverImpl implements BankIdWebDriver {
                         .searchForFirstMatchingLocator(
                                 BankIdElementsSearchQuery.builder()
                                         .searchFor(locator)
-                                        .waitForSeconds(10)
+                                        .searchForSeconds(10)
                                         .build())
                         .getFirstFoundElement()
                         .orElseThrow(
@@ -84,7 +84,7 @@ public class BankIdWebDriverImpl implements BankIdWebDriver {
                         .searchForFirstMatchingLocator(
                                 BankIdElementsSearchQuery.builder()
                                         .searchFor(locator)
-                                        .waitForSeconds(10)
+                                        .searchForSeconds(10)
                                         .build())
                         .getFirstFoundElement()
                         .orElseThrow(

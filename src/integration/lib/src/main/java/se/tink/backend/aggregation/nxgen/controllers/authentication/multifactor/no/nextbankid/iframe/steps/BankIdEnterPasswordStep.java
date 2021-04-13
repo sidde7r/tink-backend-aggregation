@@ -31,7 +31,7 @@ public class BankIdEnterPasswordStep {
                         .searchForFirstMatchingLocator(
                                 BankIdElementsSearchQuery.builder()
                                         .searchFor(LOC_PRIVATE_PASSWORD_INPUT)
-                                        .waitForSeconds(10)
+                                        .searchForSeconds(10)
                                         .build())
                         .isNotEmpty();
         if (!inputFound) {

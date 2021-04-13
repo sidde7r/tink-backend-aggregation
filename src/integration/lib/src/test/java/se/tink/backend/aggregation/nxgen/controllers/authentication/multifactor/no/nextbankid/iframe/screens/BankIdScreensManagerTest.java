@@ -98,7 +98,7 @@ public class BankIdScreensManagerTest {
                             .build(),
                     BankIdElementsSearchQuery.builder()
                             .searchFor(getScreensLocators(ENTER_SSN_SCREEN))
-                            .waitForSeconds(10)
+                            .searchForSeconds(10)
                             .build()),
             array(
                     BankIdScreensQuery.builder()
@@ -109,7 +109,7 @@ public class BankIdScreensManagerTest {
                     BankIdElementsSearchQuery.builder()
                             .searchFor(getScreensLocators(ENTER_SSN_SCREEN))
                             .searchFor(getScreensLocators(BankIdScreen.getAllErrorScreens()))
-                            .waitForSeconds(11)
+                            .searchForSeconds(11)
                             .build()),
             array(
                     BankIdScreensQuery.builder()
@@ -118,7 +118,7 @@ public class BankIdScreensManagerTest {
                             .build(),
                     BankIdElementsSearchQuery.builder()
                             .searchFor(getScreensLocators(BankIdScreen.getAll2FAMethodScreens()))
-                            .waitForSeconds(123)
+                            .searchForSeconds(123)
                             .build())
         };
     }
@@ -218,7 +218,7 @@ public class BankIdScreensManagerTest {
                 .isEqualToComparingFieldByFieldRecursively(
                         BankIdElementsSearchQuery.builder()
                                 .searchFor(screenToSearchFor.getLocatorToDetectScreen())
-                                .waitForSeconds(15)
+                                .searchForSeconds(15)
                                 .build());
         assertThat(captor.getAllValues().get(1))
                 .isEqualToComparingFieldByFieldRecursively(
@@ -227,7 +227,7 @@ public class BankIdScreensManagerTest {
                                         BankIdScreen.getAllScreens().stream()
                                                 .map(BankIdScreen::getLocatorToDetectScreen)
                                                 .collect(toList()))
-                                .waitForSeconds(0)
+                                .searchOnlyOnce()
                                 .build());
 
         mocksToVerifyInOrder

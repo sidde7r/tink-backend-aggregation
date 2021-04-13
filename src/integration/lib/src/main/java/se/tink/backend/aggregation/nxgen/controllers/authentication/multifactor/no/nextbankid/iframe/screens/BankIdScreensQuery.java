@@ -18,13 +18,13 @@ public class BankIdScreensQuery {
     private final List<BankIdScreen> screensToWaitFor;
     private final int waitForSeconds;
     /**
-     * Include error screens in the list of screens to search for. Additionally, if such an error
-     * screen is found, throw appropriate bank id exception. This is a convenient way to not repeat
-     * throwing same exception each time when we want to search for some non error screen. It also
-     * speeds up searching - whenever error screen occurs we will detect it in the very next search
-     * iteration and stop unnecessarily waiting for other expected screens.
+     * Include all error screens in the list of screens to search for. Additionally, if such an
+     * error screen is found, throw appropriate bank id exception. This is a convenient way to not
+     * repeat throwing same exception each time when we want to search for some non error screen. It
+     * also speeds up searching - whenever error screen occurs we will detect it in the very next
+     * search iteration and stop unnecessarily waiting for other expected screens.
      */
-    private final boolean verifyNoErrorScreens;
+    private final boolean shouldVerifyNoErrorScreens;
 
     public static BankIdWaitForScreenQueryBuilder builder() {
         return new BankIdWaitForScreenQueryBuilder();

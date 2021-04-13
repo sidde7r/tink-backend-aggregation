@@ -10,7 +10,7 @@ import static org.mockito.Mockito.when;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants.BANK_ID_LOG_PREFIX;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants.HtmlLocators.LOC_IFRAME;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants.HtmlLocators.LOC_PRIVATE_PASSWORD_ERROR_BUBBLE;
-import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants.WAIT_FOR_AUTHENTICATION_FINISH_SIGNS_IN_SECONDS;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants.WAIT_FOR_SIGN_THAT_AUTHENTICATION_IS_FINISHED_FOR_SECONDS;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdTestUtils.mockLocatorDoesNotExists;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdTestUtils.mockLocatorExists;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdTestUtils.verifyNTimes;
@@ -140,7 +140,7 @@ public class BankIdVerifyAuthenticationStepTest {
                     verifyChecksForErrorScreens();
                     mocksToVerifyInOrder.verify(webDriver).sleepFor(1_000);
                 },
-                WAIT_FOR_AUTHENTICATION_FINISH_SIGNS_IN_SECONDS);
+                WAIT_FOR_SIGN_THAT_AUTHENTICATION_IS_FINISHED_FOR_SECONDS);
 
         verifyTriesToDetectAnyScreen();
         mocksToVerifyInOrder.verifyNoMoreInteractions();
@@ -157,7 +157,7 @@ public class BankIdVerifyAuthenticationStepTest {
                 .searchForFirstMatchingLocator(
                         BankIdElementsSearchQuery.builder()
                                 .searchFor(LOC_IFRAME)
-                                .waitForSeconds(0)
+                                .searchOnlyOnce()
                                 .build());
     }
 
@@ -167,7 +167,7 @@ public class BankIdVerifyAuthenticationStepTest {
                 .searchForFirstMatchingLocator(
                         BankIdElementsSearchQuery.builder()
                                 .searchFor(LOC_PRIVATE_PASSWORD_ERROR_BUBBLE)
-                                .waitForSeconds(2)
+                                .searchForSeconds(2)
                                 .build());
     }
 

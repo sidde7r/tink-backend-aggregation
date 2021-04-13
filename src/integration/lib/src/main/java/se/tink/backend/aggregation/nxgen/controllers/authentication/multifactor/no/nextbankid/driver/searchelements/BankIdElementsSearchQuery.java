@@ -16,11 +16,12 @@ public class BankIdElementsSearchQuery {
 
     private final List<BankIdElementLocator> locators;
     /**
-     * Defines how many seconds should we wait while searching for elements. If this value is 0,
-     * there will be only one search performed. If this value is > 0, number of searches depends of
-     * how many searches per second are run by {@link BankIdElementsSearcher}.
+     * If this value is 0, there will be only one search performed. If this value is > 0, number of
+     * searches depends on how many searches per second are run by {@link BankIdElementsSearcher}.
      */
-    private final Integer waitForSeconds;
+    private final Integer searchForSeconds;
+
+    private final boolean searchOnlyOnce;
 
     public static ElementsSearchQueryBuilder builder() {
         return new ElementsSearchQueryBuilder();
@@ -29,8 +30,9 @@ public class BankIdElementsSearchQuery {
     public static class ElementsSearchQueryBuilder {
 
         private final List<BankIdElementLocator> elements = new ArrayList<>();
-        private Integer waitForSeconds =
+        private Integer searchForSeconds =
                 BankIdConstants.DEFAULT_WAIT_FOR_ELEMENT_TIMEOUT_IN_SECONDS;
+        private boolean searchOnlyOnce;
 
         public ElementsSearchQueryBuilder searchFor(BankIdElementLocator... locators) {
             this.elements.addAll(asList(locators));
@@ -42,13 +44,18 @@ public class BankIdElementsSearchQuery {
             return this;
         }
 
-        public ElementsSearchQueryBuilder waitForSeconds(Integer seconds) {
-            waitForSeconds = seconds;
+        public ElementsSearchQueryBuilder searchForSeconds(Integer seconds) {
+            searchForSeconds = seconds;
+            return this;
+        }
+
+        public ElementsSearchQueryBuilder searchOnlyOnce() {
+            searchOnlyOnce = true;
             return this;
         }
 
         public BankIdElementsSearchQuery build() {
-            return new BankIdElementsSearchQuery(elements, waitForSeconds);
+            return new BankIdElementsSearchQuery(elements, searchForSeconds, searchOnlyOnce);
         }
     }
 }

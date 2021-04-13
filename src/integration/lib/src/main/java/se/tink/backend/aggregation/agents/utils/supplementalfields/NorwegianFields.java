@@ -30,7 +30,7 @@ public class NorwegianFields {
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class BankIdCodeChipField {
 
-        private static final String FIELD_KEY = "bankIdCodeChip";
+        private static final String FIELD_KEY = "bankIdChipCode";
         private static final int CODE_LENGTH = 6;
 
         private static final LocalizableKey DESCRIPTION = new LocalizableKey("Chip code");

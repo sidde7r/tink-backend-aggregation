@@ -52,7 +52,7 @@ public class BankIdAuthWithMobileBankIdStep {
                         .searchForFirstMatchingLocator(
                                 BankIdElementsSearchQuery.builder()
                                         .searchFor(LOC_REFERENCE_WORDS)
-                                        .waitForSeconds(10)
+                                        .searchForSeconds(10)
                                         .build())
                         .getFirstFoundElement()
                         .orElseThrow(

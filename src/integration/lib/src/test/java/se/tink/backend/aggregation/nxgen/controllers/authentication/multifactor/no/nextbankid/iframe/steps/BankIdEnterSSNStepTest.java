@@ -77,7 +77,7 @@ public class BankIdEnterSSNStepTest {
                 .searchForFirstMatchingLocator(
                         BankIdElementsSearchQuery.builder()
                                 .searchFor(LOC_SSN_INPUT)
-                                .waitForSeconds(10)
+                                .searchForSeconds(10)
                                 .build());
         mocksToVerifyInOrder.verify(webDriver).setValueToElement(SAMPLE_USER_SSN, LOC_SSN_INPUT);
         mocksToVerifyInOrder.verify(webDriver).clickButton(LOC_SUBMIT_BUTTON);

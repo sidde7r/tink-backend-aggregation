@@ -47,7 +47,7 @@ public class BankIdEnterSSNStep {
                 driver.searchForFirstMatchingLocator(
                                 BankIdElementsSearchQuery.builder()
                                         .searchFor(LOC_SSN_INPUT)
-                                        .waitForSeconds(10)
+                                        .searchForSeconds(10)
                                         .build())
                         .isNotEmpty();
         if (!ssnInputFound) {

@@ -80,7 +80,7 @@ public class BankIdAuthWithMobileBankIdStepTest {
                 .searchForFirstMatchingLocator(
                         BankIdElementsSearchQuery.builder()
                                 .searchFor(LOC_REFERENCE_WORDS)
-                                .waitForSeconds(10)
+                                .searchForSeconds(10)
                                 .build());
         mocksToVerifyInOrder
                 .verify(supplementalInformationController)
@@ -118,7 +118,7 @@ public class BankIdAuthWithMobileBankIdStepTest {
                 .searchForFirstMatchingLocator(
                         BankIdElementsSearchQuery.builder()
                                 .searchFor(LOC_REFERENCE_WORDS)
-                                .waitForSeconds(10)
+                                .searchForSeconds(10)
                                 .build());
         mocksToVerifyInOrder.verifyNoMoreInteractions();
     }

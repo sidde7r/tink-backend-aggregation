@@ -193,7 +193,7 @@ public class BankIdWebDriverTest {
                 .searchForFirstMatchingLocator(
                         BankIdElementsSearchQuery.builder()
                                 .searchFor(buttonLocator)
-                                .waitForSeconds(10)
+                                .searchForSeconds(10)
                                 .build());
         mocksToVerifyInOrder.verifyNoMoreInteractions();
     }
@@ -219,7 +219,7 @@ public class BankIdWebDriverTest {
                 .searchForFirstMatchingLocator(
                         BankIdElementsSearchQuery.builder()
                                 .searchFor(buttonLocator)
-                                .waitForSeconds(10)
+                                .searchForSeconds(10)
                                 .build());
         mocksToVerifyInOrder.verifyNoMoreInteractions();
     }
@@ -248,7 +248,7 @@ public class BankIdWebDriverTest {
                 .searchForFirstMatchingLocator(
                         BankIdElementsSearchQuery.builder()
                                 .searchFor(elementLocator)
-                                .waitForSeconds(10)
+                                .searchForSeconds(10)
                                 .build());
         mocksToVerifyInOrder.verifyNoMoreInteractions();
     }
@@ -276,7 +276,7 @@ public class BankIdWebDriverTest {
                 .searchForFirstMatchingLocator(
                         BankIdElementsSearchQuery.builder()
                                 .searchFor(elementLocator)
-                                .waitForSeconds(10)
+                                .searchForSeconds(10)
                                 .build());
         mocksToVerifyInOrder.verifyNoMoreInteractions();
     }

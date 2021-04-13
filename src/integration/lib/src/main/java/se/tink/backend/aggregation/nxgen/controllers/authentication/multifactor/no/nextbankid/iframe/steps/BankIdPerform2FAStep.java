@@ -66,7 +66,7 @@ public class BankIdPerform2FAStep {
                         .searchForFirstMatchingLocator(
                                 BankIdElementsSearchQuery.builder()
                                         .searchFor(LOC_CHANGE_2FA_METHOD_LINK)
-                                        .waitForSeconds(0)
+                                        .searchOnlyOnce()
                                         .build())
                         .isNotEmpty();
         log.info(

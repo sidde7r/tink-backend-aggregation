@@ -4,12 +4,12 @@ import static java.util.Collections.emptyList;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants.BANK_ID_LOG_PREFIX;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants.HtmlLocators.LOC_IFRAME;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants.HtmlLocators.LOC_PRIVATE_PASSWORD_ERROR_BUBBLE;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants.WAIT_FOR_SIGN_THAT_AUTHENTICATION_IS_FINISHED_FOR_SECONDS;
 
 import com.google.inject.Inject;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.exceptions.bankidno.BankIdNOError;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.BankIdWebDriver;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.BankIdElementsSearchQuery;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.screens.BankIdScreen;
@@ -28,7 +28,7 @@ public class BankIdVerifyAuthenticationStep {
         Wait for any signs of successful or failed authentication. Check all conditions one by one for optimisation
         since we don't know which one can occur first.
          */
-        for (int i = 0; i < BankIdConstants.WAIT_FOR_AUTHENTICATION_FINISH_SIGNS_IN_SECONDS; i++) {
+        for (int i = 0; i < WAIT_FOR_SIGN_THAT_AUTHENTICATION_IS_FINISHED_FOR_SECONDS; i++) {
 
             if (checkIfControllerLeftIframe()) {
                 log.info("{} Controller left iframe - authentication finished", BANK_ID_LOG_PREFIX);
@@ -61,7 +61,7 @@ public class BankIdVerifyAuthenticationStep {
                 .searchForFirstMatchingLocator(
                         BankIdElementsSearchQuery.builder()
                                 .searchFor(LOC_IFRAME)
-                                .waitForSeconds(0)
+                                .searchOnlyOnce()
                                 .build())
                 .isEmpty();
     }
@@ -71,7 +71,7 @@ public class BankIdVerifyAuthenticationStep {
                 .searchForFirstMatchingLocator(
                         BankIdElementsSearchQuery.builder()
                                 .searchFor(LOC_PRIVATE_PASSWORD_ERROR_BUBBLE)
-                                .waitForSeconds(2)
+                                .searchForSeconds(2)
                                 .build())
                 .isNotEmpty();
     }
