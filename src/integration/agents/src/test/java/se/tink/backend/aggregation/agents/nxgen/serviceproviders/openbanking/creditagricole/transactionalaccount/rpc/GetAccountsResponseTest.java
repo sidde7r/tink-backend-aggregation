@@ -5,9 +5,11 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.util.Collections;
+import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.entities.AccountEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.entities.AccountIdEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.entities.LinksEntity;
 
 public class GetAccountsResponseTest {
@@ -19,8 +21,6 @@ public class GetAccountsResponseTest {
     public void setUp() {
         linksEntityMock = mock(LinksEntity.class);
         accountEntityMock = mock(AccountEntity.class);
-
-        when(accountEntityMock.areConsentsNecessary()).thenReturn(Boolean.FALSE);
     }
 
     @Test
@@ -35,10 +35,11 @@ public class GetAccountsResponseTest {
         getAccountsResponse.setAccounts(Collections.singletonList(accountEntityMock));
 
         // when
-        final boolean response = getAccountsResponse.areConsentsNecessary();
+        List<AccountIdEntity> listOfNecessaryConsents =
+                getAccountsResponse.getAccountsListForNecessaryConsents();
 
         // then
-        assertThat(response).isFalse();
+        assertThat(listOfNecessaryConsents).isEmpty();
     }
 
     @Test
@@ -52,10 +53,11 @@ public class GetAccountsResponseTest {
         getAccountsResponse.setLinks(linksEntityMock);
 
         // when
-        final boolean response = getAccountsResponse.areConsentsNecessary();
+        List<AccountIdEntity> listOfNecessaryConsents =
+                getAccountsResponse.getAccountsListForNecessaryConsents();
 
         // then
-        assertThat(response).isFalse();
+        assertThat(listOfNecessaryConsents).isEmpty();
     }
 
     @Test
@@ -70,9 +72,10 @@ public class GetAccountsResponseTest {
         getAccountsResponse.setAccounts(Collections.singletonList(accountEntityMock));
 
         // when
-        final boolean response = getAccountsResponse.areConsentsNecessary();
+        List<AccountIdEntity> listOfNecessaryConsents =
+                getAccountsResponse.getAccountsListForNecessaryConsents();
 
         // then
-        assertThat(response).isTrue();
+        assertThat(listOfNecessaryConsents).isNotEmpty();
     }
 }

@@ -86,7 +86,8 @@ public class CreditAgricoleBaseTransactionalAccountFetcherTest {
                         CreditAgricoleBaseTransactionalAccountFetcherTestData
                                 .ACCOUNT_WITHOUT_TRANSACTIONS_LINK);
         Collection<TransactionalAccount> transactionalAccounts = accountsResponse.toTinkAccounts();
-        List<AccountIdEntity> necessaryConsents = accountsResponse.getListOfNecessaryConsents();
+        List<AccountIdEntity> necessaryConsents =
+                accountsResponse.getAccountsListForNecessaryConsents();
 
         when(apiClient.getAccounts()).thenReturn(accountsResponse);
         doNothing().when(apiClient).putConsents(necessaryConsents);
@@ -109,7 +110,8 @@ public class CreditAgricoleBaseTransactionalAccountFetcherTest {
                         CreditAgricoleBaseTransactionalAccountFetcherTestData
                                 .ACCOUNTS_WITHOUT_IDENTITY_LINK);
         Collection<TransactionalAccount> transactionalAccounts = accountsResponse.toTinkAccounts();
-        List<AccountIdEntity> necessaryConsents = accountsResponse.getListOfNecessaryConsents();
+        List<AccountIdEntity> necessaryConsents =
+                accountsResponse.getAccountsListForNecessaryConsents();
 
         when(apiClient.getAccounts()).thenReturn(accountsResponse);
         doNothing().when(apiClient).putConsents(necessaryConsents);
@@ -132,7 +134,8 @@ public class CreditAgricoleBaseTransactionalAccountFetcherTest {
                         CreditAgricoleBaseTransactionalAccountFetcherTestData
                                 .ACCOUNTS_WITHOUT_LINKS);
         Collection<TransactionalAccount> transactionalAccounts = accountsResponse.toTinkAccounts();
-        List<AccountIdEntity> necessaryConsents = accountsResponse.getListOfNecessaryConsents();
+        List<AccountIdEntity> necessaryConsents =
+                accountsResponse.getAccountsListForNecessaryConsents();
 
         when(apiClient.getAccounts()).thenReturn(accountsResponse);
         doNothing().when(apiClient).putConsents(necessaryConsents);
