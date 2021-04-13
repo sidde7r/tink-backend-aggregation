@@ -63,7 +63,12 @@ import se.tink.libraries.date.CountryDateHelper;
     TRANSFERS,
     CREDIT_CARDS
 })
-@AgentPisCapability(capabilities = PisCapability.PIS_SEPA)
+@AgentPisCapability(
+        capabilities = {
+            PisCapability.PIS_SEPA_ICT,
+            PisCapability.PIS_SEPA,
+            PisCapability.PIS_FUTURE_DATE,
+        })
 public final class SocieteGeneraleAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor,
