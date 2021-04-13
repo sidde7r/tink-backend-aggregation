@@ -1,0 +1,46 @@
+REQUEST 1
+POST https://site1.sibsapimarket.com/sibs/apimarket/CGDPT/v1-0-2/payments/sepa-credit-transfers?tppRedirectPreferred=true
+Accept: application/json
+Content-Type: application/json
+
+{
+    "chargeBearer": "SHAR",
+    "creditorAccount": {
+        "iban": "PT50001800034278472802055"
+    },
+    "creditorName": "Payment Initiation",
+    "instructedAmount": {
+        "content": "1.00",
+        "currency": "EUR"
+    },
+    "remittanceInformationUnstructured": "PT Demo"
+}
+
+RESPONSE 1
+201
+Date: Fri, 09 Apr 2021 09:44:26 GMT
+Date: Fri, 09 Apr 2021 09:44:33 GMT
+Content-Type: application/json
+
+{
+    "_links": {
+        "redirect": "https://app.cgd.pt/cdoOBA/login.seam?ref=3fec518c2662f645c8b9bb8cf32762a5cb"
+    },
+    "paymentId": "0fb3c1e5a1524e4ebcb5194d7d3d7a80",
+    "psuMessage": "                                                  ",
+    "transactionFeeIndicator": false,
+    "transactionStatus": "RCVD"
+}
+
+REQUEST 2
+GET https://site1.sibsapimarket.com/sibs/apimarket/CGDPT/v1-0-2/payments/sepa-credit-transfers/0fb3c1e5a1524e4ebcb5194d7d3d7a80/status
+
+RESPONSE 2
+200
+Date: Fri, 09 Apr 2021 09:46:15 GMT
+Date: Fri, 09 Apr 2021 09:46:16 GMT
+Content-Type: application/json
+
+{
+    "transactionStatus": "ACSC"
+}
