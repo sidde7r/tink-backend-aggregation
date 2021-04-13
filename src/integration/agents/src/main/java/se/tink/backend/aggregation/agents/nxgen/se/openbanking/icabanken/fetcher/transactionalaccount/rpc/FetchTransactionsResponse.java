@@ -7,8 +7,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.fetcher.transactionalaccount.entity.transaction.AccountEntity;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.fetcher.transactionalaccount.entity.transaction.BookedEntity;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.fetcher.transactionalaccount.entity.transaction.PendingEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.fetcher.transactionalaccount.entity.transaction.TransactionsEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
@@ -34,32 +32,14 @@ public class FetchTransactionsResponse implements PaginatorResponse {
     private List<Transaction> getBookedTransactions() {
         return Optional.ofNullable(transactions.getBooked()).orElse(Collections.emptyList())
                 .stream()
-                .map(this::toTinkTransaction)
+                .map(transactionEntity -> transactionEntity.toTinkTransaction(false))
                 .collect(Collectors.toList());
     }
 
     private List<Transaction> getPendingTransactions() {
         return Optional.ofNullable(transactions.getPending()).orElse(Collections.emptyList())
                 .stream()
-                .map(this::toTinkTransaction)
+                .map(transactionEntity -> transactionEntity.toTinkTransaction(true))
                 .collect(Collectors.toList());
-    }
-
-    private Transaction toTinkTransaction(BookedEntity transaction) {
-        return Transaction.builder()
-                .setPending(false)
-                .setDate(transaction.getBookingDate())
-                .setAmount(transaction.getTransactionAmount().toAmount())
-                .setDescription(transaction.getTransactionText())
-                .build();
-    }
-
-    private Transaction toTinkTransaction(PendingEntity transaction) {
-        return Transaction.builder()
-                .setPending(true)
-                .setDate(transaction.getBookingDate())
-                .setAmount(transaction.getTransactionAmount().toAmount())
-                .setDescription(transaction.getTransactionText())
-                .build();
     }
 }
