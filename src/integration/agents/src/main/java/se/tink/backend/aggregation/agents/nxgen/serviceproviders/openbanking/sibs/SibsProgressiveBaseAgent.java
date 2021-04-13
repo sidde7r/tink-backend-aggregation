@@ -24,7 +24,7 @@ import se.tink.backend.aggregation.agents.progressive.ProgressiveAuthAgent;
 import se.tink.backend.aggregation.agents.utils.transfer.InferredTransferDestinations;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
-import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
+import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentProgressiveGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.StatelessProgressiveAuthenticator;
@@ -53,7 +53,8 @@ public abstract class SibsProgressiveBaseAgent extends SubsequentProgressiveGene
 
     public SibsProgressiveBaseAgent(
             AgentComponentProvider agentComponentProvider,
-            AgentsServiceConfiguration agentsServiceConfiguration) {
+            AgentsServiceConfiguration agentsServiceConfiguration,
+            QsealcSigner qsealcSigner) {
         super(agentComponentProvider);
         userState = new SibsUserState(persistentStorage);
         setConfiguration(agentsServiceConfiguration);
@@ -64,16 +65,13 @@ public abstract class SibsProgressiveBaseAgent extends SubsequentProgressiveGene
                         request.getProvider().getPayload(),
                         request.isManual(),
                         userIp);
+
         final AgentConfiguration<SibsConfiguration> agentConfiguration = getAgentConfiguration();
         final SibsConfiguration sibsConfiguration =
                 agentConfiguration.getProviderSpecificConfiguration();
         apiClient.setConfiguration(agentConfiguration);
         client.setMessageSignInterceptor(
-                new SibsMessageSignInterceptor(
-                        sibsConfiguration,
-                        configuration.getEidasProxy(),
-                        new EidasIdentity(
-                                context.getClusterId(), context.getAppId(), this.getAgentClass())));
+                new SibsMessageSignInterceptor(sibsConfiguration, qsealcSigner));
         applyFilters(client);
 
         client.setEidasProxy(configuration.getEidasProxy());
