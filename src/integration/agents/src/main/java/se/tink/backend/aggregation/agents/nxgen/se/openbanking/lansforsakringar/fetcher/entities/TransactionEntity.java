@@ -1,56 +1,36 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.fetcher.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import java.util.Date;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import java.time.LocalDate;
+import lombok.Getter;
+import se.tink.backend.aggregation.agents.models.TransactionExternalSystemIdType;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction.Builder;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
+import se.tink.backend.aggregation.nxgen.core.transaction.TransactionDates;
+import se.tink.backend.aggregation.utils.json.deserializers.LocalDateDeserializer;
+import se.tink.libraries.chrono.AvailableDateInformation;
 
 @JsonObject
+@Getter
 public class TransactionEntity {
 
-    private String bookingDate;
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    private LocalDate bookingDate;
+
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    private LocalDate transactionDate;
+
     private DebtorAccountEntity debtorAccount;
     private String entryReference;
     private String remittanceInformationUnstructured;
     private BalanceAmountEntity transactionAmount;
-    private Date transactionDate;
     private String merchantName;
     private String text;
 
-    public String getRemittanceInformationUnstructured() {
-        return remittanceInformationUnstructured;
-    }
-
-    public BalanceAmountEntity getTransactionAmount() {
-        return transactionAmount;
-    }
-
-    public Date getTransactionDate() {
-        return transactionDate;
-    }
-
-    public String getMerchantName() {
-        return merchantName;
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    public String getBookingDate() {
-        return bookingDate;
-    }
-
-    public DebtorAccountEntity getDebtorAccount() {
-        return debtorAccount;
-    }
-
-    public String getEntryReference() {
-        return entryReference;
-    }
-
     @JsonIgnore
-    private String getDescription() {
+    private String getTinkDescription() {
         if (remittanceInformationUnstructured != null) {
             return remittanceInformationUnstructured;
         }
@@ -59,12 +39,32 @@ public class TransactionEntity {
 
     @JsonIgnore
     public Transaction toTinkTransaction(boolean pending) {
-        return Transaction.builder()
-                .setAmount(transactionAmount.getAmount())
-                .setDate(transactionDate)
-                .setDescription(getDescription())
-                .setPending(pending)
-                .build();
+        Builder builder =
+                Transaction.builder()
+                        .setAmount(transactionAmount.getAmount())
+                        .setDate(transactionDate)
+                        .setDescription(getTinkDescription())
+                        .setPending(pending)
+                        .setTransactionDates(getTinkTransactionDates(pending))
+                        .addExternalSystemIds(
+                                TransactionExternalSystemIdType.PROVIDER_GIVEN_TRANSACTION_ID,
+                                entryReference)
+                        .setProprietaryFinancialInstitutionType(text)
+                        .setMerchantName(merchantName);
+
+        return (Transaction) builder.build();
+    }
+
+    private TransactionDates getTinkTransactionDates(boolean pending) {
+        TransactionDates.Builder builder = TransactionDates.builder();
+
+        builder.setValueDate(new AvailableDateInformation().setDate(transactionDate));
+
+        if (!pending) {
+            builder.setBookingDate(new AvailableDateInformation().setDate(bookingDate));
+        }
+
+        return builder.build();
     }
 
     @JsonIgnore

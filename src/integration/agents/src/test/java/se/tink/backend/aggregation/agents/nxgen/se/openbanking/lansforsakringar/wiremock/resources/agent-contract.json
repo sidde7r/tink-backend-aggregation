@@ -96,8 +96,23 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "316465105-25"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-07-10",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-07-10",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "text"
   }, {
     "amount" : -1.0,
     "date" : 1589191200000,
@@ -109,8 +124,23 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "282050285-25"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-05-11",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-05-11",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "text"
   }, {
     "amount" : 5.0,
     "date" : 1588672800000,
@@ -122,8 +152,23 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "280158899-25"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-05-05",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-05-05",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "text"
   }, {
     "amount" : -2380.08,
     "date" : 1588586400000,
@@ -135,8 +180,23 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "279399909-25"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-05-04",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-05-04",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "text"
   }, {
     "amount" : 1864.0,
     "date" : 1586253600000,
@@ -148,8 +208,23 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "264350632-25"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-04-07",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-04-07",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "text"
   }, {
     "amount" : -1740.0,
     "date" : 1584615600000,
@@ -161,8 +236,23 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "252726722-25"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-03-19",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-03-19",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "text"
   }, {
     "amount" : 1.0,
     "date" : 1584442800000,
@@ -174,8 +264,23 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "249160343-25"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-03-17",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-03-17",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "text"
   }, {
     "amount" : -1000.0,
     "date" : 1584183600000,
@@ -187,8 +292,23 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "250556244-25"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-03-14",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-03-14",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "text"
   }, {
     "amount" : 3.0,
     "date" : 1584010800000,
@@ -200,8 +320,23 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "249856689-25"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-03-12",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-03-12",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "text"
   }, {
     "amount" : -4250.0,
     "date" : 1583838000000,
@@ -213,8 +348,23 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "249158245-25"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-03-10",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-03-10",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "text"
   }, {
     "amount" : 4108.08,
     "date" : 1583838000000,
@@ -226,8 +376,23 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "249156629-25"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-03-10",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-03-10",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "text"
   }, {
     "amount" : 1.0,
     "date" : 1583838000000,
@@ -239,8 +404,23 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "249155498-25"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-03-10",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-03-10",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "text"
   }, {
     "amount" : -1303.0,
     "date" : 1583319600000,
@@ -252,8 +432,23 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "247162912-25"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-03-04",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-03-04",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "text"
   }, {
     "amount" : -15899.0,
     "date" : 1583146800000,
@@ -265,8 +460,23 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "246505590-25"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-03-02",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-03-02",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "text"
   }, {
     "amount" : -5405.0,
     "date" : 1582801200000,
@@ -278,8 +488,23 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "242330892-25"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-02-27",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-02-27",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "text"
   }, {
     "amount" : -7500.0,
     "date" : 1582628400000,
@@ -291,8 +516,23 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "239900924-25"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-02-25",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-02-25",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "text"
   }, {
     "amount" : -56000.0,
     "date" : 1582023600000,
@@ -304,8 +544,23 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "236010407-25"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-02-18",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-02-18",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "text"
   }, {
     "amount" : -1.0,
     "date" : 1581418800000,
@@ -317,8 +572,23 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "233388744-25"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-02-11",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-02-11",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "text"
   }, {
     "amount" : -1.0,
     "date" : 1581418800000,
@@ -330,8 +600,23 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "233386285-25"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-02-11",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-02-11",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "text"
   }, {
     "amount" : -1.0,
     "date" : 1581418800000,
@@ -343,8 +628,23 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "233385502-25"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-02-11",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-02-11",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "text"
   }, {
     "amount" : -1.0,
     "date" : 1581332400000,
@@ -356,8 +656,23 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "233051784-25"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-02-10",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-02-10",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "text"
   }, {
     "amount" : -29000.0,
     "date" : 1580986800000,
@@ -369,8 +684,23 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "231775523-25"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-02-06",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-02-06",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "text"
   }, {
     "amount" : -6500.0,
     "date" : 1580554800000,
@@ -382,8 +712,23 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "229565308-25"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-02-01",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-02-01",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "text"
   }, {
     "amount" : 125000.0,
     "date" : 1580122800000,
@@ -395,8 +740,23 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "226064420-25"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-01-27",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-01-27",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "text"
   }, {
     "amount" : 1.0,
     "date" : 1579086000000,
@@ -408,8 +768,23 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "218383492-25"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-01-15",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-01-15",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "text"
   }, {
     "amount" : 1.0,
     "date" : 1576839600000,
@@ -421,8 +796,23 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "205509124-25"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2019-12-20",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2019-12-20",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "text"
   }, {
     "amount" : 1.0,
     "date" : 1576839600000,
@@ -434,8 +824,23 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "205406930-25"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2019-12-20",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2019-12-20",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "text"
   }, {
     "amount" : -5.0,
     "date" : 1573210800000,
@@ -447,8 +852,23 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "182984221-25"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2019-11-08",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2019-11-08",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "text"
   }, {
     "amount" : 5.0,
     "date" : 1573038000000,
@@ -460,8 +880,23 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "182185888-25"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2019-11-06",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2019-11-06",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "text"
   }, {
     "amount" : -1.0,
     "date" : 1572951600000,
@@ -473,8 +908,23 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "181877494-25"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2019-11-05",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2019-11-05",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "text"
   }, {
     "amount" : 1.0,
     "date" : 1594375200000,
@@ -486,8 +936,23 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "316465105-25"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-07-10",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-07-10",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "text"
   }, {
     "amount" : -1.0,
     "date" : 1589191200000,
@@ -499,8 +964,23 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "282050285-25"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-05-11",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-05-11",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "text"
   }, {
     "amount" : 5.0,
     "date" : 1588672800000,
@@ -512,8 +992,23 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "280158899-25"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-05-05",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-05-05",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "text"
   }, {
     "amount" : -2380.08,
     "date" : 1588586400000,
@@ -525,8 +1020,23 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "279399909-25"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-05-04",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-05-04",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "text"
   }, {
     "amount" : 1864.0,
     "date" : 1586253600000,
@@ -538,8 +1048,23 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "264350632-25"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-04-07",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-04-07",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "text"
   }, {
     "amount" : -1740.0,
     "date" : 1584615600000,
@@ -551,8 +1076,23 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "252726722-25"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-03-19",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-03-19",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "text"
   }, {
     "amount" : 1.0,
     "date" : 1584442800000,
@@ -564,8 +1104,23 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "249160343-25"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-03-17",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-03-17",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "text"
   }, {
     "amount" : -1000.0,
     "date" : 1584183600000,
@@ -577,8 +1132,23 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "250556244-25"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-03-14",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-03-14",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "text"
   }, {
     "amount" : 3.0,
     "date" : 1584010800000,
@@ -590,8 +1160,23 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "249856689-25"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-03-12",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-03-12",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "text"
   }, {
     "amount" : -4250.0,
     "date" : 1583838000000,
@@ -603,8 +1188,23 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "249158245-25"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-03-10",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-03-10",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "text"
   }, {
     "amount" : 4108.08,
     "date" : 1583838000000,
@@ -616,8 +1216,23 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "249156629-25"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-03-10",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-03-10",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "text"
   }, {
     "amount" : 1.0,
     "date" : 1583838000000,
@@ -629,8 +1244,23 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "249155498-25"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-03-10",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-03-10",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "text"
   }, {
     "amount" : -1303.0,
     "date" : 1583319600000,
@@ -642,8 +1272,23 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "247162912-25"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-03-04",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-03-04",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "text"
   }, {
     "amount" : -15899.0,
     "date" : 1583146800000,
@@ -655,8 +1300,23 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "246505590-25"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-03-02",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-03-02",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "text"
   }, {
     "amount" : -5405.0,
     "date" : 1582801200000,
@@ -668,8 +1328,23 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "242330892-25"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-02-27",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-02-27",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "text"
   }, {
     "amount" : -7500.0,
     "date" : 1582628400000,
@@ -681,8 +1356,23 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "239900924-25"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-02-25",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-02-25",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "text"
   }, {
     "amount" : -56000.0,
     "date" : 1582023600000,
@@ -694,8 +1384,23 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "236010407-25"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-02-18",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-02-18",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "text"
   }, {
     "amount" : -1.0,
     "date" : 1581418800000,
@@ -707,8 +1412,23 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "233388744-25"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-02-11",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-02-11",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "text"
   }, {
     "amount" : -1.0,
     "date" : 1581418800000,
@@ -720,8 +1440,23 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "233386285-25"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-02-11",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-02-11",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "text"
   }, {
     "amount" : -1.0,
     "date" : 1581418800000,
@@ -733,8 +1468,23 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "233385502-25"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-02-11",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-02-11",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "text"
   }, {
     "amount" : -1.0,
     "date" : 1581332400000,
@@ -746,8 +1496,23 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "233051784-25"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-02-10",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-02-10",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "text"
   }, {
     "amount" : -29000.0,
     "date" : 1580986800000,
@@ -759,8 +1524,23 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "231775523-25"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-02-06",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-02-06",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "text"
   }, {
     "amount" : -6500.0,
     "date" : 1580554800000,
@@ -772,8 +1552,23 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "229565308-25"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-02-01",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-02-01",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "text"
   }, {
     "amount" : 125000.0,
     "date" : 1580122800000,
@@ -785,8 +1580,23 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "226064420-25"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-01-27",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-01-27",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "text"
   }, {
     "amount" : 1.0,
     "date" : 1579086000000,
@@ -798,8 +1608,23 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "218383492-25"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-01-15",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-01-15",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "text"
   }, {
     "amount" : 1.0,
     "date" : 1576839600000,
@@ -811,8 +1636,23 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "205509124-25"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2019-12-20",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2019-12-20",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "text"
   }, {
     "amount" : 1.0,
     "date" : 1576839600000,
@@ -824,8 +1664,23 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "205406930-25"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2019-12-20",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2019-12-20",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "text"
   }, {
     "amount" : -5.0,
     "date" : 1573210800000,
@@ -837,8 +1692,23 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "182984221-25"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2019-11-08",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2019-11-08",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "text"
   }, {
     "amount" : 5.0,
     "date" : 1573038000000,
@@ -850,8 +1720,23 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "182185888-25"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2019-11-06",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2019-11-06",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "text"
   }, {
     "amount" : -1.0,
     "date" : 1572951600000,
@@ -863,8 +1748,23 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "181877494-25"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2019-11-05",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2019-11-05",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "text"
   }, {
     "amount" : -220.0,
     "date" : 1594461600000,
@@ -876,8 +1776,24 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "2019501730151122"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-07-11",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : null,
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Köp",
+    "merchantName" : "merchantName"
   }, {
     "amount" : -104.13,
     "date" : 1594375200000,
@@ -889,8 +1805,24 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "2019501730151121"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-07-10",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : null,
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Köp",
+    "merchantName" : "merchantName"
   }, {
     "amount" : -49.0,
     "date" : 1594288800000,
@@ -902,8 +1834,24 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "2019201730110244"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-07-09",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : null,
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Köp",
+    "merchantName" : "merchantName"
   }, {
     "amount" : -3995.0,
     "date" : 1594202400000,
@@ -915,8 +1863,24 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "2019101730064587"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-07-08",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : null,
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Köp",
+    "merchantName" : "merchantName"
   }, {
     "amount" : -129.0,
     "date" : 1594116000000,
@@ -928,8 +1892,24 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "2019001730062791"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-07-07",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : null,
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Köp",
+    "merchantName" : "merchantName"
   }, {
     "amount" : -110.0,
     "date" : 1594116000000,
@@ -941,8 +1921,24 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "2019001730062790"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-07-07",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : null,
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Köp",
+    "merchantName" : "merchantName"
   }, {
     "amount" : -109.0,
     "date" : 1594116000000,
@@ -954,8 +1950,24 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "2019001730062789"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-07-07",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : null,
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Köp",
+    "merchantName" : "merchantName"
   }, {
     "amount" : -175.0,
     "date" : 1593943200000,
@@ -967,8 +1979,24 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "2018801730162603"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-07-05",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : null,
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Köp",
+    "merchantName" : "merchantName"
   }, {
     "amount" : -49.0,
     "date" : 1593943200000,
@@ -980,8 +2008,24 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "2018801730162602"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-07-05",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : null,
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Köp",
+    "merchantName" : "merchantName"
   }, {
     "amount" : -521.6,
     "date" : 1593856800000,
@@ -993,8 +2037,24 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "2018801730162601"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-07-04",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : null,
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Köp",
+    "merchantName" : "merchantName"
   }, {
     "amount" : -274.0,
     "date" : 1593856800000,
@@ -1006,8 +2066,24 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "2018801730162600"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-07-04",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : null,
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Köp",
+    "merchantName" : "merchantName"
   }, {
     "amount" : -138.4,
     "date" : 1593770400000,
@@ -1019,8 +2095,24 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "2018801730162599"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-07-03",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : null,
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Köp",
+    "merchantName" : "merchantName"
   }, {
     "amount" : -85.0,
     "date" : 1593770400000,
@@ -1032,8 +2124,24 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "2018801730162598"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-07-03",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : null,
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Köp",
+    "merchantName" : "merchantName"
   }, {
     "amount" : -11849.0,
     "date" : 1593684000000,
@@ -1045,8 +2153,24 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "2018901730077617"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-07-02",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : null,
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Köp",
+    "merchantName" : "merchantName"
   }, {
     "amount" : -115.24,
     "date" : 1593684000000,
@@ -1058,8 +2182,24 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "2018501730087481"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-07-02",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : null,
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Köp",
+    "merchantName" : "merchantName"
   }, {
     "amount" : -90.0,
     "date" : 1593684000000,
@@ -1071,8 +2211,24 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "2018501730087480"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-07-02",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : null,
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Köp",
+    "merchantName" : "merchantName"
   }, {
     "amount" : -184.51,
     "date" : 1593597600000,
@@ -1084,8 +2240,24 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "2018401730054632"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-07-01",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : null,
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Köp",
+    "merchantName" : "merchantName"
   }, {
     "amount" : -45.98,
     "date" : 1593424800000,
@@ -1097,8 +2269,24 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "2018201730127951"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-06-29",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : null,
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Köp",
+    "merchantName" : "merchantName"
   }, {
     "amount" : -29.0,
     "date" : 1592992800000,
@@ -1110,8 +2298,24 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "2017701730103206"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-06-24",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : null,
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Köp",
+    "merchantName" : "merchantName"
   }, {
     "amount" : -948.0,
     "date" : 1592733600000,
@@ -1123,8 +2327,24 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "2017401730150718"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-06-21",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : null,
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Köp",
+    "merchantName" : "merchantName"
   }, {
     "amount" : -597.0,
     "date" : 1592733600000,
@@ -1136,8 +2356,24 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "2017401730150717"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-06-21",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : null,
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Köp",
+    "merchantName" : "merchantName"
   }, {
     "amount" : -525.0,
     "date" : 1592733600000,
@@ -1149,8 +2385,24 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "2017401730150716"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-06-21",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : null,
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Köp",
+    "merchantName" : "merchantName"
   }, {
     "amount" : -149.0,
     "date" : 1592733600000,
@@ -1162,8 +2414,24 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "2017401730150715"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-06-21",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : null,
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Köp",
+    "merchantName" : "merchantName"
   }, {
     "amount" : -139.0,
     "date" : 1592733600000,
@@ -1175,8 +2443,24 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "2017401730150714"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-06-21",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : null,
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Köp",
+    "merchantName" : "merchantName"
   }, {
     "amount" : -129.81,
     "date" : 1592733600000,
@@ -1188,8 +2472,24 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "2017401730150713"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-06-21",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : null,
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Köp",
+    "merchantName" : "merchantName"
   }, {
     "amount" : -120.0,
     "date" : 1592733600000,
@@ -1201,8 +2501,24 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "2017401730150712"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-06-21",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : null,
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Köp",
+    "merchantName" : "merchantName"
   }, {
     "amount" : -111.0,
     "date" : 1592733600000,
@@ -1214,8 +2530,24 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "2017401730150711"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-06-21",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : null,
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Köp",
+    "merchantName" : "merchantName"
   }, {
     "amount" : -65.43,
     "date" : 1592733600000,
@@ -1227,8 +2559,24 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "2017401730150710"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-06-21",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : null,
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Köp",
+    "merchantName" : "merchantName"
   }, {
     "amount" : -37.0,
     "date" : 1592733600000,
@@ -1240,8 +2588,24 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "2017401730150709"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-06-21",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : null,
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Köp",
+    "merchantName" : "merchantName"
   }, {
     "amount" : -37.0,
     "date" : 1592733600000,
@@ -1253,8 +2617,24 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "2017401730150708"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-06-21",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : null,
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Köp",
+    "merchantName" : "merchantName"
   }, {
     "amount" : -220.0,
     "date" : 1594461600000,
@@ -1266,8 +2646,24 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "2019501730151122"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-07-11",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : null,
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Köp",
+    "merchantName" : "merchantName"
   }, {
     "amount" : -104.13,
     "date" : 1594375200000,
@@ -1279,8 +2675,24 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "2019501730151121"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-07-10",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : null,
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Köp",
+    "merchantName" : "merchantName"
   }, {
     "amount" : -49.0,
     "date" : 1594288800000,
@@ -1292,8 +2704,24 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "2019201730110244"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-07-09",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : null,
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Köp",
+    "merchantName" : "merchantName"
   }, {
     "amount" : -3995.0,
     "date" : 1594202400000,
@@ -1305,8 +2733,24 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "2019101730064587"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-07-08",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : null,
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Köp",
+    "merchantName" : "merchantName"
   }, {
     "amount" : -129.0,
     "date" : 1594116000000,
@@ -1318,8 +2762,24 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "2019001730062791"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-07-07",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : null,
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Köp",
+    "merchantName" : "merchantName"
   }, {
     "amount" : -110.0,
     "date" : 1594116000000,
@@ -1331,8 +2791,24 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "2019001730062790"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-07-07",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : null,
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Köp",
+    "merchantName" : "merchantName"
   }, {
     "amount" : -109.0,
     "date" : 1594116000000,
@@ -1344,8 +2820,24 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "2019001730062789"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-07-07",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : null,
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Köp",
+    "merchantName" : "merchantName"
   }, {
     "amount" : -175.0,
     "date" : 1593943200000,
@@ -1357,8 +2849,24 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "2018801730162603"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-07-05",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : null,
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Köp",
+    "merchantName" : "merchantName"
   }, {
     "amount" : -49.0,
     "date" : 1593943200000,
@@ -1370,8 +2878,24 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "2018801730162602"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-07-05",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : null,
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Köp",
+    "merchantName" : "merchantName"
   }, {
     "amount" : -521.6,
     "date" : 1593856800000,
@@ -1383,8 +2907,24 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "2018801730162601"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-07-04",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : null,
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Köp",
+    "merchantName" : "merchantName"
   }, {
     "amount" : -274.0,
     "date" : 1593856800000,
@@ -1396,8 +2936,24 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "2018801730162600"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-07-04",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : null,
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Köp",
+    "merchantName" : "merchantName"
   }, {
     "amount" : -138.4,
     "date" : 1593770400000,
@@ -1409,8 +2965,24 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "2018801730162599"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-07-03",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : null,
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Köp",
+    "merchantName" : "merchantName"
   }, {
     "amount" : -85.0,
     "date" : 1593770400000,
@@ -1422,8 +2994,24 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "2018801730162598"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-07-03",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : null,
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Köp",
+    "merchantName" : "merchantName"
   }, {
     "amount" : -11849.0,
     "date" : 1593684000000,
@@ -1435,8 +3023,24 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "2018901730077617"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-07-02",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : null,
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Köp",
+    "merchantName" : "merchantName"
   }, {
     "amount" : -115.24,
     "date" : 1593684000000,
@@ -1448,8 +3052,24 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "2018501730087481"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-07-02",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : null,
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Köp",
+    "merchantName" : "merchantName"
   }, {
     "amount" : -90.0,
     "date" : 1593684000000,
@@ -1461,8 +3081,24 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "2018501730087480"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-07-02",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : null,
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Köp",
+    "merchantName" : "merchantName"
   }, {
     "amount" : -184.51,
     "date" : 1593597600000,
@@ -1474,8 +3110,24 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "2018401730054632"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-07-01",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : null,
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Köp",
+    "merchantName" : "merchantName"
   }, {
     "amount" : -45.98,
     "date" : 1593424800000,
@@ -1487,8 +3139,24 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "2018201730127951"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-06-29",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : null,
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Köp",
+    "merchantName" : "merchantName"
   }, {
     "amount" : -29.0,
     "date" : 1592992800000,
@@ -1500,8 +3168,24 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "2017701730103206"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-06-24",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : null,
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Köp",
+    "merchantName" : "merchantName"
   }, {
     "amount" : -948.0,
     "date" : 1592733600000,
@@ -1513,8 +3197,24 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "2017401730150718"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-06-21",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : null,
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Köp",
+    "merchantName" : "merchantName"
   }, {
     "amount" : -597.0,
     "date" : 1592733600000,
@@ -1526,8 +3226,24 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "2017401730150717"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-06-21",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : null,
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Köp",
+    "merchantName" : "merchantName"
   }, {
     "amount" : -525.0,
     "date" : 1592733600000,
@@ -1539,8 +3255,24 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "2017401730150716"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-06-21",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : null,
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Köp",
+    "merchantName" : "merchantName"
   }, {
     "amount" : -149.0,
     "date" : 1592733600000,
@@ -1552,8 +3284,24 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "2017401730150715"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-06-21",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : null,
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Köp",
+    "merchantName" : "merchantName"
   }, {
     "amount" : -139.0,
     "date" : 1592733600000,
@@ -1565,8 +3313,24 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "2017401730150714"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-06-21",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : null,
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Köp",
+    "merchantName" : "merchantName"
   }, {
     "amount" : -129.81,
     "date" : 1592733600000,
@@ -1578,8 +3342,24 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "2017401730150713"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-06-21",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : null,
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Köp",
+    "merchantName" : "merchantName"
   }, {
     "amount" : -120.0,
     "date" : 1592733600000,
@@ -1591,8 +3371,24 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "2017401730150712"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-06-21",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : null,
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Köp",
+    "merchantName" : "merchantName"
   }, {
     "amount" : -111.0,
     "date" : 1592733600000,
@@ -1604,8 +3400,24 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "2017401730150711"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-06-21",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : null,
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Köp",
+    "merchantName" : "merchantName"
   }, {
     "amount" : -65.43,
     "date" : 1592733600000,
@@ -1617,8 +3429,24 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "2017401730150710"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-06-21",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : null,
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Köp",
+    "merchantName" : "merchantName"
   }, {
     "amount" : -37.0,
     "date" : 1592733600000,
@@ -1630,8 +3458,24 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "2017401730150709"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-06-21",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : null,
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Köp",
+    "merchantName" : "merchantName"
   }, {
     "amount" : -37.0,
     "date" : 1592733600000,
@@ -1643,8 +3487,24 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "2017401730150708"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-06-21",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : null,
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "Köp",
+    "merchantName" : "merchantName"
   }, {
     "amount" : -70.0,
     "date" : 1594720800000,
@@ -1656,8 +3516,23 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "283954799-1516"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-07-14",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-07-15",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "text"
   }, {
     "amount" : -529.87,
     "date" : 1594720800000,
@@ -1669,8 +3544,23 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "283862998-1516"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-07-14",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-07-15",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "text"
   }, {
     "amount" : -475.0,
     "date" : 1594548000000,
@@ -1682,8 +3572,23 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "282639720-1516"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-07-12",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-07-14",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "text"
   }, {
     "amount" : -778.0,
     "date" : 1594634400000,
@@ -1695,8 +3600,23 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "35547139-202"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-07-13",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-07-13",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "text"
   }, {
     "amount" : -1.0,
     "date" : 1594375200000,
@@ -1708,8 +3628,23 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "316465105-25"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-07-10",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-07-10",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "text"
   }, {
     "amount" : -3.0,
     "date" : 1594375200000,
@@ -1721,8 +3656,23 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "316459385-25"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-07-10",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-07-10",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "text"
   }, {
     "amount" : -120.0,
     "date" : 1594288800000,
@@ -1734,8 +3684,23 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "316039541-25"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-07-09",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-07-09",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "text"
   }, {
     "amount" : -400.0,
     "date" : 1594029600000,
@@ -1747,8 +3712,23 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "314883623-25"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-07-06",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-07-06",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "text"
   }, {
     "amount" : 7303.0,
     "date" : 1593770400000,
@@ -1760,8 +3740,23 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "314000614-25"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-07-03",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-07-03",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "text"
   }, {
     "amount" : -2174.0,
     "date" : 1593770400000,
@@ -1773,8 +3768,23 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "313904314-25"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-07-03",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-07-03",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "text"
   }, {
     "amount" : -4687.96,
     "date" : 1593770400000,
@@ -1786,8 +3796,23 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "313903333-25"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-07-03",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-07-03",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "text"
   }, {
     "amount" : -191.51,
     "date" : 1593770400000,
@@ -1799,8 +3824,23 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "313497982-25"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-07-03",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-07-03",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "text"
   }, {
     "amount" : -1.0,
     "date" : 1593770400000,
@@ -1812,8 +3852,23 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "313503039-25"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-07-03",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-07-03",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "text"
   }, {
     "amount" : -457.0,
     "date" : 1593684000000,
@@ -1825,8 +3880,23 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "163678901-1625"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-07-02",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-07-02",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "text,ELIAS DANI"
   }, {
     "amount" : -100.0,
     "date" : 1593511200000,
@@ -1838,8 +3908,23 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "275426450-1516"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-06-30",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-07-01",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "text"
   }, {
     "amount" : -3814.0,
     "date" : 1593511200000,
@@ -1851,8 +3936,23 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "34288619-202"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-06-30",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-06-30",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "text"
   }, {
     "amount" : -235.0,
     "date" : 1593511200000,
@@ -1864,8 +3964,23 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "34288618-202"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-06-30",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-06-30",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "text"
   }, {
     "amount" : -151.0,
     "date" : 1593511200000,
@@ -1877,8 +3992,23 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "34288617-202"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-06-30",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-06-30",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "text"
   }, {
     "amount" : -1119.58,
     "date" : 1593511200000,
@@ -1890,8 +4020,23 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "307746004-25"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-06-30",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-06-30",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "text"
   }, {
     "amount" : -350.0,
     "date" : 1593424800000,
@@ -1903,8 +4048,23 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "34114073-202"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-06-29",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-06-29",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "text"
   }, {
     "amount" : -112.0,
     "date" : 1593424800000,
@@ -1916,8 +4076,23 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "34114072-202"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-06-29",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-06-29",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "text"
   }, {
     "amount" : -12312.0,
     "date" : 1593165600000,
@@ -1929,8 +4104,23 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "308426324-25"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-06-26",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-06-26",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "text"
   }, {
     "amount" : 4200.0,
     "date" : 1593165600000,
@@ -1942,8 +4132,23 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "162271556-1625"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-06-26",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-06-26",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "text"
   }, {
     "amount" : -4500.0,
     "date" : 1593165600000,
@@ -1955,8 +4160,23 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "307745965-25"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-06-26",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-06-26",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "text"
   }, {
     "amount" : -109.0,
     "date" : 1593165600000,
@@ -1968,8 +4188,23 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "33376740-202"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-06-26",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-06-26",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "text"
   }, {
     "amount" : 26867.0,
     "date" : 1592992800000,
@@ -1981,8 +4216,23 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "305557658-25"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-06-24",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-06-24",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "text"
   }, {
     "amount" : -160.95,
     "date" : 1592474400000,
@@ -1994,8 +4244,23 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "268820312-1516"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-06-18",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-06-19",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "text"
   }, {
     "amount" : 150.0,
     "date" : 1592128800000,
@@ -2007,8 +4272,23 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "159665403-1625"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-06-14",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-06-14",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "text"
   }, {
     "amount" : -4250.0,
     "date" : 1591956000000,
@@ -2020,8 +4300,23 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "159379451-1625"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-06-12",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-06-12",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "text,JENS"
   }, {
     "amount" : 2000.0,
     "date" : 1591956000000,
@@ -2033,8 +4328,23 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "159378442-1625"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-06-12",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-06-12",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "text,CHRISTOFF"
   }, {
     "amount" : -70.0,
     "date" : 1594720800000,
@@ -2046,8 +4356,17 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "283954799-0000"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-07-14",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "text"
   }, {
     "amount" : -529.87,
     "date" : 1594720800000,
@@ -2059,8 +4378,17 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "283862998-0000"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-07-14",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "text"
   }, {
     "amount" : -475.0,
     "date" : 1594548000000,
@@ -2072,8 +4400,17 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "282639720-0000"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-07-12",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "text"
   }, {
     "amount" : -778.0,
     "date" : 1594634400000,
@@ -2085,7 +4422,16 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false,
-    "externalSystemIds" : { },
-    "transactionDates" : [ ]
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "35547139-000"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-07-13",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "text"
   } ]
 }
