@@ -14,4 +14,9 @@ public class UkOpenBankingPisConfiguration implements UkOpenBankingPisConfig {
         this.baseUrl = pisBaseUrl;
         this.wellKnownURL = new URL(wellKnownURL);
     }
+
+    @Override
+    public boolean useMaxAge() {
+        return true;
+    }
 }
