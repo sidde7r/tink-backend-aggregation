@@ -13,6 +13,7 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
+import se.tink.libraries.payments.common.model.PaymentScheme;
 
 public class BnpParibasAgentPaymentTest {
 
@@ -60,6 +61,7 @@ public class BnpParibasAgentPaymentTest {
                         RemittanceInformationUtils.generateUnstructuredRemittanceInformation(
                                 "Message"))
                 .withUniqueId(UUID.randomUUID().toString())
+                .withPaymentScheme(PaymentScheme.SEPA_INSTANT_CREDIT_TRANSFER)
                 .build();
     }
 

@@ -1,0 +1,40 @@
+REQUEST 1
+POST https://api-psd2.bddf.bnpparibas/as/psd2/retail/token
+Content-Type: application/x-www-form-urlencoded
+Accept: application/json
+X-Aggregator : Tink Testing
+
+client_id=DUMMY_ID&grant_type=client_credentials&scope=pisp
+
+RESPONSE 1
+200
+Content-Type: application/json
+
+{"access_token":"DUMMY_ACCESS_TOKEN","token_type":"Bearer","expires_in":900}
+
+REQUEST 2
+POST https://api-psd2.bddf.bnpparibas/psd2/retail/V1.4/payment-requests
+Accept: application/json
+Content-Type: application/json
+X-Aggregator: Tink Testing
+Authorization: Bearer DUMMY_ACCESS_TOKEN
+
+{"numberOfTransactions":1,"initiatingParty":{"name":"TINK"},"paymentTypeInformation":{"serviceLevel":"SEPA", "localInstrument":"INST","categoryPurpose":"CASH"},"debtorAccount":{"iban":"FR1261401750597365134612940"},"beneficiary":{"creditor":{"name":"Payment Creditor"},"creditorAccount":{"iban":"FR1420041010050500013M02606"}},"creditTransferTransaction":[{"remittanceInformation":["test"],"instructedAmount":{"amount":"1.0","currency":"EUR"}}],"chargeBearer":"SLEV","supplementaryData":{"acceptedAuthenticationApproach":["REDIRECT"],"successfulReportUrl":"https://api.tink.com/api/v1/credentials/third-party/callback?state=00000000-0000-4000-0000-000000000000","unsuccessfulReportUrl":"https://api.tink.com/api/v1/credentials/third-party/callback?state=00000000-0000-4000-0000-000000000000"}}
+
+RESPONSE 2
+200
+Content-Type: application/json
+
+{"appliedAuthenticationApproach":"REDIRECT","_links":{"consentApproval":{"href":"https://psd2-retail.bddf.bnpparibas/paiement/client/payer.html?i=paymentId","templated":null}}}
+
+REQUEST 3
+GET https://api-psd2.bddf.bnpparibas/psd2/retail/V1.4/payment-requests/paymentId
+Accept: application/json
+X-Aggregator: Tink Testing
+Authorization: Bearer DUMMY_ACCESS_TOKEN
+
+RESPONSE 3
+200
+Content-Type: application/json
+
+{"paymentRequest":{"paymentTypeInformation":{"serviceLevel":"SEPA", "localInstrument":"INST","categoryPurpose":"CASH"},"debtorAccount":{"iban":"FR1261401750597365134612940"},"beneficiary":{"creditorAccount":{"iban":"FR1420041010050500013M02606"}},"paymentInformationStatus":"ACSP","creditTransferTransaction":[{"instructedAmount":{"currency":"EUR","amount":"1"}}],"chargeBearer":"SLEV","supplementaryData":{"acceptedAuthenticationApproach":["REDIRECT"],"successfulReportUrl":"https://127.0.0.1:7357/api/v1/thirdparty/callback?state=00000000-0000-4000-0000-000000000000","unsuccessfulReportUrl":"https://127.0.0.1:7357/api/v1/thirdparty/callback?state=00000000-0000-4000-0000-000000000000"}}}
