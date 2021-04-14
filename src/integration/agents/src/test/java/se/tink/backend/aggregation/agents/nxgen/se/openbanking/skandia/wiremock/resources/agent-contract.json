@@ -37,8 +37,22 @@
         "timestamp" : 0,
         "type" : "DEFAULT",
         "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "915011111111111@mocked@2021-04-12@2021-04-12-22.47.41.260165"
+        },
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : null,
+                "instant" : "2021-04-11T22:00:00.000Z"
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : null,
+                "instant" : "2021-04-11T22:00:00.000Z"
+            }
+        } ]
     }, {
         "amount" : 350.0,
         "date" : 1617703200000,
@@ -50,8 +64,22 @@
         "timestamp" : 0,
         "type" : "DEFAULT",
         "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "915011111111111@mocked@2021-04-06@2021-04-04-14.22.48.171251"
+        },
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : null,
+                "instant" : "2021-04-04T22:00:00.000Z"
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : null,
+                "instant" : "2021-04-05T22:00:00.000Z"
+            }
+        } ]
     }, {
         "amount" : -99.0,
         "date" : 1617271200000,
@@ -63,7 +91,21 @@
         "timestamp" : 0,
         "type" : "DEFAULT",
         "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "915011111111111@mocked@2021-04-01@2021-04-01-05.36.06.166182"
+        },
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : null,
+                "instant" : "2021-03-31T22:00:00.000Z"
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : null,
+                "instant" : "2021-03-31T22:00:00.000Z"
+            }
+        } ]
     } ]
 }
