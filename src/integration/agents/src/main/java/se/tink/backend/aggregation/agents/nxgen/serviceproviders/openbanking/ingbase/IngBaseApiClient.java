@@ -39,11 +39,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ing
 import se.tink.backend.aggregation.api.Psd2Headers;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agents.utils.CertificateUtils;
-import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
-import se.tink.backend.aggregation.eidassigner.QsealcAlg;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
-import se.tink.backend.aggregation.eidassigner.QsealcSignerImpl;
-import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
 import se.tink.backend.aggregation.nxgen.controllers.utils.ProviderSessionCacheController;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -58,14 +54,13 @@ public class IngBaseApiClient {
     private final TinkHttpClient client;
     private final PersistentStorage persistentStorage;
     private final String market;
-    private EidasIdentity eidasIdentity;
     private String redirectUrl;
-    private EidasProxyConfiguration eidasProxyConfiguration;
     private String hexCertificateSerial;
     private String base64derQsealc;
     private final ProviderSessionCacheController providerSessionCacheController;
     private final boolean isManualAuthentication;
     private MarketConfiguration marketConfiguration;
+    private final QsealcSigner proxySigner;
 
     private static final Logger logger = LoggerFactory.getLogger(IngBaseApiClient.class);
 
@@ -75,23 +70,20 @@ public class IngBaseApiClient {
             String market,
             ProviderSessionCacheController providerSessionCacheController,
             boolean isManualAuthentication,
-            MarketConfiguration marketConfiguration) {
+            MarketConfiguration marketConfiguration,
+            QsealcSigner proxySigner) {
         this.client = client;
         this.persistentStorage = persistentStorage;
         this.market = market;
         this.providerSessionCacheController = providerSessionCacheController;
         this.isManualAuthentication = isManualAuthentication;
         this.marketConfiguration = marketConfiguration;
+        this.proxySigner = proxySigner;
     }
 
-    public void setConfiguration(
-            AgentConfiguration<IngBaseConfiguration> agentConfiguration,
-            EidasProxyConfiguration eidasProxyConfiguration,
-            EidasIdentity eidasIdentity)
+    public void setConfiguration(AgentConfiguration<IngBaseConfiguration> agentConfiguration)
             throws CertificateException {
         this.redirectUrl = agentConfiguration.getRedirectUrl();
-        this.eidasProxyConfiguration = eidasProxyConfiguration;
-        this.eidasIdentity = eidasIdentity;
         this.hexCertificateSerial =
                 CertificateUtils.getSerialNumber(agentConfiguration.getQsealc(), 16);
         this.base64derQsealc =
@@ -375,12 +367,6 @@ public class IngBaseApiClient {
 
         final SignatureEntity signatureEntity =
                 new SignatureEntity(httpMethod, reqPath, date, digest, xIngRequestId);
-
-        QsealcSigner proxySigner =
-                QsealcSignerImpl.build(
-                        eidasProxyConfiguration.toInternalConfig(),
-                        QsealcAlg.EIDAS_RSA_SHA256,
-                        eidasIdentity);
 
         return proxySigner.getSignatureBase64(signatureEntity.toString().getBytes());
     }

@@ -22,7 +22,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ing
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.filters.IngRetryFilter;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
-import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
+import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -53,7 +53,7 @@ public abstract class IngBaseAgent extends NextGenerationAgent
     private AutoAuthenticationController authenticator;
     private final boolean isManualAuthentication;
 
-    public IngBaseAgent(AgentComponentProvider agentComponentProvider) {
+    public IngBaseAgent(AgentComponentProvider agentComponentProvider, QsealcSigner qsealcSigner) {
         super(agentComponentProvider);
         configureHttpClient(client);
         isManualAuthentication = shouldDoManualAuthentication(request);
@@ -69,7 +69,8 @@ public abstract class IngBaseAgent extends NextGenerationAgent
                         marketInUppercase,
                         providerSessionCacheController,
                         isManualAuthentication,
-                        this);
+                        this,
+                        qsealcSigner);
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
     }
 
@@ -94,12 +95,8 @@ public abstract class IngBaseAgent extends NextGenerationAgent
         final AgentConfiguration<IngBaseConfiguration> agentConfiguration =
                 getAgentConfigurationController().getAgentConfiguration(IngBaseConfiguration.class);
 
-        EidasIdentity eidasIdentity =
-                new EidasIdentity(context.getClusterId(), context.getAppId(), this.getAgentClass());
-
         try {
-            apiClient.setConfiguration(
-                    agentConfiguration, configuration.getEidasProxy(), eidasIdentity);
+            apiClient.setConfiguration(agentConfiguration);
         } catch (CertificateException e) {
             throw new IllegalStateException(
                     "Could not parse QSEALC properly while setting up ING agent", e);
