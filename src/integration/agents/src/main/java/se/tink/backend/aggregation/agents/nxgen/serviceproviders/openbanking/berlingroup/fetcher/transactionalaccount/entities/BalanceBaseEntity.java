@@ -13,6 +13,10 @@ public class BalanceBaseEntity implements BalanceMappable {
     private String balanceType;
     private Boolean creditLimitIncluded;
 
+    public BalanceAmountBaseEntity getBalanceAmount() {
+        return balanceAmount;
+    }
+
     public boolean isClosingBooked() {
         return balanceType.equalsIgnoreCase(Accounts.BALANCE_CLOSING_BOOKED)
                 || balanceType.equalsIgnoreCase(Accounts.CLBD);
