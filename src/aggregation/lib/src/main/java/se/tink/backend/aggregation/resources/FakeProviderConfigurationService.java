@@ -47,4 +47,10 @@ public class FakeProviderConfigurationService implements ProviderConfigurationSe
             String clusterName, String clusterEnvironment, String providerName) {
         throw new UnsupportedOperationException("Not implemented");
     }
+
+    @Override
+    public ProviderConfiguration getProviderByNameInClusterIfPossible(
+            String clusterName, String clusterEnvironment, String providerName) {
+        throw new UnsupportedOperationException("Not implemented");
+    }
 }

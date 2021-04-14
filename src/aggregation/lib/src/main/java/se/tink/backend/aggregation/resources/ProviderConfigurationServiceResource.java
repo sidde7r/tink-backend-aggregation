@@ -75,4 +75,12 @@ public class ProviderConfigurationServiceResource implements ProviderConfigurati
         return getProviderConfigurationService()
                 .getProviderByName(clusterName, clusterEnvironment, providerName);
     }
+
+    @Override
+    public ProviderConfiguration getProviderByNameInClusterIfPossible(
+            String clusterName, String clusterEnvironment, String providerName) {
+        return getProviderConfigurationService()
+                .getProviderByNameInClusterIfPossible(
+                        clusterName, clusterEnvironment, providerName);
+    }
 }

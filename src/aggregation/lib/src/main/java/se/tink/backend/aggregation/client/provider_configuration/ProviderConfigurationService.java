@@ -43,4 +43,12 @@ public interface ProviderConfigurationService {
             @HeaderParam(Headers.CLUSTER_NAME) String clusterName,
             @HeaderParam(Headers.CLUSTER_ENVIRONMENT) String clusterEnvironment,
             @PathParam("providerName") String providerName);
+
+    @Path("/provider/{providerName}")
+    @GET
+    @TeamOwnership(Team.AGGREGATION_THIRD_PARTY_ACCESS)
+    ProviderConfiguration getProviderByNameInClusterIfPossible(
+            @HeaderParam(Headers.CLUSTER_NAME) String clusterName,
+            @HeaderParam(Headers.CLUSTER_ENVIRONMENT) String clusterEnvironment,
+            @PathParam("providerName") String providerName);
 }
