@@ -20,6 +20,7 @@ junit_test(
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/identity_data",
         "//src/integration/lib",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/berlingroup",
         "//src/libraries/mapper",
         "//src/libraries/serialization",
         "//third_party:com_sun_jersey_jersey_core",
