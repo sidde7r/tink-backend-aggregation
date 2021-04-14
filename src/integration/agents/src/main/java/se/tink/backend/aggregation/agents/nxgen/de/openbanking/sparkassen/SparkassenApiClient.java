@@ -12,7 +12,6 @@ import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen
 
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
-import java.util.Base64;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -115,20 +114,20 @@ public class SparkassenApiClient implements PaymentApiClient {
     public AuthenticationMethodResponse initializeAuthorization(
             URL url, String username, String password) throws AuthenticationException {
         try {
-            String base64username = Base64.getEncoder().encodeToString(username.getBytes());
-            String psuId = "=?ISO-8859-1?B?" + base64username + "?=";
             AuthenticationMethodResponse authenticationMethodResponse =
                     createRequest(url)
-                            .header(HeaderKeys.PSU_ID, psuId)
+                            .header(HeaderKeys.PSU_ID, username)
                             .post(
                                     AuthenticationMethodResponse.class,
                                     new InitAuthorizationRequest(new PsuDataEntity(password)));
             // NZG-283 temporary login
-            logSpecialCharacters(username, "SUCCESS_LOGIN");
+            logSpecialCharacters("SUCCESS_LOGIN", "username", username);
+            logSpecialCharacters("SUCCESS_LOGIN", "password", password);
             return authenticationMethodResponse;
         } catch (HttpResponseException e) {
             // NZG-283 temporary login
-            logSpecialCharacters(username, "FAILED_LOGIN");
+            logSpecialCharacters("FAILED_LOGIN", "username", username);
+            logSpecialCharacters("FAILED_LOGIN", "password", password);
             // ITE-2489 - temporary experiment
             SparkassenExperimentalLoginErrorHandling.handleIncorrectLogin(e, provider);
             String errorBody = e.getResponse().getBody(String.class);
@@ -157,23 +156,23 @@ public class SparkassenApiClient implements PaymentApiClient {
         }
     }
 
-    public void logSpecialCharacters(String username, String outcome) {
-        log.info(outcome + " username encoding " + getEncoding(username));
+    public void logSpecialCharacters(String outcome, String property, String value) {
+        log.info("{} {} {}", outcome, property, getEncoding(value));
     }
 
-    private static String getEncoding(String v) {
+    private static String getEncoding(String value) {
         String regex = "^[a-zA-Z0-9]+$";
         Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(v);
+        Matcher matcher = pattern.matcher(value);
 
-        if (StringUtils.isNumeric(v)) {
+        if (StringUtils.isNumeric(value)) {
             return "NUMERIC";
         } else if (matcher.matches()) {
             // simple alphanumeric
             return "ALPHANUMERIC";
-        } else if (StandardCharsets.US_ASCII.newEncoder().canEncode(v)) {
+        } else if (StandardCharsets.US_ASCII.newEncoder().canEncode(value)) {
             return StandardCharsets.US_ASCII.displayName();
-        } else if (StandardCharsets.ISO_8859_1.newEncoder().canEncode(v)) {
+        } else if (StandardCharsets.ISO_8859_1.newEncoder().canEncode(value)) {
             return StandardCharsets.ISO_8859_1.displayName();
         } else {
             return "OTHER";
