@@ -201,11 +201,11 @@ class LegacyExceptionToConnectivityErrorMapper {
                             BankIdNOError.UNKNOWN_BANK_ID_ERROR,
                             ConnectivityErrorFactory.userLoginError(UserLoginErrors.UNRECOGNIZED))
                     .put(
-                            BankIdNOError.INVALID_SSN_OR_CHIP_CODE,
+                            BankIdNOError.INVALID_SSN_OR_ONE_TIME_CODE,
                             ConnectivityErrorFactory.userLoginError(
                                     UserLoginErrors.STATIC_CREDENTIALS_INCORRECT))
                     .put(
-                            BankIdNOError.MOBILE_BANK_ID_TIMEOUT,
+                            BankIdNOError.MOBILE_BANK_ID_TIMEOUT_OR_REJECTED,
                             ConnectivityErrorFactory.userLoginError(
                                     UserLoginErrors.DYNAMIC_CREDENTIALS_FLOW_TIMEOUT))
                     .put(

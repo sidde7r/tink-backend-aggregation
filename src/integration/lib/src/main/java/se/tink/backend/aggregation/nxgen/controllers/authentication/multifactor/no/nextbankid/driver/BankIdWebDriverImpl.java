@@ -1,11 +1,14 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver;
 
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants.BANK_ID_LOG_PREFIX;
+
 import com.google.inject.Inject;
 import java.util.Set;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.Cookie;
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants;
@@ -61,6 +64,21 @@ public class BankIdWebDriverImpl implements BankIdWebDriver {
 
     @Override
     public void clickButton(BankIdElementLocator locator) {
+        try {
+            clickButtonInternal(locator);
+
+        } catch (StaleElementReferenceException exception) {
+            /*
+            Sometimes element can become stale even though we have just found it. This may happen due to some
+            style recalculations that cause element to be recreated.
+            If such thing occurs, we should try to click button one more time.
+             */
+            log.warn("{} Stale button element reference", BANK_ID_LOG_PREFIX);
+            clickButtonInternal(locator);
+        }
+    }
+
+    private void clickButtonInternal(BankIdElementLocator locator) {
         WebElement buttonElement =
                 elementsSearcher
                         .searchForFirstMatchingLocator(

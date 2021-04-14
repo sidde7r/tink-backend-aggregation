@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.steps;
 
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants.BANK_ID_LOG_PREFIX;
-import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants.HtmlLocators.LOC_CHIP_CODE_INPUT;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants.HtmlLocators.LOC_ONE_TIME_CODE_INPUT;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants.HtmlLocators.LOC_SUBMIT_BUTTON;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.screens.BankIdScreen.ENTER_BANK_ID_PASSWORD_SCREEN;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.screens.BankIdScreen.ENTER_SSN_SCREEN;
@@ -23,9 +23,9 @@ import se.tink.libraries.i18n.Catalog;
 
 @Slf4j
 @RequiredArgsConstructor(onConstructor = @__({@Inject}))
-public class BankIdAuthWithChipCodeStep {
+public class BankIdAuthWithOneTimeCodeStep {
 
-    private static final Pattern VALID_CHIP_CODE_FORMAT_REGEX = Pattern.compile("^\\d{6}$");
+    private static final Pattern VALID_ONE_TIME_CODE_FORMAT_REGEX = Pattern.compile("^\\d{6}$");
 
     private final BankIdWebDriver webDriver;
     private final BankIdScreensManager screensManager;
@@ -33,46 +33,46 @@ public class BankIdAuthWithChipCodeStep {
     private final Catalog catalog;
     private final SupplementalInformationController supplementalInformationController;
 
-    public void authenticateWithChipCode() {
+    public void authenticateWithOneTimeCode() {
         String code = askUserForCode();
         verifyCodeIsValid(code);
 
         enterCode(code);
         clickNext();
 
-        verifyChipCodeResult();
+        verifyOneTimeCodeResult();
     }
 
     private String askUserForCode() {
-        log.info("{} Asking user for chip code", BANK_ID_LOG_PREFIX);
+        log.info("{} Asking user for one-time code", BANK_ID_LOG_PREFIX);
 
-        Field chipCodeField = NorwegianFields.BankIdChipCodeField.build(catalog);
+        Field codeField = NorwegianFields.BankIdOneTimeCodeField.build(catalog);
 
         Map<String, String> supplementalInfoResponse =
-                supplementalInformationController.askSupplementalInformationSync(chipCodeField);
+                supplementalInformationController.askSupplementalInformationSync(codeField);
 
-        return supplementalInfoResponse.get(chipCodeField.getName());
+        return supplementalInfoResponse.get(codeField.getName());
     }
 
     private void verifyCodeIsValid(String code) {
-        if (!VALID_CHIP_CODE_FORMAT_REGEX.matcher(code).matches()) {
-            throw new IllegalStateException("Incorrect format for chip code: " + code);
+        if (!VALID_ONE_TIME_CODE_FORMAT_REGEX.matcher(code).matches()) {
+            throw new IllegalStateException("Incorrect format for one-time code: " + code);
         }
-        log.info("{} Chip code has correct format", BANK_ID_LOG_PREFIX);
+        log.info("{} One-time code has correct format", BANK_ID_LOG_PREFIX);
     }
 
     private void enterCode(String number) {
-        log.info("{} Entering chip code", BANK_ID_LOG_PREFIX);
-        webDriver.setValueToElement(number, LOC_CHIP_CODE_INPUT);
+        log.info("{} Entering one-time code", BANK_ID_LOG_PREFIX);
+        webDriver.setValueToElement(number, LOC_ONE_TIME_CODE_INPUT);
     }
 
     private void clickNext() {
-        log.info("{} Clicking submit chip code button", BANK_ID_LOG_PREFIX);
+        log.info("{} Clicking submit one-time code button", BANK_ID_LOG_PREFIX);
         webDriver.clickButton(LOC_SUBMIT_BUTTON);
     }
 
-    private void verifyChipCodeResult() {
-        log.info("{} Waiting for SSN screen after submitting chip code", BANK_ID_LOG_PREFIX);
+    private void verifyOneTimeCodeResult() {
+        log.info("{} Waiting for SSN screen after submitting one-time code", BANK_ID_LOG_PREFIX);
         BankIdScreen bankIdScreen =
                 screensManager.waitForAnyScreenFromQuery(
                         BankIdScreensQuery.builder()
@@ -83,13 +83,14 @@ public class BankIdAuthWithChipCodeStep {
 
         if (bankIdScreen == ENTER_BANK_ID_PASSWORD_SCREEN) {
             // we've successfully reached next authentication step
-            log.info("{} Chip code valid", BANK_ID_LOG_PREFIX);
+            log.info("{} One-time code valid", BANK_ID_LOG_PREFIX);
             return;
         }
 
-        // when we're moved back to enter SSN screen it's either invalid SSN or invalid chip code
+        // when we're moved back to enter SSN screen it's either invalid SSN or invalid one-time
+        // code
         if (bankIdScreen == ENTER_SSN_SCREEN) {
-            throw BankIdNOError.INVALID_SSN_OR_CHIP_CODE.exception();
+            throw BankIdNOError.INVALID_SSN_OR_ONE_TIME_CODE.exception();
         }
     }
 }

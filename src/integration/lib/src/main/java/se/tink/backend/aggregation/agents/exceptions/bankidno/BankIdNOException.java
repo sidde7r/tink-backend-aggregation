@@ -23,11 +23,16 @@ public class BankIdNOException extends MultiFactorAuthenticationException {
     }
 
     public BankIdNOException(AgentError error, String internalMessage) {
-        super(error, internalMessage);
+        super(error, getEnhancedInternalMessage(error, internalMessage));
     }
 
     @Override
     public BankIdNOError getError() {
         return getError(BankIdNOError.class);
+    }
+
+    private static String getEnhancedInternalMessage(AgentError error, String internalMessage) {
+        String agentError = String.format("%s.%s", error.getClass().getSimpleName(), error.name());
+        return "Cause: " + agentError + ", Details: " + internalMessage;
     }
 }

@@ -27,7 +27,7 @@ public class BankIdPerform2FAStepTest {
      */
     private BankIdWebDriver webDriver;
     private BankIdScreensManager screensManager;
-    private BankIdAuthWithChipCodeStep authWithChipCodeStep;
+    private BankIdAuthWithOneTimeCodeStep authWithOneTimeCodeStep;
     private BankIdAuthWithMobileBankIdStep authWithMobileBankIdStep;
     private BankIdAuthWithBankIdAppStep authWithBankIdAppStep;
 
@@ -42,7 +42,7 @@ public class BankIdPerform2FAStepTest {
     public void setup() {
         webDriver = mock(BankIdWebDriver.class);
         screensManager = mock(BankIdScreensManager.class);
-        authWithChipCodeStep = mock(BankIdAuthWithChipCodeStep.class);
+        authWithOneTimeCodeStep = mock(BankIdAuthWithOneTimeCodeStep.class);
         authWithMobileBankIdStep = mock(BankIdAuthWithMobileBankIdStep.class);
         authWithBankIdAppStep = mock(BankIdAuthWithBankIdAppStep.class);
 
@@ -50,7 +50,7 @@ public class BankIdPerform2FAStepTest {
                 inOrder(
                         webDriver,
                         screensManager,
-                        authWithChipCodeStep,
+                        authWithOneTimeCodeStep,
                         authWithMobileBankIdStep,
                         authWithBankIdAppStep);
 
@@ -58,7 +58,7 @@ public class BankIdPerform2FAStepTest {
                 new BankIdPerform2FAStep(
                         webDriver,
                         screensManager,
-                        authWithChipCodeStep,
+                        authWithOneTimeCodeStep,
                         authWithMobileBankIdStep,
                         authWithBankIdAppStep);
     }
@@ -76,8 +76,8 @@ public class BankIdPerform2FAStepTest {
         // then
         verifyLogsIfLinkToChangeMethodExists();
         switch (currentScreen) {
-            case CODE_CHIP_METHOD_SCREEN:
-                mocksToVerifyInOrder.verify(authWithChipCodeStep).authenticateWithChipCode();
+            case ONE_TIME_CODE_METHOD_SCREEN:
+                mocksToVerifyInOrder.verify(authWithOneTimeCodeStep).authenticateWithOneTimeCode();
                 break;
             case MOBILE_BANK_ID_METHOD_SCREEN:
                 mocksToVerifyInOrder
