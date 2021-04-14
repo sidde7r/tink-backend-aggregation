@@ -6,14 +6,14 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class TransactionsEntity {
 
-    private List<BookedEntity> booked;
-    private List<PendingEntity> pending;
+    private List<TransactionEntity> booked;
+    private List<TransactionEntity> pending;
 
-    public List<BookedEntity> getBooked() {
+    public List<TransactionEntity> getBooked() {
         return booked;
     }
 
-    public List<PendingEntity> getPending() {
+    public List<TransactionEntity> getPending() {
         return pending;
     }
 }
