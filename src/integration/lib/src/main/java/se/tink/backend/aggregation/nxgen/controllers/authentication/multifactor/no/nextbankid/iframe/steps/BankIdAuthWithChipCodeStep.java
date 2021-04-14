@@ -46,7 +46,7 @@ public class BankIdAuthWithChipCodeStep {
     private String askUserForCode() {
         log.info("{} Asking user for chip code", BANK_ID_LOG_PREFIX);
 
-        Field chipCodeField = NorwegianFields.BankIdCodeChipField.build(catalog);
+        Field chipCodeField = NorwegianFields.BankIdChipCodeField.build(catalog);
 
         Map<String, String> supplementalInfoResponse =
                 supplementalInformationController.askSupplementalInformationSync(chipCodeField);

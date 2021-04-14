@@ -28,7 +28,7 @@ public class NorwegianFields {
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
-    public static class BankIdCodeChipField {
+    public static class BankIdChipCodeField {
 
         private static final String FIELD_KEY = "bankIdChipCode";
         private static final int CODE_LENGTH = 6;

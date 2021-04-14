@@ -75,7 +75,7 @@ public class BankIdAuthWithChipCodeStepTest {
     public void should_ask_user_to_provide_chip_code_then_enter_it_and_wait_for_password_screen(
             String validCode) {
         // given
-        Field expectedField = NorwegianFields.BankIdCodeChipField.build(catalog);
+        Field expectedField = NorwegianFields.BankIdChipCodeField.build(catalog);
         mockUserChipCodeResponse(expectedField, validCode);
 
         mockScreenDetected(ENTER_BANK_ID_PASSWORD_SCREEN);
@@ -113,7 +113,7 @@ public class BankIdAuthWithChipCodeStepTest {
     public void should_recognize_invalid_ssn_or_chip_code_error_by_detecting_enter_ssn_screen(
             String validCode) {
         // given
-        Field expectedField = NorwegianFields.BankIdCodeChipField.build(catalog);
+        Field expectedField = NorwegianFields.BankIdChipCodeField.build(catalog);
         mockUserChipCodeResponse(expectedField, validCode);
 
         mockScreenDetected(ENTER_SSN_SCREEN);
@@ -148,7 +148,7 @@ public class BankIdAuthWithChipCodeStepTest {
     @Parameters(method = "invalidCodes")
     public void should_throw_invalid_chip_code_format_error(String invalidCode) {
         // given
-        Field expectedField = NorwegianFields.BankIdCodeChipField.build(catalog);
+        Field expectedField = NorwegianFields.BankIdChipCodeField.build(catalog);
         mockUserChipCodeResponse(expectedField, invalidCode);
 
         // when
