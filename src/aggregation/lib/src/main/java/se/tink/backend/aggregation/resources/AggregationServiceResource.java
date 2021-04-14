@@ -436,8 +436,18 @@ public class AggregationServiceResource implements AggregationService {
                     clusterEnvironment);
         }
 
-        // will use getProviderByName(clusterName, clusterEnvironment, providerName) to replace
-        // listAll()
+        ProviderConfiguration filteredProvider =
+                providerConfigurationService.getProviderByNameInClusterIfPossible(
+                        clusterName, clusterEnvironment, providerName);
+        if (!Objects.isNull(filteredProvider)) {
+            logger.info(
+                    "get provider from provider configuration service for {}",
+                    filteredProvider.getName());
+        } else {
+            logger.info(
+                    "get null provider from provider configuration service for {}", providerName);
+        }
+        // will replace listAll() when testing of getProviderByNameInClusterIfPossible is working
         List<ProviderConfiguration> allProviders = providerConfigurationService.listAll();
 
         List<ProviderConfiguration> filteredProviders =
