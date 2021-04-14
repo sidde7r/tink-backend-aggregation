@@ -25,13 +25,4 @@ public class TransactionEntity {
                 .setPending(false)
                 .build();
     }
-
-    public Transaction toPendingTransaction() {
-        return Transaction.builder()
-                .setDescription(remittanceInformationUnstructured)
-                .setDate(bookingDate)
-                .setAmount(transactionAmount.toAmount())
-                .setPending(true)
-                .build();
-    }
 }
