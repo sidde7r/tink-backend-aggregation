@@ -26,6 +26,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ber
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.entities.BalanceAmountBaseEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.entities.BalanceBaseEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.entities.CashAccountType;
+import se.tink.backend.aggregation.agents.utils.berlingroup.BalanceType;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
@@ -124,9 +125,10 @@ public class LaBanquePostaleAccountConverterTest {
 
         final BalanceBaseEntity balanceBaseEntity = mock(BalanceBaseEntity.class);
         when(balanceBaseEntity.getBalanceAmount()).thenReturn(balanceAmountBaseEntity);
-        when(balanceBaseEntity.getBalanceType()).thenReturn(balanceType);
+        when(balanceBaseEntity.getBalanceType())
+                .thenReturn(BalanceType.findByStringType(balanceType));
         when(balanceBaseEntity.isInCurrency(CURRENCY)).thenReturn(Boolean.TRUE);
-        when(balanceBaseEntity.toAmount())
+        when(balanceBaseEntity.toTinkAmount())
                 .thenReturn(new ExactCurrencyAmount(new BigDecimal(amount), CURRENCY));
 
         return balanceBaseEntity;
