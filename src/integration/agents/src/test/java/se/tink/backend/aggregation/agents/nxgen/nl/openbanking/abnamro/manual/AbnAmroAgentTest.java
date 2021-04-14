@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.nl.openbanking.abnamro;
+package se.tink.backend.aggregation.agents.nxgen.nl.openbanking.abnamro.manual;
 
 import org.junit.AfterClass;
 import org.junit.Before;

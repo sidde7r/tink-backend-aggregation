@@ -1,14 +1,14 @@
-package se.tink.backend.aggregation.agents.nxgen.nl.openbanking.abnamro.errorhandling;
+package se.tink.backend.aggregation.agents.nxgen.nl.openbanking.abnamro.mock;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static se.tink.backend.aggregation.agents.nxgen.nl.openbanking.abnamro.errorhandling.ApiErrorHandlerSampleResponses.ERROR_RESPONSE_401;
-import static se.tink.backend.aggregation.agents.nxgen.nl.openbanking.abnamro.errorhandling.ApiErrorHandlerSampleResponses.ERROR_RESPONSE_429;
-import static se.tink.backend.aggregation.agents.nxgen.nl.openbanking.abnamro.errorhandling.ApiErrorHandlerSampleResponses.ERROR_RESPONSE_503;
-import static se.tink.backend.aggregation.agents.nxgen.nl.openbanking.abnamro.errorhandling.ApiErrorHandlerSampleResponses.OAUTH2_ERROR_RESPONSE_WITH_INVALID_GRANT;
-import static se.tink.backend.aggregation.agents.nxgen.nl.openbanking.abnamro.errorhandling.ApiErrorHandlerSampleResponses.OAUTH2_ERROR_RESPONSE_WITH_UNKNOWN_ERROR;
+import static se.tink.backend.aggregation.agents.nxgen.nl.openbanking.abnamro.mock.ApiErrorHandlerSampleResponses.ERROR_RESPONSE_401;
+import static se.tink.backend.aggregation.agents.nxgen.nl.openbanking.abnamro.mock.ApiErrorHandlerSampleResponses.ERROR_RESPONSE_429;
+import static se.tink.backend.aggregation.agents.nxgen.nl.openbanking.abnamro.mock.ApiErrorHandlerSampleResponses.ERROR_RESPONSE_503;
+import static se.tink.backend.aggregation.agents.nxgen.nl.openbanking.abnamro.mock.ApiErrorHandlerSampleResponses.OAUTH2_ERROR_RESPONSE_WITH_INVALID_GRANT;
+import static se.tink.backend.aggregation.agents.nxgen.nl.openbanking.abnamro.mock.ApiErrorHandlerSampleResponses.OAUTH2_ERROR_RESPONSE_WITH_UNKNOWN_ERROR;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
@@ -19,6 +19,7 @@ import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceExce
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.abnamro.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.abnamro.authenticator.rpc.ErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.abnamro.authenticator.rpc.OAuth2ErrorResponse;
+import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.abnamro.errorhandling.ApiErrorHandler;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
