@@ -32,6 +32,8 @@ public final class SparkassenConstants {
         public static final String MISSING_LINKS_ENTITY = "Response missing links entity";
         static final String NO_ACTIVE_TAN_MEDIUM = "Kein aktives TAN-Medium gefunden.";
         static final String PLEASE_CHANGE_PIN = "Bitte führen Sie eine PIN-Änderung durch.";
+        public static final String REQUEST_PROCESSING_ERROR =
+                "Die Anfrage konnte nicht verarbeitet werden.";
     }
 
     public static class Urls {

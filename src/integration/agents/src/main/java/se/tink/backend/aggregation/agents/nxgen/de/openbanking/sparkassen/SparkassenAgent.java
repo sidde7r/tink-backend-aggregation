@@ -20,6 +20,7 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authen
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.SparkassenPaymentAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.fetcher.SparkassenAccountsFetcher;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.fetcher.SparkassenTransactionsFetcher;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.filter.RequestNotProcessedFilter;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.BasePaymentExecutor;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.PaymentAuthenticator;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.enums.PaymentAuthenticationMode;
@@ -34,6 +35,7 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.AccessExceededFilter;
 import se.tink.libraries.account.enums.AccountIdentifierType;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, TRANSFERS})
@@ -66,6 +68,8 @@ public class SparkassenAgent extends NextGenerationAgent
     public void setConfiguration(AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
         client.setEidasProxy(configuration.getEidasProxy());
+        client.addFilter(new AccessExceededFilter(provider.getName()));
+        client.addFilter(new RequestNotProcessedFilter());
     }
 
     protected SparkassenApiClient constructApiClient() {
