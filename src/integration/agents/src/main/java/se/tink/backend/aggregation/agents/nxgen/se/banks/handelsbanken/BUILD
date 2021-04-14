@@ -25,6 +25,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/response",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/source_info",
         "//src/integration/models",
         "//src/integration/signableoperation/src/main/java/se/tink/libraries/signableoperation/enums",
         "//src/integration/transfer:enums",

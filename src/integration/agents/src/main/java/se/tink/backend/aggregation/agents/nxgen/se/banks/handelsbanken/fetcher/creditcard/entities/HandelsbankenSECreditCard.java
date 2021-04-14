@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsba
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.backend.aggregation.source_info.AccountSourceInfo;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class HandelsbankenSECreditCard extends HandelsbankenCreditCard {
@@ -29,7 +30,12 @@ public class HandelsbankenSECreditCard extends HandelsbankenCreditCard {
                 .setAccountNumber(numberMasked)
                 .setName(name)
                 .setBankIdentifier(numberMasked)
+                .sourceInfo(createAccountSourceInfo())
                 .build();
+    }
+
+    private AccountSourceInfo createAccountSourceInfo() {
+        return AccountSourceInfo.builder().bankProductCode(typeCode).bankAccountType(name).build();
     }
 
     public URL getCardTransactionsUrl() {
