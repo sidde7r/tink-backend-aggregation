@@ -1,0 +1,3835 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+
+
+
+  <!--
+  <title>BANCA INTERNET</title>
+  -->
+  <!-- -->
+
+  <title>BANCA INTERNET</title>
+
+  <meta HTTP-EQUIV="Cache-Control" CONTENT="No-cache">
+  <META HTTP-EQUIV="Pragma" CONTENT="No-cache">
+  <META HTTP-EQUIV="Expires" CONTENT="Now">
+  <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1" />
+
+
+
+
+  <script language="javascript" src="/javascripts_portal/es_ES/js_portal/ValidateTO.js"></script>
+  <script language="javascript" src="/javascripts_portal/es_ES/js_portal/interface.js"></script>
+  <script language="javascript" src="/javascripts_portal/es_ES/js_portal/calendar.js"></script>
+  <script language="javascript" >
+
+    var pulsada = 0;
+
+    //Se usa una variable global para la fecha actual
+    var hoy = new Date("2021", "3", "14");
+
+    function getFechaSistema(){
+      return formatearFecha(hoy);
+    }
+
+    function restarDias(dias){
+      var salida = new Date(hoy.getFullYear(),hoy.getMonth(),parseInt(hoy.getDate(),10)-parseInt(dias,10));
+      return formatearFecha(salida);
+    }
+
+    function restarMeses(meses){
+      var salida = new Date(hoy.getFullYear(),parseInt(hoy.getMonth(),10)-parseInt(meses,10) ,hoy.getDate());
+      return formatearFecha(salida);
+    }
+
+    function inicializarDatos(){
+
+      habilitarOrden(1, true);
+      document.FORM_RVIA_0.FECHAMOVHASTA.value = "14-04-2021";
+      document.FORM_RVIA_0.FECHAMOVDESDE.value = "14-01-2021";
+
+
+      //orden
+
+      document.FORM_RVIA_0.ordenBusqueda[0].checked = true;
+
+
+      // Usaremos la fecha de comparación para que no introduzcan fechas posteriores a la actual
+      document.FORM_RVIA_0.fechaComparacion.value = getFechaSistema();
+
+
+    }
+
+    //Completa la paginación
+    function completar(pag) {
+      document.FORM_RVIA_0.clavePagina.value = "PAS_MOV_CUENTAS";
+      document.FORM_RVIA_0.columnaOrden.value = document.FORM_RVIA_0.ultimoOrden.value;
+      if (pulsada == 0) {
+        pulsada = 1;
+// 			document.FORM_RVIA_0.mostrarAlert250.value = "0";
+        document.FORM_RVIA_0.submit();
+      }
+    }
+
+
+    //Habilita y deshabilita y marca tipo de orden de dependiendo de la opcion de búsqueda seleccionada
+    function habilitarOrden(tipo, actualizaCampos){
+      //dependiendo del parámetro que se pasa en la llamada a la función se le llama desde un onclick de un radiobutton u otro
+      switch (tipo){
+
+          // Búsqueda de últimos movimientos
+        case 0:
+          document.FORM_RVIA_0.tipoBusqueda[0].checked = true;
+          document.FORM_RVIA_0.ordenBusqueda[0].checked = true;
+          //document.FORM_RVIA_0.ordenBusqueda[1].disabled = true;
+          document.FORM_RVIA_0.ordenBusqueda[1].value = "C";
+          if(actualizaCampos) document.FORM_RVIA_0.nMovs.value = "50";
+          document.FORM_RVIA_0.FECHAMOVHASTA.value = "";
+          document.FORM_RVIA_0.FECHAMOVDESDE.value = "";
+          document.FORM_RVIA_0.diasAnteriores.value = "";
+          break;
+
+          //Búsqueda por rango de fechas*/
+        case 1:
+          document.FORM_RVIA_0.tipoBusqueda[1].checked = true;
+          document.FORM_RVIA_0.ordenBusqueda[0].checked = true;
+          //document.FORM_RVIA_0.ordenBusqueda[1].disabled = false;
+          document.FORM_RVIA_0.ordenBusqueda[1].value = "A";
+          document.FORM_RVIA_0.nMovs.value = "";
+          if(actualizaCampos){
+            document.FORM_RVIA_0.FECHAMOVHASTA.value = getFechaSistema();
+            document.FORM_RVIA_0.FECHAMOVDESDE.value = restarMeses(1);
+          }
+          document.FORM_RVIA_0.diasAnteriores.value = "";
+          break;
+
+          //Búsqueda por últimos días*/
+        case 2:
+          document.FORM_RVIA_0.tipoBusqueda[2].checked = true;
+          document.FORM_RVIA_0.ordenBusqueda[0].checked = true;
+          //document.FORM_RVIA_0.ordenBusqueda[1].disabled = false;
+          document.FORM_RVIA_0.ordenBusqueda[1].value = "A";
+          document.FORM_RVIA_0.nMovs.value = "";
+          document.FORM_RVIA_0.FECHAMOVHASTA.value = "";
+          document.FORM_RVIA_0.FECHAMOVDESDE.value = "";
+          break;
+      }
+    }
+
+
+    //Muestra u oculta búsqueda avanzada en función de onclick sobre literal
+    function mostrarOcultar(){
+      var vista = document.getElementById("BUSQUEDA_AVANZADA").style.display;
+      if (vista=='none')
+        vista='block';
+      else
+        vista='none';
+      document.getElementById("BUSQUEDA_AVANZADA").style.display = vista;
+    }
+
+    function mostrarBusAv(){
+      document.getElementById("BUSQUEDA_AVANZADA").style.display ='block';
+      document.getElementById("BOTON_BA").style.display ='none';
+      document.FORM_RVIA_0.busquedaAvanzada.value = "1";
+    }
+
+
+    function siguientes(){
+      if (!validar()) return;
+      if ( pulsada == 0 ){
+        pulsada = 1;
+        document.FORM_RVIA_0.NumSecuencia.value = document.FORM_RVIA_0.numeroSecuencialApunteLast.value;
+        document.FORM_RVIA_0.saldoArrastre.value = document.FORM_RVIA_0.saldoArrastreLast.value;
+        document.FORM_RVIA_0.codigoMoneda.value = document.FORM_RVIA_0.codigoMonedaLast.value;
+        document.FORM_RVIA_0.numeroSecuencialApunteFirst.value = document.FORM_RVIA_0.numeroSecuencialApunteLast.value;
+        document.FORM_RVIA_0.saldoArrastreFirst.value = document.FORM_RVIA_0.saldoArrastreLast.value;
+        document.FORM_RVIA_0.codigoMonedaFirst.value = document.FORM_RVIA_0.codigoMonedaLast.value;
+        document.FORM_RVIA_0.paginar.value = "s"; //siguientes
+        document.FORM_RVIA_0.clavePagina.value = "PAS_MOV_CUENTAS_PAGINAR";
+        document.FORM_RVIA_0.submit();
+      }
+    }
+
+    function inicio(){
+      if (!validar()) return;
+      if ( pulsada == 0 ){
+        pulsada = 1;
+        document.FORM_RVIA_0.nPaginaParcial.value = "0";
+        document.FORM_RVIA_0.numeroSecuencialApunteFirst.value = "0";
+        document.FORM_RVIA_0.saldoArrastreFirst.value = "0.0";
+        document.FORM_RVIA_0.codigoMonedaFirst.value = "";
+        document.FORM_RVIA_0.paginar.value = "a"; //inicio
+        document.FORM_RVIA_0.clavePagina.value = "PAS_MOV_CUENTAS_PAGINAR";
+        document.FORM_RVIA_0.submit();
+      }
+    }
+
+
+    function aceptarBuscar(){
+      if (!validar()) return;
+
+      if ( pulsada == 0 ){
+        pulsada = 1;
+        document.FORM_RVIA_0.mostrarAlert250.value = "1";
+        document.FORM_RVIA_0.nPaginaParcial.value = "0";
+        document.FORM_RVIA_0.numeroSecuencialApunteFirst.value = "0";
+        document.FORM_RVIA_0.saldoArrastreFirst.value = "0.0";
+        document.FORM_RVIA_0.codigoMonedaFirst.value = "";
+        document.FORM_RVIA_0.paginar.value = ""; //Se inicializa
+        document.FORM_RVIA_0.tipoOrden.value = "0";
+        if(document.FORM_RVIA_0.busquedaAvanzada.value == "1" || document.FORM_RVIA_0.BUSQUEDA.value == "EMPRESA"){
+          document.FORM_RVIA_0.pagInicial.value = "1";
+          document.FORM_RVIA_0.clavePagina.value = "PAS_MOV_CUENTAS_NO_FINAN";
+          document.FORM_RVIA_0.clavePaginaOperativa.value = "PAS_MOV_CUENTAS_NO_FINAN";
+          document.FORM_RVIA_0.clavePaginaSiguiente.value = "PAS_MOV_CUENTAS_NO_FINAN";
+        }else{
+          document.FORM_RVIA_0.clavePagina.value = "PAS_MOV_CUENTAS";
+        }
+        document.FORM_RVIA_0.columnaOrden.value = 0;
+        document.FORM_RVIA_0.submit();
+      }
+    }
+
+    function validar() {
+      if( false ){
+        // Vamos a obtener la Cuenta Seleccionada
+        cuentaSelecc = document.FORM_RVIA_0.SELCTA[document.FORM_RVIA_0.SELCTA.selectedIndex].value;
+        if ( cuentaSelecc == "0" ) {
+          window.alert("Debe de seleccionar una cuenta.");
+          return false;
+        }
+        document.FORM_RVIA_0.cuentaSel.value = cuentaSelecc;
+        document.FORM_RVIA_0.cuenta.value = cuentaSelecc.substring(0,20);
+        document.FORM_RVIA_0.DIVISA_COD.value = cuentaSelecc.substring(20,23);
+        //**** P000018455 04-02-2016 INICIO ****************
+        document.FORM_RVIA_0.descripcionCuenta.value = cuentaSelecc.substring(28, cuentaSelecc.length);
+        //**** P000018455 04-02-2016 FIN ****************
+
+
+
+        var textoCuenta = document.FORM_RVIA_0.SELCTA[document.FORM_RVIA_0.SELCTA.selectedIndex].text;
+        var arrayCuenta = textoCuenta.split(" | ");
+        document.FORM_RVIA_0.DIVISA_NAME.value = arrayCuenta[2];
+
+
+      }else{
+        document.FORM_RVIA_0.primeraVez.value = '1';
+        document.FORM_RVIA_0.paginaActual.value = '0';
+        document.FORM_RVIA_0.tamanioPagina.value = '50';
+        document.FORM_RVIA_0.campoPaginacion.value = 'lista';
+      }
+
+      var tipoBusq = "0";
+      for(i=0;i<document.FORM_RVIA_0.tipoBusqueda.length;i++){
+        if(document.FORM_RVIA_0.tipoBusqueda[i].checked){
+          tipoBusq = document.FORM_RVIA_0.tipoBusqueda[i].value;
+        }
+      }
+
+      switch (tipoBusq){
+        case ("0"):
+          if (! checkInteger2 (document.FORM_RVIA_0.nMovs,'Movimientos',false))return false;
+          if (! checkNumericMayor(document.FORM_RVIA_0.CERO, document.FORM_RVIA_0.nMovs,'Movimientos',false))return false;
+          document.FORM_RVIA_0.numMovs.value  = document.FORM_RVIA_0.nMovs.value;
+          document.FORM_RVIA_0.FechaDesde.value  = restarMeses(60);
+          document.FORM_RVIA_0.FechaHasta.value  = getFechaSistema();
+          break;
+        case ("1"):
+          // Chequeo de fechas
+          if (! checkDate(document.FORM_RVIA_0.FECHAMOVDESDE,'Fecha', false))return false;
+          if (! checkDate(document.FORM_RVIA_0.FECHAMOVHASTA,'Fecha', false))return false;
+          if (! checkDateMayorEquals(document.FORM_RVIA_0.FECHAMOVDESDE, document.FORM_RVIA_0.FECHAMOVHASTA, false))return false;
+          if (! isDateMayorEquals(document.FORM_RVIA_0.FECHAMOVHASTA, document.FORM_RVIA_0.fechaComparacion, false)){
+            alert("El campo Fecha Hasta no debe ser posterior a la Fecha Actual.");
+            return false;
+          }
+          document.FORM_RVIA_0.FechaDesde.value  = document.FORM_RVIA_0.FECHAMOVDESDE.value;
+          document.FORM_RVIA_0.FechaHasta.value  = document.FORM_RVIA_0.FECHAMOVHASTA.value;
+          document.FORM_RVIA_0.numMovs.value  = "0";
+          break;
+        case ("2"):
+          // Validación de últimos días de movimientos
+          if (! checkInteger2(document.FORM_RVIA_0.diasAnteriores,'número de días',false))return false;
+          if (! checkNumericMayor(document.FORM_RVIA_0.CERO, document.FORM_RVIA_0.diasAnteriores,'número de días',false))return false;
+          document.FORM_RVIA_0.FechaDesde.value  = restarDias(document.FORM_RVIA_0.diasAnteriores.value);
+          document.FORM_RVIA_0.FechaHasta.value  = getFechaSistema();
+          document.FORM_RVIA_0.numMovs.value  = "0";
+          break;
+      }
+
+      if(document.FORM_RVIA_0.busquedaAvanzada.value == "1"){
+        //Importes
+        if(document.FORM_RVIA_0.IMPORTMIN.value != ""){
+          if (!comprobarImporteyEnteros(document.FORM_RVIA_0.IMPORTMIN, 'Importe desde',13, false)) return false;
+          document.FORM_RVIA_0.importeDesde.value = document.FORM_RVIA_0.IMPORTMIN.value;
+          convertirNumero(document.FORM_RVIA_0.importeDesde);
+        }
+        /***************** P00015616 06/11/2013 INICIO ************************/
+        else{
+          document.FORM_RVIA_0.importeDesde.value = "";
+        }
+        /***************** P00015616 06/11/2013 FIN ***************************/
+        if(document.FORM_RVIA_0.IMPORTMAX.value != ""){
+          if (!comprobarImporteyEnteros(document.FORM_RVIA_0.IMPORTMAX, 'Importe hasta',13, false)) return false;
+          document.FORM_RVIA_0.importeHasta.value = document.FORM_RVIA_0.IMPORTMAX.value;
+          convertirNumero(document.FORM_RVIA_0.importeHasta);
+        }
+        /***************** P00015616 06/11/2013 INICIO ************************/
+        else{
+          document.FORM_RVIA_0.importeHasta.value = "";
+        }
+
+        if(isNumericMayor(document.FORM_RVIA_0.importeHasta,document.FORM_RVIA_0.importeDesde,false)){
+          alert("El campo 'Importe hasta' debe ser mayor o igual que el campo 'Importe desde'. Por favor, introdúzcalos de nuevo.");
+          return false;
+        }
+        /***************** P00015616 06/11/2013 FIN ***************************/
+
+      }
+      return true;
+    }
+
+    function convertirNumero(theField){
+      theField.value = EliminaFormatoImporte(theField);
+      theField.value = cambiaCaracter(theField,',','.');
+    }
+
+    function volver(){
+      if (pulsada == 0) {
+
+        switch ("PG"){
+          case ("MM"):
+
+            document.FORM_RVIA_0.numMovs.value = 50;
+            document.FORM_RVIA_0.diasAnteriores.value = "";
+            document.FORM_RVIA_0.tipoMovimiento.value = "";
+            document.FORM_RVIA_0.importeDesde.value = "";
+            document.FORM_RVIA_0.importeHasta.value = "";
+            document.FORM_RVIA_0.tipoBusqueda.value = "1";
+            document.FORM_RVIA_0.FechaDesde.value  = "14-01-2021";
+            document.FORM_RVIA_0.FechaHasta.value  = "14-04-2021";
+            document.FORM_RVIA_0.SALDO_CONTABLE.value = "";
+            document.FORM_RVIA_0.clavePagina.value = "MENUP_PAS_MOV_CUENTAS";
+            break;
+          case ("PG"):
+            document.FORM_RVIA_0.clavePagina.value = "BEL_FR_POS_GLOBAL_OPT_PORTAL";
+            break;
+          default:
+            return false;
+        }
+
+        pulsada = 1;
+        document.FORM_RVIA_0.submit();
+      }
+    }
+
+    //Ordenación de columnas de movimientos
+    function ordenar(tipo){
+      validar();
+
+
+      if ( pulsada == 0 ){
+        // si no hay movimientos se desactiva la ordenacion
+        if (false)return;
+
+        document.FORM_RVIA_0.columnaOrden.value = tipo;
+        // contadores de ordenación de columnas para comprobar si toca orden ascendente o descendente
+        var ult = document.FORM_RVIA_0.ultimoOrden.value;
+
+        if(tipo == ult){
+          if( document.FORM_RVIA_0.tipoOrden.value == "1"){
+            document.FORM_RVIA_0.tipoOrden.value = "0";
+          }else{
+            document.FORM_RVIA_0.tipoOrden.value = "1";
+          }
+        }else{
+          document.FORM_RVIA_0.tipoOrden.value = "1";
+        }
+
+        document.FORM_RVIA_0.diasAnteriores.value = "";
+        document.FORM_RVIA_0.tipoMovimiento.value = "";
+        document.FORM_RVIA_0.importeDesde.value = "";
+        document.FORM_RVIA_0.importeHasta.value = "";
+        document.FORM_RVIA_0.tipoBusqueda[1].checked = true;
+        document.FORM_RVIA_0.FechaDesde.value  = "14-01-2021";
+        document.FORM_RVIA_0.FechaHasta.value  = "14-04-2021";
+        document.FORM_RVIA_0.saldoVisible.value = "0";
+
+        document.FORM_RVIA_0.clavePagina.value = "PAS_MOV_CUENTAS_PAGINAR";
+        if (document.FORM_RVIA_0.tipoBusqueda[0].checked){
+          var npagAux = parseInt(document.FORM_RVIA_0.nPaginaParcial.value) - 1;
+          if (npagAux > 0) document.FORM_RVIA_0.nPaginaParcial.value = ""+npagAux;
+          else document.FORM_RVIA_0.nPaginaParcial.value = "0";
+        }
+
+
+        document.FORM_RVIA_0.ordenBusqueda.value = "D";
+
+
+        pulsada = 1;
+        document.FORM_RVIA_0.submit();
+      }
+    }
+
+
+    function mostrarDetalle(tipoDetalle, origenApunteEspecifico, NumEntidad, NroClave, fechaValor, origenApunte ,fechaOperacion, positivoNegativo,descripcionLarga, indicadorRef, ordenante, numSecuencia, importeNumerico, descripcionLarg, listaTipoAplazamiento, sMoneda)
+    {
+      console.log("Entra en mostrarDetalle "+tipoDetalle);
+
+      var hoy_menos_13_meses = new Date("2021", "3"-13, "14");
+      var hoy_menos_6_meses = new Date("2021", "3"-6, "14");
+      var hoy_menos_500_dias = new Date("2021", "3", "14"-500);
+      var hoy_menos_3_anios = new Date("2021"-3, "3", "14");
+
+      var valida_menos_13_mes
+
+
+
+
+
+      var hoy_menos_5_anios = new Date("2021"-5, "3", "14");
+      var dateFechaOperacion;
+      if (fechaOperacion.substr(6).indexOf("-")>-1)
+        dateFechaOperacion = new Date (parseInt(fechaOperacion.substr(0,4),10),parseInt(fechaOperacion.substr(5,7),10)-1,parseInt(fechaOperacion.substr(8),10))
+      else
+        dateFechaOperacion = new Date (parseInt(fechaOperacion.substr(6),10),parseInt(fechaOperacion.substr(3,5),10)-1,parseInt(fechaOperacion.substr(0,2),10));
+
+
+      var hoy_menos_13_meses = new Date("2021", "3"-13, "14");
+      var hoy_menos_6_meses = new Date("2021", "3"-6, "14");
+      var hoy_menos_500_dias = new Date("2021", "3", "14"-500);
+      var hoy_menos_3_anios = new Date("2021"-3, "3", "14");
+
+      var valida_menos_13_meses = hoy_menos_13_meses.getTime()>dateFechaOperacion.getTime();
+      valida_menos_13_meses = valida_menos_13_meses && (tipoDetalle=="31" || tipoDetalle=="32" || tipoDetalle=="33" || tipoDetalle=="34" || tipoDetalle=="35" || tipoDetalle=="37" || tipoDetalle=="3C" || tipoDetalle=="3B" || tipoDetalle=="RB" ||  tipoDetalle=="V7" );
+
+      var valida_menos_6_meses = hoy_menos_6_meses.getTime()>dateFechaOperacion.getTime();
+      valida_menos_6_meses = valida_menos_6_meses && (tipoDetalle=="TF" || tipoDetalle=="TR");
+
+      var valida_menos_500_dias = hoy_menos_500_dias.getTime()>dateFechaOperacion.getTime();
+      valida_menos_500_dias = valida_menos_500_dias && (tipoDetalle=="RZ");
+
+      var valida_menos_3_anios = hoy_menos_3_anios.getTime()>dateFechaOperacion.getTime();
+      valida_menos_3_anios = valida_menos_3_anios &&  (tipoDetalle=="EC" || tipoDetalle=="RME");
+
+      var valida_menos_5_anios = hoy_menos_5_anios.getTime()>dateFechaOperacion.getTime();
+      valida_menos_5_anios =  valida_menos_5_anios && !valida_menos_13_meses && !valida_menos_6_meses && !valida_menos_500_dias && !valida_menos_3_anios;
+
+      if (valida_menos_13_meses){
+        alert("El detalle de este movimiento no puede consultarse, por tener una antiguedad superior a 13 meses. Por favor disculpe las molestias.");
+        return ;
+      }
+
+      if (valida_menos_6_meses){
+        alert("El detalle de este movimiento no puede consultarse, por tener una antiguedad superior a 6 meses. Por favor disculpe las molestias.");
+        return ;
+      }
+
+      if (valida_menos_500_dias){
+        alert("El detalle de este movimiento no puede consultarse, por tener una antiguedad superior a 500 días. Por favor disculpe las molestias.");
+        return ;
+      }
+
+      if (valida_menos_3_anios){
+        alert("El detalle de este movimiento no puede consultarse, por tener una antiguedad superior a 3 años. Por favor disculpe las molestias.");
+        return ;
+      }
+
+      if (valida_menos_5_anios){
+        alert("El detalle de este movimiento no puede consultarse, por tener una antiguedad superior a 5 años. Por favor disculpe las molestias.");
+        return ;
+      }
+
+
+
+
+
+
+
+
+      validar();
+
+      document.FORM_RVIA_0.fechaOperacion.value  = fechaOperacion;
+      document.FORM_RVIA_0.Entidad.value         = NumEntidad;
+      document.FORM_RVIA_0.NumClave.value        = NroClave;
+      document.FORM_RVIA_0.numClave.value        = NroClave;
+      document.FORM_RVIA_0.fechaValor.value      = fechaValor;
+      document.FORM_RVIA_0.origenApunte.value    = origenApunte;
+      document.FORM_RVIA_0.columnaOrden.value = document.FORM_RVIA_0.ultimoOrden.value;
+      document.FORM_RVIA_0.saldoVisible.value = 1;
+
+      document.FORM_RVIA_0.FechaDesde.value  = "14-01-2021";
+      document.FORM_RVIA_0.FechaHasta.value  = "14-04-2021";
+
+
+
+      document.FORM_RVIA_0.NumSecuencia.value= numSecuencia;
+      //document.FORM_RVIA_0.listaTipoAplazamiento.value = "7003"; //ELIMINAR
+      document.FORM_RVIA_0.listaTipoAplazamiento.value = listaTipoAplazamiento;
+      document.FORM_RVIA_0.moneda.value = sMoneda;
+
+
+      if (tipoDetalle == "TR"){
+        if (origenApunteEspecifico == "TI"){
+          tipoDetalle = "TI";
+        }
+      }
+
+      switch (tipoDetalle)
+      {
+        case "31": //Tributo Local
+          document.FORM_RVIA_0.clavePagina.value  = "PAS_DETRNDTL";
+          break;
+
+        case "32":  // Servicios
+          document.FORM_RVIA_0.clavePagina.value  = "PAS_DETRNDSE";
+          break;
+
+        case "33": // Cuota Fija Seguridad Social
+          document.FORM_RVIA_0.clavePagina.value  = "PAS_DETCUOTAFIJASS";
+          break;
+
+        case "34": // Cuota Fija Seguridad Social
+          document.FORM_RVIA_0.clavePagina.value  = "PAS_DETCUOTAVARIABLESS";
+          break;
+
+        case "35": // Hacienda Pública A.E.ET.; Ingreso de Autoliquidación.
+          document.FORM_RVIA_0.clavePagina.value  = "PAS_DETINGAUTOLIQHAC";
+          break;
+
+        case "37": // Hacienda Pública A.E.AT. ; Liquidación de Hacienda.
+          document.FORM_RVIA_0.clavePagina.value  = "PAS_DETLIQHACIENDA";
+          break;
+
+        case "3C": // Hacienda Pública A.E.AT. ; Tasas de Hacienda.
+          document.FORM_RVIA_0.clavePagina.value  = "PAS_DETTASASHACIENDA";
+          break;
+
+        case "3B": // Recaudaciones Autonimicas.
+          document.FORM_RVIA_0.clavePagina.value  = "PAS_DETRECAUTONOMICAS";
+          break;
+
+        case "RZ":  //Recibos sepa
+          document.FORM_RVIA_0.IND_SEPA.value=1;
+
+
+
+
+          document.FORM_RVIA_0.ENTIDAD_I.value=NumEntidad;
+
+          document.FORM_RVIA_0.OFICINA_I.value=document.FORM_RVIA_0.cuenta.value.substring(4,8);
+          document.FORM_RVIA_0.ACUERDO_I.value=document.FORM_RVIA_0.cuenta.value.substring(10,20);
+          document.FORM_RVIA_0.clavePagina.value  = "BDP_REC_DOM_DETALLE_SEPA_MOVS";
+          break;
+
+        case "RB":  //Recibos
+          document.FORM_RVIA_0.clavePagina.value  = "PAS_CONMOVSREC";
+          break;
+
+        case "TF": // Transferencias
+          /*** I002660525  31-03-2017  INICIO  ***/
+          if (positivoNegativo=="1"){
+            document.FORM_RVIA_0.indic.value="TR";
+          }
+          else{
+            document.FORM_RVIA_0.indic.value="TE";
+          }
+          /*** I002660525  31-03-2017  FIN  ***/
+          document.FORM_RVIA_0.clavePagina.value  = "PAS_CONMOVSTRN";
+          break;
+
+        case "HL": //Créditos; Depósitos y Préstamos
+          document.FORM_RVIA_0.clavePagina.value  = "PAS_DETHL";
+          break;
+
+        case "XO": //Transferencias Extranjero
+          document.FORM_RVIA_0.clavePagina.value  = "PAS_EXTDETTRANSF";
+          document.FORM_RVIA_0.numClave.value        = NroClave.substring(3);
+          break;
+
+        case "EC": //Impagados
+          document.FORM_RVIA_0.clavePagina.value = "BDP_DETALLE_EFECTO";
+          if (descripcionLarga.indexOf("COBRO EFECTO IMPAGADO")!= -1){
+            document.FORM_RVIA_0.indicadorEfecto.value = "I";
+          } else if (descripcionLarga.indexOf("EF S/CARGO")!= -1){
+            document.FORM_RVIA_0.indicadorEfecto.value = "C";
+          } else if (descripcionLarga.indexOf("DEV.EF.COBRADO")!= -1){
+            document.FORM_RVIA_0.indicadorEfecto.value = "D";
+          }
+          //CODIGO MOCKEO
+          else{
+            document.FORM_RVIA_0.indicadorEfecto.value = "D";
+          }
+          break;
+
+        case "OM": //OMF
+          document.FORM_RVIA_0.clavePagina.value = "PAS_DETOMF";
+          break;
+
+        case "TR": // Transferencias 	SEPA
+          //Importe Positivo->Transferencia Recibida
+          document.FORM_RVIA_0.ESSEPA.value="1";
+          if (positivoNegativo=="1"){
+            document.FORM_RVIA_0.indic.value="TR";
+            document.FORM_RVIA_0.clavePagina.value  = "BDP_SEPA_DETALLE_TRANSF_REC";
+          }
+          else{
+            document.FORM_RVIA_0.DESCRIPCIONCANAL.value="Oficina";
+            document.FORM_RVIA_0.indic.value="TE";
+            //Importe Negativo->Transferencia Emitida
+            document.FORM_RVIA_0.clavePagina.value  = "BDP_SEPA_DETALLE_TRANSF_EMI";
+          }
+          break;
+          //P00021024 19/05/2017 INICIO
+        case "TI": // Transferencias 	INMEDIATAS
+          document.FORM_RVIA_0.ESSEPA.value="2";
+          if (positivoNegativo=="1"){
+            document.FORM_RVIA_0.indic.value="TR";
+            document.FORM_RVIA_0.clavePagina.value  = "BDP_SEPA_DETALLE_TRANSF_INM_REC";
+          }else{
+            document.FORM_RVIA_0.indic.value="TE";
+            document.FORM_RVIA_0.clavePagina.value  = "BDP_SEPA_DETALLE_TRANSF_INM_EMI";
+          }
+          break;
+          //P00021024 19/05/2017 FIN
+        case "OT": // Transferencias 	TARGET 2
+          document.FORM_RVIA_0.FECDESDE.value     = fechaValor;
+          document.FORM_RVIA_0.FECHASTA.value     = fechaValor;
+          document.FORM_RVIA_0.FECHA_VALOR.value  = fechaValor;
+          document.FORM_RVIA_0.NORHOST.value      = NroClave;
+          document.FORM_RVIA_0.FECHA_CREA.value 	= fechaValor;
+          document.FORM_RVIA_0.CUENTA_DESC.value 	= "LIBRETAS%2BAHORRO%2BPARTICULARES";
+          document.FORM_RVIA_0.CUENTA_SELEC.value	= "00818447506159992545";
+          //Importe Positivo->Transferencia Recibida
+          if (positivoNegativo=="1"){
+            document.FORM_RVIA_0.clavePagina.value  = "BDP_TARGET2_DETALLE_RECIBIDA";
+          }
+          else{
+            //Importe Negativo->Transferencia Emitida
+            document.FORM_RVIA_0.clavePagina.value  = "BDP_TARGET2_DETALLE_EMITIDA";
+          }
+          break;
+
+        case "V7":
+          document.FORM_RVIA_0.clavePagina.value  = "PAS_DETCOMMAN";
+          break;
+
+
+        case "RME":
+          var relleno = "0000000000000000";
+          var aRemesa = descripcionLarga.substring(0, 4);
+          var nRemesa = descripcionLarga.substring(4);
+
+          document.FORM_RVIA_0.anyoRemesa.value = aRemesa ;
+          document.FORM_RVIA_0.numRemesa.value  =  nRemesa;
+          document.FORM_RVIA_0.cuentaSel.value = document.FORM_RVIA_0.CUENTA.value+"   "+document.FORM_RVIA_0.DESCUENTA.value;
+          document.FORM_RVIA_0.clavePagina.value  = "CAR_EFECTOSREM_CARTERA";
+          break;
+
+
+        case "AC":  //Ingreso por ventanilla
+          document.FORM_RVIA_0.indicadorRef.value= indicadorRef;
+          document.FORM_RVIA_0.ordenante.value= ordenante;
+          document.FORM_RVIA_0.NumSecuencia.value= numSecuencia;
+          document.FORM_RVIA_0.origenApunte.value= tipoDetalle;
+          document.FORM_RVIA_0.importe.value= importeNumerico;
+          //document.FORM_RVIA_0.descripcionCorta.value= descripcionCorta;
+          document.FORM_RVIA_0.descripcionLarga.value= descripcionLarg;
+          document.FORM_RVIA_0.clavePagina.value  = "PAS_DETINGRESOVENT";
+          break;
+
+      }
+
+      if (pulsada == 0) {
+        if (document.FORM_RVIA_0.tipoBusqueda[0].checked){
+          var npagAux = parseInt(document.FORM_RVIA_0.nPaginaParcial.value) - 1;
+          if (npagAux > 0) document.FORM_RVIA_0.nPaginaParcial.value = ""+npagAux;
+          else document.FORM_RVIA_0.nPaginaParcial.value = "0";
+        }
+        pulsada = 1;
+        document.FORM_RVIA_0.submit();
+      }
+    }
+
+    function listaSolicitudes() {
+      if(pulsada == 0){
+
+        document.FORM_RVIA_0.diasAnteriores.value = "";
+        document.FORM_RVIA_0.tipoMovimiento.value = "";
+        document.FORM_RVIA_0.importeDesde.value = "";
+        document.FORM_RVIA_0.importeHasta.value = "";
+        document.FORM_RVIA_0.tipoBusqueda[1].checked = true;
+        document.FORM_RVIA_0.FechaDesde.value  = "14-01-2021";
+        document.FORM_RVIA_0.FechaHasta.value  = "14-04-2021";
+
+        document.FORM_RVIA_0.columnaOrden.value = document.FORM_RVIA_0.ultimoOrden.value;
+        document.FORM_RVIA_0.saldoVisible.value = 1;
+        document.FORM_RVIA_0.clavePagina.value = "PAS_MOV_FICH_SOLICITADOS";
+        pulsada = 1;
+        document.FORM_RVIA_0.submit();
+      }
+    }
+
+
+    function abrirDoc(cuenta, entidad, fechaOperacion, fechaValor, importe, origenApunte, acuerdoDoc, secuenciaApunte, codigoDoc, secuenciaDoc){
+
+      document.FORM_RVIA_1.acuerdo.value = cuenta.substring(10,20);
+      document.FORM_RVIA_1.Entidad.value = entidad;
+      document.FORM_RVIA_1.fechaValor.value = fechaValor.substring(6,10)+"-"+fechaValor.substring(3,5)+"-"+fechaValor.substring(0,2);
+      document.FORM_RVIA_1.fechaOperacion.value = fechaOperacion.substring(6,10)+"-"+fechaOperacion.substring(3,5)+"-"+fechaOperacion.substring(0,2);
+      document.FORM_RVIA_1.importe.value = Math.abs(importe);
+      document.FORM_RVIA_1.origenApunte.value = origenApunte;
+
+      document.FORM_RVIA_1.acuerdoDocumento.value = acuerdoDoc;
+      document.FORM_RVIA_1.numeroSecuencialApunteDoc.value = secuenciaApunte;
+      document.FORM_RVIA_1.codigoDocumento.value = codigoDoc;
+      document.FORM_RVIA_1.numSecPDF.value = secuenciaDoc;
+      //********** M000000875 - 26/05/2016 - INICIO ************
+      var nuevaVentana=window.open('','NEW','width=500,height=500,top=0,left=0,menubar=yes,scrollbars=yes,resizable=yes');
+      document.FORM_RVIA_1.target='NEW';
+      //********** M000000875 - 26/05/2016 - FIN ************
+      document.FORM_RVIA_1.clavePagina.value = "BDP_PAS_GENERA_DOC";
+      document.FORM_RVIA_1.submit();
+    }
+
+
+
+    function aplazarPago(cuenta, importe, fecha, descripcion, listaTipoAplazamiento, numSecuencia, sMoneda){
+      if ( pulsada == 0 ){
+        pulsada = 1;
+        document.FORM_RVIA_0.listaTipoAplazamiento.value = listaTipoAplazamiento;
+        document.FORM_RVIA_0.importe.value = importe;
+        document.FORM_RVIA_0.descripcionLarga.value = descripcion;
+        document.FORM_RVIA_0.CUENTA.value = cuenta;
+        document.FORM_RVIA_0.fechaValor.value = fecha;
+        document.FORM_RVIA_0.NumSecuencia.value = numSecuencia;
+        document.FORM_RVIA_0.moneda.value = sMoneda;
+        if (document.FORM_RVIA_0.tipoBusqueda[0].checked){
+          var npagAux = parseInt(document.FORM_RVIA_0.nPaginaParcial.value) - 1;
+          if (npagAux > 0) document.FORM_RVIA_0.nPaginaParcial.value = ""+npagAux;
+          else document.FORM_RVIA_0.nPaginaParcial.value = "0";
+        }
+        document.FORM_RVIA_0.clavePagina.value = "BDP_PAS_MOVS_APLAZA";
+        document.FORM_RVIA_0.columnaOrden.value = 0;
+        document.FORM_RVIA_0.submit();
+      }
+    }
+
+
+  </script>
+
+
+
+
+  <link rel="Stylesheet" type="text/css" href="/estilos_prtl/css/skin.css?id=002">
+
+  <link rel="Stylesheet" type="text/css" href="/estilos_prtl/css/TM2/RVIA05_IE/skin.css?id=002">
+
+
+
+  <link rel="Stylesheet" type="text/css" href="/estilos_prtl/css/TM2/RVIA05_IE/PARTICULAR/skin.css?id=002">
+
+  <link rel="Stylesheet" type="text/css" href="/estilos_prtl/bi/style.css">
+  <link rel="Stylesheet" type="text/css" href="/estilos_prtl/bi/style_IE.css">
+
+
+  <link rel="Stylesheet" type="text/css" href="/estilos_prtl/css/TM2/RVIA05_IE/PARTICULAR/3190/skin.css?id=002">
+
+
+  <NO_TRANSFORM><script language="javascript" src="/javascripts_portal/es_ES/js_portal/interface.js"></script></NO_TRANSFORM>
+
+
+
+
+  <NO_TRANSFORM><script language="javascript" src="/javascripts_portal/es_ES/js_portal/multicanalidad.js"></script></NO_TRANSFORM>
+
+
+
+  <script language="JavaScript">
+    <!--
+    openMenuA = null;
+    openMenuB = null;
+
+    function cambiaKK(capa1, capa2){
+      oculta(capa1);
+      visualiza(capa2);
+      if (openMenuA != null){
+        oculta(openMenuB);
+        visualiza(openMenuA);
+      }
+      if (openMenuA == capa2){
+        openMenuA = null;
+        openMenuB = null;
+      }else{
+        openMenuA = capa1;
+        openMenuB = capa2;
+      }
+    }
+
+    function oculta(capaId){
+      capa = document.getElementById(capaId);
+      capa.style.display = 'none';
+      i = 0;
+      while (document.getElementById(capaId + "_" + i)){
+        caux = document.getElementById(capaId + "_" + i);
+        caux.style.display = 'none';
+        i++;
+      }
+    }
+
+    function visualiza(capaId){
+      capa = document.getElementById(capaId);
+      capa.style.display = 'block';
+      i = 0;
+      while (document.getElementById(capaId + "_" + i)){
+        caux = document.getElementById(capaId + "_" + i);
+        caux.style.display = 'block';
+        i++;
+      }
+    }
+
+
+
+
+
+
+    function pintarTablaMenu(texto)
+    {
+      document.write("<td class='fondoMenu' style=' vertical-align: bottom;'>");
+      document.write("	<table cellpadding='0' cellspacing='0' border='0'>");
+      document.write("	<tr>");
+      document.write("		<td nowrap='true' id='opcion'>" + texto + "</td>");
+      document.write("	</tr>");
+      document.write("	</table>");
+      document.write("</td>");
+    }
+
+    function pintarTablaMenuSeleccionada(texto)
+    {
+      document.write("<td class='fondoMenu' style=' vertical-align: bottom;'>");
+      document.write("			<table cellpadding='0' cellspacing='0' border='0'>");
+      document.write("			<tr>");
+      document.write("	 			<td class='izqFin' nowrap='true'></td>");
+      document.write("	 			<td class='centroFin' nowrap='true'>&nbsp;" + texto + "&nbsp;</td>");
+      document.write("				<td class='dchaFin' nowrap='true'>&nbsp;</td>");
+      document.write("			</tr>");
+      document.write("		 	</table>");
+      document.write("		</td>");
+
+
+    }
+
+    function pintarFinTablaMenu()
+    {
+      document.write("<td class='fondoMenu' style='vertical-align: bottom; padding-top:5px;' width='100%'>");
+      document.write("<table cellpadding='0' cellspacing='0' border='0' width='100%'>");
+      document.write("	<tr>");
+      document.write("		<td id='opcion'>&nbsp;</td>");
+      document.write("	</tr>");
+      document.write("	</table>");
+      document.write("</td>");
+    }
+
+    //-->
+  </script>
+  <script language="Javascript">
+    <!--
+    ie4 = (document.all)? true:false;
+    function pulsarTecla (e){
+      if ((ie4 && (event.keyCode == 13)) || (! ie4 && (e.which == 13))){
+        return false;
+      }
+    }
+    document.onkeydown = pulsarTecla;
+    //-->
+
+  </script>
+  <script language="javascript" src="/javascripts_portal/utils/funciones.js"></script>
+</head>
+
+<BODY>
+<DIV ID="RESOLUCION">
+
+  <!--CABECERA-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script language="JavaScript">
+    <!--
+    function resolucion(valor){
+      if (valor == "TM1"){
+        var tx = "Se va a proceder a modificar el modo de visualización de su pantalla. Le recomendamos que ajuste la configuración de su pantalla a 800 x 600 píxeles.";
+        alert(tx);
+      }else{
+        var tx = "Se va a proceder a modificar el modo de visualización de su pantalla. Le recomendamos que ajuste la configuración de su pantalla a un resolución mínima de 1024 x 768 píxeles.";
+        alert(tx);
+      }
+      url = window.location.href;
+      if (url.indexOf("?") != -1){
+        indice = url.indexOf("?");
+        if (indice != -1){
+          window.location.href = url.substring(0, indice) + "?RES=" + valor;
+        }else{
+          window.location.href = url + "&RES=" + valor;
+        }
+      }else{
+        window.location.href = url + "?RES=" + valor;
+      }
+    }
+    //-->
+
+    function salirConfirmacion(url){
+      load(url);
+      //location.href="/isum/srv.BDP_EXCLUSIVE_SALIR_EMP.BDP_EXCLUSIVE_SALIR_EMP";
+    }
+
+    var pgLogout = null ;
+
+    function load(url) {
+
+
+
+
+      url= 'https://bancaelectronica.evobanco.com'+url;
+
+
+      if (typeof window.ActiveXObject != 'undefined' ) {
+        pgLogout = new ActiveXObject("Microsoft.XMLHTTP");
+        pgLogout.onreadystatechange = process ;
+      }
+      else {
+        pgLogout = new XMLHttpRequest();
+        pgLogout.onload = process ;
+      }
+      pgLogout.open( 'POST', url, true );
+      pgLogout.send( null );
+    }
+
+    function process() {
+      if (pgLogout.readyState != 4 ) return ;
+      document.getElementById('CONTENIDO').innerHTML = pgLogout.responseText ;
+    }
+
+
+  </script>
+
+  <div class=CABECERA>
+
+    <div id=LOGO></div>
+    <div id=BARRALITERAL>
+
+
+
+      <a href="/isum/interfaces/ruralvia2005b/Logout.jsp?entidad=3190&modo_autenticacion=1" id="botonSalir" ></a>
+
+
+
+      <div id=CBLITERAL01>
+
+
+        <a href='Main?ISUM_ID=cabecera&ISUM_SCR=serviceScr&ISUM_CIPH=7rTlGDi4Q1aXSQrvU8vmsnSdI69oz38VCyiC8VIVgwI%3D' onMouseOut="MM_swapImgRestore()" onMouseOver="MM_swapImage('desconectar','','/es_ES/img/desconectar_b.gif',1)"><img name="desconectar" border="0" src="/es_ES/img/desconectar_a.gif" alt="Desconectar" ></a>
+
+
+
+      </div> <!-- CBLITERAL01 -->
+
+
+
+
+
+
+      <div id=CBLITERAL><a class="link0" href="/isum/Main?ISUM_ID=Utilities&ISUM_SCR=serviceScr&ISUM_CIPH=U31Z7iWTseeErHSYkS0f1g%3D%3D" target="_blank">Atención al Cliente</a>&nbsp;|&nbsp;</div>
+
+
+
+
+
+      <div id=CBLITERAL><a class="link0" href="/isum/Main?ISUM_ID=Utilities&ISUM_SCR=serviceScr&ISUM_CIPH=kwCMzo%2F3Ei32dhFM9pSjeQ%3D%3D" target="_blank">Seguridad</a>&nbsp;|&nbsp;</div>
+
+
+
+      <!--Adaptación Resoluciones-->
+
+
+
+      <!--***** P00009735 -- INICIO ***********-->
+
+      <!-- /*************************** P00017411 12/08/2013 INICIO *************************************** -->
+
+
+      <div id="CBLOGOTXT">
+        GLOBALCAJA
+
+
+        <div class="bix">BIC: BCOEESMM190</div>
+
+      </div>
+      <!-- /*************************** P00017411 12/08/2013 FIN ****************************************** -->
+
+      <!--***** P00009735 -- FIN ***********-->
+
+
+
+
+
+
+    </div> <!-- BARRALITERAL -->
+
+
+    <div id=ENTORNO>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      <div id=DESTACADOS><a class="link1" HREF="/isum/Main?ISUM_ID=cabecera&ISUM_SCR=groupScr&ISUM_CIPH=qz1M1IumUvEyI8opzKHh97A%2BrhqeWvUx8Lf%2FrXS%2BS9Y%3D" id="BDP_RVIA05_BANCA_PRIVADA_PAR">Banca Privada</a></div>
+
+
+
+
+
+      <div id=DESTACADOS><a class="link1" HREF="/isum/Main?ISUM_ID=cabecera&ISUM_SCR=groupScr&ISUM_CIPH=11bxFoBE04HQzIeTLzlGU7bAfib8dZh4ckTtcBVXgTY%3D" id="BDP_RVIA05_COMERCIO_PAR">Comercio</a></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      <div id=DESTACADOS><a class="link1" HREF="/isum/srv.PARTICULAR.BDP_RVIA05_SERV_CABECERA_GEST_FICHEROS"  id="PARTICULAR_IA">Gestión de Ficheros</a></div>
+
+      <INPUT type="hidden" name="PARTICULAR_IA_REDIRECT" id="PARTICULAR_IA_REDIRECT" value="/isum/Main?ISUM_ID=cabecera&ISUM_SCR=groupScr&ISUM_CIPH=YJx3dE2M7wqsrYErqhPuXupPwFnK5%2BGcc5r1z6kE7vI%3D">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </div>
+  </DIV>
+
+
+
+
+
+
+
+  <!--MENU SUPERIOR-->
+
+
+
+
+
+
+
+
+
+
+  <!--	<DIV MENU> //-->
+  <div id="menuHorizontal">
+    <table cellpadding="0" align="center" cellspacing="0" border="0" style="border-top: 1px solid #000000; border-left: 1px solid #949494;">
+      <tr>
+
+        <script>pintarTablaMenuSeleccionada('Inicio');</script>
+
+        <script>pintarTablaMenu('<a class="menu" href="/isum/Main?ISUM_ID=menu&ISUM_SCR=groupScr&ISUM_CIPH=2SE0%2Ba4RovcRVQ1GAI5zsv8kSC%2FwAU5jBXfdbeJmYWY%3D">Cuentas</a>');</script>
+
+
+        <script>pintarTablaMenu('<a class="menu" href="/isum/Main?ISUM_ID=menu&ISUM_SCR=groupScr&ISUM_CIPH=zLtXpsq4GNq%2FwqRZGtsMLFdWE5WexZ1X9lufEB8%2F4YY%3D">Transferencias</a>');</script>
+
+
+        <script>pintarTablaMenu('<a class="menu" href="/isum/Main?ISUM_ID=menu&ISUM_SCR=groupScr&ISUM_CIPH=yRcHqcYLrTARQGHj7Pi1ff%2BtpwJgrOU6HbLmlQS9dEE%3D">Tarjetas</a>');</script>
+
+
+        <script>pintarTablaMenu('<a class="menu" href="/isum/Main?ISUM_ID=menu&ISUM_SCR=groupScr&ISUM_CIPH=LmiigXoP4vRpMeljAtnV3v1ZgIBeocHT8yM1ae4KgTI%3D">Ahorro/Inversión</a>');</script>
+
+
+        <script>pintarTablaMenu('<a class="menu" href="/isum/Main?ISUM_ID=menu&ISUM_SCR=groupScr&ISUM_CIPH=HPicfOzvGMcbLd500kVJHPaOA1c%2BeoIFkEJFksIQfds%3D">Valores</a>');</script>
+
+
+        <script>pintarTablaMenu('<a class="menu" href="/isum/Main?ISUM_ID=menu&ISUM_SCR=groupScr&ISUM_CIPH=3P8ak%2Fw%2BLq%2F1kXcFZjHlkxA7hAm2%2FGXSOqdyAMHJ15w%3D">Financiación</a>');</script>
+
+
+        <script>pintarTablaMenu('<a class="menu" href="/isum/Main?ISUM_ID=menu&ISUM_SCR=groupScr&ISUM_CIPH=8BlyulHrQLTEYbnaUP3QUm%2FdR4NNTNBkixw74ISu73s%3D">Internacional</a>');</script>
+
+
+        <script>pintarTablaMenu('<a class="menu" href="/isum/Main?ISUM_ID=menu&ISUM_SCR=groupScr&ISUM_CIPH=73hcwk0XZo8SEP2dxczbgnnexVvPQ3ilwzh0%2F769H14%3D">Seguros</a>');</script>
+
+
+        <script>pintarTablaMenu('<a class="menu" href="/isum/Main?ISUM_ID=menu&ISUM_SCR=groupScr&ISUM_CIPH=Y9LhU13F2LWEUuChfGupvRa1F%2FGwMaJ0bDvCMnSrrlA%3D">Impuestos</a>');</script>
+
+
+        <script>pintarTablaMenu('<a class="menu" href="/isum/Main?ISUM_ID=menu&ISUM_SCR=groupScr&ISUM_CIPH=3pvGhvjKGR1CcYjyBXAuoEU%2BIkbvF6Z3BIEEkFjA3ZM%3D">Ficheros</a>');</script>
+
+
+        <script>pintarTablaMenu('<a class="menu" href="/isum/Main?ISUM_ID=menu&ISUM_SCR=groupScr&ISUM_CIPH=5DtUwjQzImfG%2BiwNL58%2F07TlDO4OHJEHoQZ45lFMHJQ%3D">Servicios</a>');</script>
+
+
+        <script>pintarTablaMenu('<a class="menu" href="/isum/Main?ISUM_ID=menu&ISUM_SCR=groupScr&ISUM_CIPH=aGsDKZ99JKy7PWazhPJl0NjKIySPuQOURkgfiBxZ2U4%3D">Buzón</a>');</script>
+
+
+        <script>pintarFinTablaMenu();</script>
+      </tr>
+    </table>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script language="JavaScript">
+    <!--
+    desplegar =  false;
+    //-->
+  </script>
+  <DIV class="MENU2">
+
+
+
+
+    <div class="opcionSm2"><a href="/isum/Main?ISUM_ID=submenu&ISUM_SCR=serviceScr&ISUM_CIPH=MHDiICbbx5SeKu%2FlPe71C595uzZSypL%2BRl8pU6Bqt74%3D" >Posición Global</a></div>
+
+
+
+
+
+
+
+    <div class="opcionSm2"><a href="/isum/Main?ISUM_ID=submenu&ISUM_SCR=serviceScr&ISUM_CIPH=iEfVf5Eg%2BSZtF06uAyUvXRjFlOTV%2B%2BYmg%2BnZUK32qH4%3D" >Documentos Pendientes de Firma</a></div>
+
+
+
+
+
+
+
+    <div class="opcionSm2"><a href="/isum/Main?ISUM_ID=submenu&ISUM_SCR=serviceScr&ISUM_CIPH=6%2F1GTWmdBoiMA0ZjAMQraI4MywtyI%2FlDX3eMv0aTGa8%3D" >Nombrar Cuentas</a></div>
+
+
+
+
+
+
+
+    <div class="opcionSm2"><a href="/isum/Main?ISUM_ID=submenu&ISUM_SCR=serviceScr&ISUM_CIPH=EvK%2Fbpjrw%2BqXrVo3yzQfQQG0B4Jw639LB1XEx22kyWM%3D" >Mis Finanzas</a></div>
+
+
+
+
+
+    <div class="opcionGm2">Operaciones Frecuentes</div>
+
+
+
+
+    <div class="fondopciones">
+
+
+      <div class="subopcionm2"><a  href="/isum/Main?ISUM_ID=submenu&ISUM_SCR=serviceScr&ISUM_CIPH=FBy92xcVjE4FLTLueNcnYmXU3gGRb9jNHXT5YxW5eEQ%3D" >Recarga Móviles </a></div>
+
+
+
+
+    </div>
+
+
+
+    <div class="fondopciones">
+
+
+      <div class="subopcionm2"><a  href="/isum/Main?ISUM_ID=submenu&ISUM_SCR=serviceScr&ISUM_CIPH=Z8TEPkvfqjh2dc7%2B2r8gJ6CN9XRQEJZLCo02zcE2BQg%3D" >Movimientos</a></div>
+
+
+
+
+    </div>
+
+
+
+    <div class="fondopciones">
+      <script language="JavaScript">
+        <!--
+        gName = 'Transferencias';
+        //-->
+      </script>
+      <div id="ga1160" class="subopcionm2A">
+        <a href="javascript:cambiaKK('ga1160', 'gb1160');"><IMG SRC="/estilos_prtl/css/abrir.gif" border=0></script></a>
+        <a href="javascript:cambiaKK('ga1160', 'gb1160');"><script language="javascript">document.write(gName);</script></a>
+      </div>
+      <div id="gb1160" class="subopcionm2C" style="display: none;">
+        <a href="javascript:cambiaKK('gb1160', 'ga1160');"><IMG SRC="/estilos_prtl/css/cerrar.gif" border=0></script></a>
+        <a href="javascript:cambiaKK('gb1160', 'ga1160');"><script language="javascript">document.write(gName);</script></a>
+      </div>
+
+
+      <div id="gb1160_0" class="subopcionm3" style="display: none;"><a href="/isum/Main?ISUM_ID=submenu&ISUM_SCR=serviceScr&ISUM_CIPH=ub9%2Bghjw7BeZ0FYcU4nRlrR%2FSUHod%2FUKKkS1Fst%2FzZ8%3D" >Entre mis cuentas</a></div>
+
+
+
+
+      <div id="gb1160_1" class="subopcionm3" style="display: none;"><a href="/isum/Main?ISUM_ID=submenu&ISUM_SCR=serviceScr&ISUM_CIPH=YY3HAtj5c7L%2BjSWvQXCg46GEFwL2K1a7gCiCDibmPfQ%3D" >Transferencia</a></div>
+
+
+
+
+      <div id="gb1160_2" class="subopcionm3" style="display: none;"><a href="/isum/Main?ISUM_ID=submenu&ISUM_SCR=serviceScr&ISUM_CIPH=5IcCJdnkOsG63%2BjbUsncXZpE3QmR09YEPkUcUlSwmMQ%3D" >Transferencia al Extranjero</a></div>
+
+
+
+
+
+    </div>
+
+
+
+    <div class="fondopciones">
+      <script language="JavaScript">
+        <!--
+        gName = 'Buzón Virtual';
+        //-->
+      </script>
+      <div id="ga1148" class="subopcionm2A">
+        <a href="javascript:cambiaKK('ga1148', 'gb1148');"><IMG SRC="/estilos_prtl/css/abrir.gif" border=0></script></a>
+        <a href="javascript:cambiaKK('ga1148', 'gb1148');"><script language="javascript">document.write(gName);</script></a>
+      </div>
+      <div id="gb1148" class="subopcionm2C" style="display: none;">
+        <a href="javascript:cambiaKK('gb1148', 'ga1148');"><IMG SRC="/estilos_prtl/css/cerrar.gif" border=0></script></a>
+        <a href="javascript:cambiaKK('gb1148', 'ga1148');"><script language="javascript">document.write(gName);</script></a>
+      </div>
+
+
+      <div id="gb1148_0" class="subopcionm3" style="display: none;"><a href="/isum/Main?ISUM_ID=submenu&ISUM_SCR=serviceScr&ISUM_CIPH=vsfxez4eOAtmTcbakWucYWM21Od2g6AdjFg7oWUutkw%3D" >Consulta</a></div>
+
+
+
+
+      <div id="gb1148_1" class="subopcionm3" style="display: none;"><a href="/isum/Main?ISUM_ID=submenu&ISUM_SCR=serviceScr&ISUM_CIPH=WOTIwQd5rq%2BiPQzlTVRh%2FXxWdtK5ljVsUFQ0zx2CvnQ%3D" >Alta Buzón Virtual</a></div>
+
+
+
+
+      <div id="gb1148_2" class="subopcionm3" style="display: none;"><a href="/isum/Main?ISUM_ID=submenu&ISUM_SCR=serviceScr&ISUM_CIPH=f5r01QqG3CeYglKxwevtMbH3%2FjKkRFjCSmSSi5qdr1U%3D" >Baja Buzón Virtual</a></div>
+
+
+
+
+
+    </div>
+
+
+
+    <div class="fondopciones">
+      <script language="JavaScript">
+        <!--
+        gName = 'Valores';
+        //-->
+      </script>
+      <div id="ga1003" class="subopcionm2A">
+        <a href="javascript:cambiaKK('ga1003', 'gb1003');"><IMG SRC="/estilos_prtl/css/abrir.gif" border=0></script></a>
+        <a href="javascript:cambiaKK('ga1003', 'gb1003');"><script language="javascript">document.write(gName);</script></a>
+      </div>
+      <div id="gb1003" class="subopcionm2C" style="display: none;">
+        <a href="javascript:cambiaKK('gb1003', 'ga1003');"><IMG SRC="/estilos_prtl/css/cerrar.gif" border=0></script></a>
+        <a href="javascript:cambiaKK('gb1003', 'ga1003');"><script language="javascript">document.write(gName);</script></a>
+      </div>
+
+
+      <div id="gb1003_0" class="subopcionm3" style="display: none;"><a href="/isum/Main?ISUM_ID=submenu&ISUM_SCR=serviceScr&ISUM_CIPH=ZANLDqDdtJX80Cvz1Sa1bAxKy462u5d4oQkzrQSUW6s%3D" >Compra de acciones</a></div>
+
+
+
+
+      <div id="gb1003_1" class="subopcionm3" style="display: none;"><a href="/isum/Main?ISUM_ID=submenu&ISUM_SCR=serviceScr&ISUM_CIPH=XWGfgldBfyjw1jJEaE8awVXNCNDDS1Bu4P00SvdSkT8%3D" >Venta de acciones</a></div>
+
+
+
+
+
+    </div>
+
+
+
+    <div class="fondopciones">
+      <script language="JavaScript">
+        <!--
+        gName = 'Planes de Pensiones';
+        //-->
+      </script>
+      <div id="ga2069" class="subopcionm2A">
+        <a href="javascript:cambiaKK('ga2069', 'gb2069');"><IMG SRC="/estilos_prtl/css/abrir.gif" border=0></script></a>
+        <a href="javascript:cambiaKK('ga2069', 'gb2069');"><script language="javascript">document.write(gName);</script></a>
+      </div>
+      <div id="gb2069" class="subopcionm2C" style="display: none;">
+        <a href="javascript:cambiaKK('gb2069', 'ga2069');"><IMG SRC="/estilos_prtl/css/cerrar.gif" border=0></script></a>
+        <a href="javascript:cambiaKK('gb2069', 'ga2069');"><script language="javascript">document.write(gName);</script></a>
+      </div>
+
+
+      <div id="gb2069_0" class="subopcionm3" style="display: none;"><a href="/isum/Main?ISUM_ID=submenu&ISUM_SCR=serviceScr&ISUM_CIPH=qranTCNJ%2FucXUK6f4ExUNeI9PDuFkVmORpObf3s7aKw%3D" target="_blank">Informes, Simulador de jubilación y Simulador de prestación</a></div>
+
+
+
+
+
+    </div>
+
+
+
+
+
+
+
+
+
+    <div class="opcionSm2"><a href="/isum/Main?ISUM_ID=submenu&ISUM_SCR=serviceScr&ISUM_CIPH=QydMfyhPvYJGYTPK2mJQ%2Bew0sYk5I6q17pFVZo4Yfsw%3D" >Mis transferencias habituales</a></div>
+
+
+
+
+
+
+
+    <div class="opcionSm2"><a href="/isum/Main?ISUM_ID=submenu&ISUM_SCR=serviceScr&ISUM_CIPH=LXHs35SRdAQXF7hK9Ors1OdSuFNgOVT52ba7F5uJ1Qg%3D" >Contratación Online</a></div>
+
+
+
+
+
+
+
+    <div class="opcionSm2"><a href="/isum/Main?ISUM_ID=submenu&ISUM_SCR=serviceScr&ISUM_CIPH=jBs4qKMNIqJEegQbhVm0G4a78b6Nd5E%2Ba2%2BHFY3PrV0%3D" >Conversor de Cuentas</a></div>
+
+
+
+    <div class="opcionSm2"><a href="/isum/Main?ISUM_ID=submenu&ISUM_SCR=serviceScr&ISUM_CIPH=0AkQvNidlXISUonccPAXycxfuICegSLW8byF0SRMZng%3D" >Ficheros</a></div>
+
+
+
+    <div class="opcionSm2"><a href="/isum/Main?ISUM_ID=submenu&ISUM_SCR=serviceScr&ISUM_CIPH=QshBe1MWQ6G%2FZaS1dn%2F5AYs%2BDEtklzk9OgQ99nl30fM%3D" >Órdenes Pendientes de Firma</a></div>
+
+
+
+    <div class="opcionSm2"><a href="/isum/Main?ISUM_ID=submenu&ISUM_SCR=serviceScr&ISUM_CIPH=3p8j4zydJkj3qmqQCLNBM7oEjKRTwJRHMdI7pkUUyKY%3D" >Operaciones Pendientes</a></div>
+
+
+
+
+
+  </DIV>
+  <script language="JavaScript">
+    <!--
+    if (desplegar)
+      cambiaKK(toHide, toShow);
+    //-->
+  </script>
+
+
+
+
+
+
+
+
+  <div id="AdminToolbar">
+
+  </div>
+
+  <!--CONTENIDO-->
+  <DIV id="CONTENIDO" class="pos_global">
+
+
+
+
+
+    <!--div style="position: relative"-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <FORM name="FORM_RVIA_0" action="/isum/Main?ISUM_ID=portlets_area&ISUM_SCR=linkServiceScr&ISUM_CIPH=lp57J0ZX0wXEyMgcVgd7gjZpGiYNGDwn%2FMIcVVH3Xq0Pao0fN%2BAxx8iq%2B6owrHQqpXfzkiB0Axb4fCIhGcZg5gGMY0hIIgkMSZ4UiMF83JKo3h6CMDyU%2FRgQDngQVwZzRhasDSL5NEzSHaDA4ggHgETtQMGVGnsLnUW0klVqiQE0sltofpFsWQbCHyKUAXmhG%2BR8kvC5qxw%2Bg9jDjurDs6JwbAES7veIHjP9s6v5oJw%3D" method="post" ><input type="hidden" name="ISUM_OLD_METHOD" value="post"/><input type="hidden" name="ISUM_ISFORM" value="true"/>
+
+      <div id=PORTLET-SECTION-HEADER>
+
+        <div id=HEADER>Movimientos</div>
+
+      </div>
+
+      <div id="EXPLICA">Seleccione los criterios de consulta que desee realizar y pulse '<b>Aceptar</b>'.</div>
+
+      <div id=PORTLET-INPUT>
+
+        <div id=HEADER_INPUT><div id=HD_INPUT>Búsqueda de Movimientos</div></div>
+
+        <div id=BODY_INPUT>
+
+
+          <table CELLPADDING="0" CELLSPACING="0" BORDER="0" WIDTH="100%" >
+            <tr >
+              <td class="datobl" width="10px" >Cuenta</td>
+
+              <!-- /**** P000018455 04-02-2016 INICIO    ****************/-->
+              <td class="datoI" >ES5000818447506159992545 | LIBRETAS%2BAHORRO%2BPARTICULARES | Euro</td>
+              <!-- /**** P000018455 04-02-2016 FIN    ****************/-->
+            </tr>
+            <tr >
+              <td class="datobl" >Saldo</td>
+              <td class="datoI" >4.099,33</td>
+
+            </tr>
+
+            <tr >
+              <td >
+                <table CELLPADDING="0" CELLSPACING="0" BORDER="0" WIDTH="100%" >
+                  <tr >
+                    <td class="datoC" width="1%" ><INPUT TYPE="radio" NAME="tipoBusqueda" VALUE="0" onClick="javascript:habilitarOrden(0, true);" checked></td>
+                    <td class="datopc" >Últimos&nbsp;
+                      <input class="dato" type="text" name="nMovs" size="3" maxlength="3" onClick="javascript:habilitarOrden(0, false);">&nbsp;
+                      Movimientos
+                    </td>
+                  </tr>
+                </table>
+              </td><td class="datoI" >&nbsp;</td>
+            <tr >
+
+            <tr >
+              <td >
+                <table CELLPADDING="0" CELLSPACING="0" BORDER="0" WIDTH="100%" >
+                  <tr >
+                    <td class="datoC" width="1%" ><INPUT TYPE="radio" NAME="tipoBusqueda" VALUE="1" onClick="javascript:habilitarOrden(1, true);"></td>
+                    <td class="datopc" >Fecha desde</td>
+                  </tr>
+                </table>
+              </td>
+              <td >
+                <table border="0" cellspacing="0" cellpadding="0" WIDTH="100%" >
+                  <tr >
+                    <td class="datoI" width="130px" >
+                      <INPUT class="dato"  TYPE="text" NAME="FECHAMOVDESDE" VALUE="" SIZE=15 MAXLENGTH=10 onClick="javascript:habilitarOrden(1, false);">
+                      <!--  I0002465967 Inicio se pasa un nuevo parametro para llamar a una funcion JavaScript -->
+                      <DIV id='cal_FECHAMOVDESDE' style='position:absolute;z-index:1;'></DIV><IMG src='/es_ES/img/P/calendar.gif' border=0 onMouseOver="this.style.cursor='hand'" onClick="javascript:showCalendar('FECHAMOVDESDE','idcal_FECHAMOVDESDE','-','espaniol','FORM_RVIA_0');habilitarOrden(1, false);"><DIV id='idcal_FECHAMOVDESDE' style='position:absolute; visibility: hidden;z-index:2;'></DIV>
+                      <!--  I0002465967 Fin -->
+                    </td>
+                    <td class="datopc" style="width:80px" >hasta</td>
+                    <td class="datoI" >
+                      <INPUT class="dato"  TYPE="text" NAME="FECHAMOVHASTA" VALUE="" SIZE=15 MAXLENGTH=10 onClick="javascript:habilitarOrden(1, false);">
+                      <!--  I0002465967 Inicio se pasa un nuevo parametro para llamar a una funcion JavaScript -->
+                      <DIV id='cal_FECHAMOVHASTA' style='position:absolute;z-index:1;'></DIV><IMG src='/es_ES/img/P/calendar.gif' border=0 onMouseOver="this.style.cursor='hand'" onClick="javascript:showCalendar('FECHAMOVHASTA','idcal_FECHAMOVHASTA','-','espaniol','FORM_RVIA_0');habilitarOrden(1, false);"><DIV id='idcal_FECHAMOVHASTA' style='position:absolute; visibility: hidden;z-index:2;'></DIV>
+                      <!--  I0002465967 Fin -->
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </TABLE>
+
+          <div id="BUSQUEDA_AVANZADA" style="display: none;">
+            <table CELLPADDING="0" CELLSPACING="0" BORDER="0" WIDTH="100%" >
+              <tr >
+                <td >
+                  <table CELLPADDING="0" CELLSPACING="0" BORDER="0" WIDTH="100%" >
+                    <tr >
+                      <td class="datoC" width="1%" ><INPUT TYPE="radio" NAME="tipoBusqueda" VALUE="2" onClick="javascript:habilitarOrden(2, true);"></td>
+                      <td class="datopc" >De los últimos
+                        <input class="dato" type="text" name="diasAnteriores" size="3" maxlength="3" onClick="javascript:habilitarOrden(2, false);">&nbsp;
+                        Días
+                      </td>
+                    </tr>
+                  </table>
+                </td><td class="datoI" >&nbsp;</td>
+              </tr>
+
+              <tr >
+                <td class="datopc" >Importe&nbsp;desde</td>
+                <td ><table border="0" cellspacing="0" cellpadding="0" WIDTH="100%" >
+                  <tr >
+                    <td class="datoI" width="130px" ><INPUT class="dato" TYPE="text" NAME="IMPORTMIN" VALUE="" SIZE=15 MAXLENGTH=15></td>
+                    <td class="datopc" style="width:80px" >hasta</td>
+                    <td class="datoI" ><INPUT class="dato"  TYPE="text" NAME="IMPORTMAX" VALUE="" SIZE=15 MAXLENGTH=15></td>
+                  </tr>
+                </table>
+                </td>
+              </tr>
+
+              <tr >
+                <td class="datobl" >Tipo&nbsp;de&nbsp;Movimiento</td>
+                <td class="datoI" >
+                  <select id ="tipoMovimiento" class="dato" name="tipoMovimiento" maxlength="20">
+                    <option selected value="">Todos</option>
+
+                    <option  value="H">Abonos</option>
+                    <option  value="D">Cargos</option>
+
+                  </select>
+                </td>
+              </tr>
+            </TABLE>
+
+            <table CELLPADDING="0" CELLSPACING="0" BORDER="0" WIDTH="100%" >
+              <tr >
+                <td class="datopc" >Mostrar primero el movimiento:</td>
+                <td class="datoI" width="130px" >
+                  <INPUT TYPE="radio" name="ordenBusqueda" id="ordenBusqueda" value="D" checked>
+                  Más reciente
+                </td>
+                <td class="datoI" >
+                  <INPUT TYPE="radio" name="ordenBusqueda" id="ordenBusqueda" value="A" >
+                  Más antiguo
+                </td>
+              </tr>
+            </table>
+
+          </div>
+
+
+        </div>
+
+
+        <div id="NOTAINFO">
+          <table cellpadding="0" cellspacing="0" border="0" width="100%" >
+            <tr >
+              <td id="BOTON_BA" style="display: block;" width="70%" ><a class="datoI" href="#" onClick="mostrarBusAv(); return false;" >Ampliar Búsqueda y Exportar Resultados</a></td>
+              <td width="50%" ><a class="datoI" href="#" onClick="listaSolicitudes(); return false;" >Ficheros Solicitados</a></td>
+            </tr>
+          </table>
+        </div>
+
+        <div id="FOOTER">
+          <div id="BOT">
+            <a href="/isum/Main?ISUM_ID=portlets_area&ISUM_SCR=linkServiceScr&ISUM_CIPH=lp57J0ZX0wXEyMgcVgd7gjZpGiYNGDwn%2FMIcVVH3Xq09Yn0X%2FRZiDEklYcY%2F4cFS" onClick="javascript:aceptarBuscar();return false;" >&#65;&#99;&#101;&#112;&#116;&#97;&#114;</a>
+          </div>
+
+          <div id="BOT">
+            <a href="/isum/Main?ISUM_ID=portlets_area&ISUM_SCR=linkServiceScr&ISUM_CIPH=lp57J0ZX0wXEyMgcVgd7gjZpGiYNGDwn%2FMIcVVH3Xq09Yn0X%2FRZiDEklYcY%2F4cFS" onClick="javascript:volver();return false;" >Volver</a>
+          </div>
+
+        </div>
+
+
+        <div id="NOTAINFO">Cumpliendo con la normativa europea PSD2, a partir del 14 de Septiembre de 2019, ampliamos la seguridad con una autenticación reforzada en 2 pasos. <br><br>Al realizar búsquedas de movimientos con una antiguedad mayor a 90 días, deberás introducir tu firma y un código de validación que recibiras por SMS en tu móvil.</div>
+
+
+        <div id="PAGINAR" align="right">
+
+
+          <a href="#" onClick="inicio();return false;" >Inicio</a>&nbsp;&nbsp;<a href="#" onClick="siguientes();return false;" >Siguientes</a>
+
+
+        </div>
+
+
+
+        <table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%" >
+          <tr >
+            <td class="cblistaC" ><a class="cblistaOR" href="#" onclick="javascript:ordenar(0)" >Fecha Ejecución</a></td>
+            <td class="cblistaC" ><a class="cblistaOR" href="#" onclick="javascript:ordenar(2)" >Fecha Valor</a></td>
+            <td class="cblistaC" ><a class="cblistaOR" href="#" onclick="javascript:ordenar(3)" >Descripción</a></td>
+            <td class="cblistaC" ><a class="cblistaOR" href="#" onclick="javascript:ordenar(4)" >Importe</a></td>
+
+            <td class="cblistaC" >Saldo</td>
+
+            <td class="cblistaC" ></td>
+            <td class="cblistaC" ></td>
+          </tr>
+
+
+
+
+
+          <tr >
+            <td class="listaC" >14-04-2021</td>
+            <td class="listaC" >14-04-2021</td>
+
+            <td class="listaI" >TJ-AMAZON.ES</td>
+
+            <td class="implistaN" >-9,38</td>
+
+            <td class="implista" >4.099,33</td>
+
+
+            <td class="listaI" >
+
+            </td>
+            <td class="listaI" >
+
+            </td>
+          </tr>
+
+
+
+          <tr >
+            <td class="listaC" >13-04-2021</td>
+            <td class="listaC" >10-04-2021</td>
+
+            <td class="listaI" >AMAZON UFG*M467A0384</td>
+
+            <td class="implistaN" >-68,48</td>
+
+            <td class="implista" >4.108,71</td>
+
+
+            <td class="listaI" >
+
+            </td>
+            <td class="listaI" >
+
+            </td>
+          </tr>
+
+
+
+          <tr >
+            <td class="listaC" >13-04-2021</td>
+            <td class="listaC" >13-04-2021</td>
+
+
+
+            <td class="listaI" >
+              <a href="/isum/Main?ISUM_ID=portlets_area&ISUM_SCR=linkServiceScr&ISUM_CIPH=lp57J0ZX0wXEyMgcVgd7gjZpGiYNGDwn%2FMIcVVH3Xq09Yn0X%2FRZiDEklYcY%2F4cFS" onClick="javaScript:mostrarDetalle('RZ', '', '3190', '1102540692', '13-04-2021', 'RZ', '13-04-2021','0','RCBO.VINCENT CLAUS', '', '', '0000814', '-750.0', 'RCBO.VINCENT CLAUS', '', '978');return false;" >
+
+                RCBO.VINCENT CLAUS
+              </a>
+            </td>
+
+            <td class="implistaN" >-750,00</td>
+
+            <td class="implista" >4.177,19</td>
+
+
+            <td class="listaI" >
+
+              <a href="/isum/Main?ISUM_ID=portlets_area&ISUM_SCR=linkServiceScr&ISUM_CIPH=lp57J0ZX0wXEyMgcVgd7gjZpGiYNGDwn%2FMIcVVH3Xq09Yn0X%2FRZiDEklYcY%2F4cFS" onClick="javascript:abrirDoc('00818447506159992545', '3190', '2021-04-13', '2021-04-13',  '-750.0', 'RZ','5022716111','0000814','RZ','1102540692');return false;" >
+
+
+                <svg class="icono_detalle_pdf" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 58 99" style="enable-background:new 0 0 58 99;" xml:space="preserve">
+									<defs>
+										<path id="SVGID_1_" d="M30.4,94C18.9,94,12,86.2,12,73.2l0.1-52.7c0-1,0.2-4.8,2.6-8.2C16.3,9.9,19.5,7,25.2,7c0,0,0,0,0,0
+											c5.8,0,8.9,2.7,10.6,4.9c2.3,3.2,2.6,6.9,2.6,8.4l-0.1,53c0,1.5,0,5-2.4,7.4c-1.5,1.5-3.5,2.2-6,2.2c0,0,0,0,0,0
+											c-4.8,0-7.6-3.6-7.6-9.7l0-52.8l5,0l0,52.8c0,4.6,1.8,4.7,2.6,4.7c0,0,0,0,0,0c1.2,0,2-0.3,2.5-0.8c0.9-0.9,0.9-2.9,0.9-3.9l0.1-53
+											c0-1-0.2-3.4-1.6-5.4C30.3,13,28.1,12,25.2,12c0,0,0,0,0,0h0c-2.8,0-5,1-6.4,3.1c-1.3,1.8-1.7,4-1.7,5.4L17,73.2
+											C17,80.4,19.3,89,30.4,89c10.8,0,13.1-8.6,13.1-15.8l-0.1-45.8l5,0l0.1,45.8C48.4,86.4,41.8,94,30.4,94z"/>
+									</defs>
+                  <use xlink:href="#SVGID_1_"  style="overflow:visible;"/>
+                  <clipPath id="SVGID_2_">
+										<use xlink:href="#SVGID_1_"  style="overflow:visible;"/>
+									</clipPath>
+								</svg>
+
+              </A>
+
+            </td>
+            <td class="listaI" >
+
+            </td>
+          </tr>
+
+
+
+          <tr >
+            <td class="listaC" >10-04-2021</td>
+            <td class="listaC" >10-04-2021</td>
+
+            <td class="listaI" >TJ-AMZN MKTP ES AMAZON.ES</td>
+
+            <td class="implistaN" >-11,58</td>
+
+            <td class="implista" >4.927,19</td>
+
+
+            <td class="listaI" >
+
+            </td>
+            <td class="listaI" >
+
+            </td>
+          </tr>
+
+
+
+          <tr >
+            <td class="listaC" >10-04-2021</td>
+            <td class="listaC" >10-04-2021</td>
+
+            <td class="listaI" >TJ-AMAZON UFG</td>
+
+            <td class="implistaN" >-70,30</td>
+
+            <td class="implista" >4.938,77</td>
+
+
+            <td class="listaI" >
+
+            </td>
+            <td class="listaI" >
+
+            </td>
+          </tr>
+
+
+
+          <tr >
+            <td class="listaC" >09-04-2021</td>
+            <td class="listaC" >09-04-2021</td>
+
+            <td class="listaI" >TJ-AMAZON.ES</td>
+
+            <td class="implistaN" >-2,43</td>
+
+            <td class="implista" >5.009,07</td>
+
+
+            <td class="listaI" >
+
+            </td>
+            <td class="listaI" >
+
+            </td>
+          </tr>
+
+
+
+          <tr >
+            <td class="listaC" >09-04-2021</td>
+            <td class="listaC" >09-04-2021</td>
+
+            <td class="listaI" >TJ-UBER   * EATS PENDING</td>
+
+            <td class="implistaN" >-22,90</td>
+
+            <td class="implista" >5.011,50</td>
+
+
+            <td class="listaI" >
+
+            </td>
+            <td class="listaI" >
+
+            </td>
+          </tr>
+
+
+
+          <tr >
+            <td class="listaC" >08-04-2021</td>
+            <td class="listaC" >31-03-2021</td>
+
+            <td class="listaI" >AMAZON UFG</td>
+
+            <td class="implista" >52,76</td>
+
+            <td class="implista" >5.034,40</td>
+
+
+            <td class="listaI" >
+
+            </td>
+            <td class="listaI" >
+
+            </td>
+          </tr>
+
+
+
+          <tr >
+            <td class="listaC" >08-04-2021</td>
+            <td class="listaC" >08-04-2021</td>
+
+            <td class="listaI" >TJ-GOOGLE*GOOGLE STORAGE</td>
+
+            <td class="implistaN" >-1,99</td>
+
+            <td class="implista" >4.981,64</td>
+
+
+            <td class="listaI" >
+
+            </td>
+            <td class="listaI" >
+
+            </td>
+          </tr>
+
+
+
+          <tr >
+            <td class="listaC" >07-04-2021</td>
+            <td class="listaC" >07-04-2021</td>
+
+            <td class="listaI" >TJ-UBER * EATS PENDING</td>
+
+            <td class="implistaN" >-23,13</td>
+
+            <td class="implista" >4.983,63</td>
+
+
+            <td class="listaI" >
+
+            </td>
+            <td class="listaI" >
+
+            </td>
+          </tr>
+
+
+
+          <tr >
+            <td class="listaC" >07-04-2021</td>
+            <td class="listaC" >31-03-2021</td>
+
+            <td class="listaI" >AMAZON UFG*MU9MJ5SP4</td>
+
+            <td class="implistaN" >-52,31</td>
+
+            <td class="implista" >5.006,76</td>
+
+
+            <td class="listaI" >
+
+            </td>
+            <td class="listaI" >
+
+            </td>
+          </tr>
+
+
+
+          <tr >
+            <td class="listaC" >07-04-2021</td>
+            <td class="listaC" >07-04-2021</td>
+
+            <td class="listaI" >TJ-AMAZON.ES</td>
+
+            <td class="implistaN" >-15,15</td>
+
+            <td class="implista" >5.059,07</td>
+
+
+            <td class="listaI" >
+
+            </td>
+            <td class="listaI" >
+
+            </td>
+          </tr>
+
+
+
+          <tr >
+            <td class="listaC" >07-04-2021</td>
+            <td class="listaC" >07-04-2021</td>
+
+
+
+            <td class="listaI" >
+              <a href="/isum/Main?ISUM_ID=portlets_area&ISUM_SCR=linkServiceScr&ISUM_CIPH=lp57J0ZX0wXEyMgcVgd7gjZpGiYNGDwn%2FMIcVVH3Xq09Yn0X%2FRZiDEklYcY%2F4cFS" onClick="javaScript:mostrarDetalle('RZ', '', '3190', '1097522432', '07-04-2021', 'RZ', '07-04-2021','0','RCBO.PEPE MOBILE, S.L.U.', '', '', '0000804', '-57.9', 'RCBO.PEPE MOBILE, S.L.U.', '', '978');return false;" >
+
+                RCBO.PEPE MOBILE, S.L.U.
+              </a>
+            </td>
+
+            <td class="implistaN" >-57,90</td>
+
+            <td class="implista" >5.074,22</td>
+
+
+            <td class="listaI" >
+
+              <a href="/isum/Main?ISUM_ID=portlets_area&ISUM_SCR=linkServiceScr&ISUM_CIPH=lp57J0ZX0wXEyMgcVgd7gjZpGiYNGDwn%2FMIcVVH3Xq09Yn0X%2FRZiDEklYcY%2F4cFS" onClick="javascript:abrirDoc('00818447506159992545', '3190', '2021-04-07', '2021-04-07',  '-57.9', 'RZ','5022716111','0000804','RZ','1097522432');return false;" >
+
+
+                <svg class="icono_detalle_pdf" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 58 99" style="enable-background:new 0 0 58 99;" xml:space="preserve">
+									<defs>
+										<path id="SVGID_1_" d="M30.4,94C18.9,94,12,86.2,12,73.2l0.1-52.7c0-1,0.2-4.8,2.6-8.2C16.3,9.9,19.5,7,25.2,7c0,0,0,0,0,0
+											c5.8,0,8.9,2.7,10.6,4.9c2.3,3.2,2.6,6.9,2.6,8.4l-0.1,53c0,1.5,0,5-2.4,7.4c-1.5,1.5-3.5,2.2-6,2.2c0,0,0,0,0,0
+											c-4.8,0-7.6-3.6-7.6-9.7l0-52.8l5,0l0,52.8c0,4.6,1.8,4.7,2.6,4.7c0,0,0,0,0,0c1.2,0,2-0.3,2.5-0.8c0.9-0.9,0.9-2.9,0.9-3.9l0.1-53
+											c0-1-0.2-3.4-1.6-5.4C30.3,13,28.1,12,25.2,12c0,0,0,0,0,0h0c-2.8,0-5,1-6.4,3.1c-1.3,1.8-1.7,4-1.7,5.4L17,73.2
+											C17,80.4,19.3,89,30.4,89c10.8,0,13.1-8.6,13.1-15.8l-0.1-45.8l5,0l0.1,45.8C48.4,86.4,41.8,94,30.4,94z"/>
+									</defs>
+                  <use xlink:href="#SVGID_1_"  style="overflow:visible;"/>
+                  <clipPath id="SVGID_2_">
+										<use xlink:href="#SVGID_1_"  style="overflow:visible;"/>
+									</clipPath>
+								</svg>
+
+              </A>
+
+            </td>
+            <td class="listaI" >
+
+            </td>
+          </tr>
+
+
+
+          <tr >
+            <td class="listaC" >07-04-2021</td>
+            <td class="listaC" >07-04-2021</td>
+
+
+
+            <td class="listaI" >
+              <a href="/isum/Main?ISUM_ID=portlets_area&ISUM_SCR=linkServiceScr&ISUM_CIPH=lp57J0ZX0wXEyMgcVgd7gjZpGiYNGDwn%2FMIcVVH3Xq09Yn0X%2FRZiDEklYcY%2F4cFS" onClick="javaScript:mostrarDetalle('RZ', '', '3190', '1096555181', '07-04-2021', 'RZ', '07-04-2021','0','RCBO.AAAAAA EEEEE IIII', '', '', '0000803', '-373.01', 'RCBO.AAAAAA EEEEE IIII', '7003,7006,7012', '978');return false;" >
+
+                RCBO.AAAAAA EEEEE IIII
+              </a>
+            </td>
+
+            <td class="implistaN" >-373,01</td>
+
+            <td class="implista" >5.132,12</td>
+
+
+            <td class="listaI" >
+
+              <a href="/isum/Main?ISUM_ID=portlets_area&ISUM_SCR=linkServiceScr&ISUM_CIPH=lp57J0ZX0wXEyMgcVgd7gjZpGiYNGDwn%2FMIcVVH3Xq09Yn0X%2FRZiDEklYcY%2F4cFS" onClick="javascript:abrirDoc('00818447506159992545', '3190', '2021-04-07', '2021-04-07',  '-373.01', 'RZ','5022716111','0000803','RZ','1096555181');return false;" >
+
+
+                <svg class="icono_detalle_pdf" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 58 99" style="enable-background:new 0 0 58 99;" xml:space="preserve">
+									<defs>
+										<path id="SVGID_1_" d="M30.4,94C18.9,94,12,86.2,12,73.2l0.1-52.7c0-1,0.2-4.8,2.6-8.2C16.3,9.9,19.5,7,25.2,7c0,0,0,0,0,0
+											c5.8,0,8.9,2.7,10.6,4.9c2.3,3.2,2.6,6.9,2.6,8.4l-0.1,53c0,1.5,0,5-2.4,7.4c-1.5,1.5-3.5,2.2-6,2.2c0,0,0,0,0,0
+											c-4.8,0-7.6-3.6-7.6-9.7l0-52.8l5,0l0,52.8c0,4.6,1.8,4.7,2.6,4.7c0,0,0,0,0,0c1.2,0,2-0.3,2.5-0.8c0.9-0.9,0.9-2.9,0.9-3.9l0.1-53
+											c0-1-0.2-3.4-1.6-5.4C30.3,13,28.1,12,25.2,12c0,0,0,0,0,0h0c-2.8,0-5,1-6.4,3.1c-1.3,1.8-1.7,4-1.7,5.4L17,73.2
+											C17,80.4,19.3,89,30.4,89c10.8,0,13.1-8.6,13.1-15.8l-0.1-45.8l5,0l0.1,45.8C48.4,86.4,41.8,94,30.4,94z"/>
+									</defs>
+                  <use xlink:href="#SVGID_1_"  style="overflow:visible;"/>
+                  <clipPath id="SVGID_2_">
+										<use xlink:href="#SVGID_1_"  style="overflow:visible;"/>
+									</clipPath>
+								</svg>
+
+              </A>
+
+            </td>
+            <td class="listaI" >
+
+              <p><a href="/isum/Main?ISUM_ID=portlets_area&ISUM_SCR=linkServiceScr&ISUM_CIPH=lp57J0ZX0wXEyMgcVgd7gjZpGiYNGDwn%2FMIcVVH3Xq09Yn0X%2FRZiDEklYcY%2F4cFS" onClick="javascript:aplazarPago('00818447506159992545','373.01','07-04-2021','RCBO.AAAAAA EEEEE IIII','7003,7006,7012','0000803', '978'); return false;" >
+
+
+                <svg class="icono_aplazar" width="40px" height="29px" viewBox="0 0 40 29" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <defs>
+                    <path d="M39.8101562,22.8351725 C40.0617065,23.0867227 40.0617065,23.4873398 39.8194729,23.73889 L35.990319,27.5680439 L35.0866014,26.6643263 L37.8257042,23.9252236 L18.325901,23.9252236 L18.325901,22.6488389 L37.8257042,22.6488389 L35.0866014,19.9097362 L35.990319,19.0060186 L39.8101562,22.8351725 Z M30.3350965,17.1520004 L33.0648826,14.4222143 L18.1861512,14.4222143 L18.1861512,13.1458297 L33.0741993,13.1458297 L30.3350965,10.4067269 L31.2388141,9.50300932 L35.0679679,13.3228465 C35.3195181,13.5743968 35.3195181,13.9750138 35.0679679,14.2265641 L31.2388141,18.0557179 L30.3350965,17.1520004 Z M25.4531583,7.65830766 L28.1829443,4.91920492 L18.1861512,4.91920492 L18.1861512,3.64282031 L28.192261,3.64282031 L25.4531583,0.90371757 L26.3568758,0 L30.1860296,3.82915383 C30.4375798,4.08070408 30.4375798,4.48132115 30.1860296,4.7328714 L26.3568758,8.56202523 L25.4531583,7.65830766 Z M6.86638991,7.44402427 C6.05583913,8.19867503 5.51547195,9.35394287 5.24528836,10.8818778 L11.4408776,10.8818778 L11.4408776,12.9781299 L5.04032149,12.9781299 L5.01237147,13.5930305 L5.01237147,14.3383646 L5.04032149,14.8694151 L10.5930601,14.8694151 L10.5930601,16.9656673 L5.28255506,16.9656673 C5.86018895,19.7886201 7.50924053,21.2047549 10.2297098,21.2047549 C11.5247277,21.2047549 12.8476956,20.9252546 14.2079303,20.366254 L14.2079303,23.1239902 C13.0153958,23.6736741 11.6365278,23.9531744 10.0620096,23.9531744 C7.88190755,23.9531744 6.10242251,23.3569071 4.74218788,22.1643725 C3.37263656,20.971838 2.48755238,19.2389362 2.06830198,16.9749839 L0,16.9749839 L0,14.8973652 L1.84470177,14.8973652 L1.81675174,14.3942647 L1.81675174,13.8911641 L1.84470177,13.0060799 L0,13.0060799 L0,10.9098278 L2.03103528,10.9098278 C2.37575228,8.63655881 3.24220311,6.847757 4.63038777,5.55273902 C6.01857243,4.25772103 7.80737415,3.60555371 9.99679291,3.60555371 C11.804228,3.60555371 13.4253295,3.9968541 14.8600976,4.79808825 L13.7234631,7.34154083 C12.3259618,6.6521068 11.086844,6.30738978 9.99679291,6.30738978 C8.72040835,6.30738978 7.67694069,6.68005683 6.86638991,7.44402427 Z" id="path-1"></path>
+                  </defs>
+                  <g id="Guidelines" stroke="none" stroke-width="1" fill-rule="evenodd">
+                    <g id="05---Iconografía-" transform="translate(-560.000000, -3064.000000)">
+                      <g id="icono/acciones/aplazar_pago" transform="translate(560.000000, 3059.000000)">
+                        <g id="rvia/primario/defecto" transform="translate(0.000000, 5.833333)">
+                          <mask id="mask-2" fill="white">
+                            <use xlink:href="#path-1"></use>
+                          </mask>
+                          <use id="Mask" fill-rule="nonzero" xlink:href="#path-1"></use>
+                          <g mask="url(#mask-2)">
+                            <g transform="translate(0.000000, -5.833333)">
+                              <path d="M1.99729162,1.18423789e-14 C0.894217919,1.18423789e-14 0,0.891539827 0,1.99729162 L0,38.0027084 C0,39.1057821 0.891539827,40 1.99729162,40 L38.0027084,40 C39.1057821,40 40,39.1084602 40,38.0027084 L40,1.99729162 C40,0.894217919 39.1084602,1.18423789e-14 38.0027084,1.18423789e-14 L1.99729162,1.18423789e-14 Z"></path>
+                            </g>
+                          </g>
+                        </g>
+                      </g>
+                    </g>
+                  </g>
+                </svg>
+
+              </a></p>
+
+            </td>
+          </tr>
+
+
+
+          <tr >
+            <td class="listaC" >07-04-2021</td>
+            <td class="listaC" >07-04-2021</td>
+
+
+
+            <td class="listaI" >
+              <a href="/isum/Main?ISUM_ID=portlets_area&ISUM_SCR=linkServiceScr&ISUM_CIPH=lp57J0ZX0wXEyMgcVgd7gjZpGiYNGDwn%2FMIcVVH3Xq09Yn0X%2FRZiDEklYcY%2F4cFS" onClick="javaScript:mostrarDetalle('RZ', '', '3190', '1096547941', '07-04-2021', 'RZ', '07-04-2021','0','RCBO.IBERDROLA COMERCIALIZACION DE ULTIMO REC', '', '', '0000802', '-99.53', 'RCBO.IBERDROLA COMERCIALIZACION DE ULTIMO REC', '7003', '978');return false;" >
+
+                RCBO.IBERDROLA COMERCIALIZACION DE ULTIMO REC
+              </a>
+            </td>
+
+            <td class="implistaN" >-99,53</td>
+
+            <td class="implista" >5.505,13</td>
+
+
+            <td class="listaI" >
+
+              <a href="/isum/Main?ISUM_ID=portlets_area&ISUM_SCR=linkServiceScr&ISUM_CIPH=lp57J0ZX0wXEyMgcVgd7gjZpGiYNGDwn%2FMIcVVH3Xq09Yn0X%2FRZiDEklYcY%2F4cFS" onClick="javascript:abrirDoc('00818447506159992545', '3190', '2021-04-07', '2021-04-07',  '-99.53', 'RZ','5022716111','0000802','RZ','1096547941');return false;" >
+
+
+                <svg class="icono_detalle_pdf" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 58 99" style="enable-background:new 0 0 58 99;" xml:space="preserve">
+									<defs>
+										<path id="SVGID_1_" d="M30.4,94C18.9,94,12,86.2,12,73.2l0.1-52.7c0-1,0.2-4.8,2.6-8.2C16.3,9.9,19.5,7,25.2,7c0,0,0,0,0,0
+											c5.8,0,8.9,2.7,10.6,4.9c2.3,3.2,2.6,6.9,2.6,8.4l-0.1,53c0,1.5,0,5-2.4,7.4c-1.5,1.5-3.5,2.2-6,2.2c0,0,0,0,0,0
+											c-4.8,0-7.6-3.6-7.6-9.7l0-52.8l5,0l0,52.8c0,4.6,1.8,4.7,2.6,4.7c0,0,0,0,0,0c1.2,0,2-0.3,2.5-0.8c0.9-0.9,0.9-2.9,0.9-3.9l0.1-53
+											c0-1-0.2-3.4-1.6-5.4C30.3,13,28.1,12,25.2,12c0,0,0,0,0,0h0c-2.8,0-5,1-6.4,3.1c-1.3,1.8-1.7,4-1.7,5.4L17,73.2
+											C17,80.4,19.3,89,30.4,89c10.8,0,13.1-8.6,13.1-15.8l-0.1-45.8l5,0l0.1,45.8C48.4,86.4,41.8,94,30.4,94z"/>
+									</defs>
+                  <use xlink:href="#SVGID_1_"  style="overflow:visible;"/>
+                  <clipPath id="SVGID_2_">
+										<use xlink:href="#SVGID_1_"  style="overflow:visible;"/>
+									</clipPath>
+								</svg>
+
+              </A>
+
+            </td>
+            <td class="listaI" >
+
+              <p><a href="/isum/Main?ISUM_ID=portlets_area&ISUM_SCR=linkServiceScr&ISUM_CIPH=lp57J0ZX0wXEyMgcVgd7gjZpGiYNGDwn%2FMIcVVH3Xq09Yn0X%2FRZiDEklYcY%2F4cFS" onClick="javascript:aplazarPago('00818447506159992545','99.53','07-04-2021','RCBO.IBERDROLA COMERCIALIZACION DE ULTIMO REC','7003','0000802', '978'); return false;" >
+
+
+                <svg class="icono_aplazar" width="40px" height="29px" viewBox="0 0 40 29" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <defs>
+                    <path d="M39.8101562,22.8351725 C40.0617065,23.0867227 40.0617065,23.4873398 39.8194729,23.73889 L35.990319,27.5680439 L35.0866014,26.6643263 L37.8257042,23.9252236 L18.325901,23.9252236 L18.325901,22.6488389 L37.8257042,22.6488389 L35.0866014,19.9097362 L35.990319,19.0060186 L39.8101562,22.8351725 Z M30.3350965,17.1520004 L33.0648826,14.4222143 L18.1861512,14.4222143 L18.1861512,13.1458297 L33.0741993,13.1458297 L30.3350965,10.4067269 L31.2388141,9.50300932 L35.0679679,13.3228465 C35.3195181,13.5743968 35.3195181,13.9750138 35.0679679,14.2265641 L31.2388141,18.0557179 L30.3350965,17.1520004 Z M25.4531583,7.65830766 L28.1829443,4.91920492 L18.1861512,4.91920492 L18.1861512,3.64282031 L28.192261,3.64282031 L25.4531583,0.90371757 L26.3568758,0 L30.1860296,3.82915383 C30.4375798,4.08070408 30.4375798,4.48132115 30.1860296,4.7328714 L26.3568758,8.56202523 L25.4531583,7.65830766 Z M6.86638991,7.44402427 C6.05583913,8.19867503 5.51547195,9.35394287 5.24528836,10.8818778 L11.4408776,10.8818778 L11.4408776,12.9781299 L5.04032149,12.9781299 L5.01237147,13.5930305 L5.01237147,14.3383646 L5.04032149,14.8694151 L10.5930601,14.8694151 L10.5930601,16.9656673 L5.28255506,16.9656673 C5.86018895,19.7886201 7.50924053,21.2047549 10.2297098,21.2047549 C11.5247277,21.2047549 12.8476956,20.9252546 14.2079303,20.366254 L14.2079303,23.1239902 C13.0153958,23.6736741 11.6365278,23.9531744 10.0620096,23.9531744 C7.88190755,23.9531744 6.10242251,23.3569071 4.74218788,22.1643725 C3.37263656,20.971838 2.48755238,19.2389362 2.06830198,16.9749839 L0,16.9749839 L0,14.8973652 L1.84470177,14.8973652 L1.81675174,14.3942647 L1.81675174,13.8911641 L1.84470177,13.0060799 L0,13.0060799 L0,10.9098278 L2.03103528,10.9098278 C2.37575228,8.63655881 3.24220311,6.847757 4.63038777,5.55273902 C6.01857243,4.25772103 7.80737415,3.60555371 9.99679291,3.60555371 C11.804228,3.60555371 13.4253295,3.9968541 14.8600976,4.79808825 L13.7234631,7.34154083 C12.3259618,6.6521068 11.086844,6.30738978 9.99679291,6.30738978 C8.72040835,6.30738978 7.67694069,6.68005683 6.86638991,7.44402427 Z" id="path-1"></path>
+                  </defs>
+                  <g id="Guidelines" stroke="none" stroke-width="1" fill-rule="evenodd">
+                    <g id="05---Iconografía-" transform="translate(-560.000000, -3064.000000)">
+                      <g id="icono/acciones/aplazar_pago" transform="translate(560.000000, 3059.000000)">
+                        <g id="rvia/primario/defecto" transform="translate(0.000000, 5.833333)">
+                          <mask id="mask-2" fill="white">
+                            <use xlink:href="#path-1"></use>
+                          </mask>
+                          <use id="Mask" fill-rule="nonzero" xlink:href="#path-1"></use>
+                          <g mask="url(#mask-2)">
+                            <g transform="translate(0.000000, -5.833333)">
+                              <path d="M1.99729162,1.18423789e-14 C0.894217919,1.18423789e-14 0,0.891539827 0,1.99729162 L0,38.0027084 C0,39.1057821 0.891539827,40 1.99729162,40 L38.0027084,40 C39.1057821,40 40,39.1084602 40,38.0027084 L40,1.99729162 C40,0.894217919 39.1084602,1.18423789e-14 38.0027084,1.18423789e-14 L1.99729162,1.18423789e-14 Z"></path>
+                            </g>
+                          </g>
+                        </g>
+                      </g>
+                    </g>
+                  </g>
+                </svg>
+
+              </a></p>
+
+            </td>
+          </tr>
+
+
+
+          <tr >
+            <td class="listaC" >06-04-2021</td>
+            <td class="listaC" >06-04-2021</td>
+
+
+
+            <td class="listaI" >
+              <a href="/isum/Main?ISUM_ID=portlets_area&ISUM_SCR=linkServiceScr&ISUM_CIPH=lp57J0ZX0wXEyMgcVgd7gjZpGiYNGDwn%2FMIcVVH3Xq09Yn0X%2FRZiDEklYcY%2F4cFS" onClick="javaScript:mostrarDetalle('TR', 'TI', '3190', '1596095287', '06-04-2021', 'TR', '06-04-2021','0','TRF.MICAELO', '', '', '0000801', '-602.5', 'TRF.MICAELO', '', '978');return false;" >
+
+                TRF.MICAELO
+              </a>
+            </td>
+
+            <td class="implistaN" >-602,50</td>
+
+            <td class="implista" >5.604,66</td>
+
+
+            <td class="listaI" >
+
+              <a href="/isum/Main?ISUM_ID=portlets_area&ISUM_SCR=linkServiceScr&ISUM_CIPH=lp57J0ZX0wXEyMgcVgd7gjZpGiYNGDwn%2FMIcVVH3Xq09Yn0X%2FRZiDEklYcY%2F4cFS" onClick="javascript:abrirDoc('00818447506159992545', '3190', '2021-04-06', '2021-04-06',  '-602.5', 'TR','5022716111','0000801','TF','0');return false;" >
+
+
+                <svg class="icono_detalle_pdf" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 58 99" style="enable-background:new 0 0 58 99;" xml:space="preserve">
+									<defs>
+										<path id="SVGID_1_" d="M30.4,94C18.9,94,12,86.2,12,73.2l0.1-52.7c0-1,0.2-4.8,2.6-8.2C16.3,9.9,19.5,7,25.2,7c0,0,0,0,0,0
+											c5.8,0,8.9,2.7,10.6,4.9c2.3,3.2,2.6,6.9,2.6,8.4l-0.1,53c0,1.5,0,5-2.4,7.4c-1.5,1.5-3.5,2.2-6,2.2c0,0,0,0,0,0
+											c-4.8,0-7.6-3.6-7.6-9.7l0-52.8l5,0l0,52.8c0,4.6,1.8,4.7,2.6,4.7c0,0,0,0,0,0c1.2,0,2-0.3,2.5-0.8c0.9-0.9,0.9-2.9,0.9-3.9l0.1-53
+											c0-1-0.2-3.4-1.6-5.4C30.3,13,28.1,12,25.2,12c0,0,0,0,0,0h0c-2.8,0-5,1-6.4,3.1c-1.3,1.8-1.7,4-1.7,5.4L17,73.2
+											C17,80.4,19.3,89,30.4,89c10.8,0,13.1-8.6,13.1-15.8l-0.1-45.8l5,0l0.1,45.8C48.4,86.4,41.8,94,30.4,94z"/>
+									</defs>
+                  <use xlink:href="#SVGID_1_"  style="overflow:visible;"/>
+                  <clipPath id="SVGID_2_">
+										<use xlink:href="#SVGID_1_"  style="overflow:visible;"/>
+									</clipPath>
+								</svg>
+
+              </A>
+
+            </td>
+            <td class="listaI" >
+
+            </td>
+          </tr>
+
+
+
+          <tr >
+            <td class="listaC" >05-04-2021</td>
+            <td class="listaC" >05-04-2021</td>
+
+            <td class="listaI" >TJ-AMAZON.ES AMAZON.ES</td>
+
+            <td class="implistaN" >-48,00</td>
+
+            <td class="implista" >6.207,16</td>
+
+
+            <td class="listaI" >
+
+            </td>
+            <td class="listaI" >
+
+            </td>
+          </tr>
+
+
+
+          <tr >
+            <td class="listaC" >05-04-2021</td>
+            <td class="listaC" >05-04-2021</td>
+
+            <td class="listaI" >TJ-AMAZON.ES AMAZON.ES</td>
+
+            <td class="implistaN" >-18,99</td>
+
+            <td class="implista" >6.255,16</td>
+
+
+            <td class="listaI" >
+
+            </td>
+            <td class="listaI" >
+
+            </td>
+          </tr>
+
+
+
+          <tr >
+            <td class="listaC" >02-04-2021</td>
+            <td class="listaC" >02-04-2021</td>
+
+            <td class="listaI" >RCBO. PRÉSTAMO1234567890</td>
+
+            <td class="implistaN" >-332,45</td>
+
+            <td class="implista" >6.274,15</td>
+
+
+            <td class="listaI" >
+
+              <a href="/isum/Main?ISUM_ID=portlets_area&ISUM_SCR=linkServiceScr&ISUM_CIPH=lp57J0ZX0wXEyMgcVgd7gjZpGiYNGDwn%2FMIcVVH3Xq09Yn0X%2FRZiDEklYcY%2F4cFS" onClick="javascript:abrirDoc('00818447506159992545', '3190', '2021-04-02', '2021-04-02',  '-332.45', 'HL','5022716111','0000798','','0');return false;" >
+
+
+                <svg class="icono_detalle_pdf" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 58 99" style="enable-background:new 0 0 58 99;" xml:space="preserve">
+									<defs>
+										<path id="SVGID_1_" d="M30.4,94C18.9,94,12,86.2,12,73.2l0.1-52.7c0-1,0.2-4.8,2.6-8.2C16.3,9.9,19.5,7,25.2,7c0,0,0,0,0,0
+											c5.8,0,8.9,2.7,10.6,4.9c2.3,3.2,2.6,6.9,2.6,8.4l-0.1,53c0,1.5,0,5-2.4,7.4c-1.5,1.5-3.5,2.2-6,2.2c0,0,0,0,0,0
+											c-4.8,0-7.6-3.6-7.6-9.7l0-52.8l5,0l0,52.8c0,4.6,1.8,4.7,2.6,4.7c0,0,0,0,0,0c1.2,0,2-0.3,2.5-0.8c0.9-0.9,0.9-2.9,0.9-3.9l0.1-53
+											c0-1-0.2-3.4-1.6-5.4C30.3,13,28.1,12,25.2,12c0,0,0,0,0,0h0c-2.8,0-5,1-6.4,3.1c-1.3,1.8-1.7,4-1.7,5.4L17,73.2
+											C17,80.4,19.3,89,30.4,89c10.8,0,13.1-8.6,13.1-15.8l-0.1-45.8l5,0l0.1,45.8C48.4,86.4,41.8,94,30.4,94z"/>
+									</defs>
+                  <use xlink:href="#SVGID_1_"  style="overflow:visible;"/>
+                  <clipPath id="SVGID_2_">
+										<use xlink:href="#SVGID_1_"  style="overflow:visible;"/>
+									</clipPath>
+								</svg>
+
+              </A>
+
+            </td>
+            <td class="listaI" >
+
+            </td>
+          </tr>
+
+
+
+          <tr >
+            <td class="listaC" >01-04-2021</td>
+            <td class="listaC" >01-04-2021</td>
+
+            <td class="listaI" >TJ-DOMINOS PIZZA </td>
+
+            <td class="implistaN" >-25,00</td>
+
+            <td class="implista" >6.606,60</td>
+
+
+            <td class="listaI" >
+
+            </td>
+            <td class="listaI" >
+
+            </td>
+          </tr>
+
+
+
+          <tr >
+            <td class="listaC" >31-03-2021</td>
+            <td class="listaC" >31-03-2021</td>
+
+            <td class="listaI" >TJ-AMAZON UFG</td>
+
+            <td class="implistaN" >-52,76</td>
+
+            <td class="implista" >6.631,60</td>
+
+
+            <td class="listaI" >
+
+            </td>
+            <td class="listaI" >
+
+            </td>
+          </tr>
+
+
+
+          <tr >
+            <td class="listaC" >31-03-2021</td>
+            <td class="listaC" >31-03-2021</td>
+
+            <td class="listaI" >TJ-AMZN MKTP ES</td>
+
+            <td class="implistaN" >-16,09</td>
+
+            <td class="implista" >6.684,36</td>
+
+
+            <td class="listaI" >
+
+            </td>
+            <td class="listaI" >
+
+            </td>
+          </tr>
+
+
+
+          <tr >
+            <td class="listaC" >31-03-2021</td>
+            <td class="listaC" >31-03-2021</td>
+
+            <td class="listaI" >RCBO. PRÉSTAMO9876543210</td>
+
+            <td class="implistaN" >-140,10</td>
+
+            <td class="implista" >6.700,45</td>
+
+
+            <td class="listaI" >
+
+              <a href="/isum/Main?ISUM_ID=portlets_area&ISUM_SCR=linkServiceScr&ISUM_CIPH=lp57J0ZX0wXEyMgcVgd7gjZpGiYNGDwn%2FMIcVVH3Xq09Yn0X%2FRZiDEklYcY%2F4cFS" onClick="javascript:abrirDoc('00818447506159992545', '3190', '2021-03-31', '2021-03-31',  '-140.1', 'HL','5022716111','0000794','','0');return false;" >
+
+
+                <svg class="icono_detalle_pdf" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 58 99" style="enable-background:new 0 0 58 99;" xml:space="preserve">
+									<defs>
+										<path id="SVGID_1_" d="M30.4,94C18.9,94,12,86.2,12,73.2l0.1-52.7c0-1,0.2-4.8,2.6-8.2C16.3,9.9,19.5,7,25.2,7c0,0,0,0,0,0
+											c5.8,0,8.9,2.7,10.6,4.9c2.3,3.2,2.6,6.9,2.6,8.4l-0.1,53c0,1.5,0,5-2.4,7.4c-1.5,1.5-3.5,2.2-6,2.2c0,0,0,0,0,0
+											c-4.8,0-7.6-3.6-7.6-9.7l0-52.8l5,0l0,52.8c0,4.6,1.8,4.7,2.6,4.7c0,0,0,0,0,0c1.2,0,2-0.3,2.5-0.8c0.9-0.9,0.9-2.9,0.9-3.9l0.1-53
+											c0-1-0.2-3.4-1.6-5.4C30.3,13,28.1,12,25.2,12c0,0,0,0,0,0h0c-2.8,0-5,1-6.4,3.1c-1.3,1.8-1.7,4-1.7,5.4L17,73.2
+											C17,80.4,19.3,89,30.4,89c10.8,0,13.1-8.6,13.1-15.8l-0.1-45.8l5,0l0.1,45.8C48.4,86.4,41.8,94,30.4,94z"/>
+									</defs>
+                  <use xlink:href="#SVGID_1_"  style="overflow:visible;"/>
+                  <clipPath id="SVGID_2_">
+										<use xlink:href="#SVGID_1_"  style="overflow:visible;"/>
+									</clipPath>
+								</svg>
+
+              </A>
+
+            </td>
+            <td class="listaI" >
+
+            </td>
+          </tr>
+
+
+
+          <tr >
+            <td class="listaC" >30-03-2021</td>
+            <td class="listaC" >26-03-2021</td>
+
+            <td class="listaI" >UBER   *EATS</td>
+
+            <td class="implista" >21,85</td>
+
+            <td class="implista" >6.840,55</td>
+
+
+            <td class="listaI" >
+
+            </td>
+            <td class="listaI" >
+
+            </td>
+          </tr>
+
+
+
+          <tr >
+            <td class="listaC" >29-03-2021</td>
+            <td class="listaC" >29-03-2021</td>
+
+
+
+            <td class="listaI" >
+              <a href="/isum/Main?ISUM_ID=portlets_area&ISUM_SCR=linkServiceScr&ISUM_CIPH=lp57J0ZX0wXEyMgcVgd7gjZpGiYNGDwn%2FMIcVVH3Xq09Yn0X%2FRZiDEklYcY%2F4cFS" onClick="javaScript:mostrarDetalle('TR', '', '3190', '1588097515', '29-03-2021', 'TR', '29-03-2021','1','TRF. AMAZON EUROPE CORE S.A.R.L.', '', '', '0000792', '56.55', 'TRF. AMAZON EUROPE CORE S.A.R.L.', '', '978');return false;" >
+
+                TRF. AMAZON EUROPE CORE S.A.R.L.
+              </a>
+            </td>
+
+            <td class="implista" >56,55</td>
+
+            <td class="implista" >6.818,70</td>
+
+
+            <td class="listaI" >
+
+              <a href="/isum/Main?ISUM_ID=portlets_area&ISUM_SCR=linkServiceScr&ISUM_CIPH=lp57J0ZX0wXEyMgcVgd7gjZpGiYNGDwn%2FMIcVVH3Xq09Yn0X%2FRZiDEklYcY%2F4cFS" onClick="javascript:abrirDoc('00818447506159992545', '3190', '2021-03-29', '2021-03-29',  '56.55', 'TR','5022716111','0000792','','0');return false;" >
+
+
+                <svg class="icono_detalle_pdf" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 58 99" style="enable-background:new 0 0 58 99;" xml:space="preserve">
+									<defs>
+										<path id="SVGID_1_" d="M30.4,94C18.9,94,12,86.2,12,73.2l0.1-52.7c0-1,0.2-4.8,2.6-8.2C16.3,9.9,19.5,7,25.2,7c0,0,0,0,0,0
+											c5.8,0,8.9,2.7,10.6,4.9c2.3,3.2,2.6,6.9,2.6,8.4l-0.1,53c0,1.5,0,5-2.4,7.4c-1.5,1.5-3.5,2.2-6,2.2c0,0,0,0,0,0
+											c-4.8,0-7.6-3.6-7.6-9.7l0-52.8l5,0l0,52.8c0,4.6,1.8,4.7,2.6,4.7c0,0,0,0,0,0c1.2,0,2-0.3,2.5-0.8c0.9-0.9,0.9-2.9,0.9-3.9l0.1-53
+											c0-1-0.2-3.4-1.6-5.4C30.3,13,28.1,12,25.2,12c0,0,0,0,0,0h0c-2.8,0-5,1-6.4,3.1c-1.3,1.8-1.7,4-1.7,5.4L17,73.2
+											C17,80.4,19.3,89,30.4,89c10.8,0,13.1-8.6,13.1-15.8l-0.1-45.8l5,0l0.1,45.8C48.4,86.4,41.8,94,30.4,94z"/>
+									</defs>
+                  <use xlink:href="#SVGID_1_"  style="overflow:visible;"/>
+                  <clipPath id="SVGID_2_">
+										<use xlink:href="#SVGID_1_"  style="overflow:visible;"/>
+									</clipPath>
+								</svg>
+
+              </A>
+
+            </td>
+            <td class="listaI" >
+
+            </td>
+          </tr>
+
+
+
+          <tr >
+            <td class="listaC" >28-03-2021</td>
+            <td class="listaC" >28-03-2021</td>
+
+            <td class="listaI" >TJ-UBER   * EATS PENDING</td>
+
+            <td class="implistaN" >-18,80</td>
+
+            <td class="implista" >6.762,15</td>
+
+
+            <td class="listaI" >
+
+            </td>
+            <td class="listaI" >
+
+            </td>
+          </tr>
+
+
+
+          <tr >
+            <td class="listaC" >26-03-2021</td>
+            <td class="listaC" >26-03-2021</td>
+
+            <td class="listaI" >TJ-UBER   * EATS PENDING</td>
+
+            <td class="implistaN" >-21,85</td>
+
+            <td class="implista" >6.780,95</td>
+
+
+            <td class="listaI" >
+
+            </td>
+            <td class="listaI" >
+
+            </td>
+          </tr>
+
+
+
+          <tr >
+            <td class="listaC" >26-03-2021</td>
+            <td class="listaC" >26-03-2021</td>
+
+
+
+            <td class="listaI" >
+              <a href="/isum/Main?ISUM_ID=portlets_area&ISUM_SCR=linkServiceScr&ISUM_CIPH=lp57J0ZX0wXEyMgcVgd7gjZpGiYNGDwn%2FMIcVVH3Xq09Yn0X%2FRZiDEklYcY%2F4cFS" onClick="javaScript:mostrarDetalle('TR', 'TI', '3190', '1585092517', '26-03-2021', 'TR', '26-03-2021','0','TRF.MICAELO', '', '', '0000789', '-600.0', 'TRF.MICAELO', '7003,7006,7012,7018', '978');return false;" >
+
+                TRF.MICAELO
+              </a>
+            </td>
+
+            <td class="implistaN" >-600,00</td>
+
+            <td class="implista" >6.802,80</td>
+
+
+            <td class="listaI" >
+
+              <a href="/isum/Main?ISUM_ID=portlets_area&ISUM_SCR=linkServiceScr&ISUM_CIPH=lp57J0ZX0wXEyMgcVgd7gjZpGiYNGDwn%2FMIcVVH3Xq09Yn0X%2FRZiDEklYcY%2F4cFS" onClick="javascript:abrirDoc('00818447506159992545', '3190', '2021-03-26', '2021-03-26',  '-600.0', 'TR','5022716111','0000789','TF','0');return false;" >
+
+
+                <svg class="icono_detalle_pdf" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 58 99" style="enable-background:new 0 0 58 99;" xml:space="preserve">
+									<defs>
+										<path id="SVGID_1_" d="M30.4,94C18.9,94,12,86.2,12,73.2l0.1-52.7c0-1,0.2-4.8,2.6-8.2C16.3,9.9,19.5,7,25.2,7c0,0,0,0,0,0
+											c5.8,0,8.9,2.7,10.6,4.9c2.3,3.2,2.6,6.9,2.6,8.4l-0.1,53c0,1.5,0,5-2.4,7.4c-1.5,1.5-3.5,2.2-6,2.2c0,0,0,0,0,0
+											c-4.8,0-7.6-3.6-7.6-9.7l0-52.8l5,0l0,52.8c0,4.6,1.8,4.7,2.6,4.7c0,0,0,0,0,0c1.2,0,2-0.3,2.5-0.8c0.9-0.9,0.9-2.9,0.9-3.9l0.1-53
+											c0-1-0.2-3.4-1.6-5.4C30.3,13,28.1,12,25.2,12c0,0,0,0,0,0h0c-2.8,0-5,1-6.4,3.1c-1.3,1.8-1.7,4-1.7,5.4L17,73.2
+											C17,80.4,19.3,89,30.4,89c10.8,0,13.1-8.6,13.1-15.8l-0.1-45.8l5,0l0.1,45.8C48.4,86.4,41.8,94,30.4,94z"/>
+									</defs>
+                  <use xlink:href="#SVGID_1_"  style="overflow:visible;"/>
+                  <clipPath id="SVGID_2_">
+										<use xlink:href="#SVGID_1_"  style="overflow:visible;"/>
+									</clipPath>
+								</svg>
+
+              </A>
+
+            </td>
+            <td class="listaI" >
+
+              <p><a href="/isum/Main?ISUM_ID=portlets_area&ISUM_SCR=linkServiceScr&ISUM_CIPH=lp57J0ZX0wXEyMgcVgd7gjZpGiYNGDwn%2FMIcVVH3Xq09Yn0X%2FRZiDEklYcY%2F4cFS" onClick="javascript:aplazarPago('00818447506159992545','600.0','26-03-2021','TRF.MICAELO','7003,7006,7012,7018','0000789', '978'); return false;" >
+
+
+                <svg class="icono_aplazar" width="40px" height="29px" viewBox="0 0 40 29" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <defs>
+                    <path d="M39.8101562,22.8351725 C40.0617065,23.0867227 40.0617065,23.4873398 39.8194729,23.73889 L35.990319,27.5680439 L35.0866014,26.6643263 L37.8257042,23.9252236 L18.325901,23.9252236 L18.325901,22.6488389 L37.8257042,22.6488389 L35.0866014,19.9097362 L35.990319,19.0060186 L39.8101562,22.8351725 Z M30.3350965,17.1520004 L33.0648826,14.4222143 L18.1861512,14.4222143 L18.1861512,13.1458297 L33.0741993,13.1458297 L30.3350965,10.4067269 L31.2388141,9.50300932 L35.0679679,13.3228465 C35.3195181,13.5743968 35.3195181,13.9750138 35.0679679,14.2265641 L31.2388141,18.0557179 L30.3350965,17.1520004 Z M25.4531583,7.65830766 L28.1829443,4.91920492 L18.1861512,4.91920492 L18.1861512,3.64282031 L28.192261,3.64282031 L25.4531583,0.90371757 L26.3568758,0 L30.1860296,3.82915383 C30.4375798,4.08070408 30.4375798,4.48132115 30.1860296,4.7328714 L26.3568758,8.56202523 L25.4531583,7.65830766 Z M6.86638991,7.44402427 C6.05583913,8.19867503 5.51547195,9.35394287 5.24528836,10.8818778 L11.4408776,10.8818778 L11.4408776,12.9781299 L5.04032149,12.9781299 L5.01237147,13.5930305 L5.01237147,14.3383646 L5.04032149,14.8694151 L10.5930601,14.8694151 L10.5930601,16.9656673 L5.28255506,16.9656673 C5.86018895,19.7886201 7.50924053,21.2047549 10.2297098,21.2047549 C11.5247277,21.2047549 12.8476956,20.9252546 14.2079303,20.366254 L14.2079303,23.1239902 C13.0153958,23.6736741 11.6365278,23.9531744 10.0620096,23.9531744 C7.88190755,23.9531744 6.10242251,23.3569071 4.74218788,22.1643725 C3.37263656,20.971838 2.48755238,19.2389362 2.06830198,16.9749839 L0,16.9749839 L0,14.8973652 L1.84470177,14.8973652 L1.81675174,14.3942647 L1.81675174,13.8911641 L1.84470177,13.0060799 L0,13.0060799 L0,10.9098278 L2.03103528,10.9098278 C2.37575228,8.63655881 3.24220311,6.847757 4.63038777,5.55273902 C6.01857243,4.25772103 7.80737415,3.60555371 9.99679291,3.60555371 C11.804228,3.60555371 13.4253295,3.9968541 14.8600976,4.79808825 L13.7234631,7.34154083 C12.3259618,6.6521068 11.086844,6.30738978 9.99679291,6.30738978 C8.72040835,6.30738978 7.67694069,6.68005683 6.86638991,7.44402427 Z" id="path-1"></path>
+                  </defs>
+                  <g id="Guidelines" stroke="none" stroke-width="1" fill-rule="evenodd">
+                    <g id="05---Iconografía-" transform="translate(-560.000000, -3064.000000)">
+                      <g id="icono/acciones/aplazar_pago" transform="translate(560.000000, 3059.000000)">
+                        <g id="rvia/primario/defecto" transform="translate(0.000000, 5.833333)">
+                          <mask id="mask-2" fill="white">
+                            <use xlink:href="#path-1"></use>
+                          </mask>
+                          <use id="Mask" fill-rule="nonzero" xlink:href="#path-1"></use>
+                          <g mask="url(#mask-2)">
+                            <g transform="translate(0.000000, -5.833333)">
+                              <path d="M1.99729162,1.18423789e-14 C0.894217919,1.18423789e-14 0,0.891539827 0,1.99729162 L0,38.0027084 C0,39.1057821 0.891539827,40 1.99729162,40 L38.0027084,40 C39.1057821,40 40,39.1084602 40,38.0027084 L40,1.99729162 C40,0.894217919 39.1084602,1.18423789e-14 38.0027084,1.18423789e-14 L1.99729162,1.18423789e-14 Z"></path>
+                            </g>
+                          </g>
+                        </g>
+                      </g>
+                    </g>
+                  </g>
+                </svg>
+
+              </a></p>
+
+            </td>
+          </tr>
+
+
+
+          <tr >
+            <td class="listaC" >26-03-2021</td>
+            <td class="listaC" >26-03-2021</td>
+
+
+
+            <td class="listaI" >
+              <a href="/isum/Main?ISUM_ID=portlets_area&ISUM_SCR=linkServiceScr&ISUM_CIPH=lp57J0ZX0wXEyMgcVgd7gjZpGiYNGDwn%2FMIcVVH3Xq09Yn0X%2FRZiDEklYcY%2F4cFS" onClick="javaScript:mostrarDetalle('TR', 'TI', '3190', '1585091416', '26-03-2021', 'TR', '26-03-2021','0','TRF.MICAELO', '', '', '0000788', '-600.0', 'TRF.MICAELO', '7003,7006,7012,7018', '978');return false;" >
+
+                TRF.MICAELO
+              </a>
+            </td>
+
+            <td class="implistaN" >-600,00</td>
+
+            <td class="implista" >7.402,80</td>
+
+
+            <td class="listaI" >
+
+              <a href="/isum/Main?ISUM_ID=portlets_area&ISUM_SCR=linkServiceScr&ISUM_CIPH=lp57J0ZX0wXEyMgcVgd7gjZpGiYNGDwn%2FMIcVVH3Xq09Yn0X%2FRZiDEklYcY%2F4cFS" onClick="javascript:abrirDoc('00818447506159992545', '3190', '2021-03-26', '2021-03-26',  '-600.0', 'TR','5022716111','0000788','TF','0');return false;" >
+
+
+                <svg class="icono_detalle_pdf" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 58 99" style="enable-background:new 0 0 58 99;" xml:space="preserve">
+									<defs>
+										<path id="SVGID_1_" d="M30.4,94C18.9,94,12,86.2,12,73.2l0.1-52.7c0-1,0.2-4.8,2.6-8.2C16.3,9.9,19.5,7,25.2,7c0,0,0,0,0,0
+											c5.8,0,8.9,2.7,10.6,4.9c2.3,3.2,2.6,6.9,2.6,8.4l-0.1,53c0,1.5,0,5-2.4,7.4c-1.5,1.5-3.5,2.2-6,2.2c0,0,0,0,0,0
+											c-4.8,0-7.6-3.6-7.6-9.7l0-52.8l5,0l0,52.8c0,4.6,1.8,4.7,2.6,4.7c0,0,0,0,0,0c1.2,0,2-0.3,2.5-0.8c0.9-0.9,0.9-2.9,0.9-3.9l0.1-53
+											c0-1-0.2-3.4-1.6-5.4C30.3,13,28.1,12,25.2,12c0,0,0,0,0,0h0c-2.8,0-5,1-6.4,3.1c-1.3,1.8-1.7,4-1.7,5.4L17,73.2
+											C17,80.4,19.3,89,30.4,89c10.8,0,13.1-8.6,13.1-15.8l-0.1-45.8l5,0l0.1,45.8C48.4,86.4,41.8,94,30.4,94z"/>
+									</defs>
+                  <use xlink:href="#SVGID_1_"  style="overflow:visible;"/>
+                  <clipPath id="SVGID_2_">
+										<use xlink:href="#SVGID_1_"  style="overflow:visible;"/>
+									</clipPath>
+								</svg>
+
+              </A>
+
+            </td>
+            <td class="listaI" >
+
+              <p><a href="/isum/Main?ISUM_ID=portlets_area&ISUM_SCR=linkServiceScr&ISUM_CIPH=lp57J0ZX0wXEyMgcVgd7gjZpGiYNGDwn%2FMIcVVH3Xq09Yn0X%2FRZiDEklYcY%2F4cFS" onClick="javascript:aplazarPago('00818447506159992545','600.0','26-03-2021','TRF.MICAELO','7003,7006,7012,7018','0000788', '978'); return false;" >
+
+
+                <svg class="icono_aplazar" width="40px" height="29px" viewBox="0 0 40 29" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <defs>
+                    <path d="M39.8101562,22.8351725 C40.0617065,23.0867227 40.0617065,23.4873398 39.8194729,23.73889 L35.990319,27.5680439 L35.0866014,26.6643263 L37.8257042,23.9252236 L18.325901,23.9252236 L18.325901,22.6488389 L37.8257042,22.6488389 L35.0866014,19.9097362 L35.990319,19.0060186 L39.8101562,22.8351725 Z M30.3350965,17.1520004 L33.0648826,14.4222143 L18.1861512,14.4222143 L18.1861512,13.1458297 L33.0741993,13.1458297 L30.3350965,10.4067269 L31.2388141,9.50300932 L35.0679679,13.3228465 C35.3195181,13.5743968 35.3195181,13.9750138 35.0679679,14.2265641 L31.2388141,18.0557179 L30.3350965,17.1520004 Z M25.4531583,7.65830766 L28.1829443,4.91920492 L18.1861512,4.91920492 L18.1861512,3.64282031 L28.192261,3.64282031 L25.4531583,0.90371757 L26.3568758,0 L30.1860296,3.82915383 C30.4375798,4.08070408 30.4375798,4.48132115 30.1860296,4.7328714 L26.3568758,8.56202523 L25.4531583,7.65830766 Z M6.86638991,7.44402427 C6.05583913,8.19867503 5.51547195,9.35394287 5.24528836,10.8818778 L11.4408776,10.8818778 L11.4408776,12.9781299 L5.04032149,12.9781299 L5.01237147,13.5930305 L5.01237147,14.3383646 L5.04032149,14.8694151 L10.5930601,14.8694151 L10.5930601,16.9656673 L5.28255506,16.9656673 C5.86018895,19.7886201 7.50924053,21.2047549 10.2297098,21.2047549 C11.5247277,21.2047549 12.8476956,20.9252546 14.2079303,20.366254 L14.2079303,23.1239902 C13.0153958,23.6736741 11.6365278,23.9531744 10.0620096,23.9531744 C7.88190755,23.9531744 6.10242251,23.3569071 4.74218788,22.1643725 C3.37263656,20.971838 2.48755238,19.2389362 2.06830198,16.9749839 L0,16.9749839 L0,14.8973652 L1.84470177,14.8973652 L1.81675174,14.3942647 L1.81675174,13.8911641 L1.84470177,13.0060799 L0,13.0060799 L0,10.9098278 L2.03103528,10.9098278 C2.37575228,8.63655881 3.24220311,6.847757 4.63038777,5.55273902 C6.01857243,4.25772103 7.80737415,3.60555371 9.99679291,3.60555371 C11.804228,3.60555371 13.4253295,3.9968541 14.8600976,4.79808825 L13.7234631,7.34154083 C12.3259618,6.6521068 11.086844,6.30738978 9.99679291,6.30738978 C8.72040835,6.30738978 7.67694069,6.68005683 6.86638991,7.44402427 Z" id="path-1"></path>
+                  </defs>
+                  <g id="Guidelines" stroke="none" stroke-width="1" fill-rule="evenodd">
+                    <g id="05---Iconografía-" transform="translate(-560.000000, -3064.000000)">
+                      <g id="icono/acciones/aplazar_pago" transform="translate(560.000000, 3059.000000)">
+                        <g id="rvia/primario/defecto" transform="translate(0.000000, 5.833333)">
+                          <mask id="mask-2" fill="white">
+                            <use xlink:href="#path-1"></use>
+                          </mask>
+                          <use id="Mask" fill-rule="nonzero" xlink:href="#path-1"></use>
+                          <g mask="url(#mask-2)">
+                            <g transform="translate(0.000000, -5.833333)">
+                              <path d="M1.99729162,1.18423789e-14 C0.894217919,1.18423789e-14 0,0.891539827 0,1.99729162 L0,38.0027084 C0,39.1057821 0.891539827,40 1.99729162,40 L38.0027084,40 C39.1057821,40 40,39.1084602 40,38.0027084 L40,1.99729162 C40,0.894217919 39.1084602,1.18423789e-14 38.0027084,1.18423789e-14 L1.99729162,1.18423789e-14 Z"></path>
+                            </g>
+                          </g>
+                        </g>
+                      </g>
+                    </g>
+                  </g>
+                </svg>
+
+              </a></p>
+
+            </td>
+          </tr>
+
+
+
+          <tr >
+            <td class="listaC" >26-03-2021</td>
+            <td class="listaC" >26-03-2021</td>
+
+
+
+            <td class="listaI" >
+              <a href="/isum/Main?ISUM_ID=portlets_area&ISUM_SCR=linkServiceScr&ISUM_CIPH=lp57J0ZX0wXEyMgcVgd7gjZpGiYNGDwn%2FMIcVVH3Xq09Yn0X%2FRZiDEklYcY%2F4cFS" onClick="javaScript:mostrarDetalle('TR', 'TI', '3190', '1585091209', '26-03-2021', 'TR', '26-03-2021','0','TRF.MICAELO', '', '', '0000787', '-530.0', 'TRF.MICAELO', '7003,7006,7012', '978');return false;" >
+
+                TRF.MICAELO
+              </a>
+            </td>
+
+            <td class="implistaN" >-530,00</td>
+
+            <td class="implista" >8.002,80</td>
+
+
+            <td class="listaI" >
+
+              <a href="/isum/Main?ISUM_ID=portlets_area&ISUM_SCR=linkServiceScr&ISUM_CIPH=lp57J0ZX0wXEyMgcVgd7gjZpGiYNGDwn%2FMIcVVH3Xq09Yn0X%2FRZiDEklYcY%2F4cFS" onClick="javascript:abrirDoc('00818447506159992545', '3190', '2021-03-26', '2021-03-26',  '-530.0', 'TR','5022716111','0000787','TF','0');return false;" >
+
+
+                <svg class="icono_detalle_pdf" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 58 99" style="enable-background:new 0 0 58 99;" xml:space="preserve">
+									<defs>
+										<path id="SVGID_1_" d="M30.4,94C18.9,94,12,86.2,12,73.2l0.1-52.7c0-1,0.2-4.8,2.6-8.2C16.3,9.9,19.5,7,25.2,7c0,0,0,0,0,0
+											c5.8,0,8.9,2.7,10.6,4.9c2.3,3.2,2.6,6.9,2.6,8.4l-0.1,53c0,1.5,0,5-2.4,7.4c-1.5,1.5-3.5,2.2-6,2.2c0,0,0,0,0,0
+											c-4.8,0-7.6-3.6-7.6-9.7l0-52.8l5,0l0,52.8c0,4.6,1.8,4.7,2.6,4.7c0,0,0,0,0,0c1.2,0,2-0.3,2.5-0.8c0.9-0.9,0.9-2.9,0.9-3.9l0.1-53
+											c0-1-0.2-3.4-1.6-5.4C30.3,13,28.1,12,25.2,12c0,0,0,0,0,0h0c-2.8,0-5,1-6.4,3.1c-1.3,1.8-1.7,4-1.7,5.4L17,73.2
+											C17,80.4,19.3,89,30.4,89c10.8,0,13.1-8.6,13.1-15.8l-0.1-45.8l5,0l0.1,45.8C48.4,86.4,41.8,94,30.4,94z"/>
+									</defs>
+                  <use xlink:href="#SVGID_1_"  style="overflow:visible;"/>
+                  <clipPath id="SVGID_2_">
+										<use xlink:href="#SVGID_1_"  style="overflow:visible;"/>
+									</clipPath>
+								</svg>
+
+              </A>
+
+            </td>
+            <td class="listaI" >
+
+              <p><a href="/isum/Main?ISUM_ID=portlets_area&ISUM_SCR=linkServiceScr&ISUM_CIPH=lp57J0ZX0wXEyMgcVgd7gjZpGiYNGDwn%2FMIcVVH3Xq09Yn0X%2FRZiDEklYcY%2F4cFS" onClick="javascript:aplazarPago('00818447506159992545','530.0','26-03-2021','TRF.MICAELO','7003,7006,7012','0000787', '978'); return false;" >
+
+
+                <svg class="icono_aplazar" width="40px" height="29px" viewBox="0 0 40 29" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <defs>
+                    <path d="M39.8101562,22.8351725 C40.0617065,23.0867227 40.0617065,23.4873398 39.8194729,23.73889 L35.990319,27.5680439 L35.0866014,26.6643263 L37.8257042,23.9252236 L18.325901,23.9252236 L18.325901,22.6488389 L37.8257042,22.6488389 L35.0866014,19.9097362 L35.990319,19.0060186 L39.8101562,22.8351725 Z M30.3350965,17.1520004 L33.0648826,14.4222143 L18.1861512,14.4222143 L18.1861512,13.1458297 L33.0741993,13.1458297 L30.3350965,10.4067269 L31.2388141,9.50300932 L35.0679679,13.3228465 C35.3195181,13.5743968 35.3195181,13.9750138 35.0679679,14.2265641 L31.2388141,18.0557179 L30.3350965,17.1520004 Z M25.4531583,7.65830766 L28.1829443,4.91920492 L18.1861512,4.91920492 L18.1861512,3.64282031 L28.192261,3.64282031 L25.4531583,0.90371757 L26.3568758,0 L30.1860296,3.82915383 C30.4375798,4.08070408 30.4375798,4.48132115 30.1860296,4.7328714 L26.3568758,8.56202523 L25.4531583,7.65830766 Z M6.86638991,7.44402427 C6.05583913,8.19867503 5.51547195,9.35394287 5.24528836,10.8818778 L11.4408776,10.8818778 L11.4408776,12.9781299 L5.04032149,12.9781299 L5.01237147,13.5930305 L5.01237147,14.3383646 L5.04032149,14.8694151 L10.5930601,14.8694151 L10.5930601,16.9656673 L5.28255506,16.9656673 C5.86018895,19.7886201 7.50924053,21.2047549 10.2297098,21.2047549 C11.5247277,21.2047549 12.8476956,20.9252546 14.2079303,20.366254 L14.2079303,23.1239902 C13.0153958,23.6736741 11.6365278,23.9531744 10.0620096,23.9531744 C7.88190755,23.9531744 6.10242251,23.3569071 4.74218788,22.1643725 C3.37263656,20.971838 2.48755238,19.2389362 2.06830198,16.9749839 L0,16.9749839 L0,14.8973652 L1.84470177,14.8973652 L1.81675174,14.3942647 L1.81675174,13.8911641 L1.84470177,13.0060799 L0,13.0060799 L0,10.9098278 L2.03103528,10.9098278 C2.37575228,8.63655881 3.24220311,6.847757 4.63038777,5.55273902 C6.01857243,4.25772103 7.80737415,3.60555371 9.99679291,3.60555371 C11.804228,3.60555371 13.4253295,3.9968541 14.8600976,4.79808825 L13.7234631,7.34154083 C12.3259618,6.6521068 11.086844,6.30738978 9.99679291,6.30738978 C8.72040835,6.30738978 7.67694069,6.68005683 6.86638991,7.44402427 Z" id="path-1"></path>
+                  </defs>
+                  <g id="Guidelines" stroke="none" stroke-width="1" fill-rule="evenodd">
+                    <g id="05---Iconografía-" transform="translate(-560.000000, -3064.000000)">
+                      <g id="icono/acciones/aplazar_pago" transform="translate(560.000000, 3059.000000)">
+                        <g id="rvia/primario/defecto" transform="translate(0.000000, 5.833333)">
+                          <mask id="mask-2" fill="white">
+                            <use xlink:href="#path-1"></use>
+                          </mask>
+                          <use id="Mask" fill-rule="nonzero" xlink:href="#path-1"></use>
+                          <g mask="url(#mask-2)">
+                            <g transform="translate(0.000000, -5.833333)">
+                              <path d="M1.99729162,1.18423789e-14 C0.894217919,1.18423789e-14 0,0.891539827 0,1.99729162 L0,38.0027084 C0,39.1057821 0.891539827,40 1.99729162,40 L38.0027084,40 C39.1057821,40 40,39.1084602 40,38.0027084 L40,1.99729162 C40,0.894217919 39.1084602,1.18423789e-14 38.0027084,1.18423789e-14 L1.99729162,1.18423789e-14 Z"></path>
+                            </g>
+                          </g>
+                        </g>
+                      </g>
+                    </g>
+                  </g>
+                </svg>
+
+              </a></p>
+
+            </td>
+          </tr>
+
+
+
+          <tr >
+            <td class="listaC" >26-03-2021</td>
+            <td class="listaC" >26-03-2021</td>
+
+
+
+            <td class="listaI" >
+              <a href="/isum/Main?ISUM_ID=portlets_area&ISUM_SCR=linkServiceScr&ISUM_CIPH=lp57J0ZX0wXEyMgcVgd7gjZpGiYNGDwn%2FMIcVVH3Xq09Yn0X%2FRZiDEklYcY%2F4cFS" onClick="javaScript:mostrarDetalle('TR', '', '3190', '1584108403', '26-03-2021', 'TR', '26-03-2021','1','TRF. *HASHED* SL', '', '', '0000786', '3520.55', 'TRF. *HASHED* SL', '', '978');return false;" >
+
+                TRF. *HASHED* SL
+              </a>
+            </td>
+
+            <td class="implista" >3.520,55</td>
+
+            <td class="implista" >8.532,80</td>
+
+
+            <td class="listaI" >
+
+              <a href="/isum/Main?ISUM_ID=portlets_area&ISUM_SCR=linkServiceScr&ISUM_CIPH=lp57J0ZX0wXEyMgcVgd7gjZpGiYNGDwn%2FMIcVVH3Xq09Yn0X%2FRZiDEklYcY%2F4cFS" onClick="javascript:abrirDoc('00818447506159992545', '3190', '2021-03-26', '2021-03-26',  '3520.55', 'TR','5022716111','0000786','','0');return false;" >
+
+
+                <svg class="icono_detalle_pdf" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 58 99" style="enable-background:new 0 0 58 99;" xml:space="preserve">
+									<defs>
+										<path id="SVGID_1_" d="M30.4,94C18.9,94,12,86.2,12,73.2l0.1-52.7c0-1,0.2-4.8,2.6-8.2C16.3,9.9,19.5,7,25.2,7c0,0,0,0,0,0
+											c5.8,0,8.9,2.7,10.6,4.9c2.3,3.2,2.6,6.9,2.6,8.4l-0.1,53c0,1.5,0,5-2.4,7.4c-1.5,1.5-3.5,2.2-6,2.2c0,0,0,0,0,0
+											c-4.8,0-7.6-3.6-7.6-9.7l0-52.8l5,0l0,52.8c0,4.6,1.8,4.7,2.6,4.7c0,0,0,0,0,0c1.2,0,2-0.3,2.5-0.8c0.9-0.9,0.9-2.9,0.9-3.9l0.1-53
+											c0-1-0.2-3.4-1.6-5.4C30.3,13,28.1,12,25.2,12c0,0,0,0,0,0h0c-2.8,0-5,1-6.4,3.1c-1.3,1.8-1.7,4-1.7,5.4L17,73.2
+											C17,80.4,19.3,89,30.4,89c10.8,0,13.1-8.6,13.1-15.8l-0.1-45.8l5,0l0.1,45.8C48.4,86.4,41.8,94,30.4,94z"/>
+									</defs>
+                  <use xlink:href="#SVGID_1_"  style="overflow:visible;"/>
+                  <clipPath id="SVGID_2_">
+										<use xlink:href="#SVGID_1_"  style="overflow:visible;"/>
+									</clipPath>
+								</svg>
+
+              </A>
+
+            </td>
+            <td class="listaI" >
+
+            </td>
+          </tr>
+
+
+
+          <tr >
+            <td class="listaC" >26-03-2021</td>
+            <td class="listaC" >26-03-2021</td>
+
+
+
+            <td class="listaI" >
+              <a href="/isum/Main?ISUM_ID=portlets_area&ISUM_SCR=linkServiceScr&ISUM_CIPH=lp57J0ZX0wXEyMgcVgd7gjZpGiYNGDwn%2FMIcVVH3Xq09Yn0X%2FRZiDEklYcY%2F4cFS" onClick="javaScript:mostrarDetalle('TR', '', '3190', '1584108402', '26-03-2021', 'TR', '26-03-2021','1','TRF. *HASHED* SL', '', '', '0000785', '4842.1', 'TRF. *HASHED* SL', '', '978');return false;" >
+
+                TRF. *HASHED* SL
+              </a>
+            </td>
+
+            <td class="implista" >4.842,10</td>
+
+            <td class="implista" >5.012,25</td>
+
+
+            <td class="listaI" >
+
+              <a href="/isum/Main?ISUM_ID=portlets_area&ISUM_SCR=linkServiceScr&ISUM_CIPH=lp57J0ZX0wXEyMgcVgd7gjZpGiYNGDwn%2FMIcVVH3Xq09Yn0X%2FRZiDEklYcY%2F4cFS" onClick="javascript:abrirDoc('00818447506159992545', '3190', '2021-03-26', '2021-03-26',  '4842.1', 'TR','5022716111','0000785','','0');return false;" >
+
+
+                <svg class="icono_detalle_pdf" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 58 99" style="enable-background:new 0 0 58 99;" xml:space="preserve">
+									<defs>
+										<path id="SVGID_1_" d="M30.4,94C18.9,94,12,86.2,12,73.2l0.1-52.7c0-1,0.2-4.8,2.6-8.2C16.3,9.9,19.5,7,25.2,7c0,0,0,0,0,0
+											c5.8,0,8.9,2.7,10.6,4.9c2.3,3.2,2.6,6.9,2.6,8.4l-0.1,53c0,1.5,0,5-2.4,7.4c-1.5,1.5-3.5,2.2-6,2.2c0,0,0,0,0,0
+											c-4.8,0-7.6-3.6-7.6-9.7l0-52.8l5,0l0,52.8c0,4.6,1.8,4.7,2.6,4.7c0,0,0,0,0,0c1.2,0,2-0.3,2.5-0.8c0.9-0.9,0.9-2.9,0.9-3.9l0.1-53
+											c0-1-0.2-3.4-1.6-5.4C30.3,13,28.1,12,25.2,12c0,0,0,0,0,0h0c-2.8,0-5,1-6.4,3.1c-1.3,1.8-1.7,4-1.7,5.4L17,73.2
+											C17,80.4,19.3,89,30.4,89c10.8,0,13.1-8.6,13.1-15.8l-0.1-45.8l5,0l0.1,45.8C48.4,86.4,41.8,94,30.4,94z"/>
+									</defs>
+                  <use xlink:href="#SVGID_1_"  style="overflow:visible;"/>
+                  <clipPath id="SVGID_2_">
+										<use xlink:href="#SVGID_1_"  style="overflow:visible;"/>
+									</clipPath>
+								</svg>
+
+              </A>
+
+            </td>
+            <td class="listaI" >
+
+            </td>
+          </tr>
+
+
+
+          <tr >
+            <td class="listaC" >25-03-2021</td>
+            <td class="listaC" >25-03-2021</td>
+
+            <td class="listaI" >TJ-AMZN MKTP ES AMAZON.ES</td>
+
+            <td class="implistaN" >-12,38</td>
+
+            <td class="implista" >170,15</td>
+
+
+            <td class="listaI" >
+
+            </td>
+            <td class="listaI" >
+
+            </td>
+          </tr>
+
+
+
+          <tr >
+            <td class="listaC" >22-03-2021</td>
+            <td class="listaC" >22-03-2021</td>
+
+            <td class="listaI" >TJ-UBER   * EATS PENDING</td>
+
+            <td class="implistaN" >-24,35</td>
+
+            <td class="implista" >182,53</td>
+
+
+            <td class="listaI" >
+
+            </td>
+            <td class="listaI" >
+
+            </td>
+          </tr>
+
+
+
+          <tr >
+            <td class="listaC" >16-03-2021</td>
+            <td class="listaC" >16-03-2021</td>
+
+            <td class="listaI" >TJ-DOMINOS PIZZA </td>
+
+            <td class="implistaN" >-25,00</td>
+
+            <td class="implista" >206,88</td>
+
+
+            <td class="listaI" >
+
+            </td>
+            <td class="listaI" >
+
+            </td>
+          </tr>
+
+
+
+          <tr >
+            <td class="listaC" >15-03-2021</td>
+            <td class="listaC" >15-03-2021</td>
+
+            <td class="listaI" >TJ-AMZN MKTP ES</td>
+
+            <td class="implistaN" >-59,53</td>
+
+            <td class="implista" >231,88</td>
+
+
+            <td class="listaI" >
+
+            </td>
+            <td class="listaI" >
+
+            </td>
+          </tr>
+
+
+
+          <tr >
+            <td class="listaC" >15-03-2021</td>
+            <td class="listaC" >15-03-2021</td>
+
+            <td class="listaI" >TJ-AMZN MKTP ES</td>
+
+            <td class="implistaN" >-26,75</td>
+
+            <td class="implista" >291,41</td>
+
+
+            <td class="listaI" >
+
+            </td>
+            <td class="listaI" >
+
+            </td>
+          </tr>
+
+
+
+          <tr >
+            <td class="listaC" >15-03-2021</td>
+            <td class="listaC" >15-03-2021</td>
+
+            <td class="listaI" >TJ-AMZN MKTP ES</td>
+
+            <td class="implistaN" >-38,05</td>
+
+            <td class="implista" >318,16</td>
+
+
+            <td class="listaI" >
+
+            </td>
+            <td class="listaI" >
+
+            </td>
+          </tr>
+
+
+
+          <tr >
+            <td class="listaC" >09-03-2021</td>
+            <td class="listaC" >09-03-2021</td>
+
+
+
+            <td class="listaI" >
+              <a href="/isum/Main?ISUM_ID=portlets_area&ISUM_SCR=linkServiceScr&ISUM_CIPH=lp57J0ZX0wXEyMgcVgd7gjZpGiYNGDwn%2FMIcVVH3Xq09Yn0X%2FRZiDEklYcY%2F4cFS" onClick="javaScript:mostrarDetalle('RZ', '', '3190', '1067527962', '09-03-2021', 'RZ', '09-03-2021','0','RCBO.ENDESA ENERGIA SAU', '', '', '0000778', '-129.6', 'RCBO.ENDESA ENERGIA SAU', '7003', '978');return false;" >
+
+                RCBO.ENDESA ENERGIA SAU
+              </a>
+            </td>
+
+            <td class="implistaN" >-129,60</td>
+
+            <td class="implista" >356,21</td>
+
+
+            <td class="listaI" >
+
+              <a href="/isum/Main?ISUM_ID=portlets_area&ISUM_SCR=linkServiceScr&ISUM_CIPH=lp57J0ZX0wXEyMgcVgd7gjZpGiYNGDwn%2FMIcVVH3Xq09Yn0X%2FRZiDEklYcY%2F4cFS" onClick="javascript:abrirDoc('00818447506159992545', '3190', '2021-03-09', '2021-03-09',  '-129.6', 'RZ','5022716111','0000778','RZ','1067527962');return false;" >
+
+
+                <svg class="icono_detalle_pdf" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 58 99" style="enable-background:new 0 0 58 99;" xml:space="preserve">
+									<defs>
+										<path id="SVGID_1_" d="M30.4,94C18.9,94,12,86.2,12,73.2l0.1-52.7c0-1,0.2-4.8,2.6-8.2C16.3,9.9,19.5,7,25.2,7c0,0,0,0,0,0
+											c5.8,0,8.9,2.7,10.6,4.9c2.3,3.2,2.6,6.9,2.6,8.4l-0.1,53c0,1.5,0,5-2.4,7.4c-1.5,1.5-3.5,2.2-6,2.2c0,0,0,0,0,0
+											c-4.8,0-7.6-3.6-7.6-9.7l0-52.8l5,0l0,52.8c0,4.6,1.8,4.7,2.6,4.7c0,0,0,0,0,0c1.2,0,2-0.3,2.5-0.8c0.9-0.9,0.9-2.9,0.9-3.9l0.1-53
+											c0-1-0.2-3.4-1.6-5.4C30.3,13,28.1,12,25.2,12c0,0,0,0,0,0h0c-2.8,0-5,1-6.4,3.1c-1.3,1.8-1.7,4-1.7,5.4L17,73.2
+											C17,80.4,19.3,89,30.4,89c10.8,0,13.1-8.6,13.1-15.8l-0.1-45.8l5,0l0.1,45.8C48.4,86.4,41.8,94,30.4,94z"/>
+									</defs>
+                  <use xlink:href="#SVGID_1_"  style="overflow:visible;"/>
+                  <clipPath id="SVGID_2_">
+										<use xlink:href="#SVGID_1_"  style="overflow:visible;"/>
+									</clipPath>
+								</svg>
+
+              </A>
+
+            </td>
+            <td class="listaI" >
+
+              <p><a href="/isum/Main?ISUM_ID=portlets_area&ISUM_SCR=linkServiceScr&ISUM_CIPH=lp57J0ZX0wXEyMgcVgd7gjZpGiYNGDwn%2FMIcVVH3Xq09Yn0X%2FRZiDEklYcY%2F4cFS" onClick="javascript:aplazarPago('00818447506159992545','129.6','09-03-2021','RCBO.ENDESA ENERGIA SAU','7003','0000778', '978'); return false;" >
+
+
+                <svg class="icono_aplazar" width="40px" height="29px" viewBox="0 0 40 29" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <defs>
+                    <path d="M39.8101562,22.8351725 C40.0617065,23.0867227 40.0617065,23.4873398 39.8194729,23.73889 L35.990319,27.5680439 L35.0866014,26.6643263 L37.8257042,23.9252236 L18.325901,23.9252236 L18.325901,22.6488389 L37.8257042,22.6488389 L35.0866014,19.9097362 L35.990319,19.0060186 L39.8101562,22.8351725 Z M30.3350965,17.1520004 L33.0648826,14.4222143 L18.1861512,14.4222143 L18.1861512,13.1458297 L33.0741993,13.1458297 L30.3350965,10.4067269 L31.2388141,9.50300932 L35.0679679,13.3228465 C35.3195181,13.5743968 35.3195181,13.9750138 35.0679679,14.2265641 L31.2388141,18.0557179 L30.3350965,17.1520004 Z M25.4531583,7.65830766 L28.1829443,4.91920492 L18.1861512,4.91920492 L18.1861512,3.64282031 L28.192261,3.64282031 L25.4531583,0.90371757 L26.3568758,0 L30.1860296,3.82915383 C30.4375798,4.08070408 30.4375798,4.48132115 30.1860296,4.7328714 L26.3568758,8.56202523 L25.4531583,7.65830766 Z M6.86638991,7.44402427 C6.05583913,8.19867503 5.51547195,9.35394287 5.24528836,10.8818778 L11.4408776,10.8818778 L11.4408776,12.9781299 L5.04032149,12.9781299 L5.01237147,13.5930305 L5.01237147,14.3383646 L5.04032149,14.8694151 L10.5930601,14.8694151 L10.5930601,16.9656673 L5.28255506,16.9656673 C5.86018895,19.7886201 7.50924053,21.2047549 10.2297098,21.2047549 C11.5247277,21.2047549 12.8476956,20.9252546 14.2079303,20.366254 L14.2079303,23.1239902 C13.0153958,23.6736741 11.6365278,23.9531744 10.0620096,23.9531744 C7.88190755,23.9531744 6.10242251,23.3569071 4.74218788,22.1643725 C3.37263656,20.971838 2.48755238,19.2389362 2.06830198,16.9749839 L0,16.9749839 L0,14.8973652 L1.84470177,14.8973652 L1.81675174,14.3942647 L1.81675174,13.8911641 L1.84470177,13.0060799 L0,13.0060799 L0,10.9098278 L2.03103528,10.9098278 C2.37575228,8.63655881 3.24220311,6.847757 4.63038777,5.55273902 C6.01857243,4.25772103 7.80737415,3.60555371 9.99679291,3.60555371 C11.804228,3.60555371 13.4253295,3.9968541 14.8600976,4.79808825 L13.7234631,7.34154083 C12.3259618,6.6521068 11.086844,6.30738978 9.99679291,6.30738978 C8.72040835,6.30738978 7.67694069,6.68005683 6.86638991,7.44402427 Z" id="path-1"></path>
+                  </defs>
+                  <g id="Guidelines" stroke="none" stroke-width="1" fill-rule="evenodd">
+                    <g id="05---Iconografía-" transform="translate(-560.000000, -3064.000000)">
+                      <g id="icono/acciones/aplazar_pago" transform="translate(560.000000, 3059.000000)">
+                        <g id="rvia/primario/defecto" transform="translate(0.000000, 5.833333)">
+                          <mask id="mask-2" fill="white">
+                            <use xlink:href="#path-1"></use>
+                          </mask>
+                          <use id="Mask" fill-rule="nonzero" xlink:href="#path-1"></use>
+                          <g mask="url(#mask-2)">
+                            <g transform="translate(0.000000, -5.833333)">
+                              <path d="M1.99729162,1.18423789e-14 C0.894217919,1.18423789e-14 0,0.891539827 0,1.99729162 L0,38.0027084 C0,39.1057821 0.891539827,40 1.99729162,40 L38.0027084,40 C39.1057821,40 40,39.1084602 40,38.0027084 L40,1.99729162 C40,0.894217919 39.1084602,1.18423789e-14 38.0027084,1.18423789e-14 L1.99729162,1.18423789e-14 Z"></path>
+                            </g>
+                          </g>
+                        </g>
+                      </g>
+                    </g>
+                  </g>
+                </svg>
+
+              </a></p>
+
+            </td>
+          </tr>
+
+
+
+          <tr >
+            <td class="listaC" >09-03-2021</td>
+            <td class="listaC" >09-03-2021</td>
+
+
+
+            <td class="listaI" >
+              <a href="/isum/Main?ISUM_ID=portlets_area&ISUM_SCR=linkServiceScr&ISUM_CIPH=lp57J0ZX0wXEyMgcVgd7gjZpGiYNGDwn%2FMIcVVH3Xq09Yn0X%2FRZiDEklYcY%2F4cFS" onClick="javaScript:mostrarDetalle('RZ', '', '3190', '1067534858', '09-03-2021', 'RZ', '09-03-2021','0','RCBO.IBERDROLA COMERCIALIZACION DE ULTIMO REC', '', '', '0000777', '-66.84', 'RCBO.IBERDROLA COMERCIALIZACION DE ULTIMO REC', '', '978');return false;" >
+
+                RCBO.IBERDROLA COMERCIALIZACION DE ULTIMO REC
+              </a>
+            </td>
+
+            <td class="implistaN" >-66,84</td>
+
+            <td class="implista" >485,81</td>
+
+
+            <td class="listaI" >
+
+              <a href="/isum/Main?ISUM_ID=portlets_area&ISUM_SCR=linkServiceScr&ISUM_CIPH=lp57J0ZX0wXEyMgcVgd7gjZpGiYNGDwn%2FMIcVVH3Xq09Yn0X%2FRZiDEklYcY%2F4cFS" onClick="javascript:abrirDoc('00818447506159992545', '3190', '2021-03-09', '2021-03-09',  '-66.84', 'RZ','5022716111','0000777','RZ','1067534858');return false;" >
+
+
+                <svg class="icono_detalle_pdf" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 58 99" style="enable-background:new 0 0 58 99;" xml:space="preserve">
+									<defs>
+										<path id="SVGID_1_" d="M30.4,94C18.9,94,12,86.2,12,73.2l0.1-52.7c0-1,0.2-4.8,2.6-8.2C16.3,9.9,19.5,7,25.2,7c0,0,0,0,0,0
+											c5.8,0,8.9,2.7,10.6,4.9c2.3,3.2,2.6,6.9,2.6,8.4l-0.1,53c0,1.5,0,5-2.4,7.4c-1.5,1.5-3.5,2.2-6,2.2c0,0,0,0,0,0
+											c-4.8,0-7.6-3.6-7.6-9.7l0-52.8l5,0l0,52.8c0,4.6,1.8,4.7,2.6,4.7c0,0,0,0,0,0c1.2,0,2-0.3,2.5-0.8c0.9-0.9,0.9-2.9,0.9-3.9l0.1-53
+											c0-1-0.2-3.4-1.6-5.4C30.3,13,28.1,12,25.2,12c0,0,0,0,0,0h0c-2.8,0-5,1-6.4,3.1c-1.3,1.8-1.7,4-1.7,5.4L17,73.2
+											C17,80.4,19.3,89,30.4,89c10.8,0,13.1-8.6,13.1-15.8l-0.1-45.8l5,0l0.1,45.8C48.4,86.4,41.8,94,30.4,94z"/>
+									</defs>
+                  <use xlink:href="#SVGID_1_"  style="overflow:visible;"/>
+                  <clipPath id="SVGID_2_">
+										<use xlink:href="#SVGID_1_"  style="overflow:visible;"/>
+									</clipPath>
+								</svg>
+
+              </A>
+
+            </td>
+            <td class="listaI" >
+
+            </td>
+          </tr>
+
+
+
+          <tr >
+            <td class="listaC" >08-03-2021</td>
+            <td class="listaC" >08-03-2021</td>
+
+            <td class="listaI" >TJ-AMAZON.ES</td>
+
+            <td class="implistaN" >-14,29</td>
+
+            <td class="implista" >552,65</td>
+
+
+            <td class="listaI" >
+
+            </td>
+            <td class="listaI" >
+
+            </td>
+          </tr>
+
+
+
+          <tr >
+            <td class="listaC" >08-03-2021</td>
+            <td class="listaC" >08-03-2021</td>
+
+            <td class="listaI" >TJ-GOOGLE *GOOGLE STORAGE</td>
+
+            <td class="implistaN" >-1,99</td>
+
+            <td class="implista" >566,94</td>
+
+
+            <td class="listaI" >
+
+            </td>
+            <td class="listaI" >
+
+            </td>
+          </tr>
+
+
+
+          <tr >
+            <td class="listaC" >08-03-2021</td>
+            <td class="listaC" >08-03-2021</td>
+
+
+
+            <td class="listaI" >
+              <a href="/isum/Main?ISUM_ID=portlets_area&ISUM_SCR=linkServiceScr&ISUM_CIPH=lp57J0ZX0wXEyMgcVgd7gjZpGiYNGDwn%2FMIcVVH3Xq09Yn0X%2FRZiDEklYcY%2F4cFS" onClick="javaScript:mostrarDetalle('RZ', '', '3190', '1067507976', '08-03-2021', 'RZ', '08-03-2021','0','RCBO.VINCENT CLAUS', '', '', '0000774', '-750.0', 'RCBO.VINCENT CLAUS', '', '978');return false;" >
+
+                RCBO.VINCENT CLAUS
+              </a>
+            </td>
+
+            <td class="implistaN" >-750,00</td>
+
+            <td class="implista" >568,93</td>
+
+
+            <td class="listaI" >
+
+              <a href="/isum/Main?ISUM_ID=portlets_area&ISUM_SCR=linkServiceScr&ISUM_CIPH=lp57J0ZX0wXEyMgcVgd7gjZpGiYNGDwn%2FMIcVVH3Xq09Yn0X%2FRZiDEklYcY%2F4cFS" onClick="javascript:abrirDoc('00818447506159992545', '3190', '2021-03-08', '2021-03-08',  '-750.0', 'RZ','5022716111','0000774','RZ','1067507976');return false;" >
+
+
+                <svg class="icono_detalle_pdf" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 58 99" style="enable-background:new 0 0 58 99;" xml:space="preserve">
+									<defs>
+										<path id="SVGID_1_" d="M30.4,94C18.9,94,12,86.2,12,73.2l0.1-52.7c0-1,0.2-4.8,2.6-8.2C16.3,9.9,19.5,7,25.2,7c0,0,0,0,0,0
+											c5.8,0,8.9,2.7,10.6,4.9c2.3,3.2,2.6,6.9,2.6,8.4l-0.1,53c0,1.5,0,5-2.4,7.4c-1.5,1.5-3.5,2.2-6,2.2c0,0,0,0,0,0
+											c-4.8,0-7.6-3.6-7.6-9.7l0-52.8l5,0l0,52.8c0,4.6,1.8,4.7,2.6,4.7c0,0,0,0,0,0c1.2,0,2-0.3,2.5-0.8c0.9-0.9,0.9-2.9,0.9-3.9l0.1-53
+											c0-1-0.2-3.4-1.6-5.4C30.3,13,28.1,12,25.2,12c0,0,0,0,0,0h0c-2.8,0-5,1-6.4,3.1c-1.3,1.8-1.7,4-1.7,5.4L17,73.2
+											C17,80.4,19.3,89,30.4,89c10.8,0,13.1-8.6,13.1-15.8l-0.1-45.8l5,0l0.1,45.8C48.4,86.4,41.8,94,30.4,94z"/>
+									</defs>
+                  <use xlink:href="#SVGID_1_"  style="overflow:visible;"/>
+                  <clipPath id="SVGID_2_">
+										<use xlink:href="#SVGID_1_"  style="overflow:visible;"/>
+									</clipPath>
+								</svg>
+
+              </A>
+
+            </td>
+            <td class="listaI" >
+
+            </td>
+          </tr>
+
+
+
+          <tr >
+            <td class="listaC" >05-03-2021</td>
+            <td class="listaC" >05-03-2021</td>
+
+
+
+            <td class="listaI" >
+              <a href="/isum/Main?ISUM_ID=portlets_area&ISUM_SCR=linkServiceScr&ISUM_CIPH=lp57J0ZX0wXEyMgcVgd7gjZpGiYNGDwn%2FMIcVVH3Xq09Yn0X%2FRZiDEklYcY%2F4cFS" onClick="javaScript:mostrarDetalle('TR', 'TI', '3190', '1564091067', '05-03-2021', 'TR', '05-03-2021','0','TRF.MICAELO', '', '', '0000773', '-602.5', 'TRF.MICAELO', '', '978');return false;" >
+
+                TRF.MICAELO
+              </a>
+            </td>
+
+            <td class="implistaN" >-602,50</td>
+
+            <td class="implista" >1.318,93</td>
+
+
+            <td class="listaI" >
+
+              <a href="/isum/Main?ISUM_ID=portlets_area&ISUM_SCR=linkServiceScr&ISUM_CIPH=lp57J0ZX0wXEyMgcVgd7gjZpGiYNGDwn%2FMIcVVH3Xq09Yn0X%2FRZiDEklYcY%2F4cFS" onClick="javascript:abrirDoc('00818447506159992545', '3190', '2021-03-05', '2021-03-05',  '-602.5', 'TR','5022716111','0000773','TF','0');return false;" >
+
+
+                <svg class="icono_detalle_pdf" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 58 99" style="enable-background:new 0 0 58 99;" xml:space="preserve">
+									<defs>
+										<path id="SVGID_1_" d="M30.4,94C18.9,94,12,86.2,12,73.2l0.1-52.7c0-1,0.2-4.8,2.6-8.2C16.3,9.9,19.5,7,25.2,7c0,0,0,0,0,0
+											c5.8,0,8.9,2.7,10.6,4.9c2.3,3.2,2.6,6.9,2.6,8.4l-0.1,53c0,1.5,0,5-2.4,7.4c-1.5,1.5-3.5,2.2-6,2.2c0,0,0,0,0,0
+											c-4.8,0-7.6-3.6-7.6-9.7l0-52.8l5,0l0,52.8c0,4.6,1.8,4.7,2.6,4.7c0,0,0,0,0,0c1.2,0,2-0.3,2.5-0.8c0.9-0.9,0.9-2.9,0.9-3.9l0.1-53
+											c0-1-0.2-3.4-1.6-5.4C30.3,13,28.1,12,25.2,12c0,0,0,0,0,0h0c-2.8,0-5,1-6.4,3.1c-1.3,1.8-1.7,4-1.7,5.4L17,73.2
+											C17,80.4,19.3,89,30.4,89c10.8,0,13.1-8.6,13.1-15.8l-0.1-45.8l5,0l0.1,45.8C48.4,86.4,41.8,94,30.4,94z"/>
+									</defs>
+                  <use xlink:href="#SVGID_1_"  style="overflow:visible;"/>
+                  <clipPath id="SVGID_2_">
+										<use xlink:href="#SVGID_1_"  style="overflow:visible;"/>
+									</clipPath>
+								</svg>
+
+              </A>
+
+            </td>
+            <td class="listaI" >
+
+            </td>
+          </tr>
+
+
+
+          <tr >
+            <td class="listaC" >05-03-2021</td>
+            <td class="listaC" >05-03-2021</td>
+
+
+
+            <td class="listaI" >
+              <a href="/isum/Main?ISUM_ID=portlets_area&ISUM_SCR=linkServiceScr&ISUM_CIPH=lp57J0ZX0wXEyMgcVgd7gjZpGiYNGDwn%2FMIcVVH3Xq09Yn0X%2FRZiDEklYcY%2F4cFS" onClick="javaScript:mostrarDetalle('RZ', '', '3190', '1063569469', '05-03-2021', 'RZ', '05-03-2021','0','RCBO.PEPE MOBILE, S.L.U.', '', '', '0000772', '-57.9', 'RCBO.PEPE MOBILE, S.L.U.', '', '978');return false;" >
+
+                RCBO.PEPE MOBILE, S.L.U.
+              </a>
+            </td>
+
+            <td class="implistaN" >-57,90</td>
+
+            <td class="implista" >1.921,43</td>
+
+
+            <td class="listaI" >
+
+              <a href="/isum/Main?ISUM_ID=portlets_area&ISUM_SCR=linkServiceScr&ISUM_CIPH=lp57J0ZX0wXEyMgcVgd7gjZpGiYNGDwn%2FMIcVVH3Xq09Yn0X%2FRZiDEklYcY%2F4cFS" onClick="javascript:abrirDoc('00818447506159992545', '3190', '2021-03-05', '2021-03-05',  '-57.9', 'RZ','5022716111','0000772','RZ','1063569469');return false;" >
+
+
+                <svg class="icono_detalle_pdf" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 58 99" style="enable-background:new 0 0 58 99;" xml:space="preserve">
+									<defs>
+										<path id="SVGID_1_" d="M30.4,94C18.9,94,12,86.2,12,73.2l0.1-52.7c0-1,0.2-4.8,2.6-8.2C16.3,9.9,19.5,7,25.2,7c0,0,0,0,0,0
+											c5.8,0,8.9,2.7,10.6,4.9c2.3,3.2,2.6,6.9,2.6,8.4l-0.1,53c0,1.5,0,5-2.4,7.4c-1.5,1.5-3.5,2.2-6,2.2c0,0,0,0,0,0
+											c-4.8,0-7.6-3.6-7.6-9.7l0-52.8l5,0l0,52.8c0,4.6,1.8,4.7,2.6,4.7c0,0,0,0,0,0c1.2,0,2-0.3,2.5-0.8c0.9-0.9,0.9-2.9,0.9-3.9l0.1-53
+											c0-1-0.2-3.4-1.6-5.4C30.3,13,28.1,12,25.2,12c0,0,0,0,0,0h0c-2.8,0-5,1-6.4,3.1c-1.3,1.8-1.7,4-1.7,5.4L17,73.2
+											C17,80.4,19.3,89,30.4,89c10.8,0,13.1-8.6,13.1-15.8l-0.1-45.8l5,0l0.1,45.8C48.4,86.4,41.8,94,30.4,94z"/>
+									</defs>
+                  <use xlink:href="#SVGID_1_"  style="overflow:visible;"/>
+                  <clipPath id="SVGID_2_">
+										<use xlink:href="#SVGID_1_"  style="overflow:visible;"/>
+									</clipPath>
+								</svg>
+
+              </A>
+
+            </td>
+            <td class="listaI" >
+
+            </td>
+          </tr>
+
+
+
+          <tr >
+            <td class="listaC" >05-03-2021</td>
+            <td class="listaC" >05-03-2021</td>
+
+
+
+            <td class="listaI" >
+              <a href="/isum/Main?ISUM_ID=portlets_area&ISUM_SCR=linkServiceScr&ISUM_CIPH=lp57J0ZX0wXEyMgcVgd7gjZpGiYNGDwn%2FMIcVVH3Xq09Yn0X%2FRZiDEklYcY%2F4cFS" onClick="javaScript:mostrarDetalle('RZ', '', '3190', '1063549809', '05-03-2021', 'RZ', '05-03-2021','0','RCBO.AAAAAA EEEEE IIII', '', '', '0000771', '-337.0', 'RCBO.AAAAAA EEEEE IIII', '7003,7006', '978');return false;" >
+
+                RCBO.AAAAAA EEEEE IIII
+              </a>
+            </td>
+
+            <td class="implistaN" >-337,00</td>
+
+            <td class="implista" >1.979,33</td>
+
+
+            <td class="listaI" >
+
+              <a href="/isum/Main?ISUM_ID=portlets_area&ISUM_SCR=linkServiceScr&ISUM_CIPH=lp57J0ZX0wXEyMgcVgd7gjZpGiYNGDwn%2FMIcVVH3Xq09Yn0X%2FRZiDEklYcY%2F4cFS" onClick="javascript:abrirDoc('00818447506159992545', '3190', '2021-03-05', '2021-03-05',  '-337.0', 'RZ','5022716111','0000771','RZ','1063549809');return false;" >
+
+
+                <svg class="icono_detalle_pdf" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 58 99" style="enable-background:new 0 0 58 99;" xml:space="preserve">
+									<defs>
+										<path id="SVGID_1_" d="M30.4,94C18.9,94,12,86.2,12,73.2l0.1-52.7c0-1,0.2-4.8,2.6-8.2C16.3,9.9,19.5,7,25.2,7c0,0,0,0,0,0
+											c5.8,0,8.9,2.7,10.6,4.9c2.3,3.2,2.6,6.9,2.6,8.4l-0.1,53c0,1.5,0,5-2.4,7.4c-1.5,1.5-3.5,2.2-6,2.2c0,0,0,0,0,0
+											c-4.8,0-7.6-3.6-7.6-9.7l0-52.8l5,0l0,52.8c0,4.6,1.8,4.7,2.6,4.7c0,0,0,0,0,0c1.2,0,2-0.3,2.5-0.8c0.9-0.9,0.9-2.9,0.9-3.9l0.1-53
+											c0-1-0.2-3.4-1.6-5.4C30.3,13,28.1,12,25.2,12c0,0,0,0,0,0h0c-2.8,0-5,1-6.4,3.1c-1.3,1.8-1.7,4-1.7,5.4L17,73.2
+											C17,80.4,19.3,89,30.4,89c10.8,0,13.1-8.6,13.1-15.8l-0.1-45.8l5,0l0.1,45.8C48.4,86.4,41.8,94,30.4,94z"/>
+									</defs>
+                  <use xlink:href="#SVGID_1_"  style="overflow:visible;"/>
+                  <clipPath id="SVGID_2_">
+										<use xlink:href="#SVGID_1_"  style="overflow:visible;"/>
+									</clipPath>
+								</svg>
+
+              </A>
+
+            </td>
+            <td class="listaI" >
+
+              <p><a href="/isum/Main?ISUM_ID=portlets_area&ISUM_SCR=linkServiceScr&ISUM_CIPH=lp57J0ZX0wXEyMgcVgd7gjZpGiYNGDwn%2FMIcVVH3Xq09Yn0X%2FRZiDEklYcY%2F4cFS" onClick="javascript:aplazarPago('00818447506159992545','337.0','05-03-2021','RCBO.AAAAAA EEEEE IIII','7003,7006','0000771', '978'); return false;" >
+
+
+                <svg class="icono_aplazar" width="40px" height="29px" viewBox="0 0 40 29" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <defs>
+                    <path d="M39.8101562,22.8351725 C40.0617065,23.0867227 40.0617065,23.4873398 39.8194729,23.73889 L35.990319,27.5680439 L35.0866014,26.6643263 L37.8257042,23.9252236 L18.325901,23.9252236 L18.325901,22.6488389 L37.8257042,22.6488389 L35.0866014,19.9097362 L35.990319,19.0060186 L39.8101562,22.8351725 Z M30.3350965,17.1520004 L33.0648826,14.4222143 L18.1861512,14.4222143 L18.1861512,13.1458297 L33.0741993,13.1458297 L30.3350965,10.4067269 L31.2388141,9.50300932 L35.0679679,13.3228465 C35.3195181,13.5743968 35.3195181,13.9750138 35.0679679,14.2265641 L31.2388141,18.0557179 L30.3350965,17.1520004 Z M25.4531583,7.65830766 L28.1829443,4.91920492 L18.1861512,4.91920492 L18.1861512,3.64282031 L28.192261,3.64282031 L25.4531583,0.90371757 L26.3568758,0 L30.1860296,3.82915383 C30.4375798,4.08070408 30.4375798,4.48132115 30.1860296,4.7328714 L26.3568758,8.56202523 L25.4531583,7.65830766 Z M6.86638991,7.44402427 C6.05583913,8.19867503 5.51547195,9.35394287 5.24528836,10.8818778 L11.4408776,10.8818778 L11.4408776,12.9781299 L5.04032149,12.9781299 L5.01237147,13.5930305 L5.01237147,14.3383646 L5.04032149,14.8694151 L10.5930601,14.8694151 L10.5930601,16.9656673 L5.28255506,16.9656673 C5.86018895,19.7886201 7.50924053,21.2047549 10.2297098,21.2047549 C11.5247277,21.2047549 12.8476956,20.9252546 14.2079303,20.366254 L14.2079303,23.1239902 C13.0153958,23.6736741 11.6365278,23.9531744 10.0620096,23.9531744 C7.88190755,23.9531744 6.10242251,23.3569071 4.74218788,22.1643725 C3.37263656,20.971838 2.48755238,19.2389362 2.06830198,16.9749839 L0,16.9749839 L0,14.8973652 L1.84470177,14.8973652 L1.81675174,14.3942647 L1.81675174,13.8911641 L1.84470177,13.0060799 L0,13.0060799 L0,10.9098278 L2.03103528,10.9098278 C2.37575228,8.63655881 3.24220311,6.847757 4.63038777,5.55273902 C6.01857243,4.25772103 7.80737415,3.60555371 9.99679291,3.60555371 C11.804228,3.60555371 13.4253295,3.9968541 14.8600976,4.79808825 L13.7234631,7.34154083 C12.3259618,6.6521068 11.086844,6.30738978 9.99679291,6.30738978 C8.72040835,6.30738978 7.67694069,6.68005683 6.86638991,7.44402427 Z" id="path-1"></path>
+                  </defs>
+                  <g id="Guidelines" stroke="none" stroke-width="1" fill-rule="evenodd">
+                    <g id="05---Iconografía-" transform="translate(-560.000000, -3064.000000)">
+                      <g id="icono/acciones/aplazar_pago" transform="translate(560.000000, 3059.000000)">
+                        <g id="rvia/primario/defecto" transform="translate(0.000000, 5.833333)">
+                          <mask id="mask-2" fill="white">
+                            <use xlink:href="#path-1"></use>
+                          </mask>
+                          <use id="Mask" fill-rule="nonzero" xlink:href="#path-1"></use>
+                          <g mask="url(#mask-2)">
+                            <g transform="translate(0.000000, -5.833333)">
+                              <path d="M1.99729162,1.18423789e-14 C0.894217919,1.18423789e-14 0,0.891539827 0,1.99729162 L0,38.0027084 C0,39.1057821 0.891539827,40 1.99729162,40 L38.0027084,40 C39.1057821,40 40,39.1084602 40,38.0027084 L40,1.99729162 C40,0.894217919 39.1084602,1.18423789e-14 38.0027084,1.18423789e-14 L1.99729162,1.18423789e-14 Z"></path>
+                            </g>
+                          </g>
+                        </g>
+                      </g>
+                    </g>
+                  </g>
+                </svg>
+
+              </a></p>
+
+            </td>
+          </tr>
+
+
+
+          <tr >
+            <td class="listaC" >04-03-2021</td>
+            <td class="listaC" >04-03-2021</td>
+
+            <td class="listaI" >TJ-AMAZON.ES AMAZON.ES</td>
+
+            <td class="implistaN" >-21,91</td>
+
+            <td class="implista" >2.316,33</td>
+
+
+            <td class="listaI" >
+
+            </td>
+            <td class="listaI" >
+
+            </td>
+          </tr>
+
+
+
+          <tr >
+            <td class="listaC" >04-03-2021</td>
+            <td class="listaC" >04-03-2021</td>
+
+
+
+            <td class="listaI" >
+              <a href="/isum/Main?ISUM_ID=portlets_area&ISUM_SCR=linkServiceScr&ISUM_CIPH=lp57J0ZX0wXEyMgcVgd7gjZpGiYNGDwn%2FMIcVVH3Xq09Yn0X%2FRZiDEklYcY%2F4cFS" onClick="javaScript:mostrarDetalle('RZ', '', '3190', '1062557414', '04-03-2021', 'RZ', '04-03-2021','0','RCBO.*HASHED*, S.A.', '', '', '0000769', '-58.42', 'RCBO.*HASHED*, S.A.', '', '978');return false;" >
+
+                RCBO.*HASHED*, S.A.
+              </a>
+            </td>
+
+            <td class="implistaN" >-58,42</td>
+
+            <td class="implista" >2.338,24</td>
+
+
+            <td class="listaI" >
+
+              <a href="/isum/Main?ISUM_ID=portlets_area&ISUM_SCR=linkServiceScr&ISUM_CIPH=lp57J0ZX0wXEyMgcVgd7gjZpGiYNGDwn%2FMIcVVH3Xq09Yn0X%2FRZiDEklYcY%2F4cFS" onClick="javascript:abrirDoc('00818447506159992545', '3190', '2021-03-04', '2021-03-04',  '-58.42', 'RZ','5022716111','0000769','RZ','1062557414');return false;" >
+
+
+                <svg class="icono_detalle_pdf" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 58 99" style="enable-background:new 0 0 58 99;" xml:space="preserve">
+									<defs>
+										<path id="SVGID_1_" d="M30.4,94C18.9,94,12,86.2,12,73.2l0.1-52.7c0-1,0.2-4.8,2.6-8.2C16.3,9.9,19.5,7,25.2,7c0,0,0,0,0,0
+											c5.8,0,8.9,2.7,10.6,4.9c2.3,3.2,2.6,6.9,2.6,8.4l-0.1,53c0,1.5,0,5-2.4,7.4c-1.5,1.5-3.5,2.2-6,2.2c0,0,0,0,0,0
+											c-4.8,0-7.6-3.6-7.6-9.7l0-52.8l5,0l0,52.8c0,4.6,1.8,4.7,2.6,4.7c0,0,0,0,0,0c1.2,0,2-0.3,2.5-0.8c0.9-0.9,0.9-2.9,0.9-3.9l0.1-53
+											c0-1-0.2-3.4-1.6-5.4C30.3,13,28.1,12,25.2,12c0,0,0,0,0,0h0c-2.8,0-5,1-6.4,3.1c-1.3,1.8-1.7,4-1.7,5.4L17,73.2
+											C17,80.4,19.3,89,30.4,89c10.8,0,13.1-8.6,13.1-15.8l-0.1-45.8l5,0l0.1,45.8C48.4,86.4,41.8,94,30.4,94z"/>
+									</defs>
+                  <use xlink:href="#SVGID_1_"  style="overflow:visible;"/>
+                  <clipPath id="SVGID_2_">
+										<use xlink:href="#SVGID_1_"  style="overflow:visible;"/>
+									</clipPath>
+								</svg>
+
+              </A>
+
+            </td>
+            <td class="listaI" >
+
+            </td>
+          </tr>
+
+
+
+          <tr >
+            <td class="listaC" >02-03-2021</td>
+            <td class="listaC" >02-03-2021</td>
+
+            <td class="listaI" >TJ-AMAZON.ES AMAZON.ES</td>
+
+            <td class="implistaN" >-10,65</td>
+
+            <td class="implista" >2.396,66</td>
+
+
+            <td class="listaI" >
+
+            </td>
+            <td class="listaI" >
+
+            </td>
+          </tr>
+
+
+
+          <tr >
+            <td class="listaC" >02-03-2021</td>
+            <td class="listaC" >02-03-2021</td>
+
+            <td class="listaI" >RCBO. PRÉSTAMO1234567890</td>
+
+            <td class="implistaN" >-332,45</td>
+
+            <td class="implista" >2.407,31</td>
+
+
+            <td class="listaI" >
+
+              <a href="/isum/Main?ISUM_ID=portlets_area&ISUM_SCR=linkServiceScr&ISUM_CIPH=lp57J0ZX0wXEyMgcVgd7gjZpGiYNGDwn%2FMIcVVH3Xq09Yn0X%2FRZiDEklYcY%2F4cFS" onClick="javascript:abrirDoc('00818447506159992545', '3190', '2021-03-02', '2021-03-02',  '-332.45', 'HL','5022716111','0000767','','0');return false;" >
+
+
+                <svg class="icono_detalle_pdf" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 58 99" style="enable-background:new 0 0 58 99;" xml:space="preserve">
+									<defs>
+										<path id="SVGID_1_" d="M30.4,94C18.9,94,12,86.2,12,73.2l0.1-52.7c0-1,0.2-4.8,2.6-8.2C16.3,9.9,19.5,7,25.2,7c0,0,0,0,0,0
+											c5.8,0,8.9,2.7,10.6,4.9c2.3,3.2,2.6,6.9,2.6,8.4l-0.1,53c0,1.5,0,5-2.4,7.4c-1.5,1.5-3.5,2.2-6,2.2c0,0,0,0,0,0
+											c-4.8,0-7.6-3.6-7.6-9.7l0-52.8l5,0l0,52.8c0,4.6,1.8,4.7,2.6,4.7c0,0,0,0,0,0c1.2,0,2-0.3,2.5-0.8c0.9-0.9,0.9-2.9,0.9-3.9l0.1-53
+											c0-1-0.2-3.4-1.6-5.4C30.3,13,28.1,12,25.2,12c0,0,0,0,0,0h0c-2.8,0-5,1-6.4,3.1c-1.3,1.8-1.7,4-1.7,5.4L17,73.2
+											C17,80.4,19.3,89,30.4,89c10.8,0,13.1-8.6,13.1-15.8l-0.1-45.8l5,0l0.1,45.8C48.4,86.4,41.8,94,30.4,94z"/>
+									</defs>
+                  <use xlink:href="#SVGID_1_"  style="overflow:visible;"/>
+                  <clipPath id="SVGID_2_">
+										<use xlink:href="#SVGID_1_"  style="overflow:visible;"/>
+									</clipPath>
+								</svg>
+
+              </A>
+
+            </td>
+            <td class="listaI" >
+
+            </td>
+          </tr>
+
+
+        </TABLE>
+
+
+        <div id="EXPLICA" class="IA_A_RIGHT">
+          <br><svg class="icono_aplazar" width="40px" height="29px" viewBox="0 0 40 29" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+          <defs>
+            <path d="M39.8101562,22.8351725 C40.0617065,23.0867227 40.0617065,23.4873398 39.8194729,23.73889 L35.990319,27.5680439 L35.0866014,26.6643263 L37.8257042,23.9252236 L18.325901,23.9252236 L18.325901,22.6488389 L37.8257042,22.6488389 L35.0866014,19.9097362 L35.990319,19.0060186 L39.8101562,22.8351725 Z M30.3350965,17.1520004 L33.0648826,14.4222143 L18.1861512,14.4222143 L18.1861512,13.1458297 L33.0741993,13.1458297 L30.3350965,10.4067269 L31.2388141,9.50300932 L35.0679679,13.3228465 C35.3195181,13.5743968 35.3195181,13.9750138 35.0679679,14.2265641 L31.2388141,18.0557179 L30.3350965,17.1520004 Z M25.4531583,7.65830766 L28.1829443,4.91920492 L18.1861512,4.91920492 L18.1861512,3.64282031 L28.192261,3.64282031 L25.4531583,0.90371757 L26.3568758,0 L30.1860296,3.82915383 C30.4375798,4.08070408 30.4375798,4.48132115 30.1860296,4.7328714 L26.3568758,8.56202523 L25.4531583,7.65830766 Z M6.86638991,7.44402427 C6.05583913,8.19867503 5.51547195,9.35394287 5.24528836,10.8818778 L11.4408776,10.8818778 L11.4408776,12.9781299 L5.04032149,12.9781299 L5.01237147,13.5930305 L5.01237147,14.3383646 L5.04032149,14.8694151 L10.5930601,14.8694151 L10.5930601,16.9656673 L5.28255506,16.9656673 C5.86018895,19.7886201 7.50924053,21.2047549 10.2297098,21.2047549 C11.5247277,21.2047549 12.8476956,20.9252546 14.2079303,20.366254 L14.2079303,23.1239902 C13.0153958,23.6736741 11.6365278,23.9531744 10.0620096,23.9531744 C7.88190755,23.9531744 6.10242251,23.3569071 4.74218788,22.1643725 C3.37263656,20.971838 2.48755238,19.2389362 2.06830198,16.9749839 L0,16.9749839 L0,14.8973652 L1.84470177,14.8973652 L1.81675174,14.3942647 L1.81675174,13.8911641 L1.84470177,13.0060799 L0,13.0060799 L0,10.9098278 L2.03103528,10.9098278 C2.37575228,8.63655881 3.24220311,6.847757 4.63038777,5.55273902 C6.01857243,4.25772103 7.80737415,3.60555371 9.99679291,3.60555371 C11.804228,3.60555371 13.4253295,3.9968541 14.8600976,4.79808825 L13.7234631,7.34154083 C12.3259618,6.6521068 11.086844,6.30738978 9.99679291,6.30738978 C8.72040835,6.30738978 7.67694069,6.68005683 6.86638991,7.44402427 Z" id="path-1"></path>
+          </defs>
+          <g id="Guidelines" stroke="none" stroke-width="1" fill-rule="evenodd">
+            <g id="05---Iconografía-" transform="translate(-560.000000, -3064.000000)">
+              <g id="icono/acciones/aplazar_pago" transform="translate(560.000000, 3059.000000)">
+                <g id="rvia/primario/defecto" transform="translate(0.000000, 5.833333)">
+                  <mask id="mask-2" fill="white">
+                    <use xlink:href="#path-1"></use>
+                  </mask>
+                  <use id="Mask" fill-rule="nonzero" xlink:href="#path-1"></use>
+                  <g mask="url(#mask-2)">
+                    <g transform="translate(0.000000, -5.833333)">
+                      <path d="M1.99729162,1.18423789e-14 C0.894217919,1.18423789e-14 0,0.891539827 0,1.99729162 L0,38.0027084 C0,39.1057821 0.891539827,40 1.99729162,40 L38.0027084,40 C39.1057821,40 40,39.1084602 40,38.0027084 L40,1.99729162 C40,0.894217919 39.1084602,1.18423789e-14 38.0027084,1.18423789e-14 L1.99729162,1.18423789e-14 Z"></path>
+                    </g>
+                  </g>
+                </g>
+              </g>
+            </g>
+          </g>
+        </svg>
+          &nbsp;Aplaza tus cargos
+        </div>
+
+
+
+
+
+      </div>
+
+
+      <INPUT type='hidden' name='clavePagina' value=''>
+      <input type="hidden" name="SELCON" value='00000000005022720592'>
+      <INPUT type='hidden' name='clavePaginaSiguiente' value='PAS_MOV_CUENTAS'>
+      <INPUT type='hidden' name='clavePaginaVolver' value='PAS_MOV_CUENTAS_PAGINAR'>
+      <INPUT type='hidden' name='cuenta' value= '00818447506159992545' >
+      <INPUT type='hidden' name='DIVISA_COD' value= '978'>
+      <INPUT type='hidden' name='DIVISA_NAME' value= 'Euro' >
+      <INPUT type="hidden" name="DIVISA_DESC" value='EUR' >
+      <INPUT type='hidden' name='descripcionCuenta' value= 'LIBRETAS%2BAHORRO%2BPARTICULARES' >
+      <INPUT type='hidden' name='SALDO_CONTABLE' value= '4099.33' >
+      <INPUT type='hidden' name='cuentaSel' value= '' >
+
+      <INPUT type='hidden' name='FechaDesde' value ='14-01-2021'>
+      <INPUT type='hidden' name='FechaHasta' value ='14-04-2021'>
+      <INPUT type='hidden' name='importeDesde' value = ''>
+      <INPUT type='hidden' name='importeHasta' value = ''>
+      <INPUT type='hidden' name='botonVolver' value = 'PG'>
+      <INPUT type='hidden' name='busquedaAvanzada' value = '' >
+      <INPUT type='hidden' name='numMovs' value = '50'>
+      <INPUT type='hidden' name='mostrarAlert250' value = '0'>
+
+      <INPUT type='hidden' name='columnaOrden' value = '0'>
+      <INPUT type='hidden' name='tipoOrden' value = '0'>
+      <INPUT type='hidden' name='ultimoOrden' value = '0'>
+      <INPUT type='hidden' name='saldoVisible' value = ''>
+
+
+      <INPUT type='hidden' name='fechaOperacion' value=''>
+      <INPUT type='hidden' name='Entidad' value=''>
+      <INPUT type='hidden' name='NumClave' value=''>
+      <INPUT type='hidden' name='numClave' value=''>
+      <INPUT type='hidden' name='fechaValor' value=''>
+      <INPUT type='hidden' name='origenApunte' value=''>
+      <INPUT type='hidden' name='IND_SEPA' value=''>
+      <INPUT type='hidden' name='ENTIDAD_I' value=''>
+      <INPUT type='hidden' name='OFICINA_I' value=''>
+      <INPUT type='hidden' name='ACUERDO_I' value=''>
+      <INPUT type='hidden' name='indic' value=''>
+      <INPUT type="hidden" name="ESSEPA" value=''>
+      <INPUT type="hidden" name="DESCRIPCIONCANAL" value=''>
+      <INPUT type='hidden' name='indicadorEfecto' value=''>
+      <INPUT type='hidden' name='FECDESDE' value=''>
+      <INPUT type='hidden' name='FECHASTA' value=''>
+      <INPUT type='hidden' name='FECHA_VALOR' value=''>
+      <INPUT type='hidden' name='NORHOST' value=''>
+      <INPUT type='hidden' name='FECHA_CREA' value=''>
+      <INPUT type='hidden' name='CUENTA_DESC' value=''>
+      <INPUT type='hidden' name='CUENTA_SELEC' value=''>
+      <INPUT type='hidden' name='CUENTA' value='00818447506159992545'>
+      <INPUT type='hidden' name='DESCUENTA' value='LIBRETAS%2BAHORRO%2BPARTICULARES'>
+      <INPUT type='hidden' name='indicador' value='MV'>
+
+      <INPUT type='hidden' name='indicadorRef' value=''>
+      <INPUT type='hidden' name='ordenante' value=''>
+      <INPUT type='hidden' name='NumSecuencia' value=''>
+      <INPUT type='hidden' name='importe' value=''>
+      <INPUT type='hidden' name='descripcionCorta' value=''>
+      <INPUT type='hidden' name='descripcionLarga' value=''>
+
+      <INPUT type='hidden' name='saldoArrastre' value='0'>
+      <INPUT type='hidden' name='codigoMoneda' value=''>
+      <INPUT type='hidden' name='moneda' value=''>
+
+
+      <INPUT type='hidden' name='fechaComparacion' value= ''>
+
+      <input type="hidden" name="CERO" value='0'>
+
+      <INPUT type='hidden' name='pagInicial' value=''>
+      <INPUT type='hidden' name='primeraVez' value='1'>
+      <INPUT type='hidden' name='paginaActual' value='0'>
+      <INPUT type='hidden' name='tamanioPagina' value='50'>
+      <INPUT type='hidden' name='campoPaginacion' value='lista'>
+
+      <INPUT type='hidden' name='mov_primeraVez' value=''>
+      <INPUT type='hidden' name='mov_paginaActual' value=''>
+      <INPUT type='hidden' name='mov_tamanioPagina' value=''>
+      <INPUT type='hidden' name='mov_campoPaginacion' value=''>
+
+
+      <INPUT type='hidden' name='numeroSecuencialApunteFirst' value='0'>
+      <INPUT type='hidden' name='saldoArrastreFirst' value='0.0'>
+      <INPUT type='hidden' name='codigoMonedaFirst' value=''>
+      <INPUT type='hidden' name='numeroSecuencialApunteLast' value='0000767'>
+      <INPUT type='hidden' name='saldoArrastreLast' value='2407.31'>
+      <INPUT type='hidden' name='codigoMonedaLast' value='978'>
+      <INPUT type='hidden' name='paginar' value=''>
+      <INPUT type='hidden' name='masDatos' value='1'>
+      <INPUT type="hidden" name="BUSQUEDA" value="">
+      <input type="hidden" name="nPaginaParcial" value="1"/>
+
+
+      <input type="hidden" name="TIPO_PERFIL" value=''>
+
+
+
+      <INPUT type='hidden' name='anyoRemesa' value=''>
+      <INPUT type='hidden' name='numRemesa' value=''>
+      <INPUT type='hidden' name='codDocumento' value='EC'>
+      <INPUT type='hidden' name='dondeEfecto' value='MV'>
+
+
+
+      <INPUT type="hidden" name="indOperativa" value="C">
+      <INPUT type="hidden" name="clavePaginaOperativa" value="PAS_MOV_CUENTAS">
+
+
+
+      <input type="hidden" name="listaTipoAplazamiento" value=""/>
+
+
+
+      <script language="javascript" >
+        inicializarDatos();
+      </script>
+    </form>
+
+
+    <FORM name="FORM_RVIA_1" action="/isum/Main?ISUM_ID=portlets_area&ISUM_SCR=linkServiceScr&ISUM_CIPH=lp57J0ZX0wXEyMgcVgd7gjZpGiYNGDwn%2FMIcVVH3Xq0Pao0fN%2BAxx8iq%2B6owrHQqpXfzkiB0Axb4fCIhGcZg5gGMY0hIIgkMSZ4UiMF83JKo3h6CMDyU%2FRgQDngQVwZzRhasDSL5NEzSHaDA4ggHgETtQMGVGnsLnUW0klVqiQE0sltofpFsWQbCHyKUAXmhG%2BR8kvC5qxw%2Bg9jDjurDs6JwbAES7veIHjP9s6v5oJw%3D" method="post" ><input type="hidden" name="ISUM_OLD_METHOD" value="post"/><input type="hidden" name="ISUM_ISFORM" value="true"/>
+      <INPUT type='hidden' name='acuerdo' value=''>
+      <INPUT type='hidden' name='Entidad' value=''>
+      <INPUT type='hidden' name='fechaValor' value=''>
+      <INPUT type='hidden' name='fechaOperacion' value=''>
+      <INPUT type='hidden' name='importe' value=''>
+      <INPUT type='hidden' name='origenApunte' value=''>
+      <INPUT type='hidden' name='clavePagina' value=''>
+      <INPUT type='hidden' name='acuerdoDocumento' value=''>
+      <INPUT type='hidden' name='numeroSecuencialApunteDoc' value=''>
+      <INPUT type='hidden' name='codigoDocumento' value=''>
+      <INPUT type='hidden' name='numSecPDF' value=''>
+    </FORM>
+
+
+    <script language="javascript" >var URLtoPrinter = 'imprimir_inf_direct.htm';var toPrinterCabecera =
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        '<div id=CABECERA_IMP>'+
+        '<div id=LOGOIMP><img src="/img/logoimp.gif" border=0></div>'+
+        '<div id=FECHAIMP>'+
+        '<table border="0" cellspacing="0">'+
+        '<tr>'+
+        '<td class=datoI>Fecha:</td><td class=datoI>14-04-2021</td>'+
+        '<td class=anchoG>&nbsp;</td>'+
+        '<td class=datoI>Hora:</td><td class=datoI>15:19:33</td>'+
+        '</tr>'+
+        '</table>'+
+        '</div>'+
+        '</div>'+
+
+
+        ''+
+        ''+
+        '<div id=CTAIBAN_IMP>'+
+        '<table width="100%" border="0" cellspacing="0" cellpadding="0">'+
+        '<TR>'+
+        '<td width=40%>'+
+        '<table border="0" cellspacing="0" cellpadding="2" width="98%">'+
+        '<tr>'+
+        '<td class=literal>IBAN:</td>'+
+
+        '<td class=datoI></td>'+
+
+        '</tr>'+
+        '</table>'+
+        '</td>'+
+        '</TR>'+
+        '</table></center>'+
+        '</div>'+
+        ''+
+        ''+
+
+
+        ''+
+        ''+
+        ''+
+
+        ''; var toPrinterCuerpo = '	<div id="PORTLET-SECTION-HEADER">		<div id="HEADER">Movimientos		</div>	</div>	<div id="PORTLET-LISTA">		<div id="BODY_LISTA">				<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" width="100%">				<tr>					<td class="cblistaC">Fecha Ejecución</td>					<td class="cblistaC">Fecha Valor</td>					<td class="cblistaC">Descripción</td>					<td class="cblistaC">Importe</td>											<td class="cblistaC">Saldo</td>					   				</tr> 										<tr class="PAR">													<td CLASS="listaC" width="12%">\'14-04-2021\'</td>							<td CLASS="listaC" width="12%">\'14-04-2021\'</td>							<td CLASS="listaI">TJ-AMAZON.ES</td>															<td class="implistaN">-9,38</td>																<td class="implista">4.099,33</td>																	</tr>												<tr class="IMPAR">													<td CLASS="listaC" width="12%">\'13-04-2021\'</td>							<td CLASS="listaC" width="12%">\'10-04-2021\'</td>							<td CLASS="listaI">AMAZON UFG*M467A0384</td>															<td class="implistaN">-68,48</td>																<td class="implista">4.108,71</td>																	</tr>												<tr class="PAR">													<td CLASS="listaC" width="12%">\'13-04-2021\'</td>							<td CLASS="listaC" width="12%">\'13-04-2021\'</td>							<td CLASS="listaI">RCBO.VINCENT CLAUS</td>															<td class="implistaN">-750,00</td>																<td class="implista">4.177,19</td>																	</tr>												<tr class="IMPAR">													<td CLASS="listaC" width="12%">\'10-04-2021\'</td>							<td CLASS="listaC" width="12%">\'10-04-2021\'</td>							<td CLASS="listaI">TJ-AMZN MKTP ES AMAZON.ES</td>															<td class="implistaN">-11,58</td>																<td class="implista">4.927,19</td>																	</tr>												<tr class="PAR">													<td CLASS="listaC" width="12%">\'10-04-2021\'</td>							<td CLASS="listaC" width="12%">\'10-04-2021\'</td>							<td CLASS="listaI">TJ-AMAZON UFG</td>															<td class="implistaN">-70,30</td>																<td class="implista">4.938,77</td>																	</tr>												<tr class="IMPAR">													<td CLASS="listaC" width="12%">\'09-04-2021\'</td>							<td CLASS="listaC" width="12%">\'09-04-2021\'</td>							<td CLASS="listaI">TJ-AMAZON.ES</td>															<td class="implistaN">-2,43</td>																<td class="implista">5.009,07</td>																	</tr>												<tr class="PAR">													<td CLASS="listaC" width="12%">\'09-04-2021\'</td>							<td CLASS="listaC" width="12%">\'09-04-2021\'</td>							<td CLASS="listaI">TJ-UBER   * EATS PENDING</td>															<td class="implistaN">-22,90</td>																<td class="implista">5.011,50</td>																	</tr>												<tr class="IMPAR">													<td CLASS="listaC" width="12%">\'08-04-2021\'</td>							<td CLASS="listaC" width="12%">\'31-03-2021\'</td>							<td CLASS="listaI">AMAZON UFG</td>															<td class="implista">52,76</td>																<td class="implista">5.034,40</td>																	</tr>												<tr class="PAR">													<td CLASS="listaC" width="12%">\'08-04-2021\'</td>							<td CLASS="listaC" width="12%">\'08-04-2021\'</td>							<td CLASS="listaI">TJ-GOOGLE*GOOGLE STORAGE</td>															<td class="implistaN">-1,99</td>																<td class="implista">4.981,64</td>																	</tr>												<tr class="IMPAR">													<td CLASS="listaC" width="12%">\'07-04-2021\'</td>							<td CLASS="listaC" width="12%">\'07-04-2021\'</td>							<td CLASS="listaI">TJ-UBER * EATS PENDING</td>															<td class="implistaN">-23,13</td>																<td class="implista">4.983,63</td>																	</tr>												<tr class="PAR">													<td CLASS="listaC" width="12%">\'07-04-2021\'</td>							<td CLASS="listaC" width="12%">\'31-03-2021\'</td>							<td CLASS="listaI">AMAZON UFG*MU9MJ5SP4</td>															<td class="implistaN">-52,31</td>																<td class="implista">5.006,76</td>																	</tr>												<tr class="IMPAR">													<td CLASS="listaC" width="12%">\'07-04-2021\'</td>							<td CLASS="listaC" width="12%">\'07-04-2021\'</td>							<td CLASS="listaI">TJ-AMAZON.ES</td>															<td class="implistaN">-15,15</td>																<td class="implista">5.059,07</td>																	</tr>												<tr class="PAR">													<td CLASS="listaC" width="12%">\'07-04-2021\'</td>							<td CLASS="listaC" width="12%">\'07-04-2021\'</td>							<td CLASS="listaI">RCBO.PEPE MOBILE, S.L.U.</td>															<td class="implistaN">-57,90</td>																<td class="implista">5.074,22</td>																	</tr>												<tr class="IMPAR">													<td CLASS="listaC" width="12%">\'07-04-2021\'</td>							<td CLASS="listaC" width="12%">\'07-04-2021\'</td>							<td CLASS="listaI">RCBO.AAAAAA EEEEE IIII</td>															<td class="implistaN">-373,01</td>																<td class="implista">5.132,12</td>																	</tr>												<tr class="PAR">													<td CLASS="listaC" width="12%">\'07-04-2021\'</td>							<td CLASS="listaC" width="12%">\'07-04-2021\'</td>							<td CLASS="listaI">RCBO.IBERDROLA COMERCIALIZACION DE ULTIMO REC</td>															<td class="implistaN">-99,53</td>																<td class="implista">5.505,13</td>																	</tr>												<tr class="IMPAR">													<td CLASS="listaC" width="12%">\'06-04-2021\'</td>							<td CLASS="listaC" width="12%">\'06-04-2021\'</td>							<td CLASS="listaI">TRF.MICAELO</td>															<td class="implistaN">-602,50</td>																<td class="implista">5.604,66</td>																	</tr>												<tr class="PAR">													<td CLASS="listaC" width="12%">\'05-04-2021\'</td>							<td CLASS="listaC" width="12%">\'05-04-2021\'</td>							<td CLASS="listaI">TJ-AMAZON.ES AMAZON.ES</td>															<td class="implistaN">-48,00</td>																<td class="implista">6.207,16</td>																	</tr>												<tr class="IMPAR">													<td CLASS="listaC" width="12%">\'05-04-2021\'</td>							<td CLASS="listaC" width="12%">\'05-04-2021\'</td>							<td CLASS="listaI">TJ-AMAZON.ES AMAZON.ES</td>															<td class="implistaN">-18,99</td>																<td class="implista">6.255,16</td>																	</tr>												<tr class="PAR">													<td CLASS="listaC" width="12%">\'02-04-2021\'</td>							<td CLASS="listaC" width="12%">\'02-04-2021\'</td>							<td CLASS="listaI">RCBO. PRÉSTAMO1234567890</td>															<td class="implistaN">-332,45</td>																<td class="implista">6.274,15</td>																	</tr>												<tr class="IMPAR">													<td CLASS="listaC" width="12%">\'01-04-2021\'</td>							<td CLASS="listaC" width="12%">\'01-04-2021\'</td>							<td CLASS="listaI">TJ-DOMINOS PIZZA </td>															<td class="implistaN">-25,00</td>																<td class="implista">6.606,60</td>																	</tr>												<tr class="PAR">													<td CLASS="listaC" width="12%">\'31-03-2021\'</td>							<td CLASS="listaC" width="12%">\'31-03-2021\'</td>							<td CLASS="listaI">TJ-AMAZON UFG</td>															<td class="implistaN">-52,76</td>																<td class="implista">6.631,60</td>																	</tr>												<tr class="IMPAR">													<td CLASS="listaC" width="12%">\'31-03-2021\'</td>							<td CLASS="listaC" width="12%">\'31-03-2021\'</td>							<td CLASS="listaI">TJ-AMZN MKTP ES</td>															<td class="implistaN">-16,09</td>																<td class="implista">6.684,36</td>																	</tr>												<tr class="PAR">													<td CLASS="listaC" width="12%">\'31-03-2021\'</td>							<td CLASS="listaC" width="12%">\'31-03-2021\'</td>							<td CLASS="listaI">RCBO. PRÉSTAMO9876543210</td>															<td class="implistaN">-140,10</td>																<td class="implista">6.700,45</td>																	</tr>												<tr class="IMPAR">													<td CLASS="listaC" width="12%">\'30-03-2021\'</td>							<td CLASS="listaC" width="12%">\'26-03-2021\'</td>							<td CLASS="listaI">UBER   *EATS</td>															<td class="implista">21,85</td>																<td class="implista">6.840,55</td>																	</tr>												<tr class="PAR">													<td CLASS="listaC" width="12%">\'29-03-2021\'</td>							<td CLASS="listaC" width="12%">\'29-03-2021\'</td>							<td CLASS="listaI">TRF. AMAZON EUROPE CORE S.A.R.L.</td>															<td class="implista">56,55</td>																<td class="implista">6.818,70</td>																	</tr>												<tr class="IMPAR">													<td CLASS="listaC" width="12%">\'28-03-2021\'</td>							<td CLASS="listaC" width="12%">\'28-03-2021\'</td>							<td CLASS="listaI">TJ-UBER   * EATS PENDING</td>															<td class="implistaN">-18,80</td>																<td class="implista">6.762,15</td>																	</tr>												<tr class="PAR">													<td CLASS="listaC" width="12%">\'26-03-2021\'</td>							<td CLASS="listaC" width="12%">\'26-03-2021\'</td>							<td CLASS="listaI">TJ-UBER   * EATS PENDING</td>															<td class="implistaN">-21,85</td>																<td class="implista">6.780,95</td>																	</tr>												<tr class="IMPAR">													<td CLASS="listaC" width="12%">\'26-03-2021\'</td>							<td CLASS="listaC" width="12%">\'26-03-2021\'</td>							<td CLASS="listaI">TRF.MICAELO</td>															<td class="implistaN">-600,00</td>																<td class="implista">6.802,80</td>																	</tr>												<tr class="PAR">													<td CLASS="listaC" width="12%">\'26-03-2021\'</td>							<td CLASS="listaC" width="12%">\'26-03-2021\'</td>							<td CLASS="listaI">TRF.MICAELO</td>															<td class="implistaN">-600,00</td>																<td class="implista">7.402,80</td>																	</tr>												<tr class="IMPAR">													<td CLASS="listaC" width="12%">\'26-03-2021\'</td>							<td CLASS="listaC" width="12%">\'26-03-2021\'</td>							<td CLASS="listaI">TRF.MICAELO</td>															<td class="implistaN">-530,00</td>																<td class="implista">8.002,80</td>																	</tr>												<tr class="PAR">													<td CLASS="listaC" width="12%">\'26-03-2021\'</td>							<td CLASS="listaC" width="12%">\'26-03-2021\'</td>							<td CLASS="listaI">TRF. *HASHED* SL</td>															<td class="implista">3.520,55</td>																<td class="implista">8.532,80</td>																	</tr>												<tr class="IMPAR">													<td CLASS="listaC" width="12%">\'26-03-2021\'</td>							<td CLASS="listaC" width="12%">\'26-03-2021\'</td>							<td CLASS="listaI">TRF. *HASHED* SL</td>															<td class="implista">4.842,10</td>																<td class="implista">5.012,25</td>																	</tr>												<tr class="PAR">													<td CLASS="listaC" width="12%">\'25-03-2021\'</td>							<td CLASS="listaC" width="12%">\'25-03-2021\'</td>							<td CLASS="listaI">TJ-AMZN MKTP ES AMAZON.ES</td>															<td class="implistaN">-12,38</td>																<td class="implista">170,15</td>																	</tr>												<tr class="IMPAR">													<td CLASS="listaC" width="12%">\'22-03-2021\'</td>							<td CLASS="listaC" width="12%">\'22-03-2021\'</td>							<td CLASS="listaI">TJ-UBER   * EATS PENDING</td>															<td class="implistaN">-24,35</td>																<td class="implista">182,53</td>																	</tr>												<tr class="PAR">													<td CLASS="listaC" width="12%">\'16-03-2021\'</td>							<td CLASS="listaC" width="12%">\'16-03-2021\'</td>							<td CLASS="listaI">TJ-DOMINOS PIZZA </td>															<td class="implistaN">-25,00</td>																<td class="implista">206,88</td>																	</tr>												<tr class="IMPAR">													<td CLASS="listaC" width="12%">\'15-03-2021\'</td>							<td CLASS="listaC" width="12%">\'15-03-2021\'</td>							<td CLASS="listaI">TJ-AMZN MKTP ES</td>															<td class="implistaN">-59,53</td>																<td class="implista">231,88</td>																	</tr>												<tr class="PAR">													<td CLASS="listaC" width="12%">\'15-03-2021\'</td>							<td CLASS="listaC" width="12%">\'15-03-2021\'</td>							<td CLASS="listaI">TJ-AMZN MKTP ES</td>															<td class="implistaN">-26,75</td>																<td class="implista">291,41</td>																	</tr>												<tr class="IMPAR">													<td CLASS="listaC" width="12%">\'15-03-2021\'</td>							<td CLASS="listaC" width="12%">\'15-03-2021\'</td>							<td CLASS="listaI">TJ-AMZN MKTP ES</td>															<td class="implistaN">-38,05</td>																<td class="implista">318,16</td>																	</tr>												<tr class="PAR">													<td CLASS="listaC" width="12%">\'09-03-2021\'</td>							<td CLASS="listaC" width="12%">\'09-03-2021\'</td>							<td CLASS="listaI">RCBO.ENDESA ENERGIA SAU</td>															<td class="implistaN">-129,60</td>																<td class="implista">356,21</td>																	</tr>												<tr class="IMPAR">													<td CLASS="listaC" width="12%">\'09-03-2021\'</td>							<td CLASS="listaC" width="12%">\'09-03-2021\'</td>							<td CLASS="listaI">RCBO.IBERDROLA COMERCIALIZACION DE ULTIMO REC</td>															<td class="implistaN">-66,84</td>																<td class="implista">485,81</td>																	</tr>												<tr class="PAR">													<td CLASS="listaC" width="12%">\'08-03-2021\'</td>							<td CLASS="listaC" width="12%">\'08-03-2021\'</td>							<td CLASS="listaI">TJ-AMAZON.ES</td>															<td class="implistaN">-14,29</td>																<td class="implista">552,65</td>																	</tr>												<tr class="IMPAR">													<td CLASS="listaC" width="12%">\'08-03-2021\'</td>							<td CLASS="listaC" width="12%">\'08-03-2021\'</td>							<td CLASS="listaI">TJ-GOOGLE *GOOGLE STORAGE</td>															<td class="implistaN">-1,99</td>																<td class="implista">566,94</td>																	</tr>												<tr class="PAR">													<td CLASS="listaC" width="12%">\'08-03-2021\'</td>							<td CLASS="listaC" width="12%">\'08-03-2021\'</td>							<td CLASS="listaI">RCBO.VINCENT CLAUS</td>															<td class="implistaN">-750,00</td>																<td class="implista">568,93</td>																	</tr>												<tr class="IMPAR">													<td CLASS="listaC" width="12%">\'05-03-2021\'</td>							<td CLASS="listaC" width="12%">\'05-03-2021\'</td>							<td CLASS="listaI">TRF.MICAELO</td>															<td class="implistaN">-602,50</td>																<td class="implista">1.318,93</td>																	</tr>												<tr class="PAR">													<td CLASS="listaC" width="12%">\'05-03-2021\'</td>							<td CLASS="listaC" width="12%">\'05-03-2021\'</td>							<td CLASS="listaI">RCBO.PEPE MOBILE, S.L.U.</td>															<td class="implistaN">-57,90</td>																<td class="implista">1.921,43</td>																	</tr>												<tr class="IMPAR">													<td CLASS="listaC" width="12%">\'05-03-2021\'</td>							<td CLASS="listaC" width="12%">\'05-03-2021\'</td>							<td CLASS="listaI">RCBO.AAAAAA EEEEE IIII</td>															<td class="implistaN">-337,00</td>																<td class="implista">1.979,33</td>																	</tr>												<tr class="PAR">													<td CLASS="listaC" width="12%">\'04-03-2021\'</td>							<td CLASS="listaC" width="12%">\'04-03-2021\'</td>							<td CLASS="listaI">TJ-AMAZON.ES AMAZON.ES</td>															<td class="implistaN">-21,91</td>																<td class="implista">2.316,33</td>																	</tr>												<tr class="IMPAR">													<td CLASS="listaC" width="12%">\'04-03-2021\'</td>							<td CLASS="listaC" width="12%">\'04-03-2021\'</td>							<td CLASS="listaI">RCBO.*HASHED*, S.A.</td>															<td class="implistaN">-58,42</td>																<td class="implista">2.338,24</td>																	</tr>												<tr class="PAR">													<td CLASS="listaC" width="12%">\'02-03-2021\'</td>							<td CLASS="listaC" width="12%">\'02-03-2021\'</td>							<td CLASS="listaI">TJ-AMAZON.ES AMAZON.ES</td>															<td class="implistaN">-10,65</td>																<td class="implista">2.396,66</td>																	</tr>												<tr class="IMPAR">													<td CLASS="listaC" width="12%">\'02-03-2021\'</td>							<td CLASS="listaC" width="12%">\'02-03-2021\'</td>							<td CLASS="listaI">RCBO. PRÉSTAMO1234567890</td>															<td class="implistaN">-332,45</td>																<td class="implista">2.407,31</td>																	</tr>						   					</TABLE>		</div>				</div>' +
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        '<div id=DATOSPIE>'+
+        '<table border="0" cellspacing="0" cellpadding="0" align=right>'+
+        '<tr>'+
+        <!--*********P00018063 10-06-2015 COMENTAR TABLA INICIO******
+    '<td class="datocodeD"></td>'+
+    '<td class="datocodeD"></td>'+
+    <!--*********P00009840 02-04-2008 INICIO******  -->
+
+
+    <!--**********************************************************
+    '<td class="datocodeD"></td>'+
+    '<td class="datocodeD"></td>'+
+    '<td class="datocodeD"></td>'+
+    '<td class="datocodeD"></td>'+
+    <!--*********P00009840 02-04-2008 FIN******  -->
+    <!--*********P00018063 10-06-2015 COMENTAR TABLA  FIN*** -->
+    '</tr>'+
+    '</table><br><br>'+
+    '</div>'
+    ;function ImpresionDirecta(){var pri = document.getElementById("imprimir_info").contentWindow;pri.focus();pri.print();}
+    function transformar(texto, posInicio, posFin){var longFrase;var posicion;var posicion_fin;while(texto.indexOf(posInicio)!=-1){longFrase = texto.length;posicion = texto.indexOf(posInicio);posicion_fin = texto.indexOf(posFin);frase_principal = texto.substring(0, posicion);frase_principal += texto.substring((posicion_fin + posFin.length), longFrase);texto = frase_principal;}return texto;}
+    function guardadoDirecto(){try{var campoVTotal = parent.document.FORM_RVIA_0.elements["visualizarTotal"];if(parent.document.FORM_RVIA_0.visualizarTotal.value == "hidden"){pInicio = parent.document.FORM_RVIA_0.comentarioInicio.value;pFin = parent.document.FORM_RVIA_0.comentarioFin.value;textoXsl = transformar(parent.toPrinterCuerpo, pInicio, pFin);}else{textoXsl = parent.opener.toPrinterCuerpo;}document.FORM_RVIA_PRINT.PAN.value=textoXsl;}catch(e){document.FORM_RVIA_PRINT.PAN.value= toPrinterCuerpo;}document.FORM_RVIA_PRINT.action = document.getElementById('url_guardarxls');document.FORM_RVIA_PRINT.target='_parent';document.FORM_RVIA_PRINT.submit();return false;}
+    </script><iframe name="imprimir_info" id="imprimir_info" src="/imprimir/imprimir_inf_direct.htm" height="0px" width="0px" scrolling="no" frameborder=0 ></iframe><form method="post" name="FORM_RVIA_PRINT" ><input type="hidden" name="ISUM_OLD_METHOD" value="post"/><input type="hidden" name="ISUM_ISFORM" value="true"/><INPUT type="hidden" name="PAN" value=""><INPUT type="hidden" name="FILENAME" value="movimientos.xls"><INPUT type="hidden" name="formato" value="htm"></form>
+
+
+
+
+    <!--/div-->
+
+
+
+
+
+  </DIV>
+
+
+
+
+
+  <DIV id=PORTLET-PUBLI>
+
+
+
+    <div id=PUBLI>
+      <div id=txt_publi>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      </div>
+    </div>
+
+
+
+
+    <div id=PUBLI>
+      <div id=txt_publi>
+
+
+
+
+
+
+
+
+
+
+        <script language="JavaScript" type="text/javascript" >
+          <!--
+          var flag	= 0;
+          var win		= null;
+
+          function abrirEnlaceCarrusel()
+          {
+            // Cuando abre una ventana crea una propiedad, para que se pueda referenciar desde la otra ventana.
+            if (!flag || win.closed)
+            {
+              win = window.open(enlaceCarr02, "gco_linkInterno", "width=100%,height=100%,top=25,left=25,scrollbars=1,resizable=yes");
+
+              if (win.opener != null)
+              {
+                win.opener = self;
+              }
+              flag = 1;
+              Gco_enviarPub(enlaceCarr01, "gco_linkInterno", 1, 0);
+            }
+            else if (win != null)
+            {
+              win.focus();
+            }
+          }
+
+          function Gco_enviarPub(destino, ventana, tipo, shortcut)
+          {
+            document.forms["FORM_GCO_CAR"].action = destino;
+
+            // Enlace externo.
+            if (tipo == 1)
+            {
+              if (shortcut > 0)
+              {
+                document.location.href = document.getElementById('urlShort').value;
+              }
+              else
+              {
+                document.forms["FORM_GCO_CAR"].target = ventana;
+              }
+            }
+            else
+            {
+              document.forms["FORM_GCO_CAR"].target = '_self';
+            }
+
+            document.forms["FORM_GCO_CAR"].submit();
+          }
+
+          function Gco_urlShort()
+          {
+            document.location.href = document.getElementById('urlShort').value;
+          }
+          //-->
+        </script>
+
+
+        <form name="FORM_GCO_CAR" method="post" ><input type="hidden" name="ISUM_OLD_METHOD" value="post"/><input type="hidden" name="ISUM_ISFORM" value="true"/>
+          <input name="enlace" type="hidden" value="null">
+          <input name="tEnlaceId" type="hidden" value="null">
+
+          <input name="mensajeId" type="hidden" value="null">
+          <input name="buzonId" type="hidden" value="null">
+
+        </form>
+
+        <font id="identificadorEnlaceCarrusel01"><a href="/isum/Main?ISUM_ID=portlets_publicidad&ISUM_SCR=linkServiceScr&ISUM_CIPH=IooKsRqF6inpN4nwo4QCJ9UeQNVicUB0OwZ6rgLa6iRBPYNQ8XDwHnDET1q1RtyQ7oWPCyEABjbF7YzfmoVrpG%2F5wi9Ux8t8BTUgvpwNAu9XnOqVyr7Ax%2BFqtusXHbGNE07Uhux6KAu%2BE3FluO4pjj4DcaJ5MaicEk2vbIX6yqk%3D" ></a></font>
+        <font id="identificadorEnlaceCarrusel02"><a href="/isum/Main?ISUM_ID=portlets_publicidad&ISUM_SCR=linkServiceScr&ISUM_CIPH=IooKsRqF6inpN4nwo4QCJ9UeQNVicUB0OwZ6rgLa6iRBPYNQ8XDwHnDET1q1RtyQ7oWPCyEABjbF7YzfmoVrpG%2F5wi9Ux8t8BTUgvpwNAu%2F%2BVsPg2lv9R94HDqmjNi4I%2BHJDa5Pw3TNiWP5YXW3b3w%3D%3D" ></a></font>
+
+        <script language="JavaScript" type="text/javascript" >
+          <!--
+          var enlaceCarr01	= document.getElementById("identificadorEnlaceCarrusel01").firstChild;
+          var enlaceCarr02	= document.getElementById("identificadorEnlaceCarrusel02").firstChild;
+
+          // Se mantiene para no tener que modificar el jsp de posición global.
+          var enlace02		= enlaceCarr01;
+
+          //-->
+        </script>
+
+
+
+
+
+
+      </div>
+    </div>
+
+
+  </DIV>
+
+
+
+</DIV>
+
+
+<div data-token="UTlmIrICnUlTDAMzbhmdu7r-11jy54zX" id="tokenValid">
+</div>
+
+
+<script language="Javascript">
+
+
+  var vcontrolBotonAtras = window.sessionStorage.getItem("controlBotonAtras");
+  if(vcontrolBotonAtras == 1){
+
+    console.log("Entro por aqui");
+    history.forward();
+  }else{
+    console.log("Me voy por el else");
+  }
+
+
+
+
+</script>
+
+</BODY>
+</html>
+
+
