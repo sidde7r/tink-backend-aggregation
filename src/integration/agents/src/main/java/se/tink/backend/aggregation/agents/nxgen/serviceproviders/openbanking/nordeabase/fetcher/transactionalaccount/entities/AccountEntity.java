@@ -2,16 +2,17 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.no
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.lang.invoke.MethodHandles;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.ListUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -23,108 +24,33 @@ import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.account.identifiers.NDAPersonalNumberIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
+import se.tink.libraries.enums.MarketCode;
 
 @JsonObject
+@Slf4j
+@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class AccountEntity {
-    @JsonIgnore
-    private static final Logger logger =
-            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
+    @Getter
     @JsonProperty("_id")
     private String id;
 
     @JsonProperty("_links")
     private List<LinkEntity> links;
 
-    @JsonProperty("account_name")
     private String accountName;
-
-    @JsonProperty("account_numbers")
     private List<AccountNumberEntity> accountNumbers;
-
-    @JsonProperty("account_type")
-    private String accountType;
-
-    @JsonProperty("available_balance")
+    @Getter private String accountType;
     private BigDecimal availableBalance;
-
     private BankEntity bank;
-
-    @JsonProperty("booked_balance")
     private String bookedBalance;
-
     private String country;
-
-    @JsonProperty("credit_limit")
     private String creditLimit;
-
     private String currency;
-
-    @JsonProperty("latest_transaction_booking_date")
     private String latestTransactionBookingDate;
-
-    private String product;
-
+    @Getter private String product;
     private String status;
-
-    @JsonProperty("value_dated_balance")
     private String valueDatedBalance;
-
-    public String getId() {
-        return id;
-    }
-
-    public List<LinkEntity> getLinks() {
-        return links;
-    }
-
-    public String getAccountName() {
-        return accountName;
-    }
-
-    public List<AccountNumberEntity> getAccountNumbers() {
-        return accountNumbers;
-    }
-
-    public String getAccountType() {
-        return accountType;
-    }
-
-    public BankEntity getBank() {
-        return bank;
-    }
-
-    public String getBookedBalance() {
-        return bookedBalance;
-    }
-
-    public String getCountry() {
-        return country;
-    }
-
-    public String getCreditLimit() {
-        return creditLimit;
-    }
-
-    public String getCurrency() {
-        return currency;
-    }
-
-    public String getLatestTransactionBookingDate() {
-        return latestTransactionBookingDate;
-    }
-
-    public String getProduct() {
-        return product;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public String getValueDatedBalance() {
-        return valueDatedBalance;
-    }
 
     @JsonIgnore
     public String getHolderName() {
@@ -142,7 +68,7 @@ public class AccountEntity {
                 .withBalance(BalanceModule.of(getAvailableBalance()))
                 .withId(
                         IdModule.builder()
-                                .withUniqueIdentifier(getIban())
+                                .withUniqueIdentifier(getUniqueIdentifier())
                                 .withAccountNumber(identifier.getIdentifier())
                                 .withAccountName(Optional.ofNullable(accountName).orElse(product))
                                 .addIdentifier(identifier)
@@ -150,6 +76,18 @@ public class AccountEntity {
                 .putInTemporaryStorage(NordeaBaseConstants.StorageKeys.ACCOUNT_ID, id)
                 .setApiIdentifier(id)
                 .build();
+    }
+
+    private String getUniqueIdentifier() {
+        if (MarketCode.DK.name().equalsIgnoreCase(country)) {
+            return extractAccountNumberFromIban();
+        }
+        return getIban();
+    }
+
+    private String extractAccountNumberFromIban() {
+        return StringUtils.right(
+                getIban(), NordeaBaseConstants.TransactionalAccounts.DANISH_ACCOUNT_NO_LENGTH);
     }
 
     @JsonIgnore
@@ -206,7 +144,7 @@ public class AccountEntity {
                 .map(AccountNumberEntity::getValue)
                 .orElseThrow(
                         () -> {
-                            logger.info(
+                            log.info(
                                     "Failed to fetch iban "
                                             + LogTag.from("openbanking_base_nordea"));
                             return new IllegalArgumentException();

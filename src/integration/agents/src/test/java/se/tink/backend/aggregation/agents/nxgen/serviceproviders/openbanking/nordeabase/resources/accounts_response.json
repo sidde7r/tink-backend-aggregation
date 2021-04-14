@@ -1,0 +1,94 @@
+{
+    "group_header": {
+        "message_identification": "12312312sdfsd",
+        "creation_date_time": "2021-04-01T09:23:04.171916Z",
+        "http_code": 200
+    },
+    "response": {
+        "accounts": [
+            {
+                "country": "DK",
+                "account_numbers": [
+                    {
+                        "value": "50519593123646",
+                        "_type": "BBAN_DK"
+                    },
+                    {
+                        "value": "DK9150519593123646",
+                        "_type": "IBAN"
+                    }
+                ],
+                "currency": "DKK",
+                "account_name": "NAME LAST_NAME",
+                "product": "Lønkonto+",
+                "account_type": "Current",
+                "available_balance": "1.12",
+                "booked_balance": "1.12",
+                "value_dated_balance": "123.45",
+                "bank": {
+                    "name": "Nordea",
+                    "bic": "NDEADKKK",
+                    "country": "DK"
+                },
+                "status": "OPEN",
+                "credit_limit": "0.00",
+                "latest_transaction_booking_date": "2021-03-31",
+                "_links": [
+                    {
+                        "rel": "details",
+                        "href": "/v4/accounts/DK50519593123646-DKK"
+                    },
+                    {
+                        "rel": "transactions",
+                        "href": "/v4/accounts/DK50519593123646-DKK/transactions"
+                    }
+                ],
+                "_id": "DK50519593123646-DKK"
+            },
+            {
+                "country": "NO",
+                "account_numbers": [
+                    {
+                        "value": "50022184484",
+                        "_type": "BBAN_NO"
+                    },
+                    {
+                        "value": "NO3750022184484",
+                        "_type": "IBAN"
+                    }
+                ],
+                "currency": "NOK",
+                "account_name": "NOR_NAME NOR_LAST_NAME",
+                "product": "SPAREKONTO",
+                "account_type": "Savings",
+                "available_balance": "0.00",
+                "booked_balance": "0.00",
+                "bank": {
+                    "name": "Nordea",
+                    "bic": "NDEANOKK",
+                    "country": "NO"
+                },
+                "status": "OPEN",
+                "credit_limit": "0.00",
+                "latest_transaction_booking_date": "2021-02-23",
+                "_links": [
+                    {
+                        "rel": "details",
+                        "href": "/v4/accounts/NO50022184484-NOK"
+                    },
+                    {
+                        "rel": "transactions",
+                        "href": "/v4/accounts/NO50022184484-NOK/transactions"
+                    }
+                ],
+                "_id": "NO50022184484-NOK"
+            }
+        ],
+        "_links": [
+            {
+                "rel": "self",
+                "href": "/v4/accounts"
+            }
+        ]
+    }
+}
