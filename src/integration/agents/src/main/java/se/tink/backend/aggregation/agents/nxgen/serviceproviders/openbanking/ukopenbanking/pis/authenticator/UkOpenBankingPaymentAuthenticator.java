@@ -149,8 +149,8 @@ public class UkOpenBankingPaymentAuthenticator {
         } else if (OpenIdConstants.Errors.TEMPORARILY_UNAVAILABLE.equalsIgnoreCase(errorType)) {
             throw NO_BANK_SERVICE.exception(errorDescription);
         }
-
-        throw new IllegalArgumentException("Unknown error: " + errorType + ":" + errorDescription);
+        log.warn("Unknown errorType {} and errorDescription {}", errorType, errorDescription);
+        throw new PaymentAuthorizationException(InternalStatus.PAYMENT_AUTHORIZATION_FAILED);
     }
 
     private String getAuthCodeFromCallbackData(Map<String, String> callbackData) {
