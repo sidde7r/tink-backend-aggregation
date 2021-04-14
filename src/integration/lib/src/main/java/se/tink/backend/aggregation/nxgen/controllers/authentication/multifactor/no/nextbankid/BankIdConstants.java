@@ -1,12 +1,16 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid;
 
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants.HtmlSelectors.BY_BUTTON_LINK;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants.HtmlSelectors.BY_CHIP_CODE_INPUT;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants.HtmlSelectors.BY_ERROR_SCREEN_WITH_HEADING;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants.HtmlSelectors.BY_ERROR_SCREEN_WITH_HEADING_TEXT;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants.HtmlSelectors.BY_ERROR_SCREEN_WITH_NO_HEADING;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants.HtmlSelectors.BY_IFRAME;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants.HtmlSelectors.BY_IFRAME_SHADOW_HOST;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants.HtmlSelectors.BY_NON_ERROR_SCREEN;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants.HtmlSelectors.BY_PASSWORD_ERROR_BUBBLE;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants.HtmlSelectors.BY_PASSWORD_INPUT;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants.HtmlSelectors.BY_REFERENCE_WORDS;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants.HtmlSelectors.BY_SUBMIT_BUTTON;
 
 import lombok.AccessLevel;
@@ -20,6 +24,14 @@ public class BankIdConstants {
 
     public static final String BANK_ID_LOG_PREFIX = "[BankID]";
     public static final int DEFAULT_WAIT_FOR_ELEMENT_TIMEOUT_IN_SECONDS = 10;
+    /*
+    Those values are based on timeouts observed in tests with ambassadors.
+    Every value is rounded up to multiple of 30s + there is 30s added just to be sure.
+     */
+    public static final int MOBILE_BANK_ID_TIMEOUT_IN_SECONDS = 120;
+    public static final int BANK_ID_APP_TIMEOUT_IN_SECONDS = 150;
+
+    public static final int WAIT_FOR_SIGN_THAT_AUTHENTICATION_IS_FINISHED_FOR_SECONDS = 5;
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class HtmlSelectors {
@@ -36,11 +48,21 @@ public class BankIdConstants {
                 new ByCssSelector(".message > p");
         static final ByCssSelector BY_ERROR_SCREEN_WITH_NO_HEADING = new ByCssSelector(".message");
         static final ByCssSelector BY_BUTTON_LINK = new ByCssSelector("button.link");
+        static final ByCssSelector BY_REFERENCE_WORDS =
+                new ByCssSelector("span[data-bind='text: reference']");
+        static final ByCssSelector BY_CHIP_CODE_INPUT =
+                new By.ByCssSelector("input[type=password]");
+        static final ByCssSelector BY_PASSWORD_INPUT =
+                new By.ByCssSelector("input[type=password][data-type=password]");
+        static final ByCssSelector BY_PASSWORD_ERROR_BUBBLE =
+                new ByCssSelector(".infobubble_wrapper .text");
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class HtmlLocators {
 
+        public static final BankIdElementLocator LOC_IFRAME =
+                BankIdElementLocator.builder().iframe(BY_IFRAME).build();
         public static final BankIdElementLocator LOC_SUBMIT_BUTTON =
                 inIframeLocator().element(BY_SUBMIT_BUTTON).mustBeDisplayed().build();
 
@@ -59,6 +81,8 @@ public class BankIdConstants {
                 nonErrorScreenLocator()
                         .mustContainOneOfTexts("BankID på mobil", "BankID on mobile")
                         .build();
+        public static final BankIdElementLocator LOC_REFERENCE_WORDS =
+                inIframeLocator().element(BY_REFERENCE_WORDS).mustBeDisplayed().build();
 
         /*
         chip code screen
@@ -67,12 +91,16 @@ public class BankIdConstants {
                 nonErrorScreenLocator()
                         .mustContainOneOfTexts("Engangskode", "One Time Code")
                         .build();
+        public static final BankIdElementLocator LOC_CHIP_CODE_INPUT =
+                inIframeLocator().element(BY_CHIP_CODE_INPUT).mustBeDisplayed().build();
 
         /*
         BankID app screen
         */
         public static final BankIdElementLocator LOC_BANK_ID_APP_METHOD_SCREEN =
-                nonErrorScreenLocator().mustContainOneOfTexts("Engangskode på mobil app").build();
+                nonErrorScreenLocator()
+                        .mustContainOneOfTexts("Engangskode på mobil app", "BankID-app")
+                        .build();
 
         /*
         error screens
@@ -94,6 +122,18 @@ public class BankIdConstants {
                         .build();
         public static final BankIdElementLocator LOC_BANK_ID_ERROR_NO_HEADING_TEXT =
                 LOC_BANK_ID_ERROR_NO_HEADING_SCREEN;
+
+        /*
+        enter password screen
+        */
+        public static final BankIdElementLocator LOC_PRIVATE_PASSWORD_SCREEN =
+                nonErrorScreenLocator()
+                        .mustContainOneOfTexts("Personlig passord", "Personal password")
+                        .build();
+        public static final BankIdElementLocator LOC_PRIVATE_PASSWORD_INPUT =
+                inIframeLocator().element(BY_PASSWORD_INPUT).mustBeDisplayed().build();
+        public static final BankIdElementLocator LOC_PRIVATE_PASSWORD_ERROR_BUBBLE =
+                inIframeLocator().element(BY_PASSWORD_ERROR_BUBBLE).build();
 
         /*
         common 2FA elements

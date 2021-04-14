@@ -98,7 +98,7 @@ public class BankIdElementsSearcherSleepingTest {
                         BankIdElementsSearchQuery.builder()
                                 .searchFor(notExistingLocator)
                                 .searchForSeconds(10)
-                                .searchOnlyOnce(true)
+                                .searchOnlyOnce()
                                 .build());
         // then
         assertThat(searchResult.isEmpty()).isTrue();

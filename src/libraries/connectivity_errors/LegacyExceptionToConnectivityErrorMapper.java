@@ -200,6 +200,25 @@ class LegacyExceptionToConnectivityErrorMapper {
                     .put(
                             BankIdNOError.UNKNOWN_BANK_ID_ERROR,
                             ConnectivityErrorFactory.userLoginError(UserLoginErrors.UNRECOGNIZED))
+                    .put(
+                            BankIdNOError.INVALID_SSN_OR_CHIP_CODE,
+                            ConnectivityErrorFactory.userLoginError(
+                                    UserLoginErrors.STATIC_CREDENTIALS_INCORRECT))
+                    .put(
+                            BankIdNOError.MOBILE_BANK_ID_TIMEOUT,
+                            ConnectivityErrorFactory.userLoginError(
+                                    UserLoginErrors.DYNAMIC_CREDENTIALS_FLOW_TIMEOUT))
+                    .put(
+                            BankIdNOError.BANK_ID_APP_BLOCKED,
+                            ConnectivityErrorFactory.userLoginError(UserLoginErrors.USER_BLOCKED))
+                    .put(
+                            BankIdNOError.BANK_ID_APP_TIMEOUT,
+                            ConnectivityErrorFactory.userLoginError(
+                                    UserLoginErrors.DYNAMIC_CREDENTIALS_FLOW_TIMEOUT))
+                    .put(
+                            BankIdNOError.INVALID_BANK_ID_PASSWORD,
+                            ConnectivityErrorFactory.userLoginError(
+                                    UserLoginErrors.STATIC_CREDENTIALS_INCORRECT))
                     .build();
 
     static final ImmutableMap<ThirdPartyAppError, ConnectivityError> THIRD_PARTY_APP_ERROR_MAPPER =

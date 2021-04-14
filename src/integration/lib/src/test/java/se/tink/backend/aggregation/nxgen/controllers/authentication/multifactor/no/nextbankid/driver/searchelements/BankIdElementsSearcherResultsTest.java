@@ -99,7 +99,7 @@ public class BankIdElementsSearcherResultsTest {
                 elementsSearcher.searchForFirstMatchingLocator(
                         BankIdElementsSearchQuery.builder()
                                 .searchFor(locatorsToSearchFor)
-                                .searchOnlyOnce(true)
+                                .searchOnlyOnce()
                                 .build());
         // then
         boolean shouldResultBeEmpty = expectedIdsForFoundElements.isEmpty();

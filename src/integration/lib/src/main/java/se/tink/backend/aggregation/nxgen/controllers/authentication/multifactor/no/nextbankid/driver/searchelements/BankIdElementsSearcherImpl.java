@@ -31,17 +31,22 @@ public class BankIdElementsSearcherImpl implements BankIdElementsSearcher {
     public BankIdElementsSearchResult searchForFirstMatchingLocator(
             BankIdElementsSearchQuery query) {
 
-        if (query.isSearchOnlyOnce()) {
-            return searchForFirstMatchingLocator(query.getLocators());
+        // always search at least once
+        BankIdElementsSearchResult firstSearchResult =
+                searchForFirstMatchingLocator(query.getLocators());
+        if (firstSearchResult.isNotEmpty() || query.isSearchOnlyOnce()) {
+            return firstSearchResult;
         }
 
-        for (int i = 0; i < query.getTimeoutInSeconds(); i++) {
+        int secondsSlept = 0;
+        while (secondsSlept++ < query.getSearchForSeconds()) {
 
             BankIdElementsSearchResult searchResult =
                     searchForFirstMatchingLocator(query.getLocators());
             if (searchResult.isNotEmpty()) {
                 return searchResult;
             }
+
             sleeper.sleepFor(1_000);
         }
 

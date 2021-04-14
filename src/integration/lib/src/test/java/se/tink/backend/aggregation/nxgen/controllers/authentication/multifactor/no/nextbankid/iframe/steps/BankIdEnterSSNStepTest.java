@@ -70,6 +70,7 @@ public class BankIdEnterSSNStepTest {
                         BankIdScreensQuery.builder()
                                 .waitForScreens(BankIdScreen.ENTER_SSN_SCREEN)
                                 .waitForSeconds(10)
+                                .verifyNoErrorScreens(true)
                                 .build());
         mocksToVerifyInOrder
                 .verify(webDriver)

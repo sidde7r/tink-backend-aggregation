@@ -37,6 +37,7 @@ public class BankIdEnterSSNStep {
                 BankIdScreensQuery.builder()
                         .waitForScreens(BankIdScreen.ENTER_SSN_SCREEN)
                         .waitForSeconds(10)
+                        .verifyNoErrorScreens(true)
                         .build());
     }
 

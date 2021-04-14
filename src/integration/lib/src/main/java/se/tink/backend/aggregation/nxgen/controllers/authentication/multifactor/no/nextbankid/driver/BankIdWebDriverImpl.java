@@ -14,12 +14,14 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.BankIdElementsSearchResult;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.BankIdElementsSearcher;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.utils.BankIdWebDriverCommonUtils;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.utils.Sleeper;
 
 @Slf4j
 @RequiredArgsConstructor(access = AccessLevel.PACKAGE, onConstructor = @__({@Inject}))
 public class BankIdWebDriverImpl implements BankIdWebDriver {
 
     private final WebDriver driver;
+    private final Sleeper sleeper;
     private final BankIdWebDriverCommonUtils driverCommonUtils;
     private final BankIdElementsSearcher elementsSearcher;
 
@@ -91,6 +93,11 @@ public class BankIdWebDriverImpl implements BankIdWebDriver {
                                                 "Could not find element by " + locator));
 
         element.sendKeys(value);
+    }
+
+    @Override
+    public void sleepFor(int millis) {
+        sleeper.sleepFor(millis);
     }
 
     @Override

@@ -27,6 +27,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.BankIdElementsSearchResult;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.BankIdElementsSearcher;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.utils.BankIdWebDriverCommonUtils;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.utils.Sleeper;
 
 @RunWith(JUnitParamsRunner.class)
 public class BankIdWebDriverTest {
@@ -38,6 +39,7 @@ public class BankIdWebDriverTest {
     private WebDriver.Options driverOptions;
     private BankIdWebDriverCommonUtils driverCommonUtils;
     private BankIdElementsSearcher elementsSearcher;
+    private Sleeper sleeper;
 
     private InOrder mocksToVerifyInOrder;
 
@@ -57,7 +59,8 @@ public class BankIdWebDriverTest {
 
         mocksToVerifyInOrder = inOrder(driver, driverOptions, driverCommonUtils, elementsSearcher);
 
-        bankIdDriver = new BankIdWebDriverImpl(driver, driverCommonUtils, elementsSearcher);
+        bankIdDriver =
+                new BankIdWebDriverImpl(driver, sleeper, driverCommonUtils, elementsSearcher);
     }
 
     @Test
