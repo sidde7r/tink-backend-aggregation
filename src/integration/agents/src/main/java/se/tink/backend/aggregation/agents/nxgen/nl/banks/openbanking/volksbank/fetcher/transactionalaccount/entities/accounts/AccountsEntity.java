@@ -6,8 +6,10 @@ import java.util.List;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankUtils;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.entities.balances.BalanceEntity;
+import se.tink.backend.aggregation.agents.utils.berlingroup.BalanceMapper;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.builder.BalanceBuilderStep;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.transactional.TransactionalBuildStep;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -71,14 +73,11 @@ public class AccountsEntity {
 
         balances.sort((o1, o2) -> o2.getLastChangeDateTime().compareTo(o1.getLastChangeDateTime()));
 
-        BalanceEntity lastBalance =
-                balances.stream().findFirst().orElseThrow(IllegalStateException::new);
-
         TransactionalBuildStep builder =
                 TransactionalAccount.nxBuilder()
                         .withType(TransactionalAccountType.CHECKING)
                         .withPaymentAccountFlag()
-                        .withBalance(BalanceModule.of(lastBalance.toAmount()))
+                        .withBalance(getBalanceModule(balances))
                         .withId(
                                 IdModule.builder()
                                         .withUniqueIdentifier(iban)
@@ -91,6 +90,13 @@ public class AccountsEntity {
         addHolderNamesToBuilder(builder);
 
         return builder.build();
+    }
+
+    @JsonIgnore
+    private BalanceModule getBalanceModule(List<BalanceEntity> balances) {
+        BalanceBuilderStep balanceBuilderStep =
+                BalanceModule.builder().withBalance(BalanceMapper.getBookedBalance(balances));
+        return balanceBuilderStep.build();
     }
 
     @JsonIgnore
