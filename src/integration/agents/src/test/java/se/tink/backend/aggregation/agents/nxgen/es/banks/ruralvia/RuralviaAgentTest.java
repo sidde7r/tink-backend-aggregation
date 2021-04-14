@@ -30,7 +30,7 @@ public class RuralviaAgentTest {
         nationalIdNumberManager.before();
     }
 
-    private AgentIntegrationTest createAgentTest() throws Exception {
+    private AgentIntegrationTest createAgentTest() {
         return new AgentIntegrationTest.Builder("es", PROVIDER_NAME)
                 .addCredentialField(
                         Field.Key.USERNAME, manager.get(UsernamePasswordArgumentEnum.USERNAME))

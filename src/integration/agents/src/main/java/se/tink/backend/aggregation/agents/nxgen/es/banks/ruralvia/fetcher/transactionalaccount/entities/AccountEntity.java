@@ -6,8 +6,6 @@ import java.util.Optional;
 import java.util.regex.Pattern;
 import lombok.Data;
 import org.jsoup.nodes.Element;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -20,7 +18,6 @@ public class AccountEntity {
 
     private static final Pattern AMOUNT_PATTERN =
             Pattern.compile("(?<value>[\\+\\-]?[0-9\\.,]+)(?<currency>€|EUROS|\\$|\\w{3})?");
-    private static final Logger log = LoggerFactory.getLogger(AccountEntity.class);
 
     private String accountAlias;
 

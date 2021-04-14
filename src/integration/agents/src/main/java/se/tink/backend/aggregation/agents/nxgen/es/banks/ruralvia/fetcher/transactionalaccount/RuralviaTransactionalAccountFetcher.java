@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.fetcher.trans
 import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.Tags.ATTRIBUTE_TAG_ACTION;
 import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.Tags.ATTRIBUTE_TAG_VALUE;
 
+import com.google.common.annotations.VisibleForTesting;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -20,13 +21,11 @@ import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.annotation.Nullable;
-import org.assertj.core.util.VisibleForTesting;
+import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.fetcher.transactionalaccount.entities.AccountEntity;
@@ -42,14 +41,12 @@ import se.tink.backend.aggregation.nxgen.http.form.Form;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
+@Slf4j
 public class RuralviaTransactionalAccountFetcher
         implements AccountFetcher<TransactionalAccount>,
                 TransactionKeyPaginator<TransactionalAccount, String> {
 
     private RuralviaApiClient apiClient;
-    private static final Logger log =
-            LoggerFactory.getLogger(RuralviaTransactionalAccountFetcher.class);
-
     private static final DateTimeFormatter PATTERN = DateTimeFormatter.ofPattern("dd-MM-uuuu");
 
     public RuralviaTransactionalAccountFetcher(RuralviaApiClient apiClient) {
@@ -58,10 +55,8 @@ public class RuralviaTransactionalAccountFetcher
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
-
         GlobalPositionResponse globalPosition =
                 new GlobalPositionResponse(apiClient.getGlobalPositionHtml());
-
         // get Accounts From Global Position
         return globalPosition.getAccounts().stream()
                 .map(AccountEntity::toTinkAccount)
@@ -73,15 +68,16 @@ public class RuralviaTransactionalAccountFetcher
     @Override
     public TransactionKeyPaginatorResponse<String> getTransactionsFor(
             TransactionalAccount account, @Nullable String key) {
-        GlobalPositionResponse globalPosition =
-                new GlobalPositionResponse(apiClient.getGlobalPositionHtml());
+
         TransactionKeyPaginatorResponseImpl<String> paginatorResponse =
                 new TransactionKeyPaginatorResponseImpl<>();
+        GlobalPositionResponse globalPosition =
+                new GlobalPositionResponse(apiClient.getGlobalPositionHtml());
 
         AccountEntity accEntity = getAccEntityForSelectedTinkAccount(account, globalPosition);
 
         if (accEntity == null) {
-            log.error("ERROR: account not found when fetch transactions");
+            log.warn("WARN: account not found when fetch transactions");
             paginatorResponse.setTransactions(Collections.emptyList());
             return paginatorResponse;
         }
@@ -100,7 +96,7 @@ public class RuralviaTransactionalAccountFetcher
         if (html.contains("NO EXISTEN DATOS PARA LA CONSULTA REALIZADA")
                 || html.contains(".contains(\"Error de la aplicac\")")
                 || html.contains("Error ocurrido en la aplicaci")) {
-            log.warn("no transactions for this account");
+            log.warn("WARN: no transactions for this account");
             paginatorResponse.setTransactions(Collections.emptyList());
             return paginatorResponse;
         }
@@ -125,14 +121,15 @@ public class RuralviaTransactionalAccountFetcher
         return paginatorResponse;
     }
 
-    private TransactionKeyPaginatorResponseImpl<String> fetchAccountTransactions(
+    @VisibleForTesting
+    public TransactionKeyPaginatorResponseImpl<String> fetchAccountTransactions(
             String html, String currency) {
 
         // contains transactions
         Element form = Jsoup.parse(html).getElementsByTag("FORM").first();
 
         Elements transactionsTable =
-                form.select("div:containsOwn(Cumpliendo con la) ~ table tr").get(1).select("td");
+                form.select("div:containsOwn(Cumpliendo con la) ~ table tr");
         transactionsTable.remove(0); // the first one refers to the table headers
         Elements rows;
         Transaction trx;
@@ -152,11 +149,10 @@ public class RuralviaTransactionalAccountFetcher
             } catch (ParseException e) {
                 log.warn("WARNING: can not parse the transaction date");
             }
-
-            //
         }
+
         TransactionKeyPaginatorResponseImpl<String> paginatorResponse =
-                new TransactionKeyPaginatorResponseImpl<String>();
+                new TransactionKeyPaginatorResponseImpl<>();
         paginatorResponse.setTransactions(tinkTransactions);
         return paginatorResponse;
     }
@@ -273,14 +269,7 @@ public class RuralviaTransactionalAccountFetcher
                 .orElse(null);
     }
 
-    /**
-     * Generate a RequestBuilder with the 50 last transactions for the 3 last months, imitating the
-     * bank flow
-     *
-     * @param formToBody a form url encoded
-     * @return RequestBuilder
-     */
-    public RequestBuilder requestBuilderWithForm(URL url, String formToBody) {
+    private RequestBuilder requestBuilderWithForm(URL url, String formToBody) {
         return apiClient.createBodyFormRequest(url, formToBody);
     }
 
@@ -341,7 +330,7 @@ public class RuralviaTransactionalAccountFetcher
         try {
             return ExactCurrencyAmount.of(decimalFormat.parse(amountWithoutSpaces), currency);
         } catch (ParseException e) {
-            log.error("Error parsing the balance", e);
+            log.warn("WARN: parsing the balance was not possible", e);
         }
         return ExactCurrencyAmount.inEUR(0); // TODO what should return?
     }

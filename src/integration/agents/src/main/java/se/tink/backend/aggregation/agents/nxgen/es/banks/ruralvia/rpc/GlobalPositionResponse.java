@@ -2,20 +2,19 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.rpc;
 
 import java.util.ArrayList;
 import java.util.List;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.fetcher.transactionalaccount.entities.AccountEntity;
 
+@Slf4j
 public class GlobalPositionResponse {
 
-    private Document html;
-    private RuralviaApiClient apiClient;
-    private static final Logger log = LoggerFactory.getLogger(GlobalPositionResponse.class);
+    private @Getter @Setter Document html;
 
     public GlobalPositionResponse(String html) {
         this.html = Jsoup.parse(html);
@@ -28,33 +27,31 @@ public class GlobalPositionResponse {
         Elements allAccounts = findAccountsElementOnHtml();
 
         // select the nodes that contains Account alias, Acc number, Balance
-        allAccounts.forEach(
-                accountContainer -> {
-                    AccountEntity accountEntity = new AccountEntity();
+        for (Element accountContainer : allAccounts) {
 
-                    Element account =
-                            accountContainer.siblingElements().select("tr td.totlistaC").first();
-                    // .select("tr:contains(0198) td")
+            AccountEntity accountEntity = new AccountEntity();
 
-                    Elements otherData =
-                            accountContainer.siblingElements().select("tr td.totlistaC").nextAll();
+            Element account = accountContainer.siblingElements().select("tr td.totlistaC").first();
+            // .select("tr:contains(0198) td")
 
-                    accountEntity.setAccountNumber(
-                            account.ownText().replaceAll("[\\s\\u202F\\u00A0]", ""));
-                    String alias = otherData.get(0).ownText();
-                    if (alias.contains("|")) {
-                        accountEntity.setAccountAlias(alias.split("\\|")[0].trim());
-                        accountEntity.setCurrency(checkAliasCurrency(alias));
-                    } else {
-                        accountEntity.setAccountAlias(alias);
-                    }
+            Elements otherData =
+                    accountContainer.siblingElements().select("tr td.totlistaC").nextAll();
 
-                    accountEntity.setBalance(otherData.get(1).ownText());
+            accountEntity.setAccountNumber(account.ownText().replaceAll("[\\s\\u202F\\u00A0]", ""));
+            String alias = otherData.get(0).ownText();
 
-                    accountEntity.setForm(accountContainer);
+            if (alias.contains("|")) {
+                accountEntity.setAccountAlias(alias.split("\\|")[0].trim());
+                accountEntity.setCurrency(checkAliasCurrency(alias));
+            } else {
+                accountEntity.setAccountAlias(alias);
+            }
 
-                    accountEntities.add(accountEntity);
-                });
+            accountEntity.setBalance(otherData.get(1).ownText());
+
+            accountEntity.setForm(accountContainer);
+            accountEntities.add(accountEntity);
+        }
 
         return accountEntities;
     }
@@ -70,13 +67,5 @@ public class GlobalPositionResponse {
             currency = "EUR";
         }
         return currency;
-    }
-
-    public Document getHtml() {
-        return html;
-    }
-
-    public void setHtml(Document html) {
-        this.html = html;
     }
 }
