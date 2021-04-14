@@ -26,9 +26,3 @@ ignoredAgentsForInitialisationTest:
   - nxgen.se.openbanking.swedbank.SwedbankAgent
   - nxgen.se.banks.swedbank.fallback.SwedbankFallbackAgent
   - nxgen.ie.openbanking.ulster.UlsterRepublicOfIrelandCorporateAgent
-  - nxgen.uk.openbanking.bbank.BBankBusinessAgent
-  - nxgen.uk.openbanking.bbank.BBankAgent
-  - nxgen.uk.openbanking.virginmoney.VirginMoneyBusinessAgent
-  - nxgen.uk.openbanking.virginmoney.VirginMoneyAgent
-  - nxgen.uk.openbanking.clydesdale.ClydesdaleAgent
-  - nxgen.uk.openbanking.clydesdale.ClydesdaleBusinessAgent
