@@ -33,7 +33,7 @@ spec:
         who: payments
         priority: P4
       annotations:
-        description: Check overall trend for this provider to assess the impact. https://grafana.global-production.tink.network/d/O0WQ492Mz/payments-connectivity-overview?orgId=1
+        description: Check overall trend for this provider to assess the impact. https://grafana.global-production.tink.network/d/XvmDe8YMz/payments-overview-dashboard?orgId=1
         summary: Threshold exceed for ( <{ $labels.className }> ) for transfers with outcome ( <{ $labels.outcome }> ).
 
     - alert: TransferFailedOutcomeThresholdIsPassedForSwedenTier1Banks
@@ -44,7 +44,7 @@ spec:
         who: payments
         priority: P3
       annotations:
-        description: Check overall trend for this provider to assess the impact. https://grafana.global-production.tink.network/d/O0WQ492Mz/payments-connectivity-overview?orgId=1
+        description: Check overall trend for this provider to assess the impact. https://grafana.global-production.tink.network/d/XvmDe8YMz/payments-overview-dashboard?orgId=1
         summary: Threshold exceed for ( <{ $labels.className }> ) for transfers with outcome ( <{ $labels.outcome }> ).
 
     - alert: TransferFailedOutcomeThresholdIsPassedForSwedbankFallbackAgent
@@ -54,7 +54,7 @@ spec:
         who: payments
         priority: P3
       annotations:
-        description: Check overall trend for this provider to assess the impact. https://grafana.global-production.tink.network/d/O0WQ492Mz/payments-connectivity-overview?orgId=1
+        description: Check overall trend for this provider to assess the impact. https://grafana.global-production.tink.network/d/XvmDe8YMz/payments-overview-dashboard?orgId=1
         summary: Threshold exceed for ( <{ $labels.className }> ) for transfers with outcome ( <{ $labels.outcome }> ).
 
     - alert: TransferUnavailableOutcomeThresholdIsPassedForSwedenTier2Banks
@@ -64,7 +64,7 @@ spec:
         who: payments
         priority: P4
       annotations:
-        description: This can indicate that the bank is having issues or that their api has changed. Check overall trend for this provider to assess the impact. https://grafana.global-production.tink.network/d/O0WQ492Mz/payments-connectivity-overview?orgId=1
+        description: This can indicate that the bank is having issues or that their api has changed. Check overall trend for this provider to assess the impact. https://grafana.global-production.tink.network/d/XvmDe8YMz/payments-overview-dashboard?orgId=1
         summary: Threshold exceed for ( <{ $labels.className }> ) for transfers with outcome ( <{ $labels.outcome }> ).
 
     - alert: TransferUnavailableOutcomeThresholdIsPassedForSwedenTier1Banks
@@ -74,7 +74,7 @@ spec:
         who: payments
         priority: P3
       annotations:
-        description: This can indicate that the bank is having issues or that their api has changed. Check overall trend for this provider to assess the impact. https://grafana.global-production.tink.network/d/O0WQ492Mz/payments-connectivity-overview?orgId=1
+        description: This can indicate that the bank is having issues or that their api has changed. Check overall trend for this provider to assess the impact. https://grafana.global-production.tink.network/d/XvmDe8YMz/payments-overview-dashboard?orgId=1
         summary: Threshold exceed for ( <{ $labels.className }> ) for transfers with outcome ( <{ $labels.outcome }> ).
     {{- end }}
     {{- end }}
