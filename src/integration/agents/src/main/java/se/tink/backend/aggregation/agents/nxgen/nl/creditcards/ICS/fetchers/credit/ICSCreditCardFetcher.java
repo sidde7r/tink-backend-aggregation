@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.fetchers.cre
 import java.util.Date;
 import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.ICSApiClient;
-import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.ICSConstants;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.utils.ICSUtils;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
@@ -35,10 +34,7 @@ public class ICSCreditCardFetcher implements TransactionDatePaginator<CreditCard
         }
 
         try {
-            return client.getTransactionsByDate(
-                    account.getFromTemporaryStorage(ICSConstants.StorageKeys.ACCOUNT_ID),
-                    fromDate,
-                    toDate);
+            return client.getTransactionsByDate(account.getApiIdentifier(), fromDate, toDate);
         } catch (HttpResponseException exception) {
             if (exception.getResponse().getStatus() == HttpStatus.SC_UNAUTHORIZED) {
                 // Error when requesting transactions out of range. Happens when the whole requested
