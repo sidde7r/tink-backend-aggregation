@@ -9,6 +9,7 @@ java_library(
     runtime_deps = [
     ],
     deps = [
+        "@tink_backend//src/libraries/unleash",
         "//src/aggregation/aggregationcontroller_api/src/main/java/se/tink/backend/aggregation/aggregationcontroller",
         "//src/aggregation/api",
         "//src/aggregation/api/src/main/java/se/tink/backend/aggregation/cluster/identification",
@@ -60,7 +61,6 @@ java_library(
         "@tink_backend//src/libraries/payments_validations",
         "//src/libraries/dropwizard_lifecycle",
         "@tink_backend//src/libraries/tracing",
-
         # JSR305 (javax.annotations)
         "//third_party:com_google_code_findbugs_jsr305",
     ],

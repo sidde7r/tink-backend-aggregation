@@ -39,6 +39,7 @@ import se.tink.libraries.account_data_cache.AccountData;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.libraries.credentials.service.RefreshableSegment;
 import se.tink.libraries.metrics.registry.MetricRegistry;
+import se.tink.libraries.unleash.UnleashClient;
 import se.tink.libraries.user.rpc.User;
 import se.tink.libraries.user.rpc.UserProfile;
 
@@ -46,6 +47,8 @@ import se.tink.libraries.user.rpc.UserProfile;
 public class AccountSegmentRestrictionWorkerCommandTest {
     @Mock private ControllerWrapper controllerWrapper;
     @Mock private AgentsServiceConfiguration agentsServiceConfiguration;
+    @Mock private UnleashClient unleashClient;
+
     private AgentWorkerCommandContext context;
     private RefreshInformationRequest request;
 
@@ -80,7 +83,8 @@ public class AccountSegmentRestrictionWorkerCommandTest {
                         "oxford-production",
                         "",
                         "",
-                        mock(AccountInformationServiceEventsProducer.class));
+                        mock(AccountInformationServiceEventsProducer.class),
+                        unleashClient);
     }
 
     private Provider getProvider() {

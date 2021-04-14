@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.configuration.models;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.dropwizard.Configuration;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.models.configuration.S3StorageConfiguration;
 import se.tink.backend.aggregation.storage.file.models.ProvisionClientsConfig;
@@ -10,8 +11,10 @@ import se.tink.libraries.endpoints.dropwizard.EndpointsConfiguration;
 import se.tink.libraries.queue.sqs.configuration.SqsQueueConfiguration;
 import se.tink.libraries.repository.config.DatabaseConfiguration;
 import se.tink.libraries.tracing.jaeger.models.JaegerConfig;
+import se.tink.libraries.unleash.model.UnleashConfiguration;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
+@Slf4j
 public class AggregationServiceConfiguration extends Configuration {
     @JsonProperty
     private AgentsServiceConfiguration agentsServiceConfiguration =
@@ -58,6 +61,8 @@ public class AggregationServiceConfiguration extends Configuration {
     @JsonProperty
     private ProviderConfigurationServiceConfiguration providerConfigurationServiceConfiguration =
             new ProviderConfigurationServiceConfiguration();
+
+    @JsonProperty private UnleashConfiguration unleashConfig;
 
     @JsonProperty private boolean sendDataTrackingEvents = false;
     @JsonProperty private boolean sendAgentLoginCompletedEvents = false;
@@ -167,5 +172,20 @@ public class AggregationServiceConfiguration extends Configuration {
 
     public void setJaegerConfig(JaegerConfig jaegerConfig) {
         this.jaegerConfig = jaegerConfig;
+    }
+
+    public UnleashConfiguration getUnleashConfiguration() {
+        if (unleashConfig != null) {
+            log.info("[Unleash] The configuration was fetched successfully.");
+            return unleashConfig;
+        }
+        log.error("[Unleash] Something went wrong. Default configuration has been initialised.");
+        return new UnleashConfiguration()
+                .setApiUrl("http://unleash-api.unleash.svc.cluster.local:4242/api/")
+                .setApplicationName("aggregation-service");
+    }
+
+    public void setUnleashConfig(UnleashConfiguration unleashConfig) {
+        this.unleashConfig = unleashConfig;
     }
 }

@@ -57,6 +57,7 @@ import se.tink.libraries.enums.MarketCode;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 import se.tink.libraries.provider.ProviderDto;
 import se.tink.libraries.transfer.rpc.Transfer;
+import se.tink.libraries.unleash.UnleashClient;
 
 public final class AgentWorkerOperationFactoryTest {
 
@@ -336,6 +337,7 @@ public final class AgentWorkerOperationFactoryTest {
                     .toInstance(mock(InterProcessSemaphoreMutexFactory.class));
             bind(AccountInformationServiceEventsProducer.class)
                     .toInstance(mock(AccountInformationServiceEventsProducer.class));
+            bind(UnleashClient.class).toInstance(mock(UnleashClient.class));
         }
     }
 }

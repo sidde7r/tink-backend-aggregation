@@ -37,6 +37,7 @@ import se.tink.libraries.account_data_cache.FilterReason;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.libraries.metrics.registry.MetricRegistry;
+import se.tink.libraries.unleash.UnleashClient;
 import se.tink.libraries.user.rpc.User;
 import se.tink.libraries.user.rpc.UserProfile;
 
@@ -52,6 +53,7 @@ public class SendAccountRestrictionEventsWorkerCommandTest {
     private CredentialsRequest request;
     @Mock private ControllerWrapper controllerWrapper;
     @Mock private AccountInformationServiceEventsProducer accountInformationServiceEventsProducer;
+    @Mock private UnleashClient unleashClient;
 
     @Before
     public void init() {
@@ -77,7 +79,8 @@ public class SendAccountRestrictionEventsWorkerCommandTest {
                         CLUSTER_ID,
                         APP_ID,
                         CORRELATION_ID,
-                        accountInformationServiceEventsProducer);
+                        accountInformationServiceEventsProducer,
+                        unleashClient);
     }
 
     @Test

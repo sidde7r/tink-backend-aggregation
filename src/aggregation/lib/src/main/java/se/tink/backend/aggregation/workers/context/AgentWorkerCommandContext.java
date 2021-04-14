@@ -45,6 +45,7 @@ import se.tink.libraries.metrics.types.counters.Counter;
 import se.tink.libraries.pair.Pair;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.signableoperation.rpc.SignableOperation;
+import se.tink.libraries.unleash.UnleashClient;
 
 public class AgentWorkerCommandContext extends AgentWorkerContext {
     private static final Logger log = LoggerFactory.getLogger(AgentWorkerCommandContext.class);
@@ -86,7 +87,8 @@ public class AgentWorkerCommandContext extends AgentWorkerContext {
             String clusterId,
             String appId,
             String correlationId,
-            AccountInformationServiceEventsProducer accountInformationServiceEventsProducer) {
+            AccountInformationServiceEventsProducer accountInformationServiceEventsProducer,
+            UnleashClient unleashClient) {
         super(
                 request,
                 metricRegistry,
@@ -98,7 +100,8 @@ public class AgentWorkerCommandContext extends AgentWorkerContext {
                 clusterId,
                 appId,
                 correlationId,
-                accountInformationServiceEventsProducer);
+                accountInformationServiceEventsProducer,
+                unleashClient);
         this.coordinationClient = coordinationClient;
         this.timePutOnQueue = System.currentTimeMillis();
 

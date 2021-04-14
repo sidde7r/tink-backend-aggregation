@@ -12,32 +12,38 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.dat
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.SupplementalInformationProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.tinkhttpclient.TinkHttpClientProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.unleashclient.UnleashClientProvider;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
+import se.tink.libraries.unleash.UnleashClient;
 
 public class AgentComponentProvider
         implements TinkHttpClientProvider,
                 SupplementalInformationProvider,
                 AgentContextProvider,
-                GeneratedValueProvider {
+                GeneratedValueProvider,
+                UnleashClientProvider {
 
     private final TinkHttpClientProvider tinkHttpClientProvider;
     private final SupplementalInformationProvider supplementalInformationProvider;
     private final AgentContextProvider agentContextProvider;
     private final GeneratedValueProvider generatedValueProvider;
+    private final UnleashClientProvider unleashClientProvider;
 
     @Inject
     public AgentComponentProvider(
             TinkHttpClientProvider tinkHttpClientProvider,
             SupplementalInformationProvider supplementalInformationProvider,
             AgentContextProvider agentContextProvider,
-            GeneratedValueProvider generatedValueProvider) {
+            GeneratedValueProvider generatedValueProvider,
+            UnleashClientProvider unleashClientProvider) {
         this.tinkHttpClientProvider = tinkHttpClientProvider;
         this.supplementalInformationProvider = supplementalInformationProvider;
         this.agentContextProvider = agentContextProvider;
         this.generatedValueProvider = generatedValueProvider;
+        this.unleashClientProvider = unleashClientProvider;
     }
 
     @Override
@@ -93,5 +99,10 @@ public class AgentComponentProvider
     @Override
     public RandomValueGenerator getRandomValueGenerator() {
         return generatedValueProvider.getRandomValueGenerator();
+    }
+
+    @Override
+    public UnleashClient getUnleashClient() {
+        return unleashClientProvider.getUnleashClient();
     }
 }

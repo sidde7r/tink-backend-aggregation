@@ -151,3 +151,7 @@ providerConfigurationServiceConfiguration:
     - CERTSHA256:A0A8FBAC442F4A58AC56CB1D0C185F93EE119A1B026BA3F046B0CA99EC165390
   port: 9048
   enabled: true
+
+unleashConfig:
+  apiUrl: http://localhost:4242/api/
+  applicationName: aggregation-service

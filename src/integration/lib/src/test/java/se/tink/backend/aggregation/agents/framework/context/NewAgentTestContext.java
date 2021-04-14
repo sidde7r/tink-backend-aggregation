@@ -56,10 +56,16 @@ import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.identitydata.IdentityData;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 import se.tink.libraries.transfer.rpc.Transfer;
+import se.tink.libraries.unleash.UnleashClient;
+import se.tink.libraries.unleash.UnleashClientFactory;
+import se.tink.libraries.unleash.model.UnleashConfiguration;
+import se.tink.libraries.unleash.strategies.ServiceType;
 import se.tink.libraries.user.rpc.User;
 
 public final class NewAgentTestContext extends AgentContext {
     private static final Logger log = LoggerFactory.getLogger(NewAgentTestContext.class);
+    private static final String UNLEASH_APPLICATION_NAME = "aggregation-service";
+    private static final String UNLEASH_LOCAL_BASE_API_URL = "http://localhost:4242/api";
     private final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     public static final String TEST_CLUSTERID = "oxford-preprod";
@@ -100,7 +106,15 @@ public final class NewAgentTestContext extends AgentContext {
         agentTestServerClient = AgentTestServerClient.getInstance();
         LogMasker logMasker = new FakeLogMasker();
         setLogMasker(logMasker);
-
+        UnleashClientFactory unleashClientFactory =
+                new UnleashClientFactory(
+                        new UnleashConfiguration()
+                                .setApplicationName(UNLEASH_APPLICATION_NAME)
+                                .setApiUrl(UNLEASH_LOCAL_BASE_API_URL),
+                        ServiceType.AGGREGATION);
+        UnleashClient unleashClient = unleashClientFactory.create();
+        unleashClient.start();
+        setUnleashClient(unleashClient);
         setTestContext(true);
         setAggregatorInfo(AggregatorInfo.getAggregatorForTesting());
     }

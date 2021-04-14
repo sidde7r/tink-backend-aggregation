@@ -15,5 +15,6 @@ java_library(
         "//src/libraries/interaction_counter/local",
         "//third_party:com_google_guava_guava",
         "@tink_backend//src/libraries/metrics/core/src/main/java/se/tink/libraries/metrics/registry",
+        "@tink_backend//src/libraries/unleash",
     ],
 )

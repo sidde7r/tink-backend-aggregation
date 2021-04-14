@@ -27,7 +27,7 @@ junit_test(
         "//third_party:org_assertj_assertj_core",
         "//third_party:org_mockito_mockito_core",
         "@aggregation//:com_google_guava_guava",
-        "@aggregation//:no_finn_unleash_unleash_client_java",
         "@tink_backend//src/libraries/account_identifier",
+        "@tink_backend//src/libraries/unleash",
     ],
 )

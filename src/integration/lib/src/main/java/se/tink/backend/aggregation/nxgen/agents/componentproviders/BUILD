@@ -20,6 +20,7 @@ java_library(
         "//third_party:com_google_inject_guice",
         "//third_party:commons_codec_commons_codec",
         "//third_party:lombok_libs",
+        "@tink_backend//src/libraries/unleash",
         "@tink_backend//src/libraries/uuid",
     ],
 )

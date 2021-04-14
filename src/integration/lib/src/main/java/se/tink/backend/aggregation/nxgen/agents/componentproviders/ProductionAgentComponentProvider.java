@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.dat
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGeneratorImpl;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.SupplementalInformationProviderImpl;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.tinkhttpclient.NextGenTinkHttpClientProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.unleashclient.UnleashClientProviderImpl;
 import se.tink.backend.aggregation.nxgen.http.event.FakeNextGenTinkHttpClientEventProducer;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
@@ -38,6 +39,7 @@ public final class ProductionAgentComponentProvider {
                 new SupplementalInformationProviderImpl(context, request),
                 new AgentContextProviderImpl(request, context),
                 new GeneratedValueProviderImpl(
-                        new ActualLocalDateTimeSource(), new RandomValueGeneratorImpl()));
+                        new ActualLocalDateTimeSource(), new RandomValueGeneratorImpl()),
+                new UnleashClientProviderImpl(context));
     }
 }

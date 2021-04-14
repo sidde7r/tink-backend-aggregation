@@ -120,6 +120,9 @@ import se.tink.libraries.queue.sqs.QueueMessageAction;
 import se.tink.libraries.queue.sqs.configuration.SqsQueueConfiguration;
 import se.tink.libraries.service.version.VersionInformation;
 import se.tink.libraries.tracing.jersey.filter.ServerTracingFilter;
+import se.tink.libraries.unleash.UnleashClient;
+import se.tink.libraries.unleash.UnleashClientFactory;
+import se.tink.libraries.unleash.strategies.ServiceType;
 
 /**
  * A singular place for all the Guice bindings necessary to start up and make calls to the
@@ -210,6 +213,12 @@ public class AggregationDecoupledModule extends AbstractModule {
                         configuration
                                 .getAgentsServiceConfiguration()
                                 .getTppSecretsServiceConfiguration());
+        bind(UnleashClient.class)
+                .toInstance(
+                        new UnleashClientFactory(
+                                        configuration.getUnleashConfiguration(),
+                                        ServiceType.AGGREGATION)
+                                .create());
         bind(ProviderConfigurationServiceConfiguration.class)
                 .toInstance(configuration.getProviderConfigurationServiceConfiguration());
 
