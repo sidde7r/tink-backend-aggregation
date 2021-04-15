@@ -24,11 +24,8 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 public final class NordeaSeApiClient extends NordeaBaseApiClient {
 
     public NordeaSeApiClient(
-            TinkHttpClient client,
-            PersistentStorage persistentStorage,
-            QsealcSigner qsealcSigner,
-            String providerName) {
-        super(client, persistentStorage, qsealcSigner, providerName, false);
+            TinkHttpClient client, PersistentStorage persistentStorage, QsealcSigner qsealcSigner) {
+        super(client, persistentStorage, qsealcSigner, false);
     }
 
     public DecoupledAuthenticationResponse authenticateDecoupled(String ssn) {

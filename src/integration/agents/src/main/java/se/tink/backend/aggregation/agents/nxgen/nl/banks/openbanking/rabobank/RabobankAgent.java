@@ -127,8 +127,7 @@ public final class RabobankAgent
                 new RateLimitRetryFilter(
                         RabobankConstants.HttpClient.MAX_RETRIES,
                         HttpClient.RETRY_SLEEP_MILLISECONDS));
-        client.addFilter(
-                new AccessExceededFilter(this.provider != null ? this.provider.getName() : null));
+        client.addFilter(new AccessExceededFilter());
         client.addFilter(
                 new RabobankRetryFilter(
                         RabobankConstants.HttpClient.MAX_RETRIES,

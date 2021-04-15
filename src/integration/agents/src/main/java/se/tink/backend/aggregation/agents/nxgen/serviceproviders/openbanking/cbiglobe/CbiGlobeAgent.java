@@ -75,8 +75,7 @@ public abstract class CbiGlobeAgent extends SubsequentProgressiveGenerationAgent
         client.addFilter(
                 new ForbiddenRetryFilter(
                         HttpClient.MAX_RETRIES, HttpClient.RETRY_SLEEP_MILLISECONDS));
-        client.addFilter(
-                new AccessExceededFilter(this.provider != null ? this.provider.getName() : null));
+        client.addFilter(new AccessExceededFilter());
         client.addFilter(new BadGatewayFilter());
         client.addFilter(
                 new CbiGlobeRetryFilter(

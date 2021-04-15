@@ -41,8 +41,7 @@ public final class NordeaDkAgent extends NordeaBaseAgent
     @Inject
     public NordeaDkAgent(AgentComponentProvider componentProvider, QsealcSigner qsealcSigner) {
         super(componentProvider);
-        apiClient =
-                new NordeaDkApiClient(client, persistentStorage, qsealcSigner, getProviderName());
+        apiClient = new NordeaDkApiClient(client, persistentStorage, qsealcSigner);
 
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }

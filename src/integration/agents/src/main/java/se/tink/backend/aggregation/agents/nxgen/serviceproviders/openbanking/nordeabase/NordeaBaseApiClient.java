@@ -82,16 +82,15 @@ public class NordeaBaseApiClient implements TokenInterface {
             TinkHttpClient client,
             PersistentStorage persistentStorage,
             QsealcSigner qsealcSigner,
-            String providerName,
             boolean corporate) {
         this.client = client;
         this.persistentStorage = persistentStorage;
         this.qsealcSigner = qsealcSigner;
         this.corporate = corporate;
-        configureFilters(providerName);
+        configureFilters();
     }
 
-    private void configureFilters(String providerName) {
+    private void configureFilters() {
         this.client.addFilter(new BankSideFailureFilter());
         this.client.addFilter(new BankSideRetryFilter());
         this.client.addFilter(new ServiceUnavailableBankServiceErrorFilter());
@@ -105,7 +104,7 @@ public class NordeaBaseApiClient implements TokenInterface {
                 new BadGatewayRetryFilter(
                         NordeaBaseConstants.Filters.NUMBER_OF_RETRIES,
                         NordeaBaseConstants.Filters.MS_TO_WAIT));
-        this.client.addFilter(new AccessExceededFilter(providerName));
+        this.client.addFilter(new AccessExceededFilter());
         this.client.addFilter(
                 new RateLimitRetryFilter(
                         NordeaBaseConstants.Filters.NUMBER_OF_RETRIES,

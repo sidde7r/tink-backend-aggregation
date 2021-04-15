@@ -13,11 +13,8 @@ public final class NordeaDkApiClient extends NordeaBaseApiClient {
             SCOPE_WITHOUT_PAYMENT_AND_CREDIT_CARDS + ",PAYMENTS_MULTIPLE";
 
     public NordeaDkApiClient(
-            TinkHttpClient client,
-            PersistentStorage persistentStorage,
-            QsealcSigner qsealcSigner,
-            String providerName) {
-        super(client, persistentStorage, qsealcSigner, providerName, false);
+            TinkHttpClient client, PersistentStorage persistentStorage, QsealcSigner qsealcSigner) {
+        super(client, persistentStorage, qsealcSigner, false);
     }
 
     @Override
