@@ -27,10 +27,11 @@
       "type" : "PERSONAL",
       "identities" : [ {
         "name" : "Firstname Lastname",
-        "role": "HOLDER"
+        "role" : "HOLDER"
       } ]
     },
     "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
+    "balances" : [ ],
     "availableCredit" : 0.0,
     "balance" : 0.0
   }, {
@@ -61,10 +62,11 @@
       "type" : "PERSONAL",
       "identities" : [ {
         "name" : "Firstname Lastname",
-        "role": "HOLDER"
+        "role" : "HOLDER"
       } ]
     },
     "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
+    "balances" : [ ],
     "availableCredit" : 0.0,
     "balance" : 12082.69
   } ],
@@ -78,7 +80,17 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "225532071"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-02-25",
+        "instant" : null
+      }
+    } ]
   }, {
     "amount" : 20000.0,
     "date" : 1581937200000,
@@ -89,7 +101,17 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "225532061"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-02-17",
+        "instant" : null
+      }
+    } ]
   }, {
     "amount" : 11433.0,
     "date" : 1595584800000,
@@ -100,7 +122,17 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "236322501"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-07-24",
+        "instant" : null
+      }
+    } ]
   }, {
     "amount" : 224.0,
     "date" : 1595584800000,
@@ -111,7 +143,17 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "236322491"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-07-24",
+        "instant" : null
+      }
+    } ]
   }, {
     "amount" : -13000.0,
     "date" : 1593079200000,
@@ -122,7 +164,17 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "233289981"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-06-25",
+        "instant" : null
+      }
+    } ]
   }, {
     "amount" : 11497.0,
     "date" : 1593079200000,
@@ -133,7 +185,17 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "233126471"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-06-25",
+        "instant" : null
+      }
+    } ]
   }, {
     "amount" : 224.0,
     "date" : 1593079200000,
@@ -144,7 +206,17 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "233126461"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-06-25",
+        "instant" : null
+      }
+    } ]
   }, {
     "amount" : -10000.0,
     "date" : 1591610400000,
@@ -155,7 +227,17 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "231851231"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-06-08",
+        "instant" : null
+      }
+    } ]
   }, {
     "amount" : 11417.0,
     "date" : 1590400800000,
@@ -166,7 +248,17 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "229754301"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-05-25",
+        "instant" : null
+      }
+    } ]
   }, {
     "amount" : 224.0,
     "date" : 1590400800000,
@@ -177,7 +269,17 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "229754291"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-05-25",
+        "instant" : null
+      }
+    } ]
   }, {
     "amount" : -18700.0,
     "date" : 1587981600000,
@@ -188,7 +290,17 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "223553621"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-04-27",
+        "instant" : null
+      }
+    } ]
   }, {
     "amount" : 17374.0,
     "date" : 1587722400000,
@@ -199,7 +311,17 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "223553611"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-04-24",
+        "instant" : null
+      }
+    } ]
   }, {
     "amount" : -15000.0,
     "date" : 1586167200000,
@@ -210,7 +332,17 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "223553601"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-04-06",
+        "instant" : null
+      }
+    } ]
   }, {
     "amount" : 15000.0,
     "date" : 1585306800000,
@@ -221,7 +353,17 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "223553591"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-03-27",
+        "instant" : null
+      }
+    } ]
   }, {
     "amount" : 8624.0,
     "date" : 1585134000000,
@@ -232,7 +374,17 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "223553581"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-03-25",
+        "instant" : null
+      }
+    } ]
   }, {
     "amount" : -40000.0,
     "date" : 1585220400000,
@@ -243,7 +395,17 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "223553571"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-03-26",
+        "instant" : null
+      }
+    } ]
   }, {
     "amount" : 24000.0,
     "date" : 1583492400000,
@@ -254,7 +416,17 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "223553561"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-03-06",
+        "instant" : null
+      }
+    } ]
   }, {
     "amount" : 8631.0,
     "date" : 1582628400000,
@@ -265,7 +437,17 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "223553551"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-02-25",
+        "instant" : null
+      }
+    } ]
   }, {
     "amount" : -7000.0,
     "date" : 1582628400000,
@@ -276,7 +458,17 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "223553541"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-02-25",
+        "instant" : null
+      }
+    } ]
   }, {
     "amount" : 24000.0,
     "date" : 1581937200000,
@@ -287,7 +479,17 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "223553531"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-02-17",
+        "instant" : null
+      }
+    } ]
   }, {
     "amount" : -20000.0,
     "date" : 1581937200000,
@@ -298,7 +500,17 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "223553521"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-02-17",
+        "instant" : null
+      }
+    } ]
   }, {
     "amount" : -60000.0,
     "date" : 1580814000000,
@@ -309,7 +521,17 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "223553511"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-02-04",
+        "instant" : null
+      }
+    } ]
   }, {
     "amount" : 8875.0,
     "date" : 1580727600000,
@@ -320,7 +542,17 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "223553501"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-02-03",
+        "instant" : null
+      }
+    } ]
   }, {
     "amount" : -12000.0,
     "date" : 1580382000000,
@@ -331,6 +563,16 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "223553491"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2020-01-30",
+        "instant" : null
+      }
+    } ]
   } ]
 }
