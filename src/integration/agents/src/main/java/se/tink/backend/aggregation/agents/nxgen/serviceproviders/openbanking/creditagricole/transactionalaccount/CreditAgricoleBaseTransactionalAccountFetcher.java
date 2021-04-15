@@ -4,11 +4,13 @@ import java.time.Clock;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.CreditAgricoleBaseConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.apiclient.CreditAgricoleBaseApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.entities.AccountIdEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
@@ -33,15 +35,10 @@ public class CreditAgricoleBaseTransactionalAccountFetcher
     public Collection<TransactionalAccount> fetchAccounts() {
         GetAccountsResponse getAccountsResponse = apiClient.getAccounts();
 
-        if (getAccountsResponse.getAccounts().stream()
-                .filter(acc -> !acc.getCashAccountType().equals("CACC"))
-                .findFirst()
-                .isPresent()) {
-            log.info("Account type different then CACC.");
-        }
-
-        if (getAccountsResponse.areConsentsNecessary()) {
-            apiClient.putConsents(getAccountsResponse.getListOfNecessaryConsents());
+        List<AccountIdEntity> accountIdsForConsentRequest =
+                getAccountsResponse.getAccountsListForNecessaryConsents();
+        if (!accountIdsForConsentRequest.isEmpty()) {
+            apiClient.putConsents(accountIdsForConsentRequest);
             getAccountsResponse = apiClient.getAccounts();
         }
 

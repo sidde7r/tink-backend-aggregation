@@ -43,26 +43,19 @@ public class GetAccountsResponse {
                 .collect(Collectors.toList());
     }
 
-    public boolean areConsentsNecessary() {
-        return CollectionUtils.isNotEmpty(accounts)
-                && (isBeneficiaryConsentNecessary()
-                        || isIdentityConsentNecessary()
-                        || isConsentForAnyAccountNecessary());
-    }
-
-    public List<AccountIdEntity> getListOfNecessaryConsents() {
+    public List<AccountIdEntity> getAccountsListForNecessaryConsents() {
+        if (CollectionUtils.isNotEmpty(accounts)
+                && (isBeneficiaryConsentNecessary() || isIdentityConsentNecessary())) {
+            return accounts.stream().map(AccountEntity::getAccountId).collect(Collectors.toList());
+        }
         return Optional.ofNullable(accounts).orElse(Collections.emptyList()).stream()
-                .filter(this::isAccountWithResourceId)
+                .filter(AccountEntity::areConsentsNecessary)
                 .map(AccountEntity::getAccountId)
                 .collect(Collectors.toList());
     }
 
     private boolean isAccountWithResourceId(AccountEntity accountEntity) {
         return StringUtils.isNotBlank(accountEntity.getResourceId());
-    }
-
-    private boolean isConsentForAnyAccountNecessary() {
-        return accounts.stream().anyMatch(AccountEntity::areConsentsNecessary);
     }
 
     private boolean isIdentityConsentNecessary() {

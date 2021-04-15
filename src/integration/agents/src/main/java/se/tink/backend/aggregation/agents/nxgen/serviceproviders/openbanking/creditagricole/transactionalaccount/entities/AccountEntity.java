@@ -42,8 +42,10 @@ public class AccountEntity {
     private String usage;
 
     public boolean areConsentsNecessary() {
-        return resourceId != null
-                && (links == null || !links.hasBalances() || !links.hasTransactions());
+        return resourceId == null
+                || links == null
+                || !links.hasBalances()
+                || !links.hasTransactions();
     }
 
     public AccountIdEntity getAccountId() {
