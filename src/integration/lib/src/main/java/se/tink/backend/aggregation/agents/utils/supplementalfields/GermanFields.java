@@ -124,10 +124,17 @@ public class GermanFields {
                 Integer otpMinLength) {
             if (otpMaxLength != null) {
                 otpBuilder
-                        .pattern("^[0-9]{" + otpMinLength + "," + otpMaxLength + "}$")
+                        .pattern(buildNumericPattern(otpMaxLength, otpMinLength))
                         .patternError(catalog.getString(NUMERIC_OTP_PATTERN_ERROR, otpMaxLength));
             }
             otpBuilder.numeric(true);
+        }
+
+        private static String buildNumericPattern(Integer otpMaxLength, Integer otpMinLength) {
+            if (!otpMaxLength.equals(otpMinLength)) {
+                return "^[0-9]{" + otpMinLength + "," + otpMaxLength + "}$";
+            }
+            return "^[0-9]{" + otpMaxLength + "}$";
         }
 
         private static void prepareOtpCharactersFormat(
