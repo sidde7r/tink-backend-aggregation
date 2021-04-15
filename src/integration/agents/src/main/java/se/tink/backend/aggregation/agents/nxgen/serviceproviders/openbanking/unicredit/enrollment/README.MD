@@ -1,8 +1,4 @@
 Unicredit enrollment
 
-* login using aws-ssh script to runner
-* create enrol-pod.yaml there
-* run ```kubectl create -f enrol-pod.yaml```
-* access pod ```kubectl exec -it tmp-shell-enrol bash -n eidas-proxy```
-* execute script with proper appId and email
-* exit pod ```kubectl delete po tmp-shell-enrol -n eidas-proxy```
+* refer to [TPP registration](https://tinkab.atlassian.net/wiki/spaces/INT/pages/1591541785/Customer+TPP+Registration+-+Handelsbanken)
+* execute ```unicredit_request.sh``` script with proper appId and email
