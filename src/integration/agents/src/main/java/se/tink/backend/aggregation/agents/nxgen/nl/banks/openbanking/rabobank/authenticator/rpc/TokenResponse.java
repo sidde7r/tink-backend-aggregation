@@ -2,8 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.a
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.concurrent.TimeUnit;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.StorageKey;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.utils.RabobankUtils;
 import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
@@ -11,10 +11,9 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
+@Slf4j
 @JsonObject
 public class TokenResponse {
-
-    private static final Logger logger = LoggerFactory.getLogger(TokenResponse.class);
 
     @JsonProperty("access_token")
     private String accessToken;
@@ -61,13 +60,14 @@ public class TokenResponse {
     }
 
     public long getRefreshTokenExpiresIn() {
-        return Long.parseLong(refreshTokenExpiresIn);
+        return TimeUnit.DAYS.toSeconds(90);
     }
 
     public OAuth2Token toOauthToken(final PersistentStorage persistentStorage) {
+        // Set sessionExpiryDate to 90 days instead of 30 days
         final String refreshTokenExpiryDate =
                 RabobankUtils.getRefreshTokenExpireDate(getRefreshTokenExpiresIn());
-        logger.info(
+        log.info(
                 "New Refresh Token: {}, Expires on: {}",
                 Hash.sha256AsHex(getRefreshToken()),
                 refreshTokenExpiryDate);
