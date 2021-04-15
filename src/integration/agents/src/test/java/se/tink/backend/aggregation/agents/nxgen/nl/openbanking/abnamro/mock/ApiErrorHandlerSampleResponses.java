@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.nl.openbanking.abnamro.errorhandling;
+package se.tink.backend.aggregation.agents.nxgen.nl.openbanking.abnamro.mock;
 
 public class ApiErrorHandlerSampleResponses {
     static final String OAUTH2_ERROR_RESPONSE_WITH_INVALID_GRANT =

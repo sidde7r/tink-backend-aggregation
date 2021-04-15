@@ -41,6 +41,7 @@ public abstract class AccountEntity extends AbstractAccountEntity {
     protected String type;
     protected String productId;
     protected TransactionsEntity transactions;
+    protected String originalName;
 
     public boolean isInvestmentAccount() {
         return SwedbankBaseConstants.ACCOUNT_TYPE_MAPPER
@@ -124,6 +125,7 @@ public abstract class AccountEntity extends AbstractAccountEntity {
         return AccountSourceInfo.builder()
                 .bankAccountType(type)
                 .bankProductCode(productId) // ex. saving, 'SPP00103', "ISKPRV01"
+                .bankProductName(originalName)
                 .build();
     }
 

@@ -95,6 +95,7 @@ public class DetailedCardAccountResponse {
     private AccountSourceInfo createAccountSourceInfo() {
         return AccountSourceInfo.builder()
                 .bankProductCode(cardAccount.getCreditCardProductId())
+                .bankProductName(cardAccount.getName())
                 .build();
     }
 

@@ -2,12 +2,12 @@ package se.tink.backend.aggregation.agents.nxgen.nl.openbanking.abnamro;
 
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
 
+import com.google.inject.Inject;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
-import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.abnamro.authenticator.AbnAmroAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.abnamro.authenticator.AbnAmroOAuth2AuthenticationController;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.abnamro.configuration.AbnAmroConfiguration;
@@ -15,8 +15,8 @@ import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.abnamro.fetcher.A
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.abnamro.fetcher.AbnAmroTransactionFetcher;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
-import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
@@ -25,7 +25,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
 @AgentCapabilities({CHECKING_ACCOUNTS})
 public final class AbnAmroAgent extends NextGenerationAgent
@@ -35,9 +34,9 @@ public final class AbnAmroAgent extends NextGenerationAgent
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private AgentConfiguration<AbnAmroConfiguration> agentConfiguration;
 
-    public AbnAmroAgent(
-            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair);
+    @Inject
+    public AbnAmroAgent(AgentComponentProvider componentProvider) {
+        super(componentProvider);
         this.apiClient = new AbnAmroApiClient(client, persistentStorage);
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
