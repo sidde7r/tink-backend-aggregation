@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.utils;
 
+import java.nio.charset.StandardCharsets;
 import java.security.PrivateKey;
 import java.util.Base64;
 import java.util.Date;
@@ -56,6 +57,8 @@ public final class SignatureUtils {
     }
 
     public static String createDigest(String body) {
-        return SignatureKeys.SHA_256 + Base64.getEncoder().encodeToString(Hash.sha256(body));
+        return SignatureKeys.SHA_256
+                + Base64.getEncoder()
+                        .encodeToString(Hash.sha256(body.getBytes(StandardCharsets.UTF_8)));
     }
 }

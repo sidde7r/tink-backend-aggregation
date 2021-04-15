@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -29,7 +30,9 @@ public class FiduciaSignatureHeaderGenerator {
     public String generateSignatureHeader(Map<String, Object> headers) {
         String signedHeaders = getSignedHeaders(headers);
         String signedHeadersWithValues = getSignedHeadersWithValues(headers);
-        String signature = qsealcSigner.getSignatureBase64(signedHeadersWithValues.getBytes());
+        String signature =
+                qsealcSigner.getSignatureBase64(
+                        signedHeadersWithValues.getBytes(StandardCharsets.UTF_8));
 
         log.info(String.format("[FIDUCIA] SIGNATURE: %s", signature));
 
