@@ -11,6 +11,7 @@ import se.tink.libraries.user.rpc.User;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class RefreshInformationRequest extends CredentialsRequest {
     @JsonProperty private boolean manual;
+    private Set<RefreshableSegment> segmentsToRefresh;
     private Set<RefreshableItem> itemsToRefresh;
     private Set<String> requestedAccountIds;
     private String refreshId;
@@ -108,6 +109,14 @@ public class RefreshInformationRequest extends CredentialsRequest {
     @Deprecated
     public boolean isManual() {
         return manual;
+    }
+
+    public Set<RefreshableSegment> getSegmentsToRefresh() {
+        return segmentsToRefresh;
+    }
+
+    public void setSegmentsToRefresh(Set<RefreshableSegment> segmentsToRefresh) {
+        this.segmentsToRefresh = segmentsToRefresh;
     }
 
     public Set<RefreshableItem> getItemsToRefresh() {
