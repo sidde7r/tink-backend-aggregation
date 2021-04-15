@@ -340,12 +340,12 @@ public class AgentWorkerOperationFactory {
 
     public AgentWorkerOperation createOperationRefresh(
             RefreshInformationRequest request, ClientInfo clientInfo) {
-        if (request.getItemsToRefresh() == null || request.getItemsToRefresh().isEmpty()) {
+        if (Objects.isNull(request.getItemsToRefresh()) || request.getItemsToRefresh().isEmpty()) {
             // Add all available items if none were submitted.
             // Todo: Remove this once it has been verified that no consumer sends in an empty/null
             // list.
             // Instead it should abort if it's empty (empty list == do nothing).
-            log.info("createOperationRefresh called with empty list of itemsToRefresh");
+            log.info("createOperationRefresh called with empty or null itemsToRefresh.");
             request.setItemsToRefresh(RefreshableItem.REFRESHABLE_ITEMS_ALL);
         }
 
@@ -1173,11 +1173,12 @@ public class AgentWorkerOperationFactory {
     /** Use this operation when refreshing only the accounts that are available in the request. */
     public AgentWorkerOperation createOperationWhitelistRefresh(
             RefreshWhitelistInformationRequest request, ClientInfo clientInfo) {
-        if (request.getItemsToRefresh() == null || request.getItemsToRefresh().isEmpty()) {
+        if (Objects.isNull(request.getItemsToRefresh()) || request.getItemsToRefresh().isEmpty()) {
             // Add all available items if none were submitted.
             // Todo: Remove this once it has been verified that no consumer sends in an empty/null
             // list.
             // Instead it should abort if it's empty (empty list == do nothing).
+            log.info("createOperationWhitelistRefresh called with empty or null itemsToRefresh.");
             request.setItemsToRefresh(RefreshableItem.REFRESHABLE_ITEMS_ALL);
         }
 
