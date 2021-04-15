@@ -16,7 +16,6 @@ import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
-import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaApiClient;
@@ -27,6 +26,7 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authentic
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.rpc.ScaResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.rpc.ScaStatusResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentDetailsResponse;
+import se.tink.backend.aggregation.agents.utils.charsetguesser.CharsetGuesser;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.CommonFields;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.GermanFields;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.authenticator.AutoAuthenticator;
@@ -78,14 +78,31 @@ public class FiduciaAuthenticator implements MultiFactorAuthenticator, AutoAuthe
     }
 
     @Override
-    public void authenticate(Credentials credentials) throws SupplementalInfoException {
+    public void authenticate(Credentials credentials) {
         String username = credentials.getField(CredentialKeys.PSU_ID);
         validateUsername(username);
         String password = credentials.getField(CredentialKeys.PASSWORD);
         sessionStorage.put(StorageKeys.PSU_ID, username);
 
-        String consentId = apiClient.createConsent();
-        ScaResponse scaResponse = apiClient.authorizeConsent(consentId, password);
+        String consentId;
+        ScaResponse scaResponse;
+
+        // NZG-297: Logging to observe success/failures depending on special characters
+        try {
+            consentId = apiClient.createConsent();
+            scaResponse = apiClient.authorizeConsent(consentId, password);
+        } catch (RuntimeException e) {
+            log.info(
+                    "FAILED_LOGIN username charset: [{}]  password charset: [{}]",
+                    CharsetGuesser.getCharset(username),
+                    CharsetGuesser.getCharset(password));
+            throw e;
+        }
+        log.info(
+                "SUCCESS_LOGIN username charset: [{}]  password charset: [{}]",
+                CharsetGuesser.getCharset(username),
+                CharsetGuesser.getCharset(password));
+
         ScaStatusResponse scaStatusResponse = authorizeWithSca(scaResponse);
 
         if (!FINALISED.equalsIgnoreCase(scaStatusResponse.getScaStatus())) {

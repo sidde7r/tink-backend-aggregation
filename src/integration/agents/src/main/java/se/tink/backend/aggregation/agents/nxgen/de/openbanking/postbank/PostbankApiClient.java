@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank;
 
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.PostbankErrorHandler.ErrorSource;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenticator.entities.PsuData;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenticator.rpc.AuthorisationResponse;
@@ -16,11 +17,13 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deu
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.entities.GlobalConsentAccessEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.rpc.ConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.configuration.DeutscheMarketConfiguration;
+import se.tink.backend.aggregation.agents.utils.charsetguesser.CharsetGuesser;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
+@Slf4j
 public class PostbankApiClient extends DeutscheBankApiClient {
     public PostbankApiClient(
             TinkHttpClient client,
@@ -53,12 +56,23 @@ public class PostbankApiClient extends DeutscheBankApiClient {
                 new StartAuthorisationRequest(new PsuData(encryptedPassword.createJWT(password)));
 
         try {
-            return createRequest(url)
-                    .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
-                    .header(HeaderKeys.PSU_ID_TYPE, marketConfiguration.getPsuIdType())
-                    .header(HeaderKeys.PSU_ID, psuId)
-                    .put(AuthorisationResponse.class, startAuthorisationRequest.toData());
+            AuthorisationResponse authorisationResponse =
+                    createRequest(url)
+                            .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
+                            .header(HeaderKeys.PSU_ID_TYPE, marketConfiguration.getPsuIdType())
+                            .header(HeaderKeys.PSU_ID, psuId)
+                            .put(AuthorisationResponse.class, startAuthorisationRequest.toData());
+            // NZG-297: Logging to observe success/failures depending on special characters
+            log.info(
+                    "SUCCESS_LOGIN username charset: [{}]  password charset: [{}]",
+                    CharsetGuesser.getCharset(psuId),
+                    CharsetGuesser.getCharset(password));
+            return authorisationResponse;
         } catch (HttpResponseException hre) {
+            log.info(
+                    "FAILED_LOGIN username charset: [{}]  password charset: [{}]",
+                    CharsetGuesser.getCharset(psuId),
+                    CharsetGuesser.getCharset(password));
             PostbankErrorHandler.handleError(
                     hre, PostbankErrorHandler.ErrorSource.AUTHORISATION_PASSWORD);
             throw hre;
