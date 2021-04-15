@@ -33,6 +33,7 @@ public class RecurringPaymentRequest extends TransferRequest {
     private UUID userId;
     private AccountIdentifierType creditorType;
     private String creditorId;
+    private String creditorName;
     private AccountIdentifierType debtorType;
     private String debtorId;
     private BigDecimal amount;
@@ -67,7 +68,7 @@ public class RecurringPaymentRequest extends TransferRequest {
         recurringPayment.setId(id);
         recurringPayment.setUserId(userId);
         recurringPayment.setCredentialsId(credentialsId);
-        recurringPayment.setDestination(creditorType, creditorId);
+        recurringPayment.setDestination(creditorType, creditorId, creditorName);
         recurringPayment.setSource(debtorType, debtorId);
         recurringPayment.setAmount(amount, currency);
         recurringPayment.setRemittanceInformation(remittanceInformation);
