@@ -1,0 +1,93 @@
+{
+    "accounts" : [ {
+        "accountNumber" : "525412******1234",
+        "accountExclusion" : "NONE",
+        "exactAvailableCredit" : {
+            "currencyCode" : "SEK",
+            "doubleValue" : -20000.73,
+            "exactValue" : -20000.73,
+            "scale" : 2,
+            "unscaledValue" : -2000073
+        },
+        "exactBalance" : {
+            "currencyCode" : "SEK",
+            "doubleValue" : -29999.27,
+            "exactValue" : -29999.27,
+            "scale" : 2,
+            "unscaledValue" : -2999927
+        },
+        "currencyCode" : "SEK",
+        "bankId" : "5254121234",
+        "excluded" : false,
+        "favored" : false,
+        "name" : "SAS EuroBonus World Mastercard",
+        "ownership" : 1.0,
+        "type" : "CREDIT_CARD",
+        "userModifiedExcluded" : false,
+        "userModifiedName" : false,
+        "userModifiedType" : false,
+        "identifiers" : "[]",
+        "closed" : false,
+        "holderName" : "123456789",
+        "accountHolder" : {
+            "accountId" : null,
+            "type" : "PERSONAL",
+            "identities" : [ {
+                "name" : "123456789",
+                "role" : "HOLDER"
+            } ]
+        },
+        "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
+        "balances" : [ ],
+        "availableCredit" : -20000.73,
+        "balance" : -29999.27
+    } ],
+    "transactions" : [ {
+        "amount" : -100.01,
+        "date" : 1617703200000,
+        "description" : "Pending transaction 1",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "CREDIT_CARD_NUMBER" : "525412******1234"
+        },
+        "pending" : true,
+        "timestamp" : 0,
+        "type" : "CREDIT_CARD",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -500.0,
+        "date" : 1617012000000,
+        "description" : "Booked transaction A",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "CREDIT_CARD_HOLDER" : "LASTNAME FIRSTNAME",
+            "CREDIT_CARD_NUMBER" : "525412******1234"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "CREDIT_CARD",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -1000.0,
+        "date" : 1614510000000,
+        "description" : "Booked transaction B",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "CREDIT_CARD_HOLDER" : "LASTNAME FIRSTNAME",
+            "CREDIT_CARD_NUMBER" : "525412******1234"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "CREDIT_CARD",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    } ]
+}
