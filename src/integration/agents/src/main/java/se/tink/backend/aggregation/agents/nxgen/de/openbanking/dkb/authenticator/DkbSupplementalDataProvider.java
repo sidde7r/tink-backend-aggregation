@@ -55,7 +55,8 @@ public class DkbSupplementalDataProvider {
                         scaMethod != null ? scaMethod.getAuthenticationType() : null,
                         scaMethod != null ? scaMethod.getName() : null,
                         challengeData != null ? challengeData.getOtpMaxLength() : null,
-                        challengeData != null ? challengeData.getOtpFormat() : null));
+                        challengeData != null ? challengeData.getOtpFormat() : null,
+                        null));
 
         return fields;
     }

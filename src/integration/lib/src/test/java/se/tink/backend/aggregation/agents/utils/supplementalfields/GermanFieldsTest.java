@@ -69,7 +69,7 @@ public class GermanFieldsTest {
     @Test
     public void shouldReturnProperTanFieldWithoutDetails() {
         // when
-        Field result = GermanFields.Tan.build(catalog, null, null, null, null);
+        Field result = GermanFields.Tan.build(catalog, null, null, null, null, null);
 
         // then
         assertThat(result.getName()).isEqualTo("tanField");
@@ -95,7 +95,8 @@ public class GermanFieldsTest {
 
         // when
         Field result =
-                GermanFields.Tan.build(catalog, authenticationType, SCA_METHOD_NAME, null, null);
+                GermanFields.Tan.build(
+                        catalog, authenticationType, SCA_METHOD_NAME, null, null, null);
 
         // then
         verifyCommonOtpProperties(result);
@@ -122,7 +123,7 @@ public class GermanFieldsTest {
         // when
         Field result =
                 GermanFields.Tan.build(
-                        catalog, authenticationType, SCA_METHOD_NAME, otpLength, otpType);
+                        catalog, authenticationType, SCA_METHOD_NAME, otpLength, otpType, null);
 
         // then
         verifyCommonOtpProperties(result);
@@ -151,7 +152,7 @@ public class GermanFieldsTest {
         // when
         Field result =
                 GermanFields.Tan.build(
-                        catalog, authenticationType, SCA_METHOD_NAME, otpLength, otpType);
+                        catalog, authenticationType, SCA_METHOD_NAME, otpLength, otpType, 1);
 
         // then
         verifyCommonOtpProperties(result);

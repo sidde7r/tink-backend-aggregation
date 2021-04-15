@@ -179,8 +179,9 @@ public class FiduciaAuthenticator implements MultiFactorAuthenticator, AutoAuthe
                         catalog,
                         authenticationType,
                         chosenScaMethod != null ? chosenScaMethod.getName() : null,
-                        challengeData != null ? challengeData.getOtpMaxLength() : null,
-                        challengeData != null ? challengeData.getOtpFormat() : null));
+                        6,
+                        challengeData != null ? challengeData.getOtpFormat() : null,
+                        6));
 
         log.info("[Fiducia 2FA] User for authenticationType {} started 2FA", authenticationType);
 

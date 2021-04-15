@@ -68,7 +68,7 @@ public class SparkassenAgent extends NextGenerationAgent
     public void setConfiguration(AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
         client.setEidasProxy(configuration.getEidasProxy());
-        client.addFilter(new AccessExceededFilter(provider.getName()));
+        client.addFilter(new AccessExceededFilter());
         client.addFilter(new RequestNotProcessedFilter());
     }
 

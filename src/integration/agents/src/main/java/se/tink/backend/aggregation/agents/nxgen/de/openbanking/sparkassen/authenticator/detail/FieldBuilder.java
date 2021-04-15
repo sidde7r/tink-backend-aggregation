@@ -35,8 +35,9 @@ public class FieldBuilder {
                         catalog,
                         scaMethod.getAuthenticationType(),
                         scaMethod.getName(),
-                        challengeData != null ? challengeData.getOtpMaxLength() : null,
-                        challengeData != null ? challengeData.getOtpFormat() : null));
+                        6,
+                        challengeData != null ? challengeData.getOtpFormat() : null,
+                        6));
         return fields;
     }
 
