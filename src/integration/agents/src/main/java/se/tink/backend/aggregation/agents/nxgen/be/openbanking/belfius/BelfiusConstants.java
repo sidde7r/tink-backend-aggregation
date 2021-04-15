@@ -102,6 +102,7 @@ public final class BelfiusConstants {
     }
 
     public static class ErrorCodes {
+        public static final String ACCOUNT_NOT_SUPPORTED = "20003";
         public static final String NOT_SUPPORTED = "20004";
     }
 }

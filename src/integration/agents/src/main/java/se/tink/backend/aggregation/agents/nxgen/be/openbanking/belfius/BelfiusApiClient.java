@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import javax.ws.rs.core.MediaType;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.refresh.AccountRefreshException;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusConstants.ErrorCodes;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusConstants.HeaderKeys;
@@ -68,17 +69,27 @@ public final class BelfiusApiClient {
     }
 
     public List<ConsentResponse> getConsent(URL url, String iban, String code) {
-
-        ConsentResponse[] consentResponses =
-                createRequestInSession(url)
-                        .queryParam(QueryKeys.IBAN, iban)
-                        .queryParam(QueryKeys.SCOPE, "AIS")
-                        .header(HeaderKeys.ACCEPT, HeaderValues.CONSENT_ACCEPT)
-                        .header(HeaderKeys.CODE_CHALLENGE, CryptoUtils.getCodeChallenge(code))
-                        .header(HeaderKeys.CODE_CHALLENGE_METHOD, HeaderValues.CODE_CHALLENGE_TYPE)
-                        .get(ConsentResponse[].class);
-
-        return Arrays.asList(consentResponses);
+        try {
+            ConsentResponse[] consentResponses =
+                    createRequestInSession(url)
+                            .queryParam(QueryKeys.IBAN, iban)
+                            .queryParam(QueryKeys.SCOPE, "AIS")
+                            .header(HeaderKeys.ACCEPT, HeaderValues.CONSENT_ACCEPT)
+                            .header(HeaderKeys.CODE_CHALLENGE, CryptoUtils.getCodeChallenge(code))
+                            .header(
+                                    HeaderKeys.CODE_CHALLENGE_METHOD,
+                                    HeaderValues.CODE_CHALLENGE_TYPE)
+                            .get(ConsentResponse[].class);
+            return Arrays.asList(consentResponses);
+        } catch (HttpResponseException e) {
+            HttpResponse response = e.getResponse();
+            ErrorResponse body = response.getBody(ErrorResponse.class);
+            if (response.getStatus() == HttpStatusCodes.STATUS_CODE_FORBIDDEN
+                    && ErrorCodes.ACCOUNT_NOT_SUPPORTED.equals(body.getErrorCode())) {
+                throw LoginError.NO_ACCESS_TO_MOBILE_BANKING.exception();
+            }
+            throw e;
+        }
     }
 
     public TokenResponse postToken(URL url, String tokenEntity) {
