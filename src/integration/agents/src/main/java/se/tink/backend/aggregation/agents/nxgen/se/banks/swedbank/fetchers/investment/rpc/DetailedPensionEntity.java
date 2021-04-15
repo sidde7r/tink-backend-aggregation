@@ -77,7 +77,11 @@ public class DetailedPensionEntity {
     }
 
     private AccountSourceInfo createAccountSourceInfo() {
-        return AccountSourceInfo.builder().bankProductCode(productId).bankAccountType(type).build();
+        return AccountSourceInfo.builder()
+                .bankProductName(name)
+                .bankProductCode(productId)
+                .bankAccountType(type)
+                .build();
     }
 
     private String migrateAndGetUniqueIdentifier(

@@ -26,7 +26,10 @@ public abstract class BaseAbstractLoanEntity {
     }
 
     protected AccountSourceInfo buildSourceInfo() {
-        return AccountSourceInfo.builder().bankAccountType(loanOverview.getType()).build();
+        return AccountSourceInfo.builder()
+                .bankAccountType(loanOverview.getType())
+                .bankProductName(loanOverview.getName())
+                .build();
     }
 
     public String getName() {
