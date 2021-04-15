@@ -1,0 +1,17 @@
+agentsServiceConfiguration:
+  eidasProxy:
+    host: https://eidas-proxy.staging.aggregation.tink.network
+    localEidasDev: true
+  testConfiguration:
+    debugOutput: true
+  integrations:
+    2bbb8caba53746d68eb161f44e01967c:
+      tink:
+        baseUrl: somehost
+        certificateId: dummyCertId
+        clientSSLP12: ZHVtbXlQMTIK
+        clientId: dummyClientId
+        clientSSLKeyPassword: pass
+        qsealcPem: qsealcPem
+        clientSecret: clientSecret
+        redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
