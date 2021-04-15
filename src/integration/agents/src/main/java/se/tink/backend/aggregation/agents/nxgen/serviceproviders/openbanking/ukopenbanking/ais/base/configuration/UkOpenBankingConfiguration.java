@@ -17,23 +17,6 @@ import se.tink.backend.aggregation.configuration.agents.ClientIdConfiguration;
 @JsonObject
 public class UkOpenBankingConfiguration implements UkOpenBankingClientConfigurationAdapter {
 
-    @JsonSchemaTitle("Signing key - OB Seal/OB Signing")
-    @JsonSchemaDescription("Private key used to sign requests, base64 encoded ")
-    @JsonSchemaExamples("MIIEwA [...] QZw=")
-    @JsonSchemaInject(ints = {@JsonSchemaInt(path = "minLength", value = 1000)})
-    @JsonProperty(required = true)
-    @Secret
-    private String signingKey;
-
-    /** @deprecated Delete this after migration to use eIDAS */
-    @Deprecated
-    @JsonSchemaTitle("Signing key id as in UKOB Directory")
-    @JsonSchemaDescription("Signing key id as in UKOB Directory")
-    @JsonSchemaExamples("ZTBCaTMm-taVUpZKsgF-ClEVoMM")
-    @JsonProperty(required = true)
-    @Secret
-    private String signingKeyId;
-
     @JsonSchemaTitle("SSA JWT obtained from UKOB Directory")
     @JsonSchemaDescription(
             "SSA can be obtained by going to Directory, choosing appropriate software client and clicking the 'Generate' button.")
@@ -43,16 +26,6 @@ public class UkOpenBankingConfiguration implements UkOpenBankingClientConfigurat
     @JsonProperty(required = true)
     @Secret
     private String softwareStatementAssertion;
-
-    @JsonSchemaTitle(
-            "Transport key (OB WAC/OB Transport) and certificate in PKCS12 format, base 64 encoded")
-    @JsonSchemaDescription(
-            "Conversion of key and certificate to the desired format can be done with the following command: '$ openssl pkcs12 -export -inkey obwac.key -in obwac.crt | base64'")
-    @JsonSchemaExamples("MIIMa [...] UbZfAgIIAA==")
-    @JsonSchemaInject(ints = {@JsonSchemaInt(path = "minLength", value = 1000)})
-    @JsonProperty(required = true)
-    @Secret
-    private String transportKey;
 
     @JsonSchemaTitle("Token Endpoint Auth Signing algorithm")
     @JsonSchemaDescription(
@@ -87,37 +60,12 @@ public class UkOpenBankingConfiguration implements UkOpenBankingClientConfigurat
     @SensitiveSecret
     private String clientSecret;
 
-    @JsonSchemaTitle("Password to the transport keystore")
-    @JsonSchemaDescription("Password to the PKCS12 transport key keystore. Empty string if N/A.")
-    @JsonSchemaExamples("ThisIsVeryStrongPassword42!")
-    @JsonProperty(required = true)
-    @SensitiveSecret
-    private String transportKeyPassword;
-
     public String getClientId() {
         return clientId;
     }
 
-    public String getSigningKey() {
-        return signingKey;
-    }
-
-    /** @deprecated */
-    @Deprecated
-    public String getSigningKeyId() {
-        return signingKeyId;
-    }
-
-    public String getTransportKey() {
-        return transportKey;
-    }
-
     public String getClientSecret() {
         return clientSecret;
-    }
-
-    public String getTransportKeyPassword() {
-        return transportKeyPassword;
     }
 
     @Override

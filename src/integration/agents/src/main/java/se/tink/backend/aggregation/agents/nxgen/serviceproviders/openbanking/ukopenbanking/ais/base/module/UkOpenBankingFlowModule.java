@@ -9,17 +9,13 @@ import se.tink.backend.aggregation.agents.agent.Agent;
 import se.tink.backend.aggregation.agents.contexts.CompositeAgentContext;
 import se.tink.backend.aggregation.agents.module.agentclass.AgentClass;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingFlowFacade;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.module.toggle.UkOpenBankingToggleModule;
 import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
 
-public final class UkOpenBankingDynamicFlowModule extends AbstractModule {
+public final class UkOpenBankingFlowModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        install(new UkOpenBankingToggleModule());
-        bind(UkOpenBankingFlowFacade.class)
-                .toProvider(UkOpenBankingFlowFactory.class)
-                .in(Scopes.SINGLETON);
+        bind(UkOpenBankingFlowFacade.class).toProvider(EidasProxyFlow.class).in(Scopes.SINGLETON);
     }
 
     @Inject

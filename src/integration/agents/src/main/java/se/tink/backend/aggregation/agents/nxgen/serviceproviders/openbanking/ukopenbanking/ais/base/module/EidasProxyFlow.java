@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.module;
 
+import com.google.inject.Inject;
+import com.google.inject.Provider;
 import se.tink.backend.aggregation.agents.contexts.CompositeAgentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingFlowFacade;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.configuration.UkOpenBankingClientConfigurationAdapter;
@@ -13,7 +15,8 @@ import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConf
 import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 
-public class EidasProxyFlow implements UkOpenBankingFlowStrategy {
+public class EidasProxyFlow
+        implements UkOpenBankingFlowStrategy, Provider<UkOpenBankingFlowFacade> {
 
     private static final Class<UkOpenBankingConfiguration> CONFIGURATION_CLASS =
             UkOpenBankingConfiguration.class;
@@ -22,6 +25,7 @@ public class EidasProxyFlow implements UkOpenBankingFlowStrategy {
     private final AgentsServiceConfiguration agentsServiceConfiguration;
     private final EidasIdentity eidasIdentity;
 
+    @Inject
     public EidasProxyFlow(
             CompositeAgentContext context,
             AgentComponentProvider agentComponentProvider,
