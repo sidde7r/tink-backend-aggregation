@@ -49,17 +49,7 @@ public class JerseyClientFactory extends AbstractJerseyClientFactory {
     public Client createBasicClient(OutputStream httpLogOutputStream) {
 
         Client client = createBasicClient();
-        try {
-            if (httpLogOutputStream != null) {
-                client.addFilter(
-                        new LoggingFilter(
-                                new PrintStream(httpLogOutputStream, true, "UTF-8"),
-                                logMasker,
-                                loggingMode));
-            }
-        } catch (Exception e) {
-            log.error("Could not add logging filter", e);
-        }
+        addLoggingFilter(httpLogOutputStream, client);
 
         return client;
     }
@@ -72,17 +62,7 @@ public class JerseyClientFactory extends AbstractJerseyClientFactory {
             OutputStream httpLogOutputStream, ApacheHttpClient4Config clientConfig) {
 
         TinkApacheHttpClient4 client = createCustomClient(clientConfig);
-        try {
-            if (httpLogOutputStream != null) {
-                client.addFilter(
-                        new LoggingFilter(
-                                new PrintStream(httpLogOutputStream, true, "UTF-8"),
-                                logMasker,
-                                loggingMode));
-            }
-        } catch (Exception e) {
-            log.error("Could not add logging filter", e);
-        }
+        addLoggingFilter(httpLogOutputStream, client);
 
         return client;
     }
@@ -97,17 +77,7 @@ public class JerseyClientFactory extends AbstractJerseyClientFactory {
             OutputStream httpLogOutputStream, ApacheHttpClient4Config clientConfig) {
 
         ApacheHttpClient4 client = createCookieClient(clientConfig);
-        try {
-            if (httpLogOutputStream != null) {
-                client.addFilter(
-                        new LoggingFilter(
-                                new PrintStream(httpLogOutputStream, true, "UTF-8"),
-                                logMasker,
-                                loggingMode));
-            }
-        } catch (Exception e) {
-            log.error("Could not add logging filter", e);
-        }
+        addLoggingFilter(httpLogOutputStream, client);
 
         return client;
     }
@@ -172,5 +142,19 @@ public class JerseyClientFactory extends AbstractJerseyClientFactory {
                 }
             }
         };
+    }
+
+    public void addLoggingFilter(OutputStream httpLogOutputStream, Client client) {
+        try {
+            if (httpLogOutputStream != null) {
+                client.addFilter(
+                        new LoggingFilter(
+                                new PrintStream(httpLogOutputStream, true, "UTF-8"),
+                                logMasker,
+                                loggingMode));
+            }
+        } catch (Exception e) {
+            log.error("Could not add logging filter", e);
+        }
     }
 }
