@@ -55,8 +55,17 @@
         "timestamp" : 0,
         "type" : "CREDIT_CARD",
         "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "mockedcardTransactionId1"
+        },
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : "2021-04-06",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "UNKNOWN"
     }, {
         "amount" : -500.0,
         "date" : 1617012000000,
@@ -71,8 +80,23 @@
         "timestamp" : 0,
         "type" : "CREDIT_CARD",
         "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "mockedcardTransactionId3"
+        },
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : "2021-03-29",
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-03-30",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "PURCHASE"
     }, {
         "amount" : -1000.0,
         "date" : 1614510000000,
@@ -87,7 +111,22 @@
         "timestamp" : 0,
         "type" : "CREDIT_CARD",
         "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "mockedcardTransactionId5"
+        },
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : "2021-02-28",
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-03-01",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "PURCHASE"
     } ]
 }
