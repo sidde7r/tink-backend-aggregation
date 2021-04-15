@@ -7041,6 +7041,11 @@ agentsServiceConfiguration:
       tink:
         redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
         qsealcKeyId: https://cdn.tink.se/eidas/tink-qsealc.pem
+    0b3360f0af044ba5a3eccffda6abb156:
+      tink:
+        clientId: dummyClientId
+        clientSecret: dummyClientSecret
+        redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
     milleniumbcp:
       tink:
         aspspCode: BCPPT

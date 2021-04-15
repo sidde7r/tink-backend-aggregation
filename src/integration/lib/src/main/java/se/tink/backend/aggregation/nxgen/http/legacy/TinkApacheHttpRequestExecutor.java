@@ -122,6 +122,10 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
         this.shouldUseEidasProxy = true;
     }
 
+    public void setShouldUseEidasProxy(boolean value) {
+        this.shouldUseEidasProxy = value;
+    }
+
     public void setRequestLoggingAdapter(DefaultRequestLoggingAdapter requestLoggingAdapter) {
         this.requestLoggingAdapter = requestLoggingAdapter;
     }

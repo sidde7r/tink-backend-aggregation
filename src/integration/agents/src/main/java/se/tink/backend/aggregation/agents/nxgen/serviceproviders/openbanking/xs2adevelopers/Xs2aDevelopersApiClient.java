@@ -92,7 +92,6 @@ public class Xs2aDevelopersApiClient {
     }
 
     private RequestBuilder createFetchingRequest(URL url) {
-
         RequestBuilder requestBuilder =
                 createRequestInSession(url)
                         .header(HeaderKeys.CONSENT_ID, getConsentIdFromStorage())

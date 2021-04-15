@@ -1,0 +1,7 @@
+{
+    "result": {
+        "status": 401,
+        "status_message": "Unathorized",
+        "url": "https://www.test.com/ecm/login?abi=03062&lang=IT&cancel_link=https://tpp.psd2.test.com/&d=asdf"
+    }
+}

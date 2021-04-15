@@ -202,6 +202,15 @@ public class IntegrationWireMockTestTinkHttpClient implements TinkHttpClient {
         // NOOP
     }
 
+    public void resetInternalClient() {
+        // NOOP
+    }
+
+    @Override
+    public void clearEidasProxy() {
+        // NOOP
+    }
+
     @Override
     @Deprecated
     public void setEidasSign(EidasProxyConfiguration conf) {

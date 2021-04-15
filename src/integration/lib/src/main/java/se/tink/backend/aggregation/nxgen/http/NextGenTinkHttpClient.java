@@ -741,6 +741,17 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
         }
     }
 
+    public void resetInternalClient() {
+        internalClient = null;
+    }
+
+    public void clearEidasProxy() {
+        requestExecutor.setShouldUseEidasProxy(false);
+        internalHttpClientBuilder.setProxy(null).setHostnameVerifier(null);
+        internalSslContextBuilder =
+                new SSLContextBuilder().useProtocol("TLSv1.2").setSecureRandom(new SecureRandom());
+    }
+
     /**
      * @deprecated This should not be used. Use `setEidasProxy` if making proxied requests. Use
      *     `QsealcSigner` if requesting signatures

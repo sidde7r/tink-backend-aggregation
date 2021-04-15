@@ -1,0 +1,25 @@
+{
+    "account": {
+        "iban": "IT98V1234567891234567891542"
+    },
+    "transactions": {
+        "booked": [
+            {
+                "bookingDate": "2020-10-12",
+                "remittanceInformationUnstructured": "Super transaction information 001",
+                "transactionAmount": {
+                    "amount": "1234.00",
+                    "currency": "EUR"
+                }
+            },
+            {
+                "bookingDate": "2020-10-11",
+                "remittanceInformationUnstructured": "Super transaction information 002",
+                "transactionAmount": {
+                    "amount": "321.00",
+                    "currency": "EUR"
+                }
+            }
+        ]
+    }
+}

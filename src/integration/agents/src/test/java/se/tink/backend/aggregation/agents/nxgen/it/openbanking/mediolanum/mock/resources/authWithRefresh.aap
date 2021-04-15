@@ -1,0 +1,186 @@
+REQUEST 1
+POST https://api.mediolanum.it/psd2bg/03062/v1/consents
+Accept: application/json
+Content-Type: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-IP-Address: 127.0.0.1
+TPP-Redirect-Uri: dummy
+X-Aggregator: Tink Testing
+
+{"access":{"availableAccounts":"allAccounts"},"recurringIndicator":true,"validUntil":"1992-07-08","frequencyPerDay":4,"combinedServiceIndicator":false}
+
+RESPONSE 1
+401
+Date: Mon, 12 Apr 2021 09:44:04 GMT
+Date: Mon, 12 Apr 2021 09:44:04 GMT
+Server:
+Max-Forwards: *** MASKED ***
+X-CorrelationID: *** MASKED ***
+Via:
+Content-Type: application/json
+Content-Length: 971
+
+{
+	"result":
+	{
+		"status": 401,
+		"status_message": "Unathorized",
+		"url":"https://www.apimediolanum.it/ecm/login?abi=03062&lang=IT&cancel_link=https://tpp.psd2.cedacrigroup.it/&d=eyJhbGciOiJSUzI1NiJ9.ewogICJpc3MiIDogIkNlZGFjcmkiLAogICJ1dWlkIiA6ICJJZC02NDE2NzQ2MDU5NGJhODcyNDA2OTZhY2YiLAogICJleHAiIDogMTYxODIyMDk0NCwKICAiYWJpIiA6ICIwMzA2MiIsCiAgImFwaSIgOiAiaHR0cDovL3BzZDItdHBwYXV0aC1hcHAtYXktdHBwYXV0aDAucHJkLm9jcC5jZWRhY3JpZ3JvdXAuaXQvcHNkMi92MS90cHBhdXRoIiwKICAidHBwX25hbWUiIDogIlBTRDIgUXVhbGlmaWVkIFdlYnNpdGUgQXV0aGVudGljYXRpb24iLAogICJ0cHBfaWQiIDogIlBTRFNFLUZJTkEtNDQwNTkiLAogICJ0cHBfdHlwZSIgOiAiQUlTUCIKfQ.kSNJ8yyMQCiWfeJT5eLQKcFonohvFB_ZlzHAjopEPG_-XSnHdvkSKOlJyefr6ADVEHUq2RiMqMWmZ57bd5B4RTebiIJ5Mi7i6UfFCH9rcyr_4ERukj4h85kEOU5S-Io0T3rT1TuLUJXipGWswxwNDwAjC_ozpG1bhePn49SM9ztf3MWs5SDAAgQS6jI_mB-bjlO1IJFfH1g3664aSJb6tSIWfd-9InFjOPzbIm_aRXyXfEvU9cXCmxkIYxqqmfOXFRediZ-STeKWDMMJc-2SNU0jt-t5hEbSBG-J8YAybrrA79vL5HJ17b69n8zWpTLvnKegdakOyX0RRzCM7q63Mg"
+	}
+}
+
+REQUEST 2
+POST https://api.mediolanum.it:9090/oauth/token
+Content-Type: application/x-www-form-urlencoded
+X-Aggregator: Tink Testing
+
+code=woot&client_id=test_client_id&client_secret=test_client_secret&redirect_uri=test_redirect_url&grant_type=authorization_code
+
+RESPONSE 2
+200
+Date: Mon, 12 Apr 2021 09:45:30 GMT
+Server:
+X-CorrelationID: *** MASKED ***
+Host: api.mediolanum.it:9090
+User-Agent: Tink (+https://www.tink.se/; noc@tink.se)
+X-Aggregator: Tink Testing
+X-Forwarded-For: 83.5.118.248, 10.199.12.7
+X-Forwarded-Host: api.mediolanum.it:9090
+X-Forwarded-Server: *** MASKED ***
+Cache-Control: no-store
+Content-Type: application/json
+Pragma: no-cache
+Keep-Alive: *** MASKED ***
+Connection: Keep-Alive
+Transfer-Encoding: chunked
+
+{
+  "access_token" : "SuperAwesomeAccessToken",
+  "token_type" : "Bearer",
+  "expires_in" : 7776000,
+  "scope" : "aisp.base",
+  "uid" : "00008853759",
+  "user_type" : "RETAIL",
+  "user_code" : "00008853759",
+  "abi" : "03062",
+  "state" : "e880f5fd-0b60-4787-857e-6fa6cad5feed",
+  "creation_date" : "2021-04-12 11:44:53",
+  "client_secret" : "test_client_secret"
+}
+
+REQUEST 3
+POST https://api.mediolanum.it/psd2bg/03062/v1/consents
+Accept: application/json
+Content-Type: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-IP-Address: 127.0.0.1
+TPP-Redirect-Uri: test_redirect_url?state=00000000-0000-4000-0000-000000000000
+TPP-Nok-Redirect-Uri: test_redirect_url?state=00000000-0000-4000-0000-000000000000&nok=true
+Authorization: Bearer SuperAwesomeAccessToken
+X-Aggregator: Tink Testing
+
+{"access":{"availableAccounts":"allAccounts"},"recurringIndicator":true,"validUntil":"1992-07-08","frequencyPerDay":4,"combinedServiceIndicator":false}
+
+RESPONSE 3
+201
+Date: Mon, 12 Apr 2021 09:45:30 GMT
+Date: Mon, 12 Apr 2021 09:45:31 GMT
+Server:
+Max-Forwards: *** MASKED ***
+X-CorrelationID: *** MASKED ***
+ASPSP-SCA-Approach: *** MASKED ***
+Location: *** MASKED ***
+Via:
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+Content-Type: application/json
+Content-Length: 1163
+
+{
+  "consentStatus" : "received",
+  "consentId" : "test_consent_id",
+  "_links" : {
+    "scaRedirect" : {
+      "href" : "https://www.apimediolanum.it/ecm/consent?consent-id=test_consent_id&d=eyJhbGciOiJSUzI1NiJ9.ewogICJpc3MiIDogIkNlZGFjcmkiLAogICJ1dWlkIiA6ICJJZC1iYjE2NzQ2MDhiNGI0MjBkNGFiMTA5M2MiLAogICJleHAiIDogMTYxODIyMTAzMSwKICAiYWJpIiA6ICIwMzA2MiIsCiAgImFjY2Vzc190b2tlbiIgOiAiMVNpR21LUk5VSEZCTVRmaXh4TG5HbExueE9rNFRPNVpaRWtzTTE5TzlUdFo1dFY0aDRWSVpnIiwKICAiY29uc2VudF9pZCIgOiAiOGVmZDViMmItNGUwMS00MjI2LWEyYjMtM2IwN2U3YTY4MTExIiwKICAidGltZXN0YW1wIiA6ICIxNjE4MjIwNzMxIiwKICAidHBwX25hbWUiIDogIlBTRDIgUXVhbGlmaWVkIFdlYnNpdGUgQXV0aGVudGljYXRpb24iLAogICJ0cHBfaWQiIDogIlBTRFNFLUZJTkEtNDQwNTkiLAogICJ0cHBfdHlwZSIgOiAiQUlTUCIsCiAgIlBzdUlwQWRkcmVzcyIgOiAiMTI3LjAuMC4xIgp9.FyZphR_ru_AWHm4_0J9XBX3GTr0n5KvrBZejPZYTijCo37NjWYMK4RYCu9EgVNvpQp5un4kanNvsjydWXNi6IZAJCqJgRQcL1xn2QinKgeswOIsFB3zGi8lGR8HK4HCQ7rqxfz5nWzu9slipxvxjTYy-0ODzbwoZ0dzVaYGaN9zuewH-kJmfsfyZ7tCe52a1cIJsPJn5t7AeKjsEzLnH_m9kZ1xb07OjRwj1ewMOs_3O48qiqcTlT5anM1OJqmpI85ztGc8Cr3JwtZO89zQsDZXxGhBdxDVi4nzZrekJcMJVuNd7RnjYM6YdKJXiNlSNox1ABBW7fHn-5RvDdh26nw"
+    }
+  }
+}
+
+REQUEST 4
+GET https://api.mediolanum.it/psd2bg/03062/v1/consents/test_consent_id
+Accept: application/json
+Content-Type: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-IP-Address: 127.0.0.1
+Authorization: Bearer SuperAwesomeAccessToken
+X-Aggregator: Tink Testing
+
+RESPONSE 4
+200
+Date: Mon, 12 Apr 2021 09:48:41 GMT
+Date: Mon, 12 Apr 2021 09:48:42 GMT
+Server:
+Max-Forwards: *** MASKED ***
+X-CorrelationID: *** MASKED ***
+Via:
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+Content-Type: application/json
+Content-Length: 231
+
+{
+  "access" : {
+    "availableAccounts" : "allAccounts"
+  },
+  "recurringIndicator" : true,
+  "validUntil" : "2021-07-10 02:00:00",
+  "frequencyPerDay" : 4,
+  "lastActionDate" : "2021-04-12 11:48:16",
+  "consentStatus" : "valid"
+}
+
+REQUEST 5
+GET https://api.mediolanum.it/psd2bg/03062/v1/accounts?withBalance=true
+Accept: application/json
+Content-Type: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-IP-Address: 127.0.0.1
+Consent-ID: test_consent_id
+Authorization: Bearer SuperAwesomeAccessToken
+X-Aggregator: Tink Testing
+
+RESPONSE 5
+200
+Date: Mon, 12 Apr 2021 09:51:52 GMT
+Date: Mon, 12 Apr 2021 09:51:52 GMT
+Server:
+Max-Forwards: *** MASKED ***
+X-CorrelationID: *** MASKED ***
+Via:
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+Content-Type: application/json
+Content-Length: 358
+
+{"accounts":[{"balances":[{"balanceAmount":{"amount":"1234.00","currency":"EUR"},"balanceType":"expected","referenceDate":"2020-10-12"},{"balanceAmount":{"amount":"1234.00","currency":"EUR"},"balanceType":"interimAvailable","referenceDate":"2020-10-12"}],"currency":"EUR","iban":"IT98V12345678912345679","resourceId":"IT98V12345678912345679_EUR"}]}
+
+REQUEST 6
+GET https://api.mediolanum.it/psd2bg/03062/v1/accounts/IT98V12345678912345679_EUR/transactions?bookingStatus=booked&dateFrom=1987-04-10&dateTo=1992-04-10
+Accept: application/json
+Content-Type: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-IP-Address: 127.0.0.1
+Consent-ID: test_consent_id
+Authorization: Bearer SuperAwesomeAccessToken
+X-Aggregator: Tink Testing
+
+RESPONSE 6
+200
+Date: Mon, 12 Apr 2021 09:51:54 GMT
+Date: Mon, 12 Apr 2021 09:51:55 GMT
+Server:
+Max-Forwards: *** MASKED ***
+X-CorrelationID: *** MASKED ***
+Via:
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+Content-Type: application/json
+Content-Length: 325
+
+{"account":{"iban":"IT98V12345678912345679"},"transactions":{"booked":[{"transactionAmount":{"currency":"EUR","amount":"123.00"},"bookingDate":"2020-10-12","remittanceInformationUnstructured":"Awesome transaction description 001"}]}}
