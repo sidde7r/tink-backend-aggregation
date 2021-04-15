@@ -4,6 +4,7 @@ import com.google.common.base.Strings;
 import com.sun.jersey.api.client.WebResource.Builder;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.security.KeyStore;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
@@ -16,6 +17,7 @@ import javax.ws.rs.core.MediaType;
 import org.apache.http.conn.ssl.X509HostnameVerifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.aggregation.agents.utils.jersey.JerseyClientFactory;
 import se.tink.backend.aggregation.configuration.integrations.abnamro.TrustStoreConfiguration;
 import se.tink.backend.aggregation.constants.CommonHeaders;
 import se.tink.libraries.net.BasicJerseyClientFactory;
@@ -28,6 +30,8 @@ public abstract class Client {
 
     protected Client(
             Class<? extends Client> cls,
+            JerseyClientFactory clientFactory,
+            OutputStream logOutputStream,
             TrustStoreConfiguration trustStoreConfiguration,
             String hostname) {
         this.log = LoggerFactory.getLogger(cls);
@@ -45,6 +49,7 @@ public abstract class Client {
 
         this.client =
                 new BasicJerseyClientFactory().createCustomClient(sslContext, hostnameVerifier);
+        clientFactory.addLoggingFilter(logOutputStream, this.client);
     }
 
     protected Builder createClientRequest(String path) {

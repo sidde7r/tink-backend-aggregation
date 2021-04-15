@@ -105,7 +105,11 @@ public final class IcsAgent extends AbstractAgent implements RefreshCreditCardAc
 
         try {
             this.ibSubscriptionClient =
-                    new IBSubscriptionClient(abnAmroConfiguration, metricRegistry);
+                    new IBSubscriptionClient(
+                            clientFactory,
+                            context.getLogOutputStream(),
+                            abnAmroConfiguration,
+                            metricRegistry);
         } catch (Exception e) {
             throw new RuntimeException("Could not instantiate Internet Banking Client", e);
         }

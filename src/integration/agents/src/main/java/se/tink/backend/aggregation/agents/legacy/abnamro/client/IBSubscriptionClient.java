@@ -7,6 +7,7 @@ import com.google.common.collect.Lists;
 import com.sun.jersey.api.client.ClientHandlerException;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
+import java.io.OutputStream;
 import java.util.List;
 import java.util.Objects;
 import javax.ws.rs.core.HttpHeaders;
@@ -22,6 +23,7 @@ import se.tink.backend.aggregation.agents.abnamro.client.model.creditcards.Credi
 import se.tink.backend.aggregation.agents.abnamro.client.rpc.ErrorResponse;
 import se.tink.backend.aggregation.agents.abnamro.client.rpc.PfmContractResponse;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
+import se.tink.backend.aggregation.agents.utils.jersey.JerseyClientFactory;
 import se.tink.backend.aggregation.configuration.integrations.abnamro.AbnAmroConfiguration;
 import se.tink.backend.aggregation.configuration.integrations.abnamro.AbnAmroInternetBankingConfiguration;
 import se.tink.libraries.metrics.core.MetricId;
@@ -33,8 +35,16 @@ public class IBSubscriptionClient extends IBClient {
     private AbnAmroInternetBankingConfiguration configuration;
 
     public IBSubscriptionClient(
-            AbnAmroConfiguration abnAmroConfiguration, MetricRegistry metricRegistry) {
-        super(IBSubscriptionClient.class, abnAmroConfiguration, metricRegistry);
+            JerseyClientFactory clientFactory,
+            OutputStream logOutputStream,
+            AbnAmroConfiguration abnAmroConfiguration,
+            MetricRegistry metricRegistry) {
+        super(
+                IBSubscriptionClient.class,
+                clientFactory,
+                logOutputStream,
+                abnAmroConfiguration,
+                metricRegistry);
 
         this.configuration = abnAmroConfiguration.getInternetBankingConfiguration();
 
