@@ -152,11 +152,11 @@ public class DataStudioLoginEventPublisherService {
                                             .LoginResult>
                                     builder()
                             .put(
-                                    BankIdNOError.INVALID_SSN_OR_CHIP_CODE,
+                                    BankIdNOError.INVALID_SSN_OR_ONE_TIME_CODE,
                                     AgentLoginCompletedEventProto.AgentLoginCompletedEvent
                                             .LoginResult.LOGIN_ERROR_INCORRECT_CREDENTIALS)
                             .put(
-                                    BankIdNOError.MOBILE_BANK_ID_TIMEOUT,
+                                    BankIdNOError.MOBILE_BANK_ID_TIMEOUT_OR_REJECTED,
                                     AgentLoginCompletedEventProto.AgentLoginCompletedEvent
                                             .LoginResult.BANKID_ERROR_TIMEOUT)
                             .put(

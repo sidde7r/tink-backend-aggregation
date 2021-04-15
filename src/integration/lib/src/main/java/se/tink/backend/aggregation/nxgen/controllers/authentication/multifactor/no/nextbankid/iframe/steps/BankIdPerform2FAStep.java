@@ -20,7 +20,7 @@ public class BankIdPerform2FAStep {
     private final BankIdWebDriver webDriver;
     private final BankIdScreensManager screensManager;
 
-    private final BankIdAuthWithChipCodeStep authWithChipCodeStep;
+    private final BankIdAuthWithOneTimeCodeStep authWithOneTimeCodeStep;
     private final BankIdAuthWithMobileBankIdStep authWithMobileBankIdStep;
     private final BankIdAuthWithBankIdAppStep authWithBankIdAppStep;
 
@@ -46,8 +46,8 @@ public class BankIdPerform2FAStep {
 
     private void authenticateWithMethod(BankId2FAMethod bankId2FAMethod) {
         switch (bankId2FAMethod) {
-            case CODE_CHIP_METHOD:
-                authWithChipCodeStep.authenticateWithChipCode();
+            case ONE_TIME_CODE_METHOD:
+                authWithOneTimeCodeStep.authenticateWithOneTimeCode();
                 break;
             case MOBILE_BANK_ID_METHOD:
                 authWithMobileBankIdStep.authenticateWithMobileBankId();

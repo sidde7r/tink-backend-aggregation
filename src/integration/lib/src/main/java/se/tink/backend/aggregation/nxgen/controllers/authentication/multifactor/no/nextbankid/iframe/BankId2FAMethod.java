@@ -1,8 +1,8 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe;
 
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.screens.BankIdScreen.BANK_ID_APP_METHOD_SCREEN;
-import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.screens.BankIdScreen.CODE_CHIP_METHOD_SCREEN;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.screens.BankIdScreen.MOBILE_BANK_ID_METHOD_SCREEN;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.screens.BankIdScreen.ONE_TIME_CODE_METHOD_SCREEN;
 
 import java.util.stream.Stream;
 import lombok.Getter;
@@ -13,7 +13,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 @RequiredArgsConstructor
 public enum BankId2FAMethod {
     MOBILE_BANK_ID_METHOD(MOBILE_BANK_ID_METHOD_SCREEN),
-    CODE_CHIP_METHOD(CODE_CHIP_METHOD_SCREEN),
+    ONE_TIME_CODE_METHOD(ONE_TIME_CODE_METHOD_SCREEN),
     BANK_ID_APP_METHOD(BANK_ID_APP_METHOD_SCREEN);
 
     private final BankIdScreen screenDedicatedForMethod;

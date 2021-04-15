@@ -5,16 +5,17 @@ import static se.tink.backend.aggregation.nxgen.controllers.authentication.multi
 import com.google.inject.Inject;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.annotation.Nullable;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import org.openqa.selenium.WebElement;
 import se.tink.backend.aggregation.agents.exceptions.bankidno.BankIdNOError;
 import se.tink.backend.aggregation.agents.exceptions.bankidno.BankIdNOErrorCode;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.BankIdWebDriver;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.BankIdElementLocator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.BankIdElementsSearchQuery;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.BankIdElementsSearchResult;
 
 @RequiredArgsConstructor(access = AccessLevel.PACKAGE, onConstructor = @__({@Inject}))
 public class BankIdScreensErrorHandler {
@@ -52,15 +53,14 @@ public class BankIdScreensErrorHandler {
                 BankIdScreen.ALL_ERROR_SCREENS_WITH_ERROR_TEXT_LOCATORS.get(errorScreen);
 
         String screenText =
-                getElementText(screenTextLocator)
+                getScreenErrorText(screenTextLocator)
                         .orElseThrow(
                                 () ->
                                         BankIdNOError.UNKNOWN_BANK_ID_ERROR.exception(
                                                 String.format(
-                                                        "%s Cannot read text from BankID error screen: %s (expectedScreens: %s)",
-                                                        BANK_ID_LOG_PREFIX,
-                                                        errorScreen,
-                                                        expectedScreens)));
+                                                        "Cannot read text from BankID error screen: %s\n"
+                                                                + "Expected screens: %s)",
+                                                        errorScreen, expectedScreens)));
 
         BankIdNOErrorCode errorCode =
                 extractErrorCode(screenText)
@@ -68,31 +68,35 @@ public class BankIdScreensErrorHandler {
                                 () ->
                                         BankIdNOError.UNKNOWN_BANK_ID_ERROR.exception(
                                                 String.format(
-                                                        "%s Cannot match BankID error code by error text on screen: %s (expectedScreens: %s)\n."
-                                                                + "Error screen text: %s",
-                                                        BANK_ID_LOG_PREFIX,
-                                                        errorScreen,
-                                                        expectedScreens,
-                                                        screenText)));
+                                                        "Cannot match error code by error text on screen: %s\n"
+                                                                + "Error screen: %s, expected screens: %s",
+                                                        errorScreen, expectedScreens, screenText)));
 
         throw errorCode
                 .getError()
                 .exception(
                         String.format(
-                                "%s BankID error: (%s). (error screen: %s) (expectedScreens: %s)",
-                                BANK_ID_LOG_PREFIX, errorCode, errorScreen, expectedScreens));
+                                "Error code: %s, error screen: %s, expectedScreens: %s",
+                                errorCode, errorScreen, expectedScreens));
     }
 
-    private Optional<String> getElementText(BankIdElementLocator elementSelector) {
-        return webDriver
-                .searchForFirstMatchingLocator(
+    private Optional<String> getScreenErrorText(BankIdElementLocator elementSelector) {
+        BankIdElementsSearchResult searchResult =
+                webDriver.searchForFirstMatchingLocator(
                         BankIdElementsSearchQuery.builder()
                                 .searchFor(elementSelector)
                                 .searchForSeconds(10)
-                                .build())
-                .getFirstFoundElement()
-                .map(WebElement::getText)
-                .map(String::trim);
+                                .build());
+
+        if (searchResult.isEmpty()) {
+            return Optional.empty();
+        }
+
+        String errorTextsConcatenated =
+                searchResult.getWebElementsFound().stream()
+                        .map(element -> element.getText().trim())
+                        .collect(Collectors.joining("\n"));
+        return Optional.of(errorTextsConcatenated);
     }
 
     private Optional<BankIdNOErrorCode> extractErrorCode(String errorMessage) {

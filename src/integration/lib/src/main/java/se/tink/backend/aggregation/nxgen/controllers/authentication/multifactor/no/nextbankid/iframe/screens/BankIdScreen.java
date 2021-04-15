@@ -19,7 +19,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 @RequiredArgsConstructor
 public enum BankIdScreen {
     ENTER_SSN_SCREEN(HtmlLocators.LOC_ENTER_SSN_SCREEN),
-    CODE_CHIP_METHOD_SCREEN(HtmlLocators.LOC_CHIP_CODE_METHOD_SCREEN),
+    ONE_TIME_CODE_METHOD_SCREEN(HtmlLocators.LOC_ONE_TIME_CODE_METHOD_SCREEN),
     MOBILE_BANK_ID_METHOD_SCREEN(HtmlLocators.LOC_MOBILE_BANK_ID_METHOD_SCREEN),
     BANK_ID_APP_METHOD_SCREEN(HtmlLocators.LOC_BANK_ID_APP_METHOD_SCREEN),
     BANK_ID_ERROR_WITH_HEADING_SCREEN(HtmlLocators.LOC_BANK_ID_ERROR_WITH_HEADING_SCREEN),
@@ -28,7 +28,7 @@ public enum BankIdScreen {
 
     private static final List<BankIdScreen> ALL_2FA_METHOD_SCREENS =
             ImmutableList.of(
-                    CODE_CHIP_METHOD_SCREEN,
+                    ONE_TIME_CODE_METHOD_SCREEN,
                     MOBILE_BANK_ID_METHOD_SCREEN,
                     BANK_ID_APP_METHOD_SCREEN);
 

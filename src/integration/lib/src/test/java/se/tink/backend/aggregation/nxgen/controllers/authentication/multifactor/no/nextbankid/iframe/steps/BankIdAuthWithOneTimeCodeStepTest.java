@@ -6,7 +6,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants.HtmlLocators.LOC_CHIP_CODE_INPUT;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants.HtmlLocators.LOC_ONE_TIME_CODE_INPUT;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants.HtmlLocators.LOC_SUBMIT_BUTTON;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdTestUtils.verifyThatFromUsersPerspectiveThrowableIsTheSameAsGivenAgentException;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.screens.BankIdScreen.ENTER_BANK_ID_PASSWORD_SCREEN;
@@ -33,11 +33,10 @@ import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.i18n.LocalizableKey;
 
 @RunWith(JUnitParamsRunner.class)
-public class BankIdAuthWithChipCodeStepTest {
+public class BankIdAuthWithOneTimeCodeStepTest {
 
-    private static final List<String> VALID_CHIP_CODES = Arrays.asList("123456", "000000");
-
-    private static final List<String> INVALID_CHIP_CODES =
+    private static final List<String> VALID_ONE_TIME_CODES = Arrays.asList("123456", "000000");
+    private static final List<String> INVALID_ONE_TIME_CODES =
             Arrays.asList("1234567", "12345", "12345a", "123456.");
 
     /*
@@ -53,7 +52,7 @@ public class BankIdAuthWithChipCodeStepTest {
     /*
     Real
      */
-    private BankIdAuthWithChipCodeStep authWithChipCodeStep;
+    private BankIdAuthWithOneTimeCodeStep authWithOneTimeCodeStep;
 
     @Before
     public void setup() {
@@ -65,30 +64,30 @@ public class BankIdAuthWithChipCodeStepTest {
 
         mocksToVerifyInOrder = inOrder(driver, screensManager, supplementalInformationController);
 
-        authWithChipCodeStep =
-                new BankIdAuthWithChipCodeStep(
+        authWithOneTimeCodeStep =
+                new BankIdAuthWithOneTimeCodeStep(
                         driver, screensManager, catalog, supplementalInformationController);
     }
 
     @Test
     @Parameters(method = "validCodes")
-    public void should_ask_user_to_provide_chip_code_then_enter_it_and_wait_for_password_screen(
+    public void should_ask_user_to_provide_one_time_code_then_enter_it_and_wait_for_password_screen(
             String validCode) {
         // given
-        Field expectedField = NorwegianFields.BankIdChipCodeField.build(catalog);
-        mockUserChipCodeResponse(expectedField, validCode);
+        Field expectedField = NorwegianFields.BankIdOneTimeCodeField.build(catalog);
+        mockUserOneTimeCodeResponse(expectedField, validCode);
 
         mockScreenDetected(ENTER_BANK_ID_PASSWORD_SCREEN);
 
         // when
-        authWithChipCodeStep.authenticateWithChipCode();
+        authWithOneTimeCodeStep.authenticateWithOneTimeCode();
 
         // then
         mocksToVerifyInOrder
                 .verify(supplementalInformationController)
                 .askSupplementalInformationSync(expectedField);
 
-        mocksToVerifyInOrder.verify(driver).setValueToElement(validCode, LOC_CHIP_CODE_INPUT);
+        mocksToVerifyInOrder.verify(driver).setValueToElement(validCode, LOC_ONE_TIME_CODE_INPUT);
         mocksToVerifyInOrder.verify(driver).clickButton(LOC_SUBMIT_BUTTON);
 
         mocksToVerifyInOrder
@@ -105,31 +104,32 @@ public class BankIdAuthWithChipCodeStepTest {
 
     @SuppressWarnings("unused")
     private static Object[] validCodes() {
-        return VALID_CHIP_CODES.toArray();
+        return VALID_ONE_TIME_CODES.toArray();
     }
 
     @Test
     @Parameters(method = "validCodes")
-    public void should_recognize_invalid_ssn_or_chip_code_error_by_detecting_enter_ssn_screen(
+    public void should_recognize_invalid_ssn_or_one_time_code_error_by_detecting_enter_ssn_screen(
             String validCode) {
         // given
-        Field expectedField = NorwegianFields.BankIdChipCodeField.build(catalog);
-        mockUserChipCodeResponse(expectedField, validCode);
+        Field expectedField = NorwegianFields.BankIdOneTimeCodeField.build(catalog);
+        mockUserOneTimeCodeResponse(expectedField, validCode);
 
         mockScreenDetected(ENTER_SSN_SCREEN);
 
         // when
-        Throwable throwable = catchThrowable(() -> authWithChipCodeStep.authenticateWithChipCode());
+        Throwable throwable =
+                catchThrowable(() -> authWithOneTimeCodeStep.authenticateWithOneTimeCode());
 
         // then
         verifyThatFromUsersPerspectiveThrowableIsTheSameAsGivenAgentException(
-                throwable, BankIdNOError.INVALID_SSN_OR_CHIP_CODE.exception());
+                throwable, BankIdNOError.INVALID_SSN_OR_ONE_TIME_CODE.exception());
 
         mocksToVerifyInOrder
                 .verify(supplementalInformationController)
                 .askSupplementalInformationSync(expectedField);
 
-        mocksToVerifyInOrder.verify(driver).setValueToElement(validCode, LOC_CHIP_CODE_INPUT);
+        mocksToVerifyInOrder.verify(driver).setValueToElement(validCode, LOC_ONE_TIME_CODE_INPUT);
         mocksToVerifyInOrder.verify(driver).clickButton(LOC_SUBMIT_BUTTON);
 
         mocksToVerifyInOrder
@@ -146,18 +146,19 @@ public class BankIdAuthWithChipCodeStepTest {
 
     @Test
     @Parameters(method = "invalidCodes")
-    public void should_throw_invalid_chip_code_format_error(String invalidCode) {
+    public void should_throw_invalid_one_time_code_format_error(String invalidCode) {
         // given
-        Field expectedField = NorwegianFields.BankIdChipCodeField.build(catalog);
-        mockUserChipCodeResponse(expectedField, invalidCode);
+        Field expectedField = NorwegianFields.BankIdOneTimeCodeField.build(catalog);
+        mockUserOneTimeCodeResponse(expectedField, invalidCode);
 
         // when
-        Throwable throwable = catchThrowable(() -> authWithChipCodeStep.authenticateWithChipCode());
+        Throwable throwable =
+                catchThrowable(() -> authWithOneTimeCodeStep.authenticateWithOneTimeCode());
 
         // then
         assertThat(throwable)
                 .isInstanceOf(IllegalStateException.class)
-                .hasMessage("Incorrect format for chip code: " + invalidCode);
+                .hasMessage("Incorrect format for one-time code: " + invalidCode);
 
         mocksToVerifyInOrder
                 .verify(supplementalInformationController)
@@ -167,12 +168,12 @@ public class BankIdAuthWithChipCodeStepTest {
 
     @SuppressWarnings("unused")
     private static Object[] invalidCodes() {
-        return INVALID_CHIP_CODES.toArray();
+        return INVALID_ONE_TIME_CODES.toArray();
     }
 
-    private void mockUserChipCodeResponse(Field field, String chipCode) {
+    private void mockUserOneTimeCodeResponse(Field field, String oneTimeCode) {
         when(supplementalInformationController.askSupplementalInformationSync(any()))
-                .thenReturn(ImmutableMap.of(field.getName(), chipCode));
+                .thenReturn(ImmutableMap.of(field.getName(), oneTimeCode));
     }
 
     private void mockScreenDetected(BankIdScreen screen) {
