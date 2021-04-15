@@ -17,6 +17,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.BankServiceDownExceptionFilter;
 
 public abstract class DeutscheBankAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
@@ -46,6 +47,7 @@ public abstract class DeutscheBankAgent extends NextGenerationAgent
         super.setConfiguration(configuration);
         client.setEidasProxy(configuration.getEidasProxy());
         client.addFilter(new DeutscheKnownErrorsFilter());
+        client.addFilter(new BankServiceDownExceptionFilter());
     }
 
     protected abstract DeutscheBankApiClient constructApiClient(DeutscheHeaderValues headerValues);
