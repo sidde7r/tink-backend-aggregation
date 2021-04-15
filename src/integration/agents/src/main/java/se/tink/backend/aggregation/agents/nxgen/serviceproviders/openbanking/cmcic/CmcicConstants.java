@@ -95,4 +95,8 @@ public final class CmcicConstants {
         public static final String POST_SIGN_STEP = "post_sign_state";
         public static final String CONFIRM_PAYMENT_STEP = "confirm_payment_step";
     }
+
+    public static class PaymentTypeInformation {
+        public static final String SEPA_INSTANT_CREDIT_TRANSFER = "INST";
+    }
 }

@@ -30,6 +30,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmc
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicConstants.DateFormat;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicConstants.PaymentSteps;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicConstants.PaymentTypeInformation;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.apiclient.CmcicApiClient;
@@ -77,6 +78,7 @@ import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
+import se.tink.libraries.payments.common.model.PaymentScheme;
 import se.tink.libraries.transfer.enums.RemittanceInformationType;
 import se.tink.libraries.uuid.UUIDUtils;
 
@@ -345,7 +347,13 @@ public class CmcicPaymentExecutor implements PaymentExecutor, FetchablePaymentEx
                 new PartyIdentificationEntity(FormValues.CREDITOR_NAME, null, null, null);
 
         PaymentTypeInformationEntity paymentTypeInformation =
-                new PaymentTypeInformationEntity(null, ServiceLevelCodeEntity.SEPA, null, null);
+                new PaymentTypeInformationEntity(
+                        null,
+                        ServiceLevelCodeEntity.SEPA,
+                        PaymentScheme.SEPA_INSTANT_CREDIT_TRANSFER == payment.getPaymentScheme()
+                                ? PaymentTypeInformation.SEPA_INSTANT_CREDIT_TRANSFER
+                                : null,
+                        null);
 
         AccountIdentificationEntity debtorAccount =
                 Optional.ofNullable(paymentRequest.getPayment().getDebtor())

@@ -1,0 +1,15 @@
+agentsServiceConfiguration:
+  integrations:
+    361bd159db8740149a8f944d5ed42c54:
+      tink:
+        authorizeUrl: https://www.cic.fr/oauth2/en/banque/oauth2_authorization.aspx
+        tokenUrl: https://oauth2-apiii.e-i.com/cic/oauth2/token
+        baseUrl: https://oauth2-apiii.e-i.com
+        redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
+        eidasQwac: Tink
+        keyId: https://cdn.tink.se/eidas/jwks.json
+        clientId: DUMMY_ID
+        clientSecret: DUMMY_SECRET
+  eidasProxy:
+    host: https://eidas-proxy.staging.aggregation.tink.network
+    localEidasDev: true
