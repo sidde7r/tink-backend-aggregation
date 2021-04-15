@@ -29,6 +29,6 @@ public class KnabAccountFetcher implements AccountFetcher<TransactionalAccount> 
     private Optional<TransactionalAccount> getAccountWithBalance(AccountEntity account) {
         BalancesResponse balancesResponse = apiClient.fetchAccountBalance(account.getResourceId());
 
-        return account.toTinkAccount(balancesResponse.getBalance());
+        return account.toTinkAccount(balancesResponse.getBalances());
     }
 }
