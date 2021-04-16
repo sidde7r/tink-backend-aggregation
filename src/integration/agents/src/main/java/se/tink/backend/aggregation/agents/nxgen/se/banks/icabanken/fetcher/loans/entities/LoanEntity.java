@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.loan.LoanModule;
+import se.tink.backend.aggregation.source_info.AccountSourceInfo;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 
 @JsonObject
@@ -60,6 +61,14 @@ public class LoanEntity {
         return LoanAccount.nxBuilder()
                 .withLoanDetails(buildLoanDetails(loanParsingHelper))
                 .withId(getIdModule(loanParsingHelper))
+                .sourceInfo(createAccountSourceInfo())
+                .build();
+    }
+
+    @JsonIgnore
+    private AccountSourceInfo createAccountSourceInfo() {
+        return AccountSourceInfo.builder()
+                .bankProductName(type) // ex. "ICA Privatlån anställd"
                 .build();
     }
 
