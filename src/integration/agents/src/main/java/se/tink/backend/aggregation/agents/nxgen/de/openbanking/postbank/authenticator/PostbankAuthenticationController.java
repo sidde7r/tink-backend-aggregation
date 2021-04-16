@@ -213,7 +213,8 @@ public class PostbankAuthenticationController implements TypedAuthenticator {
                         authenticationType,
                         scaMethodName,
                         challengeData != null ? challengeData.getOtpMaxLength() : null,
-                        challengeData != null ? challengeData.getOtpFormat() : null));
+                        challengeData != null ? challengeData.getOtpFormat() : null,
+                        null));
 
         return supplementalInformationController
                 .askSupplementalInformationSync(fields.toArray(new Field[0]))

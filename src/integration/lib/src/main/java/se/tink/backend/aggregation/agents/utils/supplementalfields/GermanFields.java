@@ -82,7 +82,10 @@ public class GermanFields {
                 String authenticationType,
                 String scaMethodName,
                 Integer otpMaxLength,
-                String otpFormat) {
+                String otpFormat,
+                Integer otpMinLength) {
+
+            Integer minLength = otpMinLength != null ? otpMinLength : 1;
             String helpText =
                     scaMethodName != null
                             ? catalog.getString(HELPTEXT_WITH_NAME_FORMAT, scaMethodName)
@@ -95,12 +98,12 @@ public class GermanFields {
                                             .getFieldName())
                             .description(catalog.getString(DESCRIPTION))
                             .helpText(helpText)
-                            .minLength(1);
+                            .minLength(minLength);
 
             prepareFieldWhenOtpLengthAvailable(otpMaxLength, otpBuilder);
 
             if (Tan.OTP_TYPE.INTEGER.name().equalsIgnoreCase(otpFormat)) {
-                prepareOtpNumericFormat(catalog, otpMaxLength, otpBuilder);
+                prepareOtpNumericFormat(catalog, otpMaxLength, otpBuilder, minLength);
             } else if (Tan.OTP_TYPE.CHARACTERS.name().equalsIgnoreCase(otpFormat)) {
                 prepareOtpCharactersFormat(catalog, otpMaxLength, otpBuilder);
             }
@@ -115,13 +118,23 @@ public class GermanFields {
         }
 
         private static void prepareOtpNumericFormat(
-                Catalog catalog, Integer otpMaxLength, Field.Builder otpBuilder) {
+                Catalog catalog,
+                Integer otpMaxLength,
+                Field.Builder otpBuilder,
+                Integer otpMinLength) {
             if (otpMaxLength != null) {
                 otpBuilder
-                        .pattern("^[0-9]{1," + otpMaxLength + "}$")
+                        .pattern(buildNumericPattern(otpMaxLength, otpMinLength))
                         .patternError(catalog.getString(NUMERIC_OTP_PATTERN_ERROR, otpMaxLength));
             }
             otpBuilder.numeric(true);
+        }
+
+        private static String buildNumericPattern(Integer otpMaxLength, Integer otpMinLength) {
+            if (!otpMaxLength.equals(otpMinLength)) {
+                return "^[0-9]{" + otpMinLength + "," + otpMaxLength + "}$";
+            }
+            return "^[0-9]{" + otpMaxLength + "}$";
         }
 
         private static void prepareOtpCharactersFormat(

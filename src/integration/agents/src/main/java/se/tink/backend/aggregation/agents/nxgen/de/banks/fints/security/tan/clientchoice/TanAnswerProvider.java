@@ -24,7 +24,7 @@ public class TanAnswerProvider {
         Map<String, String> supplementalInformation;
         List<Field> fields = new LinkedList<>();
         try {
-            fields.add(GermanFields.Tan.build(catalog, null, tanMedium, null, null));
+            fields.add(GermanFields.Tan.build(catalog, null, tanMedium, null, null, null));
             supplementalInformation =
                     supplementalInformationHelper.askSupplementalInformation(
                             fields.toArray(new Field[0]));

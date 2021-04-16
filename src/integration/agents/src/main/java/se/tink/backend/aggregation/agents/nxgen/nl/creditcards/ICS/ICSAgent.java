@@ -69,8 +69,7 @@ public final class ICSAgent extends NextGenerationAgent
         client.addFilter(new BankServiceInternalErrorFilter());
         client.addFilter(
                 new ICSRetryFilter(HttpClient.MAX_RETRIES, HttpClient.RETRY_SLEEP_MILLISECONDS));
-        client.addFilter(
-                new AccessExceededFilter(this.provider != null ? this.provider.getName() : null));
+        client.addFilter(new AccessExceededFilter());
         client.addFilter(new TimeoutFilter());
     }
 

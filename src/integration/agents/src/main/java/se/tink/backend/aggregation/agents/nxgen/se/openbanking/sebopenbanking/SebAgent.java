@@ -72,8 +72,7 @@ public final class SebAgent extends SebBaseAgent<SebApiClient>
     }
 
     private void configureHttpClient(TinkHttpClient client) {
-        client.addFilter(
-                new AccessExceededFilter(this.provider != null ? this.provider.getName() : null));
+        client.addFilter(new AccessExceededFilter());
     }
 
     @Override
