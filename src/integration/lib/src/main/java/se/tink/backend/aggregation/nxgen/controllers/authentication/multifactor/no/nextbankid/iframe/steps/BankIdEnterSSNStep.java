@@ -26,7 +26,7 @@ public class BankIdEnterSSNStep {
         waitForSSNScreen();
         waitForSSNInput();
 
-        String ssn = credentials.getField(Field.Key.DATE_OF_BIRTH);
+        String ssn = credentials.getField(Field.Key.USERNAME);
         enterSSN(ssn);
         clickSubmit();
     }

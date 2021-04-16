@@ -1,9 +1,26 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.nordea;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+import org.openqa.selenium.By;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.BankIdElementLocator;
+
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class NordeaNoConstants {
+
     public static final String PRODUCT_CODE = "productCode";
     public static final String CAN_FETCH_TRANSACTION = "canFetchTransactions";
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class HtmlLocators {
+        public static final BankIdElementLocator LOC_BANK_ID_METHOD_BUTTON =
+                BankIdElementLocator.builder()
+                        .element(new By.ByCssSelector("span.method-item__info__title"))
+                        .mustHaveExactText("BankID")
+                        .build();
+    }
+
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class QueryParamKeys {
         public static final String CLIENT_ID = "client_id";
         public static final String CODE_CHALLENGE = "code_challenge";
@@ -27,8 +44,10 @@ public class NordeaNoConstants {
         public static final String PAGE = "page";
         public static final String PAGE_SIZE = "page_size";
         public static final String TYPE = "type";
+        public static final String AUTHORIZATION_CODE = "code";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class QueryParamValues {
         public static final String CLIENT_ID = "bQwEsS8eczQFjqqF2ocl";
         public static final String CODE_CHALLENGE_METHOD = "S256";
@@ -46,6 +65,7 @@ public class NordeaNoConstants {
         public static final String TYPE = "TOTAL";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class HeaderKeys {
         public static final String HOST = "Host";
         public static final String ACCEPT_ENCODING = "Accept-Encoding";
@@ -58,12 +78,12 @@ public class NordeaNoConstants {
         public static final String APP_LANGUAGE = "x-app-language";
         public static final String PLATFORM_VERSION = "x-platform-version";
         public static final String APP_SEGMENT = "x-app-segment";
-        public static final String DEVICE_ID = "x-Device-Id";
         public static final String DEVICE_EC = "x-device-ec";
         public static final String AUTHORIZATION = "Authorization";
         public static final String X_AUTHORIZATION = "x-Authorization";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class HeaderValues {
         public static final String NORDEA_PRIVATE_HOST = "private.nordea.no";
         public static final String BR_GZIP_ENCODING = "br, gzip, deflate";
@@ -79,6 +99,7 @@ public class NordeaNoConstants {
         public static final String ACCEPT_LANGUAGE = "en-no";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class FormKeys {
         public static final String COUNTRY = "country";
         public static final String CODE = "code";
@@ -93,6 +114,7 @@ public class NordeaNoConstants {
         public static final String TOKEN_TYPE_HINT = "token_type_hint";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class FormValues {
         public static final String COUNTRY = "NO";
         public static final String CLIENT_ID = "bQwEsS8eczQFjqqF2ocl";
@@ -105,30 +127,25 @@ public class NordeaNoConstants {
         public static final String TOKEN_TYPE_HINT = "access_token";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class UriParams {
-        public static final String URI_SESSION_ID = "sessionId";
         public static final String URI_ACCOUNT_ID = "accountId";
         public static final String URI_CARD_ID = "cardId";
         public static final String URI_LOAN_ID = "loanId";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class Urls {
 
         public static final String NORDEA_AUTH_BASE_URL = "https://identify.nordea.com/";
-        public static final String OIDC_BANKID_BASE_URL = "https://oidc-ui.bankidnorge.no/";
         public static final String NORDEA_PRIVATE_BASE_URL = "https://private.nordea.no/";
 
         public static final String NORDEA_AUTHENTICATION_START =
                 NORDEA_AUTH_BASE_URL + "api/dbf/ca/bankidno-v1/authentications";
-        public static final String NORDEA_AUTHENTICATION_PATCH =
-                NORDEA_AUTH_BASE_URL + "api/dbf/ca/bankidno-v1/authentications/{sessionId}";
         public static final String BANKID_AUTHENTICATION_INIT = NORDEA_AUTH_BASE_URL + "bidno";
-        public static final String BANKID_AUTHENTICATION_CHECK =
-                OIDC_BANKID_BASE_URL + "api/bim/{sessionId}";
 
-        public static final String NORDEA_AUTHORIZATION =
-                NORDEA_AUTH_BASE_URL
-                        + "api/dbf/ca/user-accounts-service-v1/user-accounts/primary/authorization";
+        public static final String NORDEA_REDIRECT_BACK_TO_MOBILE_APP_URL =
+                "https://identify.nordea.com/redirect";
 
         public static final String EXCHANGE_TOKEN =
                 NORDEA_PRIVATE_BASE_URL + "api/dbf/ca/token-service-v3/oauth/token";
@@ -160,19 +177,9 @@ public class NordeaNoConstants {
                 NORDEA_PRIVATE_BASE_URL + "/api/dbf/ca/loans-v1/loans/{loanId}";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class RetryFilter {
         public static final int NUM_TIMEOUT_RETRIES = 3;
         public static final int RETRY_SLEEP_MILLISECONDS = 5000;
-    }
-
-    public static class ErrorCode {
-        public static final String WRONG_PHONE_NUMBER_OR_INACTIVATED_SERVICE_ERROR_CODE = "C161";
-        public static final String MOBILE_OPERATOR_ERROR_RETRY_1 = "C131";
-        public static final String MOBILE_OPERATOR_ERROR_RETRY_2 = "C325";
-        public static final String MOBILE_BANK_ID_BLOCKED_1 = "C30E";
-        public static final String MOBILE_BANK_ID_BLOCKED_2 = "C30F";
-        public static final String MOBILE_BANK_ID_TIMEOUT_1 = "C30B";
-        public static final String MOBILE_BANK_ID_TIMEOUT_2 = "C308";
-        public static final String MOBILE_BANK_ID_SUBSCRIPTION_CHANGED = "C167";
     }
 }

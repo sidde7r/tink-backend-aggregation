@@ -1,0 +1,5 @@
+{
+    "bankid_integration_url": "https://bank.id.integration.url",
+    "session_id": "sample_session_id",
+    "status": "sample_session_status"
+}

@@ -1,499 +1,4 @@
 REQUEST 1
-GET https://identify.nordea.com/?client_id=bQwEsS8eczQFjqqF2ocl&code_challenge=Fv2688auEbi41amQx632hFOuqeksultlC336EpO_3WY&code_challenge_method=S256&state=AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=&nonce=AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=&redirect_uri=com.nordea.mobilebank.no://auth-callback&response_type=code&ui_locales=en&av=3.13.2.1092&dm=iPhone9,3&installed_apps=bankid%20nemid&scope=openid%20ndf%20agreement%20offline_access&login_hint=bankidm_no:96325874:121290&app_channel=NDM_NO_IOS&adobe_mc=MCMID=72013651902555220792178724439960251443%7CMCORGID=9D193D565A0AFF460A495E66%2540AdobeOrg%7CTS=1593772516
-Connection: keep-alive
-
-RESPONSE 1
-200
-X-Backside-Transport: OK OK,OK OK
-Connection: close
-Transfer-Encoding: chunked
-Date: Fri, 03 Jul 2020 10:35:17 GMT
-Content-Security-Policy: connect-src 'self' *.nordea.com;style-src 'self' 'unsafe-inline';script-src 'self' 'unsafe-inline';frame-src 'none';frame-ancestors *.nordea.com *.nordea.fi *.nordea.se *.nordea.dk *.nordea.no;img-src 'self' data:;default-src 'none';font-src 'self';
-X-Frame-Options: DENY
-X-Content-Type-Options: nosniff,nosniff
-X-XSS-Protection: 1; mode=block
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-Pragma: no-cache
-Expires: 0
-Content-Language: en
-Content-Type: text/html
-Vary: Accept-Encoding, User-Agent
-X-Global-Transaction-ID: 2504d7535eff09e52ba71df7
-
-
-<!DOCTYPE html>
-<html lang="en" class="mobile">
-
-    <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <meta name="robots" content="noindex, nofollow">
-    <title>Nordea - Identification</title>
-
-    <script>
-    function safeLog(message, type) {
-        if (console) {
-            if (type === 'ERROR' && console.error) { console.error(message); }
-            else if (type === 'WARN' && console.warn) { console.warn(message); }
-            else if (type === 'INFO' && console.info) { console.info(message); }
-            else if (type === 'DEBUG' && console.debug) { console.debug(message); }
-            else if (console.log) { console.log(message); }
-        }
-    }
-</script>
-<script>  safeLog(['\n', "Stop!", "This is a browser feature intended for developers.\n\nUsing the console may allow attackers to impersonate you and steal your information using an attack called Self-XSS.\n\nDo not enter code that you do not understand.", '\n\n'].join('\n'), 'WARN'); </script>
-    <link rel="shortcut icon" type="image/x-icon" href="/assets/images/favicon.ico" onload="safeLog('Loaded: ' + this.href)" onerror="safeLog('Failed to load: ' + this.href, 'ERROR')">
-    <link rel="stylesheet" href="/assets/styles-6af237f07b117508ecc428f538073c25.css" onload="safeLog('Loaded: ' + this.href)" onerror="safeLog('Failed to load: ' + this.href, 'ERROR')">
-
-
-
-
-    <!-- 1.16.3 -->
-
-</head>
-
-    <body class="loading cv-form  ">
-
-
-        <div class="main-loader centered" id="loading" tabindex="-1" role="dialog">
-    <div class="loader" aria-hidden="true">
-    <svg focusable="false" viewBox="0 0 48 48"><path d="M24,2.4000000000000004A21.6,21.6 0 1 1 2.4000000000000004,24" fill="none" stroke-width="4.5px" stroke="#000"></path></svg>
-</div>
-<p class="loader-text">Loading...</p>
-<noscript><p class="loader-text">JavaScript must be enabled to use this page.</p></noscript>
-</div>
-
-
-
-
-        <header class="text-center">
-    <div class="header-container">
-        <svg class="logo" viewBox="0 0 136.1 28.6" focusable="false">
-    <g id="logo">
-        <path fill="#ffffff" d="M124.1,6.2c-5.5,0.4-9.9,4.9-10.3,10.4c-0.4,6.5,4.7,11.9,11.1,11.9c2.3,0,5.4-1.2,6.8-3.6v3.3h4.3V17.6 C136.2,10.6,130.6,5.7,124.1,6.2z M131.4,17.6c-0.2,3.7-3.4,6.5-7.2,6c-2.9-0.4-5.2-2.7-5.6-5.6c-0.4-3.9,2.6-7.2,6.4-7.2 c3.4,0,6.2,2.7,6.4,6.1L131.4,17.6L131.4,17.6z"></path>
-        <path fill="#ffffff" d="M100.5,6.2c-5.9,0.2-10.9,4.7-10.9,11.3c0,6,4.9,11.1,11.2,11.1c4.4,0,8.7-2.6,10.4-6.9l-4.3-1.3 c-0.8,1.8-2.7,3.3-4.8,3.7c-3,0.6-5.8-1.3-6.9-3.3l16.7-4.6C111.4,11.8,107.6,6,100.5,6.2z M94.3,16.8c0-2.3,1.4-5,4.4-6.1 c3.4-1.3,6.4,0.4,7.7,2.8L94.3,16.8z"></path>
-        <path fill="#ffffff" d="M63.8,10.7V6.1c-4.2,0-5.6,2.1-6.3,3.2V6.8h-4.8V17v11.1h4.9c0-6.6,0-6.5,0-10.5 C57.6,12.8,60.4,10.9,63.8,10.7z"></path>
-        <polygon fill="#ffffff" points="19.7,19.6 5.1,2.4 0.1,2.4 0.1,28.1 5.3,28.1 5.3,10.9 20.1,28.2 24.6,28.2 24.6,2.4 19.7,2.4"></polygon>
-        <path fill="#ffffff" d="M86.7,0.1h-4.6v8.4c-1.1-1.4-4.5-2.6-7.4-2.3c-5.5,0.4-9.9,4.9-10.3,10.4c-0.4,6.5,4.7,11.9,11.1,11.9 c2.4,0,5.7-1.1,6.8-3.2v2.8h4.3V17.5c0-0.1,0-0.1,0-0.2c0-0.1,0-0.1,0-0.2L86.7,0.1L86.7,0.1z M81.9,17.6 c-0.2,3.7-3.4,6.5-7.2,6c-2.9-0.4-5.2-2.7-5.6-5.6c-0.4-3.9,2.6-7.2,6.4-7.2c3.4,0,6.2,2.7,6.4,6.1 C81.9,16.9,81.9,17.6,81.9,17.6z"></path>
-        <path fill="#ffffff" d="M38.7,6.1c-6.2,0-11.2,5-11.2,11.2s5,11.2,11.2,11.2s11.2-5,11.2-11.2C49.8,11.1,44.8,6.1,38.7,6.1z M38.7,23.7c-3.5,0-6.4-2.9-6.4-6.4s2.9-6.4,6.4-6.4s6.4,2.9,6.4,6.4C45.1,20.9,42.2,23.7,38.7,23.7z"></path>
-    </g>
-</svg>
-
-        <div class="page-context">Identification</div>
-    </div>
-</header>
-
-        <main role="main">
-            <div class="content">
-                <h1 class="page-title text-center">Nordea Mobile</h1>
-                <div class="inner-content">
-
-                    <div data-view-id="form" class="current">
-    <form action="#" class="auth-form" id="auth-form" autocomplete="off" role="form">
-        <fieldset>
-            <legend class="sub-title">Select method</legend>
-            <div id="method-groups" class="method-groups">
-                <div id="primary">
-                    <div class="auth-method-selection">
-    <div class="auth-method">
-        <input class="method visually-hidden" type="radio" id="bankidm_no" name="method" checked="checked">
-        <label for="bankidm_no">
-            <svg aria-hidden="true" viewBox="0 0 32 32" focusable="false" class="checkmark"><path d="M9 15.5l5 5M23 11.5l-9 9"></path></svg>
-            <span class="auth-method-img-wrapper" aria-hidden="true"><img alt="BankID on Mobile" src="/assets/images/bankidnomobile-8bd2f3c1665c6c00eff2af6bd153e9f6.svg"></span>
-            <span class="auth-method-text"
-                  aria-hidden="false">BankID on Mobile</span>
-
-        </label>
-    </div>
-    <div class="auth-method">
-        <input class="method visually-hidden" type="radio" id="bankid_no" name="method">
-        <label for="bankid_no">
-            <svg aria-hidden="true" viewBox="0 0 32 32" focusable="false" class="checkmark"><path d="M9 15.5l5 5M23 11.5l-9 9"></path></svg>
-            <span class="auth-method-img-wrapper" aria-hidden="true"><img alt="BankID" src="/assets/images/bankidno-4ea331ae4c5bc3a12e6cf8340862d4c0.svg"></span>
-            <span class="auth-method-text"
-                  aria-hidden="false">BankID</span>
-
-        </label>
-    </div>
-    <div class="auth-method">
-        <input class="method visually-hidden" type="radio" id="mta_no" name="method">
-        <label for="mta_no">
-            <svg aria-hidden="true" viewBox="0 0 32 32" focusable="false" class="checkmark"><path d="M9 15.5l5 5M23 11.5l-9 9"></path></svg>
-            <span class="auth-method-img-wrapper" aria-hidden="true"><img alt="Nordea Codes" src="/assets/images/codes_app-8d38f9a911670376d264a0e9a72f8bf4.svg"></span>
-            <span class="auth-method-text"
-                  aria-hidden="false">Nordea Codes</span>
-
-        </label>
-    </div>
-</div>
-                </div>
-
-            </div>
-        </fieldset>
-        <div id="inputs">
-            <div class="inputs-wrapper current" data-id="bankidm_no">
-                <div class="input-wrapper">
-    <input id="bankidm-no-phone-number" class="input" data-manage title="Please use numbers only." name="phone_number" value="96325874" type="tel" pattern="[0-9]*" minlength="8" maxlength="8" data-min="8" data-max="8" data-validation="^[0-9]+$">
-    <label for="bankidm-no-phone-number">Mobile number (8 digits)</label>
-    <div class="input-error" aria-live="assertive" role="alert" aria-hidden="true">
-        <span class="input-error-text">Please use numbers only.</span>
-    </div>
-</div>
-<div class="input-wrapper">
-    <input id="bankidm-no-birth-date" class="input" data-manage title="Please use numbers only." name="birth_date" value="121290" type="tel" pattern="[0-9]*" minlength="6" maxlength="6" data-min="6" data-max="6" data-validation="^[0-9]+$">
-    <label for="bankidm-no-birth-date">Date of birth (ddmmyy)</label>
-    <div class="input-error" aria-live="assertive" role="alert" aria-hidden="true">
-        <span class="input-error-text">Please use numbers only.</span>
-    </div>
-</div>
-            </div>
-            <div class="inputs-wrapper" data-id="bankid_no">
-                <div class="input-wrapper">
-    <input id="bankid-no-user-id" class="input" data-manage title="Please use numbers only." name="user_id" type="tel" pattern="[0-9]*" minlength="11" maxlength="11" data-min="11" data-max="11" data-validation="^[0-9]+$">
-    <label for="bankid-no-user-id">User ID</label>
-    <div class="input-error" aria-live="assertive" role="alert" aria-hidden="true">
-        <span class="input-error-text">Please use numbers only.</span>
-    </div>
-</div>
-            </div>
-            <div class="inputs-wrapper" data-id="mta_no">
-                <div class="input-wrapper">
-    <input id="mta-no-user-id" class="input bullets" data-manage title="Please use numbers only." name="user_id" type="tel" pattern="[0-9]*" minlength="6" maxlength="13" data-min="6" data-max="13" data-validation="^[0-9]+$">
-    <label for="mta-no-user-id">User ID</label>
-    <div class="input-error" aria-live="assertive" role="alert" aria-hidden="true">
-        <span class="input-error-text">Please use numbers only.</span>
-    </div>
-</div>
-            </div>
-        </div>
-        <button type="submit" id="auth-button" aria-disabled="true">OK</button>
-    </form>
-    <div class="button-group">
-        <div>
-            <button class="link hidden" id="switch-primary-group">Change method</button>
-            <button class="link cancel-link" id="cancel-btn">Cancel</button>
-        </div>
-        <div><button class="link sidebar-toggler">Need help?</button></div>
-    </div>
-</div>
-
-
-
-
-
-                    <div data-view-id="codesapp">
-    <div id="status-container-codesapp" tabindex="-1" aria-live="assertive">
-        <div class="status-texts">
-            <div class="status-text status-text-ok" aria-role="status">Success</div>
-            <div class="status-text status-text-cp" aria-role="status">Please enter your PIN or authenticate with biometric identifier.</div>
-            <div class="status-text status-text-ap" aria-role="status">Please open Nordea Codes app.</div>
-        </div>
-        <div class="status-images" aria-hidden="true">
-            <div class="status-img-p"><svg class="mobile-status-pending" viewBox="0 0 288 216"><defs><style>.c2{fill:#00f}.d2{fill:#e5f2ff}.g2{fill:#39f;opacity:.3}</style></defs><path class="status-pending-device-shadow" d="M251.85 131.39l-133.34 77.48a12.57 12.57 0 0 1-12.61 0l-59.7-34.45a7.54 7.54 0 0 1 0-13.06l133.32-77.49a12.56 12.56 0 0 1 12.6 0l59.71 34.47a7.55 7.55 0 0 1 .02 13.05z" fill="#cebbb2" opacity=".5"/><g class="status-pending-device"><path class="c2" d="M42.4 112.2v15.56a7.46 7.46 0 0 0 3.76 6.39l59.71 34.47a12.56 12.56 0 0 0 12.6 0l133.35-77.5a7.46 7.46 0 0 0 3.74-6.2V68z"/><path class="d2" d="M251.82 74.73l-133.34 77.49a12.58 12.58 0 0 1-12.6 0l-59.71-34.45a7.55 7.55 0 0 1 0-13.06l133.32-77.49a12.6 12.6 0 0 1 12.61 0l59.7 34.47a7.54 7.54 0 0 1 .02 13.04z"/><path fill="#9cf" d="M177.05 36.16L57.48 105.62l62.89 36.92 119.6-69.48"/><path class="c2" d="M205 45.15l9.58 5.38a1.59 1.59 0 0 0 1.78-.15.59.59 0 0 0-.08-1l-9.47-5.27a1.66 1.66 0 0 0-1.9.21.5.5 0 0 0 .09.83z"/><ellipse class="c2" cx="223.05" cy="54.46" rx=".75" ry="1.31" transform="rotate(-88.64 223.067 54.458)"/><ellipse class="c2" cx="219.82" cy="52.55" rx=".75" ry="1.31" transform="rotate(-88.64 219.83 52.548)"/><path fill="#39f" d="M239.97 73.06l-62.92-36.9-119.57 69.46 4.3 2.52 115.01-66.8 58.58 34.39 4.6-2.67z"/></g><g class="status-pending-step status-pending-step-1"><path class="c2" d="M95 28.49c.22 5.1-6.54 9.53-15.09 9.9s-15.66-3.47-15.88-8.57 6.7-5.54 15.26-5.91S94.8 23.39 95 28.49z"/><path class="c2" d="M64.16 22.66h30.95v5.96H64.16z"/><ellipse class="d2" cx="79.62" cy="22.66" rx="15.5" ry="9.24"/></g><g class="status-pending-step status-pending-step-2"><path class="c2" d="M124.53 46.59c0 5.11-6.94 9.24-15.5 9.24s-15.5-4.13-15.5-9.24 6.94-5.25 15.5-5.25 15.5.15 15.5 5.25z"/><path class="c2" d="M93.58 40.1h30.95v5.96H93.58z"/><ellipse class="d2" cx="109.03" cy="40.1" rx="15.5" ry="9.24"/></g><g class="status-pending-step status-pending-step-3"><ellipse class="g2" cx="138" cy="80.31" rx="15.5" ry="9.24"/><path class="c2" d="M153.49 64.6c0 5.11-6.93 9.25-15.49 9.25s-15.5-4.14-15.5-9.25 6.94-5.25 15.5-5.25 15.49.15 15.49 5.25z"/><path class="c2" d="M122.54 58.12h30.95v5.96h-30.95z"/><ellipse class="d2" cx="138" cy="58.12" rx="15.5" ry="9.24"/></g><g class="status-pending-step status-pending-step-4"><ellipse class="g2" cx="167.35" cy="98.33" rx="15.5" ry="9.24"/><path class="c2" d="M182.84 82.62c0 5.1-6.93 9.24-15.49 9.24s-15.5-4.14-15.5-9.24 6.94-5.25 15.5-5.25 15.49.14 15.49 5.25z"/><path class="c2" d="M151.89 76.13h30.95v5.96h-30.95z"/><ellipse class="d2" cx="167.35" cy="76.13" rx="15.5" ry="9.24"/></g></svg></div>
-            <div class="status-img-ok"><svg class="status-success" viewBox="0 0 320 264"><defs><style>.a1{fill:#00f}.b1{fill:#9cf}.c1{fill:#39f}.f1{opacity:.5}.g1{fill:#5cadff}.h1{fill:#fff}</style><clipPath id="codesapp-ok"><path class="a1" d="M208.61 119.83C189.9 87.41 158.53 70.47 138.56 82l-17.7 10.22s2.77 47.44 15.42 69.36c12.15 21 50.83 48.85 50.83 48.85l19.22-11c19.98-11.55 21-47.18 2.28-79.6z"/></clipPath></defs><path class="a" d="M66.113 76.318l44.122-38.64 8.822 10.073-44.122 38.64z"/><ellipse class="b1" cx="88.18" cy="56.99" rx="29.32" ry="5.76" transform="rotate(-41.21 88.194 56.99)"/><ellipse class="b1" cx="88.18" cy="56.99" rx="29.32" ry="5.76" transform="rotate(-41.21 88.194 56.99)"/><ellipse class="c1" cx="88.18" cy="56.99" rx="20.39" ry="2.66" transform="rotate(-41.21 88.194 56.99)"/><ellipse class="a1" cx="97" cy="67.06" rx="29.32" ry="5.76" transform="rotate(-41.21 97.002 67.07)"/><path class="a1" d="M208.61 119.83C189.9 87.41 158.53 70.47 138.56 82l-17.7 10.22s2.77 47.44 15.42 69.36c12.15 21 50.83 48.85 50.83 48.85l19.22-11c19.98-11.55 21-47.18 2.28-79.6z"/><g clip-path="url(#codesapp-ok)"><path opacity=".5" fill="#39f" d="M155.85 95.32l19.83-11.45 14.76 11.05-20.21 11.68-14.38-11.28z"/><g class="f1"><path class="c1" d="M162.83 78.82l-19.05 11 6.33 3.05 19.46-11.24-6.74-2.81z"/></g><g class="f1"><path class="c1" d="M203.79 111.61l-19.05 11 3.18 4.87 19.85-11.46-3.98-4.41z"/></g></g><ellipse class="b1" cx="154.75" cy="150.92" rx="41.76" ry="67.78" transform="rotate(-30 154.727 150.899)"/><path class="c1" d="M134.53 106.43a19.79 19.79 0 0 1 11.84-2.37c-7.37-3.06-14.47-3.34-20.06-.06-14.3 8.25-13.66 36.12 1.42 62.24 6.54 11.34 14.73 20.48 23.07 26.53A100.88 100.88 0 0 1 136.05 173c-16.13-27.93-16.81-57.74-1.52-66.57z"/><path class="g1" d="M180.91 198.55c14.3-8.25 13.66-36.12-1.42-62.24-9.17-15.9-21.59-27.48-33.12-32.25a19.79 19.79 0 0 0-11.84 2.37c-15.29 8.83-14.61 38.64 1.52 66.6a100.88 100.88 0 0 0 14.75 19.69c10.88 7.88 22.02 10.5 30.11 5.83z"/><path class="a1" d="M36.822 184.282l41.472 41.472-9.468 9.468-41.472-41.472z"/><ellipse class="b1" cx="57.56" cy="205.02" rx="5.76" ry="29.32" transform="rotate(-45 57.561 205.017)"/><ellipse class="b1" cx="57.56" cy="205.02" rx="5.76" ry="29.32" transform="rotate(-45 57.561 205.017)"/><ellipse class="c1" cx="57.56" cy="205.02" rx="2.66" ry="20.39" transform="rotate(-45 57.561 205.017)"/><ellipse class="a1" cx="48.09" cy="214.49" rx="5.76" ry="29.32" transform="rotate(-45 48.094 214.489)"/><path class="h1" d="M139.836 160.559l30.683-17.715 4.3 7.448-30.683 17.715z"/><path class="h1" d="M144.154 167.993l-11-19.053 6.374-3.68 11 19.053z"/><path class="a1" d="M267.59 21.62l-7.55 4.09-.01 32.88 26.3 16.66 7.43-4.04-26.17-49.59z"/><ellipse class="a1" cx="272.93" cy="50.61" rx="17.28" ry="28.05" transform="rotate(-28.55 272.897 50.623)"/><ellipse class="b1" cx="280.36" cy="46.57" rx="17.28" ry="28.05" transform="rotate(-28.55 280.33 46.572)"/><path class="c1" d="M270.19 30.59c6.24-3.4 16.34 3.1 22.55 14.51a41.11 41.11 0 0 1 3.08 7.21 37 37 0 0 0-4.12-11.77c-6-11-15.67-17.21-21.67-13.95-3.45 1.88-4.91 6.5-4.41 12.17.43-3.76 1.94-6.76 4.57-8.17z"/><path class="g1" d="M291.63 66.3c3.82-2.08 5.21-7.5 4.19-14a41.11 41.11 0 0 0-3.08-7.21c-6.21-11.41-16.31-17.91-22.55-14.51-2.63 1.43-4.14 4.38-4.57 8.17A36 36 0 0 0 270 52.36c5.93 10.96 15.63 17.2 21.63 13.94z"/></svg></div>
-        </div>
-        <div class="button-group-vertical">
-            <div><button class="hidden" id="open-codesapp">Open</button></div>
-        </div>
-    </div>
-    <div class="button-group">
-        <div><button class="link cancel-codesapp">Cancel</button></div>
-    </div>
-</div>
-
-
-
-
-
-                    <div data-view-id="collision" class="collision-content" tabindex="-1">
-    <img class="lazy-image" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" alt="You are already logging in from somewhere else." aria-hidden="true" data-src="/assets/images/technical-error-91ca9eec9eed6ed945355d650bb10d41.svg">
-    <p class="error-message">Several simultaneous identification/confirmation attempts.</p>
-    <button class="try-again-codesapp try-again-bankidse">Try again</button>
-    <div class="button-group">
-        <div><button class="link cancel-codesapp cancel-bankidse">Cancel</button></div>
-    </div>
-</div>
-
-
-                    <div id="external" data-view-id="external" class="external-content no-button-row" tabindex="-1"></div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                    <div data-view-id="agreements">
-    <form action="#" id="agreements-form" role="form">
-         <fieldset tabindex="-1" id="agreements-group">
-             <legend class="agreements-title sub-title">Select agreement</legend>
-             <div class="agreements" id="agreements" x-ms-format-detection="none"></div>
-             <div class="agreements-blocked-info" id="agreements-blocked-info">You have one or more inactive agreements. Please contact Nordea to reactivate the agreements.</div>
-        </fieldset>
-        <button type="submit" class="agreements-submit-btn" id="agreements-submit-btn" aria-label="Select agreement">OK</button>
-    </form>
-    <div class="button-group">
-        <div><button class="button link" id="agreements-cancel">Cancel</button></div>
-    </div>
-    <div aria-live="polite" class="visually-hidden" id="agreements-blocked-info-text"></div>
-</div>
-
-                    <div data-view-id="error" class="error-content" role="alertdialog" aria-labelledby="error-message" id="error-view">
-    <div id="errors" class="errors">
-    <img class="hidden lazy-image" id="default-error" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" alt="Something went wrong." data-src="/assets/images/something-went-wrong-9bbd07dc81f3c2a11d2c7735b416ee18.svg">
-    <img class="hidden lazy-image" id="cancel-error" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" alt="Authentication was cancelled." data-src="/assets/images/cancel-d0c0f9d25ebde42bbd552c8ad5363f01.svg">
-    <img class="hidden lazy-image" id="request-error" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" alt="Something went wrong." data-src="/assets/images/no-connection-83f79e2367a313b468986e12a237c346.svg">
-    <img class="hidden lazy-image" id="empty-error" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" alt="You have no agreements available.
-Please contact us." data-src="/assets/images/empty-3857ebe69f653487f8c9d99adde4657f.svg">
-    <img class="hidden lazy-image" id="technical-error" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" alt="Something went wrong." data-src="/assets/images/technical-error-91ca9eec9eed6ed945355d650bb10d41.svg">
-</div>
-
-
-    <p id="error-message" class="error-message"></p>
-    <button id="error-close" type="button">OK</button>
-    <div class="button-group">
-        <div><button class="link cancel-link">Cancel</button></div>
-    </div>
-</div>
-
-
-                    <div id="manual-redirect" data-view-id="manual-redirect" class="success-content">
-    <p>Almost there.
-Just click the button below to continue.</p>
-    <button id="manual-redirect-btn">Continue</button>
-</div>
-
-                    <div class="content-loader centered" id="content-loader" tabindex="-1" role="dialog">
-    <div class="loader" aria-hidden="true">
-    <svg focusable="false" viewBox="0 0 48 48"><path d="M24,2.4000000000000004A21.6,21.6 0 1 1 2.4000000000000004,24" fill="none" stroke-width="4.5px" stroke="#000"></path></svg>
-</div>
-    <p class="loader-text">Loading...</p>
-</div>
-                </div>
-            </div>
-        </main>
-
-        <footer>
-    <div>&copy; Nordea 2020 <br />This connection is encrypted</div>
-
-
-
-
-</footer>
-
-        <aside id="sidebar" class="sidebar" role="complementary" tabindex="-1" aria-hidden="true">
-    <button type="button" class="icon-button sidebar-toggler" aria-hidden="true">
-        <svg focusable="false" viewBox="0 0 32 32"><line x1="4.5" y1="4.5" x2="27.5" y2="27.5" style="fill:none;stroke:#ffffff;stroke-linecap:round;stroke-linejoin:round"></line><line x1="27.5" y1="4.5" x2="4.5" y2="27.5" style="fill:none;stroke:#ffffff;stroke-linecap:round;stroke-linejoin:round"></line></svg>
-    </button>
-    <div class="sidebar-content-wrapper">
-        <div class="sidebar-inner-wrapper">
-            <div id="sidebar-methods">
-                <div class="method-wrapper current" data-id="bankidm_no">
-                    <div class="sidebar-main-info">
-                        <h1 class="title">BankID on Mobile</h1>
-                        <p>BankID is an electronic ID you use to identify yourself, sign transactions and enter binding agreements in a simple and secure way. You can get BankID when you become a Nordea customer. To use your BankID you need your User ID, a physical or digital token and your personal password.</p>
-                    </div>
-                    <div class="sidebar-content">
-    <h2>Mobile number (8 digits)</h2>
-    <p>Your mobile number, 8 digits without spaces.</p>
-
-    <h2>Date of birth (ddmmyy)</h2>
-    <p>Your date of birth is written with 6 digits without spaces or other symbols.</p>
-</div>
-                </div>
-                <div class="method-wrapper" data-id="bankid_no">
-                    <div class="sidebar-main-info">
-                        <h1 class="title">BankID</h1>
-                        <p>BankID is an electronic ID you use to identify yourself, sign transactions and enter binding agreements in a simple and secure way. You can get BankID when you become a Nordea customer. To use your BankID you need your User ID, a physical or digital token and your personal password.</p>
-                    </div>
-                    <div class="sidebar-content">
-    <h2>User ID</h2>
-    <p>The User ID is your Norwegian national ID number and consists of 11 digits without spaces.</p>
-    <p>It is issued by the government to all Norwegian nationals and foreign nationals who are liable for tax in Norway, among others.</p>
-</div>
-                </div>
-                <div class="method-wrapper" data-id="mta_no">
-                    <div class="sidebar-main-info">
-                        <h1 class="title">Nordea Codes</h1>
-                        <p>Nordea Codes app is a mobile application. With the Nordea Codes you can log in to Nordea services and confirm actions, identify yourself in other service providersâ services.</p>
-                    </div>
-                    <div class="sidebar-content">
-    <h2>User ID</h2>
-    <p>The User ID is usually your Norwegian national ID number, and consists of 11 digits.</p>
-    <p>It is issued by the government to all Norwegian nationals, and foreign nationals who are liable for tax in Norway, among others.</p>
-</div>
-                </div>
-
-
-            </div>
-            <div class="text-center">
-                <button type="button" class="inverted-button sidebar-toggler" aria-label="Close help"><span aria-hidden="true">Close</span></button>
-            </div>
-        </div>
-    </div>
-</aside>
-
-
-
-
-
-        <script src="/assets/scripts-27923c4075b36293221d71824ad421b0.js" onload="safeLog('Loaded: ' + this.src)" onerror="safeLog('Failed to load: ' + this.src, 'ERROR')"></script>
-        <script>
-            App.main({
-                startOver: false,
-                id: "8c5c7fbf-94ff-4b01-bf88-ccc139e1a959",
-                skipUserId: false,
-                systemMessages: false,
-                lang: "en",
-                requestParams: {
-                    client_id: "bQwEsS8eczQFjqqF2ocl",
-                    code_challenge: "Fv2688auEbi41amQx632hFOuqeksultlC336EpO_3WY",
-                    code_challenge_method: "S256",
-                    redirect_uri: "com.nordea.mobilebank.no:\/\/auth-callback",
-                    response_type: "code",
-                    scope: "openid ndf agreement offline_access",
-                    state: "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
-                    nonce: "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
-                    acr_values: null,
-                    signing_order_id: null
-                },
-                errors: {
-                    ie_url_too_long: "Your browser is not fully compatible to complete authentication request.\nPlease use other browser, such as Chrome.",
-                    inactive_agreement: "You don't have suitable agreements for identification.\nPlease contact Nordea.",
-                    no_agreements: "You have no agreements available. \nPlease contact us.",
-                    inactive_agrmts_info: "You have one or more inactive agreements. Please contact Nordea to reactivate the agreements.",
-                    access_denied: "Authentication was cancelled.",
-                    error_default: "Something went wrong.",
-                    invalid_request: "Something went wrong. Please try again.",
-                    invalid_content: "Something went wrong. Please try again.",
-                    internal_server_error: "Something went wrong. Please try again later.",
-                    authentication_collision: "You are already logging in from somewhere else.",
-                    challenge_expired: "BankID didn't start. Make sure that you have the latest version installed and a valid BankID.",
-                    start_failed: "BankID didn't start. Make sure that you have the latest version installed and a valid BankID.",
-                    bankidse_qrcode_generation_failure: "QR code generation didn't work. Please try again.",
-                    request_failed: "Something went wrong. Please try again.",
-                    request_timeout: "Connection timed out. Please try again.",
-                    timeout: "The session expired. Please try again.",
-                    cancelled: "Authentication was cancelled.",
-                    failed: "Authentication failed.",
-                    0: "Authentication failed.",
-                    retry_collision: "Several simultaneous identification\/confirmation attempts.",
-                    ip_changed: "Your device's network address has changed. Please try again.",
-                    nemid_app001: "A technical error has occurred. Please try again. Contact Nordea if the problem persists.",
-                    nemid_app002: "A technical error has occurred. Please try again. Contact Nordea if the problem persists.",
-                    nemid_app003: "A technical error has occurred. Please contact NemID support [link]https:\/\/www.nemid.nu\/dk-en\/support\/contact\/[\/link].",
-                    nemid_app004: "A technical error has occurred. Please try again. Contact Nordea if the problem persists.",
-                    nemid_app007: "A technical error has occurred. Contact Nordea.",
-                    nemid_app008: "A technical error has occurred. Contact Nordea.",
-                    nemid_app009: "A technical error has occurred. Please try again. Contact Nordea if the problem persists.",
-                    nemid_app0010: "A technical error has occurred. Please try again.",
-                    nemid_auth001: "Your NemID is blocked. Please contact NemID support. [link]https:\/\/www.nemid.nu\/dk-en\/support\/contact\/[\/link].",
-                    nemid_auth003: "Login succeeded but you have no bank agreement. Please contact your bank for more details.",
-                    nemid_auth004: "Your NemID is temporarily locked and you cannot log on until the 8 hour time lock has been lifted.",
-                    nemid_auth005: "Your NemID has been blocked. Please contact NemID support. [link]https:\/\/www.nemid.nu\/dk-en\/support\/contact\/[\/link].",
-                    nemid_auth006: "You have used all the codes on your code card. You can order a new code card on the Lost code card page. [link]https:\/\/service.nemid.nu\/dk-en\/nemid\/code_cards\/lost_code_card\/[\/link].",
-                    nemid_auth007: "Your NemID password is blocked due to too many failed password attempts. Please contact NemID support. [link]https:\/\/www.nemid.nu\/dk-en\/support\/contact\/[\/link].",
-                    nemid_auth008: "Your NemID is not active and you need support to issue a new activation password to activate. Please call NemID support. [link]https:\/\/www.nemid.nu\/dk-en\/support\/contact\/[\/link].",
-                    nemid_auth009: "A technical error has occurred. Please try again.",
-                    nemid_auth010: "A technical error has occurred. Please try again, and ensure that only one NemID login is running.",
-                    nemid_auth011: "NemID login on mobile does not support authentication using a temporary password. Please contact NemID support to have a new temporary password issued. [link]https:\/\/www.nemid.nu\/dk-en\/support\/contact\/[\/link].",
-                    nemid_auth012: "A technical error has occurred. Please try again.",
-                    nemid_auth013: "A technical error has occurred. Please try again.",
-                    nemid_auth017: "Something in the browser environment has caused NemID to stop working. This could be because of an incompatible plug- in, too restrictive privacy settings or other environment factors. Please try deactivating plugins, resetting your browser settings or try using a different browser.",
-                    nemid_auth018: "Your code app is revoked. To use it again please reactivate it.",
-                    nemid_auth019: "It is not possible to login with a code card, please use a code app or code token.",
-                    nemid_auth020: "Unable to login with 1-factor, please try with 2-factor login.",
-                    nemid_can001: "You have cancelled the activation of NemID after submitting the activation password. Your activation password is no longer valid, and you must request a new activation password before you can activate and use NemID. You can order your new activation password via NemID Support [link]https:\/\/www.nemid.nu\/dk-en\/support\/contact\/[\/link].",
-                    nemid_can003: "The connection to the application has timed out or has been interrupted by another app. Please try again.",
-                    nemid_can004: "The session is cancelled. Please try again.",
-                    nemid_can005: "You took too long to authenticate the request you had sent to your code app.",
-                    nemid_can006: "The maximum number of active code apps you can have at any time is ##MAXACTIVENMAS##. If you wish to activate another code app, you must first block one of your current code apps at nemid.nu or by contacting NemID Support or your bank.",
-                    nemid_can007: "You rejected your code app authentication request. If this was incorrect, you can submit a new request after clicking \u201COK\u201D to finish.",
-                    nemid_can008: "You sent a new authentication request to your code app overwriting an existing one.",
-                    nemid_capp004: "Your code app is suspended. Please try and update your code app.",
-                    nemid_lib002: "A technical error has occurred due to network issues.\nPlease try again.\nContact Nordea if the problem persists.",
-                    nemid_lock001: "You have used the wrong user ID or password too many times. Your NemID is now blocked for 8 hours after which you can try again. If you have forgotten your password you can find support here [link]https:\/\/www.nemid.nu\/dk-en\/support\/contact\/[\/link].",
-                    nemid_lock002: "You have used a wrong password too many times. Your NemID is blocked and cannot be used. To get help with this problem, Please contact NemID support. [link]https:\/\/www.nemid.nu\/dk-en\/support\/contact\/[\/link].",
-                    nemid_lock003: "You have entered a wrong NemID key too many times. Your NemID is blocked and cannot be used. Please contact NemID support. [link]https:\/\/www.nemid.nu\/dk-en\/support\/contact\/[\/link].",
-                    nemid_srv001: "A technical error has occurred. Please try again. Contact Nordea if the problem persists.",
-                    nemid_srv002: "A technical error has occurred. Please try again. Contact Nordea if the problem persists.",
-                    nemid_srv003: "A technical error has occurred. Please try again. Contact Nordea if the problem persists.",
-                    nemid_srv004: "A technical error has occurred. Please contact NemID support. [link]https:\/\/www.nemid.nu\/dk-en\/support\/contact\/[\/link].",
-                    nemid_srv005: "A technical error has occurred. Please try again. Contact Nordea if the problem persists.",
-                    nemid_srv006: "Temporary logon error.\nTry to disable \u201DRemember me\u201D and logon again.\nWe are working on fixing this error and we apologize for any inconvenience caused.",
-                    nemid_srv008: "A technical error has occurred. Contact Nordea.",
-                    nemid_srv010: "A technical error has occurred. Please try again. Contact Nordea if the problem persists.",
-                    nemid_oces001: "You only have NemID for online banking. If you wish to use NemID for other public or private services, you must affiliate a public digital signature to your NemID [link]https:\/\/service.nemid.nu\/dk-da\/bestil_nemid\/bestil_offentlig_digital_signatur_til_dit_nemid\/[\/link].",
-                    nemid_oces002: "If you wish to use NemID for other services than online banking, you have to affiliate a public digital signature to your NemID. You can do this by starting the regular NemID order flow, which will then order the needed public digital signature. Request NemID [link]https:\/\/service.nemid.nu\/dk-da\/bestil_nemid\/[\/link].",
-                    nemid_oces003: "You have attempted to log on using a NemID with no public digital signature. If you previously have logged on to our service using your NemID, the error can be due to having more than one NemID and having used a different NemID than normally.",
-                    nemid_oces004: "You can only use this NemID for your online banking service.",
-                    nemid_oces005: "persists contact NemID support [link]https:\/\/www.nemid.nu\/dk-en\/support\/contact\/[\/link].",
-                    nemid_oces007: "You currently don\u2019t have an active public digital signature (OCES certificate) affiliated with your NemID. To get this, start the regular NemID order flow after witch you will be asked to affiliate a public digital signature with your current NemID. Request NemID [link]https:\/\/service.nemid.nu\/dk-da\/bestil_nemid\/[\/link].",
-                    bankid_se_qrcode_scan_failure: "Failed to scan the QR code.\nYou need to have the latest version of BankID installed on your Android or iOS device.",
-                    bankid_se_open_failure: "BankID didn't start. Make sure that you have the latest version installed and a valid BankID.",
-                    signing_mismatch: "Signing failed. Please try again.",
-                    challenge_auth_verify_error: "User ID and the response code do not match.",
-                    ccode_default_error: "Invalid information entered, try again or cancel. In Repeated incorrect entries will be blocked.",
-                    ccode_last_attempt_error: "Invalid information entered. You have one attempt left before your code is blocked.",
-                    ccode_blocked_error: "Your code is blocked. Please contact Nordea.",
-                    cprnumber_mismatch: "Incorrect CPR number"
-                },
-                defaultMethod: "bankidm_no",
-                "bankidm_no": {
-                    id: "bankidm_no",
-                    url: "\/api\/dbf\/ca\/bankidno-v1\/authentications",
-                    type: "externaloidc",
-                    integration: {"url":"https:\/\/oidc.bankidapis.no\/auth\/realms\/prod\/protocol\/openid-connect\/auth\/","mode":"fullscreen","clientId":"nordea-bankid-prod","stateValid":600,"type":"BIM"},
-                },
-                "bankid_no": {
-                    id: "bankid_no",
-                    url: "\/api\/dbf\/ca\/bankidno-v1\/authentications",
-                    type: "externaloidc",
-                    integration: {"url":"https:\/\/oidc.bankidapis.no\/auth\/realms\/prod\/protocol\/openid-connect\/auth\/","mode":"fullscreen","clientId":"nordea-bankid-prod","stateValid":600,"type":"BID"},
-                },
-                "mta_no": {
-                    id: "mta_no",
-                    url: "\/api\/dbf\/ca\/auth-sign-v2\/mta\/authentications",
-                    type: "mta",
-                },
-                segments: { household: "Household", corporate: "Corporate" },
-                autoSubmit: true,
-                platform: "iOS",
-                deviceType: "mobile",
-                installedApps: "",
-                userAccountsUrl: "\/api\/dbf\/ca\/user-accounts-service-v1",
-                cuaie: false,
-                agreement: "primary",
-                sessionId: null,
-                nv: "1.16.3",
-                av: "3.13.2.1092",
-                dm: "iPhone9,3",
-                ec: "0",
-                rt: null,
-                allowAppSwitch: true,
-                forceRedirect: false,
-                defaultInputValues: [
-                    "96325874",
-                    "121290",],
-                allowManualRedirect: true,
-                showExceptions: false,
-                bankIdType: "mobile",
-                requestHash: "401c6e086948b11e7fbd18477cee0237",
-                retry: false
-            });
-        </script>
-    </body>
-</html>
-
-REQUEST 2
 POST https://identify.nordea.com/api/dbf/ca/bankidno-v1/authentications
 x-device-ec: 0
 Content-Type: application/json
@@ -503,7 +8,7 @@ x-device-model: iPhone9,3
 
 {"client_id":"bQwEsS8eczQFjqqF2ocl","code_challenge":"Fv2688auEbi41amQx632hFOuqeksultlC336EpO_3WY","code_challenge_method":"S256","redirect_uri":"com.nordea.mobilebank.no://auth-callback","response_type":"code","scope":"openid ndf agreement offline_access","state":"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=","nonce":"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=","acr_values":null,"signing_order_id":null,"amr":"bankidm_no"}
 
-RESPONSE 2
+RESPONSE 1
 200
 X-Backside-Transport: OK OK,OK OK
 nnCoection: close
@@ -525,601 +30,20 @@ Pragma: no-cache
 
 {"session_id":"12561d87-4959-45d1-b00b-437aeb29ca16","status":"assignment_pending","bankid_integration_url":"https://oidc.bankidapis.no/auth/realms/prod/protocol/openid-connect/auth?client_id=nordea-bankid-prod&redirect_uri=https://identify.nordea.com/bidnocb&response_type=code&response_mode=query&scope=openid%20profile%20nnin_altsub"}
 
-REQUEST 3
-GET https://identify.nordea.com/bidno?client_id=bQwEsS8eczQFjqqF2ocl&code_challenge=Fv2688auEbi41amQx632hFOuqeksultlC336EpO_3WY&code_challenge_method=S256&redirect_uri=com.nordea.mobilebank.no%3A%2F%2Fauth-callback&response_type=code&scope=openid%20ndf%20agreement%20offline_access&state=AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=&nonce=AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=&method_id=bankidm_no&login_hint=BIM%3A96325874%3A121290&lang=en&av=3.13.2.1092&dm=iPhone9%2C3&ec=0&platform=iOS&integration_url=https%3A%2F%2Foidc.bankidapis.no%2Fauth%2Frealms%2Fprod%2Fprotocol%2Fopenid-connect%2Fauth%3Fclient_id%3Dnordea-bankid-prod%26redirect_uri%3Dhttps%3A%2F%2Fidentify.nordea.com%2Fbidnocb%26response_type%3Dcode%26response_mode%3Dquery%26scope%3Dopenid%2520profile%2520nnin_altsub&session_id=12561d87-4959-45d1-b00b-437aeb29ca16
-
-RESPONSE 3
-200
-X-Frame-Options: SAMEORIGIN
-Referrer-Policy: no-referrer
-Content-Security-Policy: frame-src 'self'; frame-ancestors 'self'; object-src 'none';
-Content-Type: text/html;charset=UTF-8
-Set-Cookie:	VALIDATION_COOKIE=1f965297-f953-4f95-8f16-55c5722c3a3d;# Version=1;Path=/;Max-Age=3600;Secure;SameSite=None;Secure
-
-<!DOCTYPE html>
-<html lang="en" class="bid-theme">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="initial-scale=1.0"/>
-    <title> OIDC-Activation Client - BankID</title>
-<meta name="cookie-activation-authUrl" content="https://oidc.bankidapis.no/auth/realms/prod/protocol/openid-connect/auth?someParam1=someValue1">
-<body>
-    not important
-</body>
-</html>
-
-REQUEST 4
-GET https://oidc.bankidapis.no/auth/realms/prod/protocol/openid-connect/auth?someParam1=someValue1
-Connection: keep-alive
-Cookie: VALIDATION_COOKIE=1f965297-f953-4f95-8f16-55c5722c3a3d
-
-RESPONSE 4
-303
-Date: Fri, 03 Jul 2020 10:35:19 GMT
-Server: web
-Cache-Control: no-store, must-revalidate, max-age=0
-Location: https://oidc.bankidapis.no/auth/realms/prod/broker/composite/login?session_code=NdMnwLUBg6r0f-fdyLMOedsNL76ahtUa3TAo7qt1MOA&client_id=nordea-bankid-prod&tab_id=HeXvoY6eCWI
-Content-Length: 0
-Strict-Transport-Security: max-age=31536000
-Set-Cookie: AUTH_SESSION_ID=990ccd5c-4de7-4ca3-bd37-2b9e36eb94dc.bai-prod-keyc2;# Version=1; Path=/auth/realms/prod/; Secure; HttpOnly
-Set-Cookie: KC_RESTART=eyJhbGciOiJIUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICI0YzFmNDBjZC1kMmI4LTQzZDUtYmU5Zi0wZDViZTRmYmY1YzgifQ.eyJjaWQiOiJub3JkZWEtYmFua2lkLXByb2QiLCJwdHkiOiJvcGVuaWQtY29ubmVjdCIsInJ1cmkiOiJodHRwczovL2lkZW50aWZ5Lm5vcmRlYS5jb20vYmlkbm9jYiIsImFjdCI6IkFVVEhFTlRJQ0FURSIsIm5vdGVzIjp7ImxvZ2luX2hpbnQiOiJCSU06NDc5MTcxNTE6MjkwODg0Iiwic2NvcGUiOiJvcGVuaWQgcHJvZmlsZSBubmluX2FsdHN1YiIsImlzcyI6Imh0dHBzOi8vb2lkYy5iYW5raWRhcGlzLm5vL2F1dGgvcmVhbG1zL3Byb2QiLCJyZXNwb25zZV90eXBlIjoiY29kZSIsImNvZGVfY2hhbGxlbmdlX21ldGhvZCI6InBsYWluIiwicmVkaXJlY3RfdXJpIjoiaHR0cHM6Ly9pZGVudGlmeS5ub3JkZWEuY29tL2JpZG5vY2IiLCJzdGF0ZSI6ImV5SmhiR2NpT2lKU1V6STFOaUo5LmV5SnpkV0lpT2lKaVVYZEZjMU00WldONlVVWnFjWEZHTW05amJDSXNJbkowWlNJNkltTnZaR1VpTENKa2JXd2lPaUpwVUdodmJtVTVMRE1pTENKdGIyUWlPaUptZFd4c2MyTnlaV1Z1SWl3aWNIUm1Jam9pYVU5VElpd2lZMk5sSWpvaWNFOXBWVkpWUlhKbVdtOW9UMWRZZDFoQmNWWktTV2N5VlVOWVVUUnliRVpVTWtoT1kyWjVWakZ4ZHlJc0lteHVaeUk2SW1WdUlpd2ljM1JsSWpvaU1HcGhaMUJETkVWSWRHdE9OVk0zWWxoQlIxaHRWbXBxYkhjaUxDSnRhV1FpT2lKaVlXNXJhV1J0WDI1dklpd2ljM0JsSWpvaWIzQmxibWxrSUc1a1ppQmhaM0psWlcxbGJuUWdiMlptYkdsdVpWOWhZMk5sYzNNaUxDSmpZMjBpT2lKVE1qVTJJaXdpZFhKcElqb2lZMjl0TG01dmNtUmxZUzV0YjJKcGJHVmlZVzVyTG01dk9sd3ZYQzloZFhSb0xXTmhiR3hpWVdOcklpd2laR0ZzSWpvaU1DSXNJbk5wWkNJNklqRXlOVFl4WkRnM0xUUTVOVGt0TkRWa01TMWlNREJpTFRRek4yRmxZakk1WTJFeE5pSXNJbTVqWlNJNklrOUxNMUJKUXpKMmNucE9ZWGM1YjFsT2MxazRURUl3TjFKQklpd2lZWFp1SWpvaU15NHhNeTR5TGpFd09USWlMQ0psZUhBaU9qRTFPVE0zTnpNeE1UZ3NJbWxoZENJNk1UVTVNemMzTWpVeE9Dd2lhblJwSWpvaVltRmlNakpqTVRrdE5ETTNNUzAwTTJSbExUZzNZak10TVRRellXVmpObUk1TnpZeUluMC5LMnd5MWxGZFVzaDVCTkNFQ3pkSm14bXdGTzBJUGZEYldMQTZQNkhlTmNsSnRkSVVYSWtsZzlzdkw4MTVGazhTMDUwekR0S2VnX3VwV3UyaEpKSUkydDd4aWhwUHA5bWZmeThDSTRGMlNUQU0tYjBHWVBtWDNSUmU4ckI5RE40MW43d1IzUEMtM1hPRndfcUdfbjJLS1pneXVGVF93dWZHWGFIQ3pTMFFXUVNkd2xNOUVSc3ptQlVEZDhUd2cwQlFIYS05Z0prX2VFc25xOVU1VC03am1NbUpzQnBfRlZKNUdXcUtSb1RJQ0dVUFpJamNVbmpSQlBYQmd6cWQtYUlhRE4yTk5xeGcxell1cHpYeFpYQllRaDdWbDgyNGJFSVV2Y0k3LWtuN2tHcGRxZ3d4ZlB1OUtHSkNnUlNrRWRlR0lfTncwczFIWThzNU5lQmxDM2VrdlEiLCJyZXNwb25zZV9tb2RlIjoicXVlcnkifX0.gKyClTo_KjU-vUIfMrRbAFrWTG31hBs07Rqm1gTNthc; Version=1; Path=/auth/realms/prod/; Secure; HttpOnly Set-Cookie: KC_RESTART=eyJhbGciOiJIUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICI0YzFmNDBjZC1kMmI4LTQzZDUtYmU5Zi0wZDViZTRmYmY1YzgifQ.eyJjaWQiOiJub3JkZWEtYmFua2lkLXByb2QiLCJwdHkiOiJvcGVuaWQtY29ubmVjdCIsInJ1cmkiOiJodHRwczovL2lkZW50aWZ5Lm5vcmRlYS5jb20vYmlkbm9jYiIsImFjdCI6IkFVVEhFTlRJQ0FURSIsIm5vdGVzIjp7ImxvZ2luX2hpbnQiOiJCSU06NDc5MTcxNTE6MjkwODg0Iiwic2NvcGUiOiJvcGVuaWQgcHJvZmlsZSBubmluX2FsdHN1YiIsImlzcyI6Imh0dHBzOi8vb2lkYy5iYW5raWRhcGlzLm5vL2F1dGgvcmVhbG1zL3Byb2QiLCJyZXNwb25zZV90eXBlIjoiY29kZSIsImNvZGVfY2hhbGxlbmdlX21ldGhvZCI6InBsYWluIiwicmVkaXJlY3RfdXJpIjoiaHR0cHM6Ly9pZGVudGlmeS5ub3JkZWEuY29tL2JpZG5vY2IiLCJzdGF0ZSI6ImV5SmhiR2NpT2lKU1V6STFOaUo5LmV5SnpkV0lpT2lKaVVYZEZjMU00WldONlVVWnFjWEZHTW05amJDSXNJbkowWlNJNkltTnZaR1VpTENKa2JXd2lPaUpwVUdodmJtVTVMRE1pTENKdGIyUWlPaUptZFd4c2MyTnlaV1Z1SWl3aWNIUm1Jam9pYVU5VElpd2lZMk5sSWpvaWNFOXBWVkpWUlhKbVdtOW9UMWRZZDFoQmNWWktTV2N5VlVOWVVUUnliRVpVTWtoT1kyWjVWakZ4ZHlJc0lteHVaeUk2SW1WdUlpd2ljM1JsSWpvaU1HcGhaMUJETkVWSWRHdE9OVk0zWWxoQlIxaHRWbXBxYkhjaUxDSnRhV1FpT2lKaVlXNXJhV1J0WDI1dklpd2ljM0JsSWpvaWIzQmxibWxrSUc1a1ppQmhaM0psWlcxbGJuUWdiMlptYkdsdVpWOWhZMk5sYzNNaUxDSmpZMjBpT2lKVE1qVTJJaXdpZFhKcElqb2lZMjl0TG01dmNtUmxZUzV0YjJKcGJHVmlZVzVyTG01dk9sd3ZYQzloZFhSb0xXTmhiR3hpWVdOcklpd2laR0ZzSWpvaU1DSXNJbk5wWkNJNklqRXlOVFl4WkRnM0xUUTVOVGt0TkRWa01TMWlNREJpTFRRek4yRmxZakk1WTJFeE5pSXNJbTVqWlNJNklrOUxNMUJKUXpKMmNucE9ZWGM1YjFsT2MxazRURUl3TjFKQklpd2lZWFp1SWpvaU15NHhNeTR5TGpFd09USWlMQ0psZUhBaU9qRTFPVE0zTnpNeE1UZ3NJbWxoZENJNk1UVTVNemMzTWpVeE9Dd2lhblJwSWpvaVltRmlNakpqTVRrdE5ETTNNUzAwTTJSbExUZzNZak10TVRRellXVmpObUk1TnpZeUluMC5LMnd5MWxGZFVzaDVCTkNFQ3pkSm14bXdGTzBJUGZEYldMQTZQNkhlTmNsSnRkSVVYSWtsZzlzdkw4MTVGazhTMDUwekR0S2VnX3VwV3UyaEpKSUkydDd4aWhwUHA5bWZmeThDSTRGMlNUQU0tYjBHWVBtWDNSUmU4ckI5RE40MW43d1IzUEMtM1hPRndfcUdfbjJLS1pneXVGVF93dWZHWGFIQ3pTMFFXUVNkd2xNOUVSc3ptQlVEZDhUd2cwQlFIYS05Z0prX2VFc25xOVU1VC03am1NbUpzQnBfRlZKNUdXcUtSb1RJQ0dVUFpJamNVbmpSQlBYQmd6cWQtYUlhRE4yTk5xeGcxell1cHpYeFpYQllRaDdWbDgyNGJFSVV2Y0k3LWtuN2tHcGRxZ3d4ZlB1OUtHSkNnUlNrRWRlR0lfTncwczFIWThzNU5lQmxDM2VrdlEiLCJyZXNwb25zZV9tb2RlIjoicXVlcnkifX0.gKyClTo_KjU-vUIfMrRbAFrWTG31hBs07Rqm1gTNthc;# Version=1; Path=/auth/realms/prod/; Secure; HttpOnly
-Keep-Alive: timeout=10, max=100
-Connection: Keep-Alive
-
-REQUEST 5
-GET https://oidc.bankidapis.no/auth/realms/prod/broker/composite/login?session_code=NdMnwLUBg6r0f-fdyLMOedsNL76ahtUa3TAo7qt1MOA&client_id=nordea-bankid-prod&tab_id=HeXvoY6eCWI
-Connection: keep-alive
-Cookie: AUTH_SESSION_ID=990ccd5c-4de7-4ca3-bd37-2b9e36eb94dc.bai-prod-keyc2; KC_RESTART=eyJhbGciOiJIUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICI0YzFmNDBjZC1kMmI4LTQzZDUtYmU5Zi0wZDViZTRmYmY1YzgifQ.eyJjaWQiOiJub3JkZWEtYmFua2lkLXByb2QiLCJwdHkiOiJvcGVuaWQtY29ubmVjdCIsInJ1cmkiOiJodHRwczovL2lkZW50aWZ5Lm5vcmRlYS5jb20vYmlkbm9jYiIsImFjdCI6IkFVVEhFTlRJQ0FURSIsIm5vdGVzIjp7ImxvZ2luX2hpbnQiOiJCSU06NDc5MTcxNTE6MjkwODg0Iiwic2NvcGUiOiJvcGVuaWQgcHJvZmlsZSBubmluX2FsdHN1YiIsImlzcyI6Imh0dHBzOi8vb2lkYy5iYW5raWRhcGlzLm5vL2F1dGgvcmVhbG1zL3Byb2QiLCJyZXNwb25zZV90eXBlIjoiY29kZSIsImNvZGVfY2hhbGxlbmdlX21ldGhvZCI6InBsYWluIiwicmVkaXJlY3RfdXJpIjoiaHR0cHM6Ly9pZGVudGlmeS5ub3JkZWEuY29tL2JpZG5vY2IiLCJzdGF0ZSI6ImV5SmhiR2NpT2lKU1V6STFOaUo5LmV5SnpkV0lpT2lKaVVYZEZjMU00WldONlVVWnFjWEZHTW05amJDSXNJbkowWlNJNkltTnZaR1VpTENKa2JXd2lPaUpwVUdodmJtVTVMRE1pTENKdGIyUWlPaUptZFd4c2MyTnlaV1Z1SWl3aWNIUm1Jam9pYVU5VElpd2lZMk5sSWpvaWNFOXBWVkpWUlhKbVdtOW9UMWRZZDFoQmNWWktTV2N5VlVOWVVUUnliRVpVTWtoT1kyWjVWakZ4ZHlJc0lteHVaeUk2SW1WdUlpd2ljM1JsSWpvaU1HcGhaMUJETkVWSWRHdE9OVk0zWWxoQlIxaHRWbXBxYkhjaUxDSnRhV1FpT2lKaVlXNXJhV1J0WDI1dklpd2ljM0JsSWpvaWIzQmxibWxrSUc1a1ppQmhaM0psWlcxbGJuUWdiMlptYkdsdVpWOWhZMk5sYzNNaUxDSmpZMjBpT2lKVE1qVTJJaXdpZFhKcElqb2lZMjl0TG01dmNtUmxZUzV0YjJKcGJHVmlZVzVyTG01dk9sd3ZYQzloZFhSb0xXTmhiR3hpWVdOcklpd2laR0ZzSWpvaU1DSXNJbk5wWkNJNklqRXlOVFl4WkRnM0xUUTVOVGt0TkRWa01TMWlNREJpTFRRek4yRmxZakk1WTJFeE5pSXNJbTVqWlNJNklrOUxNMUJKUXpKMmNucE9ZWGM1YjFsT2MxazRURUl3TjFKQklpd2lZWFp1SWpvaU15NHhNeTR5TGpFd09USWlMQ0psZUhBaU9qRTFPVE0zTnpNeE1UZ3NJbWxoZENJNk1UVTVNemMzTWpVeE9Dd2lhblJwSWpvaVltRmlNakpqTVRrdE5ETTNNUzAwTTJSbExUZzNZak10TVRRellXVmpObUk1TnpZeUluMC5LMnd5MWxGZFVzaDVCTkNFQ3pkSm14bXdGTzBJUGZEYldMQTZQNkhlTmNsSnRkSVVYSWtsZzlzdkw4MTVGazhTMDUwekR0S2VnX3VwV3UyaEpKSUkydDd4aWhwUHA5bWZmeThDSTRGMlNUQU0tYjBHWVBtWDNSUmU4ckI5RE40MW43d1IzUEMtM1hPRndfcUdfbjJLS1pneXVGVF93dWZHWGFIQ3pTMFFXUVNkd2xNOUVSc3ptQlVEZDhUd2cwQlFIYS05Z0prX2VFc25xOVU1VC03am1NbUpzQnBfRlZKNUdXcUtSb1RJQ0dVUFpJamNVbmpSQlBYQmd6cWQtYUlhRE4yTk5xeGcxell1cHpYeFpYQllRaDdWbDgyNGJFSVV2Y0k3LWtuN2tHcGRxZ3d4ZlB1OUtHSkNnUlNrRWRlR0lfTncwczFIWThzNU5lQmxDM2VrdlEiLCJyZXNwb25zZV9tb2RlIjoicXVlcnkifX0.gKyClTo_KjU-vUIfMrRbAFrWTG31hBs07Rqm1gTNthc; VALIDATION_COOKIE=1f965297-f953-4f95-8f16-55c5722c3a3d
-
-RESPONSE 5
-303
-Date: Fri, 03 Jul 2020 10:35:19 GMT
-Server: web
-Location: https://oidc-ui.bankidnorge.no/?client_id=nordea-bankid-prod&state=e4ez9Bus1sqpnepvaYAk0FL-ZfMRzYw9EToklMsn52Y.HeXvoY6eCWI.nordea-bankid-prod&application_name=Nordea+Identification&redirect_uri=https%3A%2F%2Foidc.bankidapis.no%2Fauth%2Frealms%2Fprod%2Fbroker%2Fcomposite%2Fendpoint&ui_locales=nb&client_state=eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJiUXdFc1M4ZWN6UUZqcXFGMm9jbCIsInJ0ZSI6ImNvZGUiLCJkbWwiOiJpUGhvbmU5LDMiLCJtb2QiOiJmdWxsc2NyZWVuIiwicHRmIjoiaU9TIiwiY2NlIjoicE9pVVJVRXJmWm9oT1dYd1hBcVZKSWcyVUNYUTRybEZUMkhOY2Z5VjFxdyIsImxuZyI6ImVuIiwic3RlIjoiMGphZ1BDNEVIdGtONVM3YlhBR1htVmpqbHciLCJtaWQiOiJiYW5raWRtX25vIiwic3BlIjoib3BlbmlkIG5kZiBhZ3JlZW1lbnQgb2ZmbGluZV9hY2Nlc3MiLCJjY20iOiJTMjU2IiwidXJpIjoiY29tLm5vcmRlYS5tb2JpbGViYW5rLm5vOlwvXC9hdXRoLWNhbGxiYWNrIiwiZGFsIjoiMCIsInNpZCI6IjEyNTYxZDg3LTQ5NTktNDVkMS1iMDBiLTQzN2FlYjI5Y2ExNiIsIm5jZSI6Ik9LM1BJQzJ2cnpOYXc5b1lOc1k4TEIwN1JBIiwiYXZuIjoiMy4xMy4yLjEwOTIiLCJleHAiOjE1OTM3NzMxMTgsImlhdCI6MTU5Mzc3MjUxOCwianRpIjoiYmFiMjJjMTktNDM3MS00M2RlLTg3YjMtMTQzYWVjNmI5NzYyIn0.K2wy1lFdUsh5BNCECzdJmxmwFO0IPfDbWLA6P6HeNclJtdIUXIklg9svL815Fk8S050zDtKeg_upWu2hJJII2t7xihpPp9mffy8CI4F2STAM-b0GYPmX3RRe8rB9DN41n7wR3PC-3XOFw_qG_n2KKZgyuFT_wufGXaHCzS0QWQSdwlM9ERszmBUDd8Twg0BQHa-9gJk_eEsnq9U5T-7jmMmJsBp_FVJ5GWqKRoTICGUPZIjcUnjRBPXBgzqd-aIaDN2NNqxg1zYupzXxZXBYQh7Vl824bEIUvcI7-kn7kGpdqgwxfPu9KGJCgRSkEdeGI_Nw0s1HY8s5NeBlC3ekvQ&login_hint=BIM%3A96325874%3A121290&action=auth&nnin_req=true
-Content-Length: 0
-Strict-Transport-Security: max-age=31536000
-Keep-Alive: timeout=10, max=99
-Connection: Keep-Alive
-
-REQUEST 6
-GET https://oidc-ui.bankidnorge.no/?client_id=nordea-bankid-prod&state=e4ez9Bus1sqpnepvaYAk0FL-ZfMRzYw9EToklMsn52Y.HeXvoY6eCWI.nordea-bankid-prod&application_name=Nordea+Identification&redirect_uri=https%3A%2F%2Foidc.bankidapis.no%2Fauth%2Frealms%2Fprod%2Fbroker%2Fcomposite%2Fendpoint&ui_locales=nb&client_state=eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJiUXdFc1M4ZWN6UUZqcXFGMm9jbCIsInJ0ZSI6ImNvZGUiLCJkbWwiOiJpUGhvbmU5LDMiLCJtb2QiOiJmdWxsc2NyZWVuIiwicHRmIjoiaU9TIiwiY2NlIjoicE9pVVJVRXJmWm9oT1dYd1hBcVZKSWcyVUNYUTRybEZUMkhOY2Z5VjFxdyIsImxuZyI6ImVuIiwic3RlIjoiMGphZ1BDNEVIdGtONVM3YlhBR1htVmpqbHciLCJtaWQiOiJiYW5raWRtX25vIiwic3BlIjoib3BlbmlkIG5kZiBhZ3JlZW1lbnQgb2ZmbGluZV9hY2Nlc3MiLCJjY20iOiJTMjU2IiwidXJpIjoiY29tLm5vcmRlYS5tb2JpbGViYW5rLm5vOlwvXC9hdXRoLWNhbGxiYWNrIiwiZGFsIjoiMCIsInNpZCI6IjEyNTYxZDg3LTQ5NTktNDVkMS1iMDBiLTQzN2FlYjI5Y2ExNiIsIm5jZSI6Ik9LM1BJQzJ2cnpOYXc5b1lOc1k4TEIwN1JBIiwiYXZuIjoiMy4xMy4yLjEwOTIiLCJleHAiOjE1OTM3NzMxMTgsImlhdCI6MTU5Mzc3MjUxOCwianRpIjoiYmFiMjJjMTktNDM3MS00M2RlLTg3YjMtMTQzYWVjNmI5NzYyIn0.K2wy1lFdUsh5BNCECzdJmxmwFO0IPfDbWLA6P6HeNclJtdIUXIklg9svL815Fk8S050zDtKeg_upWu2hJJII2t7xihpPp9mffy8CI4F2STAM-b0GYPmX3RRe8rB9DN41n7wR3PC-3XOFw_qG_n2KKZgyuFT_wufGXaHCzS0QWQSdwlM9ERszmBUDd8Twg0BQHa-9gJk_eEsnq9U5T-7jmMmJsBp_FVJ5GWqKRoTICGUPZIjcUnjRBPXBgzqd-aIaDN2NNqxg1zYupzXxZXBYQh7Vl824bEIUvcI7-kn7kGpdqgwxfPu9KGJCgRSkEdeGI_Nw0s1HY8s5NeBlC3ekvQ&login_hint=BIM%3A96325874%3A121290&action=auth&nnin_req=true
-Connection: keep-alive
-
-RESPONSE 6
-303
-Date: Fri, 03 Jul 2020 10:35:20 GMT
-Server: web
-Location: https://oidc-ui.bankidnorge.no/view?sid=fe0a727d-d87f-4dea-ae05-dc68b6492013
-Content-Length: 0
-Strict-Transport-Security: max-age=31536000
-Keep-Alive: timeout=10, max=100
-Connection: Keep-Alive
-
-REQUEST 7
-GET https://oidc-ui.bankidnorge.no/view?sid=fe0a727d-d87f-4dea-ae05-dc68b6492013
-Connection: keep-alive
-
-RESPONSE 7
-200
-Date: Fri, 03 Jul 2020 10:35:20 GMT
-Server: web
-Cache-Control: no-cache, no-store, must-revalidate
-Vary: Accept-Encoding
-Content-Type: text/html;charset=utf-8
-Content-Length: 5572
-Strict-Transport-Security: max-age=31536000
-Keep-Alive: timeout=10, max=99
-Connection: Keep-Alive
-
-<!DOCTYPE html>
-<html lang="nb">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="google" content="notranslate">
-    <title>OIDC Client - BankID</title>
-    <link rel="stylesheet" href="css/oidc-client.min.css">
-<meta name="oidc-birthdate" content="121290">
-<meta name="oidc-chosenIdp" content="BIM">
-<meta name="oidc-errorMessage" content="null">
-<meta name="oidc-pollingInterval" content="1000">
-<meta name="oidc-errorCode" content="null">
-<meta name="oidc-languageCode" content="nb">
-<meta name="oidc-error" content="false">
-<meta name="oidc-sid" content="fe0a727d-d87f-4dea-ae05-dc68b6492013">
-<meta name="oidc-merchantName" content="Nordea Bank Abp">
-<meta name="oidc-idps" content="%5B%7B%22id%22%3A%22BIM%22%2C%22contextPath%22%3A%22bim%22%2C%22loa%22%3A%224%22%2C%22title%22%3A%22BankID%20p%C3%A5%20mobil%22%2C%22description%22%3A%22Mobilnummer%2C%20f%C3%B8dselsdato%2C%20og%20selvvalgt%20PIN.%22%2C%22overrideUri%22%3A%22%22%2C%22logo%22%3A%22data%253Aimage%252Fsvg%252Bxml%253Bbase64%252CPD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iNTBweCIgaGVpZ2h0PSI1MHB4IiB2aWV3Qm94PSIwIDAgNTAgNTAiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI%252BCiAgICA8IS0tIEdlbmVyYXRvcjogc2tldGNodG9vbCA1MS4yICg1NzUxOSkgLSBodHRwOi8vd3d3LmJvaGVtaWFuY29kaW5nLmNvbS9za2V0Y2ggLS0%252BCiAgICA8dGl0bGU%252BRTQyOEI1RTItRkM4MC00MTFELUE4NkUtNDIzN0E1QTNDRURCQDN4PC90aXRsZT4KICAgIDxkZXNjPkNyZWF0ZWQgd2l0aCBza2V0Y2h0b29sLjwvZGVzYz4KICAgIDxkZWZzPjwvZGVmcz4KICAgIDxnIGlkPSJQYWdlLTEiIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIxIiBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPgogICAgICAgIDxnIGlkPSI0MDBweC1wbHVzcyIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTU2LjAwMDAwMCwgLTE2Mi4wMDAwMDApIj4KICAgICAgICAgICAgPGcgaWQ9Ikdyb3VwLTQtQ29weS02IiB0cmFuc2Zvcm09InRyYW5zbGF0ZSg1Ni4wMDAwMDAsIDE2Mi4wMDAwMDApIj4KICAgICAgICAgICAgICAgIDxyZWN0IGlkPSJSZWN0YW5nbGUtQ29weSIgZmlsbD0iIzE0NzlCQSIgeD0iMCIgeT0iMCIgd2lkdGg9IjUwIiBoZWlnaHQ9IjUwIiByeD0iMiI%252BPC9yZWN0PgogICAgICAgICAgICAgICAgPHBhdGggZD0iTTQwLjU2MDExOCwzMyBMMzIuNzEyNzIwNCwzMyBDMzIuNDcwNTAxNywzMyAzMi4yNzI4MzgzLDMzLjE5Nzg4MjcgMzIuMjcyODM4MywzMy40NDIxODI0IEwzMi4yNzI4MzgzLDM1LjU1ODYzMTkgQzMyLjI3MjgzODMsMzUuODAyMTE3MyAzMi40NzA1MDE3LDM2IDMyLjcxMjcyMDQsMzYgTDQwLjU2MDExOCwzNiBDNDAuODAyMzM2NywzNiA0MSwzNS44MDIxMTczIDQxLDM1LjU1ODYzMTkgTDQxLDMzLjQ0MjE4MjQgQzQxLDMzLjE5Nzg4MjcgNDAuODAyMzM2NywzMyA0MC41NjAxMTgsMzMgWiBNMTcuMjg3Mjc5NywzMyBMOS40Mzk4ODIsMzMgQzkuMTk3NjYzMzcsMzMgOSwzMy4xOTc4ODI3IDksMzMuNDQyMTgyNCBMOSwzNS41NTg2MzE5IEM5LDM1LjgwMjExNzMgOS4xOTc2NjMzNywzNiA5LjQzOTg4MiwzNiBMMTcuMjg3Mjc5NywzNiBDMTcuNTI5NDk4MywzNiAxNy43MjcxNjE3LDM1LjgwMjExNzMgMTcuNzI3MTYxNywzNS41NTg2MzE5IEwxNy43MjcxNjE3LDMzLjQ0MjE4MjQgQzE3LjcyNzE2MTcsMzMuMTk3ODgyNyAxNy41Mjk0OTgzLDMzIDE3LjI4NzI3OTcsMzMgWiBNMjguOTIzOTAyNCwyNyBMMjEuMDc2NTA0OCwyNyBDMjAuODM0Mjg2MSwyNyAyMC42MzY2MjI4LDI3LjE5Nzg4MjcgMjAuNjM2NjIyOCwyNy40NDIxODI0IEwyMC42MzY2MjI4LDI5LjU1ODYzMTkgQzIwLjYzNjYyMjgsMjkuODAyMTE3MyAyMC44MzQyODYxLDMwIDIxLjA3NjUwNDgsMzAgTDI4LjkyMzkwMjQsMzAgQzI5LjE2NjEyMTEsMzAgMjkuMzYzNzg0NSwyOS44MDIxMTczIDI5LjM2Mzc4NDUsMjkuNTU4NjMxOSBMMjkuMzYzNzg0NSwyNy40NDIxODI0IEMyOS4zNjM3ODQ1LDI3LjE5Nzg4MjcgMjkuMTY2MTIxMSwyNyAyOC45MjM5MDI0LDI3IFogTTE3LjI4NzI3OTcsMjcgTDkuNDM5ODgyLDI3IEM5LjE5NzY2MzM3LDI3IDksMjcuMTk3ODgyNyA5LDI3LjQ0MjE4MjQgTDksMjkuNTU4NjMxOSBDOSwyOS44MDIxMTczIDkuMTk3NjYzMzcsMzAgOS40Mzk4ODIsMzAgTDE3LjI4NzI3OTcsMzAgQzE3LjUyOTQ5ODMsMzAgMTcuNzI3MTYxNywyOS44MDIxMTczIDE3LjcyNzE2MTcsMjkuNTU4NjMxOSBMMTcuNzI3MTYxNywyNy40NDIxODI0IEMxNy43MjcxNjE3LDI3LjE5Nzg4MjcgMTcuNTI5NDk4MywyNyAxNy4yODcyNzk3LDI3IFogTTQwLjU2MDExOCwyMC45OTc1MTYgTDMyLjcxMTkxMDMsMjAuOTk3NTE2IEMzMi40Njk2OTE2LDIwLjk5NzUxNiAzMi4yNzI4MzgzLDIxLjE5NTM5ODcgMzIuMjcyODM4MywyMS40Mzk2OTg0IEwzMi4yNzI4MzgzLDIzLjU1NjE0NzkgQzMyLjI3MjgzODMsMjMuNzk5NjMzMyAzMi40Njk2OTE2LDIzLjk5NzUxNiAzMi43MTI3MjA0LDIzLjk5NzUxNiBMNDAuNTYwMTE4LDIzLjk5NzUxNiBDNDAuODAyMzM2NywyMy45OTc1MTYgNDEsMjMuNzk5NjMzMyA0MSwyMy41NTYxNDc5IEw0MSwyMS40Mzk2OTg0IEM0MSwyMS4xOTUzOTg3IDQwLjgwMjMzNjcsMjAuOTk3NTE2IDQwLjU2MDExOCwyMC45OTc1MTYgWiBNMjguOTIzOTAyNCwyMSBMMjEuMDc2NTA0OCwyMSBDMjAuODM0Mjg2MSwyMSAyMC42MzY2MjI4LDIxLjE5Nzg4MjcgMjAuNjM2NjIyOCwyMS40NDIxODI0IEwyMC42MzY2MjI4LDIzLjU1ODYzMTkgQzIwLjYzNjYyMjgsMjMuODAyMTE3MyAyMC44MzQyODYxLDI0IDIxLjA3NjUwNDgsMjQgTDI4LjkyMzkwMjQsMjQgQzI5LjE2NjEyMTEsMjQgMjkuMzYzNzg0NSwyMy44MDIxMTczIDI5LjM2Mzc4NDUsMjMuNTU4NjMxOSBMMjkuMzYzNzg0NSwyMS40NDIxODI0IEMyOS4zNjM3ODQ1LDIxLjE5Nzg4MjcgMjkuMTY2MTIxMSwyMSAyOC45MjM5MDI0LDIxIFogTTQwLjU2MDExOCwxNSBMMzIuNzEyNzIwNCwxNSBDMzIuNDcwNTAxNywxNSAzMi4yNzI4MzgzLDE1LjE5Nzg4MjcgMzIuMjcyODM4MywxNS40NDIxODI0IEwzMi4yNzI4MzgzLDE3LjU1ODYzMTkgQzMyLjI3MjgzODMsMTcuODAyMTE3MyAzMi40NzA1MDE3LDE4IDMyLjcxMjcyMDQsMTggTDQwLjU2MDExOCwxOCBDNDAuODAyMzM2NywxOCA0MSwxNy44MDIxMTczIDQxLDE3LjU1ODYzMTkgTDQxLDE1LjQ0MjE4MjQgQzQxLDE1LjE5Nzg4MjcgNDAuODAyMzM2NywxNSA0MC41NjAxMTgsMTUgWiBNMTcuMjg3Mjc5NywxNSBMOS40Mzk4ODIsMTUgQzkuMTk3NjYzMzcsMTUgOSwxNS4xOTc4ODI3IDksMTUuNDQyMTgyNCBMOSwxNy41NTg2MzE5IEM5LDE3LjgwMjExNzMgOS4xOTc2NjMzNywxOCA5LjQzOTg4MiwxOCBMMTcuMjg3Mjc5NywxOCBDMTcuNTI5NDk4MywxOCAxNy43MjcxNjE3LDE3LjgwMjExNzMgMTcuNzI3MTYxNywxNy41NTg2MzE5IEwxNy43MjcxNjE3LDE1LjQ0MjE4MjQgQzE3LjcyNzE2MTcsMTUuMTk3ODgyNyAxNy41Mjk0OTgzLDE1IDE3LjI4NzI3OTcsMTUgWiIgaWQ9IkROQSIgZmlsbD0iI0ZGRkZGRiIgZmlsbC1ydWxlPSJub256ZXJvIj48L3BhdGg%252BCiAgICAgICAgICAgIDwvZz4KICAgICAgICA8L2c%252BCiAgICA8L2c%252BCjwvc3ZnPg%253D%253D%22%7D%5D">
-<meta name="oidc-pollingTimeout" content="90">
-<meta name="oidc-idpOptions" content="BIM">
-<meta name="oidc-phone" content="96325874">
-<meta name="oidc-enrollXid" content="false">
-<meta name="oidc-action" content="AUTHENTICATE">
-<meta name="oidc-returnUrl" content="https://oidc-ui.bankidnorge.no/">
-<meta name="oidc-merchantReference" content="TEKNO PLAST">
-<meta name="oidc-applicationName" content="Nordea Identification">
-<meta name="oidc-applicationLogo" content="">
-<meta name="oidc-requestTimeout" content="10000"></head>
-<body>
-
-<!-- Errors -->
-<!-- ... Timeout error -->
-<div id="timeout-error" class="static-error" style="display: none;">
-    <div class="grid grid--fill">
-        <div class="grid__cell">
-            <div class="content">
-                <div class="icon">
-                    <span class="warning"></span>
-                </div>
-                <div class="text_wrapper">
-                    <h1 lang="no">Kommunikasjonsfeil, vennligst prÃ¸v igjen.</h1>
-
-                    <h2 lang="en">Communication error, please try again.</h2>
-
-                    <div class="icon">
-                        <button class="call-to-action" title="Neste / Next" onclick="window.location.reload();">
-                                <span class="white-arrow"></span>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- ... No Javascript -->
-<noscript>
-    <div id="no-js-error" class="static-error active">
-        <div class="grid grid--fill">
-            <div class="grid__cell">
-                <div class="content">
-                    <div class="icon">
-                        <span class="warning"></span>
-                    </div>
-                    <h1 lang="no">Du mÃ¥ skru pÃ¥ JavaScript for at dette nettstedet skal fungere</h1>
-                    <h2 lang="en">You have to enable JavaScript for this website to function</h2>
-                    <div class="icon">
-                        <button class="call-to-action" title="Neste / Next" onclick="window.location.reload();">
-                            <span class="white-arrow"></span>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</noscript>
-
-<!-- Loader -->
-<div id="loader">
-    <div class="loader_wrapper">
-        <div class="spinner_wrapper">
-            <img class="spinner gif"
-                 src="data:image/gif;base64,R0lGODlhKAAoANUAAP///+/3++Px+d/v99Pp9dXp9cnj8cfj8cXh8cHf8cHf773d77nb77vb763V65nL54vD44nD436933y933i533a53W6122ix21ap1VCl1TybzzOZzCqRyyiRyx6Lxx6LyRyLxwqBwwB8wQB6wQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH/C05FVFNDQVBFMi4wAwEAAAAh+QQJDQAAACwUAAIAEgAkAAAGoUBRqJOBEADIpBIpajo5j+XSSRV5HFJmlYoJSAMDhmSz5QiySQKm6jmjkQkPleN9AwIarh2Jp2L3AXJNHntwVFGFa00chQAEVEeFZE0QjRJOGY0MTh2NA04hjQFUoqSFn02hhZtNnYWXTZmSTpV7j06RdooijHsJh4CCVoB5Tn9ofU4YdnFzdVJqbG58YWNl01pbTV1S2lbHU1VQdkJERoVBACH5BAkNAAAALAcABwAfAB8AAAa+QIBwSCwaiQzBcckkLkScQHNaVIiuGKoWoLleHdtpwOP1hKcJr+hxbmK8nDaToCbIlxsv5H6UeDN8RgxeHYFFA14hhkQBaotDjV6PQohXipODV4WTfleAk3lXe490XnaPb1dxj2lebItjZY8BXV5gQwYaUmG0allDCFceCVsJZHC7AFa+p0sEqWVKQwIcalcbEgwDAQEDDBKhahzSjNDW5+cYyUYOx+joHrdTD9XvcK9hBBAZHSGWHRkgNGMSBAAh+QQJDQAAACwCABQAJAASAAAGqECRUBQAGI/IpDIZGIpCw8FySjUOhqHOkFHtJhnDTmYo8ZoBkmEGMtycvZshhOAkvKn0oZ0zxNynGEMcRg9OCX9JCU4PRx5DHkWIAAGOQh5IDk4akXcBGk4OSYFDm52ffUoBfI+HZgmVQhycSAKwQhh2eKOPAlQCq04bEgwDAQEDDBJxTiIcvVUBu8zT0xizVQ621MweoX8PwNvNjJJGBBAZHVBPYnNeQQAh+QQJDQAAACwCAAcAHwAfAAAGvkCAECCIDI/IpHIY4Igqy6gUI6pCpdiho1rVZL8erifwxT64okQZ66xi1lICmgCPQribejTDleiXHVwMf0ohXAOESWhkiUeLjUeGVYiQQoFVg5UAfFV+mndVeZpyXHSabSJvmmdcapphVWOaW1wajJBUtbdfARoXSE1oHq5ZCbC/RwKwXBimSwS5fUgCqHgSDAMBAQMMEhtoVRwCSQHR4OfnGLtIDsvo5x4OXw/V7xwPdQQQGR2SIR0ZIDg7EgQAIfkECQ0AAAAsAgACABIAJAAABqJAgHBIFBIgmU5IVCw+OKKotCl0eKRYZjGAyWaLAmh2I2EMAkTBFYshUAEBcdSTeAu7Ug3a7sDq7UJrIh57dg9YdYAAchiKAARYbooQUhuOABlSEpcdUgyXS1EDl1iFgKWgUqOOnVGfjplRm46UUZaOkFKSioyXh1KJioKEjn15pm94UX+AcVh0impZbYBhXmRmyHDKXlpNVt3eVE9euEhKIkEAIfkECQ0AAAAsAgACAB8AHwAABr9AgHBIFBIgmU5IJAp1MhBCcTp9cJjYLJbzoE4dHq1Y63F4AQHMeK3FBKaCq3YjYQwCgQFDshFzBEQCYVkYUmcEalkRQwFyTB4JZ0UJgxREiUwab5JFARoVRA5ZmpylAIMiHpumZw9ZkaySjhixkgRZhrVUEFgbumcZWBK/Xh1YDMRUS0wDyVNZq85C0NJEyyLN1ULGTMjaAMFMw9+8TL7ft1i51bPfAK5YsNqoqt+iWBrumBfujSIW7oQIWKQtCAAh+QQJDQAAACwCAAIAJAASAAAGqUCAcEgUEiCZTkgkCnUyEEJxSiU+OMysNst5VL8Ah2dL3nocYGIAU25vMYG0ALvdSBiDQGDAkGzIHAJfAmNaGFJfBGxaHoJTAXRMHglpQwmFTBxxRYtMGpuVQgEahkUOWp+hRaNaaEOYHqCqQwGwQw9alLNTCVpeAJEYu1WdHAAEWojDRchZR1kby1V/TEhZEtJUEllJWQzZUwxZSlkD4EUDWUtZsucBWkEAIfkECQ0AAAAsBwACAB8AHwAABr9AgHAIIEAynZBIFOpkIASidCp8cJbYLJbzoE4dHq1Y63F4AQHMeK3FBKaCq3YjYQwCgQFDshFzBFIKbVFnBGpZHoBEgiIeCWdSCWFbb4salZBEARpZGJmfQptZZqCZAZONpZ8JWV2qkIciHK+QBFmEtFR9SxC5XhJYGb5UDFgdw1MDWCHIUgFZzZrQ0ULKS8zUAMVLx9nAS8LZuyK91LZYuM2xs9SsWK7Np1ge2ZxYpNEHWJ7ZAPocmLIhUCQkCAA7"
-                 alt="Laster OIDC, vennligst vent! Loading OIDC, please wait!"
-            />
-            <img class="spinner svg"
-                 src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHRpdGxlPmljb19zcGlubmVyX2JpZzwvdGl0bGU+PGcgZmlsbD0ibm9uZSI+PHBhdGggZD0iTTIwIDJ2NGM3LjcyIDAgMTQgNi4yOCAxNCAxNCAwIDcuNzE4LTYuMjggMTQtMTQgMTR2NGM5Ljk0IDAgMTgtOC4wNiAxOC0xOCAwLTkuOTQyLTguMDYtMTgtMTgtMTgiIGZpbGw9IiNmZmYiLz48cGF0aCBkPSJNMjAgNnYtNGMtOS45NDIgMC0xOCA4LjA1OC0xOCAxOCAwIDkuOTQgOC4wNTggMTggMTggMTh2LTRjLTcuNzIgMC0xNC02LjI4Mi0xNC0xNCAwLTcuNzIgNi4yOC0xNCAxNC0xNHoiIGZpbGw9IiMwMDdCQzAiLz48L2c+PC9zdmc+"
-                 alt="Laster OIDC, vennligst vent! Loading OIDC, please wait!">
-        </div>
-        <div class="text_wrapper">
-            <h1 lang="no">Laster klienten, vennligst vent.</h1>
-
-            <h2 lang="en">Loading client, please wait.</h2>
-        </div>
-    </div>
-</div>
-
-<!-- Client -->
-<div id="app">
-
-    <div id="resize-wrapper">
-        <!-- Merchant header is injected here. -->
-        <div id="merchant-header"></div>
-        <!-- View viewport. Viewport defined in 'viewports/view/' is injected here. -->
-        <div id="view"></div>
-
-        <!-- Modal viewport. Viewport defined in 'viewports/modal/' is injected here. -->
-        <div id="modal"></div>
-
-        <!-- Full screen container -->
-        <div id="full-screen"></div>
-    </div>
-
-    <!-- Dialog container -->
-    <div id="dialog-container"></div>
-</div>
-
-<!-- Watchdog -->
-<script>
-    // Start watchdog. Executed if client is not correctly loaded.
-    var watchDogTime = 30000;
-
-    window.watchDogTimer = setTimeout( function () {
-        // show timeout static error
-        var timeoutErrorPage = document.getElementById( 'timeout-error' );
-
-        if ( timeoutErrorPage ) {
-            timeoutErrorPage.removeAttribute( 'style' );
-            timeoutErrorPage.className += ' active';
-        }
-    }, watchDogTime );
-</script>
-
-<script type="application/javascript" src="js/oidc-client.polyfill.bundle.min.js"></script>
-<script type="application/javascript" src="js/oidc-client.bundle.min.js"></script>
-</body>
-</html>
-
-REQUEST 8
-GET https://oidc-ui.bankidnorge.no/api/bim/fe0a727d-d87f-4dea-ae05-dc68b6492013
-Connection: keep-alive
-
-RESPONSE 8
-200
-Date: Fri, 03 Jul 2020 10:35:39 GMT
-Server: web
-Content-Length: 0
-Strict-Transport-Security: max-age=31536000
-Keep-Alive: timeout=10, max=84
-Connection: Keep-Alive
-
-REQUEST 9
-GET https://oidc-ui.bankidnorge.no/api/session/fe0a727d-d87f-4dea-ae05-dc68b6492013
-Connection: keep-alive
-Cache-Control: no-store
-
-RESPONSE 9
-200
-Date: Fri, 03 Jul 2020 10:35:39 GMT
-Server: web
-Vary: Accept-Encoding
-Content-Encoding: gzip
-Content-Type: application/json;charset=utf-8
-Content-Length: 332
-Strict-Transport-Security: max-age=31536000
-Keep-Alive: timeout=10, max=83
-Connection: Keep-Alive
-
-{"loginHint":{"nnin":null,"birthDate":"121290","phoneNo":"96325874","idp":"BIM"},"merchantName":"Nordea Bank Abp","requestedLevelOfAssurance":"LOA4","applicationName":"Nordea Identification","nnin":"12129026566","sid":"fe0a727d-d87f-4dea-ae05-dc68b6492013","languageCode":"nb","errorMessage":null,"applicationLogo":{"present":true},"chosenIdp":"BIM","enrollXid":false,"idpOptions":["BIM"],"returnUrl":"https://oidc-ui.bankidnorge.no/","errorCode":null,"action":"FINISH"}
-
-REQUEST 10
-GET https://oidc-ui.bankidnorge.no/?sid=fe0a727d-d87f-4dea-ae05-dc68b6492013
-Connection: keep-alive
-
-RESPONSE 10
-303
-Date: Fri, 03 Jul 2020 10:35:40 GMT
-Server: web
-Location: https://oidc.bankidapis.no/auth/realms/prod/broker/composite/endpoint?state=e4ez9Bus1sqpnepvaYAk0FL-ZfMRzYw9EToklMsn52Y.HeXvoY6eCWI.nordea-bankid-prod&code=18fc7af6-35a9-4b77-b237-323675ae39a3
-Content-Length: 0
-Strict-Transport-Security: max-age=31536000
-Keep-Alive: timeout=10, max=81
-Connection: Keep-Alive
-
-REQUEST 11
-GET https://oidc.bankidapis.no/auth/realms/prod/broker/composite/endpoint?state=e4ez9Bus1sqpnepvaYAk0FL-ZfMRzYw9EToklMsn52Y.HeXvoY6eCWI.nordea-bankid-prod&code=18fc7af6-35a9-4b77-b237-323675ae39a3
-Connection: keep-alive
-Cookie: AUTH_SESSION_ID=990ccd5c-4de7-4ca3-bd37-2b9e36eb94dc.bai-prod-keyc2; KC_RESTART=eyJhbGciOiJIUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICI0YzFmNDBjZC1kMmI4LTQzZDUtYmU5Zi0wZDViZTRmYmY1YzgifQ.eyJjaWQiOiJub3JkZWEtYmFua2lkLXByb2QiLCJwdHkiOiJvcGVuaWQtY29ubmVjdCIsInJ1cmkiOiJodHRwczovL2lkZW50aWZ5Lm5vcmRlYS5jb20vYmlkbm9jYiIsImFjdCI6IkFVVEhFTlRJQ0FURSIsIm5vdGVzIjp7ImxvZ2luX2hpbnQiOiJCSU06NDc5MTcxNTE6MjkwODg0Iiwic2NvcGUiOiJvcGVuaWQgcHJvZmlsZSBubmluX2FsdHN1YiIsImlzcyI6Imh0dHBzOi8vb2lkYy5iYW5raWRhcGlzLm5vL2F1dGgvcmVhbG1zL3Byb2QiLCJyZXNwb25zZV90eXBlIjoiY29kZSIsImNvZGVfY2hhbGxlbmdlX21ldGhvZCI6InBsYWluIiwicmVkaXJlY3RfdXJpIjoiaHR0cHM6Ly9pZGVudGlmeS5ub3JkZWEuY29tL2JpZG5vY2IiLCJzdGF0ZSI6ImV5SmhiR2NpT2lKU1V6STFOaUo5LmV5SnpkV0lpT2lKaVVYZEZjMU00WldONlVVWnFjWEZHTW05amJDSXNJbkowWlNJNkltTnZaR1VpTENKa2JXd2lPaUpwVUdodmJtVTVMRE1pTENKdGIyUWlPaUptZFd4c2MyTnlaV1Z1SWl3aWNIUm1Jam9pYVU5VElpd2lZMk5sSWpvaWNFOXBWVkpWUlhKbVdtOW9UMWRZZDFoQmNWWktTV2N5VlVOWVVUUnliRVpVTWtoT1kyWjVWakZ4ZHlJc0lteHVaeUk2SW1WdUlpd2ljM1JsSWpvaU1HcGhaMUJETkVWSWRHdE9OVk0zWWxoQlIxaHRWbXBxYkhjaUxDSnRhV1FpT2lKaVlXNXJhV1J0WDI1dklpd2ljM0JsSWpvaWIzQmxibWxrSUc1a1ppQmhaM0psWlcxbGJuUWdiMlptYkdsdVpWOWhZMk5sYzNNaUxDSmpZMjBpT2lKVE1qVTJJaXdpZFhKcElqb2lZMjl0TG01dmNtUmxZUzV0YjJKcGJHVmlZVzVyTG01dk9sd3ZYQzloZFhSb0xXTmhiR3hpWVdOcklpd2laR0ZzSWpvaU1DSXNJbk5wWkNJNklqRXlOVFl4WkRnM0xUUTVOVGt0TkRWa01TMWlNREJpTFRRek4yRmxZakk1WTJFeE5pSXNJbTVqWlNJNklrOUxNMUJKUXpKMmNucE9ZWGM1YjFsT2MxazRURUl3TjFKQklpd2lZWFp1SWpvaU15NHhNeTR5TGpFd09USWlMQ0psZUhBaU9qRTFPVE0zTnpNeE1UZ3NJbWxoZENJNk1UVTVNemMzTWpVeE9Dd2lhblJwSWpvaVltRmlNakpqTVRrdE5ETTNNUzAwTTJSbExUZzNZak10TVRRellXVmpObUk1TnpZeUluMC5LMnd5MWxGZFVzaDVCTkNFQ3pkSm14bXdGTzBJUGZEYldMQTZQNkhlTmNsSnRkSVVYSWtsZzlzdkw4MTVGazhTMDUwekR0S2VnX3VwV3UyaEpKSUkydDd4aWhwUHA5bWZmeThDSTRGMlNUQU0tYjBHWVBtWDNSUmU4ckI5RE40MW43d1IzUEMtM1hPRndfcUdfbjJLS1pneXVGVF93dWZHWGFIQ3pTMFFXUVNkd2xNOUVSc3ptQlVEZDhUd2cwQlFIYS05Z0prX2VFc25xOVU1VC03am1NbUpzQnBfRlZKNUdXcUtSb1RJQ0dVUFpJamNVbmpSQlBYQmd6cWQtYUlhRE4yTk5xeGcxell1cHpYeFpYQllRaDdWbDgyNGJFSVV2Y0k3LWtuN2tHcGRxZ3d4ZlB1OUtHSkNnUlNrRWRlR0lfTncwczFIWThzNU5lQmxDM2VrdlEiLCJyZXNwb25zZV9tb2RlIjoicXVlcnkifX0.gKyClTo_KjU-vUIfMrRbAFrWTG31hBs07Rqm1gTNthc; VALIDATION_COOKIE=1f965297-f953-4f95-8f16-55c5722c3a3d
-
-RESPONSE 11
-302
-Date: Fri, 03 Jul 2020 10:35:41 GMT
-Server: web
-Location: https://oidc.bankidapis.no/auth/realms/prod/login-actions/post-broker-login?client_id=nordea-bankid-prod&tab_id=HeXvoY6eCWI
-Content-Length: 0
-Strict-Transport-Security: max-age=31536000
-Keep-Alive: timeout=10, max=100
-Connection: Keep-Alive
-
-REQUEST 12
-GET https://oidc.bankidapis.no/auth/realms/prod/login-actions/post-broker-login?client_id=nordea-bankid-prod&tab_id=HeXvoY6eCWI
-Connection: keep-alive
-Cookie: AUTH_SESSION_ID=990ccd5c-4de7-4ca3-bd37-2b9e36eb94dc.bai-prod-keyc2; KC_RESTART=eyJhbGciOiJIUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICI0YzFmNDBjZC1kMmI4LTQzZDUtYmU5Zi0wZDViZTRmYmY1YzgifQ.eyJjaWQiOiJub3JkZWEtYmFua2lkLXByb2QiLCJwdHkiOiJvcGVuaWQtY29ubmVjdCIsInJ1cmkiOiJodHRwczovL2lkZW50aWZ5Lm5vcmRlYS5jb20vYmlkbm9jYiIsImFjdCI6IkFVVEhFTlRJQ0FURSIsIm5vdGVzIjp7ImxvZ2luX2hpbnQiOiJCSU06NDc5MTcxNTE6MjkwODg0Iiwic2NvcGUiOiJvcGVuaWQgcHJvZmlsZSBubmluX2FsdHN1YiIsImlzcyI6Imh0dHBzOi8vb2lkYy5iYW5raWRhcGlzLm5vL2F1dGgvcmVhbG1zL3Byb2QiLCJyZXNwb25zZV90eXBlIjoiY29kZSIsImNvZGVfY2hhbGxlbmdlX21ldGhvZCI6InBsYWluIiwicmVkaXJlY3RfdXJpIjoiaHR0cHM6Ly9pZGVudGlmeS5ub3JkZWEuY29tL2JpZG5vY2IiLCJzdGF0ZSI6ImV5SmhiR2NpT2lKU1V6STFOaUo5LmV5SnpkV0lpT2lKaVVYZEZjMU00WldONlVVWnFjWEZHTW05amJDSXNJbkowWlNJNkltTnZaR1VpTENKa2JXd2lPaUpwVUdodmJtVTVMRE1pTENKdGIyUWlPaUptZFd4c2MyTnlaV1Z1SWl3aWNIUm1Jam9pYVU5VElpd2lZMk5sSWpvaWNFOXBWVkpWUlhKbVdtOW9UMWRZZDFoQmNWWktTV2N5VlVOWVVUUnliRVpVTWtoT1kyWjVWakZ4ZHlJc0lteHVaeUk2SW1WdUlpd2ljM1JsSWpvaU1HcGhaMUJETkVWSWRHdE9OVk0zWWxoQlIxaHRWbXBxYkhjaUxDSnRhV1FpT2lKaVlXNXJhV1J0WDI1dklpd2ljM0JsSWpvaWIzQmxibWxrSUc1a1ppQmhaM0psWlcxbGJuUWdiMlptYkdsdVpWOWhZMk5sYzNNaUxDSmpZMjBpT2lKVE1qVTJJaXdpZFhKcElqb2lZMjl0TG01dmNtUmxZUzV0YjJKcGJHVmlZVzVyTG01dk9sd3ZYQzloZFhSb0xXTmhiR3hpWVdOcklpd2laR0ZzSWpvaU1DSXNJbk5wWkNJNklqRXlOVFl4WkRnM0xUUTVOVGt0TkRWa01TMWlNREJpTFRRek4yRmxZakk1WTJFeE5pSXNJbTVqWlNJNklrOUxNMUJKUXpKMmNucE9ZWGM1YjFsT2MxazRURUl3TjFKQklpd2lZWFp1SWpvaU15NHhNeTR5TGpFd09USWlMQ0psZUhBaU9qRTFPVE0zTnpNeE1UZ3NJbWxoZENJNk1UVTVNemMzTWpVeE9Dd2lhblJwSWpvaVltRmlNakpqTVRrdE5ETTNNUzAwTTJSbExUZzNZak10TVRRellXVmpObUk1TnpZeUluMC5LMnd5MWxGZFVzaDVCTkNFQ3pkSm14bXdGTzBJUGZEYldMQTZQNkhlTmNsSnRkSVVYSWtsZzlzdkw4MTVGazhTMDUwekR0S2VnX3VwV3UyaEpKSUkydDd4aWhwUHA5bWZmeThDSTRGMlNUQU0tYjBHWVBtWDNSUmU4ckI5RE40MW43d1IzUEMtM1hPRndfcUdfbjJLS1pneXVGVF93dWZHWGFIQ3pTMFFXUVNkd2xNOUVSc3ptQlVEZDhUd2cwQlFIYS05Z0prX2VFc25xOVU1VC03am1NbUpzQnBfRlZKNUdXcUtSb1RJQ0dVUFpJamNVbmpSQlBYQmd6cWQtYUlhRE4yTk5xeGcxell1cHpYeFpYQllRaDdWbDgyNGJFSVV2Y0k3LWtuN2tHcGRxZ3d4ZlB1OUtHSkNnUlNrRWRlR0lfTncwczFIWThzNU5lQmxDM2VrdlEiLCJyZXNwb25zZV9tb2RlIjoicXVlcnkifX0.gKyClTo_KjU-vUIfMrRbAFrWTG31hBs07Rqm1gTNthc; VALIDATION_COOKIE=1f965297-f953-4f95-8f16-55c5722c3a3d
-
-RESPONSE 12
-302
-Date: Fri, 03 Jul 2020 10:35:42 GMT
-Server: web
-Cache-Control: no-store, must-revalidate, max-age=0
-Location: https://oidc.bankidapis.no/auth/realms/prod/broker/after-post-broker-login?session_code=daXl-dOiKB1h1-QlDpBUIqnSWLRIDrv51VoPuoMRI-M&client_id=nordea-bankid-prod&tab_id=HeXvoY6eCWI
-Content-Length: 0
-Strict-Transport-Security: max-age=31536000
-Keep-Alive: timeout=10, max=99
-Connection: Keep-Alive
-
-REQUEST 13
-GET https://oidc.bankidapis.no/auth/realms/prod/broker/after-post-broker-login?session_code=daXl-dOiKB1h1-QlDpBUIqnSWLRIDrv51VoPuoMRI-M&client_id=nordea-bankid-prod&tab_id=HeXvoY6eCWI
-Connection: keep-alive
-Cookie: AUTH_SESSION_ID=990ccd5c-4de7-4ca3-bd37-2b9e36eb94dc.bai-prod-keyc2; KC_RESTART=eyJhbGciOiJIUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICI0YzFmNDBjZC1kMmI4LTQzZDUtYmU5Zi0wZDViZTRmYmY1YzgifQ.eyJjaWQiOiJub3JkZWEtYmFua2lkLXByb2QiLCJwdHkiOiJvcGVuaWQtY29ubmVjdCIsInJ1cmkiOiJodHRwczovL2lkZW50aWZ5Lm5vcmRlYS5jb20vYmlkbm9jYiIsImFjdCI6IkFVVEhFTlRJQ0FURSIsIm5vdGVzIjp7ImxvZ2luX2hpbnQiOiJCSU06NDc5MTcxNTE6MjkwODg0Iiwic2NvcGUiOiJvcGVuaWQgcHJvZmlsZSBubmluX2FsdHN1YiIsImlzcyI6Imh0dHBzOi8vb2lkYy5iYW5raWRhcGlzLm5vL2F1dGgvcmVhbG1zL3Byb2QiLCJyZXNwb25zZV90eXBlIjoiY29kZSIsImNvZGVfY2hhbGxlbmdlX21ldGhvZCI6InBsYWluIiwicmVkaXJlY3RfdXJpIjoiaHR0cHM6Ly9pZGVudGlmeS5ub3JkZWEuY29tL2JpZG5vY2IiLCJzdGF0ZSI6ImV5SmhiR2NpT2lKU1V6STFOaUo5LmV5SnpkV0lpT2lKaVVYZEZjMU00WldONlVVWnFjWEZHTW05amJDSXNJbkowWlNJNkltTnZaR1VpTENKa2JXd2lPaUpwVUdodmJtVTVMRE1pTENKdGIyUWlPaUptZFd4c2MyTnlaV1Z1SWl3aWNIUm1Jam9pYVU5VElpd2lZMk5sSWpvaWNFOXBWVkpWUlhKbVdtOW9UMWRZZDFoQmNWWktTV2N5VlVOWVVUUnliRVpVTWtoT1kyWjVWakZ4ZHlJc0lteHVaeUk2SW1WdUlpd2ljM1JsSWpvaU1HcGhaMUJETkVWSWRHdE9OVk0zWWxoQlIxaHRWbXBxYkhjaUxDSnRhV1FpT2lKaVlXNXJhV1J0WDI1dklpd2ljM0JsSWpvaWIzQmxibWxrSUc1a1ppQmhaM0psWlcxbGJuUWdiMlptYkdsdVpWOWhZMk5sYzNNaUxDSmpZMjBpT2lKVE1qVTJJaXdpZFhKcElqb2lZMjl0TG01dmNtUmxZUzV0YjJKcGJHVmlZVzVyTG01dk9sd3ZYQzloZFhSb0xXTmhiR3hpWVdOcklpd2laR0ZzSWpvaU1DSXNJbk5wWkNJNklqRXlOVFl4WkRnM0xUUTVOVGt0TkRWa01TMWlNREJpTFRRek4yRmxZakk1WTJFeE5pSXNJbTVqWlNJNklrOUxNMUJKUXpKMmNucE9ZWGM1YjFsT2MxazRURUl3TjFKQklpd2lZWFp1SWpvaU15NHhNeTR5TGpFd09USWlMQ0psZUhBaU9qRTFPVE0zTnpNeE1UZ3NJbWxoZENJNk1UVTVNemMzTWpVeE9Dd2lhblJwSWpvaVltRmlNakpqTVRrdE5ETTNNUzAwTTJSbExUZzNZak10TVRRellXVmpObUk1TnpZeUluMC5LMnd5MWxGZFVzaDVCTkNFQ3pkSm14bXdGTzBJUGZEYldMQTZQNkhlTmNsSnRkSVVYSWtsZzlzdkw4MTVGazhTMDUwekR0S2VnX3VwV3UyaEpKSUkydDd4aWhwUHA5bWZmeThDSTRGMlNUQU0tYjBHWVBtWDNSUmU4ckI5RE40MW43d1IzUEMtM1hPRndfcUdfbjJLS1pneXVGVF93dWZHWGFIQ3pTMFFXUVNkd2xNOUVSc3ptQlVEZDhUd2cwQlFIYS05Z0prX2VFc25xOVU1VC03am1NbUpzQnBfRlZKNUdXcUtSb1RJQ0dVUFpJamNVbmpSQlBYQmd6cWQtYUlhRE4yTk5xeGcxell1cHpYeFpYQllRaDdWbDgyNGJFSVV2Y0k3LWtuN2tHcGRxZ3d4ZlB1OUtHSkNnUlNrRWRlR0lfTncwczFIWThzNU5lQmxDM2VrdlEiLCJyZXNwb25zZV9tb2RlIjoicXVlcnkifX0.gKyClTo_KjU-vUIfMrRbAFrWTG31hBs07Rqm1gTNthc; VALIDATION_COOKIE=1f965297-f953-4f95-8f16-55c5722c3a3d
-
-RESPONSE 13
-302
-Date: Fri, 03 Jul 2020 10:35:42 GMT
-Server: web
-P3P: CP="This is not a P3P policy!"
-Location: https://identify.nordea.com/bidnocb?state=eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJiUXdFc1M4ZWN6UUZqcXFGMm9jbCIsInJ0ZSI6ImNvZGUiLCJkbWwiOiJpUGhvbmU5LDMiLCJtb2QiOiJmdWxsc2NyZWVuIiwicHRmIjoiaU9TIiwiY2NlIjoicE9pVVJVRXJmWm9oT1dYd1hBcVZKSWcyVUNYUTRybEZUMkhOY2Z5VjFxdyIsImxuZyI6ImVuIiwic3RlIjoiMGphZ1BDNEVIdGtONVM3YlhBR1htVmpqbHciLCJtaWQiOiJiYW5raWRtX25vIiwic3BlIjoib3BlbmlkIG5kZiBhZ3JlZW1lbnQgb2ZmbGluZV9hY2Nlc3MiLCJjY20iOiJTMjU2IiwidXJpIjoiY29tLm5vcmRlYS5tb2JpbGViYW5rLm5vOlwvXC9hdXRoLWNhbGxiYWNrIiwiZGFsIjoiMCIsInNpZCI6IjEyNTYxZDg3LTQ5NTktNDVkMS1iMDBiLTQzN2FlYjI5Y2ExNiIsIm5jZSI6Ik9LM1BJQzJ2cnpOYXc5b1lOc1k4TEIwN1JBIiwiYXZuIjoiMy4xMy4yLjEwOTIiLCJleHAiOjE1OTM3NzMxMTgsImlhdCI6MTU5Mzc3MjUxOCwianRpIjoiYmFiMjJjMTktNDM3MS00M2RlLTg3YjMtMTQzYWVjNmI5NzYyIn0.K2wy1lFdUsh5BNCECzdJmxmwFO0IPfDbWLA6P6HeNclJtdIUXIklg9svL815Fk8S050zDtKeg_upWu2hJJII2t7xihpPp9mffy8CI4F2STAM-b0GYPmX3RRe8rB9DN41n7wR3PC-3XOFw_qG_n2KKZgyuFT_wufGXaHCzS0QWQSdwlM9ERszmBUDd8Twg0BQHa-9gJk_eEsnq9U5T-7jmMmJsBp_FVJ5GWqKRoTICGUPZIjcUnjRBPXBgzqd-aIaDN2NNqxg1zYupzXxZXBYQh7Vl824bEIUvcI7-kn7kGpdqgwxfPu9KGJCgRSkEdeGI_Nw0s1HY8s5NeBlC3ekvQ&session_state=990ccd5c-4de7-4ca3-bd37-2b9e36eb94dc&code=0757d797-1867-41d9-9041-c0b372018355.990ccd5c-4de7-4ca3-bd37-2b9e36eb94dc.7123e0eb-7407-435c-9c7a-1474176098eb
-Content-Length: 0
-Strict-Transport-Security: max-age=31536000
-Set-Cookie: KC_RESTART=; Version=1; Expires=Thu, 01-Jan-1970 00:00:10 GMT; Max-Age=0; Path=/auth/realms/prod/; Secure; HttpOnly
-Set-Cookie: KEYCLOAK_IDENTITY=eyJhbGciOiJIUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICI0YzFmNDBjZC1kMmI4LTQzZDUtYmU5Zi0wZDViZTRmYmY1YzgifQ.eyJqdGkiOiI3MmRiMzdmOS1jMDQ1LTRkMGQtYjhhOS1mZmNhMWI4NmQyMDMiLCJleHAiOjE1OTM4MDg1NDIsIm5iZiI6MCwiaWF0IjoxNTkzNzcyNTQyLCJpc3MiOiJodHRwczovL29pZGMuYmFua2lkYXBpcy5uby9hdXRoL3JlYWxtcy9wcm9kIiwic3ViIjoiOTZhYTY5ZmItZmY4MS00MzJjLThjNmItZGY3MTYyNjEzM2EzIiwidHlwIjoiU2VyaWFsaXplZC1JRCIsImF1dGhfdGltZSI6MCwic2Vzc2lvbl9zdGF0ZSI6Ijk5MGNjZDVjLTRkZTctNGNhMy1iZDM3LTJiOWUzNmViOTRkYyIsInN0YXRlX2NoZWNrZXIiOiJ4MDNSRkl6Z1YxUTR4RHhrenE2dk9YZlhtMmhFbHZCM2MteHN0MU9MeGJNIn0.1ilHDBhXQOV39Nifi3VhiWTFMeBg8S155aQYmZsLVsk; Version=1; Path=/auth/realms/prod/; SameSite=None; Secure; HttpOnly
-Set-Cookie: KEYCLOAK_IDENTITY_LEGACY=eyJhbGciOiJIUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICI0YzFmNDBjZC1kMmI4LTQzZDUtYmU5Zi0wZDViZTRmYmY1YzgifQ.eyJqdGkiOiI3MmRiMzdmOS1jMDQ1LTRkMGQtYjhhOS1mZmNhMWI4NmQyMDMiLCJleHAiOjE1OTM4MDg1NDIsIm5iZiI6MCwiaWF0IjoxNTkzNzcyNTQyLCJpc3MiOiJodHRwczovL29pZGMuYmFua2lkYXBpcy5uby9hdXRoL3JlYWxtcy9wcm9kIiwic3ViIjoiOTZhYTY5ZmItZmY4MS00MzJjLThjNmItZGY3MTYyNjEzM2EzIiwidHlwIjoiU2VyaWFsaXplZC1JRCIsImF1dGhfdGltZSI6MCwic2Vzc2lvbl9zdGF0ZSI6Ijk5MGNjZDVjLTRkZTctNGNhMy1iZDM3LTJiOWUzNmViOTRkYyIsInN0YXRlX2NoZWNrZXIiOiJ4MDNSRkl6Z1YxUTR4RHhrenE2dk9YZlhtMmhFbHZCM2MteHN0MU9MeGJNIn0.1ilHDBhXQOV39Nifi3VhiWTFMeBg8S155aQYmZsLVsk; Version=1; Path=/auth/realms/prod/; Secure; HttpOnly
-Set-Cookie: KEYCLOAK_SESSION=prod/96aa69fb-ff81-432c-8c6b-df71626133a3/990ccd5c-4de7-4ca3-bd37-2b9e36eb94dc; Version=1; Expires=Fri, 03-Jul-2020 20:35:42 GMT; Max-Age=36000; Path=/auth/realms/prod/; SameSite=None; Secure
-Set-Cookie: KEYCLOAK_SESSION_LEGACY=prod/96aa69fb-ff81-432c-8c6b-df71626133a3/990ccd5c-4de7-4ca3-bd37-2b9e36eb94dc; Version=1; Expires=Fri, 03-Jul-2020 20:35:42 GMT; Max-Age=36000; Path=/auth/realms/prod/; Secure
-Set-Cookie: KEYCLOAK_REMEMBER_ME=; Version=1; Comment=Expiring cookie; Expires=Thu, 01-Jan-1970 00:00:10 GMT; Max-Age=0; Path=/auth/realms/prod/; Secure; HttpOnly
-Keep-Alive: timeout=10, max=98
-Connection: Keep-Alive
-
-REQUEST 14
-GET https://identify.nordea.com/bidnocb?state=eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJiUXdFc1M4ZWN6UUZqcXFGMm9jbCIsInJ0ZSI6ImNvZGUiLCJkbWwiOiJpUGhvbmU5LDMiLCJtb2QiOiJmdWxsc2NyZWVuIiwicHRmIjoiaU9TIiwiY2NlIjoicE9pVVJVRXJmWm9oT1dYd1hBcVZKSWcyVUNYUTRybEZUMkhOY2Z5VjFxdyIsImxuZyI6ImVuIiwic3RlIjoiMGphZ1BDNEVIdGtONVM3YlhBR1htVmpqbHciLCJtaWQiOiJiYW5raWRtX25vIiwic3BlIjoib3BlbmlkIG5kZiBhZ3JlZW1lbnQgb2ZmbGluZV9hY2Nlc3MiLCJjY20iOiJTMjU2IiwidXJpIjoiY29tLm5vcmRlYS5tb2JpbGViYW5rLm5vOlwvXC9hdXRoLWNhbGxiYWNrIiwiZGFsIjoiMCIsInNpZCI6IjEyNTYxZDg3LTQ5NTktNDVkMS1iMDBiLTQzN2FlYjI5Y2ExNiIsIm5jZSI6Ik9LM1BJQzJ2cnpOYXc5b1lOc1k4TEIwN1JBIiwiYXZuIjoiMy4xMy4yLjEwOTIiLCJleHAiOjE1OTM3NzMxMTgsImlhdCI6MTU5Mzc3MjUxOCwianRpIjoiYmFiMjJjMTktNDM3MS00M2RlLTg3YjMtMTQzYWVjNmI5NzYyIn0.K2wy1lFdUsh5BNCECzdJmxmwFO0IPfDbWLA6P6HeNclJtdIUXIklg9svL815Fk8S050zDtKeg_upWu2hJJII2t7xihpPp9mffy8CI4F2STAM-b0GYPmX3RRe8rB9DN41n7wR3PC-3XOFw_qG_n2KKZgyuFT_wufGXaHCzS0QWQSdwlM9ERszmBUDd8Twg0BQHa-9gJk_eEsnq9U5T-7jmMmJsBp_FVJ5GWqKRoTICGUPZIjcUnjRBPXBgzqd-aIaDN2NNqxg1zYupzXxZXBYQh7Vl824bEIUvcI7-kn7kGpdqgwxfPu9KGJCgRSkEdeGI_Nw0s1HY8s5NeBlC3ekvQ&session_state=990ccd5c-4de7-4ca3-bd37-2b9e36eb94dc&code=0757d797-1867-41d9-9041-c0b372018355.990ccd5c-4de7-4ca3-bd37-2b9e36eb94dc.7123e0eb-7407-435c-9c7a-1474176098eb
-Connection: keep-alive
-
-RESPONSE 14
-200
-X-Backside-Transport: OK OK,OK OK
-nnCoection: close
-Transfer-Encoding: chunked
-Date: Fri, 03 Jul 2020 10:35:42 GMT
-Content-Language: en
-Content-Type: text/html
-X-Content-Type-Options: nosniff
-X-XSS-Protection: 1; mode=block
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-Pragma: no-cache
-Expires: 0
-Vary: Accept-Encoding, User-Agent
-X-Global-Transaction-ID: c2da75b45eff09fe4b51d753
-
-
-<!DOCTYPE html>
-<html class="mobile">
-
-    <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <meta name="robots" content="noindex, nofollow">
-    <title>Nordea - Identification</title>
-
-    <script>
-    function safeLog(message, type) {
-        if (console) {
-            if (type === 'ERROR' && console.error) { console.error(message); }
-            else if (type === 'WARN' && console.warn) { console.warn(message); }
-            else if (type === 'INFO' && console.info) { console.info(message); }
-            else if (type === 'DEBUG' && console.debug) { console.debug(message); }
-            else if (console.log) { console.log(message); }
-        }
-    }
-</script>
-<script>  safeLog(['\n', "Stop!", "This is a browser feature intended for developers.\n\nUsing the console may allow attackers to impersonate you and steal your information using an attack called Self-XSS.\n\nDo not enter code that you do not understand.", '\n\n'].join('\n'), 'WARN'); </script>
-    <link rel="shortcut icon" type="image/x-icon" href="/assets/images/favicon.ico" onload="safeLog('Loaded: ' + this.href)" onerror="safeLog('Failed to load: ' + this.href, 'ERROR')">
-    <link rel="stylesheet" href="/assets/styles-6af237f07b117508ecc428f538073c25.css" onload="safeLog('Loaded: ' + this.href)" onerror="safeLog('Failed to load: ' + this.href, 'ERROR')">
-
-
-
-
-    <!-- 1.16.3 -->
-
-</head>
-
-    <body class="loading">
-
-        <div class="main-loader centered" id="loading" tabindex="-1" role="dialog">
-    <div class="loader" aria-hidden="true">
-    <svg focusable="false" viewBox="0 0 48 48"><path d="M24,2.4000000000000004A21.6,21.6 0 1 1 2.4000000000000004,24" fill="none" stroke-width="4.5px" stroke="#000"></path></svg>
-</div>
-<p class="loader-text">Loading...</p>
-<noscript><p class="loader-text">JavaScript must be enabled to use this page.</p></noscript>
-</div>
-
-        <header class="text-center">
-            <div class="header-container">
-                <svg class="logo" viewBox="0 0 136.1 28.6" focusable="false">
-    <g id="logo">
-        <path fill="#ffffff" d="M124.1,6.2c-5.5,0.4-9.9,4.9-10.3,10.4c-0.4,6.5,4.7,11.9,11.1,11.9c2.3,0,5.4-1.2,6.8-3.6v3.3h4.3V17.6 C136.2,10.6,130.6,5.7,124.1,6.2z M131.4,17.6c-0.2,3.7-3.4,6.5-7.2,6c-2.9-0.4-5.2-2.7-5.6-5.6c-0.4-3.9,2.6-7.2,6.4-7.2 c3.4,0,6.2,2.7,6.4,6.1L131.4,17.6L131.4,17.6z"></path>
-        <path fill="#ffffff" d="M100.5,6.2c-5.9,0.2-10.9,4.7-10.9,11.3c0,6,4.9,11.1,11.2,11.1c4.4,0,8.7-2.6,10.4-6.9l-4.3-1.3 c-0.8,1.8-2.7,3.3-4.8,3.7c-3,0.6-5.8-1.3-6.9-3.3l16.7-4.6C111.4,11.8,107.6,6,100.5,6.2z M94.3,16.8c0-2.3,1.4-5,4.4-6.1 c3.4-1.3,6.4,0.4,7.7,2.8L94.3,16.8z"></path>
-        <path fill="#ffffff" d="M63.8,10.7V6.1c-4.2,0-5.6,2.1-6.3,3.2V6.8h-4.8V17v11.1h4.9c0-6.6,0-6.5,0-10.5 C57.6,12.8,60.4,10.9,63.8,10.7z"></path>
-        <polygon fill="#ffffff" points="19.7,19.6 5.1,2.4 0.1,2.4 0.1,28.1 5.3,28.1 5.3,10.9 20.1,28.2 24.6,28.2 24.6,2.4 19.7,2.4"></polygon>
-        <path fill="#ffffff" d="M86.7,0.1h-4.6v8.4c-1.1-1.4-4.5-2.6-7.4-2.3c-5.5,0.4-9.9,4.9-10.3,10.4c-0.4,6.5,4.7,11.9,11.1,11.9 c2.4,0,5.7-1.1,6.8-3.2v2.8h4.3V17.5c0-0.1,0-0.1,0-0.2c0-0.1,0-0.1,0-0.2L86.7,0.1L86.7,0.1z M81.9,17.6 c-0.2,3.7-3.4,6.5-7.2,6c-2.9-0.4-5.2-2.7-5.6-5.6c-0.4-3.9,2.6-7.2,6.4-7.2c3.4,0,6.2,2.7,6.4,6.1 C81.9,16.9,81.9,17.6,81.9,17.6z"></path>
-        <path fill="#ffffff" d="M38.7,6.1c-6.2,0-11.2,5-11.2,11.2s5,11.2,11.2,11.2s11.2-5,11.2-11.2C49.8,11.1,44.8,6.1,38.7,6.1z M38.7,23.7c-3.5,0-6.4-2.9-6.4-6.4s2.9-6.4,6.4-6.4s6.4,2.9,6.4,6.4C45.1,20.9,42.2,23.7,38.7,23.7z"></path>
-    </g>
-</svg>
-
-            </div>
-        </header>
-
-        <main role="main">
-            <div class="content">
-                <h1 class="page-title text-center">Nordea Mobile</h1>
-                <div class="inner-content">
-
-                    <div id="manual-redirect" data-view-id="manual-redirect" class="success-content">
-    <p>Almost there.
-Just click the button below to continue.</p>
-    <button id="manual-redirect-btn">Continue</button>
-</div>
-
-                    <div data-view-id="error" class="error-content" role="alertdialog" aria-labelledby="error-message" id="error-view">
-    <div id="errors" class="errors">
-    <img class="hidden lazy-image" id="default-error" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" alt="Something went wrong." data-src="/assets/images/something-went-wrong-9bbd07dc81f3c2a11d2c7735b416ee18.svg">
-    <img class="hidden lazy-image" id="cancel-error" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" alt="Authentication was cancelled." data-src="/assets/images/cancel-d0c0f9d25ebde42bbd552c8ad5363f01.svg">
-    <img class="hidden lazy-image" id="request-error" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" alt="Something went wrong." data-src="/assets/images/no-connection-83f79e2367a313b468986e12a237c346.svg">
-    <img class="hidden lazy-image" id="empty-error" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" alt="You have no agreements available.
-Please contact us." data-src="/assets/images/empty-3857ebe69f653487f8c9d99adde4657f.svg">
-    <img class="hidden lazy-image" id="technical-error" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" alt="Something went wrong." data-src="/assets/images/technical-error-91ca9eec9eed6ed945355d650bb10d41.svg">
-</div>
-
-
-    <p id="error-message" class="error-message"></p>
-    <button id="error-close" type="button" data-add-params="true">OK</button>
-    <div class="button-group">
-        <div><button class="link cancel-link">Cancel</button></div>
-    </div>
-</div>
-
-
-
-                    <div data-view-id="agreements">
-    <form action="#" id="agreements-form" role="form">
-         <fieldset tabindex="-1" id="agreements-group">
-             <legend class="agreements-title sub-title">Select agreement</legend>
-             <div class="agreements" id="agreements" x-ms-format-detection="none"></div>
-             <div class="agreements-blocked-info" id="agreements-blocked-info">You have one or more inactive agreements. Please contact Nordea to reactivate the agreements.</div>
-        </fieldset>
-        <button type="submit" class="agreements-submit-btn" id="agreements-submit-btn" aria-label="Select agreement">OK</button>
-    </form>
-    <div class="button-group">
-        <div><button class="button link" id="agreements-cancel">Cancel</button></div>
-    </div>
-    <div aria-live="polite" class="visually-hidden" id="agreements-blocked-info-text"></div>
-</div>
-
-                    <div class="content-loader centered" id="content-loader" tabindex="-1" role="dialog">
-    <div class="loader" aria-hidden="true">
-    <svg focusable="false" viewBox="0 0 48 48"><path d="M24,2.4000000000000004A21.6,21.6 0 1 1 2.4000000000000004,24" fill="none" stroke-width="4.5px" stroke="#000"></path></svg>
-</div>
-    <p class="loader-text">Loading...</p>
-</div>
-                </div>
-            </div>
-        </main>
-
-        <footer>
-    <div>&copy; Nordea 2020 <br />This connection is encrypted</div>
-
-
-
-
-</footer>
-
-        <script src="/assets/scripts-27923c4075b36293221d71824ad421b0.js"></script>
-        <script>
-
-        App.redirect({
-            startOver: false,
-            userAccountsUrl: "\/api\/dbf\/ca\/user-accounts-service-v1",
-            agreement: "primary",
-            cuaie: false,
-            nv: "1.16.3",
-            av: "3.13.2.1092",
-            dm: "iPhone9,3",
-            ec: "0",
-            rt: null,
-            platform: "iOS",
-            requestParams: {"client_id":"bQwEsS8eczQFjqqF2ocl","redirect_uri":"com.nordea.mobilebank.no:\/\/auth-callback","scope":"openid ndf agreement offline_access","state":"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=","response_type":"code","nonce":"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=","acr_values":null,"code_challenge":"Fv2688auEbi41amQx632hFOuqeksultlC336EpO_3WY","code_challenge_method":"S256","signing_order_id":null},
-            lang: "en",
-            errors: {
-                error_default: "Something went wrong.",
-                access_denied: "Authentication was cancelled.",
-                cancelled: "Authentication was cancelled.",
-                request_failed: "Something went wrong. Please try again.",
-                request_timeout: "Connection timed out. Please try again.",
-                inactive_agreement: "You don't have suitable agreements for identification.\nPlease contact Nordea.",
-                no_agreements: "You have no agreements available. \nPlease contact us.",
-                inactive_agrmts_info: "You have one or more inactive agreements. Please contact Nordea to reactivate the agreements."
-            },
-            defaultMethod: "bankidm_no",
-            segments: { household: "Household", corporate: "Corporate" },
-            forceRedirect: false,
-            allowManualRedirect: true,
-            showExceptions: false,
-            "bankidm_no": {
-                id: "bankidm_no",
-                url: "\/api\/dbf\/ca\/bankidno-v1\/authentications",
-                type: "externaloidc"
-            }
-        }, "12561d87-4959-45d1-b00b-437aeb29ca16", "fullscreen", "0757d797-1867-41d9-9041-c0b372018355.990ccd5c-4de7-4ca3-bd37-2b9e36eb94dc.7123e0eb-7407-435c-9c7a-1474176098eb", null);
-
-
-
-
-        </script>
-    </body>
-</html>
-
-
-REQUEST 15
-PATCH https://identify.nordea.com/api/dbf/ca/bankidno-v1/authentications/12561d87-4959-45d1-b00b-437aeb29ca16
-x-device-ec: 0
-Content-Type: application/json
-x-platform-type: iOS
-x-app-version: 3.13.2.1092 -> 1.16.3
-x-device-model: iPhone9,3
-Connection: keep-alive
-
-{"bid_code":"0757d797-1867-41d9-9041-c0b372018355.990ccd5c-4de7-4ca3-bd37-2b9e36eb94dc.7123e0eb-7407-435c-9c7a-1474176098eb"}
-
-RESPONSE 15
-200
-X-Backside-Transport: OK OK,OK OK
-nnCoection: close
-Transfer-Encoding: chunked
-Date: Fri, 03 Jul 2020 10:35:43 GMT
-X-Application-Context: nasf-bankidno-service:nasa-clients-v1:6017
-Content-Type: application/json
-X-Global-Transaction-ID: c2da75b45eff09ff23ec3e0b
-Access-Control-Allow-Origin: https://identify.nordea.com
-Access-Control-Allow-Credentials: true
-Access-Control-Allow-Methods: POST, GET, DELETE, PATCH, PUT
-Access-Control-Max-Age: 3600
-Access-Control-Allow-Headers: origin,x-requested-with,x-dbf-servicerequestcontext,x-authorization,x-since,x-until,content-type,authorization,accept,accept-encoding,accept-language,client-security-token
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-X-Frame-Options: DENY
-X-XSS-Protection: 1; mode=block
-strict-transport-security: max-age=31536000; includeSubDomains
-Pragma: no-cache
-
-{"session_id":"12561d87-4959-45d1-b00b-437aeb29ca16","status":"completed","code":"eyJ6aXAiOiJERUYiLCJ0dHlwIjoiYXV0aGVudGljYXRpb25fdG9rZW4iLCJ2ZXIiOiIyLjAuMyIsImtpZCI6Im5hc2YtYXV0aGVudGljYXRpb24tdG9rZW4tZW5jcnlwdGlvbi1wcm9kIiwiY3R5IjoiSldUIiwiZW5jIjoiQTEyOEdDTSIsImFsZyI6ImRpciJ9..XvFVOu5WJ0HO4oqR.GzUEuVCuq_TL7kvBobheVQlmbfJ74X5bBtTGi6JwNROK0V3GpaLi5_-oO2-j3wVNGYTb3Nu735_3i6WCQlxy1vR7dfAQYSlLF9CUs9PXvU8kgPZAqcl6ESuq8K0czYl8S_Tnfjrw-W__2AVjEs4U48wpJOv1na6zxcFY-eWV3yKOHu81Cmi1edF9X00TmJQFNQeTbPF6qKF97SzLPhUt1XpWHISpahshwd4aK9aGBXo5AMddIttcFQ9syzr2kTnngFbyyPsVYaMCr0yTk9-OuQtvATIyC75WKhhUIIPhgxiSY4Wa5yRR6rdzlQ8SVG0kCzeYW48BAjN8G7QyUC8AK_XZyoOIir-mCKYrTUT6fuBW7kjDcQuzUKZCxPGBrFPPloW5125Pzwdg9YKEASH1jGnRyHfIkU3c59IHj9CqN4Ol45-YwJXQgYxxh86V1e_5nct26uVIhUUKTCNREqr7-kiN6GU--wyUczqYB8if9fkVkdaUBWrH4oTo8kkAg6k9YaL_5pjds5R2QXAjIaoNjHGD8oX4K-cfK7QnqClBfLqSnP50lnJ9WktcGLnWkDW3j_mjROlUgBnLgjwLNGGxXCwBM_-FOh1JH65LKguFWxU5V2Y6JKJXjCxIEES_IYtKC9EcJs20FMha69slYZueyaSY8jcCkHh_2sMsRrdEX2pyBAgzF0VJ6u-CkMIGS4gHAfjDDvGVQ63pnGVv2XfXOZbAtJ9ajKUf6Yo_tINKS2Z0z20i1HUoUxK6yfO_uAaSurWm6DlwblEd2oPZRp_ZrQZG5-_m-YpMINtxol14kEOV3RivL4TuF19n0rrTLOH_y6cX9ffRJgm6at2KdTsy-jukWqDuo5FEQL87sTNrQiOHDCNR3Ja4A2xwc4qP9isEF5vaCsTCGbNqIlz8Sb1Dq5Tcux0CGu2-d4RVC3ARP8iyWZKx3B-6iKXlV3J_1YfEhB8RgyYFBG7SQgrcil0u0B6ct8a8My6zzG05eofaJqS7QBPwSQWsPX74hPWd9PqMTsqv8LOmKBLjG3fv9b4DJEnA1KSguFxUjXtBjVuBaMN6hhv-2FCZvgciQn-Rp5GRNmUgepWhVlDx9VwpsHpEBAcFzjOJzZSOOBXlJHiMOn3ZRFJr3Pexm1hav1rKxJh1yFFdfrhb1CrnHI2lwCCLAK5h0I-NkAf-MGLbo4igbPrmey7Ucgc-JdHnBdGfMk_loQz5OTBUNlSxhhRl6qHhtVsLnEdPXjyTpH-CpIA0jq-YEafjsszd-Cildq9I3fqLjAEnas31mfv2k198Y64KLFd2dhLF84Xk-BEYjMXDvDanXgPyPNjgM1u3b07H99O4N2yh87lVytifPeVSJafZx0A2dywoi6FZy6tKsS3CkEBu1MM.jXktmad_yem6YxDFKSO7dg"}
-
-REQUEST 16
-POST https://identify.nordea.com/api/dbf/ca/user-accounts-service-v1/user-accounts/primary/authorization
-x-device-ec: 0
-Content-Type: application/json
-x-platform-type: iOS
-x-app-version: 3.13.2.1092 -> 1.16.3
-Content-Length: 1640
-x-device-model: iPhone9,3
-Connection: keep-alive
-
-{"code":"eyJ6aXAiOiJERUYiLCJ0dHlwIjoiYXV0aGVudGljYXRpb25fdG9rZW4iLCJ2ZXIiOiIyLjAuMyIsImtpZCI6Im5hc2YtYXV0aGVudGljYXRpb24tdG9rZW4tZW5jcnlwdGlvbi1wcm9kIiwiY3R5IjoiSldUIiwiZW5jIjoiQTEyOEdDTSIsImFsZyI6ImRpciJ9..XvFVOu5WJ0HO4oqR.GzUEuVCuq_TL7kvBobheVQlmbfJ74X5bBtTGi6JwNROK0V3GpaLi5_-oO2-j3wVNGYTb3Nu735_3i6WCQlxy1vR7dfAQYSlLF9CUs9PXvU8kgPZAqcl6ESuq8K0czYl8S_Tnfjrw-W__2AVjEs4U48wpJOv1na6zxcFY-eWV3yKOHu81Cmi1edF9X00TmJQFNQeTbPF6qKF97SzLPhUt1XpWHISpahshwd4aK9aGBXo5AMddIttcFQ9syzr2kTnngFbyyPsVYaMCr0yTk9-OuQtvATIyC75WKhhUIIPhgxiSY4Wa5yRR6rdzlQ8SVG0kCzeYW48BAjN8G7QyUC8AK_XZyoOIir-mCKYrTUT6fuBW7kjDcQuzUKZCxPGBrFPPloW5125Pzwdg9YKEASH1jGnRyHfIkU3c59IHj9CqN4Ol45-YwJXQgYxxh86V1e_5nct26uVIhUUKTCNREqr7-kiN6GU--wyUczqYB8if9fkVkdaUBWrH4oTo8kkAg6k9YaL_5pjds5R2QXAjIaoNjHGD8oX4K-cfK7QnqClBfLqSnP50lnJ9WktcGLnWkDW3j_mjROlUgBnLgjwLNGGxXCwBM_-FOh1JH65LKguFWxU5V2Y6JKJXjCxIEES_IYtKC9EcJs20FMha69slYZueyaSY8jcCkHh_2sMsRrdEX2pyBAgzF0VJ6u-CkMIGS4gHAfjDDvGVQ63pnGVv2XfXOZbAtJ9ajKUf6Yo_tINKS2Z0z20i1HUoUxK6yfO_uAaSurWm6DlwblEd2oPZRp_ZrQZG5-_m-YpMINtxol14kEOV3RivL4TuF19n0rrTLOH_y6cX9ffRJgm6at2KdTsy-jukWqDuo5FEQL87sTNrQiOHDCNR3Ja4A2xwc4qP9isEF5vaCsTCGbNqIlz8Sb1Dq5Tcux0CGu2-d4RVC3ARP8iyWZKx3B-6iKXlV3J_1YfEhB8RgyYFBG7SQgrcil0u0B6ct8a8My6zzG05eofaJqS7QBPwSQWsPX74hPWd9PqMTsqv8LOmKBLjG3fv9b4DJEnA1KSguFxUjXtBjVuBaMN6hhv-2FCZvgciQn-Rp5GRNmUgepWhVlDx9VwpsHpEBAcFzjOJzZSOOBXlJHiMOn3ZRFJr3Pexm1hav1rKxJh1yFFdfrhb1CrnHI2lwCCLAK5h0I-NkAf-MGLbo4igbPrmey7Ucgc-JdHnBdGfMk_loQz5OTBUNlSxhhRl6qHhtVsLnEdPXjyTpH-CpIA0jq-YEafjsszd-Cildq9I3fqLjAEnas31mfv2k198Y64KLFd2dhLF84Xk-BEYjMXDvDanXgPyPNjgM1u3b07H99O4N2yh87lVytifPeVSJafZx0A2dywoi6FZy6tKsS3CkEBu1MM.jXktmad_yem6YxDFKSO7dg"}
-
-RESPONSE 16
-200
-X-Backside-Transport: OK OK,OK OK
-nnCoection: close
-Transfer-Encoding: chunked
-Date: Fri, 03 Jul 2020 10:35:44 GMT
-X-Application-Context: nasf-user-accounts-service:nasa-clients-v1,nasa-ftn-clients-v1:6013
-Vary: Origin
-Content-Type: application/json
-X-Global-Transaction-ID: 855c86fd5eff0a00b39ed699
-Access-Control-Allow-Origin: https://identify.nordea.com
-Access-Control-Allow-Credentials: true
-Access-Control-Allow-Methods: POST, GET, DELETE, PATCH, PUT
-Access-Control-Max-Age: 3600
-Access-Control-Allow-Headers: origin,x-requested-with,x-dbf-servicerequestcontext,x-authorization,x-since,x-until,content-type,authorization,accept,accept-encoding,accept-language,client-security-token
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-X-Frame-Options: DENY
-X-XSS-Protection: 1; mode=block
-strict-transport-security: max-age=31536000; includeSubDomains
-Pragma: no-cache
-
-{"code":"eyJ6aXAiOiJERUYiLCJ0dHlwIjoiYXV0aGVudGljYXRpb25fdG9rZW4iLCJ2ZXIiOiIyLjAuMyIsImtpZCI6Im5hc2YtYXV0aGVudGljYXRpb24tdG9rZW4tZW5jcnlwdGlvbi1wcm9kIiwiY3R5IjoiSldUIiwiZW5jIjoiQTEyOEdDTSIsImFsZyI6ImRpciJ9..GfW39BcRSp0gs85o.xUz2orqX4N34DxazppqW3s-0kHEBT44Xg4zEWdOC5WyVpxAup-W-IVMrsyLBBdUVuO9KoM5wP3QxgeshNg1QBvG1QX5RnQBKYL27PK1C72-HlK7pJ0OzLIZAuIPbo0FdYJ-m8eRGpakMnhWpeiHM5zdnuX86WhZgJsEbjZo4hS-Xy4kfbRj4ZMfv-6wQ6PwG5YqG1ng73C9e9wNOZJW8tOpKfSECjF5sPeaJx0ZqcHEpqQRsMrzLebirHrb2eeqgP6ltlM-McyVE57gD-u23mcM-1ZcrB_VVux-aA52gStx8ik4JNzpsdPHIPtZjuh_q5HFd2ADwl9SuEoeE1zrs8TOeoI6kTnqn7sQdyUiQMxX5om73v9B4s1xu2BZF637TMuysYstvw4C2_ATLGhUVxTN7Gdy5G9YK3VjFZAKW12jIzzeHESjW74lIdd2cKAqeAANZ6En1wlHygIFm3KnbmR24YU8lQ7kjfdWyxbrt71JSNwC5cnIUFlFLOqMz-6qBbDl4JLHJbISpkZNunj-T_N_qgE2qKOHZh2ttHSGR5xcKgWdRnZUQ8SpdBknjoytE5RnwzMf9rm3BW7Mtf5W9kpNpQCRkzjfSDKl0YrDhfBjXPYUoD6mr5SONm1kIA_z8HhvwQfvw3bK2K57N8LDtPb7ZiaG_wtgdw4y87Na6-fIi9z2uxx4kKbQjrftH-55R0Vi48KrTzBCLv9lqHTRzhRSiPm5CdlvreeyLfL92_ZdAh7BIm9_mXTrW5U4sV4vT55c-pL2G2VObaZtbVqqzL5mVLKVdC80GFEarkGrSaB9TOq1V8R9VRAIDscQNjtCQN2i07XLp7QxWFRYs1AGZ4N14weluJw4SqI1t2FnbljGd3vC8UjKolKhOYXfsL7ZSCz2v_NwOFzIo5K0Ss-zfYAB3T4ukU0aIWuYS5KOgCUv337Ed14S-T2rvxHXxd2Js9f3bRVzGHNDSGW0e1ojipTJP7ikbPO8chDcMzS1Yj0aOetkhCigJexm3aRyaHPlZHncpdSoGoL49ioRQvNMruX7YIcr-xm8laufnacM9e8VUCjP66QcJLAw-UyjghY_DiKFNcqAp_82_vRnuuc1TA5Bvz_Qhq9HNM9DV0jUeIyPA4z4oI5HIzkSaGXIBWbGlZRAulUClci-QpTiItIIGfkGb6aAGuqph0ocuy4ByCNYxTKNBLkZgnSdZntLS4aZJ564ttygP16LWVbPXNHEpHWiYQGedKrGdj04wrWTrmyHSt3yObgznV1k-7y5HPjzN7j2dbpWO-od-4rLzF6f1DwPlPjosSk7sFPE5dnZtKBsXOPgQti1LkJUHubRy33oufEbHtWqCX6wLy-GGUSpfYhvmMSUkFP22JYvtSSR43AsiUTP634mYy2bjI7OXszOqW3JWbli1hSxAS6OGmMfTVwHtxdWPjQPjHJNc0C9ci6w.vpPmc_EE4IGWql0D1luCQQ"}
-
-REQUEST 17
+REQUEST 2
 POST https://private.nordea.no/api/dbf/ca/token-service-v3/oauth/token
 Content-Type: application/x-www-form-urlencoded
 x-app-language: en_NO
 x-platform-version: 12.4.0
 x-app-segment: household
 x-platform-type: iOS
-x-Device-Id: 00000000-0000-4000-0000-000000000000
 x-app-version: 3.13.2.1092
 x-device-model: iPhone9,3
 x-app-country: NO
 
-auth_method=nasa&client_id=bQwEsS8eczQFjqqF2ocl&code=eyJ6aXAiOiJERUYiLCJ0dHlwIjoiYXV0aGVudGljYXRpb25fdG9rZW4iLCJ2ZXIiOiIyLjAuMyIsImtpZCI6Im5hc2YtYXV0aGVudGljYXRpb24tdG9rZW4tZW5jcnlwdGlvbi1wcm9kIiwiY3R5IjoiSldUIiwiZW5jIjoiQTEyOEdDTSIsImFsZyI6ImRpciJ9..GfW39BcRSp0gs85o.xUz2orqX4N34DxazppqW3s-0kHEBT44Xg4zEWdOC5WyVpxAup-W-IVMrsyLBBdUVuO9KoM5wP3QxgeshNg1QBvG1QX5RnQBKYL27PK1C72-HlK7pJ0OzLIZAuIPbo0FdYJ-m8eRGpakMnhWpeiHM5zdnuX86WhZgJsEbjZo4hS-Xy4kfbRj4ZMfv-6wQ6PwG5YqG1ng73C9e9wNOZJW8tOpKfSECjF5sPeaJx0ZqcHEpqQRsMrzLebirHrb2eeqgP6ltlM-McyVE57gD-u23mcM-1ZcrB_VVux-aA52gStx8ik4JNzpsdPHIPtZjuh_q5HFd2ADwl9SuEoeE1zrs8TOeoI6kTnqn7sQdyUiQMxX5om73v9B4s1xu2BZF637TMuysYstvw4C2_ATLGhUVxTN7Gdy5G9YK3VjFZAKW12jIzzeHESjW74lIdd2cKAqeAANZ6En1wlHygIFm3KnbmR24YU8lQ7kjfdWyxbrt71JSNwC5cnIUFlFLOqMz-6qBbDl4JLHJbISpkZNunj-T_N_qgE2qKOHZh2ttHSGR5xcKgWdRnZUQ8SpdBknjoytE5RnwzMf9rm3BW7Mtf5W9kpNpQCRkzjfSDKl0YrDhfBjXPYUoD6mr5SONm1kIA_z8HhvwQfvw3bK2K57N8LDtPb7ZiaG_wtgdw4y87Na6-fIi9z2uxx4kKbQjrftH-55R0Vi48KrTzBCLv9lqHTRzhRSiPm5CdlvreeyLfL92_ZdAh7BIm9_mXTrW5U4sV4vT55c-pL2G2VObaZtbVqqzL5mVLKVdC80GFEarkGrSaB9TOq1V8R9VRAIDscQNjtCQN2i07XLp7QxWFRYs1AGZ4N14weluJw4SqI1t2FnbljGd3vC8UjKolKhOYXfsL7ZSCz2v_NwOFzIo5K0Ss-zfYAB3T4ukU0aIWuYS5KOgCUv337Ed14S-T2rvxHXxd2Js9f3bRVzGHNDSGW0e1ojipTJP7ikbPO8chDcMzS1Yj0aOetkhCigJexm3aRyaHPlZHncpdSoGoL49ioRQvNMruX7YIcr-xm8laufnacM9e8VUCjP66QcJLAw-UyjghY_DiKFNcqAp_82_vRnuuc1TA5Bvz_Qhq9HNM9DV0jUeIyPA4z4oI5HIzkSaGXIBWbGlZRAulUClci-QpTiItIIGfkGb6aAGuqph0ocuy4ByCNYxTKNBLkZgnSdZntLS4aZJ564ttygP16LWVbPXNHEpHWiYQGedKrGdj04wrWTrmyHSt3yObgznV1k-7y5HPjzN7j2dbpWO-od-4rLzF6f1DwPlPjosSk7sFPE5dnZtKBsXOPgQti1LkJUHubRy33oufEbHtWqCX6wLy-GGUSpfYhvmMSUkFP22JYvtSSR43AsiUTP634mYy2bjI7OXszOqW3JWbli1hSxAS6OGmMfTVwHtxdWPjQPjHJNc0C9ci6w.vpPmc_EE4IGWql0D1luCQQ&code_verifier=AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=&country=NO&grant_type=authorization_code&redirect_uri=com.nordea.mobilebank.no%3A//auth-callback&scope=ndf
+auth_method=nasa&client_id=bQwEsS8eczQFjqqF2ocl&code=AUTH_CODE&code_verifier=AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=&country=NO&grant_type=authorization_code&redirect_uri=com.nordea.mobilebank.no%3A//auth-callback&scope=ndf
 
-RESPONSE 17
+RESPONSE 2
 200
 X-Backside-Transport: OK OK,OK OK
 nnCoection: close
@@ -1136,7 +60,7 @@ Pragma: no-cache
 
 {"access_token":"eyJ0dHlwIjoiYWNjZXNzX3Rva2VuIiwidmVyIjoiMy4xLjIiLCJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Im5hc2YtYWNjZXNzLXRva2VuIn0.eyJzdWIiOiJuXC9hIiwiY291bnRyeSI6Ik5PIiwiaXNzIjoibmFzZi1hY2Nlc3MtdG9rZW4iLCJjbGllbnRfaWQiOiJOREhNTk8iLCJzaWQiOiIxMjU2MWQ4Ny00OTU5LTQ1ZDEtYjAwYi00MzdhZWIyOWNhMTYiLCJzc24iOiIyOTA4ODQyNjU2NiIsInVpZCI6IjI5MDg4NDI2NTY2IiwiY3Jpc3MiOiJCYW5rSUQgLSBOb3JkZWEgLSBCYW5rIENBIDMiLCJzY29wZSI6WyJuZGYiLCJhZ3JlZW1lbnQiLCJvcGVuaWQiLCJvZmZsaW5lX2FjY2VzcyJdLCJzZ20iOiJob3VzZWhvbGQiLCJleHAiOjE1OTM3NzI3MjgsImlhdCI6MTU5Mzc3MjU0OCwianRpIjoiZWRhMWUwOGNmODkyNGQ2NTg0YjQ1NmM2Y2FjODA5NGUiLCJncmFudHMiOnsiYWdyZWVtZW50IjoyOTA4ODQyNjU2Nn0sImMiOiJOTyIsImNoIjoiTkRITSIsImFpc3MiOiJkb21lc3RpY19wbiIsImFkbCI6e30sImFsIjoyLCJhbSI6ImJhbmtpZG1fbm8iLCJudHQiOiJleHQiLCJhdWQiOlsibmFzZiIsImRiZiIsIm9zbCJdLCJuYmYiOjE1OTM3NzI1MzgsImFpZCI6MjkwODg0MjY1NjYsImNpZCI6IjI5MDg4NDI2NTY2In0.LlX546p8R9VxK8XE26hhBs2Y9iR2Cb2AXbrXgwh4U3fvu9knNSWv44ZkCYjSxjBaegmNW1vmEPBDdKHegckUhGblhpC3Yy6G7VCHg3GZsAtrNMqQ3uCBdUxJBINSj9zaYP8yFIoX6jR7cvSe850xptmpRUgQAUrfv7o-H7wd7WiM4Qq-4UEpmAA-_B5BL0QCmZtiTPFgyrW1NxDnebRT7R1JggZRTmQlbALrsgJXCcB5-VVu7ais87iJ-OI8a8mrgGkzujW628e924Bpx6-iYxRH_WYuvkjDitFDlcNZiaiKfSTFmaXTjR909r9Tr99H01K7xSRhPf8I9nZ9ThsNzA","expires_in":180,"token_type":"Bearer","id_token":"eyJ0dHlwIjoiaWRfdG9rZW4iLCJ2ZXIiOiIxLjAuMyIsInR5cCI6IkpXVCIsImFsZyI6IlJTMjU2Iiwia2lkIjoibmFzZi1pZC10b2tlbiJ9.eyJzdWIiOiJuXC9hIiwiY291bnRyeSI6Ik5PIiwiY2giOiJOREhNIiwiYWlzcyI6ImRvbWVzdGljX3BuIiwiYW1yIjoiYmFua2lkbV9ubyIsImlzcyI6Imh0dHBzOlwvXC9pZGVudGlmeS5ub3JkZWEuY29tIiwiYWRsIjp7fSwibm9uY2UiOiJPSzNQSUMydnJ6TmF3OW9ZTnNZOExCMDdSQSIsImNsaWVudF9pZCI6ImJRd0VzUzhlY3pRRmpxcUYyb2NsIiwibnR0IjoiZXh0Iiwic2lkIjoiMTI1NjFkODctNDk1OS00NWQxLWIwMGItNDM3YWViMjljYTE2IiwiYXVkIjoiYlF3RXNTOGVjelFGanFxRjJvY2wiLCJ1aWQiOiIyOTA4ODQyNjU2NiIsImFjciI6IjIiLCJjcmlzcyI6IkJhbmtJRCAtIE5vcmRlYSAtIEJhbmsgQ0EgMyIsIm5iZiI6MTU5Mzc3MjUzOCwiYXV0aF90aW1lIjoxNTkzNzcyNTQzLCJleHAiOjE1OTM3NzMxNDgsImlhdCI6MTU5Mzc3MjU0OCwiYWlkIjoyOTA4ODQyNjU2NiwianRpIjoiOGQyNTY4NGItZjg1OS00NmJkLWFlYmYtM2VlMTVjMWUxMTY0In0.ZBrexdnsYTHDtQDXerejPgpj5yoU4XV6Cq-H5EI6uzuwx0w9EBMmj4TK9O_KxIUvpeRJDC8pbWAyjHMYsnmA4_qKaqps2vEwffBpYeE5KOkwajqvYUd-Sqaz_WDzLFn6mguZkvpmdhWTJDOErDd0dDUgEa_wWyjHLno6m0nhuhZk2FcFQKegOeXalF2SHbh5v6IIdkSbhS0tdmZAWudF_pmUjU1DZljWdArblo4A-iS0WQvC11jqXnAgedsAkMQWwNX0s59nBVuyAHZw96pC6DE4wkdoEdZRxrGc0JfREjwG1S5daw3BWWlOCZMgCpk1CmcU09TEX2QT7yRY9ucjTA","refresh_token":"eyJ6aXAiOiJERUYiLCJ0dHlwIjoicmVmcmVzaF90b2tlbiIsInZlciI6IjMuMS4yIiwia2lkIjoibmFzZi1yZWZyZXNoLXRva2VuLWNyeXB0aW5nIiwiY3R5IjoiSldUIiwiZW5jIjoiQTEyOEdDTSIsImFsZyI6IlJTQS1PQUVQLTI1NiJ9.G2aAh0G33P2SvJonAUDOzlwsPmdEUHMQTMw-M9T60ap7kW5JyDbR1K9rm2nNUieu6ROR3wZzbsEMZBuyTOsX79Zn5ioIvmkc5-6KlDb1vphw7Al94G-V5JfyaXB_FwscFE2Kehebwr3K1uZktDIUROuyy7tuEFcgRXLjJvOV-yQ0OfR3xEa8Vyf2pd_grP0a_U5H2vWH4SnN03iuGQ-iWh5MRIiHJ-DZGxTSXo03MksYx7ob2ozaXSkL3daHj0ewhQEq11mGxIPT7mIwV3XSy33DeDfnSEMhNFxfV-YTG2OHHb4cYgVRR_inpNFlQBm5YKEbXxRb0xIdjyh8NsKYbw.yDhV_seZTHDM4oVe.vfLXyzp9BwqXwG7ds-j5tPbrCVcitwe9YNUPCJvCdE2al8qeRepHZ7tBdIKPvtYn5aR96UrQ13mZHqrwMTaB3C6mMPokO_G4qcLYFucDPBBpnWalcPrVIBdVDBYMkxIZcSpXG8Ge2FDRFLIeFMaB9uQWbAzTMR80PnmgviMQYJRTHe6BwbqPgnlIFZwd660M1clU2le4Gx-MHPJ-dSuYy7-JEPpF9oisGx9-m2Y6NKZTXV7foTPZPhpffkDE7sGUaOoOQt2HDsedaJtub64TcBIiIvY1VJlXTpmxlGwQTSmc1MsmwI68AJ3qlPQg8ToPmvybGt-vLlgHgTgm17FzZTSCvt3e57M2GXHcm4weM1GSu4v1n3k2DQXJplUWsYHSGnlUrc5A-kx1ULC4FA0MPoG8iDqvFrNEQXhBW0bjEH8o67IZmSZjpvgxEMAflMJNYcJCWAoN00iriFIZZV1RYrKZ5k68yUG1jccMuRaOtPqdE_xJK41DJpa4X5LN-OY8Z0tbkmF4LY0TfJ5bfXiwg85ztocX7TEqPdtrR1HH3iWSYTIi22TuXr98m1DFiYSwGp--p-kBB8UoKA3dG3PUHds02uIKn2toMq4OAKcR8Nlg3UX4OtturOfJY7TeQQWVAtRao8fcQguUElUAn2dG8Db9Twp_V9MIuTGiqH7o5eFVIKaE61fLVwRWyUUBKoK9euZWMZquF2MbegtdNkX13g0zaSWP1nhrMcQJVbY3m4AV1bADlJ_UqKwMGJx_ZWFKVFEqohvKNUW_QngPGzQB7hk9wmoudzW1q1gbdTj1k77i25kFd63SiD8RqvORrHXWG-djy7U5lscLFnG4prMXEvaqqhDRWtxttuVwGnPLRZNU1IL65y8JxoqwjMSQsaHo366YiEPHOnoaL3WNeKu_WGdWZheuZ6yR0b8V0ZruH7X3VLjESugDyAU2eNAxe8zpgnqn0IlRXM8nyFO9Gc_9KzhNJVfSd2Jbt0dJlVklhfVKQtajsniv4OMW2D0MfOF17bG4pQOkR27S7aTTN3PfC7v2q5wZ19PaPCovKve9ulzpIoaVF-fWQHv3M_txaBqwCqwcOoJSACZ_KdrXzZ8lbmaO8j20M-ov_Gs1-csWdX_vncM0._E93vHH5nT-6lHPnvc_IEA","scope":"ndf agreement openid offline_access","uh":"0072e5fa1859d034084e975c6bfe2e223b2119ac84fd6827f5446890a01a2122236eebfbbfb09e997647403fe0e99930b246fab21bd52e29b9ed241810424337"}
 
-REQUEST 18
+REQUEST 3
 GET https://private.nordea.no/api/dbf/ca/token-service-v3/keys
 Authorization: Bearer eyJ0dHlwIjoiYWNjZXNzX3Rva2VuIiwidmVyIjoiMy4xLjIiLCJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Im5hc2YtYWNjZXNzLXRva2VuIn0.eyJzdWIiOiJuXC9hIiwiY291bnRyeSI6Ik5PIiwiaXNzIjoibmFzZi1hY2Nlc3MtdG9rZW4iLCJjbGllbnRfaWQiOiJOREhNTk8iLCJzaWQiOiIxMjU2MWQ4Ny00OTU5LTQ1ZDEtYjAwYi00MzdhZWIyOWNhMTYiLCJzc24iOiIyOTA4ODQyNjU2NiIsInVpZCI6IjI5MDg4NDI2NTY2IiwiY3Jpc3MiOiJCYW5rSUQgLSBOb3JkZWEgLSBCYW5rIENBIDMiLCJzY29wZSI6WyJuZGYiLCJhZ3JlZW1lbnQiLCJvcGVuaWQiLCJvZmZsaW5lX2FjY2VzcyJdLCJzZ20iOiJob3VzZWhvbGQiLCJleHAiOjE1OTM3NzI3MjgsImlhdCI6MTU5Mzc3MjU0OCwianRpIjoiZWRhMWUwOGNmODkyNGQ2NTg0YjQ1NmM2Y2FjODA5NGUiLCJncmFudHMiOnsiYWdyZWVtZW50IjoyOTA4ODQyNjU2Nn0sImMiOiJOTyIsImNoIjoiTkRITSIsImFpc3MiOiJkb21lc3RpY19wbiIsImFkbCI6e30sImFsIjoyLCJhbSI6ImJhbmtpZG1fbm8iLCJudHQiOiJleHQiLCJhdWQiOlsibmFzZiIsImRiZiIsIm9zbCJdLCJuYmYiOjE1OTM3NzI1MzgsImFpZCI6MjkwODg0MjY1NjYsImNpZCI6IjI5MDg4NDI2NTY2In0.LlX546p8R9VxK8XE26hhBs2Y9iR2Cb2AXbrXgwh4U3fvu9knNSWv44ZkCYjSxjBaegmNW1vmEPBDdKHegckUhGblhpC3Yy6G7VCHg3GZsAtrNMqQ3uCBdUxJBINSj9zaYP8yFIoX6jR7cvSe850xptmpRUgQAUrfv7o-H7wd7WiM4Qq-4UEpmAA-_B5BL0QCmZtiTPFgyrW1NxDnebRT7R1JggZRTmQlbALrsgJXCcB5-VVu7ais87iJ-OI8a8mrgGkzujW628e924Bpx6-iYxRH_WYuvkjDitFDlcNZiaiKfSTFmaXTjR909r9Tr99H01K7xSRhPf8I9nZ9ThsNzA
 x-Authorization: Bearer eyJ0dHlwIjoiYWNjZXNzX3Rva2VuIiwidmVyIjoiMy4xLjIiLCJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Im5hc2YtYWNjZXNzLXRva2VuIn0.eyJzdWIiOiJuXC9hIiwiY291bnRyeSI6Ik5PIiwiaXNzIjoibmFzZi1hY2Nlc3MtdG9rZW4iLCJjbGllbnRfaWQiOiJOREhNTk8iLCJzaWQiOiIxMjU2MWQ4Ny00OTU5LTQ1ZDEtYjAwYi00MzdhZWIyOWNhMTYiLCJzc24iOiIyOTA4ODQyNjU2NiIsInVpZCI6IjI5MDg4NDI2NTY2IiwiY3Jpc3MiOiJCYW5rSUQgLSBOb3JkZWEgLSBCYW5rIENBIDMiLCJzY29wZSI6WyJuZGYiLCJhZ3JlZW1lbnQiLCJvcGVuaWQiLCJvZmZsaW5lX2FjY2VzcyJdLCJzZ20iOiJob3VzZWhvbGQiLCJleHAiOjE1OTM3NzI3MjgsImlhdCI6MTU5Mzc3MjU0OCwianRpIjoiZWRhMWUwOGNmODkyNGQ2NTg0YjQ1NmM2Y2FjODA5NGUiLCJncmFudHMiOnsiYWdyZWVtZW50IjoyOTA4ODQyNjU2Nn0sImMiOiJOTyIsImNoIjoiTkRITSIsImFpc3MiOiJkb21lc3RpY19wbiIsImFkbCI6e30sImFsIjoyLCJhbSI6ImJhbmtpZG1fbm8iLCJudHQiOiJleHQiLCJhdWQiOlsibmFzZiIsImRiZiIsIm9zbCJdLCJuYmYiOjE1OTM3NzI1MzgsImFpZCI6MjkwODg0MjY1NjYsImNpZCI6IjI5MDg4NDI2NTY2In0.LlX546p8R9VxK8XE26hhBs2Y9iR2Cb2AXbrXgwh4U3fvu9knNSWv44ZkCYjSxjBaegmNW1vmEPBDdKHegckUhGblhpC3Yy6G7VCHg3GZsAtrNMqQ3uCBdUxJBINSj9zaYP8yFIoX6jR7cvSe850xptmpRUgQAUrfv7o-H7wd7WiM4Qq-4UEpmAA-_B5BL0QCmZtiTPFgyrW1NxDnebRT7R1JggZRTmQlbALrsgJXCcB5-VVu7ais87iJ-OI8a8mrgGkzujW628e924Bpx6-iYxRH_WYuvkjDitFDlcNZiaiKfSTFmaXTjR909r9Tr99H01K7xSRhPf8I9nZ9ThsNzA
@@ -1147,13 +71,12 @@ Accept-Encoding: br, gzip, deflate
 x-app-segment: household
 x-platform-type: iOS
 Content-Type: application/json
-x-Device-Id: 00000000-0000-4000-0000-000000000000
 x-app-version: 3.13.2.1092
 Connection: keep-alive
 x-device-model: iPhone9,3
 x-app-country: NO
 
-RESPONSE 18
+RESPONSE 3
 200
 X-Backside-Transport: OK OK,OK OK
 nnCoection: close
@@ -1171,7 +94,7 @@ Pragma: no-cache
 {"keys":[{"kty":"RSA","e":"AQAB","n":"AKggXVttNEo+Gglm2mi2tnWCKlF5C7khn62hIAX7tRlWBk2FAbZGGfHQRWLN+DvefR4M14RX45wdo+VOa5W9ejCmMEBICDZMjYbHYrI3mOiQKwwqUOIdmEU4KlrBp5PBka5UvpCndTkRflYFdfXtJXz9pYEGNuL36MSosNdulHDfuO5I3JfpAEsXMVjcfkULRj4esddysnw+/iDsCQVGJokHkKLbvuLqUTM877d0eLln0hvF9pbjUfkw3JozKOiziNwVIUKZQMIfFvNF85Rzw7rqCqreXmWG2pLWaqij9fvZ0OEeV+95Ws19D0TUfkrur1zAJOv6hYKLSzXZ9HRxArM=","kid":"nasf-access-token","use":"sig"},{"kty":"RSA","e":"AQAB","n":"AJ6E0vqZ4nBZm0pTCP/98EuCy21mMxd8jiQ7B+56WKVkJV2anQYRSwm2b7WZY0agvdik5KJzRCO0XN8ekyaCQnMWBkfRKnbybpkgYp3qE4cNUNH5pv5qQyoOe88CP6EZigdaN0xyWw+3XLxgv/1trE/QgVKFw1RlwSTwMpnocf0Ml7LuKX9D8DsVI02ZA/WV5Ca/5MOP2AxciLueoOj2EoCcLauO0exkjHw0OkuJWNQPMS4biMgwH+YAZjpwjZD9rp/YcBF8ctXuSAYSB0qxP6mYp/x+ulEghCC+zXfuQelgNjSeGv8IbSAInseOHv6gW3/2D16+fKqNCiXevbcMhdc=","kid":"nasf-id-token","use":"sig"},{"kty":"RSA","e":"AQAB","n":"AILbS6ADuQFQeRv6GnmZx9nyzNxViw2k1XkD2ASFxkRmA5kYszl3b6oX8SxrYRvnG18ahhiff49BY9wXMMMyahV+tnjKYGSsEdsLErC/uxy6HCiGybd8r+ZgsQeKduJUpBZqintw04Hhz3PUOW3KvlgCt2GferBuRROA3qHEyhSCZye8uMGcQzEnLGsDPiOBmBsPhLRN4GK0YBdxVD/KyLZeh55nRVTd8aUoGPj0reGR21qnEZhYPr7loO59nLqevbtK/UeMFdxaKeqWSab37+ith7/hY08idnmmczG40mJdIcbZNxgaVosUWrPPIc9qVwPfw0y+6OEmuiH+o7bZfzc=","kid":"demo-id-token","use":"sig"},{"kty":"RSA","e":"AQAB","n":"AOwazSS9tu7u16YoHnLkg4sJTWKdh8U6hq3Am7PCL3bGNySQ56uDeaas0p0bwlT+M4HbPPi/nLaMf6qb+sZJb+vab1w8p3/2zaQTqQKRVFfJXpPidmAydgHSnA75L2lp53BxU60m8iZE4bBV9YRabCoJXSh1v+4GnUvZsOBzhE91yD3VzDNsPUTPvmfg3E8XEbwSHaO7Gz9k+yv32TUySozdgmvPVlaUDA4dFmAUQ3Uy4gsd8As7jTeP4SmK62dNwH+Nr+BE8dO9Kg4hYKz5V7X5kOIe0u7psH0MIOSHW00rQx/sCU1pOvwQzFFJAFWg25Fs36ohnu1HvQZlDM5+bvc=","kid":"ftn-sp-sign","alg":"RSA-OAEP","use":"enc"},{"kty":"RSA","e":"AQAB","n":"AOwazSS9tu7u16YoHnLkg4sJTWKdh8U6hq3Am7PCL3bGNySQ56uDeaas0p0bwlT+M4HbPPi/nLaMf6qb+sZJb+vab1w8p3/2zaQTqQKRVFfJXpPidmAydgHSnA75L2lp53BxU60m8iZE4bBV9YRabCoJXSh1v+4GnUvZsOBzhE91yD3VzDNsPUTPvmfg3E8XEbwSHaO7Gz9k+yv32TUySozdgmvPVlaUDA4dFmAUQ3Uy4gsd8As7jTeP4SmK62dNwH+Nr+BE8dO9Kg4hYKz5V7X5kOIe0u7psH0MIOSHW00rQx/sCU1pOvwQzFFJAFWg25Fs36ohnu1HvQZlDM5+bvc=","kid":"ftn-sp-sign","alg":"RS256","use":"sig"},{"kty":"RSA","e":"AQAB","n":"AIqp50obQpT9TvupfmG1H0dhzjGJmlusoGhzLdsHLmEq8zsrt/beeLrMnDiCXaE+dkZYjT4HcKZH18A2WRiQRdwQQdJs1jEEaLflBCj1QnGNrwgDVNqxO491xmhTNSwKDkbad6a9uQxjG6ZB+KPXcQmNYczXDfayUmvqKRxXt4DR1zW+NkWunMn9Xz9w17tc6EX1tkgY2X/L5Sh9flwnwBTZ2lH8vY0ITk+fCR7S2Y4upencvSFuRPstTno1kEOO2HmM0hkKzQ4p86OrMt3G4p1d07RzTbEYVL5yVkVgHo7JpqjD3CQ5TltYN8gN/VHscL9jHYvqi7n9z8ZKy8BRxBM=","kid":"ndf-token-exchange-prod-v2","use":"sig"},{"kty":"RSA","e":"AQAB","n":"AIUlS620SH9n+KWAyZhCGEJ+vDCf4DBlGfkFyoUTW0MpeWzhIfkrAvqsX+nLMj6qfe473eJ44Oa6nex4MdY+SwocWkrXmn9b7ahjEeFEim8qmJ8vI3p16exQHBnHmN21BrL7zCgr9UJ2IbpFMD3bdrw7iFHwq8nOyuLFVPEVsN1UgcBY1cx4EpxtBV6cikJ0mnikVIQtT66trBkmZft3O/XDp0qJ5Y0w3qPyfmrdTtKYnysCBOnhvS5j3Kz7gcgUeUesoYiXDjl4eEgbwnjvFyH20YHnX2hjIA1GVWQe4hT+/FNdM8ASGTBuXq0Hgqw0IhoIUZN2Nj+cr8Q+ekphvVs=","kid":"nasf-signing-token-prod","use":"enc"}]}
 
 
-REQUEST 19
+REQUEST 4
 GET https://private.nordea.no/api/dbf/no/customerinfo-v2/customers/info
 Authorization: Bearer eyJ0dHlwIjoiYWNjZXNzX3Rva2VuIiwidmVyIjoiMy4xLjIiLCJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Im5hc2YtYWNjZXNzLXRva2VuIn0.eyJzdWIiOiJuXC9hIiwiY291bnRyeSI6Ik5PIiwiaXNzIjoibmFzZi1hY2Nlc3MtdG9rZW4iLCJjbGllbnRfaWQiOiJOREhNTk8iLCJzaWQiOiIxMjU2MWQ4Ny00OTU5LTQ1ZDEtYjAwYi00MzdhZWIyOWNhMTYiLCJzc24iOiIyOTA4ODQyNjU2NiIsInVpZCI6IjI5MDg4NDI2NTY2IiwiY3Jpc3MiOiJCYW5rSUQgLSBOb3JkZWEgLSBCYW5rIENBIDMiLCJzY29wZSI6WyJuZGYiLCJhZ3JlZW1lbnQiLCJvcGVuaWQiLCJvZmZsaW5lX2FjY2VzcyJdLCJzZ20iOiJob3VzZWhvbGQiLCJleHAiOjE1OTM3NzI3MjgsImlhdCI6MTU5Mzc3MjU0OCwianRpIjoiZWRhMWUwOGNmODkyNGQ2NTg0YjQ1NmM2Y2FjODA5NGUiLCJncmFudHMiOnsiYWdyZWVtZW50IjoyOTA4ODQyNjU2Nn0sImMiOiJOTyIsImNoIjoiTkRITSIsImFpc3MiOiJkb21lc3RpY19wbiIsImFkbCI6e30sImFsIjoyLCJhbSI6ImJhbmtpZG1fbm8iLCJudHQiOiJleHQiLCJhdWQiOlsibmFzZiIsImRiZiIsIm9zbCJdLCJuYmYiOjE1OTM3NzI1MzgsImFpZCI6MjkwODg0MjY1NjYsImNpZCI6IjI5MDg4NDI2NTY2In0.LlX546p8R9VxK8XE26hhBs2Y9iR2Cb2AXbrXgwh4U3fvu9knNSWv44ZkCYjSxjBaegmNW1vmEPBDdKHegckUhGblhpC3Yy6G7VCHg3GZsAtrNMqQ3uCBdUxJBINSj9zaYP8yFIoX6jR7cvSe850xptmpRUgQAUrfv7o-H7wd7WiM4Qq-4UEpmAA-_B5BL0QCmZtiTPFgyrW1NxDnebRT7R1JggZRTmQlbALrsgJXCcB5-VVu7ais87iJ-OI8a8mrgGkzujW628e924Bpx6-iYxRH_WYuvkjDitFDlcNZiaiKfSTFmaXTjR909r9Tr99H01K7xSRhPf8I9nZ9ThsNzA
 x-Authorization: Bearer eyJ0dHlwIjoiYWNjZXNzX3Rva2VuIiwidmVyIjoiMy4xLjIiLCJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Im5hc2YtYWNjZXNzLXRva2VuIn0.eyJzdWIiOiJuXC9hIiwiY291bnRyeSI6Ik5PIiwiaXNzIjoibmFzZi1hY2Nlc3MtdG9rZW4iLCJjbGllbnRfaWQiOiJOREhNTk8iLCJzaWQiOiIxMjU2MWQ4Ny00OTU5LTQ1ZDEtYjAwYi00MzdhZWIyOWNhMTYiLCJzc24iOiIyOTA4ODQyNjU2NiIsInVpZCI6IjI5MDg4NDI2NTY2IiwiY3Jpc3MiOiJCYW5rSUQgLSBOb3JkZWEgLSBCYW5rIENBIDMiLCJzY29wZSI6WyJuZGYiLCJhZ3JlZW1lbnQiLCJvcGVuaWQiLCJvZmZsaW5lX2FjY2VzcyJdLCJzZ20iOiJob3VzZWhvbGQiLCJleHAiOjE1OTM3NzI3MjgsImlhdCI6MTU5Mzc3MjU0OCwianRpIjoiZWRhMWUwOGNmODkyNGQ2NTg0YjQ1NmM2Y2FjODA5NGUiLCJncmFudHMiOnsiYWdyZWVtZW50IjoyOTA4ODQyNjU2Nn0sImMiOiJOTyIsImNoIjoiTkRITSIsImFpc3MiOiJkb21lc3RpY19wbiIsImFkbCI6e30sImFsIjoyLCJhbSI6ImJhbmtpZG1fbm8iLCJudHQiOiJleHQiLCJhdWQiOlsibmFzZiIsImRiZiIsIm9zbCJdLCJuYmYiOjE1OTM3NzI1MzgsImFpZCI6MjkwODg0MjY1NjYsImNpZCI6IjI5MDg4NDI2NTY2In0.LlX546p8R9VxK8XE26hhBs2Y9iR2Cb2AXbrXgwh4U3fvu9knNSWv44ZkCYjSxjBaegmNW1vmEPBDdKHegckUhGblhpC3Yy6G7VCHg3GZsAtrNMqQ3uCBdUxJBINSj9zaYP8yFIoX6jR7cvSe850xptmpRUgQAUrfv7o-H7wd7WiM4Qq-4UEpmAA-_B5BL0QCmZtiTPFgyrW1NxDnebRT7R1JggZRTmQlbALrsgJXCcB5-VVu7ais87iJ-OI8a8mrgGkzujW628e924Bpx6-iYxRH_WYuvkjDitFDlcNZiaiKfSTFmaXTjR909r9Tr99H01K7xSRhPf8I9nZ9ThsNzA
@@ -1179,13 +102,12 @@ x-app-language: en_NO
 x-platform-version: 12.4.0
 x-app-segment: household
 x-platform-type: iOS
-x-Device-Id: 00000000-0000-4000-0000-000000000000
 x-app-version: 3.13.2.1092
 Connection: keep-alive
 x-device-model: iPhone9,3
 x-app-country: NO
 
-RESPONSE 19
+RESPONSE 4
 200
 X-Backside-Transport: OK OK,OK OK
 nnCoection: close
@@ -1205,7 +127,7 @@ strict-transport-security: max-age=31536000; includeSubDomains
 {"customer_id":"29088426566","segment":"household","loyalty_group":"F-PLUSS","person_id":"29088426566","birth_date":"1984-08-29","enrollment_date":"2009-10-16","first_name":"ASDF ASDF","last_name":"ASDF","address":{"address_line1":"SKOGVEIEN 5","city":"ASKIM","postal_code":"1831","country_code":"NO"},"phone_number":"4747917151","employee":false,"us_resident":false}
 
 
-REQUEST 20
+REQUEST 5
 GET https://private.nordea.no/api/dbf/ca/accounts-v2/accounts
 Authorization: Bearer eyJ0dHlwIjoiYWNjZXNzX3Rva2VuIiwidmVyIjoiMy4xLjIiLCJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Im5hc2YtYWNjZXNzLXRva2VuIn0.eyJzdWIiOiJuXC9hIiwiY291bnRyeSI6Ik5PIiwiaXNzIjoibmFzZi1hY2Nlc3MtdG9rZW4iLCJjbGllbnRfaWQiOiJOREhNTk8iLCJzaWQiOiIxMjU2MWQ4Ny00OTU5LTQ1ZDEtYjAwYi00MzdhZWIyOWNhMTYiLCJzc24iOiIyOTA4ODQyNjU2NiIsInVpZCI6IjI5MDg4NDI2NTY2IiwiY3Jpc3MiOiJCYW5rSUQgLSBOb3JkZWEgLSBCYW5rIENBIDMiLCJzY29wZSI6WyJuZGYiLCJhZ3JlZW1lbnQiLCJvcGVuaWQiLCJvZmZsaW5lX2FjY2VzcyJdLCJzZ20iOiJob3VzZWhvbGQiLCJleHAiOjE1OTM3NzI3MjgsImlhdCI6MTU5Mzc3MjU0OCwianRpIjoiZWRhMWUwOGNmODkyNGQ2NTg0YjQ1NmM2Y2FjODA5NGUiLCJncmFudHMiOnsiYWdyZWVtZW50IjoyOTA4ODQyNjU2Nn0sImMiOiJOTyIsImNoIjoiTkRITSIsImFpc3MiOiJkb21lc3RpY19wbiIsImFkbCI6e30sImFsIjoyLCJhbSI6ImJhbmtpZG1fbm8iLCJudHQiOiJleHQiLCJhdWQiOlsibmFzZiIsImRiZiIsIm9zbCJdLCJuYmYiOjE1OTM3NzI1MzgsImFpZCI6MjkwODg0MjY1NjYsImNpZCI6IjI5MDg4NDI2NTY2In0.LlX546p8R9VxK8XE26hhBs2Y9iR2Cb2AXbrXgwh4U3fvu9knNSWv44ZkCYjSxjBaegmNW1vmEPBDdKHegckUhGblhpC3Yy6G7VCHg3GZsAtrNMqQ3uCBdUxJBINSj9zaYP8yFIoX6jR7cvSe850xptmpRUgQAUrfv7o-H7wd7WiM4Qq-4UEpmAA-_B5BL0QCmZtiTPFgyrW1NxDnebRT7R1JggZRTmQlbALrsgJXCcB5-VVu7ais87iJ-OI8a8mrgGkzujW628e924Bpx6-iYxRH_WYuvkjDitFDlcNZiaiKfSTFmaXTjR909r9Tr99H01K7xSRhPf8I9nZ9ThsNzA
 x-Authorization: Bearer eyJ0dHlwIjoiYWNjZXNzX3Rva2VuIiwidmVyIjoiMy4xLjIiLCJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Im5hc2YtYWNjZXNzLXRva2VuIn0.eyJzdWIiOiJuXC9hIiwiY291bnRyeSI6Ik5PIiwiaXNzIjoibmFzZi1hY2Nlc3MtdG9rZW4iLCJjbGllbnRfaWQiOiJOREhNTk8iLCJzaWQiOiIxMjU2MWQ4Ny00OTU5LTQ1ZDEtYjAwYi00MzdhZWIyOWNhMTYiLCJzc24iOiIyOTA4ODQyNjU2NiIsInVpZCI6IjI5MDg4NDI2NTY2IiwiY3Jpc3MiOiJCYW5rSUQgLSBOb3JkZWEgLSBCYW5rIENBIDMiLCJzY29wZSI6WyJuZGYiLCJhZ3JlZW1lbnQiLCJvcGVuaWQiLCJvZmZsaW5lX2FjY2VzcyJdLCJzZ20iOiJob3VzZWhvbGQiLCJleHAiOjE1OTM3NzI3MjgsImlhdCI6MTU5Mzc3MjU0OCwianRpIjoiZWRhMWUwOGNmODkyNGQ2NTg0YjQ1NmM2Y2FjODA5NGUiLCJncmFudHMiOnsiYWdyZWVtZW50IjoyOTA4ODQyNjU2Nn0sImMiOiJOTyIsImNoIjoiTkRITSIsImFpc3MiOiJkb21lc3RpY19wbiIsImFkbCI6e30sImFsIjoyLCJhbSI6ImJhbmtpZG1fbm8iLCJudHQiOiJleHQiLCJhdWQiOlsibmFzZiIsImRiZiIsIm9zbCJdLCJuYmYiOjE1OTM3NzI1MzgsImFpZCI6MjkwODg0MjY1NjYsImNpZCI6IjI5MDg4NDI2NTY2In0.LlX546p8R9VxK8XE26hhBs2Y9iR2Cb2AXbrXgwh4U3fvu9knNSWv44ZkCYjSxjBaegmNW1vmEPBDdKHegckUhGblhpC3Yy6G7VCHg3GZsAtrNMqQ3uCBdUxJBINSj9zaYP8yFIoX6jR7cvSe850xptmpRUgQAUrfv7o-H7wd7WiM4Qq-4UEpmAA-_B5BL0QCmZtiTPFgyrW1NxDnebRT7R1JggZRTmQlbALrsgJXCcB5-VVu7ais87iJ-OI8a8mrgGkzujW628e924Bpx6-iYxRH_WYuvkjDitFDlcNZiaiKfSTFmaXTjR909r9Tr99H01K7xSRhPf8I9nZ9ThsNzA
@@ -1213,13 +135,12 @@ x-app-language: en_NO
 x-platform-version: 12.4.0
 x-app-segment: household
 x-platform-type: iOS
-x-Device-Id: 00000000-0000-4000-0000-000000000000
 x-app-version: 3.13.2.1092
 Connection: keep-alive
 x-device-model: iPhone9,3
 x-app-country: NO
 
-RESPONSE 20
+RESPONSE 5
 200
 X-Backside-Transport: OK OK,OK OK
 nnCoection: close
@@ -1239,7 +160,7 @@ strict-transport-security: max-age=31536000; includeSubDomains
 {"result":[{"account_id":"60111473857","display_account_number":"6011.14.73857","iban":"NO9386011117947","bic":"NDEANOKK","country_code":"NO","product_code":"FORP","product_name":"Brukskonto","nickname":"Felleskonto","product_type":"KKT","category":"transaction","account_status":"open","booked_balance":1801.40,"credit_limit":0.00,"available_balance":1801.40,"equivalent_balance":1801.40,"currency":"NOK","equivalent_currency":"NOK","statement_format":"electronic","roles":[{"name":"GURO LARSEN ASDF","role":"power_of_attorney"},{"name":"ASDF ASDF ASDF","role":"owner"}],"permissions":{"can_view":true,"can_view_transactions":true,"can_pay_from_account":true,"can_transfer_from_account":true,"can_transfer_to_account":true,"can_deposit_to_account":true},"transaction_list_search_criteria":{"can_use_start_date":true,"can_use_end_date":true,"can_use_lowest_amount":false,"can_use_highest_amount":false,"can_use_free_text":false}}]}
 
 
-REQUEST 21
+REQUEST 6
 GET https://private.nordea.no/api/dbf/ca/accounts-v2/accounts/60111473857/transactions?product_code=FORP
 Authorization: Bearer eyJ0dHlwIjoiYWNjZXNzX3Rva2VuIiwidmVyIjoiMy4xLjIiLCJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Im5hc2YtYWNjZXNzLXRva2VuIn0.eyJzdWIiOiJuXC9hIiwiY291bnRyeSI6Ik5PIiwiaXNzIjoibmFzZi1hY2Nlc3MtdG9rZW4iLCJjbGllbnRfaWQiOiJOREhNTk8iLCJzaWQiOiIxMjU2MWQ4Ny00OTU5LTQ1ZDEtYjAwYi00MzdhZWIyOWNhMTYiLCJzc24iOiIyOTA4ODQyNjU2NiIsInVpZCI6IjI5MDg4NDI2NTY2IiwiY3Jpc3MiOiJCYW5rSUQgLSBOb3JkZWEgLSBCYW5rIENBIDMiLCJzY29wZSI6WyJuZGYiLCJhZ3JlZW1lbnQiLCJvcGVuaWQiLCJvZmZsaW5lX2FjY2VzcyJdLCJzZ20iOiJob3VzZWhvbGQiLCJleHAiOjE1OTM3NzI3MjgsImlhdCI6MTU5Mzc3MjU0OCwianRpIjoiZWRhMWUwOGNmODkyNGQ2NTg0YjQ1NmM2Y2FjODA5NGUiLCJncmFudHMiOnsiYWdyZWVtZW50IjoyOTA4ODQyNjU2Nn0sImMiOiJOTyIsImNoIjoiTkRITSIsImFpc3MiOiJkb21lc3RpY19wbiIsImFkbCI6e30sImFsIjoyLCJhbSI6ImJhbmtpZG1fbm8iLCJudHQiOiJleHQiLCJhdWQiOlsibmFzZiIsImRiZiIsIm9zbCJdLCJuYmYiOjE1OTM3NzI1MzgsImFpZCI6MjkwODg0MjY1NjYsImNpZCI6IjI5MDg4NDI2NTY2In0.LlX546p8R9VxK8XE26hhBs2Y9iR2Cb2AXbrXgwh4U3fvu9knNSWv44ZkCYjSxjBaegmNW1vmEPBDdKHegckUhGblhpC3Yy6G7VCHg3GZsAtrNMqQ3uCBdUxJBINSj9zaYP8yFIoX6jR7cvSe850xptmpRUgQAUrfv7o-H7wd7WiM4Qq-4UEpmAA-_B5BL0QCmZtiTPFgyrW1NxDnebRT7R1JggZRTmQlbALrsgJXCcB5-VVu7ais87iJ-OI8a8mrgGkzujW628e924Bpx6-iYxRH_WYuvkjDitFDlcNZiaiKfSTFmaXTjR909r9Tr99H01K7xSRhPf8I9nZ9ThsNzA
 x-Authorization: Bearer eyJ0dHlwIjoiYWNjZXNzX3Rva2VuIiwidmVyIjoiMy4xLjIiLCJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Im5hc2YtYWNjZXNzLXRva2VuIn0.eyJzdWIiOiJuXC9hIiwiY291bnRyeSI6Ik5PIiwiaXNzIjoibmFzZi1hY2Nlc3MtdG9rZW4iLCJjbGllbnRfaWQiOiJOREhNTk8iLCJzaWQiOiIxMjU2MWQ4Ny00OTU5LTQ1ZDEtYjAwYi00MzdhZWIyOWNhMTYiLCJzc24iOiIyOTA4ODQyNjU2NiIsInVpZCI6IjI5MDg4NDI2NTY2IiwiY3Jpc3MiOiJCYW5rSUQgLSBOb3JkZWEgLSBCYW5rIENBIDMiLCJzY29wZSI6WyJuZGYiLCJhZ3JlZW1lbnQiLCJvcGVuaWQiLCJvZmZsaW5lX2FjY2VzcyJdLCJzZ20iOiJob3VzZWhvbGQiLCJleHAiOjE1OTM3NzI3MjgsImlhdCI6MTU5Mzc3MjU0OCwianRpIjoiZWRhMWUwOGNmODkyNGQ2NTg0YjQ1NmM2Y2FjODA5NGUiLCJncmFudHMiOnsiYWdyZWVtZW50IjoyOTA4ODQyNjU2Nn0sImMiOiJOTyIsImNoIjoiTkRITSIsImFpc3MiOiJkb21lc3RpY19wbiIsImFkbCI6e30sImFsIjoyLCJhbSI6ImJhbmtpZG1fbm8iLCJudHQiOiJleHQiLCJhdWQiOlsibmFzZiIsImRiZiIsIm9zbCJdLCJuYmYiOjE1OTM3NzI1MzgsImFpZCI6MjkwODg0MjY1NjYsImNpZCI6IjI5MDg4NDI2NTY2In0.LlX546p8R9VxK8XE26hhBs2Y9iR2Cb2AXbrXgwh4U3fvu9knNSWv44ZkCYjSxjBaegmNW1vmEPBDdKHegckUhGblhpC3Yy6G7VCHg3GZsAtrNMqQ3uCBdUxJBINSj9zaYP8yFIoX6jR7cvSe850xptmpRUgQAUrfv7o-H7wd7WiM4Qq-4UEpmAA-_B5BL0QCmZtiTPFgyrW1NxDnebRT7R1JggZRTmQlbALrsgJXCcB5-VVu7ais87iJ-OI8a8mrgGkzujW628e924Bpx6-iYxRH_WYuvkjDitFDlcNZiaiKfSTFmaXTjR909r9Tr99H01K7xSRhPf8I9nZ9ThsNzA
@@ -1247,13 +168,12 @@ x-app-language: en_NO
 x-platform-version: 12.4.0
 x-app-segment: household
 x-platform-type: iOS
-x-Device-Id: 00000000-0000-4000-0000-000000000000
 x-app-version: 3.13.2.1092
 Connection: keep-alive
 x-device-model: iPhone9,3
 x-app-country: NO
 
-RESPONSE 21
+RESPONSE 6
 200
 X-Backside-Transport: OK OK,OK OK
 nnCoection: close
@@ -1273,7 +193,7 @@ strict-transport-security: max-age=31536000; includeSubDomains
 {"result":[{"transaction_id":"012021","booked":true,"amount":-10.00,"booking_date":"2020-07-02","transaction_date":"2020-07-02","description":"APPLE.COM/BILL","reference_number":"012021","transaction_type":{"transaction_code":"NO1401","transaction_code_text":"Visa varekjÃ¸p"},"exchange":{},"card":{"card_number":"4002886011094549"}},{"transaction_id":"00039857244","booked":true,"amount":11000.00,"booking_date":"2020-07-01","transaction_date":"2020-07-01","description":"FRA JESUS REVOLUTION","reference_number":"857244","archive_id":"*17002988","message":"FRA: JESUS REVOLUTION, FERIEPENGER","originators_reference":"300039857244","transaction_type":{"transaction_code":"NO0395","transaction_code_text":"Straksinnbetaling"},"exchange":{},"card":{}},{"transaction_id":"65080011511","booked":true,"amount":-548.50,"booking_date":"2020-07-01","transaction_date":"2020-06-30","description":"COOP OBS SLITU  MORSTONG SLITU","archive_id":"*17326006","transaction_type":{"transaction_code":"NO0028","transaction_code_text":"VarekjÃ¸p"},"exchange":{},"card":{"card_number":"601114738571"}},{"transaction_id":"54747011559","booked":true,"amount":-90.93,"booking_date":"2020-07-01","transaction_date":"2020-06-30","description":"NILLE 121 ASKIM EIDSBERGVN ASKIM","archive_id":"*17365440","transaction_type":{"transaction_code":"NO0028","transaction_code_text":"VarekjÃ¸p"},"exchange":{},"card":{"card_number":"601114738571"}},{"transaction_id":"55486011604","booked":true,"amount":-24.30,"booking_date":"2020-07-01","transaction_date":"2020-06-30","description":"EXTRA ASKIMTORG P.W.RÂ¢WDES G ASKIM","archive_id":"*17465306","transaction_type":{"transaction_code":"NO0028","transaction_code_text":"VarekjÃ¸p"},"exchange":{},"card":{"card_number":"601114738571"}},{"transaction_id":"69524011539","booked":true,"amount":-186.06,"booking_date":"2020-07-01","transaction_date":"2020-06-30","description":"KIWI 287 VAMMAV VAMMAVEIEN 2 ASKIM","archive_id":"*17932259","transaction_type":{"transaction_code":"NO0028","transaction_code_text":"VarekjÃ¸p"},"exchange":{},"card":{"card_number":"601114738571"}},{"transaction_id":"253648","booked":true,"amount":-10212.00,"booking_date":"2020-07-01","transaction_date":"2020-07-01","description":"BETALING PÃ LÃN 6320.82.53648","reference_number":"253648","own_reference":"63208253648","transaction_type":{"transaction_code":"NO0012","transaction_code_text":"LÃ¥n"},"exchange":{},"card":{}},{"transaction_id":"012021","booked":true,"amount":-147.00,"booking_date":"2020-07-01","transaction_date":"2020-07-01","description":"VIPPS*VY APP","reference_number":"012021","transaction_type":{"transaction_code":"NO1401","transaction_code_text":"Visa varekjÃ¸p"},"exchange":{},"card":{"card_number":"4002886011094549"}},{"transaction_id":"03497180977","booked":true,"amount":-200.00,"booking_date":"2020-06-30","transaction_date":"2020-06-30","description":"TIL SEBASTIAN LEE MEHLEN","reference_number":"180977","archive_id":"*17481553","message":"VIPPS CANDY AND DIP","own_reference":"103497180977","transaction_type":{"transaction_code":"NO0394","transaction_code_text":"Straksutbetaling"},"exchange":{},"card":{}},{"transaction_id":"60112011437","booked":true,"amount":-172.00,"booking_date":"2020-06-30","transaction_date":"2020-06-30","description":"CUBUS 924 MORSTONGVN SLITU","archive_id":"*17636244","transaction_type":{"transaction_code":"NO0028","transaction_code_text":"VarekjÃ¸p"},"exchange":{},"card":{"card_number":"601114738571"}},{"transaction_id":"00034839923","booked":true,"amount":500.00,"booking_date":"2020-06-29","transaction_date":"2020-06-26","description":"FRA JESUS REVOLUTION","reference_number":"839923","archive_id":"*17009178","message":"FRA: JESUS REVOLUTION","originators_reference":"300034839923","transaction_type":{"transaction_code":"NO0395","transaction_code_text":"Straksinnbetaling"},"exchange":{},"card":{}},{"transaction_id":"00036523614","booked":true,"amount":500.00,"booking_date":"2020-06-29","transaction_date":"2020-06-29","description":"FRA JESUS REVOLUTION","reference_number":"523614","archive_id":"*17003391","message":"FRA: JESUS REVOLUTION","originators_reference":"300036523614","transaction_type":{"transaction_code":"NO0395","transaction_code_text":"Straksinnbetaling"},"exchange":{},"card":{}},{"transaction_id":"20062969600","booked":true,"amount":1862.33,"booking_date":"2020-06-29","transaction_date":"2020-06-29","description":"FRA THE CURRENCY CLOUD LTD","reference_number":"969600","archive_id":"975069600","message":"SENT FROM REVOLUT","originators_reference":"20062969600","transaction_type":{"transaction_code":"NO0059","transaction_code_text":"OverfÃ¸rsel"},"exchange":{},"card":{}},{"transaction_id":"00036623507","booked":true,"amount":1000.00,"booking_date":"2020-06-29","transaction_date":"2020-06-29","description":"FRA JESUS REVOLUTION","reference_number":"623507","archive_id":"*17004769","message":"FRA: JESUS REVOLUTION","originators_reference":"300036623507","transaction_type":{"transaction_code":"NO0395","transaction_code_text":"Straksinnbetaling"},"exchange":{},"card":{}},{"transaction_id":"55548011148","booked":true,"amount":-706.14,"booking_date":"2020-06-29","transaction_date":"2020-06-29","description":"KIWI 287 VAMMAV VAMMAVEIEN 2 ASKIM","archive_id":"*17871951","transaction_type":{"transaction_code":"NO0028","transaction_code_text":"VarekjÃ¸p"},"exchange":{},"card":{"card_number":"601114738571"}},{"transaction_id":"58237011411","booked":true,"amount":-152.00,"booking_date":"2020-06-29","transaction_date":"2020-06-29","description":"SPORT OUTLET AS TRÂ¢GDSTADVEI ASKIM","archive_id":"*17774379","transaction_type":{"transaction_code":"NO0028","transaction_code_text":"VarekjÃ¸p"},"exchange":{},"card":{"card_number":"601114738571"}},{"transaction_id":"64291011452","booked":true,"amount":-175.00,"booking_date":"2020-06-29","transaction_date":"2020-06-29","description":"H&M NO0873 ASKIMTORGET  ASKIM","archive_id":"*17604195","transaction_type":{"transaction_code":"NO0028","transaction_code_text":"VarekjÃ¸p"},"exchange":{},"card":{"card_number":"601114738571"}},{"transaction_id":"58644011414","booked":true,"amount":-29.00,"booking_date":"2020-06-29","transaction_date":"2020-06-29","description":"EXTRA ASKIM HENSTAD ALLE ASKIM","archive_id":"*17831963","transaction_type":{"transaction_code":"NO0028","transaction_code_text":"VarekjÃ¸p"},"exchange":{},"card":{"card_number":"601114738571"}},{"transaction_id":"60940011429","booked":true,"amount":-223.00,"booking_date":"2020-06-29","transaction_date":"2020-06-29","description":"CUBUS 817 ASKIMTORGET  1800 ASKIM","archive_id":"*17145850","transaction_type":{"transaction_code":"NO0028","transaction_code_text":"VarekjÃ¸p"},"exchange":{},"card":{"card_number":"601114738571"}},{"transaction_id":"012021","booked":true,"amount":-70.00,"booking_date":"2020-06-29","transaction_date":"2020-06-29","description":"VIPPS*BAKKEN, MALMOEYA","reference_number":"012021","transaction_type":{"transaction_code":"NO1401","transaction_code_text":"Visa varekjÃ¸p"},"exchange":{},"card":{"card_number":"4002886011094549"}},{"transaction_id":"012021","booked":true,"amount":-115.00,"booking_date":"2020-06-29","transaction_date":"2020-06-29","description":"VIPPS*BAKKEN, MALMOEYA","reference_number":"012021","transaction_type":{"transaction_code":"NO1401","transaction_code_text":"Visa varekjÃ¸p"},"exchange":{},"card":{"card_number":"4002886011094549"}},{"transaction_id":"012021","booked":true,"amount":-663.84,"booking_date":"2020-06-26","transaction_date":"2020-06-26","description":"REVOLUT**4601*","reference_number":"012021","transaction_type":{"transaction_code":"NO1401","transaction_code_text":"Visa varekjÃ¸p"},"exchange":{},"card":{"card_number":"4002886011094549"}},{"transaction_id":"00032605394","booked":true,"amount":500.00,"booking_date":"2020-06-25","transaction_date":"2020-06-24","description":"FRA JESUS REVOLUTION","reference_number":"605394","archive_id":"*17007369","message":"FRA: JESUS REVOLUTION","originators_reference":"300032605394","transaction_type":{"transaction_code":"NO0395","transaction_code_text":"Straksinnbetaling"},"exchange":{},"card":{}},{"transaction_id":"000028","booked":true,"amount":-500.00,"booking_date":"2020-06-24","transaction_date":"2020-06-24","description":"TIL GURO LARSEN ASDF","reference_number":"000028","transaction_type":{"transaction_code":"NO0025","transaction_code_text":"Kontoregulering"},"exchange":{},"card":{}},{"transaction_id":"012021","booked":true,"amount":-2064.00,"booking_date":"2020-06-24","transaction_date":"2020-06-24","description":"BAUHAUS WEB SHOP","reference_number":"012021","transaction_type":{"transaction_code":"NO1401","transaction_code_text":"Visa varekjÃ¸p"},"exchange":{},"card":{"card_number":"4002886011094549"}},{"transaction_id":"01751080025","booked":true,"amount":500.00,"booking_date":"2020-06-23","transaction_date":"2020-06-22","description":"FRA LINDA ELISABETH CHRISTOFFERSEN","reference_number":"080025","archive_id":"980139360","message":"FOR UTLEGG FOR GAVE TIL GURO LÂ´RER, KINOGAVEKORT","originators_reference":"1751080025","transaction_type":{"transaction_code":"NO1305","transaction_code_text":"Giro"},"exchange":{},"card":{}},{"transaction_id":"012021","booked":true,"amount":-89.00,"booking_date":"2020-06-23","transaction_date":"2020-06-23","description":"APPLE.COM/BILL","reference_number":"012021","transaction_type":{"transaction_code":"NO1401","transaction_code_text":"Visa varekjÃ¸p"},"exchange":{},"card":{"card_number":"4002886011094549"}},{"transaction_id":"012021","booked":true,"amount":-923.49,"booking_date":"2020-06-23","transaction_date":"2020-06-23","description":"KIWI 287 VAMMAVEIEN","reference_number":"012021","transaction_type":{"transaction_code":"NO1401","transaction_code_text":"Visa varekjÃ¸p"},"exchange":{},"card":{"card_number":"4002886011094549"}},{"transaction_id":"23528114983","booked":true,"amount":686.46,"booking_date":"2020-06-22","transaction_date":"2020-06-20","description":"FRA ASDF ASDF ASDF","reference_number":"114983","archive_id":"*17004592","message":"FRA: ASDF ASDF ASDF","originators_reference":"923528114983","transaction_type":{"transaction_code":"NO0395","transaction_code_text":"Straksinnbetaling"},"exchange":{},"card":{}},{"transaction_id":"00028115179","booked":true,"amount":1000.00,"booking_date":"2020-06-22","transaction_date":"2020-06-20","description":"FRA JESUS REVOLUTION","reference_number":"115179","archive_id":"*17004598","message":"FRA: JESUS REVOLUTION","originators_reference":"300028115179","transaction_type":{"transaction_code":"NO0395","transaction_code_text":"Straksinnbetaling"},"exchange":{},"card":{}}],"total_size":4834}
 
 
-REQUEST 22
+REQUEST 7
 GET https://private.nordea.no/api/dbf/ca/cards-v4/cards
 Authorization: Bearer eyJ0dHlwIjoiYWNjZXNzX3Rva2VuIiwidmVyIjoiMy4xLjIiLCJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Im5hc2YtYWNjZXNzLXRva2VuIn0.eyJzdWIiOiJuXC9hIiwiY291bnRyeSI6Ik5PIiwiaXNzIjoibmFzZi1hY2Nlc3MtdG9rZW4iLCJjbGllbnRfaWQiOiJOREhNTk8iLCJzaWQiOiIxMjU2MWQ4Ny00OTU5LTQ1ZDEtYjAwYi00MzdhZWIyOWNhMTYiLCJzc24iOiIyOTA4ODQyNjU2NiIsInVpZCI6IjI5MDg4NDI2NTY2IiwiY3Jpc3MiOiJCYW5rSUQgLSBOb3JkZWEgLSBCYW5rIENBIDMiLCJzY29wZSI6WyJuZGYiLCJhZ3JlZW1lbnQiLCJvcGVuaWQiLCJvZmZsaW5lX2FjY2VzcyJdLCJzZ20iOiJob3VzZWhvbGQiLCJleHAiOjE1OTM3NzI3MjgsImlhdCI6MTU5Mzc3MjU0OCwianRpIjoiZWRhMWUwOGNmODkyNGQ2NTg0YjQ1NmM2Y2FjODA5NGUiLCJncmFudHMiOnsiYWdyZWVtZW50IjoyOTA4ODQyNjU2Nn0sImMiOiJOTyIsImNoIjoiTkRITSIsImFpc3MiOiJkb21lc3RpY19wbiIsImFkbCI6e30sImFsIjoyLCJhbSI6ImJhbmtpZG1fbm8iLCJudHQiOiJleHQiLCJhdWQiOlsibmFzZiIsImRiZiIsIm9zbCJdLCJuYmYiOjE1OTM3NzI1MzgsImFpZCI6MjkwODg0MjY1NjYsImNpZCI6IjI5MDg4NDI2NTY2In0.LlX546p8R9VxK8XE26hhBs2Y9iR2Cb2AXbrXgwh4U3fvu9knNSWv44ZkCYjSxjBaegmNW1vmEPBDdKHegckUhGblhpC3Yy6G7VCHg3GZsAtrNMqQ3uCBdUxJBINSj9zaYP8yFIoX6jR7cvSe850xptmpRUgQAUrfv7o-H7wd7WiM4Qq-4UEpmAA-_B5BL0QCmZtiTPFgyrW1NxDnebRT7R1JggZRTmQlbALrsgJXCcB5-VVu7ais87iJ-OI8a8mrgGkzujW628e924Bpx6-iYxRH_WYuvkjDitFDlcNZiaiKfSTFmaXTjR909r9Tr99H01K7xSRhPf8I9nZ9ThsNzA
 x-Authorization: Bearer eyJ0dHlwIjoiYWNjZXNzX3Rva2VuIiwidmVyIjoiMy4xLjIiLCJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Im5hc2YtYWNjZXNzLXRva2VuIn0.eyJzdWIiOiJuXC9hIiwiY291bnRyeSI6Ik5PIiwiaXNzIjoibmFzZi1hY2Nlc3MtdG9rZW4iLCJjbGllbnRfaWQiOiJOREhNTk8iLCJzaWQiOiIxMjU2MWQ4Ny00OTU5LTQ1ZDEtYjAwYi00MzdhZWIyOWNhMTYiLCJzc24iOiIyOTA4ODQyNjU2NiIsInVpZCI6IjI5MDg4NDI2NTY2IiwiY3Jpc3MiOiJCYW5rSUQgLSBOb3JkZWEgLSBCYW5rIENBIDMiLCJzY29wZSI6WyJuZGYiLCJhZ3JlZW1lbnQiLCJvcGVuaWQiLCJvZmZsaW5lX2FjY2VzcyJdLCJzZ20iOiJob3VzZWhvbGQiLCJleHAiOjE1OTM3NzI3MjgsImlhdCI6MTU5Mzc3MjU0OCwianRpIjoiZWRhMWUwOGNmODkyNGQ2NTg0YjQ1NmM2Y2FjODA5NGUiLCJncmFudHMiOnsiYWdyZWVtZW50IjoyOTA4ODQyNjU2Nn0sImMiOiJOTyIsImNoIjoiTkRITSIsImFpc3MiOiJkb21lc3RpY19wbiIsImFkbCI6e30sImFsIjoyLCJhbSI6ImJhbmtpZG1fbm8iLCJudHQiOiJleHQiLCJhdWQiOlsibmFzZiIsImRiZiIsIm9zbCJdLCJuYmYiOjE1OTM3NzI1MzgsImFpZCI6MjkwODg0MjY1NjYsImNpZCI6IjI5MDg4NDI2NTY2In0.LlX546p8R9VxK8XE26hhBs2Y9iR2Cb2AXbrXgwh4U3fvu9knNSWv44ZkCYjSxjBaegmNW1vmEPBDdKHegckUhGblhpC3Yy6G7VCHg3GZsAtrNMqQ3uCBdUxJBINSj9zaYP8yFIoX6jR7cvSe850xptmpRUgQAUrfv7o-H7wd7WiM4Qq-4UEpmAA-_B5BL0QCmZtiTPFgyrW1NxDnebRT7R1JggZRTmQlbALrsgJXCcB5-VVu7ais87iJ-OI8a8mrgGkzujW628e924Bpx6-iYxRH_WYuvkjDitFDlcNZiaiKfSTFmaXTjR909r9Tr99H01K7xSRhPf8I9nZ9ThsNzA
@@ -1281,13 +201,12 @@ x-app-language: en_NO
 x-platform-version: 12.4.0
 x-app-segment: household
 x-platform-type: iOS
-x-Device-Id: 00000000-0000-4000-0000-000000000000
 x-app-version: 3.13.2.1092
 Connection: keep-alive
 x-device-model: iPhone9,3
 x-app-country: NO
 
-RESPONSE 22
+RESPONSE 7
 200
 X-Backside-Transport: OK OK,OK OK
 nnCoection: close
@@ -1308,66 +227,64 @@ strict-transport-security: max-age=31536000; includeSubDomains
 
 
 
-REQUEST 23
+REQUEST 8
 GET https://private.nordea.no/api/dbf/ca/cards-v4/cards/2218836201
 Authorization: Bearer eyJ0dHlwIjoiYWNjZXNzX3Rva2VuIiwidmVyIjoiMy4xLjIiLCJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Im5hc2YtYWNjZXNzLXRva2VuIn0.eyJzdWIiOiJuXC9hIiwiY291bnRyeSI6Ik5PIiwiaXNzIjoibmFzZi1hY2Nlc3MtdG9rZW4iLCJjbGllbnRfaWQiOiJOREhNTk8iLCJzaWQiOiIxMjU2MWQ4Ny00OTU5LTQ1ZDEtYjAwYi00MzdhZWIyOWNhMTYiLCJzc24iOiIyOTA4ODQyNjU2NiIsInVpZCI6IjI5MDg4NDI2NTY2IiwiY3Jpc3MiOiJCYW5rSUQgLSBOb3JkZWEgLSBCYW5rIENBIDMiLCJzY29wZSI6WyJuZGYiLCJhZ3JlZW1lbnQiLCJvcGVuaWQiLCJvZmZsaW5lX2FjY2VzcyJdLCJzZ20iOiJob3VzZWhvbGQiLCJleHAiOjE1OTM3NzI3MjgsImlhdCI6MTU5Mzc3MjU0OCwianRpIjoiZWRhMWUwOGNmODkyNGQ2NTg0YjQ1NmM2Y2FjODA5NGUiLCJncmFudHMiOnsiYWdyZWVtZW50IjoyOTA4ODQyNjU2Nn0sImMiOiJOTyIsImNoIjoiTkRITSIsImFpc3MiOiJkb21lc3RpY19wbiIsImFkbCI6e30sImFsIjoyLCJhbSI6ImJhbmtpZG1fbm8iLCJudHQiOiJleHQiLCJhdWQiOlsibmFzZiIsImRiZiIsIm9zbCJdLCJuYmYiOjE1OTM3NzI1MzgsImFpZCI6MjkwODg0MjY1NjYsImNpZCI6IjI5MDg4NDI2NTY2In0.LlX546p8R9VxK8XE26hhBs2Y9iR2Cb2AXbrXgwh4U3fvu9knNSWv44ZkCYjSxjBaegmNW1vmEPBDdKHegckUhGblhpC3Yy6G7VCHg3GZsAtrNMqQ3uCBdUxJBINSj9zaYP8yFIoX6jR7cvSe850xptmpRUgQAUrfv7o-H7wd7WiM4Qq-4UEpmAA-_B5BL0QCmZtiTPFgyrW1NxDnebRT7R1JggZRTmQlbALrsgJXCcB5-VVu7ais87iJ-OI8a8mrgGkzujW628e924Bpx6-iYxRH_WYuvkjDitFDlcNZiaiKfSTFmaXTjR909r9Tr99H01K7xSRhPf8I9nZ9ThsNzA
 x-Authorization: Bearer eyJ0dHlwIjoiYWNjZXNzX3Rva2VuIiwidmVyIjoiMy4xLjIiLCJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Im5hc2YtYWNjZXNzLXRva2VuIn0.eyJzdWIiOiJuXC9hIiwiY291bnRyeSI6Ik5PIiwiaXNzIjoibmFzZi1hY2Nlc3MtdG9rZW4iLCJjbGllbnRfaWQiOiJOREhNTk8iLCJzaWQiOiIxMjU2MWQ4Ny00OTU5LTQ1ZDEtYjAwYi00MzdhZWIyOWNhMTYiLCJzc24iOiIyOTA4ODQyNjU2NiIsInVpZCI6IjI5MDg4NDI2NTY2IiwiY3Jpc3MiOiJCYW5rSUQgLSBOb3JkZWEgLSBCYW5rIENBIDMiLCJzY29wZSI6WyJuZGYiLCJhZ3JlZW1lbnQiLCJvcGVuaWQiLCJvZmZsaW5lX2FjY2VzcyJdLCJzZ20iOiJob3VzZWhvbGQiLCJleHAiOjE1OTM3NzI3MjgsImlhdCI6MTU5Mzc3MjU0OCwianRpIjoiZWRhMWUwOGNmODkyNGQ2NTg0YjQ1NmM2Y2FjODA5NGUiLCJncmFudHMiOnsiYWdyZWVtZW50IjoyOTA4ODQyNjU2Nn0sImMiOiJOTyIsImNoIjoiTkRITSIsImFpc3MiOiJkb21lc3RpY19wbiIsImFkbCI6e30sImFsIjoyLCJhbSI6ImJhbmtpZG1fbm8iLCJudHQiOiJleHQiLCJhdWQiOlsibmFzZiIsImRiZiIsIm9zbCJdLCJuYmYiOjE1OTM3NzI1MzgsImFpZCI6MjkwODg0MjY1NjYsImNpZCI6IjI5MDg4NDI2NTY2In0.LlX546p8R9VxK8XE26hhBs2Y9iR2Cb2AXbrXgwh4U3fvu9knNSWv44ZkCYjSxjBaegmNW1vmEPBDdKHegckUhGblhpC3Yy6G7VCHg3GZsAtrNMqQ3uCBdUxJBINSj9zaYP8yFIoX6jR7cvSe850xptmpRUgQAUrfv7o-H7wd7WiM4Qq-4UEpmAA-_B5BL0QCmZtiTPFgyrW1NxDnebRT7R1JggZRTmQlbALrsgJXCcB5-VVu7ais87iJ-OI8a8mrgGkzujW628e924Bpx6-iYxRH_WYuvkjDitFDlcNZiaiKfSTFmaXTjR909r9Tr99H01K7xSRhPf8I9nZ9ThsNzA
-x-Device-Id: 00000000-0000-4000-0000-000000000000
 Connection: keep-alive
 
-RESPONSE 23
+RESPONSE 8
 200
 Content-Type: application/json
 
 {"card_id":"2218836201","card_category":"credit","card_status":"active","card_expiration":{"date":"2023-02-28","formatted":"02/23"},"cardholder_name":"FIRST SECOND SURNAME","cardholder_type":"parallel","principal_cardholder_name":null,"product_code":"NO0051","card_loyalty_group":null,"country_code":"NO","currency":"NOK","nickname":null,"pan_id":null,"atm_account_number":null,"credit":{"masked_credit_card_number":"5269 **** **** 3239","credit_limit":10000,"credit_booked_balance":127.05,"credit_available_balance":1765.06,"prev_min_instalment_amount":null,"instalment_min_percent":null,"instalment_free_months":[],"interest":null,"invoice":null},"debit":null,"parallel_cards":null,"usage_limits":{"internet":true,"internet_non3d":null,"contactless":null,"daily_limits":null,"weekly_limits":null,"monthly_credit_spending_limit":null,"permanent_region":["norway","nordic","baltic","europe","americas","asia","africa","oceania"],"temporary_region":null},"permissions":{"transactions":true,"transfer_from_credit":true,"view_pin":true,"allowed_to_enroll_mobile_payments":true},"notifications":null,"metadata":{"geographical_zones":["norway","europe","nordic","baltic","americas","asia","oceania","africa"],"limits":{"atm_payment":0,"atm_payment_step":0,"atm_withdrawal":7500,"atm_withdrawal_step":500,"pos_payment":100000,"pos_payment_step":500,"online_payment":100000,"online_payment_step":500}}}
 
 
-REQUEST 24
+REQUEST 9
 GET https://private.nordea.no/api/dbf/ca/cards-v4/cards/2218836201/transactions?page=1&page_size=100
 Content-Type: application/x-www-form-urlencoded
 Accept: application/json
 x-Authorization: Bearer eyJ0dHlwIjoiYWNjZXNzX3Rva2VuIiwidmVyIjoiMy4xLjIiLCJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Im5hc2YtYWNjZXNzLXRva2VuIn0.eyJzdWIiOiJuXC9hIiwiY291bnRyeSI6Ik5PIiwiaXNzIjoibmFzZi1hY2Nlc3MtdG9rZW4iLCJjbGllbnRfaWQiOiJOREhNTk8iLCJzaWQiOiIxMjU2MWQ4Ny00OTU5LTQ1ZDEtYjAwYi00MzdhZWIyOWNhMTYiLCJzc24iOiIyOTA4ODQyNjU2NiIsInVpZCI6IjI5MDg4NDI2NTY2IiwiY3Jpc3MiOiJCYW5rSUQgLSBOb3JkZWEgLSBCYW5rIENBIDMiLCJzY29wZSI6WyJuZGYiLCJhZ3JlZW1lbnQiLCJvcGVuaWQiLCJvZmZsaW5lX2FjY2VzcyJdLCJzZ20iOiJob3VzZWhvbGQiLCJleHAiOjE1OTM3NzI3MjgsImlhdCI6MTU5Mzc3MjU0OCwianRpIjoiZWRhMWUwOGNmODkyNGQ2NTg0YjQ1NmM2Y2FjODA5NGUiLCJncmFudHMiOnsiYWdyZWVtZW50IjoyOTA4ODQyNjU2Nn0sImMiOiJOTyIsImNoIjoiTkRITSIsImFpc3MiOiJkb21lc3RpY19wbiIsImFkbCI6e30sImFsIjoyLCJhbSI6ImJhbmtpZG1fbm8iLCJudHQiOiJleHQiLCJhdWQiOlsibmFzZiIsImRiZiIsIm9zbCJdLCJuYmYiOjE1OTM3NzI1MzgsImFpZCI6MjkwODg0MjY1NjYsImNpZCI6IjI5MDg4NDI2NTY2In0.LlX546p8R9VxK8XE26hhBs2Y9iR2Cb2AXbrXgwh4U3fvu9knNSWv44ZkCYjSxjBaegmNW1vmEPBDdKHegckUhGblhpC3Yy6G7VCHg3GZsAtrNMqQ3uCBdUxJBINSj9zaYP8yFIoX6jR7cvSe850xptmpRUgQAUrfv7o-H7wd7WiM4Qq-4UEpmAA-_B5BL0QCmZtiTPFgyrW1NxDnebRT7R1JggZRTmQlbALrsgJXCcB5-VVu7ais87iJ-OI8a8mrgGkzujW628e924Bpx6-iYxRH_WYuvkjDitFDlcNZiaiKfSTFmaXTjR909r9Tr99H01K7xSRhPf8I9nZ9ThsNzA
 Authorization: Bearer eyJ0dHlwIjoiYWNjZXNzX3Rva2VuIiwidmVyIjoiMy4xLjIiLCJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Im5hc2YtYWNjZXNzLXRva2VuIn0.eyJzdWIiOiJuXC9hIiwiY291bnRyeSI6Ik5PIiwiaXNzIjoibmFzZi1hY2Nlc3MtdG9rZW4iLCJjbGllbnRfaWQiOiJOREhNTk8iLCJzaWQiOiIxMjU2MWQ4Ny00OTU5LTQ1ZDEtYjAwYi00MzdhZWIyOWNhMTYiLCJzc24iOiIyOTA4ODQyNjU2NiIsInVpZCI6IjI5MDg4NDI2NTY2IiwiY3Jpc3MiOiJCYW5rSUQgLSBOb3JkZWEgLSBCYW5rIENBIDMiLCJzY29wZSI6WyJuZGYiLCJhZ3JlZW1lbnQiLCJvcGVuaWQiLCJvZmZsaW5lX2FjY2VzcyJdLCJzZ20iOiJob3VzZWhvbGQiLCJleHAiOjE1OTM3NzI3MjgsImlhdCI6MTU5Mzc3MjU0OCwianRpIjoiZWRhMWUwOGNmODkyNGQ2NTg0YjQ1NmM2Y2FjODA5NGUiLCJncmFudHMiOnsiYWdyZWVtZW50IjoyOTA4ODQyNjU2Nn0sImMiOiJOTyIsImNoIjoiTkRITSIsImFpc3MiOiJkb21lc3RpY19wbiIsImFkbCI6e30sImFsIjoyLCJhbSI6ImJhbmtpZG1fbm8iLCJudHQiOiJleHQiLCJhdWQiOlsibmFzZiIsImRiZiIsIm9zbCJdLCJuYmYiOjE1OTM3NzI1MzgsImFpZCI6MjkwODg0MjY1NjYsImNpZCI6IjI5MDg4NDI2NTY2In0.LlX546p8R9VxK8XE26hhBs2Y9iR2Cb2AXbrXgwh4U3fvu9knNSWv44ZkCYjSxjBaegmNW1vmEPBDdKHegckUhGblhpC3Yy6G7VCHg3GZsAtrNMqQ3uCBdUxJBINSj9zaYP8yFIoX6jR7cvSe850xptmpRUgQAUrfv7o-H7wd7WiM4Qq-4UEpmAA-_B5BL0QCmZtiTPFgyrW1NxDnebRT7R1JggZRTmQlbALrsgJXCcB5-VVu7ais87iJ-OI8a8mrgGkzujW628e924Bpx6-iYxRH_WYuvkjDitFDlcNZiaiKfSTFmaXTjR909r9Tr99H01K7xSRhPf8I9nZ9ThsNzA
 
-RESPONSE 24
+RESPONSE 9
 200
 
 {"size":15,"page":1,"page_size":30,"transactions":[{"transaction_id":"003802","transaction_date":"2020-07-23","transaction_type":null,"amount":-4000,"currency":"NOK","exchange_rate":null,"original_amount":null,"original_currency":null,"title":"Revolut**0873*","booked":false,"booking_date":null,"merchant_city":null,"merchant_country":null,"mcc":null,"ecological_footprint":null,"invoiced_date":null,"invoice_status":null},{"transaction_id":"2019901320011576","transaction_date":"2020-07-15","transaction_type":null,"amount":-597.05,"currency":"NOK","exchange_rate":1.00,"original_amount":-597.05,"original_currency":"NOK","title":"CRV*ST1 46101 ASKIM      London       GB","booked":true,"booking_date":"2020-07-17","merchant_city":"London","merchant_country":"GB","mcc":null,"ecological_footprint":null,"invoiced_date":null,"invoice_status":null},{"transaction_id":"2018301320009896","transaction_date":"2020-06-29","transaction_type":null,"amount":-173.5,"currency":"NOK","exchange_rate":1.0,"original_amount":-173.5,"original_currency":"NOK","title":"EUROSPAR RUGTVE          Stathelle    NO","booked":true,"booking_date":"2020-07-01","merchant_city":"Stathelle","merchant_country":"NO","mcc":null,"ecological_footprint":null,"invoiced_date":null,"invoice_status":null},{"transaction_id":"2018301320009895","transaction_date":"2020-06-29","transaction_type":null,"amount":-31.2,"currency":"NOK","exchange_rate":1.0,"original_amount":-31.2,"original_currency":"NOK","title":"BOLT EU  R 2006290905    Tallinn      EE","booked":true,"booking_date":"2020-07-01","merchant_city":"Tallinn","merchant_country":"EE","mcc":null,"ecological_footprint":null,"invoiced_date":null,"invoice_status":null},{"transaction_id":"2018301320009894","transaction_date":"2020-06-29","transaction_type":null,"amount":-20,"currency":"NOK","exchange_rate":1,"original_amount":-20,"original_currency":"NOK","title":"NARVESEN 103 ASKIM JBS   ASKIM        NO","booked":true,"booking_date":"2020-07-01","merchant_city":"ASKIM","merchant_country":"NO","mcc":null,"ecological_footprint":null,"invoiced_date":null,"invoice_status":null},{"transaction_id":"2018101320021659","transaction_date":"2020-06-26","transaction_type":null,"amount":-399.97,"currency":"NOK","exchange_rate":1.00,"original_amount":-399.97,"original_currency":"NOK","title":"YX 7 ELEVEN 7589 HOEVI   HOVIK        NO","booked":true,"booking_date":"2020-06-29","merchant_city":"HOVIK","merchant_country":"NO","mcc":null,"ecological_footprint":null,"invoiced_date":null,"invoice_status":null},{"transaction_id":"2013901320019865","transaction_date":"2020-05-14","transaction_type":null,"amount":-990.51,"currency":"NOK","exchange_rate":1.00,"original_amount":-990.51,"original_currency":"NOK","title":"CRV*SITEGROUND HOSTING   london       GB","booked":true,"booking_date":"2020-05-18","merchant_city":"london","merchant_country":"GB","mcc":null,"ecological_footprint":null,"invoiced_date":null,"invoice_status":null},{"transaction_id":"2013901320019864","transaction_date":"2020-05-14","transaction_type":null,"amount":-553,"currency":"NOK","exchange_rate":1,"original_amount":-553,"original_currency":"NOK","title":"CRV*Lekekassen no        london       GB","booked":true,"booking_date":"2020-05-18","merchant_city":"london","merchant_country":"GB","mcc":null,"ecological_footprint":null,"invoiced_date":null,"invoice_status":null},{"transaction_id":"2013901320019863","transaction_date":"2020-05-14","transaction_type":null,"amount":-153.73,"currency":"NOK","exchange_rate":1.00,"original_amount":-153.73,"original_currency":"NOK","title":"CRV*SITEGROUND HOSTING   london       GB","booked":true,"booking_date":"2020-05-18","merchant_city":"london","merchant_country":"GB","mcc":null,"ecological_footprint":null,"invoiced_date":null,"invoice_status":null},{"transaction_id":"2013201320021563","transaction_date":"2020-05-08","transaction_type":null,"amount":-153.04,"currency":"NOK","exchange_rate":1.00,"original_amount":-153.04,"original_currency":"NOK","title":"CRV*Audible              london       GB","booked":true,"booking_date":"2020-05-11","merchant_city":"london","merchant_country":"GB","mcc":null,"ecological_footprint":null,"invoiced_date":null,"invoice_status":null},{"transaction_id":"2012501320027044","transaction_date":"2020-04-29","transaction_type":null,"amount":-342,"currency":"NOK","exchange_rate":1,"original_amount":-342,"original_currency":"NOK","title":"CRV*NETS   *pizzabaker   London       GB","booked":true,"booking_date":"2020-05-04","merchant_city":"London","merchant_country":"GB","mcc":null,"ecological_footprint":null,"invoiced_date":null,"invoice_status":null},{"transaction_id":"2012501320027043","transaction_date":"2020-04-29","transaction_type":null,"amount":-289.9,"currency":"NOK","exchange_rate":1.0,"original_amount":-289.9,"original_currency":"NOK","title":"CRV*VINMONOPOLET ASKIM   london       GB","booked":true,"booking_date":"2020-05-04","merchant_city":"london","merchant_country":"GB","mcc":null,"ecological_footprint":null,"invoiced_date":null,"invoice_status":null},{"transaction_id":"2012501320027042","transaction_date":"2020-04-29","transaction_type":null,"amount":-238,"currency":"NOK","exchange_rate":1,"original_amount":-238,"original_currency":"NOK","title":"STEEN CATERING           Askim        NO","booked":true,"booking_date":"2020-05-04","merchant_city":"Askim","merchant_country":"NO","mcc":null,"ecological_footprint":null,"invoiced_date":null,"invoice_status":null},{"transaction_id":"2012501320027041","transaction_date":"2020-04-29","transaction_type":null,"amount":-39.9,"currency":"NOK","exchange_rate":1.0,"original_amount":-39.9,"original_currency":"NOK","title":"CRV*KIWI 287 VAMMAV      London       GB","booked":true,"booking_date":"2020-05-04","merchant_city":"London","merchant_country":"GB","mcc":null,"ecological_footprint":null,"invoiced_date":null,"invoice_status":null},{"transaction_id":"2012501320027040","transaction_date":"2020-04-29","transaction_type":null,"amount":-39.9,"currency":"NOK","exchange_rate":1.0,"original_amount":-39.9,"original_currency":"NOK","title":"CL  OHLSON 2900          ASKIM        NO","booked":true,"booking_date":"2020-05-04","merchant_city":"ASKIM","merchant_country":"NO","mcc":null,"ecological_footprint":null,"invoiced_date":null,"invoice_status":null}],"billing_period":null}
 
-REQUEST 25
+REQUEST 10
 GET https://private.nordea.no/api/dbf/ca/loans-v1/loans
 Authorization: Bearer eyJ0dHlwIjoiYWNjZXNzX3Rva2VuIiwidmVyIjoiMy4xLjIiLCJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Im5hc2YtYWNjZXNzLXRva2VuIn0.eyJzdWIiOiJuXC9hIiwiY291bnRyeSI6Ik5PIiwiaXNzIjoibmFzZi1hY2Nlc3MtdG9rZW4iLCJjbGllbnRfaWQiOiJOREhNTk8iLCJzaWQiOiIxMjU2MWQ4Ny00OTU5LTQ1ZDEtYjAwYi00MzdhZWIyOWNhMTYiLCJzc24iOiIyOTA4ODQyNjU2NiIsInVpZCI6IjI5MDg4NDI2NTY2IiwiY3Jpc3MiOiJCYW5rSUQgLSBOb3JkZWEgLSBCYW5rIENBIDMiLCJzY29wZSI6WyJuZGYiLCJhZ3JlZW1lbnQiLCJvcGVuaWQiLCJvZmZsaW5lX2FjY2VzcyJdLCJzZ20iOiJob3VzZWhvbGQiLCJleHAiOjE1OTM3NzI3MjgsImlhdCI6MTU5Mzc3MjU0OCwianRpIjoiZWRhMWUwOGNmODkyNGQ2NTg0YjQ1NmM2Y2FjODA5NGUiLCJncmFudHMiOnsiYWdyZWVtZW50IjoyOTA4ODQyNjU2Nn0sImMiOiJOTyIsImNoIjoiTkRITSIsImFpc3MiOiJkb21lc3RpY19wbiIsImFkbCI6e30sImFsIjoyLCJhbSI6ImJhbmtpZG1fbm8iLCJudHQiOiJleHQiLCJhdWQiOlsibmFzZiIsImRiZiIsIm9zbCJdLCJuYmYiOjE1OTM3NzI1MzgsImFpZCI6MjkwODg0MjY1NjYsImNpZCI6IjI5MDg4NDI2NTY2In0.LlX546p8R9VxK8XE26hhBs2Y9iR2Cb2AXbrXgwh4U3fvu9knNSWv44ZkCYjSxjBaegmNW1vmEPBDdKHegckUhGblhpC3Yy6G7VCHg3GZsAtrNMqQ3uCBdUxJBINSj9zaYP8yFIoX6jR7cvSe850xptmpRUgQAUrfv7o-H7wd7WiM4Qq-4UEpmAA-_B5BL0QCmZtiTPFgyrW1NxDnebRT7R1JggZRTmQlbALrsgJXCcB5-VVu7ais87iJ-OI8a8mrgGkzujW628e924Bpx6-iYxRH_WYuvkjDitFDlcNZiaiKfSTFmaXTjR909r9Tr99H01K7xSRhPf8I9nZ9ThsNzA
 x-Authorization: Bearer eyJ0dHlwIjoiYWNjZXNzX3Rva2VuIiwidmVyIjoiMy4xLjIiLCJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Im5hc2YtYWNjZXNzLXRva2VuIn0.eyJzdWIiOiJuXC9hIiwiY291bnRyeSI6Ik5PIiwiaXNzIjoibmFzZi1hY2Nlc3MtdG9rZW4iLCJjbGllbnRfaWQiOiJOREhNTk8iLCJzaWQiOiIxMjU2MWQ4Ny00OTU5LTQ1ZDEtYjAwYi00MzdhZWIyOWNhMTYiLCJzc24iOiIyOTA4ODQyNjU2NiIsInVpZCI6IjI5MDg4NDI2NTY2IiwiY3Jpc3MiOiJCYW5rSUQgLSBOb3JkZWEgLSBCYW5rIENBIDMiLCJzY29wZSI6WyJuZGYiLCJhZ3JlZW1lbnQiLCJvcGVuaWQiLCJvZmZsaW5lX2FjY2VzcyJdLCJzZ20iOiJob3VzZWhvbGQiLCJleHAiOjE1OTM3NzI3MjgsImlhdCI6MTU5Mzc3MjU0OCwianRpIjoiZWRhMWUwOGNmODkyNGQ2NTg0YjQ1NmM2Y2FjODA5NGUiLCJncmFudHMiOnsiYWdyZWVtZW50IjoyOTA4ODQyNjU2Nn0sImMiOiJOTyIsImNoIjoiTkRITSIsImFpc3MiOiJkb21lc3RpY19wbiIsImFkbCI6e30sImFsIjoyLCJhbSI6ImJhbmtpZG1fbm8iLCJudHQiOiJleHQiLCJhdWQiOlsibmFzZiIsImRiZiIsIm9zbCJdLCJuYmYiOjE1OTM3NzI1MzgsImFpZCI6MjkwODg0MjY1NjYsImNpZCI6IjI5MDg4NDI2NTY2In0.LlX546p8R9VxK8XE26hhBs2Y9iR2Cb2AXbrXgwh4U3fvu9knNSWv44ZkCYjSxjBaegmNW1vmEPBDdKHegckUhGblhpC3Yy6G7VCHg3GZsAtrNMqQ3uCBdUxJBINSj9zaYP8yFIoX6jR7cvSe850xptmpRUgQAUrfv7o-H7wd7WiM4Qq-4UEpmAA-_B5BL0QCmZtiTPFgyrW1NxDnebRT7R1JggZRTmQlbALrsgJXCcB5-VVu7ais87iJ-OI8a8mrgGkzujW628e924Bpx6-iYxRH_WYuvkjDitFDlcNZiaiKfSTFmaXTjR909r9Tr99H01K7xSRhPf8I9nZ9ThsNzA
 Connection: keep-alive
 
-RESPONSE 25
+RESPONSE 10
 200
 Content-Type: application/json
 
 {"loans": [{"amount": {"balance": -2660372.0, "granted": 2820000.0, "paid": 159628.0 }, "currency": "NOK", "group": "mortgage", "interest": {}, "loan_formatted_id": "6320.82.12345", "loan_id": "632082123456", "metadata": {"patch_metadata": [{"allowed_operations": ["replace"], "path": "/repayment_schedule/debit_account_number"}, {"allowed_operations": ["replace"], "path": "/repayment_schedule/repayment_day_of_month"} ] }, "nickname": "LÃ¥n", "owners": [], "product_code": "ART21", "repayment_status": "paid"} ] }
 
 
-REQUEST 26
+REQUEST 11
 GET https://private.nordea.no/api/dbf/ca/loans-v1/loans/632082123456
 Authorization: Bearer eyJ0dHlwIjoiYWNjZXNzX3Rva2VuIiwidmVyIjoiMy4xLjIiLCJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Im5hc2YtYWNjZXNzLXRva2VuIn0.eyJzdWIiOiJuXC9hIiwiY291bnRyeSI6Ik5PIiwiaXNzIjoibmFzZi1hY2Nlc3MtdG9rZW4iLCJjbGllbnRfaWQiOiJOREhNTk8iLCJzaWQiOiIxMjU2MWQ4Ny00OTU5LTQ1ZDEtYjAwYi00MzdhZWIyOWNhMTYiLCJzc24iOiIyOTA4ODQyNjU2NiIsInVpZCI6IjI5MDg4NDI2NTY2IiwiY3Jpc3MiOiJCYW5rSUQgLSBOb3JkZWEgLSBCYW5rIENBIDMiLCJzY29wZSI6WyJuZGYiLCJhZ3JlZW1lbnQiLCJvcGVuaWQiLCJvZmZsaW5lX2FjY2VzcyJdLCJzZ20iOiJob3VzZWhvbGQiLCJleHAiOjE1OTM3NzI3MjgsImlhdCI6MTU5Mzc3MjU0OCwianRpIjoiZWRhMWUwOGNmODkyNGQ2NTg0YjQ1NmM2Y2FjODA5NGUiLCJncmFudHMiOnsiYWdyZWVtZW50IjoyOTA4ODQyNjU2Nn0sImMiOiJOTyIsImNoIjoiTkRITSIsImFpc3MiOiJkb21lc3RpY19wbiIsImFkbCI6e30sImFsIjoyLCJhbSI6ImJhbmtpZG1fbm8iLCJudHQiOiJleHQiLCJhdWQiOlsibmFzZiIsImRiZiIsIm9zbCJdLCJuYmYiOjE1OTM3NzI1MzgsImFpZCI6MjkwODg0MjY1NjYsImNpZCI6IjI5MDg4NDI2NTY2In0.LlX546p8R9VxK8XE26hhBs2Y9iR2Cb2AXbrXgwh4U3fvu9knNSWv44ZkCYjSxjBaegmNW1vmEPBDdKHegckUhGblhpC3Yy6G7VCHg3GZsAtrNMqQ3uCBdUxJBINSj9zaYP8yFIoX6jR7cvSe850xptmpRUgQAUrfv7o-H7wd7WiM4Qq-4UEpmAA-_B5BL0QCmZtiTPFgyrW1NxDnebRT7R1JggZRTmQlbALrsgJXCcB5-VVu7ais87iJ-OI8a8mrgGkzujW628e924Bpx6-iYxRH_WYuvkjDitFDlcNZiaiKfSTFmaXTjR909r9Tr99H01K7xSRhPf8I9nZ9ThsNzA
 x-Authorization: Bearer eyJ0dHlwIjoiYWNjZXNzX3Rva2VuIiwidmVyIjoiMy4xLjIiLCJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Im5hc2YtYWNjZXNzLXRva2VuIn0.eyJzdWIiOiJuXC9hIiwiY291bnRyeSI6Ik5PIiwiaXNzIjoibmFzZi1hY2Nlc3MtdG9rZW4iLCJjbGllbnRfaWQiOiJOREhNTk8iLCJzaWQiOiIxMjU2MWQ4Ny00OTU5LTQ1ZDEtYjAwYi00MzdhZWIyOWNhMTYiLCJzc24iOiIyOTA4ODQyNjU2NiIsInVpZCI6IjI5MDg4NDI2NTY2IiwiY3Jpc3MiOiJCYW5rSUQgLSBOb3JkZWEgLSBCYW5rIENBIDMiLCJzY29wZSI6WyJuZGYiLCJhZ3JlZW1lbnQiLCJvcGVuaWQiLCJvZmZsaW5lX2FjY2VzcyJdLCJzZ20iOiJob3VzZWhvbGQiLCJleHAiOjE1OTM3NzI3MjgsImlhdCI6MTU5Mzc3MjU0OCwianRpIjoiZWRhMWUwOGNmODkyNGQ2NTg0YjQ1NmM2Y2FjODA5NGUiLCJncmFudHMiOnsiYWdyZWVtZW50IjoyOTA4ODQyNjU2Nn0sImMiOiJOTyIsImNoIjoiTkRITSIsImFpc3MiOiJkb21lc3RpY19wbiIsImFkbCI6e30sImFsIjoyLCJhbSI6ImJhbmtpZG1fbm8iLCJudHQiOiJleHQiLCJhdWQiOlsibmFzZiIsImRiZiIsIm9zbCJdLCJuYmYiOjE1OTM3NzI1MzgsImFpZCI6MjkwODg0MjY1NjYsImNpZCI6IjI5MDg4NDI2NTY2In0.LlX546p8R9VxK8XE26hhBs2Y9iR2Cb2AXbrXgwh4U3fvu9knNSWv44ZkCYjSxjBaegmNW1vmEPBDdKHegckUhGblhpC3Yy6G7VCHg3GZsAtrNMqQ3uCBdUxJBINSj9zaYP8yFIoX6jR7cvSe850xptmpRUgQAUrfv7o-H7wd7WiM4Qq-4UEpmAA-_B5BL0QCmZtiTPFgyrW1NxDnebRT7R1JggZRTmQlbALrsgJXCcB5-VVu7ais87iJ-OI8a8mrgGkzujW628e924Bpx6-iYxRH_WYuvkjDitFDlcNZiaiKfSTFmaXTjR909r9Tr99H01K7xSRhPf8I9nZ9ThsNzA
-x-Device-Id: 00000000-0000-4000-0000-000000000000
 Connection: keep-alive
 
-RESPONSE 26
+RESPONSE 11
 200
 Content-Type: application/json
 
 {"amount": {"balance": -2654170.0, "granted": 2820000.0, "paid": 165830.0 }, "currency": "NOK", "following_payment": {"date": "2020-09-01", "fees": 65.0, "instalment": 6211.0, "interest": 4070.0, "total": 10346.0 }, "group": "mortgage", "interest": {"base_rate": 1.84, "rate": 1.91, "reference_rate_type": "float"}, "loan_formatted_id": "6320.82.123456", "loan_id": "632082123456", "metadata": {"patch_metadata": [{"allowed_operations": ["replace"], "path": "/repayment_schedule/debit_account_number"}, {"allowed_operations": ["replace"], "path": "/repayment_schedule/repayment_day_of_month"} ] }, "nickname": "Lån", "owners": [{"name": "WWES QASD ASDFG"}, {"name": "FFEE ZXCV ASDFG"}, {"name": "JOHN ASFVZ ZXCV"}, {"name": "RUTH ZXCV"} ], "product_code": "ART21", "repayment_schedule": {"debit_account_number": "6011.14.73857", "final_payment_date": "2048-01-01", "following_instalment": "2020-09-01", "following_interest_payment": "2020-09-01", "instalment_free_months": [], "method_of_payment": "annuity", "number_of_instalments": 329, "period_between_instalments": 1, "terms_per_year": 12 }, "repayment_status": "paid"}
 
 
-REQUEST 27
+REQUEST 12
 GET https://private.nordea.no/api/dbf/ca/savings-v1/savings/custodies
 Authorization: Bearer eyJ0dHlwIjoiYWNjZXNzX3Rva2VuIiwidmVyIjoiMy4xLjIiLCJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Im5hc2YtYWNjZXNzLXRva2VuIn0.eyJzdWIiOiJuXC9hIiwiY291bnRyeSI6Ik5PIiwiaXNzIjoibmFzZi1hY2Nlc3MtdG9rZW4iLCJjbGllbnRfaWQiOiJOREhNTk8iLCJzaWQiOiIxMjU2MWQ4Ny00OTU5LTQ1ZDEtYjAwYi00MzdhZWIyOWNhMTYiLCJzc24iOiIyOTA4ODQyNjU2NiIsInVpZCI6IjI5MDg4NDI2NTY2IiwiY3Jpc3MiOiJCYW5rSUQgLSBOb3JkZWEgLSBCYW5rIENBIDMiLCJzY29wZSI6WyJuZGYiLCJhZ3JlZW1lbnQiLCJvcGVuaWQiLCJvZmZsaW5lX2FjY2VzcyJdLCJzZ20iOiJob3VzZWhvbGQiLCJleHAiOjE1OTM3NzI3MjgsImlhdCI6MTU5Mzc3MjU0OCwianRpIjoiZWRhMWUwOGNmODkyNGQ2NTg0YjQ1NmM2Y2FjODA5NGUiLCJncmFudHMiOnsiYWdyZWVtZW50IjoyOTA4ODQyNjU2Nn0sImMiOiJOTyIsImNoIjoiTkRITSIsImFpc3MiOiJkb21lc3RpY19wbiIsImFkbCI6e30sImFsIjoyLCJhbSI6ImJhbmtpZG1fbm8iLCJudHQiOiJleHQiLCJhdWQiOlsibmFzZiIsImRiZiIsIm9zbCJdLCJuYmYiOjE1OTM3NzI1MzgsImFpZCI6MjkwODg0MjY1NjYsImNpZCI6IjI5MDg4NDI2NTY2In0.LlX546p8R9VxK8XE26hhBs2Y9iR2Cb2AXbrXgwh4U3fvu9knNSWv44ZkCYjSxjBaegmNW1vmEPBDdKHegckUhGblhpC3Yy6G7VCHg3GZsAtrNMqQ3uCBdUxJBINSj9zaYP8yFIoX6jR7cvSe850xptmpRUgQAUrfv7o-H7wd7WiM4Qq-4UEpmAA-_B5BL0QCmZtiTPFgyrW1NxDnebRT7R1JggZRTmQlbALrsgJXCcB5-VVu7ais87iJ-OI8a8mrgGkzujW628e924Bpx6-iYxRH_WYuvkjDitFDlcNZiaiKfSTFmaXTjR909r9Tr99H01K7xSRhPf8I9nZ9ThsNzA
 x-Authorization: Bearer eyJ0dHlwIjoiYWNjZXNzX3Rva2VuIiwidmVyIjoiMy4xLjIiLCJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Im5hc2YtYWNjZXNzLXRva2VuIn0.eyJzdWIiOiJuXC9hIiwiY291bnRyeSI6Ik5PIiwiaXNzIjoibmFzZi1hY2Nlc3MtdG9rZW4iLCJjbGllbnRfaWQiOiJOREhNTk8iLCJzaWQiOiIxMjU2MWQ4Ny00OTU5LTQ1ZDEtYjAwYi00MzdhZWIyOWNhMTYiLCJzc24iOiIyOTA4ODQyNjU2NiIsInVpZCI6IjI5MDg4NDI2NTY2IiwiY3Jpc3MiOiJCYW5rSUQgLSBOb3JkZWEgLSBCYW5rIENBIDMiLCJzY29wZSI6WyJuZGYiLCJhZ3JlZW1lbnQiLCJvcGVuaWQiLCJvZmZsaW5lX2FjY2VzcyJdLCJzZ20iOiJob3VzZWhvbGQiLCJleHAiOjE1OTM3NzI3MjgsImlhdCI6MTU5Mzc3MjU0OCwianRpIjoiZWRhMWUwOGNmODkyNGQ2NTg0YjQ1NmM2Y2FjODA5NGUiLCJncmFudHMiOnsiYWdyZWVtZW50IjoyOTA4ODQyNjU2Nn0sImMiOiJOTyIsImNoIjoiTkRITSIsImFpc3MiOiJkb21lc3RpY19wbiIsImFkbCI6e30sImFsIjoyLCJhbSI6ImJhbmtpZG1fbm8iLCJudHQiOiJleHQiLCJhdWQiOlsibmFzZiIsImRiZiIsIm9zbCJdLCJuYmYiOjE1OTM3NzI1MzgsImFpZCI6MjkwODg0MjY1NjYsImNpZCI6IjI5MDg4NDI2NTY2In0.LlX546p8R9VxK8XE26hhBs2Y9iR2Cb2AXbrXgwh4U3fvu9knNSWv44ZkCYjSxjBaegmNW1vmEPBDdKHegckUhGblhpC3Yy6G7VCHg3GZsAtrNMqQ3uCBdUxJBINSj9zaYP8yFIoX6jR7cvSe850xptmpRUgQAUrfv7o-H7wd7WiM4Qq-4UEpmAA-_B5BL0QCmZtiTPFgyrW1NxDnebRT7R1JggZRTmQlbALrsgJXCcB5-VVu7ais87iJ-OI8a8mrgGkzujW628e924Bpx6-iYxRH_WYuvkjDitFDlcNZiaiKfSTFmaXTjR909r9Tr99H01K7xSRhPf8I9nZ9ThsNzA
 Connection: keep-alive
 
-RESPONSE 27
+RESPONSE 12
 200
 Content-Type: application/json
 X-Global-Transaction-ID: eaf52b955eff0a1094e311b1

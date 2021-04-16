@@ -6,7 +6,11 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import io.netty.handler.codec.http.DefaultHttpHeaders;
+import io.netty.handler.codec.http.HttpHeaders;
+import io.netty.handler.codec.http.HttpResponse;
 import java.util.List;
+import java.util.Map;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.junit.Ignore;
@@ -14,6 +18,7 @@ import org.mockito.exceptions.base.MockitoException;
 import org.openqa.selenium.WebElement;
 import se.tink.backend.aggregation.agents.exceptions.agent.AgentException;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.BankIdWebDriver;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.proxy.ResponseFromProxy;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.BankIdElementLocator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.BankIdElementsSearchResult;
 
@@ -84,5 +89,17 @@ public class BankIdTestUtils {
                                             argument.getLocators();
                                     return locatorsInQuery.contains(locator);
                                 }));
+    }
+
+    public static ResponseFromProxy mockProxyResponseWithHeaders(Map<String, String> headers) {
+        HttpHeaders httpHeaders = new DefaultHttpHeaders();
+        headers.forEach(httpHeaders::add);
+
+        HttpResponse httpResponse = mock(HttpResponse.class);
+        when(httpResponse.headers()).thenReturn(httpHeaders);
+
+        ResponseFromProxy proxyResponse = mock(ResponseFromProxy.class);
+        when(proxyResponse.getResponse()).thenReturn(httpResponse);
+        return proxyResponse;
     }
 }

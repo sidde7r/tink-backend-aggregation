@@ -1,8 +1,6 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid;
 
-import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.authenticator.AutoAuthenticator;
-
-public interface BankIdIframeAuthenticator extends AutoAuthenticator {
+public interface BankIdIframeAuthenticator {
 
     /**
      * Returns an url that, when called from WebDriver, indicates that we've successfully completed

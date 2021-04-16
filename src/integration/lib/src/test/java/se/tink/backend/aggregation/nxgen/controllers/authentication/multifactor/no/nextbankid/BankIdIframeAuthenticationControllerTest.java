@@ -65,16 +65,6 @@ public class BankIdIframeAuthenticationControllerTest {
     }
 
     @Test
-    public void should_delegate_auto_authentication_to_authenticator() {
-        // when
-        iframeAuthenticator.autoAuthenticate();
-
-        // then
-        mocksToVerifyInOrder.verify(iframeAuthenticator).autoAuthenticate();
-        mocksToVerifyInOrder.verifyNoMoreInteractions();
-    }
-
-    @Test
     @Parameters(method = "allFirstIframeWindows")
     public void should_run_manual_authentication(BankIdIframeFirstWindow firstWindow) {
         // given
