@@ -93,7 +93,11 @@ public final class AbnAmroAgent extends AbstractAgent
         this.abnAmroConfiguration = getValidAbnAmroConfiguration(configuration);
 
         this.subscriptionClient =
-                new IBSubscriptionClient(abnAmroConfiguration, metricContext.getMetricRegistry());
+                new IBSubscriptionClient(
+                        clientFactory,
+                        context.getLogOutputStream(),
+                        abnAmroConfiguration,
+                        metricContext.getMetricRegistry());
 
         this.enrollmentService =
                 new EnrollmentClient(

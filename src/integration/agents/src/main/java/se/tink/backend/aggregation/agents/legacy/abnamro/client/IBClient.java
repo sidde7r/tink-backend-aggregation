@@ -2,7 +2,9 @@ package se.tink.backend.aggregation.agents.abnamro.client;
 
 import com.google.common.base.Strings;
 import com.sun.jersey.api.client.WebResource.Builder;
+import java.io.OutputStream;
 import javax.ws.rs.core.NewCookie;
+import se.tink.backend.aggregation.agents.utils.jersey.JerseyClientFactory;
 import se.tink.backend.aggregation.configuration.integrations.abnamro.AbnAmroConfiguration;
 import se.tink.libraries.metrics.core.MetricId;
 import se.tink.libraries.metrics.registry.MetricRegistry;
@@ -18,10 +20,14 @@ public class IBClient extends Client {
 
     protected IBClient(
             Class<? extends Client> cls,
+            JerseyClientFactory clientFactory,
+            OutputStream logOutputStream,
             AbnAmroConfiguration abnAmroConfiguration,
             MetricRegistry metricRegistry) {
         super(
                 cls,
+                clientFactory,
+                logOutputStream,
                 abnAmroConfiguration.getTrustStoreConfiguration(),
                 abnAmroConfiguration.getInternetBankingConfiguration().getHost());
 
