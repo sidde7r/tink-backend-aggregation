@@ -1,42 +1,31 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.fetcher.cardaccounts.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import lombok.Getter;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.CreditCardTransaction;
 
 @JsonObject
+@Getter
 public class TransactionsEntity {
-
-    private List<BookedEntity> booked;
-    private List<PendingEntity> pending;
-
-    public List<BookedEntity> getBooked() {
-        return booked;
-    }
-
-    public List<PendingEntity> getPending() {
-        return pending;
-    }
+    private List<TransactionEntity> booked;
+    private List<TransactionEntity> pending;
 
     @JsonIgnore
     public List<CreditCardTransaction> toTinkTransactions(String accountNumber) {
-        List<CreditCardTransaction> bookedTransactions =
-                collect(booked, BookedEntity::toTinkTransaction, accountNumber);
-        List<CreditCardTransaction> pendingTransactions =
-                collect(pending, PendingEntity::toTinkTransaction, accountNumber);
-        List<CreditCardTransaction> transactions = new ArrayList<>(bookedTransactions);
-        transactions.addAll(pendingTransactions);
-        return transactions;
+        return Stream.concat(
+                        collect(booked, te -> te.toTinkTransaction(false), accountNumber),
+                        collect(pending, te -> te.toTinkTransaction(true), accountNumber))
+                .collect(Collectors.toList());
     }
 
     @JsonIgnore
-    public <T> List<CreditCardTransaction> collect(
+    public <T> Stream<CreditCardTransaction> collect(
             List<T> transactions,
             Function<T, CreditCardTransaction> mapMethod,
             String accountNumber) {
@@ -48,9 +37,8 @@ public class TransactionsEntity {
                                         .filter(
                                                 transaction ->
                                                         isTransactionForCurrentAccount(
-                                                                transaction, accountNumber))
-                                        .collect(Collectors.toList()))
-                .orElseGet(Collections::emptyList);
+                                                                transaction, accountNumber)))
+                .orElse(Stream.empty());
     }
 
     @JsonIgnore

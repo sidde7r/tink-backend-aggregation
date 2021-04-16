@@ -13,8 +13,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.Se
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.utils.SebStorage;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.utils.SebUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.fetcher.cardaccounts.ErrorResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.fetcher.cardaccounts.entities.BookedEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.fetcher.cardaccounts.entities.PendingEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.fetcher.cardaccounts.entities.TransactionEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.fetcher.cardaccounts.entities.TransactionsEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.fetcher.cardaccounts.rpc.FetchCardAccountsTransactions;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
@@ -50,8 +49,8 @@ public class SebCreditCardAccountFetcher<A extends Account>
      * This method fetches all the {@link TransactionsEntity} for a {@link CreditCardAccount} and
      * checks each of them for creditCardNumber. If it finds a new creditCardNumber also known as
      * sub-card(other then that is already present in the CreditCardAccount) that is mapped to any
-     * of the {@link PendingEntity} Or {@link BookedEntity}, it creates a new {@link
-     * CreditCardAccount} and stores it in the accountNumberAccountMap.
+     * {@link TransactionEntity}, it creates a new {@link CreditCardAccount} and stores it in the
+     * accountNumberAccountMap.
      *
      * <p>All the {@link TransactionsEntity}(s) are stored in the instanceStorage and then used in
      * {@link SebCreditCardTransactionsFetcher} to get CreditCardTransaction for each account
@@ -95,27 +94,31 @@ public class SebCreditCardAccountFetcher<A extends Account>
     }
 
     private void checkAndCreateSubCreditCardInBookedTransaction(
-            CreditCardAccount account, List<BookedEntity> bookedTransactions) {
+            CreditCardAccount account, List<TransactionEntity> bookedTransactions) {
         bookedTransactions.stream()
-                .filter(bookedEntity -> !Strings.isNullOrEmpty(bookedEntity.getMaskedPan()))
+                .filter(
+                        transactionEntity ->
+                                !Strings.isNullOrEmpty(transactionEntity.getMaskedPan()))
                 .forEach(
-                        bookedEntity ->
+                        transactionEntity ->
                                 checkAndCreateNewCreditCardAccount(
                                         account,
-                                        bookedEntity.getMaskedPan(),
-                                        bookedEntity.getNameOnCard()));
+                                        transactionEntity.getMaskedPan(),
+                                        transactionEntity.getNameOnCard()));
     }
 
     private void checkAndCreateSubCreditCardInPendingTransaction(
-            CreditCardAccount account, List<PendingEntity> pendingEntities) {
+            CreditCardAccount account, List<TransactionEntity> pendingEntities) {
         pendingEntities.stream()
-                .filter(pendingEntity -> !Strings.isNullOrEmpty(pendingEntity.getMaskedPan()))
+                .filter(
+                        transactionEntity ->
+                                !Strings.isNullOrEmpty(transactionEntity.getMaskedPan()))
                 .forEach(
-                        pendingEntity ->
+                        transactionEntity ->
                                 checkAndCreateNewCreditCardAccount(
                                         account,
-                                        pendingEntity.getMaskedPan(),
-                                        pendingEntity.getNameOnCard()));
+                                        transactionEntity.getMaskedPan(),
+                                        transactionEntity.getNameOnCard()));
     }
 
     private void checkAndCreateNewCreditCardAccount(
