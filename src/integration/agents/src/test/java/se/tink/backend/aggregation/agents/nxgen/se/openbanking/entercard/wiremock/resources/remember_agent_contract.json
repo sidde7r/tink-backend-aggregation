@@ -44,8 +44,19 @@
         "timestamp" : 0,
         "type" : "CREDIT_CARD",
         "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "333333333"
+        },
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-04-15",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "Transaction",
+        "merchantName" : "Merchant 3",
+        "merchantCategoryCode" : "5732"
     }, {
         "amount" : -250.31,
         "date" : 1615719600000,
@@ -57,7 +68,18 @@
         "timestamp" : 0,
         "type" : "CREDIT_CARD",
         "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "555555555"
+        },
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-03-15",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "Transaction",
+        "merchantName" : "Merchant 5",
+        "merchantCategoryCode" : "5999"
     } ]
 }
