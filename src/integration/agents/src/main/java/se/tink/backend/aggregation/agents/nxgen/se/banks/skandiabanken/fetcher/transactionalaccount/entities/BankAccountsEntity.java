@@ -19,6 +19,7 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.creditc
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
+import se.tink.backend.aggregation.source_info.AccountSourceInfo;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 
 @Getter
@@ -129,6 +130,15 @@ public class BankAccountsEntity {
                 .addHolderName(holder.getHolderName())
                 .setApiIdentifier(encryptedNumber)
                 .setBankIdentifier(encryptedNumber)
+                .sourceInfo(createAccountSourceInfo())
+                .build();
+    }
+
+    @JsonIgnore
+    private AccountSourceInfo createAccountSourceInfo() {
+        return AccountSourceInfo.builder()
+                .bankAccountType(typeName)
+                .bankProductName(displayTypeName)
                 .build();
     }
 
@@ -159,6 +169,15 @@ public class BankAccountsEntity {
                 .withId(idModule)
                 .addHolderName(holder.getHolderName())
                 .setApiIdentifier(encryptedNumber)
+                .sourceInfo(createAccountSourceInfo(cardEntity))
+                .build();
+    }
+
+    @JsonIgnore
+    private AccountSourceInfo createAccountSourceInfo(CardEntity cardEntity) {
+        return AccountSourceInfo.builder()
+                .bankAccountType(cardEntity.getDisplayTypeName()) // ex. "Kreditkort", "Bankkort"
+                .bankProductName(cardEntity.getTypeName()) // ex. "PayAndDebitCard", "BankCard"
                 .build();
     }
 }
