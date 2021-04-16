@@ -16,6 +16,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.i
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.investment.entities.TypeEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
+import se.tink.backend.aggregation.source_info.AccountSourceInfo;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
@@ -117,6 +118,14 @@ public class FetchInvestmentAccountDetailsResponse {
                 .setAccountNumber(accountsEntity.getNumber())
                 .setName(accountsEntity.getDisplayName())
                 .setPortfolios(Collections.singletonList(getTinkPortfolio(holdingsResponse)))
+                .sourceInfo(createAccountSourceInfo(accountsEntity))
+                .build();
+    }
+
+    private AccountSourceInfo createAccountSourceInfo(SecuritiesAccountsEntity accountsEntity) {
+        return AccountSourceInfo.builder()
+                .bankAccountType(accountsEntity.getAccountTypeName()) // ex. "ISK"
+                .bankProductName(accountsEntity.getTypeName()) // ex.  "Investeringssparkonto"
                 .build();
     }
 

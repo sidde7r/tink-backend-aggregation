@@ -151,4 +151,9 @@ public class SecuritiesAccountsEntity {
     public String getTypeName() {
         return typeName;
     }
+
+    @JsonIgnore
+    public String getAccountTypeName() {
+        return accountTypeName;
+    }
 }

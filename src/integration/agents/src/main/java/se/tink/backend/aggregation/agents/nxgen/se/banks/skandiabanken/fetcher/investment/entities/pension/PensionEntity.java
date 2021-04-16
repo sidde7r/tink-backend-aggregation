@@ -17,6 +17,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.i
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
+import se.tink.backend.aggregation.source_info.AccountSourceInfo;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
@@ -85,6 +86,15 @@ public class PensionEntity {
                 .setPortfolios(getPortfolio())
                 .setCashBalance(
                         ExactCurrencyAmount.inSEK(0.0)) // Amount is set in framework from parts.
+                .sourceInfo(createAccountSourceInfo())
+                .build();
+    }
+
+    @JsonIgnore
+    private AccountSourceInfo createAccountSourceInfo() {
+        return AccountSourceInfo.builder()
+                .bankAccountType(typeName) // ex. "SkandiaLivAiEForsakring"
+                .bankProductName(displayName) //  ex. "Pensionsförsäkring Allt i Ett"
                 .build();
     }
 
