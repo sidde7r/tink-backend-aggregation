@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.inves
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.storage.IcaBankenSessionStorage;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
+import se.tink.backend.aggregation.source_info.AccountSourceInfo;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class IcaBankenInvestmentFetcher implements AccountFetcher<InvestmentAccount> {
@@ -44,6 +45,14 @@ public class IcaBankenInvestmentFetcher implements AccountFetcher<InvestmentAcco
                 .setName(depot.getDepotName())
                 .setCashBalance(ExactCurrencyAmount.inSEK(depot.getDisposable()))
                 .setPortfolios(Collections.singletonList(addPortfolio(depot)))
+                .sourceInfo(createAccountSourceInfo(depot))
+                .build();
+    }
+
+    private AccountSourceInfo createAccountSourceInfo(DepotEntity depot) {
+        return AccountSourceInfo.builder()
+                .bankAccountType(depot.getInvestmentAccountType())
+                .bankProductName(depot.getDepotName())
                 .build();
     }
 

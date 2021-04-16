@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccou
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount.Builder;
+import se.tink.backend.aggregation.source_info.AccountSourceInfo;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.enums.AccountFlag;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
@@ -84,7 +85,8 @@ public class AccountEntity implements GeneralAccountEntity {
                         .setHolderName(new HolderName(holder))
                         .setBankIdentifier(accountId)
                         .addIdentifier(new SwedishIdentifier(accountNumber))
-                        .addIdentifier(new IbanIdentifier(iban));
+                        .addIdentifier(new IbanIdentifier(iban))
+                        .sourceInfo(createAccountSourceInfo());
         if (accountType == AccountTypes.CHECKING) {
             builder.addAccountFlag(AccountFlag.PSD2_PAYMENT_ACCOUNT);
         }
@@ -101,7 +103,13 @@ public class AccountEntity implements GeneralAccountEntity {
                 .setName(name)
                 .setHolderName(new HolderName(holder))
                 .setBankIdentifier(accountId)
+                .sourceInfo(createAccountSourceInfo())
                 .build();
+    }
+
+    @JsonIgnore
+    private AccountSourceInfo createAccountSourceInfo() {
+        return AccountSourceInfo.builder().bankAccountType(type).bankProductName(name).build();
     }
 
     @JsonIgnore
