@@ -6,13 +6,15 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 public class UkOpenBankingAuthenticationErrorMatcher {
 
     private static final String AUTHORIZATION_CANCELLED_BY_USER = "cancelled";
+    private static final String AUTHORIZATION_REJECTED_BY_USER = "User rejection";
     private static final String CONSENT_REJECTED_BY_USER = "rejected";
     private static final String AUTHORIZATION_FAILED_BY_USER = "User failed to authenticate";
     private static final String AUTHORIZATION_TIME_OUT = "not completed in the allotted time";
 
     boolean isAuthorizationCancelledByUser(String errorMessage) {
         return StringUtils.containsIgnoreCase(errorMessage, AUTHORIZATION_CANCELLED_BY_USER)
-                || StringUtils.containsIgnoreCase(errorMessage, CONSENT_REJECTED_BY_USER);
+                || StringUtils.containsIgnoreCase(errorMessage, CONSENT_REJECTED_BY_USER)
+                || StringUtils.containsIgnoreCase(errorMessage, AUTHORIZATION_REJECTED_BY_USER);
     }
 
     boolean isAuthorizationFailedByUser(String errorMessage) {
