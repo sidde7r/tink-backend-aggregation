@@ -28,7 +28,7 @@ public class RecurringPaymentRequest extends TransferRequest {
 
     private String credentialsId;
 
-    private UUID userId;
+    private String userId;
     private AccountIdentifierType creditorType;
     private String creditorId;
     private String creditorName;
@@ -64,7 +64,7 @@ public class RecurringPaymentRequest extends TransferRequest {
     public RecurringPayment getRecurringPayment() {
         RecurringPayment recurringPayment = new RecurringPayment();
         recurringPayment.setId(id);
-        recurringPayment.setUserId(userId);
+        recurringPayment.setUserId(UUIDUtils.fromTinkUUID(userId));
         recurringPayment.setCredentialsId(UUIDUtils.fromTinkUUID(credentialsId));
         recurringPayment.setDestination(creditorType, creditorId, creditorName);
         recurringPayment.setSource(debtorType, debtorId);
