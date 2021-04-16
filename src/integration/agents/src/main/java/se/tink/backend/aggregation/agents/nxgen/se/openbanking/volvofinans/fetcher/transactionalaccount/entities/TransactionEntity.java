@@ -1,12 +1,18 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.volvofinans.fetcher.transactionalaccount.entities;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import java.util.Date;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import java.time.LocalDate;
+import se.tink.backend.aggregation.agents.models.TransactionExternalSystemIdType;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction.Builder;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
+import se.tink.backend.aggregation.utils.json.deserializers.LocalDateDeserializer;
 
 @JsonObject
 public class TransactionEntity {
+
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    private LocalDate transactionDate;
 
     private String transactionId;
     private String proprietaryBankTransactionCode;
@@ -15,10 +21,6 @@ public class TransactionEntity {
     private TransactionAmount originalAmount;
     private TransactionAmount foreignTransactionFee;
     private TransactionAmount withdrawalFee;
-
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    private Date transactionDate;
-
     private TransactionAmount discount;
     private TransactionAmount loyaltyCheck;
     private String fromAccount;
@@ -29,11 +31,17 @@ public class TransactionEntity {
     private String ownMessage;
 
     public Transaction toTinkTransaction(boolean isPending) {
-        return Transaction.builder()
-                .setPending(isPending)
-                .setAmount(transactionAmount.toAmount())
-                .setDate(transactionDate)
-                .setDescription(transactionDetails)
-                .build();
+        Builder builder =
+                Transaction.builder()
+                        .setPending(isPending)
+                        .setAmount(transactionAmount.toAmount())
+                        .setDate(transactionDate)
+                        .setDescription(transactionDetails)
+                        .addExternalSystemIds(
+                                TransactionExternalSystemIdType.PROVIDER_GIVEN_TRANSACTION_ID,
+                                transactionId)
+                        .setProprietaryFinancialInstitutionType(proprietaryBankTransactionCode);
+
+        return (Transaction) builder.build();
     }
 }
