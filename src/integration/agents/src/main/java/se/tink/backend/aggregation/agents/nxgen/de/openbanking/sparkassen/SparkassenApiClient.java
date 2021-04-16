@@ -10,15 +10,11 @@ import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen
 import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants.ErrorMessages.PSU_ID_TOO_LONG;
 import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants.ErrorMessages.TEMPORARILY_BLOCKED_ACCOUNT;
 
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.util.UUID;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import javax.ws.rs.core.MediaType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
@@ -53,6 +49,7 @@ import se.tink.backend.aggregation.agents.utils.berlingroup.payment.enums.Paymen
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.rpc.FetchPaymentStatusResponse;
+import se.tink.backend.aggregation.agents.utils.charsetguesser.CharsetGuesser;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -121,13 +118,17 @@ public class SparkassenApiClient implements PaymentApiClient {
                                     AuthenticationMethodResponse.class,
                                     new InitAuthorizationRequest(new PsuDataEntity(password)));
             // NZG-283 temporary login
-            logSpecialCharacters("SUCCESS_LOGIN", "username", username);
-            logSpecialCharacters("SUCCESS_LOGIN", "password", password);
+            log.info(
+                    "SUCCESS_LOGIN username charset: [{}]  password charset: [{}]",
+                    CharsetGuesser.getCharset(username),
+                    CharsetGuesser.getCharset(password));
             return authenticationMethodResponse;
         } catch (HttpResponseException e) {
             // NZG-283 temporary login
-            logSpecialCharacters("FAILED_LOGIN", "username", username);
-            logSpecialCharacters("FAILED_LOGIN", "password", password);
+            log.info(
+                    "FAILED_LOGIN username charset: [{}]  password charset: [{}]",
+                    CharsetGuesser.getCharset(username),
+                    CharsetGuesser.getCharset(password));
             // ITE-2489 - temporary experiment
             SparkassenExperimentalLoginErrorHandling.handleIncorrectLogin(e, provider);
             String errorBody = e.getResponse().getBody(String.class);
@@ -153,29 +154,6 @@ public class SparkassenApiClient implements PaymentApiClient {
             }
 
             throw e;
-        }
-    }
-
-    public void logSpecialCharacters(String outcome, String property, String value) {
-        log.info("{} {} {}", outcome, property, getEncoding(value));
-    }
-
-    private static String getEncoding(String value) {
-        String regex = "^[a-zA-Z0-9]+$";
-        Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(value);
-
-        if (StringUtils.isNumeric(value)) {
-            return "NUMERIC";
-        } else if (matcher.matches()) {
-            // simple alphanumeric
-            return "ALPHANUMERIC";
-        } else if (StandardCharsets.US_ASCII.newEncoder().canEncode(value)) {
-            return StandardCharsets.US_ASCII.displayName();
-        } else if (StandardCharsets.ISO_8859_1.newEncoder().canEncode(value)) {
-            return StandardCharsets.ISO_8859_1.displayName();
-        } else {
-            return "OTHER";
         }
     }
 
