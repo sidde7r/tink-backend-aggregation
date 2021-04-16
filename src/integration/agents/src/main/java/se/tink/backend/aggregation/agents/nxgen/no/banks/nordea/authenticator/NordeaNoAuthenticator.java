@@ -11,14 +11,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
-import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.NordeaNoStorage;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.authenticator.rpc.OauthTokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.client.AuthenticationClient;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdIframeAuthenticationResult;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdIframeAuthenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
-import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2TokenBase;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -26,22 +24,6 @@ public class NordeaNoAuthenticator implements BankIdIframeAuthenticator {
 
     private final AuthenticationClient authenticationClient;
     private final NordeaNoStorage storage;
-
-    @Override
-    public void autoAuthenticate() {
-        String refreshToken =
-                storage.retrieveOauthToken()
-                        .flatMap(OAuth2TokenBase::getRefreshToken)
-                        .orElseThrow(SessionError.SESSION_EXPIRED::exception);
-
-        OauthTokenResponse oauthTokenResponse =
-                authenticationClient.refreshAccessToken(refreshToken);
-
-        storage.storeOauthToken(
-                oauthTokenResponse
-                        .toOauthToken()
-                        .orElseThrow(SessionError.SESSION_EXPIRED::exception));
-    }
 
     @Override
     public String getSubstringOfUrlIndicatingAuthenticationFinish() {

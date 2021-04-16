@@ -20,6 +20,7 @@ import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModules;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.authenticator.NordeaBankIdIFrameInitializer;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.authenticator.NordeaNoAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.authenticator.NordeaNoSessionHandler;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.client.AuthenticationClient;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.client.BaseClient;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.client.ExceptionFilter;
@@ -150,7 +151,7 @@ public final class NordeaNoAgent extends NextGenerationAgent
 
     @Override
     protected SessionHandler constructSessionHandler() {
-        return SessionHandler.alwaysFail();
+        return new NordeaNoSessionHandler(authenticationClient, storage);
     }
 
     @Override

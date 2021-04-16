@@ -7,7 +7,6 @@ import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.authenticator.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.BankIdWebDriver;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.proxy.ProxyManager;
@@ -52,7 +51,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 @Slf4j
 @RequiredArgsConstructor
 public class BankIdIframeAuthenticationController
-        implements Authenticator, MultiFactorAuthenticator, AutoAuthenticator {
+        implements Authenticator, MultiFactorAuthenticator {
 
     private static final int WAIT_FOR_PROXY_RESPONSE_IN_SECONDS = 10;
 
@@ -65,11 +64,6 @@ public class BankIdIframeAuthenticationController
     @Override
     public CredentialsTypes getType() {
         return CredentialsTypes.PASSWORD;
-    }
-
-    @Override
-    public void autoAuthenticate() {
-        iframeAuthenticator.autoAuthenticate();
     }
 
     @Override
