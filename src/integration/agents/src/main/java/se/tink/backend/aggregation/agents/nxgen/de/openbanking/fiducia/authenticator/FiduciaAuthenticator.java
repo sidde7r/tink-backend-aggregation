@@ -106,7 +106,7 @@ public class FiduciaAuthenticator implements MultiFactorAuthenticator, AutoAuthe
 
         if (StringUtils.isBlank(username)
                 || username.length() > PSU_ID_MAX_ALLOWED_LENGTH
-                || !username.equals(StringUtils.trim(username))) {
+                || !username.equals(username.trim())) {
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
     }
