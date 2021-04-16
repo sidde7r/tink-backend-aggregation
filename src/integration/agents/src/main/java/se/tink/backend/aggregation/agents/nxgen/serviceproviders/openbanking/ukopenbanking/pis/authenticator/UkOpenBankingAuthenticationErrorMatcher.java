@@ -12,13 +12,16 @@ public class UkOpenBankingAuthenticationErrorMatcher {
     private static final String AUTHORIZATION_TIME_OUT = "not completed in the allotted time";
     private static final String CONSENT_DENIED_BY_USER = "The user denied consent.";
     private static final String NATIONWIDE_USER_CANCEL_MSG = "access_denied";
+    private static final String TSB_USER_CANCEL_MSG =
+            "The resource_owner denied access to resources";
 
     boolean isAuthorizationCancelledByUser(String errorMessage) {
         return StringUtils.containsIgnoreCase(errorMessage, AUTHORIZATION_CANCELLED_BY_USER)
                 || StringUtils.containsIgnoreCase(errorMessage, CONSENT_REJECTED_BY_USER)
                 || StringUtils.containsIgnoreCase(errorMessage, AUTHORIZATION_REJECTED_BY_USER)
                 || StringUtils.containsIgnoreCase(errorMessage, CONSENT_DENIED_BY_USER)
-                || StringUtils.containsIgnoreCase(errorMessage, NATIONWIDE_USER_CANCEL_MSG);
+                || StringUtils.containsIgnoreCase(errorMessage, NATIONWIDE_USER_CANCEL_MSG)
+                || StringUtils.containsIgnoreCase(errorMessage, TSB_USER_CANCEL_MSG);
     }
 
     boolean isAuthorizationFailedByUser(String errorMessage) {
