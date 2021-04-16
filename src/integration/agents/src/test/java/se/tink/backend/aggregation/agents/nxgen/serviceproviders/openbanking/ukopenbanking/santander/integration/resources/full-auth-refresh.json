@@ -59,7 +59,7 @@
       "name": "SAVINGR12345678",
       "ownership": 1.0,
       "type": "SAVINGS",
-      "identifiers": "[\"bban://SAVINGR12345678\"]",
+      "identifiers": "[\"reference-number://UK.Santander.SavingsRoll/SAVINGR12345678\"]",
       "closed": false,
       "holderName" : "Mr Adam Tink",
       "accountHolder" : {

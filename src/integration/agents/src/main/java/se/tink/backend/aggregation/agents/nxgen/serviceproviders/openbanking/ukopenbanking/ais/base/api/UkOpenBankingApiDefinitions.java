@@ -155,17 +155,18 @@ public class UkOpenBankingApiDefinitions {
         PAYM,
         SORT_CODE_ACCOUNT_NUMBER,
         PAN,
+        NWB_CURRENCY_ACCOUNT,
         SAVINGS_ROLL_NUMBER;
 
         private static final GenericTypeMapper<ExternalAccountIdentification4Code, String>
                 ACCOUNT_IDENTIFIER_TYPE_MAPPER =
                         GenericTypeMapper
                                 .<ExternalAccountIdentification4Code, String>genericBuilder()
+                                .put(NWB_CURRENCY_ACCOUNT, "UK.NWB.CurrencyAccount")
                                 .put(
                                         ExternalAccountIdentification4Code.BBAN,
                                         "UK.OBIE.BBAN",
-                                        "DK.DanskeBank.AccountNumber",
-                                        "UK.NWB.CurrencyAccount")
+                                        "DK.DanskeBank.AccountNumber")
                                 .put(ExternalAccountIdentification4Code.IBAN, "UK.OBIE.IBAN")
                                 .put(ExternalAccountIdentification4Code.PAYM, "UK.OBIE.Paym")
                                 .put(
