@@ -36,6 +36,6 @@ public class WebScrapingConstants {
                 By.xpath(
                         "//ul/child::li/child::button[span[contains(text(),'mobil') and contains(text(),'BankID')]]");
         public static final By REFERENCE_WORDS_XPATH =
-                By.xpath("//span[@data-bind='text: reference']");
+                By.xpath("//span[@data-bind='text: reference' and text()!='']");
     }
 }
