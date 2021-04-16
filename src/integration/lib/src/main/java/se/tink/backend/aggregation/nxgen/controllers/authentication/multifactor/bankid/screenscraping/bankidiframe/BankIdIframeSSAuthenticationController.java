@@ -86,7 +86,13 @@ public class BankIdIframeSSAuthenticationController {
         return webDriverHelper
                 .waitForElement(driver, Xpath.REFERENCE_WORDS_XPATH)
                 .map(WebElement::getText)
-                .orElseThrow(() -> new ScreenScrapingException("Couldn't find reference words"));
+                .orElseThrow(
+                        () -> {
+                            log.info(
+                                    "No methods available. Page source: {}",
+                                    driver.getPageSource());
+                            throw new ScreenScrapingException("Couldn't find reference words");
+                        });
     }
 
     private void displayReferenceWords() {
