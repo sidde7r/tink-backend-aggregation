@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.rpc;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
@@ -18,7 +17,7 @@ import se.tink.libraries.transfer.rpc.Frequency;
 import se.tink.libraries.transfer.rpc.RecurringPayment;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 import se.tink.libraries.user.rpc.User;
-import se.tink.libraries.uuid.UUIDDeserializer;
+import se.tink.libraries.uuid.UUIDUtils;
 
 @Setter
 @Getter
@@ -27,8 +26,7 @@ public class RecurringPaymentRequest extends TransferRequest {
 
     private UUID id;
 
-    @JsonDeserialize(using = UUIDDeserializer.class)
-    private UUID credentialsId;
+    private String credentialsId;
 
     private UUID userId;
     private AccountIdentifierType creditorType;
@@ -67,7 +65,7 @@ public class RecurringPaymentRequest extends TransferRequest {
         RecurringPayment recurringPayment = new RecurringPayment();
         recurringPayment.setId(id);
         recurringPayment.setUserId(userId);
-        recurringPayment.setCredentialsId(credentialsId);
+        recurringPayment.setCredentialsId(UUIDUtils.fromTinkUUID(credentialsId));
         recurringPayment.setDestination(creditorType, creditorId, creditorName);
         recurringPayment.setSource(debtorType, debtorId);
         recurringPayment.setAmount(amount, currency);
