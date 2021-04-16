@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.a
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.concurrent.TimeUnit;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.StorageKey;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.utils.RabobankUtils;
@@ -60,11 +59,10 @@ public class TokenResponse {
     }
 
     public long getRefreshTokenExpiresIn() {
-        return TimeUnit.DAYS.toSeconds(90);
+        return Long.parseLong(refreshTokenExpiresIn);
     }
 
     public OAuth2Token toOauthToken(final PersistentStorage persistentStorage) {
-        // Set sessionExpiryDate to 90 days instead of 30 days
         final String refreshTokenExpiryDate =
                 RabobankUtils.getRefreshTokenExpireDate(getRefreshTokenExpiresIn());
         log.info(
@@ -72,11 +70,8 @@ public class TokenResponse {
                 Hash.sha256AsHex(getRefreshToken()),
                 refreshTokenExpiryDate);
         persistentStorage.put(StorageKey.TOKEN_EXPIRY_DATE, refreshTokenExpiryDate);
+        // Not using refreshTokenExpiresIn: the bank response for 30 days of token expiry
         return OAuth2Token.create(
-                getTokenType(),
-                getAccessToken(),
-                getRefreshToken(),
-                getExpiresIn(),
-                getRefreshTokenExpiresIn());
+                getTokenType(), getAccessToken(), getRefreshToken(), getExpiresIn());
     }
 }
