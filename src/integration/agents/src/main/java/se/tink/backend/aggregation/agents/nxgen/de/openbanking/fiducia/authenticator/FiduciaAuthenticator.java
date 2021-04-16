@@ -103,7 +103,10 @@ public class FiduciaAuthenticator implements MultiFactorAuthenticator, AutoAuthe
     }
 
     private void validateUsername(String username) {
-        if (StringUtils.isBlank(username) || username.length() > PSU_ID_MAX_ALLOWED_LENGTH) {
+
+        if (StringUtils.isBlank(username)
+                || username.length() > PSU_ID_MAX_ALLOWED_LENGTH
+                || !username.equals(StringUtils.trim(username))) {
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
     }
