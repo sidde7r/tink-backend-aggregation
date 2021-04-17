@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.creditcard.CreditCardModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
+import se.tink.backend.aggregation.source_info.AccountSourceInfo;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
@@ -141,7 +142,13 @@ public class BillingUnitEntity {
                                                 arrangementNumber))
                                 .build())
                 .setApiIdentifier(billingUnitIdClear)
+                .sourceInfo(createAccountSourceInfo(config))
                 .build();
+    }
+
+    @JsonIgnore
+    private AccountSourceInfo createAccountSourceInfo(SebKortConfiguration config) {
+        return AccountSourceInfo.builder().bankProductCode(config.getProductCode()).build();
     }
 
     /**
