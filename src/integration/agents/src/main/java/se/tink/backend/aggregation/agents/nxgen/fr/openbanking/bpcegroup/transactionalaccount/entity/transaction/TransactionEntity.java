@@ -36,7 +36,7 @@ public class TransactionEntity {
     public Transaction toTinkTransaction() {
         return Transaction.builder()
                 .setAmount(getTinkAmount())
-                .setDate(bookingDate)
+                .setDate(bookingDate != null ? bookingDate : transactionDate)
                 .setDescription(String.join(", ", remittanceInformation))
                 .setPending(status != TransactionStatus.BOOK)
                 .build();
