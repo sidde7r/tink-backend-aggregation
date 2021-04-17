@@ -98,8 +98,14 @@ public class TransactionEntity {
 
     @JsonIgnore
     private Date getBookedDate() {
+        String transactionDate =
+                bookingDateTime == null
+                        ? Optional.ofNullable(currencyExchange)
+                                .map(CurrencyExchangeEntity::getQuotationDate)
+                                .orElseThrow(IllegalStateException::new)
+                        : bookingDateTime;
         try {
-            return new SimpleDateFormat(Format.TRANSACTION_TIMESTAMP).parse(bookingDateTime);
+            return new SimpleDateFormat(Format.TRANSACTION_TIMESTAMP).parse(transactionDate);
         } catch (ParseException e) {
             throw new IllegalStateException(e);
         }
