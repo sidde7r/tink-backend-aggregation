@@ -1,0 +1,228 @@
+
+REQUEST 1
+POST https://auth.sdc.dk/Token
+Accept: application/json
+Content-Type: application/json
+
+{"code":"dummyCode","scope":"psd2.aisp","ssn":null,"ipidfr":"","grant_type":"authorization_code","redirect_uri":"https://127.0.0.1:7357/api/v1/thirdparty/callback","client_id":"dummyClient","client_secret":"dummySecret"}
+
+RESPONSE 1
+200
+Date: Thu, 08 Apr 2021 14:56:49 GMT
+Date: Thu, 08 Apr 2021 14:56:49 GMT
+Content-Type: application/json;charset=utf-8
+Server: Kestrel
+Strict-Transport-Security: max-age=2592000
+X-Powered-By: ASP.NET
+
+{"access_token":"dummyAccessToken","refresh_token":"dummyRefreshToken"}
+
+REQUEST 2
+GET https://api-proxy.sdc.dk/api/psd2/v1/accounts?withBalance=true
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 2
+200
+Date: Thu, 08 Apr 2021 14:56:50 GMT
+Date: Thu, 08 Apr 2021 14:56:50 GMT
+Cache-Control: private
+Content-Type: application/json;charset=utf-8
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"accounts":[{"resourceId":"123456789012345","iban":"NO1911001234567","bban":"11001234567","currency":"NOK","cashAccountType":"CACC","name":"Brukskonto","bic":"BRGPNO21","usage":"PRIV","balances":[],"_links":{"balances":{"href":"/v1/accounts/123456789012345/balances"},"transactions":{"href":"/v1/accounts/123456789012345/transactions"}}},{"resourceId":"987654321987654","iban":"NO3711098765432","bban":"11098765432","currency":"NOK","cashAccountType":"CACC","name":"Sparekonto","bic":"BRGPNO21","usage":"PRIV","balances":[],"_links":{"balances":{"href":"/v1/accounts/987654321987654/balances"},"transactions":{"href":"/v1/accounts/987654321987654/transactions"}}}]}
+
+REQUEST 3
+GET https://api-proxy.sdc.dk/api/psd2/v1/accounts/123456789012345/balances
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 3
+200
+Date: Thu, 08 Apr 2021 14:56:51 GMT
+Date: Thu, 08 Apr 2021 14:56:50 GMT
+Cache-Control: private
+Content-Type: application/json;charset=utf-8
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"account":{"iban":"NO1911001234567","currency":"NOK"},"balances":[{"balanceType":"closingBooked","balanceAmount":{"currency":"NOK","amount":"10000"},"referenceDate":"2021-04-08+02:00"},{"balanceType":"available","balanceAmount":{"currency":"NOK","amount":"10000"},"referenceDate":"2021-04-08+02:00"}]}
+
+REQUEST 4
+GET https://api-proxy.sdc.dk/api/psd2/v1/accounts/987654321987654/balances
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 4
+200
+Date: Thu, 08 Apr 2021 14:56:52 GMT
+Date: Thu, 08 Apr 2021 14:56:52 GMT
+Cache-Control: private
+Content-Type: application/json;charset=utf-8
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"account":{"iban":"NO3711098765432","currency":"NOK"},"balances":[{"balanceType":"closingBooked","balanceAmount":{"currency":"NOK","amount":"200000"},"referenceDate":"2021-04-08+02:00"},{"balanceType":"available","balanceAmount":{"currency":"NOK","amount":"200000"},"referenceDate":"2021-04-08+02:00"}]}
+
+REQUEST 5
+GET https://api-proxy.sdc.dk/api/psd2/v1/accounts/123456789012345/transactions?bookingStatus=booked
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 5 SET TRANSACTIONS_1
+200
+Date: Thu, 08 Apr 2021 14:56:53 GMT
+Date: Thu, 08 Apr 2021 14:56:53 GMT
+Cache-Control: private
+Content-Type: application/json;charset=utf-8
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"account":{"iban":"NO1911001234567","currency":"NOK"},"transactions":{"booked":[{"transactionId":"123456789012345@Homebank@2021-04-08@2021-04-08-14.30.19.206123","entryReference":"2021-04-08-14.30.19.206123","creditorAccount":{"bban":"12345"},"debtorName":"Firstname Lastname","debtorAccount":{"iban":"NO1911001234567","currency":"NOK"},"transactionAmount":{"currency":"NOK","amount":"500"},"bookingDate":"2021-04-08","valueDate":"2021-04-08","remittanceInformationUnstructured":"Overføring","_links":{"transactionDetails":{"href":""}}},{"transactionId":"123456789012345@YG8N0169@2021-03-31@2021-03-31-22.15.03.078123","entryReference":"2021-03-31-22.15.03.078123","creditorAccount":{"bban":"110511001234567"},"debtorName":"Firstname Lastname","debtorAccount":{"iban":"","currency":"NOK"},"transactionAmount":{"currency":"NOK","amount":"-50"},"bookingDate":"2021-03-31","valueDate":"2021-03-31","remittanceInformationUnstructured":"Purchase 1","_links":{"transactionDetails":{"href":""}}},{"transactionId":"123456789012345@YB8N0161@2021-03-25@2021-03-25-05.45.44.783123","entryReference":"2021-03-25-05.45.44.783123","creditorAccount":{"bban":"110511001234567"},"debtorName":"Firstname Lastname","debtorAccount":{"iban":"12345","currency":"NOK"},"transactionAmount":{"currency":"NOK","amount":"-1500"},"bookingDate":"2021-03-25","valueDate":"2021-03-25","remittanceInformationUnstructured":"Purchase 2","_links":{"transactionDetails":{"href":""}}}],"pending":[],"_links":{"account":{"href":""}}},"balances":[]}
+
+REQUEST 6 MATCH TRANSACTIONS_1
+GET https://api-proxy.sdc.dk/api/psd2/v1/accounts/123456789012345/transactions?bookingStatus=booked
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 6 SET TRANSACTIONS_2
+200
+Date: Thu, 08 Apr 2021 14:56:53 GMT
+Date: Thu, 08 Apr 2021 14:56:54 GMT
+Cache-Control: private
+Content-Type: application/json;charset=utf-8
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"account":{"iban":""},"transactions":{"booked":[],"pending":[]},"balances":[]}
+
+REQUEST 7 MATCH TRANSACTIONS_2
+GET https://api-proxy.sdc.dk/api/psd2/v1/accounts/123456789012345/transactions?bookingStatus=booked
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 7 SET TRANSACTIONS_3
+200
+Date: Thu, 08 Apr 2021 14:56:54 GMT
+Date: Thu, 08 Apr 2021 14:56:55 GMT
+Cache-Control: private
+Content-Type: application/json;charset=utf-8
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"account":{"iban":""},"transactions":{"booked":[],"pending":[]},"balances":[]}
+
+REQUEST 8 MATCH TRANSACTIONS_3
+GET https://api-proxy.sdc.dk/api/psd2/v1/accounts/123456789012345/transactions?bookingStatus=booked
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 8 SET TRANSACTIONS_4
+200
+Date: Thu, 08 Apr 2021 14:56:55 GMT
+Date: Thu, 08 Apr 2021 14:56:56 GMT
+Cache-Control: private
+Content-Type: application/json;charset=utf-8
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"account":{"iban":""},"transactions":{"booked":[],"pending":[]},"balances":[]}
+
+REQUEST 9 MATCH TRANSACTIONS_4
+GET https://api-proxy.sdc.dk/api/psd2/v1/accounts/123456789012345/transactions?bookingStatus=booked
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 9
+200
+Date: Thu, 08 Apr 2021 14:56:56 GMT
+Date: Thu, 08 Apr 2021 14:56:57 GMT
+Cache-Control: private
+Content-Type: application/json;charset=utf-8
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"account":{"iban":""},"transactions":{"booked":[],"pending":[]},"balances":[]}
+
+REQUEST 10
+GET https://api-proxy.sdc.dk/api/psd2/v1/accounts/987654321987654/transactions?bookingStatus=booked
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 10 SET TRANSACTIONS_5
+200
+Date: Thu, 08 Apr 2021 14:56:59 GMT
+Date: Thu, 08 Apr 2021 14:56:59 GMT
+Cache-Control: private
+Content-Type: application/json;charset=utf-8
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"account":{"iban":""},"transactions":{"booked":[],"pending":[]},"balances":[]}
+
+REQUEST 11 MATCH TRANSACTIONS_5
+GET https://api-proxy.sdc.dk/api/psd2/v1/accounts/987654321987654/transactions?bookingStatus=booked
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 11 SET TRANSACTIONS_6
+200
+Date: Thu, 08 Apr 2021 14:57:00 GMT
+Date: Thu, 08 Apr 2021 14:57:00 GMT
+Cache-Control: private
+Content-Type: application/json;charset=utf-8
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"account":{"iban":"NO3711098765432","currency":"NOK"},"transactions":{"booked":[{"transactionId":"987654321987654@Homebank@2021-03-01@2021-02-27-14.50.46.281123","entryReference":"2021-02-27-14.50.46.281123","creditorAccount":{"bban":"110511052656984"},"debtorName":"Firstname Lastname","debtorAccount":{"iban":"NO3711098765432","currency":"NOK"},"transactionAmount":{"currency":"NOK","amount":"20"},"bookingDate":"2021-03-01","valueDate":"2021-02-27","remittanceInformationUnstructured":"Overføring","_links":{"transactionDetails":{"href":""}}}],"pending":[],"_links":{"account":{"href":""}}},"balances":[]}
+
+REQUEST 12 MATCH TRANSACTIONS_6
+GET https://api-proxy.sdc.dk/api/psd2/v1/accounts/987654321987654/transactions?bookingStatus=booked
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 12 SET TRANSACTIONS_7
+200
+Date: Thu, 08 Apr 2021 14:57:00 GMT
+Date: Thu, 08 Apr 2021 14:57:01 GMT
+Cache-Control: private
+Content-Type: application/json;charset=utf-8
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"account":{"iban":""},"transactions":{"booked":[],"pending":[]},"balances":[]}
+
+REQUEST 13 MATCH TRANSACTIONS_7
+GET https://api-proxy.sdc.dk/api/psd2/v1/accounts/987654321987654/transactions?bookingStatus=booked
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 13 SET TRANSACTIONS_8
+200
+Date: Thu, 08 Apr 2021 14:57:01 GMT
+Date: Thu, 08 Apr 2021 14:57:02 GMT
+Cache-Control: private
+Content-Type: application/json;charset=utf-8
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"account":{"iban":""},"transactions":{"booked":[],"pending":[]},"balances":[]}
+
+REQUEST 14 MATCH TRANSACTIONS_8
+GET https://api-proxy.sdc.dk/api/psd2/v1/accounts/987654321987654/transactions?bookingStatus=booked
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 14 SET TRANSACTIONS_9
+200
+Date: Thu, 08 Apr 2021 14:57:02 GMT
+Date: Thu, 08 Apr 2021 14:57:02 GMT
+Cache-Control: private
+Content-Type: application/json;charset=utf-8
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"account":{"iban":""},"transactions":{"booked":[],"pending":[]},"balances":[]}
+
+REQUEST 15 MATCH TRANSACTIONS_9
+GET https://api-proxy.sdc.dk/api/psd2/v1/accounts/987654321987654/transactions?bookingStatus=booked
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 15
+200
+Date: Thu, 08 Apr 2021 14:57:02 GMT
+Date: Thu, 08 Apr 2021 14:57:02 GMT
+Cache-Control: private
+Content-Type: application/json;charset=utf-8
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"account":{"iban":""},"transactions":{"booked":[],"pending":[]},"balances":[]}

@@ -1,0 +1,20 @@
+agentsServiceConfiguration:
+  eidasProxy:
+    host: https://eidas-proxy.staging.aggregation.tink.network
+    localEidasDev: true
+  featureFlags:
+  testConfiguration:
+    debugOutput: true
+  integrations:
+    85525e462d4e46629f6f4ccf9698d618:
+      tink:
+        clientId: dummyClient
+        clientSecret: dummySecret
+        ocpApimSubscriptionKey: dummySubscriptionKey
+        redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+    f6438a61016e4fe5b440d56aa528ee04:
+      tink:
+        clientId: dummyClient
+        clientSecret: dummySecret
+        ocpApimSubscriptionKey: dummySubscriptionKey
+        redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
