@@ -4,13 +4,13 @@ import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbank
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
 
+import com.google.inject.Inject;
 import java.time.temporal.ChronoUnit;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
-import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sdc.authenticator.SdcAuthenticationController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sdc.authenticator.SdcAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sdc.configuration.SdcConfiguration;
@@ -19,6 +19,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sdc
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
@@ -26,7 +27,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS})
 public class SdcAgent extends NextGenerationAgent
@@ -35,13 +35,9 @@ public class SdcAgent extends NextGenerationAgent
     private final SdcApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
-    public SdcAgent(
-            CredentialsRequest request,
-            AgentContext context,
-            AgentsServiceConfiguration agentsServiceConfiguration) {
-        super(request, context, agentsServiceConfiguration.getSignatureKeyPair());
-
-        client.setEidasProxy(agentsServiceConfiguration.getEidasProxy());
+    @Inject
+    public SdcAgent(AgentComponentProvider componentProvider) {
+        super(componentProvider);
 
         apiClient = constructApiClient();
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
@@ -49,6 +45,12 @@ public class SdcAgent extends NextGenerationAgent
 
     protected AgentConfiguration<SdcConfiguration> getAgentConfiguration() {
         return getAgentConfigurationController().getAgentConfiguration(SdcConfiguration.class);
+    }
+
+    @Override
+    public void setConfiguration(final AgentsServiceConfiguration agentsServiceConfiguration) {
+        super.setConfiguration(agentsServiceConfiguration);
+        client.setEidasProxy(agentsServiceConfiguration.getEidasProxy());
     }
 
     protected SdcApiClient constructApiClient() {
