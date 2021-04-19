@@ -120,9 +120,9 @@ public class UkOpenBankingPaymentAuthenticatorTest {
 
         // then
         assertThat(thrown)
-                .isExactlyInstanceOf(PaymentAuthorizationException.class)
-                .hasNoCause()
-                .hasMessage(PaymentAuthorizationException.DEFAULT_MESSAGE);
+                .isExactlyInstanceOf(PaymentAuthorizationCancelledByUserException.class)
+                .hasMessage("Authorisation of payment was cancelled. Please try again.")
+                .hasNoCause();
 
         verifyThirdPartyAppWasOpened();
     }

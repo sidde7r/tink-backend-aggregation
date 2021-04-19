@@ -10,7 +10,7 @@ import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbank
 
 import java.time.LocalDateTime;
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationCancelledByUserException;
 import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesJsonFileParser;
 import se.tink.backend.aggregation.agents.framework.assertions.entities.AgentContractEntity;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.AgentWireMockPaymentTest;
@@ -78,9 +78,9 @@ public class MonzoAgentWiremockTest {
 
         // then
         assertThat(thrown)
-                .isExactlyInstanceOf(PaymentAuthorizationException.class)
+                .isExactlyInstanceOf(PaymentAuthorizationCancelledByUserException.class)
                 .hasNoCause()
-                .hasMessage("Payment was not authorised. Please try again.");
+                .hasMessage("Authorisation of payment was cancelled. Please try again.");
     }
 
     private static AgentWireMockPaymentTest createAgentWireMockPaymentTestWithAuthCodeCallbackData(
