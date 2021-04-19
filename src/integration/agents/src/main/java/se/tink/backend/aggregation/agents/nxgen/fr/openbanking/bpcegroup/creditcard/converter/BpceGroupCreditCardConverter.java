@@ -35,12 +35,10 @@ public class BpceGroupCreditCardConverter {
     private CreditCardModule mapCardDetails(
             AccountEntity accountEntity, String cardNumber, List<BalanceEntity> balances) {
 
-        ExactCurrencyAmount balance = getBalance(balances);
-
         return CreditCardModule.builder()
                 .withCardNumber(cardNumber)
-                .withBalance(balance)
-                .withAvailableCredit(ExactCurrencyAmount.zero(balance.getCurrencyCode()))
+                .withBalance(getBalance(balances))
+                .withAvailableCredit(ExactCurrencyAmount.zero("EUR"))
                 .withCardAlias(accountEntity.getName())
                 .build();
     }
@@ -62,7 +60,7 @@ public class BpceGroupCreditCardConverter {
                 .orElseGet(() -> findBalanceByType(balances, BalanceType.XPCD))
                 .map(BalanceEntity::getBalanceAmount)
                 .map(AmountEntity::toTinkAmount)
-                .orElseThrow(() -> new IllegalStateException("No balance found"));
+                .orElse(ExactCurrencyAmount.zero("EUR"));
     }
 
     private static Optional<BalanceEntity> findBalanceByType(
