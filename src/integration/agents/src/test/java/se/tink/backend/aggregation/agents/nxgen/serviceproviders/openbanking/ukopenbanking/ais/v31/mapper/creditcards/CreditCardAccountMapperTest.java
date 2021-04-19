@@ -25,7 +25,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.fixtures.PartyFixtures;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.identifier.DefaultIdentifierMapper;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
-import se.tink.libraries.account.identifiers.PaymentCardNumberIdentifier;
+import se.tink.libraries.account.identifiers.MaskedPanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class CreditCardAccountMapperTest {
@@ -95,8 +95,7 @@ public class CreditCardAccountMapperTest {
 
         // then
         assertThat(mappingResult.getIdentifiers())
-                .containsOnly(
-                        new PaymentCardNumberIdentifier(expectedIdentifier.getIdentification()));
+                .containsOnly(new MaskedPanIdentifier(expectedIdentifier.getIdentification()));
         assertThat(mappingResult.getIdModule().getUniqueId())
                 .isEqualTo(StringUtils.right(expectedIdentifier.getIdentification(), 4));
         assertThat(mappingResult.getIdModule().getAccountNumber())
