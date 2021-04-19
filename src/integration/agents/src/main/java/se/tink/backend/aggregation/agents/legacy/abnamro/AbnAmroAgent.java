@@ -354,7 +354,11 @@ public final class AbnAmroAgent extends AbstractAgent
             Map<Account, List<Transaction>> transactionsMap = new HashMap<>();
             List<Account> accounts = fetchCreditCardAccounts().getAccounts();
             for (Account account : accounts) {
-                account.setBalance(getCreditCardBalance(account));
+                final Double balance = getCreditCardBalance(account);
+                account.setBalance(balance);
+                logger.info(
+                        "Sending account to update service with {} balance",
+                        balance == 0.0 ? "zero" : "non-zero");
                 systemUpdater.sendAccountToUpdateService(account.getBankId());
                 Long accountNumber = getCreditCardContractNumber(account);
                 List<Transaction> transactions = getCreditCardTransactions(accountNumber);
