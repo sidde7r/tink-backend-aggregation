@@ -2,18 +2,17 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.entercard.mervar
 
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CREDIT_CARDS;
 
+import com.google.inject.Inject;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
-import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.entercard.EnterCardAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.entercard.EnterCardConstants.BrandedCards;
-import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
-import se.tink.libraries.credentials.service.CredentialsRequest;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 
 @AgentCapabilities({CREDIT_CARDS})
 public final class MervardeMasterCardAgent extends EnterCardAgent {
 
-    public MervardeMasterCardAgent(
-            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair, BrandedCards.MERVARDE);
+    @Inject
+    public MervardeMasterCardAgent(AgentComponentProvider componentProvider) {
+        super(componentProvider, BrandedCards.MERVARDE);
     }
 }

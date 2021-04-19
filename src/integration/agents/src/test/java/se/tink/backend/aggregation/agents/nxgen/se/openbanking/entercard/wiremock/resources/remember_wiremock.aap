@@ -1,0 +1,85 @@
+
+REQUEST 1
+POST https://openbanking.entercard.com/oauth/v2/oauth-token
+Content-Type: application/x-www-form-urlencoded
+Accept: application/json
+
+scope=Read+openid&code=dummyCode&grant_type=authorization_code&client_id=dummyClient&client_secret=dummySecret&redirect_uri=https%3A%2F%2F127.0.0.1%3A7357%2Fapi%2Fv1%2Fthirdparty%2Fcallback
+
+RESPONSE 1
+200
+Date: Thu, 15 Apr 2021 15:01:05 GMT
+Date: Thu, 15 Apr 2021 15:01:05 GMT
+Server: nginx
+Content-Type: application/json;charset=utf-8
+X-Content-Type-Options: nosniff
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+X-XSS-Protection: 1; mode=block
+X-Frame-Options: DENY
+X-Frame-Options: deny
+Cache-Control: no-cache, no-store
+Pragma: no-cache
+Expires: Thu, 01 Jan 1970 00:00:00 GMT
+Strict-Transport-Security: max-age=31536000; includeSubDomains
+
+{"token_type":"Bearer","access_token":"mockedAccessToken","refresh_token":"mockedRefreshToken","scope":"Read","claims":"another_static_claim client_serial_number psd2_certificate_subject psd2_organisation_number psd2_role psd2_ssn static_claim","expires_in":300}
+
+REQUEST 2
+GET https://openbanking.entercard.com/accountdetails/api/v1/account?ssn=199909121213
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 2
+200
+Date: Thu, 15 Apr 2021 15:01:05 GMT
+Date: Thu, 15 Apr 2021 15:01:05 GMT
+Server: nginx
+Content-Type: application/json;charset=utf-8
+Strict-Transport-Security: max-age=15724800; includeSubDomains;
+Strict-Transport-Security: max-age=31536000; includeSubDomains
+X-Frame-Options: deny
+X-XSS-Protection: 1; mode=block
+X-Content-Type-Options: nosniff
+
+{"account":[{"accountNumber":"5299123456789","accountType":"card","otb":25000.340,"creditLimit":50000.000,"productName":"MC RE:MEMBER MORE","currency":"SEK","transactionPurposeList":"FT","cardDetails":[{"maskedCardNo":"529912******1234"}],"_links":{"self":{"href":"/api/v2/account?accountNumber=5299123456789"},"movements":{"href":"/api/v2/movements?accountNumber=5299123456789"}}}]}
+
+REQUEST 3
+GET https://openbanking.entercard.com/accountmovements/api/v1/movements?includeCardMovements=true&accountNumber=5299123456789&startAtRowNum=1&stopAfterRowNum=100
+Accept: application/json
+Content-Type: application/json,application/json
+
+RESPONSE 3
+200
+Date: Thu, 15 Apr 2021 15:01:06 GMT
+Date: Thu, 15 Apr 2021 15:01:07 GMT
+Server: nginx
+Content-Type: application/json;charset=utf-8
+Strict-Transport-Security: max-age=15724800; includeSubDomains;
+Strict-Transport-Security: max-age=31536000; includeSubDomains
+X-Frame-Options: deny
+X-XSS-Protection: 1; mode=block
+X-Content-Type-Options: nosniff
+Transfer-Encoding: chunked
+
+{"metadata":{"total_count":5,"result_count":3,"offset":1},"account":{"accountNumber":"5299123456789","movements":[{"maskedCardNo":"529912******1234","movementType":"Authorization","timeOfPurchase":"2021-04-15 12:31:07","transactionPostedDate":null,"transactionAmount":-100.000,"transactionID":111111111,"canBeSplitted":false,"billingCurrency":"SEK","billingAmount":-100.000,"transactionCurrency":"SEK","merchantId":"111111111","mccCode":"9402","merchantCategoryDescription":"Merchant category description 1","merchantName":"Merchant 1","merchantCity":"STOCKHOLM","merchantCountry":"SWE","accountLevelTransactionDescription":"","movementStatus":"OPEN","reasonCode":"0","terminalId":"1234567","_links":{"self":{"href":"/movements/111111111"}}},{"maskedCardNo":"529912******1234","movementType":"Authorization","timeOfPurchase":"2021-04-14 17:45:51","transactionPostedDate":"2021-04-15 12:49:35","transactionAmount":-20.000,"transactionID":222222222,"canBeSplitted":false,"billingCurrency":"SEK","billingAmount":-20.000,"transactionCurrency":"SEK","merchantId":"526567000431358","mccCode":"5732","merchantCategoryDescription":"Merchant category description 2","merchantName":"Merchant 2","merchantCity":"Karlshamn","merchantCountry":"SWE","accountLevelTransactionDescription":"","movementStatus":"MATCHED","reasonCode":"0","terminalId":"1234567","_links":{"self":{"href":"/movements/222222222"}}},{"maskedCardNo":"529912******1234","movementType":"Transaction","timeOfPurchase":"2021-04-14 00:00:00","transactionPostedDate":"2021-04-15 00:00:00","transactionAmount":-20.000,"transactionID":333333333,"canBeSplitted":false,"billingCurrency":"SEK","billingAmount":-20.000,"transactionCurrency":"SEK","merchantId":"333333333","mccCode":"5732","merchantCategoryDescription":"Merchant category description 3","merchantName":"Merchant 3","merchantCity":"STOCKHOLM","merchantCountry":"SWE","accountLevelTransactionDescription":null,"movementStatus":"OTHER","reasonCode":null,"terminalId":"1234567","_links":{"self":{"href":"/movements/333333333"}}}]}}
+
+REQUEST 4
+GET https://openbanking.entercard.com/accountmovements/api/v1/movements?includeCardMovements=true&accountNumber=5299123456789&startAtRowNum=4&stopAfterRowNum=103
+Accept: application/json
+Content-Type: application/json,application/json
+
+RESPONSE 4
+200
+Date: Thu, 15 Apr 2021 15:01:07 GMT
+Date: Thu, 15 Apr 2021 15:01:08 GMT
+Server: nginx
+Content-Type: application/json;charset=utf-8
+Strict-Transport-Security: max-age=15724800; includeSubDomains;
+Strict-Transport-Security: max-age=31536000; includeSubDomains
+X-Frame-Options: deny
+X-XSS-Protection: 1; mode=block
+X-Content-Type-Options: nosniff
+Transfer-Encoding: chunked
+
+{"metadata":{"total_count":5,"result_count":2,"offset":4},"account":{"accountNumber":"5299123456789","movements":[{"maskedCardNo":"529912******1234","movementType":"Authorization","timeOfPurchase":"2021-03-14 11:41:36","transactionPostedDate":"2021-03-15 18:29:03","transactionAmount":-30.500,"transactionID":444444444,"canBeSplitted":false,"billingCurrency":"SEK","billingAmount":-30.500,"transactionCurrency":"SEK","merchantId":"444444444","mccCode":"5499","merchantCategoryDescription":"Merchant category description 4","merchantName":"Merchant 4","merchantCity":"STOCKHOLM","merchantCountry":"SWE","accountLevelTransactionDescription":"","movementStatus":"MATCHED","reasonCode":"0","terminalId":"1234567","_links":{"self":{"href":"/movements/444444444"}}},{"maskedCardNo":"529912******1234","movementType":"Transaction","timeOfPurchase":"2021-03-14 00:00:00","transactionPostedDate":"2021-03-15 00:00:00","transactionAmount":-250.310,"transactionID":555555555,"canBeSplitted":false,"billingCurrency":"SEK","billingAmount":-250.310,"transactionCurrency":"SEK","merchantId":"555555555","mccCode":"5999","merchantCategoryDescription":"Merchant category description 5","merchantName":"Merchant 5","merchantCity":"WWW.MOCKEDURL.SE","merchantCountry":"SWE","accountLevelTransactionDescription":null,"movementStatus":"OTHER","reasonCode":null,"terminalId":null,"_links":{"self":{"href":"/movements/555555555"}}}]}}

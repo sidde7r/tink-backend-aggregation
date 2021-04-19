@@ -1,0 +1,85 @@
+{
+    "accounts" : [ {
+        "accountNumber" : "529912******1234",
+        "accountExclusion" : "NONE",
+        "exactAvailableCredit" : {
+            "currencyCode" : "SEK",
+            "doubleValue" : 25000.34,
+            "scale" : 3,
+            "exactValue" : 25000.34,
+            "unscaledValue" : 25000340
+        },
+        "exactBalance" : {
+            "currencyCode" : "SEK",
+            "doubleValue" : -24999.66,
+            "scale" : 3,
+            "exactValue" : -24999.66,
+            "unscaledValue" : -24999660
+        },
+        "currencyCode" : "SEK",
+        "bankId" : "5299123456789",
+        "excluded" : false,
+        "favored" : false,
+        "name" : "",
+        "ownership" : 1.0,
+        "type" : "CREDIT_CARD",
+        "userModifiedExcluded" : false,
+        "userModifiedName" : false,
+        "userModifiedType" : false,
+        "identifiers" : "[\"payment-card-number://5299123456789\"]",
+        "closed" : false,
+        "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
+        "balances" : [ ],
+        "availableCredit" : 25000.34,
+        "balance" : -24999.66
+    } ],
+    "transactions" : [ {
+        "amount" : -20.0,
+        "date" : 1618394400000,
+        "description" : "Merchant 3",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "CREDIT_CARD",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "333333333"
+        },
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-04-15",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "Transaction",
+        "merchantName" : "Merchant 3",
+        "merchantCategoryCode" : "5732"
+    }, {
+        "amount" : -250.31,
+        "date" : 1615719600000,
+        "description" : "Merchant 5",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "CREDIT_CARD",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "555555555"
+        },
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-03-15",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "Transaction",
+        "merchantName" : "Merchant 5",
+        "merchantCategoryCode" : "5999"
+    } ]
+}

@@ -3,14 +3,22 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.en
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.google.api.client.util.Strings;
-import java.util.Date;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.Objects;
 import org.apache.commons.lang3.StringUtils;
+import se.tink.backend.aggregation.agents.models.TransactionExternalSystemIdType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.entercard.EnterCardConstants.Transactions;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction.Builder;
 import se.tink.backend.aggregation.nxgen.core.transaction.CreditCardTransaction;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
+import se.tink.backend.aggregation.nxgen.core.transaction.TransactionDates;
 import se.tink.libraries.amount.ExactCurrencyAmount;
+import se.tink.libraries.chrono.AvailableDateInformation;
 
 @JsonObject
 public class TransactionEntity {
@@ -18,20 +26,23 @@ public class TransactionEntity {
     @JsonProperty("_links")
     private LinksEntity links;
 
+    /** Example from docs is 2019-08-01T20:10:05, but actual format we get is 2019-08-01 20:10:05 */
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDate timeOfPurchase;
+
+    /** Example from docs is 2019-08-01T20:10:05, but actual format we get is 2019-08-01 20:10:05 */
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDate transactionPostedDate;
+
     private String maskedCardNo;
     private String movementType;
-
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    private Date timeOfPurchase;
-
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    private Date transactionPostedDate;
-
-    private Number transactionAmount;
-    private Number transactionID;
+    private BigDecimal transactionAmount;
+    private BigDecimal transactionID;
     private Boolean canBeSplitted;
     private String billingCurrency;
-    private Number billingAmount;
+    private BigDecimal billingAmount;
     private String transactionCurrency;
     private String merchantId;
     private String mccCode;
@@ -46,12 +57,35 @@ public class TransactionEntity {
 
     @JsonIgnore
     public Transaction toTinkTransaction() {
-        return CreditCardTransaction.builder()
-                .setPending(Transactions.OPEN.equalsIgnoreCase(movementStatus))
-                .setDate(timeOfPurchase)
-                .setDescription(getDescription())
-                .setAmount(ExactCurrencyAmount.of(billingAmount, billingCurrency))
-                .build();
+        Builder builder =
+                CreditCardTransaction.builder()
+                        .setAmount(ExactCurrencyAmount.of(billingAmount, billingCurrency))
+                        .setPending(Transactions.OPEN.equalsIgnoreCase(movementStatus))
+                        .setDate(timeOfPurchase)
+                        .setDescription(getDescription())
+                        .setTransactionDates(getTinkTransactionDates())
+                        .setMerchantCategoryCode(mccCode)
+                        .setMerchantName(merchantName)
+                        .setProprietaryFinancialInstitutionType(movementType);
+
+        if (Objects.nonNull(transactionID)) {
+            // TransactionID is marked as required in docs but adding null check just to be safe.
+            builder.addExternalSystemIds(
+                    TransactionExternalSystemIdType.PROVIDER_GIVEN_TRANSACTION_ID,
+                    transactionID.toString());
+        }
+
+        return (CreditCardTransaction) builder.build();
+    }
+
+    private TransactionDates getTinkTransactionDates() {
+        TransactionDates.Builder builder = TransactionDates.builder();
+
+        if (Objects.nonNull(transactionPostedDate)) {
+            builder.setBookingDate(new AvailableDateInformation().setDate(transactionPostedDate));
+        }
+
+        return builder.build();
     }
 
     /**

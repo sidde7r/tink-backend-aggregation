@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.en
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
-import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.entercard.EnterCardConstants.CredentialKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.entercard.authenticator.EnterCardAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.entercard.configuration.EnterCardConfiguration;
@@ -11,8 +10,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ent
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.entercard.fetcher.creditcardaccount.CreditCardTransactionFetcher;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
-import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
@@ -21,7 +20,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCa
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public abstract class EnterCardAgent extends NextGenerationAgent
         implements RefreshCreditCardAccountsExecutor {
@@ -30,12 +28,8 @@ public abstract class EnterCardAgent extends NextGenerationAgent
     private final EnterCardApiClient apiClient;
     private final CreditCardRefreshController creditCardRefreshController;
 
-    public EnterCardAgent(
-            CredentialsRequest request,
-            AgentContext context,
-            SignatureKeyPair signatureKeyPair,
-            String brandId) {
-        super(request, context, signatureKeyPair);
+    public EnterCardAgent(AgentComponentProvider componentProvider, String brandId) {
+        super(componentProvider);
 
         agentConfiguration =
                 getAgentConfigurationController()
