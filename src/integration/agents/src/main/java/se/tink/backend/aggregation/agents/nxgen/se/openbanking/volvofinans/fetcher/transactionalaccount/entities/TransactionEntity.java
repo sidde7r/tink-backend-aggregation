@@ -1,30 +1,47 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.volvofinans.fetcher.transactionalaccount.entities;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import java.time.LocalDate;
+import se.tink.backend.aggregation.agents.models.TransactionExternalSystemIdType;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction.Builder;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
+import se.tink.backend.aggregation.utils.json.deserializers.LocalDateDeserializer;
 
 @JsonObject
 public class TransactionEntity {
 
-    @JsonProperty("_links")
-    List<LinksEntity> links;
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    private LocalDate transactionDate;
 
-    private List<BookedEntity> booked = Collections.emptyList();
-    private List<PendingEntity> pending = Collections.emptyList();
+    private String transactionId;
+    private String proprietaryBankTransactionCode;
+    private String transactionDetails;
+    private TransactionAmount transactionAmount;
+    private TransactionAmount originalAmount;
+    private TransactionAmount foreignTransactionFee;
+    private TransactionAmount withdrawalFee;
+    private TransactionAmount discount;
+    private TransactionAmount loyaltyCheck;
+    private String fromAccount;
+    private String toAccount;
+    private String bank;
+    private String clearingNumber;
+    private String bankAccountNumber;
+    private String ownMessage;
 
-    public Collection<Transaction> toTinkTransactions() {
-        final Stream<Transaction> bookedTransactionsStream =
-                booked.stream().map(BookedEntity::toTinkTransaction);
-        final Stream<Transaction> pendingTransactionsStream =
-                pending.stream().map(PendingEntity::toTinkTransaction);
+    public Transaction toTinkTransaction(boolean isPending) {
+        Builder builder =
+                Transaction.builder()
+                        .setPending(isPending)
+                        .setAmount(transactionAmount.toAmount())
+                        .setDate(transactionDate)
+                        .setDescription(transactionDetails)
+                        .addExternalSystemIds(
+                                TransactionExternalSystemIdType.PROVIDER_GIVEN_TRANSACTION_ID,
+                                transactionId)
+                        .setProprietaryFinancialInstitutionType(proprietaryBankTransactionCode);
 
-        return Stream.concat(bookedTransactionsStream, pendingTransactionsStream)
-                .collect(Collectors.toList());
+        return (Transaction) builder.build();
     }
 }
