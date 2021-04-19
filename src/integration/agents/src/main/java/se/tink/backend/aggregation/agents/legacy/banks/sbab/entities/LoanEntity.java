@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.models.Loan;
+import se.tink.backend.aggregation.source_info.AccountSourceInfo;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class LoanEntity {
@@ -180,6 +181,7 @@ public class LoanEntity {
         account.setName(loanNumber);
         account.setBalance(getAmount().negate().doubleValue());
         account.setType(AccountTypes.LOAN);
+        account.setSourceInfo(createAccountSourceInfo());
 
         return Optional.of(account);
     }
@@ -234,5 +236,9 @@ public class LoanEntity {
             logger.error("Could not create loan", e);
             return Optional.empty();
         }
+    }
+
+    private AccountSourceInfo createAccountSourceInfo() {
+        return AccountSourceInfo.builder().bankProductCode(String.valueOf(type)).build();
     }
 }

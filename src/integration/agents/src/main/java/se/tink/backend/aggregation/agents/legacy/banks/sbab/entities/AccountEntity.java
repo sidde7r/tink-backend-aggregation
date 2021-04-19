@@ -20,6 +20,7 @@ import se.tink.backend.agents.rpc.HolderIdentity;
 import se.tink.backend.agents.rpc.HolderRole;
 import se.tink.backend.aggregation.agents.general.models.GeneralAccountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.source_info.AccountSourceInfo;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.enums.AccountFlag;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
@@ -84,7 +85,16 @@ public class AccountEntity implements GeneralAccountEntity {
         account.setAccountHolder(accountHolder);
         account.setHolderName(getFirstHolder(accountHolder.getIdentities()).orElse(null));
 
+        account.setSourceInfo(createAccountSourceInfo());
+
         return Optional.of(account);
+    }
+
+    private AccountSourceInfo createAccountSourceInfo() {
+        return AccountSourceInfo.builder()
+                .bankAccountType(productType)
+                .bankProductName(productName)
+                .build();
     }
 
     private AccountHolder getTinkAccountHolder() {
