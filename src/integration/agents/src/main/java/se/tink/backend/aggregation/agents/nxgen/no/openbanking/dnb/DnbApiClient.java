@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb;
 
+import java.util.Arrays;
 import java.util.Date;
 import javax.ws.rs.core.MediaType;
 import lombok.AllArgsConstructor;
@@ -55,7 +56,7 @@ public class DnbApiClient {
     }
 
     private void handleKnownCreateConsentErrors(HttpResponseException httpException) {
-        if (httpException.getResponse().getStatus() == 400
+        if (Arrays.asList(400, 403).contains(httpException.getResponse().getStatus())
                 && httpException.getResponse().hasBody()) {
             String body = httpException.getResponse().getBody(String.class);
             if (body.contains(ErrorMessages.WRONG_PSUID)) {
