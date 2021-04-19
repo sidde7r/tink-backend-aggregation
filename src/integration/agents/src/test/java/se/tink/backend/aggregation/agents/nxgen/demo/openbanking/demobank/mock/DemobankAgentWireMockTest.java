@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.mock;
 
 import java.time.LocalDate;
 import org.junit.Test;
+import se.tink.backend.aggregation.agents.exceptions.payment.InsufficientFundsException;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.AgentWireMockPaymentTest;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.command.PaymentCommand;
 import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
@@ -22,8 +23,12 @@ public class DemobankAgentWireMockTest {
     private static final String RESOURCE_PATH =
             "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/demo/openbanking/demobank/mock/resources";
     private static final String SINGLE_PAYMENT_AAP = RESOURCE_PATH + "/demobank-single-payment.aap";
+    private static final String SINGLE_PAYMENT_ERROR_AAP =
+            RESOURCE_PATH + "/demobank-single-payment-error.aap";
     private static final String RECURRING_PAYMENT_AAP =
             RESOURCE_PATH + "/demobank-recurring-payment.aap";
+    private static final String RECURRING_PAYMENT_ERROR_AAP =
+            RESOURCE_PATH + "/demobank-recurring-payment-error.aap";
 
     private static final String SOURCE_IDENTIFIER = "IT76K2958239128VVJCLBIHVDAT";
     private static final String DESTINATION_IDENTIFIER = "IT12L8551867857UFGAYZF25O4M";
@@ -43,6 +48,21 @@ public class DemobankAgentWireMockTest {
         agentWireMockPaymentTest.executePayment();
     }
 
+    @Test(expected = InsufficientFundsException.class)
+    public void testSinglePaymentError() throws Exception {
+        AgentWireMockPaymentTest agentWireMockPaymentTest =
+                AgentWireMockPaymentTest.builder(
+                                MarketCode.IT,
+                                "it-demobank-open-banking-redirect",
+                                SINGLE_PAYMENT_ERROR_AAP)
+                        .withHttpDebugTrace()
+                        .addCallbackData("code", "DUMMY_CODE")
+                        .withPayment(createMockedDomesticPayment())
+                        .buildWithoutLogin(PaymentCommand.class);
+
+        agentWireMockPaymentTest.executePayment();
+    }
+
     @Test
     public void testRecurringPayment() throws Exception {
         AgentWireMockPaymentTest agentWireMockPaymentTest =
@@ -50,6 +70,21 @@ public class DemobankAgentWireMockTest {
                                 MarketCode.IT,
                                 "it-demobank-open-banking-redirect",
                                 RECURRING_PAYMENT_AAP)
+                        .withHttpDebugTrace()
+                        .addCallbackData("code", "DUMMY_CODE")
+                        .withPayment(createMockedRecurringDomesticPayment())
+                        .buildWithoutLogin(PaymentCommand.class);
+
+        agentWireMockPaymentTest.executePayment();
+    }
+
+    @Test(expected = InsufficientFundsException.class)
+    public void testRecurringPaymentError() throws Exception {
+        AgentWireMockPaymentTest agentWireMockPaymentTest =
+                AgentWireMockPaymentTest.builder(
+                                MarketCode.IT,
+                                "it-demobank-open-banking-redirect",
+                                RECURRING_PAYMENT_ERROR_AAP)
                         .withHttpDebugTrace()
                         .addCallbackData("code", "DUMMY_CODE")
                         .withPayment(createMockedRecurringDomesticPayment())

@@ -12,6 +12,7 @@ import java.util.Optional;
 import javax.ws.rs.core.MediaType;
 import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.Href;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.entities.TokenEntity;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.rpc.RedirectLoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.DemobankDtoMappers;
@@ -21,11 +22,13 @@ import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.ap
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.apiclient.dto.PaymentInitiationDto;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.apiclient.dto.PaymentResponseDto;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.apiclient.dto.PaymentStatusResponseDto;
+import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.apiclient.error.DemobankErrorHandler;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.storage.DemobankStorage;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.Storage;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.enums.PaymentStatus;
@@ -39,26 +42,32 @@ public class DemobankSinglePaymentApiClient implements DemobankPaymentApiClient 
     private static final String GET_PAYMENT_STATUS_URL = "/api/payment/v1/status/";
 
     private final DemobankDtoMappers mappers;
+    private final DemobankErrorHandler errorHandler;
     private final DemobankPaymentRequestFilter requestFilter;
     private final DemobankStorage storage;
     private final TinkHttpClient client;
     private final String callbackUri;
 
     @Override
-    public PaymentResponse createPayment(PaymentRequest paymentRequest) {
+    public PaymentResponse createPayment(PaymentRequest paymentRequest) throws PaymentException {
         final PaymentInitiationDto paymentInitiationDto =
                 createPaymentInitiationDto(paymentRequest);
 
-        final PaymentResponseDto paymentResponseDto =
-                client.request(BASE_URL + CREATE_PAYMENT_URL)
-                        .header(PAYMENT_CLIENT_TOKEN_HEADER, PAYMENT_CLIENT_TOKEN)
-                        .type(MediaType.APPLICATION_JSON_TYPE)
-                        .accept(MediaType.APPLICATION_JSON_TYPE)
-                        .post(PaymentResponseDto.class, paymentInitiationDto);
+        try {
+            final PaymentResponseDto paymentResponseDto =
+                    client.request(BASE_URL + CREATE_PAYMENT_URL)
+                            .header(PAYMENT_CLIENT_TOKEN_HEADER, PAYMENT_CLIENT_TOKEN)
+                            .type(MediaType.APPLICATION_JSON_TYPE)
+                            .accept(MediaType.APPLICATION_JSON_TYPE)
+                            .post(PaymentResponseDto.class, paymentInitiationDto);
 
-        saveToStorage(paymentResponseDto.getId(), paymentResponseDto.getLinks());
+            saveToStorage(paymentResponseDto.getId(), paymentResponseDto.getLinks());
 
-        return convertResponseDtoToPaymentResponse(paymentResponseDto);
+            return convertResponseDtoToPaymentResponse(paymentResponseDto);
+        } catch (HttpResponseException e) {
+            errorHandler.remapException(e);
+            throw e;
+        }
     }
 
     @Override
