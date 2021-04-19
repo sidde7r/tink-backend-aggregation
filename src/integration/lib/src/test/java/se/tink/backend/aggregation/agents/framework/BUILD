@@ -51,6 +51,7 @@ java_library(
         "//third_party:com_sun_jersey_jersey_core",
         "//third_party:io_dropwizard_dropwizard_configuration",
         "//third_party:junit_junit",
+        "//third_party:lombok_libs",
         "//third_party:org_apache_commons_commons_lang3",
         "//third_party:org_apache_curator_curator_framework",
         "//third_party:org_apache_httpcomponents_httpcore",
