@@ -19,7 +19,12 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponen
 
 @AgentDependencyModules(modules = QSealcSignerModuleRSASHA256.class)
 @AgentCapabilities({CHECKING_ACCOUNTS, IDENTITY_DATA, TRANSFERS, LIST_BENEFICIARIES, CREDIT_CARDS})
-@AgentPisCapability(capabilities = PisCapability.PIS_SEPA)
+@AgentPisCapability(
+        capabilities = {
+            PisCapability.PIS_SEPA,
+            PisCapability.PIS_SEPA_ICT,
+            PisCapability.PIS_FUTURE_DATE
+        })
 public final class CreditMutuelAgent extends CmcicAgent {
 
     @Inject
