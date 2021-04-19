@@ -33,32 +33,34 @@ public class SantanderEsAuthenticator implements PasswordAuthenticator {
     @Override
     public void authenticate(String username, String password)
             throws AuthenticationException, AuthorizationException {
-        String responseString;
+        String responseString = "";
         try {
-            responseString = apiClient.authenticateCredentials("user123", password);
+            responseString = apiClient.authenticateCredentials(username, password);
         } catch (HttpResponseException e) {
-
             Node n =
                     SantanderEsXmlUtils.getTagNodeFromSoapString(
                             e.getResponse().getBody(String.class),
                             SantanderEsConstants.NodeTags.CODIGO_ERROR);
 
-            if (n == null) {
-                throw e;
-            }
+            Optional.ofNullable(n)
+                    .map(
+                            node -> {
+                                String errorCode =
+                                        node.getFirstChild().getTextContent().trim().toUpperCase();
 
-            String errorCode = n.getFirstChild().getTextContent().trim().toUpperCase();
+                                if (ErrorCodes.INCORRECT_CREDENTIALS.stream()
+                                        .anyMatch(code -> code.equalsIgnoreCase(errorCode))) {
+                                    throw new LoginException(LoginError.INCORRECT_CREDENTIALS, e);
 
-            if (ErrorCodes.INCORRECT_CREDENTIALS.stream()
-                    .anyMatch(code -> code.equalsIgnoreCase(errorCode))) {
-                throw new LoginException(LoginError.INCORRECT_CREDENTIALS, e);
-
-            } else if (ErrorCodes.BLOCKED_CREDENTIALS.stream()
-                    .anyMatch(code -> code.equalsIgnoreCase(errorCode))) {
-                throw new AuthorizationException(AuthorizationError.ACCOUNT_BLOCKED, e);
-            } else {
-                throw e;
-            }
+                                } else if (ErrorCodes.BLOCKED_CREDENTIALS.stream()
+                                        .anyMatch(code -> code.equalsIgnoreCase(errorCode))) {
+                                    throw new AuthorizationException(
+                                            AuthorizationError.ACCOUNT_BLOCKED, e);
+                                } else {
+                                    throw e;
+                                }
+                            })
+                    .orElseThrow(() -> e);
         }
 
         // Parse token credential and add it to api client to be used for future requests
