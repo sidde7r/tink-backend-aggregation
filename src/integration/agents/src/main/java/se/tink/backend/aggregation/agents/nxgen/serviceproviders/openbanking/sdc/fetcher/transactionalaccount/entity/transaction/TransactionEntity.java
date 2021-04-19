@@ -1,25 +1,29 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sdc.fetcher.transactionalaccount.entity.transaction;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.google.common.base.Preconditions;
-import java.util.Date;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import java.time.LocalDate;
+import java.util.Objects;
+import se.tink.backend.aggregation.agents.models.TransactionExternalSystemIdType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sdc.fetcher.transactionalaccount.entity.common.AmountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction.Builder;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
+import se.tink.backend.aggregation.nxgen.core.transaction.TransactionDates;
+import se.tink.backend.aggregation.utils.json.deserializers.LocalDateDeserializer;
+import se.tink.libraries.chrono.AvailableDateInformation;
 
 @JsonObject
 public class TransactionEntity {
 
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    private LocalDate bookingDate;
+
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    private LocalDate valueDate;
+
     private String transactionId;
     private String entryReference;
     private String endToEndId;
-
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    private Date bookingDate;
-
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    private Date valueDate;
-
     private AmountEntity transactionAmount;
     private String creditorName;
     private TransactionAccountInfoEntity creditorAccount;
@@ -37,15 +41,29 @@ public class TransactionEntity {
     }
 
     public Transaction toTinkTransaction(boolean isPending) {
-        return Transaction.builder()
-                .setAmount(transactionAmount.toAmount())
-                .setDate(bookingDate)
-                .setDescription(remittanceInformationUnstructured)
-                .setPending(isPending)
-                .build();
+        Builder builder =
+                Transaction.builder()
+                        .setAmount(transactionAmount.toAmount())
+                        .setDate(bookingDate)
+                        .setDescription(remittanceInformationUnstructured)
+                        .setPending(isPending)
+                        .addExternalSystemIds(
+                                TransactionExternalSystemIdType.PROVIDER_GIVEN_TRANSACTION_ID,
+                                transactionId)
+                        .setTransactionDates(getTinkTransactionDates());
+
+        return (Transaction) builder.build();
     }
 
-    public Date getValueDate() {
-        return Preconditions.checkNotNull(valueDate);
+    private TransactionDates getTinkTransactionDates() {
+        TransactionDates.Builder builder = TransactionDates.builder();
+
+        builder.setValueDate(new AvailableDateInformation().setDate(valueDate));
+
+        if (Objects.nonNull(bookingDate)) {
+            builder.setBookingDate(new AvailableDateInformation().setDate(bookingDate));
+        }
+
+        return builder.build();
     }
 }
