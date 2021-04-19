@@ -1,0 +1,138 @@
+{
+    "accounts" : [ {
+        "accountNumber" : "123456789012345",
+        "accountExclusion" : "NONE",
+        "exactBalance" : {
+            "currencyCode" : "DKK",
+            "doubleValue" : 20000.37,
+            "exactValue" : 20000.37,
+            "unscaledValue" : 2000037,
+            "scale" : 2
+        },
+        "currencyCode" : "DKK",
+        "bankId" : "DK6361210001234567",
+        "excluded" : false,
+        "favored" : false,
+        "name" : "Kronekonto",
+        "ownership" : 1.0,
+        "type" : "CHECKING",
+        "userModifiedExcluded" : false,
+        "userModifiedName" : false,
+        "userModifiedType" : false,
+        "identifiers" : "[]",
+        "closed" : false,
+        "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
+        "balances" : [ ],
+        "availableCredit" : 0.0,
+        "balance" : 20000.37
+    } ],
+    "transactions" : [ {
+        "amount" : -100.55,
+        "date" : 1618221600000,
+        "description" : "Purchase",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "123456789012345@Homebank@2021-04-12@2021-04-11-16.10.58.984005"
+        },
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : "2021-04-12",
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-04-12",
+                "instant" : null
+            }
+        } ]
+    }, {
+        "amount" : 5000.0,
+        "date" : 1617012000000,
+        "description" : "Overførsel",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "123456789012345@Homebank@2021-03-29@2021-03-27-16.21.51.930603"
+        },
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : "2021-03-29",
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-03-29",
+                "instant" : null
+            }
+        } ]
+    }, {
+        "amount" : -3500.0,
+        "date" : 1614078000000,
+        "description" : "Konto 12345678",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "123456789012345@Homebank@2021-02-22@2021-02-22-10.15.04.123456"
+        },
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : "2021-02-23",
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-02-23",
+                "instant" : null
+            }
+        } ]
+    }, {
+        "amount" : -100.0,
+        "date" : 1608548400000,
+        "description" : "MobilePay",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "123456789012345@Homebank@2020-12-21@2020-12-22-17.30.02.477555"
+        },
+        "transactionDates" : [ {
+            "type" : "VALUE_DATE",
+            "value" : {
+                "date" : "2020-12-21",
+                "instant" : null
+            }
+        }, {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2020-12-21",
+                "instant" : null
+            }
+        } ]
+    } ]
+}
