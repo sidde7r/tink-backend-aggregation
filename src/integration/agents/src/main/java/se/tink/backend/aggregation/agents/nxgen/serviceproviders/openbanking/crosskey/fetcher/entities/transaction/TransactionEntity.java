@@ -27,8 +27,8 @@ public class TransactionEntity {
     private String addressLine;
     private AmountEntity amount;
     private TransactionBalanceEntity balance;
-    private BankTransactionCodeEntity bankTransactionCodeEntity;
     private String bookingDateTime;
+    private BankTransactionCodeEntity bankTransactionCode;
     private CardInstrumentEntity cardInstrument;
     private AmountEntity chargeAmount;
     private String creditDebitIndicator;
@@ -38,7 +38,7 @@ public class TransactionEntity {
     private DebtorAccountEntity debtorAccount;
     private DebtorAgentEntity debtorAgent;
     private MerchantDetailsEntity merchantDetails;
-    private ProprietaryBankTransactionCodeEntity proprietaryBankTransactionCodeEntity;
+    private ProprietaryBankTransactionCodeEntity proprietaryBankTransactionCode;
     private List<String> statementReference = null;
     private String status;
     private SupplementaryDataEntity supplementaryData;
@@ -118,13 +118,13 @@ public class TransactionEntity {
     }
 
     private String getProprietaryBankTransactionCode() {
-        return Optional.ofNullable(proprietaryBankTransactionCodeEntity)
+        return Optional.ofNullable(proprietaryBankTransactionCode)
                 .map(ProprietaryBankTransactionCodeEntity::getCode)
                 .orElse(getBankTransactionCodeEntity());
     }
 
     private String getBankTransactionCodeEntity() {
-        return Optional.ofNullable(bankTransactionCodeEntity)
+        return Optional.ofNullable(bankTransactionCode)
                 .map(BankTransactionCodeEntity::getCode)
                 .orElse("");
     }
