@@ -124,11 +124,9 @@ public class UkOpenBankingPaymentAuthenticator {
 
             final ErrorEntity errorEntity = ErrorEntity.create(errorType, errorDescription);
 
-            if (StringUtils.isBlank(errorDescription)) {
-                throw new PaymentAuthorizationException(
-                        InternalStatus.PAYMENT_AUTHORIZATION_UNKNOWN_EXCEPTION);
-            } else if (authenticationErrorMatcher.isAuthorizationCancelledByUser(
-                    errorDescription)) {
+            if (StringUtils.isBlank(errorDescription)
+                    || authenticationErrorMatcher.isAuthorizationCancelledByUser(
+                            errorDescription)) {
                 throw new PaymentAuthorizationCancelledByUserException(
                         errorEntity, InternalStatus.PAYMENT_AUTHORIZATION_CANCELLED);
             } else if (authenticationErrorMatcher.isAuthorizationTimeOut(errorDescription)) {

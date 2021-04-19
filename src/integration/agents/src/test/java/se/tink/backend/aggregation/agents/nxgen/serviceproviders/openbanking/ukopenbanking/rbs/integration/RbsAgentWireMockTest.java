@@ -6,7 +6,7 @@ import static org.assertj.core.api.Assertions.catchThrowable;
 import java.time.LocalDate;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.exceptions.payment.CreditorValidationException;
-import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationCancelledByUserException;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.AgentWireMockPaymentTest;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.command.PaymentGBCommand;
 import se.tink.backend.aggregation.agents.utils.remittanceinformation.RemittanceInformationUtils;
@@ -62,9 +62,9 @@ public class RbsAgentWireMockTest {
 
         // then
         assertThat(thrown)
-                .isExactlyInstanceOf(PaymentAuthorizationException.class)
+                .isExactlyInstanceOf(PaymentAuthorizationCancelledByUserException.class)
                 .hasNoCause()
-                .hasMessage("Payment was not authorised. Please try again.");
+                .hasMessage("Authorisation of payment was cancelled. Please try again.");
     }
 
     private AgentWireMockPaymentTest createAgentWireMockPaymentTestWithAuthCodeCallbackData(
