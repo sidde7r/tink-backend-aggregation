@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.creditcard.CreditCardModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
+import se.tink.backend.aggregation.source_info.AccountSourceInfo;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
@@ -87,6 +88,14 @@ public class CardEntity {
                         SebKortConstants.StorageKey.CARD_ACCOUNT_ID, contract.getCardAccountId())
                 .putInTemporaryStorage(
                         SebKortConstants.StorageKey.IS_ACCOUNT_OWNER, contract.isOwned())
+                .sourceInfo(createAccountSourceInfo(contract))
+                .build();
+    }
+
+    private AccountSourceInfo createAccountSourceInfo(CardContractEntity contract) {
+        return AccountSourceInfo.builder()
+                .bankAccountType(contract.getProductType())
+                .bankProductName(contract.getProductName())
                 .build();
     }
 
