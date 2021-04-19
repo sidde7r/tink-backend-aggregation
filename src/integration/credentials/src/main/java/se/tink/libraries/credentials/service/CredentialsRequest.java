@@ -10,6 +10,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Objects;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.commons.codec.binary.Hex;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Credentials;
@@ -20,6 +23,8 @@ import se.tink.libraries.user.rpc.User;
 import se.tink.libraries.uuid.UUIDUtils;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
+@Getter
+@Setter
 public abstract class CredentialsRequest {
     // OperationId will be null when originating from CredentialsService...
     // Will be set when coming from new Authentication & Aggregation Engine
@@ -29,7 +34,10 @@ public abstract class CredentialsRequest {
     private Provider provider;
     private User user;
     private String userDeviceId;
+
+    @Getter(AccessLevel.NONE)
     private List<Account> accounts;
+
     private String appUriId;
     private String callbackUri;
 
@@ -69,42 +77,20 @@ public abstract class CredentialsRequest {
     }
 
     public CredentialsRequest(
+            User user,
+            Provider provider,
+            Credentials credentials,
+            UserAvailability userAvailability) {
+        this.user = user;
+        this.provider = provider;
+        this.credentials = credentials;
+        this.userAvailability = userAvailability;
+    }
+
+    public CredentialsRequest(
             User user, Provider provider, Credentials credentials, String originatingUserIp) {
         this(user, provider, credentials);
         this.originatingUserIp = originatingUserIp;
-    }
-
-    public Credentials getCredentials() {
-        return credentials;
-    }
-
-    public Provider getProvider() {
-        return provider;
-    }
-
-    /** @return a user, or null if user not supplied. */
-    public User getUser() {
-        return user;
-    }
-
-    public void setCredentials(Credentials credentials) {
-        this.credentials = credentials;
-    }
-
-    public void setProvider(Provider provider) {
-        this.provider = provider;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public String getUserDeviceId() {
-        return userDeviceId;
-    }
-
-    public void setUserDeviceId(String userDeviceId) {
-        this.userDeviceId = userDeviceId;
     }
 
     public String constructLockPath(String salt) {
@@ -144,38 +130,6 @@ public abstract class CredentialsRequest {
         return new String(Hex.encodeHex(StringUtils.hashSHA1(s)));
     }
 
-    public List<Account> getAccounts() {
-        return Objects.nonNull(accounts) ? accounts : Collections.emptyList();
-    }
-
-    public void setAccounts(List<Account> accounts) {
-        this.accounts = accounts;
-    }
-
-    public boolean isCreate() {
-        return create;
-    }
-
-    public void setCreate(boolean create) {
-        this.create = create;
-    }
-
-    public boolean isUpdate() {
-        return update;
-    }
-
-    public void setUpdate(boolean update) {
-        this.update = update;
-    }
-
-    public String getAppUriId() {
-        return appUriId;
-    }
-
-    public void setAppUriId(String appUriId) {
-        this.appUriId = appUriId;
-    }
-
     public String getState() {
         // Use `appUriId` as state or, if not set, generate a random one.
         //
@@ -195,60 +149,11 @@ public abstract class CredentialsRequest {
         return appUriId;
     }
 
-    public String getCallbackUri() {
-        return callbackUri;
-    }
-
-    public void setCallbackUri(String callbackUri) {
-        this.callbackUri = callbackUri;
-    }
-
-    public String getOperationId() {
-        return operationId;
-    }
-
-    public void setOperationId(String operationId) {
-        this.operationId = operationId;
-    }
-
-    public String getConsentId() {
-        return consentId;
-    }
-
-    public void setConsentId(String consentId) {
-        this.consentId = consentId;
-    }
-
-    public List<DataFetchingRestrictions> getDataFetchingRestrictions() {
-        return dataFetchingRestrictions;
-    }
-
-    public void setDataFetchingRestrictions(
-            List<DataFetchingRestrictions> dataFetchingRestrictions) {
-        this.dataFetchingRestrictions = dataFetchingRestrictions;
-    }
-
-    public String getOriginatingUserIp() {
-        return originatingUserIp;
-    }
-
-    public void setOriginatingUserIp(String originatingUserIp) {
-        this.originatingUserIp = originatingUserIp;
+    public List<Account> getAccounts() {
+        return Objects.nonNull(accounts) ? accounts : Collections.emptyList();
     }
 
     public boolean shouldManualAuthBeForced() {
         return forceAuthenticate;
-    }
-
-    public void setForceAuthenticate(boolean forceAuthenticate) {
-        this.forceAuthenticate = forceAuthenticate;
-    }
-
-    public UserAvailability getUserAvailability() {
-        return userAvailability;
-    }
-
-    public void setUserAvailability(UserAvailability userAvailability) {
-        this.userAvailability = userAvailability;
     }
 }

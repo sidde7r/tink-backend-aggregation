@@ -47,6 +47,7 @@ import se.tink.backend.aggregation.storage.database.repositories.CryptoConfigura
 import se.tink.backend.integration.tpp_secrets_service.client.iface.TppSecretsServiceClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.ManualAuthenticateRequest;
+import se.tink.libraries.credentials.service.UserAvailability;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 import se.tink.libraries.user.rpc.User;
@@ -164,7 +165,12 @@ public class AgentInitialisor {
         // by Main)
         credentials.setFields(credentials.getFields());
 
-        return new ManualAuthenticateRequest(user, provider, credentials, true);
+        UserAvailability userAvailability = new UserAvailability();
+        userAvailability.setUserPresent(true);
+        userAvailability.setUserAvailableForInteraction(true);
+        userAvailability.setOriginatingUserIp("127.0.0.1");
+
+        return new ManualAuthenticateRequest(user, provider, credentials, userAvailability);
     }
 
     private Set<Module> getGuiceModulesToUse() {
