@@ -46,6 +46,7 @@ import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.ap
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.apiclient.DemobankPaymentRequestFilter;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.apiclient.DemobankRecurringPaymentApiClient;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.apiclient.DemobankSinglePaymentApiClient;
+import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.apiclient.error.DemobankErrorHandler;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.authenticator.DemobankPaymentAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.storage.DemobankStorage;
 import se.tink.backend.aggregation.agents.utils.transfer.InferredTransferDestinations;
@@ -299,13 +300,14 @@ public final class DemobankAgent extends NextGenerationAgent
         final DemobankStorage storage = new DemobankStorage();
         final DemobankPaymentRequestFilter requestFilter =
                 new DemobankPaymentRequestFilter(storage);
+        final DemobankErrorHandler errorHandler = new DemobankErrorHandler();
 
         final DemobankPaymentApiClient paymentApiClient =
                 PaymentServiceType.PERIODIC.equals(payment.getPaymentServiceType())
                         ? new DemobankRecurringPaymentApiClient(
-                                mappers, requestFilter, storage, client, callbackUri)
+                                mappers, errorHandler, requestFilter, storage, client, callbackUri)
                         : new DemobankSinglePaymentApiClient(
-                                mappers, requestFilter, storage, client, callbackUri);
+                                mappers, errorHandler, requestFilter, storage, client, callbackUri);
 
         final DemobankPaymentAuthenticator authenticator =
                 new DemobankPaymentAuthenticator(
