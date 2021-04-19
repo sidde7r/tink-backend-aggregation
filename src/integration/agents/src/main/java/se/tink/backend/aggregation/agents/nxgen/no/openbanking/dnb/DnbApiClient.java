@@ -113,10 +113,11 @@ public class DnbApiClient {
                 .get(CardTransactionResponse.class);
     }
 
-    public TransactionResponse fetchTransactions(String consentId, String accountId) {
+    public TransactionResponse fetchTransactions(
+            String fromDate, String consentId, String accountId) {
         return createRequest(new URL(Urls.TRANSACTIONS).parameter(IdTags.ACCOUNT_ID, accountId))
                 .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BOTH)
-                .queryParam(QueryKeys.FROM_DATE, "1970-01-01")
+                .queryParam(QueryKeys.FROM_DATE, fromDate)
                 .queryParam(
                         QueryKeys.TO_DATE,
                         ThreadSafeDateFormat.FORMATTER_DAILY.format(

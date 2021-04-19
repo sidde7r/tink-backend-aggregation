@@ -22,6 +22,7 @@ import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.fetcher.mappe
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
+import se.tink.libraries.credentials.service.UserAvailability;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class DnbCardTransactionFetcherTest {
@@ -36,6 +37,7 @@ public class DnbCardTransactionFetcherTest {
     private DnbStorage mockStorage;
     private DnbApiClient mockApiClient;
     private DnbTransactionMapper mockTransactionMapper;
+    private UserAvailability mockUserAvailability;
 
     private DnbCardTransactionFetcher cardTransactionFetcher;
 
@@ -47,6 +49,7 @@ public class DnbCardTransactionFetcherTest {
         mockStorage = mock(DnbStorage.class);
         mockApiClient = mock(DnbApiClient.class);
         mockTransactionMapper = mock(DnbTransactionMapper.class);
+        mockUserAvailability = mock(UserAvailability.class);
 
         testCardAccount = mock(CreditCardAccount.class);
 
@@ -67,9 +70,10 @@ public class DnbCardTransactionFetcherTest {
     public void
             shouldAlwaysReturnPageWithCanFetchMoreAndExpectedNumberOfTransactionsWhenManualRefresh() {
         // given
+        given(mockUserAvailability.isUserPresent()).willReturn(true);
         cardTransactionFetcher =
                 new DnbCardTransactionFetcher(
-                        mockStorage, mockApiClient, mockTransactionMapper, true);
+                        mockStorage, mockApiClient, mockTransactionMapper, mockUserAvailability);
 
         // when
         PaginatorResponse pageOfTransactions =
@@ -91,9 +95,10 @@ public class DnbCardTransactionFetcherTest {
     @Test
     public void shouldNeverAllowForMorePagesWhenAutoRefresh() {
         // given
+        given(mockUserAvailability.isUserPresent()).willReturn(false);
         cardTransactionFetcher =
                 new DnbCardTransactionFetcher(
-                        mockStorage, mockApiClient, mockTransactionMapper, false);
+                        mockStorage, mockApiClient, mockTransactionMapper, mockUserAvailability);
 
         // when
         PaginatorResponse pageOfTransactions =
