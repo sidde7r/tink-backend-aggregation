@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.fetcher.transactionalaccount;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.mockito.Mockito.when;
@@ -56,6 +57,7 @@ public class CrossKeyTransactionalAccountTransactionFetcherTest {
         assertEquals(-1443.01, transaction1.getExactAmount().getDoubleValue(), 0.001);
         assertEquals("EUR", transaction1.getExactAmount().getCurrencyCode());
         assertFalse(transaction1.isPending());
+        assertThat(transaction1.getDate()).isEqualToIgnoringHours("2020-11-16");
     }
 
     private CrosskeyTransactionsResponse preparePaginatorResponse() {

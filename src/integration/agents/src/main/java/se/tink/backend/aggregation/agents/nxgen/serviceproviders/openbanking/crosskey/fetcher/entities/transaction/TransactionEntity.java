@@ -2,32 +2,42 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cr
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.google.common.base.Strings;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import org.apache.commons.lang.StringUtils;
+import se.tink.backend.aggregation.agents.models.TransactionExternalSystemIdType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants.Format;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants.Transactions;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.fetcher.entities.common.AmountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
+import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction.Builder;
 import se.tink.backend.aggregation.nxgen.core.transaction.CreditCardTransaction;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
+import se.tink.backend.aggregation.nxgen.core.transaction.TransactionDates;
+import se.tink.backend.aggregation.utils.json.deserializers.LocalDateTimeDeserializer;
 import se.tink.libraries.amount.ExactCurrencyAmount;
+import se.tink.libraries.chrono.AvailableDateInformation;
 
 @JsonObject
 @JsonNaming(PropertyNamingStrategy.UpperCamelCaseStrategy.class)
 public class TransactionEntity {
 
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    private LocalDateTime valueDateTime;
+
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    private LocalDateTime bookingDateTime;
+
     private String accountId;
     private String addressLine;
     private AmountEntity amount;
     private TransactionBalanceEntity balance;
-    private String bookingDateTime;
     private BankTransactionCodeEntity bankTransactionCode;
     private CardInstrumentEntity cardInstrument;
     private AmountEntity chargeAmount;
@@ -45,7 +55,6 @@ public class TransactionEntity {
     private String transactionId;
     private String transactionInformation;
     private String transactionReference;
-    private String valueDateTime;
 
     public String getCreditDebitIndicator() {
         return creditDebitIndicator;
@@ -61,12 +70,8 @@ public class TransactionEntity {
                         ? transactionAmount.negate()
                         : transactionAmount;
 
-        return CreditCardTransaction.builder()
-                .setPending(!Transactions.STATUS_BOOKED.equalsIgnoreCase(status))
-                .setDate(getBookedDate())
-                .setDescription(getDescription())
-                .setAmount(transactionAmount)
-                .build();
+        return (CreditCardTransaction)
+                getAggregationTransaction(transactionAmount, getDescription());
     }
 
     public Transaction constructTransactionalAccountTransaction() {
@@ -88,27 +93,56 @@ public class TransactionEntity {
             transactionName = "";
         }
 
-        return Transaction.builder()
-                .setPending(!Transactions.STATUS_BOOKED.equalsIgnoreCase(status))
-                .setDate(getBookedDate())
-                .setDescription(transactionName)
-                .setAmount(transactionAmount)
-                .build();
+        return (Transaction) getAggregationTransaction(transactionAmount, transactionName);
+    }
+
+    private AggregationTransaction getAggregationTransaction(
+            ExactCurrencyAmount amount, String description) {
+        Builder builder =
+                Transaction.builder()
+                        .setAmount(amount)
+                        .setPending(!Transactions.STATUS_BOOKED.equalsIgnoreCase(status))
+                        .setDescription(description)
+                        .setDate(getBookedDate())
+                        .setTransactionDates(getTinkTransactionDates())
+                        .addExternalSystemIds(
+                                TransactionExternalSystemIdType.PROVIDER_GIVEN_TRANSACTION_ID,
+                                transactionId)
+                        .setProprietaryFinancialInstitutionType(getProprietaryBankTransactionCode())
+                        .setTransactionReference(transactionReference);
+
+        if (merchantDetails != null) {
+            builder.setMerchantName(merchantDetails.getMerchantName());
+            builder.setMerchantCategoryCode(merchantDetails.getMerchantCategoryCode());
+        }
+
+        return builder.build();
+    }
+
+    private TransactionDates getTinkTransactionDates() {
+        TransactionDates.Builder builder = TransactionDates.builder();
+
+        builder.setBookingDate(
+                new AvailableDateInformation().setDate(bookingDateTime.toLocalDate()));
+
+        if (valueDateTime != null) {
+            builder.setValueDate(
+                    new AvailableDateInformation().setDate(valueDateTime.toLocalDate()));
+        }
+
+        return builder.build();
     }
 
     @JsonIgnore
-    private Date getBookedDate() {
-        String transactionDate =
+    private LocalDate getBookedDate() {
+        LocalDateTime bookingDate =
                 bookingDateTime == null
                         ? Optional.ofNullable(currencyExchange)
                                 .map(CurrencyExchangeEntity::getQuotationDate)
                                 .orElseThrow(IllegalStateException::new)
                         : bookingDateTime;
-        try {
-            return new SimpleDateFormat(Format.TRANSACTION_TIMESTAMP).parse(transactionDate);
-        } catch (ParseException e) {
-            throw new IllegalStateException(e);
-        }
+
+        return bookingDate.toLocalDate();
     }
 
     @JsonIgnore
