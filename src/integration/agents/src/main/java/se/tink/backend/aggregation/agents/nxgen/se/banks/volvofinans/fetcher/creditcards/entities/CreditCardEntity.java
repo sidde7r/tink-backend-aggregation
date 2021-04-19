@@ -6,6 +6,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans.fetcher.cre
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
+import se.tink.backend.aggregation.source_info.AccountSourceInfo;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
@@ -53,6 +54,14 @@ public class CreditCardEntity {
                 .setName(name)
                 .setHolderName(getHolderName(creditData))
                 .putInTemporaryStorage(VolvoFinansConstants.UrlParameters.ACCOUNT_ID, accountId)
+                .sourceInfo(createAccountSourceInfo())
+                .build();
+    }
+
+    private AccountSourceInfo createAccountSourceInfo() {
+        return AccountSourceInfo.builder()
+                .bankProductCode(produkt) // ex. "RKPVI"
+                .bankProductName(name)
                 .build();
     }
 
