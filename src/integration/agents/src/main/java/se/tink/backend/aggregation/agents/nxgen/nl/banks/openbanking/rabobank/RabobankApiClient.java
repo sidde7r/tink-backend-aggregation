@@ -31,10 +31,7 @@ import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.ut
 import se.tink.backend.aggregation.agents.utils.crypto.Certificate;
 import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 import se.tink.backend.aggregation.api.Psd2Headers;
-import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
-import se.tink.backend.aggregation.eidassigner.QsealcAlg;
-import se.tink.backend.aggregation.eidassigner.QsealcSignerImpl;
-import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
+import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.CompositePaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.EmptyFinalPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
@@ -57,8 +54,7 @@ public final class RabobankApiClient {
     private final PersistentStorage persistentStorage;
     private final RabobankUserIpInformation userIpInformation;
     private final RabobankConfiguration rabobankConfiguration;
-    private final EidasProxyConfiguration eidasProxyConf;
-    private final EidasIdentity eidasIdentity;
+    private final QsealcSigner qsealcSigner;
     private String qsealcPem;
     private String consentStatus;
 
@@ -67,14 +63,12 @@ public final class RabobankApiClient {
             final PersistentStorage persistentStorage,
             final RabobankConfiguration rabobankConfiguration,
             final String qsealcPem,
-            final EidasProxyConfiguration eidasProxyConf,
-            final EidasIdentity eidasIdentity,
+            final QsealcSigner qsealcSigner,
             final RabobankUserIpInformation userIpInformation) {
         this.client = client;
         this.persistentStorage = persistentStorage;
         this.rabobankConfiguration = rabobankConfiguration;
-        this.eidasProxyConf = eidasProxyConf;
-        this.eidasIdentity = eidasIdentity;
+        this.qsealcSigner = qsealcSigner;
         this.userIpInformation = userIpInformation;
 
         this.qsealcPem = qsealcPem;
@@ -319,12 +313,7 @@ public final class RabobankApiClient {
     private String buildSignatureHeader(
             final String digest, final String requestId, final String date) {
         final String signingString = RabobankUtils.createSignatureString(date, digest, requestId);
-        final byte[] signatureBytes =
-                QsealcSignerImpl.build(
-                                eidasProxyConf.toInternalConfig(),
-                                QsealcAlg.EIDAS_RSA_SHA256,
-                                eidasIdentity)
-                        .getSignature(signingString.getBytes());
+        final byte[] signatureBytes = qsealcSigner.getSignature(signingString.getBytes());
 
         final String b64Signature = Base64.getEncoder().encodeToString(signatureBytes);
         final String clientCertSerial = extractQsealcSerial(qsealcPem);

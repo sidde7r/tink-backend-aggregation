@@ -3,15 +3,16 @@ package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
 
 import com.google.common.collect.ImmutableSet;
+import com.google.inject.Inject;
 import java.security.cert.CertificateException;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
-import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
+import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModules;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.HttpClient;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.QueryParams;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.authenticator.RabobankAuthenticationController;
@@ -25,10 +26,10 @@ import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.fi
 import se.tink.backend.aggregation.agents.progressive.ProgressiveAuthAgent;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agents.utils.CertificateUtils;
-import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
-import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
+import se.tink.backend.aggregation.eidassigner.QsealcSigner;
+import se.tink.backend.aggregation.eidassigner.module.QSealcSignerModuleRSASHA256;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentGenerationAgent;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.ProductionAgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.progressive.AutoAuthenticationProgressiveController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationProgressiveController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.progressive.ThirdPartyAppAuthenticationProgressiveController;
@@ -44,8 +45,8 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.AccessExceededFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.randomretry.RateLimitRetryFilter;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
+@AgentDependencyModules(modules = QSealcSignerModuleRSASHA256.class)
 @AgentCapabilities({CHECKING_ACCOUNTS})
 public final class RabobankAgent
         extends SubsequentGenerationAgent<AutoAuthenticationProgressiveController>
@@ -58,13 +59,9 @@ public final class RabobankAgent
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final AutoAuthenticationProgressiveController progressiveAuthenticator;
 
-    public RabobankAgent(
-            final CredentialsRequest request,
-            final AgentContext context,
-            final AgentsServiceConfiguration agentsConfiguration) {
-        super(
-                ProductionAgentComponentProvider.create(
-                        request, context, agentsConfiguration.getSignatureKeyPair()));
+    @Inject
+    public RabobankAgent(AgentComponentProvider componentProvider, QsealcSigner qsealcSigner) {
+        super(componentProvider);
         configureHttpClient(client);
         clientName = request.getProvider().getPayload();
 
@@ -86,8 +83,6 @@ public final class RabobankAgent
         }
 
         client.setSslClientCertificate(p12, password);
-        EidasIdentity eidasIdentity =
-                new EidasIdentity(context.getClusterId(), context.getAppId(), RabobankAgent.class);
 
         apiClient =
                 new RabobankApiClient(
@@ -95,8 +90,7 @@ public final class RabobankAgent
                         persistentStorage,
                         rabobankConfiguration,
                         qsealPem,
-                        agentsConfiguration.getEidasProxy(),
-                        eidasIdentity,
+                        qsealcSigner,
                         getUserIpInformation());
 
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
