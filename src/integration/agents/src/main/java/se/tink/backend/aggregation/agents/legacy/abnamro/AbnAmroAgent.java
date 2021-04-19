@@ -344,34 +344,41 @@ public final class AbnAmroAgent extends AbstractAgent
                 .filter(a -> Objects.equals(a.getType(), AccountTypes.CREDIT_CARD))
                 .forEach(resultAccounts::add);
         closeAndExcludeOldDuplicateICSAccounts(importedAccounts);
+        resultAccounts.stream().forEach(this::setCreditCardAccountBalance);
         return new FetchAccountsResponse(resultAccounts);
+    }
+
+    private void setCreditCardAccountBalance(Account account) {
+        Preconditions.checkArgument(account.getType() == AccountTypes.CREDIT_CARD);
+        try {
+            account.setBalance(getCreditCardBalance(account));
+        } catch (IcsException e) {
+            handleIcsException(e);
+        }
     }
 
     @Override
     public FetchTransactionsResponse fetchCreditCardTransactions() {
-
         try {
             Map<Account, List<Transaction>> transactionsMap = new HashMap<>();
             List<Account> accounts = fetchCreditCardAccounts().getAccounts();
             for (Account account : accounts) {
-                final Double balance = getCreditCardBalance(account);
-                account.setBalance(balance);
-                logger.info(
-                        "Sending account to update service with {} balance",
-                        balance == 0.0 ? "zero" : "non-zero");
-                systemUpdater.sendAccountToUpdateService(account.getBankId());
                 Long accountNumber = getCreditCardContractNumber(account);
                 List<Transaction> transactions = getCreditCardTransactions(accountNumber);
                 transactionsMap.put(account, transactions);
             }
             return new FetchTransactionsResponse(transactionsMap);
         } catch (IcsException e) {
-            if (abnAmroConfiguration.shouldIgnoreCreditCardErrors()) {
-                logger.warn("Ignoring error from ICS", e);
-                return new FetchTransactionsResponse(Collections.emptyMap());
-            } else {
-                throw new IllegalStateException(e);
-            }
+            handleIcsException(e);
+            return new FetchTransactionsResponse(Collections.emptyMap());
+        }
+    }
+
+    private void handleIcsException(IcsException e) {
+        if (abnAmroConfiguration.shouldIgnoreCreditCardErrors()) {
+            logger.warn("Ignoring error from ICS", e);
+        } else {
+            throw new IllegalStateException(e);
         }
     }
 
