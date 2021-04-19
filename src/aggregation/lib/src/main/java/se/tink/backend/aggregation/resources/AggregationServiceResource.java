@@ -439,39 +439,16 @@ public class AggregationServiceResource implements AggregationService {
         ProviderConfiguration filteredProvider =
                 providerConfigurationService.getProviderByNameInClusterIfPossible(
                         clusterName, clusterEnvironment, providerName);
-        if (!Objects.isNull(filteredProvider)) {
-            logger.info(
-                    "get provider from provider configuration service for {}",
-                    filteredProvider.getName());
+        if (!Objects.isNull(filteredProvider)
+                && filteredProvider.getAccessType() == AccessType.OPEN_BANKING
+                && !StringUtils.containsIgnoreCase(filteredProvider.getName(), "sandbox")) {
+            return Provider.of(filteredProvider);
         } else {
-            logger.info(
-                    "get null provider from provider configuration service for {}", providerName);
-        }
-        // will replace listAll() when testing of getProviderByNameInClusterIfPossible is working
-        List<ProviderConfiguration> allProviders = providerConfigurationService.listAll();
-
-        List<ProviderConfiguration> filteredProviders =
-                allProviders.stream()
-                        .filter(prv -> Objects.equals(providerName, prv.getName()))
-                        .filter(prv -> prv.getAccessType() == AccessType.OPEN_BANKING)
-                        // Trying to get rid of possible sandbox providers if they exist.
-                        .filter(prv -> !StringUtils.containsIgnoreCase(prv.getName(), "sandbox"))
-                        .collect(Collectors.toList());
-
-        HttpResponseHelper httpResponseHelper = new HttpResponseHelper(logger);
-
-        if (filteredProviders.size() == 0) {
+            HttpResponseHelper httpResponseHelper = new HttpResponseHelper(logger);
             httpResponseHelper.error(
                     Response.Status.NOT_FOUND,
                     String.format("Provider not found: %s", providerName));
-        } else if (filteredProviders.size() != 1) {
-            httpResponseHelper.error(
-                    Response.Status.INTERNAL_SERVER_ERROR,
-                    String.format(
-                            "Trying to get secrets template. Should find 1 provider for providerName : %s, but found instead : %d",
-                            providerName, filteredProviders.size()));
+            return null;
         }
-
-        return Provider.of(filteredProviders.get(0));
     }
 }
