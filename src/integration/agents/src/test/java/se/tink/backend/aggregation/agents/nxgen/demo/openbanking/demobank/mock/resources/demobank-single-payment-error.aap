@@ -1,0 +1,53 @@
+
+REQUEST 1
+POST https://demobank.production.global.tink.se/api/payment/v1/payments/domestic/create
+X-Client-Header: sXVn6Lt9P3AYaK4YwuErsu4qn2AUW3AnSE4rMzcZdLFCM2vHn8JpbUfBUJc3e7VaB4ApgJLvYB2fd7GjwkBxauXbSaRx2w5WXeh3jKgeLFefhvQHeSewMLsDXAAU63Ax3B47EMPa2UiCWE6VmJkXKC4Uv6pfYsLTGqSnw3pR4kkec8d5Y5eJ5NWrCXXZ5gFjhbuBkeZpFvnsBTnHJYbK3XWAZ8jR9Qhbqb2vQkthGZm49U5eHQ5K7emuT9szTEv2
+Content-Type: application/json
+Accept: application/json
+X-Aggregator: Tink Testing
+
+{
+  "debtorAccount": {
+    "accountId": "IT76K2958239128VVJCLBIHVDAT",
+    "type": "IBAN",
+    "identifier": "IT76K2958239128VVJCLBIHVDAT"
+  },
+  "creditorAccount": {
+    "accountId": "IT12L8551867857UFGAYZF25O4M",
+    "type": "IBAN",
+    "identifier": "IT12L8551867857UFGAYZF25O4M"
+  },
+  "amount": {
+    "currency": "EUR",
+    "amountValue": "0.1"
+  },
+  "creditorName": "Unknown person",
+  "remittanceInformationUnstructured": "Message",
+  "remittanceInformationStructured": null,
+  "initiationDate": "2021-03-22"
+}
+
+RESPONSE 1
+400
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+X-Frame-Options: DENY
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Mon, 22 Mar 2021 08:33:27 GMT
+Keep-Alive: ***
+Connection: keep-alive
+
+{
+  "tppMessages" : [
+    {
+        "category" : "",
+        "code" : "INSUFFICIENT_FUNDS",
+        "text" : "Insufficient founds on given account"
+    }
+  ]
+}
