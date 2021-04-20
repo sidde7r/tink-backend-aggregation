@@ -42,8 +42,8 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class AktiaTestFixtures {
 
-    public static final String AUTH_SERVER_URL = "https://mobile-auth.aktia.fi";
-    public static final String API_SERVER_URL = "https://mobile-gateway.aktia.fi";
+    public static final String AUTH_SERVER_URL = "https://mobile-auth2.aktia.fi";
+    public static final String API_SERVER_URL = "https://mobile-gateway2.aktia.fi";
     public static final String BASIC_AUTH_HEADER_VALUE = "Zm9vOmJhcgo=";
     public static final String ACCESS_TOKEN = "1234";
     public static final String USERNAME = "user1";

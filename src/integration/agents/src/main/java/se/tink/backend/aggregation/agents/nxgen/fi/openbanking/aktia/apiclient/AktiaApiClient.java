@@ -34,7 +34,7 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 @Slf4j
 public class AktiaApiClient {
 
-    private static final String AUTH_TOKEN_PATH = "/mobileauth/oauth2/mobileauth/access_token";
+    private static final String AUTH_TOKEN_PATH = "/cauth/oauth2/mobileauth/access_token";
     private static final String LOGIN_DETAILS_PATH = "/api/login/details";
     private static final String OTP_AUTH_PATH = "/api/login/otp/authenticate";
     private static final String ACCOUNT_SUMMARY_PATH = "/api/summary";
@@ -166,11 +166,11 @@ public class AktiaApiClient {
     }
 
     private URL createAuthUrl() {
-        return new URL("https://mobile-auth.aktia.fi" + AUTH_TOKEN_PATH);
+        return new URL("https://mobile-auth2.aktia.fi" + AUTH_TOKEN_PATH);
     }
 
     private URL createApiUrl(String path) {
-        return new URL("https://mobile-gateway.aktia.fi" + path);
+        return new URL("https://mobile-gateway2.aktia.fi" + path);
     }
 
     private OAuth2Token getOAuth2Token() {

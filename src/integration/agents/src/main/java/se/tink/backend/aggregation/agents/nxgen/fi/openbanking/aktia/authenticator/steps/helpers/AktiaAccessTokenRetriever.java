@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.authenticator.steps.helpers;
 
+import java.time.Instant;
+import java.time.ZoneId;
 import lombok.RequiredArgsConstructor;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
@@ -33,6 +35,11 @@ public class AktiaAccessTokenRetriever {
         final OAuth2Token oAuth2Token = convertResponseToOauth2Token(tokenResponse);
 
         tokenStorage.storeToken(oAuth2Token);
+        request.getCredentials()
+                .setSessionExpiryDate(
+                        Instant.ofEpochMilli(oAuth2Token.getAccessExpireEpoch() * 1000)
+                                .atZone(ZoneId.systemDefault())
+                                .toLocalDate());
     }
 
     private static AccessTokenStatus getTokenStatus(OAuth2Token token) {

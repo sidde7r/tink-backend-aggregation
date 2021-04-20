@@ -53,7 +53,7 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 public class AktiaApiClientTest {
 
     private static final String AUTH_TOKEN_URL =
-            AUTH_SERVER_URL + "/mobileauth/oauth2/mobileauth/access_token";
+            AUTH_SERVER_URL + "/cauth/oauth2/mobileauth/access_token";
 
     private AktiaApiClient aktiaApiClient;
 
