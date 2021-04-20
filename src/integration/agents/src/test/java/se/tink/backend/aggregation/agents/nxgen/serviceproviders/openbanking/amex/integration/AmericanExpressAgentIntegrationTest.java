@@ -43,6 +43,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
+import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
@@ -164,6 +165,7 @@ public class AmericanExpressAgentIntegrationTest extends IntegrationTestBase {
     }
 
     @Test
+    @Ignore
     public void testTransactionsFetchingWithValidAccessToken() {
         // given
         final CredentialsRequest credentialsRequest = createCredentialsRequest();
