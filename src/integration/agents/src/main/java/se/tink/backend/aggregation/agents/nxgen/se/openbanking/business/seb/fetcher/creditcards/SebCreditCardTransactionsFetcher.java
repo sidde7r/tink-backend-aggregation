@@ -16,9 +16,11 @@ public class SebCreditCardTransactionsFetcher
         implements TransactionMonthPaginator<CreditCardAccount> {
 
     private final SebStorage instanceStorage;
+    private final String providerMarket;
 
-    public SebCreditCardTransactionsFetcher(SebStorage instanceStorage) {
+    public SebCreditCardTransactionsFetcher(SebStorage instanceStorage, String providerMarket) {
         this.instanceStorage = instanceStorage;
+        this.providerMarket = providerMarket;
     }
 
     /**
@@ -46,7 +48,7 @@ public class SebCreditCardTransactionsFetcher
                         .map(
                                 transactionEntity ->
                                         transactionEntity.toTinkTransactions(
-                                                account.getAccountNumber()))
+                                                account.getAccountNumber(), providerMarket))
                         .flatMap(List::stream)
                         .collect(Collectors.toList());
         return PaginatorResponseImpl.create(creditCardTransactions, false);

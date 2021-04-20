@@ -16,9 +16,11 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 public class SebCardTransactionsFetcher implements TransactionMonthPaginator<CreditCardAccount> {
 
     private final SebBaseApiClient client;
+    private final String providerMarket;
 
-    public SebCardTransactionsFetcher(SebBaseApiClient client) {
+    public SebCardTransactionsFetcher(SebBaseApiClient client, String providerMarket) {
         this.client = client;
+        this.providerMarket = providerMarket;
     }
 
     @Override
@@ -35,7 +37,7 @@ public class SebCardTransactionsFetcher implements TransactionMonthPaginator<Cre
             FetchCardAccountsTransactions response =
                     client.fetchCardTransactions(account.getApiIdentifier(), fromDate, toDate);
             return PaginatorResponseImpl.create(
-                    response.tinkTransactions(account.getAccountNumber()));
+                    response.tinkTransactions(account.getAccountNumber(), providerMarket));
         } catch (HttpResponseException e) {
             if (e.getResponse().getStatus() == HttpStatus.SC_INTERNAL_SERVER_ERROR
                     && e.getResponse().getBody(ErrorResponse.class).isEndOfPagingError()) {

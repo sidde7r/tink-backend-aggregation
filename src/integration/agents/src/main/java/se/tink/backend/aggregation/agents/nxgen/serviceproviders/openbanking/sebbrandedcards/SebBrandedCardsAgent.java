@@ -27,7 +27,9 @@ public class SebBrandedCardsAgent extends SebBaseAgent<SebBrandedCardsApiClient>
         apiClient =
                 new SebBrandedCardsApiClient(
                         client, persistentStorage, brandId, request.isManual());
-        creditCardRefreshController = getCreditCardRefreshController();
+        creditCardRefreshController =
+                getCreditCardRefreshController(
+                        componentProvider.getCredentialsRequest().getProvider().getMarket());
     }
 
     private void configureHttpClient(TinkHttpClient client) {
@@ -68,7 +70,7 @@ public class SebBrandedCardsAgent extends SebBaseAgent<SebBrandedCardsApiClient>
         return creditCardRefreshController.fetchCreditCardTransactions();
     }
 
-    private CreditCardRefreshController getCreditCardRefreshController() {
+    private CreditCardRefreshController getCreditCardRefreshController(String providerMarket) {
         return new CreditCardRefreshController(
                 metricRefreshController,
                 updateController,
@@ -76,7 +78,7 @@ public class SebBrandedCardsAgent extends SebBaseAgent<SebBrandedCardsApiClient>
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
                         new TransactionMonthPaginationController<>(
-                                new SebCardTransactionsFetcher(apiClient),
+                                new SebCardTransactionsFetcher(apiClient, providerMarket),
                                 SebCommonConstants.ZONE_ID)));
     }
 }

@@ -62,7 +62,9 @@ public final class SebAgent extends SebBaseAgent<SebApiClient>
         this.apiClient = new SebApiClient(client, persistentStorage, request.isManual());
         this.instanceStorage = new SebStorage();
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
-        creditCardRefreshController = getCreditCardRefreshController();
+        creditCardRefreshController =
+                getCreditCardRefreshController(
+                        componentProvider.getCredentialsRequest().getProvider().getMarket());
         transferDestinationRefreshController = constructTransferDestinationController();
     }
 
@@ -125,7 +127,7 @@ public final class SebAgent extends SebBaseAgent<SebApiClient>
                                         apiClient, transactionPaginationHelper))));
     }
 
-    private CreditCardRefreshController getCreditCardRefreshController() {
+    private CreditCardRefreshController getCreditCardRefreshController(String providerMarket) {
         return new CreditCardRefreshController(
                 metricRefreshController,
                 updateController,
@@ -133,7 +135,8 @@ public final class SebAgent extends SebBaseAgent<SebApiClient>
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
                         new TransactionMonthPaginationController<>(
-                                new SebCreditCardTransactionsFetcher(instanceStorage),
+                                new SebCreditCardTransactionsFetcher(
+                                        instanceStorage, providerMarket),
                                 SebCommonConstants.ZONE_ID)));
     }
 

@@ -17,10 +17,17 @@ public class TransactionsEntity {
     private List<TransactionEntity> pending;
 
     @JsonIgnore
-    public List<CreditCardTransaction> toTinkTransactions(String accountNumber) {
+    public List<CreditCardTransaction> toTinkTransactions(
+            String accountNumber, String providerMarket) {
         return Stream.concat(
-                        collect(booked, te -> te.toTinkTransaction(false), accountNumber),
-                        collect(pending, te -> te.toTinkTransaction(true), accountNumber))
+                        collect(
+                                booked,
+                                te -> te.toTinkTransaction(false, providerMarket),
+                                accountNumber),
+                        collect(
+                                pending,
+                                te -> te.toTinkTransaction(true, providerMarket),
+                                accountNumber))
                 .collect(Collectors.toList());
     }
 

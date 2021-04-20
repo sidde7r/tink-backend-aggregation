@@ -65,7 +65,8 @@
                 "instant" : null
             }
         } ],
-        "proprietaryFinancialInstitutionType" : "UNKNOWN"
+        "proprietaryFinancialInstitutionType" : "UNKNOWN",
+        "providerMarket" : "SE"
     }, {
         "amount" : -500.0,
         "date" : 1617012000000,
@@ -96,7 +97,8 @@
                 "instant" : null
             }
         } ],
-        "proprietaryFinancialInstitutionType" : "PURCHASE"
+        "proprietaryFinancialInstitutionType" : "PURCHASE",
+        "providerMarket" : "SE"
     }, {
         "amount" : -1000.0,
         "date" : 1614510000000,
@@ -127,6 +129,7 @@
                 "instant" : null
             }
         } ],
-        "proprietaryFinancialInstitutionType" : "PURCHASE"
+        "proprietaryFinancialInstitutionType" : "PURCHASE",
+        "providerMarket" : "SE"
     } ]
 }
