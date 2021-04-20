@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import se.tink.backend.aggregation.agents.models.TransactionExternalSystemIdType;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.SkandiaConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction.Builder;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
@@ -41,7 +42,8 @@ public class TransactionEntity {
                         .addExternalSystemIds(
                                 TransactionExternalSystemIdType.PROVIDER_GIVEN_TRANSACTION_ID,
                                 transactionId)
-                        .setTransactionReference(endToEndId);
+                        .setTransactionReference(endToEndId)
+                        .setProviderMarket(SkandiaConstants.PROVIDER_MARKET);
 
         return (Transaction) builder.build();
     }

@@ -6,6 +6,7 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public final class SkandiaConstants {
+    public static final String PROVIDER_MARKET = "SE";
 
     public static final TransactionalAccountTypeMapper ACCOUNT_TYPE_MAPPER =
             TransactionalAccountTypeMapper.builder()
