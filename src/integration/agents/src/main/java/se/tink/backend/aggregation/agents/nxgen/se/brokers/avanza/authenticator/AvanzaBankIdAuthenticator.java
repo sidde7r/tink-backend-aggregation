@@ -157,13 +157,7 @@ public class AvanzaBankIdAuthenticator implements BankIdAuthenticator<BankIdInit
         maskAuthCredentialsFromLogging(bankIdCompleteResponse);
         putAuthCredentialsInAuthSessionStorage(bankIdCompleteResponse);
 
-        try {
-            // The try/catch is only used temporarily to log if we fail at fetching the holder name.
-            // This should be removed at the latest 2020-05-01.
-            storeHolderNameIfAvailable();
-        } catch (Exception e) {
-            LOGGER.info("Could not fetch holder name with the exception: ", e);
-        }
+        storeHolderNameIfAvailable();
     }
 
     private void storeHolderNameIfAvailable() {
