@@ -55,7 +55,7 @@ public class GetAccountsResponseTest {
                                 IdModule.builder()
                                         .withUniqueIdentifier("9593123646")
                                         .withAccountNumber("DK9150519593123646")
-                                        .withAccountName("NAME LAST_NAME")
+                                        .withAccountName("Lønkonto+")
                                         .addIdentifier(new IbanIdentifier("DK9150519593123646"))
                                         .build())
                         .putInTemporaryStorage(
@@ -75,7 +75,7 @@ public class GetAccountsResponseTest {
                                 IdModule.builder()
                                         .withUniqueIdentifier("NO3750022184484")
                                         .withAccountNumber("NO3750022184484")
-                                        .withAccountName("NOR_NAME NOR_LAST_NAME")
+                                        .withAccountName("SPAREKONTO")
                                         .addIdentifier(new IbanIdentifier("NO3750022184484"))
                                         .build())
                         .putInTemporaryStorage(

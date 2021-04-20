@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -70,7 +71,12 @@ public class AccountEntity {
                         IdModule.builder()
                                 .withUniqueIdentifier(getUniqueIdentifier())
                                 .withAccountNumber(identifier.getIdentifier())
-                                .withAccountName(Optional.ofNullable(accountName).orElse(product))
+                                .withAccountName(
+                                        Optional.ofNullable(product)
+                                                .orElseThrow(
+                                                        () ->
+                                                                new NoSuchElementException(
+                                                                        "Product is missing")))
                                 .addIdentifier(identifier)
                                 .build())
                 .putInTemporaryStorage(NordeaBaseConstants.StorageKeys.ACCOUNT_ID, id)
