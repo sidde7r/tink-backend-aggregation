@@ -1,0 +1,2924 @@
+{
+    "accounts": [
+        {
+            "accountNumber": "NL32BUNQ2206559854",
+            "accountExclusion": "NONE",
+            "exactBalance": {
+                "currencyCode": "EUR",
+                "doubleValue": 525.41,
+                "exactValue": 525.41,
+                "unscaledValue": 52541,
+                "scale": 2
+            },
+            "currencyCode": "EUR",
+            "bankId": "NL32BUNQ2206559854",
+            "excluded": false,
+            "favored": false,
+            "name": "Conjunta",
+            "ownership": 1.0,
+            "type": "CHECKING",
+            "userModifiedExcluded": false,
+            "userModifiedName": false,
+            "userModifiedType": false,
+            "identifiers": "[\"iban://NL32BUNQ2206559854\"]",
+            "closed": false,
+            "holderName": "Vinicius Hana Scardazzi",
+            "accountHolder": {
+                "accountId": null,
+                "type": "PERSONAL",
+                "identities": [
+                    {
+                        "name": "Vinicius Hana Scardazzi",
+                        "role": "HOLDER"
+                    }
+                ]
+            },
+            "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
+            "balances": [],
+            "availableCredit": 0.0,
+            "balance": 525.41
+        }
+    ],
+    "transactions": [
+        {
+            "amount": -3.5,
+            "date": 1618826400000,
+            "description": "SumUp  *Ripsnorter",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "SumUp  *Ripsnorter Rotterdam, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -10.99,
+            "date": 1618826400000,
+            "description": "NETFLIX INTERNATIONAL B.V.",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Netflix Monthly Subscription"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -12.98,
+            "date": 1618826400000,
+            "description": "Albert Heijn 1282",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Albert Heijn 1282 AMSTERDAM, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -3.6,
+            "date": 1618826400000,
+            "description": "AH to go 5825 rdam",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "AH to go 5825 rdam ROTTERDAM, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": 9.99,
+            "date": 1618740000000,
+            "description": "V. Hana Scardazzi",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "PLAYSTATIONNETWORK LONDON, GB"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -9.99,
+            "date": 1618740000000,
+            "description": "PLAYSTATIONNETWORK",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "PLAYSTATIONNETWORK LONDON, GB\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -33.65,
+            "date": 1618740000000,
+            "description": "Marqt Bilderdijkstr",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Marqt Bilderdijkstr AMSTERDAM, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -13.2,
+            "date": 1618740000000,
+            "description": "Monks Coffee",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Monks Coffee AMSTERDAM, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -46.08,
+            "date": 1618740000000,
+            "description": "Albert Heijn 1282",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Albert Heijn 1282 AMSTERDAM, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -14.1,
+            "date": 1618653600000,
+            "description": "Sevgi bloemhuis",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Sevgi bloemhuis AMSTERDAM, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -15.0,
+            "date": 1618653600000,
+            "description": "WIJNWINKEL RENALDA",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "WIJNWINKEL RENALDA AMSTERDAM, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -34.75,
+            "date": 1618653600000,
+            "description": "Kaaskamer van A'dam",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Kaaskamer van A'dam AMSTERDAM, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -11.4,
+            "date": 1618653600000,
+            "description": "Monks Coffee",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Monks Coffee AMSTERDAM, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -43.24,
+            "date": 1618653600000,
+            "description": "Albert Heijn 1282",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Albert Heijn 1282 AMSTERDAM, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -29.28,
+            "date": 1618567200000,
+            "description": "Albert Heijn 1282",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Albert Heijn 1282 AMSTERDAM, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -10.95,
+            "date": 1618567200000,
+            "description": "CCV*Microfix Amsterdam",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "CCV*Microfix Amsterdam AMSTERDAM, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": 9.8,
+            "date": 1618567200000,
+            "description": "VVE ADMIRALITEIT",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "CORRECTIEFACTUUR"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -1.8,
+            "date": 1618567200000,
+            "description": "AH to go 5868 A'dam",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "AH to go 5868 A'dam AMSTERDAM, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -3.05,
+            "date": 1618567200000,
+            "description": "AH to go 5868 A'dam",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "AH to go 5868 A'dam AMSTERDAM, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -43.67,
+            "date": 1618480800000,
+            "description": "Marqt Bilderdijkstr",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Marqt Bilderdijkstr AMSTERDAM, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -35.23,
+            "date": 1618480800000,
+            "description": "Infomedics B.V. collecting for Infomedics",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "99973515299 0030006643138134 Invoice 62145277128071 Infomedics"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -28.25,
+            "date": 1618480800000,
+            "description": "C&M*LOCAL HERO",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "C&M*LOCAL HERO AMSTERDAM, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -10.97,
+            "date": 1618480800000,
+            "description": "Albert Heijn 1282",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Albert Heijn 1282 AMSTERDAM, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -31.73,
+            "date": 1618394400000,
+            "description": "Albert Heijn 1282",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Albert Heijn 1282 AMSTERDAM, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -18.0,
+            "date": 1618394400000,
+            "description": "C&M*LOCAL HERO",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "C&M*LOCAL HERO AMSTERDAM, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -13.8,
+            "date": 1618394400000,
+            "description": "Caffenation Amsterdam",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Caffenation Amsterdam AMSTERDAM, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -48.85,
+            "date": 1618308000000,
+            "description": "Bloemenspeciaalzaak De Roos by Buckaroo",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "100021575 1030000363250966 Betaling aan De Roos Bloemist"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -160.67,
+            "date": 1618308000000,
+            "description": "IKEA BV via ING Bank",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "1187625726 0050005385410636 1187625726"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -19.94,
+            "date": 1618308000000,
+            "description": "Albert Heijn 1282",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Albert Heijn 1282 AMSTERDAM, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -5.69,
+            "date": 1618221600000,
+            "description": "Spar Van Holland",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Spar Van Holland ROTTERDAM, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -23.16,
+            "date": 1618221600000,
+            "description": "Albert Heijn 1282",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Albert Heijn 1282 AMSTERDAM, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -33.44,
+            "date": 1618135200000,
+            "description": "Albert Heijn 1282",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Albert Heijn 1282 AMSTERDAM, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -38.89,
+            "date": 1618048800000,
+            "description": "Albert Heijn 1282",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Albert Heijn 1282 AMSTERDAM, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -9.98,
+            "date": 1617962400000,
+            "description": "Albert Heijn 1282",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Albert Heijn 1282 AMSTERDAM, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -23.71,
+            "date": 1617962400000,
+            "description": "Albert Heijn 1282",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Albert Heijn 1282 AMSTERDAM, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -11.7,
+            "date": 1617962400000,
+            "description": "Dudok Patisserie Rotte",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Dudok Patisserie Rotte Rotterdam, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -34.55,
+            "date": 1617876000000,
+            "description": "UBER * EATS PENDING",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "UBER * EATS PENDING help.uber.com, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -16.5,
+            "date": 1617876000000,
+            "description": "SWAPFIETS BY BUCKAROO",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "1-4 NL - B2C - Org - Norm (16,50) 30 days: 16.50,1-3 NL - B2C - Org - Norm (16,50) 31 days: 16.50"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -19.43,
+            "date": 1617876000000,
+            "description": "APOTHEEK FREDERIK HEND",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "APOTHEEK FREDERIK HEND AMSTERDAM, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -0.67,
+            "date": 1617876000000,
+            "description": "Albert Heijn 1282",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Albert Heijn 1282 AMSTERDAM, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -41.32,
+            "date": 1617876000000,
+            "description": "Albert Heijn 1282",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Albert Heijn 1282 AMSTERDAM, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -98.5,
+            "date": 1617789600000,
+            "description": "CROSSFIT AKA",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Maandlidmaatschap AKA 1"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -111.5,
+            "date": 1617789600000,
+            "description": "CROSSFIT AKA",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "MaandlidmaatschapAKA2"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -14.99,
+            "date": 1617789600000,
+            "description": "SPOTIFY",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "SpotifyNL P142F7A07B"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -161.55,
+            "date": 1617789600000,
+            "description": "TransferWise by Adyen",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "1619177973754177 0020004980186926 TW Payment 234332150 4068"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -39.0,
+            "date": 1617789600000,
+            "description": "GREENCHOICE",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Fact VS087375412 april Energie 1056LB 99,00 C BTW:  21? 6,76"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -12.06,
+            "date": 1617789600000,
+            "description": "Infomedics B.V. collecting for Infomedics",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "99955005199 0030006568411598 Invoice 42144514984071 Infomedics"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -22.66,
+            "date": 1617703200000,
+            "description": "Albert Heijn 1282",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Albert Heijn 1282 AMSTERDAM, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -263.8,
+            "date": 1617703200000,
+            "description": "DITZO ZORGVERZEKERING",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Kenmerk  1464259762200026 / Omschrijving  Premie / april 2021"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -61.81,
+            "date": 1617703200000,
+            "description": "T-MOBILE NETHERLANDS B.V.",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Mob 0655986590 Klantnr 1.18287459 Factuur 901407682007 Factuurdatum 25.03.2021 Factuur zien? t-mobile.nl/my/facturen"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -42.8,
+            "date": 1617616800000,
+            "description": "Albert Heijn 1282",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Albert Heijn 1282 AMSTERDAM, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -13.9,
+            "date": 1617616800000,
+            "description": "IZ *Coffee & juices (J",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "IZ *Coffee & juices (J Amsterdam, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -25.19,
+            "date": 1617616800000,
+            "description": "Etos Tollenaar",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Etos Tollenaar AMSTERDAM, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -40.4,
+            "date": 1617530400000,
+            "description": "UBER   * EATS PENDING",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "UBER   * EATS PENDING Amsterdam, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -31.19,
+            "date": 1617530400000,
+            "description": "Albert Heijn 1282",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Albert Heijn 1282 AMSTERDAM, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -23.69,
+            "date": 1617444000000,
+            "description": "UBER   * EATS PENDING",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "UBER   * EATS PENDING Amsterdam, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -22.64,
+            "date": 1617444000000,
+            "description": "UBER   * EATS PENDING",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "UBER   * EATS PENDING Amsterdam, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -359.28,
+            "date": 1617444000000,
+            "description": "Gemeente Amsterdam Belastingen",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "58348770 0020004966795056 Betaling openstaand saldo"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -13.2,
+            "date": 1617444000000,
+            "description": "Monks Coffee",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Monks Coffee AMSTERDAM, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -3.5,
+            "date": 1617444000000,
+            "description": "IZ *CrossFit AKA",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "IZ *CrossFit AKA AMSTERDAM, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -19.5,
+            "date": 1617357600000,
+            "description": "BUC    *Swapfiets BV",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "BUC    *Swapfiets BV AMSTERDAM, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -13.5,
+            "date": 1617357600000,
+            "description": "C&M*LOCAL HERO",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "C&M*LOCAL HERO AMSTERDAM, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -6.5,
+            "date": 1617357600000,
+            "description": "AH to go 5825 Rotter",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "AH to go 5825 Rotter ROTTERDAM, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -35.6,
+            "date": 1617271200000,
+            "description": "bol.com b.v. collecting for bol.com",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "1215242580 0050005361045286 bol.com ref 1215242580 bol.com"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -68.89,
+            "date": 1617271200000,
+            "description": "Zalando Payments GmbH",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "10206099666835 1150006522805782 10206099666835"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -47.8,
+            "date": 1617271200000,
+            "description": "TheHutGroup via Adyen",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "1519173097307266 0030006522789086 283241926-203529453"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -46.65,
+            "date": 1617271200000,
+            "description": "TransferWise by Adyen",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "4716173093468513 0020004960979802 TW Payment 232551861 1187"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -40.66,
+            "date": 1617271200000,
+            "description": "UBER   * EATS PENDING",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "UBER   * EATS PENDING Amsterdam, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": 0.57,
+            "date": 1617271200000,
+            "description": "bunq",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Interest payment"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -3.32,
+            "date": 1617271200000,
+            "description": "DITZO",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "7585026876 Premie periode 01-04-2021 - 30-04-2021 Ditzo Doorlopende Reisverzekering"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -38.66,
+            "date": 1617271200000,
+            "description": "Jumbo Westerstr ASD",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Jumbo Westerstr ASD AMSTERDAM, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -6.46,
+            "date": 1617271200000,
+            "description": "PAYPAL *PATREON  MEMBE",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "PAYPAL *PATREON  MEMBE 4029357733, US\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -7.26,
+            "date": 1617271200000,
+            "description": "PAYPAL *PATREONIREL  M",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "PAYPAL *PATREONIREL  M 35314369001, IE\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -61.81,
+            "date": 1617271200000,
+            "description": "T-MOBILE NETHERLANDS B.V.",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Mob 0655988477 Klantnr 1.18287458 Factuur 901407508455 Factuurdatum 24.03.2021 Factuur zien? t-mobile.nl/my/facturen"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -11.75,
+            "date": 1617271200000,
+            "description": "Selma's",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Selma's AMSTERDAM, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -15.34,
+            "date": 1617271200000,
+            "description": "Albert Heijn 1282",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Albert Heijn 1282 AMSTERDAM, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -300.16,
+            "date": 1617184800000,
+            "description": "NS GROEP IZ NS REIZIGERS",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Factuur: 420002895793"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -14.0,
+            "date": 1617184800000,
+            "description": "HET PAROOL B V",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "4400004109286151 ABONNR 29895437 HET PAROOL VANAF 28/03/2021 4 KRANTEN INCL 9 PCT BTW 1 16 080NL93BUNQ2206462435"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -25.9,
+            "date": 1617184800000,
+            "description": "Salinto via Stichting Mollie Payments",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "M01748281M9PDTBF 1150006504765698 100008090 salinto.nl"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -11.7,
+            "date": 1617184800000,
+            "description": "Selma's",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Selma's AMSTERDAM, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -1.3,
+            "date": 1617184800000,
+            "description": "Selma's",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Selma's AMSTERDAM, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -22.89,
+            "date": 1617184800000,
+            "description": "DIERENSPRCIAALZAAK M",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "DIERENSPRCIAALZAAK M AMSTERDAM, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -27.76,
+            "date": 1617098400000,
+            "description": "Albert Heijn 1282",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Albert Heijn 1282 AMSTERDAM, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -36.48,
+            "date": 1617098400000,
+            "description": "Albert Heijn 1282",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Albert Heijn 1282 AMSTERDAM, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -1.95,
+            "date": 1617098400000,
+            "description": "La La Ijs",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "La La Ijs AMSTERDAM, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -6.75,
+            "date": 1617098400000,
+            "description": "CCV*EMPANADAS ARGENTIN",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "CCV*EMPANADAS ARGENTIN AMSTERDAM, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -18.4,
+            "date": 1617098400000,
+            "description": "C&M*LOCAL HERO",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "C&M*LOCAL HERO AMSTERDAM, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -22.61,
+            "date": 1617012000000,
+            "description": "Albert Heijn 1282",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Albert Heijn 1282 AMSTERDAM, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -1.8,
+            "date": 1617012000000,
+            "description": "AH to go 5868 A'dam",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "AH to go 5868 A'dam AMSTERDAM, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -8.07,
+            "date": 1617012000000,
+            "description": "TAF BV",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "58403667-Premie levensverzekering-april 2021-"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -3.5,
+            "date": 1617012000000,
+            "description": "SumUp  *Ripsnorter",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "SumUp  *Ripsnorter Rotterdam, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -2.6,
+            "date": 1617012000000,
+            "description": "AH to go 5825 Rdam",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "AH to go 5825 Rdam ROTTERDAM, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -46.39,
+            "date": 1616925600000,
+            "description": "bol.com b.v. collecting for bol.com",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "1213810668 0050005351149451 bol.com ref 1213810668 bol.com"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -13.7,
+            "date": 1616925600000,
+            "description": "Monks Coffee",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Monks Coffee AMSTERDAM, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -31.6,
+            "date": 1616925600000,
+            "description": "CCV*SEOUL FOOD",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "CCV*SEOUL FOOD AMSTERDAM, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -6.75,
+            "date": 1616925600000,
+            "description": "CCV*EMPANADAS ARGENTIN",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "CCV*EMPANADAS ARGENTIN AMSTERDAM, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -6.98,
+            "date": 1616842800000,
+            "description": "Albert Heijn 1282",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Albert Heijn 1282 AMSTERDAM, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -14.6,
+            "date": 1616842800000,
+            "description": "Albert Heijn 1282",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Albert Heijn 1282 AMSTERDAM, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -16.57,
+            "date": 1616842800000,
+            "description": "Etos Tollenaar",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Etos Tollenaar AMSTERDAM, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -47.99,
+            "date": 1616842800000,
+            "description": "Amazon Payments Europe SCA collecting for AMZN MKTP NL",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "20Y0KFK 0140000345918450 Amzn Mktp NL AMZN MKTP NL"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -7.5,
+            "date": 1616842800000,
+            "description": "Selma's",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Selma's AMSTERDAM, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -18.13,
+            "date": 1616756400000,
+            "description": "UBER   * EATS PENDING",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "UBER   * EATS PENDING Amsterdam, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -1.8,
+            "date": 1616756400000,
+            "description": "AH to go Apeldrn 5830",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "AH to go Apeldrn 5830 APELDOORN, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -3.85,
+            "date": 1616756400000,
+            "description": "AH To Go Apeldoorn",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "AH To Go Apeldoorn APELDOORN, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -36.3,
+            "date": 1616756400000,
+            "description": "Albert Heijn 1105",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Albert Heijn 1105 AMSTERDAM, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -5.4,
+            "date": 1616756400000,
+            "description": "AH To Go Apeldoorn",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "AH To Go Apeldoorn APELDOORN, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": 4.99,
+            "date": 1616670000000,
+            "description": "V. Hana Scardazzi",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "PAYPAL *CRUNCHYROLL 35314369001, NL"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -4.99,
+            "date": 1616670000000,
+            "description": "PAYPAL *CRUNCHYROLL",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "PAYPAL *CRUNCHYROLL 35314369001, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -19.38,
+            "date": 1616670000000,
+            "description": "UBER   * EATS PENDING",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "UBER   * EATS PENDING Amsterdam, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -14.77,
+            "date": 1616670000000,
+            "description": "De Jong Behangwereld B.V. via Mollie",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "M00101724M9NHFYY 0020004931062206 Order 174617 Samara Zukoski"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": 100.0,
+            "date": 1616670000000,
+            "description": "A KURSUN",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "April parking garage fee"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -27.69,
+            "date": 1616670000000,
+            "description": "Infomedics B.V. collecting for Infomedics",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "59928913599 0030006446219680 Invoice 52143674611071 Infomedics"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -16.61,
+            "date": 1616670000000,
+            "description": "ALBERT HEIJN 1105",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "ALBERT HEIJN 1105 AMSTERDAM, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -873.97,
+            "date": 1616670000000,
+            "description": "Vinicius",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": ""
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -200.0,
+            "date": 1616670000000,
+            "description": "Vinicius",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": ""
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -200.0,
+            "date": 1616670000000,
+            "description": "Samara",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": ""
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -108.31,
+            "date": 1616670000000,
+            "description": "TransferWise by Adyen",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "1719166651218679 0020004929025198 TW Payment 229650730 3050"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -277.69,
+            "date": 1616670000000,
+            "description": "VvE De Admiraleteit",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Geuzenkade 99 C"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": 4800.0,
+            "date": 1616670000000,
+            "description": "S ZUKOSKI PEDRO SCARD CJ",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": ""
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -43.95,
+            "date": 1616583600000,
+            "description": "Albert Heijn 1282",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Albert Heijn 1282 AMSTERDAM, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -7.99,
+            "date": 1616583600000,
+            "description": "bunq",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "invoice 5280070"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -7.99,
+            "date": 1616583600000,
+            "description": "bunq",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "invoice 5280034"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -16.93,
+            "date": 1616497200000,
+            "description": "Albert Heijn 1105",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Albert Heijn 1105 AMSTERDAM, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": 89.9,
+            "date": 1616497200000,
+            "description": "Zalando Payments GmbH",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "10206098605087 ZALANDO"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": 360.0,
+            "date": 1616497200000,
+            "description": "S ZUKOSKI PEDRO SCARD CJ",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Refund NS KAAN"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -16.76,
+            "date": 1616497200000,
+            "description": "Kruidvat 3611",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Kruidvat 3611 AMSTERDAM, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -32.41,
+            "date": 1616410800000,
+            "description": "ALBERT HEIJN 8760",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "ALBERT HEIJN 8760 AMSTERDAM, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -38.99,
+            "date": 1616410800000,
+            "description": "bol.com b.v. collecting for bol.com",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "1211260278 0050005334227810 bol.com ref 1211260278 bol.com"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -81.5,
+            "date": 1616410800000,
+            "description": "ZIGGO SERVICES BV",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Je klantnummer 9778339 Je factuurnummer 512291738 Factuurdatum 12 Maart     2021. Factuur zien? Check: ziggo.nl/mijnziggo"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -5.05,
+            "date": 1616410800000,
+            "description": "KEXP",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "KEXP SEATTLE, US\n6.00 USD, 1 USD = 0.84167 EUR"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -27.17,
+            "date": 1616410800000,
+            "description": "Albert Heijn 1282",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Albert Heijn 1282 AMSTERDAM, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -2.21,
+            "date": 1616324400000,
+            "description": "UBER   *EATS",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "UBER   *EATS Amsterdam, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -22.19,
+            "date": 1616324400000,
+            "description": "UBER   *EATS",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "UBER   *EATS Amsterdam, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -5.68,
+            "date": 1616324400000,
+            "description": "Marqt Bilderdijkstr",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Marqt Bilderdijkstr AMSTERDAM, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -5.75,
+            "date": 1616324400000,
+            "description": "IZ *L61KINKERSTRAAT B.",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "IZ *L61KINKERSTRAAT B. AMSTERDAM, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -4.69,
+            "date": 1616324400000,
+            "description": "Kruidvat 7694",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Kruidvat 7694 AMSTERDAM, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -8.11,
+            "date": 1616324400000,
+            "description": "Albert Heijn 1282",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Albert Heijn 1282 AMSTERDAM, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -35.13,
+            "date": 1616238000000,
+            "description": "UBER   * EATS PENDING",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "UBER   * EATS PENDING Amsterdam, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -34.99,
+            "date": 1616238000000,
+            "description": "Udemy by Adyen",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "4616162344750655 0030006394930908 179910424"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -30.42,
+            "date": 1616151600000,
+            "description": "Albert Heijn 1282",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Albert Heijn 1282 AMSTERDAM, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -7.25,
+            "date": 1616151600000,
+            "description": "AH to go 5825 Rdam",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "AH to go 5825 Rdam ROTTERDAM, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -3.5,
+            "date": 1616151600000,
+            "description": "SumUp  *Ripsnorter",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "SumUp  *Ripsnorter Rotterdam, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -9.99,
+            "date": 1616065200000,
+            "description": "PlaystationNetwork",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "PlaystationNetwork London, GB\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -20.84,
+            "date": 1616065200000,
+            "description": "Albert Heijn 1282",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Albert Heijn 1282 AMSTERDAM, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -10.99,
+            "date": 1615978800000,
+            "description": "NETFLIX INTERNATIONAL B.V.",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Netflix Monthly Subscription"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -18.07,
+            "date": 1615978800000,
+            "description": "Albert Heijn 1282",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Albert Heijn 1282 AMSTERDAM, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -3.49,
+            "date": 1615892400000,
+            "description": "Albert Heijn 1282",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Albert Heijn 1282 AMSTERDAM, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -9.97,
+            "date": 1615892400000,
+            "description": "Kruidvat 7694",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Kruidvat 7694 AMSTERDAM, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -30.66,
+            "date": 1615892400000,
+            "description": "Albert Heijn 1282",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Albert Heijn 1282 AMSTERDAM, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -7.75,
+            "date": 1615806000000,
+            "description": "Koninklijke PostNL via Ingenico",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "5824263666 0020004893177738 8OE7SBA"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -16.9,
+            "date": 1615806000000,
+            "description": "Albert Heijn 1282",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Albert Heijn 1282 AMSTERDAM, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -82.79,
+            "date": 1615719600000,
+            "description": "VANOUDS DE ZWAAN",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "VANOUDS DE ZWAAN +31411700202, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -15.15,
+            "date": 1615719600000,
+            "description": "Albert Heijn 1282",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Albert Heijn 1282 AMSTERDAM, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -22.8,
+            "date": 1615719600000,
+            "description": "Albert Heijn 1282",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Albert Heijn 1282 AMSTERDAM, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -22.45,
+            "date": 1615633200000,
+            "description": "ALBERT HEIJN 1482",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "ALBERT HEIJN 1482 AMSTERDAM, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -36.98,
+            "date": 1615633200000,
+            "description": "bol.com b.v. collecting for bol.com",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "1206806179 0050005314723310 bol.com ref 1206806179 bol.com"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -38.1,
+            "date": 1615633200000,
+            "description": "ChocoPaty",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "4E8JW7O 0140000042452591 SP BR MARKET"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -146.09,
+            "date": 1615633200000,
+            "description": "Zalando Payments GmbH",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "10206098605087 1150001495649632 www zalando nl"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -25.95,
+            "date": 1615633200000,
+            "description": "Selma's",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Selma's AMSTERDAM, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -23.04,
+            "date": 1615546800000,
+            "description": "Albert Heijn 1282",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Albert Heijn 1282 AMSTERDAM, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -15.82,
+            "date": 1615460400000,
+            "description": "UBER   * EATS PENDING",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "UBER   * EATS PENDING Amsterdam, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -7.8,
+            "date": 1615460400000,
+            "description": "Albert Heijn 1282",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Albert Heijn 1282 AMSTERDAM, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -42.73,
+            "date": 1615460400000,
+            "description": "Albert Heijn 1282",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Albert Heijn 1282 AMSTERDAM, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -5.75,
+            "date": 1615374000000,
+            "description": "IZ *L61KINKERSTRAAT B.",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "IZ *L61KINKERSTRAAT B. AMSTERDAM, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -33.42,
+            "date": 1615287600000,
+            "description": "Albert Heijn 1282",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Albert Heijn 1282 AMSTERDAM, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -12.88,
+            "date": 1615201200000,
+            "description": "Albert Heijn 1282",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Albert Heijn 1282 AMSTERDAM, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -16.5,
+            "date": 1615201200000,
+            "description": "SWAPFIETS BY BUCKAROO",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "1-2 NL - B2C - Org - Norm (16,50) 28 days: 16.50,1-3 NL - B2C - Org - Norm (16,50) 31 days: 16.50"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -12.5,
+            "date": 1615201200000,
+            "description": "SumUp  *Ripsnorter",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "SumUp  *Ripsnorter Rotterdam, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -4.5,
+            "date": 1615201200000,
+            "description": "Spar Van Holland",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Spar Van Holland ROTTERDAM, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -39.0,
+            "date": 1615201200000,
+            "description": "GREENCHOICE",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Fact VS086619433 maart Energie 1056LB 99,00 C BTW:  21? 6,77"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -43.29,
+            "date": 1615114800000,
+            "description": "Albert Heijn 1282",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Albert Heijn 1282 AMSTERDAM, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -46.22,
+            "date": 1615028400000,
+            "description": "UBER   * EATS PENDING",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "UBER   * EATS PENDING Amsterdam, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -11.08,
+            "date": 1615028400000,
+            "description": "Albert Heijn 1282",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Albert Heijn 1282 AMSTERDAM, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -24.92,
+            "date": 1615028400000,
+            "description": "Etos Tollenaar",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Etos Tollenaar AMSTERDAM, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -80.94,
+            "date": 1615028400000,
+            "description": "Kruidvat 7694",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Kruidvat 7694 AMSTERDAM, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -16.12,
+            "date": 1615028400000,
+            "description": "DIRK VDBROEK FIL3173",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "DIRK VDBROEK FIL3173 Amsterdam, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -25.49,
+            "date": 1615028400000,
+            "description": "ALBERT HEIJN 1482",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "ALBERT HEIJN 1482 AMSTERDAM, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -7.5,
+            "date": 1615028400000,
+            "description": "SumUp  *Hungry Dinosau",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "SumUp  *Hungry Dinosau Amsterdam, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -9.5,
+            "date": 1615028400000,
+            "description": "Grieks Traiterie Ela",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Grieks Traiterie Ela AMSTERDAM, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -35.13,
+            "date": 1614942000000,
+            "description": "UBER   * EATS PENDING",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "UBER   * EATS PENDING Amsterdam, NL\n"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        }
+    ]
+}
