@@ -14,7 +14,8 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
 @JsonObject
-public class CreditCardTransactionsResponse implements TransactionKeyPaginatorResponse {
+public class CreditCardTransactionsResponse
+        implements TransactionKeyPaginatorResponse<TransactionKey> {
 
     private MetadataEntity metadata;
     private TransactionAccountEntity account;
