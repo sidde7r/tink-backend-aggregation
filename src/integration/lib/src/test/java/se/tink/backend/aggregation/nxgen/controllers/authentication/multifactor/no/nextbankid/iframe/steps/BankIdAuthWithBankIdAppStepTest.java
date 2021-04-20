@@ -54,7 +54,7 @@ public class BankIdAuthWithBankIdAppStepTest {
         mockUserAnswersSupplementalInfo();
 
         // when
-        authWithBankIdAppStep.authenticateWithBankIdApp();
+        authWithBankIdAppStep.authenticateWithBankIdApp(true);
 
         // then
         mocksToVerifyInOrder

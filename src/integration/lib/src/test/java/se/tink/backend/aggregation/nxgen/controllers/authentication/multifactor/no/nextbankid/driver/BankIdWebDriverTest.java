@@ -39,7 +39,6 @@ public class BankIdWebDriverTest {
     private WebDriver.Options driverOptions;
     private BankIdWebDriverCommonUtils driverCommonUtils;
     private BankIdElementsSearcher elementsSearcher;
-    private Sleeper sleeper;
 
     private InOrder mocksToVerifyInOrder;
 
@@ -56,8 +55,10 @@ public class BankIdWebDriverTest {
 
         driverCommonUtils = mock(BankIdWebDriverCommonUtils.class);
         elementsSearcher = mock(BankIdElementsSearcher.class);
+        Sleeper sleeper = mock(Sleeper.class);
 
-        mocksToVerifyInOrder = inOrder(driver, driverOptions, driverCommonUtils, elementsSearcher);
+        mocksToVerifyInOrder =
+                inOrder(driver, driverOptions, driverCommonUtils, elementsSearcher, sleeper);
 
         bankIdDriver =
                 new BankIdWebDriverImpl(driver, sleeper, driverCommonUtils, elementsSearcher);

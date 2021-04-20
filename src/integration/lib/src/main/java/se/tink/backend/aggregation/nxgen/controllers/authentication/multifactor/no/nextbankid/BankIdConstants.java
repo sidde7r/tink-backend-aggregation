@@ -1,19 +1,24 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid;
 
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants.HtmlSelectors.BY_BANK_ID_APP_SPINNER;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants.HtmlSelectors.BY_BUTTON_LINK;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants.HtmlSelectors.BY_CHOOSE_2FA_METHOD_OPTIONS_LIST;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants.HtmlSelectors.BY_CHOOSE_2FA_METHOD_OPTION_BUTTON_LABEL;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants.HtmlSelectors.BY_ERROR_SCREEN_WITH_HEADING;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants.HtmlSelectors.BY_ERROR_SCREEN_WITH_HEADING_TEXT;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants.HtmlSelectors.BY_ERROR_SCREEN_WITH_NO_HEADING;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants.HtmlSelectors.BY_IFRAME;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants.HtmlSelectors.BY_MOBILE_BANK_ID_SPINNER;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants.HtmlSelectors.BY_ONE_TIME_CODE_INPUT;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants.HtmlSelectors.BY_PASSWORD_ERROR_BUBBLE;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants.HtmlSelectors.BY_PASSWORD_INPUT;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants.HtmlSelectors.BY_REFERENCE_WORDS;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants.HtmlSelectors.BY_SSN_INPUT;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants.HtmlSelectors.BY_SUBMIT_BUTTON;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants.HtmlSelectors.BY_TITLE_OF_SCREEN_WITH_FORM_TO_SEND;
-import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants.HtmlSelectors.BY_TITLE_OF_SCREEN_WITH_NO_FORM_TO_SEND;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.BankIdWebDriverConstants.EMPTY_BY;
 
+import java.util.function.Function;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.openqa.selenium.By;
@@ -40,25 +45,38 @@ public class BankIdConstants {
         public static final ByCssSelector BY_IFRAME = new ByCssSelector("iframe[src*='csfe']");
 
         static final ByCssSelector BY_SUBMIT_BUTTON = new ByCssSelector("form button[type=submit]");
-        static final ByCssSelector BY_SSN_INPUT = new ByCssSelector("input[type=tel]");
         static final ByCssSelector BY_TITLE_OF_SCREEN_WITH_FORM_TO_SEND =
                 new ByCssSelector("form label");
-        static final ByCssSelector BY_TITLE_OF_SCREEN_WITH_NO_FORM_TO_SEND =
-                new ByCssSelector(".title.label");
         static final ByCssSelector BY_ERROR_SCREEN_WITH_HEADING =
                 new ByCssSelector(".message > h2");
         static final ByCssSelector BY_ERROR_SCREEN_WITH_HEADING_TEXT =
                 new ByCssSelector(".message > p");
         static final ByCssSelector BY_ERROR_SCREEN_WITH_NO_HEADING = new ByCssSelector(".message");
-        static final ByCssSelector BY_BUTTON_LINK = new ByCssSelector("button.link");
+        static final ByCssSelector BY_BUTTON_LINK = new ByCssSelector("form button.link");
         static final ByCssSelector BY_REFERENCE_WORDS =
                 new ByCssSelector("span[data-bind='text: reference']");
-        static final ByCssSelector BY_ONE_TIME_CODE_INPUT =
-                new By.ByCssSelector("input[type=password]");
-        static final ByCssSelector BY_PASSWORD_INPUT =
-                new By.ByCssSelector("input[type=password][data-type=password]");
         static final ByCssSelector BY_PASSWORD_ERROR_BUBBLE =
                 new ByCssSelector(".infobubble_wrapper .text");
+        static final ByCssSelector BY_CHOOSE_2FA_METHOD_OPTIONS_LIST =
+                new ByCssSelector(".otp-list");
+        static final ByCssSelector BY_CHOOSE_2FA_METHOD_OPTION_BUTTON_LABEL =
+                new ByCssSelector(".otp-list li button span.label");
+
+        /*
+         * These inputs must be mutually exclusive
+         */
+        static final ByCssSelector BY_SSN_INPUT = new ByCssSelector("input[type=tel]");
+        static final ByCssSelector BY_ONE_TIME_CODE_INPUT =
+                new ByCssSelector("input[type=password]:not([data-type]):not([disabled])");
+        static final ByCssSelector BY_PASSWORD_INPUT =
+                new ByCssSelector("input[type=password][data-type=password]:not([disabled])");
+        /*
+         * These spinners must be mutually exclusive
+         */
+        static final ByCssSelector BY_MOBILE_BANK_ID_SPINNER =
+                new ByCssSelector(".icon[src] + .spinner");
+        static final ByCssSelector BY_BANK_ID_APP_SPINNER =
+                new ByCssSelector(".icon:not([src]) + .spinner");
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -73,12 +91,9 @@ public class BankIdConstants {
         enter social number screen
         */
         public static final BankIdElementLocator LOC_ENTER_SSN_SCREEN =
-                inIframeLocator()
-                        .element(BY_TITLE_OF_SCREEN_WITH_FORM_TO_SEND)
-                        .mustContainOneOfTexts("Fødselsnummer", "User ID")
-                        .build();
+                inIframeLocator().element(BY_SSN_INPUT).build();
         public static final BankIdElementLocator LOC_SSN_INPUT =
-                inIframeLocator().element(HtmlSelectors.BY_SSN_INPUT).mustBeDisplayed().build();
+                inIframeLocator().element(BY_SSN_INPUT).mustBeDisplayed().build();
 
         /*
         mobile BankID screen
@@ -88,6 +103,8 @@ public class BankIdConstants {
                         .element(BY_TITLE_OF_SCREEN_WITH_FORM_TO_SEND)
                         .mustContainOneOfTexts("BankID på mobil", "BankID on mobile")
                         .build();
+        public static final BankIdElementLocator LOC_MOBILE_BANK_ID_REFERENCE_WORDS_SCREEN =
+                inIframeLocator().element(BY_MOBILE_BANK_ID_SPINNER).build();
         public static final BankIdElementLocator LOC_REFERENCE_WORDS =
                 inIframeLocator().element(BY_REFERENCE_WORDS).mustBeDisplayed().build();
 
@@ -95,10 +112,7 @@ public class BankIdConstants {
         one-time code screen
         */
         public static final BankIdElementLocator LOC_ONE_TIME_CODE_METHOD_SCREEN =
-                inIframeLocator()
-                        .element(BY_TITLE_OF_SCREEN_WITH_FORM_TO_SEND)
-                        .mustContainOneOfTexts("Engangskode", "One Time Code")
-                        .build();
+                inIframeLocator().element(BY_ONE_TIME_CODE_INPUT).build();
         public static final BankIdElementLocator LOC_ONE_TIME_CODE_INPUT =
                 inIframeLocator().element(BY_ONE_TIME_CODE_INPUT).mustBeDisplayed().build();
 
@@ -106,10 +120,22 @@ public class BankIdConstants {
         BankID app screen
         */
         public static final BankIdElementLocator LOC_BANK_ID_APP_METHOD_SCREEN =
-                inIframeLocator()
-                        .element(BY_TITLE_OF_SCREEN_WITH_NO_FORM_TO_SEND)
-                        .mustContainOneOfTexts("Engangskode på mobil app", "BankID-app")
-                        .build();
+                inIframeLocator().element(BY_BANK_ID_APP_SPINNER).build();
+
+        /*
+        choose 2FA screen
+         */
+        public static final BankIdElementLocator LOC_CHOOSE_2FA_METHOD_SCREEN =
+                inIframeLocator().element(BY_CHOOSE_2FA_METHOD_OPTIONS_LIST).build();
+        public static final BankIdElementLocator LOC_CHOOSE_2FA_METHOD_OPTION_BUTTON_LABEL =
+                inIframeLocator().element(BY_CHOOSE_2FA_METHOD_OPTION_BUTTON_LABEL).build();
+        public static final Function<String, BankIdElementLocator>
+                LOC_CHOOSE_2FA_METHOD_OPTION_BUTTON_WITH_LABEL =
+                        label ->
+                                inIframeLocator()
+                                        .element(BY_CHOOSE_2FA_METHOD_OPTION_BUTTON_LABEL)
+                                        .mustHaveExactText(label)
+                                        .build();
 
         /*
         error screens
@@ -136,10 +162,7 @@ public class BankIdConstants {
         enter password screen
         */
         public static final BankIdElementLocator LOC_PRIVATE_PASSWORD_SCREEN =
-                inIframeLocator()
-                        .element(BY_TITLE_OF_SCREEN_WITH_FORM_TO_SEND)
-                        .mustContainOneOfTexts("Personlig passord", "Personal password")
-                        .build();
+                inIframeLocator().element(BY_PASSWORD_INPUT).build();
         public static final BankIdElementLocator LOC_PRIVATE_PASSWORD_INPUT =
                 inIframeLocator().element(BY_PASSWORD_INPUT).mustBeDisplayed().build();
         public static final BankIdElementLocator LOC_PRIVATE_PASSWORD_ERROR_BUBBLE =
