@@ -9,6 +9,9 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 import com.google.common.collect.ImmutableList;
 import java.nio.file.Paths;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Month;
 import java.util.Collection;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,12 +20,16 @@ import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.DnbStorage;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.fetcher.data.entity.TransactionEntity;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.fetcher.data.rpc.TransactionResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.fetcher.mapper.DnbTransactionMapper;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
+import se.tink.libraries.credentials.service.UserAvailability;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class DnbTransactionFetcherTest {
+
+    private static final String FROM_DATE = "1970-01-01";
 
     private static final String TEST_DATA_PATH =
             "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/no/openbanking/dnb/resources";
@@ -34,6 +41,8 @@ public class DnbTransactionFetcherTest {
     private DnbStorage mockStorage;
     private DnbApiClient mockApiClient;
     private DnbTransactionMapper mockTransactionMapper;
+    private UserAvailability mockUserAvailability;
+    private LocalDateTimeSource mockLocalDateTimeSource;
 
     private DnbTransactionFetcher transactionFetcher;
 
@@ -45,9 +54,16 @@ public class DnbTransactionFetcherTest {
         mockStorage = mock(DnbStorage.class);
         mockApiClient = mock(DnbApiClient.class);
         mockTransactionMapper = mock(DnbTransactionMapper.class);
+        mockUserAvailability = mock(UserAvailability.class);
+        mockLocalDateTimeSource = mock(LocalDateTimeSource.class);
 
         transactionFetcher =
-                new DnbTransactionFetcher(mockStorage, mockApiClient, mockTransactionMapper);
+                new DnbTransactionFetcher(
+                        mockStorage,
+                        mockApiClient,
+                        mockTransactionMapper,
+                        mockUserAvailability,
+                        mockLocalDateTimeSource);
 
         testAccount = mock(TransactionalAccount.class);
 
@@ -63,8 +79,9 @@ public class DnbTransactionFetcherTest {
     public void shouldReturnPageWithSomeTransactionsAndNextKey() {
         // given
         given(testAccount.getApiIdentifier()).willReturn(TEST_ACCOUNT_ID);
-        given(mockApiClient.fetchTransactions(TEST_CONSENT_ID, TEST_ACCOUNT_ID))
+        given(mockApiClient.fetchTransactions(FROM_DATE, TEST_CONSENT_ID, TEST_ACCOUNT_ID))
                 .willReturn(getTransactionsResponse());
+        given(mockUserAvailability.isUserPresent()).willReturn(true);
 
         // when
         TransactionKeyPaginatorResponse<String> pageOfTransactions =
@@ -76,7 +93,7 @@ public class DnbTransactionFetcherTest {
 
         verify(testAccount).getApiIdentifier();
         verify(mockStorage).getConsentId();
-        verify(mockApiClient).fetchTransactions(TEST_CONSENT_ID, TEST_ACCOUNT_ID);
+        verify(mockApiClient).fetchTransactions(FROM_DATE, TEST_CONSENT_ID, TEST_ACCOUNT_ID);
         verify(mockTransactionMapper).toTinkTransactions(any(TransactionEntity.class));
         verifyNoMoreInteractionsOnAllMocks();
     }
@@ -84,6 +101,7 @@ public class DnbTransactionFetcherTest {
     @Test
     public void shouldFetchSubsequentPageIfContinuationKeyPresent() {
         // given
+        given(mockUserAvailability.isUserPresent()).willReturn(true);
         given(mockApiClient.fetchNextTransactions(TEST_CONSENT_ID, TEST_NEXT_URL_PART))
                 .willReturn(getTransactionsLastPageResponse());
 
@@ -97,6 +115,32 @@ public class DnbTransactionFetcherTest {
 
         verify(mockStorage).getConsentId();
         verify(mockApiClient).fetchNextTransactions(TEST_CONSENT_ID, TEST_NEXT_URL_PART);
+        verify(mockTransactionMapper).toTinkTransactions(any(TransactionEntity.class));
+        verifyNoMoreInteractionsOnAllMocks();
+    }
+
+    @Test
+    public void shouldFetchTransactionsFromLast89DaysWhenUserIsNotAvailable() {
+        // given
+        LocalDateTime startDate = LocalDateTime.of(2021, Month.APRIL, 19, 12, 0);
+        LocalDate fromDate = startDate.minusDays(89).toLocalDate();
+
+        given(mockUserAvailability.isUserPresent()).willReturn(false);
+        given(mockLocalDateTimeSource.now()).willReturn(startDate);
+        given(testAccount.getApiIdentifier()).willReturn(TEST_ACCOUNT_ID);
+        given(
+                        mockApiClient.fetchTransactions(
+                                fromDate.toString(), TEST_CONSENT_ID, TEST_ACCOUNT_ID))
+                .willReturn(getTransactionsResponse());
+
+        // when
+        transactionFetcher.getTransactionsFor(testAccount, null);
+
+        // then
+        verify(testAccount).getApiIdentifier();
+        verify(mockStorage).getConsentId();
+        verify(mockApiClient)
+                .fetchTransactions(fromDate.toString(), TEST_CONSENT_ID, TEST_ACCOUNT_ID);
         verify(mockTransactionMapper).toTinkTransactions(any(TransactionEntity.class));
         verifyNoMoreInteractionsOnAllMocks();
     }

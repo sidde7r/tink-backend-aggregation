@@ -12,6 +12,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
+import se.tink.libraries.credentials.service.UserAvailability;
 
 @AllArgsConstructor
 public class DnbCardTransactionFetcher implements TransactionDatePaginator<CreditCardAccount> {
@@ -19,7 +20,7 @@ public class DnbCardTransactionFetcher implements TransactionDatePaginator<Credi
     private final DnbStorage storage;
     private final DnbApiClient apiClient;
     private final DnbTransactionMapper transactionMapper;
-    private final boolean isManualRefresh;
+    private final UserAvailability userAvailability;
 
     @Override
     public PaginatorResponse getTransactionsFor(
@@ -32,6 +33,6 @@ public class DnbCardTransactionFetcher implements TransactionDatePaginator<Credi
 
         // Allow to fetch more only in case of manual refresh (user present), to not exhaust 4-a-day
         // limit with just card transactions
-        return PaginatorResponseImpl.create(tinkTransactions, isManualRefresh);
+        return PaginatorResponseImpl.create(tinkTransactions, userAvailability.isUserPresent());
     }
 }

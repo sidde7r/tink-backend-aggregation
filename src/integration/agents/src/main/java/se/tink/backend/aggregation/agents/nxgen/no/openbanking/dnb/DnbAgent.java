@@ -25,6 +25,7 @@ import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.fetcher.trans
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
@@ -35,6 +36,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
+import se.tink.libraries.credentials.service.UserAvailability;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, CREDIT_CARDS})
 public final class DnbAgent extends NextGenerationAgent
@@ -51,28 +53,34 @@ public final class DnbAgent extends NextGenerationAgent
     public DnbAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
         storage = new DnbStorage(persistentStorage);
+        UserAvailability userAvailability =
+                componentProvider.getCredentialsRequest().getUserAvailability();
         apiClient =
                 new DnbApiClient(
                         client,
-                        setupHeaderValues(componentProvider),
+                        setupHeaderValues(userAvailability),
                         componentProvider.getRandomValueGenerator(),
                         componentProvider.getLocalDateTimeSource());
-        transactionalRefreshController = constructTransactionalRefreshController();
-        cardRefreshController = constructCardAccountRefreshController(componentProvider);
+        transactionalRefreshController = constructTransactionalRefreshController(componentProvider);
+        cardRefreshController = constructCardAccountRefreshController(userAvailability);
     }
 
-    private DnbHeaderValues setupHeaderValues(AgentComponentProvider componentProvider) {
+    private DnbHeaderValues setupHeaderValues(UserAvailability userAvailability) {
         String psuId = credentials.getField(DnbConstants.CredentialsKeys.PSU_ID);
         String redirectUrl =
                 getAgentConfigurationController()
                         .getAgentConfiguration(DnbConfiguration.class)
                         .getRedirectUrl();
         String userIpHeaderValue =
-                componentProvider.getCredentialsRequest().isManual() ? userIp : null;
+                userAvailability.isUserPresent() ? userAvailability.getOriginatingUserIp() : null;
         return new DnbHeaderValues(psuId, redirectUrl, userIpHeaderValue);
     }
 
-    private TransactionalAccountRefreshController constructTransactionalRefreshController() {
+    private TransactionalAccountRefreshController constructTransactionalRefreshController(
+            AgentComponentProvider componentProvider) {
+        UserAvailability userAvailability =
+                componentProvider.getCredentialsRequest().getUserAvailability();
+        LocalDateTimeSource localDateTimeSource = componentProvider.getLocalDateTimeSource();
         return new TransactionalAccountRefreshController(
                 metricRefreshController,
                 updateController,
@@ -81,17 +89,18 @@ public final class DnbAgent extends NextGenerationAgent
                         transactionPaginationHelper,
                         new TransactionKeyPaginationController<>(
                                 new DnbTransactionFetcher(
-                                        storage, apiClient, new DnbTransactionMapper()))));
+                                        storage,
+                                        apiClient,
+                                        new DnbTransactionMapper(),
+                                        userAvailability,
+                                        localDateTimeSource))));
     }
 
     private CreditCardRefreshController constructCardAccountRefreshController(
-            AgentComponentProvider componentProvider) {
+            UserAvailability userAvailability) {
         DnbCardTransactionFetcher cardTransactionFetcher =
                 new DnbCardTransactionFetcher(
-                        storage,
-                        apiClient,
-                        new DnbTransactionMapper(),
-                        componentProvider.getCredentialsRequest().isManual());
+                        storage, apiClient, new DnbTransactionMapper(), userAvailability);
 
         return new CreditCardRefreshController(
                 metricRefreshController,
