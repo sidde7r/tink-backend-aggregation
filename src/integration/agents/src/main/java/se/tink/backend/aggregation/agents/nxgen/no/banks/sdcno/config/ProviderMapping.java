@@ -56,6 +56,7 @@ public enum ProviderMapping {
     ORLAND("4290", AuthenticationType.PORTAL, "orland-sparebank"),
     ORSKOG("4060", AuthenticationType.PORTAL, "orskogsparebank"),
     RINDAL("4111", AuthenticationType.PORTAL, "rindalsbanken"),
+    ROMSDALSBANKEN("4075", AuthenticationType.PORTAL, "romsdalsbanken"),
     ROROSBANKEN("4280", AuthenticationType.PORTAL, "rorosbanken"),
     SANDNES("3260", AuthenticationType.PORTAL, "sandnes-sparebank"),
     SELBU("4285", AuthenticationType.PORTAL, "selbusparebank"),
@@ -73,12 +74,14 @@ public enum ProviderMapping {
     TOTENS("2050", AuthenticationType.PORTAL, "totenbanken"),
     TROGSTAD("1140", AuthenticationType.PORTAL, "tsbank"),
     TYSNES("3525", AuthenticationType.PORTAL, "tysnes-sparebank"),
+    VALDRESSPAREBANK("2153", AuthenticationType.PORTAL, "valdressparebank"),
     VALLE("2890", AuthenticationType.PORTAL, "valle-sparebank"),
     VANG("2146", AuthenticationType.PORTAL, "valdressparebank"),
     VEKSELBANKEN("9581", AuthenticationType.PORTAL, "vekselbanken"),
     VESTRE_SLIDRE("2153", AuthenticationType.PORTAL, "valdressparebank"),
     VIK("3800", AuthenticationType.PORTAL, "sognbank"),
-    EIKA("1821", AuthenticationType.EIKA, "eika");
+    EIKA("1821", AuthenticationType.EIKA, "eika"),
+    NORD68("4730", AuthenticationType.PORTAL, "68nord");
 
     private String bankCode;
     private AuthenticationType authenticationType;
