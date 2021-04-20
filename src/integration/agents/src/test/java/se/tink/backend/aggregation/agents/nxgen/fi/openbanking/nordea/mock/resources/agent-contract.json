@@ -13,7 +13,7 @@
     "bankId" : "FI1410093000123458",
     "excluded" : false,
     "favored" : false,
-    "name" : "ACCOUNT_NAME",
+    "name" : "KÄYTTÖTILI",
     "ownership" : 1.0,
     "type" : "CHECKING",
     "userModifiedExcluded" : false,
