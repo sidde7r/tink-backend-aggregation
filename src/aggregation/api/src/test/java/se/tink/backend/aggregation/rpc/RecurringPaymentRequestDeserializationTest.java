@@ -160,7 +160,7 @@ public class RecurringPaymentRequestDeserializationTest {
                 + "  },\n"
                 + "  \"id\": \"5be22e27-3b35-4109-a9a4-b8b403de9665\",\n"
                 + "  \"credentialsId\": \"749d9eb38428445a951b306562c42745\",\n"
-                + "  \"userId\": \"f8e8d9b3-f90f-47a2-a366-a9ae932542b5\",\n"
+                + "  \"userId\": \"f8e8d9b3f90f47a2a366a9ae932542b5\",\n"
                 + "  \"creditorType\": \"IBAN\",\n"
                 + "  \"creditorId\": \"FR7630006000011234567890189\",\n"
                 + "  \"creditorName\": \"Merchant LLC\",\n"

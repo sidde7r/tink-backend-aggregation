@@ -16,6 +16,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.nxgen.core.account.GenericTypeMapper;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.enums.AccountIdentifierType;
+import se.tink.libraries.account.enums.ReferenceNumber;
+import se.tink.libraries.account.identifiers.ReferenceNumberIdentifier;
 import se.tink.libraries.mapper.PrioritizedValueExtractor;
 
 @RequiredArgsConstructor
@@ -39,10 +41,9 @@ public class DefaultIdentifierMapper implements IdentifierMapper {
                                     ExternalAccountIdentification4Code.IBAN)
                             .put(
                                     AccountIdentifierType.BBAN,
-                                    ExternalAccountIdentification4Code.BBAN,
-                                    ExternalAccountIdentification4Code.SAVINGS_ROLL_NUMBER)
+                                    ExternalAccountIdentification4Code.BBAN)
                             .put(
-                                    AccountIdentifierType.PAYMENT_CARD_NUMBER,
+                                    AccountIdentifierType.MASKED_PAN,
                                     ExternalAccountIdentification4Code.PAN)
                             .build();
 
@@ -50,15 +51,24 @@ public class DefaultIdentifierMapper implements IdentifierMapper {
 
     @Override
     public AccountIdentifier mapIdentifier(AccountIdentifierEntity id) {
-        AccountIdentifierType type =
-                typeMapper
-                        .translate(id.getIdentifierType())
-                        .orElseThrow(
-                                () ->
-                                        new IllegalArgumentException(
-                                                "Unable to map identifier type: " + id));
+        switch (id.getIdentifierType()) {
+            case NWB_CURRENCY_ACCOUNT:
+                return ReferenceNumberIdentifier.of(
+                        ReferenceNumber.UK_NWB_CURRENCY_ACCOUNT, id.getIdentification());
+            case SAVINGS_ROLL_NUMBER:
+                return ReferenceNumberIdentifier.of(
+                        ReferenceNumber.UK_SANTANDER_SAVINGS_ROLL, id.getIdentification());
+            default:
+                AccountIdentifierType type =
+                        typeMapper
+                                .translate(id.getIdentifierType())
+                                .orElseThrow(
+                                        () ->
+                                                new IllegalArgumentException(
+                                                        "Unable to map identifier type: " + id));
 
-        return AccountIdentifier.create(type, id.getIdentification());
+                return AccountIdentifier.create(type, id.getIdentification());
+        }
     }
 
     @Override
