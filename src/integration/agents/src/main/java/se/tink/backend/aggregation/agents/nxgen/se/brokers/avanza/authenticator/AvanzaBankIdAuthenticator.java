@@ -172,7 +172,15 @@ public class AvanzaBankIdAuthenticator implements BankIdAuthenticator<BankIdInit
                         .flatMap(getSessionAccountPairs())
                         .collect(Collectors.toList());
 
-        storeHolderNameInTemporaryStorage(sessionAccountPairs);
+        try {
+            storeHolderNameInTemporaryStorage(sessionAccountPairs);
+        } catch (HttpResponseException e) {
+            if (e.getResponse().getStatus() == HttpStatus.SC_NOT_FOUND) {
+                // If we're getting status code 404, that means that we can't fetch the holder name.
+                return;
+            }
+            throw e;
+        }
     }
 
     private Function<String, Stream<? extends SessionAccountPair>> getSessionAccountPairs() {
