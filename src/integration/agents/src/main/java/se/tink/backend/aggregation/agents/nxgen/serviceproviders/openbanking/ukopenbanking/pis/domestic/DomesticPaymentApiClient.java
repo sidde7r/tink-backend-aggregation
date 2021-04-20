@@ -1,12 +1,16 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domestic;
 
+import static se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError.NO_BANK_SERVICE;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentConstants.CONSENT_ID_KEY;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentConstants.ErrorMessage;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentConstants.PAYMENT_ID_KEY;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.exceptions.payment.CreditorValidationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.DebtorValidationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.InsufficientFundsException;
@@ -48,6 +52,11 @@ public class DomesticPaymentApiClient implements UkOpenBankingPaymentApiClient {
     private final UkOpenBankingRequestBuilder requestBuilder;
     private final DomesticPaymentConverter domesticPaymentConverter;
     private final String baseUrl;
+    private static final List<Integer> FAILED_STATUSES =
+            Arrays.asList(
+                    HttpStatus.SC_INTERNAL_SERVER_ERROR,
+                    HttpStatus.SC_SERVICE_UNAVAILABLE,
+                    HttpStatus.SC_BAD_GATEWAY);
 
     @Override
     public PaymentResponse createPaymentConsent(PaymentRequest paymentRequest)
@@ -150,12 +159,31 @@ public class DomesticPaymentApiClient implements UkOpenBankingPaymentApiClient {
     }
 
     private boolean areFundsAvailable(String consentId) {
-        DomesticPaymentConsentFundsConfirmationResponse response =
-                requestBuilder
-                        .createPisRequest(
-                                createUrl(PAYMENT_CONSENT_FUND_CONFIRMATION)
-                                        .parameter(CONSENT_ID_KEY, consentId))
-                        .get(DomesticPaymentConsentFundsConfirmationResponse.class);
+        DomesticPaymentConsentFundsConfirmationResponse response = null;
+        try {
+            response =
+                    requestBuilder
+                            .createPisRequest(
+                                    createUrl(PAYMENT_CONSENT_FUND_CONFIRMATION)
+                                            .parameter(CONSENT_ID_KEY, consentId))
+                            .get(DomesticPaymentConsentFundsConfirmationResponse.class);
+
+        } catch (HttpResponseException hre) {
+            HttpResponse hreResponse = hre.getResponse();
+            ErrorResponse errorResponse = hreResponse.getBody(ErrorResponse.class);
+            String errorMessage =
+                    errorResponse.getErrorMessages().isEmpty()
+                            ? ErrorMessage.NO_DESCRIPTION
+                            : errorResponse.getErrorMessages().get(0);
+            if (FAILED_STATUSES.contains(hreResponse.getStatus())) {
+                throw NO_BANK_SERVICE.exception(errorMessage);
+            }
+            log.warn(
+                    "[UKOB] Received HttpStatus:{}, response body:{}",
+                    hreResponse.getStatus(),
+                    hreResponse.getBody(String.class));
+            throw hre;
+        }
         boolean areFundsAvailable =
                 Optional.ofNullable(response.getData())
                         .map(

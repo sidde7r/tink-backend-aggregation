@@ -32,6 +32,7 @@ import se.tink.backend.aggregation.nxgen.storage.Storage;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.rpc.Debtor;
+import se.tink.libraries.signableoperation.enums.InternalStatus;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -119,7 +120,9 @@ public class UkOpenBankingPaymentExecutor implements PaymentExecutor, FetchableP
         // payment controller with TransferExecutionException usage. Ticket PAY2-188 will
         // address handling the REJECTED status, then we can remove the logic from here.
         if (PaymentStatus.REJECTED.equals(paymentResponse.getPayment().getStatus())) {
-            throw new PaymentRejectedException();
+            throw new PaymentRejectedException(
+                    PaymentRejectedException.MESSAGE,
+                    InternalStatus.PAYMENT_REJECTED_BY_BANK_NO_DESCRIPTION);
         }
 
         savePaymentId(paymentResponse);
