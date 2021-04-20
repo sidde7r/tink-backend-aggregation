@@ -13,5 +13,6 @@ public class UkOpenBankingPaymentConstants {
         public static final String EXCEED_DAILY_LIMIT_FAILURE =
                 "Forbidden: This payment exceeds the daily payment limit";
         public static final String INVALID_CLAIM_FAILURE = "Invalid Claims";
+        public static final String NO_DESCRIPTION = "No Description";
     }
 }
