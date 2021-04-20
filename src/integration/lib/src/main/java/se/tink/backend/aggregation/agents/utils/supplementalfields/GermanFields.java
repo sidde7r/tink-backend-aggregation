@@ -1,11 +1,15 @@
 package se.tink.backend.aggregation.agents.utils.supplementalfields;
 
 import com.google.common.base.Enums;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.agents.rpc.Field;
+import se.tink.backend.agents.rpc.SelectOption;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.i18n.LocalizableKey;
 import se.tink.libraries.i18n.LocalizableParametrizedKey;
@@ -146,5 +150,30 @@ public class GermanFields {
                                 catalog.getString(CHARACTERS_OTP_PATTERN_ERROR, otpMaxLength));
             }
         }
+    }
+
+    public static class SelectOptions {
+
+        public static List<SelectOption> prepareSelectOptions(
+                List<? extends SelectEligible> methods) {
+            return IntStream.range(0, methods.size())
+                    .mapToObj(
+                            index -> {
+                                SelectEligible selectEligible = methods.get(index);
+                                return new SelectOption(
+                                        selectEligible.getName(),
+                                        String.valueOf(index + 1),
+                                        selectEligible.getIconUrl());
+                            })
+                    .collect(Collectors.toList());
+        }
+    }
+
+    public interface SelectEligible {
+        String getName();
+
+        String getAuthenticationType();
+
+        String getIconUrl();
     }
 }

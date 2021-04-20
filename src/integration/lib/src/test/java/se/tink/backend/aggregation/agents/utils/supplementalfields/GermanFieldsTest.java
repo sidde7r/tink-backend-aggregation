@@ -11,10 +11,13 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 import java.text.MessageFormat;
+import java.util.Arrays;
+import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
+import se.tink.backend.agents.rpc.SelectOption;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.i18n.LocalizableKey;
 import se.tink.libraries.i18n.LocalizableParametrizedKey;
@@ -179,5 +182,41 @@ public class GermanFieldsTest {
                         "Confirm by entering the generated TAN for \"" + SCA_METHOD_NAME + "\".");
         assertThat(result.getMinLength()).isEqualTo(1);
         assertThat(result.isImmutable()).isFalse();
+    }
+
+    @Test
+    public void shouldReturnProperSelectOptions() {
+        // given
+        GermanFields.SelectEligible mockSelectEligible =
+                getSelectEligible("PUSH_TAN", "Push", "https://test_url.com/push");
+        GermanFields.SelectEligible mockSelectEligible2 =
+                getSelectEligible("SMS_TAN", "SMS", "https://test_url.com/sms");
+
+        List<GermanFields.SelectEligible> selectEligibles =
+                Arrays.asList(mockSelectEligible, mockSelectEligible2);
+
+        // when
+        List<SelectOption> selectOptions =
+                GermanFields.SelectOptions.prepareSelectOptions(selectEligibles);
+
+        // then
+        assertThat(selectOptions).hasSize(2);
+        SelectOption resultSelectOption = selectOptions.get(0);
+        assertThat(resultSelectOption.getValue()).isEqualTo("1");
+        assertThat(resultSelectOption.getText()).isEqualTo("Push");
+        assertThat(resultSelectOption.getIconUrl()).isEqualTo("https://test_url.com/push");
+        SelectOption resultSelectOption2 = selectOptions.get(1);
+        assertThat(resultSelectOption2.getValue()).isEqualTo("2");
+        assertThat(resultSelectOption2.getText()).isEqualTo("SMS");
+        assertThat(resultSelectOption2.getIconUrl()).isEqualTo("https://test_url.com/sms");
+    }
+
+    private GermanFields.SelectEligible getSelectEligible(
+            String authenticationType, String name, String url) {
+        GermanFields.SelectEligible mockSelectEligible = mock(GermanFields.SelectEligible.class);
+        when(mockSelectEligible.getAuthenticationType()).thenReturn(authenticationType);
+        when(mockSelectEligible.getName()).thenReturn(name);
+        when(mockSelectEligible.getIconUrl()).thenReturn(url);
+        return mockSelectEligible;
     }
 }

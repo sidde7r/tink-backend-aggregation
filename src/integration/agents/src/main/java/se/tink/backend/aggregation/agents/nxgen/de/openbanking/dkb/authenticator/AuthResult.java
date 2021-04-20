@@ -29,7 +29,7 @@ public class AuthResult {
 
     private static final Set<String> METHODS_EXCLUDED_FROM_SELECTION = ImmutableSet.of("CHIPTAN");
     private static final Predicate<AuthMethod> IS_SELECTABLE =
-            authMethod -> !METHODS_EXCLUDED_FROM_SELECTION.contains(authMethod.authType);
+            authMethod -> !METHODS_EXCLUDED_FROM_SELECTION.contains(authMethod.authenticationType);
 
     private String returnCode;
     private String actionCode;
@@ -68,11 +68,13 @@ public class AuthResult {
         @JsonProperty("authOptionId")
         private String identifier;
 
-        private String authType;
+        @JsonProperty("authType")
+        private String authenticationType;
+
         private String authInfo;
 
         public String getName() {
-            return format("%s - %s", authType, authInfo);
+            return format("%s - %s", authenticationType, authInfo);
         }
     }
 }

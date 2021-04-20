@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.CommonFields;
@@ -74,14 +73,12 @@ public class DkbSupplementalDataProvider {
 
     String selectAuthMethod(List<? extends SelectableMethod> methods)
             throws SupplementalInfoException {
-        Field field =
-                CommonFields.Selection.build(
-                        catalog,
-                        methods.stream()
-                                .map(SelectableMethod::getName)
-                                .collect(Collectors.toList()));
-
         if (methods.size() > 1) {
+            Field field =
+                    CommonFields.Selection.build(
+                            catalog,
+                            null,
+                            GermanFields.SelectOptions.prepareSelectOptions(methods));
             Map<String, String> supplementalInformation =
                     supplementalInformationHelper.askSupplementalInformation(field);
             return getSelectedAuthMethodId(supplementalInformation.get(field.getName()), methods);

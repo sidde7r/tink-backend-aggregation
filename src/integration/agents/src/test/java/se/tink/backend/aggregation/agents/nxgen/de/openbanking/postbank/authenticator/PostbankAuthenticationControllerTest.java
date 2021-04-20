@@ -17,7 +17,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-import java.util.stream.Collectors;
 import javax.ws.rs.core.MediaType;
 import org.junit.Test;
 import org.mockito.ArgumentMatcher;
@@ -316,9 +315,9 @@ public class PostbankAuthenticationControllerTest {
         Field field =
                 CommonFields.Selection.build(
                         catalog,
-                        authorisationResponse.getScaMethods().stream()
-                                .map(ScaMethod::getName)
-                                .collect(Collectors.toList()));
+                        null,
+                        GermanFields.SelectOptions.prepareSelectOptions(
+                                authorisationResponse.getScaMethods()));
         when(mockSuppController.askSupplementalInformationSync(argThat(new FieldMatcher(field))))
                 .thenReturn(supplementalInformation);
     }
