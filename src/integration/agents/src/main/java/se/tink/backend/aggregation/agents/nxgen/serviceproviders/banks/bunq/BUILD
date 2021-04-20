@@ -25,6 +25,7 @@ java_library(
         "//src/libraries/serialization",
         "//src/libraries/uuid",
         "//third_party:com_google_http_client_google_http_client",
+        "//third_party:com_google_inject_guice",
         "//third_party:com_sun_jersey_jersey_core",
         "//third_party:lombok_libs",
         "//third_party:org_assertj_assertj_core",
