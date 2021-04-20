@@ -5,6 +5,7 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import java.time.LocalDate;
 import java.util.List;
 import se.tink.backend.aggregation.agents.models.TransactionExternalSystemIdType;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.IcaBankenConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction.Builder;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
@@ -39,7 +40,8 @@ public class TransactionEntity {
                         .setTransactionDates(getTinkTransactionDates())
                         .addExternalSystemIds(
                                 TransactionExternalSystemIdType.PROVIDER_GIVEN_TRANSACTION_ID,
-                                entryReference);
+                                entryReference)
+                        .setProviderMarket(IcaBankenConstants.PROVIDER_MARKET);
 
         return (Transaction) builder.build();
     }
