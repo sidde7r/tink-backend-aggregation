@@ -60,7 +60,12 @@ public abstract class CrosskeyBaseAgent extends NextGenerationAgent
             throw new IllegalStateException(ErrorMessages.INVALID_CONFIGURATION, e);
         }
 
-        apiClient = getApiClient(qsealcSigner, marketConfiguration, certificateSerialNumber);
+        apiClient =
+                getApiClient(
+                        qsealcSigner,
+                        marketConfiguration,
+                        certificateSerialNumber,
+                        componentProvider.getCredentialsRequest().getProvider().getMarket());
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
         creditCardRefreshController = getCreditCardRefreshController();
     }
@@ -149,14 +154,16 @@ public abstract class CrosskeyBaseAgent extends NextGenerationAgent
     private CrosskeyBaseApiClient getApiClient(
             QsealcSigner qsealcSigner,
             CrosskeyMarketConfiguration marketConfiguration,
-            String certificateSerialNumber) {
+            String certificateSerialNumber,
+            String providerMarket) {
         return new CrosskeyBaseApiClient(
                 client,
                 sessionStorage,
                 marketConfiguration,
                 agentConfiguration,
                 qsealcSigner,
-                certificateSerialNumber);
+                certificateSerialNumber,
+                providerMarket);
     }
 
     protected TransactionalAccountRefreshController getTransactionalAccountRefreshController() {

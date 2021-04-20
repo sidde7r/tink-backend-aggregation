@@ -72,6 +72,7 @@ public class CrosskeyBaseApiClient {
     private final String baseApiUrl;
     private final String xFapiFinancialId;
     private final String certificateSerialNumber;
+    private final String providerMarket;
 
     public CrosskeyBaseApiClient(
             TinkHttpClient client,
@@ -79,7 +80,8 @@ public class CrosskeyBaseApiClient {
             CrosskeyMarketConfiguration marketConfiguration,
             AgentConfiguration<CrosskeyBaseConfiguration> agentConfiguration,
             QsealcSigner qsealcSigner,
-            String certificateSerialNumber) {
+            String certificateSerialNumber,
+            String providerMarket) {
         this.client = client;
         this.sessionStorage = sessionStorage;
         this.baseAuthUrl = marketConfiguration.getBaseAuthURL();
@@ -89,6 +91,7 @@ public class CrosskeyBaseApiClient {
         this.configuration = agentConfiguration.getProviderSpecificConfiguration();
         redirectUrl = agentConfiguration.getRedirectUrl();
         this.certificateSerialNumber = certificateSerialNumber;
+        this.providerMarket = providerMarket;
     }
 
     public void setConfiguration(AgentsServiceConfiguration configuration) {
@@ -301,7 +304,7 @@ public class CrosskeyBaseApiClient {
                 throw exception;
             }
         }
-        return response;
+        return response.setProviderMarket(providerMarket);
     }
 
     private OAuth2Token getTokenFromSession() {
