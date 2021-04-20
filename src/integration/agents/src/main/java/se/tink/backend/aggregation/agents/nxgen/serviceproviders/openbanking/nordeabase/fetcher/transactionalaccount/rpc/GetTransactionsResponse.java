@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.fetcher.transactionalaccount.rpc;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Optional;
@@ -16,10 +17,12 @@ public class GetTransactionsResponse<T extends TransactionEntity> extends Nordea
 
     private TransactionsResponseEntity<T> response;
 
+    @JsonIgnore private String providerMarket;
+
     @Override
     public Collection<? extends Transaction> getTinkTransactions() {
         return Optional.ofNullable(response)
-                .map(TransactionsResponseEntity::toTinkTransactions)
+                .map(responseEntity -> responseEntity.toTinkTransactions(providerMarket))
                 .orElse(Collections.emptyList());
     }
 
@@ -35,5 +38,10 @@ public class GetTransactionsResponse<T extends TransactionEntity> extends Nordea
 
     protected TransactionsResponseEntity<T> getResponse() {
         return response;
+    }
+
+    public GetTransactionsResponse<T> setProviderMarket(String providerMarket) {
+        this.providerMarket = providerMarket;
+        return this;
     }
 }

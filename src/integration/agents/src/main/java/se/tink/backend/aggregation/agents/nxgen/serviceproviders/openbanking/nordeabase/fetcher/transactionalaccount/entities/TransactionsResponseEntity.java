@@ -16,9 +16,9 @@ public class TransactionsResponseEntity<T extends TransactionEntity> {
 
     private List<T> transactions;
 
-    public Collection<? extends Transaction> toTinkTransactions() {
+    public Collection<? extends Transaction> toTinkTransactions(String providerMarket) {
         return ListUtils.emptyIfNull(transactions).stream()
-                .map(T::toTinkTransaction)
+                .map(te -> te.toTinkTransaction(providerMarket))
                 .collect(Collectors.toList());
     }
 

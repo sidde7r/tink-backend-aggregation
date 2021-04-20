@@ -11,9 +11,12 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 public abstract class NordeaBaseAgent extends NextGenerationAgent {
     protected NordeaBaseApiClient apiClient;
     protected String language;
+    protected String providerMarket;
 
     public NordeaBaseAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
+
+        this.providerMarket = componentProvider.getCredentialsRequest().getProvider().getMarket();
 
         try {
             this.language = request.getUser().getLocale().split("_")[0];
