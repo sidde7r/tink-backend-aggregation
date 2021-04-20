@@ -29,7 +29,6 @@ import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbank
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Optional;
@@ -39,7 +38,6 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.AmericanExpressConstants;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.AmericanExpressConstants.QueryParams;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.AmexApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.AmexGrantType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.configuration.AmexConfiguration;
@@ -58,7 +56,6 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
-import se.tink.libraries.date.ThreadSafeDateFormat;
 
 public class AmexApiClientTest {
 
@@ -314,18 +311,6 @@ public class AmexApiClientTest {
 
         when(httpClientMock.request(
                         new URL(urlString)
-                                .queryParam(
-                                        QueryParams.EXTENDED_DETAILS,
-                                        AmericanExpressConstants.QueryValues.MERCHANT)
-                                .queryParam(
-                                        AmericanExpressConstants.QueryParams.QUERY_PARAM_LIMIT,
-                                        "1000")
-                                .queryParam(
-                                        AmericanExpressConstants.QueryParams.QUERY_PARAM_START_DATE,
-                                        ThreadSafeDateFormat.FORMATTER_DAILY.format(new Date()))
-                                .queryParam(
-                                        AmericanExpressConstants.QueryParams.QUERY_PARAM_END_DATE,
-                                        ThreadSafeDateFormat.FORMATTER_DAILY.format(new Date()))
                                 .queryParam(
                                         AmericanExpressConstants.QueryParams.STATUS,
                                         AmericanExpressConstants.QueryValues.PENDING)))

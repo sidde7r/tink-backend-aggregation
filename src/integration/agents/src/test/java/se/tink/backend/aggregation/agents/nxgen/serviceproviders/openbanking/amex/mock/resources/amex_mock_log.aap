@@ -182,7 +182,7 @@ Server: Jetty(9.4.z-SNAPSHOT)
 
 
 REQUEST 5
-GET https://api2s.americanexpress.com/servicing/v1/financials/transactions?extended_details=merchant&limit=1000&start_date=1992-03-11&end_date=1992-04-10&status=pending
+GET https://api2s.americanexpress.com/servicing/v1/financials/transactions?status=pending
 
 RESPONSE 5
 200
