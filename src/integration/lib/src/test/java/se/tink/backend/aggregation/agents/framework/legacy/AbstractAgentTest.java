@@ -39,6 +39,7 @@ import se.tink.backend.aggregation.utils.CookieContainer;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.libraries.credentials.service.RefreshableItem;
+import se.tink.libraries.credentials.service.UserAvailability;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.signableoperation.rpc.SignableOperation;
 import se.tink.libraries.strings.StringUtils;
@@ -116,6 +117,7 @@ public abstract class AbstractAgentTest<T extends Agent> extends AbstractConfigu
                 .provider(provider)
                 .credentials(credentials)
                 .originatingUserIp("127.0.0.1")
+                .userAvailability(createUserAvailability())
                 .manual(true)
                 .forceAuthenticate(false)
                 .build();
@@ -131,6 +133,14 @@ public abstract class AbstractAgentTest<T extends Agent> extends AbstractConfigu
         user.setFlags(constructFeatureFlags());
 
         return user;
+    }
+
+    private UserAvailability createUserAvailability() {
+        UserAvailability userAvailability = new UserAvailability();
+        userAvailability.setOriginatingUserIp("127.0.0.1");
+        userAvailability.setUserAvailableForInteraction(true);
+        userAvailability.setUserPresent(true);
+        return userAvailability;
     }
 
     protected void testAgent(Credentials credentials) throws Exception {

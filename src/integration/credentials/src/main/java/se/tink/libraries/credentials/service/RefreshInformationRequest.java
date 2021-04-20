@@ -29,6 +29,7 @@ public class RefreshInformationRequest extends CredentialsRequest {
         private boolean update = false;
         private boolean forceAuthenticate;
         private Set<String> requestedAccountIds;
+        private UserAvailability userAvailability;
 
         public Builder credentials(Credentials credentials) {
             this.credentials = credentials;
@@ -75,6 +76,11 @@ public class RefreshInformationRequest extends CredentialsRequest {
             return this;
         }
 
+        public Builder userAvailability(UserAvailability userAvailability) {
+            this.userAvailability = userAvailability;
+            return this;
+        }
+
         public RefreshInformationRequest build() {
             RefreshInformationRequest refreshInformationRequest = new RefreshInformationRequest();
 
@@ -87,6 +93,7 @@ public class RefreshInformationRequest extends CredentialsRequest {
             refreshInformationRequest.setUpdate(update);
             refreshInformationRequest.setForceAuthenticate(forceAuthenticate);
             refreshInformationRequest.setRequestedAccountIds(requestedAccountIds);
+            refreshInformationRequest.setUserAvailability(userAvailability);
             return refreshInformationRequest;
         }
     }

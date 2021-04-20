@@ -11,6 +11,7 @@ import se.tink.backend.agents.rpc.Provider;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.libraries.credentials.service.RefreshableItem;
+import se.tink.libraries.credentials.service.UserAvailability;
 import se.tink.libraries.user.rpc.User;
 
 public final class RefreshRequestModule extends AbstractModule {
@@ -56,7 +57,11 @@ public final class RefreshRequestModule extends AbstractModule {
     @Provides
     @Singleton
     protected RefreshInformationRequest provideRefreshInformationRequest(
-            User user, Credentials credential, Provider provider, String originatingUserIp) {
+            User user,
+            Credentials credential,
+            Provider provider,
+            String originatingUserIp,
+            UserAvailability userAvailability) {
 
         // Hack required due to logic in AutoAuthenticationController#shouldDoManualAuthentication
         // During auto refresh all agents have CredentialsTypes.PASSWORD
@@ -72,6 +77,7 @@ public final class RefreshRequestModule extends AbstractModule {
                         .provider(provider)
                         .credentials(credential)
                         .originatingUserIp(originatingUserIp)
+                        .userAvailability(userAvailability)
                         .manual(requestFlagManual)
                         .create(requestFlagCreate)
                         .update(requestFlagUpdate)

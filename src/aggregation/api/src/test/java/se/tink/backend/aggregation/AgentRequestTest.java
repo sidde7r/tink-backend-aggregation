@@ -6,6 +6,7 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
+import se.tink.libraries.credentials.service.UserAvailability;
 import se.tink.libraries.user.rpc.User;
 
 public class AgentRequestTest {
@@ -16,12 +17,18 @@ public class AgentRequestTest {
         credentials.setFieldsSerialized("{}");
         credentials.setProviderName("jens-test-provider");
 
+        UserAvailability userAvailability = new UserAvailability();
+        userAvailability.setUserPresent(false);
+        userAvailability.setUserAvailableForInteraction(false);
+        userAvailability.setOriginatingUserIp("127.0.0.1");
+
         CredentialsRequest request =
                 RefreshInformationRequest.builder()
                         .user(new User())
                         .provider(new Provider())
                         .credentials(credentials)
                         .originatingUserIp("127.0.0.1")
+                        .userAvailability(userAvailability)
                         .manual(false)
                         .forceAuthenticate(false)
                         .build();

@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
 import org.assertj.core.util.Strings;
 import org.junit.Assert;
@@ -83,6 +84,7 @@ import se.tink.backend.integration.tpp_secrets_service.client.TppSecretsServiceC
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.libraries.credentials.service.RefreshableItem;
+import se.tink.libraries.credentials.service.UserAvailability;
 import se.tink.libraries.payment.enums.CreateBeneficiaryStatus;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.rpc.Beneficiary;
@@ -111,6 +113,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
     private final String clusterIdForSecretsService;
     private Credentials credential;
     private final String originatingUserIp;
+    private final UserAvailability userAvailability;
     // if it should override standard logic (Todo: find a better way to implement this!)
     private Boolean requestFlagCreate;
     private Boolean requestFlagUpdate;
@@ -121,6 +124,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         this.user = builder.getUser();
         this.credential = builder.getCredential();
         this.originatingUserIp = builder.getOriginatingUserIp();
+        this.userAvailability = builder.getUserAvailability();
         this.loadCredentialsBefore = builder.isLoadCredentialsBefore();
         this.saveCredentialsAfter = builder.isSaveCredentialsAfter();
         this.requestFlagCreate = builder.getRequestFlagCreate();
@@ -202,6 +206,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                         .manual(requestFlagManual)
                         .create(requestFlagCreate)
                         .update(requestFlagUpdate)
+                        .userAvailability(userAvailability)
                         .forceAuthenticate(false)
                         .build();
 
@@ -957,6 +962,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         return provider;
     }
 
+    @Getter
     public static class Builder {
         private static final String DEFAULT_USER_ID = "deadbeefdeadbeefdeadbeefdeadbeef";
         private static final String DEFAULT_CREDENTIAL_ID = "cafebabecafebabecafebabecafebabe";
@@ -966,6 +972,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         private User user = createDefaultUser();
         private Credentials credential = createDefaultCredential();
         private String originatingUserIp = "127.0.0.1";
+        private UserAvailability userAvailability = createDefaultUserAvailability();
 
         private int transactionsToPrint = 32;
         private boolean loadCredentialsBefore = false;
@@ -1036,12 +1043,13 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
             return credential;
         }
 
-        public Provider getProvider() {
-            return provider;
-        }
+        private static UserAvailability createDefaultUserAvailability() {
+            UserAvailability userAvailability = new UserAvailability();
+            userAvailability.setUserPresent(true);
+            userAvailability.setUserAvailableForInteraction(true);
+            userAvailability.setOriginatingUserIp("127.0.0.1");
 
-        public User getUser() {
-            return user;
+            return userAvailability;
         }
 
         public Builder setUser(User user) {
@@ -1049,33 +1057,9 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
             return this;
         }
 
-        public Credentials getCredential() {
-            return credential;
-        }
-
-        public int getTransactionsToPrint() {
-            return transactionsToPrint;
-        }
-
-        public boolean isLoadCredentialsBefore() {
-            return loadCredentialsBefore;
-        }
-
-        public boolean isSaveCredentialsAfter() {
-            return saveCredentialsAfter;
-        }
-
-        public Boolean getRequestFlagCreate() {
-            return requestFlagCreate;
-        }
-
         public Builder setRequestFlagCreate(boolean requestFlagCreate) {
             this.requestFlagCreate = requestFlagCreate;
             return this;
-        }
-
-        public Boolean getRequestFlagUpdate() {
-            return requestFlagUpdate;
         }
 
         public Builder setRequestFlagUpdate(boolean requestFlagUpdate) {
@@ -1083,34 +1067,14 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
             return this;
         }
 
-        public boolean isRequestFlagManual() {
-            return requestFlagManual;
-        }
-
         public Builder setRequestFlagManual(boolean requestFlagManual) {
             this.requestFlagManual = requestFlagManual;
             return this;
         }
 
-        public boolean isDoLogout() {
-            return doLogout;
-        }
-
-        public boolean isExpectLoggedIn() {
-            return expectLoggedIn;
-        }
-
-        public Set<RefreshableItem> getRefreshableItems() {
-            return refreshableItems;
-        }
-
         public Builder setRefreshableItems(Set<RefreshableItem> refreshableItems) {
             this.refreshableItems = refreshableItems;
             return this;
-        }
-
-        public String getAppId() {
-            return appId;
         }
 
         public Builder setAppId(final String appId) {
@@ -1185,26 +1149,14 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
             return this;
         }
 
-        public String getRedirectUrl() {
-            return redirectUrl;
-        }
-
         public Builder setRedirectUrl(String redirectUrl) {
             this.redirectUrl = redirectUrl;
             return this;
         }
 
-        public String getClusterId() {
-            return clusterId;
-        }
-
         public Builder setClusterId(String clusterId) {
             this.clusterId = clusterId;
             return this;
-        }
-
-        public String getClusterIdForSecretsService() {
-            return clusterIdForSecretsService;
         }
 
         public Builder setClusterIdForSecretsService(String clusterIdForSecretsService) {
@@ -1215,14 +1167,6 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         public Builder dumpContentForContractFile() {
             this.dumpContentForContractFile = true;
             return this;
-        }
-
-        public boolean isDumpContentForContractFile() {
-            return this.dumpContentForContractFile;
-        }
-
-        public String getOriginatingUserIp() {
-            return originatingUserIp;
         }
 
         public Builder setOriginatingUserIp(String originatingUserIp) {

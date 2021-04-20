@@ -43,6 +43,7 @@ import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
 import se.tink.backend.integration.tpp_secrets_service.client.iface.TppSecretsServiceClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
+import se.tink.libraries.credentials.service.UserAvailability;
 import se.tink.libraries.metrics.core.MetricBuckets;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 import se.tink.libraries.metrics.types.counters.Counter;
@@ -83,12 +84,14 @@ public abstract class IntegrationTestBase {
         final User user = createUser();
         final Provider provider = getProvider();
         final Credentials credentials = createCredentials(user, provider);
+        final UserAvailability userAvailability = createUserAvailability();
 
         return RefreshInformationRequest.builder()
                 .user(user)
                 .provider(provider)
                 .credentials(credentials)
                 .originatingUserIp(ORIGINATING_USER_IP)
+                .userAvailability(userAvailability)
                 .manual(false)
                 .forceAuthenticate(false)
                 .build();
@@ -171,6 +174,15 @@ public abstract class IntegrationTestBase {
         credentials.setProviderName(provider.getName());
 
         return credentials;
+    }
+
+    private static UserAvailability createUserAvailability() {
+        UserAvailability userAvailability = new UserAvailability();
+        userAvailability.setUserAvailableForInteraction(false);
+        userAvailability.setUserPresent(false);
+        userAvailability.setOriginatingUserIp(ORIGINATING_USER_IP);
+
+        return userAvailability;
     }
 
     private static MetricRegistry createMetricRegistry() {

@@ -27,6 +27,7 @@ import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPa
 import se.tink.libraries.account_data_cache.AccountDataCache;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
+import se.tink.libraries.credentials.service.UserAvailability;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 import se.tink.libraries.user.rpc.User;
 
@@ -39,11 +40,7 @@ public class AmericanExpressV3AgentTest extends AbstractAgentTest<AmericanExpres
 
     private AgentTestContext context;
     private Client client;
-
-    private User user = new User();
-    private Credentials credentials = new Credentials();
     private Provider provider = new Provider();
-    private String originatingUserIp = "127.0.0.1";
 
     public AmericanExpressV3AgentTest() {
         super(AmericanExpressV3Agent.class);
@@ -99,12 +96,21 @@ public class AmericanExpressV3AgentTest extends AbstractAgentTest<AmericanExpres
         mockTransactionsRequest(1, 0);
         mockTransactionsRequest(1, 1);
 
+        User user = new User();
+        Credentials credentials = new Credentials();
+        UserAvailability userAvailability = new UserAvailability();
+        userAvailability.setUserAvailableForInteraction(true);
+        userAvailability.setUserPresent(true);
+        userAvailability.setOriginatingUserIp("127.0.0.1");
+        String originatingUserIp = "127.0.0.1";
+
         context = new AgentTestContext(credentials);
         CredentialsRequest request =
                 RefreshInformationRequest.builder()
                         .user(CoreUserMapper.toAggregationUser(user))
                         .provider(provider)
                         .credentials(credentials)
+                        .userAvailability(userAvailability)
                         .originatingUserIp(originatingUserIp)
                         .manual(true)
                         .forceAuthenticate(false)
