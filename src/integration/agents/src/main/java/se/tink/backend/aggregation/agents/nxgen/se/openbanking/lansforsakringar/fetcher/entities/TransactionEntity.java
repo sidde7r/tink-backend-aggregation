@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.time.LocalDate;
 import lombok.Getter;
 import se.tink.backend.aggregation.agents.models.TransactionExternalSystemIdType;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction.Builder;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
@@ -50,7 +51,8 @@ public class TransactionEntity {
                                 TransactionExternalSystemIdType.PROVIDER_GIVEN_TRANSACTION_ID,
                                 entryReference)
                         .setProprietaryFinancialInstitutionType(text)
-                        .setMerchantName(merchantName);
+                        .setMerchantName(merchantName)
+                        .setProviderMarket(LansforsakringarConstants.PROVIDER_MARKET);
 
         return (Transaction) builder.build();
     }
