@@ -193,34 +193,25 @@ public class AmexApiClient {
     }
 
     private URL buildTransactionsUrl(int limit, Optional<LocalDate> fromDate, LocalDate toDate) {
-        URL urlWithBaseQueryParams =
-                Urls.ENDPOINT_TRANSACTIONS
-                        .queryParam(
-                                QueryParams.EXTENDED_DETAILS,
-                                AmericanExpressConstants.QueryValues.MERCHANT)
-                        .queryParam(
-                                AmericanExpressConstants.QueryParams.QUERY_PARAM_LIMIT,
-                                Integer.toString(limit));
-
+        URL urlWithBaseQueryParams = Urls.ENDPOINT_TRANSACTIONS;
         // Pending transactions
         if (fromDate.isPresent()) {
-            return urlWithBaseQueryParams
-                    .queryParam(
-                            AmericanExpressConstants.QueryParams.QUERY_PARAM_START_DATE,
-                            fromDate.get().format(DateTimeFormatter.ISO_LOCAL_DATE))
-                    .queryParam(
-                            AmericanExpressConstants.QueryParams.QUERY_PARAM_END_DATE,
-                            toDate.format(DateTimeFormatter.ISO_LOCAL_DATE))
-                    .queryParam(
-                            AmericanExpressConstants.QueryParams.STATUS,
-                            AmericanExpressConstants.QueryValues.PENDING);
+            return urlWithBaseQueryParams.queryParam(
+                    AmericanExpressConstants.QueryParams.STATUS,
+                    AmericanExpressConstants.QueryValues.PENDING);
         }
 
         // Posted transactions, from documentation "if status is not specified, this API returns
         // posted transactions by default."
-        return urlWithBaseQueryParams.queryParam(
-                AmericanExpressConstants.QueryParams.QUERY_PARAM_STATEMENT_END_DATE,
-                toDate.format(DateTimeFormatter.ISO_LOCAL_DATE));
+        return urlWithBaseQueryParams
+                .queryParam(
+                        QueryParams.EXTENDED_DETAILS, AmericanExpressConstants.QueryValues.MERCHANT)
+                .queryParam(
+                        AmericanExpressConstants.QueryParams.QUERY_PARAM_LIMIT,
+                        Integer.toString(limit))
+                .queryParam(
+                        AmericanExpressConstants.QueryParams.QUERY_PARAM_STATEMENT_END_DATE,
+                        toDate.format(DateTimeFormatter.ISO_LOCAL_DATE));
     }
 
     /*
