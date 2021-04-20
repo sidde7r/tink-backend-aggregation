@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
@@ -29,6 +30,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticato
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
@@ -62,6 +64,7 @@ public abstract class IngBaseAgent extends NextGenerationAgent
             lowercase as wrong country code and returns error that it's malformed
         */
         final String marketInUppercase = request.getProvider().getMarket().toUpperCase();
+
         apiClient =
                 new IngBaseApiClient(
                         client,
@@ -163,6 +166,17 @@ public abstract class IngBaseAgent extends NextGenerationAgent
                         new TransactionKeyPaginationController<>(
                                 new IngBaseTransactionsFetcher(
                                         apiClient, this::getTransactionsFromDate))));
+    }
+
+    @Override
+    public Optional<PaymentController> constructPaymentController() {
+        IngPaymentExecutor paymentExecutor =
+                new IngPaymentExecutor(
+                        apiClient,
+                        sessionStorage,
+                        strongAuthenticationState,
+                        supplementalInformationHelper);
+        return Optional.of(new PaymentController(paymentExecutor, paymentExecutor));
     }
 
     @Override

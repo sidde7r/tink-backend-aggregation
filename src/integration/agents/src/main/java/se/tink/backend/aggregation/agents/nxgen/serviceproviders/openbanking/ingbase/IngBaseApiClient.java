@@ -17,12 +17,15 @@ import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants.ErrorCodes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants.HeaderKeys;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants.IdTags;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants.Signature;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.authenticator.entities.AuthorizationEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.authenticator.entities.PaymentAuthorizationEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.authenticator.entities.PaymentSignatureEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.authenticator.entities.SignatureEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.authenticator.rpc.ApplicationTokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.authenticator.rpc.AuthorizationUrl;
@@ -32,10 +35,13 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ing
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.configuration.MarketConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.fetcher.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.fetcher.rpc.BaseFetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.fetcher.rpc.CreatePaymentRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.fetcher.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.fetcher.rpc.ErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.fetcher.rpc.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.fetcher.rpc.FetchBalancesResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.fetcher.rpc.FetchCardTransactionsResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.fetcher.rpc.GetPaymentResponse;
 import se.tink.backend.aggregation.api.Psd2Headers;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agents.utils.CertificateUtils;
@@ -48,6 +54,7 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.date.DateFormat;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class IngBaseApiClient {
 
@@ -61,6 +68,7 @@ public class IngBaseApiClient {
     private final boolean isManualAuthentication;
     private MarketConfiguration marketConfiguration;
     private final QsealcSigner proxySigner;
+    private String psuIdAddress;
 
     private static final Logger logger = LoggerFactory.getLogger(IngBaseApiClient.class);
 
@@ -83,6 +91,7 @@ public class IngBaseApiClient {
 
     public void setConfiguration(AgentConfiguration<IngBaseConfiguration> agentConfiguration)
             throws CertificateException {
+        this.psuIdAddress = agentConfiguration.getProviderSpecificConfiguration().getPsuIpAddress();
         this.redirectUrl = agentConfiguration.getRedirectUrl();
         this.hexCertificateSerial =
                 CertificateUtils.getSerialNumber(agentConfiguration.getQsealc(), 16);
@@ -166,6 +175,43 @@ public class IngBaseApiClient {
                 .addBearerToken(getTokenFromSession())
                 .type(MediaType.APPLICATION_JSON)
                 .get(FetchCardTransactionsResponse.class);
+    }
+
+    public CreatePaymentResponse createPayment(CreatePaymentRequest request) {
+
+        final TokenResponse tokenResponse = getApplicationAccessToken();
+        setApplicationTokenToSession(tokenResponse.toTinkToken());
+        setClientIdToSession(tokenResponse.getClientId());
+
+        RequestBuilder requestBuilder =
+                buildRequestWithPaymentSignature(
+                                Urls.PAYMENT_INITIATION,
+                                Signature.HTTP_METHOD_POST,
+                                SerializationUtils.serializeToString(request))
+                        .addBearerToken(getApplicationTokenFromSession())
+                        .type(MediaType.APPLICATION_JSON)
+                        .header(HeaderKeys.TPP_REDIRECT_URI, redirectUrl)
+                        .header(HeaderKeys.PSU_ID_ADDRESS, psuIdAddress);
+
+        return requestBuilder.post(
+                CreatePaymentResponse.class, SerializationUtils.serializeToString(request));
+    }
+
+    public GetPaymentResponse getPayment(String paymentId) {
+
+        RequestBuilder requestBuilder =
+                buildRequestWithPaymentSignature(
+                                new URL(Urls.GET_PAYMENT_STATUS)
+                                        .parameter(IdTags.PAYMENT_ID, paymentId)
+                                        .toString(),
+                                Signature.HTTP_METHOD_GET,
+                                StringUtils.EMPTY)
+                        .addBearerToken(getApplicationTokenFromSession())
+                        .type(MediaType.APPLICATION_JSON)
+                        .header(HeaderKeys.TPP_REDIRECT_URI, redirectUrl)
+                        .header(HeaderKeys.PSU_ID_ADDRESS, psuIdAddress);
+
+        return requestBuilder.get(GetPaymentResponse.class);
     }
 
     public URL getAuthorizeUrl(final String state) {
@@ -305,6 +351,26 @@ public class IngBaseApiClient {
                                 reqId,
                                 date,
                                 digest));
+    }
+
+    RequestBuilder buildRequestWithPaymentSignature(
+            final String reqPath, final String httpMethod, final String payload) {
+        final String reqId = Psd2Headers.getRequestId();
+        final String date = getFormattedDate();
+        final String digest = generateDigest(payload);
+
+        final PaymentSignatureEntity signatureEntity =
+                new PaymentSignatureEntity(httpMethod, reqPath, date, digest, reqId);
+
+        return buildRequest(reqId, date, digest, reqPath)
+                .header(HeaderKeys.X_REQUEST_ID, reqId)
+                .header(
+                        HeaderKeys.SIGNATURE,
+                        new PaymentAuthorizationEntity(
+                                        getClientIdFromSession(),
+                                        proxySigner.getSignatureBase64(
+                                                signatureEntity.toString().getBytes()))
+                                .toString());
     }
 
     private RequestBuilder buildRequest(
