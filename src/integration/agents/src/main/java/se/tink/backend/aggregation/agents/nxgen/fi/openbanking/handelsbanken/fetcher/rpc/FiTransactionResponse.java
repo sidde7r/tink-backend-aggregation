@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.fi.openbanking.handelsbanken.fe
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.Market;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.fetcher.rpc.TransactionResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
@@ -16,7 +17,7 @@ public class FiTransactionResponse extends TransactionResponse {
     public Collection<? extends Transaction> getTinkTransactions() {
         return transactions.stream()
                 .filter(FiTransactionsItemEntity::hasDate)
-                .map(FiTransactionsItemEntity::toTinkTransaction)
+                .map(te -> te.toTinkTransaction(Market.FINLAND))
                 .collect(Collectors.toList());
     }
 }

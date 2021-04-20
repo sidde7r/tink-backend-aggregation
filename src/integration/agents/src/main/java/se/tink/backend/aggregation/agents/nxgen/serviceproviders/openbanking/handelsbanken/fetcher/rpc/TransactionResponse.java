@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.fetcher.rpc;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -12,6 +13,8 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 @JsonObject
 public class TransactionResponse implements PaginatorResponse {
 
+    @JsonIgnore private String providerMarket;
+
     private List<TransactionsItemEntity> transactions;
 
     public List<TransactionsItemEntity> getTransactions() {
@@ -21,13 +24,18 @@ public class TransactionResponse implements PaginatorResponse {
     @Override
     public Collection<? extends Transaction> getTinkTransactions() {
         return transactions.stream()
-                .filter(e -> e.hasDate())
-                .map(TransactionsItemEntity::toTinkTransaction)
+                .filter(TransactionsItemEntity::hasDate)
+                .map(te -> te.toTinkTransaction(providerMarket))
                 .collect(Collectors.toList());
     }
 
     @Override
     public Optional<Boolean> canFetchMore() {
         return Optional.empty();
+    }
+
+    public TransactionResponse setProviderMarket(String providerMarket) {
+        this.providerMarket = providerMarket;
+        return this;
     }
 }
