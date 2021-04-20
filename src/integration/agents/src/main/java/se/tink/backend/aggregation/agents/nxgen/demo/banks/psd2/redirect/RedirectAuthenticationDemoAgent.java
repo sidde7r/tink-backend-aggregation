@@ -85,13 +85,6 @@ import se.tink.libraries.identitydata.NameElement;
         capabilities = {PisCapability.PIS_SEPA, PisCapability.PIS_SEPA_ICT},
         markets = {"IT"})
 @AgentPisCapability(
-        capabilities = {
-            PisCapability.PIS_SE_BANK_TRANSFERS,
-            PisCapability.PIS_SE_BG,
-            PisCapability.PIS_SE_PG
-        },
-        markets = {"SE"})
-@AgentPisCapability(
         capabilities = PisCapability.PIS_SEPA,
         markets = {"DE", "ES", "FR", "PT"})
 @AgentPisCapability(capabilities = PisCapability.PIS_UK_FASTER_PAYMENT, markets = "GB")
