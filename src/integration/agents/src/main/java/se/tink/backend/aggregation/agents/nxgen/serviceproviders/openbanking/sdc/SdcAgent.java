@@ -40,7 +40,9 @@ public class SdcAgent extends NextGenerationAgent
         super(componentProvider);
 
         apiClient = constructApiClient();
-        transactionalAccountRefreshController = getTransactionalAccountRefreshController();
+        transactionalAccountRefreshController =
+                getTransactionalAccountRefreshController(
+                        componentProvider.getCredentialsRequest().getProvider().getMarket());
     }
 
     protected AgentConfiguration<SdcConfiguration> getAgentConfiguration() {
@@ -100,12 +102,13 @@ public class SdcAgent extends NextGenerationAgent
         return transactionalAccountRefreshController.fetchSavingsTransactions();
     }
 
-    private TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
+    private TransactionalAccountRefreshController getTransactionalAccountRefreshController(
+            String providerMarket) {
         final SdcTransactionalAccountFetcher accountFetcher =
                 new SdcTransactionalAccountFetcher(apiClient);
 
         final SdcTransactionalAccountTransactionFetcher transactionFetcher =
-                new SdcTransactionalAccountTransactionFetcher(apiClient);
+                new SdcTransactionalAccountTransactionFetcher(apiClient, providerMarket);
 
         /*
            We are overriding the default date range (by default it is 3 months but we use 1 month)

@@ -52,7 +52,8 @@
                 "date" : "2021-04-12",
                 "instant" : null
             }
-        } ]
+        } ],
+        "providerMarket" : "DK"
     }, {
         "amount" : 5000.0,
         "date" : 1617012000000,
@@ -79,7 +80,8 @@
                 "date" : "2021-03-29",
                 "instant" : null
             }
-        } ]
+        } ],
+        "providerMarket" : "DK"
     }, {
         "amount" : -3500.0,
         "date" : 1614078000000,
@@ -106,7 +108,8 @@
                 "date" : "2021-02-23",
                 "instant" : null
             }
-        } ]
+        } ],
+        "providerMarket" : "DK"
     }, {
         "amount" : -100.0,
         "date" : 1608548400000,
@@ -133,6 +136,7 @@
                 "date" : "2020-12-21",
                 "instant" : null
             }
-        } ]
+        } ],
+        "providerMarket" : "DK"
     } ]
 }

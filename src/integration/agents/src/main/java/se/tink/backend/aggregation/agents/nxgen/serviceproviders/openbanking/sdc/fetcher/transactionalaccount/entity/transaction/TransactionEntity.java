@@ -32,15 +32,15 @@ public class TransactionEntity {
     private String remittanceInformationUnstructured;
     private TransactionDetailsLinksEntity links;
 
-    public Transaction toBookedTinkTransaction() {
-        return toTinkTransaction(false);
+    public Transaction toBookedTinkTransaction(String providerMarket) {
+        return toTinkTransaction(false, providerMarket);
     }
 
-    public Transaction toPendingTinkTransaction() {
-        return toTinkTransaction(true);
+    public Transaction toPendingTinkTransaction(String providerMarket) {
+        return toTinkTransaction(true, providerMarket);
     }
 
-    public Transaction toTinkTransaction(boolean isPending) {
+    public Transaction toTinkTransaction(boolean isPending, String providerMarket) {
         Builder builder =
                 Transaction.builder()
                         .setAmount(transactionAmount.toAmount())
@@ -50,7 +50,8 @@ public class TransactionEntity {
                         .addExternalSystemIds(
                                 TransactionExternalSystemIdType.PROVIDER_GIVEN_TRANSACTION_ID,
                                 transactionId)
-                        .setTransactionDates(getTinkTransactionDates());
+                        .setTransactionDates(getTinkTransactionDates())
+                        .setProviderMarket(providerMarket);
 
         return (Transaction) builder.build();
     }

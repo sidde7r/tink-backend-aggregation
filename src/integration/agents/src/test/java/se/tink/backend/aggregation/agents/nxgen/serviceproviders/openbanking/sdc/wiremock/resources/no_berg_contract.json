@@ -78,7 +78,8 @@
                 "date" : "2021-03-01",
                 "instant" : null
             }
-        } ]
+        } ],
+        "providerMarket" : "NO"
     }, {
         "amount" : 500.0,
         "date" : 1617876000000,
@@ -105,7 +106,8 @@
                 "date" : "2021-04-08",
                 "instant" : null
             }
-        } ]
+        } ],
+        "providerMarket" : "NO"
     }, {
         "amount" : -50.0,
         "date" : 1617184800000,
@@ -132,7 +134,8 @@
                 "date" : "2021-03-31",
                 "instant" : null
             }
-        } ]
+        } ],
+        "providerMarket" : "NO"
     }, {
         "amount" : -1500.0,
         "date" : 1616670000000,
@@ -159,6 +162,7 @@
                 "date" : "2021-03-25",
                 "instant" : null
             }
-        } ]
+        } ],
+        "providerMarket" : "NO"
     } ]
 }
