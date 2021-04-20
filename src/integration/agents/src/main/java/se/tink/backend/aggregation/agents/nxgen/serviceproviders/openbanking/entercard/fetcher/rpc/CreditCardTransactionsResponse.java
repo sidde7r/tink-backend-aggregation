@@ -17,6 +17,8 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 public class CreditCardTransactionsResponse
         implements TransactionKeyPaginatorResponse<TransactionKey> {
 
+    @JsonIgnore private String providerMarket;
+
     private MetadataEntity metadata;
     private TransactionAccountEntity account;
 
@@ -26,7 +28,7 @@ public class CreditCardTransactionsResponse
         return Optional.ofNullable(account).map(TransactionAccountEntity::getMovements)
                 .orElse(Collections.emptyList()).stream()
                 .filter(TransactionEntity::isValidTransaction)
-                .map(TransactionEntity::toTinkTransaction)
+                .map(te -> te.toTinkTransaction(providerMarket))
                 .collect(Collectors.toList());
     }
 
@@ -43,5 +45,10 @@ public class CreditCardTransactionsResponse
             return null; // This must be an exception
         }
         return new TransactionKey(metadata.getOffset() * metadata.getResultCount());
+    }
+
+    public CreditCardTransactionsResponse setProviderMarket(String providerMarket) {
+        this.providerMarket = providerMarket;
+        return this;
     }
 }

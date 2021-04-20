@@ -10,9 +10,11 @@ public class CreditCardTransactionFetcher
         implements TransactionKeyPaginator<CreditCardAccount, TransactionKey> {
 
     private final EnterCardApiClient apiClient;
+    private final String providerMarket;
 
-    public CreditCardTransactionFetcher(EnterCardApiClient apiClient) {
+    public CreditCardTransactionFetcher(EnterCardApiClient apiClient, String providerMarket) {
         this.apiClient = apiClient;
+        this.providerMarket = providerMarket;
     }
 
     @Override
@@ -21,6 +23,6 @@ public class CreditCardTransactionFetcher
         if (key == null) {
             key = new TransactionKey(0);
         }
-        return apiClient.fetchCreditCardTransactions(account, key);
+        return apiClient.fetchCreditCardTransactions(account, key, providerMarket);
     }
 }

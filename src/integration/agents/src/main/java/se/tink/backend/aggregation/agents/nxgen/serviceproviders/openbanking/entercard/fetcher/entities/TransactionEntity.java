@@ -56,7 +56,7 @@ public class TransactionEntity {
     private String terminalId;
 
     @JsonIgnore
-    public Transaction toTinkTransaction() {
+    public Transaction toTinkTransaction(String providerMarket) {
         Builder builder =
                 CreditCardTransaction.builder()
                         .setAmount(ExactCurrencyAmount.of(billingAmount, billingCurrency))
@@ -66,7 +66,8 @@ public class TransactionEntity {
                         .setTransactionDates(getTinkTransactionDates())
                         .setMerchantCategoryCode(mccCode)
                         .setMerchantName(merchantName)
-                        .setProprietaryFinancialInstitutionType(movementType);
+                        .setProprietaryFinancialInstitutionType(movementType)
+                        .setProviderMarket(providerMarket);
 
         if (Objects.nonNull(transactionID)) {
             // TransactionID is marked as required in docs but adding null check just to be safe.
