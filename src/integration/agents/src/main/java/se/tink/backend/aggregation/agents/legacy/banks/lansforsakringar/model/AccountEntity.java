@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.general.models.GeneralAccountEntity;
+import se.tink.backend.aggregation.source_info.AccountSourceInfo;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.account.identifiers.se.ClearingNumber;
@@ -196,7 +197,17 @@ public class AccountEntity implements GeneralAccountEntity {
                     account.getBankId());
         }
 
+        account.setSourceInfo(createAccountSourceInfo());
+
         return account;
+    }
+
+    private AccountSourceInfo createAccountSourceInfo() {
+        return AccountSourceInfo.builder()
+                .bankProductCode(productCode)
+                .bankAccountType(type)
+                .bankProductName(accountName)
+                .build();
     }
 
     private void setTypeForAccountTypeUnknown(Account account) {

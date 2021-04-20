@@ -16,6 +16,7 @@ import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.AgentParsingUtils;
 import se.tink.backend.aggregation.agents.models.Loan;
 import se.tink.backend.aggregation.agents.models.LoanDetails;
+import se.tink.backend.aggregation.source_info.AccountSourceInfo;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -141,8 +142,13 @@ public class LoanDetailsEntity {
         account.setName(getLoanName());
         account.setBalance(getCurrentDebt());
         account.setType(AccountTypes.LOAN);
+        account.setSourceInfo(createAccountSourceInfo());
 
         return account;
+    }
+
+    private AccountSourceInfo createAccountSourceInfo() {
+        return AccountSourceInfo.builder().bankProductName(loanName).build();
     }
 
     public Loan toLoan(String detailsString) throws ParseException, JsonProcessingException {
