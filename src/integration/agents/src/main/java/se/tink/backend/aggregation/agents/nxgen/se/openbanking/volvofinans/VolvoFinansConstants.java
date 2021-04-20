@@ -5,6 +5,8 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public final class VolvoFinansConstants {
 
+    public static final String PROVIDER_MARKET = "SE";
+
     private VolvoFinansConstants() {
         throw new AssertionError();
     }

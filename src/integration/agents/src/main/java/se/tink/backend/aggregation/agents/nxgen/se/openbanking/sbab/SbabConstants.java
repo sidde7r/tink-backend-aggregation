@@ -5,6 +5,8 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public final class SbabConstants {
 
+    public static final String PROVIDER_MARKET = "SE";
+
     private SbabConstants() {
         throw new AssertionError();
     }
