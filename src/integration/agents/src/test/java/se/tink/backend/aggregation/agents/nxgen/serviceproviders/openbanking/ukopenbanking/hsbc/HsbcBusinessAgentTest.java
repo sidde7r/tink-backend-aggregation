@@ -5,6 +5,8 @@ import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 
 public class HsbcBusinessAgentTest {
 
+    private static final String HSBC_FINANCIAL_INSTITUTION_ID = "6cd6d369ba8e4d72b1a7d26dabe509a3";
+
     @Test
     public void testRefresh() throws Exception {
         new AgentIntegrationTest.Builder("uk", "uk-hsbc-business-ob")
@@ -12,7 +14,7 @@ public class HsbcBusinessAgentTest {
                 .saveCredentialsAfter(true)
                 .expectLoggedIn(false)
                 .setAppId("tink")
-                .setFinancialInstitutionId("2dd34a204b31439d81c8f913044ea637")
+                .setFinancialInstitutionId(HSBC_FINANCIAL_INSTITUTION_ID)
                 .build()
                 .testRefresh();
     }
