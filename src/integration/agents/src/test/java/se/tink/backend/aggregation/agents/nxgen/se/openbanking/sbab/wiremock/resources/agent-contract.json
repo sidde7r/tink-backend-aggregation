@@ -90,7 +90,8 @@
         "date" : "2020-02-25",
         "instant" : null
       }
-    } ]
+    } ],
+    "providerMarket" : "SE"
   }, {
     "amount" : 20000.0,
     "date" : 1581937200000,
@@ -111,7 +112,8 @@
         "date" : "2020-02-17",
         "instant" : null
       }
-    } ]
+    } ],
+    "providerMarket" : "SE"
   }, {
     "amount" : 11433.0,
     "date" : 1595584800000,
@@ -132,7 +134,8 @@
         "date" : "2020-07-24",
         "instant" : null
       }
-    } ]
+    } ],
+    "providerMarket" : "SE"
   }, {
     "amount" : 224.0,
     "date" : 1595584800000,
@@ -153,7 +156,8 @@
         "date" : "2020-07-24",
         "instant" : null
       }
-    } ]
+    } ],
+    "providerMarket" : "SE"
   }, {
     "amount" : -13000.0,
     "date" : 1593079200000,
@@ -174,7 +178,8 @@
         "date" : "2020-06-25",
         "instant" : null
       }
-    } ]
+    } ],
+    "providerMarket" : "SE"
   }, {
     "amount" : 11497.0,
     "date" : 1593079200000,
@@ -195,7 +200,8 @@
         "date" : "2020-06-25",
         "instant" : null
       }
-    } ]
+    } ],
+    "providerMarket" : "SE"
   }, {
     "amount" : 224.0,
     "date" : 1593079200000,
@@ -216,7 +222,8 @@
         "date" : "2020-06-25",
         "instant" : null
       }
-    } ]
+    } ],
+    "providerMarket" : "SE"
   }, {
     "amount" : -10000.0,
     "date" : 1591610400000,
@@ -237,7 +244,8 @@
         "date" : "2020-06-08",
         "instant" : null
       }
-    } ]
+    } ],
+    "providerMarket" : "SE"
   }, {
     "amount" : 11417.0,
     "date" : 1590400800000,
@@ -258,7 +266,8 @@
         "date" : "2020-05-25",
         "instant" : null
       }
-    } ]
+    } ],
+    "providerMarket" : "SE"
   }, {
     "amount" : 224.0,
     "date" : 1590400800000,
@@ -279,7 +288,8 @@
         "date" : "2020-05-25",
         "instant" : null
       }
-    } ]
+    } ],
+    "providerMarket" : "SE"
   }, {
     "amount" : -18700.0,
     "date" : 1587981600000,
@@ -300,7 +310,8 @@
         "date" : "2020-04-27",
         "instant" : null
       }
-    } ]
+    } ],
+    "providerMarket" : "SE"
   }, {
     "amount" : 17374.0,
     "date" : 1587722400000,
@@ -321,7 +332,8 @@
         "date" : "2020-04-24",
         "instant" : null
       }
-    } ]
+    } ],
+    "providerMarket" : "SE"
   }, {
     "amount" : -15000.0,
     "date" : 1586167200000,
@@ -342,7 +354,8 @@
         "date" : "2020-04-06",
         "instant" : null
       }
-    } ]
+    } ],
+    "providerMarket" : "SE"
   }, {
     "amount" : 15000.0,
     "date" : 1585306800000,
@@ -363,7 +376,8 @@
         "date" : "2020-03-27",
         "instant" : null
       }
-    } ]
+    } ],
+    "providerMarket" : "SE"
   }, {
     "amount" : 8624.0,
     "date" : 1585134000000,
@@ -384,7 +398,8 @@
         "date" : "2020-03-25",
         "instant" : null
       }
-    } ]
+    } ],
+    "providerMarket" : "SE"
   }, {
     "amount" : -40000.0,
     "date" : 1585220400000,
@@ -405,7 +420,8 @@
         "date" : "2020-03-26",
         "instant" : null
       }
-    } ]
+    } ],
+    "providerMarket" : "SE"
   }, {
     "amount" : 24000.0,
     "date" : 1583492400000,
@@ -426,7 +442,8 @@
         "date" : "2020-03-06",
         "instant" : null
       }
-    } ]
+    } ],
+    "providerMarket" : "SE"
   }, {
     "amount" : 8631.0,
     "date" : 1582628400000,
@@ -447,7 +464,8 @@
         "date" : "2020-02-25",
         "instant" : null
       }
-    } ]
+    } ],
+    "providerMarket" : "SE"
   }, {
     "amount" : -7000.0,
     "date" : 1582628400000,
@@ -468,7 +486,8 @@
         "date" : "2020-02-25",
         "instant" : null
       }
-    } ]
+    } ],
+    "providerMarket" : "SE"
   }, {
     "amount" : 24000.0,
     "date" : 1581937200000,
@@ -489,7 +508,8 @@
         "date" : "2020-02-17",
         "instant" : null
       }
-    } ]
+    } ],
+    "providerMarket" : "SE"
   }, {
     "amount" : -20000.0,
     "date" : 1581937200000,
@@ -510,7 +530,8 @@
         "date" : "2020-02-17",
         "instant" : null
       }
-    } ]
+    } ],
+    "providerMarket" : "SE"
   }, {
     "amount" : -60000.0,
     "date" : 1580814000000,
@@ -531,7 +552,8 @@
         "date" : "2020-02-04",
         "instant" : null
       }
-    } ]
+    } ],
+    "providerMarket" : "SE"
   }, {
     "amount" : 8875.0,
     "date" : 1580727600000,
@@ -552,7 +574,8 @@
         "date" : "2020-02-03",
         "instant" : null
       }
-    } ]
+    } ],
+    "providerMarket" : "SE"
   }, {
     "amount" : -12000.0,
     "date" : 1580382000000,
@@ -573,6 +596,7 @@
         "date" : "2020-01-30",
         "instant" : null
       }
-    } ]
+    } ],
+    "providerMarket" : "SE"
   } ]
 }
