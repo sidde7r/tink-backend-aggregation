@@ -1,0 +1,22 @@
+{
+    "accounts": [],
+    "cards": [
+        {
+            "id": "1",
+            "productCode": "05007",
+            "description": "VISA DEBITO",
+            "currency": "EUR",
+            "status": "OPERATIVA",
+            "expiry": "11-2024",
+            "account": "A1",
+            "pan": "415007******2158",
+            "type": "DT",
+            "available": true,
+            "brand": "1"
+        }
+    ],
+    "currency": "EUR",
+    "globalBalance": 3133.86,
+    "whatIhave": 3133.86,
+    "whatIowe": 0.00
+}

@@ -1,0 +1,22 @@
+{
+    "card": "4150********1111",
+    "cardType": "Débito",
+    "expiryDate": "2024-11-30",
+    "debitAccount": "ES20 3058 0000 0000 0000 0000",
+    "relatedMainCard": "-",
+    "accumulatedOperations": 105,
+    "accumulatedAmount": 3056.63,
+    "discountForUse": "15,00 euros with more than 48 purchases.",
+    "accountHolder": "ADRIAN DE LA PACO",
+    "currency": "EUR",
+    "operationCardLimits": [
+        {
+            "scope": "Contactless",
+            "level": true
+        },
+        {
+            "scope": "Look",
+            "level": false
+        }
+    ]
+}

@@ -10,6 +10,7 @@ import javax.annotation.Nullable;
 import javax.ws.rs.core.MediaType;
 import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.BankiaConstants.Default;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.RequestFactory.Scope;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.authenticator.BankiaCrypto;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.authenticator.rpc.LoginRequest;
@@ -88,7 +89,6 @@ public class BankiaApiClient {
                     .create(Scope.WITH_SESSION, URL.of(BankiaConstants.Url.SERVICES_CONTRACTS))
                     .queryParam(
                             BankiaConstants.Query.GROUP_BY_FAMILIA, BankiaConstants.Default.TRUE)
-                    .queryParam(BankiaConstants.Query.ID_VISTA, BankiaConstants.Default._1)
                     .get(ContractsResponse.class);
         } catch (HttpResponseException exception) {
             if (exception.getResponse().getStatus() == HttpStatus.SC_FORBIDDEN) {
@@ -147,12 +147,9 @@ public class BankiaApiClient {
         PositionWalletRequest request = new PositionWalletRequest(dataHomeModel);
 
         return client.request(BankiaConstants.Url.VALUE_ACCOUNT_POSITION_WALLET)
-                .queryParam(
-                        BankiaConstants.Query.CM_FORCED_DEVICE_TYPE, BankiaConstants.Default.JSON)
-                .queryParam(BankiaConstants.Query.J_GID_COD_APP, BankiaConstants.Default.O3)
-                .queryParam(
-                        BankiaConstants.Query.J_GID_COD_DS, BankiaConstants.Default.LOWER_CASE_OIP)
-                .queryParam(BankiaConstants.Query.X_J_GID_COD_APP, BankiaConstants.Default.O3)
+                .header(BankiaConstants.Query.J_GID_COD_APP, Default.LOWER_CASE_AM)
+                .header(BankiaConstants.Query.J_GID_COD_DS, BankiaConstants.Default.LOWER_CASE_OIP)
+                .header(BankiaConstants.Query.X_J_GID_COD_APP, Default.LOWER_CASE_AM)
                 .body(request, MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .post(PositionWalletResponse.class);

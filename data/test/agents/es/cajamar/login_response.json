@@ -1,0 +1,19 @@
+{
+    "branch": "1",
+    "bugurooId": "Cajamar-bcc",
+    "campaign": [],
+    "entity": "CAJAMAR CAJA RURAL",
+    "hmacCodePerson": "person",
+    "hmacCodeSesion": "session",
+    "language": "eng",
+    "lastAccessDate": "2021-04-01T17:19:00.000+0200",
+    "maiaId": "4b",
+    "maxIdleTime": 600,
+    "name": "STEVE JOBS",
+    "notices": [],
+    "passMustBeChanged": false,
+    "personNumber": "1",
+    "remoteSessionClosed": false,
+    "style": "0",
+    "verisecEnabled": false
+}

@@ -1,0 +1,224 @@
+REQUEST 1
+POST https://oauth2-apisi.e-i.com/cm/oauth2/token
+Accept: application/json
+Content-Type: application/x-www-form-urlencoded
+X-Aggregator: Tink Testing
+
+RESPONSE 1
+200
+Content-Type: application/json;charset=utf-8
+
+{
+    "access_token": "DUMMY_ACCESS_TOKEN",
+    "token_type": "bearer",
+    "expires_in": 3600,
+    "scope": "pisp"
+}
+
+REQUEST 2
+POST https://oauth2-apisi.e-i.com/cm/stet-psd2-api/v1.1/payment-requests
+Authorization: Bearer DUMMY_ACCESS_TOKEN
+Accept: application/json
+X-Aggregator: Tink Testing
+Content-Type: application/json
+
+{
+    "numberOfTransactions": 1,
+    "initiatingParty": {
+        "name": "Payment Initiator"
+    },
+    "paymentTypeInformation": {
+        "serviceLevel": "SEPA",
+        "localInstrument": "INST"
+    },
+    "debtorAccount": {
+        "iban": "FR7610278022230002054000114"
+    },
+    "beneficiary": {
+        "creditor": {
+            "name": "Payment Receiver"
+        },
+        "creditorAccount": {
+            "iban": "FR7630004033770000100375924"
+        }
+    },
+    "creditTransferTransaction": [
+        {
+            "instructedAmount": {
+                "currency": "EUR",
+                "amount": "1.0"
+            },
+            "remittanceInformation": {
+                "unstructured": [
+                    "Message"
+                ]
+            }
+        }
+    ],
+    "supplementaryData": {
+        "acceptedAuthenticationApproach": [
+            "REDIRECT"
+        ],
+        "successfulReportUrl": "https://api.tink.com/api/v1/credentials/third-party/callback?code=123&state=00000000-0000-4000-0000-000000000000",
+        "unsuccessfulReportUrl": "https://api.tink.com/api/v1/credentials/third-party/callback?code=123&state=00000000-0000-4000-0000-000000000000"
+    }
+}
+
+RESPONSE 2
+201
+Content-Language: fr
+Content-Type: application/json;charset=utf-8
+
+{
+    "appliedAuthenticationApproach": "REDIRECT",
+    "_links": {
+        "consentApproval": {
+            "href": "https://www.creditmutuel.fr/oauth2/fr/banque/confirmer_paiement.html?paymentId=pB8SUWGz-EGijR-LmpoIJA"
+        }
+    }
+}
+
+REQUEST 3
+GET https://oauth2-apisi.e-i.com/cm/stet-psd2-api/v1.1/payment-requests/pB8SUWGz-EGijR-LmpoIJA
+Accept: application/json
+X-Aggregator: Tink Testing
+Authorization: Bearer DUMMY_ACCESS_TOKEN
+Content-Type: application/json
+
+RESPONSE 3
+200
+Content-Type: application/json;charset=utf-8
+Content-Language: fr
+
+{
+    "paymentRequest": {
+        "paymentInformationId": "a7cff4cb50f54228a984dc9c768fe914",
+        "numberOfTransactions": 1,
+        "initiatingParty": {
+            "name": "Payment Initiator"
+        },
+        "paymentTypeInformation": {
+            "serviceLevel": "SEPA",
+            "localInstrument": "INST"
+        },
+        "debtorAccount": {
+            "iban": "FR7610278022230002054000114"
+        },
+        "beneficiary": {
+            "creditor": {
+                "name": "Creditor Name"
+            },
+            "creditorAccount": {
+                "iban": "FR7630004033770000100375924"
+            }
+        },
+        "paymentInformationStatusCode": "ACSP",
+        "creditTransferTransaction": [
+            {
+                "paymentId": {
+                    "instructionId": "229f2ad2bf564ef1a988112df6967b9d"
+                },
+                "instructedAmount": {
+                    "currency": "EUR",
+                    "amount": "1.0"
+                },
+                "remittanceInformation": {
+                    "unstructured": [
+                        "Message"
+                    ]
+                }
+            }
+        ],
+        "supplementaryData": {
+            "acceptedAuthenticationApproach": [
+                "REDIRECT"
+            ],
+            "successfulReportUrl": "https://api.tink.com/api/v1/credentials/third-party/callback?code=123&state=00000000-0000-4000-0000-000000000000",
+            "unsuccessfulReportUrl": "https://api.tink.com/api/v1/credentials/third-party/callback?code=123&state=00000000-0000-4000-0000-000000000000"
+        }
+    },
+    "_links": {
+        "self": {
+            "href": "/cm/stet-psd2-api/v1.1/payment-requests/pB8SUWGz-EGijR-LmpoIJA"
+        },
+        "request": {
+            "href": "/cm/stet-psd2-api/v1.1/payment-requests/pB8SUWGz-EGijR-LmpoIJA"
+        },
+        "confirmation": {
+            "href": "/cm/stet-psd2-api/v1.1/payment-requests/pB8SUWGz-EGijR-LmpoIJA/confirmation"
+        }
+    }
+}
+
+REQUEST 4
+POST https://oauth2-apisi.e-i.com/cm/stet-psd2-api/v1.1/payment-requests/pB8SUWGz-EGijR-LmpoIJA/confirmation
+Accept: application/json
+X-Aggregator: Tink Testing
+Authorization: Bearer DUMMY_ACCESS_TOKEN
+Content-Type: application/json
+
+{
+    "psuAuthenticationFactor": "DUMMY_PSU_AUTH_CODE"
+}
+
+RESPONSE 4
+200
+Content-Type: application/json;charset=utf-8
+Content-Language: fr
+
+{
+    "paymentRequest": {
+        "paymentInformationId": "a7cff4cb50f54228a984dc9c768fe914",
+        "numberOfTransactions": 1,
+        "initiatingParty": {
+            "name": "Payment Initiator"
+        },
+        "paymentTypeInformation": {
+            "serviceLevel": "SEPA",
+            "localInstrument": "INST"
+        },
+        "debtorAccount": {
+            "iban": "FR7610278022230002054000114"
+        },
+        "beneficiary": {
+            "creditor": {
+                "name": "Creditor Name"
+            },
+            "creditorAccount": {
+                "iban": "FR7630004033770000100375924"
+            }
+        },
+        "paymentInformationStatusCode": "ACSC",
+        "creditTransferTransaction": [
+            {
+                "paymentId": {
+                    "instructionId": "229f2ad2bf564ef1a988112df6967b9d"
+                },
+                "instructedAmount": {
+                    "currency": "EUR",
+                    "amount": "1.0"
+                },
+                "remittanceInformation": {
+                    "unstructured": [
+                        "Message"
+                    ]
+                }
+            }
+        ],
+        "supplementaryData": {
+            "acceptedAuthenticationApproach": [
+                "REDIRECT"
+            ],
+            "successfulReportUrl": "https://api.tink.com/api/v1/thirdparty/callback?code=123&state=00000000-0000-4000-0000-000000000000",
+            "unsuccessfulReportUrl": "https://api.tink.com/api/v1/thirdparty/callback?code=123&state=00000000-0000-4000-0000-000000000000"
+        }
+    },
+    "_links": {
+        "self": {
+            "href": "/cm/stet-psd2-api/v1.1/payment-requests/pB8SUWGz-EGijR-LmpoIJA/confirmation"
+        },
+        "confirmation": {
+            "href": "/cm/stet-psd2-api/v1.1/payment-requests/pB8SUWGz-EGijR-LmpoIJA/confirmation"
+        }
+    }
+}

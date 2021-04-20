@@ -913,6 +913,10 @@ agentsServiceConfiguration:
         clientSigningCertificateSerialNumber: ''
         psuIpAddress: 127.0.0.1
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+    260962a9ff404808854693520d1246f7:
+      tink:
+        clientId: dummyClientId
+        redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
     2698364f6dc543898dd9337058bfdf51:
       tink:
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback

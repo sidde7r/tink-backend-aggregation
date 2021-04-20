@@ -30,13 +30,14 @@ public abstract class BankiaConstants {
         public static final String CREDIT_CARD_TRANSACTIONS =
                 URL_BASE_OIP + "/api/1.0/operativas/2.0/tarjetas/movimientos";
         public static final String VALUE_ACCOUNT_POSITION_WALLET =
-                URL_BASE_OIP + "/api/microservicios/1.0/valores/posicionCartera";
+                URL_BASE_OIP
+                        + "/api/1.0/servicios/valores.ConsultarPosicionCarteraValores/3.0/valores/ConsultarPosicionCarteraValores";
 
         public static final String IDENTITY_DATA =
-                URL_BASE_OIP + "/api/1.0/servicios/cliente.datos/5.0/cliente/datos";
+                URL_BASE_OIP + "/api/1.0/servicios/cliente.datos/7.0/cliente/datos";
         public static final String CUSTOMER_SCENARIO =
                 URL_BASE_OIP
-                        + "/api/1.0/servicios/contexto.escenariocliente/13.0/contexto/escenariocliente";
+                        + "/api/1.0/servicios/contexto.escenariocliente/14.0/contexto/escenariocliente";
     }
 
     public static class Query {
@@ -46,7 +47,6 @@ public abstract class BankiaConstants {
         public static final String J_GID_COD_DS = "j_gid_cod_ds";
         public static final String ORIGEN = "origen";
         public static final String X_J_GID_COD_APP = "x-j_gid_cod_app";
-        public static final String ID_VISTA = "idVista";
         public static final String GROUP_BY_FAMILIA = "groupByFamilia";
     }
 
@@ -81,7 +81,6 @@ public abstract class BankiaConstants {
         public static final String LOGIN = "login";
         public static final String OMP = "omp";
         public static final String O3 = "o3";
-        public static final String _1 = "1";
         public static final String EMPTY_RESUME_POINT = "";
         public static final String ACCEPT_LANGUAGE = "es";
         public static final String EMPTY_EXECUTION_STRING = "";
