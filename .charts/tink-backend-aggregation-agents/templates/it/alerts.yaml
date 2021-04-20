@@ -1650,6 +1650,22 @@ spec:
           the last 30 minutes for <{ $labels.type }>
         tags: {{ .Values.tags }}
 
+    - alert: bank_is_down_it
+      expr: |
+        # bank is down since 60 mins
+        sum by(action, className) (increase(tink_agent_login_total{action=~"login|is-logged-in",market="IT",outcome=~"unavailable",provider_type!="test"}[60m]))
+      for: {{ .Values.p2WaitTimeBeforeFiringAlert }}
+      labels:
+        severity: urgent
+        priority: P2
+        who: integration-nazguls
+      annotations:
+        description: {{ .Values.kibanaClassLink }}
+          {{ .Values.grafanaLink }}
+        summary: Bank is down since 60 min for ( <{ $value }> ) login attempts for agent <{ $labels.className }>
+          the last {{ .Values.p2WaitTimeBeforeFiringAlert }} minutes.
+        tags: {{ .Values.tags }}
+
     #########################################
     ### AgentServerErrors - Agent Refresh ###
     #########################################
