@@ -285,7 +285,7 @@ public class UkOpenBankingPaymentAuthenticatorTest {
 
         // then
         assertThat(thrown)
-                .isExactlyInstanceOf(IllegalArgumentException.class)
+                .isExactlyInstanceOf(PaymentAuthorizationException.class)
                 .hasNoCause()
                 .hasMessageStartingWith("callbackData did not contain code.");
 

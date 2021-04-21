@@ -151,16 +151,17 @@ public class UkOpenBankingPaymentAuthenticator {
         throw new PaymentAuthorizationException(InternalStatus.PAYMENT_AUTHORIZATION_FAILED);
     }
 
-    private String getAuthCodeFromCallbackData(Map<String, String> callbackData) {
+    private String getAuthCodeFromCallbackData(Map<String, String> callbackData)
+            throws PaymentAuthorizationException {
         return getCallbackElement(callbackData, OpenIdConstants.CallbackParams.CODE)
                 .orElseThrow(
                         () ->
-                                new IllegalArgumentException(
+                                new PaymentAuthorizationException(
                                         String.format(
                                                 "callbackData did not contain code. CallbackUri: %s, Data received: %s",
                                                 callbackUri,
-                                                SerializationUtils.serializeToString(
-                                                        callbackData))));
+                                                SerializationUtils.serializeToString(callbackData)),
+                                        InternalStatus.PAYMENT_AUTHORIZATION_FAILED));
     }
 
     private void validateIdToken(Map<String, String> callbackData, String authCode) {
