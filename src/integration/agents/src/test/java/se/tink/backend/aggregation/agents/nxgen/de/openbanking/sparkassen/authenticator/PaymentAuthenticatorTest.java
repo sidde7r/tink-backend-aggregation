@@ -9,7 +9,7 @@ import static org.mockito.Mockito.when;
 import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.AuthenticatorTestData.PASSWORD;
 import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.AuthenticatorTestData.SELECT_AUTH_METHOD_OK;
 import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.AuthenticatorTestData.USERNAME;
-import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.payment.PaymentTestHelper.PAYMENT_AUTHORIZATION_RESPONSE;
+import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.payment.PaymentTestHelper.PAYMENT_AUTHORIZATION_RESPONSE_WITH_MULTIPLE_SCA_METHOD;
 import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.payment.PaymentTestHelper.PAYMENT_CREATE_RESPONSE;
 import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.payment.PaymentTestHelper.PAYMENT_SCA_AUTHENTICATION_FAILED_STATUS_RESPONSE;
 import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.payment.PaymentTestHelper.PAYMENT_SCA_AUTHENTICATION_STATUS_RESPONSE;
@@ -64,7 +64,8 @@ public class PaymentAuthenticatorTest {
     @Test
     public void shouldCompletePaymentAuthenticationWithSelectingSCAMethod() {
         // given
-        paymentTestHelper.whenCreatePaymentAuthorizationReturn(PAYMENT_AUTHORIZATION_RESPONSE);
+        paymentTestHelper.whenCreatePaymentAuthorizationReturn(
+                PAYMENT_AUTHORIZATION_RESPONSE_WITH_MULTIPLE_SCA_METHOD);
         paymentTestHelper.whenSelectPaymentAuthorizationMethodReturn(
                 PAYMENT_SCA_METHOD_SELECTION_RESPONSE);
         paymentTestHelper.whenCreatePaymentFinalizeAuthorizationReturn(
@@ -86,7 +87,8 @@ public class PaymentAuthenticatorTest {
     @Test
     public void shouldThrowPaymentAuthenticationErrorWhenScaAuthenticationFailed() {
         // given
-        paymentTestHelper.whenCreatePaymentAuthorizationReturn(PAYMENT_AUTHORIZATION_RESPONSE);
+        paymentTestHelper.whenCreatePaymentAuthorizationReturn(
+                PAYMENT_AUTHORIZATION_RESPONSE_WITH_MULTIPLE_SCA_METHOD);
         paymentTestHelper.whenSelectPaymentAuthorizationMethodReturn(
                 PAYMENT_SCA_METHOD_SELECTION_RESPONSE);
         paymentTestHelper.whenCreatePaymentFinalizeAuthorizationReturn(
