@@ -1,66 +1,56 @@
 package se.tink.backend.aggregation.rpc;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
-import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.agents.rpc.Provider;
+import lombok.ToString;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsRequestType;
 import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.payments.common.model.PaymentScheme;
-import se.tink.libraries.signableoperation.rpc.SignableOperation;
 import se.tink.libraries.transfer.rpc.ExecutionRule;
 import se.tink.libraries.transfer.rpc.Frequency;
 import se.tink.libraries.transfer.rpc.RecurringPayment;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
-import se.tink.libraries.user.rpc.User;
+import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.uuid.UUIDUtils;
 
 @Setter
 @Getter
+@NoArgsConstructor
+@ToString
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class RecurringPaymentRequest extends TransferRequest {
 
     private UUID id;
-
     private String credentialsId;
-
     private String userId;
     private AccountIdentifierType creditorType;
-    private String creditorId;
-    private String creditorName;
+    @ToString.Exclude private String creditorId;
+    @ToString.Exclude private String creditorName;
     private AccountIdentifierType debtorType;
-    private String debtorId;
+    @ToString.Exclude private String debtorId;
     private BigDecimal amount;
     private String currency;
-    private RemittanceInformation remittanceInformation;
+    @ToString.Exclude private RemittanceInformation remittanceInformation;
     private PaymentScheme paymentScheme;
-    private String originatingUserIp;
+    @ToString.Exclude private String originatingUserIp;
     private Frequency frequency;
     private LocalDate startDate;
     private LocalDate endDate;
     private ExecutionRule executionRule;
     private int dayOfExecution;
 
-    public RecurringPaymentRequest() {}
-
-    public RecurringPaymentRequest(
-            User user,
-            Provider provider,
-            Credentials credentials,
-            SignableOperation signableOperation,
-            boolean update) {
-        super(user, provider, credentials, signableOperation, update);
-    }
-
     @Override
     public CredentialsRequestType getType() {
         return CredentialsRequestType.RECURRING_PAYMENT;
     }
 
+    @JsonIgnore
     public RecurringPayment getRecurringPayment() {
         RecurringPayment recurringPayment = new RecurringPayment();
         recurringPayment.setId(id);
@@ -79,5 +69,11 @@ public class RecurringPaymentRequest extends TransferRequest {
         recurringPayment.setDayOfExecution(dayOfExecution);
 
         return recurringPayment;
+    }
+
+    // temp overriding unless we restructure code in better way
+    @JsonIgnore
+    public Transfer getTransfer() {
+        return getRecurringPayment();
     }
 }
