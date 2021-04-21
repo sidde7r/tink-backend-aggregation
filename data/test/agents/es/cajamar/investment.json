@@ -1,0 +1,19 @@
+{
+    "account": "3000/0000/00/00000000",
+    "currency": "EUR",
+    "investmentFundTotal": 28.00,
+    "portfolioValues": [
+        {
+            "currency": "EUR",
+            "valueFundId": "16190211167858545688",
+            "valueFund": "Value",
+            "shares": "5,00",
+            "marketPrice": "5,6",
+            "plusMinus": "-1,0",
+            "type": "RV",
+            "marketCode": "BMA",
+            "isinCode": "ES0000000I00",
+            "marketValue": 28.00
+        }
+    ]
+}

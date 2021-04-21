@@ -61,6 +61,8 @@ public class CajamarConstants {
                 BASE_URL + VERSION + CARD_ENDPOINT + "/{" + PARAM_ID + "}" + TRANSACTIONS_ENDPOINT;
         public static final String IDENTITY_DATA =
                 BASE_URL + VERSION + ACCOUNT_ENDPOINT + "/{" + PARAM_ID + "}/certificate";
+        public static final String INVESTMENT_ACCOUNT =
+                BASE_URL + VERSION + "/portfolio/{" + PARAM_ID + "}";
     }
 
     public static final class HeaderValues {
