@@ -15,6 +15,9 @@ public final class IngBaseConstants {
         private static final String BASE_AUTH = "/oauth2";
         public static final String OAUTH = BASE_AUTH + "/authorization-server-url";
         public static final String TOKEN = BASE_AUTH + "/token";
+        public static final String PAYMENT_INITIATION = "/v1/payments/sepa-credit-transfers";
+        public static final String GET_PAYMENT_STATUS =
+                "/v1/payments/sepa-credit-transfers/{paymentId}/status";
     }
 
     public static class Transaction {
@@ -22,6 +25,21 @@ public final class IngBaseConstants {
         // Documentation says "immediately" after authentication. In practice, this is 1h.
         public static final long FULL_HISTORY_MAX_AGE = 30 * 60 * 1000L;
         public static final long DEFAULT_HISTORY_DAYS = 89;
+    }
+
+    public static class IdTags {
+        public static final String PAYMENT_ID = "paymentId";
+    }
+
+    public static class PaymentRequest {
+        public static final String CREDITOR_AGENT = "INGBFRPP";
+        public static final String PAYMENT_CREDITOR = "Payment Creditor";
+        public static final String SLEV = "SLEV";
+        public static final String SEPA = "SEPA";
+        public static final String PAYMENT_TYPE_SEPA = "SEPA";
+        public static final String INST = "INST";
+        public static final String EXECUTION_DATE_FORMAT = "yyyy-MM-dd";
+        public static final String DEFAULT_IP = "0.0.0.0";
     }
 
     public static class StorageKeys {
@@ -59,6 +77,9 @@ public final class IngBaseConstants {
         public static final String AUTHORIZATION = "Authorization";
         public static final String TPP_SIGNATURE_CERTIFICATE = "TPP-Signature-Certificate";
         public static final String SIGNATURE = "Signature";
+        public static final String X_REQUEST_ID = "X-Request-ID";
+        public static final String PSU_ID_ADDRESS = "psu-ip-address";
+        public static final String TPP_REDIRECT_URI = "TPP-Redirect-URI";
     }
 
     public static class FormKeys {
@@ -81,11 +102,14 @@ public final class IngBaseConstants {
         public static final String TIMEZONE = "GMT";
         public static final String DIGEST = "digest: ";
         public static final String X_ING_REQUEST_ID = "x-ing-reqid: ";
+        public static final String X_REQUEST_ID = "x-request-id: ";
         public static final String ALGORITHM = "algorithm=\"rsa-sha256\"";
         public static final String DIGEST_PREFIX = "SHA-256=";
         public static final String SIGNATURE = "Signature";
         public static final String KEY_ID_NAME = "keyId=";
         public static final String HEADERS = "headers=\"(request-target) date digest x-ing-reqid\"";
+        public static final String PAYMENT_HEADERS =
+                "headers=\"(request-target) date digest x-request-id\"";
         public static final String SIGNATURE_NAME = "signature=";
         public static final String HTTP_METHOD_POST = "post";
         public static final String HTTP_METHOD_GET = "get";
