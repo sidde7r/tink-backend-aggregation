@@ -64,10 +64,23 @@ public class PaymentTestHelper {
                     Paths.get(TEST_DATA_PATH, "payment_create_response.json").toFile(),
                     CreatePaymentResponse.class);
 
-    public static final AuthenticationMethodResponse PAYMENT_AUTHORIZATION_RESPONSE =
-            SerializationUtils.deserializeFromString(
-                    Paths.get(TEST_DATA_PATH, "payment_init_authorizations_response.json").toFile(),
-                    AuthenticationMethodResponse.class);
+    public static final AuthenticationMethodResponse
+            PAYMENT_AUTHORIZATION_RESPONSE_WITH_MULTIPLE_SCA_METHOD =
+                    SerializationUtils.deserializeFromString(
+                            Paths.get(
+                                            TEST_DATA_PATH,
+                                            "payment_init_authorizations_with_multiple_sca_method_response.json")
+                                    .toFile(),
+                            AuthenticationMethodResponse.class);
+
+    public static final AuthenticationMethodResponse
+            PAYMENT_AUTHORIZATION_RESPONSE_WITH_SINGLE_SCA_METHOD =
+                    SerializationUtils.deserializeFromString(
+                            Paths.get(
+                                            TEST_DATA_PATH,
+                                            "payment_init_authorizations_with_single_sca_method_response.json")
+                                    .toFile(),
+                            AuthenticationMethodResponse.class);
 
     public static final AuthenticationMethodResponse PAYMENT_SCA_METHOD_SELECTION_RESPONSE =
             SerializationUtils.deserializeFromString(

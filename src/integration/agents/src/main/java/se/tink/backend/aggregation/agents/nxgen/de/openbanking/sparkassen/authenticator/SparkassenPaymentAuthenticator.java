@@ -49,13 +49,7 @@ public class SparkassenPaymentAuthenticator extends SparkassenAuthenticator
                         credentials.getField(Field.Key.USERNAME),
                         credentials.getField(Field.Key.PASSWORD));
 
-        AuthenticationMethodResponse scaMethodDetails =
-                getPaymentScaMethodDetails(initAuthorizationResponse);
-
-        authorizePaymentWithOtp(
-                initAuthorizationResponse.getLinks().getSelectAuthenticationMethod().getHref(),
-                scaMethodDetails.getChosenScaMethod(),
-                scaMethodDetails.getChallengeData());
+        authorisePayment(initAuthorizationResponse);
     }
 
     private AuthenticationMethodResponse initializeAuthorizationOfPayment(
@@ -75,19 +69,33 @@ public class SparkassenPaymentAuthenticator extends SparkassenAuthenticator
         return apiClient.initializeAuthorization(url, username, password);
     }
 
-    private AuthenticationMethodResponse getPaymentScaMethodDetails(
-            AuthenticationMethodResponse initAuthorizationResponse)
+    private void authorisePayment(AuthenticationMethodResponse initAuthorizationResponse)
             throws SupplementalInfoException, LoginException {
+
         switch (initAuthorizationResponse.getScaStatus()) {
             case PSU_AUTHENTICATED:
-                return getPaymentScaMethodDetailsOutOfMultiplePossible(
-                        getSupportedScaMethods(initAuthorizationResponse),
+                AuthenticationMethodResponse authenticationMethodResponse =
+                        getPaymentScaMethodDetailsOutOfMultiplePossible(
+                                getSupportedScaMethods(initAuthorizationResponse),
+                                initAuthorizationResponse
+                                        .getLinks()
+                                        .getSelectAuthenticationMethod()
+                                        .getHref());
+                authorizePaymentWithOtp(
                         initAuthorizationResponse
                                 .getLinks()
                                 .getSelectAuthenticationMethod()
-                                .getHref());
+                                .getHref(),
+                        authenticationMethodResponse.getChosenScaMethod(),
+                        authenticationMethodResponse.getChallengeData());
+                break;
+
             case SCA_METHOD_SELECTED:
-                return initAuthorizationResponse;
+                authorizePaymentWithOtp(
+                        initAuthorizationResponse.getLinks().getAuthoriseTransaction().getHref(),
+                        initAuthorizationResponse.getChosenScaMethod(),
+                        initAuthorizationResponse.getChallengeData());
+                break;
             default:
                 throw new IllegalStateException(
                         SparkassenConstants.ErrorMessages.MISSING_SCA_METHOD_DETAILS);
