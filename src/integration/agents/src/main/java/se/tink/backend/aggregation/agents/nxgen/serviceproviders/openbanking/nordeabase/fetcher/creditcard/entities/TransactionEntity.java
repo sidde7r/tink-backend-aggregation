@@ -32,13 +32,13 @@ public class TransactionEntity {
     private String currency;
 
     @JsonIgnore
-    public ExactCurrencyAmount getAmount() {
+    public ExactCurrencyAmount getTinkAmount() {
         return ExactCurrencyAmount.of(amount, currency);
     }
 
     public CreditCardTransaction toTinkCreditCardTransaction() {
         return CreditCardTransaction.builder()
-                .setAmount(getAmount())
+                .setAmount(getTinkAmount())
                 .setCreditCard(CreditCard.create(beneficiary, maskedCreditCardNumber))
                 .setDescription(beneficiary)
                 .setPending(false)
