@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.fetcher.mapper;
 
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -36,7 +37,7 @@ public class DnbTransactionMapper {
                     Transaction.builder()
                             .setPending(isPending)
                             .setAmount(transactionEntity.getTransactionAmount().toTinkAmount())
-                            .setDate(transactionEntity.getBookingDate())
+                            .setDate(getTransactionDate(transactionEntity, isPending))
                             .setDescription(
                                     ObjectUtils.firstNonNull(
                                             transactionEntity.getAdditionalInformation(),
@@ -46,5 +47,10 @@ public class DnbTransactionMapper {
             log.error("Failed to parse transaction, it will be skipped.", e);
         }
         return Optional.ofNullable(transaction);
+    }
+
+    private LocalDate getTransactionDate(
+            TransactionDetailsEntity transactionEntity, boolean isPending) {
+        return isPending ? transactionEntity.getValueDate() : transactionEntity.getBookingDate();
     }
 }

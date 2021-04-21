@@ -120,6 +120,24 @@ public class DnbTransactionFetcherTest {
     }
 
     @Test
+    public void shouldAllTransactionsHaveDateFilled() {
+        // given
+        given(testAccount.getApiIdentifier()).willReturn(TEST_ACCOUNT_ID);
+        given(mockApiClient.fetchTransactions(FROM_DATE, TEST_CONSENT_ID, TEST_ACCOUNT_ID))
+                .willReturn(getTransactionsResponse());
+        given(mockUserAvailability.isUserPresent()).willReturn(true);
+
+        // when
+        TransactionKeyPaginatorResponse<String> pageOfTransactions =
+                transactionFetcher.getTransactionsFor(testAccount, null);
+
+        // then
+        assertThat(pageOfTransactions.getTinkTransactions())
+                .extracting(Transaction::getDate)
+                .isNotNull();
+    }
+
+    @Test
     public void shouldFetchTransactionsFromLast89DaysWhenUserIsNotAvailable() {
         // given
         LocalDateTime startDate = LocalDateTime.of(2021, Month.APRIL, 19, 12, 0);

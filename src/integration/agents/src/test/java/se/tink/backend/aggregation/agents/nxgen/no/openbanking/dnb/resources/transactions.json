@@ -37,7 +37,6 @@
         "pending": [
             {
                 "additionalInformation": "VISA ASDKFASF",
-                "bookingDate": "2020-11-03",
                 "transactionAmount": {
                     "amount": "-378",
                     "currency": "NOK"
