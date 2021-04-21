@@ -54,8 +54,7 @@ public abstract class AbstractAgent extends SuperAbstractAgent {
 
     /** Returns the certain date for this account (that is from when we know we have all data) */
     protected Date getContentWithRefreshDate(Account account) {
-        if (this.request.getAccounts() == null
-                || this.request.getCredentials().getUpdated() == null) {
+        if (this.request.getAccounts() == null) {
             return null;
         }
 
@@ -81,8 +80,7 @@ public abstract class AbstractAgent extends SuperAbstractAgent {
             return false;
         }
 
-        if (this.request.getAccounts() == null
-                || this.request.getCredentials().getUpdated() == null) {
+        if (this.request.getAccounts() == null) {
             return false;
         }
 

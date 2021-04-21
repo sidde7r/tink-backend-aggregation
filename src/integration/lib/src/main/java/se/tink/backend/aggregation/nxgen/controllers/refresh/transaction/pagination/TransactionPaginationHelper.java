@@ -26,7 +26,7 @@ public class TransactionPaginationHelper {
             return false;
         }
 
-        if (request.getAccounts() == null || request.getCredentials().getUpdated() == null) {
+        if (request.getAccounts() == null) {
             return false;
         }
 
@@ -82,7 +82,7 @@ public class TransactionPaginationHelper {
 
     /** Returns the certain date for this account (that is from when we know we have all data) */
     public Optional<Date> getContentWithRefreshDate(final Account account) {
-        if (request.getAccounts() == null || request.getCredentials().getUpdated() == null) {
+        if (request.getAccounts() == null) {
             return Optional.empty();
         }
 
