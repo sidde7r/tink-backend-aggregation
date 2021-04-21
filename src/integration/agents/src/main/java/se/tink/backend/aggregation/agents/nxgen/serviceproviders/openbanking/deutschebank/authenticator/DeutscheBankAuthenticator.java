@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
+import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.CredentialKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.StorageKeys;
@@ -52,7 +53,15 @@ public class DeutscheBankAuthenticator {
 
     public boolean isPersistedConsentIdValid() {
         ConsentStatusResponse consentStatus = apiClient.getConsentStatus();
-        return consentStatus != null && consentStatus.isValid();
+
+        if (consentStatus == null) {
+            throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception();
+        }
+
+        if (consentStatus.isRejected()) {
+            throw ThirdPartyAppError.CANCELLED.exception();
+        }
+        return consentStatus.isValid();
     }
 
     public AuthorisationDetailsResponse getAuthorisationDetails() {

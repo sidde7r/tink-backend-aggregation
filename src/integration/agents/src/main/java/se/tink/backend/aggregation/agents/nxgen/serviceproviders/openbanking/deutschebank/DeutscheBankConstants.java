@@ -105,6 +105,7 @@ public final class DeutscheBankConstants {
         public static final String EXPIRED = "expired";
         public static final String RECEIVED = "received";
         public static final String VALID = "valid";
+        public static final String REJECTED = "rejected";
     }
 
     public static class FormValues {

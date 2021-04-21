@@ -76,6 +76,8 @@ public class DeutscheBankMultifactorAuthenticator implements TypedAuthenticator,
                     continue;
                 case DeutscheBankConstants.StatusValues.EXPIRED:
                     throw ThirdPartyAppError.AUTHENTICATION_ERROR.exception();
+                case DeutscheBankConstants.StatusValues.REJECTED:
+                    throw ThirdPartyAppError.CANCELLED.exception();
                 default:
                     break;
             }
