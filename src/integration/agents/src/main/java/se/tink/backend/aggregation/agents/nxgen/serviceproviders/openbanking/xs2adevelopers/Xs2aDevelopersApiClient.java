@@ -51,15 +51,15 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 @Slf4j
 public class Xs2aDevelopersApiClient {
 
-    private static final DateTimeFormatter DATE_FORMATTER =
+    protected static final DateTimeFormatter DATE_FORMATTER =
             DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     protected final TinkHttpClient client;
-    private final PersistentStorage persistentStorage;
-    private final Xs2aDevelopersProviderConfiguration configuration;
-    private final boolean isManual;
-    private final String userIp;
-    private final RandomValueGenerator randomValueGenerator;
+    protected final PersistentStorage persistentStorage;
+    protected final Xs2aDevelopersProviderConfiguration configuration;
+    protected final boolean isManual;
+    protected final String userIp;
+    protected final RandomValueGenerator randomValueGenerator;
 
     public Xs2aDevelopersApiClient(
             TinkHttpClient client,
@@ -91,7 +91,8 @@ public class Xs2aDevelopersApiClient {
         return requestBuilder;
     }
 
-    private RequestBuilder createFetchingRequest(URL url) {
+    protected RequestBuilder createFetchingRequest(URL url) {
+
         RequestBuilder requestBuilder =
                 createRequestInSession(url)
                         .header(HeaderKeys.CONSENT_ID, getConsentIdFromStorage())
@@ -131,7 +132,6 @@ public class Xs2aDevelopersApiClient {
     }
 
     public ConsentDetailsResponse getConsentDetails() {
-
         String consentId =
                 Optional.ofNullable(persistentStorage.get(StorageKeys.CONSENT_ID))
                         .orElseThrow(SessionError.SESSION_EXPIRED::exception);
@@ -169,9 +169,7 @@ public class Xs2aDevelopersApiClient {
 
     public TokenResponse getToken(TokenForm tokenForm) {
         try {
-            return createRequest(new URL(configuration.getBaseUrl() + ApiServices.TOKEN))
-                    .body(tokenForm, MediaType.APPLICATION_FORM_URLENCODED)
-                    .post(TokenResponse.class);
+            return getTokenRequest(tokenForm).post(TokenResponse.class);
         } catch (HttpResponseException hre) {
             log.error("Error caught while getting/refreshing access token", hre);
             if (hre.getResponse().getStatus() == 500) {
@@ -262,5 +260,10 @@ public class Xs2aDevelopersApiClient {
                 .accept(MediaType.APPLICATION_JSON_TYPE)
                 .get(WellKnownResponse.class)
                 .getAuthorizationEndpoint();
+    }
+
+    protected RequestBuilder getTokenRequest(TokenForm tokenForm) {
+        return createRequest(new URL(configuration.getBaseUrl() + ApiServices.TOKEN))
+                .body(tokenForm, MediaType.APPLICATION_FORM_URLENCODED);
     }
 }
