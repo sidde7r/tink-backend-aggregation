@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
+import lombok.Getter;
 import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.HandelsbankenNOConstants;
@@ -13,6 +14,7 @@ import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccou
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
+@Getter
 public class OwnCsdAccountEntity {
     private String whenCreated;
     private String sendPaymentNotificationMode;
@@ -31,74 +33,6 @@ public class OwnCsdAccountEntity {
     private String ask;
     private String ownName;
     private List<CsdAccountRightsEntity> rights;
-
-    public String getWhenCreated() {
-        return whenCreated;
-    }
-
-    public String getSendPaymentNotificationMode() {
-        return sendPaymentNotificationMode;
-    }
-
-    public String getWhenTerminated() {
-        return whenTerminated;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public boolean isClientAccount() {
-        return clientAccount;
-    }
-
-    public String getPensionType() {
-        return pensionType;
-    }
-
-    public InvestorEntity getInvestor() {
-        return investor;
-    }
-
-    public String getCsdAccountNumber() {
-        return csdAccountNumber;
-    }
-
-    public BankAccountsEntity getBankAccounts() {
-        return bankAccounts;
-    }
-
-    public String getUri() {
-        return uri;
-    }
-
-    public String getChangeNotificationMode() {
-        return changeNotificationMode;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public MainLocalParticipantEntity getMainLocalParticipant() {
-        return mainLocalParticipant;
-    }
-
-    public Integer getChangeNotificationMailDays() {
-        return changeNotificationMailDays;
-    }
-
-    public String getAsk() {
-        return ask;
-    }
-
-    public String getOwnName() {
-        return ownName;
-    }
-
-    public List<CsdAccountRightsEntity> getRights() {
-        return rights;
-    }
 
     @JsonIgnore
     public boolean isNotClosed() {

@@ -8,10 +8,10 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.util.Strings;
 import org.jsoup.Jsoup;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.HandelsbankenNOApiClient;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.HandelsbankenNOConstants;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.fetcher.investment.entities.AksjerAccountEntity;
@@ -26,18 +26,14 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
+@Slf4j
+@RequiredArgsConstructor
 public class HandelsbankenNOInvestmentFetcher implements AccountFetcher<InvestmentAccount> {
 
-    private final Logger log = LoggerFactory.getLogger(HandelsbankenNOInvestmentFetcher.class);
     private final HandelsbankenNOApiClient apiClient;
     private final String username;
 
     private HashMap<String, Double> availableBalanceByCsdAccountNumber;
-
-    public HandelsbankenNOInvestmentFetcher(HandelsbankenNOApiClient apiClient, String username) {
-        this.apiClient = apiClient;
-        this.username = username;
-    }
 
     @Override
     public Collection<InvestmentAccount> fetchAccounts() {
@@ -69,6 +65,11 @@ public class HandelsbankenNOInvestmentFetcher implements AccountFetcher<Investme
 
         return investmentsOverviewResponse.getOwnCsdAccounts().stream()
                 .filter(OwnCsdAccountEntity::isNotClosed)
+                .filter(
+                        ownCsdAccountEntity ->
+                                ownCsdAccountEntity
+                                        .getMainLocalParticipant()
+                                        .isHandelsbankenAccount())
                 .map(this::convertToTinkAccount)
                 .collect(Collectors.toList());
     }
