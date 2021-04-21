@@ -23,23 +23,11 @@ public class FetchFundInvestmentsResponse extends ArrayList<FundInvestmentEntity
     public Collection<InvestmentAccount> getTinkInvestmentAccounts() {
         Map<String, TmpAccount> tmpMap = new HashMap<>();
         for (FundInvestmentEntity investmentEntity : this) {
-            TmpAccount tmpAccount =
-                    tmpMap.getOrDefault(
-                            investmentEntity.getAccountNumber(), new TmpAccount(investmentEntity));
             if (!tmpMap.containsKey(investmentEntity.getAccountNumber())) {
+                TmpAccount tmpAccount = new TmpAccount(investmentEntity);
+                tmpAccount.instruments.add(investmentEntity.toTinkInstrument());
                 tmpMap.put(investmentEntity.getAccountNumber(), tmpAccount);
             }
-            tmpAccount.accountBalance =
-                    tmpAccount.accountBalance.add(BigDecimal.valueOf(investmentEntity.getValue()));
-            tmpAccount.totalValue =
-                    tmpAccount.totalValue.add(BigDecimal.valueOf(investmentEntity.getValue()));
-            if (investmentEntity.getProfit() != null) {
-                tmpAccount.totalProfit =
-                        tmpAccount.totalProfit.add(
-                                BigDecimal.valueOf(investmentEntity.getProfit()));
-            }
-
-            tmpAccount.instruments.add(investmentEntity.toTinkInstrument());
         }
 
         return tmpMap.values().stream()
@@ -85,9 +73,9 @@ public class FetchFundInvestmentsResponse extends ArrayList<FundInvestmentEntity
         private final PortfolioModule.PortfolioType portfolioType;
         private final String accountName;
         private final String accountNumber;
-        private BigDecimal totalValue = new BigDecimal(0);
-        private BigDecimal totalProfit = new BigDecimal(0);
-        private BigDecimal accountBalance = new BigDecimal(0);
+        private final BigDecimal totalValue;
+        private final BigDecimal totalProfit;
+        private final BigDecimal accountBalance;
         private final List<InstrumentModule> instruments = new ArrayList<>();
 
         private TmpAccount(FundInvestmentEntity investmentEntity) {
@@ -95,6 +83,12 @@ public class FetchFundInvestmentsResponse extends ArrayList<FundInvestmentEntity
             this.portfolioType = investmentEntity.getTinkPortfolioType();
             this.accountName = investmentEntity.getPortfolioName();
             this.accountNumber = investmentEntity.getAccountNumber();
+            this.totalValue = BigDecimal.valueOf(investmentEntity.getValue());
+            this.accountBalance = BigDecimal.valueOf(investmentEntity.getValue());
+            this.totalProfit =
+                    investmentEntity.getProfit() != null
+                            ? BigDecimal.valueOf(investmentEntity.getProfit())
+                            : new BigDecimal(0);
         }
     }
 }

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Strings;
 import lombok.Getter;
+import lombok.Setter;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.SparebankenVestConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument.InstrumentModule;
@@ -33,7 +34,7 @@ public class FundInvestmentEntity {
     @JsonProperty("verdi")
     private Double value;
 
-    private String type;
+    @Setter private String type;
 
     @JsonProperty("portefoljeNavn")
     private String portfolioName;
@@ -63,7 +64,7 @@ public class FundInvestmentEntity {
     }
 
     @JsonIgnore
-    private InstrumentModule.InstrumentType getTinkInstrumentType() {
+    InstrumentModule.InstrumentType getTinkInstrumentType() {
         if (isFund() || isPension()) {
             return InstrumentModule.InstrumentType.FUND;
         }
