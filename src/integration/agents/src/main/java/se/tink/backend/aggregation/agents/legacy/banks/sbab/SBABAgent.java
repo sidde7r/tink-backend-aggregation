@@ -9,8 +9,6 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 import com.google.common.base.Objects;
 import com.google.common.util.concurrent.Uninterruptibles;
 import com.sun.jersey.api.client.Client;
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -87,7 +85,6 @@ public class SBABAgent extends AbstractAgent
 
     private final Client client;
     private final Client clientWithoutSSL;
-    private final LocalDate lastCredentialsUpdate;
 
     private final SBABTransferExecutor transferExecutor;
 
@@ -99,14 +96,6 @@ public class SBABAgent extends AbstractAgent
         super(request, context);
         this.catalog = context.getCatalog();
         credentials = request.getCredentials();
-        lastCredentialsUpdate =
-                credentials.getUpdated() != null
-                        ? credentials
-                                .getUpdated()
-                                .toInstant()
-                                .atZone(ZoneId.of("UTC"))
-                                .toLocalDate()
-                        : null;
 
         //        DefaultApacheHttpClient4Config config = new DefaultApacheHttpClient4Config();
         //        config.getProperties().put(
