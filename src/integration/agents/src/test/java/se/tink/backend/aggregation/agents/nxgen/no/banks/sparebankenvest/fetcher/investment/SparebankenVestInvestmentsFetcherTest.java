@@ -8,7 +8,6 @@ import static org.mockito.Mockito.when;
 
 import java.nio.file.Paths;
 import java.util.Collection;
-import java.util.Iterator;
 import javax.ws.rs.core.MediaType;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.models.Instrument;
@@ -49,8 +48,7 @@ public class SparebankenVestInvestmentsFetcherTest {
 
         // then
         assertThat(accounts).hasSize(2);
-        Iterator<InvestmentAccount> iterator = accounts.iterator();
-        InvestmentAccount account1 = iterator.next();
+        InvestmentAccount account1 = getInvestmentAccount(accounts, "036259009999");
         assertThat(account1.getIdModule().getUniqueId()).isEqualTo("036259009999");
         assertThat(account1.getSystemPortfolios()).isNotEmpty();
         Portfolio portfolio1 = account1.getSystemPortfolios().get(0);
@@ -65,11 +63,19 @@ public class SparebankenVestInvestmentsFetcherTest {
                 1,
                 null);
 
-        InvestmentAccount account2 = iterator.next();
+        InvestmentAccount account2 = getInvestmentAccount(accounts, "9999999");
         assertThat(account2.getIdModule().getUniqueId()).isEqualTo("9999999");
         assertThat(account2.getSystemPortfolios()).isNotEmpty();
         Portfolio portfolio2 = account2.getSystemPortfolios().get(0);
         assertPortfolio(portfolio2, "9999999", 218645.4465, 188465.45, 1, 218645.4465);
+    }
+
+    private InvestmentAccount getInvestmentAccount(
+            Collection<InvestmentAccount> accounts, String accountNumber) {
+        return accounts.stream()
+                .filter(account -> account.getAccountNumber().equals(accountNumber))
+                .findFirst()
+                .orElseThrow(IllegalStateException::new);
     }
 
     private void assertPortfolio(

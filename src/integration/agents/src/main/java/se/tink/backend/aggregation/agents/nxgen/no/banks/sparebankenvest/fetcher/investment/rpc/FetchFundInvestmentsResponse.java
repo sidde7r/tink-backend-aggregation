@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.fetcher.investment.entities.FundInvestmentEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -20,22 +21,22 @@ public class FetchFundInvestmentsResponse extends ArrayList<FundInvestmentEntity
 
     @JsonIgnore
     public Collection<InvestmentAccount> getTinkInvestmentAccounts() {
-        HashMap<String, TmpAccount> tmpMap = new HashMap<>();
+        Map<String, TmpAccount> tmpMap = new HashMap<>();
         for (FundInvestmentEntity investmentEntity : this) {
             TmpAccount tmpAccount =
                     tmpMap.getOrDefault(
-                            investmentEntity.getKontonummer(), new TmpAccount(investmentEntity));
-            if (!tmpMap.containsKey(investmentEntity.getKontonummer())) {
-                tmpMap.put(investmentEntity.getKontonummer(), tmpAccount);
+                            investmentEntity.getAccountNumber(), new TmpAccount(investmentEntity));
+            if (!tmpMap.containsKey(investmentEntity.getAccountNumber())) {
+                tmpMap.put(investmentEntity.getAccountNumber(), tmpAccount);
             }
             tmpAccount.accountBalance =
-                    tmpAccount.accountBalance.add(BigDecimal.valueOf(investmentEntity.getVerdi()));
+                    tmpAccount.accountBalance.add(BigDecimal.valueOf(investmentEntity.getValue()));
             tmpAccount.totalValue =
-                    tmpAccount.totalValue.add(BigDecimal.valueOf(investmentEntity.getVerdi()));
-            if (investmentEntity.getGevinst() != null) {
+                    tmpAccount.totalValue.add(BigDecimal.valueOf(investmentEntity.getValue()));
+            if (investmentEntity.getProfit() != null) {
                 tmpAccount.totalProfit =
                         tmpAccount.totalProfit.add(
-                                BigDecimal.valueOf(investmentEntity.getGevinst()));
+                                BigDecimal.valueOf(investmentEntity.getProfit()));
             }
 
             tmpAccount.instruments.add(investmentEntity.toTinkInstrument());
@@ -93,7 +94,7 @@ public class FetchFundInvestmentsResponse extends ArrayList<FundInvestmentEntity
             this.portfolioRawType = investmentEntity.getType();
             this.portfolioType = investmentEntity.getTinkPortfolioType();
             this.accountName = investmentEntity.getPortfolioName();
-            this.accountNumber = investmentEntity.getKontonummer();
+            this.accountNumber = investmentEntity.getAccountNumber();
         }
     }
 }
