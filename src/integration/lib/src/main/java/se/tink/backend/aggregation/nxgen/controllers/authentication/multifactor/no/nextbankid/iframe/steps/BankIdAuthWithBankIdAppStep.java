@@ -23,14 +23,32 @@ public class BankIdAuthWithBankIdAppStep {
     private final Catalog catalog;
     private final SupplementalInformationController supplementalInformationController;
 
-    public void authenticateWithBankIdApp() {
-        askUserToConfirmBankIdApp();
-        verifyUserHasConfirmed();
+    public BankIdAuthWithBankIdAppUserChoice authenticateWithBankIdApp(boolean canChangeMethod) {
+        BankIdAuthWithBankIdAppUserChoice userChoice = askUserToConfirmBankIdApp(canChangeMethod);
+
+        if (userChoice == BankIdAuthWithBankIdAppUserChoice.AUTHENTICATE) {
+            verifyUserHasConfirmed();
+        }
+
+        return userChoice;
     }
 
-    private void askUserToConfirmBankIdApp() {
-        log.info("{} Asking user to confirm BankID app", BANK_ID_LOG_PREFIX);
+    @SuppressWarnings("unused")
+    private BankIdAuthWithBankIdAppUserChoice askUserToConfirmBankIdApp(boolean canChangeMethod) {
+        log.info(
+                "{} Asking user to confirm BankID app. Can change method: {}",
+                BANK_ID_LOG_PREFIX,
+                canChangeMethod);
 
+        if (canChangeMethod) {
+            return askUserToConfirmAuthenticationOrChangeMethod();
+        }
+
+        askUserToConfirmAuthentication();
+        return BankIdAuthWithBankIdAppUserChoice.AUTHENTICATE;
+    }
+
+    private void askUserToConfirmAuthentication() {
         Field confirmBankIdAppField = NorwegianFields.BankIdAppField.build(catalog);
         try {
             supplementalInformationController.askSupplementalInformationSync(confirmBankIdAppField);
@@ -38,6 +56,15 @@ public class BankIdAuthWithBankIdAppStep {
             // ignore empty response!
             // we're actually not interested in response at all, we just show a text!
         }
+    }
+
+    /*
+    This is temporarily hard coded to always continue BankID app authentication until sdk-web helps us to prepare
+    supplemental info screen
+     */
+    private BankIdAuthWithBankIdAppUserChoice askUserToConfirmAuthenticationOrChangeMethod() {
+        askUserToConfirmAuthentication();
+        return BankIdAuthWithBankIdAppUserChoice.AUTHENTICATE;
     }
 
     private void verifyUserHasConfirmed() {

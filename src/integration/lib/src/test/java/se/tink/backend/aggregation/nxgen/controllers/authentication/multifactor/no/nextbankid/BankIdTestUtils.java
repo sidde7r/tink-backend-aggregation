@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid;
 
+import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.doReturn;
@@ -67,7 +68,14 @@ public class BankIdTestUtils {
 
     public static void mockLocatorExists(
             BankIdElementLocator locator, WebElement elementForLocator, BankIdWebDriver driver) {
-        doReturn(BankIdElementsSearchResult.of(locator, elementForLocator))
+        mockLocatorExists(locator, singletonList(elementForLocator), driver);
+    }
+
+    public static void mockLocatorExists(
+            BankIdElementLocator locator,
+            List<WebElement> elementsForLocator,
+            BankIdWebDriver driver) {
+        doReturn(BankIdElementsSearchResult.of(locator, elementsForLocator))
                 .when(driver)
                 .searchForFirstMatchingLocator(
                         argThat(

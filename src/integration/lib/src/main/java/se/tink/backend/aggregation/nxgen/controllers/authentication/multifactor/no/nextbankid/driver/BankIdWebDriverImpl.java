@@ -65,6 +65,13 @@ public class BankIdWebDriverImpl implements BankIdWebDriver {
     @Override
     public void clickButton(BankIdElementLocator locator) {
         try {
+            /*
+            Sometimes there is no effect of clicking the button. The exact reason was not investigated but an effective
+            solution is to wait for a little to give page time to "stabilize" itself, e.g. recalculate some styles.
+            It may be also helpful in avoiding org.openqa.selenium.ElementClickInterceptedException when something
+            is briefly covering the button.
+             */
+            sleepFor(200);
             clickButtonInternal(locator);
 
         } catch (StaleElementReferenceException exception) {

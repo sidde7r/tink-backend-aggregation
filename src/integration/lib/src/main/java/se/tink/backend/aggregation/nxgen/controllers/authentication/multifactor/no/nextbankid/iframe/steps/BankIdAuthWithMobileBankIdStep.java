@@ -13,8 +13,10 @@ import org.openqa.selenium.WebElement;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.NorwegianFields;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.BankIdWebDriver;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.BankIdElementsSearchQuery;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.screens.BankIdScreen;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.screens.BankIdScreensManager;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.screens.BankIdScreensQuery;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
@@ -32,6 +34,7 @@ public class BankIdAuthWithMobileBankIdStep {
 
     public void authenticateWithMobileBankId() {
         sendMobileRequest();
+        waitForReferenceWordsScreen();
 
         String referenceWords = searchForReferenceWords();
         askUserToConfirmBankIdMobile(referenceWords);
@@ -42,6 +45,16 @@ public class BankIdAuthWithMobileBankIdStep {
     private void sendMobileRequest() {
         log.info("{} Sending BankID mobile request", BANK_ID_LOG_PREFIX);
         webDriver.clickButton(LOC_SUBMIT_BUTTON);
+    }
+
+    private void waitForReferenceWordsScreen() {
+        log.info("{} Waiting for reference words screen", BankIdConstants.BANK_ID_LOG_PREFIX);
+        screensManager.waitForAnyScreenFromQuery(
+                BankIdScreensQuery.builder()
+                        .waitForScreens(BankIdScreen.MOBILE_BANK_ID_REFERENCE_WORDS_SCREEN)
+                        .waitForSeconds(10)
+                        .verifyNoErrorScreens(true)
+                        .build());
     }
 
     private String searchForReferenceWords() {
