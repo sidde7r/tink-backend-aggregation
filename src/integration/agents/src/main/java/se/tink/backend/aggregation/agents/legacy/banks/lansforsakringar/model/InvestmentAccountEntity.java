@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.banks.lansforsakringar.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.aggregation.source_info.AccountSourceInfo;
 import se.tink.libraries.strings.StringUtils;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -43,7 +44,12 @@ public class InvestmentAccountEntity {
         account.setName(getCustomName().isEmpty() ? getAccountNumber() : getCustomName());
         account.setType(AccountTypes.INVESTMENT);
         account.setBalance(totalValue);
+        account.setSourceInfo(createAccountSourceInfo());
 
         return account;
+    }
+
+    private AccountSourceInfo createAccountSourceInfo() {
+        return AccountSourceInfo.builder().bankProductName(customName).build();
     }
 }
