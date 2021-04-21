@@ -13,11 +13,13 @@ public class NordeaBaseTransactionalAccountFetcher<R extends GetTransactionsResp
                 TransactionKeyPaginator<TransactionalAccount, String> {
     private final NordeaBaseApiClient apiClient;
     private Class<R> responseClass;
+    private String providerMarket;
 
     public NordeaBaseTransactionalAccountFetcher(
-            NordeaBaseApiClient apiClient, Class<R> responseClass) {
+            NordeaBaseApiClient apiClient, Class<R> responseClass, String providerMarket) {
         this.apiClient = apiClient;
         this.responseClass = responseClass;
+        this.providerMarket = providerMarket;
     }
 
     @Override
@@ -28,6 +30,8 @@ public class NordeaBaseTransactionalAccountFetcher<R extends GetTransactionsResp
     @Override
     public TransactionKeyPaginatorResponse<String> getTransactionsFor(
             TransactionalAccount account, String key) {
-        return apiClient.getTransactions(account, key, responseClass);
+        return apiClient
+                .getTransactions(account, key, responseClass)
+                .setProviderMarket(providerMarket);
     }
 }

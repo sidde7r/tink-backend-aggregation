@@ -8,7 +8,9 @@ public class NordeaNoTransactionalAccountFetcher<R extends GetTransactionsRespon
         extends NordeaBaseTransactionalAccountFetcher<R> {
 
     public NordeaNoTransactionalAccountFetcher(
-            NordeaBaseApiClient apiClient, Class<R> transactionResponseClass) {
-        super(apiClient, transactionResponseClass);
+            NordeaBaseApiClient apiClient,
+            Class<R> transactionResponseClass,
+            String providerMarket) {
+        super(apiClient, transactionResponseClass, providerMarket);
     }
 }

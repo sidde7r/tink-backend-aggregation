@@ -23,7 +23,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ent
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.entercard.fetcher.rpc.CreditCardAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.entercard.fetcher.rpc.CreditCardTransactionsResponse;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -85,8 +84,8 @@ public final class EnterCardApiClient {
                 .get(CreditCardAccountResponse.class);
     }
 
-    public TransactionKeyPaginatorResponse fetchCreditCardTransactions(
-            CreditCardAccount account, TransactionKey key) {
+    public CreditCardTransactionsResponse fetchCreditCardTransactions(
+            CreditCardAccount account, TransactionKey key, String providerMarket) {
         return createRequestInSession(EnterCardConstants.Urls.TRANSACTIONS)
                 .queryParam(QueryKeys.INCLUDE_CARD_MOVEMENTS, QueryValues.TRUE)
                 .queryParam(QueryKeys.ACCOUNT_NUMBER, account.getApiIdentifier())
@@ -94,7 +93,8 @@ public final class EnterCardApiClient {
                 .queryParam(
                         QueryKeys.STOP_AFTER_ROW_NUMBER, String.valueOf(key.getStopAfterRowNum()))
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
-                .get(CreditCardTransactionsResponse.class);
+                .get(CreditCardTransactionsResponse.class)
+                .setProviderMarket(providerMarket);
     }
 
     public OAuth2Token getAuth() {

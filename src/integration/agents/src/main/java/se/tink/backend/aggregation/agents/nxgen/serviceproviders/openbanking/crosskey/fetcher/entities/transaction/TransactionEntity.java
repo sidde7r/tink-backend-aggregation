@@ -60,7 +60,7 @@ public class TransactionEntity {
         return creditDebitIndicator;
     }
 
-    public Transaction constructCreditCardTransaction() {
+    public Transaction constructCreditCardTransaction(String providerMarket) {
 
         ExactCurrencyAmount transactionAmount =
                 ExactCurrencyAmount.of(amount.getAmount(), amount.getCurrency());
@@ -71,10 +71,10 @@ public class TransactionEntity {
                         : transactionAmount;
 
         return (CreditCardTransaction)
-                getAggregationTransaction(transactionAmount, getDescription());
+                getAggregationTransaction(transactionAmount, getDescription(), providerMarket);
     }
 
-    public Transaction constructTransactionalAccountTransaction() {
+    public Transaction constructTransactionalAccountTransaction(String providerMarket) {
 
         ExactCurrencyAmount transactionAmount =
                 ExactCurrencyAmount.of(amount.getAmount(), amount.getCurrency());
@@ -93,11 +93,12 @@ public class TransactionEntity {
             transactionName = "";
         }
 
-        return (Transaction) getAggregationTransaction(transactionAmount, transactionName);
+        return (Transaction)
+                getAggregationTransaction(transactionAmount, transactionName, providerMarket);
     }
 
     private AggregationTransaction getAggregationTransaction(
-            ExactCurrencyAmount amount, String description) {
+            ExactCurrencyAmount amount, String description, String providerMarket) {
         Builder builder =
                 Transaction.builder()
                         .setAmount(amount)
@@ -109,7 +110,8 @@ public class TransactionEntity {
                                 TransactionExternalSystemIdType.PROVIDER_GIVEN_TRANSACTION_ID,
                                 transactionId)
                         .setProprietaryFinancialInstitutionType(getProprietaryBankTransactionCode())
-                        .setTransactionReference(transactionReference);
+                        .setTransactionReference(transactionReference)
+                        .setProviderMarket(providerMarket);
 
         if (merchantDetails != null) {
             builder.setMerchantName(merchantDetails.getMerchantName());

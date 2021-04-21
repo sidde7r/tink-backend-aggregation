@@ -10,7 +10,7 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 public class FiTransactionsItemEntity extends TransactionsItemEntity {
 
     @Override
-    public Transaction toTinkTransaction() {
+    public Transaction toTinkTransaction(String providerMarket) {
         return Transaction.builder()
                 .setDate(getBookingDate())
                 .setAmount(creditOrDebit())

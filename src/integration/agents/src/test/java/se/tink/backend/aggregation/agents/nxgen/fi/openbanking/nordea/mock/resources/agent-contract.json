@@ -371,7 +371,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -0.01,
     "date" : 1594029600000,
@@ -399,7 +400,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -0.97,
     "date" : 1594029600000,
@@ -427,7 +429,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -10.13,
     "date" : 1593770400000,
@@ -455,7 +458,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -22.96,
     "date" : 1593684000000,
@@ -483,7 +487,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : 40.0,
     "date" : 1593597600000,
@@ -511,7 +516,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -1.07,
     "date" : 1593597600000,
@@ -539,7 +545,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -80.0,
     "date" : 1593511200000,
@@ -567,7 +574,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : 60.0,
     "date" : 1593511200000,
@@ -595,7 +603,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -30.0,
     "date" : 1593511200000,
@@ -623,7 +632,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : 100.0,
     "date" : 1593511200000,
@@ -651,7 +661,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -4.19,
     "date" : 1593424800000,
@@ -679,7 +690,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -29.98,
     "date" : 1593165600000,
@@ -707,7 +719,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -10.7,
     "date" : 1593165600000,
@@ -735,7 +748,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -14.98,
     "date" : 1593165600000,
@@ -763,7 +777,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : 40.0,
     "date" : 1593079200000,
@@ -791,7 +806,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -29.7,
     "date" : 1593079200000,
@@ -819,7 +835,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -16.28,
     "date" : 1593079200000,
@@ -847,7 +864,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -40.0,
     "date" : 1593079200000,
@@ -875,7 +893,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : 20.0,
     "date" : 1593079200000,
@@ -903,7 +922,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -100.0,
     "date" : 1593079200000,
@@ -931,7 +951,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -140.0,
     "date" : 1592992800000,
@@ -959,7 +980,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -24.99,
     "date" : 1592992800000,
@@ -987,7 +1009,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -11.8,
     "date" : 1592992800000,
@@ -1015,7 +1038,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -60.0,
     "date" : 1592906400000,
@@ -1043,7 +1067,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -7.93,
     "date" : 1592906400000,
@@ -1071,7 +1096,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -4.0,
     "date" : 1592820000000,
@@ -1099,7 +1125,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -26.45,
     "date" : 1592820000000,
@@ -1127,7 +1154,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -16.33,
     "date" : 1592820000000,
@@ -1155,7 +1183,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -9.0,
     "date" : 1592820000000,
@@ -1183,7 +1212,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -18.8,
     "date" : 1592820000000,
@@ -1211,7 +1241,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -7.03,
     "date" : 1592820000000,
@@ -1239,7 +1270,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -6.2,
     "date" : 1592820000000,
@@ -1267,7 +1299,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -40.0,
     "date" : 1592474400000,
@@ -1295,7 +1328,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -19.8,
     "date" : 1592474400000,
@@ -1323,7 +1357,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -57.72,
     "date" : 1592388000000,
@@ -1351,7 +1386,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -10.0,
     "date" : 1592388000000,
@@ -1379,7 +1415,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -10.0,
     "date" : 1592388000000,
@@ -1407,7 +1444,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -10.0,
     "date" : 1592388000000,
@@ -1435,7 +1473,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -10.0,
     "date" : 1592388000000,
@@ -1463,7 +1502,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -10.0,
     "date" : 1592388000000,
@@ -1491,7 +1531,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -124.0,
     "date" : 1592388000000,
@@ -1519,7 +1560,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -39.9,
     "date" : 1592388000000,
@@ -1547,7 +1589,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -10.9,
     "date" : 1592388000000,
@@ -1575,7 +1618,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -51.52,
     "date" : 1592388000000,
@@ -1603,7 +1647,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -53.98,
     "date" : 1592388000000,
@@ -1631,7 +1676,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -8.0,
     "date" : 1592388000000,
@@ -1659,7 +1705,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -45.0,
     "date" : 1592301600000,
@@ -1687,7 +1734,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -10.0,
     "date" : 1592301600000,
@@ -1715,7 +1763,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -10.0,
     "date" : 1592301600000,
@@ -1743,7 +1792,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -15.65,
     "date" : 1592301600000,
@@ -1771,7 +1821,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -3.85,
     "date" : 1592301600000,
@@ -1799,7 +1850,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -166.68,
     "date" : 1592301600000,
@@ -1827,7 +1879,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -130.97,
     "date" : 1592301600000,
@@ -1855,7 +1908,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -116.0,
     "date" : 1592301600000,
@@ -1883,7 +1937,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -130.39,
     "date" : 1592301600000,
@@ -1911,7 +1966,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -114.0,
     "date" : 1592301600000,
@@ -1939,7 +1995,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -137.44,
     "date" : 1592301600000,
@@ -1967,7 +2024,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -351.32,
     "date" : 1592301600000,
@@ -1995,7 +2053,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -281.79,
     "date" : 1592301600000,
@@ -2023,7 +2082,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -95.86,
     "date" : 1592301600000,
@@ -2051,7 +2111,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -41.54,
     "date" : 1592301600000,
@@ -2079,7 +2140,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -75.34,
     "date" : 1592301600000,
@@ -2107,7 +2169,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -99.0,
     "date" : 1592301600000,
@@ -2135,7 +2198,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -120.0,
     "date" : 1592215200000,
@@ -2163,7 +2227,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -200.0,
     "date" : 1592215200000,
@@ -2191,7 +2256,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : 21.22,
     "date" : 1592215200000,
@@ -2219,7 +2285,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -159.74,
     "date" : 1592215200000,
@@ -2247,7 +2314,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -293.67,
     "date" : 1592215200000,
@@ -2275,7 +2343,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -69.16,
     "date" : 1592215200000,
@@ -2303,7 +2372,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -255.52,
     "date" : 1592215200000,
@@ -2331,7 +2401,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : 3761.95,
     "date" : 1592215200000,
@@ -2359,7 +2430,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -5.05,
     "date" : 1592215200000,
@@ -2387,7 +2459,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -15.9,
     "date" : 1592215200000,
@@ -2415,7 +2488,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : 40.0,
     "date" : 1592215200000,
@@ -2443,7 +2517,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -11.52,
     "date" : 1591956000000,
@@ -2471,7 +2546,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -8.0,
     "date" : 1591956000000,
@@ -2499,7 +2575,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -29.77,
     "date" : 1591956000000,
@@ -2527,7 +2604,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -129.6,
     "date" : 1591783200000,
@@ -2555,7 +2633,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : 220.0,
     "date" : 1591783200000,
@@ -2583,7 +2662,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -3.9,
     "date" : 1591696800000,
@@ -2611,7 +2691,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -14.88,
     "date" : 1591696800000,
@@ -2639,7 +2720,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -10.16,
     "date" : 1591610400000,
@@ -2667,7 +2749,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -17.82,
     "date" : 1591610400000,
@@ -2695,7 +2778,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -21.5,
     "date" : 1591610400000,
@@ -2723,7 +2807,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -7.54,
     "date" : 1591610400000,
@@ -2751,7 +2836,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -10.47,
     "date" : 1591351200000,
@@ -2779,7 +2865,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -0.91,
     "date" : 1591351200000,
@@ -2807,7 +2894,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -1.1,
     "date" : 1591264800000,
@@ -2835,7 +2923,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -6.53,
     "date" : 1591264800000,
@@ -2863,7 +2952,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -5.79,
     "date" : 1591178400000,
@@ -2891,7 +2981,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -141.0,
     "date" : 1591178400000,
@@ -2919,7 +3010,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -13.98,
     "date" : 1591178400000,
@@ -2947,7 +3039,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : 47.0,
     "date" : 1591005600000,
@@ -2975,7 +3068,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : 200.0,
     "date" : 1591005600000,
@@ -3003,7 +3097,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -14.56,
     "date" : 1591005600000,
@@ -3031,7 +3126,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -1.03,
     "date" : 1591005600000,
@@ -3059,7 +3155,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -3.48,
     "date" : 1591005600000,
@@ -3087,7 +3184,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -14.14,
     "date" : 1590573600000,
@@ -3115,7 +3213,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -14.98,
     "date" : 1590400800000,
@@ -3143,7 +3242,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -4.57,
     "date" : 1590400800000,
@@ -3171,7 +3271,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -7.91,
     "date" : 1590400800000,
@@ -3199,7 +3300,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -4.0,
     "date" : 1590141600000,
@@ -3227,7 +3329,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -20.56,
     "date" : 1590141600000,
@@ -3255,7 +3358,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -26.65,
     "date" : 1589882400000,
@@ -3283,7 +3387,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -44.63,
     "date" : 1589882400000,
@@ -3311,7 +3416,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -13.32,
     "date" : 1589882400000,
@@ -3339,7 +3445,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -6.47,
     "date" : 1589882400000,
@@ -3367,7 +3474,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -73.9,
     "date" : 1589796000000,
@@ -3395,7 +3503,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -350.0,
     "date" : 1589796000000,
@@ -3423,7 +3532,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : 340.0,
     "date" : 1589796000000,
@@ -3451,7 +3561,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -52.09,
     "date" : 1589796000000,
@@ -3479,7 +3590,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -281.79,
     "date" : 1589796000000,
@@ -3507,7 +3619,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -54.96,
     "date" : 1589796000000,
@@ -3535,7 +3648,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -70.18,
     "date" : 1589796000000,
@@ -3563,7 +3677,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -152.77,
     "date" : 1589796000000,
@@ -3591,7 +3706,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -181.93,
     "date" : 1589796000000,
@@ -3619,7 +3735,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -59.01,
     "date" : 1589796000000,
@@ -3647,7 +3764,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -116.0,
     "date" : 1589796000000,
@@ -3675,7 +3793,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -113.0,
     "date" : 1589796000000,
@@ -3703,7 +3822,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -99.0,
     "date" : 1589796000000,
@@ -3731,7 +3851,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -293.67,
     "date" : 1589536800000,
@@ -3759,7 +3880,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -252.61,
     "date" : 1589536800000,
@@ -3787,7 +3909,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -412.48,
     "date" : 1589536800000,
@@ -3815,7 +3938,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : 2147.07,
     "date" : 1589536800000,
@@ -3843,7 +3967,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -15.54,
     "date" : 1589536800000,
@@ -3871,7 +3996,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -13.48,
     "date" : 1589450400000,
@@ -3899,7 +4025,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : 48.33,
     "date" : 1589364000000,
@@ -3927,7 +4054,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -39.25,
     "date" : 1589364000000,
@@ -3955,7 +4083,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -14.0,
     "date" : 1589364000000,
@@ -3983,7 +4112,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -29.0,
     "date" : 1589364000000,
@@ -4011,7 +4141,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -9.67,
     "date" : 1589277600000,
@@ -4039,7 +4170,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -8.0,
     "date" : 1589277600000,
@@ -4067,7 +4199,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -48.33,
     "date" : 1589191200000,
@@ -4095,7 +4228,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -2.3,
     "date" : 1589191200000,
@@ -4123,7 +4257,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -39.24,
     "date" : 1589191200000,
@@ -4151,7 +4286,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -14.39,
     "date" : 1589191200000,
@@ -4179,7 +4315,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -7.87,
     "date" : 1589191200000,
@@ -4207,7 +4344,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -8.92,
     "date" : 1589191200000,
@@ -4235,7 +4373,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -13.47,
     "date" : 1589191200000,
@@ -4263,7 +4402,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -10.09,
     "date" : 1588932000000,
@@ -4291,7 +4431,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -29.91,
     "date" : 1588932000000,
@@ -4319,7 +4460,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -1.8,
     "date" : 1588932000000,
@@ -4347,7 +4489,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -10.0,
     "date" : 1588759200000,
@@ -4375,7 +4518,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -11.28,
     "date" : 1588759200000,
@@ -4403,7 +4547,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -10.0,
     "date" : 1588759200000,
@@ -4431,7 +4576,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -32.05,
     "date" : 1588759200000,
@@ -4459,7 +4605,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -10.0,
     "date" : 1588759200000,
@@ -4487,7 +4634,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -1.63,
     "date" : 1588759200000,
@@ -4515,7 +4663,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -10.0,
     "date" : 1588759200000,
@@ -4543,7 +4692,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -11.75,
     "date" : 1588759200000,
@@ -4571,7 +4721,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -10.0,
     "date" : 1588759200000,
@@ -4599,7 +4750,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -8.86,
     "date" : 1588759200000,
@@ -4627,7 +4779,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -1.59,
     "date" : 1588672800000,
@@ -4655,7 +4808,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -10.0,
     "date" : 1588672800000,
@@ -4683,7 +4837,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -19.25,
     "date" : 1588672800000,
@@ -4711,7 +4866,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -10.0,
     "date" : 1588672800000,
@@ -4739,7 +4895,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -46.84,
     "date" : 1588672800000,
@@ -4767,7 +4924,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -10.0,
     "date" : 1588586400000,
@@ -4795,7 +4953,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -17.5,
     "date" : 1588586400000,
@@ -4823,7 +4982,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -10.0,
     "date" : 1588586400000,
@@ -4851,7 +5011,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -1.07,
     "date" : 1588586400000,
@@ -4879,7 +5040,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -4.19,
     "date" : 1588586400000,
@@ -4907,7 +5069,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -10.0,
     "date" : 1588586400000,
@@ -4935,7 +5098,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -4.58,
     "date" : 1588586400000,
@@ -4963,7 +5127,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : 220.0,
     "date" : 1588586400000,
@@ -4991,7 +5156,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -50.0,
     "date" : 1588586400000,
@@ -5019,7 +5185,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -30.0,
     "date" : 1588240800000,
@@ -5047,7 +5214,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -10.0,
     "date" : 1588240800000,
@@ -5075,7 +5243,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -4.99,
     "date" : 1588240800000,
@@ -5103,7 +5272,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -70.21,
     "date" : 1588068000000,
@@ -5131,7 +5301,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -70.21,
     "date" : 1588068000000,
@@ -5159,7 +5330,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -10.0,
     "date" : 1588068000000,
@@ -5187,7 +5359,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -18.43,
     "date" : 1588068000000,
@@ -5215,7 +5388,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -10.0,
     "date" : 1588068000000,
@@ -5243,7 +5417,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -19.97,
     "date" : 1588068000000,
@@ -5271,7 +5446,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -10.0,
     "date" : 1588068000000,
@@ -5299,7 +5475,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -13.8,
     "date" : 1588068000000,
@@ -5327,7 +5504,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -10.0,
     "date" : 1587981600000,
@@ -5355,7 +5533,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -10.0,
     "date" : 1587981600000,
@@ -5383,7 +5562,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -26.97,
     "date" : 1587981600000,
@@ -5411,7 +5591,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -6.28,
     "date" : 1587981600000,
@@ -5439,7 +5620,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -10.0,
     "date" : 1587981600000,
@@ -5467,7 +5649,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -8.34,
     "date" : 1587981600000,
@@ -5495,7 +5678,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -46.83,
     "date" : 1587981600000,
@@ -5523,7 +5707,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -10.0,
     "date" : 1587722400000,
@@ -5551,7 +5736,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -3.99,
     "date" : 1587722400000,
@@ -5579,7 +5765,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -10.0,
     "date" : 1587722400000,
@@ -5607,7 +5794,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -15.52,
     "date" : 1587722400000,
@@ -5635,7 +5823,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -10.0,
     "date" : 1587636000000,
@@ -5663,7 +5852,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -36.62,
     "date" : 1587636000000,
@@ -5691,7 +5881,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -10.0,
     "date" : 1587636000000,
@@ -5719,7 +5910,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -6.47,
     "date" : 1587636000000,
@@ -5747,7 +5939,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -10.0,
     "date" : 1587549600000,
@@ -5775,7 +5968,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -41.11,
     "date" : 1587549600000,
@@ -5803,7 +5997,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -4.0,
     "date" : 1587549600000,
@@ -5831,7 +6026,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -10.0,
     "date" : 1587549600000,
@@ -5859,7 +6055,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -2.73,
     "date" : 1587549600000,
@@ -5887,7 +6084,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -30.0,
     "date" : 1587376800000,
@@ -5915,7 +6113,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -10.0,
     "date" : 1587376800000,
@@ -5943,7 +6142,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -10.0,
     "date" : 1587376800000,
@@ -5971,7 +6171,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -10.0,
     "date" : 1587376800000,
@@ -5999,7 +6200,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -9.8,
     "date" : 1587376800000,
@@ -6027,7 +6229,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -7.12,
     "date" : 1587376800000,
@@ -6055,7 +6258,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -14.49,
     "date" : 1587376800000,
@@ -6083,7 +6287,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -10.0,
     "date" : 1587376800000,
@@ -6111,7 +6316,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -26.92,
     "date" : 1587376800000,
@@ -6139,7 +6345,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -10.0,
     "date" : 1587376800000,
@@ -6167,7 +6374,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -44.84,
     "date" : 1587376800000,
@@ -6195,7 +6403,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -10.0,
     "date" : 1587376800000,
@@ -6223,7 +6432,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -28.2,
     "date" : 1587376800000,
@@ -6251,7 +6461,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : 70.0,
     "date" : 1587031200000,
@@ -6279,7 +6490,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -10.0,
     "date" : 1587031200000,
@@ -6307,7 +6519,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -15.15,
     "date" : 1587031200000,
@@ -6335,7 +6548,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -10.0,
     "date" : 1587031200000,
@@ -6363,7 +6577,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -55.18,
     "date" : 1587031200000,
@@ -6391,7 +6606,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : 54.98,
     "date" : 1587031200000,
@@ -6419,7 +6635,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -10.0,
     "date" : 1587031200000,
@@ -6447,7 +6664,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -28.65,
     "date" : 1587031200000,
@@ -6475,7 +6693,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -10.0,
     "date" : 1587031200000,
@@ -6503,7 +6722,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -11.99,
     "date" : 1587031200000,
@@ -6531,7 +6751,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -10.0,
     "date" : 1587031200000,
@@ -6559,7 +6780,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -72.32,
     "date" : 1587031200000,
@@ -6587,7 +6809,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -130.39,
     "date" : 1587031200000,
@@ -6615,7 +6838,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -180.0,
     "date" : 1587031200000,
@@ -6643,7 +6867,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -95.65,
     "date" : 1587031200000,
@@ -6671,7 +6896,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -135.97,
     "date" : 1587031200000,
@@ -6699,7 +6925,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -46.83,
     "date" : 1587031200000,
@@ -6727,7 +6954,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -41.54,
     "date" : 1587031200000,
@@ -6755,7 +6983,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -350.0,
     "date" : 1587031200000,
@@ -6783,7 +7012,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -49.96,
     "date" : 1587031200000,
@@ -6811,7 +7041,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -281.79,
     "date" : 1587031200000,
@@ -6839,7 +7070,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -35.0,
     "date" : 1587031200000,
@@ -6867,7 +7099,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -130.39,
     "date" : 1587031200000,
@@ -6895,7 +7128,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -149.97,
     "date" : 1587031200000,
@@ -6923,7 +7157,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -34.67,
     "date" : 1587031200000,
@@ -6951,7 +7186,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -113.0,
     "date" : 1587031200000,
@@ -6979,7 +7215,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -350.0,
     "date" : 1587031200000,
@@ -7007,7 +7244,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -355.0,
     "date" : 1587031200000,
@@ -7035,7 +7273,8 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   }, {
     "amount" : -99.0,
     "date" : 1586944800000,
@@ -7063,6 +7302,7 @@
         "instant" : null
       }
     } ],
-    "proprietaryFinancialInstitutionType" : "type_description_values"
+    "proprietaryFinancialInstitutionType" : "type_description_values",
+    "providerMarket" : "FI"
   } ]
 }

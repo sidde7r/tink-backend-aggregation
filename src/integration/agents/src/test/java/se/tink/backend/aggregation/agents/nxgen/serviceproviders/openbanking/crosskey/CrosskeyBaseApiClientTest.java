@@ -58,7 +58,8 @@ public class CrosskeyBaseApiClientTest {
                         CrossKeyTestUtils.getCrossKeyMarketConfiguration(),
                         agentConfiguration,
                         qsealcSigner,
-                        CrossKeyTestUtils.CERTIFICATE_SERIAL_NUMBER);
+                        CrossKeyTestUtils.CERTIFICATE_SERIAL_NUMBER,
+                        "FI");
 
         when(requestBuilder.header(anyString(), anyString())).thenReturn(requestBuilder);
     }

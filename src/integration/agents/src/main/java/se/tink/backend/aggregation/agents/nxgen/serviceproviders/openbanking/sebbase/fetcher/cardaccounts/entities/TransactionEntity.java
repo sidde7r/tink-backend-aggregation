@@ -44,7 +44,7 @@ public class TransactionEntity {
         return Strings.emptyToNull(nameOnCard);
     }
 
-    public CreditCardTransaction toTinkTransaction(boolean isPending) {
+    public CreditCardTransaction toTinkTransaction(boolean isPending, String providerMarket) {
         Builder builder =
                 CreditCardTransaction.builder()
                         .setAmount(transactionAmount.getTinkAmount())
@@ -56,7 +56,8 @@ public class TransactionEntity {
                         .addExternalSystemIds(
                                 TransactionExternalSystemIdType.PROVIDER_GIVEN_TRANSACTION_ID,
                                 cardTransactionId)
-                        .setProprietaryFinancialInstitutionType(proprietaryBankTransactionCode);
+                        .setProprietaryFinancialInstitutionType(proprietaryBankTransactionCode)
+                        .setProviderMarket(providerMarket);
 
         return (CreditCardTransaction) builder.build();
     }

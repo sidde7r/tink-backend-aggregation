@@ -94,7 +94,7 @@ public class TransactionsItemEntity {
                 : transactionAmountEntity.getAmount().negate();
     }
 
-    public Transaction toTinkTransaction() {
+    public Transaction toTinkTransaction(String providerMarket) {
 
         return (Transaction)
                 Transaction.builder()
@@ -109,6 +109,7 @@ public class TransactionsItemEntity {
                                 SerializationUtils.serializeToString(getTransactionDetails()))
                         .setProprietaryFinancialInstitutionType(creditDebit)
                         .setTransactionDates(getTransactionDates())
+                        .setProviderMarket(providerMarket)
                         .build();
     }
 

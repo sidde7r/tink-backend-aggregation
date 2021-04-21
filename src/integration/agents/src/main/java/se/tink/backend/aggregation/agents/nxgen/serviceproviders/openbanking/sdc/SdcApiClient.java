@@ -140,7 +140,8 @@ public class SdcApiClient {
                 .get(BalancesResponse.class);
     }
 
-    public TransactionsResponse getTransactionsFor(String accountId, Date fromDate, Date toDate) {
+    public TransactionsResponse getTransactionsFor(
+            String accountId, Date fromDate, Date toDate, String providerMarket) {
         return createRequestInSession(
                         urlProvider.getTransactionsUrl().parameter(ACCOUNT_ID, accountId))
                 .header(X_REQUEST_ID, Psd2Headers.getRequestId())
@@ -149,6 +150,7 @@ public class SdcApiClient {
                 .queryParam(BOOKING_STATUS, BOOKED)
                 .queryParam(DATE_FROM, FORMATTER_DAILY.format(fromDate))
                 .queryParam(DATE_TO, FORMATTER_DAILY.format(toDate))
-                .get(TransactionsResponse.class);
+                .get(TransactionsResponse.class)
+                .setProviderMarket(providerMarket);
     }
 }

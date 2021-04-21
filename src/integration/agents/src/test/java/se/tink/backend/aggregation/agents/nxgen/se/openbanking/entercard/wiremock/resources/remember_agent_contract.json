@@ -56,7 +56,8 @@
         } ],
         "proprietaryFinancialInstitutionType" : "Transaction",
         "merchantName" : "Merchant 3",
-        "merchantCategoryCode" : "5732"
+        "merchantCategoryCode" : "5732",
+        "providerMarket" : "SE"
     }, {
         "amount" : -250.31,
         "date" : 1615719600000,
@@ -80,6 +81,7 @@
         } ],
         "proprietaryFinancialInstitutionType" : "Transaction",
         "merchantName" : "Merchant 5",
-        "merchantCategoryCode" : "5999"
+        "merchantCategoryCode" : "5999",
+        "providerMarket" : "SE"
     } ]
 }

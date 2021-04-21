@@ -36,7 +36,9 @@ public final class SebCorporateAgent extends SebBaseAgent<SebCorporateApiClient>
 
         this.instanceStorage = new SebStorage();
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
-        creditCardRefreshController = getCreditCardRefreshController();
+        creditCardRefreshController =
+                getCreditCardRefreshController(
+                        componentProvider.getCredentialsRequest().getProvider().getMarket());
     }
 
     @Override
@@ -88,7 +90,7 @@ public final class SebCorporateAgent extends SebBaseAgent<SebCorporateApiClient>
                                 new SebTransactionFetcher(apiClient))));
     }
 
-    private CreditCardRefreshController getCreditCardRefreshController() {
+    private CreditCardRefreshController getCreditCardRefreshController(String providerMarket) {
         return new CreditCardRefreshController(
                 metricRefreshController,
                 updateController,
@@ -96,7 +98,8 @@ public final class SebCorporateAgent extends SebBaseAgent<SebCorporateApiClient>
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
                         new TransactionMonthPaginationController<>(
-                                new SebCreditCardTransactionsFetcher(instanceStorage),
+                                new SebCreditCardTransactionsFetcher(
+                                        instanceStorage, providerMarket),
                                 SebCommonConstants.ZONE_ID)));
     }
 }

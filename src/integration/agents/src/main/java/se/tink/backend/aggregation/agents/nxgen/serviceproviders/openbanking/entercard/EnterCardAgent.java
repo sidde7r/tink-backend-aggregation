@@ -37,15 +37,9 @@ public abstract class EnterCardAgent extends NextGenerationAgent
         apiClient = new EnterCardApiClient(client, persistentStorage);
 
         creditCardRefreshController =
-                new CreditCardRefreshController(
-                        metricRefreshController,
-                        updateController,
-                        new CreditCardAccountFetcher(
-                                apiClient, credentials.getField(CredentialKeys.SSN), brandId),
-                        new TransactionFetcherController<>(
-                                transactionPaginationHelper,
-                                new TransactionKeyPaginationController<>(
-                                        new CreditCardTransactionFetcher(apiClient))));
+                constructCreditCardRefreshController(
+                        brandId,
+                        componentProvider.getCredentialsRequest().getProvider().getMarket());
     }
 
     @Override
@@ -86,5 +80,18 @@ public abstract class EnterCardAgent extends NextGenerationAgent
     @Override
     public FetchTransactionsResponse fetchCreditCardTransactions() {
         return creditCardRefreshController.fetchCreditCardTransactions();
+    }
+
+    private CreditCardRefreshController constructCreditCardRefreshController(
+            String brandId, String providerMarket) {
+        return new CreditCardRefreshController(
+                metricRefreshController,
+                updateController,
+                new CreditCardAccountFetcher(
+                        apiClient, credentials.getField(CredentialKeys.SSN), brandId),
+                new TransactionFetcherController<>(
+                        transactionPaginationHelper,
+                        new TransactionKeyPaginationController<>(
+                                new CreditCardTransactionFetcher(apiClient, providerMarket))));
     }
 }

@@ -154,7 +154,7 @@ public class HandelsbankenBaseApiClient {
                                 QueryKeys.DATE_TO,
                                 ThreadSafeDateFormat.FORMATTER_DAILY.format(dateTo));
 
-        return requestRefreshableGet(request, TransactionResponse.class);
+        return requestRefreshableGet(request, TransactionResponse.class).setProviderMarket(market);
     }
 
     public CreditAccountResponse getCreditAccounts() {
@@ -182,7 +182,7 @@ public class HandelsbankenBaseApiClient {
                                 QueryKeys.DATE_TO,
                                 ThreadSafeDateFormat.FORMATTER_DAILY.format(dateTo));
 
-        return requestRefreshableGet(request, TransactionResponse.class);
+        return requestRefreshableGet(request, TransactionResponse.class).setProviderMarket(market);
     }
 
     public DecoupledResponse getDecoupled(URL href) {

@@ -64,7 +64,7 @@ public class TransactionEntity {
         return typeDescription;
     }
 
-    public Transaction toTinkTransaction() {
+    public Transaction toTinkTransaction(String providerMarket) {
 
         Builder builder =
                 Transaction.builder()
@@ -76,7 +76,8 @@ public class TransactionEntity {
                                 TransactionExternalSystemIdType.PROVIDER_GIVEN_TRANSACTION_ID,
                                 transactionId)
                         .setTransactionDates(getTinkTransactionDates())
-                        .setProprietaryFinancialInstitutionType(typeDescription);
+                        .setProprietaryFinancialInstitutionType(typeDescription)
+                        .setProviderMarket(providerMarket);
 
         if (Objects.nonNull(reference)) {
             builder.setTransactionReference(reference);

@@ -22,7 +22,8 @@ public class FetchCardAccountsTransactions {
     }
 
     @JsonIgnore
-    public List<CreditCardTransaction> tinkTransactions(String accountNumber) {
-        return transactions.toTinkTransactions(accountNumber);
+    public List<CreditCardTransaction> tinkTransactions(
+            String accountNumber, String providerMarket) {
+        return transactions.toTinkTransactions(accountNumber, providerMarket);
     }
 }

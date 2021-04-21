@@ -10,7 +10,6 @@ import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.fetcher.entities.common.LinksEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.fetcher.entities.common.MetaEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.fetcher.entities.transaction.TransactionDataEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.fetcher.entities.transaction.TransactionEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.fetcher.entities.transaction.TransactionTypeEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
@@ -26,11 +25,12 @@ public class CrosskeyTransactionsResponse implements PaginatorResponse {
 
     @JsonIgnore private boolean canFetchMore = true;
     @JsonIgnore private TransactionTypeEntity transactionType;
+    @JsonIgnore private String providerMarket;
 
     public Collection<? extends Transaction> getTinkCreditCardTransactions() {
         return Optional.ofNullable(data).map(TransactionDataEntity::getTransactions)
                 .orElse(Collections.emptyList()).stream()
-                .map(TransactionEntity::constructCreditCardTransaction)
+                .map(te -> te.constructCreditCardTransaction(providerMarket))
                 .collect(Collectors.toList());
     }
 
@@ -38,7 +38,7 @@ public class CrosskeyTransactionsResponse implements PaginatorResponse {
     public Collection<? extends Transaction> getTinkTransactions() {
         return Optional.ofNullable(data).map(TransactionDataEntity::getTransactions)
                 .orElse(Collections.emptyList()).stream()
-                .map(TransactionEntity::constructTransactionalAccountTransaction)
+                .map(te -> te.constructTransactionalAccountTransaction(providerMarket))
                 .collect(Collectors.toList());
     }
 
@@ -52,6 +52,11 @@ public class CrosskeyTransactionsResponse implements PaginatorResponse {
 
     public CrosskeyTransactionsResponse setTransactionType(TransactionTypeEntity transactionType) {
         this.transactionType = transactionType;
+        return this;
+    }
+
+    public CrosskeyTransactionsResponse setProviderMarket(String providerMarket) {
+        this.providerMarket = providerMarket;
         return this;
     }
 
