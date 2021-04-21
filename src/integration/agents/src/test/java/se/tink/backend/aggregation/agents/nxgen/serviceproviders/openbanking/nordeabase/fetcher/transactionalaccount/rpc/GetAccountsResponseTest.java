@@ -61,6 +61,7 @@ public class GetAccountsResponseTest {
                         .putInTemporaryStorage(
                                 NordeaBaseConstants.StorageKeys.ACCOUNT_ID, "DK50519593123646-DKK")
                         .setApiIdentifier("DK50519593123646-DKK")
+                        .addHolderName("NAME LAST_NAME")
                         .build()
                         .orElseThrow(IllegalStateException::new),
                 TransactionalAccount.nxBuilder()
@@ -81,6 +82,7 @@ public class GetAccountsResponseTest {
                         .putInTemporaryStorage(
                                 NordeaBaseConstants.StorageKeys.ACCOUNT_ID, "NO50022184484-NOK")
                         .setApiIdentifier("NO50022184484-NOK")
+                        .addHolderName("NOR_NAME NOR_LAST_NAME")
                         .build()
                         .orElseThrow(IllegalStateException::new));
     }

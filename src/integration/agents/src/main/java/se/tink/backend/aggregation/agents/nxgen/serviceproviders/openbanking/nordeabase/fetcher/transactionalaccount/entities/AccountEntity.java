@@ -81,6 +81,7 @@ public class AccountEntity {
                                 .build())
                 .putInTemporaryStorage(NordeaBaseConstants.StorageKeys.ACCOUNT_ID, id)
                 .setApiIdentifier(id)
+                .addHolderName(accountName)
                 .build();
     }
 
