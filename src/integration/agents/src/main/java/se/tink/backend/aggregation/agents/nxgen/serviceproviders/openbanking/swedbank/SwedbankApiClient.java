@@ -138,7 +138,8 @@ public final class SwedbankApiClient implements SwedbankOpenBankingPaymentApiCli
 
     private RequestBuilder createRequestInSession(URL url, boolean withConsent) {
         final RequestBuilder request = createRequest(url).addBearerToken(getTokenFromSession());
-        if (credentialsRequest.isManual()) {
+
+        if (credentialsRequest.getUserAvailability().isUserPresent()) {
             request.header(
                             HeaderKeys.PSU_IP_ADDRESS,
                             Optional.ofNullable(credentialsRequest.getOriginatingUserIp())
@@ -317,7 +318,7 @@ public final class SwedbankApiClient implements SwedbankOpenBankingPaymentApiCli
             String accountId, LocalDate fromDate, LocalDate toDate) {
 
         // Swedbank doesn't allow offline statement without PSU involvement
-        if (credentialsRequest.isManual()) {
+        if (credentialsRequest.getUserAvailability().isUserPresent()) {
             RequestBuilder requestBuilder =
                     createRequestInSession(
                                     Urls.ACCOUNT_TRANSACTIONS.parameter(
