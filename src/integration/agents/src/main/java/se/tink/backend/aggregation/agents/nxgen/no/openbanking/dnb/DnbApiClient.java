@@ -62,7 +62,8 @@ public class DnbApiClient {
             if (body.contains(ErrorMessages.WRONG_PSUID)) {
                 throw LoginError.INCORRECT_CREDENTIALS.exception(httpException);
             }
-            if (body.contains(ErrorMessages.NO_ACCOUNTS)) {
+            if (body.contains(ErrorMessages.NO_ACCOUNTS)
+                    || body.contains(ErrorMessages.NO_PSD2_ACCOUNTS)) {
                 throw LoginError.NO_ACCOUNTS.exception(httpException);
             }
         }

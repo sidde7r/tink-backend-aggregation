@@ -15,6 +15,7 @@ public final class DnbConstants {
         static final String WRONG_PSUID =
                 "User id can be either an 11 digit valid Norwegian ssn - or 2 letters followed by 5 digits (business)";
         static final String NO_ACCOUNTS = "User does not have any accounts.";
+        static final String NO_PSD2_ACCOUNTS = "No valid PSD2 payment accounts found for user.";
     }
 
     public static class Urls {
