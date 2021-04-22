@@ -14,6 +14,7 @@ import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.exceptions.payment.CreditorValidationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.DebtorValidationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.InsufficientFundsException;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.rpc.ErrorResponse;
@@ -153,6 +154,13 @@ public class DomesticPaymentApiClient implements UkOpenBankingPaymentApiClient {
                         ErrorMessage.EXCEED_DAILY_LIMIT_FAILURE,
                         InternalStatus.TRANSFER_LIMIT_REACHED);
             }
+
+            if (body.getErrorMessages().contains(ErrorMessage.PAYMENT_RE_AUTHENTICATION_REQUIRED)) {
+                throw new PaymentAuthorizationException(
+                        "Your payment request could not be authorized by the bank at the moment. Please try executing payment again.",
+                        InternalStatus.PAYMENT_AUTHORIZATION_FAILED);
+            }
+
             // To add more internal specific error exception
             throw e;
         }

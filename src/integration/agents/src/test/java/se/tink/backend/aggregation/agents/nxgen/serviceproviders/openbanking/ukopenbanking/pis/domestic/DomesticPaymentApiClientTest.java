@@ -23,10 +23,12 @@ import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbank
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domestic.DomesticPaymentApiClient.PAYMENT_STATUS;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
 import java.time.Clock;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.rpc.ErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentConstants.ErrorMessage;
@@ -301,5 +303,51 @@ public class DomesticPaymentApiClientTest {
             Assert.assertEquals(
                     e.getMessage(), ErrorMessage.INVALID_CLAIM_FAILURE + ", Path = [kid]");
         }
+    }
+
+    @Test(expected = PaymentAuthorizationException.class)
+    public void throwErrorWhenBankAsksForReAuthentication() throws IOException, PaymentException {
+
+        String source =
+                "{\n"
+                        + "  \"Code\": \"403\",\n"
+                        + "  \"Message\": \"Forbidden\",\n"
+                        + "  \"Errors\": [\n"
+                        + "    {\n"
+                        + "      \"ErrorCode\": \"UK.OBIE.Reauthenticate\",\n"
+                        + "      \"Message\": \"Not having required scope or permission to perform this action. Please contact support for further details.\"\n"
+                        + "    }\n"
+                        + "  ]\n"
+                        + "}";
+
+        // given
+        HttpResponseException httpResponseException = mock(HttpResponseException.class);
+        HttpResponse httpResponse = mock(HttpResponse.class);
+        when(httpResponseException.getResponse()).thenReturn(httpResponse);
+        when(httpResponse.getBody(ErrorResponse.class))
+                .thenReturn(objectMapper.readValue(source, ErrorResponse.class));
+        final PaymentRequest paymentRequestMock =
+                createDomesticPaymentRequestForNotExecutedPayment(this.clockMock);
+        final DomesticPaymentResponse response = createDomesticPaymentResponse();
+        final DomesticPaymentConsentFundsConfirmationResponse fundsConfirmationResponse =
+                createFundsConfirmationResponse();
+        final RequestBuilder requestBuilderMock = mock(RequestBuilder.class);
+        when(requestBuilderMock.get(DomesticPaymentConsentFundsConfirmationResponse.class))
+                .thenReturn(fundsConfirmationResponse);
+        when(requestBuilderMock.post(
+                        eq(DomesticPaymentResponse.class), any(DomesticPaymentRequest.class)))
+                .thenReturn(response);
+
+        final URL url = new URL(API_BASE_URL + PAYMENT);
+        URL fundsConfirm =
+                new URL(API_BASE_URL + PAYMENT_CONSENT_FUND_CONFIRMATION)
+                        .parameter(CONSENT_ID_KEY, CONSENT_ID);
+        when(ukOpenBankingRequestBuilder.createPisRequest(eq(fundsConfirm)))
+                .thenReturn(requestBuilderMock);
+        when(ukOpenBankingRequestBuilder.createPisRequestWithJwsHeader(eq(url)))
+                .thenThrow(httpResponseException);
+
+        // then
+        apiClient.executePayment(paymentRequestMock, CONSENT_ID, END_TO_END_ID, INSTRUCTION_ID);
     }
 }
