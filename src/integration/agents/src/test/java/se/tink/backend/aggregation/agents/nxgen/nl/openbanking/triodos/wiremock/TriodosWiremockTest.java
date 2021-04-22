@@ -1,26 +1,27 @@
-package se.tink.backend.aggregation.agents.nxgen.nl.banks.ics.wiremock;
+package se.tink.backend.aggregation.agents.nxgen.nl.openbanking.triodos.wiremock;
 
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesJsonFileParser;
 import se.tink.backend.aggregation.agents.framework.assertions.entities.AgentContractEntity;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockrefresh.AgentWireMockRefreshTest;
+import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.triodos.wiremock.module.TriodosWiremockTestModule;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationReader;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.enums.MarketCode;
 
-public class IcsWiremockTest {
+public class TriodosWiremockTest {
+
     @Test
     public void testRefresh() throws Exception {
-
         // given
         final String configurationPath =
-                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/nl/banks/ics/wiremock/resources/configuration.yml";
+                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/nl/openbanking/triodos/wiremock/resources/configuration.yml";
         final String wireMockServerFilePath =
-                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/nl/banks/ics/wiremock/resources/nl-ics-ob-ais.aap";
+                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/nl/openbanking/triodos/wiremock/resources/nl-triodos-ob-ais.aap";
 
         final String contractFilePath =
-                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/nl/banks/ics/wiremock/resources/agent-contract.json";
+                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/nl/openbanking/triodos/wiremock/resources/agent-contract.json";
 
         final AgentsServiceConfiguration configuration =
                 AgentsServiceConfigurationReader.read(configurationPath);
@@ -28,13 +29,15 @@ public class IcsWiremockTest {
         final AgentWireMockRefreshTest agentWireMockRefreshTest =
                 AgentWireMockRefreshTest.nxBuilder()
                         .withMarketCode(MarketCode.NL)
-                        .withProviderName("nl-ics-oauth2")
+                        .withProviderName("nl-triodos-ob")
                         .withWireMockFilePath(wireMockServerFilePath)
                         .withConfigFile(configuration)
                         .testFullAuthentication()
                         .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
                         .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
                         .addCallbackData("code", "dummyCode")
+                        .withAgentTestModule(new TriodosWiremockTestModule())
+                        .addCredentialField("ibans", "iban01")
                         .build();
 
         final AgentContractEntity expected =

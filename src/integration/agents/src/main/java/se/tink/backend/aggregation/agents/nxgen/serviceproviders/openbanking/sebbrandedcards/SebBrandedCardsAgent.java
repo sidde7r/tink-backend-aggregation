@@ -24,9 +24,7 @@ public class SebBrandedCardsAgent extends SebBaseAgent<SebBrandedCardsApiClient>
     public SebBrandedCardsAgent(AgentComponentProvider componentProvider, String brandId) {
         super(componentProvider);
         configureHttpClient(client);
-        apiClient =
-                new SebBrandedCardsApiClient(
-                        client, persistentStorage, brandId, request.isManual());
+        apiClient = new SebBrandedCardsApiClient(client, persistentStorage, brandId, request);
         creditCardRefreshController =
                 getCreditCardRefreshController(
                         componentProvider.getCredentialsRequest().getProvider().getMarket());

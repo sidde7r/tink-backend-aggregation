@@ -70,7 +70,7 @@ public class BankIdIframeSSAuthenticationController {
                                     log.info(
                                             "No methods available. Page source: {}",
                                             driver.getPageSource());
-                                    throw LoginError.NO_AVAILABLE_SCA_METHODS.exception();
+                                    throw LoginError.NOT_SUPPORTED.exception();
                                 });
         webDriverHelper.clickButton(selectAuthenticationButton);
     }
