@@ -121,7 +121,7 @@ public abstract class SebBaseApiClient {
                                 Psd2Headers.getRequestId())
                         .addBearerToken(getTokenFromStorage());
 
-        if (credentialsRequest.getUserAvailability().isUserPresent()) {
+        if (credentialsRequest.isManual()) {
             requestBuilder.header(
                     SebCommonConstants.HeaderKeys.PSU_IP_ADDRESS,
                     credentialsRequest.getOriginatingUserIp());
