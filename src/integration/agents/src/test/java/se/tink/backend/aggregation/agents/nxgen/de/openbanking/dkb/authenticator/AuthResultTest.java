@@ -94,7 +94,7 @@ public class AuthResultTest {
         // given
         AuthResult tested = new AuthResult();
         tested.setActionCode("PROMPT_FOR_AUTH_METHOD_SELECTION");
-        tested.setAuthMethods(singletonList(new AuthMethod().setAuthType("PUSHTAN")));
+        tested.setAuthMethods(singletonList(new AuthMethod().setAuthenticationType("PUSHTAN")));
 
         // when
         boolean result = tested.isAuthMethodSelectionRequired();
@@ -108,7 +108,7 @@ public class AuthResultTest {
         // given
         AuthResult tested = new AuthResult();
         tested.setActionCode("other");
-        tested.setAuthMethods(singletonList(new AuthMethod().setAuthType("PUSHTAN")));
+        tested.setAuthMethods(singletonList(new AuthMethod().setAuthenticationType("PUSHTAN")));
 
         // when
         boolean result = tested.isAuthMethodSelectionRequired();
@@ -133,8 +133,8 @@ public class AuthResultTest {
     @Test
     public void getSelectableAuthMethodsShouldReturnListWithoutChipTanMethod() {
         // given
-        AuthMethod givenChipTanMethod = new AuthMethod().setAuthType("CHIPTAN");
-        AuthMethod givenPushTanMethod = new AuthMethod().setAuthType("PUSHTAN");
+        AuthMethod givenChipTanMethod = new AuthMethod().setAuthenticationType("CHIPTAN");
+        AuthMethod givenPushTanMethod = new AuthMethod().setAuthenticationType("PUSHTAN");
 
         AuthResult tested = new AuthResult();
         tested.setAuthMethods(asList(givenChipTanMethod, givenPushTanMethod));

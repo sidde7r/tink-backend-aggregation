@@ -137,9 +137,8 @@ public class PostbankAuthenticationController implements TypedAuthenticator {
                 supplementalInformationController.askSupplementalInformationSync(
                         CommonFields.Selection.build(
                                 catalog,
-                                scaMethods.stream()
-                                        .map(ScaMethod::getName)
-                                        .collect(Collectors.toList())));
+                                null,
+                                GermanFields.SelectOptions.prepareSelectOptions(scaMethods)));
         int index =
                 Integer.parseInt(supplementalInformation.get(CommonFields.Selection.getFieldKey()))
                         - 1;

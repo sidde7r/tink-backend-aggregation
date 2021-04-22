@@ -165,9 +165,8 @@ public class FiduciaAuthenticator implements MultiFactorAuthenticator, AutoAuthe
         Field scaMethodField =
                 CommonFields.Selection.build(
                         catalog,
-                        onlySupportedScaMethods.stream()
-                                .map(ScaMethod::getName)
-                                .collect(Collectors.toList()));
+                        null,
+                        GermanFields.SelectOptions.prepareSelectOptions(onlySupportedScaMethods));
         String index =
                 supplementalInformationHelper
                         .askSupplementalInformation(scaMethodField)

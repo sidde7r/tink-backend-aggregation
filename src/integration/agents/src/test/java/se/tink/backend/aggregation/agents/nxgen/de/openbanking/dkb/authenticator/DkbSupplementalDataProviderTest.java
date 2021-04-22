@@ -128,9 +128,11 @@ public class DkbSupplementalDataProviderTest {
         when(supplementalInfoHelperMock.askSupplementalInformation(any()))
                 .thenReturn(Collections.singletonMap("selectAuthMethodField", TEST_INDEX_VALUE));
 
-        AuthMethod givenMethod1 = new AuthMethod().setIdentifier(TEST_VALUE_1);
+        AuthMethod givenMethod1 =
+                new AuthMethod().setIdentifier(TEST_VALUE_1).setAuthenticationType("PUSHOTP");
 
-        AuthMethod givenMethod2 = new AuthMethod().setIdentifier(TEST_VALUE_2);
+        AuthMethod givenMethod2 =
+                new AuthMethod().setIdentifier(TEST_VALUE_2).setAuthenticationType("PUSHOTP");
 
         List<AuthMethod> givenSelectionList = asList(givenMethod1, givenMethod2);
 

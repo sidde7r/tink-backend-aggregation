@@ -4,7 +4,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
@@ -51,7 +50,6 @@ public class FieldBuilder {
 
     public Field getChooseScaMethodField(List<ScaMethodEntity> scaMethods) {
         return CommonFields.Selection.build(
-                catalog,
-                scaMethods.stream().map(ScaMethodEntity::getName).collect(Collectors.toList()));
+                catalog, null, GermanFields.SelectOptions.prepareSelectOptions(scaMethods));
     }
 }
