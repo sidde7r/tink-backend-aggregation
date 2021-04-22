@@ -15,7 +15,9 @@ import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
+import se.tink.backend.aggregation.agents.exceptions.ThirdPartyAppException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
+import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheHeaderValues;
@@ -67,6 +69,23 @@ public class DeutscheBankAuthenticatorTest {
 
         // Then
         assertThat(t).doesNotThrowAnyException();
+    }
+
+    @Test
+    public void shouldThrowCancelledIfRejectedConsentStatus() {
+        // Given
+        ConsentStatusResponse expected =
+                SerializationUtils.deserializeFromString(
+                        "{\"consentStatus\": \"rejected\"}", ConsentStatusResponse.class);
+        when(deutscheBankApiClient.getConsentStatus()).thenReturn(expected);
+
+        // When
+        Throwable t = catchThrowable(deutscheBankAuthenticator::verifyPersistedConsentIdIsValid);
+
+        // Then
+        assertThat(t)
+                .isInstanceOf(ThirdPartyAppException.class)
+                .hasMessage(ThirdPartyAppError.CANCELLED.exception().getMessage());
     }
 
     @Test

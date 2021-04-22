@@ -18,4 +18,9 @@ public class ConsentStatusResponse {
     public boolean isValid() {
         return StatusValues.VALID.equalsIgnoreCase(consentStatus);
     }
+
+    @JsonIgnore
+    public boolean isRejected() {
+        return StatusValues.REJECTED.equalsIgnoreCase(consentStatus);
+    }
 }
