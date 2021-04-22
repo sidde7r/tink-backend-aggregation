@@ -45,6 +45,7 @@ import se.tink.libraries.user.rpc.UserProfile;
 @RunWith(MockitoJUnitRunner.class)
 public class AccountSegmentRestrictionWorkerCommandTest {
     @Mock private ControllerWrapper controllerWrapper;
+    @Mock private AgentsServiceConfiguration agentsServiceConfiguration;
     private AgentWorkerCommandContext context;
     private RefreshInformationRequest request;
 
@@ -60,12 +61,18 @@ public class AccountSegmentRestrictionWorkerCommandTest {
         HostConfiguration hostConfiguration = new HostConfiguration();
         hostConfiguration.setClusterId("oxford-production");
         when(controllerWrapper.getHostConfiguration()).thenReturn(hostConfiguration);
+
+        when(agentsServiceConfiguration.isFeatureEnabled(
+                        AccountSegmentRestrictionWorkerCommand
+                                .USE_ACCOUNT_SEGMENT_RESTRICTION_FEATURE_NAME))
+                .thenReturn(true);
+
         context =
                 new AgentWorkerCommandContext(
                         request,
                         mock(MetricRegistry.class),
                         mock(CuratorFramework.class),
-                        mock(AgentsServiceConfiguration.class),
+                        agentsServiceConfiguration,
                         mock(AggregatorInfo.class),
                         mock(SupplementalInformationController.class),
                         mock(ProviderSessionCacheController.class),
@@ -211,6 +218,41 @@ public class AccountSegmentRestrictionWorkerCommandTest {
         // then
         List<Pair<Account, Transaction>> expectedAccountsAndTransactions =
                 Stream.of(getUndeterminedAccountData())
+                        .flatMap(Collection::stream)
+                        .collect(Collectors.toList());
+        verifyAccounts(expectedAccountsAndTransactions);
+        verifyTransactions(expectedAccountsAndTransactions);
+        assertThat(result).isEqualTo(AgentWorkerCommandResult.CONTINUE);
+    }
+
+    @Test
+    public void shouldNotFilterSegmentsIfFeatureIsDisabled() throws Exception {
+        // given
+        when(agentsServiceConfiguration.isFeatureEnabled(
+                        AccountSegmentRestrictionWorkerCommand
+                                .USE_ACCOUNT_SEGMENT_RESTRICTION_FEATURE_NAME))
+                .thenReturn(false);
+
+        Set<RefreshableSegment> refreshableSegments =
+                ImmutableSet.<RefreshableSegment>builder()
+                        .add(RefreshableSegment.UNDETERMINED)
+                        .build();
+
+        request.setSegmentsToRefresh(refreshableSegments);
+        AccountSegmentRestrictionWorkerCommand command =
+                new AccountSegmentRestrictionWorkerCommand(context);
+
+        feedContextWithAccountData(); // feed with accounts & transactions
+
+        // when
+        AgentWorkerCommandResult result = command.doExecute();
+
+        // then
+        List<Pair<Account, Transaction>> expectedAccountsAndTransactions =
+                Stream.of(
+                                getPersonalAccountData(),
+                                getBusinessAccountData(),
+                                getUndeterminedAccountData())
                         .flatMap(Collection::stream)
                         .collect(Collectors.toList());
         verifyAccounts(expectedAccountsAndTransactions);

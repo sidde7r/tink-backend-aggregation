@@ -19,6 +19,8 @@ import se.tink.libraries.credentials.service.RefreshableSegment;
 public class AccountSegmentRestrictionWorkerCommand extends AgentWorkerCommand {
     private static final Logger log =
             LoggerFactory.getLogger(AccountSegmentRestrictionWorkerCommand.class);
+    public static final String USE_ACCOUNT_SEGMENT_RESTRICTION_FEATURE_NAME =
+            "useAccountSegmentRestriction";
 
     private final AgentWorkerCommandContext context;
     private final Set<RefreshableSegment> segmentsToRefresh;
@@ -33,6 +35,10 @@ public class AccountSegmentRestrictionWorkerCommand extends AgentWorkerCommand {
 
     @Override
     protected AgentWorkerCommandResult doExecute() throws Exception {
+        if (!isAccountSegmentRestrictionEnabled()) {
+            return AgentWorkerCommandResult.CONTINUE;
+        }
+
         // Temporary null/isEmpty check.
         if (CollectionUtils.isEmpty(this.segmentsToRefresh)) {
             log.debug("The segmentsToRefresh was null or empty.");
@@ -48,6 +54,11 @@ public class AccountSegmentRestrictionWorkerCommand extends AgentWorkerCommand {
     @Override
     protected void doPostProcess() throws Exception {
         // NOOP.
+    }
+
+    private boolean isAccountSegmentRestrictionEnabled() {
+        return context.getAgentsServiceConfiguration()
+                .isFeatureEnabled(USE_ACCOUNT_SEGMENT_RESTRICTION_FEATURE_NAME);
     }
 
     private void registerAccountSegmentFilter() {
