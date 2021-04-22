@@ -41,6 +41,7 @@ import se.tink.backend.aggregation.agents.module.loader.TestModule;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.common.authentication.RefreshableAccessToken;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.libraries.credentials.service.RefreshableItem;
+import se.tink.libraries.credentials.service.UserAvailability;
 import se.tink.libraries.enums.MarketCode;
 
 public final class AgentWireMockRefreshTest {
@@ -70,7 +71,8 @@ public final class AgentWireMockRefreshTest {
             boolean requestFlagCreate,
             boolean requestFlagUpdate,
             boolean wireMockServerLogsEnabled,
-            boolean forceAutoAuthentication) {
+            boolean forceAutoAuthentication,
+            UserAvailability userAvailability) {
 
         ImmutableSet<RequestResponseParser> parsers =
                 wireMockFilePaths.stream()
@@ -99,7 +101,8 @@ public final class AgentWireMockRefreshTest {
                                 requestFlagManual,
                                 requestFlagCreate,
                                 requestFlagUpdate,
-                                forceAutoAuthentication),
+                                forceAutoAuthentication,
+                                userAvailability),
                         new AgentFactoryWireMockModule(
                                 MutableFakeBankSocket.of("localhost:" + server.getHttpsPort()),
                                 callbackData,
@@ -425,7 +428,16 @@ public final class AgentWireMockRefreshTest {
                     requestCreate,
                     requestUpdate,
                     true,
-                    false);
+                    false,
+                    prepareUserAvailability());
+        }
+
+        private UserAvailability prepareUserAvailability() {
+            UserAvailability userAvailability = new UserAvailability();
+            userAvailability.setOriginatingUserIp("127.0.0.1");
+            userAvailability.setUserPresent(requestManual);
+            userAvailability.setUserAvailableForInteraction(requestManual);
+            return userAvailability;
         }
     }
 
@@ -463,6 +475,7 @@ public final class AgentWireMockRefreshTest {
         private boolean requestFlagCreate;
         private boolean requestFlagUpdate;
         private boolean forceAutoAuthentication;
+        private UserAvailability userAvailability;
 
         private NxBuilder() {
             this.configuration = new AgentsServiceConfiguration();
@@ -478,6 +491,7 @@ public final class AgentWireMockRefreshTest {
             this.requestFlagCreate = false;
             this.requestFlagUpdate = false;
             this.forceAutoAuthentication = false;
+            this.userAvailability = new UserAvailability();
         }
 
         @Override
@@ -518,6 +532,9 @@ public final class AgentWireMockRefreshTest {
 
         @Override
         public RefreshOrAuthOnlyStep testFullAuthentication() {
+            this.userAvailability.setUserPresent(true);
+            this.userAvailability.setUserAvailableForInteraction(true);
+            this.userAvailability.setOriginatingUserIp("127.0.0.1");
             return this;
         }
 
@@ -525,6 +542,9 @@ public final class AgentWireMockRefreshTest {
         public RefreshOrAuthOnlyStep testAutoAuthentication() {
             this.forceAutoAuthentication = true;
             this.requestFlagManual = false;
+            this.userAvailability.setUserPresent(false);
+            this.userAvailability.setUserAvailableForInteraction(false);
+            this.userAvailability.setOriginatingUserIp(null);
             return this;
         }
 
@@ -642,6 +662,12 @@ public final class AgentWireMockRefreshTest {
         }
 
         @Override
+        public BuildStep withUserAvailability(UserAvailability userAvailability) {
+            this.userAvailability = userAvailability;
+            return this;
+        }
+
+        @Override
         public BuildStep enableHttpDebugTrace() {
             this.httpDebugTraceEnabled = true;
             return this;
@@ -680,7 +706,8 @@ public final class AgentWireMockRefreshTest {
                     requestFlagCreate,
                     requestFlagUpdate,
                     wireMockServerLogsEnabled,
-                    forceAutoAuthentication);
+                    forceAutoAuthentication,
+                    userAvailability);
         }
     }
 
@@ -788,6 +815,8 @@ public final class AgentWireMockRefreshTest {
         BuildStep withRequestFlagCreate(boolean requestFlagCreate);
 
         BuildStep withRequestFlagUpdate(boolean requestFlagUpdate);
+
+        BuildStep withUserAvailability(UserAvailability userAvailability);
 
         /** Enable printing of http debug trace */
         BuildStep enableHttpDebugTrace();

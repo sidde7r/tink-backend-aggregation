@@ -21,6 +21,7 @@ public final class RefreshRequestModule extends AbstractModule {
     private final boolean requestFlagCreate;
     private final boolean requestFlagUpdate;
     private final boolean forceAutoAuth;
+    private final UserAvailability userAvailability;
     private static final String VALID_V4_UUID = "00000000-0000-4000-0000-000000000000";
 
     public RefreshRequestModule(
@@ -28,21 +29,28 @@ public final class RefreshRequestModule extends AbstractModule {
             boolean manual,
             boolean create,
             boolean update,
-            boolean forceAutoAuth) {
+            boolean forceAutoAuth,
+            UserAvailability userAvailability) {
         this.refreshableItems = refreshableItems;
         this.requestFlagManual = manual;
         this.requestFlagCreate = create;
         this.requestFlagUpdate = update;
         this.forceAutoAuth = forceAutoAuth;
+        this.userAvailability = userAvailability;
     }
 
     public RefreshRequestModule(
-            Set<RefreshableItem> refreshableItems, boolean manual, boolean create, boolean update) {
+            Set<RefreshableItem> refreshableItems,
+            boolean manual,
+            boolean create,
+            boolean update,
+            UserAvailability userAvailability) {
         this.refreshableItems = refreshableItems;
         this.requestFlagManual = manual;
         this.requestFlagCreate = create;
         this.requestFlagUpdate = update;
         this.forceAutoAuth = false;
+        this.userAvailability = userAvailability;
     }
 
     @Override
@@ -57,11 +65,7 @@ public final class RefreshRequestModule extends AbstractModule {
     @Provides
     @Singleton
     protected RefreshInformationRequest provideRefreshInformationRequest(
-            User user,
-            Credentials credential,
-            Provider provider,
-            String originatingUserIp,
-            UserAvailability userAvailability) {
+            User user, Credentials credential, Provider provider, String originatingUserIp) {
 
         // Hack required due to logic in AutoAuthenticationController#shouldDoManualAuthentication
         // During auto refresh all agents have CredentialsTypes.PASSWORD

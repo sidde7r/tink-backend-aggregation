@@ -26,6 +26,7 @@ import se.tink.backend.aggregation.agents.framework.wiremock.utils.ResourceFileR
 import se.tink.backend.aggregation.agents.module.loader.TestModule;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.libraries.credentials.service.RefreshableItem;
+import se.tink.libraries.credentials.service.UserAvailability;
 import se.tink.libraries.enums.MarketCode;
 import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.transfer.rpc.Transfer;
@@ -73,7 +74,11 @@ public final class AgentWireMockPaymentTest {
                                 cache,
                                 httpDebugTrace),
                         new RefreshRequestModule(
-                                RefreshableItem.REFRESHABLE_ITEMS_ALL, true, false, false),
+                                RefreshableItem.REFRESHABLE_ITEMS_ALL,
+                                true,
+                                false,
+                                false,
+                                prepareUserAvailability()),
                         new PaymentRequestModule(payment),
                         new TransferRequestModule(transfer),
                         new VerdictModule(),
@@ -85,6 +90,14 @@ public final class AgentWireMockPaymentTest {
 
         Injector injector = Guice.createInjector(modules);
         compositeAgentTest = injector.getInstance(CompositeAgentTest.class);
+    }
+
+    private UserAvailability prepareUserAvailability() {
+        UserAvailability userAvailability = new UserAvailability();
+        userAvailability.setUserAvailableForInteraction(true);
+        userAvailability.setUserPresent(true);
+        userAvailability.setOriginatingUserIp("127.0.0.1");
+        return userAvailability;
     }
 
     /**
