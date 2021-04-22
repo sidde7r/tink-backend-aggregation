@@ -11,6 +11,7 @@ import static se.tink.backend.aggregation.nxgen.controllers.authentication.multi
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdTestUtils.mockLocatorDoesNotExists;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdTestUtils.mockLocatorExists;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.screens.BankIdScreen.BANK_ID_APP_METHOD_SCREEN;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.screens.BankIdScreen.CHOOSE_2FA_METHOD_SCREEN;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +37,7 @@ public class BankIdPerform2FAStepTest {
      */
     private BankIdWebDriver webDriver;
     private BankIdScreensManager screensManager;
-    private BankIdChoose2FAMethodNameStep choose2FAStep;
+    private BankIdAskUserToChoose2FAMethodNameStep choose2FAStep;
     private BankIdAuthWithOneTimeCodeStep authWithOneTimeCodeStep;
     private BankIdAuthWithMobileBankIdStep authWithMobileBankIdStep;
     private BankIdAuthWithBankIdAppStep authWithBankIdAppStep;
@@ -52,7 +53,7 @@ public class BankIdPerform2FAStepTest {
     public void setup() {
         webDriver = mock(BankIdWebDriver.class);
         screensManager = mock(BankIdScreensManager.class);
-        choose2FAStep = mock(BankIdChoose2FAMethodNameStep.class);
+        choose2FAStep = mock(BankIdAskUserToChoose2FAMethodNameStep.class);
         authWithOneTimeCodeStep = mock(BankIdAuthWithOneTimeCodeStep.class);
         authWithMobileBankIdStep = mock(BankIdAuthWithMobileBankIdStep.class);
         authWithBankIdAppStep = mock(BankIdAuthWithBankIdAppStep.class);
@@ -78,8 +79,9 @@ public class BankIdPerform2FAStepTest {
 
     @Test
     @Parameters(method = "all2FAMethodScreens")
-    public void should_authenticate_with_default_method_when_link_to_change_method_doesnt_exist(
-            BankIdScreen currentScreen) {
+    public void
+            when_initial_screen_is_any_2FA_method_and_link_doesnt_exist_should_authenticate_with_current_method(
+                    BankIdScreen currentScreen) {
         // given
         mockDetectCurrentScreenResults(currentScreen);
         mockLocatorDoesNotExists(LOC_CHANGE_2FA_METHOD_LINK, webDriver);
@@ -88,13 +90,39 @@ public class BankIdPerform2FAStepTest {
         perform2FAStep.perform2FA();
 
         // then
-        verifyDetectsCurrent2FAMethodScreen();
+        verifyDetects2FAMethodOrChangeMethodScreen();
         verifyAuthenticatesWithCorrectMethod(currentScreen);
         mocksToVerifyInOrder.verifyNoMoreInteractions();
     }
 
     @Test
-    public void when_current_screen_is_bank_id_app_should_allow_user_to_continue_authentication() {
+    @Parameters(method = "currentScreenIsNotBankIdAppTestParams")
+    public void
+            when_initial_screen_is_2FA_but_not_bank_id_app_and_link_exists_should_authenticate_with_user_chosen_method(
+                    BankIdScreen currentScreen, BankIdScreen screenAfterChoosingMethod) {
+        // given
+        mockDetectCurrentScreenResults(currentScreen, screenAfterChoosingMethod);
+        mockLocatorExists(LOC_CHANGE_2FA_METHOD_LINK, webDriver);
+
+        when(authWithBankIdAppStep.authenticateWithBankIdApp(anyBoolean()))
+                .thenReturn(BankIdAuthWithBankIdAppUserChoice.CHANGE_METHOD);
+        when(choose2FAStep.choose2FAMethodName()).thenReturn("SOME_SCREEN_SCRAPED_METHOD_NAME123");
+
+        // when
+        perform2FAStep.perform2FA();
+
+        // then
+        verifyDetects2FAMethodOrChangeMethodScreen();
+        mocksToVerifyInOrder.verify(choose2FAStep).choose2FAMethodName();
+        verifyClicksButtonWithLabel("SOME_SCREEN_SCRAPED_METHOD_NAME123");
+        verifyDetects2FAMethodScreen();
+        verifyAuthenticatesWithCorrectMethod(screenAfterChoosingMethod);
+        mocksToVerifyInOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void
+            when_initial_screen_is_bank_id_app_and_link_exists_should_allow_user_to_continue_authentication() {
         // given
         mockDetectCurrentScreenResults(BANK_ID_APP_METHOD_SCREEN);
         mockLocatorExists(LOC_CHANGE_2FA_METHOD_LINK, webDriver);
@@ -106,7 +134,7 @@ public class BankIdPerform2FAStepTest {
         perform2FAStep.perform2FA();
 
         // then
-        verifyDetectsCurrent2FAMethodScreen();
+        verifyDetects2FAMethodOrChangeMethodScreen();
         mocksToVerifyInOrder.verify(authWithBankIdAppStep).authenticateWithBankIdApp(true);
         mocksToVerifyInOrder.verifyNoMoreInteractions();
     }
@@ -114,7 +142,7 @@ public class BankIdPerform2FAStepTest {
     @Test
     @Parameters(method = "all2FAMethodScreens")
     public void
-            when_current_screen_is_bank_id_app_should_allow_user_to_authenticate_with_different_method(
+            when_initial_screen_is_bank_id_app_and_link_exists_should_allow_user_to_authenticate_with_different_method(
                     BankIdScreen screenAfterChoosingOtherMethod) {
         // given
         mockDetectCurrentScreenResults(BANK_ID_APP_METHOD_SCREEN, screenAfterChoosingOtherMethod);
@@ -128,51 +156,33 @@ public class BankIdPerform2FAStepTest {
         perform2FAStep.perform2FA();
 
         // then
-        verifyDetectsCurrent2FAMethodScreen();
+        verifyDetects2FAMethodOrChangeMethodScreen();
         mocksToVerifyInOrder.verify(authWithBankIdAppStep).authenticateWithBankIdApp(true);
         mocksToVerifyInOrder.verify(choose2FAStep).choose2FAMethodName();
-
-        ArgumentCaptor<BankIdElementLocator> locatorArgumentCaptor =
-                ArgumentCaptor.forClass(BankIdElementLocator.class);
-        mocksToVerifyInOrder.verify(webDriver).clickButton(locatorArgumentCaptor.capture());
-        assertThat(locatorArgumentCaptor.getValue())
-                .isEqualToComparingFieldByFieldRecursively(
-                        LOC_CHOOSE_2FA_METHOD_OPTION_BUTTON_WITH_LABEL.apply(
-                                "SOME_SCREEN_SCRAPED_METHOD_NAME"));
-
-        verifyDetectsCurrent2FAMethodScreen();
+        verifyClicksButtonWithLabel("SOME_SCREEN_SCRAPED_METHOD_NAME");
+        verifyDetects2FAMethodScreen();
         verifyAuthenticatesWithCorrectMethod(screenAfterChoosingOtherMethod);
         mocksToVerifyInOrder.verifyNoMoreInteractions();
     }
 
     @Test
-    @Parameters(method = "currentScreenIsNotBankIdAppTestParams")
-    public void should_ask_user_to_choose_method_name_and_authenticate_with_it_when_link_exists(
-            BankIdScreen currentScreen, BankIdScreen screenAfterChoosingMethod) {
+    @Parameters(method = "all2FAMethodScreens")
+    public void
+            when_initial_screen_is_choose_2FA_method_should_authenticate_with_user_chosen_method(
+                    BankIdScreen screenAfterChoosingMethod) {
         // given
-        mockDetectCurrentScreenResults(currentScreen, screenAfterChoosingMethod);
-        mockLocatorExists(LOC_CHANGE_2FA_METHOD_LINK, webDriver);
+        mockDetectCurrentScreenResults(CHOOSE_2FA_METHOD_SCREEN, screenAfterChoosingMethod);
 
-        when(authWithBankIdAppStep.authenticateWithBankIdApp(anyBoolean()))
-                .thenReturn(BankIdAuthWithBankIdAppUserChoice.CHANGE_METHOD);
-        when(choose2FAStep.choose2FAMethodName()).thenReturn("SOME_SCREEN_SCRAPED_METHOD_NAME123");
+        when(choose2FAStep.choose2FAMethodName()).thenReturn("SOME_SCREEN_SCRAPED_METHOD_NAME$$$");
 
         // when
         perform2FAStep.perform2FA();
 
         // then
-        verifyDetectsCurrent2FAMethodScreen();
+        verifyDetects2FAMethodOrChangeMethodScreen();
         mocksToVerifyInOrder.verify(choose2FAStep).choose2FAMethodName();
-
-        ArgumentCaptor<BankIdElementLocator> locatorArgumentCaptor =
-                ArgumentCaptor.forClass(BankIdElementLocator.class);
-        mocksToVerifyInOrder.verify(webDriver).clickButton(locatorArgumentCaptor.capture());
-        assertThat(locatorArgumentCaptor.getValue())
-                .isEqualToComparingFieldByFieldRecursively(
-                        LOC_CHOOSE_2FA_METHOD_OPTION_BUTTON_WITH_LABEL.apply(
-                                "SOME_SCREEN_SCRAPED_METHOD_NAME123"));
-
-        verifyDetectsCurrent2FAMethodScreen();
+        verifyClicksButtonWithLabel("SOME_SCREEN_SCRAPED_METHOD_NAME$$$");
+        verifyDetects2FAMethodScreen();
         verifyAuthenticatesWithCorrectMethod(screenAfterChoosingMethod);
         mocksToVerifyInOrder.verifyNoMoreInteractions();
     }
@@ -207,7 +217,18 @@ public class BankIdPerform2FAStepTest {
                 .thenReturn(firstDetectedScreen, screensToBeDetectedLater);
     }
 
-    private void verifyDetectsCurrent2FAMethodScreen() {
+    private void verifyDetects2FAMethodOrChangeMethodScreen() {
+        mocksToVerifyInOrder
+                .verify(screensManager)
+                .waitForAnyScreenFromQuery(
+                        BankIdScreensQuery.builder()
+                                .waitForScreens(BankIdScreen.getAll2FAMethodScreens())
+                                .waitForScreens(CHOOSE_2FA_METHOD_SCREEN)
+                                .verifyNoErrorScreens(true)
+                                .build());
+    }
+
+    private void verifyDetects2FAMethodScreen() {
         mocksToVerifyInOrder
                 .verify(screensManager)
                 .waitForAnyScreenFromQuery(
@@ -231,5 +252,16 @@ public class BankIdPerform2FAStepTest {
                 mocksToVerifyInOrder.verify(authWithBankIdAppStep).authenticateWithBankIdApp(false);
                 break;
         }
+    }
+
+    private void verifyClicksButtonWithLabel(String label) {
+        ArgumentCaptor<BankIdElementLocator> locatorArgumentCaptor =
+                ArgumentCaptor.forClass(BankIdElementLocator.class);
+
+        mocksToVerifyInOrder.verify(webDriver).clickButton(locatorArgumentCaptor.capture());
+
+        assertThat(locatorArgumentCaptor.getValue())
+                .isEqualToComparingFieldByFieldRecursively(
+                        LOC_CHOOSE_2FA_METHOD_OPTION_BUTTON_WITH_LABEL.apply(label));
     }
 }

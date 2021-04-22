@@ -22,32 +22,79 @@ public class BankIdPerform2FAStep {
     private final BankIdWebDriver webDriver;
     private final BankIdScreensManager screensManager;
 
-    private final BankIdChoose2FAMethodNameStep choose2FAStep;
+    private final BankIdAskUserToChoose2FAMethodNameStep askUserToChoose2FAMethodNameStep;
 
     private final BankIdAuthWithOneTimeCodeStep authWithOneTimeCodeStep;
     private final BankIdAuthWithMobileBankIdStep authWithMobileBankIdStep;
     private final BankIdAuthWithBankIdAppStep authWithBankIdAppStep;
 
     public void perform2FA() {
-        BankId2FAMethod bankId2FAMethod = detectCurrentMethod();
-        boolean canChangeMethod = checkIfLinkToChange2FAMethodExists();
+        BankIdScreen currentScreen =
+                screensManager.waitForAnyScreenFromQuery(
+                        BankIdScreensQuery.builder()
+                                .waitForScreens(BankIdScreen.getAll2FAMethodScreens())
+                                .waitForScreens(BankIdScreen.CHOOSE_2FA_METHOD_SCREEN)
+                                .verifyNoErrorScreens(true)
+                                .build());
 
-        authenticateStartingFromMethod(bankId2FAMethod, canChangeMethod);
+        if (currentScreen == BankIdScreen.CHOOSE_2FA_METHOD_SCREEN) {
+            handleFirstScreenIsChoose2FAMethod();
+        } else {
+            handleFirstScreenIs2FAMethod(currentScreen);
+        }
+    }
+
+    private void handleFirstScreenIsChoose2FAMethod() {
+        log.info("{} Starting with select 2FA method screen", BANK_ID_LOG_PREFIX);
+        BankId2FAMethod chosenMethod = choose2FAMethod();
+        authenticateWithMethod(chosenMethod);
+    }
+
+    private void handleFirstScreenIs2FAMethod(BankIdScreen currentScreen) {
+        log.info("{} Starting with 2FA method screen: {}", BANK_ID_LOG_PREFIX, currentScreen);
+        BankId2FAMethod method = BankId2FAMethod.get2FAMethodByScreen(currentScreen);
+
+        boolean canChangeMethod = checkIfLinkToChange2FAMethodExists();
+        if (!canChangeMethod) {
+            authenticateWithMethod(method);
+            return;
+        }
+
+        if (method == BANK_ID_APP_METHOD) {
+            BankIdAuthWithBankIdAppUserChoice result =
+                    authWithBankIdAppStep.authenticateWithBankIdApp(true);
+            if (result == BankIdAuthWithBankIdAppUserChoice.AUTHENTICATE) {
+                /*
+                User chose to continue BankID app authentication and we didn't get any error - this means that
+                authentication was successful
+                 */
+                return;
+            }
+        }
+
+        clickLinkToChange2FAMethod();
+        BankId2FAMethod chosenMethod = choose2FAMethod();
+        authenticateWithMethod(chosenMethod);
+    }
+
+    private BankId2FAMethod choose2FAMethod() {
+        String selectedMethodName = askUserToChoose2FAMethodNameStep.choose2FAMethodName();
+        clickOptionButtonWithLabel(selectedMethodName);
+
+        return detectCurrentMethod();
     }
 
     private BankId2FAMethod detectCurrentMethod() {
-        BankIdScreen current2FAScreen = get2FAScreen();
+        log.info("{} Searching for any 2FA screen", BANK_ID_LOG_PREFIX);
+        BankIdScreen current2FAScreen =
+                screensManager.waitForAnyScreenFromQuery(
+                        BankIdScreensQuery.builder()
+                                .waitForScreens(BankIdScreen.getAll2FAMethodScreens())
+                                .verifyNoErrorScreens(true)
+                                .build());
+
         log.info("{} 2FA screen detected: {}", BANK_ID_LOG_PREFIX, current2FAScreen);
         return BankId2FAMethod.get2FAMethodByScreen(current2FAScreen);
-    }
-
-    private BankIdScreen get2FAScreen() {
-        log.info("{} Searching for any 2FA screen", BANK_ID_LOG_PREFIX);
-        return screensManager.waitForAnyScreenFromQuery(
-                BankIdScreensQuery.builder()
-                        .waitForScreens(BankIdScreen.getAll2FAMethodScreens())
-                        .verifyNoErrorScreens(true)
-                        .build());
     }
 
     private boolean checkIfLinkToChange2FAMethodExists() {
@@ -63,34 +110,8 @@ public class BankIdPerform2FAStep {
         return linkExists;
     }
 
-    private void authenticateStartingFromMethod(
-            BankId2FAMethod bankId2FAMethod, boolean canChangeMethod) {
-
-        if (!canChangeMethod) {
-            authenticateWithMethod(bankId2FAMethod);
-            return;
-        }
-
-        if (bankId2FAMethod == BANK_ID_APP_METHOD) {
-            BankIdAuthWithBankIdAppUserChoice result =
-                    authWithBankIdAppStep.authenticateWithBankIdApp(true);
-            if (result == BankIdAuthWithBankIdAppUserChoice.AUTHENTICATE) {
-                /*
-                User chose to continue BankID app authentication and we didn't get any error - this means that
-                authentication was successful
-                 */
-                return;
-            }
-        }
-
-        BankId2FAMethod chosenMethod = choose2FAMethod();
-        authenticateWithMethod(chosenMethod);
-    }
-
-    private BankId2FAMethod choose2FAMethod() {
-        String selectedMethodName = choose2FAStep.choose2FAMethodName();
-        clickOptionButtonWithLabel(selectedMethodName);
-        return detectCurrentMethod();
+    private void clickLinkToChange2FAMethod() {
+        webDriver.clickButton(LOC_CHANGE_2FA_METHOD_LINK);
     }
 
     private void clickOptionButtonWithLabel(String label) {

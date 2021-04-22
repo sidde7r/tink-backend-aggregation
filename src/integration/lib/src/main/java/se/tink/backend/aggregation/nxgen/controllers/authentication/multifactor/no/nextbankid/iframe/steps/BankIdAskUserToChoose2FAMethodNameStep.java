@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.steps;
 
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants.BANK_ID_LOG_PREFIX;
-import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants.HtmlLocators.LOC_CHANGE_2FA_METHOD_LINK;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants.HtmlLocators.LOC_CHOOSE_2FA_METHOD_OPTION_BUTTON_LABEL;
 
 import com.google.inject.Inject;
@@ -22,7 +21,7 @@ import se.tink.libraries.i18n.Catalog;
 
 @Slf4j
 @RequiredArgsConstructor(onConstructor = @__({@Inject}))
-public class BankIdChoose2FAMethodNameStep {
+public class BankIdAskUserToChoose2FAMethodNameStep {
 
     private final BankIdWebDriver webDriver;
     private final BankIdScreensManager screensManager;
@@ -31,7 +30,6 @@ public class BankIdChoose2FAMethodNameStep {
     private final SupplementalInformationController supplementalInformationController;
 
     public String choose2FAMethodName() {
-        clickLinkToChange2FAMethod();
         waitForChoose2FAMethodScreen();
 
         List<String> optionButtonLabels = getAll2FAOptionButtonLabels();
@@ -41,10 +39,6 @@ public class BankIdChoose2FAMethodNameStep {
         log.info("{} User chose label: {}", BANK_ID_LOG_PREFIX, labelChosenByUser);
 
         return labelChosenByUser;
-    }
-
-    private void clickLinkToChange2FAMethod() {
-        webDriver.clickButton(LOC_CHANGE_2FA_METHOD_LINK);
     }
 
     private void waitForChoose2FAMethodScreen() {
