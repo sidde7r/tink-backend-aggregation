@@ -130,7 +130,7 @@ public final class RabobankAgent
     }
 
     private RabobankUserIpInformation getUserIpInformation() {
-        return new RabobankUserIpInformation(request.isManual(), userIp);
+        return new RabobankUserIpInformation(request.getUserAvailability().isUserPresent(), userIp);
     }
 
     @Override
