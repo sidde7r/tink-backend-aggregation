@@ -28,15 +28,12 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class SebApiClient extends SebBaseApiClient {
 
     public SebApiClient(
-            TinkHttpClient client,
-            PersistentStorage persistentStorage,
-            CredentialsRequest credentialsRequest) {
-        super(client, persistentStorage, credentialsRequest);
+            TinkHttpClient client, PersistentStorage persistentStorage, boolean isManualRequest) {
+        super(client, persistentStorage, isManualRequest);
     }
 
     @Override
