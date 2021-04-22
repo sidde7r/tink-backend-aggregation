@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.fetcher.transactional.model;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,5 +24,10 @@ public class NordeaPartnerTransactionalPaginatorResponse
     @Override
     public Optional<Boolean> canFetchMore() {
         return canFetchMore;
+    }
+
+    public static NordeaPartnerTransactionalPaginatorResponse createEmpty() {
+        return new NordeaPartnerTransactionalPaginatorResponse(
+                Collections.emptyList(), null, Optional.of(false));
     }
 }
