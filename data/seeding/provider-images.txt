@@ -348,9 +348,7 @@ icon:no-totens-sparebank	https://cdn.tink.se/provider-images/no/no-totens_spareb
 icon:no-trogstad-sparebank	https://cdn.tink.se/provider-images/no/no-trogstad_sparebank.png
 icon:no-tysnes-sparebank	https://cdn.tink.se/provider-images/no/no-tysnes_sparebank.png
 icon:no-valle-sparebank	https://cdn.tink.se/provider-images/no/no-valle_sparebank.png
-icon:no-vang-sparebank	https://cdn.tink.se/provider-images/no/no-vang_sparebank.png
 icon:no-vekselbanken	https://cdn.tink.se/provider-images/no/no-vekselbanken.png
-icon:no-vestre-slidre-sparebank	https://cdn.tink.se/provider-images/no/no-vestre_slidre_sparebank.png
 icon:no-vik-sparebank	https://cdn.tink.se/provider-images/no/no-vik_sparebank.png
 icon:no-ya-bank	https://cdn.tink.se/provider-images/no/no-ya_bank.png
 icon:nordax	https://cdn.tink.se/provider-images/nordax.png

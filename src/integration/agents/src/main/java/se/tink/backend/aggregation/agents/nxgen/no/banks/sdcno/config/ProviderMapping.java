@@ -76,9 +76,7 @@ public enum ProviderMapping {
     TYSNES("3525", AuthenticationType.PORTAL, "tysnes-sparebank"),
     VALDRESSPAREBANK("2153", AuthenticationType.PORTAL, "valdressparebank"),
     VALLE("2890", AuthenticationType.PORTAL, "valle-sparebank"),
-    VANG("2146", AuthenticationType.PORTAL, "valdressparebank"),
     VEKSELBANKEN("9581", AuthenticationType.PORTAL, "vekselbanken"),
-    VESTRE_SLIDRE("2153", AuthenticationType.PORTAL, "valdressparebank"),
     VIK("3800", AuthenticationType.PORTAL, "sognbank"),
     EIKA("1821", AuthenticationType.EIKA, "eika"),
     NORD68("4730", AuthenticationType.PORTAL, "68nord");
