@@ -6,6 +6,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.filter.UkOpenBankingPisRequestFilter;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.TimeoutFilter;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 @RequiredArgsConstructor
@@ -27,6 +28,7 @@ public class UkOpenBankingRequestBuilder {
                 .request(url)
                 .addFilter(pisRequestFilter)
                 .addFilter(new UKOpenBankingPisRequestRetryFilter(3, 2000))
+                .addFilter(new TimeoutFilter())
                 .accept(MediaType.APPLICATION_JSON_TYPE);
     }
 }
