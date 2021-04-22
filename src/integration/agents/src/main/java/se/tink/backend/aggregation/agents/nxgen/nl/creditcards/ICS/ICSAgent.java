@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.fetchers.cred
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.fetchers.credit.ICSCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.filter.ICSRetryFilter;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
+import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -47,8 +48,6 @@ public final class ICSAgent extends NextGenerationAgent
         final ICSConfiguration icsConfiguration =
                 agentConfiguration.getProviderSpecificConfiguration();
 
-        client.setEidasProxy(agentsServiceConfiguration.getEidasProxy());
-
         final String customerIpAddress = request.isManual() ? userIp : "";
         apiClient =
                 new ICSApiClient(
@@ -60,6 +59,12 @@ public final class ICSAgent extends NextGenerationAgent
                         customerIpAddress);
 
         creditCardRefreshController = constructCreditCardRefreshController();
+    }
+
+    @Override
+    public void setConfiguration(AgentsServiceConfiguration configuration) {
+        super.setConfiguration(configuration);
+        client.setEidasProxy(configuration.getEidasProxy());
     }
 
     private void configureHttpClient(TinkHttpClient client) {
