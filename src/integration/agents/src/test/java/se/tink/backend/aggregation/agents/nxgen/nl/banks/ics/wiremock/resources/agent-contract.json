@@ -1,0 +1,2250 @@
+{
+    "accounts": [
+        {
+            "accountNumber": "73297630011",
+            "accountExclusion": "NONE",
+            "exactAvailableCredit": {
+                "currencyCode": "EUR",
+                "unscaledValue": 94523,
+                "scale": 2,
+                "doubleValue": 945.23,
+                "exactValue": 945.23
+            },
+            "exactBalance": {
+                "currencyCode": "EUR",
+                "unscaledValue": -5476999999999998,
+                "scale": 14,
+                "doubleValue": -54.76999999999998,
+                "exactValue": -54.76999999999998
+            },
+            "currencyCode": "EUR",
+            "bankId": "73297630011",
+            "excluded": false,
+            "favored": false,
+            "name": "Knab Creditcard",
+            "ownership": 1.0,
+            "type": "CREDIT_CARD",
+            "userModifiedExcluded": false,
+            "userModifiedName": false,
+            "userModifiedType": false,
+            "identifiers": "[\"other://73297630011\"]",
+            "closed": false,
+            "flags": "[]",
+            "balances": [],
+            "availableCredit": 945.23,
+            "balance": -54.76999999999998
+        }
+    ],
+    "transactions": [
+        {
+            "amount": -53.77,
+            "date": 1617530400000,
+            "description": "AMZN MKTP NL*MU08A6U24 AMAZON.NL LUX",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Miscellaneous Retail Stor",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "AMZN MKTP NL*MU08A6U24 AMAZON.NL LUX"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -1.0,
+            "date": 1617271200000,
+            "description": "Bijdrage Card Alerts",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "N/A",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "Bijdrage Card Alerts"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": 72.72,
+            "date": 1617184800000,
+            "description": "IDEAL BETALING, DANK U",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "N/A",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "N/A"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": 146.0,
+            "date": 1616756400000,
+            "description": "IDEAL BETALING, DANK U",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "N/A",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "N/A"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -14.79,
+            "date": 1616151600000,
+            "description": "AMAZONRETAIL*MU6LQ0NT4 WWW.AMAZON.NL LUX",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Miscellaneous Retail Stor",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "AMAZONRETAIL*MU6LQ0NT4 WWW.AMAZON.NL LUX"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -57.93,
+            "date": 1615546800000,
+            "description": "BON PRIX MARCQ EN BARO FRA",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Dir Market-Comb Cat Retai",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "BON PRIX MARCQ EN BARO FRA"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -146.0,
+            "date": 1615114800000,
+            "description": "MEDIAMARKT.NL ROTTERDAM NLD",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Electronic Sales",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "MEDIAMARKT.NL ROTTERDAM NLD"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": 322.47,
+            "date": 1614423600000,
+            "description": "IDEAL BETALING, DANK U",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "N/A",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "N/A"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -86.11,
+            "date": 1612350000000,
+            "description": "NAVIEXTRAS.COM X HUN",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Computers",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "NAVIEXTRAS.COM X HUN"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -235.0,
+            "date": 1610535600000,
+            "description": "JYSKBE SCHOUTEN BEL",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Equipment,Furniture",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "JYSKBE SCHOUTEN BEL"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -53.77,
+            "date": 1617530400000,
+            "description": "AMZN MKTP NL*MU08A6U24 AMAZON.NL LUX",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Miscellaneous Retail Stor",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "AMZN MKTP NL*MU08A6U24 AMAZON.NL LUX"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -1.0,
+            "date": 1617271200000,
+            "description": "Bijdrage Card Alerts",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "N/A",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "Bijdrage Card Alerts"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": 72.72,
+            "date": 1617184800000,
+            "description": "IDEAL BETALING, DANK U",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "N/A",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "N/A"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": 146.0,
+            "date": 1616756400000,
+            "description": "IDEAL BETALING, DANK U",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "N/A",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "N/A"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -14.79,
+            "date": 1616151600000,
+            "description": "AMAZONRETAIL*MU6LQ0NT4 WWW.AMAZON.NL LUX",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Miscellaneous Retail Stor",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "AMAZONRETAIL*MU6LQ0NT4 WWW.AMAZON.NL LUX"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -57.93,
+            "date": 1615546800000,
+            "description": "BON PRIX MARCQ EN BARO FRA",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Dir Market-Comb Cat Retai",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "BON PRIX MARCQ EN BARO FRA"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -146.0,
+            "date": 1615114800000,
+            "description": "MEDIAMARKT.NL ROTTERDAM NLD",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Electronic Sales",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "MEDIAMARKT.NL ROTTERDAM NLD"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": 322.47,
+            "date": 1614423600000,
+            "description": "IDEAL BETALING, DANK U",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "N/A",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "N/A"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -86.11,
+            "date": 1612350000000,
+            "description": "NAVIEXTRAS.COM X HUN",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Computers",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "NAVIEXTRAS.COM X HUN"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -235.0,
+            "date": 1610535600000,
+            "description": "JYSKBE SCHOUTEN BEL",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Equipment,Furniture",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "JYSKBE SCHOUTEN BEL"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -53.77,
+            "date": 1617530400000,
+            "description": "AMZN MKTP NL*MU08A6U24 AMAZON.NL LUX",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Miscellaneous Retail Stor",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "AMZN MKTP NL*MU08A6U24 AMAZON.NL LUX"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -1.0,
+            "date": 1617271200000,
+            "description": "Bijdrage Card Alerts",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "N/A",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "Bijdrage Card Alerts"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": 72.72,
+            "date": 1617184800000,
+            "description": "IDEAL BETALING, DANK U",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "N/A",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "N/A"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": 146.0,
+            "date": 1616756400000,
+            "description": "IDEAL BETALING, DANK U",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "N/A",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "N/A"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -14.79,
+            "date": 1616151600000,
+            "description": "AMAZONRETAIL*MU6LQ0NT4 WWW.AMAZON.NL LUX",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Miscellaneous Retail Stor",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "AMAZONRETAIL*MU6LQ0NT4 WWW.AMAZON.NL LUX"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -57.93,
+            "date": 1615546800000,
+            "description": "BON PRIX MARCQ EN BARO FRA",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Dir Market-Comb Cat Retai",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "BON PRIX MARCQ EN BARO FRA"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -146.0,
+            "date": 1615114800000,
+            "description": "MEDIAMARKT.NL ROTTERDAM NLD",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Electronic Sales",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "MEDIAMARKT.NL ROTTERDAM NLD"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": 322.47,
+            "date": 1614423600000,
+            "description": "IDEAL BETALING, DANK U",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "N/A",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "N/A"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -86.11,
+            "date": 1612350000000,
+            "description": "NAVIEXTRAS.COM X HUN",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Computers",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "NAVIEXTRAS.COM X HUN"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -235.0,
+            "date": 1610535600000,
+            "description": "JYSKBE SCHOUTEN BEL",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Equipment,Furniture",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "JYSKBE SCHOUTEN BEL"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -53.77,
+            "date": 1617530400000,
+            "description": "AMZN MKTP NL*MU08A6U24 AMAZON.NL LUX",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Miscellaneous Retail Stor",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "AMZN MKTP NL*MU08A6U24 AMAZON.NL LUX"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -1.0,
+            "date": 1617271200000,
+            "description": "Bijdrage Card Alerts",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "N/A",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "Bijdrage Card Alerts"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": 72.72,
+            "date": 1617184800000,
+            "description": "IDEAL BETALING, DANK U",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "N/A",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "N/A"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": 146.0,
+            "date": 1616756400000,
+            "description": "IDEAL BETALING, DANK U",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "N/A",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "N/A"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -14.79,
+            "date": 1616151600000,
+            "description": "AMAZONRETAIL*MU6LQ0NT4 WWW.AMAZON.NL LUX",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Miscellaneous Retail Stor",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "AMAZONRETAIL*MU6LQ0NT4 WWW.AMAZON.NL LUX"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -57.93,
+            "date": 1615546800000,
+            "description": "BON PRIX MARCQ EN BARO FRA",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Dir Market-Comb Cat Retai",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "BON PRIX MARCQ EN BARO FRA"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -146.0,
+            "date": 1615114800000,
+            "description": "MEDIAMARKT.NL ROTTERDAM NLD",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Electronic Sales",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "MEDIAMARKT.NL ROTTERDAM NLD"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": 322.47,
+            "date": 1614423600000,
+            "description": "IDEAL BETALING, DANK U",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "N/A",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "N/A"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -86.11,
+            "date": 1612350000000,
+            "description": "NAVIEXTRAS.COM X HUN",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Computers",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "NAVIEXTRAS.COM X HUN"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -235.0,
+            "date": 1610535600000,
+            "description": "JYSKBE SCHOUTEN BEL",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Equipment,Furniture",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "JYSKBE SCHOUTEN BEL"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -53.77,
+            "date": 1617530400000,
+            "description": "AMZN MKTP NL*MU08A6U24 AMAZON.NL LUX",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Miscellaneous Retail Stor",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "AMZN MKTP NL*MU08A6U24 AMAZON.NL LUX"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -1.0,
+            "date": 1617271200000,
+            "description": "Bijdrage Card Alerts",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "N/A",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "Bijdrage Card Alerts"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": 72.72,
+            "date": 1617184800000,
+            "description": "IDEAL BETALING, DANK U",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "N/A",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "N/A"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": 146.0,
+            "date": 1616756400000,
+            "description": "IDEAL BETALING, DANK U",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "N/A",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "N/A"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -14.79,
+            "date": 1616151600000,
+            "description": "AMAZONRETAIL*MU6LQ0NT4 WWW.AMAZON.NL LUX",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Miscellaneous Retail Stor",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "AMAZONRETAIL*MU6LQ0NT4 WWW.AMAZON.NL LUX"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -57.93,
+            "date": 1615546800000,
+            "description": "BON PRIX MARCQ EN BARO FRA",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Dir Market-Comb Cat Retai",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "BON PRIX MARCQ EN BARO FRA"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -146.0,
+            "date": 1615114800000,
+            "description": "MEDIAMARKT.NL ROTTERDAM NLD",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Electronic Sales",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "MEDIAMARKT.NL ROTTERDAM NLD"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": 322.47,
+            "date": 1614423600000,
+            "description": "IDEAL BETALING, DANK U",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "N/A",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "N/A"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -86.11,
+            "date": 1612350000000,
+            "description": "NAVIEXTRAS.COM X HUN",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Computers",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "NAVIEXTRAS.COM X HUN"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -235.0,
+            "date": 1610535600000,
+            "description": "JYSKBE SCHOUTEN BEL",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Equipment,Furniture",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "JYSKBE SCHOUTEN BEL"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -53.77,
+            "date": 1617530400000,
+            "description": "AMZN MKTP NL*MU08A6U24 AMAZON.NL LUX",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Miscellaneous Retail Stor",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "AMZN MKTP NL*MU08A6U24 AMAZON.NL LUX"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -1.0,
+            "date": 1617271200000,
+            "description": "Bijdrage Card Alerts",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "N/A",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "Bijdrage Card Alerts"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": 72.72,
+            "date": 1617184800000,
+            "description": "IDEAL BETALING, DANK U",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "N/A",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "N/A"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": 146.0,
+            "date": 1616756400000,
+            "description": "IDEAL BETALING, DANK U",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "N/A",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "N/A"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -14.79,
+            "date": 1616151600000,
+            "description": "AMAZONRETAIL*MU6LQ0NT4 WWW.AMAZON.NL LUX",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Miscellaneous Retail Stor",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "AMAZONRETAIL*MU6LQ0NT4 WWW.AMAZON.NL LUX"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -57.93,
+            "date": 1615546800000,
+            "description": "BON PRIX MARCQ EN BARO FRA",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Dir Market-Comb Cat Retai",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "BON PRIX MARCQ EN BARO FRA"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -146.0,
+            "date": 1615114800000,
+            "description": "MEDIAMARKT.NL ROTTERDAM NLD",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Electronic Sales",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "MEDIAMARKT.NL ROTTERDAM NLD"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": 322.47,
+            "date": 1614423600000,
+            "description": "IDEAL BETALING, DANK U",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "N/A",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "N/A"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -86.11,
+            "date": 1612350000000,
+            "description": "NAVIEXTRAS.COM X HUN",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Computers",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "NAVIEXTRAS.COM X HUN"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -235.0,
+            "date": 1610535600000,
+            "description": "JYSKBE SCHOUTEN BEL",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Equipment,Furniture",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "JYSKBE SCHOUTEN BEL"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -53.77,
+            "date": 1617530400000,
+            "description": "AMZN MKTP NL*MU08A6U24 AMAZON.NL LUX",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Miscellaneous Retail Stor",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "AMZN MKTP NL*MU08A6U24 AMAZON.NL LUX"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -1.0,
+            "date": 1617271200000,
+            "description": "Bijdrage Card Alerts",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "N/A",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "Bijdrage Card Alerts"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": 72.72,
+            "date": 1617184800000,
+            "description": "IDEAL BETALING, DANK U",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "N/A",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "N/A"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": 146.0,
+            "date": 1616756400000,
+            "description": "IDEAL BETALING, DANK U",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "N/A",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "N/A"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -14.79,
+            "date": 1616151600000,
+            "description": "AMAZONRETAIL*MU6LQ0NT4 WWW.AMAZON.NL LUX",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Miscellaneous Retail Stor",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "AMAZONRETAIL*MU6LQ0NT4 WWW.AMAZON.NL LUX"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -57.93,
+            "date": 1615546800000,
+            "description": "BON PRIX MARCQ EN BARO FRA",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Dir Market-Comb Cat Retai",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "BON PRIX MARCQ EN BARO FRA"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -146.0,
+            "date": 1615114800000,
+            "description": "MEDIAMARKT.NL ROTTERDAM NLD",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Electronic Sales",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "MEDIAMARKT.NL ROTTERDAM NLD"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": 322.47,
+            "date": 1614423600000,
+            "description": "IDEAL BETALING, DANK U",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "N/A",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "N/A"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -86.11,
+            "date": 1612350000000,
+            "description": "NAVIEXTRAS.COM X HUN",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Computers",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "NAVIEXTRAS.COM X HUN"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -235.0,
+            "date": 1610535600000,
+            "description": "JYSKBE SCHOUTEN BEL",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Equipment,Furniture",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "JYSKBE SCHOUTEN BEL"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -53.77,
+            "date": 1617530400000,
+            "description": "AMZN MKTP NL*MU08A6U24 AMAZON.NL LUX",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Miscellaneous Retail Stor",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "AMZN MKTP NL*MU08A6U24 AMAZON.NL LUX"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -1.0,
+            "date": 1617271200000,
+            "description": "Bijdrage Card Alerts",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "N/A",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "Bijdrage Card Alerts"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": 72.72,
+            "date": 1617184800000,
+            "description": "IDEAL BETALING, DANK U",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "N/A",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "N/A"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": 146.0,
+            "date": 1616756400000,
+            "description": "IDEAL BETALING, DANK U",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "N/A",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "N/A"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -14.79,
+            "date": 1616151600000,
+            "description": "AMAZONRETAIL*MU6LQ0NT4 WWW.AMAZON.NL LUX",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Miscellaneous Retail Stor",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "AMAZONRETAIL*MU6LQ0NT4 WWW.AMAZON.NL LUX"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -57.93,
+            "date": 1615546800000,
+            "description": "BON PRIX MARCQ EN BARO FRA",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Dir Market-Comb Cat Retai",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "BON PRIX MARCQ EN BARO FRA"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -146.0,
+            "date": 1615114800000,
+            "description": "MEDIAMARKT.NL ROTTERDAM NLD",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Electronic Sales",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "MEDIAMARKT.NL ROTTERDAM NLD"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": 322.47,
+            "date": 1614423600000,
+            "description": "IDEAL BETALING, DANK U",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "N/A",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "N/A"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -86.11,
+            "date": 1612350000000,
+            "description": "NAVIEXTRAS.COM X HUN",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Computers",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "NAVIEXTRAS.COM X HUN"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -235.0,
+            "date": 1610535600000,
+            "description": "JYSKBE SCHOUTEN BEL",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Equipment,Furniture",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "JYSKBE SCHOUTEN BEL"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -53.77,
+            "date": 1617530400000,
+            "description": "AMZN MKTP NL*MU08A6U24 AMAZON.NL LUX",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Miscellaneous Retail Stor",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "AMZN MKTP NL*MU08A6U24 AMAZON.NL LUX"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -1.0,
+            "date": 1617271200000,
+            "description": "Bijdrage Card Alerts",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "N/A",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "Bijdrage Card Alerts"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": 72.72,
+            "date": 1617184800000,
+            "description": "IDEAL BETALING, DANK U",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "N/A",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "N/A"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": 146.0,
+            "date": 1616756400000,
+            "description": "IDEAL BETALING, DANK U",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "N/A",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "N/A"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -14.79,
+            "date": 1616151600000,
+            "description": "AMAZONRETAIL*MU6LQ0NT4 WWW.AMAZON.NL LUX",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Miscellaneous Retail Stor",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "AMAZONRETAIL*MU6LQ0NT4 WWW.AMAZON.NL LUX"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -57.93,
+            "date": 1615546800000,
+            "description": "BON PRIX MARCQ EN BARO FRA",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Dir Market-Comb Cat Retai",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "BON PRIX MARCQ EN BARO FRA"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -146.0,
+            "date": 1615114800000,
+            "description": "MEDIAMARKT.NL ROTTERDAM NLD",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Electronic Sales",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "MEDIAMARKT.NL ROTTERDAM NLD"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": 322.47,
+            "date": 1614423600000,
+            "description": "IDEAL BETALING, DANK U",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "N/A",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "N/A"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -86.11,
+            "date": 1612350000000,
+            "description": "NAVIEXTRAS.COM X HUN",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Computers",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "NAVIEXTRAS.COM X HUN"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -235.0,
+            "date": 1610535600000,
+            "description": "JYSKBE SCHOUTEN BEL",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Equipment,Furniture",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "JYSKBE SCHOUTEN BEL"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -53.77,
+            "date": 1617530400000,
+            "description": "AMZN MKTP NL*MU08A6U24 AMAZON.NL LUX",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Miscellaneous Retail Stor",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "AMZN MKTP NL*MU08A6U24 AMAZON.NL LUX"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -1.0,
+            "date": 1617271200000,
+            "description": "Bijdrage Card Alerts",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "N/A",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "Bijdrage Card Alerts"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": 72.72,
+            "date": 1617184800000,
+            "description": "IDEAL BETALING, DANK U",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "N/A",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "N/A"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": 146.0,
+            "date": 1616756400000,
+            "description": "IDEAL BETALING, DANK U",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "N/A",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "N/A"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -14.79,
+            "date": 1616151600000,
+            "description": "AMAZONRETAIL*MU6LQ0NT4 WWW.AMAZON.NL LUX",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Miscellaneous Retail Stor",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "AMAZONRETAIL*MU6LQ0NT4 WWW.AMAZON.NL LUX"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -57.93,
+            "date": 1615546800000,
+            "description": "BON PRIX MARCQ EN BARO FRA",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Dir Market-Comb Cat Retai",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "BON PRIX MARCQ EN BARO FRA"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -146.0,
+            "date": 1615114800000,
+            "description": "MEDIAMARKT.NL ROTTERDAM NLD",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Electronic Sales",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "MEDIAMARKT.NL ROTTERDAM NLD"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": 322.47,
+            "date": 1614423600000,
+            "description": "IDEAL BETALING, DANK U",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "N/A",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "N/A"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -86.11,
+            "date": 1612350000000,
+            "description": "NAVIEXTRAS.COM X HUN",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Computers",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "NAVIEXTRAS.COM X HUN"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -235.0,
+            "date": 1610535600000,
+            "description": "JYSKBE SCHOUTEN BEL",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Equipment,Furniture",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "JYSKBE SCHOUTEN BEL"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -53.77,
+            "date": 1617530400000,
+            "description": "AMZN MKTP NL*MU08A6U24 AMAZON.NL LUX",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Miscellaneous Retail Stor",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "AMZN MKTP NL*MU08A6U24 AMAZON.NL LUX"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -1.0,
+            "date": 1617271200000,
+            "description": "Bijdrage Card Alerts",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "N/A",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "Bijdrage Card Alerts"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": 72.72,
+            "date": 1617184800000,
+            "description": "IDEAL BETALING, DANK U",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "N/A",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "N/A"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": 146.0,
+            "date": 1616756400000,
+            "description": "IDEAL BETALING, DANK U",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "N/A",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "N/A"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -14.79,
+            "date": 1616151600000,
+            "description": "AMAZONRETAIL*MU6LQ0NT4 WWW.AMAZON.NL LUX",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Miscellaneous Retail Stor",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "AMAZONRETAIL*MU6LQ0NT4 WWW.AMAZON.NL LUX"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -57.93,
+            "date": 1615546800000,
+            "description": "BON PRIX MARCQ EN BARO FRA",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Dir Market-Comb Cat Retai",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "BON PRIX MARCQ EN BARO FRA"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -146.0,
+            "date": 1615114800000,
+            "description": "MEDIAMARKT.NL ROTTERDAM NLD",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Electronic Sales",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "MEDIAMARKT.NL ROTTERDAM NLD"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": 322.47,
+            "date": 1614423600000,
+            "description": "IDEAL BETALING, DANK U",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "N/A",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "N/A"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -86.11,
+            "date": 1612350000000,
+            "description": "NAVIEXTRAS.COM X HUN",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Computers",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "NAVIEXTRAS.COM X HUN"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -235.0,
+            "date": 1610535600000,
+            "description": "JYSKBE SCHOUTEN BEL",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Equipment,Furniture",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "JYSKBE SCHOUTEN BEL"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -53.77,
+            "date": 1617530400000,
+            "description": "AMZN MKTP NL*MU08A6U24 AMAZON.NL LUX",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Miscellaneous Retail Stor",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "AMZN MKTP NL*MU08A6U24 AMAZON.NL LUX"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -1.0,
+            "date": 1617271200000,
+            "description": "Bijdrage Card Alerts",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "N/A",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "Bijdrage Card Alerts"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": 72.72,
+            "date": 1617184800000,
+            "description": "IDEAL BETALING, DANK U",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "N/A",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "N/A"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": 146.0,
+            "date": 1616756400000,
+            "description": "IDEAL BETALING, DANK U",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "N/A",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "N/A"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -14.79,
+            "date": 1616151600000,
+            "description": "AMAZONRETAIL*MU6LQ0NT4 WWW.AMAZON.NL LUX",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Miscellaneous Retail Stor",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "AMAZONRETAIL*MU6LQ0NT4 WWW.AMAZON.NL LUX"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -57.93,
+            "date": 1615546800000,
+            "description": "BON PRIX MARCQ EN BARO FRA",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Dir Market-Comb Cat Retai",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "BON PRIX MARCQ EN BARO FRA"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -146.0,
+            "date": 1615114800000,
+            "description": "MEDIAMARKT.NL ROTTERDAM NLD",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Electronic Sales",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "MEDIAMARKT.NL ROTTERDAM NLD"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": 322.47,
+            "date": 1614423600000,
+            "description": "IDEAL BETALING, DANK U",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "N/A",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "N/A"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -86.11,
+            "date": 1612350000000,
+            "description": "NAVIEXTRAS.COM X HUN",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Computers",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "NAVIEXTRAS.COM X HUN"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -235.0,
+            "date": 1610535600000,
+            "description": "JYSKBE SCHOUTEN BEL",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Equipment,Furniture",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "JYSKBE SCHOUTEN BEL"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -53.77,
+            "date": 1617530400000,
+            "description": "AMZN MKTP NL*MU08A6U24 AMAZON.NL LUX",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Miscellaneous Retail Stor",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "AMZN MKTP NL*MU08A6U24 AMAZON.NL LUX"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -1.0,
+            "date": 1617271200000,
+            "description": "Bijdrage Card Alerts",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "N/A",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "Bijdrage Card Alerts"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": 72.72,
+            "date": 1617184800000,
+            "description": "IDEAL BETALING, DANK U",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "N/A",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "N/A"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": 146.0,
+            "date": 1616756400000,
+            "description": "IDEAL BETALING, DANK U",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "N/A",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "N/A"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -14.79,
+            "date": 1616151600000,
+            "description": "AMAZONRETAIL*MU6LQ0NT4 WWW.AMAZON.NL LUX",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Miscellaneous Retail Stor",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "AMAZONRETAIL*MU6LQ0NT4 WWW.AMAZON.NL LUX"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -57.93,
+            "date": 1615546800000,
+            "description": "BON PRIX MARCQ EN BARO FRA",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Dir Market-Comb Cat Retai",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "BON PRIX MARCQ EN BARO FRA"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -146.0,
+            "date": 1615114800000,
+            "description": "MEDIAMARKT.NL ROTTERDAM NLD",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Electronic Sales",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "MEDIAMARKT.NL ROTTERDAM NLD"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": 322.47,
+            "date": 1614423600000,
+            "description": "IDEAL BETALING, DANK U",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "N/A",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "N/A"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -86.11,
+            "date": 1612350000000,
+            "description": "NAVIEXTRAS.COM X HUN",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Computers",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "NAVIEXTRAS.COM X HUN"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -235.0,
+            "date": 1610535600000,
+            "description": "JYSKBE SCHOUTEN BEL",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Equipment,Furniture",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "JYSKBE SCHOUTEN BEL"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        }
+    ]
+}
