@@ -81,7 +81,14 @@ public class BankIdPerform2FAStep {
         String selectedMethodName = askUserToChoose2FAMethodNameStep.choose2FAMethodName();
         clickOptionButtonWithLabel(selectedMethodName);
 
-        return detectCurrentMethod();
+        BankId2FAMethod selectedMethod = detectCurrentMethod();
+        log.info(
+                "{} 2FA method mapping: [{}={}]",
+                BANK_ID_LOG_PREFIX,
+                selectedMethodName,
+                selectedMethod);
+
+        return selectedMethod;
     }
 
     private BankId2FAMethod detectCurrentMethod() {
