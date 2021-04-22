@@ -1,11 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.authenticator;
 
 import lombok.RequiredArgsConstructor;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticationValidator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdConstants.Errors;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.entity.AuthTokenCategory;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.entity.UkPisAuthToken;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.storage.UkOpenBankingPaymentStorage;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
+import se.tink.libraries.signableoperation.enums.InternalStatus;
 
 @RequiredArgsConstructor
 public class UkOpenBankingPisAuthFilterInstantiator {
@@ -14,10 +18,20 @@ public class UkOpenBankingPisAuthFilterInstantiator {
     private final OpenIdAuthenticationValidator authenticationValidator;
     private final UkOpenBankingPaymentStorage storage;
 
-    public void instantiateAuthFilterWithClientToken() {
+    public void instantiateAuthFilterWithClientToken() throws PaymentException {
         if (!hasValidClientTokenInStorage()) {
-            final UkPisAuthToken clientToken = retrieveClientToken();
-            storage.storeToken(clientToken);
+            try {
+                final UkPisAuthToken clientToken = retrieveClientToken();
+                storage.storeToken(clientToken);
+            } catch (HttpResponseException hre) {
+                final String responseBody = hre.getResponse().getBody(String.class);
+                final InternalStatus status =
+                        responseBody.contains(Errors.INVALID_GRANT)
+                                ? InternalStatus.INVALID_GRANT
+                                : InternalStatus.PAYMENT_AUTHORIZATION_FAILED;
+
+                throw new PaymentException(responseBody, status);
+            }
         }
     }
 

@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.authenticator;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -9,11 +11,14 @@ import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbank
 
 import org.junit.Before;
 import org.junit.Test;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticationValidator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.entity.AuthTokenCategory;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.entity.UkPisAuthToken;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.storage.UkOpenBankingPaymentStorage;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
 public class UkOpenBankingPisAuthFilterInstantiatorTest {
 
@@ -37,7 +42,7 @@ public class UkOpenBankingPisAuthFilterInstantiatorTest {
     }
 
     @Test
-    public void shouldInstantiateAuthFilterWithClientToken() {
+    public void shouldInstantiateAuthFilterWithClientToken() throws PaymentException {
         // given
         final OAuth2Token oAuth2Token = createToken();
         when(apiClientMock.requestClientCredentials()).thenReturn(oAuth2Token);
@@ -55,7 +60,46 @@ public class UkOpenBankingPisAuthFilterInstantiatorTest {
     }
 
     @Test
-    public void shouldInstantiateAuthFilterWithClientTokenWhenValidTokenInStorage() {
+    public void shouldThrowInvalidGrantExceptionWhenInstantiateAuthFilterFail() {
+        // given
+        HttpResponse response = mock(HttpResponse.class);
+        when(response.getBody(String.class)).thenReturn("invalid_grant");
+
+        when(apiClientMock.requestClientCredentials())
+                .thenThrow(new HttpResponseException(null, response));
+
+        // when
+        Throwable result =
+                catchThrowable(authFilterInstantiator::instantiateAuthFilterWithClientToken);
+
+        // then
+        assertThat(result)
+                .isExactlyInstanceOf(PaymentException.class)
+                .hasFieldOrPropertyWithValue("InternalStatus", "INVALID_GRANT");
+    }
+
+    @Test
+    public void shouldThrowPaymentExceptionWhenInstantiateAuthFilterFail() {
+        // given
+        HttpResponse response = mock(HttpResponse.class);
+        when(response.getBody(String.class)).thenReturn("Internal Server Error");
+
+        when(apiClientMock.requestClientCredentials())
+                .thenThrow(new HttpResponseException(null, response));
+
+        // when
+        Throwable result =
+                catchThrowable(authFilterInstantiator::instantiateAuthFilterWithClientToken);
+
+        // then
+        assertThat(result)
+                .isExactlyInstanceOf(PaymentException.class)
+                .hasFieldOrPropertyWithValue("InternalStatus", "PAYMENT_AUTHORIZATION_FAILED");
+    }
+
+    @Test
+    public void shouldInstantiateAuthFilterWithClientTokenWhenValidTokenInStorage()
+            throws PaymentException {
         // given
         when(paymentStorageMock.hasToken()).thenReturn(Boolean.TRUE);
 
@@ -75,7 +119,8 @@ public class UkOpenBankingPisAuthFilterInstantiatorTest {
     }
 
     @Test
-    public void shouldInstantiateAuthFilterWithClientTokenWhenInvalidTokenInStorage() {
+    public void shouldInstantiateAuthFilterWithClientTokenWhenInvalidTokenInStorage()
+            throws PaymentException {
         // given
         when(paymentStorageMock.hasToken()).thenReturn(Boolean.TRUE);
 

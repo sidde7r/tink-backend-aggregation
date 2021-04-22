@@ -99,7 +99,7 @@ public class UkOpenBankingPaymentExecutorTest {
     }
 
     @Test
-    public void shouldFetchPaymentIfPresent() {
+    public void shouldFetchPaymentIfPresent() throws PaymentException {
         // given
         final PaymentRequest paymentRequestMock =
                 createDomesticPaymentRequestForAlreadyExecutedPayment(this.clockMock);
@@ -118,7 +118,7 @@ public class UkOpenBankingPaymentExecutorTest {
     }
 
     @Test
-    public void shouldFetchPaymentConsentIfPaymentNotPresent() {
+    public void shouldFetchPaymentConsentIfPaymentNotPresent() throws PaymentException {
         // given
         final PaymentRequest paymentRequestMock =
                 createDomesticPaymentRequestForAlreadyExecutedPayment(this.clockMock);
@@ -137,7 +137,7 @@ public class UkOpenBankingPaymentExecutorTest {
     }
 
     @Test
-    public void shouldFetchPaymentIdFromCacheIfNotInStorage() {
+    public void shouldFetchPaymentIdFromCacheIfNotInStorage() throws PaymentException {
         // given
         final PaymentRequest paymentRequestMock = createPaymentRequest();
         final PaymentResponse paymentResponseMock = createPaymentResponse();
