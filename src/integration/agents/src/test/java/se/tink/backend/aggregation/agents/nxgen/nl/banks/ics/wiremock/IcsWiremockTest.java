@@ -35,7 +35,6 @@ public class IcsWiremockTest {
                         .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
                         .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
                         .addCallbackData("code", "dummyCode")
-                        .enableDataDumpForContractFile()
                         .build();
 
         final AgentContractEntity expected =
