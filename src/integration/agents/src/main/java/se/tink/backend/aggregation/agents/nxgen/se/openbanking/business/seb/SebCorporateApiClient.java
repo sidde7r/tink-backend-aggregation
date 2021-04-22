@@ -32,7 +32,7 @@ public class SebCorporateApiClient extends SebBaseApiClient {
             TinkHttpClient client,
             PersistentStorage persistentStorage,
             CredentialsRequest credentialsRequest) {
-        super(client, persistentStorage, credentialsRequest);
+        super(client, persistentStorage, credentialsRequest.isManual());
         this.credentials = credentialsRequest.getCredentials();
     }
 
@@ -119,19 +119,12 @@ public class SebCorporateApiClient extends SebBaseApiClient {
 
     @Override
     protected RequestBuilder createRequestInSession(URL url) {
-        RequestBuilder requestBuilder =
-                createRequest(url)
-                        .header(HeaderKeys.X_REQUEST_ID, Psd2Headers.getRequestId())
-                        .header(
-                                HeaderKeys.PSU_CORPORATE_ID,
-                                credentials.getField("psu-corporate-id"))
-                        .addBearerToken(getTokenFromStorage());
-
-        if (credentialsRequest.getUserAvailability().isUserPresent()) {
-            requestBuilder.header(
-                    HeaderKeys.PSU_IP_ADDRESS, credentialsRequest.getOriginatingUserIp());
-        }
-
-        return requestBuilder;
+        return createRequest(url)
+                .header(SebCommonConstants.HeaderKeys.X_REQUEST_ID, Psd2Headers.getRequestId())
+                .header(
+                        SebCommonConstants.HeaderKeys.PSU_IP_ADDRESS,
+                        SebCommonConstants.getPsuIpAddress())
+                .header(HeaderKeys.PSU_CORPORATE_ID, credentials.getField("psu-corporate-id"))
+                .addBearerToken(getTokenFromStorage());
     }
 }
