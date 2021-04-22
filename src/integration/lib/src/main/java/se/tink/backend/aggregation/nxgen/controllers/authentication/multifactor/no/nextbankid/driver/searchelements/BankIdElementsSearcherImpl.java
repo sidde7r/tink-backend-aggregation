@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.SearchContext;
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.utils.BankIdWebDriverCommonUtils;
@@ -114,8 +115,24 @@ public class BankIdElementsSearcherImpl implements BankIdElementsSearcher {
             SearchContext searchContext, BankIdElementLocator locator) {
 
         return searchContext.findElements(locator.getElementSelector()).stream()
-                .filter(locator::matchesAdditionalFilters)
+                .filter(element -> doesElementMatchAdditionalFilters(element, locator))
                 .collect(Collectors.toList());
+    }
+
+    private boolean doesElementMatchAdditionalFilters(
+            WebElement element, BankIdElementLocator locator) {
+        try {
+            return locator.matchesAdditionalFilters(element);
+
+        } catch (StaleElementReferenceException e) {
+            /*
+            Sometimes right after we find element it can be removed from DOM due to some style recalculations or just
+            dynamic loading of a different view. If this happens before we run additional filters we can get stale
+            element reference exception - e.g. we check the text of non existing element. Since this element was
+            just removed we return false to not include it in search result.
+             */
+            return false;
+        }
     }
 
     private Optional<WebElement> tryFindElement(By by) {

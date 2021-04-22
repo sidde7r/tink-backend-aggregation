@@ -7,7 +7,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants.HtmlLocators.LOC_CHANGE_2FA_METHOD_LINK;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants.HtmlLocators.LOC_CHOOSE_2FA_METHOD_OPTION_BUTTON_LABEL;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdTestUtils.mockLocatorDoesNotExists;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdTestUtils.mockLocatorExists;
@@ -36,7 +35,7 @@ import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.i18n.LocalizableKey;
 
 @RunWith(JUnitParamsRunner.class)
-public class BankIdChoose2FAMethodNameStepTest {
+public class BankIdAskUserToChoose2FAMethodNameStepTest {
 
     /*
     Mocks
@@ -51,7 +50,7 @@ public class BankIdChoose2FAMethodNameStepTest {
     /*
     Real
      */
-    private BankIdChoose2FAMethodNameStep choose2FAStep;
+    private BankIdAskUserToChoose2FAMethodNameStep choose2FAStep;
 
     @Before
     public void setup() {
@@ -65,7 +64,7 @@ public class BankIdChoose2FAMethodNameStepTest {
                 inOrder(webDriver, screensManager, catalog, supplementalInformationController);
 
         choose2FAStep =
-                new BankIdChoose2FAMethodNameStep(
+                new BankIdAskUserToChoose2FAMethodNameStep(
                         webDriver, screensManager, catalog, supplementalInformationController);
     }
 
@@ -87,7 +86,6 @@ public class BankIdChoose2FAMethodNameStepTest {
         // then
         assertThat(labelChosenByUser).isEqualTo(expectedLabelChosenByUser);
 
-        mocksToVerifyInOrder.verify(webDriver).clickButton(LOC_CHANGE_2FA_METHOD_LINK);
         mocksToVerifyInOrder
                 .verify(screensManager)
                 .waitForAnyScreenFromQuery(
@@ -152,7 +150,6 @@ public class BankIdChoose2FAMethodNameStepTest {
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage("No 2FA method option button labels found");
 
-        mocksToVerifyInOrder.verify(webDriver).clickButton(LOC_CHANGE_2FA_METHOD_LINK);
         mocksToVerifyInOrder
                 .verify(screensManager)
                 .waitForAnyScreenFromQuery(
