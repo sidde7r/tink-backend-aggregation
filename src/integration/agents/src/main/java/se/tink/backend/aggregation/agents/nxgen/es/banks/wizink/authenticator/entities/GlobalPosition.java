@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.authenticator.entities;
 
 import java.util.List;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.fetcher.account.entities.ProductEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject

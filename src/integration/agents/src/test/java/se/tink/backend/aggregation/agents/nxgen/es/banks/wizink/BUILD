@@ -6,6 +6,7 @@ junit_test(
     data = [
         "//:agent_test_data",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/es/banks/wizink/resources/authenticator",
+        "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/es/banks/wizink/resources/fetcher/account",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/es/banks/wizink/resources/fetcher/creditcard",
     ],
     tags = [
@@ -27,6 +28,7 @@ junit_test(
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/configuration",
         "//src/libraries/serialization",
         "//third_party:com_fasterxml_jackson_core_jackson_core",
+        "//third_party:com_sun_jersey_jersey_core",
         "//third_party:org_assertj_assertj_core",
         "//third_party:org_mockito_mockito_core",
     ],

@@ -257,12 +257,12 @@
             "products": [
                 {
                     "productType": "AV",
-                    "internalKey": "_zLIbYO8SQ1E_HhHUpVkO9wJjapqaWrSQq24y6ejhUk",
+                    "internalKey": "Dummy1",
                     "alias": "",
                     "balance": "5,08",
                     "currency": "EUR",
                     "formattedKey": "Vd0InFctmXhZvkt6FRqFVv2NBPjp6pUQjnnddEeNtHE",
-                    "formattedKeyDisplay": "NDA4OWEwOGU1ZjJiMzU1MDJiYmJhNTNlODQ0NjJkMWJiOGQyOGUwNzIxYmQ3Nzc4MzA2MmI3MGU1NzQ3MTI1Mw\u003d\u003d",
+                    "formattedKeyDisplay": "ZDRkMGZiYjE1OWYwNDY5MjEzYzVjNDc3MGU0YmZhYTM4MzViNDFjYjNkZjUzODEyMTRiZWI5ODU3OTU2Y2I\u003d\u003d",
                     "product": "Cuenta de ahorro WiZink",
                     "interveners": [
                         {
@@ -280,7 +280,7 @@
                 },
                 {
                     "productType": "AV",
-                    "internalKey": "ZhsUmcpacr4eOjP1ZldLxEVTPPR8zHGBMAL045eQfmo",
+                    "internalKey": "Dummy2",
                     "alias": "Cuenta Ahorro Vista",
                     "balance": "0",
                     "currency": "EUR",

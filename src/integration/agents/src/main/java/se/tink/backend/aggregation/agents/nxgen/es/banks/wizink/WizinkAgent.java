@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.wizink;
 
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CREDIT_CARDS;
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
 
 import com.google.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +27,7 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
 @Slf4j
-@AgentCapabilities({CREDIT_CARDS})
+@AgentCapabilities({CREDIT_CARDS, SAVINGS_ACCOUNTS})
 public class WizinkAgent extends SubsequentProgressiveGenerationAgent
         implements RefreshCreditCardAccountsExecutor, RefreshSavingsAccountsExecutor {
 
@@ -67,14 +68,12 @@ public class WizinkAgent extends SubsequentProgressiveGenerationAgent
 
     @Override
     public FetchAccountsResponse fetchSavingsAccounts() {
-        return transactionalAccountRefreshController
-                .fetchSavingsAccounts(); // TODO to be implemented [IFD-1666]
+        return transactionalAccountRefreshController.fetchSavingsAccounts();
     }
 
     @Override
     public FetchTransactionsResponse fetchSavingsTransactions() {
-        return transactionalAccountRefreshController
-                .fetchSavingsTransactions(); // TODO to be implemented [IFD-1666]
+        return transactionalAccountRefreshController.fetchSavingsTransactions();
     }
 
     private CreditCardRefreshController constructCreditCardRefreshController() {

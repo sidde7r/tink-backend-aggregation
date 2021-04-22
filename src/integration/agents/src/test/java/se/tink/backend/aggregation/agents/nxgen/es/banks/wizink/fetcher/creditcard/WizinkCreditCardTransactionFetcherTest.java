@@ -38,7 +38,7 @@ public class WizinkCreditCardTransactionFetcherTest {
     @Test
     public void shouldFetchTransactionFromLast90Days() {
         // given
-        prepareData(false);
+        prepareDataWithFirstRefreshFlagOnFalse();
 
         // when
         List<AggregationTransaction> transactions =
@@ -51,7 +51,7 @@ public class WizinkCreditCardTransactionFetcherTest {
     @Test
     public void shouldFetchAllTransactions() {
         // given
-        prepareData(true);
+        prepareDataWithFirstRefreshFlagOnTrue();
 
         // when
         List<AggregationTransaction> transactions =
@@ -62,9 +62,9 @@ public class WizinkCreditCardTransactionFetcherTest {
     }
 
     @Test
-    public void shouldFetchAndMapFirstAndLastTransaction() {
+    public void shouldFetchAndMapFirstTransaction() {
         // given
-        prepareData(true);
+        prepareDataWithFirstRefreshFlagOnTrue();
 
         // when
         List<AggregationTransaction> transactions =
@@ -72,13 +72,33 @@ public class WizinkCreditCardTransactionFetcherTest {
 
         // then
         assertFirstTransactionData(transactions.get(0));
+    }
+
+    @Test
+    public void shouldFetchAndMapLastTransaction() {
+        // given
+        prepareDataWithFirstRefreshFlagOnTrue();
+
+        // when
+        List<AggregationTransaction> transactions =
+                wizinkCreditCardTransactionFetcher.fetchTransactionsFor(mockAccount);
+
+        // then
         assertFifthTransactionData(transactions.get(4));
     }
 
-    private void prepareData(boolean firstRefresh) {
-        when(mockAccount.getApiIdentifier()).thenReturn("dummyApiIdentifier");
-        when(wizinkStorage.getFirstFullRefreshFlag()).thenReturn(firstRefresh);
+    private void prepareDataWithFirstRefreshFlagOnTrue() {
+        when(wizinkStorage.getFirstFullRefreshFlag()).thenReturn(true);
+        prepareData();
+    }
 
+    private void prepareDataWithFirstRefreshFlagOnFalse() {
+        when(wizinkStorage.getFirstFullRefreshFlag()).thenReturn(false);
+        prepareData();
+    }
+
+    private void prepareData() {
+        when(mockAccount.getApiIdentifier()).thenReturn("dummyApiIdentifier");
         when(wizinkApiClient.fetchCreditCardTransactionsFrom90Days(any()))
                 .thenReturn(
                         SerializationUtils.deserializeFromString(
@@ -87,7 +107,7 @@ public class WizinkCreditCardTransactionFetcherTest {
                                                 "find_movements_response_last_90_days.json")
                                         .toFile(),
                                 FindMovementsResponse.class));
-        when(wizinkApiClient.prepareOtpRequestToUserMobilePhone(any()))
+        when(wizinkApiClient.fetchSessionIdForOlderCardTransactions(any()))
                 .thenReturn(
                         SerializationUtils.deserializeFromString(
                                 Paths.get(TEST_DATA_PATH, "find_movements_response_sessionId.json")
