@@ -2,11 +2,11 @@ package se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS;
 
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CREDIT_CARDS;
 
+import com.google.inject.Inject;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
-import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.ICSConstants.HttpClient;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.authenticator.ICSOAuthAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.configuration.ICSConfiguration;
@@ -14,8 +14,8 @@ import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.fetchers.cred
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.fetchers.credit.ICSCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.filter.ICSRetryFilter;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
-import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
@@ -28,7 +28,6 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.AccessExceededFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.BankServiceInternalErrorFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.TimeoutFilter;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
 @AgentCapabilities({CREDIT_CARDS})
 public final class ICSAgent extends NextGenerationAgent
@@ -38,11 +37,9 @@ public final class ICSAgent extends NextGenerationAgent
 
     private final CreditCardRefreshController creditCardRefreshController;
 
-    public ICSAgent(
-            CredentialsRequest request,
-            AgentContext context,
-            AgentsServiceConfiguration agentsServiceConfiguration) {
-        super(request, context, agentsServiceConfiguration.getSignatureKeyPair());
+    @Inject
+    public ICSAgent(AgentComponentProvider componentProvider) {
+        super(componentProvider);
         configureHttpClient(client);
 
         final AgentConfiguration<ICSConfiguration> agentConfiguration =
