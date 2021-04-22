@@ -254,7 +254,7 @@ public class BankIdIframeSSAuthenticationControllerTest {
         // then
         assertThat(throwable)
                 .isInstanceOf(LoginException.class)
-                .hasMessage(LoginError.NO_AVAILABLE_SCA_METHODS.exception().getMessage());
+                .hasMessage(LoginError.NOT_SUPPORTED.exception().getMessage());
     }
 
     @Test
