@@ -120,7 +120,7 @@ public final class RabobankApiClient {
                         .accept(MediaType.APPLICATION_JSON_TYPE);
 
         // This header must be present iff the request was initiated by the PSU
-        if (userIpInformation.isManualRequest()) {
+        if (userIpInformation.isUserPresent()) {
             logger.info("Request is attended -- adding PSU header for {}", url);
             builder.header(QueryParams.PSU_IP_ADDRESS, userIpInformation.getUserIp());
         } else {
@@ -307,7 +307,7 @@ public final class RabobankApiClient {
             boolean isSandbox, TransactionalTransactionsResponse page) {
         return page.getTransactions().getLinks().getNextKey() != null
                 && !isSandbox
-                && userIpInformation.isManualRequest();
+                && userIpInformation.isUserPresent();
     }
 
     private String buildSignatureHeader(

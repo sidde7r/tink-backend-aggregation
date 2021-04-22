@@ -6,6 +6,6 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public class RabobankUserIpInformation {
-    private final boolean manualRequest;
+    private final boolean userPresent;
     private final String userIp;
 }
