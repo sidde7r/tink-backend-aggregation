@@ -70,6 +70,7 @@ public class OpenIdConstants {
         public static final String LOGIN_REQUIRED = "login_required";
         public static final String SERVER_ERROR = "server_error";
         public static final String TEMPORARILY_UNAVAILABLE = "temporarily_unavailable";
+        public static final String INVALID_GRANT = "invalid_grant";
     }
 
     public static class Ps256 {
