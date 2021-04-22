@@ -34,13 +34,14 @@ public class CardDetailEntity {
     @JsonIgnore
     public CreditCardAccount toTinkAccount(String xTokenUser) {
         String decodedMaskedCardNumber =
-                WizinkDecoder.decodeMaskedCardNumber(maskedCardNumber, xTokenUser);
+                WizinkDecoder.decodeMaskedNumber(maskedCardNumber, xTokenUser);
 
         return CreditCardAccount.nxBuilder()
                 .withCardDetails(createCardDetails(decodedMaskedCardNumber))
                 .withoutFlags()
                 .withId(createIdModule(decodedMaskedCardNumber))
                 .setApiIdentifier(decodedMaskedCardNumber)
+                .addHolderName(nameInCard)
                 .putInTemporaryStorage(StorageKeys.ENCODED_ACCOUNT_NUMBER, accountNumber)
                 .build();
     }

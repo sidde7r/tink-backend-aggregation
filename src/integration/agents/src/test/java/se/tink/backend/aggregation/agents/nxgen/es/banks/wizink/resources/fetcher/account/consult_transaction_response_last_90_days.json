@@ -1,0 +1,65 @@
+{
+	"ConsultTransactionResponse": {
+		"transactionList": [
+			{
+				"amount": "15,30",
+				"operationDate": "01/04/2021",
+				"valueDate": "01/09/2020",
+				"transactionNumber": "1623",
+				"balance": "5,08",
+				"concept": "INTERESES",
+				"businessProcessNumber": "915989955688000",
+				"conceptCode": "10145"
+			},
+			{
+				"amount": "0",
+				"operationDate": "16/01/2021",
+				"valueDate": "01/08/2020",
+				"transactionNumber": "1580",
+				"balance": "5,08",
+				"concept": "INTERESES CUENTA",
+				"businessProcessNumber": "915964852620000",
+				"conceptCode": "10145"
+			},
+			{
+				"amount": "0",
+				"operationDate": "17/07/2020",
+				"valueDate": "01/07/2020",
+				"transactionNumber": "1533",
+				"balance": "5,08",
+				"concept": "INTERESES CUENTA AHORRO",
+				"businessProcessNumber": "915936283376000",
+				"conceptCode": "10145"
+			},
+			{
+				"amount": "0",
+				"operationDate": "18/07/2020",
+				"valueDate": "01/07/2020",
+				"transactionNumber": "1533",
+				"balance": "5,08",
+				"concept": "INTERESES CUENTA AHORRO",
+				"businessProcessNumber": "915936283376000",
+				"conceptCode": "10145"
+			},
+			{
+				"amount": "0",
+				"operationDate": "01/07/2020",
+				"valueDate": "01/07/2020",
+				"transactionNumber": "1533",
+				"balance": "5,08",
+				"concept": "INTERESES CUENTA AHORRO",
+				"businessProcessNumber": "915936283376000",
+				"conceptCode": "10145"
+			}
+		],
+		"haveMore": false,
+		"retentions": [],
+		"indRetenciones": false,
+		"retentionListSize": "0",
+		"more90Days": true,
+		"result": {
+			"code": "000",
+			"message": "OK"
+		}
+	}
+}

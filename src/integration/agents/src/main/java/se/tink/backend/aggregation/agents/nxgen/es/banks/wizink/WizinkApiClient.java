@@ -10,17 +10,22 @@ import javax.ws.rs.core.MultivaluedMap;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.WizinkConstants.ErrorCodes;
+import se.tink.backend.aggregation.agents.exceptions.errors.SupplementalInfoError;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.WizinkConstants.HeaderKeys;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.WizinkConstants.ResultCodes;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.WizinkConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.authenticator.entities.CardEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.authenticator.rpc.CustomerLoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.authenticator.rpc.CustomerLoginResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.fetcher.TransactionsRequestBody;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.fetcher.account.rpc.ConsultTransactionRequest;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.fetcher.account.rpc.ConsultTransactionResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.fetcher.creditcard.rpc.CardDetailRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.fetcher.creditcard.rpc.CardDetailResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.fetcher.creditcard.rpc.FindMovementsRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.fetcher.creditcard.rpc.FindMovementsResponse;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.rpc.OtpRequest;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.rpc.BaseResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.rpc.OtpEntity;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
@@ -65,6 +70,43 @@ public class WizinkApiClient {
         }
     }
 
+    public ConsultTransactionResponse fetchTransactionsFrom90Days(String internalKey) {
+        return createRequest(Urls.TRANSACTIONS)
+                .body(
+                        new ConsultTransactionRequest(
+                                TransactionsRequestBody.builder(false)
+                                        .withInternalKey(internalKey)
+                                        .build()))
+                .post(ConsultTransactionResponse.class);
+    }
+
+    public ConsultTransactionResponse fetchTransactionsOlderThan90Days(
+            String sessionId, String internalKey) {
+        String otpInput = supplementalInformationHelper.waitForOtpInput();
+        ConsultTransactionResponse response =
+                createRequest(Urls.TRANSACTIONS)
+                        .body(
+                                new ConsultTransactionRequest(
+                                        TransactionsRequestBody.builder(false)
+                                                .withInternalKey(internalKey)
+                                                .withOtpEntity(new OtpEntity(otpInput, sessionId))
+                                                .build()))
+                        .post(ConsultTransactionResponse.class);
+        handleOtpResponse(response.getTransactionResponse());
+        return response;
+    }
+
+    public ConsultTransactionResponse fetchSessionIdForOlderAccountTransactions(
+            String internalKey) {
+        return createRequest(Urls.TRANSACTIONS)
+                .body(
+                        new ConsultTransactionRequest(
+                                TransactionsRequestBody.builder(true)
+                                        .withInternalKey(internalKey)
+                                        .build()))
+                .post(ConsultTransactionResponse.class);
+    }
+
     public CardDetailResponse fetchCreditCardDetails(CardEntity cardEntity) {
         return createRequest(Urls.CARD_DETAIL)
                 .accept(MediaType.APPLICATION_JSON_TYPE)
@@ -75,39 +117,43 @@ public class WizinkApiClient {
     }
 
     public FindMovementsResponse fetchCreditCardTransactionsFrom90Days(String accountNumber) {
+        String now = LocalDate.now().format(DATE_FORMATTER);
         return createRequest(Urls.CARD_DETAIL_TRANSACTIONS)
-                .body(new FindMovementsRequest(accountNumber, false, prepareDate89DaysAgo()))
+                .body(
+                        new FindMovementsRequest(
+                                TransactionsRequestBody.builder(false)
+                                        .withAccountNumber(accountNumber)
+                                        .withDateFrom(now)
+                                        .build()))
                 .post(FindMovementsResponse.class);
     }
 
-    public FindMovementsResponse prepareOtpRequestToUserMobilePhone(String accountNumber) {
+    public FindMovementsResponse fetchSessionIdForOlderCardTransactions(String accountNumber) {
         return createRequest(Urls.CARD_DETAIL_TRANSACTIONS)
-                .body(new FindMovementsRequest(accountNumber, true, prepareDate89DaysAgo()))
+                .body(
+                        new FindMovementsRequest(
+                                TransactionsRequestBody.builder(true)
+                                        .withAccountNumber(accountNumber)
+                                        .withDateFrom(prepareDate89DaysAgo())
+                                        .build()))
                 .post(FindMovementsResponse.class);
     }
 
     public FindMovementsResponse fetchCreditCardTransactionsOlderThan90Days(
             String accountNumber, String sessionId) {
         String otpInput = supplementalInformationHelper.waitForOtpInput();
-        try {
-            return createRequest(Urls.CARD_DETAIL_TRANSACTIONS)
-                    .body(
-                            new FindMovementsRequest(
-                                    accountNumber,
-                                    new OtpRequest(otpInput, sessionId),
-                                    prepareDate89DaysAgo()))
-                    .post(FindMovementsResponse.class);
-        } catch (HttpResponseException e) {
-            FindMovementsResponse response = e.getResponse().getBody(FindMovementsResponse.class);
-            if (ErrorCodes.WRONG_OTP.equalsIgnoreCase(response.getResult().getCode())) {
-                throw LoginError.INCORRECT_CHALLENGE_RESPONSE.exception();
-            }
-            log.warn(
-                    "Unknown error code {} with message {}",
-                    response.getResult().getCode(),
-                    response.getResult().getMessage());
-            throw e;
-        }
+        FindMovementsResponse response =
+                createRequest(Urls.CARD_DETAIL_TRANSACTIONS)
+                        .body(
+                                new FindMovementsRequest(
+                                        TransactionsRequestBody.builder(false)
+                                                .withAccountNumber(accountNumber)
+                                                .withDateFrom(prepareDate89DaysAgo())
+                                                .withOtpEntity(new OtpEntity(otpInput, sessionId))
+                                                .build()))
+                        .post(FindMovementsResponse.class);
+        handleOtpResponse(response.getCreditCardTransactions());
+        return response;
     }
 
     public void logout() {
@@ -151,6 +197,18 @@ public class WizinkApiClient {
                 .request(url)
                 .header(HeaderKeys.X_TOKEN_ID, wizinkStorage.getXTokenId())
                 .type(MediaType.APPLICATION_JSON_TYPE);
+    }
+
+    private void handleOtpResponse(BaseResponse response) {
+        if (ResultCodes.WRONG_OTP.equalsIgnoreCase(response.getResult().getCode())) {
+            throw SupplementalInfoError.NO_VALID_CODE.exception();
+        } else if (ResultCodes.EXPIRED_OTP.equalsIgnoreCase(response.getResult().getCode())) {
+            throw SupplementalInfoError.WAIT_TIMEOUT.exception();
+        }
+        log.warn(
+                "Unknown error code {} with message {}",
+                response.getResult().getCode(),
+                response.getResult().getMessage());
     }
 
     private String prepareDate89DaysAgo() {

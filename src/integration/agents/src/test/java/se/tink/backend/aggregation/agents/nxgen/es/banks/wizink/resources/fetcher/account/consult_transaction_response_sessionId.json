@@ -1,0 +1,13 @@
+{
+	"ConsultTransactionResponse": {
+		"indRetenciones": false,
+		"mobilePhone": "DUMMY_MOBILE",
+		"otp": {
+			"bharosaSessionId": "DUMMY_ID"
+		},
+		"result": {
+			"code": "000",
+			"message": "OK"
+		}
+	}
+}

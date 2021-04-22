@@ -31,10 +31,11 @@ public class WizinkConstants {
         public static final String X_TOKEN_USER = "X-user-token";
     }
 
-    public static class ErrorCodes {
-        private ErrorCodes() {}
+    public static class ResultCodes {
+        private ResultCodes() {}
 
         public static final String WRONG_OTP = "807";
+        public static final String EXPIRED_OTP = "808";
     }
 
     public static class StorageKeys {
@@ -46,5 +47,12 @@ public class WizinkConstants {
         public static final String X_TOKEN_USER = "xTokenUser";
         public static final String FIRST_FULL_REFRESH = "firstFullRefresh";
         public static final String ENCODED_ACCOUNT_NUMBER = "encodedAccountNumber";
+    }
+
+    public static class HolderTypes {
+        private HolderTypes() {}
+
+        public static final String OWNER = "TITULAR";
+        public static final String AUTHORIZED_USER = "AUTORIZADO";
     }
 }

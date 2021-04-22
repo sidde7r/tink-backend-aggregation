@@ -7,12 +7,12 @@ import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 
 public class WizinkDecoder {
 
-    public static String decodeMaskedCardNumber(String maskedCardNumber, String xTokenUser) {
-        return decodeHex(xor(decodeBase64(removePadding(maskedCardNumber)), xTokenUser));
+    public static String decodeMaskedNumber(String maskedNumber, String xTokenUser) {
+        return decodeHex(xor(decodeBase64(removePadding(maskedNumber)), xTokenUser));
     }
 
     private static String removePadding(String maskedCardNumber) {
-        return maskedCardNumber.replace("\\u003d\\u003d", "");
+        return maskedCardNumber.replace("\\u003d", "").replace("=", "");
     }
 
     private static String decodeHex(String str) {

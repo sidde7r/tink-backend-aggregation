@@ -6,13 +6,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.rpc.OtpResponse;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.rpc.Result;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.rpc.BaseResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.rpc.SessionEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
 
 @JsonObject
-public class Movements {
+public class CreditCardTransactions extends BaseResponse {
 
     @JsonProperty("listaMovimiento")
     private List<CardTransactionEntity> cardTransactions;
@@ -20,16 +20,22 @@ public class Movements {
     @JsonProperty("more90Days")
     private boolean hasTransactionsOlderThan90Days;
 
+    @JsonProperty("otp")
+    private SessionEntity sessionEntity;
+
     private String mobilePhone;
-    private OtpResponse otp;
-    private Result result;
+    private boolean haveMore;
 
     public boolean canFetchTransactionsOlderThan90Days() {
         return hasTransactionsOlderThan90Days;
     }
 
-    public OtpResponse getOtp() {
-        return otp;
+    public SessionEntity getSessionEntity() {
+        return sessionEntity;
+    }
+
+    public boolean isHaveMore() {
+        return haveMore;
     }
 
     @JsonIgnore
