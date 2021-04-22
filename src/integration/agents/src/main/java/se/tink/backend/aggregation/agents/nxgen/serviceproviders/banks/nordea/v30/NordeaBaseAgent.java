@@ -21,7 +21,6 @@ import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.NordeaBaseConstants.Fetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.NordeaBaseConstants.TransactionFetching;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.authenticator.NordeaBankIdAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.authenticator.NordeaPasswordAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.authenticator.rpc.BankIdAutostartResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.executors.NordeaBankTransferExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.executors.NordeaExecutorHelper;
@@ -44,7 +43,6 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.dat
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticationController;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
@@ -170,22 +168,7 @@ public abstract class NordeaBaseAgent extends NextGenerationAgent
                         persistentStorage,
                         credentials);
 
-        NordeaPasswordAuthenticator passwordAuthenticator =
-                new NordeaPasswordAuthenticator(
-                        request,
-                        supplementalInformationController,
-                        apiClient,
-                        persistentStorage,
-                        sessionStorage,
-                        bankIdAuthenticationController,
-                        nordeaConfiguration);
-
-        AutoAuthenticationController passwordAuthenticationController =
-                new AutoAuthenticationController(
-                        request, systemUpdater, passwordAuthenticator, passwordAuthenticator);
-
-        return new TypedAuthenticationController(
-                bankIdAuthenticationController, passwordAuthenticationController);
+        return new TypedAuthenticationController(bankIdAuthenticationController);
     }
 
     @Override
