@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.nl.openbanking.triodos;
+package se.tink.backend.aggregation.agents.nxgen.nl.openbanking.triodos.manual;
 
 import org.junit.AfterClass;
 import org.junit.Before;
