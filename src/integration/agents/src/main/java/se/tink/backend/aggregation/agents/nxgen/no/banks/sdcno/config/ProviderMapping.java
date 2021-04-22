@@ -79,7 +79,13 @@ public enum ProviderMapping {
     VEKSELBANKEN("9581", AuthenticationType.PORTAL, "vekselbanken"),
     VIK("3800", AuthenticationType.PORTAL, "sognbank"),
     EIKA("1821", AuthenticationType.EIKA, "eika"),
-    NORD68("4730", AuthenticationType.PORTAL, "68nord");
+    NORD68("4730", AuthenticationType.PORTAL, "68nord"),
+    BRABANK("9791", AuthenticationType.NETTBANK, "brabank"),
+    MARITIME_MERCHANT_BANK("8348", AuthenticationType.PORTAL, "maritime-merchant-bank-asa"),
+    NAERINGSBANKEN("9175", AuthenticationType.NETTBANK, "naeringsbanken"),
+    NIDAROS_SPAREBANK("4358", AuthenticationType.PORTAL, "nidaros-sparebank"),
+    NORDIC_CORPORATE_BANK("0026", AuthenticationType.NETTBANK, "ncbank"),
+    OESTRE_AGDER_SPAREBANK("2907", AuthenticationType.PORTAL, "oasparebank");
 
     private String bankCode;
     private AuthenticationType authenticationType;
