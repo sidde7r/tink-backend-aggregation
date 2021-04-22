@@ -40,6 +40,7 @@ import se.tink.backend.aggregation.storage.database.providers.ControllerWrapperP
 import se.tink.backend.aggregation.storage.debug.AgentDebugStorageHandler;
 import se.tink.backend.aggregation.workers.agent_metrics.AgentWorkerMetricReporter;
 import se.tink.backend.aggregation.workers.commands.AbnAmroSpecificCase;
+import se.tink.backend.aggregation.workers.commands.AccountSegmentRestrictionWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.AccountWhitelistRestrictionWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.CircuitBreakerAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.ClearSensitiveInformationCommand;
@@ -308,6 +309,7 @@ public class AgentWorkerOperationFactory {
                             accountInformationServiceEventsProducer,
                             controllerWrapper));
             commands.add(new DataFetchingRestrictionWorkerCommand(context, controllerWrapper));
+            commands.add(new AccountSegmentRestrictionWorkerCommand(context));
             commands.add(new AccountWhitelistRestrictionWorkerCommand(context, request));
             commands.add(new RequestedAccountsRestrictionWorkerCommand(context));
             // SendAccountRestrictionEventsWorkerCommand should be added after all restrictions on
@@ -463,6 +465,7 @@ public class AgentWorkerOperationFactory {
                         accountInformationServiceEventsProducer,
                         controllerWrapper));
         commands.add(new DataFetchingRestrictionWorkerCommand(context, controllerWrapper));
+        commands.add(new AccountSegmentRestrictionWorkerCommand(context));
         commands.add(new AccountWhitelistRestrictionWorkerCommand(context, request));
         commands.add(new RequestedAccountsRestrictionWorkerCommand(context));
         // SendAccountRestrictionEventsWorkerCommand should be added after all restrictions on
@@ -802,6 +805,7 @@ public class AgentWorkerOperationFactory {
                             accountInformationServiceEventsProducer,
                             controllerWrapper));
             commands.add(new DataFetchingRestrictionWorkerCommand(context, controllerWrapper));
+            commands.add(new AccountSegmentRestrictionWorkerCommand(context));
             commands.add(new AccountWhitelistRestrictionWorkerCommand(context, request));
             commands.add(new RequestedAccountsRestrictionWorkerCommand(context));
             // SendAccountRestrictionEventsWorkerCommand should be added after all restrictions on
@@ -1440,6 +1444,7 @@ public class AgentWorkerOperationFactory {
                             accountInformationServiceEventsProducer,
                             controllerWrapper));
             commands.add(new DataFetchingRestrictionWorkerCommand(context, controllerWrapper));
+            commands.add(new AccountSegmentRestrictionWorkerCommand(context));
             commands.add(new RequestedAccountsRestrictionWorkerCommand(context));
             // If this is an optIn request we request the caller do supply supplemental information
             // with the
