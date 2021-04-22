@@ -55,4 +55,10 @@ public class WizinkConstants {
         public static final String OWNER = "TITULAR";
         public static final String AUTHORIZED_USER = "AUTORIZADO";
     }
+
+    public static class DocumentTypes {
+        private DocumentTypes() {}
+
+        public static final String NIF = "nif";
+    }
 }

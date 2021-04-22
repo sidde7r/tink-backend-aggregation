@@ -1,10 +1,10 @@
 {
     "CustomerLoginResponse": {
-        "nif": "NDA4OWEwY2IwYzEyMDM3MDAxOTE4ZjE0YTQ2YzA3MzE5MmYyYTQyZDBiOTc1NzYyMmE3MGFjMWE1MTRjMWEwMA\u003d\u003d",
+        "nif": "MjBmNTkzOTQ4NTZmZGYwM2FkZmNmOGQwNTNlZjQ5YWU0NjBkNDE5NjEyNDE4OGIxOTI4YjJkZDdjYTBlZDA0YQ\u003d\u003d",
         "nifMasked": "NDA4OWEwY2IwYzEyMDM3MDAxOTE4ZjE0YTQ2YzA3MzE5MmYyYTQyZDBiOTc1Nzc4MzA2MmI3MDQ0YzRjMWEwMA\u003d\u003d",
         "loginInactivity": "",
         "landingPage": "GLOBAL_POSITION",
-        "name": "Arturo Gonzalez Mac Dowell",
+        "name": "John Doe Loe",
         "numberOfCards": 3,
         "lastLogin": "23/09/2020 14:22:16",
         "documentType": "nif",
@@ -307,7 +307,7 @@
             "idGlobalBanking": "0000008726",
             "idCMF": "50109867",
             "mobileNumber": "NDA4OWEwY2IwYzEyMDM3MDAxOTE4ZjE0YTQ2YzA3MzE5MmYyYTQyZDBiYTQ2MzY0Mjg3OGFmMWY1NTQ3MTc1ZA\u003d\u003d",
-            "fechaNacimiento": "NDA4OWEwY2IwYzEyMDM3MDAxOTE4ZjE0YTQ2YzA3MzE5MmYyYTQyZDBiOTc1NzUyMmI3MWFiMWE1NjQ2MTM1ZQ\u003d\u003d",
+            "fechaNacimiento": "MjBmNTkzOTQ4NTZmZGYwM2FkZmNmOGQwNTNlZjQ5YWU0NjBkNDE5NjEyNDE4ODliODk5ODMxYzlkMDA0ZDkxNA\u003d\u003d",
             "fechaNacimientoMasked": "NDA4OWEwY2IwYzEyMDM3MDAxOTE4ZjE0YTQ2YzA3MzE5MmYyYTQyZDBiOTc2Njc4MzU3OGI3MDE1NzRkMDg0MA\u003d\u003d",
             "phoneCallCenterDeposit": "91 175 08 69",
             "phoneCallCenterGeneric": "91 175 08 69",

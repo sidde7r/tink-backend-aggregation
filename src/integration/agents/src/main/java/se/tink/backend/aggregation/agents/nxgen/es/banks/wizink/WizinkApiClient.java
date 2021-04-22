@@ -152,7 +152,7 @@ public class WizinkApiClient {
                                                 .withOtpEntity(new OtpEntity(otpInput, sessionId))
                                                 .build()))
                         .post(FindMovementsResponse.class);
-        handleOtpResponse(response.getCreditCardTransactions());
+        handleOtpResponse(response.getCardTransactionsResponse());
         return response;
     }
 
