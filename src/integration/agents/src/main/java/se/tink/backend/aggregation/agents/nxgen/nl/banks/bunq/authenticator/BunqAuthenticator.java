@@ -58,7 +58,7 @@ public class BunqAuthenticator implements Authenticator {
 
     private void registration(Credentials credentials, SessionException autoException)
             throws AuthenticationException, AuthorizationException {
-        if (!request.isManual()) {
+        if (!request.getUserAvailability().isUserAvailableForInteraction()) {
             throw SessionError.SESSION_EXPIRED.exception(autoException);
         }
 
@@ -70,7 +70,7 @@ public class BunqAuthenticator implements Authenticator {
         try {
             autoAuthenticator.autoAuthenticate();
         } catch (SessionException autoException) {
-            if (!request.isManual()) {
+            if (!request.getUserAvailability().isUserAvailableForInteraction()) {
                 throw autoException;
             }
 
