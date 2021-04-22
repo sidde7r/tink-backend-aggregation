@@ -45,7 +45,7 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 public final class TriodosApiClient extends BerlinGroupApiClient<TriodosConfiguration> {
     private final String clientId;
     private final String qSealc;
-    private final boolean isManual;
+    private final boolean isUserPresent;
     private final Credentials credentials;
     private final QsealcSigner qsealcSigner;
 
@@ -59,7 +59,7 @@ public final class TriodosApiClient extends BerlinGroupApiClient<TriodosConfigur
             final String qSealc) {
         super(client, persistentStorage, configuration, request, redirectUrl, qSealc);
         this.qSealc = qSealc;
-        this.isManual = request.isManual();
+        this.isUserPresent = request.getUserAvailability().isUserPresent();
         this.credentials = request.getCredentials();
         this.qsealcSigner = qsealcSigner;
         try {
@@ -270,7 +270,7 @@ public final class TriodosApiClient extends BerlinGroupApiClient<TriodosConfigur
                         .addBearerToken(
                                 getTokenFromSession(BerlinGroupConstants.StorageKeys.OAUTH_TOKEN));
 
-        if (isManual) {
+        if (isUserPresent) {
             requestBuilder.header(HeaderKeys.PSU_IP_ADDRESS, TriodosConstants.PSU_IPADDRESS);
         }
         return requestBuilder;
