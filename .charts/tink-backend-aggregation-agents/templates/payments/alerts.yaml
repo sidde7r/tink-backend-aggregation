@@ -76,5 +76,14 @@ spec:
       annotations:
         description: This can indicate that the bank is having issues or that their api has changed. Check overall trend for this provider to assess the impact. https://grafana.global-production.tink.network/d/XvmDe8YMz/payments-overview-dashboard?orgId=1
         summary: Threshold exceed for ( <{ $labels.className }> ) for transfers with outcome ( <{ $labels.outcome }> ).
+
+    - alert: TransferFailedOutcomeThresholdIsPassedForSebOb
+      expr: sum(increase(tink_agent_transfer_total{market="SE", className="nxgen.se.openbanking.sebopenbanking.SebAgent", outcome="failed"}[24h])) / sum(increase(tink_agent_transfer_total{market="SE", className="nxgen.se.openbanking.sebopenbanking.SebAgent"}[24h])) > 0.5
+      labels:
+        severity: ping
+        who: payments
+      annotations:
+        description: MONITORING SEB OB is failing transfers at a higher rate than expected, please investigate. 50% or more in the last 24h
+        summary: MONITORING SEB OB is failing transfers at a higher rate than expected, please investigate. 50% or more in the last 24h
     {{- end }}
     {{- end }}
