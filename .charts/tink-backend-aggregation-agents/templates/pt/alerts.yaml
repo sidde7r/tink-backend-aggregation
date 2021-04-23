@@ -13,10 +13,10 @@ spec:
     - alert: AuthenticationErrorRateOver50%PT
       expr: |
         # Failed logins over 50%
-        (sum(sum_over_time(tink_agent_login_total{action=~"login|is-logged-in", outcome="completed", market="PT", provider_type!="test"}[30m])) by (action,className,provider)
-            / sum(sum_over_time(tink_agent_login_total{action=~"login|is-logged-in", market="PT", provider_type!="test"}[30m])) by (action,className,provider) < 0.5)
+        (count(sum_over_time(tink_agent_login_total{action="login", outcome="completed", market="PT", provider_type!="test"}[30m])) by (action,className,provider)
+            / count(sum_over_time(tink_agent_login_total{action="login", market="PT", provider_type!="test"}[30m])) by (action,className,provider) < 0.5)
         # At least this many attempts.
-            and sum(sum_over_time(tink_agent_login_total{action=~"login", market="PT", provider_type!="test"}[30m])) by (className,provider) > 3
+            and count(sum_over_time(tink_agent_login_total{action="login", market="PT", provider_type!="test"}[30m])) by (className,provider) > 3
       for: 5m
       labels:
         severity: urgent
@@ -33,8 +33,8 @@ spec:
     - alert: RefreshErrorRateOver20%PT
       expr: |
         # Failed refreshes over 20%
-        (sum(sum_over_time(tink_agent_refresh_total{label="refresh", outcome="completed", market="PT", provider_type!="test"}[30m])) by (className,provider,type)
-            / sum(sum_over_time(tink_agent_refresh_total{market="PT", provider_type!="test"}[30m])) by (className,provider,type) < 0.2)
+        (count(sum_over_time(tink_agent_refresh_total{label="refresh", outcome="completed", market="PT", provider_type!="test"}[30m])) by (className,provider,type)
+            / count(sum_over_time(tink_agent_refresh_total{market="PT", provider_type!="test"}[30m])) by (className,provider,type) < 0.2)
       for: 5m
       labels:
         severity: urgent
@@ -53,8 +53,8 @@ spec:
     - alert: AuthenticationUnknownErrorRateOver5%PT
       expr: |
         # Failed logins (due to unknown RuntimeException) over 10%
-        (sum(sum_over_time(tink_agent_login_total{action=~"login|is-logged-in", outcome="failed", market="PT", provider_type!="test"}[30m])) by (action,className,provider)
-            / sum(sum_over_time(tink_agent_login_total{action=~"login|is-logged-in", market="PT", provider_type!="test"}[30m])) by (action,className,provider) > 0.1)
+        (count(sum_over_time(tink_agent_login_total{action=~"login", outcome="failed", market="PT", provider_type!="test"}[30m])) by (action,className,provider)
+            / count(sum_over_time(tink_agent_login_total{action=~"login", market="PT", provider_type!="test"}[30m])) by (action,className,provider) > 0.1)
       for: 5m
       labels:
         severity: urgent
@@ -71,8 +71,8 @@ spec:
     - alert: RefreshUnknownErrorRateOver10%PT
       expr: |
         # Failed refreshes (due to unknown RuntimeException) over 10%
-        (sum(sum_over_time(tink_agent_refresh_total{label="refresh", outcome="failed", market="PT", provider_type!="test"}[30m])) by (className,provider,type)
-            / sum(sum_over_time(tink_agent_refresh_total{market="PT", provider_type!="test"}[30m])) by (className,provider,type) > 0.1)
+        (count(sum_over_time(tink_agent_refresh_total{label="refresh", outcome="failed", market="PT", provider_type!="test"}[30m])) by (className,provider,type)
+            / count(sum_over_time(tink_agent_refresh_total{market="PT", provider_type!="test"}[30m])) by (className,provider,type) > 0.1)
       for: 5m
       labels:
         severity: urgent
@@ -91,11 +91,11 @@ spec:
     - alert: ManualAuthenticationBankSiteErrorRateOver90%PT
       expr: |
         # Failed logins (due to bank site errors) over 90%
-        sum(sum_over_time(tink_agent_login_total{action="login",outcome="unavailable", market="PT"}[4h])) BY (className,provider)
+        count(sum_over_time(tink_agent_login_total{action="login-manual",outcome="unavailable", market="PT"}[4h])) BY (className,provider)
         # All login attempts the last 4 hours
-          / sum(sum_over_time(tink_agent_login_total{action=~"login", market="PT"}[4h])) BY (className,provider) > 0.90
+          / count(sum_over_time(tink_agent_login_total{action="login-manual", market="PT"}[4h])) BY (className,provider) > 0.90
         # At least this many attempts.
-           and sum(sum_over_time(tink_agent_login_total{action=~"login", market="PT", provider_type!="test"}[4h])) by (className,provider) > 10
+           and count(sum_over_time(tink_agent_login_total{action="login-manual", market="PT", provider_type!="test"}[4h])) by (className,provider) > 10
       for: 5m
       labels:
         severity: urgent
@@ -110,11 +110,11 @@ spec:
     - alert: AutoAuthenticationBankSiteErrorRateOver90%PT
       expr: |
         # Failed logins (due to bank site errors) over 90%
-        sum(sum_over_time(tink_agent_login_total{action="is-logged-in",outcome="unavailable", market="PT"}[4h])) BY (className,provider)
+        count(sum_over_time(tink_agent_login_total{action=~"login-auto|login-cron",outcome="unavailable", market="PT"}[4h])) BY (className,provider)
         # All login attempts the last 4 hours
-          / sum(sum_over_time(tink_agent_login_total{action=~"is-logged-in", market="PT"}[4h])) BY (className,provider) > 0.90
+          / count(sum_over_time(tink_agent_login_total{action=~"login-auto|login-cron", market="PT"}[4h])) BY (className,provider) > 0.90
         # At least this many attempts.
-           and sum(sum_over_time(tink_agent_login_total{action=~"is-logged-in", market="PT", provider_type!="test"}[4h])) by (className,provider) > 10
+           and count(sum_over_time(tink_agent_login_total{action=~"login-auto|login-cron", market="PT", provider_type!="test"}[4h])) by (className,provider) > 10
       for: 5m
       labels:
         severity: urgent
@@ -130,9 +130,9 @@ spec:
     - alert: LongTermAuthenticationBankSiteErrorRateOver90%PT
       expr: |
         # Failed logins (due to bank site errors) over 90%
-        sum(sum_over_time(tink_agent_login_total{action="login|is-logged-in",outcome="unavailable", market="PT"}[12h])) BY (className,provider)
+        count(sum_over_time(tink_agent_login_total{action="login",outcome="unavailable", market="PT"}[12h])) BY (className,provider)
         # All login attempts the last 6 hours
-          / sum(sum_over_time(tink_agent_login_total{action=~"login|is-logged-in", market="PT"}[6h])) BY (className,provider) > 0.90
+          / count(sum_over_time(tink_agent_login_total{action="login", market="PT"}[6h])) BY (className,provider) > 0.90
       for: 1m
       labels:
         severity: urgent
@@ -148,10 +148,10 @@ spec:
     - alert: RefreshBankSiteErrorRateOver90%PT
       expr: |
         # Failed refreshes (due to bank site errors) over 90%
-        (sum(sum_over_time(tink_agent_refresh_total{label="refresh", outcome="unavailable", market="PT", provider_type!="test"}[4h])) by (className,provider)
-            / sum(sum_over_time(tink_agent_refresh_total{market="PT", provider_type!="test"}[4h])) by (className,provider,type) > 0.90)
+        (count(sum_over_time(tink_agent_refresh_total{label="refresh", outcome="unavailable", market="PT", provider_type!="test"}[4h])) by (className,provider)
+            / count(sum_over_time(tink_agent_refresh_total{market="PT", provider_type!="test"}[4h])) by (className,provider,type) > 0.90)
         # At least this many attempts.
-           and sum(sum_over_time(tink_agent_login_total{action=~"login|is-logged-in", market="PT", provider_type!="test"}[4h])) by (className,provider) > 10
+           and count(sum_over_time(tink_agent_login_total{action=~"login|is-logged-in", market="PT", provider_type!="test"}[4h])) by (className,provider) > 10
       for: 5m
       labels:
         severity: urgent
@@ -165,8 +165,8 @@ spec:
     - alert: LongTermRefreshBankSiteErrorRateOver90%PT
       expr: |
         # Failed refresh (due to bank site errors) over 90%
-        (sum(sum_over_time(tink_agent_refresh_total{label="refresh", outcome="unavailable", market="PT", provider_type!="test"}[12h])) by (className,provider)
-            / sum(sum_over_time(tink_agent_refresh_total{market="PT", provider_type!="test"}[6h])) by (className,provider) > 0.90)
+        (count(sum_over_time(tink_agent_refresh_total{label="refresh", outcome="unavailable", market="PT", provider_type!="test"}[12h])) by (className,provider)
+            / count(sum_over_time(tink_agent_refresh_total{market="PT", provider_type!="test"}[6h])) by (className,provider) > 0.90)
       for: 1m
       labels:
         severity: urgent
@@ -185,11 +185,11 @@ spec:
     - alert: AuthenticationUserCancellationRateOver50%PT
       expr: |
         # Failed logins (due to user cancellation) over 50%
-        sum(sum_over_time(tink_agent_login_total{action="login|is-logged-in",outcome=~"cancelled|cancelled_due_to_third_party_app_timeout", market="PT"}[2h])) BY (className,provider)
+        count(sum_over_time(tink_agent_login_total{action="login",outcome=~"cancelled|cancelled_due_to_third_party_app_timeout", market="PT"}[2h])) BY (className,provider)
         # All login attempts the last 3 hours
-          / sum(sum_over_time(tink_agent_login_total{action=~"login|is-logged-in", market="PT"}[2h])) BY (className,provider) > 0.50
+          / count(sum_over_time(tink_agent_login_total{action="login", market="PT"}[2h])) BY (className,provider) > 0.50
         # At least this many attempts.
-           and sum(sum_over_time(tink_agent_login_total{action=~"login|is-logged-in", market="PT", provider_type!="test"}[2h])) by (className,provider) > 10
+           and count(sum_over_time(tink_agent_login_total{action="login", market="PT", provider_type!="test"}[2h])) by (className,provider) > 10
       for: 5m
       labels:
         severity: urgent
@@ -204,9 +204,9 @@ spec:
     - alert: LongTermAuthenticationUserCancellationDueToThirdPartyAppTimeoutRateOver50%PT
       expr: |
         # Failed logins (due to third party app timeout) over 90%
-        sum(sum_over_time(tink_agent_login_total{action="login|is-logged-in",outcome="cancelled_due_to_third_party_app_timeout", market="PT"}[6h])) BY (className,provider)
+        count(sum_over_time(tink_agent_login_total{action="login",outcome="cancelled_due_to_third_party_app_timeout", market="PT"}[6h])) BY (className,provider)
         # All login attempts the last 6 hours
-          / sum(sum_over_time(tink_agent_login_total{action=~"login|is-logged-in", market="PT"}[6h])) BY (className,provider) > 0.90
+          / count(sum_over_time(tink_agent_login_total{action="login", market="PT"}[6h])) BY (className,provider) > 0.90
       for: 1m
       labels:
         severity: urgent
