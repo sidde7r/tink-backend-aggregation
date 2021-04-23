@@ -6,6 +6,7 @@ import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.WizinkConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.authenticator.entities.CardEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.authenticator.entities.LoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.fetcher.account.entities.ProductEntity;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
@@ -14,7 +15,7 @@ import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 public class WizinkStorage {
     private static final String DEVICE_ID = "deviceId";
     private static final String INDIGITALL_DEVICE = "indigitallDevice";
-
+    private static final String LOGIN_RESPONSE = "loginResponse";
     private final PersistentStorage persistentStorage;
     private final SessionStorage sessionStorage;
 
@@ -48,6 +49,10 @@ public class WizinkStorage {
         persistentStorage.put(StorageKeys.ACCOUNTS_LIST, accounts);
     }
 
+    public void storeLoginResponse(LoginResponse response) {
+        sessionStorage.put(LOGIN_RESPONSE, response);
+    }
+
     public List<CardEntity> getCreditCardList() {
         return persistentStorage
                 .get(StorageKeys.CARDS_LIST, new TypeReference<List<CardEntity>>() {})
@@ -66,6 +71,15 @@ public class WizinkStorage {
                             log.info("No accounts found");
                             return Collections.emptyList();
                         });
+    }
+
+    public LoginResponse getLoginResponse() {
+        return sessionStorage
+                .get(LOGIN_RESPONSE, new TypeReference<LoginResponse>() {})
+                .orElseThrow(
+                        () ->
+                                new IllegalArgumentException(
+                                        "Login response not found in session storage"));
     }
 
     public void storeXTokenId(String token) {

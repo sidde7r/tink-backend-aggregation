@@ -42,7 +42,7 @@ import se.tink.libraries.account.enums.AccountIdentifierType;
 @AgentPisCapability(
         capabilities = {
             PisCapability.PIS_SEPA,
-            PisCapability.PIS_SEPA_ICT,
+            PisCapability.PIS_SEPA_INSTANT_CREDIT_TRANSFER,
             PisCapability.PIS_SEPA_RECURRING_PAYMENTS
         })
 public class SparkassenAgent extends NextGenerationAgent

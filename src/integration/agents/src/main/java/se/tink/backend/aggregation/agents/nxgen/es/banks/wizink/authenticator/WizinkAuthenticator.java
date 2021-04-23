@@ -60,6 +60,7 @@ public class WizinkAuthenticator extends StatelessProgressiveAuthenticator {
 
         storage.storeCreditCardData(response.getLoginResponse().getGlobalPosition().getCards());
         storage.storeAccounts(response.getLoginResponse().getGlobalPosition().getProducts());
+        storage.storeLoginResponse(response.getLoginResponse());
 
         return AuthenticationStepResponse.authenticationSucceeded();
     }

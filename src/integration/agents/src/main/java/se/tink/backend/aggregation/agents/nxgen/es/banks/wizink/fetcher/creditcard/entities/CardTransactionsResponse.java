@@ -12,7 +12,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
 
 @JsonObject
-public class CreditCardTransactions extends BaseResponse {
+public class CardTransactionsResponse extends BaseResponse {
 
     @JsonProperty("listaMovimiento")
     private List<CardTransactionEntity> cardTransactions;
