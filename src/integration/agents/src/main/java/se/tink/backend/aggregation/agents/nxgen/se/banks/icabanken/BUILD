@@ -5,7 +5,6 @@ java_library(
     deps = [
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/client/provider_configuration/rpc",
         "//src/integration/account/src/main/java/se/tink/libraries/account/enums",
-        "//src/integration/agents",
         "//src/integration/amount",
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/credentials:service",
@@ -47,6 +46,5 @@ java_library(
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
         "@aggregation//:com_google_guava_guava",
         "@tink_backend//src/libraries/account_identifier",
-        "@tink_backend//src/libraries/uuid",
     ],
 )
