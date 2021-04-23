@@ -52,7 +52,6 @@ import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.signableoperation.enums.InternalStatus;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.signableoperation.rpc.SignableOperation;
-import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.libraries.transfer.rpc.RecurringPayment;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 import se.tink.libraries.transfer.rpc.Transfer;
@@ -98,9 +97,10 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
         Optional<String> operationStatusMessage = empty();
         try {
             log.info(
-                    "[transferId: {}] {}",
+                    "[transferId: {}] of Type: {}",
                     UUIDUtils.toTinkUUID(transfer.getId()),
-                    getTransferExecuteLogInfo(transfer));
+                    transferRequest.getType());
+
             String market = transferRequest.getProvider().getMarket();
 
             Optional<Payment> payment = empty();
@@ -453,25 +453,23 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
     private Optional<Payment> handleRecurringPayment(
             Agent agent, RecurringPaymentRequest recurringPaymentRequestRequest)
             throws PaymentException {
-        if (agent instanceof PaymentControllerable) {
-            PaymentControllerable paymentControllerable = (PaymentControllerable) agent;
+        if (agent instanceof PaymentControllerable
+                && ((PaymentControllerable) agent).getPaymentController().isPresent()) {
 
-            if (!paymentControllerable.getPaymentController().isPresent()) {
-                log.error("Payment not supported by Agent=" + agent.getAgentClass());
-            } else {
+            PaymentController paymentController =
+                    ((PaymentControllerable) agent).getPaymentController().get();
 
-                PaymentController paymentController =
-                        paymentControllerable.getPaymentController().get();
-                RecurringPayment recurringPayment =
-                        recurringPaymentRequestRequest.getRecurringPayment();
+            RecurringPayment recurringPayment =
+                    recurringPaymentRequestRequest.getRecurringPayment();
 
-                PaymentResponse createPaymentResponse =
-                        paymentController.create(
-                                PaymentRequest.ofRecurringPayment(recurringPayment));
+            PaymentResponse createPaymentResponse =
+                    paymentController.create(PaymentRequest.ofRecurringPayment(recurringPayment));
 
-                return Optional.of(
-                        handleRecurringPaymentSigning(paymentController, createPaymentResponse));
-            }
+            return Optional.of(
+                    handleRecurringPaymentSigning(paymentController, createPaymentResponse));
+
+        } else {
+            log.error("Payment not supported by Agent=" + agent.getAgentClass());
         }
 
         return empty();
@@ -616,16 +614,6 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
     @Override
     protected void doPostProcess() throws Exception {
         // Deliberately left empty.
-    }
-
-    private String getTransferExecuteLogInfo(Transfer transfer) {
-        if (TransferType.BANK_TRANSFER.equals(transfer.getType())) {
-            return "Creating a new bank transfer.";
-        } else if (TransferType.PAYMENT.equals(transfer.getType())) {
-            return "Creating a new payment.";
-        } else {
-            return "Unrecognized transfer command.";
-        }
     }
 
     @Override
