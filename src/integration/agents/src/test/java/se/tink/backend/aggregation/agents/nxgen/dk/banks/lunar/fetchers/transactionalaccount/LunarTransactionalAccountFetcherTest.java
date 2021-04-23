@@ -255,7 +255,6 @@ public class LunarTransactionalAccountFetcherTest {
 
     private TransactionalAccount getFirstTestCheckingAccount(List<Party> expectedParties) {
         return getExpectedCheckingAccount(
-                BigDecimal.valueOf(12.12),
                 BigDecimal.valueOf(11.12),
                 "DK0250514683417965",
                 "250514683417965",
@@ -267,7 +266,6 @@ public class LunarTransactionalAccountFetcherTest {
 
     private TransactionalAccount getSecondTestCheckingAccount(List<Party> expectedParties) {
         return getExpectedCheckingAccount(
-                BigDecimal.valueOf(123.12),
                 BigDecimal.valueOf(113.12),
                 "DK5350514417454687",
                 "50514417454687",
@@ -308,7 +306,6 @@ public class LunarTransactionalAccountFetcherTest {
 
     private TransactionalAccount getExpectedCheckingAccount(
             BigDecimal balance,
-            BigDecimal availableBalance,
             String iban,
             String bban,
             String accountNumber,
@@ -321,8 +318,7 @@ public class LunarTransactionalAccountFetcherTest {
                 .withBalance(
                         BalanceModule.builder()
                                 .withBalance(ExactCurrencyAmount.of(balance, CURRENCY))
-                                .setAvailableBalance(
-                                        ExactCurrencyAmount.of(availableBalance, CURRENCY))
+                                .setAvailableBalance(ExactCurrencyAmount.of(balance, CURRENCY))
                                 .build())
                 .withId(
                         IdModule.builder()

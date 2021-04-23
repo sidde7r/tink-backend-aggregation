@@ -64,7 +64,7 @@ public class AccountEntity extends BaseResponseEntity {
 
     private BalanceModule buildBalanceModule() {
         return BalanceModule.builder()
-                .withBalance(ExactCurrencyAmount.of(balanceAmount, currency))
+                .withBalance(ExactCurrencyAmount.of(balanceUsableAmount, currency))
                 .setAvailableBalance(ExactCurrencyAmount.of(balanceUsableAmount, currency))
                 .build();
     }
