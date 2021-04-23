@@ -181,6 +181,9 @@ public class FiduciaAuthenticatorTest {
                 SerializationUtils.deserializeFromString(
                         Paths.get(TEST_DATA_PATH, "scaResponseSelectedChipTan.json").toFile(),
                         ScaResponse.class);
+        ScaMethod chosenMethod = mock(ScaMethod.class);
+        when(chosenMethod.getAuthenticationType()).thenReturn("CHIP_OTP");
+        scaResponse.setChosenScaMethod(chosenMethod);
         whenSupplementalInformationHelperReturn(scaResponse);
         when(apiClient.selectAuthMethod(AUTH_PATH, SCA_METHOD_ID_CHIP_TAN)).thenReturn(scaResponse);
         when(apiClient.authorizeWithOtpCode(AUTH_PATH, OTP_CODE))
@@ -216,7 +219,7 @@ public class FiduciaAuthenticatorTest {
         assertThat(allValues.get(0).getName()).isEqualTo("selectAuthMethodField");
         assertThat(allValues.get(1).getName()).isEqualTo("startcodeField");
         assertThat(allValues.get(1).getValue()).isEqualTo(STARTCODE);
-        assertThat(allValues.get(2).getName()).isEqualTo("tanField");
+        assertThat(allValues.get(2).getName()).isEqualTo("chipTan");
 
         assertThat(credentials.getSessionExpiryDate()).isEqualTo(parseIsoDate(CONSENT_VALID_UNTIL));
     }
