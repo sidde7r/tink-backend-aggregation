@@ -17,6 +17,7 @@ import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.TypedPaymentControllerable;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingFlowFacade;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.authenticator.UkOpenBankingAisAuthenticator;
@@ -355,7 +356,8 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
     }
 
     @Override
-    public Optional<PaymentController> getPaymentController(Payment payment) {
+    public Optional<PaymentController> getPaymentController(Payment payment)
+            throws PaymentRejectedException {
         if (paymentController == null) {
             paymentController = constructPaymentController(payment).orElse(null);
         }
@@ -363,7 +365,8 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
         return Optional.ofNullable(paymentController);
     }
 
-    public Optional<PaymentController> constructPaymentController(Payment payment) {
+    public Optional<PaymentController> constructPaymentController(Payment payment)
+            throws PaymentRejectedException {
         if (this.pisConfig == null || this.pisRequestFilter == null) {
             return Optional.empty();
         }
@@ -425,7 +428,8 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
     }
 
     private UkOpenBankingPaymentApiClient createPaymentApiClient(
-            UkOpenBankingRequestBuilder requestBuilder, Payment payment) {
+            UkOpenBankingRequestBuilder requestBuilder, Payment payment)
+            throws PaymentRejectedException {
         final PaymentType paymentType = UkOpenBankingPaymentHelper.getPaymentType(payment);
 
         switch (paymentType) {
