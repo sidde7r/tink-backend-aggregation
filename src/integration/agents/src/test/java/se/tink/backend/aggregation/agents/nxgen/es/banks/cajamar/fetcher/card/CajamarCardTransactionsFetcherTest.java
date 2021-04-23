@@ -38,7 +38,7 @@ public class CajamarCardTransactionsFetcherTest {
                                         .withCardNumber("4150********1111")
                                         .withBalance(ExactCurrencyAmount.of(3133.86, "EUR"))
                                         .withAvailableCredit(ExactCurrencyAmount.of(3133.86, "EUR"))
-                                        .withCardAlias("VISA DEBITO")
+                                        .withCardAlias("VISA")
                                         .build())
                         .withInferredAccountFlags()
                         .withId(

@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.cajamar.CajamarApiClient;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.cajamar.entities.CardEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.cajamar.fetcher.creditcard.rpc.CreditCardResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
@@ -18,9 +19,8 @@ public class CajamarCreditCardFetcher implements AccountFetcher<CreditCardAccoun
 
     @Override
     public Collection<CreditCardAccount> fetchAccounts() {
-        return apiClient
-                .fetchPositions()
-                .getCards()
+        return apiClient.fetchPositions().getCards().stream()
+                .filter(CardEntity::isCreditCard)
                 .map(
                         cardEntity ->
                                 cardEntity.toTinkCreditCard(fetchMoreCardInfo(cardEntity.getId())))

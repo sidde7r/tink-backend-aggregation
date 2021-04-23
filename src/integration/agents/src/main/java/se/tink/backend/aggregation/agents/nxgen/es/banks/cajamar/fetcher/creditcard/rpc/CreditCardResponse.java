@@ -17,8 +17,6 @@ public class CreditCardResponse {
     private BigDecimal accumulatedAmount;
     private String discountForUse;
     private String domiciliationAccount;
-    private String debitAccount;
-    private String relatedMainCard;
     private String creditAccount;
     private String accountHolder;
     private Integer associatedCards;

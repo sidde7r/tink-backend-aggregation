@@ -6,5 +6,5 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class OperationCardLimitEntity {
     private boolean level;
     private String scope;
-    private String limit;
+    private String limits;
 }

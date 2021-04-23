@@ -1,22 +1,32 @@
 {
-    "card": "4150********1111",
-    "cardType": "Débito",
-    "expiryDate": "2024-11-30",
-    "debitAccount": "ES20 3058 0000 0000 0000 0000",
-    "relatedMainCard": "-",
-    "accumulatedOperations": 105,
-    "accumulatedAmount": 3056.63,
-    "discountForUse": "15,00 euros with more than 48 purchases.",
-    "accountHolder": "ADRIAN DE LA PACO",
+    "creditAccountId": "1234",
+    "card": "550000******0000",
+    "cardType": "Crédito",
+    "expiryDate": "2023-09-30",
+    "accumulatedOperations": 0,
+    "accumulatedAmount": 0.00,
+    "discountForUse": "15,00 eur. with purchases over 1.000,00 eur",
+    "domiciliationAccount": "ES52 0000 0000 0000 2000 0000",
+    "creditAccount": "0000/0000/00/0000000000",
+    "accountHolder": "EDUARDO MONTEZUMA",
+    "associatedCards": 1,
+    "paymentMethod": "Aplazado porcentual",
+    "liquidationPeriodicity": "Mensual",
+    "nextLiquidationDate": "2021-04-25",
+    "availableAmount": 2000.00,
+    "creditLimit": 2000.00,
+    "cardLimit": 2000.00,
     "currency": "EUR",
     "operationCardLimits": [
         {
             "scope": "Contactless",
-            "level": true
+            "level": true,
+            "limits": "Limit"
         },
         {
             "scope": "Look",
-            "level": false
+            "level": false,
+            "limits": "Limit"
         }
     ]
 }
