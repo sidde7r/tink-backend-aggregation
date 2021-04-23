@@ -20,9 +20,11 @@ public enum ProviderMapping {
     BIRKENES("2880", AuthenticationType.PORTAL, "birkenes-sparebank"),
     BJUGN("4295", AuthenticationType.PORTAL, "bjugn-sparebank"),
     BLAKER("1321", AuthenticationType.PORTAL, "blakersparebank"),
+    BRABANK("9791", AuthenticationType.NETTBANK, "brabank"),
     BUD_FRAENA_OG_HUSTAD("4075", AuthenticationType.PORTAL, "romsdalsbanken"),
     DRANGEDAL("2635", AuthenticationType.PORTAL, "drangedalsparebank"),
     EIDSBERG("1020", AuthenticationType.PORTAL, "esbank"),
+    EIKA("1821", AuthenticationType.EIKA, "eika"),
     ETNEDAL("2140", AuthenticationType.PORTAL, "etnedalsparebank"),
     EVJE_OG_HORNNES("2901", AuthenticationType.PORTAL, "eh-sparebank"),
     FORNEBUBANKEN("1450", AuthenticationType.PORTAL, "fornebusparebank"),
@@ -46,10 +48,16 @@ public enum ProviderMapping {
     LARVIKBANKEN("2510", AuthenticationType.PORTAL, "larvikbanken"),
     LILLESTROMBANKEN("1286", AuthenticationType.PORTAL, "lillestrombanken"),
     LOFOTEN("4589", AuthenticationType.PORTAL, "68nord"),
+    MARITIME_MERCHANT_BANK("8348", AuthenticationType.PORTAL, "maritime-merchant-bank-asa"),
     MARKER("1050", AuthenticationType.PORTAL, "marker-sparebank"),
     MELHUSBANKEN("4230", AuthenticationType.PORTAL, "melhusbanken"),
+    NAERINGSBANKEN("9175", AuthenticationType.NETTBANK, "naeringsbanken"),
     NESSET("4106", AuthenticationType.PORTAL, "romsdalsbanken"),
+    NIDAROS_SPAREBANK("4358", AuthenticationType.PORTAL, "nidaros-sparebank"),
+    NORD68("4730", AuthenticationType.PORTAL, "68nord"),
+    NORDIC_CORPORATE_BANK("0026", AuthenticationType.NETTBANK, "ncbank"),
     ODAL("1870", AuthenticationType.PORTAL, "odal-sparebank"),
+    OSTRE_AGDER_SPAREBANK("2907", AuthenticationType.PORTAL, "oasparebank"),
     OFOTEN("4605", AuthenticationType.PORTAL, "ofotensparebank"),
     OPPDALSBANKEN("4266", AuthenticationType.PORTAL, "oppdalsbanken"),
     ORKLA("4270", AuthenticationType.PORTAL, "orklasparebank"),
@@ -77,9 +85,7 @@ public enum ProviderMapping {
     VALDRESSPAREBANK("2153", AuthenticationType.PORTAL, "valdressparebank"),
     VALLE("2890", AuthenticationType.PORTAL, "valle-sparebank"),
     VEKSELBANKEN("9581", AuthenticationType.PORTAL, "vekselbanken"),
-    VIK("3800", AuthenticationType.PORTAL, "sognbank"),
-    EIKA("1821", AuthenticationType.EIKA, "eika"),
-    NORD68("4730", AuthenticationType.PORTAL, "68nord");
+    VIK("3800", AuthenticationType.PORTAL, "sognbank");
 
     private String bankCode;
     private AuthenticationType authenticationType;
