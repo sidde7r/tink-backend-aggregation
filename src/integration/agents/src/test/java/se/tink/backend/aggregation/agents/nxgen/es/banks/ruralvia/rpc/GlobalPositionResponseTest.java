@@ -60,13 +60,12 @@ public class GlobalPositionResponseTest {
     }
 
     private AccountEntity mockedAccount() {
-        AccountEntity accountEntity = new AccountEntity();
 
-        accountEntity.setAccountNumber("ES5000818447506159992545");
-        accountEntity.setAccountAlias("C/C PARTICULARES");
-        accountEntity.setCurrency("EUR");
-        accountEntity.setBalance("100,00");
-
-        return accountEntity;
+        return AccountEntity.builder()
+                .accountNumber("ES5000818447506159992545")
+                .accountAlias("C/C PARTICULARES")
+                .currency("EUR")
+                .balance("100,00")
+                .build();
     }
 }

@@ -29,28 +29,28 @@ public class GlobalPositionResponse {
         // select the nodes that contains Account alias, Acc number, Balance
         for (Element accountContainer : allAccounts) {
 
-            AccountEntity accountEntity = new AccountEntity();
+            AccountEntity.AccountEntityBuilder accountBuilder = AccountEntity.builder();
 
             Element account = accountContainer.siblingElements().select("tr td.totlistaC").first();
-            // .select("tr:contains(0198) td")
-
             Elements otherData =
                     accountContainer.siblingElements().select("tr td.totlistaC").nextAll();
 
-            accountEntity.setAccountNumber(account.ownText().replaceAll("[\\s\\u202F\\u00A0]", ""));
             String alias = otherData.get(0).ownText();
 
             if (alias.contains("|")) {
-                accountEntity.setAccountAlias(alias.split("\\|")[0].trim());
-                accountEntity.setCurrency(checkAliasCurrency(alias));
+                accountBuilder
+                        .accountAlias(alias.split("\\|")[0].trim())
+                        .currency(checkAliasCurrency(alias));
             } else {
-                accountEntity.setAccountAlias(alias);
+                accountBuilder.accountAlias(alias);
             }
 
-            accountEntity.setBalance(otherData.get(1).ownText());
+            accountBuilder
+                    .accountNumber(account.ownText().replaceAll("[\\s\\u202F\\u00A0]", ""))
+                    .balance(otherData.get(1).ownText())
+                    .form(accountContainer);
 
-            accountEntity.setForm(accountContainer);
-            accountEntities.add(accountEntity);
+            accountEntities.add(accountBuilder.build());
         }
 
         return accountEntities;
@@ -61,7 +61,6 @@ public class GlobalPositionResponse {
     }
 
     private String checkAliasCurrency(String alias) {
-
         String currency = alias.split("\\|")[1].trim().toUpperCase();
         if (currency.contains("€") || currency.contains("EUR") || currency.contains("&#8364;")) {
             currency = "EUR";

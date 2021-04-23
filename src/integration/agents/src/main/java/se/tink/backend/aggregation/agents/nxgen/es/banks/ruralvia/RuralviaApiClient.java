@@ -16,13 +16,13 @@ public class RuralviaApiClient {
 
     public final TinkHttpClient client;
     private final PersistentStorage persistentStorage;
-    private @Getter @Setter
-    String globalPositionHtml;
+    private @Getter @Setter String globalPositionHtml;
+    private @Getter @Setter String headerReferer;
 
     public RuralviaApiClient(TinkHttpClient client, PersistentStorage persistentStorage) {
         this.client = client;
-        client.setUserAgent(HeaderValues.USER_AGENT);
         this.persistentStorage = persistentStorage;
+        client.setUserAgent(HeaderValues.USER_AGENT);
     }
 
     private RequestBuilder createRequest(URL url) {
@@ -33,9 +33,9 @@ public class RuralviaApiClient {
         return createRequest(url).body(formToBody, MediaType.APPLICATION_FORM_URLENCODED);
     }
 
-    // TODO check if still inside session
+    // TODO
     public boolean keepAlive() {
-        return false;
+        return true;
     }
 
     private Cookie convertCookie(org.openqa.selenium.Cookie cookie) {
@@ -50,11 +50,23 @@ public class RuralviaApiClient {
         cookies.stream().map(this::convertCookie).forEach(client::addCookie);
     }
 
-    public String navigateAccountTransactionFirstRequest(RequestBuilder builder) {
-        return builder.post(String.class);
+    public String navigateAccountTransactionFirstRequest(URL url, String form) {
+        return createBodyFormRequest(url, form).post(String.class);
     }
 
-    public String navigateAccountTransactionsBetweenDates(RequestBuilder builder) {
-        return builder.post(String.class);
+    public String navigateAccountTransactionsBetweenDates(URL url, String form) {
+        return createBodyFormRequest(url, form).post(String.class);
+    }
+
+    public String navigateToCreditCardsMovements(URL url) {
+        return client.request(url).get(String.class);
+    }
+
+    public String navigateToCreditCardTransactionsByDates(URL url, String form) {
+        return createBodyFormRequest(url, form).post(String.class);
+    }
+
+    public String requestTransactionsBetweenDates(URL url, String params) {
+        return createBodyFormRequest(url, params).post(String.class);
     }
 }

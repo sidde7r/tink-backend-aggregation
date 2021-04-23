@@ -22,6 +22,11 @@
 
 
 
+
+
+
+
+
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -69,9 +74,8 @@
 
     function inicializarDatos(){
 
-      habilitarOrden(1, true);
-      document.FORM_RVIA_0.FECHAMOVHASTA.value = "14-04-2021";
-      document.FORM_RVIA_0.FECHAMOVDESDE.value = "14-01-2021";
+      habilitarOrden(0, true);
+      document.FORM_RVIA_0.nMovs.value = "50";
 
 
       //orden
@@ -215,72 +219,7 @@
       }
     }
 
-    function validar() {
-      if( false ){
-        // Vamos a obtener la Cuenta Seleccionada
-        cuentaSelecc = document.FORM_RVIA_0.SELCTA[document.FORM_RVIA_0.SELCTA.selectedIndex].value;
-        if ( cuentaSelecc == "0" ) {
-          window.alert("Debe de seleccionar una cuenta.");
-          return false;
-        }
-        document.FORM_RVIA_0.cuentaSel.value = cuentaSelecc;
-        document.FORM_RVIA_0.cuenta.value = cuentaSelecc.substring(0,20);
-        document.FORM_RVIA_0.DIVISA_COD.value = cuentaSelecc.substring(20,23);
-        //**** P000018455 04-02-2016 INICIO ****************
-        document.FORM_RVIA_0.descripcionCuenta.value = cuentaSelecc.substring(28, cuentaSelecc.length);
-        //**** P000018455 04-02-2016 FIN ****************
 
-
-
-        var textoCuenta = document.FORM_RVIA_0.SELCTA[document.FORM_RVIA_0.SELCTA.selectedIndex].text;
-        var arrayCuenta = textoCuenta.split(" | ");
-        document.FORM_RVIA_0.DIVISA_NAME.value = arrayCuenta[2];
-
-
-      }else{
-        document.FORM_RVIA_0.primeraVez.value = '1';
-        document.FORM_RVIA_0.paginaActual.value = '0';
-        document.FORM_RVIA_0.tamanioPagina.value = '50';
-        document.FORM_RVIA_0.campoPaginacion.value = 'lista';
-      }
-
-      var tipoBusq = "0";
-      for(i=0;i<document.FORM_RVIA_0.tipoBusqueda.length;i++){
-        if(document.FORM_RVIA_0.tipoBusqueda[i].checked){
-          tipoBusq = document.FORM_RVIA_0.tipoBusqueda[i].value;
-        }
-      }
-
-      switch (tipoBusq){
-        case ("0"):
-          if (! checkInteger2 (document.FORM_RVIA_0.nMovs,'Movimientos',false))return false;
-          if (! checkNumericMayor(document.FORM_RVIA_0.CERO, document.FORM_RVIA_0.nMovs,'Movimientos',false))return false;
-          document.FORM_RVIA_0.numMovs.value  = document.FORM_RVIA_0.nMovs.value;
-          document.FORM_RVIA_0.FechaDesde.value  = restarMeses(60);
-          document.FORM_RVIA_0.FechaHasta.value  = getFechaSistema();
-          break;
-        case ("1"):
-          // Chequeo de fechas
-          if (! checkDate(document.FORM_RVIA_0.FECHAMOVDESDE,'Fecha', false))return false;
-          if (! checkDate(document.FORM_RVIA_0.FECHAMOVHASTA,'Fecha', false))return false;
-          if (! checkDateMayorEquals(document.FORM_RVIA_0.FECHAMOVDESDE, document.FORM_RVIA_0.FECHAMOVHASTA, false))return false;
-          if (! isDateMayorEquals(document.FORM_RVIA_0.FECHAMOVHASTA, document.FORM_RVIA_0.fechaComparacion, false)){
-            alert("El campo Fecha Hasta no debe ser posterior a la Fecha Actual.");
-            return false;
-          }
-          document.FORM_RVIA_0.FechaDesde.value  = document.FORM_RVIA_0.FECHAMOVDESDE.value;
-          document.FORM_RVIA_0.FechaHasta.value  = document.FORM_RVIA_0.FECHAMOVHASTA.value;
-          document.FORM_RVIA_0.numMovs.value  = "0";
-          break;
-        case ("2"):
-          // Validación de últimos días de movimientos
-          if (! checkInteger2(document.FORM_RVIA_0.diasAnteriores,'número de días',false))return false;
-          if (! checkNumericMayor(document.FORM_RVIA_0.CERO, document.FORM_RVIA_0.diasAnteriores,'número de días',false))return false;
-          document.FORM_RVIA_0.FechaDesde.value  = restarDias(document.FORM_RVIA_0.diasAnteriores.value);
-          document.FORM_RVIA_0.FechaHasta.value  = getFechaSistema();
-          document.FORM_RVIA_0.numMovs.value  = "0";
-          break;
-      }
 
       if(document.FORM_RVIA_0.busquedaAvanzada.value == "1"){
         //Importes
@@ -330,8 +269,8 @@
             document.FORM_RVIA_0.tipoMovimiento.value = "";
             document.FORM_RVIA_0.importeDesde.value = "";
             document.FORM_RVIA_0.importeHasta.value = "";
-            document.FORM_RVIA_0.tipoBusqueda.value = "1";
-            document.FORM_RVIA_0.FechaDesde.value  = "14-01-2021";
+            document.FORM_RVIA_0.tipoBusqueda.value = "0";
+            document.FORM_RVIA_0.FechaDesde.value  = "15-01-2021";
             document.FORM_RVIA_0.FechaHasta.value  = "14-04-2021";
             document.FORM_RVIA_0.SALDO_CONTABLE.value = "";
             document.FORM_RVIA_0.clavePagina.value = "MENUP_PAS_MOV_CUENTAS";
@@ -375,8 +314,8 @@
         document.FORM_RVIA_0.tipoMovimiento.value = "";
         document.FORM_RVIA_0.importeDesde.value = "";
         document.FORM_RVIA_0.importeHasta.value = "";
-        document.FORM_RVIA_0.tipoBusqueda[1].checked = true;
-        document.FORM_RVIA_0.FechaDesde.value  = "14-01-2021";
+        document.FORM_RVIA_0.tipoBusqueda[0].checked = true;
+        document.FORM_RVIA_0.FechaDesde.value  = "15-01-2021";
         document.FORM_RVIA_0.FechaHasta.value  = "14-04-2021";
         document.FORM_RVIA_0.saldoVisible.value = "0";
 
@@ -396,82 +335,6 @@
       }
     }
 
-
-    function mostrarDetalle(tipoDetalle, origenApunteEspecifico, NumEntidad, NroClave, fechaValor, origenApunte ,fechaOperacion, positivoNegativo,descripcionLarga, indicadorRef, ordenante, numSecuencia, importeNumerico, descripcionLarg, listaTipoAplazamiento, sMoneda)
-    {
-      console.log("Entra en mostrarDetalle "+tipoDetalle);
-
-      var hoy_menos_13_meses = new Date("2021", "3"-13, "14");
-      var hoy_menos_6_meses = new Date("2021", "3"-6, "14");
-      var hoy_menos_500_dias = new Date("2021", "3", "14"-500);
-      var hoy_menos_3_anios = new Date("2021"-3, "3", "14");
-
-      var valida_menos_13_mes
-
-
-
-
-
-      var hoy_menos_5_anios = new Date("2021"-5, "3", "14");
-      var dateFechaOperacion;
-      if (fechaOperacion.substr(6).indexOf("-")>-1)
-        dateFechaOperacion = new Date (parseInt(fechaOperacion.substr(0,4),10),parseInt(fechaOperacion.substr(5,7),10)-1,parseInt(fechaOperacion.substr(8),10))
-      else
-        dateFechaOperacion = new Date (parseInt(fechaOperacion.substr(6),10),parseInt(fechaOperacion.substr(3,5),10)-1,parseInt(fechaOperacion.substr(0,2),10));
-
-
-      var hoy_menos_13_meses = new Date("2021", "3"-13, "14");
-      var hoy_menos_6_meses = new Date("2021", "3"-6, "14");
-      var hoy_menos_500_dias = new Date("2021", "3", "14"-500);
-      var hoy_menos_3_anios = new Date("2021"-3, "3", "14");
-
-      var valida_menos_13_meses = hoy_menos_13_meses.getTime()>dateFechaOperacion.getTime();
-      valida_menos_13_meses = valida_menos_13_meses && (tipoDetalle=="31" || tipoDetalle=="32" || tipoDetalle=="33" || tipoDetalle=="34" || tipoDetalle=="35" || tipoDetalle=="37" || tipoDetalle=="3C" || tipoDetalle=="3B" || tipoDetalle=="RB" ||  tipoDetalle=="V7" );
-
-      var valida_menos_6_meses = hoy_menos_6_meses.getTime()>dateFechaOperacion.getTime();
-      valida_menos_6_meses = valida_menos_6_meses && (tipoDetalle=="TF" || tipoDetalle=="TR");
-
-      var valida_menos_500_dias = hoy_menos_500_dias.getTime()>dateFechaOperacion.getTime();
-      valida_menos_500_dias = valida_menos_500_dias && (tipoDetalle=="RZ");
-
-      var valida_menos_3_anios = hoy_menos_3_anios.getTime()>dateFechaOperacion.getTime();
-      valida_menos_3_anios = valida_menos_3_anios &&  (tipoDetalle=="EC" || tipoDetalle=="RME");
-
-      var valida_menos_5_anios = hoy_menos_5_anios.getTime()>dateFechaOperacion.getTime();
-      valida_menos_5_anios =  valida_menos_5_anios && !valida_menos_13_meses && !valida_menos_6_meses && !valida_menos_500_dias && !valida_menos_3_anios;
-
-      if (valida_menos_13_meses){
-        alert("El detalle de este movimiento no puede consultarse, por tener una antiguedad superior a 13 meses. Por favor disculpe las molestias.");
-        return ;
-      }
-
-      if (valida_menos_6_meses){
-        alert("El detalle de este movimiento no puede consultarse, por tener una antiguedad superior a 6 meses. Por favor disculpe las molestias.");
-        return ;
-      }
-
-      if (valida_menos_500_dias){
-        alert("El detalle de este movimiento no puede consultarse, por tener una antiguedad superior a 500 días. Por favor disculpe las molestias.");
-        return ;
-      }
-
-      if (valida_menos_3_anios){
-        alert("El detalle de este movimiento no puede consultarse, por tener una antiguedad superior a 3 años. Por favor disculpe las molestias.");
-        return ;
-      }
-
-      if (valida_menos_5_anios){
-        alert("El detalle de este movimiento no puede consultarse, por tener una antiguedad superior a 5 años. Por favor disculpe las molestias.");
-        return ;
-      }
-
-
-
-
-
-
-
-
       validar();
 
       document.FORM_RVIA_0.fechaOperacion.value  = fechaOperacion;
@@ -483,263 +346,8 @@
       document.FORM_RVIA_0.columnaOrden.value = document.FORM_RVIA_0.ultimoOrden.value;
       document.FORM_RVIA_0.saldoVisible.value = 1;
 
-      document.FORM_RVIA_0.FechaDesde.value  = "14-01-2021";
+      document.FORM_RVIA_0.FechaDesde.value  = "15-01-2021";
       document.FORM_RVIA_0.FechaHasta.value  = "14-04-2021";
-
-
-
-      document.FORM_RVIA_0.NumSecuencia.value= numSecuencia;
-      //document.FORM_RVIA_0.listaTipoAplazamiento.value = "7003"; //ELIMINAR
-      document.FORM_RVIA_0.listaTipoAplazamiento.value = listaTipoAplazamiento;
-      document.FORM_RVIA_0.moneda.value = sMoneda;
-
-
-      if (tipoDetalle == "TR"){
-        if (origenApunteEspecifico == "TI"){
-          tipoDetalle = "TI";
-        }
-      }
-
-      switch (tipoDetalle)
-      {
-        case "31": //Tributo Local
-          document.FORM_RVIA_0.clavePagina.value  = "PAS_DETRNDTL";
-          break;
-
-        case "32":  // Servicios
-          document.FORM_RVIA_0.clavePagina.value  = "PAS_DETRNDSE";
-          break;
-
-        case "33": // Cuota Fija Seguridad Social
-          document.FORM_RVIA_0.clavePagina.value  = "PAS_DETCUOTAFIJASS";
-          break;
-
-        case "34": // Cuota Fija Seguridad Social
-          document.FORM_RVIA_0.clavePagina.value  = "PAS_DETCUOTAVARIABLESS";
-          break;
-
-        case "35": // Hacienda Pública A.E.ET.; Ingreso de Autoliquidación.
-          document.FORM_RVIA_0.clavePagina.value  = "PAS_DETINGAUTOLIQHAC";
-          break;
-
-        case "37": // Hacienda Pública A.E.AT. ; Liquidación de Hacienda.
-          document.FORM_RVIA_0.clavePagina.value  = "PAS_DETLIQHACIENDA";
-          break;
-
-        case "3C": // Hacienda Pública A.E.AT. ; Tasas de Hacienda.
-          document.FORM_RVIA_0.clavePagina.value  = "PAS_DETTASASHACIENDA";
-          break;
-
-        case "3B": // Recaudaciones Autonimicas.
-          document.FORM_RVIA_0.clavePagina.value  = "PAS_DETRECAUTONOMICAS";
-          break;
-
-        case "RZ":  //Recibos sepa
-          document.FORM_RVIA_0.IND_SEPA.value=1;
-
-
-
-
-          document.FORM_RVIA_0.ENTIDAD_I.value=NumEntidad;
-
-          document.FORM_RVIA_0.OFICINA_I.value=document.FORM_RVIA_0.cuenta.value.substring(4,8);
-          document.FORM_RVIA_0.ACUERDO_I.value=document.FORM_RVIA_0.cuenta.value.substring(10,20);
-          document.FORM_RVIA_0.clavePagina.value  = "BDP_REC_DOM_DETALLE_SEPA_MOVS";
-          break;
-
-        case "RB":  //Recibos
-          document.FORM_RVIA_0.clavePagina.value  = "PAS_CONMOVSREC";
-          break;
-
-        case "TF": // Transferencias
-          /*** I002660525  31-03-2017  INICIO  ***/
-          if (positivoNegativo=="1"){
-            document.FORM_RVIA_0.indic.value="TR";
-          }
-          else{
-            document.FORM_RVIA_0.indic.value="TE";
-          }
-          /*** I002660525  31-03-2017  FIN  ***/
-          document.FORM_RVIA_0.clavePagina.value  = "PAS_CONMOVSTRN";
-          break;
-
-        case "HL": //Créditos; Depósitos y Préstamos
-          document.FORM_RVIA_0.clavePagina.value  = "PAS_DETHL";
-          break;
-
-        case "XO": //Transferencias Extranjero
-          document.FORM_RVIA_0.clavePagina.value  = "PAS_EXTDETTRANSF";
-          document.FORM_RVIA_0.numClave.value        = NroClave.substring(3);
-          break;
-
-        case "EC": //Impagados
-          document.FORM_RVIA_0.clavePagina.value = "BDP_DETALLE_EFECTO";
-          if (descripcionLarga.indexOf("COBRO EFECTO IMPAGADO")!= -1){
-            document.FORM_RVIA_0.indicadorEfecto.value = "I";
-          } else if (descripcionLarga.indexOf("EF S/CARGO")!= -1){
-            document.FORM_RVIA_0.indicadorEfecto.value = "C";
-          } else if (descripcionLarga.indexOf("DEV.EF.COBRADO")!= -1){
-            document.FORM_RVIA_0.indicadorEfecto.value = "D";
-          }
-          //CODIGO MOCKEO
-          else{
-            document.FORM_RVIA_0.indicadorEfecto.value = "D";
-          }
-          break;
-
-        case "OM": //OMF
-          document.FORM_RVIA_0.clavePagina.value = "PAS_DETOMF";
-          break;
-
-        case "TR": // Transferencias 	SEPA
-          //Importe Positivo->Transferencia Recibida
-          document.FORM_RVIA_0.ESSEPA.value="1";
-          if (positivoNegativo=="1"){
-            document.FORM_RVIA_0.indic.value="TR";
-            document.FORM_RVIA_0.clavePagina.value  = "BDP_SEPA_DETALLE_TRANSF_REC";
-          }
-          else{
-            document.FORM_RVIA_0.DESCRIPCIONCANAL.value="Oficina";
-            document.FORM_RVIA_0.indic.value="TE";
-            //Importe Negativo->Transferencia Emitida
-            document.FORM_RVIA_0.clavePagina.value  = "BDP_SEPA_DETALLE_TRANSF_EMI";
-          }
-          break;
-          //P00021024 19/05/2017 INICIO
-        case "TI": // Transferencias 	INMEDIATAS
-          document.FORM_RVIA_0.ESSEPA.value="2";
-          if (positivoNegativo=="1"){
-            document.FORM_RVIA_0.indic.value="TR";
-            document.FORM_RVIA_0.clavePagina.value  = "BDP_SEPA_DETALLE_TRANSF_INM_REC";
-          }else{
-            document.FORM_RVIA_0.indic.value="TE";
-            document.FORM_RVIA_0.clavePagina.value  = "BDP_SEPA_DETALLE_TRANSF_INM_EMI";
-          }
-          break;
-          //P00021024 19/05/2017 FIN
-        case "OT": // Transferencias 	TARGET 2
-          document.FORM_RVIA_0.FECDESDE.value     = fechaValor;
-          document.FORM_RVIA_0.FECHASTA.value     = fechaValor;
-          document.FORM_RVIA_0.FECHA_VALOR.value  = fechaValor;
-          document.FORM_RVIA_0.NORHOST.value      = NroClave;
-          document.FORM_RVIA_0.FECHA_CREA.value 	= fechaValor;
-          document.FORM_RVIA_0.CUENTA_DESC.value 	= "LIBRETAS%2BAHORRO%2BPARTICULARES";
-          document.FORM_RVIA_0.CUENTA_SELEC.value	= "00818447506159992545";
-          //Importe Positivo->Transferencia Recibida
-          if (positivoNegativo=="1"){
-            document.FORM_RVIA_0.clavePagina.value  = "BDP_TARGET2_DETALLE_RECIBIDA";
-          }
-          else{
-            //Importe Negativo->Transferencia Emitida
-            document.FORM_RVIA_0.clavePagina.value  = "BDP_TARGET2_DETALLE_EMITIDA";
-          }
-          break;
-
-        case "V7":
-          document.FORM_RVIA_0.clavePagina.value  = "PAS_DETCOMMAN";
-          break;
-
-
-        case "RME":
-          var relleno = "0000000000000000";
-          var aRemesa = descripcionLarga.substring(0, 4);
-          var nRemesa = descripcionLarga.substring(4);
-
-          document.FORM_RVIA_0.anyoRemesa.value = aRemesa ;
-          document.FORM_RVIA_0.numRemesa.value  =  nRemesa;
-          document.FORM_RVIA_0.cuentaSel.value = document.FORM_RVIA_0.CUENTA.value+"   "+document.FORM_RVIA_0.DESCUENTA.value;
-          document.FORM_RVIA_0.clavePagina.value  = "CAR_EFECTOSREM_CARTERA";
-          break;
-
-
-        case "AC":  //Ingreso por ventanilla
-          document.FORM_RVIA_0.indicadorRef.value= indicadorRef;
-          document.FORM_RVIA_0.ordenante.value= ordenante;
-          document.FORM_RVIA_0.NumSecuencia.value= numSecuencia;
-          document.FORM_RVIA_0.origenApunte.value= tipoDetalle;
-          document.FORM_RVIA_0.importe.value= importeNumerico;
-          //document.FORM_RVIA_0.descripcionCorta.value= descripcionCorta;
-          document.FORM_RVIA_0.descripcionLarga.value= descripcionLarg;
-          document.FORM_RVIA_0.clavePagina.value  = "PAS_DETINGRESOVENT";
-          break;
-
-      }
-
-      if (pulsada == 0) {
-        if (document.FORM_RVIA_0.tipoBusqueda[0].checked){
-          var npagAux = parseInt(document.FORM_RVIA_0.nPaginaParcial.value) - 1;
-          if (npagAux > 0) document.FORM_RVIA_0.nPaginaParcial.value = ""+npagAux;
-          else document.FORM_RVIA_0.nPaginaParcial.value = "0";
-        }
-        pulsada = 1;
-        document.FORM_RVIA_0.submit();
-      }
-    }
-
-    function listaSolicitudes() {
-      if(pulsada == 0){
-
-        document.FORM_RVIA_0.diasAnteriores.value = "";
-        document.FORM_RVIA_0.tipoMovimiento.value = "";
-        document.FORM_RVIA_0.importeDesde.value = "";
-        document.FORM_RVIA_0.importeHasta.value = "";
-        document.FORM_RVIA_0.tipoBusqueda[1].checked = true;
-        document.FORM_RVIA_0.FechaDesde.value  = "14-01-2021";
-        document.FORM_RVIA_0.FechaHasta.value  = "14-04-2021";
-
-        document.FORM_RVIA_0.columnaOrden.value = document.FORM_RVIA_0.ultimoOrden.value;
-        document.FORM_RVIA_0.saldoVisible.value = 1;
-        document.FORM_RVIA_0.clavePagina.value = "PAS_MOV_FICH_SOLICITADOS";
-        pulsada = 1;
-        document.FORM_RVIA_0.submit();
-      }
-    }
-
-
-    function abrirDoc(cuenta, entidad, fechaOperacion, fechaValor, importe, origenApunte, acuerdoDoc, secuenciaApunte, codigoDoc, secuenciaDoc){
-
-      document.FORM_RVIA_1.acuerdo.value = cuenta.substring(10,20);
-      document.FORM_RVIA_1.Entidad.value = entidad;
-      document.FORM_RVIA_1.fechaValor.value = fechaValor.substring(6,10)+"-"+fechaValor.substring(3,5)+"-"+fechaValor.substring(0,2);
-      document.FORM_RVIA_1.fechaOperacion.value = fechaOperacion.substring(6,10)+"-"+fechaOperacion.substring(3,5)+"-"+fechaOperacion.substring(0,2);
-      document.FORM_RVIA_1.importe.value = Math.abs(importe);
-      document.FORM_RVIA_1.origenApunte.value = origenApunte;
-
-      document.FORM_RVIA_1.acuerdoDocumento.value = acuerdoDoc;
-      document.FORM_RVIA_1.numeroSecuencialApunteDoc.value = secuenciaApunte;
-      document.FORM_RVIA_1.codigoDocumento.value = codigoDoc;
-      document.FORM_RVIA_1.numSecPDF.value = secuenciaDoc;
-      //********** M000000875 - 26/05/2016 - INICIO ************
-      var nuevaVentana=window.open('','NEW','width=500,height=500,top=0,left=0,menubar=yes,scrollbars=yes,resizable=yes');
-      document.FORM_RVIA_1.target='NEW';
-      //********** M000000875 - 26/05/2016 - FIN ************
-      document.FORM_RVIA_1.clavePagina.value = "BDP_PAS_GENERA_DOC";
-      document.FORM_RVIA_1.submit();
-    }
-
-
-
-    function aplazarPago(cuenta, importe, fecha, descripcion, listaTipoAplazamiento, numSecuencia, sMoneda){
-      if ( pulsada == 0 ){
-        pulsada = 1;
-        document.FORM_RVIA_0.listaTipoAplazamiento.value = listaTipoAplazamiento;
-        document.FORM_RVIA_0.importe.value = importe;
-        document.FORM_RVIA_0.descripcionLarga.value = descripcion;
-        document.FORM_RVIA_0.CUENTA.value = cuenta;
-        document.FORM_RVIA_0.fechaValor.value = fecha;
-        document.FORM_RVIA_0.NumSecuencia.value = numSecuencia;
-        document.FORM_RVIA_0.moneda.value = sMoneda;
-        if (document.FORM_RVIA_0.tipoBusqueda[0].checked){
-          var npagAux = parseInt(document.FORM_RVIA_0.nPaginaParcial.value) - 1;
-          if (npagAux > 0) document.FORM_RVIA_0.nPaginaParcial.value = ""+npagAux;
-          else document.FORM_RVIA_0.nPaginaParcial.value = "0";
-        }
-        document.FORM_RVIA_0.clavePagina.value = "BDP_PAS_MOVS_APLAZA";
-        document.FORM_RVIA_0.columnaOrden.value = 0;
-        document.FORM_RVIA_0.submit();
-      }
-    }
-
 
   </script>
 
@@ -769,186 +377,12 @@
   <NO_TRANSFORM><script language="javascript" src="/javascripts_portal/es_ES/js_portal/multicanalidad.js"></script></NO_TRANSFORM>
 
 
-
-  <script language="JavaScript">
-    <!--
-    openMenuA = null;
-    openMenuB = null;
-
-    function cambiaKK(capa1, capa2){
-      oculta(capa1);
-      visualiza(capa2);
-      if (openMenuA != null){
-        oculta(openMenuB);
-        visualiza(openMenuA);
-      }
-      if (openMenuA == capa2){
-        openMenuA = null;
-        openMenuB = null;
-      }else{
-        openMenuA = capa1;
-        openMenuB = capa2;
-      }
-    }
-
-    function oculta(capaId){
-      capa = document.getElementById(capaId);
-      capa.style.display = 'none';
-      i = 0;
-      while (document.getElementById(capaId + "_" + i)){
-        caux = document.getElementById(capaId + "_" + i);
-        caux.style.display = 'none';
-        i++;
-      }
-    }
-
-    function visualiza(capaId){
-      capa = document.getElementById(capaId);
-      capa.style.display = 'block';
-      i = 0;
-      while (document.getElementById(capaId + "_" + i)){
-        caux = document.getElementById(capaId + "_" + i);
-        caux.style.display = 'block';
-        i++;
-      }
-    }
-
-
-
-
-
-
-    function pintarTablaMenu(texto)
-    {
-      document.write("<td class='fondoMenu' style=' vertical-align: bottom;'>");
-      document.write("	<table cellpadding='0' cellspacing='0' border='0'>");
-      document.write("	<tr>");
-      document.write("		<td nowrap='true' id='opcion'>" + texto + "</td>");
-      document.write("	</tr>");
-      document.write("	</table>");
-      document.write("</td>");
-    }
-
-    function pintarTablaMenuSeleccionada(texto)
-    {
-      document.write("<td class='fondoMenu' style=' vertical-align: bottom;'>");
-      document.write("			<table cellpadding='0' cellspacing='0' border='0'>");
-      document.write("			<tr>");
-      document.write("	 			<td class='izqFin' nowrap='true'></td>");
-      document.write("	 			<td class='centroFin' nowrap='true'>&nbsp;" + texto + "&nbsp;</td>");
-      document.write("				<td class='dchaFin' nowrap='true'>&nbsp;</td>");
-      document.write("			</tr>");
-      document.write("		 	</table>");
-      document.write("		</td>");
-
-
-    }
-
-    function pintarFinTablaMenu()
-    {
-      document.write("<td class='fondoMenu' style='vertical-align: bottom; padding-top:5px;' width='100%'>");
-      document.write("<table cellpadding='0' cellspacing='0' border='0' width='100%'>");
-      document.write("	<tr>");
-      document.write("		<td id='opcion'>&nbsp;</td>");
-      document.write("	</tr>");
-      document.write("	</table>");
-      document.write("</td>");
-    }
-
-    //-->
-  </script>
-  <script language="Javascript">
-    <!--
-    ie4 = (document.all)? true:false;
-    function pulsarTecla (e){
-      if ((ie4 && (event.keyCode == 13)) || (! ie4 && (e.which == 13))){
-        return false;
-      }
-    }
-    document.onkeydown = pulsarTecla;
-    //-->
-
-  </script>
-  <script language="javascript" src="/javascripts_portal/utils/funciones.js"></script>
 </head>
 
 <BODY>
 <DIV ID="RESOLUCION">
 
   <!--CABECERA-->
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  <script language="JavaScript">
-    <!--
-    function resolucion(valor){
-      if (valor == "TM1"){
-        var tx = "Se va a proceder a modificar el modo de visualización de su pantalla. Le recomendamos que ajuste la configuración de su pantalla a 800 x 600 píxeles.";
-        alert(tx);
-      }else{
-        var tx = "Se va a proceder a modificar el modo de visualización de su pantalla. Le recomendamos que ajuste la configuración de su pantalla a un resolución mínima de 1024 x 768 píxeles.";
-        alert(tx);
-      }
-      url = window.location.href;
-      if (url.indexOf("?") != -1){
-        indice = url.indexOf("?");
-        if (indice != -1){
-          window.location.href = url.substring(0, indice) + "?RES=" + valor;
-        }else{
-          window.location.href = url + "&RES=" + valor;
-        }
-      }else{
-        window.location.href = url + "?RES=" + valor;
-      }
-    }
-    //-->
-
-    function salirConfirmacion(url){
-      load(url);
-      //location.href="/isum/srv.BDP_EXCLUSIVE_SALIR_EMP.BDP_EXCLUSIVE_SALIR_EMP";
-    }
-
-    var pgLogout = null ;
-
-    function load(url) {
-
-
-
-
-      url= 'https://bancaelectronica.evobanco.com'+url;
-
-
-      if (typeof window.ActiveXObject != 'undefined' ) {
-        pgLogout = new ActiveXObject("Microsoft.XMLHTTP");
-        pgLogout.onreadystatechange = process ;
-      }
-      else {
-        pgLogout = new XMLHttpRequest();
-        pgLogout.onload = process ;
-      }
-      pgLogout.open( 'POST', url, true );
-      pgLogout.send( null );
-    }
-
-    function process() {
-      if (pgLogout.readyState != 4 ) return ;
-      document.getElementById('CONTENIDO').innerHTML = pgLogout.responseText ;
-    }
-
-
-  </script>
 
   <div class=CABECERA>
 
@@ -1458,12 +892,12 @@
               <td class="datobl" width="10px" >Cuenta</td>
 
               <!-- /**** P000018455 04-02-2016 INICIO    ****************/-->
-              <td class="datoI" >ES5000818447506159992545 | LIBRETAS%2BAHORRO%2BPARTICULARES | Euro</td>
+              <td class="datoI" >ES5000818447506159992545 | LIBRETAS+AHORRO+PARTICULARES | Euro</td>
               <!-- /**** P000018455 04-02-2016 FIN    ****************/-->
             </tr>
             <tr >
               <td class="datobl" >Saldo</td>
-              <td class="datoI" >4.099,33</td>
+              <td class="datoI" >400.999,33</td>
 
             </tr>
 
@@ -1601,8 +1035,6 @@
         <div id="PAGINAR" align="right">
 
 
-          <a href="#" onClick="inicio();return false;" >Inicio</a>&nbsp;&nbsp;<a href="#" onClick="siguientes();return false;" >Siguientes</a>
-
 
         </div>
 
@@ -1650,7 +1082,7 @@
             <td class="listaC" >13-04-2021</td>
             <td class="listaC" >10-04-2021</td>
 
-            <td class="listaI" >AMAZON UFG*M467A0384</td>
+            <td class="listaI" >AMAZON UFG*M00000000</td>
 
             <td class="implistaN" >-68,48</td>
 
@@ -1823,7 +1255,7 @@
             <td class="listaC" >08-04-2021</td>
             <td class="listaC" >08-04-2021</td>
 
-            <td class="listaI" >TJ-GOOGLE*GOOGLE STORAGE</td>
+            <td class="listaI" >FF-GOOGLE*GOOGLE ST</td>
 
             <td class="implistaN" >-1,99</td>
 
@@ -1865,7 +1297,7 @@
             <td class="listaC" >07-04-2021</td>
             <td class="listaC" >31-03-2021</td>
 
-            <td class="listaI" >AMAZON UFG*MU9MJ5SP4</td>
+            <td class="listaI" >AMAZON UFG*M00000000</td>
 
             <td class="implistaN" >-52,31</td>
 
@@ -1912,7 +1344,7 @@
             <td class="listaI" >
               <a href="/isum/Main?ISUM_ID=portlets_area&ISUM_SCR=linkServiceScr&ISUM_CIPH=lp57J0ZX0wXEyMgcVgd7gjZpGiYNGDwn%2FMIcVVH3Xq09Yn0X%2FRZiDEklYcY%2F4cFS" onClick="javaScript:mostrarDetalle('RZ', '', '3190', '1097522432', '07-04-2021', 'RZ', '07-04-2021','0','RCBO.PEPE MOBILE, S.L.U.', '', '', '0000804', '-57.9', 'RCBO.PEPE MOBILE, S.L.U.', '', '978');return false;" >
 
-                RCBO.PEPE MOBILE, S.L.U.
+                RCBO.AAAA AAAAAA, S.L.U.
               </a>
             </td>
 
@@ -1923,7 +1355,7 @@
 
             <td class="listaI" >
 
-              <a href="/isum/Main?ISUM_ID=portlets_area&ISUM_SCR=linkServiceScr&ISUM_CIPH=lp57J0ZX0wXEyMgcVgd7gjZpGiYNGDwn%2FMIcVVH3Xq09Yn0X%2FRZiDEklYcY%2F4cFS" onClick="javascript:abrirDoc('00818447506159992545', '3190', '2021-04-07', '2021-04-07',  '-57.9', 'RZ','5022716111','0000804','RZ','1097522432');return false;" >
+              <a href="/isum/Main?ISUM_ID=portlets_area&ISUM_SCR=linkServiceScr&ISUM_CIPH=lp57J0ZX0wXEyMgcVgd7gjZpGiYNGDwn%2FMIcVVH3Xq09Yn0X%2FRZiDEklYcY%2F4cFS" onClick="javascript:abrirDoc('00818447506159992545', '3190', '2021-04-07', '2021-04-07',  '-57.9', 'RZ','5000710011','0000804','RZ','1000500400');return false;" >
 
 
                 <svg class="icono_detalle_pdf" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 58 99" style="enable-background:new 0 0 58 99;" xml:space="preserve">
@@ -1957,9 +1389,9 @@
 
 
             <td class="listaI" >
-              <a href="/isum/Main?ISUM_ID=portlets_area&ISUM_SCR=linkServiceScr&ISUM_CIPH=lp57J0ZX0wXEyMgcVgd7gjZpGiYNGDwn%2FMIcVVH3Xq09Yn0X%2FRZiDEklYcY%2F4cFS" onClick="javaScript:mostrarDetalle('RZ', '', '3190', '1096555181', '07-04-2021', 'RZ', '07-04-2021','0','RCBO.AAAAAA EEEEE IIII', '', '', '0000803', '-373.01', 'RCBO.AAAAAA EEEEE IIII', '7003,7006,7012', '978');return false;" >
+              <a href="/isum/Main?ISUM_ID=portlets_area&ISUM_SCR=linkServiceScr&ISUM_CIPH=lp57J0ZX0wXEyMgcVgd7gjZpGiYNGDwn%2FMIcVVH3Xq09Yn0X%2FRZiDEklYcY%2F4cFS" onClick="javaScript:mostrarDetalle('RZ', '', '3190', '1234567890', '07-04-2021', 'RZ', '07-04-2021','0','RCBO.AAAAAA BBBBBB', '', '', '0000803', '-373.01', 'RCBO.AAAAAA BBBBBB', '7003,7006,7012', '978');return false;" >
 
-                RCBO.AAAAAA EEEEE IIII
+                RCBO.AAAAAA BBBB CCCCC
               </a>
             </td>
 
@@ -1970,7 +1402,7 @@
 
             <td class="listaI" >
 
-              <a href="/isum/Main?ISUM_ID=portlets_area&ISUM_SCR=linkServiceScr&ISUM_CIPH=lp57J0ZX0wXEyMgcVgd7gjZpGiYNGDwn%2FMIcVVH3Xq09Yn0X%2FRZiDEklYcY%2F4cFS" onClick="javascript:abrirDoc('00818447506159992545', '3190', '2021-04-07', '2021-04-07',  '-373.01', 'RZ','5022716111','0000803','RZ','1096555181');return false;" >
+              <a href="/isum/Main?ISUM_ID=portlets_area&ISUM_SCR=linkServiceScr&ISUM_CIPH=lp57J0ZX0wXEyMgcVgd7gjZpGiYNGDwn%2FMIcVVH3Xq09Yn0X%2FRZiDEklYcY%2F4cFS" onClick="javascript:abrirDoc('12345678909876543210', '3190', '2021-04-07', '2021-04-07',  '-373.01', 'RZ','5022716111','0000803','RZ','1096555181');return false;" >
 
 
                 <svg class="icono_detalle_pdf" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 58 99" style="enable-background:new 0 0 58 99;" xml:space="preserve">
@@ -1992,7 +1424,7 @@
             </td>
             <td class="listaI" >
 
-              <p><a href="/isum/Main?ISUM_ID=portlets_area&ISUM_SCR=linkServiceScr&ISUM_CIPH=lp57J0ZX0wXEyMgcVgd7gjZpGiYNGDwn%2FMIcVVH3Xq09Yn0X%2FRZiDEklYcY%2F4cFS" onClick="javascript:aplazarPago('00818447506159992545','373.01','07-04-2021','RCBO.AAAAAA EEEEE IIII','7003,7006,7012','0000803', '978'); return false;" >
+              <p><a href="/isum/Main?ISUM_ID=portlets_area&ISUM_SCR=linkServiceScr&ISUM_CIPH=lp57J0ZX0wXEyMgcVgd7gjZpGiYNGDwn%2FMIcVVH3Xq09Yn0X%2FRZiDEklYcY%2F4cFS" onClick="javascript:aplazarPago('00818447506159992545','373.01','07-04-2021','RCBO.AAAAAA BBBBBB','7003,7006,7012','0000803', '978'); return false;" >
 
 
                 <svg class="icono_aplazar" width="40px" height="29px" viewBox="0 0 40 29" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -2233,7 +1665,7 @@
             <td class="listaC" >01-04-2021</td>
             <td class="listaC" >01-04-2021</td>
 
-            <td class="listaI" >TJ-DOMINOS PIZZA </td>
+            <td class="listaI" >TJ-DOMINOS PIZZA</td>
 
             <td class="implistaN" >-25,00</td>
 
@@ -2296,7 +1728,7 @@
             <td class="listaC" >31-03-2021</td>
             <td class="listaC" >31-03-2021</td>
 
-            <td class="listaI" >RCBO. PRÉSTAMO9876543210</td>
+            <td class="listaI" >RCBO. PRÉSTAMO1234567890</td>
 
             <td class="implistaN" >-140,10</td>
 
@@ -3034,7 +2466,7 @@
             <td class="listaC" >08-03-2021</td>
             <td class="listaC" >08-03-2021</td>
 
-            <td class="listaI" >TJ-GOOGLE *GOOGLE STORAGE</td>
+            <td class="listaI" >TJ-GOOGLE *GOOGLE ST</td>
 
             <td class="implistaN" >-1,99</td>
 
@@ -3199,9 +2631,9 @@
 
 
             <td class="listaI" >
-              <a href="/isum/Main?ISUM_ID=portlets_area&ISUM_SCR=linkServiceScr&ISUM_CIPH=lp57J0ZX0wXEyMgcVgd7gjZpGiYNGDwn%2FMIcVVH3Xq09Yn0X%2FRZiDEklYcY%2F4cFS" onClick="javaScript:mostrarDetalle('RZ', '', '3190', '1063549809', '05-03-2021', 'RZ', '05-03-2021','0','RCBO.AAAAAA EEEEE IIII', '', '', '0000771', '-337.0', 'RCBO.AAAAAA EEEEE IIII', '7003,7006', '978');return false;" >
+              <a href="/isum/Main?ISUM_ID=portlets_area&ISUM_SCR=linkServiceScr&ISUM_CIPH=lp57J0ZX0wXEyMgcVgd7gjZpGiYNGDwn%2FMIcVVH3Xq09Yn0X%2FRZiDEklYcY%2F4cFS" onClick="javaScript:mostrarDetalle('RZ', '', '3190', '1063549809', '05-03-2021', 'RZ', '05-03-2021','0','RCBO.AAAAA EEEEEE IIIIII', '', '', '0000771', '-337.0', 'RCBO.AAAAA EEEEEE IIIIII', '7003,7006', '978');return false;" >
 
-                RCBO.AAAAAA EEEEE IIII
+                RCBO.AAAAA EEEEEE IIIIII
               </a>
             </td>
 
@@ -3234,7 +2666,7 @@
             </td>
             <td class="listaI" >
 
-              <p><a href="/isum/Main?ISUM_ID=portlets_area&ISUM_SCR=linkServiceScr&ISUM_CIPH=lp57J0ZX0wXEyMgcVgd7gjZpGiYNGDwn%2FMIcVVH3Xq09Yn0X%2FRZiDEklYcY%2F4cFS" onClick="javascript:aplazarPago('00818447506159992545','337.0','05-03-2021','RCBO.AAAAAA EEEEE IIII','7003,7006','0000771', '978'); return false;" >
+              <p><a href="/isum/Main?ISUM_ID=portlets_area&ISUM_SCR=linkServiceScr&ISUM_CIPH=lp57J0ZX0wXEyMgcVgd7gjZpGiYNGDwn%2FMIcVVH3Xq09Yn0X%2FRZiDEklYcY%2F4cFS" onClick="javascript:aplazarPago('00818447506159992545','337.0','05-03-2021','RCBO.AAAAA EEEEEE IIIIII','7003,7006','0000771', '978'); return false;" >
 
 
                 <svg class="icono_aplazar" width="40px" height="29px" viewBox="0 0 40 29" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -3297,7 +2729,7 @@
             <td class="listaI" >
               <a href="/isum/Main?ISUM_ID=portlets_area&ISUM_SCR=linkServiceScr&ISUM_CIPH=lp57J0ZX0wXEyMgcVgd7gjZpGiYNGDwn%2FMIcVVH3Xq09Yn0X%2FRZiDEklYcY%2F4cFS" onClick="javaScript:mostrarDetalle('RZ', '', '3190', '1062557414', '04-03-2021', 'RZ', '04-03-2021','0','RCBO.*HASHED*, S.A.', '', '', '0000769', '-58.42', 'RCBO.*HASHED*, S.A.', '', '978');return false;" >
 
-                RCBO.*HASHED*, S.A.
+                RCBO.AGUA
               </a>
             </td>
 
@@ -3439,11 +2871,11 @@
       <INPUT type='hidden' name='DIVISA_COD' value= '978'>
       <INPUT type='hidden' name='DIVISA_NAME' value= 'Euro' >
       <INPUT type="hidden" name="DIVISA_DESC" value='EUR' >
-      <INPUT type='hidden' name='descripcionCuenta' value= 'LIBRETAS%2BAHORRO%2BPARTICULARES' >
+      <INPUT type='hidden' name='descripcionCuenta' value= 'LIBRETAS+AHORRO+PARTICULARES' >
       <INPUT type='hidden' name='SALDO_CONTABLE' value= '4099.33' >
       <INPUT type='hidden' name='cuentaSel' value= '' >
 
-      <INPUT type='hidden' name='FechaDesde' value ='14-01-2021'>
+      <INPUT type='hidden' name='FechaDesde' value ='15-01-2021'>
       <INPUT type='hidden' name='FechaHasta' value ='14-04-2021'>
       <INPUT type='hidden' name='importeDesde' value = ''>
       <INPUT type='hidden' name='importeHasta' value = ''>
@@ -3480,7 +2912,7 @@
       <INPUT type='hidden' name='CUENTA_DESC' value=''>
       <INPUT type='hidden' name='CUENTA_SELEC' value=''>
       <INPUT type='hidden' name='CUENTA' value='00818447506159992545'>
-      <INPUT type='hidden' name='DESCUENTA' value='LIBRETAS%2BAHORRO%2BPARTICULARES'>
+      <INPUT type='hidden' name='DESCUENTA' value='LIBRETAS+AHORRO+PARTICULARES'>
       <INPUT type='hidden' name='indicador' value='MV'>
 
       <INPUT type='hidden' name='indicadorRef' value=''>
@@ -3518,7 +2950,7 @@
       <INPUT type='hidden' name='saldoArrastreLast' value='2407.31'>
       <INPUT type='hidden' name='codigoMonedaLast' value='978'>
       <INPUT type='hidden' name='paginar' value=''>
-      <INPUT type='hidden' name='masDatos' value='1'>
+      <INPUT type='hidden' name='masDatos' value='0'>
       <INPUT type="hidden" name="BUSQUEDA" value="">
       <input type="hidden" name="nPaginaParcial" value="1"/>
 
@@ -3587,7 +3019,7 @@
         '<tr>'+
         '<td class=datoI>Fecha:</td><td class=datoI>14-04-2021</td>'+
         '<td class=anchoG>&nbsp;</td>'+
-        '<td class=datoI>Hora:</td><td class=datoI>15:19:33</td>'+
+        '<td class=datoI>Hora:</td><td class=datoI>15:18:01</td>'+
         '</tr>'+
         '</table>'+
         '</div>'+
@@ -3620,7 +3052,7 @@
         ''+
         ''+
 
-        ''; var toPrinterCuerpo = '	<div id="PORTLET-SECTION-HEADER">		<div id="HEADER">Movimientos		</div>	</div>	<div id="PORTLET-LISTA">		<div id="BODY_LISTA">				<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" width="100%">				<tr>					<td class="cblistaC">Fecha Ejecución</td>					<td class="cblistaC">Fecha Valor</td>					<td class="cblistaC">Descripción</td>					<td class="cblistaC">Importe</td>											<td class="cblistaC">Saldo</td>					   				</tr> 										<tr class="PAR">													<td CLASS="listaC" width="12%">\'14-04-2021\'</td>							<td CLASS="listaC" width="12%">\'14-04-2021\'</td>							<td CLASS="listaI">TJ-AMAZON.ES</td>															<td class="implistaN">-9,38</td>																<td class="implista">4.099,33</td>																	</tr>												<tr class="IMPAR">													<td CLASS="listaC" width="12%">\'13-04-2021\'</td>							<td CLASS="listaC" width="12%">\'10-04-2021\'</td>							<td CLASS="listaI">AMAZON UFG*M467A0384</td>															<td class="implistaN">-68,48</td>																<td class="implista">4.108,71</td>																	</tr>												<tr class="PAR">													<td CLASS="listaC" width="12%">\'13-04-2021\'</td>							<td CLASS="listaC" width="12%">\'13-04-2021\'</td>							<td CLASS="listaI">RCBO.VINCENT CLAUS</td>															<td class="implistaN">-750,00</td>																<td class="implista">4.177,19</td>																	</tr>												<tr class="IMPAR">													<td CLASS="listaC" width="12%">\'10-04-2021\'</td>							<td CLASS="listaC" width="12%">\'10-04-2021\'</td>							<td CLASS="listaI">TJ-AMZN MKTP ES AMAZON.ES</td>															<td class="implistaN">-11,58</td>																<td class="implista">4.927,19</td>																	</tr>												<tr class="PAR">													<td CLASS="listaC" width="12%">\'10-04-2021\'</td>							<td CLASS="listaC" width="12%">\'10-04-2021\'</td>							<td CLASS="listaI">TJ-AMAZON UFG</td>															<td class="implistaN">-70,30</td>																<td class="implista">4.938,77</td>																	</tr>												<tr class="IMPAR">													<td CLASS="listaC" width="12%">\'09-04-2021\'</td>							<td CLASS="listaC" width="12%">\'09-04-2021\'</td>							<td CLASS="listaI">TJ-AMAZON.ES</td>															<td class="implistaN">-2,43</td>																<td class="implista">5.009,07</td>																	</tr>												<tr class="PAR">													<td CLASS="listaC" width="12%">\'09-04-2021\'</td>							<td CLASS="listaC" width="12%">\'09-04-2021\'</td>							<td CLASS="listaI">TJ-UBER   * EATS PENDING</td>															<td class="implistaN">-22,90</td>																<td class="implista">5.011,50</td>																	</tr>												<tr class="IMPAR">													<td CLASS="listaC" width="12%">\'08-04-2021\'</td>							<td CLASS="listaC" width="12%">\'31-03-2021\'</td>							<td CLASS="listaI">AMAZON UFG</td>															<td class="implista">52,76</td>																<td class="implista">5.034,40</td>																	</tr>												<tr class="PAR">													<td CLASS="listaC" width="12%">\'08-04-2021\'</td>							<td CLASS="listaC" width="12%">\'08-04-2021\'</td>							<td CLASS="listaI">TJ-GOOGLE*GOOGLE STORAGE</td>															<td class="implistaN">-1,99</td>																<td class="implista">4.981,64</td>																	</tr>												<tr class="IMPAR">													<td CLASS="listaC" width="12%">\'07-04-2021\'</td>							<td CLASS="listaC" width="12%">\'07-04-2021\'</td>							<td CLASS="listaI">TJ-UBER * EATS PENDING</td>															<td class="implistaN">-23,13</td>																<td class="implista">4.983,63</td>																	</tr>												<tr class="PAR">													<td CLASS="listaC" width="12%">\'07-04-2021\'</td>							<td CLASS="listaC" width="12%">\'31-03-2021\'</td>							<td CLASS="listaI">AMAZON UFG*MU9MJ5SP4</td>															<td class="implistaN">-52,31</td>																<td class="implista">5.006,76</td>																	</tr>												<tr class="IMPAR">													<td CLASS="listaC" width="12%">\'07-04-2021\'</td>							<td CLASS="listaC" width="12%">\'07-04-2021\'</td>							<td CLASS="listaI">TJ-AMAZON.ES</td>															<td class="implistaN">-15,15</td>																<td class="implista">5.059,07</td>																	</tr>												<tr class="PAR">													<td CLASS="listaC" width="12%">\'07-04-2021\'</td>							<td CLASS="listaC" width="12%">\'07-04-2021\'</td>							<td CLASS="listaI">RCBO.PEPE MOBILE, S.L.U.</td>															<td class="implistaN">-57,90</td>																<td class="implista">5.074,22</td>																	</tr>												<tr class="IMPAR">													<td CLASS="listaC" width="12%">\'07-04-2021\'</td>							<td CLASS="listaC" width="12%">\'07-04-2021\'</td>							<td CLASS="listaI">RCBO.AAAAAA EEEEE IIII</td>															<td class="implistaN">-373,01</td>																<td class="implista">5.132,12</td>																	</tr>												<tr class="PAR">													<td CLASS="listaC" width="12%">\'07-04-2021\'</td>							<td CLASS="listaC" width="12%">\'07-04-2021\'</td>							<td CLASS="listaI">RCBO.IBERDROLA COMERCIALIZACION DE ULTIMO REC</td>															<td class="implistaN">-99,53</td>																<td class="implista">5.505,13</td>																	</tr>												<tr class="IMPAR">													<td CLASS="listaC" width="12%">\'06-04-2021\'</td>							<td CLASS="listaC" width="12%">\'06-04-2021\'</td>							<td CLASS="listaI">TRF.MICAELO</td>															<td class="implistaN">-602,50</td>																<td class="implista">5.604,66</td>																	</tr>												<tr class="PAR">													<td CLASS="listaC" width="12%">\'05-04-2021\'</td>							<td CLASS="listaC" width="12%">\'05-04-2021\'</td>							<td CLASS="listaI">TJ-AMAZON.ES AMAZON.ES</td>															<td class="implistaN">-48,00</td>																<td class="implista">6.207,16</td>																	</tr>												<tr class="IMPAR">													<td CLASS="listaC" width="12%">\'05-04-2021\'</td>							<td CLASS="listaC" width="12%">\'05-04-2021\'</td>							<td CLASS="listaI">TJ-AMAZON.ES AMAZON.ES</td>															<td class="implistaN">-18,99</td>																<td class="implista">6.255,16</td>																	</tr>												<tr class="PAR">													<td CLASS="listaC" width="12%">\'02-04-2021\'</td>							<td CLASS="listaC" width="12%">\'02-04-2021\'</td>							<td CLASS="listaI">RCBO. PRÉSTAMO1234567890</td>															<td class="implistaN">-332,45</td>																<td class="implista">6.274,15</td>																	</tr>												<tr class="IMPAR">													<td CLASS="listaC" width="12%">\'01-04-2021\'</td>							<td CLASS="listaC" width="12%">\'01-04-2021\'</td>							<td CLASS="listaI">TJ-DOMINOS PIZZA </td>															<td class="implistaN">-25,00</td>																<td class="implista">6.606,60</td>																	</tr>												<tr class="PAR">													<td CLASS="listaC" width="12%">\'31-03-2021\'</td>							<td CLASS="listaC" width="12%">\'31-03-2021\'</td>							<td CLASS="listaI">TJ-AMAZON UFG</td>															<td class="implistaN">-52,76</td>																<td class="implista">6.631,60</td>																	</tr>												<tr class="IMPAR">													<td CLASS="listaC" width="12%">\'31-03-2021\'</td>							<td CLASS="listaC" width="12%">\'31-03-2021\'</td>							<td CLASS="listaI">TJ-AMZN MKTP ES</td>															<td class="implistaN">-16,09</td>																<td class="implista">6.684,36</td>																	</tr>												<tr class="PAR">													<td CLASS="listaC" width="12%">\'31-03-2021\'</td>							<td CLASS="listaC" width="12%">\'31-03-2021\'</td>							<td CLASS="listaI">RCBO. PRÉSTAMO9876543210</td>															<td class="implistaN">-140,10</td>																<td class="implista">6.700,45</td>																	</tr>												<tr class="IMPAR">													<td CLASS="listaC" width="12%">\'30-03-2021\'</td>							<td CLASS="listaC" width="12%">\'26-03-2021\'</td>							<td CLASS="listaI">UBER   *EATS</td>															<td class="implista">21,85</td>																<td class="implista">6.840,55</td>																	</tr>												<tr class="PAR">													<td CLASS="listaC" width="12%">\'29-03-2021\'</td>							<td CLASS="listaC" width="12%">\'29-03-2021\'</td>							<td CLASS="listaI">TRF. AMAZON EUROPE CORE S.A.R.L.</td>															<td class="implista">56,55</td>																<td class="implista">6.818,70</td>																	</tr>												<tr class="IMPAR">													<td CLASS="listaC" width="12%">\'28-03-2021\'</td>							<td CLASS="listaC" width="12%">\'28-03-2021\'</td>							<td CLASS="listaI">TJ-UBER   * EATS PENDING</td>															<td class="implistaN">-18,80</td>																<td class="implista">6.762,15</td>																	</tr>												<tr class="PAR">													<td CLASS="listaC" width="12%">\'26-03-2021\'</td>							<td CLASS="listaC" width="12%">\'26-03-2021\'</td>							<td CLASS="listaI">TJ-UBER   * EATS PENDING</td>															<td class="implistaN">-21,85</td>																<td class="implista">6.780,95</td>																	</tr>												<tr class="IMPAR">													<td CLASS="listaC" width="12%">\'26-03-2021\'</td>							<td CLASS="listaC" width="12%">\'26-03-2021\'</td>							<td CLASS="listaI">TRF.MICAELO</td>															<td class="implistaN">-600,00</td>																<td class="implista">6.802,80</td>																	</tr>												<tr class="PAR">													<td CLASS="listaC" width="12%">\'26-03-2021\'</td>							<td CLASS="listaC" width="12%">\'26-03-2021\'</td>							<td CLASS="listaI">TRF.MICAELO</td>															<td class="implistaN">-600,00</td>																<td class="implista">7.402,80</td>																	</tr>												<tr class="IMPAR">													<td CLASS="listaC" width="12%">\'26-03-2021\'</td>							<td CLASS="listaC" width="12%">\'26-03-2021\'</td>							<td CLASS="listaI">TRF.MICAELO</td>															<td class="implistaN">-530,00</td>																<td class="implista">8.002,80</td>																	</tr>												<tr class="PAR">													<td CLASS="listaC" width="12%">\'26-03-2021\'</td>							<td CLASS="listaC" width="12%">\'26-03-2021\'</td>							<td CLASS="listaI">TRF. *HASHED* SL</td>															<td class="implista">3.520,55</td>																<td class="implista">8.532,80</td>																	</tr>												<tr class="IMPAR">													<td CLASS="listaC" width="12%">\'26-03-2021\'</td>							<td CLASS="listaC" width="12%">\'26-03-2021\'</td>							<td CLASS="listaI">TRF. *HASHED* SL</td>															<td class="implista">4.842,10</td>																<td class="implista">5.012,25</td>																	</tr>												<tr class="PAR">													<td CLASS="listaC" width="12%">\'25-03-2021\'</td>							<td CLASS="listaC" width="12%">\'25-03-2021\'</td>							<td CLASS="listaI">TJ-AMZN MKTP ES AMAZON.ES</td>															<td class="implistaN">-12,38</td>																<td class="implista">170,15</td>																	</tr>												<tr class="IMPAR">													<td CLASS="listaC" width="12%">\'22-03-2021\'</td>							<td CLASS="listaC" width="12%">\'22-03-2021\'</td>							<td CLASS="listaI">TJ-UBER   * EATS PENDING</td>															<td class="implistaN">-24,35</td>																<td class="implista">182,53</td>																	</tr>												<tr class="PAR">													<td CLASS="listaC" width="12%">\'16-03-2021\'</td>							<td CLASS="listaC" width="12%">\'16-03-2021\'</td>							<td CLASS="listaI">TJ-DOMINOS PIZZA </td>															<td class="implistaN">-25,00</td>																<td class="implista">206,88</td>																	</tr>												<tr class="IMPAR">													<td CLASS="listaC" width="12%">\'15-03-2021\'</td>							<td CLASS="listaC" width="12%">\'15-03-2021\'</td>							<td CLASS="listaI">TJ-AMZN MKTP ES</td>															<td class="implistaN">-59,53</td>																<td class="implista">231,88</td>																	</tr>												<tr class="PAR">													<td CLASS="listaC" width="12%">\'15-03-2021\'</td>							<td CLASS="listaC" width="12%">\'15-03-2021\'</td>							<td CLASS="listaI">TJ-AMZN MKTP ES</td>															<td class="implistaN">-26,75</td>																<td class="implista">291,41</td>																	</tr>												<tr class="IMPAR">													<td CLASS="listaC" width="12%">\'15-03-2021\'</td>							<td CLASS="listaC" width="12%">\'15-03-2021\'</td>							<td CLASS="listaI">TJ-AMZN MKTP ES</td>															<td class="implistaN">-38,05</td>																<td class="implista">318,16</td>																	</tr>												<tr class="PAR">													<td CLASS="listaC" width="12%">\'09-03-2021\'</td>							<td CLASS="listaC" width="12%">\'09-03-2021\'</td>							<td CLASS="listaI">RCBO.ENDESA ENERGIA SAU</td>															<td class="implistaN">-129,60</td>																<td class="implista">356,21</td>																	</tr>												<tr class="IMPAR">													<td CLASS="listaC" width="12%">\'09-03-2021\'</td>							<td CLASS="listaC" width="12%">\'09-03-2021\'</td>							<td CLASS="listaI">RCBO.IBERDROLA COMERCIALIZACION DE ULTIMO REC</td>															<td class="implistaN">-66,84</td>																<td class="implista">485,81</td>																	</tr>												<tr class="PAR">													<td CLASS="listaC" width="12%">\'08-03-2021\'</td>							<td CLASS="listaC" width="12%">\'08-03-2021\'</td>							<td CLASS="listaI">TJ-AMAZON.ES</td>															<td class="implistaN">-14,29</td>																<td class="implista">552,65</td>																	</tr>												<tr class="IMPAR">													<td CLASS="listaC" width="12%">\'08-03-2021\'</td>							<td CLASS="listaC" width="12%">\'08-03-2021\'</td>							<td CLASS="listaI">TJ-GOOGLE *GOOGLE STORAGE</td>															<td class="implistaN">-1,99</td>																<td class="implista">566,94</td>																	</tr>												<tr class="PAR">													<td CLASS="listaC" width="12%">\'08-03-2021\'</td>							<td CLASS="listaC" width="12%">\'08-03-2021\'</td>							<td CLASS="listaI">RCBO.VINCENT CLAUS</td>															<td class="implistaN">-750,00</td>																<td class="implista">568,93</td>																	</tr>												<tr class="IMPAR">													<td CLASS="listaC" width="12%">\'05-03-2021\'</td>							<td CLASS="listaC" width="12%">\'05-03-2021\'</td>							<td CLASS="listaI">TRF.MICAELO</td>															<td class="implistaN">-602,50</td>																<td class="implista">1.318,93</td>																	</tr>												<tr class="PAR">													<td CLASS="listaC" width="12%">\'05-03-2021\'</td>							<td CLASS="listaC" width="12%">\'05-03-2021\'</td>							<td CLASS="listaI">RCBO.PEPE MOBILE, S.L.U.</td>															<td class="implistaN">-57,90</td>																<td class="implista">1.921,43</td>																	</tr>												<tr class="IMPAR">													<td CLASS="listaC" width="12%">\'05-03-2021\'</td>							<td CLASS="listaC" width="12%">\'05-03-2021\'</td>							<td CLASS="listaI">RCBO.AAAAAA EEEEE IIII</td>															<td class="implistaN">-337,00</td>																<td class="implista">1.979,33</td>																	</tr>												<tr class="PAR">													<td CLASS="listaC" width="12%">\'04-03-2021\'</td>							<td CLASS="listaC" width="12%">\'04-03-2021\'</td>							<td CLASS="listaI">TJ-AMAZON.ES AMAZON.ES</td>															<td class="implistaN">-21,91</td>																<td class="implista">2.316,33</td>																	</tr>												<tr class="IMPAR">													<td CLASS="listaC" width="12%">\'04-03-2021\'</td>							<td CLASS="listaC" width="12%">\'04-03-2021\'</td>							<td CLASS="listaI">RCBO.*HASHED*, S.A.</td>															<td class="implistaN">-58,42</td>																<td class="implista">2.338,24</td>																	</tr>												<tr class="PAR">													<td CLASS="listaC" width="12%">\'02-03-2021\'</td>							<td CLASS="listaC" width="12%">\'02-03-2021\'</td>							<td CLASS="listaI">TJ-AMAZON.ES AMAZON.ES</td>															<td class="implistaN">-10,65</td>																<td class="implista">2.396,66</td>																	</tr>												<tr class="IMPAR">													<td CLASS="listaC" width="12%">\'02-03-2021\'</td>							<td CLASS="listaC" width="12%">\'02-03-2021\'</td>							<td CLASS="listaI">RCBO. PRÉSTAMO1234567890</td>															<td class="implistaN">-332,45</td>																<td class="implista">2.407,31</td>																	</tr>						   					</TABLE>		</div>				</div>' +
+        ''; var toPrinterCuerpo = '	<div id="PORTLET-SECTION-HEADER">		<div id="HEADER">Movimientos		</div>	</div>	<div id="PORTLET-LISTA">		<div id="BODY_LISTA">				<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" width="100%">				<tr>					<td class="cblistaC">Fecha Ejecución</td>					<td class="cblistaC">Fecha Valor</td>					<td class="cblistaC">Descripción</td>					<td class="cblistaC">Importe</td>											<td class="cblistaC">Saldo</td>					   				</tr> 										<tr class="PAR">													<td CLASS="listaC" width="12%">\'14-04-2021\'</td>							<td CLASS="listaC" width="12%">\'14-04-2021\'</td>							<td CLASS="listaI">TJ-AMAZON.ES</td>															<td class="implistaN">-9,38</td>																<td class="implista">4.099,33</td>																	</tr>												<tr class="IMPAR">													<td CLASS="listaC" width="12%">\'13-04-2021\'</td>							<td CLASS="listaC" width="12%">\'10-04-2021\'</td>							<td CLASS="listaI">AMAZON UFG*M467A0384</td>															<td class="implistaN">-68,48</td>																<td class="implista">4.108,71</td>																	</tr>												<tr class="PAR">													<td CLASS="listaC" width="12%">\'13-04-2021\'</td>							<td CLASS="listaC" width="12%">\'13-04-2021\'</td>							<td CLASS="listaI">RCBO.VINCENT CLAUS</td>															<td class="implistaN">-750,00</td>																<td class="implista">4.177,19</td>																	</tr>												<tr class="IMPAR">													<td CLASS="listaC" width="12%">\'10-04-2021\'</td>							<td CLASS="listaC" width="12%">\'10-04-2021\'</td>							<td CLASS="listaI">TJ-AMZN MKTP ES AMAZON.ES</td>															<td class="implistaN">-11,58</td>																<td class="implista">4.927,19</td>																	</tr>												<tr class="PAR">													<td CLASS="listaC" width="12%">\'10-04-2021\'</td>							<td CLASS="listaC" width="12%">\'10-04-2021\'</td>							<td CLASS="listaI">TJ-AMAZON UFG</td>															<td class="implistaN">-70,30</td>																<td class="implista">4.938,77</td>																	</tr>												<tr class="IMPAR">													<td CLASS="listaC" width="12%">\'09-04-2021\'</td>							<td CLASS="listaC" width="12%">\'09-04-2021\'</td>							<td CLASS="listaI">TJ-AMAZON.ES</td>															<td class="implistaN">-2,43</td>																<td class="implista">5.009,07</td>																	</tr>												<tr class="PAR">													<td CLASS="listaC" width="12%">\'09-04-2021\'</td>							<td CLASS="listaC" width="12%">\'09-04-2021\'</td>							<td CLASS="listaI">TJ-UBER   * EATS PENDING</td>															<td class="implistaN">-22,90</td>																<td class="implista">5.011,50</td>																	</tr>												<tr class="IMPAR">													<td CLASS="listaC" width="12%">\'08-04-2021\'</td>							<td CLASS="listaC" width="12%">\'31-03-2021\'</td>							<td CLASS="listaI">AMAZON UFG</td>															<td class="implista">52,76</td>																<td class="implista">5.034,40</td>																	</tr>												<tr class="PAR">													<td CLASS="listaC" width="12%">\'08-04-2021\'</td>							<td CLASS="listaC" width="12%">\'08-04-2021\'</td>							<td CLASS="listaI">TJ-GOOGLE*GOOGLE STORAGE</td>															<td class="implistaN">-1,99</td>																<td class="implista">4.981,64</td>																	</tr>												<tr class="IMPAR">													<td CLASS="listaC" width="12%">\'07-04-2021\'</td>							<td CLASS="listaC" width="12%">\'07-04-2021\'</td>							<td CLASS="listaI">TJ-UBER * EATS PENDING</td>															<td class="implistaN">-23,13</td>																<td class="implista">4.983,63</td>																	</tr>												<tr class="PAR">													<td CLASS="listaC" width="12%">\'07-04-2021\'</td>							<td CLASS="listaC" width="12%">\'31-03-2021\'</td>							<td CLASS="listaI">AMAZON UFG*MU9MJ5SP4</td>															<td class="implistaN">-52,31</td>																<td class="implista">5.006,76</td>																	</tr>												<tr class="IMPAR">													<td CLASS="listaC" width="12%">\'07-04-2021\'</td>							<td CLASS="listaC" width="12%">\'07-04-2021\'</td>							<td CLASS="listaI">TJ-AMAZON.ES</td>															<td class="implistaN">-15,15</td>																<td class="implista">5.059,07</td>																	</tr>												<tr class="PAR">													<td CLASS="listaC" width="12%">\'07-04-2021\'</td>							<td CLASS="listaC" width="12%">\'07-04-2021\'</td>							<td CLASS="listaI">RCBO.PEPE MOBILE, S.L.U.</td>															<td class="implistaN">-57,90</td>																<td class="implista">5.074,22</td>																	</tr>												<tr class="IMPAR">													<td CLASS="listaC" width="12%">\'07-04-2021\'</td>							<td CLASS="listaC" width="12%">\'07-04-2021\'</td>							<td CLASS="listaI">RCBO.AAAAA EEEEEE IIIIII</td>															<td class="implistaN">-373,01</td>																<td class="implista">5.132,12</td>																	</tr>												<tr class="PAR">													<td CLASS="listaC" width="12%">\'07-04-2021\'</td>							<td CLASS="listaC" width="12%">\'07-04-2021\'</td>							<td CLASS="listaI">RCBO.IBERDROLA COMERCIALIZACION DE ULTIMO REC</td>															<td class="implistaN">-99,53</td>																<td class="implista">5.505,13</td>																	</tr>												<tr class="IMPAR">													<td CLASS="listaC" width="12%">\'06-04-2021\'</td>							<td CLASS="listaC" width="12%">\'06-04-2021\'</td>							<td CLASS="listaI">TRF.MICAELO</td>															<td class="implistaN">-602,50</td>																<td class="implista">5.604,66</td>																	</tr>												<tr class="PAR">													<td CLASS="listaC" width="12%">\'05-04-2021\'</td>							<td CLASS="listaC" width="12%">\'05-04-2021\'</td>							<td CLASS="listaI">TJ-AMAZON.ES AMAZON.ES</td>															<td class="implistaN">-48,00</td>																<td class="implista">6.207,16</td>																	</tr>												<tr class="IMPAR">													<td CLASS="listaC" width="12%">\'05-04-2021\'</td>							<td CLASS="listaC" width="12%">\'05-04-2021\'</td>							<td CLASS="listaI">TJ-AMAZON.ES AMAZON.ES</td>															<td class="implistaN">-18,99</td>																<td class="implista">6.255,16</td>																	</tr>												<tr class="PAR">													<td CLASS="listaC" width="12%">\'02-04-2021\'</td>							<td CLASS="listaC" width="12%">\'02-04-2021\'</td>							<td CLASS="listaI">RCBO. PRÉSTAMO1234567890</td>															<td class="implistaN">-332,45</td>																<td class="implista">6.274,15</td>																	</tr>												<tr class="IMPAR">													<td CLASS="listaC" width="12%">\'01-04-2021\'</td>							<td CLASS="listaC" width="12%">\'01-04-2021\'</td>							<td CLASS="listaI">TJ-DOMINOS PIZZA </td>															<td class="implistaN">-25,00</td>																<td class="implista">6.606,60</td>																	</tr>												<tr class="PAR">													<td CLASS="listaC" width="12%">\'31-03-2021\'</td>							<td CLASS="listaC" width="12%">\'31-03-2021\'</td>							<td CLASS="listaI">TJ-AMAZON UFG</td>															<td class="implistaN">-52,76</td>																<td class="implista">6.631,60</td>																	</tr>												<tr class="IMPAR">													<td CLASS="listaC" width="12%">\'31-03-2021\'</td>							<td CLASS="listaC" width="12%">\'31-03-2021\'</td>							<td CLASS="listaI">TJ-AMZN MKTP ES</td>															<td class="implistaN">-16,09</td>																<td class="implista">6.684,36</td>																	</tr>												<tr class="PAR">													<td CLASS="listaC" width="12%">\'31-03-2021\'</td>							<td CLASS="listaC" width="12%">\'31-03-2021\'</td>							<td CLASS="listaI">RCBO. PRÉSTAMO5137920855</td>															<td class="implistaN">-140,10</td>																<td class="implista">6.700,45</td>																	</tr>												<tr class="IMPAR">													<td CLASS="listaC" width="12%">\'30-03-2021\'</td>							<td CLASS="listaC" width="12%">\'26-03-2021\'</td>							<td CLASS="listaI">UBER   *EATS</td>															<td class="implista">21,85</td>																<td class="implista">6.840,55</td>																	</tr>												<tr class="PAR">													<td CLASS="listaC" width="12%">\'29-03-2021\'</td>							<td CLASS="listaC" width="12%">\'29-03-2021\'</td>							<td CLASS="listaI">TRF. AMAZON EUROPE CORE S.A.R.L.</td>															<td class="implista">56,55</td>																<td class="implista">6.818,70</td>																	</tr>												<tr class="IMPAR">													<td CLASS="listaC" width="12%">\'28-03-2021\'</td>							<td CLASS="listaC" width="12%">\'28-03-2021\'</td>							<td CLASS="listaI">TJ-UBER   * EATS PENDING</td>															<td class="implistaN">-18,80</td>																<td class="implista">6.762,15</td>																	</tr>												<tr class="PAR">													<td CLASS="listaC" width="12%">\'26-03-2021\'</td>							<td CLASS="listaC" width="12%">\'26-03-2021\'</td>							<td CLASS="listaI">TJ-UBER   * EATS PENDING</td>															<td class="implistaN">-21,85</td>																<td class="implista">6.780,95</td>																	</tr>												<tr class="IMPAR">													<td CLASS="listaC" width="12%">\'26-03-2021\'</td>							<td CLASS="listaC" width="12%">\'26-03-2021\'</td>							<td CLASS="listaI">TRF.MICAELO</td>															<td class="implistaN">-600,00</td>																<td class="implista">6.802,80</td>																	</tr>												<tr class="PAR">													<td CLASS="listaC" width="12%">\'26-03-2021\'</td>							<td CLASS="listaC" width="12%">\'26-03-2021\'</td>							<td CLASS="listaI">TRF.MICAELO</td>															<td class="implistaN">-600,00</td>																<td class="implista">7.402,80</td>																	</tr>												<tr class="IMPAR">													<td CLASS="listaC" width="12%">\'26-03-2021\'</td>							<td CLASS="listaC" width="12%">\'26-03-2021\'</td>							<td CLASS="listaI">TRF.MICAELO</td>															<td class="implistaN">-530,00</td>																<td class="implista">8.002,80</td>																	</tr>												<tr class="PAR">													<td CLASS="listaC" width="12%">\'26-03-2021\'</td>							<td CLASS="listaC" width="12%">\'26-03-2021\'</td>							<td CLASS="listaI">TRF. *HASHED* SL</td>															<td class="implista">3.520,55</td>																<td class="implista">8.532,80</td>																	</tr>												<tr class="IMPAR">													<td CLASS="listaC" width="12%">\'26-03-2021\'</td>							<td CLASS="listaC" width="12%">\'26-03-2021\'</td>							<td CLASS="listaI">TRF. *HASHED* SL</td>															<td class="implista">4.842,10</td>																<td class="implista">5.012,25</td>																	</tr>												<tr class="PAR">													<td CLASS="listaC" width="12%">\'25-03-2021\'</td>							<td CLASS="listaC" width="12%">\'25-03-2021\'</td>							<td CLASS="listaI">TJ-AMZN MKTP ES AMAZON.ES</td>															<td class="implistaN">-12,38</td>																<td class="implista">170,15</td>																	</tr>												<tr class="IMPAR">													<td CLASS="listaC" width="12%">\'22-03-2021\'</td>							<td CLASS="listaC" width="12%">\'22-03-2021\'</td>							<td CLASS="listaI">TJ-UBER   * EATS PENDING</td>															<td class="implistaN">-24,35</td>																<td class="implista">182,53</td>																	</tr>												<tr class="PAR">													<td CLASS="listaC" width="12%">\'16-03-2021\'</td>							<td CLASS="listaC" width="12%">\'16-03-2021\'</td>							<td CLASS="listaI">TJ-DOMINOS PIZZA </td>															<td class="implistaN">-25,00</td>																<td class="implista">206,88</td>																	</tr>												<tr class="IMPAR">													<td CLASS="listaC" width="12%">\'15-03-2021\'</td>							<td CLASS="listaC" width="12%">\'15-03-2021\'</td>							<td CLASS="listaI">TJ-AMZN MKTP ES</td>															<td class="implistaN">-59,53</td>																<td class="implista">231,88</td>																	</tr>												<tr class="PAR">													<td CLASS="listaC" width="12%">\'15-03-2021\'</td>							<td CLASS="listaC" width="12%">\'15-03-2021\'</td>							<td CLASS="listaI">TJ-AMZN MKTP ES</td>															<td class="implistaN">-26,75</td>																<td class="implista">291,41</td>																	</tr>												<tr class="IMPAR">													<td CLASS="listaC" width="12%">\'15-03-2021\'</td>							<td CLASS="listaC" width="12%">\'15-03-2021\'</td>							<td CLASS="listaI">TJ-AMZN MKTP ES</td>															<td class="implistaN">-38,05</td>																<td class="implista">318,16</td>																	</tr>												<tr class="PAR">													<td CLASS="listaC" width="12%">\'09-03-2021\'</td>							<td CLASS="listaC" width="12%">\'09-03-2021\'</td>							<td CLASS="listaI">RCBO.ENDESA ENERGIA SAU</td>															<td class="implistaN">-129,60</td>																<td class="implista">356,21</td>																	</tr>												<tr class="IMPAR">													<td CLASS="listaC" width="12%">\'09-03-2021\'</td>							<td CLASS="listaC" width="12%">\'09-03-2021\'</td>							<td CLASS="listaI">RCBO.IBERDROLA COMERCIALIZACION DE ULTIMO REC</td>															<td class="implistaN">-66,84</td>																<td class="implista">485,81</td>																	</tr>												<tr class="PAR">													<td CLASS="listaC" width="12%">\'08-03-2021\'</td>							<td CLASS="listaC" width="12%">\'08-03-2021\'</td>							<td CLASS="listaI">TJ-AMAZON.ES</td>															<td class="implistaN">-14,29</td>																<td class="implista">552,65</td>																	</tr>												<tr class="IMPAR">													<td CLASS="listaC" width="12%">\'08-03-2021\'</td>							<td CLASS="listaC" width="12%">\'08-03-2021\'</td>							<td CLASS="listaI">TJ-GOOGLE *GOOGLE STORAGE</td>															<td class="implistaN">-1,99</td>																<td class="implista">566,94</td>																	</tr>												<tr class="PAR">													<td CLASS="listaC" width="12%">\'08-03-2021\'</td>							<td CLASS="listaC" width="12%">\'08-03-2021\'</td>							<td CLASS="listaI">RCBO.VINCENT CLAUS</td>															<td class="implistaN">-750,00</td>																<td class="implista">568,93</td>																	</tr>												<tr class="IMPAR">													<td CLASS="listaC" width="12%">\'05-03-2021\'</td>							<td CLASS="listaC" width="12%">\'05-03-2021\'</td>							<td CLASS="listaI">TRF.MICAELO</td>															<td class="implistaN">-602,50</td>																<td class="implista">1.318,93</td>																	</tr>												<tr class="PAR">													<td CLASS="listaC" width="12%">\'05-03-2021\'</td>							<td CLASS="listaC" width="12%">\'05-03-2021\'</td>							<td CLASS="listaI">RCBO.PEPE MOBILE, S.L.U.</td>															<td class="implistaN">-57,90</td>																<td class="implista">1.921,43</td>																	</tr>												<tr class="IMPAR">													<td CLASS="listaC" width="12%">\'05-03-2021\'</td>							<td CLASS="listaC" width="12%">\'05-03-2021\'</td>							<td CLASS="listaI">RCBO.AAAAA EEEEEE IIIIII</td>															<td class="implistaN">-337,00</td>																<td class="implista">1.979,33</td>																	</tr>												<tr class="PAR">													<td CLASS="listaC" width="12%">\'04-03-2021\'</td>							<td CLASS="listaC" width="12%">\'04-03-2021\'</td>							<td CLASS="listaI">TJ-AMAZON.ES AMAZON.ES</td>															<td class="implistaN">-21,91</td>																<td class="implista">2.316,33</td>																	</tr>												<tr class="IMPAR">													<td CLASS="listaC" width="12%">\'04-03-2021\'</td>							<td CLASS="listaC" width="12%">\'04-03-2021\'</td>							<td CLASS="listaI">RCBO.*HASHED*, S.A.</td>															<td class="implistaN">-58,42</td>																<td class="implista">2.338,24</td>																	</tr>												<tr class="PAR">													<td CLASS="listaC" width="12%">\'02-03-2021\'</td>							<td CLASS="listaC" width="12%">\'02-03-2021\'</td>							<td CLASS="listaI">TJ-AMAZON.ES AMAZON.ES</td>															<td class="implistaN">-10,65</td>																<td class="implista">2.396,66</td>																	</tr>												<tr class="IMPAR">													<td CLASS="listaC" width="12%">\'02-03-2021\'</td>							<td CLASS="listaC" width="12%">\'02-03-2021\'</td>							<td CLASS="listaI">RCBO. PRÉSTAMO1234567890</td>															<td class="implistaN">-332,45</td>																<td class="implista">2.407,31</td>																	</tr>						   					</TABLE>		</div>				</div>' +
 
 
 

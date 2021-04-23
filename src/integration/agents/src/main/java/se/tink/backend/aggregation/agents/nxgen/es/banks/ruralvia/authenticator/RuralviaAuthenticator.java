@@ -80,11 +80,6 @@ public class RuralviaAuthenticator implements Authenticator {
         driver.findElement(By.cssSelector(LoginForm.WEB_VIEW)).click();
         driver.findElement(By.id(LoginForm.ACCEPT_BUTTON)).click();
 
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
         waitForLoad(5);
         checkCorrectLogin();
     }

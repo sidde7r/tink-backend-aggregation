@@ -1,11 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.fetcher.transactionalaccount.entities;
 
-import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.fetcher.transactionalaccount.RuralviaTransactionalAccountFetcher.parseAmount;
-
 import java.util.Optional;
-import java.util.regex.Pattern;
-import lombok.Data;
+import lombok.Builder;
+import lombok.Getter;
 import org.jsoup.nodes.Element;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.fetcher.RuralviaUtils;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -13,33 +12,24 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.enums.AccountIdentifierType;
 
-@Data
+@Getter
+@Builder
 public class AccountEntity {
 
-    private static final Pattern AMOUNT_PATTERN =
-            Pattern.compile("(?<value>[\\+\\-]?[0-9\\.,]+)(?<currency>€|EUROS|\\$|\\w{3})?");
-
     private String accountAlias;
-
     private String accountNumber;
-
     private String balance;
-
-    private String currency;
-
+    @Builder.Default private String currency = "EUR";
     private Element form;
-
-    public AccountEntity() {
-        this.setCurrency("EUR");
-    }
 
     public Optional<TransactionalAccount> toTinkAccount() {
         final AccountIdentifier accountIdentifier = getAccountIdentifier();
 
         return TransactionalAccount.nxBuilder()
                 .withType(TransactionalAccountType.CHECKING)
-                .withFlags()
-                .withBalance(BalanceModule.of(parseAmount(getBalance(), getCurrency())))
+                .withoutFlags()
+                .withBalance(
+                        BalanceModule.of(RuralviaUtils.parseAmount(getBalance(), getCurrency())))
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(accountIdentifier.getIdentifier())
