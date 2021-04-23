@@ -149,11 +149,13 @@ public class FiduciaAuthenticator implements MultiFactorAuthenticator, AutoAuthe
             throwNoSupportedMethodFound();
         }
 
+        ScaMethod selectedMethod = askUserForSelection(onlySupportedScaMethods);
         ScaResponse scaSelectionResponse =
                 apiClient.selectAuthMethod(
                         scaResponse.getLinks().getSelectAuthenticationMethod(),
-                        askUserForSelection(onlySupportedScaMethods).getAuthenticationMethodId());
+                        selectedMethod.getAuthenticationMethodId());
 
+        scaSelectionResponse.setChosenScaMethod(selectedMethod);
         return authorizeWithOtp(scaSelectionResponse);
     }
 
