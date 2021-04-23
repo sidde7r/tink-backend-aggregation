@@ -50,7 +50,7 @@ spec:
     # Unknown errors (due to RuntimeException) alerts
     #-------------------------------------------------------------------------------------------------------------------
     # Authentication alerts
-    - alert: AuthenticationUnknownErrorRateOver5%PT
+    - alert: AuthenticationUnknownErrorRateOver10%PT
       expr: |
         # Failed logins (due to unknown RuntimeException) over 10%
         (count(sum_over_time(tink_agent_login_total{action=~"login", outcome="failed", market="PT", provider_type!="test"}[30m])) by (action,className,provider)
@@ -182,12 +182,12 @@ spec:
     # Cancelled errors alerts
     #-------------------------------------------------------------------------------------------------------------------
     # Authentication alerts
-    - alert: AuthenticationUserCancellationRateOver50%PT
+    - alert: AuthenticationUserCancellationRateOver60%PT
       expr: |
-        # Failed logins (due to user cancellation) over 50%
+        # Failed logins (due to user cancellation) over 60%
         count(sum_over_time(tink_agent_login_total{action="login",outcome=~"cancelled|cancelled_due_to_third_party_app_timeout", market="PT"}[2h])) BY (className,provider)
         # All login attempts the last 3 hours
-          / count(sum_over_time(tink_agent_login_total{action="login", market="PT"}[2h])) BY (className,provider) > 0.50
+          / count(sum_over_time(tink_agent_login_total{action="login", market="PT"}[2h])) BY (className,provider) > 0.60
         # At least this many attempts.
            and count(sum_over_time(tink_agent_login_total{action="login", market="PT", provider_type!="test"}[2h])) by (className,provider) > 10
       for: 5m
@@ -198,7 +198,7 @@ spec:
       annotations:
         description: {{ .Values.kibanaLink }}
           {{ .Values.grafanaLink }}
-        summary: Authentication failures due to user cancelletion is over 50% (<{ $value }>%) for <{ $labels.className }> ( <{ $labels.provider }>
+        summary: Authentication failures due to user cancelletion is over 60% (<{ $value }>%) for <{ $labels.className }> ( <{ $labels.provider }>
         tags: {{ .Values.tags }}
 
     - alert: LongTermAuthenticationUserCancellationDueToThirdPartyAppTimeoutRateOver50%PT
