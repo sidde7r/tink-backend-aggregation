@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabi
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount.Builder;
+import se.tink.backend.aggregation.source_info.AccountSourceInfo;
 import se.tink.libraries.account.enums.AccountFlag;
 
 @JsonObject
@@ -69,6 +70,16 @@ public class SdcAccount {
                 .canWithdrawCash(canWithdrawCash())
                 .canExecuteExternalTransfer(canExecuteExternalTransfer())
                 .canReceiveExternalTransfer(canReceiveExternalTransfer())
+                .sourceInfo(createAccountSourceInfo())
+                .build();
+    }
+
+    @JsonIgnore
+    private AccountSourceInfo createAccountSourceInfo() {
+        return AccountSourceInfo.builder()
+                .bankProductCode(productElementType)
+                .bankAccountType(type)
+                .bankProductName(name)
                 .build();
     }
 
