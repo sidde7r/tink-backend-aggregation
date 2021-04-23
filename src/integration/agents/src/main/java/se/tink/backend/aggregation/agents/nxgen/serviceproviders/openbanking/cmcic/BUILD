@@ -25,7 +25,6 @@ java_library(
         "//src/integration/payment:enums",
         "//src/integration/payment:rpc",
         "//src/integration/transfer:enums",
-        "//src/libraries/mapper",
         "//src/libraries/metrics:collection",
         "//src/libraries/serialization",
         "//src/libraries/uuid",
