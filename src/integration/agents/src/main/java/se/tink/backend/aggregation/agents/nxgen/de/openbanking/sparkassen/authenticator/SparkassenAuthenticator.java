@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authe
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -88,6 +89,11 @@ public class SparkassenAuthenticator implements MultiFactorAuthenticator, AutoAu
         if (!consentDetailsResponse.isValid()) {
             throw SessionError.SESSION_EXPIRED.exception();
         }
+        LocalDate now = LocalDate.now();
+        log.info(
+                "[SparkassenAuthDebug]: setting credentials expiry to: {} (now is: {})",
+                consentDetailsResponse.getValidUntil(),
+                now);
         credentials.setSessionExpiryDate(consentDetailsResponse.getValidUntil());
     }
 
