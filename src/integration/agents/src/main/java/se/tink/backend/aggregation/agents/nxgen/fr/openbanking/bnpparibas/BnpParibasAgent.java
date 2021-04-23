@@ -19,7 +19,8 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponen
 
 @AgentDependencyModules(modules = QSealcSignerModuleRSASHA256.class)
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, IDENTITY_DATA, TRANSFERS, CREDIT_CARDS})
-@AgentPisCapability(capabilities = {PisCapability.PIS_SEPA, PisCapability.PIS_SEPA_ICT})
+@AgentPisCapability(
+        capabilities = {PisCapability.PIS_SEPA, PisCapability.PIS_SEPA_INSTANT_CREDIT_TRANSFER})
 public final class BnpParibasAgent extends BnpParibasBaseAgent {
 
     private static final String AUTHORIZE_URL =

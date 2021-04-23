@@ -50,7 +50,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDe
 @AgentCapabilities({CHECKING_ACCOUNTS, IDENTITY_DATA, LIST_BENEFICIARIES, TRANSFERS, CREDIT_CARDS})
 @AgentPisCapability(
         capabilities = {
-            PisCapability.PIS_SEPA_ICT,
+            PisCapability.PIS_SEPA_INSTANT_CREDIT_TRANSFER,
             PisCapability.PIS_SEPA,
             PisCapability.PIS_FUTURE_DATE,
         })

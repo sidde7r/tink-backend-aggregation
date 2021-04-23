@@ -21,7 +21,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 @AgentPisCapability(
         capabilities = {
             PisCapability.PIS_SEPA,
-            PisCapability.PIS_SEPA_ICT,
+            PisCapability.PIS_SEPA_INSTANT_CREDIT_TRANSFER,
             PisCapability.PIS_SEPA_RECURRING_PAYMENTS
         })
 public final class IspAgent extends CbiGlobeAgent

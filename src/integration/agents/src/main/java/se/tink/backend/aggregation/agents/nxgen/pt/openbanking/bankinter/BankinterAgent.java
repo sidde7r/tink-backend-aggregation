@@ -21,7 +21,7 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponen
         capabilities = {
             PisCapability.PIS_SEPA,
             PisCapability.PIS_FUTURE_DATE,
-            PisCapability.PIS_SEPA_ICT
+            PisCapability.PIS_SEPA_INSTANT_CREDIT_TRANSFER
         })
 public final class BankinterAgent extends SibsProgressiveBaseAgent {
 
