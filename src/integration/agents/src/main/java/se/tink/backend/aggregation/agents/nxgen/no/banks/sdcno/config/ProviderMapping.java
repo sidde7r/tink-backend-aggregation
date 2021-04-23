@@ -57,7 +57,7 @@ public enum ProviderMapping {
     NORD68("4730", AuthenticationType.PORTAL, "68nord"),
     NORDIC_CORPORATE_BANK("0026", AuthenticationType.NETTBANK, "ncbank"),
     ODAL("1870", AuthenticationType.PORTAL, "odal-sparebank"),
-    OESTRE_AGDER_SPAREBANK("2907", AuthenticationType.PORTAL, "oasparebank"),
+    OSTRE_AGDER_SPAREBANK("2907", AuthenticationType.PORTAL, "oasparebank"),
     OFOTEN("4605", AuthenticationType.PORTAL, "ofotensparebank"),
     OPPDALSBANKEN("4266", AuthenticationType.PORTAL, "oppdalsbanken"),
     ORKLA("4270", AuthenticationType.PORTAL, "orklasparebank"),
