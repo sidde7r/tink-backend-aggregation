@@ -1,6 +1,7 @@
 # Tink Backend Aggregation
 
 [![Bors enabled](https://bors.tech/images/badge_small.svg)](https://bors.internal.tink.se/repositories/71)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=tink-ab_tink-backend-aggregation&metric=alert_status&token=98e6aea870d5ad6e4d2c10e284347850cc578f92)](https://sonarcloud.io/dashboard?id=tink-ab_tink-backend-aggregation)
 
 ## Integration Squad
 
