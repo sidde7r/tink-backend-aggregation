@@ -58,8 +58,7 @@ public class CardsEntity {
                 .withAccountNumber(cardNumber)
                 .withAccountName(getAccountName())
                 .addIdentifier(
-                        AccountIdentifier.create(
-                                AccountIdentifierType.PAYMENT_CARD_NUMBER, cardNumber))
+                        AccountIdentifier.create(AccountIdentifierType.MASKED_PAN, cardNumber))
                 .build();
     }
 
