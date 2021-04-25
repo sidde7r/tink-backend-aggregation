@@ -79,8 +79,7 @@ public class CardEntity {
                                 .withAccountName(contract.getProductName())
                                 .addIdentifier(
                                         AccountIdentifier.create(
-                                                AccountIdentifierType.PAYMENT_CARD_NUMBER,
-                                                maskedCardNumber))
+                                                AccountIdentifierType.MASKED_PAN, maskedCardNumber))
                                 .build())
                 .addHolderName(nameOnCard)
                 .setApiIdentifier(contract.getId())
