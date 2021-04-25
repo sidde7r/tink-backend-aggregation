@@ -61,7 +61,7 @@ public class Account {
                 .withAccountName(productName)
                 .addIdentifier(
                         AccountIdentifier.create(
-                                AccountIdentifierType.PAYMENT_CARD_NUMBER, getKid()))
+                                AccountIdentifierType.MASKED_PAN, card.getMaskedNr()))
                 .setProductName(productName)
                 .build();
     }
