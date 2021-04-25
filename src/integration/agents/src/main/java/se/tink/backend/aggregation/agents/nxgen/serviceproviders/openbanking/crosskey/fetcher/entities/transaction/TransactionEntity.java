@@ -124,8 +124,7 @@ public class TransactionEntity {
     private TransactionDates getTinkTransactionDates() {
         TransactionDates.Builder builder = TransactionDates.builder();
 
-        builder.setBookingDate(
-                new AvailableDateInformation().setDate(bookingDateTime.toLocalDate()));
+        builder.setBookingDate(new AvailableDateInformation().setDate(getBookedDate()));
 
         if (valueDateTime != null) {
             builder.setValueDate(
