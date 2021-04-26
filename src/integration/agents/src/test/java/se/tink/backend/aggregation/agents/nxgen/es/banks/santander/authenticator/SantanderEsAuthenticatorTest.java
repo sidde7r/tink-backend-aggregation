@@ -23,7 +23,7 @@ import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 public class SantanderEsAuthenticatorTest {
 
     private static final String TEST_DATA_PATH =
-        "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/es/banks/santander/resources";
+            "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/es/banks/santander/resources";
 
     private static SantanderEsApiClient apiClient;
     private static HttpResponseException httpResponseException;
@@ -32,8 +32,8 @@ public class SantanderEsAuthenticatorTest {
 
     @BeforeClass
     public static void setUpOnce() {
-       httpResponseException = mock(HttpResponseException.class);
-       httpResponse = mock(HttpResponse.class);
+        httpResponseException = mock(HttpResponseException.class);
+        httpResponse = mock(HttpResponse.class);
     }
 
     @Before
@@ -45,11 +45,22 @@ public class SantanderEsAuthenticatorTest {
     @Test
     public void authenticateShouldWorkAsExpected() throws IOException {
         // given
-        when(apiClient.authenticateCredentials(any(), any())).thenReturn(new String(
-            Files.readAllBytes(Paths.get(TEST_DATA_PATH, "authenticateCredentialsResponse.xml"))));
-        when(apiClient.login()).thenReturn(new String(
-            Files.readAllBytes(Paths.get(TEST_DATA_PATH, "authenticatorLoginResponse.xml"))));
-        SantanderEsAuthenticator authenticator = new SantanderEsAuthenticator(apiClient, santanderEsSessionStorage);
+        when(apiClient.authenticateCredentials(any(), any()))
+                .thenReturn(
+                        new String(
+                                Files.readAllBytes(
+                                        Paths.get(
+                                                TEST_DATA_PATH,
+                                                "authenticateCredentialsResponse.xml"))));
+        when(apiClient.login())
+                .thenReturn(
+                        new String(
+                                Files.readAllBytes(
+                                        Paths.get(
+                                                TEST_DATA_PATH,
+                                                "authenticatorLoginResponse.xml"))));
+        SantanderEsAuthenticator authenticator =
+                new SantanderEsAuthenticator(apiClient, santanderEsSessionStorage);
 
         // when
         authenticator.authenticate("correctUsername", "correctPassword");
@@ -66,10 +77,16 @@ public class SantanderEsAuthenticatorTest {
         // given
         when(apiClient.authenticateCredentials(any(), any())).thenThrow(httpResponseException);
         when(httpResponseException.getResponse()).thenReturn(httpResponse);
-        when(httpResponse.getBody(any())).thenReturn(new String(
-            Files.readAllBytes(Paths.get(TEST_DATA_PATH, "incorrectCredentialsResponseError.xml"))));
+        when(httpResponse.getBody(any()))
+                .thenReturn(
+                        new String(
+                                Files.readAllBytes(
+                                        Paths.get(
+                                                TEST_DATA_PATH,
+                                                "incorrectCredentialsResponseError.xml"))));
 
-        SantanderEsAuthenticator authenticator = new SantanderEsAuthenticator(apiClient, santanderEsSessionStorage);
+        SantanderEsAuthenticator authenticator =
+                new SantanderEsAuthenticator(apiClient, santanderEsSessionStorage);
 
         // when
         authenticator.authenticate("incorrect", "incorrect");
@@ -83,9 +100,15 @@ public class SantanderEsAuthenticatorTest {
         // given
         when(apiClient.authenticateCredentials(any(), any())).thenThrow(httpResponseException);
         when(httpResponseException.getResponse()).thenReturn(httpResponse);
-        when(httpResponse.getBody(any())).thenReturn(new String(
-            Files.readAllBytes(Paths.get(TEST_DATA_PATH, "blockedCredentialsResponseError.xml"))));
-        SantanderEsAuthenticator authenticator = new SantanderEsAuthenticator(apiClient, santanderEsSessionStorage);
+        when(httpResponse.getBody(any()))
+                .thenReturn(
+                        new String(
+                                Files.readAllBytes(
+                                        Paths.get(
+                                                TEST_DATA_PATH,
+                                                "blockedCredentialsResponseError.xml"))));
+        SantanderEsAuthenticator authenticator =
+                new SantanderEsAuthenticator(apiClient, santanderEsSessionStorage);
 
         // when
         authenticator.authenticate("blockedUser", "mockedpassword");
@@ -95,13 +118,18 @@ public class SantanderEsAuthenticatorTest {
     }
 
     @Test(expected = HttpResponseException.class)
-    public void authenticateShouldThrowHttpResponseExceptionWhenUnexpectedErrorHappens() throws IOException {
+    public void authenticateShouldThrowHttpResponseExceptionWhenUnexpectedErrorHappens()
+            throws IOException {
         // given
         when(apiClient.authenticateCredentials(any(), any())).thenThrow(httpResponseException);
         when(httpResponseException.getResponse()).thenReturn(httpResponse);
-        when(httpResponse.getBody(any())).thenReturn(new String(
-            Files.readAllBytes(Paths.get(TEST_DATA_PATH, "unexpectedErrorResponse.xml"))));
-        SantanderEsAuthenticator authenticator = new SantanderEsAuthenticator(apiClient, santanderEsSessionStorage);
+        when(httpResponse.getBody(any()))
+                .thenReturn(
+                        new String(
+                                Files.readAllBytes(
+                                        Paths.get(TEST_DATA_PATH, "unexpectedErrorResponse.xml"))));
+        SantanderEsAuthenticator authenticator =
+                new SantanderEsAuthenticator(apiClient, santanderEsSessionStorage);
 
         // when
         authenticator.authenticate("mock1", "mock1password");
@@ -109,5 +137,4 @@ public class SantanderEsAuthenticatorTest {
         // then
 
     }
-
 }
