@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Strings;
 import java.util.Date;
+import java.util.Optional;
 import java.util.stream.Stream;
 import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -82,6 +83,9 @@ public class TransactionEntity {
                 .setAmount(amount.getAsTinkAmount())
                 .setDescription(getTinkDescription())
                 .setPayload(TransactionPayloadTypes.MESSAGE, Strings.nullToEmpty(description))
+                .setPayload(
+                        TransactionPayloadTypes.TRANSFER_ACCOUNT_EXTERNAL,
+                        getCounterPartyAccount(counterpartyAlias))
                 .build();
     }
 
@@ -98,5 +102,9 @@ public class TransactionEntity {
 
     private String getCreditor() {
         return alias == null ? "" : alias.getDisplayName();
+    }
+
+    private String getCounterPartyAccount(TransactionAliasEntity transaction) {
+        return Optional.ofNullable(transaction.getIban()).orElse("");
     }
 }
