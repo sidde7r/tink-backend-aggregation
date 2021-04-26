@@ -1,0 +1,39 @@
+<soap-env:Envelope xmlns:soap-env="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <soap-env:Header/>
+  <soap-env:Body>
+    <soap-env:Fault>
+      <faultcode>soap-env:Server</faultcode>
+      <faultstring>Executing Facade: loginServicesNew, Method: authenticateCredential</faultstring>
+      <faultactor>http://www.isban.es/soap/banksphere</faultactor>
+      <detail>
+        <prefixRigel0:Exception xmlns:prefixRigel0="http://www.gruposantander.es/webservices/genericFault">
+          <faultCode>soap-env:Server</faultCode>
+          <code>
+            <Value>Receiver</Value>
+            <Subcode>
+              <Value/>
+            </Subcode>
+          </code>
+          <reasons>
+            <reason>
+              <lang>en</lang>
+              <text>The request message could not be processed, because it happened an unexpected error in the Server</text>
+            </reason>
+          </reasons>
+          <processInfo>
+            <processIncomingMessage>AC16296A5DE4E8C6526F6521</processIncomingMessage>
+            <processID/>
+            <processName>F_SBAMOV_Services_LA</processName>
+          </processInfo>
+          <technicalException>
+            <technicalPlatform>BKS</technicalPlatform>
+            <platformCode>BKSE04034000093</platformCode>
+            <message>[BKSE04034000093] : Link 'LINK_TCP_TRXOP04': An error occurred when reading data from socket '(localhost:65000)'</message>
+            <stackTrace/>
+          </technicalException>
+          <additionalInfo/>
+        </prefixRigel0:Exception>
+      </detail>
+    </soap-env:Fault>
+  </soap-env:Body>
+</soap-env:Envelope>

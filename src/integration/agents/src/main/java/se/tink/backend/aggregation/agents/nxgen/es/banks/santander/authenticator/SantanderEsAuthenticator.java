@@ -33,29 +33,34 @@ public class SantanderEsAuthenticator implements PasswordAuthenticator {
     @Override
     public void authenticate(String username, String password)
             throws AuthenticationException, AuthorizationException {
-        String responseString;
+        String responseString = "";
         try {
             responseString = apiClient.authenticateCredentials(username, password);
         } catch (HttpResponseException e) {
-            String errorCode =
+            Node n =
                     SantanderEsXmlUtils.getTagNodeFromSoapString(
-                                    e.getResponse().getBody(String.class),
-                                    SantanderEsConstants.NodeTags.CODIGO_ERROR)
-                            .getFirstChild()
-                            .getTextContent()
-                            .trim()
-                            .toUpperCase();
+                            e.getResponse().getBody(String.class),
+                            SantanderEsConstants.NodeTags.CODIGO_ERROR);
 
-            if (ErrorCodes.INCORRECT_CREDENTIALS.stream()
-                    .anyMatch(code -> code.equalsIgnoreCase(errorCode))) {
-                throw new LoginException(LoginError.INCORRECT_CREDENTIALS, e);
+            Optional.ofNullable(n)
+                    .map(
+                            node -> {
+                                String errorCode =
+                                        node.getFirstChild().getTextContent().trim().toUpperCase();
 
-            } else if (ErrorCodes.BLOCKED_CREDENTIALS.stream()
-                    .anyMatch(code -> code.equalsIgnoreCase(errorCode))) {
-                throw new AuthorizationException(AuthorizationError.ACCOUNT_BLOCKED, e);
-            } else {
-                throw e;
-            }
+                                if (ErrorCodes.INCORRECT_CREDENTIALS.stream()
+                                        .anyMatch(code -> code.equalsIgnoreCase(errorCode))) {
+                                    throw new LoginException(LoginError.INCORRECT_CREDENTIALS, e);
+
+                                } else if (ErrorCodes.BLOCKED_CREDENTIALS.stream()
+                                        .anyMatch(code -> code.equalsIgnoreCase(errorCode))) {
+                                    throw new AuthorizationException(
+                                            AuthorizationError.ACCOUNT_BLOCKED, e);
+                                } else {
+                                    throw e;
+                                }
+                            })
+                    .orElseThrow(() -> e);
         }
 
         // Parse token credential and add it to api client to be used for future requests
