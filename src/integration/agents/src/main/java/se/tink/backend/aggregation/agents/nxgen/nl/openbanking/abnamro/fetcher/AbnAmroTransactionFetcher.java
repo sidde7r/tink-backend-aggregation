@@ -33,7 +33,7 @@ public class AbnAmroTransactionFetcher
     }
 
     private boolean isBackgroundRefresh() {
-        return !userIpInformation.isManualRequest();
+        return !userIpInformation.isUserPresent();
     }
 
     private TransactionKeyPaginatorResponse<String> fetchBackgroundRefreshTransactions(

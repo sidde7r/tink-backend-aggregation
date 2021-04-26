@@ -105,7 +105,7 @@ public final class AbnAmroAgent extends NextGenerationAgent
     }
 
     private AbnAmroUserIpInformation getUserIpInformation() {
-        return new AbnAmroUserIpInformation(request.isManual(), userIp);
+        return new AbnAmroUserIpInformation(request.getUserAvailability().isUserPresent(), userIp);
     }
 
     @Override
