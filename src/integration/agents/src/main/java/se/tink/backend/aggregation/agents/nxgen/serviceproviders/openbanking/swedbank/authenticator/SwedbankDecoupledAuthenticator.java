@@ -131,10 +131,10 @@ public class SwedbankDecoupledAuthenticator implements BankIdAuthenticator<Strin
                 // but we do not have possibility to check what savings bank it is.
                 // Currently we are supporting only Swedbank through Decoupled flow.
                 throw LoginError.NOT_CUSTOMER.exception(
-                        SwedbankConstants.EndUserMessage.WRONG_BANK_SAVINGSBANK.getKey());
+                        SwedbankConstants.EndUserMessage.WRONG_BANK_SWEDBANK.getKey());
             } else {
                 throw LoginError.NOT_CUSTOMER.exception(
-                        SwedbankConstants.EndUserMessage.WRONG_BANK_SWEDBANK.getKey());
+                        SwedbankConstants.EndUserMessage.WRONG_BANK_SAVINGSBANK.getKey());
             }
         }
         if (errorResponse.hasEmptyUserId() || errorResponse.hasWrongUserId()) {
