@@ -57,7 +57,7 @@ public class AccountEntity {
         return Optional.ofNullable(balances).orElse(Collections.emptyList()).stream()
                 .filter(this::doesMatchWithAccountCurrency)
                 .findFirst()
-                .map(BalanceBaseEntity::toAmount)
+                .map(BalanceBaseEntity::toTinkAmount)
                 .orElse(getDefaultAmount());
     }
 

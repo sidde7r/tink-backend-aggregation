@@ -7,6 +7,7 @@ import java.util.Optional;
 import lombok.Getter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.entities.AccountLinksEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.entities.BalanceBaseEntity;
+import se.tink.backend.aggregation.agents.utils.berlingroup.BalanceType;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
@@ -43,18 +44,18 @@ public class CardEntity {
 
     public ExactCurrencyAmount getInterimBooked() {
         return Optional.ofNullable(balances).orElse(Collections.emptyList()).stream()
-                .filter(b -> "interimBooked".equals(b.getBalanceType()))
+                .filter(b -> BalanceType.INTERIM_BOOKED.equals(b.getBalanceType().get()))
                 .findFirst()
-                .map(BalanceBaseEntity::toAmount)
+                .map(BalanceBaseEntity::toTinkAmount)
                 .orElse(getZero())
                 .abs();
     }
 
     public ExactCurrencyAmount getInterimAvailable() {
         return Optional.ofNullable(balances).orElse(Collections.emptyList()).stream()
-                .filter(b -> "interimAvailable".equals(b.getBalanceType()))
+                .filter(b -> BalanceType.INTERIM_AVAILABLE.equals(b.getBalanceType().get()))
                 .findFirst()
-                .map(BalanceBaseEntity::toAmount)
+                .map(BalanceBaseEntity::toTinkAmount)
                 .orElse(getZero())
                 .abs();
     }

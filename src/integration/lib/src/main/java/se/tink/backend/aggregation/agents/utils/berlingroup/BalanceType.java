@@ -12,16 +12,17 @@ import lombok.extern.slf4j.Slf4j;
 public enum BalanceType {
     // Values extracted from BerlinGroup specification, version 1.3.6
 
-    PREVIOUSLY_CLOSED_BOOKED("previouslyClosedBooked"),
-    CLOSING_BOOKED("closingBooked"),
-    CLOSING_AVAILABLE("closingAvailable"),
-    EXPECTED("expected"),
-    OPENING_BOOKED("openingBooked"),
-    INTERIM_AVAILABLE("interimAvailable"),
-    INTERIM_BOOKED("interimBooked"),
-    FORWARD_AVAILABLE("forwardAvailable"),
-    NON_INVOICED("nonInvoiced");
+    PREVIOUSLY_CLOSED_BOOKED("previouslyClosedBooked", "PRCD"),
+    CLOSING_BOOKED("closingBooked", "CLBD"),
+    CLOSING_AVAILABLE("closingAvailable", "CLAV"),
+    EXPECTED("expected", "XPCD"),
+    OPENING_BOOKED("openingBooked", "OPBD"),
+    INTERIM_AVAILABLE("interimAvailable", "ITAV"),
+    INTERIM_BOOKED("interimBooked", "ITBD"),
+    FORWARD_AVAILABLE("forwardAvailable", "FWAV"),
+    NON_INVOICED("nonInvoiced", null);
     private String type;
+    private String shortType;
 
     private static BalanceType[] values = BalanceType.values();
 

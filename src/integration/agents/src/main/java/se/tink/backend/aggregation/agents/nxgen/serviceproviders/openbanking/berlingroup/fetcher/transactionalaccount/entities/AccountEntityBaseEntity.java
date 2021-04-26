@@ -4,11 +4,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import lombok.Data;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.StorageKeys;
+import se.tink.backend.aggregation.agents.utils.berlingroup.BalanceMapper;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.entity.Party;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.builder.BalanceBuilderStep;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
@@ -16,6 +19,7 @@ import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
+@Data
 @JsonObject
 public class AccountEntityBaseEntity implements BerlinGroupAccountEntity {
     private String resourceId;
@@ -59,7 +63,7 @@ public class AccountEntityBaseEntity implements BerlinGroupAccountEntity {
         return TransactionalAccount.nxBuilder()
                 .withType(type)
                 .withPaymentAccountFlag()
-                .withBalance(BalanceModule.of(getBalance()))
+                .withBalance(getBalanceModule())
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(getUniqueIdentifier())
@@ -74,12 +78,20 @@ public class AccountEntityBaseEntity implements BerlinGroupAccountEntity {
                 .build();
     }
 
+    private BalanceModule getBalanceModule() {
+        BalanceBuilderStep balanceBuilderStep =
+                BalanceModule.builder().withBalance(BalanceMapper.getBookedBalance(balances));
+        BalanceMapper.getAvailableBalance(balances)
+                .ifPresent(balanceBuilderStep::setAvailableBalance);
+        return balanceBuilderStep.build();
+    }
+
     @Override
     public ExactCurrencyAmount getBalance() {
         return Optional.ofNullable(balances).orElse(Collections.emptyList()).stream()
                 .filter(this::doesMatchWithAccountCurrency)
                 .findFirst()
-                .map(BalanceBaseEntity::toAmount)
+                .map(BalanceBaseEntity::toTinkAmount)
                 .orElse(getDefaultAmount());
     }
 
@@ -91,10 +103,6 @@ public class AccountEntityBaseEntity implements BerlinGroupAccountEntity {
     @Override
     public ExactCurrencyAmount getDefaultAmount() {
         return ExactCurrencyAmount.zero(currency);
-    }
-
-    public String getIban() {
-        return iban;
     }
 
     @Override
@@ -124,33 +132,5 @@ public class AccountEntityBaseEntity implements BerlinGroupAccountEntity {
 
     public List<Party> getParties() {
         return Collections.singletonList(new Party(name, Party.Role.HOLDER));
-    }
-
-    public List<BalanceBaseEntity> getBalances() {
-        return balances;
-    }
-
-    public String getResourceId() {
-        return resourceId;
-    }
-
-    public String getCurrency() {
-        return currency;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getCashAccountType() {
-        return cashAccountType;
-    }
-
-    public AccountLinksEntity getLinks() {
-        return links;
-    }
-
-    public void setBalances(final List<BalanceBaseEntity> balances) {
-        this.balances = balances;
     }
 }

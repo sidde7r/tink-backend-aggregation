@@ -9,14 +9,13 @@ import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.fetcher.transactionalaccount.rpc.AccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.Accounts;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.entities.BalanceBaseEntity;
+import se.tink.backend.aggregation.agents.utils.berlingroup.BalanceMapper;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.builder.BalanceBuilderStep;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
-import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -61,36 +60,9 @@ public class LaBanquePostaleAccountConverter {
 
     private BalanceModule getBalanceModule(List<BalanceBaseEntity> balances) {
         BalanceBuilderStep balanceBuilderStep =
-                BalanceModule.builder().withBalance(getBookedBalance(balances));
-        getAvailableBalance(balances).ifPresent(balanceBuilderStep::setAvailableBalance);
+                BalanceModule.builder().withBalance(BalanceMapper.getBookedBalance(balances));
+        BalanceMapper.getAvailableBalance(balances)
+                .ifPresent(balanceBuilderStep::setAvailableBalance);
         return balanceBuilderStep.build();
-    }
-
-    private ExactCurrencyAmount getBookedBalance(List<BalanceBaseEntity> balances) {
-        if (balances.isEmpty()) {
-            throw new IllegalArgumentException(
-                    "Cannot determine booked balance from empty list of balances.");
-        }
-        Optional<BalanceBaseEntity> balanceEntity =
-                balances.stream()
-                        .filter(b -> Accounts.CLBD.equalsIgnoreCase(b.getBalanceType()))
-                        .findAny();
-
-        if (!balanceEntity.isPresent()) {
-            log.warn(
-                    "Couldn't determine booked balance of known type, and no credit limit included. Defaulting to first provided balance.");
-        }
-        return balanceEntity
-                .map(Optional::of)
-                .orElseGet(() -> balances.stream().findFirst())
-                .map(BalanceBaseEntity::toAmount)
-                .get();
-    }
-
-    private Optional<ExactCurrencyAmount> getAvailableBalance(List<BalanceBaseEntity> balances) {
-        return balances.stream()
-                .filter(b -> Accounts.XPCD.equalsIgnoreCase(b.getBalanceType()))
-                .findAny()
-                .map(BalanceBaseEntity::toAmount);
     }
 }

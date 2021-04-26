@@ -1,19 +1,20 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.entities;
 
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.Accounts;
+import se.tink.backend.aggregation.agents.utils.berlingroup.BalanceMappable;
+import se.tink.backend.aggregation.agents.utils.berlingroup.BalanceType;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
-public class BalanceBaseEntity {
+public class BalanceBaseEntity implements BalanceMappable {
     private BalanceAmountBaseEntity balanceAmount;
     private String balanceType;
+    private Boolean creditLimitIncluded;
 
-    public BalanceBaseEntity() {}
-
-    BalanceBaseEntity(final BalanceAmountBaseEntity balanceAmount, final String balanceType) {
-        this.balanceAmount = balanceAmount;
-        this.balanceType = balanceType;
+    public BalanceAmountBaseEntity getBalanceAmount() {
+        return balanceAmount;
     }
 
     public boolean isClosingBooked() {
@@ -25,15 +26,18 @@ public class BalanceBaseEntity {
         return balanceAmount.getCurrency().equalsIgnoreCase(currency);
     }
 
-    public ExactCurrencyAmount toAmount() {
+    @Override
+    public ExactCurrencyAmount toTinkAmount() {
         return balanceAmount.toAmount();
     }
 
-    public BalanceAmountBaseEntity getBalanceAmount() {
-        return balanceAmount;
+    @Override
+    public boolean isCreditLimitIncluded() {
+        return Optional.ofNullable(creditLimitIncluded).orElse(false);
     }
 
-    public String getBalanceType() {
-        return balanceType;
+    @Override
+    public Optional<BalanceType> getBalanceType() {
+        return BalanceType.findByStringType(balanceType);
     }
 }
