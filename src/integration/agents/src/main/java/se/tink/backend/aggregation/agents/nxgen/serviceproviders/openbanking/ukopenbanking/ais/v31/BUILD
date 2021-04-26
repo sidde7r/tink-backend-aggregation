@@ -18,7 +18,6 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
         "//src/integration/models",
         "//src/libraries/mapper",
-        "//src/libraries/pair",
         "//src/libraries/strings",
         "//third_party:com_auth0_java_jwt",
         "//third_party:com_google_code_findbugs_jsr305",

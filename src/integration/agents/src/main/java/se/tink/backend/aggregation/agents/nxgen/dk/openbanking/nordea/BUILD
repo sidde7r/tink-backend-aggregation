@@ -8,7 +8,6 @@ java_library(
         "//src/integration/credentials:service",
         "//src/integration/lib",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/agentcapabilities",
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/contexts",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/module/annotation",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/eidassigner",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/eidassigner/module",
