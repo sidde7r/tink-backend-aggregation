@@ -805,7 +805,6 @@ public class AgentWorkerOperationFactory {
                             accountInformationServiceEventsProducer,
                             controllerWrapper));
             commands.add(new DataFetchingRestrictionWorkerCommand(context, controllerWrapper));
-            commands.add(new AccountSegmentRestrictionWorkerCommand(context));
             commands.add(new AccountWhitelistRestrictionWorkerCommand(context, request));
             commands.add(new RequestedAccountsRestrictionWorkerCommand(context));
             // SendAccountRestrictionEventsWorkerCommand should be added after all restrictions on
