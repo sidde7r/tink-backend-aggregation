@@ -26,7 +26,7 @@
         "userModifiedExcluded" : false,
         "userModifiedName" : false,
         "userModifiedType" : false,
-        "identifiers" : "[\"payment-card-number://5299123456789\"]",
+        "identifiers" : "[\"masked-pan://529912******1234\"]",
         "closed" : false,
         "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
         "balances" : [ ],
