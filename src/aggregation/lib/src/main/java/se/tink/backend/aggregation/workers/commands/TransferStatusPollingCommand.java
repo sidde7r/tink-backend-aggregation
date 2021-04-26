@@ -10,6 +10,7 @@ import java.util.concurrent.TimeUnit;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.TypedPaymentControllerable;
 import se.tink.backend.aggregation.agents.agent.Agent;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.rpc.TransferRequest;
@@ -69,7 +70,7 @@ public class TransferStatusPollingCommand extends AgentWorkerCommand {
         PaymentStatus paymentStatus;
         try {
             paymentStatus = pollForStatus(transfer);
-        } catch (ExecutionException | RetryException e) {
+        } catch (ExecutionException | RetryException | PaymentException e) {
             log.info(
                     "[transferId: {}] Could not fetch payment status. {}",
                     UUIDUtils.toTinkUUID(transfer.getId()),
@@ -89,7 +90,7 @@ public class TransferStatusPollingCommand extends AgentWorkerCommand {
     }
 
     private PaymentStatus pollForStatus(Transfer transfer)
-            throws ExecutionException, RetryException {
+            throws ExecutionException, RetryException, PaymentException {
         TypedPaymentControllerable paymentControllerable =
                 (TypedPaymentControllerable) context.getAgent();
         PaymentRequest paymentRequest =

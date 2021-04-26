@@ -146,6 +146,7 @@ public class TransferStatusPollingCommandTest {
         return paymentController;
     }
 
+    @SneakyThrows
     private static TypedPaymentControllerable createAgent(PaymentController paymentController) {
         final TypedPaymentControllerable agentMock =
                 mock(TypedPaymentControllerable.class, withSettings().extraInterfaces(Agent.class));
