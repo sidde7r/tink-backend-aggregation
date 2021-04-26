@@ -25,9 +25,7 @@ public class CajamarAccountFetcher implements AccountFetcher<TransactionalAccoun
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
-        return apiClient
-                .fetchPositions()
-                .getAccounts()
+        return apiClient.fetchPositions().getAccounts().stream()
                 .map(
                         accountEntity ->
                                 accountEntity.toTinkTransactionalAccount(

@@ -13,17 +13,19 @@
     ],
     "cards": [
         {
-            "id": "1",
-            "productCode": "05007",
-            "description": "VISA DEBITO",
+            "id": "A2",
+            "productCode": "06202",
+            "description": "MASTERCARD BUSINESS",
             "currency": "EUR",
+            "availableBalance": 2000.00,
             "status": "OPERATIVA",
-            "expiry": "11-2024",
-            "account": "A1",
-            "pan": "415007******2158",
-            "type": "DT",
+            "expiry": "09-2023",
+            "limit": 2000.00,
+            "account": "1234",
+            "pan": "550000******0000",
+            "type": "CR",
             "available": true,
-            "brand": "1"
+            "brand": "2"
         }
     ],
     "currency": "EUR",

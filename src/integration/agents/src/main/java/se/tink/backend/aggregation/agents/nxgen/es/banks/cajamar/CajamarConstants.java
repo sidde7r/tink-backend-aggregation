@@ -91,8 +91,7 @@ public class CajamarConstants {
     }
 
     public static class CardTypes {
-        public static final String CREDIT = "Crédito";
-        public static final String DEBIT = "Débito";
+        public static final String CREDIT = "CR";
     }
 
     public static class SessionKeys {
