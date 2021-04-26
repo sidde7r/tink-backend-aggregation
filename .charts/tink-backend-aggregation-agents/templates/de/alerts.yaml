@@ -171,10 +171,11 @@ spec:
           the last {{ .Values.p1WaitTimeBeforeFiringAlert }} minutes.
         tags: {{ .Values.tags }}
 
-    - alert: bank_is_down_de
+    - alert: manual_login_due_to_bank_side_error_rate_over_50%_DE
       expr: |
-        # bank is down since 60 mins
-        sum by(action, className) (increase(tink_agent_login_total{action=~"login|is-logged-in",market="DE",outcome=~"unavailable",provider_type!="test"}[60m]))
+        (count by(provider, className) (count_over_time (tink_agent_login_total{ environment="production",market="DE", outcome="unavailable", action="login-manual"}[1h]))
+        / count by(provider, className) (count_over_time (tink_agent_login_total{ environment="production",market="DE", action="login-manual"}[1h])) > 0.5 )
+        and (count by(provider, className) (count_over_time (tink_agent_login_total{ environment="production",market="DE", action="login-manual"}[1h])) > 5)
       for: {{ .Values.p2WaitTimeBeforeFiringAlert }}
       labels:
         severity: urgent
@@ -183,10 +184,26 @@ spec:
       annotations:
         description: {{ .Values.kibanaClassLink }}
           {{ .Values.grafanaLink }}
-        summary: Bank is down since 60 min for ( <{ $value }> ) login attempts for agent <{ $labels.className }>
+        summary: Manual login error rate more than 50% ( <{ $value }> * 100 ) % for provider <{ $labels.provider }> of agent <{ $labels.className }>
           the last {{ .Values.p2WaitTimeBeforeFiringAlert }} minutes.
         tags: {{ .Values.tags }}
 
+    - alert: auto_login_due_to_bank_side_error_rate_over_50%_DE
+      expr: |
+        (count by(provider, className, action) (count_over_time (tink_agent_login_total{ environment="production",market="DE", outcome="unavailable", action=~"login-auto|login-cron"}[1h]))
+        / count by(provider, className, action) (count_over_time (tink_agent_login_total{ environment="production",market="DE", action=~"login-auto|login-cron"}[1h])) > 0.5 )
+        and (count by(provider, className, action) (count_over_time (tink_agent_login_total{ environment="production",market="DE", action=~"login-auto|login-cron"}[1h])) > 5)
+      for: {{ .Values.p2WaitTimeBeforeFiringAlert }}
+      labels:
+        severity: urgent
+        priority: P2
+        who: integration-nazguls
+      annotations:
+        description: {{ .Values.kibanaClassLink }}
+          {{ .Values.grafanaLink }}
+        summary: Auto login error rate more than 50% ( <{ $value }> * 100 ) % for action <{ $labels.action }> provider <{ $labels.provider }> of agent <{ $labels.className }>
+          the last {{ .Values.p2WaitTimeBeforeFiringAlert }} minutes.
+        tags: {{ .Values.tags }}
 
     ## Long term alerts 
     ## - to detect only authentication error / timeouts through longer period of time with really low SR
