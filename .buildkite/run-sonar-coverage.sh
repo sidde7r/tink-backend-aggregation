@@ -43,5 +43,4 @@ set -e
 sonar-scanner \
   -Dsonar.login="$SONAR_TOKEN" \
   -Dsonar.branch.name="$BUILDKITE_BRANCH" \
-  -Dsonar.coverage.exclusions="" \
   -Dsonar.coverageReportPaths=bazel-out/_coverage/_coverage_report.dat
