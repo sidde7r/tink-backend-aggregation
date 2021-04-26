@@ -85,13 +85,6 @@ public final class MetroServiceConstants {
                         httpHeaders.add("X-APP-VERSION", HEADER_VERSION);
                         httpHeaders.add("X-PLATFORM", GlobalConstants.PLATFORM.getValue());
                         httpHeaders.add(
-                                "X-REQUEST-ID",
-                                String.format(
-                                        "%s-%s-%s",
-                                        UUID.randomUUID().toString().toUpperCase(),
-                                        GlobalConstants.PLATFORM.getValue(),
-                                        HEADER_VERSION));
-                        httpHeaders.add(
                                 "User-Agent",
                                 "MetroBankMobile/9.7.0 (uk.plc.metrobankmobile.ios; build:2004; iOS 12.4.5) Alamofire/9.7.0");
                         return httpHeaders;

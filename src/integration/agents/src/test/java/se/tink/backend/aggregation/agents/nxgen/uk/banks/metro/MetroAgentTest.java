@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.agents.framework.ArgumentManager.SecurityNumb
 import se.tink.backend.aggregation.agents.framework.ArgumentManager.UsernamePasswordArgumentEnum;
 import se.tink.libraries.credentials.service.RefreshableItem;
 
-public class MetroPersonalAgentTest {
+public class MetroAgentTest {
     private final ArgumentManager<UsernamePasswordArgumentEnum> usernamePasswordManager =
             new ArgumentManager<>(UsernamePasswordArgumentEnum.values());
     private final ArgumentManager<SecurityNumberArgumentEnum> secureNumberManager =
@@ -28,8 +28,28 @@ public class MetroPersonalAgentTest {
     }
 
     @Test
-    public void testRefresh() throws Exception {
+    public void testPersonalRefresh() throws Exception {
         new AgentIntegrationTest.Builder("uk", "uk-metro-personal-password")
+                .addCredentialField(
+                        Field.Key.USERNAME,
+                        usernamePasswordManager.get(UsernamePasswordArgumentEnum.USERNAME))
+                .addCredentialField(
+                        Field.Key.PASSWORD,
+                        usernamePasswordManager.get(UsernamePasswordArgumentEnum.PASSWORD))
+                .addCredentialField(
+                        Field.Key.SECURITY_NUMBER,
+                        secureNumberManager.get(SecurityNumberArgumentEnum.SECURITY_NUMBER))
+                .loadCredentialsBefore(true)
+                .saveCredentialsAfter(true)
+                .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
+                .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
+                .build()
+                .testRefresh();
+    }
+
+    @Test
+    public void testBusinessRefresh() throws Exception {
+        new AgentIntegrationTest.Builder("uk", "uk-metro-business-password")
                 .addCredentialField(
                         Field.Key.USERNAME,
                         usernamePasswordManager.get(UsernamePasswordArgumentEnum.USERNAME))

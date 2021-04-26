@@ -65,6 +65,11 @@ public class AccountMapper {
                                 AccountIdentifierType.IBAN,
                                 account.getAccountId(),
                                 account.getNickname()))
+                .addIdentifier(
+                        AccountIdentifier.create(
+                                AccountIdentifierType.SORT_CODE,
+                                account.getSortCode() + account.getAccountId(),
+                                account.getNickname()))
                 .build();
     }
 

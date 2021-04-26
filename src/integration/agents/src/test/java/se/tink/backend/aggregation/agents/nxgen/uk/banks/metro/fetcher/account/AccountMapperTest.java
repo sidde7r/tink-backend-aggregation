@@ -54,7 +54,7 @@ public class AccountMapperTest {
 
         // when
         List<TransactionalAccount> result =
-            accountMapper.map(entity.getAccounts(), entity.getEntityName());
+                accountMapper.map(entity.getAccounts(), entity.getEntityName());
 
         // then
         assertThat(result.isEmpty()).isFalse();

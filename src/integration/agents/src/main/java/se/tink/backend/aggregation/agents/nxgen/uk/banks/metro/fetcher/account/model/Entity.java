@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.uk.banks.metro.fetcher.account.
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
 import lombok.Getter;
+import se.tink.backend.aggregation.agents.nxgen.uk.banks.metro.fetcher.common.model.EntityType;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject

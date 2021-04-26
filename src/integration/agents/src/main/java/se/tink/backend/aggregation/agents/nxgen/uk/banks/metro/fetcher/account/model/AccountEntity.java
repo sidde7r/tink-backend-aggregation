@@ -33,7 +33,7 @@ public class AccountEntity {
     private String nickname;
 
     @JsonIgnore
-    public CategoryType getAccountType(){
+    public CategoryType getAccountType() {
         return category.getAccountCategory();
     }
 }

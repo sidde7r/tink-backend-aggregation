@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.uk.banks.metro.fetcher.transact
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Optional;
 import lombok.Getter;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -15,7 +14,7 @@ public class TransactionEntity {
 
     private LocalDate date;
 
-    private List<DetailsEntity> details;
+    private Object details;
 
     @JsonProperty("line1")
     private String firstDescription;
@@ -31,7 +30,7 @@ public class TransactionEntity {
                 .orElse(firstDescription);
     }
 
-    public List<DetailsEntity> getRawDetails(){
+    public Object getRawDetails() {
         return details;
     }
 }

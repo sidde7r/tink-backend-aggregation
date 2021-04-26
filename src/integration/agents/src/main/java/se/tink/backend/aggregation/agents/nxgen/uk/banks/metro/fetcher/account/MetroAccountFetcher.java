@@ -36,8 +36,7 @@ public class MetroAccountFetcher implements AccountFetcher<TransactionalAccount>
             return accountsEntity.getEntities(accountType).stream()
                     .flatMap(
                             entity ->
-                                    accountMapper
-                                            .map(entity.getAccounts(), entity.getEntityName())
+                                    accountMapper.map(entity.getAccounts(), entity.getEntityName())
                                             .stream())
                     .collect(Collectors.toList());
         } else {

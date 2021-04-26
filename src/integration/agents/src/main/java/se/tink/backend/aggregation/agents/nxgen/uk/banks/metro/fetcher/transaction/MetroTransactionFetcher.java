@@ -33,23 +33,24 @@ public class MetroTransactionFetcher implements TransactionFetcher<Transactional
     public List<AggregationTransaction> fetchTransactionsFor(TransactionalAccount account) {
         String currencyCode = account.getFromTemporaryStorage(AccountConstants.CURRENCY);
         TransactionRequest request =
-                new TransactionRequest()
-                        .setAccountId(account.getFromTemporaryStorage(AccountConstants.ACCOUNT_ID))
-                        .setCategory(
+                TransactionRequest.builder()
+                        .accountId(account.getFromTemporaryStorage(AccountConstants.ACCOUNT_ID))
+                        .category(
                                 new CategoryEntity()
                                         .setAccountCategory(
                                                 CategoryEntity.CategoryType.valueOf(
                                                         account.getFromTemporaryStorage(
                                                                 AccountConstants.ACCOUNT_TYPE))))
-                        .setCurrencyCode(currencyCode)
-                        .setPendingRequired(true)
-                        .setTransactionEndDate(LocalDateTime.now())
-                        .setTransactionStartDate(
+                        .currencyCode(currencyCode)
+                        .isPendingRequired(true)
+                        .transactionEndDate(LocalDateTime.now())
+                        .transactionStartDate(
                                 LocalDate.parse(
                                                 account.getFromTemporaryStorage(
                                                         AccountConstants.CREATION_DATE),
                                                 DateTimeFormatter.ISO_DATE)
-                                        .atStartOfDay());
+                                        .atStartOfDay())
+                        .build();
 
         Either<AgentBankApiError, TransactionResponse> response =
                 transactionClient.fetchTransactions(request);

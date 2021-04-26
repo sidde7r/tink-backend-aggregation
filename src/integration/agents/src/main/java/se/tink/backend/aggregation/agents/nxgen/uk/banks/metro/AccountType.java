@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.uk.banks.metro;
 
-import se.tink.backend.aggregation.agents.nxgen.uk.banks.metro.fetcher.account.model.EntityType;
+import se.tink.backend.aggregation.agents.nxgen.uk.banks.metro.fetcher.common.model.EntityType;
 
 public enum AccountType {
     PERSONAL(EntityType.RETAIL),
