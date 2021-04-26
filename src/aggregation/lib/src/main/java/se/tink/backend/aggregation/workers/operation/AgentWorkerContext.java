@@ -71,6 +71,8 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     private static final MetricId CREDENTIALS_STATUS_CHANGES_WITHOUT_ERRORS =
             MetricId.newId("aggregation_credentials_status_changes_without_errors");
     private static final MetricId RESULTING_ERRORS = MetricId.newId("aggregation_resulting_errors");
+    private static final MetricId SUPPLEMENTAL_INFO_AND_USER_STATE =
+            MetricId.newId("aggregation_supplemental_info_user_state");
 
     private static final Set<CredentialsStatus> ERROR_STATUSES =
             ImmutableSet.of(
@@ -406,6 +408,21 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     @Override
     public void requestSupplementalInformation(String mfaId, Credentials credentials) {
         supplementalInteractionCounter.inc();
+
+        getMetricRegistry()
+                .meter(
+                        SUPPLEMENTAL_INFO_AND_USER_STATE
+                                .label(AGENT, request.getProvider().getClassName())
+                                .label("operation", request.getType().toString())
+                                .label(
+                                        "userAvailableForInteraction",
+                                        request.getUserAvailability()
+                                                .isUserAvailableForInteraction())
+                                // irrelevant, added just for debugging
+                                .label("userPresent", request.getUserAvailability().isUserPresent())
+                                // redundant, added just for debugging
+                                .label("manual", request.isManual()))
+                .inc();
 
         // Execute any event-listeners; this tells the signable operation to update status
         for (AgentEventListener eventListener : eventListeners) {
