@@ -11,9 +11,10 @@ public enum BankIdNOError implements AgentError {
     MOBILE_BANK_ID_TIMEOUT_OR_REJECTED(
             new LocalizableKey(
                     "There was a technical error when connecting with your mobile operator.")),
-    BANK_ID_APP_BLOCKED(new LocalizableKey("Your BankID app is blocked.")),
-    BANK_ID_APP_TIMEOUT(new LocalizableKey("BankID app timeout.")),
-    BANK_ID_APP_REJECTED(new LocalizableKey("The BankID app authentication was rejected by user.")),
+    THIRD_PARTY_APP_BLOCKED(new LocalizableKey("Your BankID authentication app is blocked.")),
+    THIRD_PARTY_APP_TIMEOUT(new LocalizableKey("BankID authentication app timeout.")),
+    THIRD_PARTY_APP_REJECTED(
+            new LocalizableKey("User rejected authentication in BankID authentication app.")),
     INVALID_BANK_ID_PASSWORD(new LocalizableKey("The BankID password is invalid."));
 
     private final LocalizableKey userMessage;

@@ -160,11 +160,11 @@ public class DataStudioLoginEventPublisherService {
                                     AgentLoginCompletedEventProto.AgentLoginCompletedEvent
                                             .LoginResult.BANKID_ERROR_TIMEOUT)
                             .put(
-                                    BankIdNOError.BANK_ID_APP_BLOCKED,
+                                    BankIdNOError.THIRD_PARTY_APP_BLOCKED,
                                     AgentLoginCompletedEventProto.AgentLoginCompletedEvent
                                             .LoginResult.BANKID_ERROR_BLOCKED)
                             .put(
-                                    BankIdNOError.BANK_ID_APP_TIMEOUT,
+                                    BankIdNOError.THIRD_PARTY_APP_TIMEOUT,
                                     AgentLoginCompletedEventProto.AgentLoginCompletedEvent
                                             .LoginResult.BANKID_ERROR_TIMEOUT)
                             .put(

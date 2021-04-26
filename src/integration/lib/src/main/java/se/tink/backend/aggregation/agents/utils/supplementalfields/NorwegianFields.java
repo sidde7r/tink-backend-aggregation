@@ -55,7 +55,8 @@ public class NorwegianFields {
     public static class BankIdAppField {
 
         private static final LocalizableKey DESCRIPTION =
-                new LocalizableKey("Confirm BankID authentication in your mobile BankID app.");
+                new LocalizableKey(
+                        "Confirm BankID authentication in your mobile BankID authentication app.");
 
         public static Field build(Catalog catalog) {
             return CommonFields.Instruction.build(catalog.getString(DESCRIPTION));
