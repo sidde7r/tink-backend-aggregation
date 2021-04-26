@@ -111,8 +111,7 @@ public class AccountEntity {
                                 .withAccountName(product)
                                 .addIdentifier(
                                         AccountIdentifier.create(
-                                                AccountIdentifierType.PAYMENT_CARD_NUMBER,
-                                                maskedPan))
+                                                AccountIdentifierType.MASKED_PAN, maskedPan))
                                 .build())
                 .addHolderName(name)
                 .setApiIdentifier(resourceId)
