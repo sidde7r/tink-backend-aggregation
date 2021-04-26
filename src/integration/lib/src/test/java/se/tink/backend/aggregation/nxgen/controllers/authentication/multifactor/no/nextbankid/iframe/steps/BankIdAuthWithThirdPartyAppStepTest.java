@@ -4,7 +4,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants.BANK_ID_APP_TIMEOUT_IN_SECONDS;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants.THIRD_PARTY_APP_TIMEOUT_IN_SECONDS;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.screens.BankIdScreen.ENTER_BANK_ID_PASSWORD_SCREEN;
 
 import java.util.Collections;
@@ -18,7 +18,7 @@ import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformati
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.i18n.LocalizableKey;
 
-public class BankIdAuthWithBankIdAppStepTest {
+public class BankIdAuthWithThirdPartyAppStepTest {
 
     /*
     Mocks
@@ -32,7 +32,7 @@ public class BankIdAuthWithBankIdAppStepTest {
     /*
     Real
      */
-    private BankIdAuthWithBankIdAppStep authWithBankIdAppStep;
+    private BankIdAuthWithThirdPartyAppStep authWithBankIdAppStep;
 
     @Before
     public void setup() {
@@ -44,17 +44,17 @@ public class BankIdAuthWithBankIdAppStepTest {
         mocksToVerifyInOrder = inOrder(screensManager, supplementalInformationController);
 
         authWithBankIdAppStep =
-                new BankIdAuthWithBankIdAppStep(
+                new BankIdAuthWithThirdPartyAppStep(
                         screensManager, catalog, supplementalInformationController);
     }
 
     @Test
-    public void should_ask_user_to_confirm_bank_id_app_and_wait_for_password_screen() {
+    public void should_ask_user_to_confirm_third_party_app_and_wait_for_password_screen() {
         // given
         mockUserAnswersSupplementalInfo();
 
         // when
-        authWithBankIdAppStep.authenticateWithBankIdApp(true);
+        authWithBankIdAppStep.authenticateWithThirdPartyApp(true);
 
         // then
         mocksToVerifyInOrder
@@ -65,7 +65,7 @@ public class BankIdAuthWithBankIdAppStepTest {
                 .waitForAnyScreenFromQuery(
                         BankIdScreensQuery.builder()
                                 .waitForScreens(ENTER_BANK_ID_PASSWORD_SCREEN)
-                                .waitForSeconds(BANK_ID_APP_TIMEOUT_IN_SECONDS)
+                                .waitForSeconds(THIRD_PARTY_APP_TIMEOUT_IN_SECONDS)
                                 .verifyNoErrorScreens(true)
                                 .build());
         mocksToVerifyInOrder.verifyNoMoreInteractions();

@@ -10,8 +10,8 @@ import static se.tink.backend.aggregation.nxgen.controllers.authentication.multi
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants.HtmlLocators.LOC_CHOOSE_2FA_METHOD_OPTION_BUTTON_WITH_LABEL;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdTestUtils.mockLocatorDoesNotExists;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdTestUtils.mockLocatorExists;
-import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.screens.BankIdScreen.BANK_ID_APP_METHOD_SCREEN;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.screens.BankIdScreen.CHOOSE_2FA_METHOD_SCREEN;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.screens.BankIdScreen.THIRD_PARTY_APP_METHOD_SCREEN;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +40,7 @@ public class BankIdPerform2FAStepTest {
     private BankIdAskUserToChoose2FAMethodNameStep choose2FAStep;
     private BankIdAuthWithOneTimeCodeStep authWithOneTimeCodeStep;
     private BankIdAuthWithMobileBankIdStep authWithMobileBankIdStep;
-    private BankIdAuthWithBankIdAppStep authWithBankIdAppStep;
+    private BankIdAuthWithThirdPartyAppStep authWithBankIdAppStep;
 
     private InOrder mocksToVerifyInOrder;
 
@@ -56,7 +56,7 @@ public class BankIdPerform2FAStepTest {
         choose2FAStep = mock(BankIdAskUserToChoose2FAMethodNameStep.class);
         authWithOneTimeCodeStep = mock(BankIdAuthWithOneTimeCodeStep.class);
         authWithMobileBankIdStep = mock(BankIdAuthWithMobileBankIdStep.class);
-        authWithBankIdAppStep = mock(BankIdAuthWithBankIdAppStep.class);
+        authWithBankIdAppStep = mock(BankIdAuthWithThirdPartyAppStep.class);
 
         mocksToVerifyInOrder =
                 inOrder(
@@ -98,14 +98,14 @@ public class BankIdPerform2FAStepTest {
     @Test
     @Parameters(method = "currentScreenIsNotBankIdAppTestParams")
     public void
-            when_initial_screen_is_2FA_but_not_bank_id_app_and_link_exists_should_authenticate_with_user_chosen_method(
+            when_initial_screen_is_2FA_but_not_third_party_app_and_link_exists_should_authenticate_with_user_chosen_method(
                     BankIdScreen currentScreen, BankIdScreen screenAfterChoosingMethod) {
         // given
         mockDetectCurrentScreenResults(currentScreen, screenAfterChoosingMethod);
         mockLocatorExists(LOC_CHANGE_2FA_METHOD_LINK, webDriver);
 
-        when(authWithBankIdAppStep.authenticateWithBankIdApp(anyBoolean()))
-                .thenReturn(BankIdAuthWithBankIdAppUserChoice.CHANGE_METHOD);
+        when(authWithBankIdAppStep.authenticateWithThirdPartyApp(anyBoolean()))
+                .thenReturn(BankIdAuthWithThirdPartyAppUserChoice.CHANGE_METHOD);
         when(choose2FAStep.choose2FAMethodName()).thenReturn("SOME_SCREEN_SCRAPED_METHOD_NAME123");
 
         // when
@@ -122,34 +122,35 @@ public class BankIdPerform2FAStepTest {
 
     @Test
     public void
-            when_initial_screen_is_bank_id_app_and_link_exists_should_allow_user_to_continue_authentication() {
+            when_initial_screen_is_third_party_app_and_link_exists_should_allow_user_to_continue_authentication() {
         // given
-        mockDetectCurrentScreenResults(BANK_ID_APP_METHOD_SCREEN);
+        mockDetectCurrentScreenResults(THIRD_PARTY_APP_METHOD_SCREEN);
         mockLocatorExists(LOC_CHANGE_2FA_METHOD_LINK, webDriver);
 
-        when(authWithBankIdAppStep.authenticateWithBankIdApp(anyBoolean()))
-                .thenReturn(BankIdAuthWithBankIdAppUserChoice.AUTHENTICATE);
+        when(authWithBankIdAppStep.authenticateWithThirdPartyApp(anyBoolean()))
+                .thenReturn(BankIdAuthWithThirdPartyAppUserChoice.AUTHENTICATE);
 
         // when
         perform2FAStep.perform2FA();
 
         // then
         verifyDetects2FAMethodOrChangeMethodScreen();
-        mocksToVerifyInOrder.verify(authWithBankIdAppStep).authenticateWithBankIdApp(true);
+        mocksToVerifyInOrder.verify(authWithBankIdAppStep).authenticateWithThirdPartyApp(true);
         mocksToVerifyInOrder.verifyNoMoreInteractions();
     }
 
     @Test
     @Parameters(method = "all2FAMethodScreens")
     public void
-            when_initial_screen_is_bank_id_app_and_link_exists_should_allow_user_to_authenticate_with_different_method(
+            when_initial_screen_is_third_party_app_and_link_exists_should_allow_user_to_authenticate_with_different_method(
                     BankIdScreen screenAfterChoosingOtherMethod) {
         // given
-        mockDetectCurrentScreenResults(BANK_ID_APP_METHOD_SCREEN, screenAfterChoosingOtherMethod);
+        mockDetectCurrentScreenResults(
+                THIRD_PARTY_APP_METHOD_SCREEN, screenAfterChoosingOtherMethod);
         mockLocatorExists(LOC_CHANGE_2FA_METHOD_LINK, webDriver);
 
-        when(authWithBankIdAppStep.authenticateWithBankIdApp(anyBoolean()))
-                .thenReturn(BankIdAuthWithBankIdAppUserChoice.CHANGE_METHOD);
+        when(authWithBankIdAppStep.authenticateWithThirdPartyApp(anyBoolean()))
+                .thenReturn(BankIdAuthWithThirdPartyAppUserChoice.CHANGE_METHOD);
         when(choose2FAStep.choose2FAMethodName()).thenReturn("SOME_SCREEN_SCRAPED_METHOD_NAME");
 
         // when
@@ -157,7 +158,7 @@ public class BankIdPerform2FAStepTest {
 
         // then
         verifyDetects2FAMethodOrChangeMethodScreen();
-        mocksToVerifyInOrder.verify(authWithBankIdAppStep).authenticateWithBankIdApp(true);
+        mocksToVerifyInOrder.verify(authWithBankIdAppStep).authenticateWithThirdPartyApp(true);
         mocksToVerifyInOrder.verify(choose2FAStep).choose2FAMethodName();
         verifyClicksButtonWithLabel("SOME_SCREEN_SCRAPED_METHOD_NAME");
         verifyDetects2FAMethodScreen();
@@ -196,7 +197,7 @@ public class BankIdPerform2FAStepTest {
     private static Object[] currentScreenIsNotBankIdAppTestParams() {
         BankIdScreen[] notBankIdAppScreens =
                 BankIdScreen.getAll2FAMethodScreens().stream()
-                        .filter(screen -> screen != BANK_ID_APP_METHOD_SCREEN)
+                        .filter(screen -> screen != THIRD_PARTY_APP_METHOD_SCREEN)
                         .toArray(BankIdScreen[]::new);
 
         List<Object[]> allTestParams = new ArrayList<>();
@@ -248,8 +249,10 @@ public class BankIdPerform2FAStepTest {
                         .verify(authWithMobileBankIdStep)
                         .authenticateWithMobileBankId();
                 break;
-            case BANK_ID_APP_METHOD_SCREEN:
-                mocksToVerifyInOrder.verify(authWithBankIdAppStep).authenticateWithBankIdApp(false);
+            case THIRD_PARTY_APP_METHOD_SCREEN:
+                mocksToVerifyInOrder
+                        .verify(authWithBankIdAppStep)
+                        .authenticateWithThirdPartyApp(false);
                 break;
         }
     }

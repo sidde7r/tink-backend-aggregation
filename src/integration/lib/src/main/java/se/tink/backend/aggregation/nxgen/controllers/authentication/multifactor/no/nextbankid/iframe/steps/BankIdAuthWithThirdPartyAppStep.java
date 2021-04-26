@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.steps;
 
-import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants.BANK_ID_APP_TIMEOUT_IN_SECONDS;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants.BANK_ID_LOG_PREFIX;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants.THIRD_PARTY_APP_TIMEOUT_IN_SECONDS;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.screens.BankIdScreen.ENTER_BANK_ID_PASSWORD_SCREEN;
 
 import com.google.inject.Inject;
@@ -17,26 +17,28 @@ import se.tink.libraries.i18n.Catalog;
 
 @Slf4j
 @RequiredArgsConstructor(onConstructor = @__({@Inject}))
-public class BankIdAuthWithBankIdAppStep {
+public class BankIdAuthWithThirdPartyAppStep {
 
     private final BankIdScreensManager screensManager;
     private final Catalog catalog;
     private final SupplementalInformationController supplementalInformationController;
 
-    public BankIdAuthWithBankIdAppUserChoice authenticateWithBankIdApp(boolean canChangeMethod) {
-        BankIdAuthWithBankIdAppUserChoice userChoice = askUserToConfirmBankIdApp(canChangeMethod);
+    public BankIdAuthWithThirdPartyAppUserChoice authenticateWithThirdPartyApp(
+            boolean canChangeMethod) {
+        BankIdAuthWithThirdPartyAppUserChoice userChoice =
+                askUserToConfirmAuthInApp(canChangeMethod);
 
-        if (userChoice == BankIdAuthWithBankIdAppUserChoice.AUTHENTICATE) {
+        if (userChoice == BankIdAuthWithThirdPartyAppUserChoice.AUTHENTICATE) {
             verifyUserHasConfirmed();
         }
 
         return userChoice;
     }
 
-    @SuppressWarnings("unused")
-    private BankIdAuthWithBankIdAppUserChoice askUserToConfirmBankIdApp(boolean canChangeMethod) {
+    private BankIdAuthWithThirdPartyAppUserChoice askUserToConfirmAuthInApp(
+            boolean canChangeMethod) {
         log.info(
-                "{} Asking user to confirm BankID app. Can change method: {}",
+                "{} Asking user to confirm third party app authentication. Can change method: {}",
                 BANK_ID_LOG_PREFIX,
                 canChangeMethod);
 
@@ -45,7 +47,7 @@ public class BankIdAuthWithBankIdAppStep {
         }
 
         askUserToConfirmAuthentication();
-        return BankIdAuthWithBankIdAppUserChoice.AUTHENTICATE;
+        return BankIdAuthWithThirdPartyAppUserChoice.AUTHENTICATE;
     }
 
     private void askUserToConfirmAuthentication() {
@@ -59,21 +61,23 @@ public class BankIdAuthWithBankIdAppStep {
     }
 
     /*
-    This is temporarily hard coded to always continue BankID app authentication until sdk-web helps us to prepare
+    This is temporarily hard coded to always continue third party app authentication until sdk-web helps us to prepare
     supplemental info screen
      */
-    private BankIdAuthWithBankIdAppUserChoice askUserToConfirmAuthenticationOrChangeMethod() {
+    private BankIdAuthWithThirdPartyAppUserChoice askUserToConfirmAuthenticationOrChangeMethod() {
         askUserToConfirmAuthentication();
-        return BankIdAuthWithBankIdAppUserChoice.AUTHENTICATE;
+        return BankIdAuthWithThirdPartyAppUserChoice.AUTHENTICATE;
     }
 
     private void verifyUserHasConfirmed() {
-        log.info("{} Looking for private password screen after BankID app", BANK_ID_LOG_PREFIX);
+        log.info(
+                "{} Looking for private password screen after third party app authentication",
+                BANK_ID_LOG_PREFIX);
 
         screensManager.waitForAnyScreenFromQuery(
                 BankIdScreensQuery.builder()
                         .waitForScreens(ENTER_BANK_ID_PASSWORD_SCREEN)
-                        .waitForSeconds(BANK_ID_APP_TIMEOUT_IN_SECONDS)
+                        .waitForSeconds(THIRD_PARTY_APP_TIMEOUT_IN_SECONDS)
                         .verifyNoErrorScreens(true)
                         .build());
     }

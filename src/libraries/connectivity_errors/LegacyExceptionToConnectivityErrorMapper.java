@@ -209,10 +209,10 @@ class LegacyExceptionToConnectivityErrorMapper {
                             ConnectivityErrorFactory.userLoginError(
                                     UserLoginErrors.DYNAMIC_CREDENTIALS_FLOW_TIMEOUT))
                     .put(
-                            BankIdNOError.BANK_ID_APP_BLOCKED,
+                            BankIdNOError.THIRD_PARTY_APP_BLOCKED,
                             ConnectivityErrorFactory.userLoginError(UserLoginErrors.USER_BLOCKED))
                     .put(
-                            BankIdNOError.BANK_ID_APP_TIMEOUT,
+                            BankIdNOError.THIRD_PARTY_APP_TIMEOUT,
                             ConnectivityErrorFactory.userLoginError(
                                     UserLoginErrors.DYNAMIC_CREDENTIALS_FLOW_TIMEOUT))
                     .put(

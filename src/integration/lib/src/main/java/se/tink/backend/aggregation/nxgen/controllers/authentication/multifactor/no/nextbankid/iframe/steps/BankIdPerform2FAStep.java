@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants.BANK_ID_LOG_PREFIX;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants.HtmlLocators.LOC_CHANGE_2FA_METHOD_LINK;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants.HtmlLocators.LOC_CHOOSE_2FA_METHOD_OPTION_BUTTON_WITH_LABEL;
-import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.BankId2FAMethod.BANK_ID_APP_METHOD;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.BankId2FAMethod.THIRD_PARTY_APP_METHOD;
 
 import com.google.inject.Inject;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +26,7 @@ public class BankIdPerform2FAStep {
 
     private final BankIdAuthWithOneTimeCodeStep authWithOneTimeCodeStep;
     private final BankIdAuthWithMobileBankIdStep authWithMobileBankIdStep;
-    private final BankIdAuthWithBankIdAppStep authWithBankIdAppStep;
+    private final BankIdAuthWithThirdPartyAppStep authWithThirdPartyAppStep;
 
     public void perform2FA() {
         BankIdScreen currentScreen =
@@ -60,14 +60,12 @@ public class BankIdPerform2FAStep {
             return;
         }
 
-        if (method == BANK_ID_APP_METHOD) {
-            BankIdAuthWithBankIdAppUserChoice result =
-                    authWithBankIdAppStep.authenticateWithBankIdApp(true);
-            if (result == BankIdAuthWithBankIdAppUserChoice.AUTHENTICATE) {
-                /*
-                User chose to continue BankID app authentication and we didn't get any error - this means that
-                authentication was successful
-                 */
+        if (method == THIRD_PARTY_APP_METHOD) {
+            BankIdAuthWithThirdPartyAppUserChoice result =
+                    authWithThirdPartyAppStep.authenticateWithThirdPartyApp(true);
+            if (result == BankIdAuthWithThirdPartyAppUserChoice.AUTHENTICATE) {
+                // User chose to continue authentication and we didn't get any error ->
+                // authentication was successful
                 return;
             }
         }
@@ -133,8 +131,8 @@ public class BankIdPerform2FAStep {
             case MOBILE_BANK_ID_METHOD:
                 authWithMobileBankIdStep.authenticateWithMobileBankId();
                 break;
-            case BANK_ID_APP_METHOD:
-                authWithBankIdAppStep.authenticateWithBankIdApp(false);
+            case THIRD_PARTY_APP_METHOD:
+                authWithThirdPartyAppStep.authenticateWithThirdPartyApp(false);
                 break;
             default:
                 throw new IllegalStateException("Unknown BankID 2FA method: " + bankId2FAMethod);

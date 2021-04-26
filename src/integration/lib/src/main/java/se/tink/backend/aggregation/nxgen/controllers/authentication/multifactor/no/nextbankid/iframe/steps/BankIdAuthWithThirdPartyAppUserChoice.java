@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.steps;
 
-public enum BankIdAuthWithBankIdAppUserChoice {
+public enum BankIdAuthWithThirdPartyAppUserChoice {
     AUTHENTICATE,
     CHANGE_METHOD
 }

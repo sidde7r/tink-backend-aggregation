@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: VERSION\n"
-"POT-Creation-Date: 2021-04-22 12:19+0000\n"
-"PO-Revision-Date: 2021-04-22 12:19+0000\n"
+"POT-Creation-Date: 2021-04-26 13:05+0000\n"
+"PO-Revision-Date: 2021-04-26 13:05+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE TEAM <EMAIL@ADDRESS>\n"
 "Language: no\n"
@@ -11,17 +11,14 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-msgid "Your BankID app is blocked."
+msgid "BankID authentication app timeout."
+msgstr "Tidsavbrudd i din BankID-app."
+
+msgid "Your BankID authentication app is blocked."
 msgstr "BankID-appen din er blokkert."
 
-msgid "BankID app timeout."
-msgstr "BankID-app tidsavbrudd."
-
-msgid "The BankID password is invalid."
-msgstr "BankID-passordet er ugyldig."
-
-msgid "Select how you want to confirm the BankID authentication"
-msgstr "Velg hvordan du vil godkjenne BankID"
+msgid "User rejected authentication in BankID authentication app."
+msgstr "Bruker avviste godkjenning i BankID-appen."
 
 msgid "You need to activate your BankID in the Handelsbanken app."
 msgstr "Du må aktivere BankID i Handelsbanken-appen."
@@ -343,3 +340,18 @@ msgstr "Ugyldig personnummer eller engangskode."
 
 msgid "The BankID app authentication was rejected by user."
 msgstr "BankID-app-autentisering ble avvist av brukeren."
+
+msgid "Your BankID app is blocked."
+msgstr "BankID-appen din er blokkert."
+
+msgid "BankID app timeout."
+msgstr "BankID-app tidsavbrudd."
+
+msgid "The BankID password is invalid."
+msgstr "BankID-passordet er ugyldig."
+
+msgid "Select how you want to confirm the BankID authentication"
+msgstr "Velg hvordan du vil godkjenne BankID"
+
+msgid "Confirm BankID authentication in your mobile BankID authentication app."
+msgstr "Bekreft BankID i den mobile BankID-godkjenningsappen din."

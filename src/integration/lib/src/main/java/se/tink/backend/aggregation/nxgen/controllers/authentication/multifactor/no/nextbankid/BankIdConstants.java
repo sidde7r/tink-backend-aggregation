@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid;
 
-import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants.HtmlSelectors.BY_BANK_ID_APP_SPINNER;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants.HtmlSelectors.BY_BUTTON_LINK;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants.HtmlSelectors.BY_CHOOSE_2FA_METHOD_OPTIONS_LIST;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants.HtmlSelectors.BY_CHOOSE_2FA_METHOD_OPTION_BUTTON_LABEL;
@@ -15,6 +14,7 @@ import static se.tink.backend.aggregation.nxgen.controllers.authentication.multi
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants.HtmlSelectors.BY_REFERENCE_WORDS;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants.HtmlSelectors.BY_SSN_INPUT;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants.HtmlSelectors.BY_SUBMIT_BUTTON;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants.HtmlSelectors.BY_THIRD_PARTY_APP_SPINNER;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants.HtmlSelectors.BY_TITLE_OF_SCREEN_WITH_FORM_TO_SEND;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.BankIdWebDriverConstants.EMPTY_BY;
 
@@ -35,7 +35,7 @@ public class BankIdConstants {
     Every value is rounded up to multiple of 30s + there is 30s added just to be sure.
      */
     public static final int MOBILE_BANK_ID_TIMEOUT_IN_SECONDS = 120;
-    public static final int BANK_ID_APP_TIMEOUT_IN_SECONDS = 150;
+    public static final int THIRD_PARTY_APP_TIMEOUT_IN_SECONDS = 150;
 
     public static final int WAIT_FOR_SIGN_THAT_AUTHENTICATION_IS_FINISHED_FOR_SECONDS = 5;
 
@@ -75,7 +75,7 @@ public class BankIdConstants {
          */
         static final ByCssSelector BY_MOBILE_BANK_ID_SPINNER =
                 new ByCssSelector(".icon[src] + .spinner");
-        static final ByCssSelector BY_BANK_ID_APP_SPINNER =
+        static final ByCssSelector BY_THIRD_PARTY_APP_SPINNER =
                 new ByCssSelector(".icon:not([src]) + .spinner");
     }
 
@@ -117,10 +117,10 @@ public class BankIdConstants {
                 inIframeLocator().element(BY_ONE_TIME_CODE_INPUT).mustBeDisplayed().build();
 
         /*
-        BankID app screen
+        third party app screen
         */
-        public static final BankIdElementLocator LOC_BANK_ID_APP_METHOD_SCREEN =
-                inIframeLocator().element(BY_BANK_ID_APP_SPINNER).build();
+        public static final BankIdElementLocator LOC_THIRD_PARTY_APP_METHOD_SCREEN =
+                inIframeLocator().element(BY_THIRD_PARTY_APP_SPINNER).build();
 
         /*
         choose 2FA screen
