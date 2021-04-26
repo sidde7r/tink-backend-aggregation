@@ -48,6 +48,7 @@ public class SparkassenAuthenticator implements MultiFactorAuthenticator, AutoAu
 
     public static final String PSU_AUTHENTICATED = "psuAuthenticated";
     public static final String SCA_METHOD_SELECTED = "scaMethodSelected";
+    public static final String EXEMPTED = "exempted";
 
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final SparkassenApiClient apiClient;

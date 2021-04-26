@@ -96,6 +96,9 @@ public class SparkassenPaymentAuthenticator extends SparkassenAuthenticator
                         initAuthorizationResponse.getChosenScaMethod(),
                         initAuthorizationResponse.getChallengeData());
                 break;
+            case EXEMPTED:
+                // do not thing as SCA is exempted
+                break;
             default:
                 throw new IllegalStateException(
                         SparkassenConstants.ErrorMessages.MISSING_SCA_METHOD_DETAILS);
