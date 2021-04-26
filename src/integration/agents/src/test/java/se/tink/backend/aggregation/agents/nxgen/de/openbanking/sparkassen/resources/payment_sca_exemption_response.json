@@ -1,0 +1,13 @@
+{
+  "scaStatus": "exempted",
+  "authorisationId": "54032e80-35ae-4fb0-b6c7-83958b2a4e6b",
+  "_links": {
+    "scaStatus": {
+      "href": "https://xs2a.f-i-apim.de:8443/fixs2aop-env/xs2a-api/25950130/v1/payments/sepa-credit-transfers/2a4b9317-733b-4bd9-b113-4d45e217ce22/authorisations/54032e80-35ae-4fb0-b6c7-83958b2a4e6b"
+    },
+    "status": {
+      "href": "https://xs2a.f-i-apim.de:8443/fixs2aop-env/xs2a-api/25950130/v1/payments/sepa-credit-transfers/2a4b9317-733b-4bd9-b113-4d45e217ce22/status"
+    }
+  },
+  "psuMessage": "0010- Der Auftrag wurde entgegengenommen."
+}

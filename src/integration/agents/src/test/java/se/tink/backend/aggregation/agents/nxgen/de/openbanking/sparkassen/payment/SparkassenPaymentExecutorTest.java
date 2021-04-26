@@ -12,6 +12,7 @@ import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen
 import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.payment.PaymentTestHelper.PAYMENT_AUTHORIZATION_RESPONSE_WITH_MULTIPLE_SCA_METHOD;
 import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.payment.PaymentTestHelper.PAYMENT_AUTHORIZATION_RESPONSE_WITH_SINGLE_SCA_METHOD;
 import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.payment.PaymentTestHelper.PAYMENT_SCA_AUTHENTICATION_STATUS_RESPONSE;
+import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.payment.PaymentTestHelper.PAYMENT_SCA_EXEMPTION_RESPONSE;
 import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.payment.PaymentTestHelper.PAYMENT_SCA_METHOD_SELECTION_RESPONSE;
 import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.payment.PaymentTestHelper.PAYMENT_STATUS_CANCELED_RESPONSE;
 import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.payment.PaymentTestHelper.PAYMENT_STATUS_REJECTED_RESPONSE;
@@ -130,6 +131,25 @@ public class SparkassenPaymentExecutorTest {
         paymentTestHelper.verifyInitializePaymentAuthorizationCalled();
         paymentTestHelper.verifyFinalizePaymentAuthorizationCalled();
         paymentTestHelper.verifyAskSupplementalInformationCalled(1);
+        paymentTestHelper.verifyCreatePaymentCalled();
+        verifyNoMoreInteractions(apiClient);
+        verifyNoMoreInteractions(supplementalInformationHelper);
+    }
+
+    @Test
+    public void shouldCreatePaymentWithSCAExemption() throws PaymentException {
+        // given
+        paymentTestHelper.whenCreatePaymentAuthorizationReturn(PAYMENT_SCA_EXEMPTION_RESPONSE);
+        paymentTestHelper.whenSupplementalInformationHelperReturn(SELECT_AUTH_METHOD_OK);
+        PaymentRequest paymentRequest = paymentTestHelper.createPaymentRequest();
+        paymentTestHelper.whenCreatePaymentReturn(paymentRequest);
+
+        // when
+        paymentExecutor.create(paymentRequest);
+
+        // then
+        paymentTestHelper.verifyInitializePaymentAuthorizationCalled();
+        paymentTestHelper.verifyAskSupplementalInformationCalled(0);
         paymentTestHelper.verifyCreatePaymentCalled();
         verifyNoMoreInteractions(apiClient);
         verifyNoMoreInteractions(supplementalInformationHelper);

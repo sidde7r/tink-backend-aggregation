@@ -88,6 +88,11 @@ public class PaymentTestHelper {
                             .toFile(),
                     AuthenticationMethodResponse.class);
 
+    public static final AuthenticationMethodResponse PAYMENT_SCA_EXEMPTION_RESPONSE =
+            SerializationUtils.deserializeFromString(
+                    Paths.get(TEST_DATA_PATH, "payment_sca_exemption_response.json").toFile(),
+                    AuthenticationMethodResponse.class);
+
     public static final FinalizeAuthorizationResponse PAYMENT_SCA_AUTHENTICATION_STATUS_RESPONSE =
             SerializationUtils.deserializeFromString(
                     Paths.get(TEST_DATA_PATH, "payment_sca_authentication_status_response.json")
