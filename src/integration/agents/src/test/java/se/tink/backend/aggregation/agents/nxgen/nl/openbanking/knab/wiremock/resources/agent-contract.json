@@ -1,2417 +1,2581 @@
 {
-    "accounts": [
-        {
-            "accountNumber": "***ibans***",
-            "accountExclusion": "NONE",
-            "exactBalance": {
-                "currencyCode": "EUR",
-                "doubleValue": 3950.26,
-                "exactValue": 3950.26,
-                "unscaledValue": 395026,
-                "scale": 2
-            },
-            "currencyCode": "EUR",
-            "availableBalance": {
-                "currencyCode": "EUR",
-                "doubleValue": 3950.26,
-                "exactValue": 3950.26,
-                "unscaledValue": 395026,
-                "scale": 2
-            },
-            "bankId": "ibans",
-            "excluded": false,
-            "favored": false,
-            "name": "Current Account",
-            "ownership": 1.0,
-            "type": "CHECKING",
-            "userModifiedExcluded": false,
-            "userModifiedName": false,
-            "userModifiedType": false,
-            "identifiers": "[]",
-            "closed": false,
-            "holderName": "L'Atelier Tailoring Maastricht",
-            "accountHolder": {
-                "accountId": null,
-                "type": "PERSONAL",
-                "identities": [
-                    {
-                        "name": "L'Atelier Tailoring Maastricht",
-                        "role": "HOLDER"
-                    }
-                ]
-            },
-            "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
-            "balances": [],
-            "availableCredit": 0.0,
-            "balance": 3950.26
-        }
-    ],
-    "transactions": [
-        {
-            "amount": -12.1,
-            "date": 1618999200000,
-            "description": "1849190075888415JDV3 0180111152945695 1x Maanden Premium account",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -7.25,
-            "date": 1618999200000,
-            "description": "MAASTRICHT 21-04-2021 11:30 Pas: 8479",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -7.25,
-            "date": 1618912800000,
-            "description": "MAASTRICHT 20-04-2021 14:15 Pas: 8479",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -2.12,
-            "date": 1618912800000,
-            "description": "MAASTRICHT 20-04-2021 13:05 Pas: 8479",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -14.5,
-            "date": 1618912800000,
-            "description": "MAASTRICHT 20-04-2021 12:59 Pas: 8479",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -10.79,
-            "date": 1618826400000,
-            "description": "MAASTRICHT 18-04-2021 15:44 Pas: 8479",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": 3007.2,
-            "date": 1618221600000,
-            "description": "L'Atelier Tailorin",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -942.0,
-            "date": 1618221600000,
-            "description": "M08488511M9SVOTV 1150006606710992 Order 5456 latelier.store",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": 194.14,
-            "date": 1617962400000,
-            "description": "L'Atelier Tailorin",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -134.0,
-            "date": 1617962400000,
-            "description": "Factuur: 410003063182",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -11.5,
-            "date": 1617876000000,
-            "description": "Maastricht 08-04-2021 18:05 Pas: 8479",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -75.0,
-            "date": 1617876000000,
-            "description": "Maastricht 08-04-2021 16:53 Pas: 8479",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -9.5,
-            "date": 1617876000000,
-            "description": "MAASTRICHT 08-04-2021 14:42 Pas: 8479",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -43.2,
-            "date": 1617876000000,
-            "description": "MAASTRICHT 08-04-2021 14:37 Pas: 8479",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -230.0,
-            "date": 1617876000000,
-            "description": "5866868644 0020004981056234 P80839502021040715294540",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": 1075.44,
-            "date": 1617789600000,
-            "description": "87897 202103 / J.A. Davans / PW-INK verslagnr. 270324",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -1000.0,
-            "date": 1617789600000,
-            "description": "",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -118.0,
-            "date": 1617789600000,
-            "description": "Fact VS087607768 april Energie 6221EA 3,00  BTW:  21? 20,47",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -2420.0,
-            "date": 1617703200000,
-            "description": "Factuur 1888.2021.00177",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": 2416.44,
-            "date": 1617703200000,
-            "description": "L'Atelier Tailorin",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -66.5,
-            "date": 1617703200000,
-            "description": "1326177023158340JEGW 0180109623956076 100013859787",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -7.25,
-            "date": 1617703200000,
-            "description": "MAASTRICHT 06-04-2021 11:10 Pas: 8479",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -87.58,
-            "date": 1617703200000,
-            "description": "Zekerheidspakket Polisnr.: 29464405 06.04.2021 - 06.05.2021",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -34.99,
-            "date": 1617703200000,
-            "description": "1636174661373237JFZS 0180109336947623 trnsnr:333197586",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -24.82,
-            "date": 1617703200000,
-            "description": "MAASTRICHT 02-04-2021 12:05 Pas: 8479",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -25.0,
-            "date": 1617271200000,
-            "description": "Maastricht 01-04-2021 15:45 Pas: 8479",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -6.0,
-            "date": 1617271200000,
-            "description": "Pakketkosten",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -400.0,
-            "date": 1617184800000,
-            "description": "",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -43.74,
-            "date": 1617184800000,
-            "description": "5853339082 0030006505431224 4169910 Viking",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -10.94,
-            "date": 1617184800000,
-            "description": "MAASTRICHT 31-03-2021 10:34 Pas: 8479",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -14.77,
-            "date": 1616756400000,
-            "description": "MAASTRICHT 26-03-2021 17:26 Pas: 8479",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -7.25,
-            "date": 1616756400000,
-            "description": "MAASTRICHT 26-03-2021 11:22 Pas: 8479",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -29.04,
-            "date": 1616670000000,
-            "description": "Mijndomein mijndomein.nl  MD94537791",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -109.38,
-            "date": 1616670000000,
-            "description": "Betaling termijn 31-3-2021 krediet 0108288.11 - L'Atelier Tailoring Maastricht",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -36.46,
-            "date": 1616670000000,
-            "description": "Betaling termijn 31-3-2021 krediet 0108288.22 - L'Atelier Tailoring Maastricht",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -11.4,
-            "date": 1616670000000,
-            "description": "3405607144 Wycker Brugstraat,3,6221EA BTW0,94 Termijnbedrag Per. maart K15287144",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": 450.05,
-            "date": 1616410800000,
-            "description": "L'Atelier Tailorin",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -350.0,
-            "date": 1616151600000,
-            "description": "",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -121.0,
-            "date": 1615719600000,
-            "description": "20214848",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -110.14,
-            "date": 1615460400000,
-            "description": "Factuur: 420002771947",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": 107.85,
-            "date": 1615201200000,
-            "description": "L'Atelier Tailorin",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -87.58,
-            "date": 1615201200000,
-            "description": "Zekerheidspakket Polisnr.: 29464405 06.03.2021 - 06.04.2021",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -118.0,
-            "date": 1615201200000,
-            "description": "Fact VS086837687 maart Energie 6221EA 3,00  BTW:  21? 20,49",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -230.0,
-            "date": 1615201200000,
-            "description": "5806595291 0020004857262698 P80839502021030610491821",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": 1075.44,
-            "date": 1614942000000,
-            "description": "87897 202102 / J.A. Davans / PW-INK verslagnr. 268806",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": 1871.0,
-            "date": 1614855600000,
-            "description": "2021001",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -34.0,
-            "date": 1614855600000,
-            "description": "1746148592727825JG0X 0180106326953930 975614568424",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -1000.0,
-            "date": 1614769200000,
-            "description": "",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": 1255.0,
-            "date": 1614769200000,
-            "description": "TERUGGAAF NR. 169192106O010300 OB.4EKWART20 (DAVANS )",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -350.0,
-            "date": 1614596400000,
-            "description": "",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -6.0,
-            "date": 1614596400000,
-            "description": "Pakketkosten",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -36.46,
-            "date": 1614250800000,
-            "description": "Betaling termijn 28-2-2021 krediet 0108288.22 - L'Atelier Tailoring Maastricht",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -109.38,
-            "date": 1614250800000,
-            "description": "Betaling termijn 28-2-2021 krediet 0108288.11 - L'Atelier Tailoring Maastricht",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -11.4,
-            "date": 1614250800000,
-            "description": "3605272246 Wycker Brugstraat,3,6221EA BTW0,94 Termijnbedrag Per. februari K15287144",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -34.0,
-            "date": 1613559600000,
-            "description": "AMSTERDAM 17-02-2021 13:07 Pas: 8479",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -1000.0,
-            "date": 1613214000000,
-            "description": "",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -87.58,
-            "date": 1612782000000,
-            "description": "Zekerheidspakket Polisnr.: 29464405 06.02.2021 - 06.03.2021",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -118.0,
-            "date": 1612782000000,
-            "description": "Fact VS085992346 februari Energie 6221EA 3,00  BTW:  21? 20,47",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -230.0,
-            "date": 1612782000000,
-            "description": "5753858774 0020004751941122 P80839502021020708055296",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": 1075.44,
-            "date": 1612522800000,
-            "description": "87897 202101 / J.A. Davans / PW-INK verslagnr. 267543",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -134.0,
-            "date": 1612436400000,
-            "description": "R010206962230 0030006076489228 NSFLEXR01-0206962230",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -1059.03,
-            "date": 1612263600000,
-            "description": "",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -3.0,
-            "date": 1612177200000,
-            "description": "Pakketkosten",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -50.0,
-            "date": 1611745200000,
-            "description": "AMSTERDAM 27-01-2021 12:14 Pas: 8479",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -50.0,
-            "date": 1611745200000,
-            "description": "AMSTERDAM 27-01-2021 12:12 Pas: 8479",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -64.41,
-            "date": 1611572400000,
-            "description": "Betaling termijn 31-1-2021 krediet 0108288.22 - L'Atelier Tailoring Maastricht",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -109.38,
-            "date": 1611572400000,
-            "description": "Betaling termijn 31-1-2021 krediet 0108288.11 - L'Atelier Tailoring Maastricht",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -11.4,
-            "date": 1611572400000,
-            "description": "3205178748 Wycker Brugstraat,3,6221EA BTW0,94 Termijnbedrag Per. januari K15287144",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -500.0,
-            "date": 1610967600000,
-            "description": "",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -17.0,
-            "date": 1610708400000,
-            "description": "AMSTERDAM 15-01-2021 12:13 Pas: 8479",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -50.0,
-            "date": 1610362800000,
-            "description": "EDE GLD 10-01-2021 11:50 Pas: 8479",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -230.0,
-            "date": 1610362800000,
-            "description": "5696659936 0020004644318948 P80839502021010911205445 SHURGARD NEDERLAND B.V.",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": 1059.03,
-            "date": 1610017200000,
-            "description": "87897 202012 / J.A. Davans / PW-INK verslagnr. 266438",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -118.0,
-            "date": 1609930800000,
-            "description": "Fact VS085064696 januari Energie 6221EA 3,00  BTW:  21? 20,48",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -87.58,
-            "date": 1609930800000,
-            "description": "Zekerheidspakket Polisnr.: 29464405 06.01.2021 - 06.02.2021",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -3.0,
-            "date": 1609498800000,
-            "description": "Pakketkosten",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -1059.03,
-            "date": 1609671600000,
-            "description": "",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -20.0,
-            "date": 1609758000000,
-            "description": "EDE GLD 03-01-2021 13:58 Pas: 8479",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -50.0,
-            "date": 1609758000000,
-            "description": "EDE GLD 03-01-2021 13:58 Pas: 8479",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -11.4,
-            "date": 1609153200000,
-            "description": "3405456633 Wycker Brugstraat,3,6221EA BTW0,94 Termijnbedrag Per. december K15287144",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -109.38,
-            "date": 1608807600000,
-            "description": "Betaling termijn 31-12-2020 krediet 0108288.11 - L'Atelier Tailoring Maastricht",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -5.59,
-            "date": 1607943600000,
-            "description": "MAASTRICHT 12-12-2020 13:23 Pas: 8479",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -17.56,
-            "date": 1607511600000,
-            "description": "MAASTRICHT 09-12-2020 18:19 Pas: 8479",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -229.9,
-            "date": 1607598000000,
-            "description": "419788472 1151000419788472 Bestelling .100014386 . Gruppoco Gruppo Corso",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -17.5,
-            "date": 1607511600000,
-            "description": "MAASTRICHT 09-12-2020 13:34 Pas: 8479",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -1059.03,
-            "date": 1607425200000,
-            "description": "",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": 4725.0,
-            "date": 1607425200000,
-            "description": "Leningovk 108288-2 d.d. 05-12-2020 minus behandelkosten",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -230.0,
-            "date": 1607425200000,
-            "description": "5629884496 0020004523446948 P80839502020120716165942 SHURGARD NEDERLAND B.V.",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -87.58,
-            "date": 1607338800000,
-            "description": "Zekerheidspakket Polisnr.: 29464405 06.12.2020 - 06.01.2021",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -118.0,
-            "date": 1607338800000,
-            "description": "Fact VS084276607 december Energie 6221EA 3,00  BTW:  21? 20,48",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": 1059.03,
-            "date": 1607338800000,
-            "description": "87897 202011 / J.A. Davans / PW-INK verslagnr. 265216",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -45.89,
-            "date": 1607338800000,
-            "description": "MAASTRICHT 06-12-2020 12:03 Pas: 8479",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -18.19,
-            "date": 1607079600000,
-            "description": "MAASTRICHT 04-12-2020 17:20 Pas: 8479",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -26.95,
-            "date": 1606993200000,
-            "description": "441541109 0020004509652326 Uw bestelling bij 123inkt.nl 123Inkt.nl",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -29.4,
-            "date": 1606993200000,
-            "description": "MAASTRICHT 03-12-2020 13:04 Pas: 8479",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -3.0,
-            "date": 1606820400000,
-            "description": "Pakketkosten",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -1059.03,
-            "date": 1606906800000,
-            "description": "",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -53.34,
-            "date": 1606906800000,
-            "description": "1168279416 0050005055133122 bol.com ref 1168279416 bol.com",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": 1059.03,
-            "date": 1606906800000,
-            "description": "87897 202010 / J.A. Davans / PW-INK verslagnr. 265006",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -86.0,
-            "date": 1606906800000,
-            "description": "Maastricht 02-12-2020 10:35 Pas: 8479",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -2117.5,
-            "date": 1606734000000,
-            "description": "Factuur 01.14.00494",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": 2443.09,
-            "date": 1606734000000,
-            "description": "2020007",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -5.0,
-            "date": 1606474800000,
-            "description": "M08573261M8KYGPZ 1150001352839165 De Waskamer QR Booking .1606476525-",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -200.52,
-            "date": 1606302000000,
-            "description": "Betaling termijn 30-11-2020 krediet 0108288.11 - FSTFRWRD Productions",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -11.4,
-            "date": 1606302000000,
-            "description": "3605191138 Wycker Brugstraat,3,6221EA BTW0,94 Termijnbedrag Per. november K15287144",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -75.0,
-            "date": 1606215600000,
-            "description": "",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -100.0,
-            "date": 1605783600000,
-            "description": "",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -97.99,
-            "date": 1605783600000,
-            "description": "MAASTRICHT 19-11-2020 10:20 Pas: 8479",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -14.26,
-            "date": 1605783600000,
-            "description": "MAASTRICHT 19-11-2020 10:13 Pas: 8479",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -3.3,
-            "date": 1605783600000,
-            "description": "MAASTRICHT 19-11-2020 09:55 Pas: 8479",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -73.41,
-            "date": 1605697200000,
-            "description": "MAASTRICHT 18-11-2020 11:12 Pas: 8479",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": 578.25,
-            "date": 1605697200000,
-            "description": "2020006",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -7.95,
-            "date": 1605697200000,
-            "description": "MAASTRICHT 18-11-2020 10:33 Pas: 8479",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -32.97,
-            "date": 1605610800000,
-            "description": "MAASTRICHT 17-11-2020 13:54 Pas: 8479",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -58.95,
-            "date": 1605610800000,
-            "description": "MAASTRICHT 17-11-2020 11:42 Pas: 8479",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -18.66,
-            "date": 1605524400000,
-            "description": "MAASTRICHT 14-11-2020 14:20 Pas: 8479",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -18.38,
-            "date": 1605524400000,
-            "description": "MAASTRICHT 14-11-2020 11:01 Pas: 8479",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -6.54,
-            "date": 1605524400000,
-            "description": "MAASTRICHT 14-11-2020 10:55 Pas: 8479",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -18.0,
-            "date": 1605178800000,
-            "description": "MAASTRICHT 12-11-2020 12:51 Pas: 8479",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -54.7,
-            "date": 1605178800000,
-            "description": "Maastricht 12-11-2020 10:01 Pas: 8479",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -22.62,
-            "date": 1605092400000,
-            "description": "MAASTRICHT 11-11-2020 14:19 Pas: 8479",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -12.0,
-            "date": 1605092400000,
-            "description": "MAASTRICHT 11-11-2020 13:06 Pas: 8479",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -87.58,
-            "date": 1605092400000,
-            "description": "Zekerheidspakket Polisnr.: 29464405 06.11.2020 - 06.12.2020",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -55.0,
-            "date": 1605006000000,
-            "description": "MAASTRICHT 10-11-2020 20:11 Pas: 8479",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -24.98,
-            "date": 1605006000000,
-            "description": "MAASTRICHT 10-11-2020 14:49 Pas: 8479",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -6.59,
-            "date": 1605006000000,
-            "description": "MAASTRICHT 10-11-2020 14:32 Pas: 8479",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -12.6,
-            "date": 1605006000000,
-            "description": "MAASTRICHT 10-11-2020 12:44 Pas: 8479",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -287.0,
-            "date": 1605006000000,
-            "description": "1141287963 1030000271387034 1141287963 - IKEA B.V.",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -13.95,
-            "date": 1604919600000,
-            "description": "MAASTRICHT 09-11-2020 13:51 Pas: 8479",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -29.95,
-            "date": 1604919600000,
-            "description": "419400961549 0020004419584762 4250702017",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -129.99,
-            "date": 1604919600000,
-            "description": "1836048323968303JFZS 0180031323951166 trnsnr:272293756",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -213.2,
-            "date": 1604919600000,
-            "description": "19079281 0050004987871010 Bestelling 19079281 PF",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -5.98,
-            "date": 1604919600000,
-            "description": "MAASTRICHT 07-11-2020 14:56 Pas: 8479",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -156.67,
-            "date": 1604919600000,
-            "description": "5559441856 0020004416841244 P80839502020110711523175 SHURGARD NEDERLAND B.V.",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -74.94,
-            "date": 1604919600000,
-            "description": "1135573460 0050004986079219 1135573460",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -149.94,
-            "date": 1604660400000,
-            "description": "82421553 0050004983754835 82421553 Media Markt Online Nederland",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -105.55,
-            "date": 1604660400000,
-            "description": "408056248 1151000408056248 Order 06011333 Voordeligschakelmateriaal.nl",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -25.2,
-            "date": 1604574000000,
-            "description": "MAASTRICHT 05-11-2020 13:35 Pas: 8479",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -109.83,
-            "date": 1604574000000,
-            "description": "HEERLEN 05-11-2020 11:59 Pas: 8479",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -21.0,
-            "date": 1604574000000,
-            "description": "MAASTRICHT 05-11-2020 10:17 Pas: 8479",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -475.0,
-            "date": 1604487600000,
-            "description": "5551280625 0020004403842768 1509933 Ambiente Direct GmbH",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": 120.4,
-            "date": 1604401200000,
-            "description": "Retour tegoed factuur.1021021299",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -177.33,
-            "date": 1604401200000,
-            "description": "1156194965 0050004974584602 bol.com ref 1156194965 bol.com",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -121.0,
-            "date": 1604314800000,
-            "description": "Factuur 20204685",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -200.0,
-            "date": 1604314800000,
-            "description": "",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -3.0,
-            "date": 1604228400000,
-            "description": "Pakketkosten",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -39.99,
-            "date": 1604314800000,
-            "description": "MAASTRICHT 31-10-2020 16:31 Pas: 8479",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -60.97,
-            "date": 1604314800000,
-            "description": "MAASTRICHT 31-10-2020 14:37 Pas: 8479",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -76.97,
-            "date": 1604314800000,
-            "description": "MAASTRICHT 31-10-2020 14:16 Pas: 8479",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -841.0,
-            "date": 1604314800000,
-            "description": "Acceptgiro",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -66.0,
-            "date": 1604055600000,
-            "description": "NL61RABO0156070308 0020004389275378 LUUK A.J. WIERSMA:Diesel:",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -72.54,
-            "date": 1603969200000,
-            "description": "BREUKELEN UT 29-10-2020 11:13 Pas: 8479",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -118.58,
-            "date": 1603969200000,
-            "description": "405482764 1151000405482764 Bestelling .100013989 . Gruppoco Gruppo Corso",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -418.9,
-            "date": 1603969200000,
-            "description": "M02166191M8CAKTV 0020004384041172 100054544 bleijenberg-shop.nl",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -500.0,
-            "date": 1603882800000,
-            "description": "",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -10.49,
-            "date": 1603796400000,
-            "description": "MAASTRICHT 27-10-2020 11:33 Pas: 8479",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -82.79,
-            "date": 1603796400000,
-            "description": "MAASTRICHT 27-10-2020 11:28 Pas: 8479",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -11.97,
-            "date": 1603796400000,
-            "description": "MAASTRICHT 27-10-2020 10:34 Pas: 8479",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -2.99,
-            "date": 1603710000000,
-            "description": "MAASTRICHT 26-10-2020 15:07 Pas: 8479",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -17.48,
-            "date": 1603710000000,
-            "description": "Maastricht 26-10-2020 14:21 Pas: 8479",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -195.11,
-            "date": 1603710000000,
-            "description": "MAASTRICHT 26-10-2020 14:05 Pas: 8479",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -211.62,
-            "date": 1603710000000,
-            "description": "6219036249672956 0030005659704708 fonQ bestelling 44562564",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -500.0,
-            "date": 1603623600000,
-            "description": "",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -399.91,
-            "date": 1603710000000,
-            "description": "1316035408611048 0030005656718012 100716399",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -350.0,
-            "date": 1603710000000,
-            "description": "MAASTRICHT 24-10-2020 12:20 Pas: 8479",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -95.01,
-            "date": 1603710000000,
-            "description": "MAASTRICHT 24-10-2020 11:24 Pas: 8479",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -139.71,
-            "date": 1603710000000,
-            "description": "MAASTRICHT 24-10-2020 11:23 Pas: 8479",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -79.99,
-            "date": 1603710000000,
-            "description": "MAASTRICHT 24-10-2020 11:03 Pas: 8479",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -80.26,
-            "date": 1603710000000,
-            "description": "Maastricht 24-10-2020 10:19 Pas: 8479",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        }
-    ]
+    "accounts" : [ {
+        "accountNumber" : "***ibans***",
+        "accountExclusion" : "NONE",
+        "exactBalance" : {
+            "currencyCode" : "EUR",
+            "scale" : 2,
+            "unscaledValue" : 395026,
+            "exactValue" : 3950.26,
+            "doubleValue" : 3950.26
+        },
+        "currencyCode" : "EUR",
+        "availableBalance" : {
+            "currencyCode" : "EUR",
+            "scale" : 2,
+            "unscaledValue" : 395026,
+            "exactValue" : 3950.26,
+            "doubleValue" : 3950.26
+        },
+        "bankId" : "ibans",
+        "excluded" : false,
+        "favored" : false,
+        "name" : "Current Account",
+        "ownership" : 1.0,
+        "type" : "CHECKING",
+        "userModifiedExcluded" : false,
+        "userModifiedName" : false,
+        "userModifiedType" : false,
+        "identifiers" : "[]",
+        "closed" : false,
+        "holderName" : "L'Atelier Tailoring Maastricht",
+        "accountHolder" : {
+            "accountId" : null,
+            "type" : "PERSONAL",
+            "identities" : [ {
+                "name" : "L'Atelier Tailoring Maastricht",
+                "role" : "HOLDER"
+            } ]
+        },
+        "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
+        "balances" : [ ],
+        "availableCredit" : 0.0,
+        "balance" : 3950.26
+    } ],
+    "transactions" : [ {
+        "amount" : -12.1,
+        "date" : 1618999200000,
+        "description" : "1849190075888415JDV3 0180111152945695 1x Maanden Premium account",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "NL04ADYB2017400157"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -7.25,
+        "date" : 1618999200000,
+        "description" : "MAASTRICHT 21-04-2021 11:30 Pas: 8479",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : ""
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -7.25,
+        "date" : 1618912800000,
+        "description" : "MAASTRICHT 20-04-2021 14:15 Pas: 8479",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : ""
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -2.12,
+        "date" : 1618912800000,
+        "description" : "MAASTRICHT 20-04-2021 13:05 Pas: 8479",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : ""
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -14.5,
+        "date" : 1618912800000,
+        "description" : "MAASTRICHT 20-04-2021 12:59 Pas: 8479",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : ""
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -10.79,
+        "date" : 1618826400000,
+        "description" : "MAASTRICHT 18-04-2021 15:44 Pas: 8479",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : ""
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : 3007.2,
+        "date" : 1618221600000,
+        "description" : "L'Atelier Tailorin",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "DE26512202000071418016"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -942.0,
+        "date" : 1618221600000,
+        "description" : "M08488511M9SVOTV 1150006606710992 Order 5456 latelier.store",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "NL51DEUT0265262461"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : 194.14,
+        "date" : 1617962400000,
+        "description" : "L'Atelier Tailorin",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "DE26512202000071418016"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -134.0,
+        "date" : 1617962400000,
+        "description" : "Factuur: 410003063182",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "NL14ABNA0576850675"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -11.5,
+        "date" : 1617876000000,
+        "description" : "Maastricht 08-04-2021 18:05 Pas: 8479",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : ""
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -75.0,
+        "date" : 1617876000000,
+        "description" : "Maastricht 08-04-2021 16:53 Pas: 8479",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : ""
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -9.5,
+        "date" : 1617876000000,
+        "description" : "MAASTRICHT 08-04-2021 14:42 Pas: 8479",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : ""
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -43.2,
+        "date" : 1617876000000,
+        "description" : "MAASTRICHT 08-04-2021 14:37 Pas: 8479",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : ""
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -230.0,
+        "date" : 1617876000000,
+        "description" : "5866868644 0020004981056234 P80839502021040715294540",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "NL39RABO0301242844"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : 1075.44,
+        "date" : 1617789600000,
+        "description" : "87897 202103 / J.A. Davans / PW-INK verslagnr. 270324",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "NL96BNGH0285174649"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -1000.0,
+        "date" : 1617789600000,
+        "description" : "",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "NL87ABNA0831702699"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -118.0,
+        "date" : 1617789600000,
+        "description" : "Fact VS087607768 april Energie 6221EA 3,00  BTW:  21? 20,47",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "NL18INGB0005309282"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -2420.0,
+        "date" : 1617703200000,
+        "description" : "Factuur 1888.2021.00177",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "NL05INGB0661613941"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : 2416.44,
+        "date" : 1617703200000,
+        "description" : "L'Atelier Tailorin",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "DE26512202000071418016"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -66.5,
+        "date" : 1617703200000,
+        "description" : "1326177023158340JEGW 0180109623956076 100013859787",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "NL04ADYB2017400157"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -7.25,
+        "date" : 1617703200000,
+        "description" : "MAASTRICHT 06-04-2021 11:10 Pas: 8479",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : ""
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -87.58,
+        "date" : 1617703200000,
+        "description" : "Zekerheidspakket Polisnr.: 29464405 06.04.2021 - 06.05.2021",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "NL67INGB0000020057"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -34.99,
+        "date" : 1617703200000,
+        "description" : "1636174661373237JFZS 0180109336947623 trnsnr:333197586",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "NL04ADYB2017400157"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -24.82,
+        "date" : 1617703200000,
+        "description" : "MAASTRICHT 02-04-2021 12:05 Pas: 8479",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : ""
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -25.0,
+        "date" : 1617271200000,
+        "description" : "Maastricht 01-04-2021 15:45 Pas: 8479",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : ""
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -6.0,
+        "date" : 1617271200000,
+        "description" : "Pakketkosten",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "80000208"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -400.0,
+        "date" : 1617184800000,
+        "description" : "",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "NL87ABNA0831702699"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -43.74,
+        "date" : 1617184800000,
+        "description" : "5853339082 0030006505431224 4169910 Viking",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "NL87ABNA0861411277"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -10.94,
+        "date" : 1617184800000,
+        "description" : "MAASTRICHT 31-03-2021 10:34 Pas: 8479",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : ""
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -14.77,
+        "date" : 1616756400000,
+        "description" : "MAASTRICHT 26-03-2021 17:26 Pas: 8479",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : ""
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -7.25,
+        "date" : 1616756400000,
+        "description" : "MAASTRICHT 26-03-2021 11:22 Pas: 8479",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : ""
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -29.04,
+        "date" : 1616670000000,
+        "description" : "Mijndomein mijndomein.nl  MD94537791",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "NL37ABNA0423430890"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -109.38,
+        "date" : 1616670000000,
+        "description" : "Betaling termijn 31-3-2021 krediet 0108288.11 - L'Atelier Tailoring Maastricht",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "NL64RABO0306367874"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -36.46,
+        "date" : 1616670000000,
+        "description" : "Betaling termijn 31-3-2021 krediet 0108288.22 - L'Atelier Tailoring Maastricht",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "NL64RABO0306367874"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -11.4,
+        "date" : 1616670000000,
+        "description" : "3405607144 Wycker Brugstraat,3,6221EA BTW0,94 Termijnbedrag Per. maart K15287144",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "NL12INGB0002307046"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : 450.05,
+        "date" : 1616410800000,
+        "description" : "L'Atelier Tailorin",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "DE26512202000071418016"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -350.0,
+        "date" : 1616151600000,
+        "description" : "",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "NL87ABNA0831702699"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -121.0,
+        "date" : 1615719600000,
+        "description" : "20214848",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "NL38RABO0160052572"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -110.14,
+        "date" : 1615460400000,
+        "description" : "Factuur: 420002771947",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "NL14ABNA0576850675"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : 107.85,
+        "date" : 1615201200000,
+        "description" : "L'Atelier Tailorin",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "DE26512202000071418016"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -87.58,
+        "date" : 1615201200000,
+        "description" : "Zekerheidspakket Polisnr.: 29464405 06.03.2021 - 06.04.2021",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "NL67INGB0000020057"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -118.0,
+        "date" : 1615201200000,
+        "description" : "Fact VS086837687 maart Energie 6221EA 3,00  BTW:  21? 20,49",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "NL18INGB0005309282"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -230.0,
+        "date" : 1615201200000,
+        "description" : "5806595291 0020004857262698 P80839502021030610491821",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "NL39RABO0301242844"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : 1075.44,
+        "date" : 1614942000000,
+        "description" : "87897 202102 / J.A. Davans / PW-INK verslagnr. 268806",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "NL96BNGH0285174649"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : 1871.0,
+        "date" : 1614855600000,
+        "description" : "2021001",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "NL62ABNA0880918233"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -34.0,
+        "date" : 1614855600000,
+        "description" : "1746148592727825JG0X 0180106326953930 975614568424",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "NL04ADYB2017400157"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -1000.0,
+        "date" : 1614769200000,
+        "description" : "",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "NL87ABNA0831702699"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : 1255.0,
+        "date" : 1614769200000,
+        "description" : "TERUGGAAF NR. 169192106O010300 OB.4EKWART20 (DAVANS )",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "NL36INGB0003445588"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -350.0,
+        "date" : 1614596400000,
+        "description" : "",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "NL87ABNA0831702699"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -6.0,
+        "date" : 1614596400000,
+        "description" : "Pakketkosten",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "80000208"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -36.46,
+        "date" : 1614250800000,
+        "description" : "Betaling termijn 28-2-2021 krediet 0108288.22 - L'Atelier Tailoring Maastricht",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "NL64RABO0306367874"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -109.38,
+        "date" : 1614250800000,
+        "description" : "Betaling termijn 28-2-2021 krediet 0108288.11 - L'Atelier Tailoring Maastricht",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "NL64RABO0306367874"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -11.4,
+        "date" : 1614250800000,
+        "description" : "3605272246 Wycker Brugstraat,3,6221EA BTW0,94 Termijnbedrag Per. februari K15287144",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "NL12INGB0002307046"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -34.0,
+        "date" : 1613559600000,
+        "description" : "AMSTERDAM 17-02-2021 13:07 Pas: 8479",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : ""
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -1000.0,
+        "date" : 1613214000000,
+        "description" : "",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "NL87ABNA0831702699"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -87.58,
+        "date" : 1612782000000,
+        "description" : "Zekerheidspakket Polisnr.: 29464405 06.02.2021 - 06.03.2021",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "NL67INGB0000020057"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -118.0,
+        "date" : 1612782000000,
+        "description" : "Fact VS085992346 februari Energie 6221EA 3,00  BTW:  21? 20,47",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "NL18INGB0005309282"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -230.0,
+        "date" : 1612782000000,
+        "description" : "5753858774 0020004751941122 P80839502021020708055296",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "NL39RABO0301242844"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : 1075.44,
+        "date" : 1612522800000,
+        "description" : "87897 202101 / J.A. Davans / PW-INK verslagnr. 267543",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "NL96BNGH0285174649"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -134.0,
+        "date" : 1612436400000,
+        "description" : "R010206962230 0030006076489228 NSFLEXR01-0206962230",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "NL14ABNA0576850675"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -1059.03,
+        "date" : 1612263600000,
+        "description" : "",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "NL87ABNA0831702699"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -3.0,
+        "date" : 1612177200000,
+        "description" : "Pakketkosten",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "80000208"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -50.0,
+        "date" : 1611745200000,
+        "description" : "AMSTERDAM 27-01-2021 12:14 Pas: 8479",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : ""
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -50.0,
+        "date" : 1611745200000,
+        "description" : "AMSTERDAM 27-01-2021 12:12 Pas: 8479",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : ""
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -64.41,
+        "date" : 1611572400000,
+        "description" : "Betaling termijn 31-1-2021 krediet 0108288.22 - L'Atelier Tailoring Maastricht",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "NL64RABO0306367874"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -109.38,
+        "date" : 1611572400000,
+        "description" : "Betaling termijn 31-1-2021 krediet 0108288.11 - L'Atelier Tailoring Maastricht",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "NL64RABO0306367874"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -11.4,
+        "date" : 1611572400000,
+        "description" : "3205178748 Wycker Brugstraat,3,6221EA BTW0,94 Termijnbedrag Per. januari K15287144",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "NL12INGB0002307046"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -500.0,
+        "date" : 1610967600000,
+        "description" : "",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "NL87ABNA0831702699"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -17.0,
+        "date" : 1610708400000,
+        "description" : "AMSTERDAM 15-01-2021 12:13 Pas: 8479",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : ""
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -50.0,
+        "date" : 1610362800000,
+        "description" : "EDE GLD 10-01-2021 11:50 Pas: 8479",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : ""
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -230.0,
+        "date" : 1610362800000,
+        "description" : "5696659936 0020004644318948 P80839502021010911205445 SHURGARD NEDERLAND B.V.",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "NL39RABO0301242844"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : 1059.03,
+        "date" : 1610017200000,
+        "description" : "87897 202012 / J.A. Davans / PW-INK verslagnr. 266438",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "NL96BNGH0285174649"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -118.0,
+        "date" : 1609930800000,
+        "description" : "Fact VS085064696 januari Energie 6221EA 3,00  BTW:  21? 20,48",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "NL18INGB0005309282"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -87.58,
+        "date" : 1609930800000,
+        "description" : "Zekerheidspakket Polisnr.: 29464405 06.01.2021 - 06.02.2021",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "NL67INGB0000020057"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -3.0,
+        "date" : 1609498800000,
+        "description" : "Pakketkosten",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "80000208"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -1059.03,
+        "date" : 1609671600000,
+        "description" : "",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "NL87ABNA0831702699"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -20.0,
+        "date" : 1609758000000,
+        "description" : "EDE GLD 03-01-2021 13:58 Pas: 8479",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : ""
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -50.0,
+        "date" : 1609758000000,
+        "description" : "EDE GLD 03-01-2021 13:58 Pas: 8479",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : ""
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -11.4,
+        "date" : 1609153200000,
+        "description" : "3405456633 Wycker Brugstraat,3,6221EA BTW0,94 Termijnbedrag Per. december K15287144",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "NL12INGB0002307046"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -109.38,
+        "date" : 1608807600000,
+        "description" : "Betaling termijn 31-12-2020 krediet 0108288.11 - L'Atelier Tailoring Maastricht",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "NL64RABO0306367874"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -5.59,
+        "date" : 1607943600000,
+        "description" : "MAASTRICHT 12-12-2020 13:23 Pas: 8479",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : ""
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -17.56,
+        "date" : 1607511600000,
+        "description" : "MAASTRICHT 09-12-2020 18:19 Pas: 8479",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : ""
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -229.9,
+        "date" : 1607598000000,
+        "description" : "419788472 1151000419788472 Bestelling .100014386 . Gruppoco Gruppo Corso",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "NL17DEUT0265262879"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -17.5,
+        "date" : 1607511600000,
+        "description" : "MAASTRICHT 09-12-2020 13:34 Pas: 8479",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : ""
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -1059.03,
+        "date" : 1607425200000,
+        "description" : "",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "NL87ABNA0831702699"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : 4725.0,
+        "date" : 1607425200000,
+        "description" : "Leningovk 108288-2 d.d. 05-12-2020 minus behandelkosten",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "NL64RABO0306367874"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -230.0,
+        "date" : 1607425200000,
+        "description" : "5629884496 0020004523446948 P80839502020120716165942 SHURGARD NEDERLAND B.V.",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "NL39RABO0301242844"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -87.58,
+        "date" : 1607338800000,
+        "description" : "Zekerheidspakket Polisnr.: 29464405 06.12.2020 - 06.01.2021",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "NL67INGB0000020057"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -118.0,
+        "date" : 1607338800000,
+        "description" : "Fact VS084276607 december Energie 6221EA 3,00  BTW:  21? 20,48",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "NL18INGB0005309282"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : 1059.03,
+        "date" : 1607338800000,
+        "description" : "87897 202011 / J.A. Davans / PW-INK verslagnr. 265216",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "NL96BNGH0285174649"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -45.89,
+        "date" : 1607338800000,
+        "description" : "MAASTRICHT 06-12-2020 12:03 Pas: 8479",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : ""
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -18.19,
+        "date" : 1607079600000,
+        "description" : "MAASTRICHT 04-12-2020 17:20 Pas: 8479",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : ""
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -26.95,
+        "date" : 1606993200000,
+        "description" : "441541109 0020004509652326 Uw bestelling bij 123inkt.nl 123Inkt.nl",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "NL27RABO0304513318"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -29.4,
+        "date" : 1606993200000,
+        "description" : "MAASTRICHT 03-12-2020 13:04 Pas: 8479",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : ""
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -3.0,
+        "date" : 1606820400000,
+        "description" : "Pakketkosten",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "80000208"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -1059.03,
+        "date" : 1606906800000,
+        "description" : "",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "NL87ABNA0831702699"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -53.34,
+        "date" : 1606906800000,
+        "description" : "1168279416 0050005055133122 bol.com ref 1168279416 bol.com",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "NL27INGB0000026500"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : 1059.03,
+        "date" : 1606906800000,
+        "description" : "87897 202010 / J.A. Davans / PW-INK verslagnr. 265006",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "NL96BNGH0285174649"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -86.0,
+        "date" : 1606906800000,
+        "description" : "Maastricht 02-12-2020 10:35 Pas: 8479",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : ""
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -2117.5,
+        "date" : 1606734000000,
+        "description" : "Factuur 01.14.00494",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "NL05INGB0661613941"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : 2443.09,
+        "date" : 1606734000000,
+        "description" : "2020007",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "NL62ABNA0880918233"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -5.0,
+        "date" : 1606474800000,
+        "description" : "M08573261M8KYGPZ 1150001352839165 De Waskamer QR Booking .1606476525-",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "NL51DEUT0265262461"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -200.52,
+        "date" : 1606302000000,
+        "description" : "Betaling termijn 30-11-2020 krediet 0108288.11 - FSTFRWRD Productions",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "NL64RABO0306367874"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -11.4,
+        "date" : 1606302000000,
+        "description" : "3605191138 Wycker Brugstraat,3,6221EA BTW0,94 Termijnbedrag Per. november K15287144",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "NL12INGB0002307046"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -75.0,
+        "date" : 1606215600000,
+        "description" : "",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "NL87ABNA0831702699"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -100.0,
+        "date" : 1605783600000,
+        "description" : "",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "NL87ABNA0831702699"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -97.99,
+        "date" : 1605783600000,
+        "description" : "MAASTRICHT 19-11-2020 10:20 Pas: 8479",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : ""
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -14.26,
+        "date" : 1605783600000,
+        "description" : "MAASTRICHT 19-11-2020 10:13 Pas: 8479",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : ""
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -3.3,
+        "date" : 1605783600000,
+        "description" : "MAASTRICHT 19-11-2020 09:55 Pas: 8479",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : ""
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -73.41,
+        "date" : 1605697200000,
+        "description" : "MAASTRICHT 18-11-2020 11:12 Pas: 8479",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : ""
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : 578.25,
+        "date" : 1605697200000,
+        "description" : "2020006",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "NL62ABNA0880918233"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -7.95,
+        "date" : 1605697200000,
+        "description" : "MAASTRICHT 18-11-2020 10:33 Pas: 8479",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : ""
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -32.97,
+        "date" : 1605610800000,
+        "description" : "MAASTRICHT 17-11-2020 13:54 Pas: 8479",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : ""
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -58.95,
+        "date" : 1605610800000,
+        "description" : "MAASTRICHT 17-11-2020 11:42 Pas: 8479",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : ""
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -18.66,
+        "date" : 1605524400000,
+        "description" : "MAASTRICHT 14-11-2020 14:20 Pas: 8479",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : ""
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -18.38,
+        "date" : 1605524400000,
+        "description" : "MAASTRICHT 14-11-2020 11:01 Pas: 8479",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : ""
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -6.54,
+        "date" : 1605524400000,
+        "description" : "MAASTRICHT 14-11-2020 10:55 Pas: 8479",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : ""
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -18.0,
+        "date" : 1605178800000,
+        "description" : "MAASTRICHT 12-11-2020 12:51 Pas: 8479",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : ""
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -54.7,
+        "date" : 1605178800000,
+        "description" : "Maastricht 12-11-2020 10:01 Pas: 8479",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : ""
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -22.62,
+        "date" : 1605092400000,
+        "description" : "MAASTRICHT 11-11-2020 14:19 Pas: 8479",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : ""
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -12.0,
+        "date" : 1605092400000,
+        "description" : "MAASTRICHT 11-11-2020 13:06 Pas: 8479",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : ""
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -87.58,
+        "date" : 1605092400000,
+        "description" : "Zekerheidspakket Polisnr.: 29464405 06.11.2020 - 06.12.2020",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "NL67INGB0000020057"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -55.0,
+        "date" : 1605006000000,
+        "description" : "MAASTRICHT 10-11-2020 20:11 Pas: 8479",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : ""
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -24.98,
+        "date" : 1605006000000,
+        "description" : "MAASTRICHT 10-11-2020 14:49 Pas: 8479",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : ""
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -6.59,
+        "date" : 1605006000000,
+        "description" : "MAASTRICHT 10-11-2020 14:32 Pas: 8479",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : ""
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -12.6,
+        "date" : 1605006000000,
+        "description" : "MAASTRICHT 10-11-2020 12:44 Pas: 8479",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : ""
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -287.0,
+        "date" : 1605006000000,
+        "description" : "1141287963 1030000271387034 1141287963 - IKEA B.V.",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "NL56DEUT0265186420"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -13.95,
+        "date" : 1604919600000,
+        "description" : "MAASTRICHT 09-11-2020 13:51 Pas: 8479",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : ""
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -29.95,
+        "date" : 1604919600000,
+        "description" : "419400961549 0020004419584762 4250702017",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "NL14RABO0155503219"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -129.99,
+        "date" : 1604919600000,
+        "description" : "1836048323968303JFZS 0180031323951166 trnsnr:272293756",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "NL04ADYB2017400157"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -213.2,
+        "date" : 1604919600000,
+        "description" : "19079281 0050004987871010 Bestelling 19079281 PF",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "NL40INGB0654880735"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -5.98,
+        "date" : 1604919600000,
+        "description" : "MAASTRICHT 07-11-2020 14:56 Pas: 8479",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : ""
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -156.67,
+        "date" : 1604919600000,
+        "description" : "5559441856 0020004416841244 P80839502020110711523175 SHURGARD NEDERLAND B.V.",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "NL39RABO0301242844"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -74.94,
+        "date" : 1604919600000,
+        "description" : "1135573460 0050004986079219 1135573460",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "NL21INGB0674773837"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -149.94,
+        "date" : 1604660400000,
+        "description" : "82421553 0050004983754835 82421553 Media Markt Online Nederland",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "NL84INGB0656768436"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -105.55,
+        "date" : 1604660400000,
+        "description" : "408056248 1151000408056248 Order 06011333 Voordeligschakelmateriaal.nl",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "NL17DEUT0265262879"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -25.2,
+        "date" : 1604574000000,
+        "description" : "MAASTRICHT 05-11-2020 13:35 Pas: 8479",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : ""
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -109.83,
+        "date" : 1604574000000,
+        "description" : "HEERLEN 05-11-2020 11:59 Pas: 8479",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : ""
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -21.0,
+        "date" : 1604574000000,
+        "description" : "MAASTRICHT 05-11-2020 10:17 Pas: 8479",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : ""
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -475.0,
+        "date" : 1604487600000,
+        "description" : "5551280625 0020004403842768 1509933 Ambiente Direct GmbH",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "NL39RABO0301242844"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : 120.4,
+        "date" : 1604401200000,
+        "description" : "Retour tegoed factuur.1021021299",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "NL40RABO0102781796"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -177.33,
+        "date" : 1604401200000,
+        "description" : "1156194965 0050004974584602 bol.com ref 1156194965 bol.com",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "NL27INGB0000026500"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -121.0,
+        "date" : 1604314800000,
+        "description" : "Factuur 20204685",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "NL38RABO0160052572"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -200.0,
+        "date" : 1604314800000,
+        "description" : "",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "NL87ABNA0831702699"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -3.0,
+        "date" : 1604228400000,
+        "description" : "Pakketkosten",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "80000208"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -39.99,
+        "date" : 1604314800000,
+        "description" : "MAASTRICHT 31-10-2020 16:31 Pas: 8479",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : ""
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -60.97,
+        "date" : 1604314800000,
+        "description" : "MAASTRICHT 31-10-2020 14:37 Pas: 8479",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : ""
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -76.97,
+        "date" : 1604314800000,
+        "description" : "MAASTRICHT 31-10-2020 14:16 Pas: 8479",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : ""
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -841.0,
+        "date" : 1604314800000,
+        "description" : "Acceptgiro",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "NL86INGB0002445588"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -66.0,
+        "date" : 1604055600000,
+        "description" : "NL61RABO0156070308 0020004389275378 LUUK A.J. WIERSMA:Diesel:",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "NL42RABO0114668043"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -72.54,
+        "date" : 1603969200000,
+        "description" : "BREUKELEN UT 29-10-2020 11:13 Pas: 8479",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : ""
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -118.58,
+        "date" : 1603969200000,
+        "description" : "405482764 1151000405482764 Bestelling .100013989 . Gruppoco Gruppo Corso",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "NL17DEUT0265262879"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -418.9,
+        "date" : 1603969200000,
+        "description" : "M02166191M8CAKTV 0020004384041172 100054544 bleijenberg-shop.nl",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "NL70RABO0115600000"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -500.0,
+        "date" : 1603882800000,
+        "description" : "",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "NL87ABNA0831702699"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -10.49,
+        "date" : 1603796400000,
+        "description" : "MAASTRICHT 27-10-2020 11:33 Pas: 8479",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : ""
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -82.79,
+        "date" : 1603796400000,
+        "description" : "MAASTRICHT 27-10-2020 11:28 Pas: 8479",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : ""
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -11.97,
+        "date" : 1603796400000,
+        "description" : "MAASTRICHT 27-10-2020 10:34 Pas: 8479",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : ""
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -2.99,
+        "date" : 1603710000000,
+        "description" : "MAASTRICHT 26-10-2020 15:07 Pas: 8479",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : ""
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -17.48,
+        "date" : 1603710000000,
+        "description" : "Maastricht 26-10-2020 14:21 Pas: 8479",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : ""
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -195.11,
+        "date" : 1603710000000,
+        "description" : "MAASTRICHT 26-10-2020 14:05 Pas: 8479",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : ""
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -211.62,
+        "date" : 1603710000000,
+        "description" : "6219036249672956 0030005659704708 fonQ bestelling 44562564",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "NL11ABNA0253754690"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -500.0,
+        "date" : 1603623600000,
+        "description" : "",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "NL87ABNA0831702699"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -399.91,
+        "date" : 1603710000000,
+        "description" : "1316035408611048 0030005656718012 100716399",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : "NL51ABNA0565668625"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -350.0,
+        "date" : 1603710000000,
+        "description" : "MAASTRICHT 24-10-2020 12:20 Pas: 8479",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : ""
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -95.01,
+        "date" : 1603710000000,
+        "description" : "MAASTRICHT 24-10-2020 11:24 Pas: 8479",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : ""
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -139.71,
+        "date" : 1603710000000,
+        "description" : "MAASTRICHT 24-10-2020 11:23 Pas: 8479",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : ""
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -79.99,
+        "date" : 1603710000000,
+        "description" : "MAASTRICHT 24-10-2020 11:03 Pas: 8479",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : ""
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -80.26,
+        "date" : 1603710000000,
+        "description" : "Maastricht 24-10-2020 10:19 Pas: 8479",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "TRANSFER_ACCOUNT_EXTERNAL" : ""
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    } ]
 }
