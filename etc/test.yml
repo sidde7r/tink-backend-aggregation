@@ -5119,7 +5119,8 @@ agentsServiceConfiguration:
         clientSecret: ''
         psd2ApiKey: ''
         psd2ClientAuthToken: ''
-        psd2InstallationKeyPair: ''
+        psd2InstallationPublicKey: ''
+        psd2InstallationPrivateKey: ''
         redirectUrl: https://127.0.0.1:7357/api/v1/credentials/third-party/callback
       tink:
         clientId: ''
