@@ -21,7 +21,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.module.UkOpenBankingLocalKeySignerModuleForDecoupledMode;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.UkOpenBankingAisConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.UkOpenBankingV31Ais;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.configuration.UkOpenBankingPisConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.aib.pis.config.AibPisConfig;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 
 @AgentDependencyModulesForProductionMode(modules = UkOpenBankingFlowModule.class)
@@ -50,8 +50,7 @@ public final class AibV31Agent extends UkOpenBankingBaseAgent {
                 componentProvider,
                 flowFacade,
                 aisConfig,
-                new UkOpenBankingPisConfiguration(
-                        AibConstants.PIS_API_URL, AibConstants.WELL_KNOWN_PERSONAL_URL),
+                new AibPisConfig(AibConstants.PIS_API_URL, AibConstants.WELL_KNOWN_PERSONAL_URL),
                 createPisRequestFilterUsingPs256WithoutBase64Signature(
                         flowFacade.getJwtSinger(), componentProvider.getRandomValueGenerator()));
     }

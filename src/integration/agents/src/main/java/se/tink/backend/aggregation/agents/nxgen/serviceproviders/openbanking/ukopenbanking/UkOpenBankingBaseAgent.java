@@ -436,7 +436,7 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
             case DOMESTIC:
             case SEPA:
                 return new DomesticPaymentApiClient(
-                        requestBuilder, getDomesticPaymentConverter(), pisConfig.getBaseUrl());
+                        requestBuilder, getDomesticPaymentConverter(), pisConfig);
             case DOMESTIC_FUTURE:
                 return new DomesticScheduledPaymentApiClient(
                         requestBuilder,

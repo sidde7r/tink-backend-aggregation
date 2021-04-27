@@ -19,4 +19,9 @@ public class UkOpenBankingPisConfiguration implements UkOpenBankingPisConfig {
     public boolean useMaxAge() {
         return true;
     }
+
+    @Override
+    public boolean compatibleWithFundsConfirming() {
+        return true;
+    }
 }

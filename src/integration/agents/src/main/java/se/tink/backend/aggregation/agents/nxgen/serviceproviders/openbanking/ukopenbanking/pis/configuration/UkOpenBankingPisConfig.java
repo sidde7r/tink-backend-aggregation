@@ -9,4 +9,6 @@ public interface UkOpenBankingPisConfig {
     String getBaseUrl();
 
     boolean useMaxAge();
+
+    boolean compatibleWithFundsConfirming();
 }
