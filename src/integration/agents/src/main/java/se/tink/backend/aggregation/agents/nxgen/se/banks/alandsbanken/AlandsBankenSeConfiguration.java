@@ -25,6 +25,7 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdMo
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
+import se.tink.backend.aggregation.source_info.AccountSourceInfo;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
@@ -64,6 +65,15 @@ public class AlandsBankenSeConfiguration extends CrossKeyConfiguration {
                                 .build())
                 .addHolderName(account.getAccountOwnerName())
                 .setApiIdentifier(account.getAccountId())
+                .sourceInfo(createAccountSourceInfo(account))
+                .build();
+    }
+
+    private AccountSourceInfo createAccountSourceInfo(CrossKeyAccount account) {
+        return AccountSourceInfo.builder()
+                .bankProductCode(String.valueOf(account.getAccountType())) // ex. 543
+                .bankProductName(account.getAccountTypeName())
+                .bankAccountType(account.getAccountGroup()) // ex. loan
                 .build();
     }
 
@@ -82,6 +92,7 @@ public class AlandsBankenSeConfiguration extends CrossKeyConfiguration {
                 .setBankIdentifier(account.getAccountId())
                 .setHolderName(accountHolderName)
                 .setPortfolios(Collections.singletonList(portfolio))
+                .sourceInfo(createAccountSourceInfo(account))
                 .build();
     }
 
@@ -141,6 +152,7 @@ public class AlandsBankenSeConfiguration extends CrossKeyConfiguration {
                 .setInterestRate(account.getInterestRate())
                 .setBankIdentifier(account.getAccountId())
                 .setDetails(details)
+                .sourceInfo(createAccountSourceInfo(account))
                 .build();
     }
 
