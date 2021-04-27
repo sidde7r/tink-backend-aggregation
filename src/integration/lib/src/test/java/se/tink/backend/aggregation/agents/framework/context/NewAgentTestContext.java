@@ -62,8 +62,8 @@ public final class NewAgentTestContext extends AgentContext {
     private static final Logger log = LoggerFactory.getLogger(NewAgentTestContext.class);
     private final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-    public static final String TEST_CLUSTERID = "oxford-staging";
-    public static final String TEST_APPID = "5f98e87106384b2981c0354a33b51590";
+    public static final String TEST_CLUSTERID = "oxford-preprod";
+    public static final String TEST_APPID = "c859501868b742b6bebd7a3f7911cd85";
 
     private final AccountDataCache accountDataCache;
     private final List<Transfer> transfers = new ArrayList<>();
