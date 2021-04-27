@@ -62,6 +62,7 @@ public class LoanDetailsResponse {
                                 .setProductName(productCode)
                                 .build())
                 .setApiIdentifier(PathValues.ACCOUNT_ID_PREFIX + loanId)
+                .addHolderName(getOwner())
                 .putInTemporaryStorage(NordeaDkConstants.StorageKeys.PRODUCT_CODE, productCode)
                 .build();
     }
@@ -114,5 +115,9 @@ public class LoanDetailsResponse {
 
     private String getLoanSecurity() {
         return Optional.ofNullable(financedObject).map(FinancedObjectEntity::getName).orElse(null);
+    }
+
+    public String getOwner() {
+        return owners.stream().findFirst().map(OwnersEntity::getName).orElse(null);
     }
 }

@@ -41,6 +41,7 @@ public class LoanFetcher implements AccountFetcher<LoanAccount> {
                                 .addIdentifier(new NorwegianIdentifier(loanDetails.getLoanId()))
                                 .setProductName(loanDetails.getProductCode())
                                 .build())
+                .addHolderName(loanDetails.getOwner())
                 .build();
     }
 
