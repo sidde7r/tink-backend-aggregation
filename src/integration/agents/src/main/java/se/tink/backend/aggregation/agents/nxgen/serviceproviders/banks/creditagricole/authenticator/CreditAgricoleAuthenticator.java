@@ -280,6 +280,7 @@ public class CreditAgricoleAuthenticator extends StatelessProgressiveAuthenticat
                 break;
             case ErrorCode.INCORRECT_CREDENTIALS:
                 throw LoginError.INCORRECT_CREDENTIALS.exception();
+            case ErrorCode.TECHNICAL_ERROR:
             case ErrorCode.GENERIC:
                 throw BankServiceError.BANK_SIDE_FAILURE.exception();
             case ErrorCode.FUNCTIONAL_ERROR:

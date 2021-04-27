@@ -156,7 +156,8 @@ public class EdenredApiClient {
     }
 
     private RuntimeException mapClientException(HttpClientException exception) {
-        if (exception.getCause() instanceof SocketTimeoutException) {
+        if (exception.getCause() instanceof SocketTimeoutException
+                || exception.getMessage().contains("MIME media type text/html was not found")) {
             return BankServiceError.BANK_SIDE_FAILURE.exception(exception);
         }
         return exception;
