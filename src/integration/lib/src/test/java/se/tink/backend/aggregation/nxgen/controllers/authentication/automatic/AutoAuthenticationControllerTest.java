@@ -18,6 +18,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthent
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.authenticator.AutoAuthenticator;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsRequestType;
 import se.tink.libraries.credentials.service.CredentialsRequest;
+import se.tink.libraries.credentials.service.UserAvailability;
 
 public class AutoAuthenticationControllerTest {
     private CredentialsRequest request = Mockito.mock(CredentialsRequest.class);
@@ -92,7 +93,7 @@ public class AutoAuthenticationControllerTest {
                     throws AuthenticationException, AuthorizationException {
         prepareCredentialsRequest(CredentialsRequestType.REFRESH_INFORMATION);
         credentials.setType(CredentialsTypes.MOBILE_BANKID);
-        Mockito.when(request.isManual()).thenReturn(false);
+        mockUserAvailability(request, false);
 
         autoAuthenticationController.authenticate(credentials);
     }
@@ -153,7 +154,7 @@ public class AutoAuthenticationControllerTest {
             throws AuthenticationException, AuthorizationException {
         prepareCredentialsRequest(CredentialsRequestType.REFRESH_INFORMATION);
         credentials.setType(CredentialsTypes.MOBILE_BANKID);
-        Mockito.when(request.isManual()).thenReturn(false);
+        mockUserAvailability(request, false);
 
         autoAuthenticationController.authenticate(credentials);
     }
@@ -170,7 +171,7 @@ public class AutoAuthenticationControllerTest {
                 .when(autoAuthenticator)
                 .autoAuthenticate();
 
-        Mockito.when(request.isManual()).thenReturn(false);
+        mockUserAvailability(request, false);
 
         try {
             autoAuthenticationController.authenticate(credentials);
@@ -196,7 +197,7 @@ public class AutoAuthenticationControllerTest {
         Mockito.doThrow(SessionError.SESSION_EXPIRED.exception())
                 .when(autoAuthenticator)
                 .autoAuthenticate();
-        Mockito.when(request.isManual()).thenReturn(true);
+        mockUserAvailability(request, true);
         Mockito.doThrow(LoginError.INCORRECT_CREDENTIALS.exception())
                 .when(multiFactorAuthenticator)
                 .authenticate(credentials);
@@ -229,13 +230,13 @@ public class AutoAuthenticationControllerTest {
             case CREATE:
                 Mockito.when(request.isCreate()).thenReturn(true);
                 Mockito.when(request.isUpdate()).thenReturn(false);
-                Mockito.when(request.isManual()).thenReturn(true);
+                mockUserAvailability(request, true);
                 credentials.setType(multiFactorAuthenticator.getType());
                 break;
             case UPDATE:
                 Mockito.when(request.isCreate()).thenReturn(false);
                 Mockito.when(request.isUpdate()).thenReturn(true);
-                Mockito.when(request.isManual()).thenReturn(true);
+                mockUserAvailability(request, true);
                 break;
             case REFRESH_INFORMATION:
                 Mockito.when(request.isCreate()).thenReturn(false);
@@ -245,5 +246,11 @@ public class AutoAuthenticationControllerTest {
                 // Nothing
                 break;
         }
+    }
+
+    private void mockUserAvailability(CredentialsRequest request, boolean isAvailable) {
+        UserAvailability mock = Mockito.mock(UserAvailability.class);
+        Mockito.when(mock.isUserAvailableForInteraction()).thenReturn(isAvailable);
+        Mockito.when(request.getUserAvailability()).thenReturn(mock);
     }
 }

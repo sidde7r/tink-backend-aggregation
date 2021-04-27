@@ -33,6 +33,10 @@
         "userId": "userId",
         "dataVersion": 1
     },
+    "userAvailability": {
+        "userAvailableForInteraction": true,
+        "userPresent": true
+    },
     "provider": {
         "accessType": "OTHER",
         "agentSources": [
