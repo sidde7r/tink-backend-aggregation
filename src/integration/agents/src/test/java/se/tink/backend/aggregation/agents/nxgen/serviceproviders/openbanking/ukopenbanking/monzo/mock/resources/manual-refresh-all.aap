@@ -61,7 +61,7 @@ Accept: application/json
 grant_type=client_credentials
     &scope=accounts
     &redirect_uri=https%3A%2F%2F127.0.0.1%3A7357%2Fapi%2Fv1%2Fthirdparty%2Fcallback
-    &client_id=dummyClientId
+    &client_id=DUMMY_CLIENT_ID
 
 RESPONSE 2
 200
@@ -146,7 +146,7 @@ Accept: application/json
 
 grant_type=authorization_code
     &redirect_uri=https%3A%2F%2F127.0.0.1%3A7357%2Fapi%2Fv1%2Fthirdparty%2Fcallback
-    &client_id=dummyClientId
+    &client_id=DUMMY_CLIENT_ID
     &code=DUMMY_ACCESS_TOKEN2
 
 RESPONSE 5

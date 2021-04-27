@@ -22,7 +22,7 @@ Accept: application/json
 X-Aggregator: Tink Testing
 x-fapi-financial-id: 001580000103U9RAAU
 
-grant_type=client_credentials&scope=payments&redirect_uri=https%3A%2F%2F127.0.0.1%3A7357%2Fapi%2Fv1%2Fthirdparty%2Fcallback&client_id=dummyClientId
+grant_type=client_credentials&scope=payments&redirect_uri=https%3A%2F%2F127.0.0.1%3A7357%2Fapi%2Fv1%2Fthirdparty%2Fcallback&client_id=DUMMY_CLIENT_ID
 
 RESPONSE 2
 200
