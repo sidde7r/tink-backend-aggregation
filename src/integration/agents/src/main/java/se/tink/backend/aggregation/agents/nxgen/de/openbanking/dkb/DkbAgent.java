@@ -106,7 +106,7 @@ public final class DkbAgent extends NextGenerationAgent
 
     private TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
         final DkbTransactionalAccountFetcher accountFetcher =
-                new DkbTransactionalAccountFetcher(getApiClient());
+                new DkbTransactionalAccountFetcher(getApiClient(), getDkbStorage());
 
         return new TransactionalAccountRefreshController(
                 metricRefreshController,
@@ -115,7 +115,7 @@ public final class DkbAgent extends NextGenerationAgent
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
                         new TransactionDatePaginationController.Builder<>(accountFetcher)
-                                .setAmountAndUnitToFetch(88, ChronoUnit.DAYS)
+                                .setAmountAndUnitToFetch(89, ChronoUnit.DAYS)
                                 .build()));
     }
 
@@ -131,5 +131,9 @@ public final class DkbAgent extends NextGenerationAgent
 
     private DkbApiClient getApiClient() {
         return dependencyRegistry.getBean(DkbApiClient.class);
+    }
+
+    private DkbStorage getDkbStorage() {
+        return dependencyRegistry.getBean(DkbStorage.class);
     }
 }
