@@ -44,8 +44,7 @@ public class CardAccountsEntity {
                 .withAccountName(product)
                 .addIdentifier(
                         AccountIdentifier.create(
-                                AccountIdentifierType.PAYMENT_CARD_NUMBER,
-                                cards.get(0).getMaskedPan()))
+                                AccountIdentifierType.MASKED_PAN, cards.get(0).getMaskedPan()))
                 .build();
     }
 

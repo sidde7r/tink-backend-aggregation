@@ -44,12 +44,12 @@ public class SwedbankTransactionFetcher implements TransactionFetcher<Transactio
 
     private Optional<FetchOnlineTransactionsResponse> fetchOnlineTransactions(
             TransactionalAccount account) {
-
         return Optional.ofNullable(
                 apiClient.getOnlineTransactions(
                         account.getApiIdentifier(),
-                        LocalDate.now().minusDays(TimeValues.ONLINE_STATEMENT_MAX_DAYS),
-                        LocalDate.now()));
+                        LocalDate.now(SwedbankConstants.ZONE_ID)
+                                .minusDays(TimeValues.ONLINE_STATEMENT_MAX_DAYS),
+                        LocalDate.now(SwedbankConstants.ZONE_ID)));
     }
 
     private Optional<FetchOfflineTransactionsResponse> downloadZippedTransactions(

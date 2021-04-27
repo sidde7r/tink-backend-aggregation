@@ -138,7 +138,7 @@ public class BillingUnitEntity {
                                 .withAccountName(billingUnitName)
                                 .addIdentifier(
                                         AccountIdentifier.create(
-                                                AccountIdentifierType.PAYMENT_CARD_NUMBER,
+                                                AccountIdentifierType.MASKED_PAN,
                                                 arrangementNumber))
                                 .build())
                 .setApiIdentifier(billingUnitIdClear)

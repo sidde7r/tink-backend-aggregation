@@ -4,17 +4,17 @@
         "accountExclusion" : "NONE",
         "exactAvailableCredit" : {
             "currencyCode" : "SEK",
-            "doubleValue" : -20000.73,
             "exactValue" : -20000.73,
+            "unscaledValue" : -2000073,
             "scale" : 2,
-            "unscaledValue" : -2000073
+            "doubleValue" : -20000.73
         },
         "exactBalance" : {
             "currencyCode" : "SEK",
-            "doubleValue" : -29999.27,
             "exactValue" : -29999.27,
+            "unscaledValue" : -2999927,
             "scale" : 2,
-            "unscaledValue" : -2999927
+            "doubleValue" : -29999.27
         },
         "currencyCode" : "SEK",
         "bankId" : "5254121234",
@@ -26,7 +26,7 @@
         "userModifiedExcluded" : false,
         "userModifiedName" : false,
         "userModifiedType" : false,
-        "identifiers" : "[]",
+        "identifiers" : "[\"masked-pan://525412******1234\"]",
         "closed" : false,
         "holderName" : "123456789",
         "accountHolder" : {

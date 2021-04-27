@@ -52,8 +52,7 @@ public class SebUtils {
                                 .withAccountName(creditCardNumber)
                                 .addIdentifier(
                                         AccountIdentifier.create(
-                                                AccountIdentifierType.PAYMENT_CARD_NUMBER,
-                                                creditCardNumber))
+                                                AccountIdentifierType.MASKED_PAN, creditCardNumber))
                                 .build())
                 .addHolderName(nameOnCard)
                 .build();

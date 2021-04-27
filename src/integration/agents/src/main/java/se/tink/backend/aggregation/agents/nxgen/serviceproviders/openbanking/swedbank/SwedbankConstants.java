@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank;
 
 import com.google.common.collect.ImmutableList;
+import java.time.ZoneId;
 import java.util.List;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccountTypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
@@ -17,6 +18,7 @@ public final class SwedbankConstants {
 
     public static final String INTEGRATION_NAME = "swedbank";
     public static final String SWEDBANK_OB_PROVIDER_NAME = "se-swedbank-ob";
+    public static final ZoneId ZONE_ID = ZoneId.of("Europe/Stockholm");
 
     public static class Format {
         public static final String TRANSACTION_DESCRIPTION_SEPARATOR = " ";

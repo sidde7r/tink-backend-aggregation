@@ -79,8 +79,7 @@ public class AccountEntity {
                                 .withAccountName(getName())
                                 .addIdentifier(
                                         AccountIdentifier.create(
-                                                AccountIdentifierType.PAYMENT_CARD_NUMBER,
-                                                accountNumber))
+                                                AccountIdentifierType.MASKED_PAN, getCardNumber()))
                                 .setProductName(productName)
                                 .build())
                 .addHolderName(getName())

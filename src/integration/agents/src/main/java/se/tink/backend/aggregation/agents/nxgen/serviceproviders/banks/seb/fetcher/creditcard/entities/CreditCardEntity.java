@@ -71,7 +71,7 @@ public class CreditCardEntity {
                         .withAccountName(getCreditCardAccountName())
                         .addIdentifier(
                                 AccountIdentifier.create(
-                                        AccountIdentifierType.PAYMENT_CARD_NUMBER, cardNumber))
+                                        AccountIdentifierType.MASKED_PAN, cardNumber))
                         .build();
 
         return CreditCardAccount.nxBuilder()

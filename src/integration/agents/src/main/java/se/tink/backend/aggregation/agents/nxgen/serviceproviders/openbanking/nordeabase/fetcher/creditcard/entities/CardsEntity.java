@@ -77,7 +77,7 @@ public class CardsEntity {
                                 .withAccountName(productName)
                                 .addIdentifier(
                                         AccountIdentifier.create(
-                                                AccountIdentifierType.PAYMENT_CARD_NUMBER,
+                                                AccountIdentifierType.MASKED_PAN,
                                                 maskCreditCardNumber()))
                                 .setProductName(productName)
                                 .build())
