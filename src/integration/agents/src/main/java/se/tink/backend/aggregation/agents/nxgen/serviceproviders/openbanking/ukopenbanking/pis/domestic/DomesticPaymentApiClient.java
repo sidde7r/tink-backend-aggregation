@@ -20,6 +20,7 @@ import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedExce
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.rpc.ErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.UkOpenBankingPaymentApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.UkOpenBankingRequestBuilder;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.configuration.UkOpenBankingPisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domestic.converter.DomesticPaymentConverter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domestic.dto.DomesticPaymentConsentFundsConfirmationResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domestic.dto.DomesticPaymentConsentFundsConfirmationResponseData;
@@ -52,7 +53,7 @@ public class DomesticPaymentApiClient implements UkOpenBankingPaymentApiClient {
 
     private final UkOpenBankingRequestBuilder requestBuilder;
     private final DomesticPaymentConverter domesticPaymentConverter;
-    private final String baseUrl;
+    private final UkOpenBankingPisConfig pisConfig;
     private static final List<Integer> FAILED_STATUSES =
             Arrays.asList(
                     HttpStatus.SC_INTERNAL_SERVER_ERROR,
@@ -167,7 +168,11 @@ public class DomesticPaymentApiClient implements UkOpenBankingPaymentApiClient {
     }
 
     private boolean areFundsAvailable(String consentId) {
-        DomesticPaymentConsentFundsConfirmationResponse response = null;
+        if (!pisConfig.compatibleWithFundsConfirming()) {
+            log.info("Exempted from funds confirmation");
+            return true;
+        }
+        DomesticPaymentConsentFundsConfirmationResponse response;
         try {
             response =
                     requestBuilder
@@ -267,6 +272,6 @@ public class DomesticPaymentApiClient implements UkOpenBankingPaymentApiClient {
     }
 
     private URL createUrl(String path) {
-        return new URL(baseUrl + path);
+        return new URL(pisConfig.getBaseUrl() + path);
     }
 }
