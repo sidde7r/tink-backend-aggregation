@@ -57,7 +57,7 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 
 @AgentDependencyModules(modules = QSealcSignerModuleRSASHA256.class)
 @AgentCapabilities({CHECKING_ACCOUNTS, CREDIT_CARDS, TRANSFERS, LIST_BENEFICIARIES})
-@AgentPisCapability(capabilities = PisCapability.PIS_SEPA)
+@AgentPisCapability(capabilities = PisCapability.PIS_SEPA_CREDIT_TRANSFER)
 public final class BpceGroupAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor,
                 RefreshTransferDestinationExecutor,

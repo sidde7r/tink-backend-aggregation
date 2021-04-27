@@ -5,7 +5,7 @@ import se.tink.backend.aggregation.client.provider_configuration.rpc.PisCapabili
 
 @Ignore
 @AgentPisCapability(
-        capabilities = {PisCapability.PIS_SEPA},
+        capabilities = {PisCapability.PIS_SEPA_CREDIT_TRANSFER},
         markets = {"GB"})
 @AgentPisCapability(
         capabilities = {PisCapability.PIS_SEPA_INSTANT_CREDIT_TRANSFER},

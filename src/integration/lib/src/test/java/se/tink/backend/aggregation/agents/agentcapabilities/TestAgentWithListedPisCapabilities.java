@@ -5,5 +5,8 @@ import se.tink.backend.aggregation.client.provider_configuration.rpc.PisCapabili
 
 @Ignore
 @AgentPisCapability(
-        capabilities = {PisCapability.PIS_SEPA, PisCapability.PIS_SEPA_INSTANT_CREDIT_TRANSFER})
+        capabilities = {
+            PisCapability.PIS_SEPA_CREDIT_TRANSFER,
+            PisCapability.PIS_SEPA_INSTANT_CREDIT_TRANSFER
+        })
 public class TestAgentWithListedPisCapabilities extends BaseTestAgent {}

@@ -20,7 +20,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, TRANSFERS})
 @AgentPisCapability(
         capabilities = {
-            PisCapability.PIS_SEPA,
+            PisCapability.PIS_SEPA_CREDIT_TRANSFER,
             PisCapability.PIS_SEPA_INSTANT_CREDIT_TRANSFER,
             PisCapability.PIS_SEPA_RECURRING_PAYMENTS
         })

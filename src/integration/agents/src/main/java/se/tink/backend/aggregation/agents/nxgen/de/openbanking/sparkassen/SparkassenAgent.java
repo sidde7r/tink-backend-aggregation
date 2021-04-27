@@ -41,7 +41,7 @@ import se.tink.libraries.account.enums.AccountIdentifierType;
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, TRANSFERS})
 @AgentPisCapability(
         capabilities = {
-            PisCapability.PIS_SEPA,
+            PisCapability.PIS_SEPA_CREDIT_TRANSFER,
             PisCapability.PIS_SEPA_INSTANT_CREDIT_TRANSFER,
             PisCapability.PIS_SEPA_RECURRING_PAYMENTS
         })

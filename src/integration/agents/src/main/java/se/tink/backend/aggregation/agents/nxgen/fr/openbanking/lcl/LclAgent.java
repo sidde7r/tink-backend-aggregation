@@ -66,7 +66,7 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 
 @AgentDependencyModules(modules = QSealcSignerModuleRSASHA256.class)
 @AgentCapabilities({CHECKING_ACCOUNTS, IDENTITY_DATA, LIST_BENEFICIARIES, TRANSFERS, CREDIT_CARDS})
-@AgentPisCapability(capabilities = PisCapability.PIS_SEPA)
+@AgentPisCapability(capabilities = PisCapability.PIS_SEPA_CREDIT_TRANSFER)
 public final class LclAgent extends SubsequentProgressiveGenerationAgent
         implements RefreshCheckingAccountsExecutor,
                 RefreshIdentityDataExecutor,

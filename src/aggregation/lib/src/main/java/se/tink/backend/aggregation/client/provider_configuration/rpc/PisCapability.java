@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.client.provider_configuration.rpc;
 
 public enum PisCapability {
-    PIS_SEPA,
     PIS_SEPA_CREDIT_TRANSFER,
     PIS_SEPA_INSTANT_CREDIT_TRANSFER,
     PIS_SE_BG,

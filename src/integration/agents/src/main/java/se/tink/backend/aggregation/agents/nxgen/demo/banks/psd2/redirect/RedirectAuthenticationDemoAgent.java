@@ -82,10 +82,13 @@ import se.tink.libraries.identitydata.NameElement;
     MORTGAGE_AGGREGATION
 })
 @AgentPisCapability(
-        capabilities = {PisCapability.PIS_SEPA, PisCapability.PIS_SEPA_INSTANT_CREDIT_TRANSFER},
+        capabilities = {
+            PisCapability.PIS_SEPA_CREDIT_TRANSFER,
+            PisCapability.PIS_SEPA_INSTANT_CREDIT_TRANSFER
+        },
         markets = {"IT"})
 @AgentPisCapability(
-        capabilities = PisCapability.PIS_SEPA,
+        capabilities = PisCapability.PIS_SEPA_CREDIT_TRANSFER,
         markets = {"DE", "ES", "FR", "PT"})
 @AgentPisCapability(capabilities = PisCapability.PIS_UK_FASTER_PAYMENT, markets = "GB")
 public final class RedirectAuthenticationDemoAgent extends NextGenerationDemoAgent
