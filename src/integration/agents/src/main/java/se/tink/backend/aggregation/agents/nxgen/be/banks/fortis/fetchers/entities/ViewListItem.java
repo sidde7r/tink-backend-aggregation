@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.fetchers.entiti
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
@@ -38,6 +39,11 @@ public class ViewListItem {
         return viewDetailList.stream()
                 .filter(ViewDetailListItem::isValid)
                 .map(ViewDetailListItem::toTinkAccount)
+                .filter(this::isNotCheckingAccount)
                 .collect(Collectors.toList());
+    }
+
+    private boolean isNotCheckingAccount(TransactionalAccount account) {
+        return account.getType() != AccountTypes.CHECKING;
     }
 }
