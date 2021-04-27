@@ -73,8 +73,11 @@ public class AmexCreditCardFetcher implements AccountFetcher<CreditCardAccount> 
             HmacToken hmacToken,
             AccountsResponseDto accountsResponse,
             StatementPeriodsDto statementPeriods) {
-
-        final List<BalanceDto> balances = getBalances(hmacToken);
+        // only basic card (not supplementary) has balance
+        final List<BalanceDto> balances =
+                accountsResponse.getIdentifiers().isBasic()
+                        ? getBalances(hmacToken)
+                        : Collections.emptyList();
 
         return accountsResponse.toCreditCardAccount(balances, statementPeriods);
     }

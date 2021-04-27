@@ -35,18 +35,18 @@ public class AccountsResponseDto {
                 AmericanExpressUtils.formatAccountId(identifiers.getDisplayAccountNumber());
         final String cardName =
                 product.getDigitalInfo().getProductDesc() + " - " + uniqueId.substring(4);
+        final String currencyCode =
+                balances.stream()
+                        .findFirst()
+                        .map(BalanceDto::getIsoAlphaCurrencyCode)
+                        .orElse(holder.getCurrencyCode());
         return CreditCardAccount.nxBuilder()
                 .withCardDetails(
                         CreditCardModule.builder()
                                 .withCardNumber(pan)
                                 .withBalance(getBalance(balances))
                                 .withAvailableCredit(
-                                        new ExactCurrencyAmount(
-                                                new BigDecimal(0),
-                                                balances.stream()
-                                                        .findFirst()
-                                                        .get()
-                                                        .getIsoAlphaCurrencyCode()))
+                                        new ExactCurrencyAmount(new BigDecimal(0), currencyCode))
                                 .withCardAlias(cardName)
                                 .build())
                 .withPaymentAccountFlag()
@@ -71,7 +71,12 @@ public class AccountsResponseDto {
                 .collect(Collectors.toList());
     }
 
-    private static ExactCurrencyAmount getBalance(List<BalanceDto> balances) {
+    private ExactCurrencyAmount getBalance(List<BalanceDto> balances) {
+        if (!identifiers.isBasic()) {
+            // supplementary card has no balance
+            return new ExactCurrencyAmount(new BigDecimal(0), holder.getCurrencyCode());
+        }
+
         return balances.stream()
                 .findFirst()
                 .map(AccountsResponseDto::convertBalanceEntityToExactCurrencyAmount)
