@@ -112,7 +112,7 @@ public class AutoAuthenticationController implements TypedAuthenticator {
 
     private void manual(Credentials credentials)
             throws AuthenticationException, AuthorizationException {
-        if (!request.isManual()) {
+        if (!request.getUserAvailability().isUserAvailableForInteraction()) {
             throw SessionError.SESSION_EXPIRED.exception();
         }
 
@@ -129,7 +129,7 @@ public class AutoAuthenticationController implements TypedAuthenticator {
         try {
             autoAuthenticator.autoAuthenticate();
         } catch (SessionException autoException) {
-            if (!request.isManual()) {
+            if (!request.getUserAvailability().isUserAvailableForInteraction()) {
                 credentials.setType(manualAuthenticator.getType());
 
                 throw autoException;
