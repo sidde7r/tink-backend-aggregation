@@ -6,6 +6,7 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsRequestType;
 import se.tink.libraries.credentials.service.CredentialsRequest;
+import se.tink.libraries.credentials.service.RefreshScope;
 import se.tink.libraries.signableoperation.rpc.SignableOperation;
 import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.user.rpc.User;
@@ -16,6 +17,7 @@ public class TransferRequest extends CredentialsRequest {
     private SignableOperation signableOperation;
     private boolean update;
     private boolean skipRefresh;
+    private RefreshScope refreshScope;
 
     public TransferRequest() {}
 
@@ -75,5 +77,13 @@ public class TransferRequest extends CredentialsRequest {
 
     public void setSkipRefresh(boolean skipRefresh) {
         this.skipRefresh = skipRefresh;
+    }
+
+    public RefreshScope getRefreshScope() {
+        return refreshScope;
+    }
+
+    public void setRefreshScope(RefreshScope refreshScope) {
+        this.refreshScope = refreshScope;
     }
 }

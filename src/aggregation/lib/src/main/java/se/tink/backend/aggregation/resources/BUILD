@@ -35,6 +35,7 @@ java_library(
         "//third_party:com_sun_jersey_jersey_core",
         "//third_party:com_sun_jersey_jersey_server",
         "//third_party:jetty_server9",
+        "//third_party:org_apache_commons_commons_collections4",
         "//third_party:org_apache_commons_commons_lang3",
         "//third_party:org_slf4j_slf4j_api",
         "//third_party:org_xerial_snappy_snappy_java",
