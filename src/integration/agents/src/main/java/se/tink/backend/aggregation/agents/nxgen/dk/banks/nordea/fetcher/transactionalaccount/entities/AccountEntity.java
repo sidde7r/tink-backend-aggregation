@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import lombok.Getter;
@@ -25,6 +26,7 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 public class AccountEntity {
 
     @JsonIgnore private final BalanceHelper balanceHelper = new BalanceHelper();
+    private static final String OWNER_ROLE = "owner";
 
     private String accountId;
     private String iban;
@@ -38,6 +40,7 @@ public class AccountEntity {
     private Double creditLimit;
     private String currency;
     private PermissionsEntity permissions;
+    private List<RoleEntity> roles;
 
     public Optional<TransactionalAccount> toTinkAccount() {
         BalanceModule balanceModule =
@@ -65,6 +68,7 @@ public class AccountEntity {
                 .canExecuteExternalTransfer(canExecuteExternalTransfer())
                 .canReceiveExternalTransfer(canReceiveExternalTransfer())
                 .setApiIdentifier(accountId)
+                .addHolderName(getOwner())
                 .putInTemporaryStorage(NordeaDkConstants.StorageKeys.PRODUCT_CODE, productCode)
                 .build();
     }
@@ -176,5 +180,13 @@ public class AccountEntity {
         private ExactCurrencyAmount getCreditLimit() {
             return ExactCurrencyAmount.of(creditLimit, currency);
         }
+    }
+
+    public String getOwner() {
+        return roles.stream()
+                .filter(x -> OWNER_ROLE.equalsIgnoreCase(x.getRole()))
+                .findFirst()
+                .map(RoleEntity::getName)
+                .orElse(null);
     }
 }
