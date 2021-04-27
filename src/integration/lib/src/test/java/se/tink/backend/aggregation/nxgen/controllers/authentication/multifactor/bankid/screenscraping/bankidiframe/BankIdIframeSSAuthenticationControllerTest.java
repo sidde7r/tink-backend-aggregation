@@ -240,13 +240,56 @@ public class BankIdIframeSSAuthenticationControllerTest {
     }
 
     @Test
-    public void
-            doLoginShouldThrowNoAvailableScaMethodsExceptionWhenAuthenticationListButtonIsNotFound() {
+    public void doLoginShouldChooseMobileBankIdWhenAuthenticationListButtonIsNotFound() {
         // given
         makeMobileBankIbAndBankIdAppReturnOptionalEmpty();
 
         given(webDriverHelper.waitForElement(driver, Xpath.AUTHENTICATION_LIST_BUTTON_XPATH))
                 .willReturn(Optional.empty());
+
+        // when
+        controller.doLogin(PASSWORD_INPUT);
+
+        // then
+
+        // initialize bank id iframe
+        inOrder.verify(iframeInitializer).initializeBankIdAuthentication();
+
+        // check if it is mobile bank id
+        inOrder.verify(webDriverHelper).waitForElement(driver, Xpath.MOBILE_BANK_ID_INPUT_XPATH);
+
+        // check if it is bank id app
+        inOrder.verify(webDriverHelper)
+                .waitForOneOfElements(
+                        driver, Xpath.BANK_ID_APP_TITLE_XPATH, Xpath.BANK_ID_PASSWORD_INPUT_XPATH);
+
+        // try to choose mobile bank id when list of authentication methods is not present
+        verify(webDriverHelper).getElement(driver, Xpath.BANK_ID_MOBIL_BUTTON);
+        verify(webDriverHelper).clickButton(buttonBankId);
+
+        // submit form
+        inOrder.verify(webDriverHelper).submitForm(driver, Xpath.FORM_XPATH);
+
+        // display reference words
+        inOrder.verify(webDriverHelper).waitForElement(driver, Xpath.REFERENCE_WORDS_XPATH);
+
+        // wait for user accepting bank id and submit bank Id password
+        verifyWaitForUserInteractionAndSendBankIdPasswordInOrder();
+
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void
+            doLoginShouldThrowExceptionWhenAuthenticationListButtonAndMobilBankIdMethodsAreNotFound() {
+        // given
+        makeMobileBankIbAndBankIdAppReturnOptionalEmpty();
+
+        given(webDriverHelper.waitForElement(driver, Xpath.AUTHENTICATION_LIST_BUTTON_XPATH))
+                .willReturn(Optional.empty());
+
+        given(webDriverHelper.getElement(driver, Xpath.BANK_ID_MOBIL_BUTTON))
+                .willThrow(HtmlElementNotFoundException.class);
 
         // when
         Throwable throwable = Assertions.catchThrowable(() -> controller.doLogin(TEST_PASSWORD));

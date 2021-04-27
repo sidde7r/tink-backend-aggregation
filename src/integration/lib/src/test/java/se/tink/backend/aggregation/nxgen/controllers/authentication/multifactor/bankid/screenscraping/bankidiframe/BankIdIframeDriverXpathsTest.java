@@ -38,6 +38,10 @@ public class BankIdIframeDriverXpathsTest {
             Paths.get(BASE_PATH, "reference_words.html").toUri().toString();
     private static final String SPAREBANK_CODE_GENERATOR =
             Paths.get(BASE_PATH, "sparebank_code_generator.html").toUri().toString();
+    private static final String AVAILABLE_METHODS_LIST_FIRST =
+            Paths.get(BASE_PATH, "availableMethodsListFirst.html").toUri().toString();
+    private static final String AVAILABLE_METHODS_LIST_SECOND =
+            Paths.get(BASE_PATH, "availableMethodsListSecond.html").toUri().toString();
 
     private WebDriver driver;
 
@@ -97,6 +101,12 @@ public class BankIdIframeDriverXpathsTest {
             new Object[] {
                 SPAREBANK_CODE_GENERATOR,
                 Collections.singletonList(Xpath.AUTHENTICATION_LIST_BUTTON_XPATH)
+            },
+            new Object[] {
+                AVAILABLE_METHODS_LIST_FIRST, Collections.singletonList(Xpath.BANK_ID_MOBIL_BUTTON)
+            },
+            new Object[] {
+                AVAILABLE_METHODS_LIST_SECOND, Collections.singletonList(Xpath.BANK_ID_MOBIL_BUTTON)
             }
         };
     }
@@ -136,6 +146,24 @@ public class BankIdIframeDriverXpathsTest {
                         Xpath.MOBILE_BANK_ID_INPUT_XPATH,
                         Xpath.BANK_ID_PASSWORD_INPUT_XPATH,
                         Xpath.BANK_ID_APP_TITLE_XPATH)
+            },
+            new Object[] {
+                AVAILABLE_METHODS_LIST_FIRST,
+                Arrays.asList(
+                        Xpath.MOBILE_BANK_ID_INPUT_XPATH,
+                        Xpath.BANK_ID_APP_TITLE_XPATH,
+                        Xpath.BANK_ID_PASSWORD_INPUT_XPATH,
+                        Xpath.AUTHENTICATION_LIST_BUTTON_XPATH,
+                        Xpath.REFERENCE_WORDS_XPATH)
+            },
+            new Object[] {
+                AVAILABLE_METHODS_LIST_SECOND,
+                Arrays.asList(
+                        Xpath.MOBILE_BANK_ID_INPUT_XPATH,
+                        Xpath.BANK_ID_APP_TITLE_XPATH,
+                        Xpath.BANK_ID_PASSWORD_INPUT_XPATH,
+                        Xpath.AUTHENTICATION_LIST_BUTTON_XPATH,
+                        Xpath.REFERENCE_WORDS_XPATH)
             }
         };
     }

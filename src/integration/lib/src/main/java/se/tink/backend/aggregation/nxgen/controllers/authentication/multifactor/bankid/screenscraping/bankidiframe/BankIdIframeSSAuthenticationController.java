@@ -62,17 +62,9 @@ public class BankIdIframeSSAuthenticationController {
     }
 
     private void getListAuthenticationMethods(WebDriver driver) {
-        WebElement selectAuthenticationButton =
-                webDriverHelper
-                        .waitForElement(driver, Xpath.AUTHENTICATION_LIST_BUTTON_XPATH)
-                        .orElseThrow(
-                                () -> {
-                                    log.info(
-                                            "No methods available. Page source: {}",
-                                            driver.getPageSource());
-                                    throw LoginError.NOT_SUPPORTED.exception();
-                                });
-        webDriverHelper.clickButton(selectAuthenticationButton);
+        Optional<WebElement> selectAuthenticationButton =
+                webDriverHelper.waitForElement(driver, Xpath.AUTHENTICATION_LIST_BUTTON_XPATH);
+        selectAuthenticationButton.ifPresent(webDriverHelper::clickButton);
     }
 
     private void chooseBankIdMobil(WebDriver driver) {
