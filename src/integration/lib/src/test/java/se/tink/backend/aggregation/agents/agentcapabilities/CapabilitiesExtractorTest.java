@@ -42,7 +42,7 @@ public class CapabilitiesExtractorTest {
                             assertThat(pisCapabilities.containsKey(marketCode)).isTrue();
                             assertThat(pisCapabilities.get(marketCode))
                                     .containsExactlyInAnyOrder(
-                                            PisCapability.PIS_SEPA.name(),
+                                            PisCapability.PIS_SEPA_CREDIT_TRANSFER.name(),
                                             PisCapability.PIS_SEPA_INSTANT_CREDIT_TRANSFER.name());
                         });
     }
@@ -68,7 +68,7 @@ public class CapabilitiesExtractorTest {
         assertThat(pisCapabilities.containsKey(MARKET)).isTrue();
         assertThat(pisCapabilities.get(MARKET))
                 .containsExactlyInAnyOrder(
-                        PisCapability.PIS_SEPA.name(),
+                        PisCapability.PIS_SEPA_CREDIT_TRANSFER.name(),
                         PisCapability.PIS_SEPA_INSTANT_CREDIT_TRANSFER.name());
     }
 }

@@ -66,7 +66,7 @@ import se.tink.libraries.date.CountryDateHelper;
 @AgentPisCapability(
         capabilities = {
             PisCapability.PIS_SEPA_INSTANT_CREDIT_TRANSFER,
-            PisCapability.PIS_SEPA,
+            PisCapability.PIS_SEPA_CREDIT_TRANSFER,
             PisCapability.PIS_FUTURE_DATE,
         })
 public final class SocieteGeneraleAgent extends NextGenerationAgent
