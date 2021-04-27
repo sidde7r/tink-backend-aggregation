@@ -8,4 +8,8 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class OwnersEntity {
 
     String name;
+
+    public String getName() {
+        return name;
+    }
 }

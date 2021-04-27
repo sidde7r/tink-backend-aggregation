@@ -106,6 +106,7 @@ public class LoanDetailsResponseTest {
                                 .setApiIdentifier(
                                         NordeaDkConstants.PathValues.ACCOUNT_ID_PREFIX
                                                 + FIRST_ACCOUNT_ID)
+                                .addHolderName(null)
                                 .putInTemporaryStorage(
                                         NordeaDkConstants.StorageKeys.PRODUCT_CODE, PRODUCT_CODE)
                                 .build());
@@ -217,6 +218,7 @@ public class LoanDetailsResponseTest {
                                 .setApiIdentifier(
                                         NordeaDkConstants.PathValues.ACCOUNT_ID_PREFIX
                                                 + SECOND_ACCOUNT_ID)
+                                .addHolderName("Owner 1")
                                 .putInTemporaryStorage(
                                         NordeaDkConstants.StorageKeys.PRODUCT_CODE, PRODUCT_CODE)
                                 .build());
