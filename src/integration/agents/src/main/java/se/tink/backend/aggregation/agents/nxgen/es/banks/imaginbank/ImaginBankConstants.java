@@ -4,7 +4,9 @@ import com.google.common.collect.ImmutableList;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.regex.Pattern;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccountTypeMapper;
+import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
@@ -16,6 +18,11 @@ public class ImaginBankConstants {
             TransactionalAccountTypeMapper.builder()
                     .put(TransactionalAccountType.CHECKING, "IMAGIN ACCOUNT", "imagin")
                     .put(TransactionalAccountType.SAVINGS, "LIBRETA ESTRELLA", "LIBRETA")
+                    .build();
+
+    public static final TypeMapper<AccountTypes> INVESTMENT_ACCOUNT_MAPPER =
+            TypeMapper.<AccountTypes>builder()
+                    .put(AccountTypes.PENSION, "pension domiciliada")
                     .build();
 
     private static class ApiService {

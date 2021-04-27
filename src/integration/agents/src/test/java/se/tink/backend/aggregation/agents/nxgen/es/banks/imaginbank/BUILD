@@ -3,10 +3,11 @@ load("//tools/bzl:junit.bzl", "junit_test")
 junit_test(
     name = "imaginbank",
     srcs = glob(["**/*.java"]),
-    data = ["//:agent_test_data"],
-    tags = [
-        "external",
-        "manual",
+    data = [
+        "//data:agent_unit_tests",
+        "//data:aggregation_test",
+        "//data:provider_configurations",
+        "//etc:development",
     ],
     visibility = ["//visibility:public"],
     deps = [
@@ -24,8 +25,11 @@ junit_test(
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
         "//src/libraries/serialization",
         "//third_party:com_sun_jersey_jersey_core",
+        "//third_party:io_vavr",
         "//third_party:org_assertj_assertj_core",
         "//third_party:org_mockito_mockito_core",
         "//third_party:pl_pragmatists_junitparams",
+        "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
+        "@tink_backend//src/libraries/account_identifier",
     ],
 )
