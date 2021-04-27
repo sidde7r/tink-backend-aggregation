@@ -31,6 +31,7 @@ public class CustodyAccountEntity {
     private String id;
     private double marketValue;
     private String name;
+    private String ownerName;
 
     @JsonProperty("profit_loss")
     private double profit;
@@ -64,6 +65,7 @@ public class CustodyAccountEntity {
                 .canWithdrawCash(AccountCapabilities.Answer.UNKNOWN)
                 .canReceiveExternalTransfer(AccountCapabilities.Answer.NO)
                 .canExecuteExternalTransfer(AccountCapabilities.Answer.NO)
+                .addHolderName(Optional.ofNullable(ownerName).orElse(null))
                 .build();
     }
 

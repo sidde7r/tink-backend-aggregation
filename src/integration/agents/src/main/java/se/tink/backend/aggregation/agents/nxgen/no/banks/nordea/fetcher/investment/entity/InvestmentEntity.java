@@ -19,6 +19,7 @@ public class InvestmentEntity {
 
     private double cashAmount;
     private double marketValue;
+    private String ownerName;
 
     @JsonProperty("profit_loss")
     private double profit;
