@@ -55,23 +55,18 @@ public class SiliconValleyBusinessAgent extends UkOpenBankingBaseAgent {
     }
 
     @Override
-    protected OpenIdAuthenticator getAisAuthenticator() {
-        return new SiliconValleyAisAuthenticator(apiClient);
-    }
-
-    @Override
     public Authenticator constructAuthenticator() {
-        UkOpenBankingAisAuthenticationController authController = createUkObAuthController();
+        SiliconValleyAisAuthenticationController authController = createUkObAuthController();
 
         return createAutoAuthController(authController);
     }
 
-    private UkOpenBankingAisAuthenticationController createUkObAuthController() {
-        return new UkOpenBankingAisAuthenticationController(
+    private SiliconValleyAisAuthenticationController createUkObAuthController() {
+        return new SiliconValleyAisAuthenticationController(
                 this.persistentStorage,
                 this.supplementalInformationHelper,
                 this.apiClient,
-                new UkOpenBankingAisAuthenticator(this.apiClient),
+                null,
                 this.credentials,
                 this.strongAuthenticationState,
                 this.request.getCallbackUri(),
