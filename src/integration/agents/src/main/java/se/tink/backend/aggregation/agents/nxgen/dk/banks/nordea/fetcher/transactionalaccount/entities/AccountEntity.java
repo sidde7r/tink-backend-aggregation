@@ -25,8 +25,9 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class AccountEntity {
 
-    @JsonIgnore private final BalanceHelper balanceHelper = new BalanceHelper();
     private static final String OWNER_ROLE = "owner";
+
+    @JsonIgnore private final BalanceHelper balanceHelper = new BalanceHelper();
 
     private String accountId;
     private String iban;

@@ -70,7 +70,7 @@ public class InvestmentFetcher implements AccountFetcher<InvestmentAccount> {
                 .canWithdrawCash(AccountCapabilities.Answer.UNKNOWN)
                 .canReceiveExternalTransfer(AccountCapabilities.Answer.NO)
                 .canExecuteExternalTransfer(AccountCapabilities.Answer.NO)
-                .addHolderName(Optional.ofNullable(account.getOwnerName()).orElse(null))
+                .addHolderName(account.getOwnerName())
                 .build();
     }
 
