@@ -61,6 +61,7 @@ public class CreditCardFetcher implements AccountFetcher<CreditCardAccount> {
                 .canReceiveExternalTransfer(AccountCapabilities.Answer.UNKNOWN)
                 .canExecuteExternalTransfer(AccountCapabilities.Answer.UNKNOWN)
                 .setApiIdentifier(cardDetails.getCardId())
+                .addHolderName(cardDetails.getPrincipalCardholderName())
                 .build();
     }
 }

@@ -13,6 +13,7 @@ public class CreditCardEntity {
 
     @Getter private String cardId;
     private String cardCategory;
+    @Getter private String principalCardholderName;
 
     public boolean isCreditCard() {
         return CREDIT_CARD_CATEGORY.equals(cardCategory);

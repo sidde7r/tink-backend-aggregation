@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.slf4j.Logger;
@@ -42,6 +43,7 @@ public class CreditCardDetailsResponse {
     private String currency;
     private String nickname;
     private String cardId;
+    private String principalCardholderName;
 
     public CreditCardAccount toTinkAccount() {
         CreditCardModule cardModule =
@@ -74,6 +76,7 @@ public class CreditCardDetailsResponse {
                 .canReceiveExternalTransfer(AccountCapabilities.Answer.UNKNOWN)
                 .canExecuteExternalTransfer(AccountCapabilities.Answer.UNKNOWN)
                 .setApiIdentifier(cardId)
+                .addHolderName(Optional.ofNullable(principalCardholderName).orElse(null))
                 .build();
     }
 

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import java.math.BigDecimal;
+import java.util.Optional;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -16,6 +17,11 @@ public class CreditCardDetailsResponse {
     private String currency;
     @Getter private String nickname;
     @Getter private String cardId;
+    private String principalCardholderName;
+
+    public String getPrincipalCardholderName() {
+        return Optional.ofNullable(principalCardholderName).orElse(null);
+    }
 
     @JsonProperty("credit")
     private CreditDetails creditDetails;
