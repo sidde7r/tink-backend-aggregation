@@ -44,8 +44,4 @@ public class LoanDetailsResponse {
     public LoanDetails.Type getTinkLoanType() {
         return LOAN_TYPE_MAPPER.translate(group).orElse(LoanDetails.Type.OTHER);
     }
-
-    public String getOwner() {
-        return owners.stream().findFirst().map(OwnersEntity::getName).orElse(null);
-    }
 }

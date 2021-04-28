@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.fetcher.loan.ent
 import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.fetcher.loan.entity.OwnersEntity;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.fetcher.loan.rpc.LoanDetailsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Party;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.util.InterestRateConverter;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
@@ -41,7 +42,7 @@ public class LoanFetcher implements AccountFetcher<LoanAccount> {
                                 .addIdentifier(new NorwegianIdentifier(loanDetails.getLoanId()))
                                 .setProductName(loanDetails.getProductCode())
                                 .build())
-                .addHolderName(loanDetails.getOwner())
+                .addParties(getPartyOfOwners(loanDetails))
                 .build();
     }
 
@@ -88,6 +89,12 @@ public class LoanFetcher implements AccountFetcher<LoanAccount> {
     private List<String> getApplicants(LoanDetailsResponse loanDetails) {
         return loanDetails.getOwners().stream()
                 .map(OwnersEntity::getName)
+                .collect(Collectors.toList());
+    }
+
+    public List<Party> getPartyOfOwners(LoanDetailsResponse loanDetails) {
+        return loanDetails.getOwners().stream()
+                .map(ownersEntity -> new Party(ownersEntity.getName(), Party.Role.HOLDER))
                 .collect(Collectors.toList());
     }
 }

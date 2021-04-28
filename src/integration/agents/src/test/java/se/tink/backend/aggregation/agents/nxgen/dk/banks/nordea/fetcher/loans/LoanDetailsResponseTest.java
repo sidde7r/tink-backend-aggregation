@@ -181,9 +181,9 @@ public class LoanDetailsResponseTest {
         List<Party> parties =
                 new ArrayList<>(
                         Arrays.asList(
-                                new Party("owner 1", Party.Role.UNKNOWN),
-                                new Party("owner 2", Party.Role.UNKNOWN),
-                                new Party("", Party.Role.UNKNOWN)));
+                                new Party("owner 1", Party.Role.HOLDER),
+                                new Party("owner 2", Party.Role.HOLDER),
+                                new Party("", Party.Role.HOLDER)));
 
         // when
         LoanAccount loanAccount = response.toTinkLoanAccount();

@@ -120,7 +120,7 @@ public class LoanDetailsResponse {
 
     public List<Party> getOwners() {
         return owners.stream()
-                .map(ownersEntity -> new Party(ownersEntity.getName(), Party.Role.UNKNOWN))
+                .map(ownersEntity -> new Party(ownersEntity.getName(), Party.Role.HOLDER))
                 .collect(Collectors.toList());
     }
 }
