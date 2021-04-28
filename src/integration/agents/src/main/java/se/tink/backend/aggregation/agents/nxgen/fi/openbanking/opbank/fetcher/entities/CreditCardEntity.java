@@ -23,7 +23,7 @@ public class CreditCardEntity {
                 .withCardDetails(
                         CreditCardModule.builder()
                                 .withCardNumber(cardNumber)
-                                .withBalance(new ExactCurrencyAmount(statementBalance, "EUR"))
+                                .withBalance(getBalance())
                                 .withAvailableCredit(
                                         new ExactCurrencyAmount(authorizedOutstandingAmount, "EUR"))
                                 .withCardAlias(productName)
@@ -40,5 +40,9 @@ public class CreditCardEntity {
                                 .build())
                 .putInTemporaryStorage(OpBankConstants.StorageKeys.CARD_ID, cardId)
                 .build();
+    }
+
+    private ExactCurrencyAmount getBalance() {
+        return new ExactCurrencyAmount(statementBalance.add(authorizedOutstandingAmount), "EUR");
     }
 }

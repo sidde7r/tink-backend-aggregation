@@ -55,19 +55,19 @@ public class OpBankCreditCardAccountFetcherTest {;
         assertThat(card1.getName()).isEqualTo("testProductName1");
         assertThat(card1.getAccountNumber()).isEqualTo("1234 56** **** 7890");
         assertThat(card1.getIdModule().getUniqueId()).isEqualTo("testCardId1");
-        assertThat(card1.getExactBalance().getExactValue()).isEqualTo(new BigDecimal("1001.56"));
+        assertThat(card1.getExactBalance().getExactValue()).isEqualTo(new BigDecimal("2401.56"));
         assertThat(card1.getExactAvailableCredit().getExactValue())
                 .isEqualTo(new BigDecimal("1400.00"));
         assertThat(card2.getName()).isEqualTo("testProductName2");
         assertThat(card2.getAccountNumber()).isEqualTo("0987 65** **** 4321");
         assertThat(card2.getIdModule().getUniqueId()).isEqualTo("testCardId2");
-        assertThat(card2.getExactBalance().getExactValue()).isEqualTo(new BigDecimal("1002.56"));
+        assertThat(card2.getExactBalance().getExactValue()).isEqualTo(new BigDecimal("2502.56"));
         assertThat(card2.getExactAvailableCredit().getExactValue())
                 .isEqualTo(new BigDecimal("1500.00"));
     }
 
     @Test
-    public void shouldFetchCredittCardTransactions() {
+    public void shouldFetchCreditCardTransactions() {
         // given
         CreditCardAccount creditCardAccount = givenSomeCreditCardAccount();
         givenApiClientWillReturn2PagesOfTransactions();
