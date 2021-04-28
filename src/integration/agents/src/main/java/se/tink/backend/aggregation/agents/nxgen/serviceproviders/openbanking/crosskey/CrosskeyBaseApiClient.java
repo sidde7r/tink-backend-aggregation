@@ -17,6 +17,7 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.ws.rs.core.MediaType;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants.Format;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants.HeaderKeys;
@@ -61,6 +62,7 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
+@Slf4j
 public class CrosskeyBaseApiClient {
 
     private final TinkHttpClient client;
@@ -101,12 +103,17 @@ public class CrosskeyBaseApiClient {
     public OAuth2Token getToken(String code) {
         final URL url = new URL(baseApiUrl + CrosskeyBaseConstants.Urls.TOKEN);
 
-        return createTokenRequest(url)
-                .queryParam(QueryKeys.REDIRECT_URI, redirectUrl)
-                .queryParam(QueryKeys.GRANT_TYPE, QueryValues.AUTHORIZATION_CODE)
-                .queryParam(QueryKeys.CODE, code)
-                .post(TokenResponse.class)
-                .toTinkToken();
+        OAuth2Token oAuth2Token =
+                createTokenRequest(url)
+                        .queryParam(QueryKeys.REDIRECT_URI, redirectUrl)
+                        .queryParam(QueryKeys.GRANT_TYPE, QueryValues.AUTHORIZATION_CODE)
+                        .queryParam(QueryKeys.CODE, code)
+                        .post(TokenResponse.class)
+                        .toTinkToken();
+        if (!oAuth2Token.getRefreshToken().isPresent()) {
+            log.warn("Refresh token not present in response");
+        }
+        return oAuth2Token;
     }
 
     public CrosskeyAccountsResponse fetchAccounts() {
