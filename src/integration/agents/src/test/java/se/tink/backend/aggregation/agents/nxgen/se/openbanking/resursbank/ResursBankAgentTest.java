@@ -1,11 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.resursbank;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 
-@Ignore
 public class ResursBankAgentTest {
 
     private AgentIntegrationTest.Builder builder;
@@ -14,6 +12,7 @@ public class ResursBankAgentTest {
     public void setup() {
         builder =
                 new AgentIntegrationTest.Builder("se", "se-resursbank-ob")
+                        .setAppId("tink")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);
