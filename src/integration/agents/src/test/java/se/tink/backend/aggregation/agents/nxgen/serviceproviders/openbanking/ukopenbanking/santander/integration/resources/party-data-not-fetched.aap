@@ -85,6 +85,68 @@ Content-Type: application/x-www-form-urlencoded
 Accept: application/json
 x-fapi-financial-id: 0015800000jfFGuAAM
 
+grant_type=client_credentials
+    &scope=accounts
+    &redirect_uri=https%3A%2F%2Fapi.tink.se%2Fapi%2Fv1%2Fcredentials%2Fthird-party%2Fcallback
+    &client_id=DUMMY_CLIENT_ID
+    &client_secret=DUMMY_CLIENT_SECRET
+
+RESPONSE 2
+200
+Connection: Keep-Alive
+Content-Type: application/json;charset=UTF-8
+
+{
+    "token_type": "Bearer",
+    "access_token": "DUMMY_AUTH_TOKEN",
+    "expires_in": 600,
+    "consented_on": 1605704828,
+    "scope": "accounts"
+}
+
+REQUEST 3
+GET https://openbanking-ma.santander.co.uk/sanuk/external/open-banking/v3.1/aisp/account-access-consents/DUMMY_CONSENT_ID
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer DUMMY_CLIENT_TOKEN
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+RESPONSE 3
+201
+Content-Type: application/json; charset=utf-8
+Connection: keep-alive
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+{
+    "Data": {
+        "ConsentId": "DUMMY_CONSENT_ID",
+        "Permissions": [
+                    "ReadAccountsDetail",
+                    "ReadTransactionsCredits",
+                    "ReadDirectDebits",
+                    "ReadTransactionsDebits",
+                    "ReadBeneficiariesDetail",
+                    "ReadBalances",
+                    "ReadStandingOrdersDetail",
+                    "ReadTransactionsDetail"
+        ],
+        "CreationDateTime": "2021-02-18T14:40:42.485Z",
+        "StatusUpdateDateTime": "2021-02-18T14:40:42.485Z",
+        "Status": "Authorised"
+    },
+    "Risk": {},
+    "Links": {
+        "Self": "https://api.ulsterbank.co.uk/open-banking/v3.1/aisp/account-access-consents/DUMMY_CONSENT_ID"
+    },
+    "Meta": {}
+}
+
+REQUEST 4
+POST https://openbanking-ma.santander.co.uk/sanuk/external/open-banking/openid-connect-provider/v1/oauth2/token
+Content-Type: application/x-www-form-urlencoded
+Accept: application/json
+x-fapi-financial-id: 0015800000jfFGuAAM
+
 grant_type=refresh_token
     &scope=accounts
     &redirect_uri=https%3A%2F%2Fapi.tink.se%2Fapi%2Fv1%2Fcredentials%2Fthird-party%2Fcallback
@@ -92,7 +154,7 @@ grant_type=refresh_token
     &client_secret=DUMMY_CLIENT_SECRET
     &refresh_token=DUMMY_REFRESH_TOKEN
 
-RESPONSE 2
+RESPONSE 4
 200
 Connection: Keep-Alive
 Content-Type: application/json;charset=UTF-8
@@ -108,13 +170,13 @@ Content-Type: application/json;charset=UTF-8
     "id_token": "DUMMY_ID_TOKEN"
 }
 
-REQUEST 3
+REQUEST 5
 GET https://openbanking-ma.santander.co.uk/sanuk/external/open-banking/v3.1/aisp/accounts
 Authorization: Bearer DUMMY_ACCESS_TOKEN
 x-fapi-financial-id: 0015800000jfFGuAAM
 x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
 
-RESPONSE 3
+RESPONSE 5
 200
 Connection: Keep-Alive
 Content-Type: application/json;charset=UTF-8
@@ -149,13 +211,13 @@ x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
     }
 }
 
-REQUEST 4
+REQUEST 6
 GET https://openbanking-ma.santander.co.uk/sanuk/external/open-banking/v3.1/aisp/accounts/8c201ba9-b066-4ea1-b453-3d05b17b18a9/balances
 Authorization: Bearer DUMMY_ACCESS_TOKEN
 x-fapi-financial-id: 0015800000jfFGuAAM
 x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
 
-RESPONSE 4
+RESPONSE 6
 200
 Connection: Keep-Alive
 Content-Type: application/json;charset=UTF-8
