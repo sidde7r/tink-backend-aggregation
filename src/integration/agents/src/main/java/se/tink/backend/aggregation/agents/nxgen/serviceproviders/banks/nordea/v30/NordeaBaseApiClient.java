@@ -57,6 +57,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v3
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.iface.Filter;
 import se.tink.backend.aggregation.nxgen.http.request.HttpMethod;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -626,5 +627,9 @@ public class NordeaBaseApiClient {
                 .accept(MediaType.APPLICATION_JSON_TYPE)
                 .body(verifyRequest, MediaType.APPLICATION_JSON_TYPE)
                 .put(VerifyPersonalCodeResponse.class, verifyRequest);
+    }
+
+    public void addFilter(Filter filter) {
+        httpClient.addFilter(filter);
     }
 }
