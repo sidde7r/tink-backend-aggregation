@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.siliconvalley;
+package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.siliconvalley.authenticator;
 
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingApiClient;
@@ -20,23 +20,41 @@ import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformati
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
-public class SiliconValleyAisAuthenticationController extends UkOpenBankingAisAuthenticationController {
+public class SiliconValleyAisAuthenticationController
+        extends UkOpenBankingAisAuthenticationController {
     private final UkOpenBankingApiClient apiClient;
     private final String strongAuthenticationState;
     private final String callbackUri;
     private final RandomValueGenerator randomValueGenerator;
 
-
-    public SiliconValleyAisAuthenticationController(PersistentStorage persistentStorage, SupplementalInformationHelper supplementalInformationHelper, UkOpenBankingApiClient apiClient, OpenIdAuthenticator authenticator, Credentials credentials, StrongAuthenticationState strongAuthenticationState, String callbackUri, RandomValueGenerator randomValueGenerator, OpenIdAuthenticationValidator authenticationValidator, ConsentStatusValidator consentStatusValidator) {
-        super(persistentStorage, supplementalInformationHelper, apiClient, authenticator, credentials, strongAuthenticationState, callbackUri, randomValueGenerator, authenticationValidator, consentStatusValidator);
+    public SiliconValleyAisAuthenticationController(
+            PersistentStorage persistentStorage,
+            SupplementalInformationHelper supplementalInformationHelper,
+            UkOpenBankingApiClient apiClient,
+            OpenIdAuthenticator authenticator,
+            Credentials credentials,
+            StrongAuthenticationState strongAuthenticationState,
+            String callbackUri,
+            RandomValueGenerator randomValueGenerator,
+            OpenIdAuthenticationValidator authenticationValidator,
+            ConsentStatusValidator consentStatusValidator) {
+        super(
+                persistentStorage,
+                supplementalInformationHelper,
+                apiClient,
+                authenticator,
+                credentials,
+                strongAuthenticationState,
+                callbackUri,
+                randomValueGenerator,
+                authenticationValidator,
+                consentStatusValidator);
 
         this.apiClient = apiClient;
         this.strongAuthenticationState = strongAuthenticationState.getState();
         this.callbackUri = callbackUri;
         this.randomValueGenerator = randomValueGenerator;
     }
-
-
 
     // Prepare third party app payload containing authentication url
     @Override
