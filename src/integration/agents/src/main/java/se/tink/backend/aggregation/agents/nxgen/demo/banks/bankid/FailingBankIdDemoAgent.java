@@ -55,7 +55,8 @@ public final class FailingBankIdDemoAgent extends NextGenerationDemoAgent {
                         supplementalInformationController,
                         authenticator,
                         persistentStorage,
-                        credentials),
+                        credentials,
+                        request.getUserAvailability()),
                 new PasswordAuthenticationController(authenticator));
     }
 

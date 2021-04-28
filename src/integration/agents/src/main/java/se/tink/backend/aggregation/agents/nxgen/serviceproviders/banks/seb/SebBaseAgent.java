@@ -106,7 +106,8 @@ public abstract class SebBaseAgent extends NextGenerationAgent
                     supplementalInformationController,
                     new SebBankIdAuthenticator(apiClient, sebConfiguration),
                     persistentStorage,
-                    credentials),
+                    credentials,
+                    request.getUserAvailability()),
             new SebTokenGenratorAuthenticationController(apiClient, supplementalInformationHelper)
         };
     }

@@ -53,7 +53,8 @@ public final class NorwegianAgent extends NextGenerationAgent
                 supplementalInformationController,
                 new NorwegianAuthenticator(apiClient),
                 persistentStorage,
-                credentials);
+                credentials,
+                request.getUserAvailability());
     }
 
     private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {

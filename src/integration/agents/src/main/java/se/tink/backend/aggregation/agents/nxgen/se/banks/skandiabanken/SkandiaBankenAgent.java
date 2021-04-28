@@ -73,7 +73,8 @@ public final class SkandiaBankenAgent extends NextGenerationAgent
                 supplementalInformationController,
                 new SkandiaBankenAuthenticator(apiClient, sessionStorage),
                 persistentStorage,
-                credentials);
+                credentials,
+                request.getUserAvailability());
     }
 
     @Override

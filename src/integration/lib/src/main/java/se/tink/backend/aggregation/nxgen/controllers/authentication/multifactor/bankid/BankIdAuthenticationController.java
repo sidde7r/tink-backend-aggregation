@@ -30,6 +30,7 @@ import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformati
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.libraries.credentials.service.UserAvailability;
 
 public class BankIdAuthenticationController<T> implements AutoAuthenticator, TypedAuthenticator {
     private static final Logger logger =
@@ -45,18 +46,21 @@ public class BankIdAuthenticationController<T> implements AutoAuthenticator, Typ
     private final TemporalUnit tokenLifetimeUnit;
     private final PersistentStorage persistentStorage;
     private final Credentials credentials;
+    private final UserAvailability userAvailability;
 
     public BankIdAuthenticationController(
             SupplementalInformationController supplementalInformationController,
             BankIdAuthenticator<T> authenticator,
             PersistentStorage persistentStorage,
-            Credentials credentials) {
+            Credentials credentials,
+            UserAvailability userAvailability) {
         this(
                 supplementalInformationController,
                 authenticator,
                 false,
                 persistentStorage,
-                credentials);
+                credentials,
+                userAvailability);
     }
 
     public BankIdAuthenticationController(
@@ -65,7 +69,8 @@ public class BankIdAuthenticationController<T> implements AutoAuthenticator, Typ
             PersistentStorage persistentStorage,
             Credentials credentials,
             int tokenLifetime,
-            TemporalUnit tokenLifetimeUnit) {
+            TemporalUnit tokenLifetimeUnit,
+            UserAvailability userAvailability) {
         this(
                 supplementalInformationController,
                 authenticator,
@@ -73,7 +78,8 @@ public class BankIdAuthenticationController<T> implements AutoAuthenticator, Typ
                 persistentStorage,
                 credentials,
                 tokenLifetime,
-                tokenLifetimeUnit);
+                tokenLifetimeUnit,
+                userAvailability);
     }
 
     public BankIdAuthenticationController(
@@ -81,7 +87,8 @@ public class BankIdAuthenticationController<T> implements AutoAuthenticator, Typ
             BankIdAuthenticator<T> authenticator,
             boolean waitOnBankId,
             PersistentStorage persistentStorage,
-            Credentials credentials) {
+            Credentials credentials,
+            UserAvailability userAvailability) {
         this(
                 supplementalInformationController,
                 authenticator,
@@ -89,7 +96,8 @@ public class BankIdAuthenticationController<T> implements AutoAuthenticator, Typ
                 persistentStorage,
                 credentials,
                 DEFAULT_TOKEN_LIFETIME,
-                DEFAULT_TOKEN_LIFETIME_UNIT);
+                DEFAULT_TOKEN_LIFETIME_UNIT,
+                userAvailability);
     }
 
     public BankIdAuthenticationController(
@@ -99,7 +107,8 @@ public class BankIdAuthenticationController<T> implements AutoAuthenticator, Typ
             PersistentStorage persistentStorage,
             Credentials credentials,
             int tokenLifetime,
-            TemporalUnit tokenLifetimeUnit) {
+            TemporalUnit tokenLifetimeUnit,
+            UserAvailability userAvailability) {
         this.authenticator = Preconditions.checkNotNull(authenticator);
         this.supplementalInformationController =
                 Preconditions.checkNotNull(supplementalInformationController);
@@ -108,6 +117,7 @@ public class BankIdAuthenticationController<T> implements AutoAuthenticator, Typ
         this.credentials = credentials;
         this.tokenLifetime = tokenLifetime;
         this.tokenLifetimeUnit = tokenLifetimeUnit;
+        this.userAvailability = userAvailability;
     }
 
     @Override
@@ -130,6 +140,10 @@ public class BankIdAuthenticationController<T> implements AutoAuthenticator, Typ
             if (Strings.isNullOrEmpty(ssn)) {
                 throw LoginError.INCORRECT_CREDENTIALS.exception();
             }
+        }
+
+        if (!userAvailability.isUserAvailableForInteraction()) {
+            logger.warn("Triggering BankID even though user is not available for interaction!");
         }
 
         // Empty SSN is valid for autostart token agents, handling for ssn not empty needs to be

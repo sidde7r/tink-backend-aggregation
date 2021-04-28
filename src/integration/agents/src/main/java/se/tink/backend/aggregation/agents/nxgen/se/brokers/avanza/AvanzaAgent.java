@@ -96,7 +96,8 @@ public final class AvanzaAgent extends NextGenerationAgent
                 new AvanzaBankIdAuthenticator(
                         apiClient, authSessionStorage, temporaryStorage, sessionStorage),
                 persistentStorage,
-                credentials);
+                credentials,
+                request.getUserAvailability());
     }
 
     @Override

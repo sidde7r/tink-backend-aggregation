@@ -49,7 +49,8 @@ public class SebKortAgent extends NextGenerationAgent
                 supplementalInformationController,
                 new SebKortAuthenticator(apiClient, sessionStorage, config),
                 persistentStorage,
-                credentials);
+                credentials,
+                request.getUserAvailability());
     }
 
     @Override

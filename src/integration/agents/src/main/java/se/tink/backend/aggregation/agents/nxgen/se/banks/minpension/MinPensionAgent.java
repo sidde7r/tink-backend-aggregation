@@ -47,7 +47,8 @@ public class MinPensionAgent extends NextGenerationAgent
                 supplementalInformationController,
                 new MinPensionAuthenticator(minPensionApiClient, sessionStorage),
                 persistentStorage,
-                credentials);
+                credentials,
+                request.getUserAvailability());
     }
 
     @Override

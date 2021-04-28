@@ -47,7 +47,8 @@ public class EnterCardAgent extends NextGenerationAgent
                 supplementalInformationController,
                 new EnterCardAuthenticator(apiClient, config),
                 persistentStorage,
-                credentials);
+                credentials,
+                request.getUserAvailability());
     }
 
     @Override
