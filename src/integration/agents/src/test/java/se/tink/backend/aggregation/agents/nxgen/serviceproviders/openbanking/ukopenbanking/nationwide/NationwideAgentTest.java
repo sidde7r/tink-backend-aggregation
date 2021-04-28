@@ -12,7 +12,6 @@ import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
 
-// @Ignore
 public class NationwideAgentTest {
 
     private final String SOURCE_IDENTIFIER = "";
