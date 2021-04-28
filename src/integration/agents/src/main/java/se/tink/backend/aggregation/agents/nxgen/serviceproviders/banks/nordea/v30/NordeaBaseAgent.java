@@ -166,7 +166,8 @@ public abstract class NordeaBaseAgent extends NextGenerationAgent
                         new NordeaBankIdAuthenticator(
                                 apiClient, sessionStorage, nordeaConfiguration, organisationNumber),
                         persistentStorage,
-                        credentials);
+                        credentials,
+                        request.getUserAvailability());
 
         return new TypedAuthenticationController(bankIdAuthenticationController);
     }

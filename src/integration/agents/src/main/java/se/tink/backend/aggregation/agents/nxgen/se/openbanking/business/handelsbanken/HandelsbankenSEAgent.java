@@ -60,7 +60,8 @@ public final class HandelsbankenSEAgent extends HandelsbankenBaseAgent
                         supplementalInformationController,
                         new HandelsbankenBankIdAuthenticator(apiClient, sessionStorage),
                         persistentStorage,
-                        credentials);
+                        credentials,
+                        request.getUserAvailability());
 
         return new AutoAuthenticationController(
                 request,

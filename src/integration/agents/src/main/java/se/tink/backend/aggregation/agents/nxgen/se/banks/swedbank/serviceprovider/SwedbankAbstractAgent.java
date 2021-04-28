@@ -99,7 +99,8 @@ public abstract class SwedbankAbstractAgent extends NextGenerationAgent
                     new SwedbankDefaultBankIdAuthenticator(
                             apiClient, sessionStorage, credentials.getField(Key.CORPORATE_ID)),
                     persistentStorage,
-                    credentials)
+                    credentials,
+                    request.getUserAvailability())
         };
     }
 

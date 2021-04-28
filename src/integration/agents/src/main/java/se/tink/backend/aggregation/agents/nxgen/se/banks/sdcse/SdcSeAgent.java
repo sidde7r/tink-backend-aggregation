@@ -68,7 +68,8 @@ public final class SdcSeAgent extends SdcAgent
                 supplementalInformationController,
                 new SdcBankIdAuthenticator(bankClient, sdcSessionStorage, credentials),
                 persistentStorage,
-                credentials);
+                credentials,
+                request.getUserAvailability());
     }
 
     @Override

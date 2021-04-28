@@ -142,7 +142,8 @@ public class LansforsakringarAgent extends NextGenerationAgent
                                 supplementalInformationController,
                                 new LansforsakringarBankIdAuthenticator(apiClient, sessionStorage),
                                 persistentStorage,
-                                credentials);
+                                credentials,
+                                request.getUserAvailability());
         return new TypedAuthenticationController(bankIdResponseBankIdAuthenticationController);
     }
 

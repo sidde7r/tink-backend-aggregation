@@ -149,7 +149,8 @@ public final class IcaBankenAgent extends NextGenerationAgent
                 supplementalInformationController,
                 new IcaBankenBankIdAuthenticator(apiClient, icaBankenSessionStorage),
                 persistentStorage,
-                credentials);
+                credentials,
+                request.getUserAvailability());
     }
 
     @Override

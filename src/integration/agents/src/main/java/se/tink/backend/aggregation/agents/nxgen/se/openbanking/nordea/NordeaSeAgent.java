@@ -59,7 +59,8 @@ public final class NordeaSeAgent extends NordeaBaseAgent
                         supplementalInformationController,
                         new NordeaSeDecoupledAuthenticator((NordeaSeApiClient) apiClient),
                         persistentStorage,
-                        credentials);
+                        credentials,
+                        request.getUserAvailability());
         return new AutoAuthenticationController(
                 request, context, bankIdAuthenticationController, bankIdAuthenticationController);
     }

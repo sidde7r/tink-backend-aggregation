@@ -68,7 +68,8 @@ public abstract class NextGenerationDemoAgent extends NextGenerationAgent
                         supplementalInformationController,
                         authenticator,
                         persistentStorage,
-                        credentials),
+                        credentials,
+                        request.getUserAvailability()),
                 new PasswordAuthenticationController(authenticator));
     }
 
