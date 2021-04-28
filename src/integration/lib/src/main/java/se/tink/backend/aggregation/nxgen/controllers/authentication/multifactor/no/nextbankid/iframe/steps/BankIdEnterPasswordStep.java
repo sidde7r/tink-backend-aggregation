@@ -7,8 +7,6 @@ import static se.tink.backend.aggregation.nxgen.controllers.authentication.multi
 import com.google.inject.Inject;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.BankIdWebDriver;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.BankIdElementsSearchQuery;
 
@@ -18,9 +16,9 @@ public class BankIdEnterPasswordStep {
 
     private final BankIdWebDriver webDriver;
 
-    public void enterPrivatePassword(Credentials credentials) {
+    public void enterPrivatePassword(String password) {
         waitForPasswordInput();
-        enterPassword(credentials);
+        setPasswordInput(password);
         clickNext();
     }
 
@@ -44,10 +42,9 @@ public class BankIdEnterPasswordStep {
         webDriver.sleepFor(1_000);
     }
 
-    private void enterPassword(Credentials credentials) {
+    private void setPasswordInput(String password) {
         log.info("{} Entering private password", BANK_ID_LOG_PREFIX);
-        webDriver.setValueToElement(
-                credentials.getField(Field.Key.BANKID_PASSWORD), LOC_PRIVATE_PASSWORD_INPUT);
+        webDriver.setValueToElement(password, LOC_PRIVATE_PASSWORD_INPUT);
     }
 
     private void clickNext() {

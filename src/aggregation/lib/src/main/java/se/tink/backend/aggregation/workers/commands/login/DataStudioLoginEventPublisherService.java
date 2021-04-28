@@ -152,7 +152,15 @@ public class DataStudioLoginEventPublisherService {
                                             .LoginResult>
                                     builder()
                             .put(
+                                    BankIdNOError.INVALID_SSN_FORMAT,
+                                    AgentLoginCompletedEventProto.AgentLoginCompletedEvent
+                                            .LoginResult.LOGIN_ERROR_INCORRECT_CREDENTIALS)
+                            .put(
                                     BankIdNOError.INVALID_SSN_OR_ONE_TIME_CODE,
+                                    AgentLoginCompletedEventProto.AgentLoginCompletedEvent
+                                            .LoginResult.LOGIN_ERROR_INCORRECT_CREDENTIALS)
+                            .put(
+                                    BankIdNOError.INVALID_ONE_TIME_CODE_FORMAT,
                                     AgentLoginCompletedEventProto.AgentLoginCompletedEvent
                                             .LoginResult.LOGIN_ERROR_INCORRECT_CREDENTIALS)
                             .put(
@@ -167,6 +175,14 @@ public class DataStudioLoginEventPublisherService {
                                     BankIdNOError.THIRD_PARTY_APP_TIMEOUT,
                                     AgentLoginCompletedEventProto.AgentLoginCompletedEvent
                                             .LoginResult.BANKID_ERROR_TIMEOUT)
+                            .put(
+                                    BankIdNOError.THIRD_PARTY_APP_REJECTED,
+                                    AgentLoginCompletedEventProto.AgentLoginCompletedEvent
+                                            .LoginResult.BANKID_ERROR_CANCELLED)
+                            .put(
+                                    BankIdNOError.INVALID_BANK_ID_PASSWORD_FORMAT,
+                                    AgentLoginCompletedEventProto.AgentLoginCompletedEvent
+                                            .LoginResult.LOGIN_ERROR_INCORRECT_CREDENTIALS)
                             .put(
                                     BankIdNOError.INVALID_BANK_ID_PASSWORD,
                                     AgentLoginCompletedEventProto.AgentLoginCompletedEvent

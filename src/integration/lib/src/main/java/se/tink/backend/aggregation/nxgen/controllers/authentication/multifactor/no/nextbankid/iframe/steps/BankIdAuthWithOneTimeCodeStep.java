@@ -3,12 +3,14 @@ package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants.BANK_ID_LOG_PREFIX;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants.HtmlLocators.LOC_ONE_TIME_CODE_INPUT;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants.HtmlLocators.LOC_SUBMIT_BUTTON;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants.Validation.VALID_ONE_TIME_CODE_PATTERN;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.screens.BankIdScreen.ENTER_BANK_ID_PASSWORD_SCREEN;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.screens.BankIdScreen.ENTER_SSN_SCREEN;
 
 import com.google.inject.Inject;
 import java.util.Map;
-import java.util.regex.Pattern;
+import java.util.Optional;
+import java.util.regex.Matcher;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.agents.rpc.Field;
@@ -24,8 +26,6 @@ import se.tink.libraries.i18n.Catalog;
 @Slf4j
 @RequiredArgsConstructor(onConstructor = @__({@Inject}))
 public class BankIdAuthWithOneTimeCodeStep {
-
-    private static final Pattern VALID_ONE_TIME_CODE_FORMAT_REGEX = Pattern.compile("^\\d{6}$");
 
     private final BankIdWebDriver webDriver;
     private final BankIdScreensManager screensManager;
@@ -55,8 +55,14 @@ public class BankIdAuthWithOneTimeCodeStep {
     }
 
     private void verifyCodeIsValid(String code) {
-        if (!VALID_ONE_TIME_CODE_FORMAT_REGEX.matcher(code).matches()) {
-            throw new IllegalStateException("Incorrect format for one-time code: " + code);
+        boolean isValid =
+                Optional.ofNullable(code)
+                        .map(VALID_ONE_TIME_CODE_PATTERN::matcher)
+                        .map(Matcher::matches)
+                        .orElse(false);
+        if (!isValid) {
+            log.error("{} Invalid OTP code format: {}", BANK_ID_LOG_PREFIX, code);
+            throw BankIdNOError.INVALID_ONE_TIME_CODE_FORMAT.exception();
         }
         log.info("{} One-time code has correct format", BANK_ID_LOG_PREFIX);
     }

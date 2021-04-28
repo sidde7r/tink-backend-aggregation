@@ -19,10 +19,12 @@ import static se.tink.backend.aggregation.nxgen.controllers.authentication.multi
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.BankIdWebDriverConstants.EMPTY_BY;
 
 import java.util.function.Function;
+import java.util.regex.Pattern;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.openqa.selenium.By;
 import org.openqa.selenium.By.ByCssSelector;
+import se.tink.backend.aggregation.agents.utils.supplementalfields.NorwegianFields.BankIdOneTimeCodeField;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.BankIdElementLocator;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -38,6 +40,18 @@ public class BankIdConstants {
     public static final int THIRD_PARTY_APP_TIMEOUT_IN_SECONDS = 150;
 
     public static final int WAIT_FOR_SIGN_THAT_AUTHENTICATION_IS_FINISHED_FOR_SECONDS = 5;
+
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class Validation {
+
+        public static final Pattern VALID_SSN_PATTERN = Pattern.compile("^\\d{11}$");
+        public static final Pattern VALID_ONE_TIME_CODE_PATTERN =
+                Pattern.compile(BankIdOneTimeCodeField.VALID_OTP_PATTERN);
+        /*
+        Length limits based on https://www.bankid.no/en/private/solve-my-bankid-problem/faq/
+         */
+        public static final Pattern VALID_PASSWORD_PATTERN = Pattern.compile("^.{6,255}$");
+    }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class HtmlSelectors {

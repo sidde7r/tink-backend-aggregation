@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-04-26 14:59+0200\n"
+"POT-Creation-Date: 2021-04-28 15:17+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1823,4 +1823,16 @@ msgid "BankID authentication app timeout."
 msgstr ""
 
 msgid "User rejected authentication in BankID authentication app."
+msgstr ""
+
+msgid "Invalid social security number format."
+msgstr ""
+
+msgid "Invalid BankID password format."
+msgstr ""
+
+msgid "One-time code must contain only digits."
+msgstr ""
+
+msgid "Invalid one-time code format."
 msgstr ""

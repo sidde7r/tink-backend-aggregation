@@ -6,8 +6,6 @@ import static se.tink.backend.aggregation.nxgen.controllers.authentication.multi
 import com.google.inject.Inject;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.BankIdWebDriver;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.BankIdElementsSearchQuery;
@@ -22,12 +20,11 @@ public class BankIdEnterSSNStep {
     private final BankIdWebDriver driver;
     private final BankIdScreensManager screensManager;
 
-    public void enterSSN(Credentials credentials) {
+    public void enterSSN(String ssn) {
         waitForSSNScreen();
         waitForSSNInput();
 
-        String ssn = credentials.getField(Field.Key.USERNAME);
-        enterSSN(ssn);
+        setSsnInput(ssn);
         clickSubmit();
     }
 
@@ -55,7 +52,7 @@ public class BankIdEnterSSNStep {
         }
     }
 
-    private void enterSSN(String ssn) {
+    private void setSsnInput(String ssn) {
         log.info("{} Entering SSN", BankIdConstants.BANK_ID_LOG_PREFIX);
         driver.setValueToElement(ssn, LOC_SSN_INPUT);
     }

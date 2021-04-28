@@ -11,8 +11,6 @@ import static se.tink.backend.aggregation.nxgen.controllers.authentication.multi
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
-import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.BankIdWebDriver;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.BankIdElementLocator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.BankIdElementsSearchQuery;
@@ -26,7 +24,6 @@ public class BankIdEnterPasswordStepTest {
     Mocks
      */
     private BankIdWebDriver webDriver;
-    private Credentials credentials;
 
     /*
     Real
@@ -36,10 +33,6 @@ public class BankIdEnterPasswordStepTest {
     @Before
     public void setup() {
         webDriver = mock(BankIdWebDriver.class);
-
-        credentials = mock(Credentials.class);
-        when(credentials.getField(Field.Key.BANKID_PASSWORD))
-                .thenReturn(SAMPLE_USER_BANK_ID_PASSWORD);
 
         enterPasswordStep = new BankIdEnterPasswordStep(webDriver);
     }
@@ -51,7 +44,7 @@ public class BankIdEnterPasswordStepTest {
         mockElementExists(LOC_PRIVATE_PASSWORD_INPUT, passwordInputElement);
 
         // when
-        enterPasswordStep.enterPrivatePassword(credentials);
+        enterPasswordStep.enterPrivatePassword(SAMPLE_USER_BANK_ID_PASSWORD);
 
         // then
         verify(webDriver)

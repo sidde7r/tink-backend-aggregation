@@ -201,7 +201,15 @@ class LegacyExceptionToConnectivityErrorMapper {
                             BankIdNOError.UNKNOWN_BANK_ID_ERROR,
                             ConnectivityErrorFactory.userLoginError(UserLoginErrors.UNRECOGNIZED))
                     .put(
+                            BankIdNOError.INVALID_SSN_FORMAT,
+                            ConnectivityErrorFactory.userLoginError(
+                                    UserLoginErrors.STATIC_CREDENTIALS_INCORRECT))
+                    .put(
                             BankIdNOError.INVALID_SSN_OR_ONE_TIME_CODE,
+                            ConnectivityErrorFactory.userLoginError(
+                                    UserLoginErrors.STATIC_CREDENTIALS_INCORRECT))
+                    .put(
+                            BankIdNOError.INVALID_ONE_TIME_CODE_FORMAT,
                             ConnectivityErrorFactory.userLoginError(
                                     UserLoginErrors.STATIC_CREDENTIALS_INCORRECT))
                     .put(
@@ -215,6 +223,14 @@ class LegacyExceptionToConnectivityErrorMapper {
                             BankIdNOError.THIRD_PARTY_APP_TIMEOUT,
                             ConnectivityErrorFactory.userLoginError(
                                     UserLoginErrors.DYNAMIC_CREDENTIALS_FLOW_TIMEOUT))
+                    .put(
+                            BankIdNOError.THIRD_PARTY_APP_REJECTED,
+                            ConnectivityErrorFactory.userLoginError(
+                                    UserLoginErrors.DYNAMIC_CREDENTIALS_FLOW_CANCELLED))
+                    .put(
+                            BankIdNOError.INVALID_BANK_ID_PASSWORD_FORMAT,
+                            ConnectivityErrorFactory.userLoginError(
+                                    UserLoginErrors.STATIC_CREDENTIALS_INCORRECT))
                     .put(
                             BankIdNOError.INVALID_BANK_ID_PASSWORD,
                             ConnectivityErrorFactory.userLoginError(
