@@ -66,8 +66,7 @@ public class CSNAgent extends NextGenerationAgent
 
     @Override
     public FetchTransactionsResponse fetchLoanTransactions() {
-        // We don't get any transactions.
-        return null;
+        return loanRefreshController.fetchLoanTransactions();
     }
 
     @Override
