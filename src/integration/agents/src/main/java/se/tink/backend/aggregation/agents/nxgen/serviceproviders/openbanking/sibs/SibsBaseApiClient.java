@@ -201,10 +201,12 @@ public class SibsBaseApiClient {
                                 new URL(redirectUrl).queryParam(QueryKeys.STATE, state))
                         .queryParam(SibsConstants.QueryKeys.TPP_REDIRECT_PREFERRED, TRUE);
 
-        if (sibsPaymentRequest.getDebtorAccount() != null) {
+        // safaty check for CDG and Dabox
+        if (sibsPaymentRequest.getDebtorAccount() != null && userState.hasConsentId()) {
             request.header(HeaderKeys.CONSENT_ID, userState.getConsentId());
         } else {
-            log.info("Creating payment without CONSENT_ID, DebtorAccount does not exists");
+            log.info(
+                    "Creating payment without CONSENT_ID, DebtorAccount or consent does not exists");
         }
 
         return request.post(SibsPaymentInitiationResponse.class, sibsPaymentRequest);
