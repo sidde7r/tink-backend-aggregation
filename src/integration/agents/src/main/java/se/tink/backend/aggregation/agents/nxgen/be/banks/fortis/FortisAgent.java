@@ -6,7 +6,6 @@ import com.google.inject.Inject;
 import org.apache.http.NoHttpResponseException;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
-import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.agentplatform.AgentPlatformHttpClient;
@@ -31,8 +30,7 @@ import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.TimeoutRetryF
 
 @AgentCapabilities({SAVINGS_ACCOUNTS})
 public final class FortisAgent extends AgentPlatformAgent
-        implements RefreshCheckingAccountsExecutor,
-                RefreshSavingsAccountsExecutor,
+        implements RefreshSavingsAccountsExecutor,
                 AgentPlatformAuthenticator,
                 AgentPlatformStorageMigration {
 
@@ -86,16 +84,6 @@ public final class FortisAgent extends AgentPlatformAgent
     protected void configureHttpClient(TinkHttpClient client) {
         client.addMessageReader(new HtmlReader());
         client.disableSignatureRequestHeader();
-    }
-
-    @Override
-    public FetchAccountsResponse fetchCheckingAccounts() {
-        return transactionalAccountRefreshController.fetchCheckingAccounts();
-    }
-
-    @Override
-    public FetchTransactionsResponse fetchCheckingTransactions() {
-        return transactionalAccountRefreshController.fetchCheckingTransactions();
     }
 
     @Override
