@@ -13,9 +13,12 @@ import se.tink.backend.aggregation.agents.general.TransferDestinationPatternBuil
 import se.tink.backend.aggregation.agents.general.models.GeneralAccountEntity;
 import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.NordeaBaseApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.NordeaBaseConstants.Filters;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.fetcher.transfer.entities.BeneficiariesEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.filters.NordeaServerErrorRetryFilter;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationFetcher;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.iface.Filter;
 import se.tink.libraries.account.enums.AccountIdentifierType;
 
 public class NordeaTransferDestinationFetcher implements TransferDestinationFetcher {
@@ -24,6 +27,9 @@ public class NordeaTransferDestinationFetcher implements TransferDestinationFetc
 
     public NordeaTransferDestinationFetcher(NordeaBaseApiClient apiClient) {
         this.apiClient = apiClient;
+        addFilter(
+                new NordeaServerErrorRetryFilter(
+                        Filters.NUMBER_OF_RETRIES, Filters.NUMBER_OF_RETRIES));
     }
 
     @Override
@@ -91,5 +97,9 @@ public class NordeaTransferDestinationFetcher implements TransferDestinationFetc
                 .setDestinationAccounts(destinationAccounts)
                 .addMultiMatchPattern(AccountIdentifierType.SE, TransferDestinationPattern.ALL)
                 .build();
+    }
+
+    private void addFilter(Filter filter) {
+        apiClient.addFilter(filter);
     }
 }

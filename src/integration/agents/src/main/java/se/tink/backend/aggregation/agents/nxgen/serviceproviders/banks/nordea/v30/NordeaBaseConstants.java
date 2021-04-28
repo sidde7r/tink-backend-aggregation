@@ -373,4 +373,9 @@ public class NordeaBaseConstants {
     public class EnrollmentType {
         public static final String PERSONAL_CODE = "personal_code";
     }
+
+    public static class Filters {
+        public static final int NUMBER_OF_RETRIES = 3;
+        public static final long MS_TO_WAIT = 2000;
+    }
 }
