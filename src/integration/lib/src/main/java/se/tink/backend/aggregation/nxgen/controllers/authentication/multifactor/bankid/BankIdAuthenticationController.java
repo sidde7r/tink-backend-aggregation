@@ -142,6 +142,10 @@ public class BankIdAuthenticationController<T> implements AutoAuthenticator, Typ
             }
         }
 
+        if (!userAvailability.isUserAvailableForInteraction()) {
+            logger.warn("Triggering BankID even though user is not available for interaction!");
+        }
+
         // Empty SSN is valid for autostart token agents, handling for ssn not empty needs to be
         // done in each agent
         T reference = authenticator.init(ssn);
