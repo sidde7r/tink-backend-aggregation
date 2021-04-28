@@ -15,6 +15,7 @@ public class RefreshInformationRequest extends CredentialsRequest {
     private Set<RefreshableItem> itemsToRefresh;
     private Set<String> requestedAccountIds;
     private String refreshId;
+    private RefreshScope refreshScope;
 
     public static Builder builder() {
         return new Builder();
@@ -31,6 +32,7 @@ public class RefreshInformationRequest extends CredentialsRequest {
         private boolean forceAuthenticate;
         private Set<String> requestedAccountIds;
         private UserAvailability userAvailability;
+        private RefreshScope refreshScope;
 
         public Builder credentials(Credentials credentials) {
             this.credentials = credentials;
@@ -82,6 +84,11 @@ public class RefreshInformationRequest extends CredentialsRequest {
             return this;
         }
 
+        public Builder refreshScope(RefreshScope refreshScope) {
+            this.refreshScope = refreshScope;
+            return this;
+        }
+
         public RefreshInformationRequest build() {
             RefreshInformationRequest refreshInformationRequest = new RefreshInformationRequest();
 
@@ -95,6 +102,7 @@ public class RefreshInformationRequest extends CredentialsRequest {
             refreshInformationRequest.setForceAuthenticate(forceAuthenticate);
             refreshInformationRequest.setRequestedAccountIds(requestedAccountIds);
             refreshInformationRequest.setUserAvailability(userAvailability);
+            refreshInformationRequest.setRefreshScope(refreshScope);
             return refreshInformationRequest;
         }
     }
@@ -148,5 +156,13 @@ public class RefreshInformationRequest extends CredentialsRequest {
 
     public void setRequestedAccountIds(Set<String> requestedAccountIds) {
         this.requestedAccountIds = requestedAccountIds;
+    }
+
+    public RefreshScope getRefreshScope() {
+        return refreshScope;
+    }
+
+    public void setRefreshScope(RefreshScope refreshScope) {
+        this.refreshScope = refreshScope;
     }
 }

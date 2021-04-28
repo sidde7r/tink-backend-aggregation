@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,6 +52,7 @@ import se.tink.libraries.credentials.service.CreateCredentialsRequest;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.ManualAuthenticateRequest;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
+import se.tink.libraries.credentials.service.RefreshScope;
 import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.credentials.service.UpdateCredentialsRequest;
 import se.tink.libraries.draining.ApplicationDrainMode;
@@ -66,6 +68,8 @@ public class AggregationServiceResource implements AggregationService {
             MetricId.newId("aggregation_user_availability");
     private static final MetricId USER_AVAILABILITY_VALUES =
             MetricId.newId("aggregation_user_availability_values");
+    private static final MetricId REFRESH_SCOPE_PRESENCE =
+            MetricId.newId("aggregation_refresh_scope_presence");
 
     private final MetricRegistry metricRegistry;
     private final QueueProducer producer;
@@ -161,6 +165,7 @@ public class AggregationServiceResource implements AggregationService {
             throws Exception {
 
         trackUserPresentFlagPresence("configure_whitelist", request);
+        trackRefreshScopePresence("configure_whitelist", request);
 
         Set<RefreshableItem> itemsToRefresh = request.getItemsToRefresh();
 
@@ -190,6 +195,7 @@ public class AggregationServiceResource implements AggregationService {
             throws Exception {
 
         trackUserPresentFlagPresence("refresh_whitelist", request);
+        trackRefreshScopePresence("refresh_whitelist", request);
 
         // If the caller don't set any accounts to refresh, we won't do a refresh.
         if (Objects.isNull(request.getAccounts()) || request.getAccounts().isEmpty()) {
@@ -215,6 +221,7 @@ public class AggregationServiceResource implements AggregationService {
     public void refreshInformation(final RefreshInformationRequest request, ClientInfo clientInfo)
             throws Exception {
         trackUserPresentFlagPresence("refresh", request);
+        trackRefreshScopePresence("refresh", request);
 
         if (isHighPrioRequest(request)) {
             agentWorker.execute(
@@ -241,6 +248,7 @@ public class AggregationServiceResource implements AggregationService {
     @Override
     public void transfer(final TransferRequest request, ClientInfo clientInfo) throws Exception {
         trackUserPresentFlagPresence("transfer", request);
+        trackRefreshScopePresence("transfer", request);
         logger.info(
                 "Transfer Request received from main. skipRefresh is: {}", request.isSkipRefresh());
         agentWorker.execute(
@@ -250,6 +258,7 @@ public class AggregationServiceResource implements AggregationService {
     @Override
     public void payment(final TransferRequest request, ClientInfo clientInfo) {
         trackUserPresentFlagPresence("payment", request);
+        trackRefreshScopePresence("payment", request);
         logger.info(
                 "Transfer Request received from main. skipRefresh is: {}", request.isSkipRefresh());
         try {
@@ -263,6 +272,7 @@ public class AggregationServiceResource implements AggregationService {
     @Override
     public void recurringPayment(RecurringPaymentRequest request, ClientInfo clientInfo) {
         trackUserPresentFlagPresence("recurring_payment", request);
+        trackRefreshScopePresence("recurring_payment", request);
         logger.info("Recurring Payment Request received from main" + request);
         try {
             agentWorker.execute(
@@ -276,6 +286,7 @@ public class AggregationServiceResource implements AggregationService {
     public void whitelistedTransfer(final WhitelistedTransferRequest request, ClientInfo clientInfo)
             throws Exception {
         trackUserPresentFlagPresence("whitelisted_transfer", request);
+        trackRefreshScopePresence("whitelisted_transfer", request);
         agentWorker.execute(
                 agentWorkerCommandFactory.createOperationExecuteWhitelistedTransfer(
                         request, clientInfo));
@@ -450,5 +461,28 @@ public class AggregationServiceResource implements AggregationService {
                     String.format("Provider not found: %s", providerName));
             return null;
         }
+    }
+
+    private void trackRefreshScopePresence(String method, RefreshInformationRequest request) {
+        trackRefreshScopePresence(method, request.getRefreshScope());
+    }
+
+    private void trackRefreshScopePresence(String method, TransferRequest request) {
+        trackRefreshScopePresence(method, request.getRefreshScope());
+    }
+
+    private void trackRefreshScopePresence(String method, RefreshScope refreshScope) {
+        metricRegistry
+                .meter(
+                        REFRESH_SCOPE_PRESENCE
+                                .label("method", method)
+                                .label("refresh_scope_present", refreshScope != null)
+                                .label(
+                                        "refresh_scope_segments_present",
+                                        refreshScope != null
+                                                && CollectionUtils.isNotEmpty(
+                                                        refreshScope
+                                                                .getFinancialServiceSegmentsIn())))
+                .inc();
     }
 }
