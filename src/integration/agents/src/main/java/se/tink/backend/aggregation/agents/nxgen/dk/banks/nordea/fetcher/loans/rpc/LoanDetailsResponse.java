@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.fetcher.loans.en
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.fetcher.loans.entities.OwnersEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Party;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
 import se.tink.backend.aggregation.nxgen.core.account.loan.util.InterestRateConverter;
@@ -62,7 +63,7 @@ public class LoanDetailsResponse {
                                 .setProductName(productCode)
                                 .build())
                 .setApiIdentifier(PathValues.ACCOUNT_ID_PREFIX + loanId)
-                .addHolderName(getOwner())
+                .addParties(getOwners())
                 .putInTemporaryStorage(NordeaDkConstants.StorageKeys.PRODUCT_CODE, productCode)
                 .build();
     }
@@ -117,7 +118,9 @@ public class LoanDetailsResponse {
         return Optional.ofNullable(financedObject).map(FinancedObjectEntity::getName).orElse(null);
     }
 
-    public String getOwner() {
-        return owners.stream().findFirst().map(OwnersEntity::getName).orElse(null);
+    public List<Party> getOwners() {
+        return owners.stream()
+                .map(ownersEntity -> new Party(ownersEntity.getName(), Party.Role.UNKNOWN))
+                .collect(Collectors.toList());
     }
 }

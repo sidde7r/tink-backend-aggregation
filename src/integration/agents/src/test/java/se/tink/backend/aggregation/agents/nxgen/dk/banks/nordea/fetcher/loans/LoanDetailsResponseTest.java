@@ -7,8 +7,10 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.io.File;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 import lombok.SneakyThrows;
@@ -18,6 +20,7 @@ import org.junit.runner.RunWith;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaDkConstants;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaTestData.LoansTestData;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.fetcher.loans.rpc.LoanDetailsResponse;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Party;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
@@ -106,7 +109,7 @@ public class LoanDetailsResponseTest {
                                 .setApiIdentifier(
                                         NordeaDkConstants.PathValues.ACCOUNT_ID_PREFIX
                                                 + FIRST_ACCOUNT_ID)
-                                .addHolderName(null)
+                                .addParties(Collections.emptyList())
                                 .putInTemporaryStorage(
                                         NordeaDkConstants.StorageKeys.PRODUCT_CODE, PRODUCT_CODE)
                                 .build());
@@ -175,6 +178,12 @@ public class LoanDetailsResponseTest {
                 readResponseFromFile(
                         LoansTestData
                                 .LOAN_DETAILS_WITH_ALL_PROPERTIES_RELEVANT_FOR_TINK_MODEL_FILE);
+        List<Party> parties =
+                new ArrayList<>(
+                        Arrays.asList(
+                                new Party("owner 1", Party.Role.UNKNOWN),
+                                new Party("owner 2", Party.Role.UNKNOWN),
+                                new Party("", Party.Role.UNKNOWN)));
 
         // when
         LoanAccount loanAccount = response.toTinkLoanAccount();
@@ -218,7 +227,7 @@ public class LoanDetailsResponseTest {
                                 .setApiIdentifier(
                                         NordeaDkConstants.PathValues.ACCOUNT_ID_PREFIX
                                                 + SECOND_ACCOUNT_ID)
-                                .addHolderName("Owner 1")
+                                .addParties(parties)
                                 .putInTemporaryStorage(
                                         NordeaDkConstants.StorageKeys.PRODUCT_CODE, PRODUCT_CODE)
                                 .build());
