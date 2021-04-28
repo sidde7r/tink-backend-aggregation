@@ -116,8 +116,6 @@ clients:
     aggregatorIdentifier: "Din Andelskasse Østervrå"
   dk-dragsholm-sparekasse-production:
     aggregatorIdentifier: "Dragsholm Sparekasse"
-  dk-dronninglund-sparekasse-production:
-    aggregatorIdentifier: "Dronninglund Sparekasse"
   dk-fano-sparekasse:
     aggregatorIdentifier: "Fanø Sparekasse"
   dk-folkesparekassen-production:
@@ -132,8 +130,6 @@ clients:
     aggregatorIdentifier: "Klim Sparekasse"
   dk-lan-spar-production:
     aggregatorIdentifier: "Lån & Spar"
-  dk-langa-sparekasse:
-    aggregatorIdentifier: "Langå Sparekasse"
   dk-middelfart-development-2:
     aggregatorIdentifier: "Middelfart Sparekasse"
   dk-middelfart-development-3:

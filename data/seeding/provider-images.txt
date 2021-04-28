@@ -160,7 +160,6 @@ icon:dk-danskebank-servicecode	https://cdn.tink.se/provider-images/dk/dk-danskeb
 icon:dk-denjyskesparekasse-password	https://cdn.tink.se/provider-images/dk/dk-den-jyske-sparekasse.png
 icon:dk-djurslandsbank-password	https://cdn.tink.se/provider-images/dk/dk-djurslands-bank.png
 icon:dk-dragsholmsparekasse-password	https://cdn.tink.se/provider-images/dk/dk-dragsholm-sparekasse.png
-icon:dk-dronninglundsparekasse-password	https://cdn.tink.se/provider-images/dk/dk-dronninglund-sparekasse.png
 icon:dk-fanosparekasse-password	https://cdn.tink.se/provider-images/dk/dk-fano-sparekasse.png
 icon:dk-fasterandelskasse-password	https://cdn.tink.se/provider-images/dk/dk-faster-andelskasse.png
 icon:dk-folkesparekassen-password	https://cdn.tink.se/provider-images/dk/dk-folkesparekassen.png
@@ -178,7 +177,6 @@ icon:dk-jyskebank-codecard	https://cdn.tink.se/provider-images/dk/dk-jyskebank.p
 icon:dk-klimsparekasse-password	https://cdn.tink.se/provider-images/dk/dk-klim-sparekasse.png
 icon:dk-kreditbanken-password	https://cdn.tink.se/provider-images/dk/dk-kreditbanken.png
 icon:dk-københavnsandelskasse-password	https://cdn.tink.se/provider-images/dk/dk-kobenhavns-andelskasse.png
-icon:dk-langasparekasse-password	https://cdn.tink.se/provider-images/dk/dk-langa-sparekasse.png
 icon:dk-lansparbank-password	https://cdn.tink.se/provider-images/dk/dk-lan-spar-bank-as.png
 icon:dk-lollands-password	https://cdn.tink.se/provider-images/dk/dk-lollands.png
 icon:dk-lægernes-password	https://cdn.tink.se/provider-images/dk/dk-laegernes.png
@@ -268,7 +266,6 @@ icon:no-bien-sparebank	https://cdn.tink.se/provider-images/no/no-bien-sparebank.
 icon:no-birkenes-sparebank	https://cdn.tink.se/provider-images/no/no-birkenes-sparebank.png
 icon:no-bjugn-sparebank	https://cdn.tink.se/provider-images/no/no-bjugn-sparebank.png
 icon:no-blaker-sparebank	https://cdn.tink.se/provider-images/no/no-blaker-sparebank.png
-icon:no-bud-fraena-hustad-sparebank	https://cdn.tink.se/provider-images/no/no-bud-fraena-hustad-sparebank.png
 icon:no-cultura-bank	https://cdn.tink.se/provider-images/no/no-cultura_bank.png
 icon:no-danskebank-password	https://cdn.tink.se/provider-images/no/no-danskebank.png
 icon:no-dnb	https://cdn.tink.se/provider-images/no/no-dnb.png
@@ -285,7 +282,6 @@ icon:no-grong-sparebank	https://cdn.tink.se/provider-images/no/no-grong-spareban
 icon:no-grue-sparebank	https://cdn.tink.se/provider-images/no/no-grue.png
 icon:no-haltdalen-sparebank	https://cdn.tink.se/provider-images/no/no-haltdalen.png
 icon:no-handelsbanken	https://cdn.tink.se/provider-images/no/no-handelsbanken.png
-icon:no-harstad-sparebank	https://cdn.tink.se/provider-images/no/no-harstad-sparebank.png
 icon:no-hegra-sparebank	https://cdn.tink.se/provider-images/no/no-hegra-sparebank.png
 icon:no-hemne-sparebank	https://cdn.tink.se/provider-images/no/no-hemne-sparebank.png
 icon:no-hjartdal-gransherad-sparebank	https://cdn.tink.se/provider-images/no/no-hjartdal-gransherad.png
@@ -299,10 +295,8 @@ icon:no-klaebu-sparebank	https://cdn.tink.se/provider-images/no/no-klaebu.png
 icon:no-kvinesdal-sparebank	https://cdn.tink.se/provider-images/no/no-kvinesdal.png
 icon:no-larvikbanken	https://cdn.tink.se/provider-images/no/nolarvikbanken.png
 icon:no-lillestrombanken	https://cdn.tink.se/provider-images/no/nolillestrombanken.png
-icon:no-lofoten-sparebank	https://cdn.tink.se/provider-images/no/nolofoten.png
 icon:no-marker-sparebank	https://cdn.tink.se/provider-images/no/nomarker.png
 icon:no-melhusbanken	https://cdn.tink.se/provider-images/no/nomelhusbanken.png
-icon:no-nesset-sparebank	https://cdn.tink.se/provider-images/no/nonesset-sparebank_romsdalsbanken.png
 icon:no-nordea	https://cdn.tink.se/provider-images/no/no-nordea.png
 icon:no-nordea-lightlogin	https://cdn.tink.se/provider-images/no/no-nordea.png
 icon:no-odal-sparebank	https://cdn.tink.se/provider-images/no/noodal-sparebank.png
