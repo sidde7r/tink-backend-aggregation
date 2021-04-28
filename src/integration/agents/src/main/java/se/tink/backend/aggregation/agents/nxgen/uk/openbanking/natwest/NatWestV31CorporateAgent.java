@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModul
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModulesForProductionMode;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.UkOpenBankingBaseAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingFlowFacade;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.authenticator.UkOpenBankingAisAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountOwnershipType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAis;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig;
@@ -17,11 +18,17 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.module.UkOpenBankingLocalKeySignerModuleForDecoupledMode;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.UkOpenBankingAisConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.UkOpenBankingV31Ais;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.authenticator.ConsentStatusValidator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.authenticator.UkOpenBankingAisAuthenticationController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.creditcards.CreditCardAccountMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.creditcards.RbsGroupCreditCardBalanceMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.identifier.DefaultIdentifierMapper;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticationValidator;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
 import se.tink.libraries.mapper.PrioritizedValueExtractor;
 
 @AgentDependencyModulesForProductionMode(modules = UkOpenBankingFlowModule.class)
@@ -59,5 +66,36 @@ public final class NatWestV31CorporateAgent extends UkOpenBankingBaseAgent {
                         new DefaultIdentifierMapper(valueExtractor));
         return new UkOpenBankingV31Ais(
                 aisConfig, persistentStorage, creditCardAccountMapper, localDateTimeSource);
+    }
+
+    @Override
+    public Authenticator constructAuthenticator() {
+        UkOpenBankingAisAuthenticationController authController = createUkObAuthController();
+
+        return createAutoAuthController(authController);
+    }
+
+    private UkOpenBankingAisAuthenticationController createUkObAuthController() {
+        return new UkOpenBankingAisAuthenticationController(
+                this.persistentStorage,
+                this.supplementalInformationHelper,
+                this.apiClient,
+                new UkOpenBankingAisAuthenticator(this.apiClient),
+                this.credentials,
+                this.strongAuthenticationState,
+                this.request.getCallbackUri(),
+                this.randomValueGenerator,
+                new OpenIdAuthenticationValidator(this.apiClient),
+                new ConsentStatusValidator(this.apiClient, this.persistentStorage));
+    }
+
+    private AutoAuthenticationController createAutoAuthController(
+            UkOpenBankingAisAuthenticationController authController) {
+        return new AutoAuthenticationController(
+                this.request,
+                this.systemUpdater,
+                new ThirdPartyAppAuthenticationController<>(
+                        authController, this.supplementalInformationHelper),
+                authController);
     }
 }

@@ -1,11 +1,9 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.authenticator;
+package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.siliconvalley.authenticator;
 
-import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.aggregation.agents.exceptions.SessionException;
-import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticationController;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.authenticator.ConsentStatusValidator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.authenticator.UkOpenBankingAisAuthenticationController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticationValidator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticatorConstants;
@@ -19,20 +17,17 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.ran
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
-import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
-@Slf4j
-public class UkOpenBankingAisAuthenticationController extends OpenIdAuthenticationController {
-
+public class SiliconValleyAisAuthenticationController
+        extends UkOpenBankingAisAuthenticationController {
     private final UkOpenBankingApiClient apiClient;
     private final String strongAuthenticationState;
     private final String callbackUri;
-    private final ConsentStatusValidator consentStatusValidator;
     private final RandomValueGenerator randomValueGenerator;
 
-    public UkOpenBankingAisAuthenticationController(
+    public SiliconValleyAisAuthenticationController(
             PersistentStorage persistentStorage,
             SupplementalInformationHelper supplementalInformationHelper,
             UkOpenBankingApiClient apiClient,
@@ -52,13 +47,13 @@ public class UkOpenBankingAisAuthenticationController extends OpenIdAuthenticati
                 strongAuthenticationState,
                 callbackUri,
                 randomValueGenerator,
-                authenticationValidator);
+                authenticationValidator,
+                consentStatusValidator);
 
         this.apiClient = apiClient;
         this.strongAuthenticationState = strongAuthenticationState.getState();
         this.callbackUri = callbackUri;
         this.randomValueGenerator = randomValueGenerator;
-        this.consentStatusValidator = consentStatusValidator;
     }
 
     // Prepare third party app payload containing authentication url
@@ -89,53 +84,8 @@ public class UkOpenBankingAisAuthenticationController extends OpenIdAuthenticati
                                         .withCallbackUri(this.callbackUri)
                                         .withWellKnownConfiguration(wellKnownConfig)
                                         .withIntentId(intentId)
-                                        .withMaxAge(OpenIdAuthenticatorConstants.MAX_AGE)
                                         .build(signer));
 
         return getThirdPartyAppAuthenticationPayload(authorizeUrl);
-    }
-
-    @Override
-    public void autoAuthenticate() throws SessionException, BankServiceException {
-        OAuth2Token clientOAuth2Token = apiClient.requestClientCredentials(ClientMode.ACCOUNTS);
-        if (!clientOAuth2Token.isValid()) {
-            throw new IllegalArgumentException("Client access token is not valid.");
-        }
-
-        apiClient.instantiateAisAuthFilter(clientOAuth2Token);
-
-        consentStatusValidator.validate();
-        super.autoAuthenticate();
-    }
-
-    protected ThirdPartyAppAuthenticationPayload getThirdPartyAppAuthenticationPayload(
-            URL authorizeUrl) {
-        ThirdPartyAppAuthenticationPayload payload = new ThirdPartyAppAuthenticationPayload();
-        payload.setAndroid(getAndroidPayload(authorizeUrl));
-        payload.setIos(getIosPayload(authorizeUrl));
-        payload.setDesktop(getDesktopPayload(authorizeUrl));
-        return payload;
-    }
-
-    private ThirdPartyAppAuthenticationPayload.Desktop getDesktopPayload(URL authorizeUrl) {
-        ThirdPartyAppAuthenticationPayload.Desktop desktop =
-                new ThirdPartyAppAuthenticationPayload.Desktop();
-        desktop.setUrl(authorizeUrl.get());
-        return desktop;
-    }
-
-    private ThirdPartyAppAuthenticationPayload.Ios getIosPayload(URL authorizeUrl) {
-        ThirdPartyAppAuthenticationPayload.Ios iOsPayload =
-                new ThirdPartyAppAuthenticationPayload.Ios();
-        iOsPayload.setAppScheme(authorizeUrl.getScheme());
-        iOsPayload.setDeepLinkUrl(authorizeUrl.get());
-        return iOsPayload;
-    }
-
-    private ThirdPartyAppAuthenticationPayload.Android getAndroidPayload(URL authorizeUrl) {
-        ThirdPartyAppAuthenticationPayload.Android androidPayload =
-                new ThirdPartyAppAuthenticationPayload.Android();
-        androidPayload.setIntent(authorizeUrl.get());
-        return androidPayload;
     }
 }
