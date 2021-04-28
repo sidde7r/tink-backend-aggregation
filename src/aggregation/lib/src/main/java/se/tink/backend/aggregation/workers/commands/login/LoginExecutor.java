@@ -120,7 +120,7 @@ public class LoginExecutor {
                 request.isCreate(),
                 request.isUpdate());
         LOGGER.info(
-                "Authentication required user intervention: {}",
+                "Authentication required user interaction: {}",
                 MetricsFactory.wasAnyUserInteraction(request, interactionCounter));
     }
 
