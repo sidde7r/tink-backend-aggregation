@@ -16,6 +16,7 @@ public class CreditCardDetailsResponse {
     private String currency;
     @Getter private String nickname;
     @Getter private String cardId;
+    @Getter private String principalCardholderName;
 
     @JsonProperty("credit")
     private CreditDetails creditDetails;

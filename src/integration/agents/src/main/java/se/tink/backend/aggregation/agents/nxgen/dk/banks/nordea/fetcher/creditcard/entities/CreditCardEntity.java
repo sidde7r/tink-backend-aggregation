@@ -13,9 +13,14 @@ public class CreditCardEntity {
 
     private String cardId;
     private String cardCategory;
+    private String principalCardholderName;
 
     public String getCardId() {
         return cardId;
+    }
+
+    public String getPrincipalCardholderName() {
+        return principalCardholderName;
     }
 
     public boolean isCreditCard() {

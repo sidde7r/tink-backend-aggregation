@@ -4,13 +4,18 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.Getter;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaDkConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Party;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -23,6 +28,8 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 @JsonObject
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class AccountEntity {
+
+    private static final String OWNER_ROLE = "owner";
 
     @JsonIgnore private final BalanceHelper balanceHelper = new BalanceHelper();
 
@@ -38,6 +45,7 @@ public class AccountEntity {
     private Double creditLimit;
     private String currency;
     private PermissionsEntity permissions;
+    private List<RoleEntity> roles;
 
     public Optional<TransactionalAccount> toTinkAccount() {
         BalanceModule balanceModule =
@@ -65,6 +73,7 @@ public class AccountEntity {
                 .canExecuteExternalTransfer(canExecuteExternalTransfer())
                 .canReceiveExternalTransfer(canReceiveExternalTransfer())
                 .setApiIdentifier(accountId)
+                .addParties(getParties())
                 .putInTemporaryStorage(NordeaDkConstants.StorageKeys.PRODUCT_CODE, productCode)
                 .build();
     }
@@ -176,5 +185,29 @@ public class AccountEntity {
         private ExactCurrencyAmount getCreditLimit() {
             return ExactCurrencyAmount.of(creditLimit, currency);
         }
+    }
+
+    public List<Party> getParties() {
+        List<Party> partyOfOwners = new ArrayList<>();
+
+        Map<Boolean, List<RoleEntity>> partition =
+                roles.stream()
+                        .collect(
+                                Collectors.partitioningBy(
+                                        x -> OWNER_ROLE.equalsIgnoreCase(x.getRole())));
+
+        List<RoleEntity> ownerRoles = partition.get(true);
+        List<RoleEntity> nonOwnerRoles = partition.get(false);
+
+        partyOfOwners.addAll(
+                ownerRoles.stream()
+                        .map(roleEntity -> new Party(roleEntity.getName(), Party.Role.HOLDER))
+                        .collect(Collectors.toList()));
+        partyOfOwners.addAll(
+                nonOwnerRoles.stream()
+                        .map(roleEntity -> new Party(roleEntity.getName(), Party.Role.UNKNOWN))
+                        .collect(Collectors.toList()));
+
+        return partyOfOwners;
     }
 }
