@@ -164,9 +164,7 @@ public final class AvanzaAgent extends NextGenerationAgent
 
     @Override
     protected SessionHandler constructSessionHandler() {
-        AvanzaSessionHandler avanzaSessionHandler =
-                new AvanzaSessionHandler(apiClient, new AuthSessionStorageHelper(sessionStorage));
-        return avanzaSessionHandler;
+        return new AvanzaSessionHandler(apiClient, new AuthSessionStorageHelper(sessionStorage));
     }
 
     @Override
