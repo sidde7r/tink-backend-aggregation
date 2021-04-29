@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.brokers.nordnet.authenticator.rpc;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.Getter;
 import se.tink.backend.aggregation.agents.bankid.status.BankIdStatus;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.brokers.nordnet.NordnetBaseConstants;
@@ -9,14 +10,14 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @Getter
 @JsonObject
+@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class PollBankIdResponse {
     private String status;
-
-    @JsonProperty("hint_code")
     private String hintCode;
-
-    @JsonProperty("error_code")
     private String errorCode;
+    private boolean loggedIn;
+    private String sessionKey;
+    private String sessionType;
 
     public BankIdStatus getBankIdStatus() {
         if (status.equalsIgnoreCase(Errors.ERROR)

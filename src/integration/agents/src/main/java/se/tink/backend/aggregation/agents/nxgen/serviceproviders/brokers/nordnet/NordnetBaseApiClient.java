@@ -14,7 +14,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.brokers.nordnet
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.brokers.nordnet.NordnetBaseConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.brokers.nordnet.NordnetBaseConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.brokers.nordnet.NordnetBaseConstants.Urls;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.brokers.nordnet.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.brokers.nordnet.fetcher.rpc.AccountInfoResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.brokers.nordnet.fetcher.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.brokers.nordnet.fetcher.rpc.PositionsResponse;
@@ -60,7 +59,7 @@ public abstract class NordnetBaseApiClient {
         return client.request(url);
     }
 
-    protected RequestBuilder createRequestInSession(URL url) {
+    public RequestBuilder createRequestInSession(URL url) {
         RequestBuilder requestBuilder = createBasicRequest(url);
         return requestBuilder
                 .accept(MediaType.APPLICATION_JSON)
@@ -115,19 +114,10 @@ public abstract class NordnetBaseApiClient {
     }
 
     private String getAuthorizationHeader() {
-
-        if (isPasswordLogin()) {
-            final String sessionKey =
-                    sessionStorage
-                            .get(StorageKeys.SESSION_KEY, String.class)
-                            .orElseThrow(SessionError.SESSION_EXPIRED::exception);
-            return HeaderKeys.BASIC + EncodingUtils.encodeAsBase64String(sessionKey);
-        } else {
-            return HeaderKeys.BEARER
-                    + persistentStorage
-                            .get(StorageKeys.OAUTH2_TOKEN, TokenResponse.class)
-                            .orElseThrow(SessionError.SESSION_EXPIRED::exception)
-                            .getAccessToken();
-        }
+        final String sessionKey =
+                sessionStorage
+                        .get(StorageKeys.SESSION_KEY, String.class)
+                        .orElseThrow(SessionError.SESSION_EXPIRED::exception);
+        return HeaderKeys.BASIC + EncodingUtils.encodeAsBase64String(sessionKey);
     }
 }
