@@ -16,8 +16,8 @@ import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
+import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AuthSessionStorageHelper;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaApiClient;
-import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaAuthSessionStorage;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.authenticator.entities.LoginEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.authenticator.rpc.BankIdCollectResponse;
@@ -38,13 +38,13 @@ public class AvanzaBankIdAuthenticator implements BankIdAuthenticator<BankIdInit
     private static final Logger LOGGER = LoggerFactory.getLogger(AvanzaBankIdAuthenticator.class);
 
     private final AvanzaApiClient apiClient;
-    private final AvanzaAuthSessionStorage authSessionStorage;
+    private final AuthSessionStorageHelper authSessionStorage;
     private final TemporaryStorage temporaryStorage;
     private final SessionStorage sessionStorage;
 
     public AvanzaBankIdAuthenticator(
             AvanzaApiClient apiClient,
-            AvanzaAuthSessionStorage authSessionStorage,
+            AuthSessionStorageHelper authSessionStorage,
             TemporaryStorage temporaryStorage,
             SessionStorage sessionStorage) {
         this.apiClient = apiClient;
@@ -154,7 +154,6 @@ public class AvanzaBankIdAuthenticator implements BankIdAuthenticator<BankIdInit
         BankIdCompleteResponse bankIdCompleteResponse =
                 apiClient.completeBankId(transactionId, loginEntity.getCustomerId());
 
-        maskAuthCredentialsFromLogging(bankIdCompleteResponse);
         putAuthCredentialsInAuthSessionStorage(bankIdCompleteResponse);
 
         storeHolderNameIfAvailable();
@@ -162,7 +161,7 @@ public class AvanzaBankIdAuthenticator implements BankIdAuthenticator<BankIdInit
 
     private void storeHolderNameIfAvailable() {
         List<SessionAccountPair> sessionAccountPairs =
-                authSessionStorage.keySet().stream()
+                authSessionStorage.getAuthSessions().stream()
                         .flatMap(getSessionAccountPairs())
                         .collect(Collectors.toList());
 
@@ -202,10 +201,7 @@ public class AvanzaBankIdAuthenticator implements BankIdAuthenticator<BankIdInit
     }
 
     private void putAuthCredentialsInAuthSessionStorage(BankIdCompleteResponse response) {
-        authSessionStorage.put(response.getAuthenticationSession(), response.getSecurityToken());
-    }
-
-    private void maskAuthCredentialsFromLogging(BankIdCompleteResponse response) {
+        // This also masks this data from logs
         sessionStorage.put(
                 String.format(StorageKeys.AUTH_SESSION_FORMAT, response.getAuthenticationSession()),
                 response.getAuthenticationSession());

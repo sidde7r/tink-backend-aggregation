@@ -8,8 +8,8 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AuthSessionStorageHelper;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaApiClient;
-import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaAuthSessionStorage;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.transactionalaccount.rpc.TransactionsResponse;
@@ -26,12 +26,12 @@ public class AvanzaTransactionalAccountFetcher
         implements AccountFetcher<TransactionalAccount>,
                 TransactionDatePaginator<TransactionalAccount> {
     private final AvanzaApiClient apiClient;
-    private final AvanzaAuthSessionStorage authSessionStorage;
+    private final AuthSessionStorageHelper authSessionStorage;
     private final TemporaryStorage temporaryStorage;
 
     public AvanzaTransactionalAccountFetcher(
             AvanzaApiClient apiClient,
-            AvanzaAuthSessionStorage authSessionStorage,
+            AuthSessionStorageHelper authSessionStorage,
             TemporaryStorage temporaryStorage) {
         this.apiClient = apiClient;
         this.authSessionStorage = authSessionStorage;
@@ -42,7 +42,7 @@ public class AvanzaTransactionalAccountFetcher
     public Collection<TransactionalAccount> fetchAccounts() {
         String holderName = temporaryStorage.getOrDefault(StorageKeys.HOLDER_NAME, null);
 
-        return authSessionStorage.keySet().stream()
+        return authSessionStorage.getAuthSessions().stream()
                 .flatMap(getAccounts(holderName))
                 .collect(Collectors.toList());
     }
@@ -67,7 +67,7 @@ public class AvanzaTransactionalAccountFetcher
         final String toDateStr = ThreadSafeDateFormat.FORMATTER_DAILY.format(toDate);
 
         List<Transaction> transactions =
-                authSessionStorage.keySet().stream()
+                authSessionStorage.getAuthSessions().stream()
                         .filter(
                                 authSession ->
                                         apiClient.authSessionHasAccountId(authSession, accId))

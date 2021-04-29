@@ -16,6 +16,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.invest
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.transactionalaccount.rpc.AccountsOverviewResponse;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
@@ -33,8 +34,11 @@ public class AvanzaInvestmentFetcherTest {
     @Test
     @Ignore // TODO previously unmaintained -- should be fixed
     public void fetchInvestments() {
-        AvanzaAuthSessionStorage authSessionStorage = new AvanzaAuthSessionStorage();
-        authSessionStorage.put(AUTH_SESSION_ID, AUTH_SESSION_SECURITY_KEY);
+        SessionStorage sessionStorage = new SessionStorage();
+        AuthSessionStorageHelper authSessionStorage = new AuthSessionStorageHelper(sessionStorage);
+        sessionStorage.put(
+                String.format(AvanzaConstants.StorageKeys.AUTH_SESSION_FORMAT, AUTH_SESSION_ID),
+                AUTH_SESSION_SECURITY_KEY);
 
         AvanzaApiClient apiClient = mock(AvanzaApiClient.class);
         TemporaryStorage temporaryStorage = new TemporaryStorage();
