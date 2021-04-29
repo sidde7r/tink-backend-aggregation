@@ -79,34 +79,7 @@ public class WizinkApiClient {
         return createRequest(Urls.TRANSACTIONS)
                 .body(
                         new ConsultTransactionRequest(
-                                TransactionsRequestBody.builder(false)
-                                        .withInternalKey(internalKey)
-                                        .build()))
-                .post(ConsultTransactionResponse.class);
-    }
-
-    public ConsultTransactionResponse fetchTransactionsOlderThan90Days(
-            String sessionId, String internalKey) {
-        String otpInput = supplementalInformationHelper.waitForOtpInput();
-        ConsultTransactionResponse response =
-                createRequest(Urls.TRANSACTIONS)
-                        .body(
-                                new ConsultTransactionRequest(
-                                        TransactionsRequestBody.builder(false)
-                                                .withInternalKey(internalKey)
-                                                .withOtpEntity(new OtpEntity(otpInput, sessionId))
-                                                .build()))
-                        .post(ConsultTransactionResponse.class);
-        handleOtpResponse(response.getTransactionResponse());
-        return response;
-    }
-
-    public ConsultTransactionResponse fetchSessionIdForOlderAccountTransactions(
-            String internalKey) {
-        return createRequest(Urls.TRANSACTIONS)
-                .body(
-                        new ConsultTransactionRequest(
-                                TransactionsRequestBody.builder(true)
+                                TransactionsRequestBody.builder()
                                         .withInternalKey(internalKey)
                                         .build()))
                 .post(ConsultTransactionResponse.class);
@@ -126,39 +99,11 @@ public class WizinkApiClient {
         return createRequest(Urls.CARD_DETAIL_TRANSACTIONS)
                 .body(
                         new FindMovementsRequest(
-                                TransactionsRequestBody.builder(false)
+                                TransactionsRequestBody.builder()
                                         .withAccountNumber(accountNumber)
                                         .withDateFrom(today)
                                         .build()))
                 .post(FindMovementsResponse.class);
-    }
-
-    public FindMovementsResponse fetchSessionIdForOlderCardTransactions(String accountNumber) {
-        return createRequest(Urls.CARD_DETAIL_TRANSACTIONS)
-                .body(
-                        new FindMovementsRequest(
-                                TransactionsRequestBody.builder(true)
-                                        .withAccountNumber(accountNumber)
-                                        .withDateFrom(prepareDate89DaysAgo())
-                                        .build()))
-                .post(FindMovementsResponse.class);
-    }
-
-    public FindMovementsResponse fetchCreditCardTransactionsOlderThan90Days(
-            String accountNumber, String sessionId) {
-        String otpInput = supplementalInformationHelper.waitForOtpInput();
-        FindMovementsResponse response =
-                createRequest(Urls.CARD_DETAIL_TRANSACTIONS)
-                        .body(
-                                new FindMovementsRequest(
-                                        TransactionsRequestBody.builder(false)
-                                                .withAccountNumber(accountNumber)
-                                                .withDateFrom(prepareDate89DaysAgo())
-                                                .withOtpEntity(new OtpEntity(otpInput, sessionId))
-                                                .build()))
-                        .post(FindMovementsResponse.class);
-        handleOtpResponse(response.getCardTransactionsResponse());
-        return response;
     }
 
     public GlobalPositionResponse fetchProductDetailsWithUnmaskedIban() {
@@ -246,10 +191,5 @@ public class WizinkApiClient {
                 "Unknown error code {} with message {}",
                 response.getResult().getCode(),
                 response.getResult().getMessage());
-    }
-
-    private String prepareDate89DaysAgo() {
-        LocalDate date89DaysAgo = LocalDate.now().minusDays(89);
-        return date89DaysAgo.format(DATE_FORMATTER);
     }
 }

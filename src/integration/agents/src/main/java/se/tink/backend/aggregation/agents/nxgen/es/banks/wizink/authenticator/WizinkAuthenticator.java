@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.authenticator;
 
-import com.google.common.base.Strings;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
@@ -35,14 +34,8 @@ public class WizinkAuthenticator extends StatelessProgressiveAuthenticator {
     }
 
     private WizinkStorage initStorageData(WizinkStorage wizinkStorage) {
-        if (Strings.isNullOrEmpty(wizinkStorage.getDeviceId())) {
-            wizinkStorage.markIsFirstFullRefresh();
-
-            String deviceId = UUID.randomUUID().toString();
-            wizinkStorage.storeDeviceId(deviceId);
-        } else {
-            wizinkStorage.markIsNotFirstFullRefresh();
-        }
+        String deviceId = UUID.randomUUID().toString();
+        wizinkStorage.storeDeviceId(deviceId);
         String indigitallDevice = UUID.randomUUID().toString();
         wizinkStorage.storeIndigitallDevice(indigitallDevice);
 

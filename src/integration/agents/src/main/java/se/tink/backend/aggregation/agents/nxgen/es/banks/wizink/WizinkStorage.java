@@ -82,16 +82,4 @@ public class WizinkStorage {
     public String getXTokenUser() {
         return sessionStorage.get(StorageKeys.X_TOKEN_USER);
     }
-
-    public void markIsNotFirstFullRefresh() {
-        persistentStorage.put(StorageKeys.FIRST_FULL_REFRESH, false);
-    }
-
-    public void markIsFirstFullRefresh() {
-        persistentStorage.put(StorageKeys.FIRST_FULL_REFRESH, true);
-    }
-
-    public boolean getFirstFullRefreshFlag() {
-        return persistentStorage.get(StorageKeys.FIRST_FULL_REFRESH, Boolean.class).orElse(false);
-    }
 }

@@ -10,11 +10,9 @@ import javax.ws.rs.core.MediaType;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
-import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.WizinkConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.WizinkConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.authenticator.rpc.CustomerLoginRequest;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.fetcher.account.rpc.ConsultTransactionResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.fetcher.account.rpc.UnmaskDataResponse;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -82,29 +80,6 @@ public class WizinkApiClientTest {
         wizinkApiClient.fetchProductDetailsWithUnmaskedIban();
     }
 
-    @Test(expected = SupplementalInfoException.class)
-    public void shouldThrowSupplementalInfoExceptionWhenInvalidOtp() {
-        // given
-        prepareTestData("808", Urls.TRANSACTIONS);
-        // when
-        wizinkApiClient.fetchTransactionsOlderThan90Days("DUMMY", "DUMMY");
-    }
-
-    @Test(expected = SupplementalInfoException.class)
-    public void shouldThrowSupplementalInfoExceptionWhenOtpExpired() {
-        // given
-        prepareTestData("807", Urls.TRANSACTIONS);
-        // when
-        wizinkApiClient.fetchTransactionsOlderThan90Days("DUMMY", "DUMMY");
-    }
-
-    private void prepareTestData(String errorCode, String url) {
-        when(supplementalInformationHelper.waitForOtpInput()).thenReturn("DUMMY_OTP");
-        final RequestBuilder requestBuilderMock = prepareRequestBuilder(url);
-        when(requestBuilderMock.post(ConsultTransactionResponse.class))
-                .thenReturn(prepareErrorResultResponse(errorCode));
-    }
-
     private RequestBuilder prepareRequestBuilder(String url) {
         when(wizinkStorage.getXTokenId()).thenReturn(DUMMY_X_TOKEN_ID);
         final RequestBuilder requestBuilderMock = mock(RequestBuilder.class);
@@ -145,20 +120,5 @@ public class WizinkApiClientTest {
                         + "    }\n"
                         + "}",
                 UnmaskDataResponse.class);
-    }
-
-    private ConsultTransactionResponse prepareErrorResultResponse(String errorCode) {
-        return SerializationUtils.deserializeFromString(
-                "{\n"
-                        + "    \"ConsultTransactionResponse\": {\n"
-                        + "        \"result\": {\n"
-                        + "            \"code\": \""
-                        + errorCode
-                        + "\",\n"
-                        + "            \"message\": \"OTP Expired\"\n"
-                        + "        }\n"
-                        + "    }\n"
-                        + "}",
-                ConsultTransactionResponse.class);
     }
 }

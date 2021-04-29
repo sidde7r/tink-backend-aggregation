@@ -2,14 +2,10 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.fetcher;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.rpc.OtpEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class TransactionsRequestBody {
-
-    @JsonInclude(Include.NON_NULL)
-    private OtpEntity otp;
 
     @JsonInclude(Include.NON_NULL)
     private String accountNumber;
@@ -27,27 +23,20 @@ public class TransactionsRequestBody {
         this.accountNumber = builder.accountNumber;
         this.dateFrom = builder.dateFrom;
         this.internalKey = builder.internalKey;
-        this.otp = builder.otp;
     }
 
-    public static Builder builder(boolean needOtp) {
-        return new Builder(needOtp);
+    public static Builder builder() {
+        return new Builder();
     }
 
     public static class Builder {
-        private OtpEntity otp;
         private String accountNumber;
         private String internalKey;
         private String dateFrom;
         private boolean needOtp;
 
-        public Builder(boolean needOtp) {
-            this.needOtp = needOtp;
-        }
-
-        public Builder withOtpEntity(OtpEntity otp) {
-            this.otp = otp;
-            return this;
+        public Builder() {
+            this.needOtp = false;
         }
 
         public Builder withAccountNumber(String accountNumber) {
