@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovide
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.BankEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.PayeeEntity;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.account.identifiers.formatters.AccountIdentifierFormatter;
 import se.tink.libraries.account.identifiers.formatters.DefaultAccountIdentifierFormatter;
 
@@ -51,16 +52,19 @@ public class SwedbankBasePredicates {
     }
 
     public static Predicate<PayeeEntity> filterPayees(AccountIdentifier accountIdentifier) {
+        String originalAccountIdentifier = accountIdentifier.getIdentifier(DEFAULT_FORMAT);
+        AccountIdentifierType originalAccountType = accountIdentifier.getType();
+
         return pe -> {
             AccountIdentifier peAccountIdentifier = pe.generalGetAccountIdentifier();
-            String originalAccountIdentifier = accountIdentifier.getIdentifier(DEFAULT_FORMAT);
 
             if (peAccountIdentifier == null || originalAccountIdentifier == null) {
                 return false;
             }
 
             return originalAccountIdentifier.equals(
-                    peAccountIdentifier.getIdentifier(DEFAULT_FORMAT));
+                            peAccountIdentifier.getIdentifier(DEFAULT_FORMAT))
+                    && originalAccountType.equals(peAccountIdentifier.getType());
         };
     }
 }
