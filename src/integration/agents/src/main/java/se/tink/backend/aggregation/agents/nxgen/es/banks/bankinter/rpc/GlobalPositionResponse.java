@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import org.jsoup.nodes.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Node;
@@ -30,7 +32,15 @@ public class GlobalPositionResponse extends HtmlResponse {
     }
 
     public List<String> getAccountLinks() {
-        return getAccountLinks(getAccountNodes(), ACCOUNT_LINK_PATTERN);
+        return getAccountLinks(getAccountScripts(), ACCOUNT_LINK_PATTERN);
+    }
+
+    private List<String> getAccountScripts() {
+        return jsoupDocument.getElementsByClass("goAccounts").stream()
+                .flatMap(element -> element.children().stream())
+                .filter(element -> element.tagName().equals("script"))
+                .map(Element::toString)
+                .collect(Collectors.toList());
     }
 
     private NodeList getInvestmentNodes() {
@@ -57,6 +67,19 @@ public class GlobalPositionResponse extends HtmlResponse {
 
     public List<String> getLoanLinks() {
         return getAccountLinks(getLoanNodes(), LOAN_LINK_PATTERN);
+    }
+
+    private List<String> getAccountLinks(List<String> scripts, Pattern pattern) {
+        ArrayList<String> links = new ArrayList<>();
+        for (String script : scripts) {
+            final Matcher matcher = pattern.matcher(script);
+            if (matcher.find()) {
+                links.add(matcher.group(1));
+            } else {
+                LOG.warn(String.format("Could not find link for account in script: %s", script));
+            }
+        }
+        return links;
     }
 
     private List<String> getAccountLinks(NodeList nodes, Pattern pattern) {
