@@ -24,6 +24,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.loan.LoanRefreshController;
@@ -60,6 +61,7 @@ public abstract class CrossKeyAgent extends NextGenerationAgent
         this.agentConfiguration = agentConfiguration;
         this.apiClient = new CrossKeyApiClient(this.client, agentConfiguration, sessionStorage);
         agentPersistentStorage = new CrossKeyPersistentStorage(this.persistentStorage);
+        this.localDateTimeSource = provider.getLocalDateTimeSource();
 
         this.investmentRefreshController =
                 new InvestmentRefreshController(
@@ -109,6 +111,7 @@ public abstract class CrossKeyAgent extends NextGenerationAgent
                         new TransactionDatePaginationController.Builder<>(
                                         new CrossKeyTransactionFetcher(
                                                 this.apiClient, agentConfiguration))
+                                .setLocalDateTimeSource(localDateTimeSource)
                                 .build()));
     }
 
