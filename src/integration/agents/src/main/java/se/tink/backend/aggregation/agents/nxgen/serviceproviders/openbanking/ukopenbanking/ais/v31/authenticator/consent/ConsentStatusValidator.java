@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.authenticator;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.authenticator.consent;
 
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
