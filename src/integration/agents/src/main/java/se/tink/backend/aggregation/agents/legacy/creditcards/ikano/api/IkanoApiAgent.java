@@ -1,9 +1,23 @@
 package se.tink.backend.aggregation.agents.creditcards.ikano.api;
 
+import com.google.common.io.Files;
+import com.sun.jersey.client.apache4.config.ApacheHttpClient4Config;
+import com.sun.jersey.client.apache4.config.DefaultApacheHttpClient4Config;
+import java.io.File;
+import java.io.InputStream;
+import java.security.KeyStore;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.net.ssl.KeyManagerFactory;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManagerFactory;
+import org.apache.http.conn.ClientConnectionManager;
+import org.apache.http.conn.scheme.Scheme;
+import org.apache.http.conn.ssl.SSLSocketFactory;
+import org.apache.http.impl.conn.BasicClientConnectionManager;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.AbstractAgent;
@@ -48,7 +62,8 @@ public final class IkanoApiAgent extends AbstractAgent
 
         apiClient =
                 new IkanoApiClient(
-                        clientFactory.createCookieClient(context.getLogOutputStream()),
+                        clientFactory.createCustomClient(
+                                context.getLogOutputStream(), createClientConfig()),
                         credentials,
                         request.getProvider().getPayload(),
                         CommonHeaders.DEFAULT_USER_AGENT);
@@ -67,6 +82,44 @@ public final class IkanoApiAgent extends AbstractAgent
         credentials = request.getCredentials();
 
         this.apiClient = apiClient;
+    }
+
+    private ApacheHttpClient4Config createClientConfig() {
+        try {
+            final ApacheHttpClient4Config config = new DefaultApacheHttpClient4Config();
+
+            final KeyStore keyStore = KeyStore.getInstance("PKCS12", "BC");
+            final InputStream stream =
+                    Files.asByteSource(new File("data/agents/ikano/ikano.p12")).openStream();
+            final char[] keystorePassword = "changeme".toCharArray();
+            keyStore.load(stream, keystorePassword);
+
+            final KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance("SunX509");
+            keyManagerFactory.init(keyStore, keystorePassword);
+
+            final TrustManagerFactory trustManagerFactory =
+                    TrustManagerFactory.getInstance("SunX509");
+            trustManagerFactory.init(keyStore);
+
+            final SSLContext sslContext = SSLContext.getInstance("TLS");
+            sslContext.init(
+                    keyManagerFactory.getKeyManagers(),
+                    trustManagerFactory.getTrustManagers(),
+                    new SecureRandom());
+
+            final SSLSocketFactory factory =
+                    new SSLSocketFactory(sslContext, SSLSocketFactory.STRICT_HOSTNAME_VERIFIER);
+            final ClientConnectionManager manager = new BasicClientConnectionManager();
+
+            final Scheme https = new Scheme("https", 443, factory);
+            manager.getSchemeRegistry().register(https);
+
+            config.getProperties()
+                    .put(ApacheHttpClient4Config.PROPERTY_CONNECTION_MANAGER, manager);
+            return config;
+        } catch (Exception e) {
+            throw new IllegalStateException("Could not create client config", e);
+        }
     }
 
     @Override

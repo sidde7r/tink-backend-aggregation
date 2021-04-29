@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.other.csn;
 
+import java.util.Optional;
 import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.MediaType;
 import lombok.RequiredArgsConstructor;
@@ -8,13 +9,13 @@ import se.tink.backend.aggregation.agents.nxgen.se.other.csn.fetcher.loans.rpc.L
 import se.tink.backend.aggregation.agents.nxgen.se.other.csn.fetcher.loans.rpc.LoanTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.other.csn.fetcher.loans.rpc.UserInfoResponse;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 @RequiredArgsConstructor
 public class CSNApiClient {
     private final TinkHttpClient client;
-    private final SessionStorage sessionStorage;
+    private final CSNAuthSessionStorageHelper authSessionStorageHelper;
 
     public String extractSessionId(HttpResponse httpResponse) {
         return httpResponse.getCookies().stream()
@@ -53,32 +54,30 @@ public class CSNApiClient {
     }
 
     public LoanAccountsResponse fetchLoanAccounts() {
-        return client.request(CSNConstants.Urls.CURRENT_DEBT)
-                .type(MediaType.APPLICATION_JSON)
-                .header(
-                        CSNConstants.HeaderKeys.CSN_AUTHORIZATION,
-                        CSNConstants.HeaderValues.BEARER
-                                + sessionStorage.get(CSNConstants.Storage.ACCESS_TOKEN))
+        return createRequestInSession(CSNConstants.Urls.CURRENT_DEBT)
                 .get(LoanAccountsResponse.class);
     }
 
     public LoanTransactionsResponse fetchLoanTransactions() {
-        return client.request(CSNConstants.Urls.LOAN_TRANSACTIONS)
-                .type(MediaType.APPLICATION_JSON)
-                .header(
-                        CSNConstants.HeaderKeys.CSN_AUTHORIZATION,
-                        CSNConstants.HeaderValues.BEARER
-                                + sessionStorage.get(CSNConstants.Storage.ACCESS_TOKEN))
+        return createRequestInSession(CSNConstants.Urls.LOAN_TRANSACTIONS)
                 .get(LoanTransactionsResponse.class);
     }
 
     public UserInfoResponse fetchUserInfo() {
-        return client.request(CSNConstants.Urls.USER_INFO)
+        return createRequestInSession(CSNConstants.Urls.USER_INFO).get(UserInfoResponse.class);
+    }
+
+    private RequestBuilder createRequestInSession(String url) {
+        Optional<String> accessToken = authSessionStorageHelper.getAccessToken();
+
+        if (!accessToken.isPresent()) {
+            throw new IllegalStateException("Expected access token to be present!");
+        }
+
+        return client.request(url)
                 .type(MediaType.APPLICATION_JSON)
                 .header(
                         CSNConstants.HeaderKeys.CSN_AUTHORIZATION,
-                        CSNConstants.HeaderValues.BEARER
-                                + sessionStorage.get(CSNConstants.Storage.ACCESS_TOKEN))
-                .get(UserInfoResponse.class);
+                        CSNConstants.HeaderValues.BEARER + accessToken.get());
     }
 }

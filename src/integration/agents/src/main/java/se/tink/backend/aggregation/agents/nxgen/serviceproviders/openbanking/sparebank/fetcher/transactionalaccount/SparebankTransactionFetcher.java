@@ -24,12 +24,9 @@ public class SparebankTransactionFetcher
     public TransactionKeyPaginatorResponse<String> getTransactionsFor(
             TransactionalAccount account, @Nullable String key) {
         TransactionResponse transactionResponse;
-        // ITE-1648 With fetching of entire history this might not be needed, needs observation
-        boolean includePending = false;
         try {
             if (key == null) {
                 transactionResponse = apiClient.fetchTransactions(account.getApiIdentifier());
-                includePending = true;
             } else {
                 transactionResponse = apiClient.fetchNextTransactions(key);
             }
@@ -43,7 +40,6 @@ public class SparebankTransactionFetcher
         TransactionEntity transactions = transactionResponse.getTransactions();
 
         return new TransactionKeyPaginatorResponseImpl<>(
-                transactions.toTinkTransactions(includePending),
-                transactions.getNext().orElse(null));
+                transactions.toTinkTransactions(), transactions.getNext().orElse(null));
     }
 }

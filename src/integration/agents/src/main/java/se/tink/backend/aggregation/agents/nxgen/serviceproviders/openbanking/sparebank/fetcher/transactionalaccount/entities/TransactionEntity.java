@@ -18,7 +18,7 @@ public class TransactionEntity {
     @JsonProperty("_links")
     private LinksEntity links;
 
-    public Collection<Transaction> toTinkTransactions(boolean includePending) {
+    public Collection<Transaction> toTinkTransactions() {
 
         final Stream<Transaction> bookedTransactionsStream =
                 booked.stream().map(entity -> entity.toTinkTransaction(false));
@@ -26,12 +26,8 @@ public class TransactionEntity {
         final Stream<Transaction> pendingTransactionsStream =
                 pending.stream().map(entity -> entity.toTinkTransaction(true));
 
-        if (includePending) {
-            return Stream.concat(bookedTransactionsStream, pendingTransactionsStream)
-                    .collect(Collectors.toList());
-        } else {
-            return bookedTransactionsStream.collect(Collectors.toList());
-        }
+        return Stream.concat(bookedTransactionsStream, pendingTransactionsStream)
+                .collect(Collectors.toList());
     }
 
     public Optional<String> getNext() {

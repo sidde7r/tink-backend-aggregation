@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.nxgen.se.other.csn.authenticator.bankid.CSNBankIdAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.other.csn.fetcher.loans.LoanAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.other.csn.fetcher.loans.identitydata.CSNIdentityDataFetcher;
+import se.tink.backend.aggregation.agents.nxgen.se.other.csn.session.CSNSessionHandler;
 import se.tink.backend.aggregation.client.provider_configuration.rpc.Capability;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
@@ -22,19 +23,22 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 public class CSNAgent extends NextGenerationAgent
         implements RefreshLoanAccountsExecutor, RefreshIdentityDataExecutor {
 
+    private final CSNAuthSessionStorageHelper authSessionStorageHelper;
     private final CSNApiClient apiClient;
     private final LoanRefreshController loanRefreshController;
 
     @Inject
     public CSNAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
-        apiClient = configureApiClient();
-        loanRefreshController = createLoanRefreshController();
+
+        this.authSessionStorageHelper = new CSNAuthSessionStorageHelper(sessionStorage);
+        this.apiClient = configureApiClient();
+        this.loanRefreshController = createLoanRefreshController();
     }
 
     private CSNApiClient configureApiClient() {
         client.setUserAgent(CSNConstants.HeaderValues.USER_AGENT);
-        return new CSNApiClient(client, sessionStorage);
+        return new CSNApiClient(client, authSessionStorageHelper);
     }
 
     private LoanRefreshController createLoanRefreshController() {
@@ -48,7 +52,7 @@ public class CSNAgent extends NextGenerationAgent
 
         return new BankIdAuthenticationController<>(
                 supplementalInformationController,
-                new CSNBankIdAuthenticator(apiClient, sessionStorage),
+                new CSNBankIdAuthenticator(apiClient, authSessionStorageHelper),
                 persistentStorage,
                 credentials,
                 request.getUserAvailability());
@@ -56,7 +60,7 @@ public class CSNAgent extends NextGenerationAgent
 
     @Override
     protected SessionHandler constructSessionHandler() {
-        return SessionHandler.alwaysFail();
+        return new CSNSessionHandler(apiClient, authSessionStorageHelper);
     }
 
     @Override
