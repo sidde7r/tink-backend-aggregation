@@ -2,11 +2,10 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.brokers.nordne
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
-import java.util.Locale;
 import java.util.Optional;
-import java.util.regex.Matcher;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
@@ -21,48 +20,34 @@ import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.brokers.nordnet.NordnetBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.brokers.nordnet.NordnetBaseConstants;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.brokers.nordnet.NordnetBaseConstants.FormKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.brokers.nordnet.NordnetBaseConstants.FormValues;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.brokers.nordnet.NordnetBaseConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.brokers.nordnet.NordnetBaseConstants.HeaderValues;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.brokers.nordnet.NordnetBaseConstants.InitLogin;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.brokers.nordnet.NordnetBaseConstants.Patterns;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.brokers.nordnet.NordnetBaseConstants.QueryKeys;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.brokers.nordnet.NordnetBaseConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.brokers.nordnet.NordnetBaseConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.brokers.nordnet.NordnetBaseConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.brokers.nordnet.authenticator.rpc.BankIdPollRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.brokers.nordnet.authenticator.rpc.InitBankIdRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.brokers.nordnet.authenticator.rpc.InitBankIdResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.brokers.nordnet.authenticator.rpc.LoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.brokers.nordnet.authenticator.rpc.PollBankIdResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.brokers.nordnet.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticator;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
-import se.tink.backend.aggregation.nxgen.http.form.Form;
-import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 @Slf4j
+@RequiredArgsConstructor
 public class NordnetBankIdAutoStartAuthenticator implements BankIdAuthenticator<String> {
 
     private final NordnetBaseApiClient apiClient;
-    private final PersistentStorage persistentStorage;
+    private final SessionStorage sessionStorage;
+
     private String autoStartToken;
     private String ssn;
-    private String ntag;
-
-    public NordnetBankIdAutoStartAuthenticator(
-            NordnetBaseApiClient apiClient, PersistentStorage persistentStorage) {
-        this.apiClient = apiClient;
-        this.persistentStorage = persistentStorage;
-    }
 
     @Override
     public String init(String ssn)
-            throws BankIdException, BankServiceException, AuthorizationException,
-                    AuthenticationException {
+            throws BankServiceException, AuthorizationException, AuthenticationException {
         this.ssn = ssn;
         return refreshAutostartToken();
     }
@@ -70,35 +55,32 @@ public class NordnetBankIdAutoStartAuthenticator implements BankIdAuthenticator<
     @Override
     public BankIdStatus collect(String reference)
             throws AuthenticationException, AuthorizationException {
-
-        final HttpResponse response;
+        final PollBankIdResponse response;
 
         try {
             final BankIdPollRequest request = new BankIdPollRequest(reference);
             final RequestBuilder requestBuilder =
                     apiClient
-                            .createBasicRequest(new URL(Urls.BANKID_POLL))
+                            .createRequestInSession(new URL(Urls.BANKID_POLL))
                             .type(MediaType.APPLICATION_JSON)
                             .accept(MediaType.APPLICATION_JSON)
-                            .header(HeaderKeys.NTAG, ntag)
                             .body(request);
-            response = apiClient.post(requestBuilder, HttpResponse.class);
+            response = apiClient.post(requestBuilder, PollBankIdResponse.class);
         } catch (HttpResponseException e) {
             return handleBankIdPollErrors(e);
         }
 
-        if (isAuthenticated(response)) {
-            getNtag(response);
-            fetchOauth2Token(getCode());
+        if (response.isLoggedIn()) {
+            setSessionKey(response.getSessionKey());
             checkIdentity();
 
             return BankIdStatus.DONE;
         }
-        return response.getBody(PollBankIdResponse.class).getBankIdStatus();
+        return response.getBankIdStatus();
     }
 
-    private boolean isAuthenticated(HttpResponse response) {
-        return response.getBody(String.class).contains(InitLogin.AUTHENTICATED);
+    private void setSessionKey(String sessionKey) {
+        sessionStorage.put(StorageKeys.SESSION_KEY, sessionKey + ":" + sessionKey);
     }
 
     @Override
@@ -110,8 +92,6 @@ public class NordnetBankIdAutoStartAuthenticator implements BankIdAuthenticator<
     public String refreshAutostartToken()
             throws BankServiceException, AuthorizationException, AuthenticationException {
         initLogin();
-        anonymousLogin();
-
         final InitBankIdResponse response = initBankId();
         this.autoStartToken = response.getAutoStartToken();
         Preconditions.checkNotNull(
@@ -120,30 +100,14 @@ public class NordnetBankIdAutoStartAuthenticator implements BankIdAuthenticator<
         return response.getOrderRef();
     }
 
-    private void anonymousLogin() {
-        RequestBuilder requestBuilder =
-                apiClient
-                        .createBasicRequest(new URL(Urls.ANONYMOUS_LOGIN))
-                        .type(MediaType.APPLICATION_FORM_URLENCODED)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .header(HeaderKeys.NTAG, HeaderValues.NO_NTAG_RECEIVED_YET)
-                        .header(HttpHeaders.USER_AGENT, HeaderValues.USER_AGENT)
-                        .header(HeaderKeys.REFERER, HeaderValues.REFERER)
-                        .acceptLanguage(Locale.UK);
-
-        HttpResponse response = apiClient.post(requestBuilder, HttpResponse.class);
-        getNtag(response);
-    }
-
     private InitBankIdResponse initBankId() {
         RequestBuilder requestBuilder =
                 apiClient
-                        .createBasicRequest(new URL(Urls.BANKID_START))
-                        .type(MediaType.APPLICATION_FORM_URLENCODED)
+                        .createRequestInSession(new URL(Urls.BANKID_START))
+                        .type(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
-                        .header(HttpHeaders.USER_AGENT, HeaderValues.USER_AGENT)
-                        .header(HeaderKeys.NTAG, ntag)
-                        .header(HeaderKeys.REFERER, HeaderValues.REFERER);
+                        .header(HttpHeaders.USER_AGENT, HeaderValues.NORDNET_AGENT)
+                        .body(new InitBankIdRequest(HeaderValues.REACT_NATIVE_AGENT));
 
         try {
             return apiClient.post(requestBuilder, InitBankIdResponse.class);
@@ -162,138 +126,9 @@ public class NordnetBankIdAutoStartAuthenticator implements BankIdAuthenticator<
                         .header(HttpHeaders.USER_AGENT, HeaderValues.USER_AGENT)
                         .body(FormValues.ANONYMOUS_LOGIN.serialize());
 
-        apiClient.post(requestBuilder, LoginResponse.class);
+        final LoginResponse response = apiClient.post(requestBuilder, LoginResponse.class);
 
-        oauth2Authorize();
-    }
-
-    private void oauth2Authorize() {
-
-        String location;
-
-        RequestBuilder authRequest =
-                apiClient
-                        .createBasicRequest(
-                                new URL(Urls.INIT_AUTHORIZE)
-                                        .queryParam(QueryKeys.AUTH_TYPE, QueryValues.AUTH_TYPE)
-                                        .queryParam(FormKeys.CLIENT_ID, QueryValues.CLIENT_ID)
-                                        .queryParam(
-                                                NordnetBaseConstants.FormKeys.RESPONSE_TYPE,
-                                                QueryValues.RESPONSE_TYPE)
-                                        .queryParam(
-                                                NordnetBaseConstants.FormKeys.REDIRECT_URI,
-                                                QueryValues.REDIRECT_URI))
-                        .accept(
-                                MediaType.TEXT_PLAIN,
-                                MediaType.APPLICATION_XHTML_XML,
-                                HeaderKeys.APPLICATION_XML_Q,
-                                HeaderKeys.GENERIC_MEDIA_TYPE)
-                        .header(HttpHeaders.USER_AGENT, HeaderValues.USER_AGENT);
-
-        HttpResponse authResponse = apiClient.get(authRequest, HttpResponse.class);
-
-        location = getLocation(authResponse);
-        RequestBuilder auth2Request =
-                apiClient
-                        .createBasicRequest(new URL(location))
-                        .accept(
-                                MediaType.TEXT_PLAIN,
-                                MediaType.APPLICATION_XHTML_XML,
-                                HeaderKeys.APPLICATION_XML_Q,
-                                HeaderKeys.GENERIC_MEDIA_TYPE)
-                        .header(HttpHeaders.USER_AGENT, HeaderValues.USER_AGENT);
-
-        HttpResponse auth2Response = apiClient.get(auth2Request, HttpResponse.class);
-
-        location = getLocation(auth2Response);
-        RequestBuilder auth3Request =
-                apiClient
-                        .createBasicRequest(new URL(Urls.AUTH_BASE + location))
-                        .accept(
-                                MediaType.TEXT_PLAIN,
-                                MediaType.APPLICATION_XHTML_XML,
-                                HeaderKeys.APPLICATION_XML_Q,
-                                HeaderKeys.GENERIC_MEDIA_TYPE)
-                        .header(HttpHeaders.USER_AGENT, HeaderValues.USER_AGENT);
-
-        apiClient.get(auth3Request, HttpResponse.class);
-    }
-
-    private void fetchOauth2Token(final String code) {
-
-        final String requestBody =
-                Form.builder()
-                        .put(QueryValues.RESPONSE_TYPE, code)
-                        .put(FormKeys.CLIENT_ID, QueryValues.CLIENT_ID)
-                        .put(FormKeys.CLIENT_SECRET, FormValues.CLIENT_SECRET)
-                        .put(FormKeys.GRANT_TYPE, FormValues.GRANT_TYPE)
-                        .put(FormKeys.REDIRECT_URI, QueryValues.REDIRECT_URI)
-                        .build()
-                        .serialize();
-
-        RequestBuilder requestBuilder =
-                apiClient
-                        .createBasicRequest(new URL(Urls.OAUTH2_TOKEN))
-                        .type(MediaType.APPLICATION_FORM_URLENCODED)
-                        .header(HttpHeaders.USER_AGENT, HeaderValues.NORDNET_AGENT)
-                        .body(requestBody);
-
-        HttpResponse response = apiClient.post(requestBuilder, HttpResponse.class);
-
-        final String forwardUri = getLocation(response);
-        requestBuilder =
-                apiClient
-                        .createBasicRequest(new URL(forwardUri))
-                        .type(MediaType.APPLICATION_FORM_URLENCODED)
-                        .header(HttpHeaders.USER_AGENT, HeaderValues.NORDNET_AGENT)
-                        .body(requestBody);
-
-        TokenResponse token = apiClient.post(requestBuilder, TokenResponse.class);
-        persistentStorage.put(StorageKeys.OAUTH2_TOKEN, token);
-    }
-
-    private String getCode() {
-
-        RequestBuilder requestBuilder =
-                apiClient
-                        .createBasicRequest(
-                                new URL(Urls.OAUTH2_AUTHORIZE)
-                                        .queryParam(
-                                                NordnetBaseConstants.FormKeys.CLIENT_ID,
-                                                QueryValues.CLIENT_ID)
-                                        .queryParam(
-                                                NordnetBaseConstants.FormKeys.RESPONSE_TYPE,
-                                                QueryValues.RESPONSE_TYPE)
-                                        .queryParam(
-                                                NordnetBaseConstants.FormKeys.REDIRECT_URI,
-                                                QueryValues.REDIRECT_URI)
-                                        .queryParam("b", "1"))
-                        .accept(
-                                MediaType.TEXT_PLAIN,
-                                MediaType.APPLICATION_XHTML_XML,
-                                HeaderKeys.APPLICATION_XML_Q,
-                                HeaderKeys.GENERIC_MEDIA_TYPE)
-                        .header(HttpHeaders.USER_AGENT, HeaderValues.USER_AGENT)
-                        .header(HeaderKeys.REFERER, HeaderValues.REFERER);
-
-        HttpResponse response = apiClient.get(requestBuilder, HttpResponse.class);
-        return getAuthCodeFrom(
-                response.getHeaders().get(HeaderKeys.LOCATION).stream()
-                        .findFirst()
-                        .orElseThrow(
-                                () -> new IllegalStateException("Fetch authorization code error")));
-    }
-
-    private String getAuthCodeFrom(String location) {
-        Matcher matcher = Patterns.CODE.matcher(location);
-
-        String code = matcher.find() ? matcher.group(1) : null;
-        if (code == null) {
-            log.error(
-                    "No code was return - this occurs due to bank issues, location: {}", location);
-            throw BankServiceError.BANK_SIDE_FAILURE.exception();
-        }
-        return code;
+        setSessionKey(response.getSessionKey());
     }
 
     private void checkIdentity() throws LoginException {
@@ -301,18 +136,6 @@ public class NordnetBankIdAutoStartAuthenticator implements BankIdAuthenticator<
         if (!ssn.equalsIgnoreCase(identityData.getIdentityData().getSsn())) {
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
-    }
-
-    private void getNtag(HttpResponse response) {
-        this.ntag = response.getHeaders().getFirst(HeaderKeys.NTAG);
-        Preconditions.checkNotNull(ntag, "Expected ntag header to exist for subsequent requests");
-    }
-
-    private String getLocation(HttpResponse response) {
-        final String location = response.getHeaders().getFirst(HeaderKeys.LOCATION);
-        Preconditions.checkNotNull(
-                location, "Expected Location header to exist for subsequent requests");
-        return location;
     }
 
     private void handleBankIdErrors(HttpResponseException e)

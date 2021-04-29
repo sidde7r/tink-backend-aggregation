@@ -9,7 +9,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.brokers.nordnet
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.identitydata.IdentityData;
 
@@ -18,11 +17,8 @@ public class NordnetApiClient extends NordnetBaseApiClient {
     private IdentityData cachedIdentityData;
 
     public NordnetApiClient(
-            TinkHttpClient client,
-            Credentials credentials,
-            PersistentStorage persistentStorage,
-            SessionStorage sessionStorage) {
-        super(client, credentials, persistentStorage, sessionStorage);
+            TinkHttpClient client, Credentials credentials, SessionStorage sessionStorage) {
+        super(client, credentials, sessionStorage);
     }
 
     @Override

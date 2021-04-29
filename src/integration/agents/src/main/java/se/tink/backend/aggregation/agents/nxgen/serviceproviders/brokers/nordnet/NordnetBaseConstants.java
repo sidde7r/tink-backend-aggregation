@@ -12,16 +12,12 @@ public class NordnetBaseConstants {
     public static class Urls {
 
         public static final String BASE = "https://www.nordnet.se";
-        public static final String AUTH_BASE = "https://classic.nordnet.se";
         public static final String INIT_LOGIN = BASE + "/api/2/login";
         public static final String BASIC_LOGIN = BASE + "/api/2/authentication/basic/login";
         public static final String INIT_AUTHORIZE = BASE + "/oauth2/authorize";
-        public static final String OAUTH2_AUTHORIZE = AUTH_BASE + "/oauth2/authorize";
-        public static final String ANONYMOUS_LOGIN = AUTH_BASE + "/api/2/login/anonymous";
         public static final String BANKID_START =
-                AUTH_BASE + "/api/2/authentication/eid/se/bankid/start";
-        public static final String BANKID_POLL =
-                AUTH_BASE + "/api/2/authentication/eid/se/bankid/poll";
+                BASE + "/api/2/authentication/eid/se/bankid/start";
+        public static final String BANKID_POLL = BASE + "/api/2/authentication/eid/se/bankid/poll";
         public static final String OAUTH2_TOKEN = BASE + "/oauth2/token";
         public static final String CUSTOMER_INFO = BASE + "/api/2/customers/contact_info";
         public static final String ACCOUNTS = BASE + "/api/2/accounts";
@@ -60,7 +56,7 @@ public class NordnetBaseConstants {
         public static final String RESPONSE_TYPE = "response_type";
         public static final String SSN = "national_registration_number";
         public static final String USERNAME = "username";
-        protected static final byte[] PASSWORD = "password".getBytes();
+        public static final String PASSWORD = "password";
         public static final String SERVICE = "service";
         public static final String COUNTRY = "country";
         public static final String SESSION_LANGUAGE = "session_lang";
@@ -75,7 +71,7 @@ public class NordnetBaseConstants {
         public static final Form ANONYMOUS_LOGIN =
                 Form.builder()
                         .put(FormKeys.USERNAME, FormValues.ANONYMOUS)
-                        .put(new String(FormKeys.PASSWORD), FormValues.ANONYMOUS)
+                        .put(FormKeys.PASSWORD, FormValues.ANONYMOUS)
                         .put(FormKeys.SERVICE, QueryValues.CLIENT_ID)
                         .put(FormKeys.COUNTRY, FormValues.COUNTRY_SE)
                         .put(FormKeys.SESSION_LANGUAGE, FormValues.LANG_EN)
@@ -96,9 +92,9 @@ public class NordnetBaseConstants {
         public static final String NO_NTAG_RECEIVED_YET = "NO_NTAG_RECEIVED_YET";
         public static final String USER_AGENT =
                 "Mozilla/5.0 (iPhone; CPU iPhone OS 13_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148";
-        public static final String NORDNET_AGENT = "Nordnet/7 CFNetwork/1121.2.2 Darwin/19.3.0";
+        public static final String NORDNET_AGENT = "Nordnet/4 CFNetwork/1220.1 Darwin/20.3.0";
         public static final String REACT_NATIVE_AGENT =
-                "Nordnet React Native App/ios-13.3.1/10.10.0";
+                "Nordnet React Native App/ios-14.4.2/12.3.0";
         public static final String REFERER =
                 "https://classic.nordnet.se/mux/login/startSE.html?clearEndpoint=0&intent=mobile_ios_2&state=signin";
     }

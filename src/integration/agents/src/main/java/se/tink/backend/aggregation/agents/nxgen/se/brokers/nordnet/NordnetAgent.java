@@ -35,6 +35,6 @@ public class NordnetAgent extends NordnetBaseAgent {
 
     @Override
     protected NordnetBaseApiClient createApiClient() {
-        return new NordnetApiClient(client, credentials, persistentStorage, sessionStorage);
+        return new NordnetApiClient(client, credentials, sessionStorage);
     }
 }

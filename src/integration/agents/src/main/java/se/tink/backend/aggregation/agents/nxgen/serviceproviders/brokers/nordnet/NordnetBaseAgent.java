@@ -51,7 +51,7 @@ public abstract class NordnetBaseAgent<T extends NordnetBaseApiClient> extends N
         return new TypedAuthenticationController(
                 new BankIdAuthenticationController<>(
                         supplementalInformationController,
-                        new NordnetBankIdAutoStartAuthenticator(apiClient, persistentStorage),
+                        new NordnetBankIdAutoStartAuthenticator(apiClient, sessionStorage),
                         persistentStorage,
                         credentials,
                         request.getUserAvailability()),
