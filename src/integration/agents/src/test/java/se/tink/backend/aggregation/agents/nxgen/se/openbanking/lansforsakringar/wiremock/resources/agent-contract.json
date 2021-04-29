@@ -100,12 +100,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "316465105-25"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-07-10",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : "2020-07-10",
@@ -129,12 +123,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "282050285-25"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-05-11",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : "2020-05-11",
@@ -158,12 +146,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "280158899-25"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-05-05",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : "2020-05-05",
@@ -187,12 +169,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "279399909-25"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-05-04",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : "2020-05-04",
@@ -216,12 +192,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "264350632-25"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-04-07",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : "2020-04-07",
@@ -245,12 +215,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "252726722-25"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-03-19",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : "2020-03-19",
@@ -274,12 +238,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "249160343-25"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-03-17",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : "2020-03-17",
@@ -303,12 +261,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "250556244-25"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-03-14",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : "2020-03-14",
@@ -332,12 +284,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "249856689-25"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-03-12",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : "2020-03-12",
@@ -361,12 +307,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "249158245-25"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-03-10",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : "2020-03-10",
@@ -390,12 +330,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "249156629-25"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-03-10",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : "2020-03-10",
@@ -419,12 +353,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "249155498-25"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-03-10",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : "2020-03-10",
@@ -448,12 +376,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "247162912-25"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-03-04",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : "2020-03-04",
@@ -477,12 +399,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "246505590-25"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-03-02",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : "2020-03-02",
@@ -506,12 +422,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "242330892-25"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-02-27",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : "2020-02-27",
@@ -535,12 +445,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "239900924-25"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-02-25",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : "2020-02-25",
@@ -564,12 +468,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "236010407-25"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-02-18",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : "2020-02-18",
@@ -593,12 +491,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "233388744-25"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-02-11",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : "2020-02-11",
@@ -622,12 +514,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "233386285-25"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-02-11",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : "2020-02-11",
@@ -651,12 +537,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "233385502-25"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-02-11",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : "2020-02-11",
@@ -680,12 +560,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "233051784-25"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-02-10",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : "2020-02-10",
@@ -709,12 +583,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "231775523-25"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-02-06",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : "2020-02-06",
@@ -738,12 +606,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "229565308-25"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-02-01",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : "2020-02-01",
@@ -767,12 +629,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "226064420-25"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-01-27",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : "2020-01-27",
@@ -796,12 +652,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "218383492-25"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-01-15",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : "2020-01-15",
@@ -825,12 +675,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "205509124-25"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2019-12-20",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : "2019-12-20",
@@ -854,12 +698,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "205406930-25"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2019-12-20",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : "2019-12-20",
@@ -883,12 +721,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "182984221-25"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2019-11-08",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : "2019-11-08",
@@ -912,12 +744,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "182185888-25"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2019-11-06",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : "2019-11-06",
@@ -941,12 +767,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "181877494-25"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2019-11-05",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : "2019-11-05",
@@ -970,12 +790,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "316465105-25"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-07-10",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : "2020-07-10",
@@ -999,12 +813,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "282050285-25"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-05-11",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : "2020-05-11",
@@ -1028,12 +836,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "280158899-25"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-05-05",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : "2020-05-05",
@@ -1057,12 +859,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "279399909-25"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-05-04",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : "2020-05-04",
@@ -1086,12 +882,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "264350632-25"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-04-07",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : "2020-04-07",
@@ -1115,12 +905,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "252726722-25"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-03-19",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : "2020-03-19",
@@ -1144,12 +928,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "249160343-25"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-03-17",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : "2020-03-17",
@@ -1173,12 +951,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "250556244-25"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-03-14",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : "2020-03-14",
@@ -1202,12 +974,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "249856689-25"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-03-12",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : "2020-03-12",
@@ -1231,12 +997,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "249158245-25"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-03-10",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : "2020-03-10",
@@ -1260,12 +1020,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "249156629-25"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-03-10",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : "2020-03-10",
@@ -1289,12 +1043,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "249155498-25"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-03-10",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : "2020-03-10",
@@ -1318,12 +1066,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "247162912-25"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-03-04",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : "2020-03-04",
@@ -1347,12 +1089,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "246505590-25"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-03-02",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : "2020-03-02",
@@ -1376,12 +1112,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "242330892-25"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-02-27",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : "2020-02-27",
@@ -1405,12 +1135,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "239900924-25"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-02-25",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : "2020-02-25",
@@ -1434,12 +1158,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "236010407-25"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-02-18",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : "2020-02-18",
@@ -1463,12 +1181,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "233388744-25"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-02-11",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : "2020-02-11",
@@ -1492,12 +1204,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "233386285-25"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-02-11",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : "2020-02-11",
@@ -1521,12 +1227,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "233385502-25"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-02-11",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : "2020-02-11",
@@ -1550,12 +1250,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "233051784-25"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-02-10",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : "2020-02-10",
@@ -1579,12 +1273,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "231775523-25"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-02-06",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : "2020-02-06",
@@ -1608,12 +1296,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "229565308-25"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-02-01",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : "2020-02-01",
@@ -1637,12 +1319,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "226064420-25"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-01-27",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : "2020-01-27",
@@ -1666,12 +1342,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "218383492-25"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-01-15",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : "2020-01-15",
@@ -1695,12 +1365,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "205509124-25"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2019-12-20",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : "2019-12-20",
@@ -1724,12 +1388,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "205406930-25"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2019-12-20",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : "2019-12-20",
@@ -1753,12 +1411,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "182984221-25"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2019-11-08",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : "2019-11-08",
@@ -1782,12 +1434,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "182185888-25"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2019-11-06",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : "2019-11-06",
@@ -1811,12 +1457,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "181877494-25"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2019-11-05",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : "2019-11-05",
@@ -1840,12 +1480,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "2019501730151122"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-07-11",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : null,
@@ -1870,12 +1504,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "2019501730151121"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-07-10",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : null,
@@ -1900,12 +1528,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "2019201730110244"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-07-09",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : null,
@@ -1930,12 +1552,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "2019101730064587"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-07-08",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : null,
@@ -1960,12 +1576,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "2019001730062791"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-07-07",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : null,
@@ -1990,12 +1600,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "2019001730062790"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-07-07",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : null,
@@ -2020,12 +1624,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "2019001730062789"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-07-07",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : null,
@@ -2050,12 +1648,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "2018801730162603"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-07-05",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : null,
@@ -2080,12 +1672,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "2018801730162602"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-07-05",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : null,
@@ -2110,12 +1696,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "2018801730162601"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-07-04",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : null,
@@ -2140,12 +1720,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "2018801730162600"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-07-04",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : null,
@@ -2170,12 +1744,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "2018801730162599"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-07-03",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : null,
@@ -2200,12 +1768,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "2018801730162598"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-07-03",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : null,
@@ -2230,12 +1792,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "2018901730077617"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-07-02",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : null,
@@ -2260,12 +1816,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "2018501730087481"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-07-02",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : null,
@@ -2290,12 +1840,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "2018501730087480"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-07-02",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : null,
@@ -2320,12 +1864,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "2018401730054632"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-07-01",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : null,
@@ -2350,12 +1888,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "2018201730127951"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-06-29",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : null,
@@ -2380,12 +1912,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "2017701730103206"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-06-24",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : null,
@@ -2410,12 +1936,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "2017401730150718"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-06-21",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : null,
@@ -2440,12 +1960,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "2017401730150717"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-06-21",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : null,
@@ -2470,12 +1984,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "2017401730150716"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-06-21",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : null,
@@ -2500,12 +2008,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "2017401730150715"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-06-21",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : null,
@@ -2530,12 +2032,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "2017401730150714"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-06-21",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : null,
@@ -2560,12 +2056,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "2017401730150713"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-06-21",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : null,
@@ -2590,12 +2080,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "2017401730150712"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-06-21",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : null,
@@ -2620,12 +2104,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "2017401730150711"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-06-21",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : null,
@@ -2650,12 +2128,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "2017401730150710"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-06-21",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : null,
@@ -2680,12 +2152,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "2017401730150709"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-06-21",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : null,
@@ -2710,12 +2176,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "2017401730150708"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-06-21",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : null,
@@ -2740,12 +2200,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "2019501730151122"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-07-11",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : null,
@@ -2770,12 +2224,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "2019501730151121"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-07-10",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : null,
@@ -2800,12 +2248,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "2019201730110244"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-07-09",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : null,
@@ -2830,12 +2272,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "2019101730064587"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-07-08",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : null,
@@ -2860,12 +2296,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "2019001730062791"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-07-07",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : null,
@@ -2890,12 +2320,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "2019001730062790"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-07-07",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : null,
@@ -2920,12 +2344,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "2019001730062789"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-07-07",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : null,
@@ -2950,12 +2368,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "2018801730162603"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-07-05",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : null,
@@ -2980,12 +2392,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "2018801730162602"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-07-05",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : null,
@@ -3010,12 +2416,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "2018801730162601"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-07-04",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : null,
@@ -3040,12 +2440,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "2018801730162600"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-07-04",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : null,
@@ -3070,12 +2464,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "2018801730162599"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-07-03",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : null,
@@ -3100,12 +2488,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "2018801730162598"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-07-03",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : null,
@@ -3130,12 +2512,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "2018901730077617"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-07-02",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : null,
@@ -3160,12 +2536,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "2018501730087481"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-07-02",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : null,
@@ -3190,12 +2560,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "2018501730087480"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-07-02",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : null,
@@ -3220,12 +2584,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "2018401730054632"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-07-01",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : null,
@@ -3250,12 +2608,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "2018201730127951"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-06-29",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : null,
@@ -3280,12 +2632,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "2017701730103206"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-06-24",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : null,
@@ -3310,12 +2656,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "2017401730150718"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-06-21",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : null,
@@ -3340,12 +2680,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "2017401730150717"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-06-21",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : null,
@@ -3370,12 +2704,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "2017401730150716"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-06-21",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : null,
@@ -3400,12 +2728,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "2017401730150715"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-06-21",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : null,
@@ -3430,12 +2752,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "2017401730150714"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-06-21",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : null,
@@ -3460,12 +2776,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "2017401730150713"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-06-21",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : null,
@@ -3490,12 +2800,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "2017401730150712"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-06-21",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : null,
@@ -3520,12 +2824,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "2017401730150711"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-06-21",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : null,
@@ -3550,12 +2848,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "2017401730150710"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-06-21",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : null,
@@ -3580,12 +2872,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "2017401730150709"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-06-21",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : null,
@@ -3610,12 +2896,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "2017401730150708"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-06-21",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : null,
@@ -3640,12 +2920,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "283954799-1516"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-07-14",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : "2020-07-15",
@@ -3669,12 +2943,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "283862998-1516"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-07-14",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : "2020-07-15",
@@ -3698,12 +2966,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "282639720-1516"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-07-12",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : "2020-07-14",
@@ -3727,12 +2989,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "35547139-202"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-07-13",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : "2020-07-13",
@@ -3756,12 +3012,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "316465105-25"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-07-10",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : "2020-07-10",
@@ -3785,12 +3035,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "316459385-25"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-07-10",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : "2020-07-10",
@@ -3814,12 +3058,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "316039541-25"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-07-09",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : "2020-07-09",
@@ -3843,12 +3081,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "314883623-25"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-07-06",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : "2020-07-06",
@@ -3872,12 +3104,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "314000614-25"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-07-03",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : "2020-07-03",
@@ -3901,12 +3127,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "313904314-25"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-07-03",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : "2020-07-03",
@@ -3930,12 +3150,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "313903333-25"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-07-03",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : "2020-07-03",
@@ -3959,12 +3173,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "313497982-25"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-07-03",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : "2020-07-03",
@@ -3988,12 +3196,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "313503039-25"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-07-03",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : "2020-07-03",
@@ -4017,12 +3219,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "163678901-1625"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-07-02",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : "2020-07-02",
@@ -4046,12 +3242,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "275426450-1516"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-06-30",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : "2020-07-01",
@@ -4075,12 +3265,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "34288619-202"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-06-30",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : "2020-06-30",
@@ -4104,12 +3288,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "34288618-202"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-06-30",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : "2020-06-30",
@@ -4133,12 +3311,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "34288617-202"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-06-30",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : "2020-06-30",
@@ -4162,12 +3334,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "307746004-25"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-06-30",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : "2020-06-30",
@@ -4191,12 +3357,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "34114073-202"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-06-29",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : "2020-06-29",
@@ -4220,12 +3380,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "34114072-202"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-06-29",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : "2020-06-29",
@@ -4249,12 +3403,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "308426324-25"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-06-26",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : "2020-06-26",
@@ -4278,12 +3426,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "162271556-1625"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-06-26",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : "2020-06-26",
@@ -4307,12 +3449,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "307745965-25"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-06-26",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : "2020-06-26",
@@ -4336,12 +3472,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "33376740-202"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-06-26",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : "2020-06-26",
@@ -4365,12 +3495,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "305557658-25"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-06-24",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : "2020-06-24",
@@ -4394,12 +3518,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "268820312-1516"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-06-18",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : "2020-06-19",
@@ -4423,12 +3541,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "159665403-1625"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-06-14",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : "2020-06-14",
@@ -4452,12 +3564,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "159379451-1625"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-06-12",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : "2020-06-12",
@@ -4481,12 +3587,6 @@
       "PROVIDER_GIVEN_TRANSACTION_ID" : "159378442-1625"
     },
     "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-06-12",
-        "instant" : null
-      }
-    }, {
       "type" : "BOOKING_DATE",
       "value" : {
         "date" : "2020-06-12",
@@ -4509,13 +3609,7 @@
     "externalSystemIds" : {
       "PROVIDER_GIVEN_TRANSACTION_ID" : "283954799-0000"
     },
-    "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-07-14",
-        "instant" : null
-      }
-    } ],
+    "transactionDates" : [ ],
     "proprietaryFinancialInstitutionType" : "text",
     "providerMarket" : "SE"
   }, {
@@ -4532,13 +3626,7 @@
     "externalSystemIds" : {
       "PROVIDER_GIVEN_TRANSACTION_ID" : "283862998-0000"
     },
-    "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-07-14",
-        "instant" : null
-      }
-    } ],
+    "transactionDates" : [ ],
     "proprietaryFinancialInstitutionType" : "text",
     "providerMarket" : "SE"
   }, {
@@ -4555,13 +3643,7 @@
     "externalSystemIds" : {
       "PROVIDER_GIVEN_TRANSACTION_ID" : "282639720-0000"
     },
-    "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-07-12",
-        "instant" : null
-      }
-    } ],
+    "transactionDates" : [ ],
     "proprietaryFinancialInstitutionType" : "text",
     "providerMarket" : "SE"
   }, {
@@ -4578,13 +3660,7 @@
     "externalSystemIds" : {
       "PROVIDER_GIVEN_TRANSACTION_ID" : "35547139-000"
     },
-    "transactionDates" : [ {
-      "type" : "VALUE_DATE",
-      "value" : {
-        "date" : "2020-07-13",
-        "instant" : null
-      }
-    } ],
+    "transactionDates" : [ ],
     "proprietaryFinancialInstitutionType" : "text",
     "providerMarket" : "SE"
   } ]

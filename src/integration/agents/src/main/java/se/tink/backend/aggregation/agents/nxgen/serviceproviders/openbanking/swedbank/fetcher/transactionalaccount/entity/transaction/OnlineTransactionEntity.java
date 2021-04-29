@@ -29,20 +29,9 @@ public class OnlineTransactionEntity extends TransactionEntity {
                                 Optional.ofNullable(remittanceInformationUnstructured)
                                         .orElse(remittanceInformationStructured))
                         .setPending(isPending)
-                        .setTransactionDates(
-                                getTinkTransactionDates(
-                                        getValueDateForTinkTransactionDates(), bookingDate))
+                        .setTransactionDates(getTinkTransactionDates(valueDate, bookingDate))
                         .setProviderMarket(providerMarket);
 
         return (Transaction) builder.build();
-    }
-
-    /**
-     * Only transactionId is set on pending transactions. Since transactionId is not even documented
-     * as a field in the API always use value date when present. They seem to represent the same
-     * date.
-     */
-    private LocalDate getValueDateForTinkTransactionDates() {
-        return valueDate == null ? transactionDate : valueDate;
     }
 }

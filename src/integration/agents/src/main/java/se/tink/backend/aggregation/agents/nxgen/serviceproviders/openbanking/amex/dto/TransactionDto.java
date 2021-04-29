@@ -116,8 +116,6 @@ public class TransactionDto {
     private TransactionDates getTransactionDates() {
         TransactionDates.Builder builder = TransactionDates.builder();
 
-        builder.setValueDate(new AvailableDateInformation().setDate(chargeDate));
-
         if (postDate != null) {
             builder.setBookingDate(new AvailableDateInformation().setDate(postDate));
         }

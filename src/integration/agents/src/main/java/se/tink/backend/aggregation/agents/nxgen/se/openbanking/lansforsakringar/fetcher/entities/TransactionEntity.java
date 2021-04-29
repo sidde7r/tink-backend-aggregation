@@ -60,8 +60,6 @@ public class TransactionEntity {
     private TransactionDates getTinkTransactionDates(boolean pending) {
         TransactionDates.Builder builder = TransactionDates.builder();
 
-        builder.setValueDate(new AvailableDateInformation().setDate(transactionDate));
-
         if (!pending) {
             builder.setBookingDate(new AvailableDateInformation().setDate(bookingDate));
         }

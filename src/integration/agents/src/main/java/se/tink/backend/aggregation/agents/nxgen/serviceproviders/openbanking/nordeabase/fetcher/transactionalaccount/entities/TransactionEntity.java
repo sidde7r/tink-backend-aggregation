@@ -89,21 +89,15 @@ public class TransactionEntity {
     private TransactionDates getTinkTransactionDates() {
         TransactionDates.Builder builder = TransactionDates.builder();
 
-        builder.setValueDate(new AvailableDateInformation().setDate(getTinkValueDate()));
+        if (Objects.nonNull(valueDate)) {
+            builder.setValueDate(new AvailableDateInformation().setDate(valueDate));
+        }
 
         if (Objects.nonNull(bookingDate)) {
             builder.setBookingDate(new AvailableDateInformation().setDate(bookingDate));
         }
 
         return builder.build();
-    }
-
-    /**
-     * transactionDate is not set for all transactions. In those cases valueDate corresponds to what
-     * we classify as value date at Tink so we use that instead.
-     */
-    private LocalDate getTinkValueDate() {
-        return Objects.nonNull(transactionDate) ? transactionDate : valueDate;
     }
 
     public String getDescription() {
