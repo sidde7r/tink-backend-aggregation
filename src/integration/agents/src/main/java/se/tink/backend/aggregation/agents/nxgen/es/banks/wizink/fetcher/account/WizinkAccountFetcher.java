@@ -20,7 +20,7 @@ public class WizinkAccountFetcher implements AccountFetcher<TransactionalAccount
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
-        return wizinkStorage.getAccounts().stream()
+        return wizinkApiClient.fetchProductDetailsWithUnmaskedIban().getProducts().stream()
                 .map(productEntity -> productEntity.toTinkAccount(wizinkStorage.getXTokenUser()))
                 .filter(Optional::isPresent)
                 .map(Optional::get)

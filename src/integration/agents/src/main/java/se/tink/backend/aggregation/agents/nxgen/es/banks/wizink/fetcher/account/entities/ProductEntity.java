@@ -22,11 +22,13 @@ public class ProductEntity {
     @JsonProperty("interveners")
     private List<PartyEntity> holdersList;
 
+    @JsonProperty("formattedKeyDisplay")
+    private String encodedIban;
+
     private String alias;
     private String availableBalance;
     private String balance;
     private String currency;
-    private String formattedKeyDisplay;
     private String internalKey;
     private String product;
     private String productType;
@@ -44,7 +46,7 @@ public class ProductEntity {
     }
 
     public Optional<TransactionalAccount> toTinkAccount(String xTokenUser) {
-        String maskedIban = WizinkDecoder.decodeMaskedNumber(formattedKeyDisplay, xTokenUser);
+        String maskedIban = WizinkDecoder.decodeNumber(encodedIban, xTokenUser);
 
         return TransactionalAccount.nxBuilder()
                 .withType(getAccountType())

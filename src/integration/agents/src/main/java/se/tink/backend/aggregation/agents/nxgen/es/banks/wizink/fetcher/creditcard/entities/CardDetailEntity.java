@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.math.BigDecimal;
 import lombok.Data;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.WizinkConstants.StorageKeys;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.utils.WizinkDecoder;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.fetcher.creditcard.util.WizinkCardUtil;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.creditcard.CreditCardModule;
@@ -19,7 +19,7 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 public class CardDetailEntity {
 
     @JsonProperty("cardNumberDisplay")
-    private String maskedCardNumber;
+    private String cardNumber;
 
     @JsonProperty("plasticid")
     private String plasticId;
@@ -33,14 +33,13 @@ public class CardDetailEntity {
 
     @JsonIgnore
     public CreditCardAccount toTinkAccount(String xTokenUser) {
-        String decodedMaskedCardNumber =
-                WizinkDecoder.decodeMaskedNumber(maskedCardNumber, xTokenUser);
+        String maskedCardNumber = WizinkCardUtil.getMaskedCardNumber(cardNumber, xTokenUser);
 
         return CreditCardAccount.nxBuilder()
-                .withCardDetails(createCardDetails(decodedMaskedCardNumber))
+                .withCardDetails(createCardDetails(maskedCardNumber))
                 .withoutFlags()
-                .withId(createIdModule(decodedMaskedCardNumber))
-                .setApiIdentifier(decodedMaskedCardNumber)
+                .withId(createIdModule(maskedCardNumber))
+                .setApiIdentifier(maskedCardNumber)
                 .addHolderName(nameInCard)
                 .putInTemporaryStorage(StorageKeys.ENCODED_ACCOUNT_NUMBER, accountNumber)
                 .build();

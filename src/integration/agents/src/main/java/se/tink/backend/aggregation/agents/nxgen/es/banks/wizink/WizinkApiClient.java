@@ -18,8 +18,13 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.authenticator.en
 import se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.authenticator.rpc.CustomerLoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.authenticator.rpc.CustomerLoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.fetcher.TransactionsRequestBody;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.fetcher.account.entities.UnmaskDataRequestBody;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.fetcher.account.rpc.ConsultTransactionRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.fetcher.account.rpc.ConsultTransactionResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.fetcher.account.rpc.GlobalPositionRequest;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.fetcher.account.rpc.GlobalPositionResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.fetcher.account.rpc.UnmaskDataRequest;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.fetcher.account.rpc.UnmaskDataResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.fetcher.creditcard.rpc.CardDetailRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.fetcher.creditcard.rpc.CardDetailResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.fetcher.creditcard.rpc.FindMovementsRequest;
@@ -117,13 +122,13 @@ public class WizinkApiClient {
     }
 
     public FindMovementsResponse fetchCreditCardTransactionsFrom90Days(String accountNumber) {
-        String now = LocalDate.now().format(DATE_FORMATTER);
+        String today = LocalDate.now().format(DATE_FORMATTER);
         return createRequest(Urls.CARD_DETAIL_TRANSACTIONS)
                 .body(
                         new FindMovementsRequest(
                                 TransactionsRequestBody.builder(false)
                                         .withAccountNumber(accountNumber)
-                                        .withDateFrom(now)
+                                        .withDateFrom(today)
                                         .build()))
                 .post(FindMovementsResponse.class);
     }
@@ -156,6 +161,18 @@ public class WizinkApiClient {
         return response;
     }
 
+    public GlobalPositionResponse fetchProductDetailsWithUnmaskedIban() {
+        Optional<String> sessionId = fetchSessionIdForUnmaskIban().getSessionId();
+        if (!sessionId.isPresent()) {
+            log.info("No sessionId retrieved from bank");
+            throw new IllegalStateException();
+        }
+        fetchCookieForUnmaskIban(sessionId.get());
+        return createRequest(Urls.GET_UNMASKED_DATA)
+                .body(new GlobalPositionRequest())
+                .post(GlobalPositionResponse.class);
+    }
+
     public void logout() {
         createRequest(WizinkConstants.Urls.LOGOUT).post();
     }
@@ -167,6 +184,26 @@ public class WizinkApiClient {
             return false;
         }
         return true;
+    }
+
+    private UnmaskDataResponse fetchSessionIdForUnmaskIban() {
+        return createRequest(Urls.UNMASK_DATA)
+                .body(new UnmaskDataRequest(new UnmaskDataRequestBody()))
+                .put(UnmaskDataResponse.class);
+    }
+
+    private UnmaskDataResponse fetchCookieForUnmaskIban(String sessionId) {
+        String otpInput = supplementalInformationHelper.waitForOtpInput();
+        UnmaskDataResponse response =
+                createRequest(Urls.UNMASK_DATA)
+                        .body(
+                                new UnmaskDataRequest(
+                                        UnmaskDataRequestBody.builder()
+                                                .otpEntity(new OtpEntity(otpInput, sessionId))
+                                                .build()))
+                        .put(UnmaskDataResponse.class);
+        handleOtpResponse(response.getUnmaskDataResponseEntity());
+        return response;
     }
 
     private Map<String, Object> prepareHeaders() {

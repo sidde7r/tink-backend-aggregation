@@ -7,7 +7,7 @@ import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 
 public class WizinkDecoder {
 
-    public static String decodeMaskedNumber(String maskedNumber, String xTokenUser) {
+    public static String decodeNumber(String maskedNumber, String xTokenUser) {
         return decodeHex(xor(decodeBase64(removePadding(maskedNumber)), xTokenUser));
     }
 

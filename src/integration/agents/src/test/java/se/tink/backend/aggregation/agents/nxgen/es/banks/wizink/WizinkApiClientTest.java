@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.WizinkConstants.
 import se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.WizinkConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.authenticator.rpc.CustomerLoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.fetcher.account.rpc.ConsultTransactionResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.fetcher.account.rpc.UnmaskDataResponse;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
@@ -59,10 +60,32 @@ public class WizinkApiClientTest {
                 .hasMessage("Cause: LoginError.INCORRECT_CREDENTIALS");
     }
 
+    @Test(expected = IllegalStateException.class)
+    public void shouldThrowIllegalStateExceptionWhenNoSessionIdReturned() {
+        // given
+        RequestBuilder requestBuilderMock = prepareRequestBuilder(Urls.UNMASK_DATA);
+        when(requestBuilderMock.put(UnmaskDataResponse.class))
+                .thenReturn(prepareUnmaskDataResponseWithNullAsSessionId());
+
+        // when
+        wizinkApiClient.fetchProductDetailsWithUnmaskedIban();
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void shouldThrowIllegalStateExceptionWhenNoOtpReturned() {
+        // given
+        RequestBuilder requestBuilderMock = prepareRequestBuilder(Urls.UNMASK_DATA);
+        when(requestBuilderMock.put(UnmaskDataResponse.class))
+                .thenReturn(prepareUnmaskDataResponseWithoutOtp());
+
+        // when
+        wizinkApiClient.fetchProductDetailsWithUnmaskedIban();
+    }
+
     @Test(expected = SupplementalInfoException.class)
     public void shouldThrowSupplementalInfoExceptionWhenInvalidOtp() {
         // given
-        prepareTestData("808");
+        prepareTestData("808", Urls.TRANSACTIONS);
         // when
         wizinkApiClient.fetchTransactionsOlderThan90Days("DUMMY", "DUMMY");
     }
@@ -70,23 +93,58 @@ public class WizinkApiClientTest {
     @Test(expected = SupplementalInfoException.class)
     public void shouldThrowSupplementalInfoExceptionWhenOtpExpired() {
         // given
-        prepareTestData("807");
+        prepareTestData("807", Urls.TRANSACTIONS);
         // when
         wizinkApiClient.fetchTransactionsOlderThan90Days("DUMMY", "DUMMY");
     }
 
-    private void prepareTestData(String errorCode) {
+    private void prepareTestData(String errorCode, String url) {
         when(supplementalInformationHelper.waitForOtpInput()).thenReturn("DUMMY_OTP");
-        when(wizinkStorage.getXTokenId()).thenReturn(DUMMY_X_TOKEN_ID);
+        final RequestBuilder requestBuilderMock = prepareRequestBuilder(url);
+        when(requestBuilderMock.post(ConsultTransactionResponse.class))
+                .thenReturn(prepareErrorResultResponse(errorCode));
+    }
 
+    private RequestBuilder prepareRequestBuilder(String url) {
+        when(wizinkStorage.getXTokenId()).thenReturn(DUMMY_X_TOKEN_ID);
         final RequestBuilder requestBuilderMock = mock(RequestBuilder.class);
         when(requestBuilderMock.header(HeaderKeys.X_TOKEN_ID, DUMMY_X_TOKEN_ID))
                 .thenReturn(requestBuilderMock);
         when(requestBuilderMock.type(any(MediaType.class))).thenReturn(requestBuilderMock);
-        when(httpClient.request(Urls.TRANSACTIONS)).thenReturn(requestBuilderMock);
+        when(httpClient.request(url)).thenReturn(requestBuilderMock);
         when(requestBuilderMock.body(any())).thenReturn(requestBuilderMock);
-        when(requestBuilderMock.post(ConsultTransactionResponse.class))
-                .thenReturn(prepareErrorResultResponse(errorCode));
+        return requestBuilderMock;
+    }
+
+    private UnmaskDataResponse prepareUnmaskDataResponseWithoutOtp() {
+        return SerializationUtils.deserializeFromString(
+                "{\n"
+                        + "    \"UnmaskDataResponse\": {\n"
+                        + "        \"mobilePhone\": \"DUMMY\",\n"
+                        + "        \"result\": {\n"
+                        + "            \"code\": \"000\",\n"
+                        + "            \"message\": \"OK\"\n"
+                        + "        }\n"
+                        + "    }\n"
+                        + "}",
+                UnmaskDataResponse.class);
+    }
+
+    private UnmaskDataResponse prepareUnmaskDataResponseWithNullAsSessionId() {
+        return SerializationUtils.deserializeFromString(
+                "{\n"
+                        + "    \"UnmaskDataResponse\": {\n"
+                        + "        \"mobilePhone\": \"DUMMY\",\n"
+                        + "        \"otp\": {\n"
+                        + "            \"bharosaSessionId\": null\n"
+                        + "        },\n"
+                        + "        \"result\": {\n"
+                        + "            \"code\": \"000\",\n"
+                        + "            \"message\": \"OK\"\n"
+                        + "        }\n"
+                        + "    }\n"
+                        + "}",
+                UnmaskDataResponse.class);
     }
 
     private ConsultTransactionResponse prepareErrorResultResponse(String errorCode) {

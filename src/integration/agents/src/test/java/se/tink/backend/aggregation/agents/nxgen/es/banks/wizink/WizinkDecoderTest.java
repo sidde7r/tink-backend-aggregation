@@ -17,7 +17,7 @@ public class WizinkDecoderTest {
 
         // when
         String decodedMaskedCardNumber =
-                WizinkDecoder.decodeMaskedNumber(maskedCardNumber, xTokenUserHeader);
+                WizinkDecoder.decodeNumber(maskedCardNumber, xTokenUserHeader);
 
         // then
         assertThat(decodedMaskedCardNumber).isEqualTo("**** **** **** 2244");

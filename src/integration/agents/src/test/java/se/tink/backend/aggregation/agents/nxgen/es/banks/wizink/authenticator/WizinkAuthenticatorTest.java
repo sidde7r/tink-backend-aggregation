@@ -6,14 +6,11 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.nio.file.Paths;
-import java.util.Iterator;
-import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.WizinkApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.WizinkStorage;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.authenticator.rpc.CustomerLoginResponse;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.fetcher.account.entities.ProductEntity;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.serialization.utils.SerializationUtils;
@@ -46,7 +43,7 @@ public class WizinkAuthenticatorTest {
     }
 
     @Test
-    public void shouldFetchAndStoreProductsFromLoginResponse() {
+    public void shouldFetchAndStoreLoginResponse() {
         // given
         mockCustomerLoginResponse("customer_login_response.json");
 
@@ -54,49 +51,7 @@ public class WizinkAuthenticatorTest {
         wizinkAuthenticator.processLogin("USERNAME", "PASSWORD");
 
         // then
-        assertThat(wizinkStorage.getAccounts()).hasSize(2);
-    }
-
-    @Test
-    public void shouldFetchAndStoreCreditCardsWithoutProductsFromLoginResponse() {
-        // given
-        mockCustomerLoginResponse("customer_login_response_without_products.json");
-
-        // when
-        wizinkAuthenticator.processLogin("USERNAME", "PASSWORD");
-
-        // then
-        assertThat(wizinkStorage.getCreditCardList()).hasSize(3);
-        assertThat(wizinkStorage.getAccounts()).isEmpty();
-    }
-
-    @Test
-    public void shouldFetchAndStoreProductsWithoutCreditCardsFromLoginResponse() {
-        // given
-        mockCustomerLoginResponse("customer_login_response_without_cards.json");
-
-        // when
-        wizinkAuthenticator.processLogin("USERNAME", "PASSWORD");
-
-        // then
-        assertThat(wizinkStorage.getAccounts()).hasSize(2);
-        assertThat(wizinkStorage.getCreditCardList()).isEmpty();
-    }
-
-    @Test
-    public void shouldFetchAndStoreAllProductDetails() {
-        // given
-        mockCustomerLoginResponse("customer_login_response.json");
-
-        // when
-        wizinkAuthenticator.processLogin("USERNAME", "PASSWORD");
-
-        // then
-        List<ProductEntity> products = wizinkStorage.getAccounts();
-
-        Iterator<ProductEntity> iterator = products.iterator();
-        assertFirstAccount(iterator.next());
-        assertSecondAccount(iterator.next());
+        assertThat(wizinkStorage.getLoginResponse()).isNotNull();
     }
 
     private void mockCustomerLoginResponse(String responseFile) {
@@ -105,19 +60,5 @@ public class WizinkAuthenticatorTest {
                         SerializationUtils.deserializeFromString(
                                 Paths.get(TEST_DATA_PATH, responseFile).toFile(),
                                 CustomerLoginResponse.class));
-    }
-
-    private void assertFirstAccount(ProductEntity productEntity) {
-        assertThat(productEntity.getInternalKey()).isEqualTo("Dummy1");
-        assertThat(productEntity.getBalance()).isEqualTo("5,08");
-        assertThat(productEntity.getCurrency()).isEqualTo("EUR");
-        assertThat(productEntity.getHoldersList().get(0).getName()).isEqualTo("John Loe Doe");
-    }
-
-    private void assertSecondAccount(ProductEntity productEntity) {
-        assertThat(productEntity.getInternalKey()).isEqualTo("Dummy2");
-        assertThat(productEntity.getBalance()).isEqualTo("0");
-        assertThat(productEntity.getCurrency()).isEqualTo("EUR");
-        assertThat(productEntity.getHoldersList().get(0).getName()).isEqualTo("John Loe Doe");
     }
 }

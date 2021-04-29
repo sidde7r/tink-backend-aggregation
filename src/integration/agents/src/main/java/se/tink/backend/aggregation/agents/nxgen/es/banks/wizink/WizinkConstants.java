@@ -2,9 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.wizink;
 
 public class WizinkConstants {
 
-    private WizinkConstants() {
-        throw new AssertionError();
-    }
+    private WizinkConstants() {}
 
     public static class Urls {
         private Urls() {}
@@ -14,6 +12,8 @@ public class WizinkConstants {
         public static final String CARD_DETAIL = BASE + "/cardDetail/summary";
         public static final String CARD_DETAIL_TRANSACTIONS = BASE + "/find/movements";
         public static final String TRANSACTIONS = BASE + "/transactions/search";
+        public static final String UNMASK_DATA = BASE + "/unmask/data";
+        public static final String GET_UNMASKED_DATA = BASE + "/globalPosition/read";
         public static final String KEEP_ALIVE = BASE + "/inbox";
         public static final String LOGOUT = BASE + "/customerLogout";
     }
@@ -42,7 +42,6 @@ public class WizinkConstants {
         private StorageKeys() {}
 
         public static final String CARDS_LIST = "creditCardsList";
-        public static final String ACCOUNTS_LIST = "accountsList";
         public static final String X_TOKEN_ID = "xTokenId";
         public static final String X_TOKEN_USER = "xTokenUser";
         public static final String FIRST_FULL_REFRESH = "firstFullRefresh";
