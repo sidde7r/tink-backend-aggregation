@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.nxgen.se.other.csn.authenticator.bankid.CSNBankIdAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.other.csn.fetcher.loans.LoanAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.other.csn.fetcher.loans.identitydata.CSNIdentityDataFetcher;
+import se.tink.backend.aggregation.agents.nxgen.se.other.csn.session.CSNSessionHandler;
 import se.tink.backend.aggregation.client.provider_configuration.rpc.Capability;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
@@ -59,7 +60,7 @@ public class CSNAgent extends NextGenerationAgent
 
     @Override
     protected SessionHandler constructSessionHandler() {
-        return SessionHandler.alwaysFail();
+        return new CSNSessionHandler(apiClient, authSessionStorageHelper);
     }
 
     @Override
