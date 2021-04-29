@@ -13,15 +13,19 @@ import static org.mockito.Mockito.when;
 import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.List;
-import org.apache.commons.lang3.StringUtils;
+import junitparams.JUnitParamsRunner;
+import junitparams.Parameters;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.agents.rpc.SelectOption;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.OtpFormat;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.i18n.LocalizableKey;
 import se.tink.libraries.i18n.LocalizableParametrizedKey;
 
+@RunWith(JUnitParamsRunner.class)
 public class GermanFieldsTest {
 
     private static final String STARTCODE = "111999222";
@@ -72,7 +76,7 @@ public class GermanFieldsTest {
     @Test
     public void shouldReturnProperTanFieldWithoutDetails() {
         // when
-        Field result = GermanFields.Tan.build(catalog, null, null, null, null, null);
+        Field result = GermanFields.Tan.builder(catalog).build();
 
         // then
         assertThat(result.getName()).isEqualTo("tanField");
@@ -92,14 +96,38 @@ public class GermanFieldsTest {
     }
 
     @Test
+    public void shouldReturnProperTanFieldWithoutSomeDetails() {
+        // when
+        Field result = GermanFields.Tan.builder(catalog).otpMaxLength(10).build();
+
+        // then
+        assertThat(result.getName()).isEqualTo("tanField");
+        assertThat(result.getDescription()).isEqualTo("TAN");
+        assertThat(result.getValue()).isNull();
+        assertThat(result.getHint()).isEqualTo("_ _ _ _ _ _ _ _ _ _");
+        assertThat(result.getHelpText()).isEqualTo("Confirm by entering the generated TAN.");
+        assertThat(result.isNumeric()).isFalse();
+        assertThat(result.getMinLength()).isEqualTo(1);
+        assertThat(result.getMaxLength()).isEqualTo(10);
+        assertThat(result.isImmutable()).isFalse();
+        assertThat(result.getPattern()).isNull();
+        assertThat(result.getPatternError()).isNull();
+
+        verify(catalog, times(2)).getString(any(LocalizableKey.class));
+        verifyNoMoreInteractions(catalog);
+    }
+
+    @Test
     public void shouldReturnProperTanFieldWithScaMethodNameAndKnownOTP() {
         // given
         String authenticationType = "SMS_OTP";
 
         // when
         Field result =
-                GermanFields.Tan.build(
-                        catalog, authenticationType, SCA_METHOD_NAME, null, null, null);
+                GermanFields.Tan.builder(catalog)
+                        .authenticationType(authenticationType)
+                        .authenticationMethodName(SCA_METHOD_NAME)
+                        .build();
 
         // then
         verifyCommonOtpProperties(result);
@@ -119,59 +147,95 @@ public class GermanFieldsTest {
     @Test
     public void shouldReturnProperTanFieldForNumericOtp() {
         // given
-        final Integer otpLength = 5;
-        String otpType = GermanFields.Tan.OTP_TYPE.INTEGER.name();
-        String authenticationType = "SMS_OTP";
+        Integer otpMaxLength = 5;
 
         // when
         Field result =
-                GermanFields.Tan.build(
-                        catalog, authenticationType, SCA_METHOD_NAME, otpLength, otpType, null);
+                GermanFields.Tan.builder(catalog)
+                        .authenticationType("SMS_OTP")
+                        .authenticationMethodName(SCA_METHOD_NAME)
+                        .otpFormat(OtpFormat.INTEGER)
+                        .otpMaxLength(otpMaxLength)
+                        .build();
 
         // then
         verifyCommonOtpProperties(result);
 
         assertThat(result.getName()).isEqualTo(SMS_TAN_FIELD_NAME);
-        assertThat(result.getHint()).isEqualTo(StringUtils.repeat("_ ", otpLength));
+        assertThat(result.getHint()).isEqualTo("_ _ _ _ _");
         assertThat(result.isNumeric()).isTrue();
-        assertThat(result.getMaxLength()).isEqualTo(otpLength);
-        assertThat(result.getPattern()).isEqualTo("^[0-9]{1," + otpLength + "}$");
+        assertThat(result.getMaxLength()).isEqualTo(otpMaxLength);
+        assertThat(result.getPattern()).isEqualTo("^[0-9]{1," + otpMaxLength + "}$");
         assertThat(result.getPatternError())
-                .isEqualTo("Please enter a maximum of " + otpLength + " digits");
+                .isEqualTo("Please enter a maximum of " + otpMaxLength + " digits");
 
         verify(catalog).getString(any(LocalizableKey.class));
         verify(catalog).getString(any(LocalizableParametrizedKey.class), anyString());
-        verify(catalog).getString(any(LocalizableParametrizedKey.class), eq(otpLength));
+        verify(catalog).getString(any(LocalizableParametrizedKey.class), eq(otpMaxLength));
         verifyNoMoreInteractions(catalog);
     }
 
     @Test
     public void shouldReturnProperTanFieldForCharactersOtp() {
         // given
-        final Integer otpLength = 5;
-        final String otpType = GermanFields.Tan.OTP_TYPE.CHARACTERS.name();
-        String authenticationType = "SMS_OTP";
+        final Integer otpMaxLength = 7;
 
         // when
         Field result =
-                GermanFields.Tan.build(
-                        catalog, authenticationType, SCA_METHOD_NAME, otpLength, otpType, 1);
+                GermanFields.Tan.builder(catalog)
+                        .authenticationType("SMS_OTP")
+                        .authenticationMethodName(SCA_METHOD_NAME)
+                        .otpFormat(OtpFormat.CHARACTERS)
+                        .otpMinLength(1)
+                        .otpMaxLength(otpMaxLength)
+                        .build();
 
         // then
         verifyCommonOtpProperties(result);
 
         assertThat(result.getName()).isEqualTo(SMS_TAN_FIELD_NAME);
-        assertThat(result.getHint()).isEqualTo(StringUtils.repeat("_ ", otpLength));
+        assertThat(result.getHint()).isEqualTo("_ _ _ _ _ _ _");
         assertThat(result.isNumeric()).isFalse();
-        assertThat(result.getMaxLength()).isEqualTo(otpLength);
-        assertThat(result.getPattern()).isEqualTo("^[^\\s]{1," + otpLength + "}$");
+        assertThat(result.getMaxLength()).isEqualTo(otpMaxLength);
+        assertThat(result.getPattern()).isEqualTo("^[^\\s]{1," + otpMaxLength + "}$");
         assertThat(result.getPatternError())
-                .isEqualTo("Please enter a maximum of " + otpLength + " characters");
+                .isEqualTo("Please enter a maximum of " + otpMaxLength + " characters");
 
         verify(catalog).getString(any(LocalizableKey.class));
         verify(catalog).getString(any(LocalizableParametrizedKey.class), anyString());
-        verify(catalog).getString(any(LocalizableParametrizedKey.class), eq(otpLength));
+        verify(catalog).getString(any(LocalizableParametrizedKey.class), eq(otpMaxLength));
         verifyNoMoreInteractions(catalog);
+    }
+
+    @Test
+    @Parameters({
+        "SMS_OTP, smsTan",
+        "CHIP_OTP, chipTan",
+        "PHOTO_OTP, photoTan",
+        "PUSH_OTP, pushTan",
+        "SMTP_OTP, smtpTan",
+        "UNEXPECTED, tanField"
+    })
+    public void shouldSetProperFieldNameDependingOnAuthType(
+            String authenticationType, String expectedFieldName) {
+        // given
+
+        // when
+        Field result =
+                GermanFields.Tan.builder(catalog).authenticationType(authenticationType).build();
+
+        // then
+        assertThat(result.getName()).isEqualTo(expectedFieldName);
+        assertThat(result.getDescription()).isEqualTo("TAN");
+        assertThat(result.getValue()).isNull();
+        assertThat(result.getHint()).isNull();
+        assertThat(result.getHelpText()).isEqualTo("Confirm by entering the generated TAN.");
+        assertThat(result.isNumeric()).isFalse();
+        assertThat(result.getMinLength()).isEqualTo(1);
+        assertThat(result.getMaxLength()).isNull();
+        assertThat(result.isImmutable()).isFalse();
+        assertThat(result.getPattern()).isNull();
+        assertThat(result.getPatternError()).isNull();
     }
 
     private void verifyCommonOtpProperties(Field result) {

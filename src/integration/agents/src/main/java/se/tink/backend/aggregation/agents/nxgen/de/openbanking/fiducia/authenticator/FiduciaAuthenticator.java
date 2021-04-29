@@ -26,9 +26,11 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authentic
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.rpc.ScaResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.rpc.ScaStatusResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentDetailsResponse;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.OtpFormat;
 import se.tink.backend.aggregation.agents.utils.charsetguesser.CharsetGuesser;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.CommonFields;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.GermanFields;
+import se.tink.backend.aggregation.agents.utils.supplementalfields.TanBuilder;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.authenticator.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
@@ -195,14 +197,19 @@ public class FiduciaAuthenticator implements MultiFactorAuthenticator, AutoAuthe
         ChallengeData challengeData = scaResponse.getChallengeData();
         String authenticationType =
                 chosenScaMethod != null ? chosenScaMethod.getAuthenticationType() : null;
-        fields.add(
-                GermanFields.Tan.build(
-                        catalog,
-                        authenticationType,
-                        chosenScaMethod != null ? chosenScaMethod.getName() : null,
-                        6,
-                        challengeData != null ? challengeData.getOtpFormat() : null,
-                        6));
+
+        TanBuilder tanBuilder =
+                GermanFields.Tan.builder(catalog)
+                        .authenticationType(authenticationType)
+                        .otpMinLength(6)
+                        .otpMaxLength(6);
+        if (chosenScaMethod != null) {
+            tanBuilder.authenticationMethodName(chosenScaMethod.getName());
+        }
+        if (challengeData != null) {
+            tanBuilder.otpFormat(OtpFormat.fromString(challengeData.getOtpFormat()).orElse(null));
+        }
+        fields.add(tanBuilder.build());
 
         log.info("[Fiducia 2FA] User for authenticationType {} started 2FA", authenticationType);
 

@@ -8,8 +8,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.OtpFormat;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.CommonFields;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.GermanFields;
+import se.tink.backend.aggregation.agents.utils.supplementalfields.TanBuilder;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.libraries.i18n.Catalog;
 
@@ -48,14 +50,17 @@ public class DkbSupplementalDataProvider {
         List<Field> fields = new LinkedList<>();
 
         extractStartCode(data).ifPresent(s -> fields.add(GermanFields.Startcode.build(catalog, s)));
-        fields.add(
-                GermanFields.Tan.build(
-                        catalog,
-                        scaMethod != null ? scaMethod.getAuthenticationType() : null,
-                        scaMethod != null ? scaMethod.getName() : null,
-                        challengeData != null ? challengeData.getOtpMaxLength() : null,
-                        challengeData != null ? challengeData.getOtpFormat() : null,
-                        null));
+
+        TanBuilder tanBuilder = GermanFields.Tan.builder(catalog);
+        if (scaMethod != null) {
+            tanBuilder.authenticationType(scaMethod.getAuthenticationType());
+            tanBuilder.authenticationMethodName(scaMethod.getName());
+        }
+        if (challengeData != null) {
+            tanBuilder.otpMaxLength(challengeData.getOtpMaxLength());
+            tanBuilder.otpFormat(OtpFormat.fromString(challengeData.getOtpFormat()).orElse(null));
+        }
+        fields.add(tanBuilder.build());
 
         return fields;
     }
