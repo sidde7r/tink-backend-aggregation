@@ -30,6 +30,7 @@ import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformati
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsRequestType;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.UserAvailability;
 
@@ -48,6 +49,7 @@ public class BankIdAuthenticationController<T> implements AutoAuthenticator, Typ
     private final PersistentStorage persistentStorage;
     private final Credentials credentials;
     private final UserAvailability userAvailability;
+    private final CredentialsRequestType requestType;
 
     public BankIdAuthenticationController(
             SupplementalInformationController supplementalInformationController,
@@ -107,6 +109,7 @@ public class BankIdAuthenticationController<T> implements AutoAuthenticator, Typ
         this.userAvailability = request.getUserAvailability();
         this.tokenLifetime = tokenLifetime;
         this.tokenLifetimeUnit = tokenLifetimeUnit;
+        this.requestType = request.getType();
     }
 
     @Override
@@ -132,6 +135,12 @@ public class BankIdAuthenticationController<T> implements AutoAuthenticator, Typ
         }
 
         if (!userAvailability.isUserAvailableForInteraction()) {
+            if (requestType == CredentialsRequestType.MANUAL_AUTHENTICATION) {
+                // note that request type "MANUAL_AUTHENTICATION" is misleading and will, in this
+                // case (with
+                // User _Not_ availableForInteraction), refer to the operation "authenticate-auto".
+                throw SessionError.SESSION_EXPIRED.exception();
+            }
             logger.warn("Triggering BankID even though user is not available for interaction!");
         }
 
