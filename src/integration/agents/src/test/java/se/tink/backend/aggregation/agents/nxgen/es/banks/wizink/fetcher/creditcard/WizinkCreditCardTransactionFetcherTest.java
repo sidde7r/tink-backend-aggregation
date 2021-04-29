@@ -10,7 +10,6 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.WizinkApiClient;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.WizinkStorage;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.fetcher.creditcard.rpc.FindMovementsResponse;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
@@ -23,22 +22,20 @@ public class WizinkCreditCardTransactionFetcherTest {
 
     private WizinkApiClient wizinkApiClient;
     private WizinkCreditCardTransactionFetcher wizinkCreditCardTransactionFetcher;
-    private WizinkStorage wizinkStorage;
     private CreditCardAccount mockAccount;
 
     @Before
     public void setup() {
         wizinkApiClient = mock(WizinkApiClient.class);
-        wizinkStorage = mock(WizinkStorage.class);
         wizinkCreditCardTransactionFetcher =
-                new WizinkCreditCardTransactionFetcher(wizinkApiClient, wizinkStorage);
+                new WizinkCreditCardTransactionFetcher(wizinkApiClient);
         mockAccount = mock(CreditCardAccount.class);
     }
 
     @Test
-    public void shouldFetchTransactionFromLast90Days() {
+    public void shouldFetchTransactionsFromLast90Days() {
         // given
-        prepareDataWithFirstRefreshFlagOnFalse();
+        prepareData();
 
         // when
         List<AggregationTransaction> transactions =
@@ -49,22 +46,9 @@ public class WizinkCreditCardTransactionFetcherTest {
     }
 
     @Test
-    public void shouldFetchAllTransactions() {
+    public void shouldFetchAndMapTransactionsFromLast90Days() {
         // given
-        prepareDataWithFirstRefreshFlagOnTrue();
-
-        // when
-        List<AggregationTransaction> transactions =
-                wizinkCreditCardTransactionFetcher.fetchTransactionsFor(mockAccount);
-
-        // then
-        assertThat(transactions).hasSize(5);
-    }
-
-    @Test
-    public void shouldFetchAndMapFirstTransaction() {
-        // given
-        prepareDataWithFirstRefreshFlagOnTrue();
+        prepareData();
 
         // when
         List<AggregationTransaction> transactions =
@@ -72,29 +56,7 @@ public class WizinkCreditCardTransactionFetcherTest {
 
         // then
         assertFirstTransactionData(transactions.get(0));
-    }
-
-    @Test
-    public void shouldFetchAndMapLastTransaction() {
-        // given
-        prepareDataWithFirstRefreshFlagOnTrue();
-
-        // when
-        List<AggregationTransaction> transactions =
-                wizinkCreditCardTransactionFetcher.fetchTransactionsFor(mockAccount);
-
-        // then
-        assertFifthTransactionData(transactions.get(4));
-    }
-
-    private void prepareDataWithFirstRefreshFlagOnTrue() {
-        when(wizinkStorage.getFirstFullRefreshFlag()).thenReturn(true);
-        prepareData();
-    }
-
-    private void prepareDataWithFirstRefreshFlagOnFalse() {
-        when(wizinkStorage.getFirstFullRefreshFlag()).thenReturn(false);
-        prepareData();
+        assertSecondTransactionData(transactions.get(1));
     }
 
     private void prepareData() {
@@ -107,21 +69,6 @@ public class WizinkCreditCardTransactionFetcherTest {
                                                 "find_movements_response_last_90_days.json")
                                         .toFile(),
                                 FindMovementsResponse.class));
-        when(wizinkApiClient.fetchSessionIdForOlderCardTransactions(any()))
-                .thenReturn(
-                        SerializationUtils.deserializeFromString(
-                                Paths.get(TEST_DATA_PATH, "find_movements_response_sessionId.json")
-                                        .toFile(),
-                                FindMovementsResponse.class));
-
-        when(wizinkApiClient.fetchCreditCardTransactionsOlderThan90Days(any(), any()))
-                .thenReturn(
-                        SerializationUtils.deserializeFromString(
-                                Paths.get(
-                                                TEST_DATA_PATH,
-                                                "find_movements_response_more_than_90_days.json")
-                                        .toFile(),
-                                FindMovementsResponse.class));
     }
 
     private void assertFirstTransactionData(AggregationTransaction transaction) {
@@ -131,10 +78,10 @@ public class WizinkCreditCardTransactionFetcherTest {
         assertThat(transaction.getAmount()).isEqualTo(ExactCurrencyAmount.of(-6, "EUR"));
     }
 
-    private void assertFifthTransactionData(AggregationTransaction transaction) {
+    private void assertSecondTransactionData(AggregationTransaction transaction) {
         assertThat(transaction).isNotNull();
-        assertThat(transaction.getDescription()).isEqualTo("MOVEMENT 5");
-        assertThat(transaction.getDate().toString()).isEqualTo("Fri Jan 24 11:00:00 UTC 2020");
-        assertThat(transaction.getAmount()).isEqualTo(ExactCurrencyAmount.of(18, "EUR"));
+        assertThat(transaction.getDescription()).isEqualTo("MOVEMENT 2");
+        assertThat(transaction.getDate().toString()).isEqualTo("Tue Mar 24 11:00:00 UTC 2020");
+        assertThat(transaction.getAmount()).isEqualTo(ExactCurrencyAmount.of(6, "EUR"));
     }
 }

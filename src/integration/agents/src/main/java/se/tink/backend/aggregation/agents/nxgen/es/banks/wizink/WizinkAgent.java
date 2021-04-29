@@ -19,7 +19,6 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.fetcher.account.
 import se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.fetcher.creditcard.WizinkCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.fetcher.creditcard.WizinkCreditCardTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.fetcher.identitydata.WizinkIdentityDataFetcher;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.filter.WizinkFirstFullRefreshErrorFilter;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.session.WizinkSessionHandler;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentProgressiveGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
@@ -48,7 +47,6 @@ public class WizinkAgent extends SubsequentProgressiveGenerationAgent
     protected WizinkAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
         this.wizinkStorage = new WizinkStorage(persistentStorage, sessionStorage);
-        configureHttpClient(wizinkStorage);
         this.apiClient = new WizinkApiClient(client, wizinkStorage, supplementalInformationHelper);
         creditCardRefreshController = constructCreditCardRefreshController();
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
@@ -88,7 +86,7 @@ public class WizinkAgent extends SubsequentProgressiveGenerationAgent
         WizinkCreditCardFetcher creditCardFetcher =
                 new WizinkCreditCardFetcher(apiClient, wizinkStorage);
         WizinkCreditCardTransactionFetcher transactionFetcher =
-                new WizinkCreditCardTransactionFetcher(apiClient, wizinkStorage);
+                new WizinkCreditCardTransactionFetcher(apiClient);
 
         return new CreditCardRefreshController(
                 metricRefreshController, updateController, creditCardFetcher, transactionFetcher);
@@ -98,7 +96,7 @@ public class WizinkAgent extends SubsequentProgressiveGenerationAgent
         AccountFetcher<TransactionalAccount> accountFetcher =
                 new WizinkAccountFetcher(apiClient, wizinkStorage);
         TransactionFetcher<TransactionalAccount> transactionFetcher =
-                new WizinkTransactionFetcher(apiClient, wizinkStorage);
+                new WizinkTransactionFetcher(apiClient);
         return new TransactionalAccountRefreshController(
                 metricRefreshController, updateController, accountFetcher, transactionFetcher);
     }
@@ -107,9 +105,5 @@ public class WizinkAgent extends SubsequentProgressiveGenerationAgent
     public FetchIdentityDataResponse fetchIdentityData() {
         final IdentityDataFetcher fetcher = new WizinkIdentityDataFetcher(wizinkStorage);
         return new FetchIdentityDataResponse(fetcher.fetchIdentityData());
-    }
-
-    private void configureHttpClient(WizinkStorage wizinkStorage) {
-        client.addFilter(new WizinkFirstFullRefreshErrorFilter(wizinkStorage));
     }
 }

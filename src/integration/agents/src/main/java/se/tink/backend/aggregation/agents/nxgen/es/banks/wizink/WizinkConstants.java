@@ -44,7 +44,6 @@ public class WizinkConstants {
         public static final String CARDS_LIST = "creditCardsList";
         public static final String X_TOKEN_ID = "xTokenId";
         public static final String X_TOKEN_USER = "xTokenUser";
-        public static final String FIRST_FULL_REFRESH = "firstFullRefresh";
         public static final String ENCODED_ACCOUNT_NUMBER = "encodedAccountNumber";
     }
 
