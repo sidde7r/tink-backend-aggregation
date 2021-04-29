@@ -71,8 +71,7 @@ public class AccountResponse extends HtmlResponse {
 
     protected ExactCurrencyAmount getBalance() {
         final String balanceString =
-                evaluateXPath(
-                        "//div[@class='saldoMov']//p[contains(@class,'cifra')]", String.class);
+                jsoupDocument.select("div.saldoMov").select("p[class=cifra]").text();
         if (Strings.isNullOrEmpty(balanceString)) {
             throw new IllegalStateException("Did not find account balance.");
         }

@@ -40,6 +40,7 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 public class HtmlResponse {
     protected final String body;
     protected final Document document;
+    protected final org.jsoup.nodes.Document jsoupDocument;
     private static final XPathFactory xpathFactory = XPathFactory.newInstance();
     private final DecimalFormat amountFormat;
     private static final Pattern AMOUNT_PATTERN =
@@ -102,6 +103,7 @@ public class HtmlResponse {
 
         this.body = body;
         this.document = parseHTML(this.body);
+        this.jsoupDocument = Jsoup.parse(body);
     }
 
     @VisibleForTesting
@@ -197,9 +199,7 @@ public class HtmlResponse {
     }
 
     public String getViewState(String formId) {
-        final String expr =
-                String.format("//form[@id='%s']//input[@name='javax.faces.ViewState']", formId);
-        return evaluateXPath(expr, Node.class).getAttributes().getNamedItem("value").getNodeValue();
+        return jsoupDocument.getElementById(formId).getElementById("javax.faces.ViewState").val();
     }
 
     public String getBody() {
