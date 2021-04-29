@@ -10,8 +10,10 @@ import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.entities.ChallengeDataEntity;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.entities.ScaMethodEntity;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.OtpFormat;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.CommonFields;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.GermanFields;
+import se.tink.backend.aggregation.agents.utils.supplementalfields.TanBuilder;
 import se.tink.libraries.i18n.Catalog;
 
 @RequiredArgsConstructor
@@ -29,14 +31,18 @@ public class FieldBuilder {
                     GermanFields.Startcode.build(
                             catalog, retrieveStartCode(challengeData.getAdditionalInformation())));
         }
-        fields.add(
-                GermanFields.Tan.build(
-                        catalog,
-                        scaMethod.getAuthenticationType(),
-                        scaMethod.getName(),
-                        6,
-                        challengeData != null ? challengeData.getOtpFormat() : null,
-                        6));
+
+        TanBuilder tanBuilder =
+                GermanFields.Tan.builder(catalog)
+                        .authenticationType(scaMethod.getAuthenticationType())
+                        .authenticationMethodName(scaMethod.getName())
+                        .otpMinLength(6)
+                        .otpMaxLength(6);
+        if (challengeData != null) {
+            tanBuilder.otpFormat(OtpFormat.fromString(challengeData.getOtpFormat()).orElse(null));
+        }
+        fields.add(tanBuilder.build());
+
         return fields;
     }
 

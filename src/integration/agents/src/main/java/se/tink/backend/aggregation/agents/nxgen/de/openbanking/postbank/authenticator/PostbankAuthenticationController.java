@@ -28,8 +28,10 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.Postbank
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenticator.entities.ChallengeData;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenticator.entities.ScaMethod;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenticator.rpc.AuthorisationResponse;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.OtpFormat;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.CommonFields;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.GermanFields;
+import se.tink.backend.aggregation.agents.utils.supplementalfields.TanBuilder;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
@@ -206,14 +208,15 @@ public class PostbankAuthenticationController implements TypedAuthenticator {
         extractStartcode(authResponse)
                 .ifPresent(x -> fields.add(GermanFields.Startcode.build(catalog, x)));
 
-        fields.add(
-                GermanFields.Tan.build(
-                        catalog,
-                        authenticationType,
-                        scaMethodName,
-                        challengeData != null ? challengeData.getOtpMaxLength() : null,
-                        challengeData != null ? challengeData.getOtpFormat() : null,
-                        null));
+        TanBuilder tanBuilder =
+                GermanFields.Tan.builder(catalog)
+                        .authenticationType(authenticationType)
+                        .authenticationMethodName(scaMethodName);
+        if (challengeData != null) {
+            tanBuilder.otpMaxLength(challengeData.getOtpMaxLength());
+            tanBuilder.otpFormat(OtpFormat.fromString(challengeData.getOtpFormat()).orElse(null));
+        }
+        fields.add(tanBuilder.build());
 
         return supplementalInformationController
                 .askSupplementalInformationSync(fields.toArray(new Field[0]))

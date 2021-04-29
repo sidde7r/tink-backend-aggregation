@@ -289,7 +289,8 @@ public class PostbankAuthenticationControllerTest {
         Map<String, String> supplementalInformation = new HashMap<>();
         String authenticationType = getFieldName(authorisationResponse.getChosenScaMethod());
         supplementalInformation.put(authenticationType, OTP_CODE);
-        Field tan = GermanFields.Tan.build(catalog, authenticationType, "", null, null, null);
+        Field tan =
+                GermanFields.Tan.builder(catalog).authenticationType(authenticationType).build();
         when(mockSuppController.askSupplementalInformationSync(argThat(new FieldMatcher(tan))))
                 .thenReturn(supplementalInformation);
     }
