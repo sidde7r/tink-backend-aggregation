@@ -1,0 +1,366 @@
+REQUEST 1
+GET https://mob.alandsbanken.se/cbs-inet-json-api-abs-v1/api/keepAlive.do
+Content-Type: application/json
+Accept: application/json
+X-Aggregator: Tink Testing
+
+RESPONSE 1
+200
+Expires: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+X-XSS-Protection: 1; mode=block
+Pragma: no-cache
+X-Frame-Options: DENY
+Date: Thu, 22 Apr 2021 01:29:14 GMT
+Connection: keep-alive
+Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+X-Content-Type-Options: nosniff
+Content-Type: application/json
+Content-Length: 123
+
+{"status":{"success":false,"errors":["NOT_AUTHORIZED"],"infos":[],"jSessionId":"1qxqA5TyTuVCnbaMLdKQpIxculq6ysZYGowA3A3T"}}
+
+REQUEST 2
+GET https://mob.alandsbanken.se/cbs-inet-json-api-abs-v1/api/systemStatus.do?appId=1.8.0-iOS&language=sv
+Content-Type: application/json
+Accept: application/json
+X-Aggregator: Tink Testing
+
+RESPONSE 2
+200
+Expires: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+X-XSS-Protection: 1; mode=block
+Pragma: no-cache
+Date: Thu, 22 Apr 2021 01:29:14 GMT
+Connection: keep-alive
+Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+X-Frame-Options: DENY
+X-Content-Type-Options: nosniff
+Content-Type: application/json
+Content-Length: 919
+
+{"status":{"success":true,"errors":[],"infos":[],"jSessionId":"1qxqA5TyTuVCnbaMLdKQpIxculq6ysZYGowA3A3T"},"systemStatus":"BLOCKED","demoLoginStatus":false,"serviceSubject":null,"serviceMessage":null,"serviceMessageDetails":null,"offlineSubject":null,"offlineMessage":null,"offlineMessageDetails":null,"appStatusSubject":"Uppdatera din Mobilbank","appStatusMessage":"Det finns en ny version tillgänglig.","appStatusMessageDetails":"För att kunna använda mobilbanken behöver du uppdatera din app.","systemStatusList":{"CardSystem":true,"eInvoiceInspect":true,"Wallet":true,"Aland_index":true,"APP_CARD_20_LATEST":true,"m1fOnline":true},"systemSettingsList":{"INTERVAL_TIME_STOCK_TRADE_ORDERS":"20000","INTERVAL_TIME_SMALL_EXCHANGE_PACKAGE":"10000","STOCK_TRADE_MAX_PRICE_DEVIATION_PERCENTAGE":"10","FUND_TRADE_MAX_AMOUNT":"500000","INTERVAL_TIME_BIG_EXCHANGE_PACKAGE":"10000","STOCK_TRADE_MAX_AMOUNT":"500000"}}
+
+REQUEST 3
+GET https://mob.alandsbanken.se/cbs-inet-json-api-abs-v1/api/getContent.do
+Content-Type: application/json
+Accept: application/json
+X-Aggregator: Tink Testing
+
+RESPONSE 3
+200
+Expires: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+X-XSS-Protection: 1; mode=block
+Pragma: no-cache
+X-Frame-Options: DENY
+Date: Thu, 22 Apr 2021 01:29:15 GMT
+Connection: keep-alive
+Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+X-Content-Type-Options: nosniff
+Content-Type: application/json
+Content-Length: 822
+
+{"status":{"success":true,"errors":[],"infos":[],"jSessionId":"1qxqA5TyTuVCnbaMLdKQpIxculq6ysZYGowA3A3T"},"content":{"CARD_VIEW_PIN":{"TEXT.INFO_3":"                   ","ERRORS.undefined":"Visning av kod har avbrutits.","TEXT.INFO_4":"                            "},"BANK_ID.ERRORS":{"DEVICE_BLOCKED":"Enheten är låst. Avregistrera enheten och logga in på nytt."},"KYC_STEP3_EMPLOYMENT":{"LABEL.TYPE":"Anställningsförhållande"},"CARD_RESTRICT":{"TEXT.INFO_2":"Om du misstänker att ditt kort är borttappat kan du som en första åtgärd begränsa användningen av kortet genom att sänka kortets beloppsgränser till 0 SEK via Hantera kort. Observera att i fall du inte hittar ditt kort inom några timmar, bör du spärra ditt kort permanent. Bankens ansvar träder in då kortet är permanent spärrat."}}}
+
+REQUEST 4
+GET https://mob.alandsbanken.se/cbs-inet-json-api-abs-v1/api/cam/getLoginProviders.do
+Content-Type: application/json
+Accept: application/json
+X-Aggregator: Tink Testing
+
+RESPONSE 4
+200
+Expires: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+X-XSS-Protection: 1; mode=block
+Pragma: no-cache
+X-Frame-Options: DENY
+Date: Thu, 22 Apr 2021 01:29:15 GMT
+Connection: keep-alive
+Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+X-Content-Type-Options: nosniff
+Content-Type: application/json
+Content-Length: 161
+
+{"status":{"success":true,"errors":[],"infos":[],"jSessionId":"1qxqA5TyTuVCnbaMLdKQpIxculq6ysZYGowA3A3T"},"availableLoginProviders":["MOBILE_BANK_ID","PIN_TAN"]}
+
+REQUEST 5
+POST https://mob.alandsbanken.se/cbs-inet-json-api-abs-v1/api/v2/bankIdAutostartLogin.do
+Content-Type: application/json
+Accept: application/json
+X-Aggregator: Tink Testing
+
+RESPONSE 5
+200
+Expires: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Access-Control-Allow-Headers: ***
+X-XSS-Protection: 1; mode=block
+Pragma: no-cache
+X-Frame-Options: DENY
+Content-Disposition: ***
+Session-Id: ***
+Date: Mon, 26 Apr 2021 11:40:19 GMT
+Connection: keep-alive
+Access-Control-Allow-Credentials: ***
+Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+X-Content-Type-Options: nosniff
+Content-Type: application/json
+Content-Length: 258
+Access-Control-Allow-Methods: ***
+
+{"status":{"success":true,"errors":[],"infos":[],"jSessionId":"1qxqA5TyTuVCnbaMLdKQpIxculq6ysZYGowA3A3T"},"approvalNeeded":false,"amlAnswersNeeded":false,"pinChangeNeeded":false,"sessionKey":null,"autoStartToken":"**HASHED:Th**"}
+
+REQUEST 6
+POST https://mob.alandsbanken.se/cbs-inet-json-api-abs-v1/api/v3/bankIdAutostartCollect.do
+Content-Type: application/json
+Accept: application/json
+X-Aggregator: Tink Testing
+
+{"appVersion":"1.9.0-iOS"}
+
+RESPONSE 6
+200
+Expires: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Access-Control-Allow-Headers: ***
+X-XSS-Protection: 1; mode=block
+Pragma: no-cache
+X-Frame-Options: DENY
+Content-Disposition: ***
+Session-Id: ***
+Date: Mon, 26 Apr 2021 11:40:24 GMT
+Connection: keep-alive
+Access-Control-Allow-Credentials: ***
+Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+X-Content-Type-Options: nosniff
+Content-Type: application/json
+
+{"status":{"success":true,"errors":[],"infos":[],"jSessionId":"1qxqA5TyTuVCnbaMLdKQpIxculq6ysZYGowA3A3T"},"approvalNeeded":false,"amlAnswersNeeded":false,"pinChangeNeeded":false,"sessionKey":null}
+
+REQUEST 7
+GET https://mob.alandsbanken.se/cbs-inet-json-api-abs-v1/api/accounts.do?showHidden=true
+Content-Type: application/json
+Accept: application/json
+X-Aggregator: Tink Testing
+
+RESPONSE 7
+200
+Expires: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Access-Control-Allow-Headers: ***
+X-XSS-Protection: 1; mode=block
+Pragma: no-cache
+X-Frame-Options: DENY
+Date: Mon, 26 Apr 2021 11:40:25 GMT
+Connection: keep-alive
+Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+X-Content-Type-Options: nosniff
+Content-Type: application/json
+
+{"status":{"success":true,"errors":[],"infos":[],"jSessionId":"1qxqA5TyTuVCnbaMLdKQpIxculq6ysZYGowA3A3T"},"sortSettings":[{"accountGroup":"loan","column":"accountNickname","columnIndex":"1","order":"desc"},{"accountGroup":"check","column":"accountNickname","columnIndex":"1","order":"desc"}],"accounts":[{"accountNumber":"SE9823000000011111111111","accountId":"caeeec458b97677eebd5f8f786e73dab53e2a58b","accountNickname":"3333 11 111 11","currency":"SEK","availableAmount":2351.00,"balance":2351.00,"creditLimit":0.00,"interestRate":0.0000,"trueInterestRate":null,"interestMargin":0.0000,"capitalization":"TWELVE_MONTHS","minInterestRate":0.0000,"maxInterestRate":0.0000,"referenceInterestName":"","referenceInterestValue":0.0000,"interestLadder":[],"accountType":"418","accountTypeName":"PREMIUMKONTO","accountGroup":"check","accountSubGroup":"check","bban":"33331111111","bbanFormatted":"3333 11 111 11","bic":"AABASESS","payableAccount":true,"transferable":true,"defaultAccount":false,"showAccount":true,"reservations":false,"reservationAmount":0,"accountOwnerName":"NAME111 SURNAME1","accountCoOwnerName":"","moreOwnersThanTwo":false,"dueDate":null,"grossInterestAmount":null,"netInterestAmount":null,"interestTaxAmount":null,"receiverAccount":null,"owner":true,"softLocked":false,"pledged":false,"allowedAsDefaultAccount":true,"usageType":"OTHER","usageText":"LÅN","transferableToOwnAccount":true,"openingDate":null,"startDate":null,"statusText":null,"renewalState":null,"renewalRestriction":null,"interestPaymentCode":null,"accountLimitVisible":true,"accountLimitChangeable":true},{"accountNumber":"SE0523000000022222222222","accountId":"a1b6ca34786c47311d09fb11633473b80dfb24b2","accountNickname":"2222 22 222 22","currency":"SEK","availableAmount":-1855000.00,"balance":-1855000.00,"creditLimit":null,"interestRate":1.4000,"trueInterestRate":null,"interestMargin":0,"capitalization":"","minInterestRate":0,"maxInterestRate":0,"referenceInterestName":"","referenceInterestValue":0,"interestLadder":[],"accountType":"543","accountTypeName":"BOLÅN 3 MÅNADER","accountGroup":"loan","accountSubGroup":null,"bban":"22222222222","bbanFormatted":"2222 22 222 22","bic":"AABASESS","payableAccount":false,"transferable":false,"defaultAccount":false,"showAccount":true,"reservations":false,"reservationAmount":0,"accountOwnerName":"NAM SURNAME1","accountCoOwnerName":"NAME111 SURNAME1","moreOwnersThanTwo":false,"dueDate":null,"grossInterestAmount":null,"netInterestAmount":null,"interestTaxAmount":null,"receiverAccount":null,"owner":true,"softLocked":false,"pledged":false,"allowedAsDefaultAccount":true,"usageType":null,"usageText":null,"transferableToOwnAccount":false,"openingDate":null,"startDate":null,"statusText":null,"renewalState":null,"renewalRestriction":null,"interestPaymentCode":null,"accountLimitVisible":false,"accountLimitChangeable":false}],"unsettledAmount":null}
+
+REQUEST 10
+GET https://mob.alandsbanken.se/cbs-inet-json-api-abs-v1/api/loanDetails.do?loanAccountId=a1b6ca34786c47311d09fb11633473b80dfb24b2
+Content-Type: application/json
+Accept: application/json
+X-Aggregator: Tink Testing
+
+RESPONSE 10
+200
+Expires: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Access-Control-Allow-Headers: ***
+X-XSS-Protection: 1; mode=block
+Pragma: no-cache
+X-Frame-Options: DENY
+Content-Disposition: ***
+Session-Id: ***
+Date: Mon, 26 Apr 2021 11:40:25 GMT
+Connection: keep-alive
+Access-Control-Allow-Credentials: ***
+Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+X-Content-Type-Options: nosniff
+Content-Type: application/json
+Content-Length: 1888
+Access-Control-Allow-Methods: ***
+
+{"status":{"success":true,"errors":[],"infos":[],"jSessionId":"1qxqA5TyTuVCnbaMLdKQpIxculq6ysZYGowA3A3T"},"loanDetailsVO":{"accountNumber":"2222 22 222 22","iban":"SE05 2300 0000 2222 2222 2222","ownerName":"NAM SURNAME1","otherOwnerName":"NAME111 SURNAME1","overdueInterest":0.00,"openingdate":"20200603","enddate":"20600530","show1":"yes","indebtednessType":"PRIVATE_PERSON","debitAccount1":"FI55 4444 4444 4444 44","debitBbanAccount1":"3333 11 111 11","show2":"no","debitAccount2":null,"debitBbanAccount2":null,"loanInsurance":" ","loanInsurance2":null,"nickName":null,"period":"0","withdrawnAmount":-1855000.00,"currentlyWithdrawableAmount":0.00,"totalamount":2164.00,"instalment":0.00,"instalmentFallenDue":0.00,"accountTypeName":"BOLÅN 3 MÅNADER","accountTypeCode":null,"accountTypeNumber":null,"interestBinding":null,"interestAmount":2164.00,"interestAmountFallenDue":0.00,"interestRate":1.4000,"fee":0.00,"feesFallenDue":0.00,"totalFallenDue":null,"grantedAmount":-1855000.00,"meddelandeKod":"no","showavi":null,"paydate2":"00000000","paydate":"00000000","accountText":"","showIP":"yes","kriterier":"","intervall":"NONE","tointerestperiod":"20210531","estimEndDate":" ","availableAmount":-1855000.00,"currency":"SEK","unUsedAmountToday":0.00,"liftable":"SHOW_AMOUNT","interestToPay":0.00,"showSecondInterestAmount":"0","showTotalAmount":"1","whitdrawWhere":"liftLayoutCode","nextInterestAdjustmentDate":"20210531","insuranceAmount":0.00,"insuranceAmountFallenDue":0.00,"insuranceAmount2":null,"insuranceAmountFallenDue2":null,"interestCeiling":0.0000,"loanStatus":null,"reference":null,"insuredPerson1":null,"insuredPerson2":null,"insurancePremium":null,"showNextPaymentInfo":false,"respiteMonthsLeft":0,"studentLoan":false,"changeRespiteAllowed":false,"changeLoanAllowed":true,"acountTextShow":"no","fromiterestperiod":"20210501","interestCeilingShow":false}}
+
+REQUEST 11
+GET https://mob.alandsbanken.se/cbs-inet-json-api-abs-v1/api/transactions.do?accountId=caeeec458b97677eebd5f8f786e73dab53e2a58b&fromdate=19920112&todate=19920410
+Content-Type: application/json
+Accept: application/json
+X-Aggregator: Tink Testing
+
+RESPONSE 11
+200
+Expires: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Access-Control-Allow-Headers: ***
+X-XSS-Protection: 1; mode=block
+Pragma: no-cache
+X-Frame-Options: DENY
+Content-Disposition: ***
+Session-Id: ***
+Date: Mon, 26 Apr 2021 11:40:26 GMT
+Connection: keep-alive
+Access-Control-Allow-Credentials: ***
+Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+X-Content-Type-Options: nosniff
+Content-Type: application/json
+Content-Length: 3791
+Access-Control-Allow-Methods: ***
+
+{"status":{"success":true,"errors":[],"infos":[],"jSessionId":"1qxqA5TyTuVCnbaMLdKQpIxculq6ysZYGowA3A3T"},"transactions":[{"transactionId":"caeeec458b97677eebd5f8f786e73dab53e2a58b:201027000006833:1:20201027","dueDate":"20201027","bookingDate":"20201027","amount":-75.00,"currency":"SEK","originalAmount":-75.00,"originalCurrency":"SEK","accountNumber":null,"recieverName":"ÅLANDSBANKEN ABP","reference":"","textCode":"BANKAVGIFT","ownRegistered":false,"copyable":false,"sepaTransaction":false,"incoming":false,"periodicity":"ONE_TIME","endDate":"20210426","ownNote":null},{"transactionId":"caeeec458b97677eebd5f8f786e73dab53e2a58b:201023000010113:1:20201023","dueDate":"20201023","bookingDate":"20201023","amount":2000.00,"currency":"SEK","originalAmount":2000.00,"originalCurrency":"SEK","accountNumber":null,"recieverName":"ÖVERFÖRING","reference":"","textCode":"ÖVERFÖRING","ownRegistered":false,"copyable":false,"sepaTransaction":false,"incoming":true,"periodicity":"ONE_TIME","endDate":"20210426","ownNote":null},{"transactionId":"caeeec458b97677eebd5f8f786e73dab53e2a58b:200930000007981:2:20200930","dueDate":"20200930","bookingDate":"20200930","amount":-2164.00,"currency":"SEK","originalAmount":-2164.00,"originalCurrency":"SEK","accountNumber":null,"recieverName":"ÅLANDSBANKEN ABP","reference":"","textCode":"RÄNTA/AMORTERING","ownRegistered":false,"copyable":false,"sepaTransaction":false,"incoming":false,"periodicity":"ONE_TIME","endDate":"20210426","ownNote":null},{"transactionId":"caeeec458b97677eebd5f8f786e73dab53e2a58b:200928000027575:1:20200928","dueDate":"20200928","bookingDate":"20200928","amount":-75.00,"currency":"SEK","originalAmount":-75.00,"originalCurrency":"SEK","accountNumber":null,"recieverName":"ÅLANDSBANKEN ABP","reference":"","textCode":"BANKAVGIFT","ownRegistered":false,"copyable":false,"sepaTransaction":false,"incoming":false,"periodicity":"ONE_TIME","endDate":"20210426","ownNote":null},{"transactionId":"caeeec458b97677eebd5f8f786e73dab53e2a58b:200925000012305:1:20200925","dueDate":"20200925","bookingDate":"20200925","amount":2000.00,"currency":"SEK","originalAmount":2000.00,"originalCurrency":"SEK","accountNumber":null,"recieverName":"ÖVERFÖRING","reference":"","textCode":"ÖVERFÖRING","ownRegistered":false,"copyable":false,"sepaTransaction":false,"incoming":true,"periodicity":"ONE_TIME","endDate":"20210426","ownNote":null},{"transactionId":"caeeec458b97677eebd5f8f786e73dab53e2a58b:200831000020696:2:20200831","dueDate":"20200831","bookingDate":"20200831","amount":-2164.00,"currency":"SEK","originalAmount":-2164.00,"originalCurrency":"SEK","accountNumber":null,"recieverName":"ÅLANDSBANKEN ABP","reference":"","textCode":"RÄNTA/AMORTERING","ownRegistered":false,"copyable":false,"sepaTransaction":false,"incoming":false,"periodicity":"ONE_TIME","endDate":"20210426","ownNote":null},{"transactionId":"caeeec458b97677eebd5f8f786e73dab53e2a58b:200827000007573:1:20200827","dueDate":"20200827","bookingDate":"20200827","amount":-75.00,"currency":"SEK","originalAmount":-75.00,"originalCurrency":"SEK","accountNumber":null,"recieverName":"ÅLANDSBANKEN ABP","reference":"","textCode":"BANKAVGIFT","ownRegistered":false,"copyable":false,"sepaTransaction":false,"incoming":false,"periodicity":"ONE_TIME","endDate":"20210426","ownNote":null},{"transactionId":"caeeec458b97677eebd5f8f786e73dab53e2a58b:200825000010755:1:20200825","dueDate":"20200825","bookingDate":"20200825","amount":2000.00,"currency":"SEK","originalAmount":2000.00,"originalCurrency":"SEK","accountNumber":null,"recieverName":"ÖVERFÖRING","reference":"","textCode":"ÖVERFÖRING","ownRegistered":false,"copyable":false,"sepaTransaction":false,"incoming":true,"periodicity":"ONE_TIME","endDate":"20210426","ownNote":null}],"dateRetrieved":1619437226220}
+
+REQUEST 12
+GET https://mob.alandsbanken.se/cbs-inet-json-api-abs-v1/api/transactions.do?accountId=caeeec458b97677eebd5f8f786e73dab53e2a58b&fromdate=19911014&todate=19920111
+Content-Type: application/json
+Accept: application/json
+X-Aggregator: Tink Testing
+
+RESPONSE 12
+200
+Expires: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Access-Control-Allow-Headers: ***
+X-XSS-Protection: 1; mode=block
+Pragma: no-cache
+X-Frame-Options: DENY
+Content-Disposition: ***
+Session-Id: ***
+Date: Mon, 26 Apr 2021 11:40:26 GMT
+Connection: keep-alive
+Access-Control-Allow-Credentials: ***
+Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+X-Content-Type-Options: nosniff
+Content-Type: application/json
+Content-Length: 3791
+Access-Control-Allow-Methods: ***
+
+{"status":{"success":true,"errors":[],"infos":[],"jSessionId":"1qxqA5TyTuVCnbaMLdKQpIxculq6ysZYGowA3A3T"},"transactions":[],"dateRetrieved":1619437226220}
+
+REQUEST 13
+GET https://mob.alandsbanken.se/cbs-inet-json-api-abs-v1/api/transactions.do?accountId=caeeec458b97677eebd5f8f786e73dab53e2a58b&fromdate=19910716&todate=19911013
+Content-Type: application/json
+Accept: application/json
+X-Aggregator: Tink Testing
+
+RESPONSE 13
+200
+Expires: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Access-Control-Allow-Headers: ***
+X-XSS-Protection: 1; mode=block
+Pragma: no-cache
+X-Frame-Options: DENY
+Content-Disposition: ***
+Session-Id: ***
+Date: Mon, 26 Apr 2021 11:40:26 GMT
+Connection: keep-alive
+Access-Control-Allow-Credentials: ***
+Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+X-Content-Type-Options: nosniff
+Content-Type: application/json
+Content-Length: 3791
+Access-Control-Allow-Methods: ***
+
+{"status":{"success":true,"errors":[],"infos":[],"jSessionId":"1qxqA5TyTuVCnbaMLdKQpIxculq6ysZYGowA3A3T"},"transactions":[],"dateRetrieved":1619437226220}
+
+REQUEST 14
+GET https://mob.alandsbanken.se/cbs-inet-json-api-abs-v1/api/transactions.do?accountId=caeeec458b97677eebd5f8f786e73dab53e2a58b&fromdate=19910417&todate=19910715
+Content-Type: application/json
+Accept: application/json
+X-Aggregator: Tink Testing
+
+RESPONSE 14
+200
+Expires: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Access-Control-Allow-Headers: ***
+X-XSS-Protection: 1; mode=block
+Pragma: no-cache
+X-Frame-Options: DENY
+Content-Disposition: ***
+Session-Id: ***
+Date: Mon, 26 Apr 2021 11:40:26 GMT
+Connection: keep-alive
+Access-Control-Allow-Credentials: ***
+Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+X-Content-Type-Options: nosniff
+Content-Type: application/json
+Content-Length: 3791
+Access-Control-Allow-Methods: ***
+
+{"status":{"success":true,"errors":[],"infos":[],"jSessionId":"1qxqA5TyTuVCnbaMLdKQpIxculq6ysZYGowA3A3T"},"transactions":[],"dateRetrieved":1619437226220}
+
+REQUEST 15
+GET https://mob.alandsbanken.se/cbs-inet-json-api-abs-v1/api/transactions.do?accountId=caeeec458b97677eebd5f8f786e73dab53e2a58b&fromdate=19910117&todate=19910416
+Content-Type: application/json
+Accept: application/json
+X-Aggregator: Tink Testing
+
+RESPONSE 15
+200
+Expires: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Access-Control-Allow-Headers: ***
+X-XSS-Protection: 1; mode=block
+Pragma: no-cache
+X-Frame-Options: DENY
+Content-Disposition: ***
+Session-Id: ***
+Date: Mon, 26 Apr 2021 11:40:26 GMT
+Connection: keep-alive
+Access-Control-Allow-Credentials: ***
+Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+X-Content-Type-Options: nosniff
+Content-Type: application/json
+Content-Length: 3791
+Access-Control-Allow-Methods: ***
+
+{"status":{"success":true,"errors":[],"infos":[],"jSessionId":"1qxqA5TyTuVCnbaMLdKQpIxculq6ysZYGowA3A3T"},"transactions":[],"dateRetrieved":1619437226220}
+
+REQUEST 16
+GET https://mob.alandsbanken.se/cbs-inet-json-api-abs-v1/api/customer.do
+Content-Type: application/json
+Accept: application/json
+X-Aggregator: Tink Testing
+
+RESPONSE 16
+200
+Expires: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Access-Control-Allow-Headers: ***
+X-XSS-Protection: 1; mode=block
+Pragma: no-cache
+X-Frame-Options: DENY
+Content-Disposition: ***
+Session-Id: ***
+Date: Mon, 26 Apr 2021 11:40:26 GMT
+Connection: keep-alive
+Access-Control-Allow-Credentials: ***
+Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+X-Content-Type-Options: nosniff
+Content-Type: application/json
+Content-Length: 1071
+Access-Control-Allow-Methods: ***
+
+{"status":{"success":true,"errors":[],"infos":[],"jSessionId":"1qxqA5TyTuVCnbaMLdKQpIxculq6ysZYGowA3A3T"},"ssn":"990101-1111","customerType":"REGULAR","gender":"FEMALE","externalId":null,"firstName":"NAME111","lastName":"SURNAME1","address":"VÄGEVÄGENVÄGEN 11 LGH 0000","address2":"","postalCode":"11111","postOffice":"LIDINGÖ","state":"","locale":"sv_SE","countryCode":"SE","addressCountryCode":"SE","serviceCodes":[],"lastLogin":"26.04.2021 13.40.24","emailAddressHome":"name.name@gmail.com","emailAddressWork":"","faxNumber":"","phoneNumber":"","phoneNumberWork":"","mobileNumber":"46000000111","mobileNumberWork":"","advisorName":"Name Name","advisorPhoneNumber":"08-111 0000","advisorImageName":"https://mob.alandsbanken.se/images/staff/jonas.kuren.png","defaultAdvisorImageName":"https://mob.alandsbanken.se/images/staff/default.png","domesticPhoneNumber":"0711111111","domesticPhoneNumberWork":"0 ","domesticMobileNumber":"0711111111","domesticMobileNumberWork":"0 ","bankOffice":11,"nationalIdGenerated":null,"forceKyc":false,"skinClass":null}

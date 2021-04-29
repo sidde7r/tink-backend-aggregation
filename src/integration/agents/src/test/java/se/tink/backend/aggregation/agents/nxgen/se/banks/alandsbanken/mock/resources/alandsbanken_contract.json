@@ -1,0 +1,192 @@
+{
+  "accounts" : [ {
+    "accountNumber" : "2222 22 222 22",
+    "accountExclusion" : "NONE",
+    "exactBalance" : {
+      "currencyCode" : "SEK",
+      "exactValue" : -1855000.0,
+      "scale" : 1,
+      "unscaledValue" : -18550000,
+      "doubleValue" : -1855000.0
+    },
+    "currencyCode" : "SEK",
+    "bankId" : "a1b6ca34786c47311d09fb11633473b80dfb24b2",
+    "excluded" : false,
+    "favored" : false,
+    "name" : "2222 22 222 22",
+    "ownership" : 1.0,
+    "type" : "LOAN",
+    "userModifiedExcluded" : false,
+    "userModifiedName" : false,
+    "userModifiedType" : false,
+    "identifiers" : "[]",
+    "closed" : false,
+    "flags" : "[]",
+    "balances" : [ ],
+    "availableCredit" : 0.0,
+    "balance" : -1855000.0
+  }, {
+    "accountNumber" : "3333 11 111 11",
+    "accountExclusion" : "NONE",
+    "exactBalance" : {
+      "currencyCode" : "SEK",
+      "exactValue" : 2351.0,
+      "scale" : 1,
+      "unscaledValue" : 23510,
+      "doubleValue" : 2351.0
+    },
+    "currencyCode" : "SEK",
+    "bankId" : "33331111111",
+    "excluded" : false,
+    "favored" : false,
+    "name" : "PREMIUMKONTO",
+    "ownership" : 1.0,
+    "type" : "CHECKING",
+    "userModifiedExcluded" : false,
+    "userModifiedName" : false,
+    "userModifiedType" : false,
+    "identifiers" : "[\"se://33331111111\"]",
+    "closed" : false,
+    "holderName" : "Name111 Surname1",
+    "accountHolder" : {
+      "accountId" : null,
+      "type" : "PERSONAL",
+      "identities" : [ {
+        "name" : "Name111 Surname1",
+        "role" : "HOLDER"
+      } ]
+    },
+    "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
+    "balances" : [ ],
+    "availableCredit" : 0.0,
+    "balance" : 2351.0
+  } ],
+  "transactions" : [ {
+    "amount" : -75.0,
+    "date" : 1603796400000,
+    "description" : "ÅLANDSBANKEN ABP",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  }, {
+    "amount" : 2000.0,
+    "date" : 1603447200000,
+    "description" : "ÖVERFÖRING",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  }, {
+    "amount" : -2164.0,
+    "date" : 1601460000000,
+    "description" : "ÅLANDSBANKEN ABP",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  }, {
+    "amount" : -75.0,
+    "date" : 1601287200000,
+    "description" : "ÅLANDSBANKEN ABP",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  }, {
+    "amount" : 2000.0,
+    "date" : 1601028000000,
+    "description" : "ÖVERFÖRING",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  }, {
+    "amount" : -2164.0,
+    "date" : 1598868000000,
+    "description" : "ÅLANDSBANKEN ABP",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  }, {
+    "amount" : -75.0,
+    "date" : 1598522400000,
+    "description" : "ÅLANDSBANKEN ABP",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  }, {
+    "amount" : 2000.0,
+    "date" : 1598349600000,
+    "description" : "ÖVERFÖRING",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  } ],
+  "identityData" : {
+    "nameElements" : [ {
+      "type" : "FIRST_NAME",
+      "value" : "NAME111"
+    }, {
+      "type" : "SURNAME",
+      "value" : "SURNAME1"
+    } ],
+    "dateOfBirth" : {
+      "year" : 1999,
+      "month" : "JANUARY",
+      "dayOfWeek" : "FRIDAY",
+      "leapYear" : false,
+      "dayOfYear" : 1,
+      "chronology" : {
+        "calendarType" : "iso8601",
+        "id" : "ISO"
+      },
+      "monthValue" : 1,
+      "dayOfMonth" : 1,
+      "era" : "CE"
+    }
+  }
+}
