@@ -29,11 +29,10 @@ import se.tink.integration.webdriver.ChromeDriverInitializer;
 @Slf4j
 public class RuralviaAuthenticator implements Authenticator {
 
-    private RuralviaApiClient apiClient;
-    private WebDriver driver;
+    private final RuralviaApiClient apiClient;
+    private final WebDriver driver;
 
     public RuralviaAuthenticator(RuralviaApiClient apiClient) {
-        super();
         this.apiClient = apiClient;
         this.driver = createDriver();
     }
@@ -42,17 +41,21 @@ public class RuralviaAuthenticator implements Authenticator {
     public void authenticate(Credentials credentials)
             throws AuthenticationException, AuthorizationException {
 
+        checkCredentials(credentials);
+
+        doLogin(credentials);
+        apiClient.storeLoginCookies(driver.manage().getCookies());
+        apiClient.setGlobalPositionHtml(driver.getPageSource());
+        apiClient.setLogged(true);
+        driver.quit();
+    }
+
+    private void checkCredentials(Credentials credentials) {
         if (Strings.isNullOrEmpty(credentials.getField(Field.Key.USERNAME))
                 || Strings.isNullOrEmpty(credentials.getField(Field.Key.PASSWORD))
                 || Strings.isNullOrEmpty(credentials.getField(Field.Key.NATIONAL_ID_NUMBER))) {
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
-
-        doLogin(credentials);
-        apiClient.storeLoginCookies(driver.manage().getCookies());
-        apiClient.setGlobalPositionHtml(driver.getPageSource());
-        driver.close();
-        driver.quit();
     }
 
     private void doLogin(Credentials credentials) {
@@ -86,17 +89,15 @@ public class RuralviaAuthenticator implements Authenticator {
 
     /** Checks if appears a Login error in the DOM due a failed login */
     private void checkCorrectLogin() {
-        boolean showsError;
+
         try {
-            showsError = driver.findElement(By.id("divErrorMessage")).isDisplayed();
-
+            if (driver.findElement(By.id("divErrorMessage")).isDisplayed()) {
+                throw LoginError.INCORRECT_CREDENTIALS.exception();
+            }
         } catch (NoSuchElementException e) {
-            showsError = false;
-        }
-
-        if (showsError
-                || !driver.getPageSource().contains("<div id=\"HEADER\">Posición Global</div>")) {
-            throw LoginError.INCORRECT_CREDENTIALS.exception();
+            if (!driver.getPageSource().contains("<div id=\"HEADER\">Posición Global</div>")) {
+                throw LoginError.INCORRECT_CREDENTIALS.exception();
+            }
         }
     }
 

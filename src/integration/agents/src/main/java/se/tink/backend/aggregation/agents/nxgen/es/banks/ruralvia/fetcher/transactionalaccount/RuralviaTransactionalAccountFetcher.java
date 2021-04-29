@@ -154,24 +154,24 @@ public class RuralviaTransactionalAccountFetcher
             String html, AccountEntity account, LocalDate fromDate, LocalDate toDate) {
         String params;
         if (html.contains(".TRANCODE.value")) {
-            params = getParamsForMovements1(html, account, fromDate, toDate);
+            params = getParamsWhenExistTrancode(html, account, fromDate, toDate);
         } else {
             boolean nextPage = false;
             if (html.contains("onClick=\"siguientes()")) {
                 nextPage = true;
             }
-            params = getParamsForMovements2(html, fromDate, toDate, nextPage);
+            params = getParamsWhenNoExistsTrancode(html, fromDate, toDate, nextPage);
         }
         return params;
     }
 
     // TODO to implement
-    private String getParamsForMovements1(
+    private String getParamsWhenExistTrancode(
             String html, AccountEntity account, LocalDate fromDate, LocalDate toDate) {
         return null;
     }
 
-    private String getParamsForMovements2(
+    private String getParamsWhenNoExistsTrancode(
             String html, LocalDate fromDate, LocalDate toDate, boolean nextPage) {
 
         Document doc = Jsoup.parse(html);
@@ -195,43 +195,31 @@ public class RuralviaTransactionalAccountFetcher
         String value;
         for (Element input : inputs) {
 
-            switch (input.attr("name")) {
-                case "FECHAMOVDESDE":
-                    value = fromDate.format(PATTERN);
-                    break;
-                case "FechaDesde":
-                    value = fromDate.format(PATTERN);
-                    break;
-                case "FECHAMOVHASTA":
-                    value = toDate.format(PATTERN);
-                    break;
-                case "FechaHasta":
-                    value = toDate.format(PATTERN);
-                    break;
-                case "primeraVez":
-                    value = firstTime;
-                    break;
-                case "paginaActual":
-                    value = currentPage;
-                    break;
-                case "EXTRA_PARAM_CUENTA":
-                    value = accountNum;
-                    break;
-                case "CUENTA":
-                    value = accountNum;
-                    break;
-                case "fechaComparacion":
-                    value = LocalDate.now().format(PATTERN);
-                    break;
-                case "clavePagina":
-                    value = nextPage ? "PAS_MOV_CUENTAS_PAGINAR" : "PAS_MOV_CUENTAS";
-                    break;
-                case "clavePaginaVolver":
-                    value = nextPage ? "PAS_MOV_CUENTAS_PAGINAR" : "MENUP_PAS_MOV_CUENTAS";
-                    break;
-                default:
-                    value = encodeValueAttrToURL(input);
-                    break;
+            String name = input.attr("name");
+            if ("FECHAMOVDESDE".equals(name)) {
+                value = fromDate.format(PATTERN);
+            } else if ("FechaDesde".equals(name)) {
+                value = fromDate.format(PATTERN);
+            } else if ("FECHAMOVHASTA".equals(name)) {
+                value = toDate.format(PATTERN);
+            } else if ("FechaHasta".equals(name)) {
+                value = toDate.format(PATTERN);
+            } else if ("primeraVez".equals(name)) {
+                value = firstTime;
+            } else if ("paginaActual".equals(name)) {
+                value = currentPage;
+            } else if ("EXTRA_PARAM_CUENTA".equals(name)) {
+                value = accountNum;
+            } else if ("CUENTA".equals(name)) {
+                value = accountNum;
+            } else if ("fechaComparacion".equals(name)) {
+                value = LocalDate.now().format(PATTERN);
+            } else if ("clavePagina".equals(name)) {
+                value = nextPage ? "PAS_MOV_CUENTAS_PAGINAR" : "PAS_MOV_CUENTAS";
+            } else if ("clavePaginaVolver".equals(name)) {
+                value = nextPage ? "PAS_MOV_CUENTAS_PAGINAR" : "MENUP_PAS_MOV_CUENTAS";
+            } else {
+                value = encodeValueAttrToURL(input);
             }
             if (!input.attr("name").equalsIgnoreCase("tipoBusqueda")
                     && !input.attr("name").equalsIgnoreCase("ordenBusqueda")

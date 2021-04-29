@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.fetcher;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.assertEquals;
 
 import java.util.Locale;
 import org.junit.Test;
@@ -23,10 +22,10 @@ public class RuralviaUtilsTest {
         ExactCurrencyAmount result2 = RuralviaUtils.parseAmount(amount2, currency);
 
         // then
-        assertTrue(result.getCurrencyCode().equals(currency));
-        assertTrue(result.getStringValue(locale).equals("100,00"));
+        assertEquals(result.getCurrencyCode(), currency);
+        assertEquals(result.getStringValue(locale), "100,00");
 
-        assertTrue(result2.getStringValue(locale).equals("1.234.567.890.000,12"));
+        assertEquals(result2.getStringValue(locale), "1.234.567.890.000,12");
     }
 
     @Test
@@ -39,12 +38,22 @@ public class RuralviaUtilsTest {
         ExactCurrencyAmount result = RuralviaUtils.parseAmountInEuros(amountToClean);
 
         // then
-        assertTrue(result.getCurrencyCode().equals("EUR"));
-        assertTrue(result.getStringValue(locale).equals("100,00"));
+        assertEquals(result.getCurrencyCode(), "EUR");
+        assertEquals(result.getStringValue(locale), "100,00");
     }
 
     @Test
-    public void getURLEncodedUTF8StringShouldEncodeWhenReceiveString(String toencode) {
-        fail();
+    public void getURLEncodedUTF8StringShouldEncodeWhenReceiveString() {
+        // given
+        String urlToEncode = "url to?encode& ";
+        String urlToEncode2 = "κόσμε";
+
+        // when
+        String result = RuralviaUtils.getURLEncodedUTF8String(urlToEncode);
+        String result2 = RuralviaUtils.getURLEncodedUTF8String(urlToEncode2);
+
+        // then
+        assertEquals(result, "url+to%3Fencode%26+");
+        assertEquals(result2, "%CE%BA%E1%BD%B9%CF%83%CE%BC%CE%B5");
     }
 }

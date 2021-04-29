@@ -1,7 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia;
 
-import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.PROVIDER_NAME;
-
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
@@ -31,7 +29,7 @@ public class RuralviaAgentTest {
     }
 
     private AgentIntegrationTest createAgentTest() {
-        return new AgentIntegrationTest.Builder("es", PROVIDER_NAME)
+        return new AgentIntegrationTest.Builder("es", "es-ruralvia-password")
                 .addCredentialField(
                         Field.Key.USERNAME, manager.get(UsernamePasswordArgumentEnum.USERNAME))
                 .addCredentialField(

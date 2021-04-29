@@ -1,25 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.fetcher.creditcard;
 
-import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.CssSelectors.CSS_AGREEMENT_CARD;
-import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.CssSelectors.CSS_CARD_CODE;
-import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.CssSelectors.CSS_CARD_TYPE;
-import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.CssSelectors.CSS_CODE_CARD_TYPE;
-import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.CssSelectors.CSS_DESCRIPTION_CARD_TYPE;
-import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.CssSelectors.CSS_DESCRIPTION_PAN;
-import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.CssSelectors.CSS_ENTITY_CARD;
-import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.INVALID_PERIOD;
-import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.ParamValues.AGREEMENT_CARD;
-import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.ParamValues.CARD_CODE;
-import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.ParamValues.CARD_TYPE;
-import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.ParamValues.CODE_CARD_TYPE;
-import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.ParamValues.DESCRIPTION_CARD_TYPE;
-import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.ParamValues.DESCRIPTION_PAN;
-import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.ParamValues.ENTITY_CARD;
-import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.PATTERN;
-import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.THERE_IS_NOT_DATA_FOR_THIS_CONSULT;
-import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.Tags.ATTRIBUTE_TAG_VALUE;
-import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.Tags.TAG_INPUT;
-import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.Urls.RURALVIA_SECURE_HOST;
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.*;
 import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.fetcher.RuralviaUtils.getURLEncodedUTF8String;
 import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.fetcher.RuralviaUtils.parseAmountInEuros;
 
@@ -118,16 +99,24 @@ public class RuralviaCreditCardFetcher
                         .getElementsByTag("form")
                         .first()
                         .nextElementSiblings()
-                        .select(TAG_INPUT);
+                        .select(Tags.TAG_INPUT);
         creditCardBuilder
-                .cardCode(inputs.select(CSS_CARD_CODE).attr(ATTRIBUTE_TAG_VALUE))
-                .cardtype(inputs.select(CSS_CARD_TYPE).attr(ATTRIBUTE_TAG_VALUE))
-                .codeCardType(inputs.select(CSS_CODE_CARD_TYPE).attr(ATTRIBUTE_TAG_VALUE))
-                .entityCard(inputs.select(CSS_ENTITY_CARD).attr(ATTRIBUTE_TAG_VALUE))
-                .agreementCard(inputs.select(CSS_AGREEMENT_CARD).attr(ATTRIBUTE_TAG_VALUE))
-                .panDescription(inputs.select(CSS_DESCRIPTION_PAN).attr(ATTRIBUTE_TAG_VALUE))
+                .cardCode(inputs.select(CssSelectors.CSS_CARD_CODE).attr(Tags.ATTRIBUTE_TAG_VALUE))
+                .cardtype(inputs.select(CssSelectors.CSS_CARD_TYPE).attr(Tags.ATTRIBUTE_TAG_VALUE))
+                .codeCardType(
+                        inputs.select(CssSelectors.CSS_CODE_CARD_TYPE)
+                                .attr(Tags.ATTRIBUTE_TAG_VALUE))
+                .entityCard(
+                        inputs.select(CssSelectors.CSS_ENTITY_CARD).attr(Tags.ATTRIBUTE_TAG_VALUE))
+                .agreementCard(
+                        inputs.select(CssSelectors.CSS_AGREEMENT_CARD)
+                                .attr(Tags.ATTRIBUTE_TAG_VALUE))
+                .panDescription(
+                        inputs.select(CssSelectors.CSS_DESCRIPTION_PAN)
+                                .attr(Tags.ATTRIBUTE_TAG_VALUE))
                 .descriptionCardType(
-                        inputs.select(CSS_DESCRIPTION_CARD_TYPE).attr(ATTRIBUTE_TAG_VALUE));
+                        inputs.select(CssSelectors.CSS_DESCRIPTION_CARD_TYPE)
+                                .attr(Tags.ATTRIBUTE_TAG_VALUE));
 
         return creditCardBuilder.build();
     }
@@ -138,7 +127,7 @@ public class RuralviaCreditCardFetcher
         globalPosition = new GlobalPositionResponse(apiClient.getGlobalPositionHtml());
         PaginatorResponse response = PaginatorResponseImpl.createEmpty();
 
-        LocalDate toDate = LocalDate.now().minusMonths(3);
+        LocalDate toDate = LocalDate.now();
         LocalDate fromDate = toDate.minusMonths(3);
         CreditCardEntity creditCardEntity =
                 getCreditCardAccountMatchWithTemporalStorageEntities(account);
@@ -180,10 +169,10 @@ public class RuralviaCreditCardFetcher
     private String getTransactionsByPeriod(
             CreditCardEntity card, LocalDate fromDate, LocalDate toDate) {
 
-        log.debug("Go to Credit Cards tab");
+        log.info("Go to Credit Cards tab");
         URL url =
                 URL.of(
-                        RURALVIA_SECURE_HOST
+                        Urls.RURALVIA_SECURE_HOST
                                 + globalPosition
                                         .getHtml()
                                         .getElementById("menuHorizontal")
@@ -192,21 +181,24 @@ public class RuralviaCreditCardFetcher
 
         Document html = Jsoup.parse(apiClient.navigateToCreditCardsMovements(url));
 
-        log.debug("Go to Credit Cards movements");
+        log.info("Go to Credit Cards movements");
         apiClient.setHeaderReferer(url.toString());
-        url = URL.of(RURALVIA_SECURE_HOST + html.select("a:containsOwn(Movimientos)").attr("href"));
+        url =
+                URL.of(
+                        Urls.RURALVIA_SECURE_HOST
+                                + html.select("a:containsOwn(Movimientos)").attr("href"));
         html = Jsoup.parse(apiClient.navigateToCreditCardsMovements(url));
 
         card.setAccountCode(extractCreditCardAccountCode(card, html));
 
-        log.debug("Select a Credit Card and go to transactions by dates");
+        log.info("Select a Credit Card and go to transactions by dates");
         apiClient.setHeaderReferer(url.toString());
-        url = URL.of(RURALVIA_SECURE_HOST + html.select("form").attr("action"));
+        url = URL.of(Urls.RURALVIA_SECURE_HOST + html.select("form").attr("action"));
         String params = generateFormBodyForCreditCardsMovements(card);
         html = Jsoup.parse(apiClient.navigateToCreditCardTransactionsByDates(url, params));
 
-        log.debug("request transactions between dates for specific credit card");
-        url = URL.of(RURALVIA_SECURE_HOST + html.select("form").attr("action"));
+        log.info("request transactions between dates for specific credit card");
+        url = URL.of(Urls.RURALVIA_SECURE_HOST + html.select("form").attr("action"));
         params = generateFormBodyForTransactionsBetweenDates(card, fromDate, toDate);
 
         return apiClient.requestTransactionsBetweenDates(url, params);
@@ -227,22 +219,24 @@ public class RuralviaCreditCardFetcher
                 .put("clavePagina", "BEL_TAR_CON_MOVS_DATOS_SAT")
                 .put("opcionSaldoUltMovs", "M")
                 .put("numeroTarjeta", card.getCardNumber())
-                .put(CARD_CODE, "")
+                .put(ParamValues.CARD_CODE, "")
                 .put("tipoTarjeta_desc", getURLEncodedUTF8String(card.getDescriptionCardType()))
-                .put(CARD_TYPE, card.getCardtype())
-                .put(AGREEMENT_CARD, card.getAgreementCard())
-                .put(ENTITY_CARD, card.getEntityCard())
+                .put(ParamValues.CARD_TYPE, card.getCardtype())
+                .put(ParamValues.AGREEMENT_CARD, card.getAgreementCard())
+                .put(ParamValues.ENTITY_CARD, card.getEntityCard())
                 .put("TIPODOCUMENTO", "")
                 .put("DOCUMENTO", "")
                 .put("fechaseisMeses", sixMonthsDate)
                 .put("clavePaginaVolver", "BEL_TAR_CON_MOVS_FECHAS_SAT")
                 .put("volverNFU", "")
                 .put("PAN", card.getCardNumber())
-                .put(DESCRIPTION_PAN, getURLEncodedUTF8String(card.getPanDescription()))
-                .put(DESCRIPTION_CARD_TYPE, getURLEncodedUTF8String(card.getDescriptionCardType()))
+                .put(ParamValues.DESCRIPTION_PAN, getURLEncodedUTF8String(card.getPanDescription()))
+                .put(
+                        ParamValues.DESCRIPTION_CARD_TYPE,
+                        getURLEncodedUTF8String(card.getDescriptionCardType()))
                 .put("ACUERDO", card.getAgreementCard())
                 .put("IRIS", "SI")
-                .put(CODE_CARD_TYPE, card.getCodeCardType())
+                .put(ParamValues.CODE_CARD_TYPE, card.getCodeCardType())
                 .build()
                 .serialize();
     }
@@ -269,19 +263,23 @@ public class RuralviaCreditCardFetcher
                 .put("pagXpag", "")
                 .put("clavePagina", "BEL_TAR_CON_MOVS_FECHAS_SAT")
                 .put("numeroTarjeta", card.getCardNumber())
-                .put(CARD_TYPE, card.getCardtype())
-                .put(DESCRIPTION_CARD_TYPE, getURLEncodedUTF8String(card.getDescriptionCardType()))
+                .put(ParamValues.CARD_TYPE, card.getCardtype())
+                .put(
+                        ParamValues.DESCRIPTION_CARD_TYPE,
+                        getURLEncodedUTF8String(card.getDescriptionCardType()))
                 .put("codigoCuenta", card.getAccountCode())
-                .put(ENTITY_CARD, card.getEntityCard())
-                .put(AGREEMENT_CARD, card.getAgreementCard())
+                .put(ParamValues.ENTITY_CARD, card.getEntityCard())
+                .put(ParamValues.AGREEMENT_CARD, card.getAgreementCard())
                 .put("PAN", card.getCardNumber())
                 .put("ACUERDO", card.getAgreementCard())
-                .put(DESCRIPTION_PAN, getURLEncodedUTF8String(card.getPanDescription()))
-                .put(DESCRIPTION_CARD_TYPE, getURLEncodedUTF8String(card.getDescriptionCardType()))
+                .put(ParamValues.DESCRIPTION_PAN, getURLEncodedUTF8String(card.getPanDescription()))
+                .put(
+                        ParamValues.DESCRIPTION_CARD_TYPE,
+                        getURLEncodedUTF8String(card.getDescriptionCardType()))
                 .put("clavePaginaVolver", "BEL_TAR_CON_MOVS_SAT")
                 .put("opcionSaldoUltMovs", "M")
                 .put("IRIS", "SI")
-                .put(CODE_CARD_TYPE, card.getCodeCardType())
+                .put(ParamValues.CODE_CARD_TYPE, card.getCodeCardType())
                 .build()
                 .serialize();
     }

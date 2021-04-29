@@ -1,28 +1,32 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia;
 
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.Urls.RURALVIA_SECURE_HOST;
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.Urls.RURALVIA_STILL_ALIVE;
+
 import java.util.Set;
 import javax.ws.rs.core.MediaType;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.cookie.BasicClientCookie;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.HeaderValues;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class RuralviaApiClient {
 
     public final TinkHttpClient client;
-    private final PersistentStorage persistentStorage;
     private @Getter @Setter String globalPositionHtml;
     private @Getter @Setter String headerReferer;
+    private @Getter @Setter boolean isLogged = false;
 
-    public RuralviaApiClient(TinkHttpClient client, PersistentStorage persistentStorage) {
+    public RuralviaApiClient(TinkHttpClient client) {
         this.client = client;
-        this.persistentStorage = persistentStorage;
-        client.setUserAgent(HeaderValues.USER_AGENT);
+        this.client.setUserAgent(HeaderValues.USER_AGENT);
     }
 
     private RequestBuilder createRequest(URL url) {
@@ -33,9 +37,12 @@ public class RuralviaApiClient {
         return createRequest(url).body(formToBody, MediaType.APPLICATION_FORM_URLENCODED);
     }
 
-    // TODO
     public boolean keepAlive() {
-        return true;
+        String html = client.request(RURALVIA_STILL_ALIVE).get(String.class);
+        return (isLogged
+                && (html.contains("'desconectar'")
+                        || !html.contains("sesion_caducada.htm")
+                        || !html.contains("id=\"error_acceso\"")));
     }
 
     private Cookie convertCookie(org.openqa.selenium.Cookie cookie) {
@@ -68,5 +75,26 @@ public class RuralviaApiClient {
 
     public String requestTransactionsBetweenDates(URL url, String params) {
         return createBodyFormRequest(url, params).post(String.class);
+    }
+
+    public String navigateThroughLoan(URL url) {
+        return client.request(url).get(String.class);
+    }
+
+    public String navigateToLoanDetails(URL url, String params) {
+        return createBodyFormRequest(url, params).post(String.class);
+    }
+
+    public String navigateToLoanAmortizationTableDetails(URL url, String params) {
+        return createBodyFormRequest(url, params).post(String.class);
+    }
+
+    public void logout() {
+        Element html = Jsoup.parse(globalPositionHtml);
+        Elements logout = html.select("a:has(img[name=desconectar])");
+        if (!logout.isEmpty()) {
+            URL url = URL.of(RURALVIA_SECURE_HOST + logout.get(0).attr("href"));
+            client.request(url).get(String.class);
+        }
     }
 }

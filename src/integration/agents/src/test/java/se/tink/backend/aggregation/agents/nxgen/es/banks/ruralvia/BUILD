@@ -3,9 +3,9 @@ load("//tools/bzl:junit.bzl", "junit_test")
 junit_test(
     name = "ruralvia_unitTests",
     srcs = [
+        "fetcher/RuralviaUtilsTest.java",
         "fetcher/account/RuralviaTransactionalAccountFetcherTest.java",
         "fetcher/creditcard/RuralviaCreditCardFetcherTest.java",
-        "fetcher/RuralviaUtilsTest.java",
         "rpc/GlobalPositionResponseTest.java",
     ],
     data = [

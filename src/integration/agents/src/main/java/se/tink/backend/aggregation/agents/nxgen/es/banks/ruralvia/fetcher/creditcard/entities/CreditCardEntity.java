@@ -49,7 +49,7 @@ public class CreditCardEntity {
                                 .addIdentifier(
                                         AccountIdentifier.create(
                                                 AccountIdentifierType.PAYMENT_CARD_NUMBER,
-                                            cardNumber))
+                                                cardNumber))
                                 .build())
                 .build();
     }

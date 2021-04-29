@@ -5,7 +5,6 @@ import org.openqa.selenium.By;
 
 public class RuralviaConstants {
 
-    public static final String PROVIDER_NAME = "es-ruralvia-password";
     public static final By USER_FIELD_INPUT = By.tagName(Tags.TAG_INPUT);
     public static final String THERE_IS_NOT_DATA_FOR_THIS_CONSULT =
             "NO EXISTEN DATOS PARA LA CONSULTA REALIZADA";
@@ -16,6 +15,9 @@ public class RuralviaConstants {
         public static final String RURALVIA_SECURE_HOST = "https://www.ruralvia.com";
         public static final String RURALVIA_MOBILE_LOGIN =
                 "https://www.ruralvia.com/isum/Main?ISUM_SCR=login&loginType=accesoSeguro&ISUM_Portal=104&acceso_idioma=es_ES";
+        public static final String RURALVIA_STILL_ALIVE =
+                RURALVIA_SECURE_HOST
+                        + "/isum/Main?ISUM_ID=menu&ISUM_SCR=groupScr&ISUM_CIPH=vHFigDiTGLnDNYt8yIybWs+dkNdI1NHIhZt2KUuy01s=";
     }
 
     public static class LoginForm {
@@ -51,12 +53,19 @@ public class RuralviaConstants {
     public static class CssSelectors {
         private static final String CSS_BASE_OPEN = "input[name=";
         private static final String CSS_CLOSE_TAG = "]";
-        public static final String CSS_CARD_CODE = CSS_BASE_OPEN + ParamValues.CARD_CODE + CSS_CLOSE_TAG;
-        public static final String CSS_CARD_TYPE = CSS_BASE_OPEN+ ParamValues.CARD_TYPE + CSS_CLOSE_TAG;
-        public static final String CSS_CODE_CARD_TYPE = CSS_BASE_OPEN + ParamValues.CODE_CARD_TYPE + CSS_CLOSE_TAG;
-        public static final String CSS_ENTITY_CARD = CSS_BASE_OPEN + ParamValues.ENTITY_CARD + CSS_CLOSE_TAG;
-        public static final String CSS_AGREEMENT_CARD = CSS_BASE_OPEN + ParamValues.AGREEMENT_CARD + CSS_CLOSE_TAG;
-        public static final String CSS_DESCRIPTION_PAN = CSS_BASE_OPEN + ParamValues.DESCRIPTION_PAN + CSS_CLOSE_TAG;
-        public static final String CSS_DESCRIPTION_CARD_TYPE = CSS_BASE_OPEN + ParamValues.DESCRIPTION_CARD_TYPE + CSS_CLOSE_TAG;
+        public static final String CSS_CARD_CODE =
+                CSS_BASE_OPEN + ParamValues.CARD_CODE + CSS_CLOSE_TAG;
+        public static final String CSS_CARD_TYPE =
+                CSS_BASE_OPEN + ParamValues.CARD_TYPE + CSS_CLOSE_TAG;
+        public static final String CSS_CODE_CARD_TYPE =
+                CSS_BASE_OPEN + ParamValues.CODE_CARD_TYPE + CSS_CLOSE_TAG;
+        public static final String CSS_ENTITY_CARD =
+                CSS_BASE_OPEN + ParamValues.ENTITY_CARD + CSS_CLOSE_TAG;
+        public static final String CSS_AGREEMENT_CARD =
+                CSS_BASE_OPEN + ParamValues.AGREEMENT_CARD + CSS_CLOSE_TAG;
+        public static final String CSS_DESCRIPTION_PAN =
+                CSS_BASE_OPEN + ParamValues.DESCRIPTION_PAN + CSS_CLOSE_TAG;
+        public static final String CSS_DESCRIPTION_CARD_TYPE =
+                CSS_BASE_OPEN + ParamValues.DESCRIPTION_CARD_TYPE + CSS_CLOSE_TAG;
     }
 }
