@@ -30,6 +30,7 @@ import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformati
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.UserAvailability;
 
 public class BankIdAuthenticationController<T> implements AutoAuthenticator, TypedAuthenticator {
@@ -52,34 +53,25 @@ public class BankIdAuthenticationController<T> implements AutoAuthenticator, Typ
             SupplementalInformationController supplementalInformationController,
             BankIdAuthenticator<T> authenticator,
             PersistentStorage persistentStorage,
-            Credentials credentials,
-            UserAvailability userAvailability) {
-        this(
-                supplementalInformationController,
-                authenticator,
-                false,
-                persistentStorage,
-                credentials,
-                userAvailability);
+            CredentialsRequest request) {
+        this(supplementalInformationController, authenticator, false, persistentStorage, request);
     }
 
     public BankIdAuthenticationController(
             SupplementalInformationController supplementalInformationController,
             BankIdAuthenticator<T> authenticator,
             PersistentStorage persistentStorage,
-            Credentials credentials,
+            CredentialsRequest request,
             int tokenLifetime,
-            TemporalUnit tokenLifetimeUnit,
-            UserAvailability userAvailability) {
+            TemporalUnit tokenLifetimeUnit) {
         this(
                 supplementalInformationController,
                 authenticator,
                 false,
                 persistentStorage,
-                credentials,
+                request,
                 tokenLifetime,
-                tokenLifetimeUnit,
-                userAvailability);
+                tokenLifetimeUnit);
     }
 
     public BankIdAuthenticationController(
@@ -87,17 +79,15 @@ public class BankIdAuthenticationController<T> implements AutoAuthenticator, Typ
             BankIdAuthenticator<T> authenticator,
             boolean waitOnBankId,
             PersistentStorage persistentStorage,
-            Credentials credentials,
-            UserAvailability userAvailability) {
+            CredentialsRequest request) {
         this(
                 supplementalInformationController,
                 authenticator,
                 waitOnBankId,
                 persistentStorage,
-                credentials,
+                request,
                 DEFAULT_TOKEN_LIFETIME,
-                DEFAULT_TOKEN_LIFETIME_UNIT,
-                userAvailability);
+                DEFAULT_TOKEN_LIFETIME_UNIT);
     }
 
     public BankIdAuthenticationController(
@@ -105,19 +95,18 @@ public class BankIdAuthenticationController<T> implements AutoAuthenticator, Typ
             BankIdAuthenticator<T> authenticator,
             boolean waitOnBankId,
             PersistentStorage persistentStorage,
-            Credentials credentials,
+            CredentialsRequest request,
             int tokenLifetime,
-            TemporalUnit tokenLifetimeUnit,
-            UserAvailability userAvailability) {
+            TemporalUnit tokenLifetimeUnit) {
         this.authenticator = Preconditions.checkNotNull(authenticator);
         this.supplementalInformationController =
                 Preconditions.checkNotNull(supplementalInformationController);
         this.waitOnBankId = waitOnBankId;
         this.persistentStorage = persistentStorage;
-        this.credentials = credentials;
+        this.credentials = request.getCredentials();
+        this.userAvailability = request.getUserAvailability();
         this.tokenLifetime = tokenLifetime;
         this.tokenLifetimeUnit = tokenLifetimeUnit;
-        this.userAvailability = userAvailability;
     }
 
     @Override

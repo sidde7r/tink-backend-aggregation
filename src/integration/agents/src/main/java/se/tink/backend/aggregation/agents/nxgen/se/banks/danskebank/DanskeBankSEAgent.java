@@ -96,8 +96,7 @@ public final class DanskeBankSEAgent extends DanskeBankAgent
                                 credentials,
                                 sessionStorage),
                         persistentStorage,
-                        credentials,
-                        request.getUserAvailability()),
+                        request),
                 new PasswordAuthenticationController(
                         new DanskeBankPasswordAuthenticator(
                                 apiClient, deviceId, configuration, credentials)));

@@ -83,8 +83,7 @@ public final class BankIdDemoAgent extends NextGenerationDemoAgent {
                         supplementalInformationController,
                         authenticator,
                         persistentStorage,
-                        credentials,
-                        request.getUserAvailability()));
+                        request));
     }
 
     @Override

@@ -50,8 +50,7 @@ public class CSNAgent extends NextGenerationAgent
                 supplementalInformationController,
                 new CSNBankIdAuthenticator(apiClient, sessionStorage),
                 persistentStorage,
-                credentials,
-                request.getUserAvailability());
+                request);
     }
 
     @Override

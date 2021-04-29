@@ -48,8 +48,7 @@ public abstract class SebBaseAgent<C extends SebBaseApiClient> extends NextGener
                         new SebDecoupledAuthenticator(
                                 apiClient, agentConfiguration, request.getUser().getLocale()),
                         persistentStorage,
-                        credentials,
-                        request.getUserAvailability());
+                        request);
         return new AutoAuthenticationController(
                 request,
                 systemUpdater,

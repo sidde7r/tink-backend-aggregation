@@ -50,8 +50,7 @@ public final class CollectorAgent extends NextGenerationAgent
                 supplementalInformationController,
                 new CollectorBankIdAuthenticator(apiClient, sessionStorage),
                 persistentStorage,
-                credentials,
-                request.getUserAvailability());
+                request);
     }
 
     @Override

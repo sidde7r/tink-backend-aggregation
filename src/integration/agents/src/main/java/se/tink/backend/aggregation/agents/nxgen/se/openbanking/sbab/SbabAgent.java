@@ -103,8 +103,7 @@ public final class SbabAgent extends NextGenerationAgent
                         supplementalInformationController,
                         sbabAuthenticator,
                         persistentStorage,
-                        credentials,
-                        request.getUserAvailability());
+                        request);
 
         return new SbabAuthenticationController(
                 request, systemUpdater, bankIdAuthenticationController);
