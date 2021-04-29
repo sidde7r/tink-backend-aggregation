@@ -43,10 +43,10 @@ public class AvanzaApiClient {
     private static final Logger LOGGER = LoggerFactory.getLogger(AvanzaApiClient.class);
 
     private final TinkHttpClient client;
-    private final AvanzaAuthSessionStorage authSessionStorage;
+    private final AuthSessionStorageHelper authSessionStorage;
     private Map<String, Set<String>> authSessionAccountCache;
 
-    public AvanzaApiClient(TinkHttpClient client, AvanzaAuthSessionStorage authSessionStorage) {
+    public AvanzaApiClient(TinkHttpClient client, AuthSessionStorageHelper authSessionStorage) {
         this.client = client;
         this.authSessionStorage = authSessionStorage;
         this.authSessionAccountCache = new HashMap<>();

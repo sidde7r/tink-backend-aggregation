@@ -3,16 +3,16 @@ package se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.session;
 import java.util.List;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
+import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AuthSessionStorageHelper;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaApiClient;
-import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaAuthSessionStorage;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 
 public class AvanzaSessionHandler implements SessionHandler {
     private final AvanzaApiClient apiClient;
-    private final AvanzaAuthSessionStorage authSessionStorage;
+    private final AuthSessionStorageHelper authSessionStorage;
 
     public AvanzaSessionHandler(
-            AvanzaApiClient apiClient, AvanzaAuthSessionStorage authSessionStorage) {
+            AvanzaApiClient apiClient, AuthSessionStorageHelper authSessionStorage) {
         this.apiClient = apiClient;
         this.authSessionStorage = authSessionStorage;
     }

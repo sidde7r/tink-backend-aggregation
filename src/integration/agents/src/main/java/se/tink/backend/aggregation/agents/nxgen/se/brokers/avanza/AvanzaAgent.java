@@ -64,7 +64,7 @@ public final class AvanzaAgent extends NextGenerationAgent
         configureHttpClient(client);
 
         this.clusterId = componentProvider.getContext().getClusterId();
-        this.apiClient = new AvanzaApiClient(client, new AvanzaAuthSessionStorage(sessionStorage));
+        this.apiClient = new AvanzaApiClient(client, new AuthSessionStorageHelper(sessionStorage));
         this.temporaryStorage = new TemporaryStorage();
         this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
         this.investmentRefreshController = constructInvestmentRefreshController();
@@ -85,7 +85,7 @@ public final class AvanzaAgent extends NextGenerationAgent
                 metricRefreshController,
                 updateController,
                 new AvanzaLoanFetcher(
-                        apiClient, new AvanzaAuthSessionStorage(sessionStorage), temporaryStorage));
+                        apiClient, new AuthSessionStorageHelper(sessionStorage), temporaryStorage));
     }
 
     @Override
@@ -94,7 +94,7 @@ public final class AvanzaAgent extends NextGenerationAgent
                 supplementalInformationController,
                 new AvanzaBankIdAuthenticator(
                         apiClient,
-                        new AvanzaAuthSessionStorage(sessionStorage),
+                        new AuthSessionStorageHelper(sessionStorage),
                         temporaryStorage,
                         sessionStorage),
                 persistentStorage,
@@ -115,7 +115,7 @@ public final class AvanzaAgent extends NextGenerationAgent
     private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {
         final AvanzaTransactionalAccountFetcher accountFetcher =
                 new AvanzaTransactionalAccountFetcher(
-                        apiClient, new AvanzaAuthSessionStorage(sessionStorage), temporaryStorage);
+                        apiClient, new AuthSessionStorageHelper(sessionStorage), temporaryStorage);
 
         return new TransactionalAccountRefreshController(
                 metricRefreshController,
@@ -134,7 +134,7 @@ public final class AvanzaAgent extends NextGenerationAgent
         final AvanzaInvestmentFetcher investmentFetcher =
                 new AvanzaInvestmentFetcher(
                         apiClient,
-                        new AvanzaAuthSessionStorage(sessionStorage),
+                        new AuthSessionStorageHelper(sessionStorage),
                         temporaryStorage,
                         localDateTimeSource,
                         clusterId);
@@ -165,7 +165,7 @@ public final class AvanzaAgent extends NextGenerationAgent
     @Override
     protected SessionHandler constructSessionHandler() {
         AvanzaSessionHandler avanzaSessionHandler =
-                new AvanzaSessionHandler(apiClient, new AvanzaAuthSessionStorage(sessionStorage));
+                new AvanzaSessionHandler(apiClient, new AuthSessionStorageHelper(sessionStorage));
         return avanzaSessionHandler;
     }
 

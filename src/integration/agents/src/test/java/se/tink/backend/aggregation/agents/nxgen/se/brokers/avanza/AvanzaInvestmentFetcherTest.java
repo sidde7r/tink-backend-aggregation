@@ -35,7 +35,7 @@ public class AvanzaInvestmentFetcherTest {
     @Ignore // TODO previously unmaintained -- should be fixed
     public void fetchInvestments() {
         SessionStorage sessionStorage = new SessionStorage();
-        AvanzaAuthSessionStorage authSessionStorage = new AvanzaAuthSessionStorage(sessionStorage);
+        AuthSessionStorageHelper authSessionStorage = new AuthSessionStorageHelper(sessionStorage);
         sessionStorage.put(
                 String.format(AvanzaConstants.StorageKeys.AUTH_SESSION_FORMAT, AUTH_SESSION_ID),
                 AUTH_SESSION_SECURITY_KEY);

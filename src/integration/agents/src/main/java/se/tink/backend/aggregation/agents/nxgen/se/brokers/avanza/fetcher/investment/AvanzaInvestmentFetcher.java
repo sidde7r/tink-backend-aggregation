@@ -10,8 +10,8 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AuthSessionStorageHelper;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaApiClient;
-import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaAuthSessionStorage;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.investment.entities.InstrumentEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.investment.entities.IsinMap;
@@ -36,14 +36,14 @@ import se.tink.libraries.date.ThreadSafeDateFormat;
 public class AvanzaInvestmentFetcher
         implements AccountFetcher<InvestmentAccount>, TransactionDatePaginator<InvestmentAccount> {
     private final AvanzaApiClient apiClient;
-    private final AvanzaAuthSessionStorage authSessionStorage;
+    private final AuthSessionStorageHelper authSessionStorage;
     private final TemporaryStorage temporaryStorage;
     private final LocalDateTimeSource localDateTimeSource;
     private final String clusterId;
 
     public AvanzaInvestmentFetcher(
             AvanzaApiClient apiClient,
-            AvanzaAuthSessionStorage authSessionStorage,
+            AuthSessionStorageHelper authSessionStorage,
             TemporaryStorage temporaryStorage,
             LocalDateTimeSource localDateTimeSource,
             String clusterId) {

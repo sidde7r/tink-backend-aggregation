@@ -16,8 +16,8 @@ import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
+import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AuthSessionStorageHelper;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaApiClient;
-import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaAuthSessionStorage;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.authenticator.entities.LoginEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.authenticator.rpc.BankIdCollectResponse;
@@ -38,13 +38,13 @@ public class AvanzaBankIdAuthenticator implements BankIdAuthenticator<BankIdInit
     private static final Logger LOGGER = LoggerFactory.getLogger(AvanzaBankIdAuthenticator.class);
 
     private final AvanzaApiClient apiClient;
-    private final AvanzaAuthSessionStorage authSessionStorage;
+    private final AuthSessionStorageHelper authSessionStorage;
     private final TemporaryStorage temporaryStorage;
     private final SessionStorage sessionStorage;
 
     public AvanzaBankIdAuthenticator(
             AvanzaApiClient apiClient,
-            AvanzaAuthSessionStorage authSessionStorage,
+            AuthSessionStorageHelper authSessionStorage,
             TemporaryStorage temporaryStorage,
             SessionStorage sessionStorage) {
         this.apiClient = apiClient;

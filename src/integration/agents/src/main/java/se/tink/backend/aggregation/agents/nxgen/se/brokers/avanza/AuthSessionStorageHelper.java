@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 @RequiredArgsConstructor
-public class AvanzaAuthSessionStorage {
+public class AuthSessionStorageHelper {
     private final SessionStorage sessionStorage;
 
     public Optional<String> getSecurityToken(String authSession) {
