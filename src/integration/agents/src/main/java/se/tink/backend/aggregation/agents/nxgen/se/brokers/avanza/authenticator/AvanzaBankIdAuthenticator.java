@@ -154,7 +154,6 @@ public class AvanzaBankIdAuthenticator implements BankIdAuthenticator<BankIdInit
         BankIdCompleteResponse bankIdCompleteResponse =
                 apiClient.completeBankId(transactionId, loginEntity.getCustomerId());
 
-        maskAuthCredentialsFromLogging(bankIdCompleteResponse);
         putAuthCredentialsInAuthSessionStorage(bankIdCompleteResponse);
 
         storeHolderNameIfAvailable();
@@ -202,10 +201,7 @@ public class AvanzaBankIdAuthenticator implements BankIdAuthenticator<BankIdInit
     }
 
     private void putAuthCredentialsInAuthSessionStorage(BankIdCompleteResponse response) {
-        sessionStorage.put(response.getAuthenticationSession(), response.getSecurityToken());
-    }
-
-    private void maskAuthCredentialsFromLogging(BankIdCompleteResponse response) {
+        // This also masks this data from logs
         sessionStorage.put(
                 String.format(StorageKeys.AUTH_SESSION_FORMAT, response.getAuthenticationSession()),
                 response.getAuthenticationSession());
