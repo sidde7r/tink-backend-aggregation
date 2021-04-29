@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.fetcher.mapper;
 
+import static org.apache.commons.lang3.StringUtils.capitalize;
 import static org.assertj.core.api.Assertions.assertThat;
+import static se.tink.backend.aggregation.nxgen.core.account.entity.Party.Role.HOLDER;
 
 import java.nio.file.Paths;
 import java.util.Optional;
@@ -13,8 +15,7 @@ import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.fetcher.data.entity.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.fetcher.data.rpc.BalancesResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.enums.AccountIdentifierType;
+import se.tink.libraries.account.identifiers.NorwegianIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
@@ -26,6 +27,7 @@ public class DnbAccountMapperTest {
     private static final String TEST_BBAN = "test_bban";
     private static final String TEST_NAME = "test_name";
     private static final String TEST_CURRENCY = "test_currency";
+    private static final String TEST_OWNER_NAME = "test_owner_name";
 
     private DnbAccountMapper accountMapper;
 
@@ -93,9 +95,10 @@ public class DnbAccountMapperTest {
         assertThat(account.getAccountNumber()).isEqualTo(TEST_BBAN);
         assertThat(account.getName()).isEqualTo(TEST_NAME);
         assertThat(account.getIdentifiers()).hasSize(1);
-        assertThat(account.getIdentifiers().get(0))
-                .isEqualTo(AccountIdentifier.create(AccountIdentifierType.NO, TEST_BBAN));
+        assertThat(account.getIdentifiers().get(0)).isEqualTo(new NorwegianIdentifier(TEST_BBAN));
         assertThat(account.getApiIdentifier()).isEqualTo(TEST_BBAN);
+        assertThat(account.getParties().get(0).getName()).isEqualTo(capitalize(TEST_OWNER_NAME));
+        assertThat(account.getParties().get(0).getRole()).isEqualTo(HOLDER);
         assertThat(account.getExactBalance()).isEqualTo(ExactCurrencyAmount.of(1234.0, "NOK"));
     }
 
@@ -104,7 +107,7 @@ public class DnbAccountMapperTest {
     }
 
     private AccountEntity getTestAccount(String name) {
-        return new AccountEntity(TEST_BBAN, name, TEST_CURRENCY);
+        return new AccountEntity(TEST_BBAN, name, TEST_CURRENCY, TEST_OWNER_NAME);
     }
 
     private BalancesResponse getTestBalances() {

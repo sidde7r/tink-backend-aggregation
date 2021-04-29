@@ -12,7 +12,8 @@
       "bban": "12045357110",
       "currency": "NOK",
       "iban": "NO6012045357110",
-      "name": "Sparekonto"
+      "name": "Sparekonto",
+      "ownerName": "Sample Owner Name"
     },
     {
       "_links": {

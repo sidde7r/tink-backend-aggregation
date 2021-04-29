@@ -14,4 +14,5 @@ public class AccountEntity {
     private String bban;
     private String name;
     private String currency;
+    private String ownerName;
 }
