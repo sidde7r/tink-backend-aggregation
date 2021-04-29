@@ -22,24 +22,18 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public abstract class NordnetBaseApiClient {
 
     private final TinkHttpClient client;
     private final Credentials credentials;
-    private final PersistentStorage persistentStorage;
     private final SessionStorage sessionStorage;
 
     public NordnetBaseApiClient(
-            TinkHttpClient client,
-            Credentials credentials,
-            PersistentStorage persistentStorage,
-            SessionStorage sessionStorage) {
+            TinkHttpClient client, Credentials credentials, SessionStorage sessionStorage) {
         this.client = client;
         this.credentials = credentials;
-        this.persistentStorage = persistentStorage;
         this.sessionStorage = sessionStorage;
     }
 
