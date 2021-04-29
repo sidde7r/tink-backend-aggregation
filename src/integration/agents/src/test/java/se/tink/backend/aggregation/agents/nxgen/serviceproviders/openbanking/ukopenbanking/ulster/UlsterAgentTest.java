@@ -21,7 +21,7 @@ public class UlsterAgentTest {
     public void test() throws Exception {
         new AgentIntegrationTest.Builder("uk", "uk-ulster-oauth2")
                 .loadCredentialsBefore(false)
-                .saveCredentialsAfter(false)
+                .saveCredentialsAfter(true)
                 .expectLoggedIn(false)
                 .setFinancialInstitutionId("0c7ba941addb428c83d6ea554ecace56")
                 .setAppId("tink")
