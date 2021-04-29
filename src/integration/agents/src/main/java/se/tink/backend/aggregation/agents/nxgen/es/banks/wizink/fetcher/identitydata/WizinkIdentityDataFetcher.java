@@ -27,7 +27,7 @@ public class WizinkIdentityDataFetcher implements IdentityDataFetcher {
         EsIdentityDataBuilder builder = EsIdentityData.builder();
         if (DocumentTypes.NIF.equalsIgnoreCase(loginResponse.getDocumentType())) {
             builder.setNifNumber(
-                    WizinkDecoder.decodeMaskedNumber(
+                    WizinkDecoder.decodeNumber(
                             loginResponse.getNif(), wizinkStorage.getXTokenUser()));
         } else {
             log.warn("Unhandled document type: {}", loginResponse.getDocumentType());
@@ -42,6 +42,6 @@ public class WizinkIdentityDataFetcher implements IdentityDataFetcher {
 
     private LocalDate getDecodedDateOfBirth(String encodedDateOfBirth, String xUserToken) {
         return LocalDate.parse(
-                WizinkDecoder.decodeMaskedNumber(encodedDateOfBirth, xUserToken), DATE_FORMATTER);
+                WizinkDecoder.decodeNumber(encodedDateOfBirth, xUserToken), DATE_FORMATTER);
     }
 }

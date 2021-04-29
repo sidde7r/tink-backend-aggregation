@@ -7,7 +7,6 @@ import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.WizinkConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.authenticator.entities.CardEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.authenticator.entities.LoginResponse;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.fetcher.account.entities.ProductEntity;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
@@ -41,12 +40,8 @@ public class WizinkStorage {
         return sessionStorage.get(INDIGITALL_DEVICE);
     }
 
-    public void storeCreditCardData(List<CardEntity> creditcards) {
-        persistentStorage.put(StorageKeys.CARDS_LIST, creditcards);
-    }
-
-    public void storeAccounts(List<ProductEntity> accounts) {
-        persistentStorage.put(StorageKeys.ACCOUNTS_LIST, accounts);
+    public void storeCreditCardData(List<CardEntity> cards) {
+        persistentStorage.put(StorageKeys.CARDS_LIST, cards);
     }
 
     public void storeLoginResponse(LoginResponse response) {
@@ -59,16 +54,6 @@ public class WizinkStorage {
                 .orElseGet(
                         () -> {
                             log.info("No cards found");
-                            return Collections.emptyList();
-                        });
-    }
-
-    public List<ProductEntity> getAccounts() {
-        return persistentStorage
-                .get(StorageKeys.ACCOUNTS_LIST, new TypeReference<List<ProductEntity>>() {})
-                .orElseGet(
-                        () -> {
-                            log.info("No accounts found");
                             return Collections.emptyList();
                         });
     }

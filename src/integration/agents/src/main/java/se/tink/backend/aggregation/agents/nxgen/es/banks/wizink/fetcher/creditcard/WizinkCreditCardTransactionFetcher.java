@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.fetcher.creditcard;
 
 import java.util.List;
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.WizinkApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.WizinkConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.WizinkStorage;
@@ -30,12 +31,13 @@ public class WizinkCreditCardTransactionFetcher implements TransactionFetcher<Cr
                 wizinkApiClient
                         .fetchCreditCardTransactionsFrom90Days(encodedAccountNumber)
                         .getCardTransactionsResponse();
-
         List<AggregationTransaction> transactions = cardTransactionsResponse.getTransactions();
-        if (firstFullRefresh && cardTransactionsResponse.canFetchTransactionsOlderThan90Days()) {
+        Optional<String> sessionId = getSessionId(encodedAccountNumber);
+        if (firstFullRefresh
+                && cardTransactionsResponse.canFetchTransactionsOlderThan90Days()
+                && sessionId.isPresent()) {
             transactions.addAll(
-                    getTransactionsFromMoreThan90Days(
-                            encodedAccountNumber, getSessionId(encodedAccountNumber)));
+                    getTransactionsFromMoreThan90Days(encodedAccountNumber, sessionId.get()));
         }
         return transactions;
     }
@@ -48,7 +50,7 @@ public class WizinkCreditCardTransactionFetcher implements TransactionFetcher<Cr
                 .getTransactions();
     }
 
-    private String getSessionId(String accountNumber) {
+    private Optional<String> getSessionId(String accountNumber) {
         return wizinkApiClient
                 .fetchSessionIdForOlderCardTransactions(accountNumber)
                 .getCardTransactionsResponse()

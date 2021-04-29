@@ -120,6 +120,7 @@ java_library(
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/es/banks/sabadell",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/es/banks/santander",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/es/banks/targo",
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/es/banks/wizink",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/es/creditcards/amex",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/es/openbanking/abanca",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/es/openbanking/bankia",

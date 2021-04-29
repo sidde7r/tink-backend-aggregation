@@ -35,7 +35,6 @@ public class WizinkAuthenticator extends StatelessProgressiveAuthenticator {
     }
 
     private WizinkStorage initStorageData(WizinkStorage wizinkStorage) {
-        // TODO handle cases when auth, cards or accounts fetching went wrong [IFD-1592]
         if (Strings.isNullOrEmpty(wizinkStorage.getDeviceId())) {
             wizinkStorage.markIsFirstFullRefresh();
 
@@ -44,7 +43,6 @@ public class WizinkAuthenticator extends StatelessProgressiveAuthenticator {
         } else {
             wizinkStorage.markIsNotFirstFullRefresh();
         }
-
         String indigitallDevice = UUID.randomUUID().toString();
         wizinkStorage.storeIndigitallDevice(indigitallDevice);
 
@@ -59,7 +57,6 @@ public class WizinkAuthenticator extends StatelessProgressiveAuthenticator {
                                 WizinkEncoder.hashPassword(storage.getDeviceId(), password)));
 
         storage.storeCreditCardData(response.getLoginResponse().getGlobalPosition().getCards());
-        storage.storeAccounts(response.getLoginResponse().getGlobalPosition().getProducts());
         storage.storeLoginResponse(response.getLoginResponse());
 
         return AuthenticationStepResponse.authenticationSucceeded();

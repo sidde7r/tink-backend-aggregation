@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.fetcher.account;
 
 import java.util.List;
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.WizinkApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.WizinkStorage;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.fetcher.account.entities.TransactionResponse;
@@ -27,20 +28,24 @@ public class WizinkTransactionFetcher implements TransactionFetcher<Transactiona
                 wizinkApiClient.fetchTransactionsFrom90Days(internalKey).getTransactionResponse();
 
         List<AggregationTransaction> transactions = transactionsFrom90Days.getTransactions();
-        if (firstFullRefresh && transactionsFrom90Days.canFetchTransactionsOlderThan90Days()) {
-            transactions.addAll(getTransactionsFromMoreThan90Days(internalKey));
+        Optional<String> sessionId = getSessionId(internalKey);
+        if (firstFullRefresh
+                && transactionsFrom90Days.canFetchTransactionsOlderThan90Days()
+                && sessionId.isPresent()) {
+            transactions.addAll(getTransactionsFromMoreThan90Days(internalKey, sessionId.get()));
         }
         return transactions;
     }
 
-    private List<AggregationTransaction> getTransactionsFromMoreThan90Days(String internalKey) {
+    private List<AggregationTransaction> getTransactionsFromMoreThan90Days(
+            String internalKey, String sessionId) {
         return wizinkApiClient
-                .fetchTransactionsOlderThan90Days(getSessionId(internalKey), internalKey)
+                .fetchTransactionsOlderThan90Days(sessionId, internalKey)
                 .getTransactionResponse()
                 .getTransactions();
     }
 
-    private String getSessionId(String internalKey) {
+    private Optional<String> getSessionId(String internalKey) {
         return wizinkApiClient
                 .fetchSessionIdForOlderAccountTransactions(internalKey)
                 .getTransactionResponse()
