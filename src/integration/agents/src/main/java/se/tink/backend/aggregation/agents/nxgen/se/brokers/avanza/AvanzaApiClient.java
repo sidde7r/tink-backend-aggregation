@@ -4,6 +4,7 @@ import com.google.common.base.Strings;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.ws.rs.core.MediaType;
@@ -65,9 +66,13 @@ public class AvanzaApiClient {
     }
 
     private RequestBuilder createRequestInSession(String url, String authSession) {
-        final String securityToken = authSessionStorage.get(authSession);
+        final Optional<String> securityToken = authSessionStorage.getSecurityToken(authSession);
+        if (!securityToken.isPresent()) {
+            throw new IllegalStateException(
+                    "Should not be here without security token in storage!");
+        }
 
-        return createRequestInSession(url, authSession, securityToken);
+        return createRequestInSession(url, authSession, securityToken.get());
     }
 
     public BankIdInitResponse initBankId(BankIdInitRequest request) {

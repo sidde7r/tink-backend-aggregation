@@ -32,7 +32,7 @@ public class AvanzaLoanFetcher implements AccountFetcher<LoanAccount> {
     public Collection<LoanAccount> fetchAccounts() {
         String holderName = temporaryStorage.getOrDefault(StorageKeys.HOLDER_NAME, null);
 
-        return authSessionStorage.keySet().stream()
+        return authSessionStorage.getAuthSessions().stream()
                 .flatMap(getAccounts(holderName))
                 .collect(Collectors.toList());
     }

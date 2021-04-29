@@ -162,7 +162,7 @@ public class AvanzaBankIdAuthenticator implements BankIdAuthenticator<BankIdInit
 
     private void storeHolderNameIfAvailable() {
         List<SessionAccountPair> sessionAccountPairs =
-                authSessionStorage.keySet().stream()
+                authSessionStorage.getAuthSessions().stream()
                         .flatMap(getSessionAccountPairs())
                         .collect(Collectors.toList());
 
@@ -202,7 +202,7 @@ public class AvanzaBankIdAuthenticator implements BankIdAuthenticator<BankIdInit
     }
 
     private void putAuthCredentialsInAuthSessionStorage(BankIdCompleteResponse response) {
-        authSessionStorage.put(response.getAuthenticationSession(), response.getSecurityToken());
+        sessionStorage.put(response.getAuthenticationSession(), response.getSecurityToken());
     }
 
     private void maskAuthCredentialsFromLogging(BankIdCompleteResponse response) {

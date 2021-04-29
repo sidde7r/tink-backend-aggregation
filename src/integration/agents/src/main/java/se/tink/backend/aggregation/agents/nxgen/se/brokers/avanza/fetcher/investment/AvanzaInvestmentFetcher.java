@@ -57,7 +57,7 @@ public class AvanzaInvestmentFetcher
     @Override
     public Collection<InvestmentAccount> fetchAccounts() {
         final List<SessionAccountPair> sessionAccountPairs =
-                authSessionStorage.keySet().stream()
+                authSessionStorage.getAuthSessions().stream()
                         .flatMap(getSessionAccountPairs())
                         .collect(Collectors.toList());
 
@@ -150,7 +150,7 @@ public class AvanzaInvestmentFetcher
         final String toDateStr = ThreadSafeDateFormat.FORMATTER_DAILY.format(toDate);
 
         List<Transaction> transactions =
-                authSessionStorage.keySet().stream()
+                authSessionStorage.getAuthSessions().stream()
                         .filter(
                                 authSession ->
                                         apiClient.authSessionHasAccountId(authSession, accId))

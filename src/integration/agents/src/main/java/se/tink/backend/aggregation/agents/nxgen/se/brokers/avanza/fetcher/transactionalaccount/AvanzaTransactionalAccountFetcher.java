@@ -42,7 +42,7 @@ public class AvanzaTransactionalAccountFetcher
     public Collection<TransactionalAccount> fetchAccounts() {
         String holderName = temporaryStorage.getOrDefault(StorageKeys.HOLDER_NAME, null);
 
-        return authSessionStorage.keySet().stream()
+        return authSessionStorage.getAuthSessions().stream()
                 .flatMap(getAccounts(holderName))
                 .collect(Collectors.toList());
     }
@@ -67,7 +67,7 @@ public class AvanzaTransactionalAccountFetcher
         final String toDateStr = ThreadSafeDateFormat.FORMATTER_DAILY.format(toDate);
 
         List<Transaction> transactions =
-                authSessionStorage.keySet().stream()
+                authSessionStorage.getAuthSessions().stream()
                         .filter(
                                 authSession ->
                                         apiClient.authSessionHasAccountId(authSession, accId))
