@@ -91,7 +91,7 @@ public class RuralviaCreditCardFetcherTest {
                                 Files.readAllBytes(
                                         Paths.get(
                                                 TEST_DATA_PATH,
-                                                "globalPositionWithNoCreditCards.html"))));
+                                                "globalPositionWithNoCardsAndLoans.html"))));
         RuralviaCreditCardFetcher cardFetcher = new RuralviaCreditCardFetcher(apiClient);
         cardFetcher.fetchAccounts();
         // when

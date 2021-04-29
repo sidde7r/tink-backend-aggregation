@@ -6,6 +6,7 @@ junit_test(
         "fetcher/RuralviaUtilsTest.java",
         "fetcher/account/RuralviaTransactionalAccountFetcherTest.java",
         "fetcher/creditcard/RuralviaCreditCardFetcherTest.java",
+        "fetcher/loan/RuralviaLoanFetcherTest.java",
         "rpc/GlobalPositionResponseTest.java",
     ],
     data = [

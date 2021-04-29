@@ -9,7 +9,8 @@ public class RuralviaConstants {
     public static final String THERE_IS_NOT_DATA_FOR_THIS_CONSULT =
             "NO EXISTEN DATOS PARA LA CONSULTA REALIZADA";
     public static final String INVALID_PERIOD = "Periodo Invalido";
-    public static final DateTimeFormatter PATTERN = DateTimeFormatter.ofPattern("dd-MM-uuuu");
+    public static final DateTimeFormatter LOCAL_DATE_PATTERN =
+            DateTimeFormatter.ofPattern("dd-MM-uuuu");
 
     public static class Urls {
         public static final String RURALVIA_SECURE_HOST = "https://www.ruralvia.com";
@@ -38,9 +39,17 @@ public class RuralviaConstants {
         public static final String TAG_INPUT = "input";
         public static final String ATTRIBUTE_TAG_VALUE = "value";
         public static final String ATTRIBUTE_TAG_ACTION = "action";
+        public static final String ATTRIBUTE_TAG_NAME = "name";
+        public static final String TAG_FORM = "form";
     }
 
     public static class ParamValues {
+        public static final String CARD_NUMBER = "numeroTarjeta";
+        public static final String PAGE_SIZE = "tamanioPagina";
+        public static final String SELECTED_ACCOUNT = "SELCTA";
+        public static final String FROM_DATE = "fechaDesde";
+        public static final String TO_DATE = "fechaHasta";
+        public static final String ACCOUNT = "cuenta";
         public static final String CARD_CODE = "codigoTarjeta";
         public static final String CARD_TYPE = "tipoTarjeta";
         public static final String CODE_CARD_TYPE = "codTipoTarjeta";

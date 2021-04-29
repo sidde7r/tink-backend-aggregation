@@ -1,9 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.fetcher;
 
-import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.Locale;
@@ -30,14 +27,5 @@ public final class RuralviaUtils {
 
     public static ExactCurrencyAmount parseAmountInEuros(String amountString) {
         return parseAmount(amountString, "EUR");
-    }
-
-    public static String getURLEncodedUTF8String(String toEncode) {
-        try {
-            return URLEncoder.encode(toEncode, StandardCharsets.UTF_8.name());
-        } catch (UnsupportedEncodingException e) {
-            log.warn("WARN: url encoding failed for params", e);
-            return "";
-        }
     }
 }

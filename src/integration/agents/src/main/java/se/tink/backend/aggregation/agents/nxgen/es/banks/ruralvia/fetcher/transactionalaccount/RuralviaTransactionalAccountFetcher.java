@@ -1,8 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.fetcher.transactionalaccount;
 
-import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.PATTERN;
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.ParamValues.FROM_DATE;
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.ParamValues.PAGE_SIZE;
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.ParamValues.TO_DATE;
 import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.Tags.ATTRIBUTE_TAG_ACTION;
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.Tags.ATTRIBUTE_TAG_NAME;
 import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.Tags.ATTRIBUTE_TAG_VALUE;
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.Tags.TAG_INPUT;
 
 import com.google.common.annotations.VisibleForTesting;
 import java.io.UnsupportedEncodingException;
@@ -10,14 +14,13 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import javax.annotation.Nullable;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -29,7 +32,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.fetcher.Ruralv
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.rpc.GlobalPositionResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginator;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -40,8 +43,9 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 @Slf4j
 public class RuralviaTransactionalAccountFetcher
         implements AccountFetcher<TransactionalAccount>,
-                TransactionKeyPaginator<TransactionalAccount, String> {
+                TransactionDatePaginator<TransactionalAccount> {
 
+    private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
     private RuralviaApiClient apiClient;
     private List<AccountEntity> temporalStorageAccountEntities;
 
@@ -65,7 +69,7 @@ public class RuralviaTransactionalAccountFetcher
 
     @Override
     public TransactionKeyPaginatorResponse<String> getTransactionsFor(
-            TransactionalAccount account, @Nullable String key) {
+            TransactionalAccount account, Date fromDate, Date toDate) {
 
         TransactionKeyPaginatorResponseImpl<String> paginatorResponse =
                 new TransactionKeyPaginatorResponseImpl<>();
@@ -79,8 +83,6 @@ public class RuralviaTransactionalAccountFetcher
         }
 
         // First request transactions, go to last transactions page
-        LocalDate toDate = LocalDate.now();
-        LocalDate fromDate = toDate.minusMonths(3);
 
         URL url =
                 URL.of(Urls.RURALVIA_SECURE_HOST + accEntity.getForm().attr(ATTRIBUTE_TAG_ACTION));
@@ -95,17 +97,15 @@ public class RuralviaTransactionalAccountFetcher
             return paginatorResponse;
         }
 
-        // Transactions by dates, TODO implement pagination by dates
         url =
                 URL.of(
                         Urls.RURALVIA_SECURE_HOST
                                 + Jsoup.parse(html)
-                                        .getElementsByAttributeValue("name", "FORM_RVIA_0")
+                                        .getElementsByAttributeValue(
+                                                ATTRIBUTE_TAG_NAME, "FORM_RVIA_0")
                                         .first()
                                         .attr(ATTRIBUTE_TAG_ACTION));
-
-        bodyForm = requestTransactionsBetweenDatesBodyForm(html, accEntity, fromDate, toDate);
-
+        bodyForm = requestTransactionsBetweenDatesBodyForm(html, fromDate, toDate);
         html = apiClient.navigateAccountTransactionsBetweenDates(url, bodyForm);
 
         paginatorResponse = fetchAccountTransactions(html, accEntity.getCurrency());
@@ -133,7 +133,7 @@ public class RuralviaTransactionalAccountFetcher
                                 .setDate(
                                         new SimpleDateFormat("dd-MM-yyyy")
                                                 .parse(rows.get(0).ownText()))
-                                .setDescription(rows.get(2).ownText())
+                                .setDescription(getDescriptionFromTable(rows.get(2)))
                                 .setAmount(
                                         RuralviaUtils.parseAmount(rows.get(3).ownText(), currency))
                                 .build();
@@ -149,44 +149,41 @@ public class RuralviaTransactionalAccountFetcher
         return paginatorResponse;
     }
 
-    /** The Period must be equal or less than 3 months */
-    private String requestTransactionsBetweenDatesBodyForm(
-            String html, AccountEntity account, LocalDate fromDate, LocalDate toDate) {
-        String params;
-        if (html.contains(".TRANCODE.value")) {
-            params = getParamsWhenExistTrancode(html, account, fromDate, toDate);
+    private String getDescriptionFromTable(Element element) {
+
+        if (element.getElementsByTag("a").isEmpty()) {
+            return element.ownText();
         } else {
-            boolean nextPage = false;
-            if (html.contains("onClick=\"siguientes()")) {
-                nextPage = true;
-            }
-            params = getParamsWhenNoExistsTrancode(html, fromDate, toDate, nextPage);
+            return element.getElementsByTag("a").get(0).ownText();
         }
-        return params;
     }
 
-    // TODO to implement
-    private String getParamsWhenExistTrancode(
-            String html, AccountEntity account, LocalDate fromDate, LocalDate toDate) {
-        return null;
+    /** The Period must be equal or less than 3 months */
+    private String requestTransactionsBetweenDatesBodyForm(
+            String html, Date fromDate, Date toDate) {
+        boolean nextPage = false;
+        if (html.contains("onClick=\"siguientes()")) {
+            nextPage = true;
+        }
+        return getParamsWhenNoExistsTrancode(html, fromDate, toDate, nextPage);
     }
 
     private String getParamsWhenNoExistsTrancode(
-            String html, LocalDate fromDate, LocalDate toDate, boolean nextPage) {
+            String html, Date fromDate, Date toDate, boolean nextPage) {
 
         Document doc = Jsoup.parse(html);
 
         String currentPage =
-                doc.getElementsByAttributeValue("name", "paginaActual")
+                doc.getElementsByAttributeValue(ATTRIBUTE_TAG_NAME, "paginaActual")
                         .first()
                         .attr(ATTRIBUTE_TAG_VALUE);
 
         String firstTime =
-                doc.getElementsByAttributeValue("name", "primeraVez")
+                doc.getElementsByAttributeValue(ATTRIBUTE_TAG_NAME, "primeraVez")
                         .first()
                         .attr(ATTRIBUTE_TAG_VALUE);
 
-        Element form = doc.getElementsByAttributeValue("name", "FORM_RVIA_0").first();
+        Element form = doc.getElementsByAttributeValue(ATTRIBUTE_TAG_NAME, "FORM_RVIA_0").first();
         Elements inputs = doc.select("FORM[name=FORM_RVIA_0] > INPUT");
 
         String accountNum = form.select("[name=CUENTA]").first().attr(ATTRIBUTE_TAG_VALUE);
@@ -195,45 +192,52 @@ public class RuralviaTransactionalAccountFetcher
         String value;
         for (Element input : inputs) {
 
-            String name = input.attr("name");
-            if ("FECHAMOVDESDE".equals(name)) {
-                value = fromDate.format(PATTERN);
-            } else if ("FechaDesde".equals(name)) {
-                value = fromDate.format(PATTERN);
-            } else if ("FECHAMOVHASTA".equals(name)) {
-                value = toDate.format(PATTERN);
-            } else if ("FechaHasta".equals(name)) {
-                value = toDate.format(PATTERN);
-            } else if ("primeraVez".equals(name)) {
-                value = firstTime;
-            } else if ("paginaActual".equals(name)) {
-                value = currentPage;
-            } else if ("EXTRA_PARAM_CUENTA".equals(name)) {
-                value = accountNum;
-            } else if ("CUENTA".equals(name)) {
-                value = accountNum;
-            } else if ("fechaComparacion".equals(name)) {
-                value = LocalDate.now().format(PATTERN);
-            } else if ("clavePagina".equals(name)) {
-                value = nextPage ? "PAS_MOV_CUENTAS_PAGINAR" : "PAS_MOV_CUENTAS";
-            } else if ("clavePaginaVolver".equals(name)) {
-                value = nextPage ? "PAS_MOV_CUENTAS_PAGINAR" : "MENUP_PAS_MOV_CUENTAS";
-            } else {
-                value = encodeValueAttrToURL(input);
+            String name = input.attr(ATTRIBUTE_TAG_NAME);
+            switch (name) {
+                case "FECHAMOVDESDE":
+                case "FechaDesde":
+                    value = dateFormat.format(fromDate);
+                    break;
+                case "FECHAMOVHASTA":
+                case "FechaHasta":
+                    value = dateFormat.format(toDate);
+                    break;
+                case "primeraVez":
+                    value = firstTime;
+                    break;
+                case "paginaActual":
+                    value = currentPage;
+                    break;
+                case "EXTRA_PARAM_CUENTA":
+                case "CUENTA":
+                    value = accountNum;
+                    break;
+                case "fechaComparacion":
+                    value = dateFormat.format(new Date());
+                    break;
+                case "clavePagina":
+                    value = nextPage ? "PAS_MOV_CUENTAS_PAGINAR" : "PAS_MOV_CUENTAS";
+                    break;
+                case "clavePaginaVolver":
+                    value = nextPage ? "PAS_MOV_CUENTAS_PAGINAR" : "MENUP_PAS_MOV_CUENTAS";
+                    break;
+                default:
+                    value = input.attr(ATTRIBUTE_TAG_VALUE);
+                    break;
             }
-            if (!input.attr("name").equalsIgnoreCase("tipoBusqueda")
-                    && !input.attr("name").equalsIgnoreCase("ordenBusqueda")
-                    && !input.attr("name").equalsIgnoreCase("cuentaSel")
-                    && !input.attr("name").equalsIgnoreCase("tamanioPagina")
-                    && !input.attr("name").equalsIgnoreCase("campoPaginacion")) {
+            if (!name.equalsIgnoreCase("tipoBusqueda")
+                    && !name.equalsIgnoreCase("ordenBusqueda")
+                    && !name.equalsIgnoreCase("cuentaSel")
+                    && !name.equalsIgnoreCase(PAGE_SIZE)
+                    && !name.equalsIgnoreCase("campoPaginacion")) {
 
-                builder.put(input.attr("name"), value);
+                builder.put(name, value);
             }
         }
         builder.put("tipoMovimiento", "")
                 .put("tipoBusqueda", "1")
                 .put("ordenBusqueda", "D")
-                .put("tamanioPagina", "50")
+                .put(PAGE_SIZE, "50")
                 .put("campoPaginacion", "lista");
 
         return builder.build().serialize();
@@ -249,36 +253,36 @@ public class RuralviaTransactionalAccountFetcher
     }
 
     private String createFormFirstRequestAccountTransaction(
-            AccountEntity account, LocalDate fromDate, LocalDate toDate) {
+            AccountEntity account, Date fromDate, Date toDate) {
 
-        Elements inputs = account.getForm().siblingElements().select("input");
+        Elements inputs = account.getForm().siblingElements().select(TAG_INPUT);
         Form.Builder builder = Form.builder();
         for (Element input : inputs) {
             String value;
-            switch (input.attr("name")) {
+            switch (input.attr(ATTRIBUTE_TAG_NAME)) {
                 case "clavePagina":
                     value = "PAS_MOV_CUENTAS_POSGLOB";
                     break;
                 case "Nmovs":
-                case "tamanioPagina":
+                case PAGE_SIZE:
                     value = "50";
                     break;
                 case "descEstado":
                     value = "TODOS";
                     break;
-                case "fechaDesde":
+                case FROM_DATE:
                 case "FechaDesde":
-                    value = fromDate.format(PATTERN);
+                    value = dateFormat.format(fromDate);
                     break;
-                case "fechaHasta":
+                case TO_DATE:
                 case "FechaHasta":
-                    value = toDate.format(PATTERN);
+                    value = dateFormat.format(toDate);
                     break;
                 default:
                     value = encodeValueAttrToURL(input);
                     break;
             }
-            builder.put(input.attr("name"), value);
+            builder.put(input.attr(ATTRIBUTE_TAG_NAME), value);
         }
 
         return builder.build().serialize();

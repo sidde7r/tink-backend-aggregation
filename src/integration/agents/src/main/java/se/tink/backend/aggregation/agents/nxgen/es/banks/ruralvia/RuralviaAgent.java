@@ -6,7 +6,6 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
 
 import com.google.inject.Inject;
-import java.util.LinkedHashMap;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
@@ -22,11 +21,12 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.fetcher.transa
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.session.RuralviaSessionHandler;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.loan.LoanRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
@@ -47,7 +47,9 @@ public class RuralviaAgent extends NextGenerationAgent
     public RuralviaAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
         this.apiClient = new RuralviaApiClient(client);
-        transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
+        transactionalAccountRefreshController =
+                constructTransactionalAccountRefreshController(
+                        componentProvider.getLocalDateTimeSource());
         creditCardRefreshController = constructCreditCardRefreshController();
         loanRefreshController = constructLoanRefreshController();
     }
@@ -57,7 +59,8 @@ public class RuralviaAgent extends NextGenerationAgent
         return new RuralviaAuthenticator(apiClient);
     }
 
-    private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {
+    private TransactionalAccountRefreshController constructTransactionalAccountRefreshController(
+            LocalDateTimeSource localDateTimeSource) {
         final RuralviaTransactionalAccountFetcher accountFetcher =
                 new RuralviaTransactionalAccountFetcher(apiClient);
 
@@ -67,7 +70,10 @@ public class RuralviaAgent extends NextGenerationAgent
                 accountFetcher,
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
-                        new TransactionKeyPaginationController<>(accountFetcher)));
+                        new TransactionDatePaginationController.Builder<>(accountFetcher)
+                                .setConsecutiveEmptyPagesLimit(2)
+                                .setLocalDateTimeSource(localDateTimeSource)
+                                .build()));
     }
 
     private CreditCardRefreshController constructCreditCardRefreshController() {
@@ -85,7 +91,6 @@ public class RuralviaAgent extends NextGenerationAgent
 
     private LoanRefreshController constructLoanRefreshController() {
         final RuralviaLoanFetcher loanFetcher = new RuralviaLoanFetcher(apiClient);
-
         return new LoanRefreshController(metricRefreshController, updateController, loanFetcher);
     }
 
@@ -129,9 +134,8 @@ public class RuralviaAgent extends NextGenerationAgent
         return loanRefreshController.fetchLoanAccounts();
     }
 
-    // TODO check if this is ok
     @Override
     public FetchTransactionsResponse fetchLoanTransactions() {
-        return new FetchTransactionsResponse(new LinkedHashMap<>());
+        return loanRefreshController.fetchLoanTransactions();
     }
 }

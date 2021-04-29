@@ -22,10 +22,10 @@ public class RuralviaUtilsTest {
         ExactCurrencyAmount result2 = RuralviaUtils.parseAmount(amount2, currency);
 
         // then
-        assertEquals(result.getCurrencyCode(), currency);
-        assertEquals(result.getStringValue(locale), "100,00");
+        assertEquals(currency, result.getCurrencyCode());
+        assertEquals("100,00", result.getStringValue(locale));
 
-        assertEquals(result2.getStringValue(locale), "1.234.567.890.000,12");
+        assertEquals("1.234.567.890.000,12", result2.getStringValue(locale));
     }
 
     @Test
@@ -38,22 +38,7 @@ public class RuralviaUtilsTest {
         ExactCurrencyAmount result = RuralviaUtils.parseAmountInEuros(amountToClean);
 
         // then
-        assertEquals(result.getCurrencyCode(), "EUR");
-        assertEquals(result.getStringValue(locale), "100,00");
-    }
-
-    @Test
-    public void getURLEncodedUTF8StringShouldEncodeWhenReceiveString() {
-        // given
-        String urlToEncode = "url to?encode& ";
-        String urlToEncode2 = "κόσμε";
-
-        // when
-        String result = RuralviaUtils.getURLEncodedUTF8String(urlToEncode);
-        String result2 = RuralviaUtils.getURLEncodedUTF8String(urlToEncode2);
-
-        // then
-        assertEquals(result, "url+to%3Fencode%26+");
-        assertEquals(result2, "%CE%BA%E1%BD%B9%CF%83%CE%BC%CE%B5");
+        assertEquals("EUR", result.getCurrencyCode());
+        assertEquals("100,00", result.getStringValue(locale));
     }
 }

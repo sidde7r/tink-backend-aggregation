@@ -1,7 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.fetcher.loan;
 
-import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.PATTERN;
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.LOCAL_DATE_PATTERN;
 import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.Tags.ATTRIBUTE_TAG_ACTION;
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.Tags.ATTRIBUTE_TAG_NAME;
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.Tags.ATTRIBUTE_TAG_VALUE;
 import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.Urls.RURALVIA_SECURE_HOST;
 
 import java.time.LocalDate;
@@ -15,7 +17,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import se.tink.backend.aggregation.agents.exceptions.refresh.LoanAccountRefreshException;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaApiClient;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.ParamValues;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.fetcher.loan.entities.LoanEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.fetcher.loan.entities.LoanEntity.LoanEntityBuilder;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.rpc.GlobalPositionResponse;
@@ -53,7 +57,6 @@ public class RuralviaLoanFetcher implements AccountFetcher<LoanAccount> {
                         .getHtml()
                         .select("div[id=HEADER_XA]:has(div:contains(Financiaci)) + div");
 
-        // parse basic info for loan
         Elements loansForm = loansContainer.select("form ~ tr:has(td[class=totlistaC])");
 
         for (Element loan : loansForm) {
@@ -66,9 +69,7 @@ public class RuralviaLoanFetcher implements AccountFetcher<LoanAccount> {
 
             html = navigateToAmortizationTable(html, loanBuilder);
 
-            loanBuilder = parseAmortizationTableDetails(html, loanBuilder);
-
-            loans.add(loanBuilder.build());
+            loans.add(parseAmortizationTableDetails(html, loanBuilder).build());
         }
 
         return loans;
@@ -76,6 +77,10 @@ public class RuralviaLoanFetcher implements AccountFetcher<LoanAccount> {
 
     private LoanEntityBuilder parseAmortizationTableDetails(
             String html, LoanEntityBuilder loanBuilder) {
+        if (html.contains("En este momento, no es posible realizar la operaci")) {
+            throw new LoanAccountRefreshException(
+                    "At this time, it is not possible to perform the requested operation");
+        }
         Element doc = Jsoup.parse(html);
 
         Elements nextMonthAmortizationRow =
@@ -101,30 +106,33 @@ public class RuralviaLoanFetcher implements AccountFetcher<LoanAccount> {
 
         LoanEntity loan = loanBuilder.build();
         doc = Jsoup.parse(html);
-        doc.select("option:containsOwn(" + loan.getAccountNumber() + ")").attr("value");
+        doc.select("option:containsOwn(" + loan.getAccountNumber() + ")").attr(ATTRIBUTE_TAG_VALUE);
         URL url =
                 URL.of(
                         RURALVIA_SECURE_HOST
-                                + doc.getElementsByAttributeValue("name", "FORM_RVIA_0")
+                                + doc.getElementsByAttributeValue(ATTRIBUTE_TAG_NAME, "FORM_RVIA_0")
                                         .get(0)
                                         .attr(ATTRIBUTE_TAG_ACTION));
-        String params = extractAmortitzationTableRequestParams(loan);
+        String params = extractAmortitzationTableRequestParams(loan, doc);
 
         html = apiClient.navigateToLoanAmortizationTableDetails(url, params);
 
         return html;
     }
 
-    private String extractAmortitzationTableRequestParams(LoanEntity loan) {
+    private String extractAmortitzationTableRequestParams(LoanEntity loan, Element html) {
+
         LocalDate today = LocalDate.now(ZoneId.of("Europe/Madrid"));
         String accountNumber = loan.getAccountNumber().replaceAll("[\\s\\u202F\\u00A0]", "");
-        String toDate = today.plusYears(1).format(PATTERN);
-        String todayFormatted = today.format(PATTERN);
+        String toDate = today.plusYears(1).format(LOCAL_DATE_PATTERN);
+        String todayFormatted = today.format(LOCAL_DATE_PATTERN);
+
+        String token = html.getElementById("tokenValid").attr("data-token");
 
         return Form.builder()
                 .put("ISUM_OLD_METHOD", "POST")
                 .put("ISUM_ISFORM", "true")
-                .put("SELCTA", accountNumber + loan.getDescription())
+                .put(ParamValues.SELECTED_ACCOUNT, accountNumber + loan.getDescription())
                 .put("FECHAMOVDESDE", todayFormatted)
                 .put("FECHAMOVHASTA", toDate)
                 .put("clavePagina", "PRE_AMORTIZACION")
@@ -132,12 +140,13 @@ public class RuralviaLoanFetcher implements AccountFetcher<LoanAccount> {
                 .put("paginaActual", "0")
                 .put("tamanioPagina", "25")
                 .put("campoPaginacion", "lista")
-                .put("cuenta", accountNumber)
+                .put(ParamValues.ACCOUNT, accountNumber)
                 .put("descripcionCuenta", loan.getDescription())
-                .put("fechaDesde", todayFormatted)
-                .put("fechaHasta", toDate)
+                .put(ParamValues.FROM_DATE, todayFormatted)
+                .put(ParamValues.TO_DATE, toDate)
                 .put("fechaActual", todayFormatted)
                 .put("TRANCODE", "")
+                .put("validationToken", token)
                 .build()
                 .serialize();
     }
@@ -165,7 +174,11 @@ public class RuralviaLoanFetcher implements AccountFetcher<LoanAccount> {
         Element dataContainer = Jsoup.parse(html).getElementById("PORTLET-DATO");
         String loanHolder = dataContainer.select("td:containsOwn(titular) + td").get(0).ownText();
         String interesRate =
-                dataContainer.select("td:containsOwn(Tipo de inter) + td").get(0).ownText();
+                dataContainer
+                        .select("td:containsOwn(Tipo de inter) + td")
+                        .get(0)
+                        .ownText()
+                        .replace("\"", "");
         String startDate =
                 dataContainer.select("td:containsOwn(Fecha Formalizaci) + td").get(0).ownText();
         String amortizedAmount =
@@ -181,7 +194,7 @@ public class RuralviaLoanFetcher implements AccountFetcher<LoanAccount> {
                 .endDate(endDate);
     }
 
-    public String navigateToLoanDetails(LoanEntity.LoanEntityBuilder loanBuilder) {
+    private String navigateToLoanDetails(LoanEntity.LoanEntityBuilder loanBuilder) {
 
         URL url =
                 URL.of(
@@ -210,12 +223,14 @@ public class RuralviaLoanFetcher implements AccountFetcher<LoanAccount> {
         Elements optionSelector = form.select("select > option");
         String selectedAccount;
         if (optionSelector.isEmpty()) {
-            selectedAccount = form.getElementsByAttributeValue("name", "cuenta").attr("value");
+            selectedAccount =
+                    form.getElementsByAttributeValue(ATTRIBUTE_TAG_NAME, "cuenta")
+                            .attr(ATTRIBUTE_TAG_VALUE);
         } else {
             selectedAccount =
                     optionSelector
                             .select("option:containsOwn(" + loan.getAccountNumber() + ")")
-                            .attr("value");
+                            .attr(ATTRIBUTE_TAG_VALUE);
         }
 
         int beginIndex = html.indexOf("FORM_RVIA_0.TRANCODE.value =");
@@ -229,8 +244,8 @@ public class RuralviaLoanFetcher implements AccountFetcher<LoanAccount> {
             String name;
             String value;
 
-            name = input.attr("name");
-            value = input.attr("value");
+            name = input.attr(ATTRIBUTE_TAG_NAME);
+            value = input.attr(ATTRIBUTE_TAG_VALUE);
             //
             if (name.equals("clavePagina")) {
                 value = "PRE_CONSULTA";

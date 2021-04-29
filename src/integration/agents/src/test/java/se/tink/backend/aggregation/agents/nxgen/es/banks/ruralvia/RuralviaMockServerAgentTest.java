@@ -15,7 +15,7 @@ public class RuralviaMockServerAgentTest {
     private static final String PASSWORD = "dummyPassword";
     private static final String NATIONAL_ID_NUMBER = "dummyNIF";
 
-    @Ignore
+    @Ignore("Last step of the development")
     @Test
     public void testRefresh() throws Exception {
 
