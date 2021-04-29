@@ -22,19 +22,22 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 public class CSNAgent extends NextGenerationAgent
         implements RefreshLoanAccountsExecutor, RefreshIdentityDataExecutor {
 
+    private final CSNAuthSessionStorageHelper authSessionStorageHelper;
     private final CSNApiClient apiClient;
     private final LoanRefreshController loanRefreshController;
 
     @Inject
     public CSNAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
-        apiClient = configureApiClient();
-        loanRefreshController = createLoanRefreshController();
+
+        this.authSessionStorageHelper = new CSNAuthSessionStorageHelper(sessionStorage);
+        this.apiClient = configureApiClient();
+        this.loanRefreshController = createLoanRefreshController();
     }
 
     private CSNApiClient configureApiClient() {
         client.setUserAgent(CSNConstants.HeaderValues.USER_AGENT);
-        return new CSNApiClient(client, sessionStorage);
+        return new CSNApiClient(client, authSessionStorageHelper);
     }
 
     private LoanRefreshController createLoanRefreshController() {
@@ -48,7 +51,7 @@ public class CSNAgent extends NextGenerationAgent
 
         return new BankIdAuthenticationController<>(
                 supplementalInformationController,
-                new CSNBankIdAuthenticator(apiClient, sessionStorage),
+                new CSNBankIdAuthenticator(apiClient, authSessionStorageHelper),
                 persistentStorage,
                 credentials,
                 request.getUserAvailability());
