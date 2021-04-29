@@ -43,7 +43,6 @@ public class BankIdAuthenticationController<T> implements AutoAuthenticator, Typ
 
     private final BankIdAuthenticator<T> authenticator;
     private final SupplementalInformationController supplementalInformationController;
-    private final boolean waitOnBankId;
     private final int tokenLifetime;
     private final TemporalUnit tokenLifetimeUnit;
     private final PersistentStorage persistentStorage;
@@ -56,60 +55,16 @@ public class BankIdAuthenticationController<T> implements AutoAuthenticator, Typ
             BankIdAuthenticator<T> authenticator,
             PersistentStorage persistentStorage,
             CredentialsRequest request) {
-        this(supplementalInformationController, authenticator, false, persistentStorage, request);
-    }
 
-    public BankIdAuthenticationController(
-            SupplementalInformationController supplementalInformationController,
-            BankIdAuthenticator<T> authenticator,
-            PersistentStorage persistentStorage,
-            CredentialsRequest request,
-            int tokenLifetime,
-            TemporalUnit tokenLifetimeUnit) {
-        this(
-                supplementalInformationController,
-                authenticator,
-                false,
-                persistentStorage,
-                request,
-                tokenLifetime,
-                tokenLifetimeUnit);
-    }
-
-    public BankIdAuthenticationController(
-            SupplementalInformationController supplementalInformationController,
-            BankIdAuthenticator<T> authenticator,
-            boolean waitOnBankId,
-            PersistentStorage persistentStorage,
-            CredentialsRequest request) {
-        this(
-                supplementalInformationController,
-                authenticator,
-                waitOnBankId,
-                persistentStorage,
-                request,
-                DEFAULT_TOKEN_LIFETIME,
-                DEFAULT_TOKEN_LIFETIME_UNIT);
-    }
-
-    public BankIdAuthenticationController(
-            SupplementalInformationController supplementalInformationController,
-            BankIdAuthenticator<T> authenticator,
-            boolean waitOnBankId,
-            PersistentStorage persistentStorage,
-            CredentialsRequest request,
-            int tokenLifetime,
-            TemporalUnit tokenLifetimeUnit) {
         this.authenticator = Preconditions.checkNotNull(authenticator);
         this.supplementalInformationController =
                 Preconditions.checkNotNull(supplementalInformationController);
-        this.waitOnBankId = waitOnBankId;
         this.persistentStorage = persistentStorage;
         this.credentials = request.getCredentials();
         this.userAvailability = request.getUserAvailability();
-        this.tokenLifetime = tokenLifetime;
-        this.tokenLifetimeUnit = tokenLifetimeUnit;
         this.requestType = request.getType();
+        this.tokenLifetime = DEFAULT_TOKEN_LIFETIME;
+        this.tokenLifetimeUnit = DEFAULT_TOKEN_LIFETIME_UNIT;
     }
 
     @Override
@@ -156,11 +111,7 @@ public class BankIdAuthenticationController<T> implements AutoAuthenticator, Typ
 
     private void openBankId() {
         String autostartToken = authenticator.getAutostartToken().orElse(null);
-        if (waitOnBankId) {
-            supplementalInformationController.openMobileBankIdSync(autostartToken);
-        } else {
-            supplementalInformationController.openMobileBankIdAsync(autostartToken);
-        }
+        supplementalInformationController.openMobileBankIdAsync(autostartToken);
     }
 
     // throws exception unless the BankIdStatus was DONE
