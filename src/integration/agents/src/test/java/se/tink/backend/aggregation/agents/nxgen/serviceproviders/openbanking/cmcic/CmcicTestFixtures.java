@@ -15,7 +15,7 @@ public final class CmcicTestFixtures {
     public static final String REQUEST_ID = "DUMMY_REQUEST_ID";
     public static final String DATE = "2020-05-01";
     public static final String IBAN = "FR6720041010050008697430710";
-    public static final String NAME = "DUMMY_NAME";
+    public static final String NAME = "00000 000000000 00 COMPTE COURANT M AAAAA BBBB";
     public static final String RESOURCE_ID = "DUMMY_RESOURCE_ID";
     public static final String AMOUNT_1 = "123.45";
     public static final String AMOUNT_2 = "345.12";

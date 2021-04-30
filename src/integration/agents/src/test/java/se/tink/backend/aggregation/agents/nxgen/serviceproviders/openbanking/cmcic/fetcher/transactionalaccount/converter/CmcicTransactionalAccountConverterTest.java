@@ -63,7 +63,8 @@ public class CmcicTransactionalAccountConverterTest {
                     assertThat(transactionalAccount.getExactBalance().getCurrencyCode())
                             .isEqualTo(clbdBalance.getBalanceAmount().getCurrency());
                     assertThat(transactionalAccount.getApiIdentifier()).isEqualTo(RESOURCE_ID);
-                    assertThat(transactionalAccount.getIdModule().getAccountName()).isEqualTo(NAME);
+                    assertThat(transactionalAccount.getIdModule().getAccountName())
+                            .isEqualTo("COMPTE COURANT");
                     assertThat(transactionalAccount.getIdModule().getAccountNumber())
                             .isEqualTo(IBAN);
                     assertThat(transactionalAccount.getIdModule().getUniqueId()).isEqualTo(IBAN);
