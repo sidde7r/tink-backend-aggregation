@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: VERSION\n"
-"POT-Creation-Date: 2021-04-26 13:05+0000\n"
-"PO-Revision-Date: 2021-04-26 13:05+0000\n"
+"POT-Creation-Date: 2021-04-29 17:31+0000\n"
+"PO-Revision-Date: 2021-04-29 17:31+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE TEAM <EMAIL@ADDRESS>\n"
 "Language: no\n"
@@ -10,15 +10,6 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-msgid "BankID authentication app timeout."
-msgstr "Tidsavbrudd i din BankID-app."
-
-msgid "Your BankID authentication app is blocked."
-msgstr "BankID-appen din er blokkert."
-
-msgid "User rejected authentication in BankID authentication app."
-msgstr "Bruker avviste godkjenning i BankID-appen."
 
 msgid "You need to activate your BankID in the Handelsbanken app."
 msgstr "Du må aktivere BankID i Handelsbanken-appen."
@@ -355,3 +346,24 @@ msgstr "Velg hvordan du vil godkjenne BankID"
 
 msgid "Confirm BankID authentication in your mobile BankID authentication app."
 msgstr "Bekreft BankID i den mobile BankID-godkjenningsappen din."
+
+msgid "Your BankID authentication app is blocked."
+msgstr "BankID-appen din er blokkert."
+
+msgid "BankID authentication app timeout."
+msgstr "Tidsavbrudd i din BankID-app."
+
+msgid "User rejected authentication in BankID authentication app."
+msgstr "Bruker avviste godkjenning i BankID-appen."
+
+msgid "Invalid social security number format."
+msgstr "Ugyldig personnummer format."
+
+msgid "Invalid BankID password format."
+msgstr "Ugyldig BankID-passord format."
+
+msgid "One-time code must contain only digits."
+msgstr "Engangskode kan bare inneholde sifre."
+
+msgid "Invalid one-time code format."
+msgstr "Ugyldig engangskode-format."

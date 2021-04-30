@@ -11,8 +11,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InOrder;
 import org.openqa.selenium.WebElement;
-import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.BankIdWebDriver;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.BankIdElementLocator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.BankIdElementsSearchQuery;
@@ -30,7 +28,6 @@ public class BankIdEnterSSNStepTest {
      */
     private BankIdWebDriver webDriver;
     private BankIdScreensManager screensManager;
-    private Credentials credentials;
 
     private InOrder mocksToVerifyInOrder;
 
@@ -44,10 +41,7 @@ public class BankIdEnterSSNStepTest {
         webDriver = mock(BankIdWebDriver.class);
         screensManager = mock(BankIdScreensManager.class);
 
-        credentials = mock(Credentials.class);
-        when(credentials.getField(Field.Key.USERNAME)).thenReturn(SAMPLE_USER_SSN);
-
-        mocksToVerifyInOrder = inOrder(webDriver, screensManager, credentials);
+        mocksToVerifyInOrder = inOrder(webDriver, screensManager);
 
         enterSSNStep = new BankIdEnterSSNStep(webDriver, screensManager);
     }
@@ -61,7 +55,7 @@ public class BankIdEnterSSNStepTest {
         mockElementExists(LOC_SSN_INPUT, ssnInputElement);
 
         // when
-        enterSSNStep.enterSSN(credentials);
+        enterSSNStep.enterSSN(SAMPLE_USER_SSN);
 
         // then
         mocksToVerifyInOrder

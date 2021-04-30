@@ -15,7 +15,12 @@ public enum BankIdNOErrorCode {
     BID_20B1("BID-20b1", BankIdNOError.MOBILE_BANK_ID_TIMEOUT_OR_REJECTED),
     BID_14A4("BID-14a4", BankIdNOError.THIRD_PARTY_APP_BLOCKED),
     BID_14B1("BID-14b1", BankIdNOError.THIRD_PARTY_APP_TIMEOUT),
-    BID_14B3("BID-14b3", BankIdNOError.THIRD_PARTY_APP_REJECTED);
+    BID_14B3("BID-14b3", BankIdNOError.THIRD_PARTY_APP_REJECTED),
+    /*
+    From our tests it seems that this error happens when OTP has some non-digits characters or is longer than 8.
+    This should be verified in ITE-1369.
+     */
+    BID_1437("BID-1437", BankIdNOError.INVALID_ONE_TIME_CODE_FORMAT);
 
     private final String code;
     private final BankIdNOError error;

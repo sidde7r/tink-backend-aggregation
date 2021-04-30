@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.steps;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.apache.commons.lang3.StringUtils.repeat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.inOrder;
@@ -35,9 +35,10 @@ import se.tink.libraries.i18n.LocalizableKey;
 @RunWith(JUnitParamsRunner.class)
 public class BankIdAuthWithOneTimeCodeStepTest {
 
-    private static final List<String> VALID_ONE_TIME_CODES = Arrays.asList("123456", "000000");
+    private static final List<String> VALID_ONE_TIME_CODES =
+            Arrays.asList(repeat("1", 3), repeat("1", 1000), "123435647565");
     private static final List<String> INVALID_ONE_TIME_CODES =
-            Arrays.asList("1234567", "12345", "12345a", "123456.");
+            Arrays.asList("", "1", "12", "123a", "12345a", "123456.");
 
     /*
     Mocks
@@ -156,9 +157,8 @@ public class BankIdAuthWithOneTimeCodeStepTest {
                 catchThrowable(() -> authWithOneTimeCodeStep.authenticateWithOneTimeCode());
 
         // then
-        assertThat(throwable)
-                .isInstanceOf(IllegalStateException.class)
-                .hasMessage("Incorrect format for one-time code: " + invalidCode);
+        verifyThatFromUsersPerspectiveThrowableIsTheSameAsGivenAgentException(
+                throwable, BankIdNOError.INVALID_ONE_TIME_CODE_FORMAT.exception());
 
         mocksToVerifyInOrder
                 .verify(supplementalInformationController)
