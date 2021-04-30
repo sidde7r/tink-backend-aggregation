@@ -9,6 +9,8 @@ public class FiduciaHeaderValues {
 
     private String tppOrganizationIdentifier;
     private String sealcDerBase64;
+    private String qsealcSerialNumberInHex;
+    private String qsealcIssuerDN;
     private String redirectUrl;
     private String userIp;
 }

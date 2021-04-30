@@ -67,12 +67,19 @@ public final class FiduciaAgent extends NextGenerationAgent
                 getAgentConfigurationController().getAgentConfiguration(FiduciaConfiguration.class);
 
         String tppOrganizationIdentifier;
+        String qsealcSerialNumberInHex;
+        String qsealcIssuerDN;
         try {
             tppOrganizationIdentifier =
                     CertificateUtils.getOrganizationIdentifier(agentConfiguration.getQsealc());
             qsealcDerBase64 =
                     CertificateUtils.getDerEncodedCertFromBase64EncodedCertificate(
                             agentConfiguration.getQsealc());
+            qsealcSerialNumberInHex =
+                    CertificateUtils.getSerialNumber(agentConfiguration.getQsealc(), 16);
+            qsealcIssuerDN =
+                    CertificateUtils.getCertificateIssuerDN(agentConfiguration.getQsealc());
+
         } catch (CertificateException e) {
             throw new IllegalStateException(
                     "Failed to extract organizationId or Qsealc from agent configuration", e);
@@ -81,6 +88,8 @@ public final class FiduciaAgent extends NextGenerationAgent
         return new FiduciaHeaderValues(
                 tppOrganizationIdentifier,
                 qsealcDerBase64,
+                qsealcSerialNumberInHex,
+                qsealcIssuerDN,
                 getAgentConfiguration().getRedirectUrl(),
                 request.isManual() ? userIp : null);
     }

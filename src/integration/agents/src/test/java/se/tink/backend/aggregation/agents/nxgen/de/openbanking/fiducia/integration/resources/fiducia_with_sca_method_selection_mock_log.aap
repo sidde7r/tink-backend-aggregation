@@ -1,6 +1,6 @@
 
 REQUEST 1
-POST https://www.raiba-muc-sued.de/services_xs2a/v1/consents
+POST https://www.raiba-muc-sued.de/services_xs2a/bg13/v1/consents
 accept: application/json
 Content-Type: application/json
 psu-id: dummy_psu_id
@@ -16,7 +16,7 @@ Content-Type: application/json;charset=utf-8
 {"consentStatus":"received","consentId":"dummy_consent_id","_links":{"startAuthorisationWithPsuAuthentication":{"href":"/v1/consents/dummy_consent_id/authorisations"}}}
 
 REQUEST 2
-POST https://www.raiba-muc-sued.de/services_xs2a/v1/consents/dummy_consent_id/authorisations
+POST https://www.raiba-muc-sued.de/services_xs2a/bg13/v1/consents/dummy_consent_id/authorisations
 accept: application/json
 Content-Type: application/json
 psu-id: dummy_psu_id
@@ -31,7 +31,7 @@ Content-Type: application/json;charset=utf-8
 {"scaStatus":"psuAuthenticated","scaMethods":[{"authenticationType":"PUSH_OTP","authenticationMethodId":"944","name":"SecureGo"},{"authenticationType":"CHIP_OTP","authenticationVersion":"1.4","authenticationMethodId":"962","name":"Smart-TAN plus manuell"},{"authenticationType":"CHIP_OTP","authenticationVersion":"1.4","authenticationMethodId":"972","name":"Smart-TAN plus optisch / USB"},{"authenticationType":"PHOTO_OTP","authenticationMethodId":"982","name":"Smart-TAN photo"}],"_links":{"selectAuthenticationMethod":{"href":"/v1/consents/dummy_consent_id/authorisations/dummy_authorization_id"}}}
 
 REQUEST 3
-PUT https://www.raiba-muc-sued.de/services_xs2a/v1/consents/dummy_consent_id/authorisations/dummy_authorization_id
+PUT https://www.raiba-muc-sued.de/services_xs2a/bg13/v1/consents/dummy_consent_id/authorisations/dummy_authorization_id
 accept: application/json
 Content-Type: application/json
 psu-id: dummy_psu_id
@@ -46,7 +46,7 @@ Content-Length: 550
 {"challengeData":{"additionalInformation":"1. Stecken Sie Ihre Chipkarte in den TAN-Generator und drücken \"TAN\"<br>2. Geben Sie den Startcode \"12345678\" ein und drücken \"OK\"<br>3. Prüfen Sie die Anzeige auf dem Leserdisplay und drücken \"OK\"<br><br>Bitte geben Sie die auf Ihrem TAN-Generator angezeigte TAN hier ein und bestätigen Sie diese mit \"OK\""},"_links":{"authoriseTransaction":{"href":"/v1/consents/dummy_consent_id/authorisations/dummy_authorization_id"}},"scaStatus":"started"}
 
 REQUEST 4
-PUT https://www.raiba-muc-sued.de/services_xs2a/v1/consents/dummy_consent_id/authorisations/dummy_authorization_id
+PUT https://www.raiba-muc-sued.de/services_xs2a/bg13/v1/consents/dummy_consent_id/authorisations/dummy_authorization_id
 accept: application/json
 Content-Type: application/json
 psu-id: dummy_psu_id
@@ -60,7 +60,7 @@ Content-Type: application/json;charset=utf-8
 {"scaStatus": "finalised"}
 
 REQUEST 5
-GET https://www.raiba-muc-sued.de/services_xs2a/v1/consents/dummy_consent_id
+GET https://www.raiba-muc-sued.de/services_xs2a/bg13/v1/consents/dummy_consent_id
 accept: application/json
 psu-id: dummy_psu_id
 
@@ -71,7 +71,7 @@ Content-Type: application/json;charset=utf-8
 {"consentStatus": "valid","validUntil": "2021-03-17"}
 
 REQUEST 6
-GET https://www.raiba-muc-sued.de/services_xs2a/v1/accounts
+GET https://www.raiba-muc-sued.de/services_xs2a/bg13/v1/accounts
 accept: application/json
 psu-id: dummy_psu_id
 consent-id: dummy_consent_id
@@ -83,7 +83,7 @@ Content-Type: application/json;charset=utf-8
 {"accounts":[{"resourceId":"dummy_resource_id","iban":"some_iban","currency":"EUR","ownerName":"Jan Unknown","name":"Kontokorrent","bic":"GENODEF1M03"}]}
 
 REQUEST 7
-GET https://www.raiba-muc-sued.de/services_xs2a/v1/accounts/dummy_resource_id/balances
+GET https://www.raiba-muc-sued.de/services_xs2a/bg13/v1/accounts/dummy_resource_id/balances
 accept: application/json
 psu-id: dummy_psu_id
 consent-id: dummy_consent_id
@@ -95,7 +95,7 @@ Content-Type: application/json;charset=utf-8
 {"balances":[{"balanceAmount":{"currency":"EUR","amount":"274.56"},"balanceType":"closingBooked"}]}
 
 REQUEST 8
-GET https://www.raiba-muc-sued.de/services_xs2a/v1/accounts/dummy_resource_id/transactions?bookingStatus=booked&dateFrom=1970-01-01
+GET https://www.raiba-muc-sued.de/services_xs2a/bg13/v1/accounts/dummy_resource_id/transactions?bookingStatus=booked&dateFrom=1970-01-01
 accept: application/json
 psu-id: dummy_psu_id
 consent-id: dummy_consent_id
@@ -107,7 +107,7 @@ Content-Type: application/json;charset=utf-8
 {"account": {"currency": "EUR", "iban": "some_iban"}, "balances": [{"balanceAmount": {"amount": "277.56", "currency": "EUR"}, "balanceType": "openingBooked", "referenceDate": "2020-01-30"}, {"balanceAmount": {"amount": "274.56", "currency": "EUR"}, "balanceType": "closingBooked", "referenceDate": "2020-03-30"} ], "transactions": {"_links": {"account": {"href": "/v1/accounts/dummy_resource_id"}, "next": {"href": "/v1/accounts/dummy_resource_id/transactions?scrollRef=0_%3D2%23%3D20200420%23%3D16312000%23%3D0%23%3D0%23%3D0&bookingStatus=booked"} }, "booked": [{"bookingDate": "2020-01-30", "creditorAccount": {"iban": "another_iban"}, "creditorName": "Jan Unknown", "debtorAccount": {"iban": "some_iban"}, "debtorName": "Jan Unknown", "endToEndId": "NOTPROVIDED", "proprietaryBankTransactionCode": "NTRF+117+00900", "purposeCode": "RINP", "remittanceInformationUnstructured": "To own account IBAN: another_iban BIC: PBNKDEFFXXX", "transactionAmount": {"amount": "-10.00", "currency": "EUR"}, "valueDate": "2020-01-30"}, {"bookingDate": "2020-03-02", "creditorAccount": {"iban": "another_iban"}, "creditorName": "Jan Unknown", "debtorAccount": {"iban": "some_iban"}, "debtorName": "Jan Unknown", "endToEndId": "NOTPROVIDED", "proprietaryBankTransactionCode": "NTRF+117+00900", "purposeCode": "RINP", "remittanceInformationUnstructured": "To own account IBAN: another_iban BIC: PBNKDEFFXXX", "transactionAmount": {"amount": "30.00", "currency": "EUR"}, "valueDate": "2020-03-02"}, {"bookingDate": "2020-03-30", "creditorAccount": {"iban": "another_iban"}, "creditorName": "Jan Unknown", "debtorAccount": {"iban": "some_iban"}, "debtorName": "Jan Unknown", "endToEndId": "NOTPROVIDED", "proprietaryBankTransactionCode": "NTRF+117+00900", "purposeCode": "RINP", "remittanceInformationUnstructured": "To own account IBAN: another_iban BIC: PBNKDEFFXXX", "transactionAmount": {"amount": "-1.00", "currency": "EUR"}, "valueDate": "2020-03-30"} ] } }
 
 REQUEST 9
-GET https://www.raiba-muc-sued.de/services_xs2a/v1/accounts/dummy_resource_id/transactions?scrollRef=0_%3D2%23%3D20200420%23%3D16312000%23%3D0%23%3D0%23%3D0&bookingStatus=booked
+GET https://www.raiba-muc-sued.de/services_xs2a/bg13/v1/accounts/dummy_resource_id/transactions?scrollRef=0_%3D2%23%3D20200420%23%3D16312000%23%3D0%23%3D0%23%3D0&bookingStatus=booked
 accept: application/json
 psu-id: dummy_psu_id
 consent-id: dummy_consent_id

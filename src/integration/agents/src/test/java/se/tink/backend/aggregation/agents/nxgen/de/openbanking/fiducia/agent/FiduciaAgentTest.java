@@ -38,7 +38,7 @@ public class FiduciaAgentTest {
                         .setAppId("tink")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
-                        .saveCredentialsAfter(true);
+                        .saveCredentialsAfter(false);
     }
 
     @Test

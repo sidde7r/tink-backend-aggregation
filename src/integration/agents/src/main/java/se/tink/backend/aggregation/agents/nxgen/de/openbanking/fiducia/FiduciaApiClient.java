@@ -62,6 +62,10 @@ public class FiduciaApiClient {
     private final String serverUrl;
     private final FiduciaRequestBuilder fiduciaRequestBuilder;
 
+    private URL createUrl(String path) {
+        return new URL(serverUrl + "/bg13" + path);
+    }
+
     public String createConsent() {
         ConsentRequest createConsentRequest =
                 new ConsentRequest(
@@ -230,9 +234,5 @@ public class FiduciaApiClient {
                         date)
                 .accept(MediaType.APPLICATION_XML)
                 .get(PaymentDocument.class);
-    }
-
-    private URL createUrl(String path) {
-        return new URL(serverUrl + path);
     }
 }
