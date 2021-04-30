@@ -3,32 +3,33 @@ import os
 import re
 import sys
 filename = sys.argv[1]
-annoyingMaskedString = 'HASHED:'
+masking_string = 'HASHED:'
 linechanger = '\n'
 state = 'STATE'
-stateCount = 1
-supportedHeader = ['Accept', 'Content-Type', 'Date', 'X-Request-ID']
-parsedContent = []
-parseStatus = ''
+state_count = 1
+api_call_count = 1
+white_list_headers = ['Accept', 'Content-Type', 'Date']
+parsed_content = []
+parsing_phase = ''
 
-def prepareTheNewFile(content):
-  	if annoyingMaskedString in content:
-  	    parsedContent.append(content.replace(annoyingMaskedString, 'MASKED'))
+def prepare_new_file_content(content):
+  	if masking_string in content:
+  	    parsed_content.append(content.replace(masking_string, 'MASKED'))
    	else:
-   	    parsedContent.append(content)
+   	    parsed_content.append(content)
 
 
-def assignSetMatch(line):
+def assign_set_match_state(line):
     #REQUET N / RESPONSE N
     pair = line.split(' ')
     #REQUEST / RESPONSE
-    reqOrRes = pair[0]
+    request_or_response = pair[0]
     #N
     number = int(pair[1])
-    if number > 3 and reqOrRes == 'REQUEST':
-        return line.rstrip() + ' MATCH ' + state + str(stateCount) + linechanger
-    elif number > 2 and reqOrRes == 'RESPONSE':
-        return line.rstrip() + ' SET ' + state + str(stateCount) + linechanger
+    if number > 3 and request_or_response == 'REQUEST':
+        return 'REQUEST ' + str(api_call_count) + ' MATCH ' + state + str(state_count) + linechanger
+    elif number > 2 and request_or_response == 'RESPONSE':
+        return 'RESPONSE ' + str(api_call_count) + ' SET ' + state + str(state_count) + linechanger
     else:
         return line
 
@@ -36,53 +37,54 @@ with open(filename) as f:
     for line in f:
         #REQUEST and giving a STATE
         if line.startswith('REQUEST'):
-            prepareTheNewFile(assignSetMatch(line))
-            stateCount = stateCount + 1
+            prepare_new_file_content(assign_set_match_state(line))
+            state_count = state_count + 1
         #RESPONSE and giving a STATE
         elif line.startswith('RESPONSE'):
-            prepareTheNewFile(assignSetMatch(line))
+            prepare_new_file_content(assign_set_match_state(line))
+            api_call_count = api_call_count + 1
         #Empty Line
         elif line.rstrip() == '':
-                prepareTheNewFile(line)
-                if parseStatus == 'HEADER':
-                    parseStatus = 'PAYLOAD'
+                prepare_new_file_content(line)
+                if parsing_phase == 'HEADER':
+                    parsing_phase = 'PAYLOAD'
         #HTTP Method and Url
         elif line.startswith('GET') or line.startswith('POST') or line.startswith('PUT') or line.startswith('DELETE'):
-                prepareTheNewFile(line)
-                parseStatus = 'HEADER'
+                prepare_new_file_content(line)
+                parsing_phase = 'HEADER'
         #HTTP RESPONSE
         elif re.match('[0-9][0-9][0-9]',line.rstrip()):
-                prepareTheNewFile(line)
-                parseStatus = 'HEADER'
+                prepare_new_file_content(line)
+                parsing_phase = 'HEADER'
         #JSON PAYLOAD REQUEST and RESPONSE
         elif line.startswith('{'):
             try:
                 asJson = json.loads(line)
             except ValueError as e:
-                prepareTheNewFile(line)
+                prepare_new_file_content(line)
             else:
-                prepareTheNewFile(json.dumps(asJson, indent=4, sort_keys=True) + linechanger)
+                prepare_new_file_content(json.dumps(asJson, indent=4, sort_keys=True) + linechanger)
         #Form PAYLOAD
         elif '=' in line and '&' in line and not ('/' in line):
-            prepareTheNewFile(line)
-        elif parseStatus == 'PAYLOAD':
-            prepareTheNewFile(line)
+            prepare_new_file_content(line)
+        elif parsing_phase == 'PAYLOAD':
+            prepare_new_file_content(line)
         #HEADERS Pattern
-        elif line.split(":")[0] in supportedHeader:
-            prepareTheNewFile(line)
+        elif line.split(":")[0] in white_list_headers:
+            prepare_new_file_content(line)
         else:
             print 'Omitting ', line
 
 
 print 'Only Keep the Headers Below'
-print(supportedHeader)
-print 'To add extra headers please add manually at supportedHeader in this py script'
+print(white_list_headers)
+print 'To add extra headers please add manually at white_list_headers in this py script'
 print 'Input AAP File:', sys.argv[1]
 head, tail = os.path.split(sys.argv[1])
 outPutFilename = head + '/parsed_' + tail
 print 'Output AAP File:', outPutFilename
 f = open(outPutFilename, "w")
-for x in parsedContent:
+for x in parsed_content:
     f.write(x)
 f.close()
 

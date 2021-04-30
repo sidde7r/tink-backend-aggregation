@@ -556,7 +556,7 @@ public final class AgentWireMockRefreshTest {
 
         @Override
         public RefreshableItemStep withRefreshableItems(Set<RefreshableItem> refreshableItems) {
-            this.refreshableItems = refreshableItems;
+            this.refreshableItems.addAll(refreshableItems);
             return this;
         }
 

@@ -14,6 +14,7 @@ junit_test(
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/ais/v31/fixtures",
         "//src/integration/amount",
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
+        "//src/integration/credentials/src/main/java/se/tink/libraries/credentials/service",
         "//src/integration/identity_data",
         "//src/integration/lib",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/instrumentation",

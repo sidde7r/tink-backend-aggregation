@@ -5,6 +5,8 @@ import io.reactivex.rxjava3.plugins.RxJavaPlugins;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
@@ -27,6 +29,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAis;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.tls.TlsConfigurationSetter;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.authenticator.consent.AllowedRefreshableItemsValidator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.PartyMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.ConsentErrorFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.FinancialOrganisationIdFilter;
@@ -86,10 +89,13 @@ import se.tink.backend.aggregation.nxgen.instrumentation.FetcherInstrumentationR
 import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.account.identifiers.SortCodeIdentifier;
 import se.tink.libraries.concurrency.RunnableMdcWrapper;
+import se.tink.libraries.credentials.service.RefreshInformationRequest;
+import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.identitydata.IdentityData;
 import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Payment;
 
+@Slf4j
 public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
         implements RefreshBeneficiariesExecutor,
                 RefreshTransferDestinationExecutor,
@@ -98,6 +104,10 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
                 RefreshSavingsAccountsExecutor,
                 RefreshIdentityDataExecutor,
                 TypedPaymentControllerable {
+
+    protected static final String FETCHING_FORBIDDEN_FOR_ITEM_MSG =
+            "Fetching '{}' forbidden. Returning empty collection in the response.";
+
     private final JwtSigner jwtSigner;
     private final EidasIdentity eidasIdentity;
     private final TlsConfigurationSetter tlsConfigurationSetter;
@@ -115,14 +125,16 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
     // Lazy loaded
     private UkOpenBankingAis aisSupport;
     private AccountFetcher<TransactionalAccount> transactionalAccountFetcher;
-    private TransferDestinationRefreshController transferDestinationRefreshController;
-    private CreditCardRefreshController creditCardRefreshController;
-    private TransactionalAccountRefreshController transactionalAccountRefreshController;
+    protected TransferDestinationRefreshController transferDestinationRefreshController;
+    protected CreditCardRefreshController creditCardRefreshController;
+    protected TransactionalAccountRefreshController transactionalAccountRefreshController;
 
     protected UkOpenBankingApiClient apiClient;
     protected SoftwareStatementAssertion softwareStatement;
     protected ClientInfo providerConfiguration;
     private String redirectUrl;
+
+    protected AllowedRefreshableItemsValidator allowedItemsValidator;
 
     public UkOpenBankingBaseAgent(
             AgentComponentProvider componentProvider,
@@ -141,7 +153,13 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
         this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
         this.fetcherInstrumentation = new FetcherInstrumentationRegistry();
         this.pisRequestFilter = pisRequestFilter;
+        this.allowedItemsValidator = new AllowedRefreshableItemsValidator(persistentStorage);
+
         configureMdcPropagation();
+
+        if (isFullAuthenticationRefresh()) {
+            allowedItemsValidator.save(getItemsExpectedToBeRefreshed());
+        }
     }
 
     public UkOpenBankingBaseAgent(
@@ -318,6 +336,25 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
                                         .build()));
     }
 
+    private boolean isItRefreshRequest() {
+        return request instanceof RefreshInformationRequest;
+    }
+
+    private boolean isFullAuthentication() {
+        return request.getUserAvailability().isUserAvailableForInteraction();
+    }
+
+    private boolean isFullAuthenticationRefresh() {
+        return isItRefreshRequest() && isFullAuthentication();
+    }
+
+    private Set<RefreshableItem> getItemsExpectedToBeRefreshed() {
+        Set<RefreshableItem> itemsExpectedToBeRefreshed =
+                ((RefreshInformationRequest) request).getItemsToRefresh();
+        log.info("Items expected to be refreshed: `{}`", itemsExpectedToBeRefreshed);
+        return itemsExpectedToBeRefreshed;
+    }
+
     private AccountFetcher<TransactionalAccount> getTransactionalAccountFetcher() {
         if (Objects.nonNull(transactionalAccountFetcher)) {
             return transactionalAccountFetcher;
@@ -328,7 +365,7 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
         return transactionalAccountFetcher;
     }
 
-    private UkOpenBankingAis getAisSupport() {
+    protected UkOpenBankingAis getAisSupport() {
         if (Objects.nonNull(aisSupport)) {
             return aisSupport;
         }

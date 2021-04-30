@@ -7,7 +7,14 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.PisCapability.PIS_UK_FASTER_PAYMENT;
 
 import com.google.inject.Inject;
+import java.util.Collections;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
+import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.aggregation.agents.FetchAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
+import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentPisCapability;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModulesForDecoupledMode;
@@ -22,15 +29,17 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.module.UkOpenBankingLocalKeySignerModuleForDecoupledMode;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.UkOpenBankingAisConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.UkOpenBankingV31Ais;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.authenticator.ConsentStatusValidator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.authenticator.UkOpenBankingAisAuthenticationController;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.authenticator.consent.ConsentStatusValidator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.PartyMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticationValidator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.configuration.UkOpenBankingPisConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
-import se.tink.libraries.credentials.service.RefreshInformationRequest;
+import se.tink.libraries.credentials.service.RefreshableItem;
+import se.tink.libraries.identitydata.IdentityData;
 
 @Slf4j
 @AgentDependencyModulesForProductionMode(modules = UkOpenBankingFlowModule.class)
@@ -63,14 +72,6 @@ public final class UlsterV31Agent extends UkOpenBankingBaseAgent {
                         UlsterConstants.PIS_API_URL, UlsterConstants.WELL_KNOWN_URL),
                 createPisRequestFilterUsingPs256WithoutBase64Signature(
                         flowFacade.getJwtSinger(), componentProvider.getRandomValueGenerator()));
-
-        log.info("UlsterV31Agent - request class:" + request.getClass());
-
-        if (request instanceof RefreshInformationRequest) {
-            log.info(
-                    "UlsterV31Agent - items to refresh: "
-                            + ((RefreshInformationRequest) request).getItemsToRefresh());
-        }
     }
 
     @Override
@@ -85,7 +86,106 @@ public final class UlsterV31Agent extends UkOpenBankingBaseAgent {
         return createAutoAuthController(authController);
     }
 
-    public UkOpenBankingAisAuthenticationController createUkObAuthController() {
+    @Override
+    public FetchAccountsResponse fetchCheckingAccounts() {
+        if (allowedItemsValidator.isForbiddenToBeRefreshed(RefreshableItem.CHECKING_ACCOUNTS)) {
+            log.info(FETCHING_FORBIDDEN_FOR_ITEM_MSG, RefreshableItem.CHECKING_ACCOUNTS);
+            return new FetchAccountsResponse(Collections.emptyList());
+        }
+
+        return transactionalAccountRefreshController.fetchCheckingAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCheckingTransactions() {
+        if (allowedItemsValidator.isForbiddenToBeRefreshed(RefreshableItem.CHECKING_TRANSACTIONS)) {
+            log.info(FETCHING_FORBIDDEN_FOR_ITEM_MSG, RefreshableItem.CHECKING_TRANSACTIONS);
+            return new FetchTransactionsResponse(Collections.emptyMap());
+        }
+
+        return transactionalAccountRefreshController.fetchCheckingTransactions();
+    }
+
+    @Override
+    public FetchAccountsResponse fetchSavingsAccounts() {
+        if (allowedItemsValidator.isForbiddenToBeRefreshed(RefreshableItem.SAVING_ACCOUNTS)) {
+            log.info(FETCHING_FORBIDDEN_FOR_ITEM_MSG, RefreshableItem.SAVING_ACCOUNTS);
+            return new FetchAccountsResponse(Collections.emptyList());
+        }
+
+        return transactionalAccountRefreshController.fetchSavingsAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchSavingsTransactions() {
+        if (allowedItemsValidator.isForbiddenToBeRefreshed(RefreshableItem.SAVING_TRANSACTIONS)) {
+            log.info(FETCHING_FORBIDDEN_FOR_ITEM_MSG, RefreshableItem.SAVING_TRANSACTIONS);
+            return new FetchTransactionsResponse(Collections.emptyMap());
+        }
+
+        return transactionalAccountRefreshController.fetchSavingsTransactions();
+    }
+
+    @Override
+    public FetchAccountsResponse fetchCreditCardAccounts() {
+        if (allowedItemsValidator.isForbiddenToBeRefreshed(RefreshableItem.CREDITCARD_ACCOUNTS)) {
+            log.info(FETCHING_FORBIDDEN_FOR_ITEM_MSG, RefreshableItem.CREDITCARD_ACCOUNTS);
+            return new FetchAccountsResponse(Collections.emptyList());
+        }
+
+        return creditCardRefreshController.fetchCreditCardAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCreditCardTransactions() {
+        if (allowedItemsValidator.isForbiddenToBeRefreshed(RefreshableItem.CREDITCARD_ACCOUNTS)) {
+            log.info(FETCHING_FORBIDDEN_FOR_ITEM_MSG, RefreshableItem.CREDITCARD_ACCOUNTS);
+            return new FetchTransactionsResponse(Collections.emptyMap());
+        }
+
+        return creditCardRefreshController.fetchCreditCardTransactions();
+    }
+
+    @Override
+    public FetchTransferDestinationsResponse fetchTransferDestinations(List<Account> accounts) {
+        if (allowedItemsValidator.isForbiddenToBeRefreshed(RefreshableItem.TRANSFER_DESTINATIONS)) {
+            log.info(FETCHING_FORBIDDEN_FOR_ITEM_MSG, RefreshableItem.TRANSFER_DESTINATIONS);
+            return new FetchTransferDestinationsResponse(Collections.emptyMap());
+        }
+
+        return transferDestinationRefreshController.fetchTransferDestinations(accounts);
+    }
+
+    @Override
+    public FetchTransferDestinationsResponse fetchBeneficiaries(List<Account> accounts) {
+        if (allowedItemsValidator.isForbiddenToBeRefreshed(RefreshableItem.LIST_BENEFICIARIES)) {
+            log.info(FETCHING_FORBIDDEN_FOR_ITEM_MSG, RefreshableItem.LIST_BENEFICIARIES);
+            return new FetchTransferDestinationsResponse(Collections.emptyMap());
+        }
+
+        return transferDestinationRefreshController.fetchTransferDestinations(accounts);
+    }
+
+    @Override
+    public FetchIdentityDataResponse fetchIdentityData() {
+        FetchIdentityDataResponse responseWithEmptyIdentityData =
+                new FetchIdentityDataResponse(
+                        IdentityData.builder().setFullName(null).setDateOfBirth(null).build());
+
+        if (allowedItemsValidator.isForbiddenToBeRefreshed(RefreshableItem.LIST_BENEFICIARIES)) {
+            log.info(FETCHING_FORBIDDEN_FOR_ITEM_MSG, RefreshableItem.LIST_BENEFICIARIES);
+            return responseWithEmptyIdentityData;
+        }
+
+        return getAisSupport()
+                .makePartyFetcher(apiClient)
+                .fetchParty()
+                .map(PartyMapper::toIdentityData)
+                .map(FetchIdentityDataResponse::new)
+                .orElse(responseWithEmptyIdentityData);
+    }
+
+    private UkOpenBankingAisAuthenticationController createUkObAuthController() {
         return new UkOpenBankingAisAuthenticationController(
                 this.persistentStorage,
                 this.supplementalInformationHelper,
@@ -99,7 +199,7 @@ public final class UlsterV31Agent extends UkOpenBankingBaseAgent {
                 new ConsentStatusValidator(this.apiClient, this.persistentStorage));
     }
 
-    public AutoAuthenticationController createAutoAuthController(
+    private AutoAuthenticationController createAutoAuthController(
             UkOpenBankingAisAuthenticationController authController) {
         return new AutoAuthenticationController(
                 this.request,
