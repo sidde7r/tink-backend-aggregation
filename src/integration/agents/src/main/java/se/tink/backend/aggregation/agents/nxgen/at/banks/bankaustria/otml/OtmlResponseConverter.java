@@ -7,7 +7,6 @@ import java.text.ParseException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -41,6 +40,7 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class OtmlResponseConverter {
     private static final Logger LOGGER = LoggerFactory.getLogger(OtmlResponseConverter.class);
+    private static final String XPATH_NOT_VALID = "Xpath expression not valid, test in unittest";
 
     private final DocumentBuilderFactory factory;
     private XPathFactory xPathfactory;
@@ -78,33 +78,27 @@ public class OtmlResponseConverter {
             return Optional.of(xpathNodeList.item(0));
         } catch (XPathExpressionException e) {
             LOGGER.error(
-                    withTag(
-                            BankAustriaConstants.LogTags.LOG_TAG_CODE_ERROR,
-                            "Xpath expression not valid, test in unittest"),
-                    e);
+                    withTag(BankAustriaConstants.LogTags.LOG_TAG_CODE_ERROR, XPATH_NOT_VALID), e);
         }
         return Optional.empty();
     }
 
     public Collection<TransactionalAccount> getAccountsFromSettings(String xml) {
         Document document = parseDocument(xml);
-        NodeList nodeList =
-                getNodeList(
+        Optional<NodeList> nodeList =
+                getOptionalNodeList(
                         document,
                         BankAustriaConstants.XPathExpression.XPATH_SETTINGS_RESPONSE_ACCOUNTS);
-        if (nodeList == null) {
+        if (!nodeList.isPresent()) {
             LOGGER.warn(
                     withTag(BankAustriaConstants.LogTags.LOG_TAG_ACCOUNT, "No accounts found."));
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         }
 
-        List<TransactionalAccount> transactionalAccounts =
-                IntStream.range(0, nodeList.getLength())
-                        .mapToObj(i -> getAccountFromSetting(nodeList.item(i)))
-                        .filter(Objects::nonNull)
-                        .collect(Collectors.toList());
-
-        return transactionalAccounts;
+        return IntStream.range(0, nodeList.get().getLength())
+                .mapToObj(i -> getAccountFromSetting(nodeList.get().item(i)))
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
     }
 
     private TransactionalAccount getAccountFromSetting(Node accountNode) {
@@ -178,15 +172,12 @@ public class OtmlResponseConverter {
             return (Node) accountNumberExtractor.evaluate(node, XPathConstants.NODE);
         } catch (XPathExpressionException e) {
             LOGGER.error(
-                    withTag(
-                            BankAustriaConstants.LogTags.LOG_TAG_CODE_ERROR,
-                            "Xpath expression not valid, test in unittest"),
-                    e);
+                    withTag(BankAustriaConstants.LogTags.LOG_TAG_CODE_ERROR, XPATH_NOT_VALID), e);
         }
         return null;
     }
 
-    private NodeList getNodeList(Document document, String expression) {
+    private Optional<NodeList> getOptionalNodeList(Document document, String expression) {
         XPath xpath = xPathfactory.newXPath();
         NodeList xpathNodeList = null;
         try {
@@ -194,12 +185,14 @@ public class OtmlResponseConverter {
             xpathNodeList = (NodeList) xpathExpression.evaluate(document, XPathConstants.NODESET);
         } catch (XPathExpressionException e) {
             LOGGER.error(
-                    withTag(
-                            BankAustriaConstants.LogTags.LOG_TAG_CODE_ERROR,
-                            "Xpath expression not valid, test in unittest"),
-                    e);
+                    withTag(BankAustriaConstants.LogTags.LOG_TAG_CODE_ERROR, XPATH_NOT_VALID), e);
         }
-        return xpathNodeList;
+        return Optional.ofNullable(xpathNodeList);
+    }
+
+    private NodeList getNodeList(Document document, String expression) {
+        return getOptionalNodeList(document, expression)
+                .orElseThrow(() -> new IllegalStateException("Method requires not null nodelist"));
     }
 
     public TransactionalAccount fillAccountInformation(
@@ -318,12 +311,10 @@ public class OtmlResponseConverter {
                 getNodeList(
                         document,
                         BankAustriaConstants.XPathExpression.XPATH_TRANSACTIONS_MOVEMENTS);
-        List<Transaction> transactions =
-                IntStream.range(0, movements.getLength())
-                        .mapToObj(i -> getTransactionFromMovement(movements.item(i)))
-                        .filter(Objects::nonNull)
-                        .collect(Collectors.toList());
-        return transactions;
+        return IntStream.range(0, movements.getLength())
+                .mapToObj(i -> getTransactionFromMovement(movements.item(i)))
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
     }
 
     private Transaction getTransactionFromMovement(Node movement) {

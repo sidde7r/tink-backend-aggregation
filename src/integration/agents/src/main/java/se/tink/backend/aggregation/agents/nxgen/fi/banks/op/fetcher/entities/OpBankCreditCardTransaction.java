@@ -63,46 +63,18 @@ public class OpBankCreditCardTransaction {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (!(obj instanceof OpBankCreditCardTransaction)) {
-            return false;
-        }
-
-        OpBankCreditCardTransaction other = (OpBankCreditCardTransaction) obj;
-
-        if (amount == null && other.amount != null) {
-            return false;
-        }
-
-        if (!amount.equals(other.amount)) {
-            return false;
-        }
-
-        if (transactionDate == null && other.transactionDate != null) {
-            return false;
-        }
-
-        if (!transactionDate.equals(other.transactionDate)) {
-            return false;
-        }
-
-        if (explanation == null && other.explanation != null) {
-            return false;
-        }
-
-        if (!explanation.equals(other.explanation)) {
-            return false;
-        }
-
-        if (status != other.status) {
-            return false;
-        }
-
-        return true;
+    public int hashCode() {
+        return Objects.hash(amount, transactionDate, explanation, status);
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(amount, transactionDate, explanation, status);
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof OpBankCreditCardTransaction)) return false;
+        OpBankCreditCardTransaction that = (OpBankCreditCardTransaction) o;
+        return status == that.status
+                && com.google.common.base.Objects.equal(transactionDate, that.transactionDate)
+                && com.google.common.base.Objects.equal(explanation, that.explanation)
+                && com.google.common.base.Objects.equal(amount, that.amount);
     }
 }

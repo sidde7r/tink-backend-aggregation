@@ -84,7 +84,7 @@ public class ExternalAccount implements GeneralAccountEntity {
     }
 
     private Optional<? extends AccountIdentifier> getParsedIdentifier() {
-        if (parsedIdentifier == null) {
+        if (!parsedIdentifier.isPresent()) {
             parsedIdentifier = FORMATTER.parseExternalIdentifier(this);
         }
 

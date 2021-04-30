@@ -221,7 +221,7 @@ public class KbcApiClient {
 
         return String.format(
                 "Invalid result code - [ResultCode]: %s - [ErrorHeader]: %s - [Message]: %s ",
-                resultCode, errorHeader == null ? "" : errorHeader, resultMessage);
+                resultCode, errorHeader, resultMessage);
     }
 
     // All responses are prepended with the iv used when encrypting the body.

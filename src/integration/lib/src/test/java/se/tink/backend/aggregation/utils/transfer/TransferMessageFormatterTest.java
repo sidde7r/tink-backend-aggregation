@@ -5,7 +5,6 @@ import static org.junit.Assert.assertEquals;
 
 import com.google.common.base.Objects;
 import java.util.Locale;
-import java.util.Optional;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Before;
@@ -37,7 +36,7 @@ public class TransferMessageFormatterTest {
                 TransferMessageLengthConfig.createWithMaxLength(25, 12, 25);
         private TransferMessageFormatter formatter =
                 new TransferMessageFormatter(
-                        Catalog.getCatalog("en-US"), lengthConfig, Optional.empty());
+                        Catalog.getCatalog("en-US"), lengthConfig, new StringNormalizerEnglish());
 
         private static final String LONG_MESSAGE =
                 "Longest message ever written in the history of the world";
@@ -173,7 +172,7 @@ public class TransferMessageFormatterTest {
         @Test
         public void normalizerAbsent_doesntNormalizeUserMessages() {
             TransferMessageFormatter formatter =
-                    new TransferMessageFormatter(null, lengthConfig, Optional.empty());
+                    new TransferMessageFormatter(null, lengthConfig, new StringNormalizerEnglish());
 
             Transfer transfer =
                     TransferMock.bankTransfer()
@@ -194,7 +193,7 @@ public class TransferMessageFormatterTest {
         @Test
         public void normalizerAbsent_doesntNormalizeTinkGeneratedMessages() {
             TransferMessageFormatter formatter =
-                    new TransferMessageFormatter(null, lengthConfig, Optional.empty());
+                    new TransferMessageFormatter(null, lengthConfig, new StringNormalizerEnglish());
 
             Transfer transfer = TransferMock.bankTransfer().build();
             transfer.setSourceMessage("source:123åäöüÅÄÖÜ$©@£");

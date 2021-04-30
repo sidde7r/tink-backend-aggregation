@@ -30,7 +30,7 @@ public class CoopPasswordAuthenticator implements PasswordAuthenticator {
 
         AuthenticateResponse authenticateResponse = apiClient.authenticate(username, password);
 
-        if (authenticateResponse == null && authenticateResponse.getAuthenticateResult() == null) {
+        if (authenticateResponse == null || authenticateResponse.getAuthenticateResult() == null) {
             throw new IllegalStateException("No response data found");
         }
         AuthenticateResultEntity authResult = authenticateResponse.getAuthenticateResult();

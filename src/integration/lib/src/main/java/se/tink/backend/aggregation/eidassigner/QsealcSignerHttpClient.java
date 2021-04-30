@@ -156,7 +156,7 @@ public class QsealcSignerHttpClient {
      * it.
      */
     public CloseableHttpResponse execute(HttpPost post) throws IOException {
-        for (int i = 1; i <= MAX_RETRY_ATTEMPTS; i++) {
+        for (long i = 1; i <= MAX_RETRY_ATTEMPTS; i++) {
             try {
                 return httpClient.execute(post);
             } catch (IOException e) {

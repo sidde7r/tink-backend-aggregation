@@ -70,10 +70,8 @@ public class ArgentaSecurityUtil {
     }
 
     private static String removeSpecialChars(String string) {
-        return string != null
-                ? string.replaceAll("[({]", "[")
-                        .replaceAll("[)}]", "]")
-                        .replaceAll("[\"*#$%&·/;<>?\\\\^`~|\"]", " ")
-                : string;
+        return string.replaceAll("[({]", "[")
+                .replaceAll("[)}]", "]")
+                .replaceAll("[\"*#$%&·/;<>?\\\\^`~|\"]", " ");
     }
 }

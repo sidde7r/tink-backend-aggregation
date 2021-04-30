@@ -15,7 +15,7 @@ public class AccountEntity implements GeneralAccountEntity {
     private static final SebAccountIdentifierFormatter FORMATTER =
             new SebAccountIdentifierFormatter();
 
-    private Optional<? extends AccountIdentifier> parsedIdentifier;
+    private Optional<? extends AccountIdentifier> parsedIdentifier = Optional.empty();
 
     @JsonProperty("ROW_ID")
     public String ROW_ID;
@@ -88,7 +88,7 @@ public class AccountEntity implements GeneralAccountEntity {
     }
 
     private Optional<? extends AccountIdentifier> getParsedIdentifier() {
-        if (parsedIdentifier == null) {
+        if (!parsedIdentifier.isPresent()) {
             parsedIdentifier = FORMATTER.parseInternalIdentifier(KONTO_NR);
         }
 

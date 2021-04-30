@@ -77,6 +77,9 @@ public class ClientConfigurationJsonSchemaBuilder {
                     propertiesNode = fieldValue;
                 }
             }
+            if (propertiesNode == null) {
+                throw new IllegalStateException("propertiesNode is null");
+            }
             constructSecretsSchema(propertiesNode, finalNode);
 
             return replaceUnwantedCharacters(mapper.writeValueAsString(finalNode));
