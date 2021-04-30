@@ -142,5 +142,16 @@
     "upcoming" : false,
     "externalSystemIds" : { },
     "transactionDates" : [ ]
-  } ]
+  } ],
+  "identityData" : {
+    "nameElements" : [ {
+      "type" : "FULLNAME",
+      "value" : "ALEJANDRO ROBERTO"
+    } ],
+    "dateOfBirth" : null,
+    "nieNumber" : null,
+    "nifNumber" : "00111111A",
+    "passportNumber" : null,
+    "otherDocumentNumber" : null
+  }
 }

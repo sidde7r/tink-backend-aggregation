@@ -5,6 +5,8 @@ import org.assertj.core.util.Strings;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.cajamar.CajamarConstants.AuthenticationKeys;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.cajamar.CajamarConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.cajamar.CajamarConstants.HeaderValues;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.cajamar.CajamarConstants.QueryParams;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.cajamar.CajamarConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.cajamar.CajamarConstants.SessionKeys;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.cajamar.CajamarConstants.URLs;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.cajamar.authenticator.rpc.EnrollmentRequest;
@@ -16,6 +18,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.cajamar.entities.Positi
 import se.tink.backend.aggregation.agents.nxgen.es.banks.cajamar.fetcher.account.rpc.CajamarAccountTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.cajamar.fetcher.creditcard.rpc.CajamarCreditCardTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.cajamar.fetcher.creditcard.rpc.CreditCardResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.cajamar.fetcher.identitydata.rpc.CajamarIdentityDataResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.cajamar.session.KeepAliveRequest;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -49,7 +52,9 @@ public class CajamarApiClient {
     }
 
     public LoginResponse login(LoginRequest loginRequest) {
-        return createLoginRequest().post(LoginResponse.class, loginRequest);
+        LoginResponse loginResponse = createLoginRequest().post(LoginResponse.class, loginRequest);
+        sessionStorage.put(SessionKeys.ACCOUNT_HOLDER_NAME, loginResponse.getName());
+        return loginResponse;
     }
 
     public void logout() {
@@ -82,6 +87,16 @@ public class CajamarApiClient {
             CreditCardAccount account, String key) {
         return createCardTransactionsRequest(account.getApiIdentifier(), key)
                 .post(CajamarCreditCardTransactionsResponse.class);
+    }
+
+    public CajamarIdentityDataResponse fetchIdentityData(String accountId) {
+        return createIdentityDataRequest(accountId).post(CajamarIdentityDataResponse.class);
+    }
+
+    private RequestBuilder createIdentityDataRequest(String accountId) {
+        return createAuthorizedRequest(
+                        URL.of(URLs.IDENTITY_DATA).parameter(URLs.PARAM_ID, accountId).get())
+                .queryParam(QueryParams.CERTIFICATE_TYPE, QueryValues.FIRST_PAGE);
     }
 
     private RequestBuilder createCardTransactionsRequest(String cardId, String key) {

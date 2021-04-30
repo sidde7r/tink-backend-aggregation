@@ -33,23 +33,34 @@ public class CajamarConstants {
 
     public static final class URLs {
         public static final String PARAM_ID = "ID";
-        public static final String BASE_URL = "https://api.cajamar.es";
+        public static final String BASE_URL = "https://api.cajamar.es/amea-web/abh";
+        public static final String VERSION = "/v19.39.0";
+        public static final String ACCOUNT_ENDPOINT = "/account";
+        public static final String CARD_ENDPOINT = "/card";
+        public static final String TRANSACTIONS_ENDPOINT = "/transactions";
 
-        public static final String REFRESH_TOKEN = BASE_URL + "/amea-web/abh/refreshToken";
-        public static final String UPDATE_PUSH_TOKEN =
-                BASE_URL + "/amea-web/abh/v19.39.0/updatePushToken";
-        public static final String ENROLLMENT = BASE_URL + "/amea-web/abh/enrollment";
-        public static final String LOGIN = BASE_URL + "/amea-web/abh/login";
-        public static final String LOGOUT = BASE_URL + "/amea-web/abh/logout";
-        public static final String POSITIONS = BASE_URL + "/amea-web/abh/v19.39.0/position";
+        public static final String REFRESH_TOKEN = BASE_URL + "/refreshToken";
+        public static final String ENROLLMENT = BASE_URL + "/enrollment";
+        public static final String LOGIN = BASE_URL + "/login";
+        public static final String LOGOUT = BASE_URL + "/logout";
+        public static final String POSITIONS = BASE_URL + VERSION + "/position";
+        public static final String UPDATE_PUSH_TOKEN = BASE_URL + VERSION + "/updatePushToken";
         public static final String ACCOUNT =
-                BASE_URL + "/amea-web/abh/v19.39.0/account/{" + PARAM_ID + "}";
+                BASE_URL + VERSION + ACCOUNT_ENDPOINT + "/{" + PARAM_ID + "}";
         public static final String ACCOUNT_TRANSACTIONS =
-                BASE_URL + "/amea-web/abh/v19.39.0/account/{" + PARAM_ID + "}/transactions";
+                BASE_URL
+                        + VERSION
+                        + ACCOUNT_ENDPOINT
+                        + "/{"
+                        + PARAM_ID
+                        + "}"
+                        + TRANSACTIONS_ENDPOINT;
         public static final String CREDIT_CARD =
-                BASE_URL + "/amea-web/abh/v19.39.0/card/{" + PARAM_ID + "}";
+                BASE_URL + VERSION + CARD_ENDPOINT + "/{" + PARAM_ID + "}";
         public static final String CARD_TRANSACTIONS =
-                BASE_URL + "/amea-web/abh/v19.39.0/card/{" + PARAM_ID + "}/transactions";
+                BASE_URL + VERSION + CARD_ENDPOINT + "/{" + PARAM_ID + "}" + TRANSACTIONS_ENDPOINT;
+        public static final String IDENTITY_DATA =
+                BASE_URL + VERSION + ACCOUNT_ENDPOINT + "/{" + PARAM_ID + "}/certificate";
     }
 
     public static final class HeaderValues {
@@ -84,10 +95,19 @@ public class CajamarConstants {
 
     public static class QueryParams {
         public static final String PAGE_NUMBER = "pageNumber";
+        public static final String CERTIFICATE_TYPE = "type";
     }
 
     public static class QueryValues {
         public static final String FIRST_PAGE = "1";
+    }
+
+    public static final class SplitValues {
+        public static final String NIF = "con N.I.F. ";
+        public static final String PASSPORT = "con PASAPORTE ";
+        public static final String END_OF_DOCUMENT_ID = ", ";
+        public static final String ADDITIONAL_PARSER = "Que según consta en nuestros archivos,";
+        public static final String ADDITIONAL_END_PARSER = "desde el ";
     }
 
     public static class CardTypes {
@@ -96,6 +116,7 @@ public class CajamarConstants {
 
     public static class SessionKeys {
         public static final String PUSH_TOKEN = "PUSH_TOKEN";
+        public static final String ACCOUNT_HOLDER_NAME = "HOLDER";
     }
 
     public static class Proxy {
