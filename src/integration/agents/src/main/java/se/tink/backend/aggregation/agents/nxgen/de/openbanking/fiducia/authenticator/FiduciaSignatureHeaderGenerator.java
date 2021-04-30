@@ -15,11 +15,10 @@ import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 public class FiduciaSignatureHeaderGenerator {
 
     private static final String SIGNATURE_HEADER_FORMAT =
-            "algorithm=\"SHA256withRSA\",headers=\"%s\",signature=\"%s\"";
+            "keyId=\"SN=%s,CA=%s\",algorithm=\"SHA256withRSA\",headers=\"%s\",signature=\"%s\"";
 
     private static final List<String> HEADERS_TO_SIGN =
             Arrays.asList(
-                    FiduciaConstants.HeaderKeys.DATE,
                     FiduciaConstants.HeaderKeys.DIGEST,
                     FiduciaConstants.HeaderKeys.X_REQUEST_ID,
                     FiduciaConstants.HeaderKeys.PSU_ID,
@@ -27,7 +26,8 @@ public class FiduciaSignatureHeaderGenerator {
 
     private final QsealcSigner qsealcSigner;
 
-    public String generateSignatureHeader(Map<String, Object> headers) {
+    public String generateSignatureHeader(
+            Map<String, Object> headers, String qsealcSerialNumberInHex, String qsealcIssuerDN) {
         String signedHeaders = getSignedHeaders(headers);
         String signedHeadersWithValues = getSignedHeadersWithValues(headers);
         String signature =
@@ -36,7 +36,12 @@ public class FiduciaSignatureHeaderGenerator {
 
         log.info(String.format("[FIDUCIA] SIGNATURE: %s", signature));
 
-        return String.format(SIGNATURE_HEADER_FORMAT, signedHeaders, signature);
+        return String.format(
+                SIGNATURE_HEADER_FORMAT,
+                qsealcSerialNumberInHex,
+                qsealcIssuerDN,
+                signedHeaders,
+                signature);
     }
 
     private String getSignedHeaders(Map<String, Object> headers) {

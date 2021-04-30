@@ -43,7 +43,10 @@ public class FiduciaRequestBuilder {
                 .headers(headers)
                 .header(
                         HeaderKeys.SIGNATURE,
-                        signatureHeaderGenerator.generateSignatureHeader(headers));
+                        signatureHeaderGenerator.generateSignatureHeader(
+                                headers,
+                                headerValues.getQsealcSerialNumberInHex(),
+                                headerValues.getQsealcIssuerDN()));
     }
 
     private Map<String, Object> getHeaders(String body) {
