@@ -15,7 +15,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.creditcard.CreditCardModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
-import se.tink.libraries.account.identifiers.MaskedPanIdentifier;
+import se.tink.libraries.account.identifiers.PaymentCardNumberIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class CrossKeyCreditCardAccountFetcher implements AccountFetcher<CreditCardAccount> {
@@ -52,23 +52,21 @@ public class CrossKeyCreditCardAccountFetcher implements AccountFetcher<CreditCa
                         .map(AccountDetailsEntity::getIdentification)
                         .orElse(accountEntity.getAccountId());
 
-        Optional<ExactCurrencyAmount> balance = getBalance(balances);
-
-        if (!balance.isPresent()) {
+        Optional<AccountBalanceEntity> maybeBalanceEntity = balances.getInterimAvailableBalance();
+        if (!maybeBalanceEntity.isPresent()) {
             return Optional.empty();
         }
-        ExactCurrencyAmount exactCurrencyAmount = balance.get();
-
+        AccountBalanceEntity balanceEntity = maybeBalanceEntity.get();
         return Optional.of(
                 CreditCardAccount.nxBuilder()
                         .withCardDetails(
                                 CreditCardModule.builder()
                                         .withCardNumber(maskedCardNumber)
-                                        .withBalance(exactCurrencyAmount)
+                                        .withBalance(balanceEntity.getExactAmount())
                                         .withAvailableCredit(
                                                 ExactCurrencyAmount.of(
                                                         BigDecimal.ZERO,
-                                                        exactCurrencyAmount.getCurrencyCode()))
+                                                        balanceEntity.getAmount().getCurrency()))
                                         .withCardAlias(accountEntity.getDescription())
                                         .build())
                         .withoutFlags()
@@ -77,18 +75,11 @@ public class CrossKeyCreditCardAccountFetcher implements AccountFetcher<CreditCa
                                         .withUniqueIdentifier(maskedCardNumber)
                                         .withAccountNumber(maskedCardNumber)
                                         .withAccountName(accountEntity.getDescription())
-                                        .addIdentifier(new MaskedPanIdentifier(maskedCardNumber))
+                                        .addIdentifier(
+                                                new PaymentCardNumberIdentifier(maskedCardNumber))
                                         .setProductName(accountEntity.getDescription())
                                         .build())
                         .setApiIdentifier(accountEntity.getAccountId())
                         .build());
-    }
-
-    private Optional<ExactCurrencyAmount> getBalance(AccountBalancesDataEntity balances) {
-        Optional<AccountBalanceEntity> interimBookedBalance = balances.getInterimBookedBalance();
-        if (interimBookedBalance.isPresent()) {
-            return interimBookedBalance.map(AccountBalanceEntity::getExactAmount);
-        }
-        return balances.getInterimAvailableBalance().map(AccountBalanceEntity::getExactAmount);
     }
 }
