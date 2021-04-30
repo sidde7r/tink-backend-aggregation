@@ -101,12 +101,12 @@ public class RuralviaAuthenticator implements Authenticator {
         }
     }
 
-    public WebDriver createDriver() {
+    private WebDriver createDriver() {
         return ChromeDriverInitializer.constructChromeDriver(
                 HeaderValues.USER_AGENT, HeaderValues.ACCEPT_LANGUAGE, null);
     }
 
-    public void waitForLoad(int secondsToWait) {
+    private void waitForLoad(int secondsToWait) {
         ExpectedCondition<Boolean> pageLoadCondition =
                 drive ->
                         ((JavascriptExecutor) drive)

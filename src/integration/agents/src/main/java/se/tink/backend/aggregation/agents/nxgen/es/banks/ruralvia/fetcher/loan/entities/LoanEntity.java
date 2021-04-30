@@ -29,13 +29,12 @@ public class LoanEntity {
     LoanDetails.Type accountType;
     @Singular private List<String> applicants;
     String interestRate;
-    String deductionDate; // the next payment date for the loan
-    String startDate; // formalization date
+    String deductionDate;
+    String startDate;
     String endDate;
     String monthlyAmortization;
 
     public LoanAccount toTinkLoanAccount() {
-
         LocalDate initialDate = LocalDate.parse(getStartDate(), LOCAL_DATE_PATTERN);
         LocalDate finalDate = LocalDate.parse(getEndDate(), LOCAL_DATE_PATTERN);
         Period diff = Period.between(initialDate, finalDate);

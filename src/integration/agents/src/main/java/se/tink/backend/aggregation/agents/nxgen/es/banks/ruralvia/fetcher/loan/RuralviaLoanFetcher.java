@@ -36,6 +36,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails.Type;
 import se.tink.backend.aggregation.nxgen.http.form.Form;
+import se.tink.backend.aggregation.nxgen.http.form.Form.Builder;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 @Slf4j
@@ -49,7 +50,6 @@ public class RuralviaLoanFetcher implements AccountFetcher<LoanAccount> {
     public Collection<LoanAccount> fetchAccounts() {
 
         temporalStorageLoans = fetchLoanAccounts();
-
         return temporalStorageLoans.stream()
                 .map(LoanEntity::toTinkLoanAccount)
                 .collect(Collectors.toList());
@@ -130,7 +130,6 @@ public class RuralviaLoanFetcher implements AccountFetcher<LoanAccount> {
     }
 
     private String extractAmortitzationTableRequestParams(LoanEntity loan, Element html) {
-
         LocalDate today = LocalDate.now(ZoneId.of("Europe/Madrid"));
         String accountNumber = loan.getAccountNumber().replaceAll("[\\s\\u202F\\u00A0]", "");
         String toDate = today.plusYears(1).format(LOCAL_DATE_PATTERN);
@@ -179,7 +178,6 @@ public class RuralviaLoanFetcher implements AccountFetcher<LoanAccount> {
     }
 
     private LoanEntityBuilder extractDetails(String html, LoanEntityBuilder loanBuilder) {
-
         Element dataContainer = Jsoup.parse(html).getElementById("PORTLET-DATO");
         String loanHolder = dataContainer.select("td:containsOwn(titular) + td").get(0).ownText();
         String interesRate =
@@ -204,7 +202,6 @@ public class RuralviaLoanFetcher implements AccountFetcher<LoanAccount> {
     }
 
     private String navigateToLoanDetails(LoanEntity.LoanEntityBuilder loanBuilder) {
-
         URL url =
                 URL.of(
                         RURALVIA_SECURE_HOST
@@ -228,7 +225,6 @@ public class RuralviaLoanFetcher implements AccountFetcher<LoanAccount> {
     }
 
     private String extractParamsForDetailsRequest(String html, Element form, LoanEntity loan) {
-
         Elements optionSelector = form.select("select > option");
         String selectedAccount;
         if (optionSelector.isEmpty()) {
@@ -247,8 +243,18 @@ public class RuralviaLoanFetcher implements AccountFetcher<LoanAccount> {
         int endIndex = html.indexOf("\";", beginIndex);
         String tranCode = html.substring(beginIndex, endIndex);
 
+        Builder formBuilder = getParamsFromInputTags(form, loan, selectedAccount, tranCode);
+        formBuilder.put(
+                "validationToken",
+                Jsoup.parse(html).getElementById("tokenValid").attr("data-token"));
+
+        return formBuilder.build().serialize();
+    }
+
+    private Builder getParamsFromInputTags(
+            Element form, LoanEntity loan, String selectedAccount, String tranCode) {
         Elements inputs = form.select("INPUT");
-        Form.Builder formBuilder = Form.builder();
+        Builder formBuilder = Form.builder();
         for (Element input : inputs) {
             String name;
             String value;
@@ -287,12 +293,6 @@ public class RuralviaLoanFetcher implements AccountFetcher<LoanAccount> {
             }
             formBuilder.put(name, value);
         }
-        formBuilder
-                .put(SELECTED_ACCOUNT, selectedAccount)
-                .put(
-                        "validationToken",
-                        Jsoup.parse(html).getElementById("tokenValid").attr("data-token"));
-
-        return formBuilder.build().serialize();
+        return formBuilder.put(SELECTED_ACCOUNT, selectedAccount);
     }
 }
