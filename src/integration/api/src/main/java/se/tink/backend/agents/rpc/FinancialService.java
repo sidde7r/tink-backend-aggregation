@@ -18,7 +18,8 @@ public class FinancialService {
 
     public enum FinancialServiceSegment {
         BUSINESS,
-        PERSONAL;
+        PERSONAL,
+        UNDETERMINED;
     }
 
     @JsonIgnore
