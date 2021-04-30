@@ -188,8 +188,8 @@ public final class DanskeBankV31Agent extends UkOpenBankingBaseAgent {
                 new FetchIdentityDataResponse(
                         IdentityData.builder().setFullName(null).setDateOfBirth(null).build());
 
-        if (allowedItemsValidator.isForbiddenToBeRefreshed(RefreshableItem.LIST_BENEFICIARIES)) {
-            log.info(FETCHING_FORBIDDEN_FOR_ITEM_MSG, RefreshableItem.LIST_BENEFICIARIES);
+        if (allowedItemsValidator.isForbiddenToBeRefreshed(RefreshableItem.IDENTITY_DATA)) {
+            log.info(FETCHING_FORBIDDEN_FOR_ITEM_MSG, RefreshableItem.IDENTITY_DATA);
             return responseWithEmptyIdentityData;
         }
 
