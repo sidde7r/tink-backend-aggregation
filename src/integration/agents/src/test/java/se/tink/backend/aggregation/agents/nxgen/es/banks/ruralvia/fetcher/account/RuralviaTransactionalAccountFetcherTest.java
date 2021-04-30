@@ -9,6 +9,8 @@ import static org.mockito.Mockito.when;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Collection;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -27,6 +29,7 @@ public class RuralviaTransactionalAccountFetcherTest {
     private static RuralviaApiClient apiClient;
     private static String htmlGlobalPosition;
     private static RuralviaTransactionalAccountFetcher accountFetcher;
+    private static SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
 
     @BeforeClass
     public static void setUp() throws IOException {
@@ -57,8 +60,9 @@ public class RuralviaTransactionalAccountFetcherTest {
     }
 
     @Test
-    public void getTransactionsForShouldFetch() throws IOException {
+    public void getTransactionsForShouldFetch() throws IOException, ParseException {
         // given
+
         when(apiClient.getGlobalPositionHtml()).thenReturn(htmlGlobalPosition);
         when(apiClient.navigateAccountTransactionFirstRequest(any(), any()))
                 .thenReturn(
@@ -78,21 +82,27 @@ public class RuralviaTransactionalAccountFetcherTest {
 
         // when
         TransactionKeyPaginatorResponse<String> paginatorResponse =
-                accountFetcher.getTransactionsFor(mockedAccount().toTinkAccount().get(), "");
+                accountFetcher.getTransactionsFor(
+                        mockedAccount().toTinkAccount().get(),
+                        formatter.parse("29-04-2021"),
+                        formatter.parse("28-01-2021"));
 
         // then
         assertEquals(50, paginatorResponse.getTinkTransactions().size());
     }
 
     @Test
-    public void getTransactionsForShouldReturnEmptyWhenNotFoundAccount() {
+    public void getTransactionsForShouldReturnEmptyWhenNotFoundAccount() throws ParseException {
         // given
         when(apiClient.getGlobalPositionHtml()).thenReturn("");
         accountFetcher.fetchAccounts();
 
         // when
         TransactionKeyPaginatorResponse<String> paginatorResponse =
-                accountFetcher.getTransactionsFor(mockedAccount().toTinkAccount().get(), "");
+                accountFetcher.getTransactionsFor(
+                        mockedAccount().toTinkAccount().get(),
+                        formatter.parse("29-04-2021"),
+                        formatter.parse("28-01-2021"));
 
         // then
         assertTrue(paginatorResponse.getTinkTransactions().size() == 0);
