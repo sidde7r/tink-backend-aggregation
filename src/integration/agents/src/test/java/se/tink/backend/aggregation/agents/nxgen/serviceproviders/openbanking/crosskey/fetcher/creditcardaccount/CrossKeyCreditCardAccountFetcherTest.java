@@ -52,6 +52,6 @@ public class CrossKeyCreditCardAccountFetcherTest {
         assertEquals(AccountTypes.CREDIT_CARD, cardAccount.getType());
         assertEquals("1111Card", cardAccount.getApiIdentifier());
         assertEquals("EUR", cardAccount.getExactBalance().getCurrencyCode());
-        assertEquals(100.0, cardAccount.getExactBalance().getDoubleValue(), 0.001);
+        assertEquals(50.0, cardAccount.getExactBalance().getDoubleValue(), 0.001);
     }
 }
