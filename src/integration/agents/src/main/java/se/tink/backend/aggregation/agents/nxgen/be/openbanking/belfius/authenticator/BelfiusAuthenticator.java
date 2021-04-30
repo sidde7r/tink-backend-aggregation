@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.authenti
 import java.util.List;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusApiClient;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusConstants;
@@ -48,14 +49,21 @@ public class BelfiusAuthenticator implements OAuth2Authenticator {
 
         final String code = CryptoUtils.getCodeVerifier();
         persistentStorage.put(StorageKeys.CODE, code);
-
-        List<ConsentResponse> consentResponseList =
-                apiClient.getConsent(
-                        new URL(configuration.getBaseUrl() + Urls.CONSENT_PATH), iban, code);
-        return new URL(
-                consentResponseList.get(0).getConsentUri()
-                        + "&"
-                        + Form.builder().put(QueryKeys.STATE, state).build());
+        try {
+            List<ConsentResponse> consentResponseList =
+                    apiClient.getConsent(
+                            new URL(configuration.getBaseUrl() + Urls.CONSENT_PATH), iban, code);
+            return new URL(
+                    consentResponseList.get(0).getConsentUri()
+                            + "&"
+                            + Form.builder().put(QueryKeys.STATE, state).build());
+        } catch (HttpResponseException ex) {
+            if (ErrorDiscover.isChannelNotPermitted(ex)) {
+                throw LoginError.NOT_SUPPORTED.exception(
+                        "This account can't be consulted via electronic channel");
+            }
+            throw ex;
+        }
     }
 
     @Override
