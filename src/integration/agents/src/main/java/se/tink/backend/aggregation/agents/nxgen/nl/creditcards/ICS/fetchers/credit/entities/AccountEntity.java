@@ -39,7 +39,8 @@ public class AccountEntity {
         return productEntity;
     }
 
-    public CreditCardAccount toCreditCardAccount(CreditBalanceResponse balanceResponse) {
+    public CreditCardAccount toCreditCardAccount(
+            CreditBalanceResponse balanceResponse, String holderName) {
         final String customerNumber = creditCardEntity.getCustomerNumber();
 
         // CC data from the bank do not returned any CardNumber or Alias
@@ -64,6 +65,7 @@ public class AccountEntity {
                                 .build())
                 .setBankIdentifier(accountId)
                 .setApiIdentifier(accountId)
+                .addHolderName(holderName)
                 .build();
     }
 }
