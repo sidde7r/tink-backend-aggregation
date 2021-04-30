@@ -1,8 +1,8 @@
 package se.tink.libraries.credentials.service;
 
 import java.util.Set;
-import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import se.tink.backend.agents.rpc.FinancialService.FinancialServiceSegment;
 
@@ -15,9 +15,9 @@ import se.tink.backend.agents.rpc.FinancialService.FinancialServiceSegment;
  * This class is to encapsulate them all in unified manner.
  * Naming follows https://book-of.tink.network/engineering/product/api_design/#must-use-mongodb-style-filtering-for-list
  */
-@Builder
 @Getter
 @Setter
+@NoArgsConstructor
 public class RefreshScope {
     private Set<FinancialServiceSegment> financialServiceSegmentsIn;
     // more properties to be added here in future
