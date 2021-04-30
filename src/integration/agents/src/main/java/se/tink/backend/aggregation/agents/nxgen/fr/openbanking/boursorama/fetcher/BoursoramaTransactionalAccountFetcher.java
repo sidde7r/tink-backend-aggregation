@@ -91,7 +91,7 @@ public class BoursoramaTransactionalAccountFetcher
                         IdModule.builder()
                                 .withUniqueIdentifier(account.getResourceId())
                                 .withAccountNumber(account.getAccountId().getIban())
-                                .withAccountName(account.getName())
+                                .withAccountName(account.getProduct())
                                 .addIdentifier(
                                         new IbanIdentifier(
                                                 account.getBicFi(),
