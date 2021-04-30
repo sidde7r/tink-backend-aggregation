@@ -1,7 +1,16 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.fetcher.loan;
 
 import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.LOCAL_DATE_PATTERN;
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.ParamValues.ACCOUNT;
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.ParamValues.ACCOUNT_DESCRIPTION;
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.ParamValues.CURRENT_PAGE;
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.ParamValues.FIRST_TIME;
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.ParamValues.PAGE_KEY;
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.ParamValues.PAGE_SIZE;
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.ParamValues.PAGINATION_FIELD;
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.ParamValues.SELECTED_ACCOUNT;
 import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.Tags.ATTRIBUTE_TAG_ACTION;
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.Tags.ATTRIBUTE_TAG_HREF;
 import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.Tags.ATTRIBUTE_TAG_NAME;
 import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.Tags.ATTRIBUTE_TAG_VALUE;
 import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.Urls.RURALVIA_SECURE_HOST;
@@ -101,7 +110,7 @@ public class RuralviaLoanFetcher implements AccountFetcher<LoanAccount> {
                         RURALVIA_SECURE_HOST
                                 + doc.select("a:containsOwn(Cuadro de amortizaci)")
                                         .get(0)
-                                        .attr("href"));
+                                        .attr(ATTRIBUTE_TAG_HREF));
         html = apiClient.navigateThroughLoan(nextUrl);
 
         LoanEntity loan = loanBuilder.build();
@@ -132,16 +141,16 @@ public class RuralviaLoanFetcher implements AccountFetcher<LoanAccount> {
         return Form.builder()
                 .put("ISUM_OLD_METHOD", "POST")
                 .put("ISUM_ISFORM", "true")
-                .put(ParamValues.SELECTED_ACCOUNT, accountNumber + loan.getDescription())
+                .put(SELECTED_ACCOUNT, accountNumber + loan.getDescription())
                 .put("FECHAMOVDESDE", todayFormatted)
                 .put("FECHAMOVHASTA", toDate)
-                .put("clavePagina", "PRE_AMORTIZACION")
-                .put("primeraVez", "1")
-                .put("paginaActual", "0")
-                .put("tamanioPagina", "25")
-                .put("campoPaginacion", "lista")
-                .put(ParamValues.ACCOUNT, accountNumber)
-                .put("descripcionCuenta", loan.getDescription())
+                .put(PAGE_KEY, "PRE_AMORTIZACION")
+                .put(FIRST_TIME, "1")
+                .put(CURRENT_PAGE, "0")
+                .put(PAGE_SIZE, "25")
+                .put(PAGINATION_FIELD, "lista")
+                .put(ACCOUNT, accountNumber)
+                .put(ACCOUNT_DESCRIPTION, loan.getDescription())
                 .put(ParamValues.FROM_DATE, todayFormatted)
                 .put(ParamValues.TO_DATE, toDate)
                 .put("fechaActual", todayFormatted)
@@ -224,7 +233,7 @@ public class RuralviaLoanFetcher implements AccountFetcher<LoanAccount> {
         String selectedAccount;
         if (optionSelector.isEmpty()) {
             selectedAccount =
-                    form.getElementsByAttributeValue(ATTRIBUTE_TAG_NAME, "cuenta")
+                    form.getElementsByAttributeValue(ATTRIBUTE_TAG_NAME, ACCOUNT)
                             .attr(ATTRIBUTE_TAG_VALUE);
         } else {
             selectedAccount =
@@ -245,32 +254,41 @@ public class RuralviaLoanFetcher implements AccountFetcher<LoanAccount> {
             String value;
 
             name = input.attr(ATTRIBUTE_TAG_NAME);
-            value = input.attr(ATTRIBUTE_TAG_VALUE);
-            //
-            if (name.equals("clavePagina")) {
-                value = "PRE_CONSULTA";
-            } else if (name.equals("campoPaginacion")) {
-                value = "lista";
-            } else if (name.equals("tamanioPagina")) {
-                value = "10";
-            } else if (name.equals("TRANCODE")) {
-                value = tranCode;
-            } else if (name.equals("SELCTA")) {
-                value = selectedAccount;
-            } else if (name.equals("descripcionCuenta")) {
-                value = loan.getDescription();
-            } else if (name.equals("cuenta")) {
-                value = loan.getAccountNumber().replaceAll("[\\s\\u202F\\u00A0]", "");
-            } else if (name.equals("primeraVez")) {
-                value = "1";
-            } else if (name.equals("paginaActual")) {
-                value = "0";
+            switch (name) {
+                case PAGE_KEY:
+                    value = "PRE_CONSULTA";
+                    break;
+                case PAGINATION_FIELD:
+                    value = "lista";
+                    break;
+                case PAGE_SIZE:
+                    value = "10";
+                    break;
+                case "TRANCODE":
+                    value = tranCode;
+                    break;
+                case SELECTED_ACCOUNT:
+                    value = selectedAccount;
+                    break;
+                case ACCOUNT_DESCRIPTION:
+                    value = loan.getDescription();
+                    break;
+                case ACCOUNT:
+                    value = loan.getAccountNumber().replaceAll("[\\s\\u202F\\u00A0]", "");
+                    break;
+                case FIRST_TIME:
+                    value = "1";
+                    break;
+                case CURRENT_PAGE:
+                    value = "0";
+                    break;
+                default:
+                    value = input.attr(ATTRIBUTE_TAG_VALUE);
             }
-
             formBuilder.put(name, value);
         }
         formBuilder
-                .put("SELCTA", selectedAccount)
+                .put(SELECTED_ACCOUNT, selectedAccount)
                 .put(
                         "validationToken",
                         Jsoup.parse(html).getElementById("tokenValid").attr("data-token"));

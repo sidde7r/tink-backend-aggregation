@@ -5,7 +5,7 @@ import org.openqa.selenium.By;
 
 public class RuralviaConstants {
 
-    public static final By USER_FIELD_INPUT = By.tagName(Tags.TAG_INPUT);
+    public static final By USER_FIELD_INPUT = By.tagName(Tags.INPUT_TAG);
     public static final String THERE_IS_NOT_DATA_FOR_THIS_CONSULT =
             "NO EXISTEN DATOS PARA LA CONSULTA REALIZADA";
     public static final String INVALID_PERIOD = "Periodo Invalido";
@@ -36,14 +36,25 @@ public class RuralviaConstants {
     }
 
     public static class Tags {
-        public static final String TAG_INPUT = "input";
+        public static final String ATTRIBUTE_TAG_HREF = "href";
+        public static final String INPUT_TAG = "input";
         public static final String ATTRIBUTE_TAG_VALUE = "value";
         public static final String ATTRIBUTE_TAG_ACTION = "action";
         public static final String ATTRIBUTE_TAG_NAME = "name";
-        public static final String TAG_FORM = "form";
+        public static final String FORM_TAG = "form";
     }
 
     public static class ParamValues {
+        public static final String ACCOUNT_SELECTED = "cuentaSel";
+        public static final String RETURN_PAGE_KEY = "clavePaginaVolver";
+        public static final String STATE_DESCRIPTION = "descEstado";
+        public static final String SORT_ORDER = "ordenBusqueda";
+        public static final String SEARCH_TYPE = "tipoBusqueda";
+        public static final String PAGINATION_FIELD = "campoPaginacion";
+        public static final String ACCOUNT_DESCRIPTION = "descripcionCuenta";
+        public static final String PAGE_KEY = "clavePagina";
+        public static final String FIRST_TIME = "primeraVez";
+        public static final String CURRENT_PAGE = "paginaActual";
         public static final String CARD_NUMBER = "numeroTarjeta";
         public static final String PAGE_SIZE = "tamanioPagina";
         public static final String SELECTED_ACCOUNT = "SELCTA";

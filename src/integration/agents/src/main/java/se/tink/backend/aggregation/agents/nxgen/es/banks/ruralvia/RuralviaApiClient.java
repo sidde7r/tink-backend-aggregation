@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia;
 
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.Tags.ATTRIBUTE_TAG_HREF;
 import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.Urls.RURALVIA_SECURE_HOST;
 import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.Urls.RURALVIA_STILL_ALIVE;
 
@@ -19,7 +20,7 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class RuralviaApiClient {
 
-    public final TinkHttpClient client;
+    private final TinkHttpClient client;
     private @Getter @Setter String globalPositionHtml;
     private @Getter @Setter String headerReferer;
     private @Getter @Setter boolean isLogged = false;
@@ -38,11 +39,15 @@ public class RuralviaApiClient {
     }
 
     public boolean keepAlive() {
-        String html = client.request(RURALVIA_STILL_ALIVE).get(String.class);
-        return (isLogged
-                && (html.contains("'desconectar'")
-                        || !html.contains("sesion_caducada.htm")
-                        || !html.contains("id=\"error_acceso\"")));
+        if (isLogged) {
+            String html = client.request(RURALVIA_STILL_ALIVE).get(String.class);
+            if (html.contains("'desconectar'")
+                    || !html.contains("sesion_caducada.htm")
+                    || !html.contains("id=\"error_acceso\"")) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private Cookie convertCookie(org.openqa.selenium.Cookie cookie) {
@@ -93,7 +98,7 @@ public class RuralviaApiClient {
         Element html = Jsoup.parse(globalPositionHtml);
         Elements logout = html.select("a:has(img[name=desconectar])");
         if (!logout.isEmpty()) {
-            URL url = URL.of(RURALVIA_SECURE_HOST + logout.get(0).attr("href"));
+            URL url = URL.of(RURALVIA_SECURE_HOST + logout.get(0).attr(ATTRIBUTE_TAG_HREF));
             client.request(url).get(String.class);
         }
     }

@@ -1,12 +1,21 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.fetcher.transactionalaccount;
 
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.ParamValues.ACCOUNT_SELECTED;
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.ParamValues.CURRENT_PAGE;
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.ParamValues.FIRST_TIME;
 import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.ParamValues.FROM_DATE;
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.ParamValues.PAGE_KEY;
 import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.ParamValues.PAGE_SIZE;
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.ParamValues.PAGINATION_FIELD;
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.ParamValues.RETURN_PAGE_KEY;
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.ParamValues.SEARCH_TYPE;
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.ParamValues.SORT_ORDER;
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.ParamValues.STATE_DESCRIPTION;
 import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.ParamValues.TO_DATE;
 import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.Tags.ATTRIBUTE_TAG_ACTION;
 import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.Tags.ATTRIBUTE_TAG_NAME;
 import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.Tags.ATTRIBUTE_TAG_VALUE;
-import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.Tags.TAG_INPUT;
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.Tags.INPUT_TAG;
 
 import com.google.common.annotations.VisibleForTesting;
 import java.io.UnsupportedEncodingException;
@@ -46,7 +55,7 @@ public class RuralviaTransactionalAccountFetcher
                 TransactionDatePaginator<TransactionalAccount> {
 
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-    private RuralviaApiClient apiClient;
+    private final RuralviaApiClient apiClient;
     private List<AccountEntity> temporalStorageAccountEntities;
 
     public RuralviaTransactionalAccountFetcher(RuralviaApiClient apiClient) {
@@ -139,7 +148,7 @@ public class RuralviaTransactionalAccountFetcher
                                 .build();
                 tinkTransactions.add(trx);
             } catch (ParseException e) {
-                log.warn("WARNING: can not parse the transaction date");
+                throw new IllegalStateException(e);
             }
         }
 
@@ -174,12 +183,12 @@ public class RuralviaTransactionalAccountFetcher
         Document doc = Jsoup.parse(html);
 
         String currentPage =
-                doc.getElementsByAttributeValue(ATTRIBUTE_TAG_NAME, "paginaActual")
+                doc.getElementsByAttributeValue(ATTRIBUTE_TAG_NAME, CURRENT_PAGE)
                         .first()
                         .attr(ATTRIBUTE_TAG_VALUE);
 
         String firstTime =
-                doc.getElementsByAttributeValue(ATTRIBUTE_TAG_NAME, "primeraVez")
+                doc.getElementsByAttributeValue(ATTRIBUTE_TAG_NAME, FIRST_TIME)
                         .first()
                         .attr(ATTRIBUTE_TAG_VALUE);
 
@@ -202,10 +211,10 @@ public class RuralviaTransactionalAccountFetcher
                 case "FechaHasta":
                     value = dateFormat.format(toDate);
                     break;
-                case "primeraVez":
+                case FIRST_TIME:
                     value = firstTime;
                     break;
-                case "paginaActual":
+                case CURRENT_PAGE:
                     value = currentPage;
                     break;
                 case "EXTRA_PARAM_CUENTA":
@@ -215,30 +224,30 @@ public class RuralviaTransactionalAccountFetcher
                 case "fechaComparacion":
                     value = dateFormat.format(new Date());
                     break;
-                case "clavePagina":
+                case PAGE_KEY:
                     value = nextPage ? "PAS_MOV_CUENTAS_PAGINAR" : "PAS_MOV_CUENTAS";
                     break;
-                case "clavePaginaVolver":
+                case RETURN_PAGE_KEY:
                     value = nextPage ? "PAS_MOV_CUENTAS_PAGINAR" : "MENUP_PAS_MOV_CUENTAS";
                     break;
                 default:
                     value = input.attr(ATTRIBUTE_TAG_VALUE);
                     break;
             }
-            if (!name.equalsIgnoreCase("tipoBusqueda")
-                    && !name.equalsIgnoreCase("ordenBusqueda")
-                    && !name.equalsIgnoreCase("cuentaSel")
+            if (!name.equalsIgnoreCase(SEARCH_TYPE)
+                    && !name.equalsIgnoreCase(SORT_ORDER)
+                    && !name.equalsIgnoreCase(ACCOUNT_SELECTED)
                     && !name.equalsIgnoreCase(PAGE_SIZE)
-                    && !name.equalsIgnoreCase("campoPaginacion")) {
+                    && !name.equalsIgnoreCase(PAGINATION_FIELD)) {
 
                 builder.put(name, value);
             }
         }
         builder.put("tipoMovimiento", "")
-                .put("tipoBusqueda", "1")
-                .put("ordenBusqueda", "D")
+                .put(SEARCH_TYPE, "1")
+                .put(SORT_ORDER, "D")
                 .put(PAGE_SIZE, "50")
-                .put("campoPaginacion", "lista");
+                .put(PAGINATION_FIELD, "lista");
 
         return builder.build().serialize();
     }
@@ -255,19 +264,19 @@ public class RuralviaTransactionalAccountFetcher
     private String createFormFirstRequestAccountTransaction(
             AccountEntity account, Date fromDate, Date toDate) {
 
-        Elements inputs = account.getForm().siblingElements().select(TAG_INPUT);
+        Elements inputs = account.getForm().siblingElements().select(INPUT_TAG);
         Form.Builder builder = Form.builder();
         for (Element input : inputs) {
             String value;
             switch (input.attr(ATTRIBUTE_TAG_NAME)) {
-                case "clavePagina":
+                case PAGE_KEY:
                     value = "PAS_MOV_CUENTAS_POSGLOB";
                     break;
                 case "Nmovs":
                 case PAGE_SIZE:
                     value = "50";
                     break;
-                case "descEstado":
+                case STATE_DESCRIPTION:
                     value = "TODOS";
                     break;
                 case FROM_DATE:
@@ -293,8 +302,7 @@ public class RuralviaTransactionalAccountFetcher
             return URLEncoder.encode(
                     element.attr(ATTRIBUTE_TAG_VALUE), StandardCharsets.UTF_8.name());
         } catch (UnsupportedEncodingException e) {
-            log.error("error while encoding from Element", e);
+            throw new IllegalStateException(e);
         }
-        return null;
     }
 }

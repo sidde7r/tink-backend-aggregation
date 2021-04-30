@@ -4,8 +4,16 @@ import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.Ruralvi
 import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.INVALID_PERIOD;
 import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.LOCAL_DATE_PATTERN;
 import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.ParamValues;
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.ParamValues.CURRENT_PAGE;
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.ParamValues.DESCRIPTION_CARD_TYPE;
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.ParamValues.FIRST_TIME;
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.ParamValues.PAGE_KEY;
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.ParamValues.PAGE_SIZE;
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.ParamValues.PAGINATION_FIELD;
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.ParamValues.RETURN_PAGE_KEY;
 import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.THERE_IS_NOT_DATA_FOR_THIS_CONSULT;
 import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.Tags;
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.Tags.ATTRIBUTE_TAG_HREF;
 import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.Urls;
 import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.fetcher.RuralviaUtils.parseAmountInEuros;
 
@@ -61,7 +69,8 @@ public class RuralviaCreditCardFetcher
 
             boolean isCreditCard =
                     dataContainer
-                            .getElementsByAttributeValue(Tags.ATTRIBUTE_TAG_NAME, "DESCR_TIPOTAR")
+                            .getElementsByAttributeValue(
+                                    Tags.ATTRIBUTE_TAG_NAME, DESCRIPTION_CARD_TYPE)
                             .attr(Tags.ATTRIBUTE_TAG_VALUE)
                             .contains("CREDITO");
 
@@ -104,10 +113,10 @@ public class RuralviaCreditCardFetcher
         // fields necessary for next requests
         Elements inputs =
                 dataContainer
-                        .getElementsByTag(Tags.TAG_FORM)
+                        .getElementsByTag(Tags.FORM_TAG)
                         .first()
                         .nextElementSiblings()
-                        .select(Tags.TAG_INPUT);
+                        .select(Tags.INPUT_TAG);
         creditCardBuilder
                 .cardCode(inputs.select(CssSelectors.CSS_CARD_CODE).attr(Tags.ATTRIBUTE_TAG_VALUE))
                 .cardtype(inputs.select(CssSelectors.CSS_CARD_TYPE).attr(Tags.ATTRIBUTE_TAG_VALUE))
@@ -185,7 +194,7 @@ public class RuralviaCreditCardFetcher
                                         .getHtml()
                                         .getElementById("menuHorizontal")
                                         .select("a:containsOwn(Tarjetas)")
-                                        .attr("href"));
+                                        .attr(ATTRIBUTE_TAG_HREF));
 
         Document html = Jsoup.parse(apiClient.navigateToCreditCardsMovements(url));
 
@@ -194,7 +203,8 @@ public class RuralviaCreditCardFetcher
         url =
                 URL.of(
                         Urls.RURALVIA_SECURE_HOST
-                                + html.select("a:containsOwn(Movimientos)").attr("href"));
+                                + html.select("a:containsOwn(Movimientos)")
+                                        .attr(ATTRIBUTE_TAG_HREF));
         html = Jsoup.parse(apiClient.navigateToCreditCardsMovements(url));
 
         card.setAccountCode(extractCreditCardAccountCode(card, html));
@@ -226,11 +236,11 @@ public class RuralviaCreditCardFetcher
                 .put("ISUM_ISFORM", "true")
                 .put("FECHAMOVDESDE", fromDate.format(LOCAL_DATE_PATTERN))
                 .put("FECHAMOVHASTA", toDate.format(LOCAL_DATE_PATTERN))
-                .put("primeraVez", "1")
-                .put("paginaActual", "0")
-                .put("tamanioPagina", "50") // originally is 25
-                .put("campoPaginacion", "lista")
-                .put("clavePagina", "BEL_TAR_CON_MOVS_DATOS_SAT")
+                .put(FIRST_TIME, "1")
+                .put(CURRENT_PAGE, "0")
+                .put(PAGE_SIZE, "50") // originally is 25
+                .put(PAGINATION_FIELD, "lista")
+                .put(PAGE_KEY, "BEL_TAR_CON_MOVS_DATOS_SAT")
                 .put("opcionSaldoUltMovs", "M")
                 .put(ParamValues.CARD_NUMBER, card.getCardNumber())
                 .put(ParamValues.CARD_CODE, "")
@@ -241,11 +251,11 @@ public class RuralviaCreditCardFetcher
                 .put("TIPODOCUMENTO", "")
                 .put("DOCUMENTO", "")
                 .put("fechaseisMeses", sixMonthsDate)
-                .put("clavePaginaVolver", "BEL_TAR_CON_MOVS_FECHAS_SAT")
+                .put(RETURN_PAGE_KEY, "BEL_TAR_CON_MOVS_FECHAS_SAT")
                 .put("volverNFU", "")
                 .put("PAN", card.getCardNumber())
                 .put(ParamValues.DESCRIPTION_PAN, card.getPanDescription())
-                .put(ParamValues.DESCRIPTION_CARD_TYPE, card.getDescriptionCardType())
+                .put(DESCRIPTION_CARD_TYPE, card.getDescriptionCardType())
                 .put("ACUERDO", card.getAgreementCard())
                 .put("IRIS", "SI")
                 .put(ParamValues.CODE_CARD_TYPE, card.getCodeCardType())
@@ -268,23 +278,23 @@ public class RuralviaCreditCardFetcher
         return Form.builder()
                 .put("ISUM_OLD_METHOD", "get")
                 .put("ISUM_ISFORM", "true")
-                .put("primeraVez", "0")
-                .put("paginaActual", "0")
-                .put("tamanioPagina", "50") // by default should be 25
-                .put("campoPaginacion", "lista")
+                .put(FIRST_TIME, "0")
+                .put(CURRENT_PAGE, "0")
+                .put(PAGE_SIZE, "50") // by default should be 25
+                .put(PAGINATION_FIELD, "lista")
                 .put("pagXpag", "")
-                .put("clavePagina", "BEL_TAR_CON_MOVS_FECHAS_SAT")
+                .put(PAGE_KEY, "BEL_TAR_CON_MOVS_FECHAS_SAT")
                 .put(ParamValues.CARD_NUMBER, card.getCardNumber())
                 .put(ParamValues.CARD_TYPE, card.getCardtype())
-                .put(ParamValues.DESCRIPTION_CARD_TYPE, card.getDescriptionCardType())
+                .put(DESCRIPTION_CARD_TYPE, card.getDescriptionCardType())
                 .put("codigoCuenta", card.getAccountCode())
                 .put(ParamValues.ENTITY_CARD, card.getEntityCard())
                 .put(ParamValues.AGREEMENT_CARD, card.getAgreementCard())
                 .put("PAN", card.getCardNumber())
                 .put("ACUERDO", card.getAgreementCard())
                 .put(ParamValues.DESCRIPTION_PAN, card.getPanDescription())
-                .put(ParamValues.DESCRIPTION_CARD_TYPE, card.getDescriptionCardType())
-                .put("clavePaginaVolver", "BEL_TAR_CON_MOVS_SAT")
+                .put(DESCRIPTION_CARD_TYPE, card.getDescriptionCardType())
+                .put(RETURN_PAGE_KEY, "BEL_TAR_CON_MOVS_SAT")
                 .put("opcionSaldoUltMovs", "M")
                 .put("IRIS", "SI")
                 .put(ParamValues.CODE_CARD_TYPE, card.getCodeCardType())
