@@ -6,16 +6,18 @@ import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
+import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.EvoBancoApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.EvoBancoConstants;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.EvoBancoConstants.ErrorMessages;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.EvoBancoConstants.ErrorCodes;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.authenticator.entities.EeILoginEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.authenticator.rpc.EELoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.authenticator.rpc.EELoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.authenticator.rpc.LoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.entities.ErrorEntity;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.authenticator.AutoAuthenticator;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
@@ -47,13 +49,16 @@ public class EvoBancoAutoAuthenticator implements AutoAuthenticator {
         try {
             bankClient.login(new LoginRequest(username, password));
         } catch (HttpResponseException e) {
-            if (e.getResponse()
-                    .getBody(ErrorEntity.class)
-                    .getMessage()
-                    .equalsIgnoreCase(ErrorMessages.AUTHENTICATION_ERROR_MSG)) {
-                // Redo pinning since stored credentials are not valid
+            HttpResponse response = e.getResponse();
+            if (response.getStatus() >= 400) {
+                if (response.getBody(ErrorEntity.class)
+                        .getCode()
+                        .equalsIgnoreCase(ErrorCodes.UNAUTHORIZED_ERROR)) {
+                    throw AuthorizationError.UNAUTHORIZED.exception();
+                }
                 throw SessionError.SESSION_EXPIRED.exception(e);
             }
+            throw e;
         }
 
         try {
