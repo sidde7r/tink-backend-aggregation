@@ -60,8 +60,10 @@ public class GrpcServer {
      * @throws IOException
      */
     public static InputStream ensurePkcs8(final File privateKeyFile) throws IOException {
-        PemReader pemReader = new PemReader(new FileReader(privateKeyFile));
-        PemObject privateKeyObject = pemReader.readPemObject();
+        PemObject privateKeyObject;
+        try (PemReader pemReader = new PemReader(new FileReader(privateKeyFile))) {
+            privateKeyObject = pemReader.readPemObject();
+        }
 
         RSAPrivateCrtKeyParameters privateKeyParameter;
 

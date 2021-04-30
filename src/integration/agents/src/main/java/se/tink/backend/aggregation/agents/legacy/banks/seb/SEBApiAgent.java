@@ -970,10 +970,9 @@ public final class SEBApiAgent extends AbstractAgent
     }
 
     private TinkApacheHttpClient4 createClient() {
-        try {
+        try (InputStream stream =
+                Files.asByteSource(new File("data/agents/seb/seb.p12")).openStream()) {
             KeyStore keyStore = KeyStore.getInstance("PKCS12", "BC");
-            InputStream stream =
-                    Files.asByteSource(new File("data/agents/seb/seb.p12")).openStream();
             keyStore.load(stream, PASSWORD.toCharArray());
             KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance("SunX509");
             keyManagerFactory.init(keyStore, PASSWORD.toCharArray());
@@ -994,8 +993,6 @@ public final class SEBApiAgent extends AbstractAgent
                     .put(ApacheHttpClient4Config.PROPERTY_CONNECTION_MANAGER, manager);
 
             BasicHttpParams params = new BasicHttpParams();
-            //            HttpHost proxy = new HttpHost("127.0.0.1", 8888);
-            //            params.setParameter(ConnRoutePNames.DEFAULT_PROXY, proxy);
             config.getProperties().put(ApacheHttpClient4Config.PROPERTY_HTTP_PARAMS, params);
 
             config.getProperties().put(CoreConnectionPNames.SO_TIMEOUT, 30000);

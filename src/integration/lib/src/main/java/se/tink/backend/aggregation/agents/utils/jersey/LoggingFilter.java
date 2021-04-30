@@ -231,7 +231,7 @@ public class LoggingFilter extends ClientFilter {
         printResponseHeaders(b, id, response.getHeaders());
 
         InputStream stream = response.getEntityInputStream();
-        try {
+        try (StringBuilderWriter sw = new StringBuilderWriter()) {
 
             if (!response.getEntityInputStream().markSupported()) {
                 stream = new BufferedInputStream(stream);
@@ -239,8 +239,6 @@ public class LoggingFilter extends ClientFilter {
             }
 
             stream.mark(Integer.MAX_VALUE);
-
-            StringBuilderWriter sw = new StringBuilderWriter();
             InputStreamReader in = new InputStreamReader(stream, Charsets.UTF_8);
             long charsCopied = IOUtils.copyLarge(in, sw, 0, MAX_SIZE);
             if (charsCopied == MAX_SIZE) {
