@@ -18,7 +18,7 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 @Slf4j
 public class BpceGroupTransactionalAccountConverter {
 
-    public Optional<TransactionalAccount> toTransactionalAccount(
+    public static Optional<TransactionalAccount> toTransactionalAccount(
             AccountEntity accountEntity, List<BalanceEntity> balances) {
         final String iban = accountEntity.getIban();
 
@@ -38,14 +38,14 @@ public class BpceGroupTransactionalAccountConverter {
                 .build();
     }
 
-    private BalanceModule getBalanceModule(List<BalanceEntity> balances) {
+    private static BalanceModule getBalanceModule(List<BalanceEntity> balances) {
         BalanceBuilderStep balanceBuilderStep =
                 BalanceModule.builder().withBalance(getBookedBalance(balances));
         getAvailableBalance(balances).ifPresent(balanceBuilderStep::setAvailableBalance);
         return balanceBuilderStep.build();
     }
 
-    private ExactCurrencyAmount getBookedBalance(List<BalanceEntity> balances) {
+    private static ExactCurrencyAmount getBookedBalance(List<BalanceEntity> balances) {
         if (balances.isEmpty()) {
             throw new IllegalArgumentException(
                     "Cannot determine booked balance from empty list of balances.");
@@ -64,7 +64,7 @@ public class BpceGroupTransactionalAccountConverter {
                 .get();
     }
 
-    private Optional<ExactCurrencyAmount> getAvailableBalance(List<BalanceEntity> balances) {
+    private static Optional<ExactCurrencyAmount> getAvailableBalance(List<BalanceEntity> balances) {
         return findBalanceByType(balances, BalanceType.XPCD)
                 .map(BalanceEntity::getBalanceAmount)
                 .map(AmountEntity::toTinkAmount);

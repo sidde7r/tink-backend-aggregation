@@ -12,12 +12,8 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 public class BpceGroupTransactionalAccountFetcher
         extends BpceGroupBaseAccountFetcher<TransactionalAccount> {
 
-    private final BpceGroupTransactionalAccountConverter converter;
-
-    public BpceGroupTransactionalAccountFetcher(
-            BpceGroupApiClient apiClient, BpceGroupTransactionalAccountConverter converter) {
+    public BpceGroupTransactionalAccountFetcher(BpceGroupApiClient apiClient) {
         super(apiClient);
-        this.converter = converter;
     }
 
     @Override
@@ -28,6 +24,7 @@ public class BpceGroupTransactionalAccountFetcher
     @Override
     protected Optional<TransactionalAccount> map(
             AccountEntity accountEntity, List<BalanceEntity> balances) {
-        return converter.toTransactionalAccount(accountEntity, balances);
+        return BpceGroupTransactionalAccountConverter.toTransactionalAccount(
+                accountEntity, balances);
     }
 }
