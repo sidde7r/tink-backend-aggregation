@@ -231,6 +231,8 @@ public class OAuth2AuthenticationController
                     errorType.getValue(),
                     SerializationUtils.serializeToString(callbackData));
             throw LoginError.INCORRECT_CREDENTIALS.exception();
+        } else if (ErrorType.CANCELED_BY_USER.equals(errorType)) {
+            throw ThirdPartyAppError.CANCELLED.exception();
         }
 
         throw new IllegalStateException(

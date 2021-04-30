@@ -160,8 +160,9 @@ public class SibsBaseApiClient {
             }
             throw ex;
         } catch (HttpClientException ex) {
-            if (ex.getMessage().contains("readHandshakeRecord")) {
-                throw BankServiceError.BANK_SIDE_FAILURE.exception();
+            if (ex.getMessage().contains("readHandshakeRecord")
+                    || ex.getMessage().contains("unexpected_message")) {
+                throw BankServiceError.BANK_SIDE_FAILURE.exception(ex);
             }
             throw ex;
         }
