@@ -1,23 +1,17 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.executor.payment;
 
-import static java.util.Objects.isNull;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.FabricApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.FabricConstants;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.executor.payment.entities.AccountEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.executor.payment.entities.InstructedAmountEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.executor.payment.rpc.CreatePaymentRequest;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.executor.payment.rpc.CreatePaymentResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.executor.payment.rpc.CreateRecurringPaymentRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.executor.payment.rpc.FabricPaymentRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.executor.payment.rpc.FabricPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.executor.payment.rpc.PaymentAuthorizationStatus;
-import se.tink.backend.aggregation.agents.utils.remittanceinformation.RemittanceInformationValidator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.executor.payment.rpc.RecurringPaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepResponse;
@@ -32,10 +26,7 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import se.tink.libraries.payment.rpc.Payment;
-import se.tink.libraries.transfer.enums.RemittanceInformationType;
 import se.tink.libraries.transfer.rpc.PaymentServiceType;
-import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 public class FabricPaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
 
@@ -75,16 +66,16 @@ public class FabricPaymentExecutor implements PaymentExecutor, FetchablePaymentE
     public PaymentResponse create(PaymentRequest paymentRequest) throws PaymentException {
         sessionStorage.put(FabricConstants.QueryKeys.STATE, strongAuthenticationState.getState());
 
-        CreatePaymentRequest createPaymentRequest;
+        FabricPaymentRequest fabricPaymentRequest;
         if (PaymentServiceType.PERIODIC.equals(
                 paymentRequest.getPayment().getPaymentServiceType())) {
-            createPaymentRequest = getCreateRecurringPaymentRequest(paymentRequest);
+            fabricPaymentRequest = RecurringPaymentRequest.createFrom(paymentRequest);
         } else {
-            createPaymentRequest = getCreatePaymentRequest(paymentRequest);
+            fabricPaymentRequest = FabricPaymentRequest.createFrom(paymentRequest);
         }
 
-        CreatePaymentResponse payment =
-                apiClient.createPayment(createPaymentRequest, paymentRequest.getPayment());
+        FabricPaymentResponse payment =
+                apiClient.createPayment(fabricPaymentRequest, paymentRequest.getPayment());
 
         sessionStorage.put(
                 FabricConstants.StorageKeys.LINK, payment.getLinks().getScaRedirect().getHref());
@@ -92,61 +83,10 @@ public class FabricPaymentExecutor implements PaymentExecutor, FetchablePaymentE
         return payment.toTinkPaymentResponse(paymentRequest.getPayment());
     }
 
-    private CreatePaymentRequest getCreatePaymentRequest(PaymentRequest paymentRequest) {
-        AccountEntity creditorEntity = AccountEntity.creditorOf(paymentRequest);
-        AccountEntity debtorEntity = AccountEntity.debtorOf(paymentRequest);
-        InstructedAmountEntity instructedAmountEntity = InstructedAmountEntity.of(paymentRequest);
-
-        RemittanceInformation remittanceInformation =
-                paymentRequest.getPayment().getRemittanceInformation();
-        RemittanceInformationValidator.validateSupportedRemittanceInformationTypesOrThrow(
-                remittanceInformation, null, RemittanceInformationType.UNSTRUCTURED);
-
-        CreatePaymentRequest.CreatePaymentRequestBuilder createPaymentRequest =
-                CreatePaymentRequest.builder()
-                        .debtorAccount(debtorEntity)
-                        .instructedAmount(instructedAmountEntity)
-                        .creditorAccount(creditorEntity)
-                        .creditorName(paymentRequest.getPayment().getCreditor().getName())
-                        .remittanceInformationUnstructured(remittanceInformation.getValue());
-        return createPaymentRequest.build();
-    }
-
-    private CreatePaymentRequest getCreateRecurringPaymentRequest(PaymentRequest paymentRequest) {
-        Payment payment = paymentRequest.getPayment();
-
-        AccountEntity creditorEntity = AccountEntity.creditorOf(paymentRequest);
-        AccountEntity debtorEntity = AccountEntity.debtorOf(paymentRequest);
-        InstructedAmountEntity instructedAmountEntity = InstructedAmountEntity.of(paymentRequest);
-
-        RemittanceInformation remittanceInformation =
-                paymentRequest.getPayment().getRemittanceInformation();
-        RemittanceInformationValidator.validateSupportedRemittanceInformationTypesOrThrow(
-                remittanceInformation, null, RemittanceInformationType.UNSTRUCTURED);
-
-        CreateRecurringPaymentRequest.CreateRecurringPaymentRequestBuilder
-                createRecurringPaymentRequest =
-                        CreateRecurringPaymentRequest.builder()
-                                .debtorAccount(debtorEntity)
-                                .instructedAmount(instructedAmountEntity)
-                                .creditorAccount(creditorEntity)
-                                .creditorName(paymentRequest.getPayment().getCreditor().getName())
-                                .remittanceInformationUnstructured(remittanceInformation.getValue())
-                                .frequency(payment.getFrequency().toString())
-                                .startDate(payment.getStartDate().toString())
-                                .dayOfExecution(
-                                        isNull(payment.getDayOfExecution())
-                                                ? null
-                                                : String.valueOf(payment.getDayOfExecution()));
-        // optional attributes
-        if (Optional.ofNullable(payment.getEndDate()).isPresent()) {
-            createRecurringPaymentRequest.endDate(payment.getEndDate().toString());
-        }
-        if (Optional.ofNullable(payment.getExecutionRule()).isPresent()) {
-            createRecurringPaymentRequest.executionRule(payment.getExecutionRule().toString());
-        }
-
-        return createRecurringPaymentRequest.build();
+    public PaymentResponse delete(PaymentRequest paymentRequest) {
+        return apiClient
+                .deletePayment(paymentRequest.getPayment())
+                .toTinkPaymentResponseDelete(paymentRequest.getPayment());
     }
 
     @Override
@@ -175,11 +115,11 @@ public class FabricPaymentExecutor implements PaymentExecutor, FetchablePaymentE
             logger.info(String.format("scaStatus: %s", authorizationStatus.getScaStatus()));
         }
 
-        CreatePaymentResponse createPaymentResponse =
+        FabricPaymentResponse fabricPaymentResponse =
                 apiClient.getPaymentStatus(paymentMultiStepRequest.getPayment());
         logger.info(
-                "Transaction Status: {} after SCA ", createPaymentResponse.getTransactionStatus());
-        return fabricPaymentController.response(createPaymentResponse, paymentMultiStepRequest);
+                "Transaction Status: {} after SCA ", fabricPaymentResponse.getTransactionStatus());
+        return fabricPaymentController.response(fabricPaymentResponse, paymentMultiStepRequest);
     }
 
     @Override

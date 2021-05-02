@@ -15,7 +15,7 @@ import se.tink.libraries.payment.rpc.Payment;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreatePaymentResponse {
+public class FabricPaymentResponse {
 
     private String transactionStatus;
     private String paymentId;
@@ -32,6 +32,18 @@ public class CreatePaymentResponse {
     public PaymentResponse toTinkPaymentResponse(Payment tinkPayment) {
         tinkPayment.setStatus(
                 FabricPaymentStatus.mapToTinkPaymentStatus(
+                        FabricPaymentStatus.fromString(transactionStatus)));
+        if (paymentId != null) {
+            tinkPayment.setUniqueId(paymentId); // bank Unique payment Id
+        }
+
+        return new PaymentResponse(tinkPayment);
+    }
+
+    @JsonIgnore
+    public PaymentResponse toTinkPaymentResponseDelete(Payment tinkPayment) {
+        tinkPayment.setStatus(
+                FabricPaymentStatus.mapToTinkPaymentStatusDelete(
                         FabricPaymentStatus.fromString(transactionStatus)));
         if (paymentId != null) {
             tinkPayment.setUniqueId(paymentId); // bank Unique payment Id

@@ -1,0 +1,80 @@
+{
+  "transactionStatus": "ACTC",
+  "_links": {
+    "account": {
+      "href": ""
+    },
+    "authoriseTransaction": {
+      "href": ""
+    },
+    "balances": {
+      "href": ""
+    },
+    "download": {
+      "href": ""
+    },
+    "first": {
+      "href": ""
+    },
+    "last": {
+      "href": ""
+    },
+    "next": {
+      "href": ""
+    },
+    "previous": {
+      "href": ""
+    },
+    "scaOAuth": {
+      "href": ""
+    },
+    "scaRedirect": {
+      "href": ""
+    },
+    "scaStatus": {
+      "href": ""
+    },
+    "selectAuthenticationMethod": {
+      "href": ""
+    },
+    "self": {
+      "href": ""
+    },
+    "startAuthorisation": {
+      "href": ""
+    },
+    "startAuthorisationWithAuthenticationMethodSelection": {
+      "href": ""
+    },
+    "startAuthorisationWithProprietaryData": {
+      "href": ""
+    },
+    "startAuthorisationWithPsuAuthentication": {
+      "href": ""
+    },
+    "startAuthorisationWithPsuIdentification": {
+      "href": ""
+    },
+    "startAuthorisationWithTransactionAuthorisation": {
+      "href": ""
+    },
+    "status": {
+      "href": ""
+    },
+    "transactionDetails": {
+      "href": ""
+    },
+    "transactions": {
+      "href": ""
+    },
+    "updateProprietaryData": {
+      "href": ""
+    },
+    "updatePsuAuthentication": {
+      "href": ""
+    },
+    "updatePsuIdentification": {
+      "href": ""
+    }
+  }
+}

@@ -56,7 +56,7 @@ public class FabricConstants {
 
         public static final String INITIATE_A_PAYMENT_URL =
                 BASE_URL + "/api/fabrick/psd2/v1/{payment-service}/{payment-product}";
-        public static final String GET_PAYMENT_URL =
+        public static final String PAYMENT_URL =
                 BASE_URL + "/api/fabrick/psd2/v1/{payment-service}/{payment-product}/{paymentId}";
         public static final String GET_PAYMENT_STATUS_URL =
                 BASE_URL
@@ -133,8 +133,8 @@ public class FabricConstants {
     }
 
     public static class Timer {
-        public static final long WAITING_FOR_SUPPLEMENTAL_INFORMATION_MINUTES = 9l;
-        public static final long WAITING_FOR_QUIT_PENDING_STATUS_MILISEC = 3000l;
+        public static final long WAITING_FOR_SUPPLEMENTAL_INFORMATION_MINUTES = 9L;
+        public static final long WAITING_FOR_QUIT_PENDING_STATUS_MILISEC = 3000L;
     }
 
     public static class PaymentStep {
