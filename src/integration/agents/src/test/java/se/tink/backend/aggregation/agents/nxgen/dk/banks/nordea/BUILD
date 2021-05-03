@@ -35,7 +35,6 @@ junit_test(
         "//src/integration/lib",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/response",
         "//src/integration/models",
-        "//src/libraries/date",
         "//src/libraries/serialization",
         "//third_party:io_vavr",
         "//third_party:lombok_libs",
