@@ -1,0 +1,408 @@
+
+REQUEST 1
+GET https://apis.tsb.co.uk/apis/open-banking/v3.1/.well-known/openid-configuration
+
+RESPONSE 1
+200
+Date: Fri, 30 Apr 2021 10:49:52 GMT
+Date: Fri, 30 Apr 2021 10:49:52 GMT
+Content-Type: application/json;charset=utf-8
+
+{
+    "acr_values_supported": [
+        "0", 
+        "urn:openbanking:psd2:sca"
+    ], 
+    "authorization_endpoint": "https://apis.tsb.co.uk/apis/open-banking/v3.1/auth/oauth2/authorize", 
+    "claims_parameter_supported": true, 
+    "claims_supported": [
+        "sub", 
+        "iss", 
+        "auth_time", 
+        "acr", 
+        "aud", 
+        "azp", 
+        "exp", 
+        "c_hash", 
+        "at_hash", 
+        "nonce", 
+        "openbanking_intent_id", 
+        "s_hash"
+    ], 
+    "display_values_supported": [
+        "page"
+    ], 
+    "grant_types_supported": [
+        "authorization_code", 
+        "client_credentials", 
+        "refresh_token"
+    ], 
+    "id_token_signing_alg_values_supported": [
+        "PS256",
+        "ES256"
+    ], 
+    "issuer": "https://apis.tsb.co.uk/apis/open-banking/v3.1/", 
+    "jwks_uri": "https://keystore.openbanking.org.uk/0015800001ZEZ3hAAH/4SoUs33VXMvHRSnIDhsVpR.jwks", 
+    "registration_endpoint": "https://apis.tsb.co.uk/apis/open-banking/v3.1/tpp/register", 
+    "request_object_signing_alg_values_supported": [
+        "ES256", 
+        "PS256"
+    ], 
+    "request_parameter_supported": true, 
+    "response_modes_supported": [
+        "query", 
+        "fragment", 
+        "form_post"
+    ], 
+    "response_types_supported": [
+        "code id_token"
+    ], 
+    "scopes_supported": [
+        "openid", 
+        "accounts", 
+        "payments", 
+        "fundsconfirmations"
+    ], 
+    "service_documentation": "https://apis.tsb.co.uk/apidocs/auth/oauth/v2/swagger", 
+    "subject_types_supported": [
+        "pairwise"
+    ], 
+    "tls_client_certificate_bound_access_tokens": true, 
+    "token_endpoint": "https://apis.tsb.co.uk/apis/open-banking/v3.1/auth/oauth2/token", 
+    "token_endpoint_auth_methods_supported": [
+        "client_secret_basic", 
+        "client_secret_post", 
+        "private_key_jwt"
+    ], 
+    "token_endpoint_auth_signing_alg_values_supported": [
+        "PS256",
+        "ES256"
+    ], 
+    "ui_locales_supported": [
+        "en-US"
+    ], 
+    "userinfo_endpoint": "https://apis.tsb.co.uk/apis/open-banking/v3.1/openid/connect/v1/userinfo", 
+    "userinfo_signing_alg_values_supported": [
+        "PS256",
+        "ES256"
+    ]
+}
+
+REQUEST 2
+POST https://apis.tsb.co.uk/apis/open-banking/v3.1/auth/oauth2/token
+Content-Type: application/x-www-form-urlencoded
+Accept: application/json
+
+grant_type=client_credentials&scope=payments&redirect_uri=https%3A%2F%2Fapi.tink.se%2Fapi%2Fv1%2Fcredentials%2Fthird-party%2Fcallback&client_id=DUMMY_CLIENT_ID&client_assertion_type=urn%3Aietf%3Aparams%3Aoauth%3Aclient-assertion-type%3Ajwt-bearer&client_assertion=RkFLRV9TSUdOQVRVUkUK
+
+RESPONSE 2 SET STATE4
+200
+Date: Fri, 30 Apr 2021 10:49:53 GMT
+Date: Fri, 30 Apr 2021 10:49:52 GMT
+Content-Type: application/json;charset=utf-8
+
+{
+
+  "access_token":"098b214d-334e-4d66-8630-8bc8d738e40a",
+
+  "token_type":"Bearer",
+
+  "expires_in":600,
+
+  "scope":"payments"
+
+}
+
+REQUEST 3 MATCH STATE4
+POST https://apis.tsb.co.uk/apis/open-banking/v3.1/pisp/domestic-payment-consents
+Accept: application/json
+Content-Type: application/json; charset=UTF-8
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+{
+    "Data": {
+        "Initiation": {
+            "CreditorAccount": {
+                "Identification": "12345612345678",
+                "Name": "Dummy Name",
+                "SchemeName": "UK.OBIE.SortCodeAccountNumber"
+            }, 
+            "EndToEndIdentification": "39d4319a6b4c46d3a9c227966a10ba5", 
+            "InstructedAmount": {
+                "Amount": "166.00", 
+                "Currency": "GBP"
+            }, 
+            "InstructionIdentification": "39d4319a6b4c46d3a9c227966a10ba57", 
+            "RemittanceInformation": {
+                "Reference": "WEALTHIFYJEANPN"
+            }
+        }
+    }, 
+    "Risk": {
+        "PaymentContextCode": "Other"
+    }
+}
+
+RESPONSE 3 SET STATE5
+201
+Date: Fri, 30 Apr 2021 10:49:53 GMT
+Date: Fri, 30 Apr 2021 10:49:54 GMT
+Content-Type: application/json;charset=utf-8
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+{
+    "Data": {
+        "Charges": [], 
+        "ConsentId": "25d96aca-c0cf-4b4f-bfbe-7a83668ad33b", 
+        "CreationDateTime": "2021-04-30T11:49:54.467+01:00", 
+        "Initiation": {
+            "CreditorAccount": {
+                "Identification": "12345612345678",
+                "Name": "Dummy Name",
+                "SchemeName": "UK.OBIE.SortCodeAccountNumber"
+            }, 
+            "EndToEndIdentification": "39d4319a6b4c46d3a9c227966a10ba5", 
+            "InstructedAmount": {
+                "Amount": "166.00", 
+                "Currency": "GBP"
+            }, 
+            "InstructionIdentification": "39d4319a6b4c46d3a9c227966a10ba57", 
+            "RemittanceInformation": {
+                "Reference": "WEALTHIFYJEANPN"
+            }
+        }, 
+        "Status": "AwaitingAuthorisation", 
+        "StatusUpdateDateTime": "2021-04-30T11:49:54.467+01:00"
+    }, 
+    "Links": {
+        "Self": "https://apis.tsb.co.uk/apis/open-banking/v3.1/pisp/domestic-payment-consents/25d96aca-c0cf-4b4f-bfbe-7a83668ad33b"
+    }, 
+    "Meta": {}, 
+    "Risk": {
+        "PaymentContextCode": "Other"
+    }
+}
+
+
+REQUEST 4 MATCH STATE5
+POST https://apis.tsb.co.uk/apis/open-banking/v3.1/auth/oauth2/token
+Content-Type: application/x-www-form-urlencoded
+Accept: application/json
+
+grant_type=authorization_code&redirect_uri=https%3A%2F%2Fapi.tink.se%2Fapi%2Fv1%2Fcredentials%2Fthird-party%2Fcallback&client_id=DUMMY_CLIENT_ID&client_assertion_type=urn%3Aietf%3Aparams%3Aoauth%3Aclient-assertion-type%3Ajwt-bearer&client_assertion=RkFLRV9TSUdOQVRVUkUK&code=DUMMY_AUTH_CODE
+
+RESPONSE 4 SET STATE6
+200
+Date: Fri, 30 Apr 2021 10:50:18 GMT
+Date: Fri, 30 Apr 2021 10:50:19 GMT
+Content-Type: application/json;charset=utf-8
+
+{
+
+  "access_token":"0c4dc734-5e52-41ca-8a86-40745f350a60",
+
+  "token_type":"Bearer",
+
+  "expires_in":600,
+
+  "refresh_token":"583c709b-ecd3-4165-a30c-fcba22bc8d20",
+
+  "scope":"openid payments",
+
+  "id_token":"eyJ0eXAiOiJKV1QiLCJhbGciOiJ**MASKEDhN**IsImtpZCI6ImNFQV9zS2R2cW14TTFHb1pXYTRqM3E4czM1TSJ9.ew0KICAic3ViIjogIlR2Rkk3LUw0QU03enFtRzZsM1I4d2MxQXlMbUFZQnJ6UnBDR0ZsMEo4TE0iLA0KICAiYXVkIjogIj**MASKED1Q**IsDQogICJjX2hhc2giOiAiS1luRVhxb0pfN1JqMHhWZmt2UzdlQSIsDQogICJzX2hhc2giOiAiQnE4V2NXM2Vmc0pwdlJPUUhhaTg1dyIsDQogICJhY3IiOiAidXJuOm9wZW5iYW5raW5nOnBzZDI6c2NhIiwNCiAgImF6cCI6ICI**MASKEDFV**UiLA0KICAiYXV0aF90aW1lIjogMTYxOTc3OTgxOCwNCiAgImlzcyI6ICJodHRwczovL2FwaXMudHNiLmNvLnVrL2FwaXMvb3Blbi1iYW5raW5nL3YzLjEvIiwNCiAgImV4cCI6IDE2MTk4NjYyMTgsDQogICJpYXQiOiAxNjE5Nzc5ODE4LA0KICAibm9uY2UiOiAiODdjYjYwNTYwMjQ3NGQyNSIsDQogICJvcGVuYmFua2luZ19pbnRlbnRfaWQiOiAiMjVkOTZhY2EtYzBjZi00YjRmLWJmYmUtN2E4MzY2OGFkMzNiIiwNCiAgImh0dHA6Ly9vcGVuYmFua2luZy5vcmcudWsvcmVmcmVzaF90b2tlbl9leHBpcmVzX2F0IjogIjE2Mjc1NTU4MTgiDQp9.jYMpbpKmKZNG5_avmxX3zanj58wf0AkEPOA4vkO3_tluIsTFFLa-rtdeAwGfC9s6tBKbsMgNZ0e-vldIHEy8hcolvjUXPPFP1yl1JBOBgppaX4zLHD3qKl-hLvFEfizJ-4eF_ejh17kl6bi4G6yGM-oYXYKG0F8JD8yLIlpXsowPacuRB2jVwhaKFEv30SEZPxOd_L0aiNny7lcAtPNrPu-Jx66tkWms_zvRTyneu3Q6GNbaOFhM76WTNbY7HvEWTn1GdCihgBTJMqJZowppdoGquu-pH0eppyPc5v86dovU1A9-flhBB0qeDeG4oZy6vCYFqEgaRMpAj35ReI_NdA",
+
+  "id_token_type":"urn:ietf:params:oauth:grant-type:jwt-bearer"
+
+}
+
+REQUEST 5 MATCH STATE6
+GET https://keystore.openbanking.org.uk/0015800001ZEZ3hAAH/4SoUs33VXMvHRSnIDhsVpR.jwks
+
+RESPONSE 5 SET STATE7
+200
+Date: Fri, 30 Apr 2021 10:50:18 GMT
+Date: Fri, 30 Apr 2021 10:50:19 GMT
+Content-Type: application/jwk+json
+
+{
+
+  "keys" : [ {
+
+    "kid" : "eFwUfAJ0dQCC5fz79n-jn6VYZYY",
+
+    "kty" : "RSA",
+
+    "n" : "9wx1Mc0J-bbeGoOL-OSstQ9b-dh8baD8bZv6V5a-gwnyVg0jdhAp8WpOI_DwJ4ugIpC8fiCaJEbecYju3aLP6Q__ydagbnwKYqvB8h-IFdraRMh1U3ldqiZ_mh5_8Qcjm8BnGtmDzdiqc2bnEfvyFNVQcOhZsatEtq7a3bZMKFrBey87r6I_ZFUDuykOtz7MD8N8SVezy5mRGyzAYYWqFLX-APg31NT4D3edhwk5HGG8HOPL8mDSjrPPyUCSAT1MEMQYNWAfV7VdFFstvqJhGWKDbg3jm7LlQh5VBAs61EKxXiUaNgztvyMp5-3o2xmgq-Z6Eg7lVZyK8wqhZ3WP9Q",
+
+    "e" : "AQAB",
+
+    "use" : "tls",
+
+    "x5c" : [ "MIIFpjCCBI6gAwIBAgIEWf9keTANBgkqhkiG9w0BAQsFADBEMQswCQYDVQQGEwJHQjEUMBIGA1UEChMLT3BlbkJhbmtpbmcxHzAdBgNVBAMTFk9wZW5CYW5raW5nIElzc3VpbmcgQ0EwHhcNMTkwNTEwMTIyODEyWhcNMjEwNTEwMTI1ODEyWjBhMQswCQYDVQQGEwJHQjEUMBIGA1UEChMLT3BlbkJhbmtpbmcxGzAZBgNVBAsTEjAwMTU4MDAwMDFaRVozaEFBSDEfMB0GA1UEAxMWNFNvVXMzM1ZYTXZIUlNuSURoc1ZwUjCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAPcMdTHNCfm23hqDi/jkrLUPW/nYfG2g/G2b+leWvoMJ8lYNI3YQKfFqTiPw8CeLoCKQvH4gmiRG3nGI7t2iz+kP/8nWoG58CmKrwfIfiBXa2kTIdVN5Xaomf5oef/EHI5vAZxrZg83YqnNm5xH78hTVUHDoWbGrRLau2t22TChawXsvO6+iP2RVA7spDrc+zA/DfElXs8uZkRsswGGFqhS1/gD4N9TU+A93nYcJORxhvBzjy/Jg0o6zz8lAkgE9TBDEGDVgH1e1XRRbLb6iYRlig24N45uy5UIeVQQLOtRCsV4lGjYM7b8jKeft6NsZoKvmehIO5VWcivMKoWd1j/UCAwEAAaOCAoEwggJ9MA4GA1UdDwEB/wQEAwIHgDAgBgNVHSUBAf8EFjAUBggrBgEFBQcDAQYIKwYBBQUHAwIwggFSBgNVHSAEggFJMIIBRTCCAUEGCysGAQQBqHWBBgEBMIIBMDA1BggrBgEFBQcCARYpaHR0cDovL29iLnRydXN0aXMuY29tL3Byb2R1Y3Rpb24vcG9saWNpZXMwgfYGCCsGAQUFBwICMIHpDIHmVGhpcyBDZXJ0aWZpY2F0ZSBpcyBzb2xlbHkgZm9yIHVzZSB3aXRoIE9wZW4gQmFua2luZyBMaW1pdGVkIGFuZCBhc3NvY2lhdGVkIE9wZW4gQmFua2luZyBTZXJ2aWNlcy4gSXRzIHJlY2VpcHQsIHBvc3Nlc3Npb24gb3IgdXNlIGNvbnN0aXR1dGVzIGFjY2VwdGFuY2Ugb2YgdGhlIE9wZW4gQmFua2luZyBMaW1pdGVkIENlcnRpZmljYXRlIFBvbGljeSBhbmQgcmVsYXRlZCBkb2N1bWVudHMgdGhlcmVpbi4wcgYIKwYBBQUHAQEEZjBkMCYGCCsGAQUFBzABhhpodHRwOi8vb2IudHJ1c3Rpcy5jb20vb2NzcDA6BggrBgEFBQcwAoYuaHR0cDovL29iLnRydXN0aXMuY29tL3Byb2R1Y3Rpb24vaXNzdWluZ2NhLmNydDA/BgNVHR8EODA2MDSgMqAwhi5odHRwOi8vb2IudHJ1c3Rpcy5jb20vcHJvZHVjdGlvbi9pc3N1aW5nY2EuY3JsMB8GA1UdIwQYMBaAFJ9Jv042p6zDDyvIR/QfKRvAeQsFMB0GA1UdDgQWBBQotejclChqefV9Q/F0W6fqJWZhTTANBgkqhkiG9w0BAQsFAAOCAQEAgjVv8t4VsLaIrAwDUtCVpZIeiFwyOrByhm9Gf7DGpDacset0mWWdNI186WqsF6/t+jQvdaalMjKKHr9IyFQ9It3oeVGHXLAUvYKZdddCToUXpis8oRniGjD0QYs8wtsIR2rQITGJ0tW4muqibb/E9h7b5J5QfDdEiusMM0S/jsN1C7WHbv14zTrTdugDE+LJhZbWoOMqo/SkNAD5ViWu87fmIv4aGbdEed9pSUPZ0exTnh9oH3bnG0hd4mOH5E4e6xd+hNoLo5tMDq64RkhbrOg3v+a7K3fQB7ASc0whHyeNBurIy8fonTVRX+Wp9zWT5Tx33a1YCzOLx27CsYOQpw==" ],
+
+    "x5t" : "Bky8bDSkz1W0bch4YuvKkqopJq0=",
+
+    "x5u" : "https://keystore.openbanking.org.uk/0015800001ZEZ3hAAH/eFwUfAJ0dQCC5fz79n-jn6VYZYY.pem",
+
+    "x5t#S256" : "hbW4K0I8tcln1dv6hU50_xEOUniu962go9QkpCAPu-4="
+
+  }, {
+
+    "kid" : "cEA_sKdvqmxM1GoZWa4j3q8s35M",
+
+    "kty" : "RSA",
+
+    "n" : "p8HSqFTMvY08ggDKD40PzvcfuUtJr96s4Q2azc3ZfNfEBSSlbHfo7zW6DhRM6ZpXfydeMskCBSplQI-5SwzYDlZQnrHsstfcFNPHnrbeetbiNVWi8bdUWDMQjV_PrFTMTE0mf7U3_BqCLVSWbZTUnmUGJ6Lvty_PzGMUsGmDyPxHuKxvt9H9BsBO8YjPa9Mfl4hGjUjhEXTzMmRjDHrbrgc31fAj04EX50BLgajOEr53leceEbgBrFuQHZ-z2W4TfM6hLKaEDGQQIK37iKkuherz-fQpoJTgkAOhTNruif8sRhrnLAiDLdvN5r_VR5_JcFzJEmSWpgBqeHo4WUB4zw",
+
+    "e" : "AQAB",
+
+    "use" : "sig",
+
+    "x5c" : [ "MIIFmzCCBIOgAwIBAgIEWf+j7DANBgkqhkiG9w0BAQsFADBEMQswCQYDVQQGEwJHQjEUMBIGA1UEChMLT3BlbkJhbmtpbmcxHzAdBgNVBAMTFk9wZW5CYW5raW5nIElzc3VpbmcgQ0EwHhcNMjAwNDIwMTAyODA3WhcNMjEwNTIwMTA1ODA3WjBhMQswCQYDVQQGEwJHQjEUMBIGA1UEChMLT3BlbkJhbmtpbmcxGzAZBgNVBAsTEjAwMTU4MDAwMDFaRVozaEFBSDEfMB0GA1UEAxMWNFNvVXMzM1ZYTXZIUlNuSURoc1ZwUjCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAKfB0qhUzL2NPIIAyg+ND873H7lLSa/erOENms3N2XzXxAUkpWx36O81ug4UTOmaV38nXjLJAgUqZUCPuUsM2A5WUJ6x7LLX3BTTx5623nrW4jVVovG3VFgzEI1fz6xUzExNJn+1N/wagi1Ulm2U1J5lBiei77cvz8xjFLBpg8j8R7isb7fR/QbATvGIz2vTH5eIRo1I4RF08zJkYwx6264HN9XwI9OBF+dAS4GozhK+d5XnHhG4AaxbkB2fs9luE3zOoSymhAxkECCt+4ipLoXq8/n0KaCU4JADoUza7on/LEYa5ywIgy3bzea/1UefyXBcyRJklqYAanh6OFlAeM8CAwEAAaOCAnYwggJyMA4GA1UdDwEB/wQEAwIGwDAVBgNVHSUEDjAMBgorBgEEAYI3CgMMMIIBUgYDVR0gBIIBSTCCAUUwggFBBgsrBgEEAah1gQYBATCCATAwNQYIKwYBBQUHAgEWKWh0dHA6Ly9vYi50cnVzdGlzLmNvbS9wcm9kdWN0aW9uL3BvbGljaWVzMIH2BggrBgEFBQcCAjCB6QyB5lRoaXMgQ2VydGlmaWNhdGUgaXMgc29sZWx5IGZvciB1c2Ugd2l0aCBPcGVuIEJhbmtpbmcgTGltaXRlZCBhbmQgYXNzb2NpYXRlZCBPcGVuIEJhbmtpbmcgU2VydmljZXMuIEl0cyByZWNlaXB0LCBwb3NzZXNzaW9uIG9yIHVzZSBjb25zdGl0dXRlcyBhY2NlcHRhbmNlIG9mIHRoZSBPcGVuIEJhbmtpbmcgTGltaXRlZCBDZXJ0aWZpY2F0ZSBQb2xpY3kgYW5kIHJlbGF0ZWQgZG9jdW1lbnRzIHRoZXJlaW4uMHIGCCsGAQUFBwEBBGYwZDAmBggrBgEFBQcwAYYaaHR0cDovL29iLnRydXN0aXMuY29tL29jc3AwOgYIKwYBBQUHMAKGLmh0dHA6Ly9vYi50cnVzdGlzLmNvbS9wcm9kdWN0aW9uL2lzc3VpbmdjYS5jcnQwPwYDVR0fBDgwNjA0oDKgMIYuaHR0cDovL29iLnRydXN0aXMuY29tL3Byb2R1Y3Rpb24vaXNzdWluZ2NhLmNybDAfBgNVHSMEGDAWgBSfSb9ONqesww8ryEf0HykbwHkLBTAdBgNVHQ4EFgQUPhPRHBA+0/hgB/JFfONE2RfqvwIwDQYJKoZIhvcNAQELBQADggEBAGD/K/SiD77akVK2TkpXbX59j7LN1z6YuvNt7DMO2aQSlaLStIy7EJGdLgzvjwbp7iX3aQ7YPy6KVvmxXDHeq2fxplbTlgZkKPfk79K49rdOp6Pv4MrmHSeE7BvOARsYG6JNxT7GDqxPnbFmiGWhm6ggezATuhz6PvR9gTaP2wRsLOVIoQyGqcYUMvz2amk1q/yxrujIWvavGZUPAtqwu8h2DPKHLkBMy6fNUkBzCwCBnI14NtaTVUythDbgpxHArLuawFfy5JxhUaX5vjww6Rh5VxC8jmdfG3VgdMoNBtMAAA8fswlPUw+SZt7Ny8wReA53HbRHk4eVAbpDT5FRviI=" ],
+
+    "x5t" : "4a5JNgM1JIwJ1OYUm9MAkGfWdD4=",
+
+    "x5u" : "https://keystore.openbanking.org.uk/0015800001ZEZ3hAAH/cEA_sKdvqmxM1GoZWa4j3q8s35M.pem",
+
+    "x5t#S256" : "Virfl296G_O9nwd9ArkX9xkiOJwoJN2rEyoMRZO9YEg="
+
+  }, {
+
+    "kid" : "Ef8lSnK_USlJQgHq0tzQ73j50_4",
+
+    "kty" : "RSA",
+
+    "n" : "rmW8Q8HOxM46pke9Zp0p2ya9RY6np1pvCms5Kl0cto5WWuoHh5W9ulZMKkU7RuqguQBxEbXocr0-gXw3sEmY5ndJSwV2aBVx7l6HFp86T04zce4GTczcJvq7R6N03SLKLgRTKxdifn0LQjqX170EcNcz_IuGCww1PilFluoVhc0ztUKG5rtNbtmnVtvhIfCAA4jEmIIghx4hWvk3IwNnjXhfq_Z90M_CcwsMXI4TlLPI4DDeUYd04pnJeOQLMo5tv1nPqjbfGk_eiPONLQ4deN6lztHK-wduo8xe-JoD0SeAMr4yjM-Llqe6v-n-ONXdQS5lr32ce4BfcmlSkax1bQ",
+
+    "e" : "AQAB",
+
+    "use" : "tls",
+
+    "x5c" : [ "MIIFpjCCBI6gAwIBAgIEWf/q+DANBgkqhkiG9w0BAQsFADBEMQswCQYDVQQGEwJHQjEUMBIGA1UEChMLT3BlbkJhbmtpbmcxHzAdBgNVBAMTFk9wZW5CYW5raW5nIElzc3VpbmcgQ0EwHhcNMjEwNDI5MTAzMTA4WhcNMjMwNDI5MTEwMTA4WjBhMQswCQYDVQQGEwJHQjEUMBIGA1UEChMLT3BlbkJhbmtpbmcxGzAZBgNVBAsTEjAwMTU4MDAwMDFaRVozaEFBSDEfMB0GA1UEAxMWNFNvVXMzM1ZYTXZIUlNuSURoc1ZwUjCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAK5lvEPBzsTOOqZHvWadKdsmvUWOp6dabwprOSpdHLaOVlrqB4eVvbpWTCpFO0bqoLkAcRG16HK9PoF8N7BJmOZ3SUsFdmgVce5ehxafOk9OM3HuBk3M3Cb6u0ejdN0iyi4EUysXYn59C0I6l9e9BHDXM/yLhgsMNT4pRZbqFYXNM7VChua7TW7Zp1bb4SHwgAOIxJiCIIceIVr5NyMDZ414X6v2fdDPwnMLDFyOE5SzyOAw3lGHdOKZyXjkCzKObb9Zz6o23xpP3ojzjS0OHXjepc7RyvsHbqPMXviaA9EngDK+MozPi5anur/p/jjV3UEuZa99nHuAX3JpUpGsdW0CAwEAAaOCAoEwggJ9MA4GA1UdDwEB/wQEAwIHgDAgBgNVHSUBAf8EFjAUBggrBgEFBQcDAQYIKwYBBQUHAwIwggFSBgNVHSAEggFJMIIBRTCCAUEGCysGAQQBqHWBBgEBMIIBMDA1BggrBgEFBQcCARYpaHR0cDovL29iLnRydXN0aXMuY29tL3Byb2R1Y3Rpb24vcG9saWNpZXMwgfYGCCsGAQUFBwICMIHpDIHmVGhpcyBDZXJ0aWZpY2F0ZSBpcyBzb2xlbHkgZm9yIHVzZSB3aXRoIE9wZW4gQmFua2luZyBMaW1pdGVkIGFuZCBhc3NvY2lhdGVkIE9wZW4gQmFua2luZyBTZXJ2aWNlcy4gSXRzIHJlY2VpcHQsIHBvc3Nlc3Npb24gb3IgdXNlIGNvbnN0aXR1dGVzIGFjY2VwdGFuY2Ugb2YgdGhlIE9wZW4gQmFua2luZyBMaW1pdGVkIENlcnRpZmljYXRlIFBvbGljeSBhbmQgcmVsYXRlZCBkb2N1bWVudHMgdGhlcmVpbi4wcgYIKwYBBQUHAQEEZjBkMCYGCCsGAQUFBzABhhpodHRwOi8vb2IudHJ1c3Rpcy5jb20vb2NzcDA6BggrBgEFBQcwAoYuaHR0cDovL29iLnRydXN0aXMuY29tL3Byb2R1Y3Rpb24vaXNzdWluZ2NhLmNydDA/BgNVHR8EODA2MDSgMqAwhi5odHRwOi8vb2IudHJ1c3Rpcy5jb20vcHJvZHVjdGlvbi9pc3N1aW5nY2EuY3JsMB8GA1UdIwQYMBaAFJ9Jv042p6zDDyvIR/QfKRvAeQsFMB0GA1UdDgQWBBRnQ3Xh8yQD4xa4XhZ3Amh5LgWLxjANBgkqhkiG9w0BAQsFAAOCAQEAlHnEE/YkppsDbw895aOyuE6qJPAQqWrpgemFGK+h10zDra1RPbNAP9wVl+Qp3OzS5G6cGiog96kFriyvoCfnLBDVqQCuxw3VcqkpEWluVTQwYqrfmxeWIhpfb3wumNblUxuidQQSONd30jz5knQ/QX2aR2a71WHvwi1kbMFTFa5kdSzYx9O+g/32dzj8LRGhWd/ge9DhKaV1vn2iqCMcJB1GBS1OkLaUhYo6dbHQJ2+ioSCvzTtRm1nTCWG0w4zJdSLUbS2S3GKFtxVw3vqoQym/+Hk+pi5R4nYqpRTYbblhf7cfLAHR/L0GffTV785tDFyKQoICkGUkpY49ShdMDA==" ],
+
+    "x5t" : "RZNrAxs4lJv06scs-r9geotWQtQ=",
+
+    "x5u" : "https://keystore.openbanking.org.uk/0015800001ZEZ3hAAH/Ef8lSnK_USlJQgHq0tzQ73j50_4.pem",
+
+    "x5t#S256" : "CNZr5og369iIuHhEXUMnv9SxxQqjiPrfh5K8UWLRmvA="
+
+  }, {
+
+    "kid" : "oHdrQ1g3b30JpNooxqa1vz2asw4",
+
+    "kty" : "RSA",
+
+    "n" : "swl9JkKKMyU2jxicXVaUvodFbA2mtyG6D0ucZ7xBmr3KswtL3sUaRx9z4mwzAiPAp1nMFsuhHLWuE6j5xidaw3v8d2Eh5n6PAyGatWarhBsJcelDPVX1ZUT-xzGTnkZSOue9LKwVOEvQ9bPUnusPJENv0g8oMLiykxEptagAYbAN7fzZPBEs3VTIrWWjMr0EoNFSA7u76ztCO08QP6kbSmc7wIsnoQofpK11m4UDKN0GVB8zujQOeGvgLTZObXTvqLvaTHE5T8tejmadLz72pFlq0JmYkMEIv1I9i7fQ8h0IiE_tQX16yRrP-gh-TOSvdZ3SAS8YNLESuSc1YeGwMQ",
+
+    "e" : "AQAB",
+
+    "use" : "sig",
+
+    "x5c" : [ "MIIFmzCCBIOgAwIBAgIEWf/q+TANBgkqhkiG9w0BAQsFADBEMQswCQYDVQQGEwJHQjEUMBIGA1UEChMLT3BlbkJhbmtpbmcxHzAdBgNVBAMTFk9wZW5CYW5raW5nIElzc3VpbmcgQ0EwHhcNMjEwNDI5MTAzMTU0WhcNMjIwNTI5MTEwMTU0WjBhMQswCQYDVQQGEwJHQjEUMBIGA1UEChMLT3BlbkJhbmtpbmcxGzAZBgNVBAsTEjAwMTU4MDAwMDFaRVozaEFBSDEfMB0GA1UEAxMWNFNvVXMzM1ZYTXZIUlNuSURoc1ZwUjCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBALMJfSZCijMlNo8YnF1WlL6HRWwNprchug9LnGe8QZq9yrMLS97FGkcfc+JsMwIjwKdZzBbLoRy1rhOo+cYnWsN7/HdhIeZ+jwMhmrVmq4QbCXHpQz1V9WVE/scxk55GUjrnvSysFThL0PWz1J7rDyRDb9IPKDC4spMRKbWoAGGwDe382TwRLN1UyK1lozK9BKDRUgO7u+s7QjtPED+pG0pnO8CLJ6EKH6StdZuFAyjdBlQfM7o0Dnhr4C02Tm1076i72kxxOU/LXo5mnS8+9qRZatCZmJDBCL9SPYu30PIdCIhP7UF9eskaz/oIfkzkr3Wd0gEvGDSxErknNWHhsDECAwEAAaOCAnYwggJyMA4GA1UdDwEB/wQEAwIGwDAVBgNVHSUEDjAMBgorBgEEAYI3CgMMMIIBUgYDVR0gBIIBSTCCAUUwggFBBgsrBgEEAah1gQYBATCCATAwNQYIKwYBBQUHAgEWKWh0dHA6Ly9vYi50cnVzdGlzLmNvbS9wcm9kdWN0aW9uL3BvbGljaWVzMIH2BggrBgEFBQcCAjCB6QyB5lRoaXMgQ2VydGlmaWNhdGUgaXMgc29sZWx5IGZvciB1c2Ugd2l0aCBPcGVuIEJhbmtpbmcgTGltaXRlZCBhbmQgYXNzb2NpYXRlZCBPcGVuIEJhbmtpbmcgU2VydmljZXMuIEl0cyByZWNlaXB0LCBwb3NzZXNzaW9uIG9yIHVzZSBjb25zdGl0dXRlcyBhY2NlcHRhbmNlIG9mIHRoZSBPcGVuIEJhbmtpbmcgTGltaXRlZCBDZXJ0aWZpY2F0ZSBQb2xpY3kgYW5kIHJlbGF0ZWQgZG9jdW1lbnRzIHRoZXJlaW4uMHIGCCsGAQUFBwEBBGYwZDAmBggrBgEFBQcwAYYaaHR0cDovL29iLnRydXN0aXMuY29tL29jc3AwOgYIKwYBBQUHMAKGLmh0dHA6Ly9vYi50cnVzdGlzLmNvbS9wcm9kdWN0aW9uL2lzc3VpbmdjYS5jcnQwPwYDVR0fBDgwNjA0oDKgMIYuaHR0cDovL29iLnRydXN0aXMuY29tL3Byb2R1Y3Rpb24vaXNzdWluZ2NhLmNybDAfBgNVHSMEGDAWgBSfSb9ONqesww8ryEf0HykbwHkLBTAdBgNVHQ4EFgQUtSwcLQapMgwNjHZo6CO+K4m1u5AwDQYJKoZIhvcNAQELBQADggEBAJ/Xr3ADPfiC3td04HFTNV84scPfVs0/EWNiK2t5+OiIkby4SFsiWMS8+sHRFY7L53dst4GYtt2bbipKywIQrOYvFt3ktZfUnu7Kqkxd66T50l4ulkSfLf/bIvTTgHm0yYnlAspXF4LlvqYrM6FbRl0Jo0amhmZU91y4nEHKes4vBt9BjiDV8Bv//hcD/xo0fwyFRZ7aIFYL/dr15z2zws56d7gjUmeSBS2THyBTPFi3S+rdbevju/NUyUdEFpvlnMCbAnpeVl43xFyx/pDiO0ztvDP7lmFu1xKpvJ7KOdO2ZqosE4oE5O+U9UkZDOAvjZEbS07pvX1RLE8dM+wPtus=" ],
+
+    "x5t" : "TZWt-_52CrG2MEruIwuug57Ulc0=",
+
+    "x5u" : "https://keystore.openbanking.org.uk/0015800001ZEZ3hAAH/oHdrQ1g3b30JpNooxqa1vz2asw4.pem",
+
+    "x5t#S256" : "o73HHJQ3ti0rBcULZEQpnxCAUTTIqAQzjMauGiWVyEo="
+
+  } ]
+
+}
+
+
+REQUEST 6 MATCH STATE7
+GET https://apis.tsb.co.uk/apis/open-banking/v3.1/pisp/domestic-payment-consents/25d96aca-c0cf-4b4f-bfbe-7a83668ad33b/funds-confirmation
+Accept: application/json
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+RESPONSE 6
+200
+Date: Fri, 30 Apr 2021 10:50:19 GMT
+Date: Fri, 30 Apr 2021 10:50:20 GMT
+Content-Type: application/json;charset=utf-8
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+{
+    "Data": {
+        "FundsAvailableResult": {
+            "FundsAvailable": true, 
+            "FundsAvailableDateTime": "2021-04-30T11:50:20.083+01:00"
+        }
+    }, 
+    "Links": {
+        "Self": "https://apis.tsb.co.uk/apis/open-banking/v3.1/pisp/domestic-payment-consents/25d96aca-c0cf-4b4f-bfbe-7a83668ad33b/funds-confirmation"
+    }, 
+    "Meta": {}
+}
+
+REQUEST 7
+POST https://apis.tsb.co.uk/apis/open-banking/v3.1/pisp/domestic-payments
+Accept: application/json
+Content-Type: application/json; charset=UTF-8
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+{
+    "Data": {
+        "ConsentId": "25d96aca-c0cf-4b4f-bfbe-7a83668ad33b", 
+        "Initiation": {
+            "CreditorAccount": {
+                "Identification": "12345612345678",
+                "Name": "Dummy Name",
+                "SchemeName": "UK.OBIE.SortCodeAccountNumber"
+            }, 
+            "EndToEndIdentification": "39d4319a6b4c46d3a9c227966a10ba5", 
+            "InstructedAmount": {
+                "Amount": "166.00", 
+                "Currency": "GBP"
+            }, 
+            "InstructionIdentification": "39d4319a6b4c46d3a9c227966a10ba57", 
+            "RemittanceInformation": {
+                "Reference": "WEALTHIFYJEANPN"
+            }
+        }
+    }, 
+    "Risk": {
+        "PaymentContextCode": "Other"
+    }
+}
+
+RESPONSE 7
+201
+Date: Fri, 30 Apr 2021 10:50:20 GMT
+Date: Fri, 30 Apr 2021 10:50:22 GMT
+Content-Type: application/json;charset=utf-8
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+{
+    "Data": {
+        "Charges": [], 
+        "ConsentId": "25d96aca-c0cf-4b4f-bfbe-7a83668ad33b", 
+        "CreationDateTime": "2021-04-30T11:50:22.787372+01:00", 
+        "DomesticPaymentId": "23ed4e39-e6fe-41d1-b255-ffb38eb88bc6", 
+        "ExpectedExecutionDateTime": "2021-04-30T11:50:23.222879+01:00", 
+        "ExpectedSettlementDateTime": "2021-04-30T11:50:23.222879+01:00", 
+        "Initiation": {
+            "CreditorAccount": {
+                "Identification": "12345612345678",
+                "Name": "Dummy Name",
+                "SchemeName": "UK.OBIE.SortCodeAccountNumber"
+            }, 
+            "EndToEndIdentification": "39d4319a6b4c46d3a9c227966a10ba5", 
+            "InstructedAmount": {
+                "Amount": "166.00", 
+                "Currency": "GBP"
+            }, 
+            "InstructionIdentification": "39d4319a6b4c46d3a9c227966a10ba57", 
+            "RemittanceInformation": {
+                "Reference": "WEALTHIFYJEANPN"
+            }
+        }, 
+        "Status": "AcceptedSettlementCompleted", 
+        "StatusUpdateDateTime": "2021-04-30T11:50:23.386+01:00"
+    }, 
+    "Links": {
+        "Self": "https://apis.tsb.co.uk/apis/open-banking/v3.1/pisp/domestic-payments/23ed4e39-e6fe-41d1-b255-ffb38eb88bc6"
+    }, 
+    "Meta": {}
+}
