@@ -154,12 +154,14 @@ public final class AbnAmroAgent extends AbstractAgent
     /** User is authenticated if we have a the customer number stored in the payload. */
     private boolean isAuthenticated() {
         if (persistentStorage.containsKey(STORAGE_BC_NUMBER)) {
+            log.info("[abnamro debug] Read bc number from persistent storage");
             return AbnAmroUtils.isValidBcNumberFormat(
                     persistentStorage.getOrDefault(STORAGE_BC_NUMBER, null));
         }
 
         // Fall back and migrate to persistent storage instead
         boolean result = AbnAmroUtils.isValidBcNumberFormat(credentials.getPayload());
+        log.info("[abnamro debug] Read bc number from credentials payload");
         persistentStorage.put(STORAGE_BC_NUMBER, credentials.getPayload());
         return result;
     }
