@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.se.creditcards.norwegian.authenticator;
 
 import java.util.Optional;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.bankid.status.BankIdStatus;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
@@ -19,6 +20,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
+@Slf4j
 public class NorwegianAuthenticator implements BankIdAuthenticator<OrderBankIdResponse> {
 
     private final NorwegianApiClient apiClient;
@@ -73,6 +75,7 @@ public class NorwegianAuthenticator implements BankIdAuthenticator<OrderBankIdRe
 
             String url = apiClient.completeLogin(callbackResponse);
             apiClient.signicatRedirect(url);
+            tryFetchIdentityData();
             return bankIdStatus;
         } catch (HttpResponseException e) {
             if (e.getResponse().getStatus() == HttpStatus.SC_CONFLICT) {
@@ -95,5 +98,14 @@ public class NorwegianAuthenticator implements BankIdAuthenticator<OrderBankIdRe
     @Override
     public Optional<OAuth2Token> refreshAccessToken(String refreshToken) {
         return Optional.empty();
+    }
+
+    private void tryFetchIdentityData() {
+        try {
+            log.info("Fetching identity data");
+            apiClient.fetchIdentityPage();
+        } catch (HttpResponseException hre) {
+            log.warn("Could not fetch identity data");
+        }
     }
 }
