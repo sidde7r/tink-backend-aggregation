@@ -104,6 +104,7 @@ public class CajamarConstants {
 
     public static final class SplitValues {
         public static final String NIF = "con N.I.F. ";
+        public static final String WITH_NIF = "with N.I.F.-FISCAL I.D. NUMBER - ";
         public static final String PASSPORT = "con PASAPORTE ";
         public static final String END_OF_DOCUMENT_ID = ", ";
         public static final String ADDITIONAL_PARSER = "Que según consta en nuestros archivos,";

@@ -57,10 +57,13 @@ public class CajamarIdentityDataFetcher implements IdentityDataFetcher {
             throw new IllegalStateException("Could not deserialize or decrypt extra", e);
         }
 
-        if (identityData.indexOf(SplitValues.NIF) != 0) {
+        if (identityData.contains(SplitValues.NIF)) {
             return builder.setNifNumber(getDocumentId(identityData, SplitValues.NIF));
         }
-        if (identityData.indexOf(SplitValues.PASSPORT) != 0) {
+        if (identityData.contains(SplitValues.WITH_NIF)) {
+            return builder.setNifNumber(getDocumentId(identityData, SplitValues.WITH_NIF));
+        }
+        if (identityData.contains(SplitValues.PASSPORT)) {
             return builder.setPassportNumber(getDocumentId(identityData, SplitValues.PASSPORT));
         }
         log.info(
