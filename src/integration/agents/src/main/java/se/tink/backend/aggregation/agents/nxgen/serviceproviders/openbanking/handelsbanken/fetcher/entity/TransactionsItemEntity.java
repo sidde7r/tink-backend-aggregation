@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.time.LocalDate;
-import java.util.Objects;
 import lombok.Getter;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.ObjectUtils;
@@ -23,15 +22,19 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 @Getter
 public class TransactionsItemEntity {
 
+    /** The date on which the transaction is recorded in the account. Only available for SE. */
     @JsonDeserialize(using = LocalDateDeserializer.class)
     private LocalDate ledgerDate;
 
+    /** The date on which a transaction is booked on the account. Only available for FI. */
     @JsonDeserialize(using = LocalDateDeserializer.class)
     private LocalDate bookingDate;
 
+    /** The date on which the transaction took place. Only available for SE. */
     @JsonDeserialize(using = LocalDateDeserializer.class)
     private LocalDate transactionDate;
 
+    /** The date the transaction debits/credits the account. Only available for UK. */
     @JsonDeserialize(using = LocalDateDeserializer.class)
     private LocalDate valueDate;
 
@@ -80,21 +83,24 @@ public class TransactionsItemEntity {
     private TransactionDates getTinkTransactionDates() {
         TransactionDates.Builder builder = TransactionDates.builder();
 
-        builder.setValueDate(new AvailableDateInformation().setDate(getTinkValueDate()));
+        if (valueDate != null) {
+            builder.setValueDate(new AvailableDateInformation().setDate(valueDate));
+        }
 
-        if (Objects.nonNull(bookingDate)) {
-            builder.setBookingDate(new AvailableDateInformation().setDate(bookingDate));
+        LocalDate tinkBookingDate = getTinkBookingDate();
+        if (tinkBookingDate != null) {
+            builder.setBookingDate(new AvailableDateInformation().setDate(tinkBookingDate));
         }
 
         return builder.build();
     }
 
     /**
-     * transactionDate is not set for all transactions. In those cases valueDate corresponds to what
-     * we classify as value date at Tink so we use that instead.
+     * Booking date is only available in FI. Ledger date is only available in SE. Ledger date is
+     * another term for booking date so both are treated as Tink booking dates.
      */
-    private LocalDate getTinkValueDate() {
-        return Objects.nonNull(ledgerDate) ? ledgerDate : transactionDate;
+    private LocalDate getTinkBookingDate() {
+        return bookingDate != null ? bookingDate : ledgerDate;
     }
 
     @JsonIgnore
