@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.time.LocalDate;
 import java.util.Objects;
+import lombok.Getter;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
@@ -19,76 +20,39 @@ import se.tink.libraries.chrono.AvailableDateInformation;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @JsonObject
+@Getter
 public class TransactionsItemEntity {
+
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    private LocalDate ledgerDate;
+
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    private LocalDate bookingDate;
+
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    private LocalDate transactionDate;
+
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    private LocalDate valueDate;
+
+    @JsonAlias("transactionDetails")
+    private String remittanceInformation;
 
     @JsonProperty("amount")
     @JsonAlias("transactionAmount")
     private TransactionAmountEntity transactionAmountEntity;
 
-    @JsonDeserialize(using = LocalDateDeserializer.class)
-    private LocalDate ledgerDate;
-
     private String creditorName;
-
     private BalanceEntity balanceEntity;
-
-    @JsonAlias("transactionDetails")
-    private String remittanceInformation;
-
-    @JsonDeserialize(using = LocalDateDeserializer.class)
-    private LocalDate bookingDate;
-
     private String debtorName;
-
-    @JsonDeserialize(using = LocalDateDeserializer.class)
-    private LocalDate valueDate;
-
     private String creditDebit;
-
-    @JsonDeserialize(using = LocalDateDeserializer.class)
-    private LocalDate transactionDate;
-
     private String status;
-
-    public String getCreditorName() {
-        return creditorName;
-    }
-
-    public BalanceEntity getBalanceEntity() {
-        return balanceEntity;
-    }
-
-    public String getRemittanceInformation() {
-        return remittanceInformation;
-    }
-
-    public LocalDate getBookingDate() {
-        return bookingDate;
-    }
 
     public Boolean hasDate() {
         return ledgerDate != null || transactionDate != null || valueDate != null;
     }
 
-    public String getDebtorName() {
-        return debtorName;
-    }
-
-    @JsonDeserialize(using = LocalDateDeserializer.class)
-    public LocalDate getValueDate() {
-        return valueDate;
-    }
-
-    @JsonDeserialize(using = LocalDateDeserializer.class)
-    public LocalDate getTransactionDate() {
-        return transactionDate;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    protected ExactCurrencyAmount creditOrDebit() {
+    protected ExactCurrencyAmount getTinkAmount() {
         return HandelsbankenBaseConstants.Transactions.CREDITED.equalsIgnoreCase(creditDebit)
                 ? transactionAmountEntity.getAmount()
                 : transactionAmountEntity.getAmount().negate();
@@ -99,21 +63,21 @@ public class TransactionsItemEntity {
         return (Transaction)
                 Transaction.builder()
                         .setDate(ObjectUtils.firstNonNull(ledgerDate, transactionDate, valueDate))
-                        .setAmount(creditOrDebit())
+                        .setAmount(getTinkAmount())
                         .setDescription(remittanceInformation)
                         .setPending(
                                 HandelsbankenBaseConstants.Transactions.IS_PENDING.equalsIgnoreCase(
                                         status))
                         .setPayload(
                                 TransactionPayloadTypes.DETAILS,
-                                SerializationUtils.serializeToString(getTransactionDetails()))
+                                SerializationUtils.serializeToString(getTinkTransactionDetails()))
                         .setProprietaryFinancialInstitutionType(creditDebit)
-                        .setTransactionDates(getTransactionDates())
+                        .setTransactionDates(getTinkTransactionDates())
                         .setProviderMarket(providerMarket)
                         .build();
     }
 
-    private TransactionDates getTransactionDates() {
+    private TransactionDates getTinkTransactionDates() {
         TransactionDates.Builder builder = TransactionDates.builder();
 
         builder.setValueDate(new AvailableDateInformation().setDate(getTinkValueDate()));
@@ -134,7 +98,7 @@ public class TransactionsItemEntity {
     }
 
     @JsonIgnore
-    public TransactionDetails getTransactionDetails() {
+    public TransactionDetails getTinkTransactionDetails() {
         return new TransactionDetails(StringUtils.EMPTY, StringUtils.EMPTY);
     }
 }

@@ -13,12 +13,12 @@ public class FiTransactionsItemEntity extends TransactionsItemEntity {
     public Transaction toTinkTransaction(String providerMarket) {
         return Transaction.builder()
                 .setDate(getBookingDate())
-                .setAmount(creditOrDebit())
+                .setAmount(getTinkAmount())
                 .setDescription(getRemittanceInformation())
                 .setPending(false)
                 .setPayload(
                         TransactionPayloadTypes.DETAILS,
-                        SerializationUtils.serializeToString(getTransactionDetails()))
+                        SerializationUtils.serializeToString(getTinkTransactionDetails()))
                 .build();
     }
 
