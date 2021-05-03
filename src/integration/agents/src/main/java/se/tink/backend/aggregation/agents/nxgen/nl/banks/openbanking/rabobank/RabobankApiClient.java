@@ -230,7 +230,7 @@ public final class RabobankApiClient {
             final Date fromDate,
             final Date toDate,
             final boolean isSandbox) {
-        final String accountId = account.getFromTemporaryStorage(StorageKey.RESOURCE_ID);
+        final String accountId = account.getApiIdentifier();
         final URL url = rabobankConfiguration.getUrls().buildTransactionsUrl(accountId);
 
         // Stop fetching if fromDate is older than 8 years from current (Rabobank specification).
