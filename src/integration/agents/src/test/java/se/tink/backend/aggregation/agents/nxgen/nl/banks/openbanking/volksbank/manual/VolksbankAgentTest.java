@@ -56,15 +56,6 @@ public final class VolksbankAgentTest {
     }
 
     @Test
-    public void testSnsBankContinuously() throws Exception {
-        for (int i = 0; i < 100; i++) {
-            System.out.println(String.format("Attempt number %d...", i));
-            createAgentTest("nl-snsbank-oauth2").testRefresh();
-            Thread.sleep(1000);
-        }
-    }
-
-    @Test
     public void testAsnBank() throws Exception {
         createAgentTest("nl-asnbank-oauth2").testRefresh();
     }
