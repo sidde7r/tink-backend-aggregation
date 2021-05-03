@@ -1,6 +1,6 @@
 java_library(
-    name = "storage",
-    srcs = glob(["**/*.java"]),
+    name = "agent-storage",
+    srcs = glob(["*.java"]),
     visibility = ["//visibility:public"],
     deps = [
         "//src/libraries/serialization",

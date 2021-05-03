@@ -20,6 +20,7 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryCo
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.UpdateController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.TransactionPaginationHelper;
+import se.tink.backend.aggregation.nxgen.controllers.session.CredentialsPersistence;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
@@ -201,10 +202,8 @@ public abstract class SubsequentGenerationAgent<Auth> extends SuperAbstractAgent
         if (sessionController == null) {
             sessionController =
                     new SessionController(
-                            client,
-                            persistentStorage,
-                            sessionStorage,
-                            credentials,
+                            new CredentialsPersistence(
+                                    persistentStorage, sessionStorage, credentials, client),
                             constructSessionHandler());
         }
         return sessionController;

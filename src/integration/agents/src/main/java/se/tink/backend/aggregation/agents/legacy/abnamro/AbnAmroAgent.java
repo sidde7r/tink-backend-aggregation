@@ -49,6 +49,9 @@ import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.integrations.abnamro.AbnAmroConfiguration;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
+import se.tink.backend.aggregation.nxgen.controllers.session.CredentialsPersistence;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.RefreshableItem;
@@ -66,10 +69,13 @@ public final class AbnAmroAgent extends AbstractAgent
     private static final Logger logger =
             LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private static final Minutes AUTHENTICATION_TIMEOUT = Minutes.minutes(5);
+    private static final String STORAGE_BC_NUMBER = "bcNumber";
 
     private final Credentials credentials;
     private final Catalog catalog;
     private final User user;
+    private final PersistentStorage persistentStorage;
+    private final CredentialsPersistence credentialsPersistence;
 
     private IBSubscriptionClient subscriptionClient;
     private EnrollmentClient enrollmentService;
@@ -86,6 +92,12 @@ public final class AbnAmroAgent extends AbstractAgent
         this.credentials = request.getCredentials();
         this.catalog = Catalog.getCatalog(user.getLocale());
         this.existingAccounts = request.getAccounts();
+
+        this.persistentStorage = new PersistentStorage();
+        this.credentialsPersistence =
+                new CredentialsPersistence(
+                        persistentStorage, new SessionStorage(), this.credentials, null);
+        this.credentialsPersistence.load();
     }
 
     @Override
@@ -131,12 +143,25 @@ public final class AbnAmroAgent extends AbstractAgent
 
     @Override
     public boolean login() throws Exception {
-        return isAuthenticated() || authenticateWithMobileBanking();
+        boolean result = isAuthenticated() || authenticateWithMobileBanking();
+
+        if (result) {
+            credentialsPersistence.store();
+        }
+        return result;
     }
 
     /** User is authenticated if we have a the customer number stored in the payload. */
     private boolean isAuthenticated() {
-        return AbnAmroUtils.isValidBcNumberFormat(credentials.getPayload());
+        if (persistentStorage.containsKey(STORAGE_BC_NUMBER)) {
+            return AbnAmroUtils.isValidBcNumberFormat(
+                    persistentStorage.getOrDefault(STORAGE_BC_NUMBER, null));
+        }
+
+        // Fall back and migrate to persistent storage instead
+        boolean result = AbnAmroUtils.isValidBcNumberFormat(credentials.getPayload());
+        persistentStorage.put(STORAGE_BC_NUMBER, credentials.getPayload());
+        return result;
     }
 
     /**
@@ -164,6 +189,8 @@ public final class AbnAmroAgent extends AbstractAgent
         credentials.setStatusPayload(null);
 
         if (bcNumber.isPresent()) {
+            persistentStorage.put(STORAGE_BC_NUMBER, bcNumber.get());
+            // continue to store on payload until persistent storage is proven to work
             credentials.setPayload(bcNumber.get());
             credentials.setStatus(CredentialsStatus.UPDATING);
         } else {
@@ -206,7 +233,7 @@ public final class AbnAmroAgent extends AbstractAgent
             return accounts;
         }
 
-        final String bcNumber = credentials.getPayload();
+        final String bcNumber = persistentStorage.get(STORAGE_BC_NUMBER);
 
         Preconditions.checkState(AbnAmroUtils.isValidBcNumberFormat(bcNumber));
         try {
@@ -259,7 +286,7 @@ public final class AbnAmroAgent extends AbstractAgent
             logger.info("Fetching ICS transactions for contract: {}", accountNumber);
         }
 
-        String bcNumber = credentials.getPayload();
+        String bcNumber = persistentStorage.get(STORAGE_BC_NUMBER);
 
         List<CreditCardAccountEntity> entities =
                 subscriptionClient.getCreditCardAccountAndTransactions(bcNumber, accountNumber)
