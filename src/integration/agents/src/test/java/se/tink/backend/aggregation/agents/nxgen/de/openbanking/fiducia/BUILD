@@ -16,7 +16,6 @@ junit_test(
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/lib",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/berlingroup",
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/supplementalfields",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/response",
         "//src/libraries/agent-storage",
         "//src/libraries/serialization",
