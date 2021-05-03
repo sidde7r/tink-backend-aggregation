@@ -6,6 +6,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Getter
 public class LansforsakringarUserIpInformation {
-    private final boolean manualRequest;
+    private final boolean userPresent;
     private final String userIp;
 }
