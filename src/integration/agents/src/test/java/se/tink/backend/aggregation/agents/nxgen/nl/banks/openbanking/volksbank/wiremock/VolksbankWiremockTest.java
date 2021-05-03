@@ -89,4 +89,42 @@ public class VolksbankWiremockTest {
         // then
         agentWireMockRefreshTest.assertExpectedData(expected);
     }
+
+    @Test
+    public void testRegioBankRefresh() throws Exception {
+
+        // given
+        final String configurationPath =
+                basePath + "volksbank/wiremock/resources/regiobank-config.yml";
+        final String wireMockServerFilePath =
+                basePath + "volksbank/wiremock/resources/nl-regiobank-ob-ais.aap";
+
+        final String contractFilePath =
+                basePath + "volksbank/wiremock/resources/regiobank-agent-contract.json";
+
+        final AgentsServiceConfiguration configuration =
+                AgentsServiceConfigurationReader.read(configurationPath);
+
+        final AgentWireMockRefreshTest agentWireMockRefreshTest =
+                AgentWireMockRefreshTest.nxBuilder()
+                        .withMarketCode(MarketCode.NL)
+                        .withProviderName("nl-regiobank-oauth2")
+                        .withWireMockFilePath(wireMockServerFilePath)
+                        .withConfigFile(configuration)
+                        .testFullAuthentication()
+                        .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
+                        .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
+                        .addCallbackData("code", "dummyCode")
+                        .build();
+
+        final AgentContractEntity expected =
+                new AgentContractEntitiesJsonFileParser()
+                        .parseContractOnBasisOfFile(contractFilePath);
+
+        // when
+        agentWireMockRefreshTest.executeRefresh();
+
+        // then
+        agentWireMockRefreshTest.assertExpectedData(expected);
+    }
 }
