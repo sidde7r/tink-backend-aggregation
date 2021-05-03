@@ -1251,12 +1251,6 @@ public final class SEBApiAgent extends AbstractAgent
     @Override
     public boolean login() throws AuthenticationException, AuthorizationException {
 
-        logger.info(
-                "Credentials contain - supplemental Information: {}",
-                credentials.getSupplementalInformation());
-        logger.info("Credentials contain - status payload: {}", credentials.getStatusPayload());
-        logger.info("Credentials contain - status: {}", credentials.getStatus());
-
         switch (credentials.getType()) {
             case MOBILE_BANKID:
                 final String csrfToken = initiateBankId();
@@ -1274,27 +1268,18 @@ public final class SEBApiAgent extends AbstractAgent
         userName = userinfo.USER_NAME;
         Preconditions.checkNotNull(customerId);
         Preconditions.checkNotNull(userId);
-        checkLoggedInCustomerId(customerId, userinfo.bankIdUserId);
+        checkLoggedInCustomerId(userinfo.bankIdUserId);
         return true;
     }
 
     // Make sure the user always logs in to the same login, and that it matches the provided SSN
     // to not mistakenly suddenly get the wrong transactions.
-    private void checkLoggedInCustomerId(String bankCustomerId, String loggedInSsn)
-            throws LoginException {
+    private void checkLoggedInCustomerId(String loggedInSsn) throws LoginException {
         final String credentialsSsn = credentials.getField(Field.Key.USERNAME);
         if (!credentialsSsn.equalsIgnoreCase(loggedInSsn)) {
             throw LoginError.NOT_CUSTOMER.exception(UserMessage.WRONG_BANKID.getKey());
         }
 
-        final String customerIdString = bankCustomerId;
-        final String previousCustomerId = credentials.getPayload();
-        if (previousCustomerId != null) {
-            if (!Objects.equal(customerIdString, previousCustomerId)) {
-                throw LoginError.NOT_CUSTOMER.exception(UserMessage.WRONG_BANKID.getKey());
-            }
-        }
-        credentials.setPayload(customerIdString);
         systemUpdater.updateCredentialsExcludingSensitiveInformation(credentials, false);
     }
 
