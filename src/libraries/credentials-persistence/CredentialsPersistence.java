@@ -6,6 +6,7 @@ import java.io.ObjectOutputStream;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import javax.annotation.Nullable;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
@@ -21,13 +22,13 @@ public final class CredentialsPersistence {
     private final PersistentStorage persistentStorage;
     private final SessionStorage sessionStorage;
     private final Credentials credentials;
-    private final TinkHttpClient httpClient;
+    @Nullable private final TinkHttpClient httpClient;
 
     public CredentialsPersistence(
             PersistentStorage persistentStorage,
             SessionStorage sessionStorage,
             Credentials credentials,
-            TinkHttpClient httpClient) {
+            @Nullable TinkHttpClient httpClient) {
         this.persistentStorage = persistentStorage;
         this.sessionStorage = sessionStorage;
         this.credentials = credentials;
@@ -35,8 +36,10 @@ public final class CredentialsPersistence {
     }
 
     public void store() {
-        // Store http client
-        credentials.setSensitivePayload(Field.Key.HTTP_CLIENT, httpClient.serialize());
+        if (httpClient != null) {
+            // Store http client
+            credentials.setSensitivePayload(Field.Key.HTTP_CLIENT, httpClient.serialize());
+        }
 
         // Store custom session values
         credentials.setSensitivePayload(
@@ -51,9 +54,11 @@ public final class CredentialsPersistence {
 
         // Load http client
         long start = System.nanoTime();
-        credentials
-                .getSensitivePayload(Field.Key.HTTP_CLIENT, SerializeContainer.class)
-                .ifPresent(httpClient::initialize);
+        if (httpClient != null) {
+            credentials
+                    .getSensitivePayload(Field.Key.HTTP_CLIENT, SerializeContainer.class)
+                    .ifPresent(httpClient::initialize);
+        }
         long stop = System.nanoTime();
         long total = stop - start;
         long initHttpClientTime = TimeUnit.SECONDS.convert(total, TimeUnit.NANOSECONDS);
@@ -102,8 +107,10 @@ public final class CredentialsPersistence {
     public void clear() {
         // Clear http client
         credentials.removeSensitivePayload(Field.Key.HTTP_CLIENT);
-        httpClient.clearCookies();
-        httpClient.clearPersistentHeaders();
+        if (httpClient != null) {
+            httpClient.clearCookies();
+            httpClient.clearPersistentHeaders();
+        }
 
         // Clear session
         credentials.removeSensitivePayload(Field.Key.SESSION_STORAGE);
