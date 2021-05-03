@@ -48,7 +48,6 @@ junit_test(
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/credentials/src/main/java/se/tink/libraries/credentials/service",
         "//src/integration/enums",
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions/bankservice",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/compliance/account_capabilities",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/refresh",

@@ -7,7 +7,6 @@ junit_test(
     ],
     visibility = ["//visibility:public"],
     deps = [
-        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/fropenbanking/base",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ingbase",
         "//src/integration/amount",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions",
