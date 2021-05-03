@@ -29,7 +29,7 @@ public final class NorwegianConstants {
         public static final String CREDIT_CARD_URL = BASE_URL + "MinSida/Creditcard/";
         public static final String CREDIT_CARD_OVERVIEW_URL =
                 BASE_URL + "api/mypage/creditcard/overview";
-        public static final String IDENTITY_URL = BASE_URL + "MinSida/Settings/ContactInfo";
+        public static final String IDENTITY_URL = BASE_URL + "api/v1/contactInfo";
         public static final String SAVINGS_ACCOUNTS_URL = BASE_URL + "MinSida/SavingsAccount/";
         public static final String CARD_TRANSACTION_URL = CREDIT_CARD_URL + "Transactions";
         public static final String SAVINGS_TRANSACTION_URL = SAVINGS_ACCOUNTS_URL + "Transactions";

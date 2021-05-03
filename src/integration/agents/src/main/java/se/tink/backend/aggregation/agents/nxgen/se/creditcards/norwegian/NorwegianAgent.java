@@ -1,21 +1,17 @@
 package se.tink.backend.aggregation.agents.nxgen.se.creditcards.norwegian;
 
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CREDIT_CARDS;
-import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.IDENTITY_DATA;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
 
 import com.google.inject.Inject;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
-import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
-import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.nxgen.se.creditcards.norwegian.authenticator.NorwegianAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.creditcards.norwegian.fetcher.creditcard.NorwegianCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.creditcards.norwegian.fetcher.creditcard.NorwegianDatePaginationController;
-import se.tink.backend.aggregation.agents.nxgen.se.creditcards.norwegian.fetcher.identity.NorwegianIdentityFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.creditcards.norwegian.fetcher.savingsaccount.NorwegianSavingsAccountFetcher;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
@@ -27,16 +23,13 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 
-@AgentCapabilities({SAVINGS_ACCOUNTS, CREDIT_CARDS, IDENTITY_DATA})
+@AgentCapabilities({SAVINGS_ACCOUNTS, CREDIT_CARDS})
 public final class NorwegianAgent extends NextGenerationAgent
-        implements RefreshCreditCardAccountsExecutor,
-                RefreshSavingsAccountsExecutor,
-                RefreshIdentityDataExecutor {
+        implements RefreshCreditCardAccountsExecutor, RefreshSavingsAccountsExecutor {
 
     private final NorwegianApiClient apiClient;
     private final CreditCardRefreshController creditCardRefreshController;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
-    private final NorwegianIdentityFetcher identityFetcher;
 
     @Inject
     public NorwegianAgent(AgentComponentProvider componentProvider) {
@@ -44,7 +37,6 @@ public final class NorwegianAgent extends NextGenerationAgent
         apiClient = new NorwegianApiClient(client);
         creditCardRefreshController = constructCreditCardRefreshController();
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
-        identityFetcher = new NorwegianIdentityFetcher(apiClient, request);
     }
 
     @Override
@@ -106,10 +98,5 @@ public final class NorwegianAgent extends NextGenerationAgent
     @Override
     public FetchTransactionsResponse fetchSavingsTransactions() {
         return transactionalAccountRefreshController.fetchSavingsTransactions();
-    }
-
-    @Override
-    public FetchIdentityDataResponse fetchIdentityData() {
-        return identityFetcher.fetchIdentityData();
     }
 }
