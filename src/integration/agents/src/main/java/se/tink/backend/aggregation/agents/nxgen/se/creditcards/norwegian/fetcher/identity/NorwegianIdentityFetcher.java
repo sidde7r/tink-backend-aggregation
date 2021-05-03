@@ -1,9 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.se.creditcards.norwegian.fetcher.identity;
 
-import java.util.NoSuchElementException;
 import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.creditcards.norwegian.NorwegianApiClient;
+import se.tink.backend.aggregation.agents.nxgen.se.creditcards.norwegian.fetcher.identity.rpc.ContactInfoResponse;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.identitydata.countries.SeIdentityData;
 
@@ -18,12 +18,10 @@ public class NorwegianIdentityFetcher {
     }
 
     public FetchIdentityDataResponse fetchIdentityData() {
-        String identityPage = apiClient.fetchIdentityPage();
-        String ssn = request.getCredentials().getField(Key.USERNAME);
+        final ContactInfoResponse contactInfo = apiClient.fetchContactInfo();
+        final String ssn = request.getCredentials().getField(Key.USERNAME);
 
-        return NorwegianIdentityUtils.parseAccountName(identityPage)
-                .map(name -> SeIdentityData.of(name, ssn))
-                .map(FetchIdentityDataResponse::new)
-                .orElseThrow(NoSuchElementException::new);
+        return new FetchIdentityDataResponse(
+                SeIdentityData.of(contactInfo.getFirstName(), contactInfo.getLastName(), ssn));
     }
 }
