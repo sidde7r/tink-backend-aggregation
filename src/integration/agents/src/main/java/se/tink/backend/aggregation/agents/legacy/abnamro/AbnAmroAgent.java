@@ -69,6 +69,7 @@ public final class AbnAmroAgent extends AbstractAgent
     private static final Logger logger =
             LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private static final Minutes AUTHENTICATION_TIMEOUT = Minutes.minutes(5);
+    private static final String STORAGE_BC_NUMBER = "bcNumber";
 
     private final Credentials credentials;
     private final Catalog catalog;
@@ -152,7 +153,15 @@ public final class AbnAmroAgent extends AbstractAgent
 
     /** User is authenticated if we have a the customer number stored in the payload. */
     private boolean isAuthenticated() {
-        return AbnAmroUtils.isValidBcNumberFormat(credentials.getPayload());
+        if (persistentStorage.containsKey(STORAGE_BC_NUMBER)) {
+            return AbnAmroUtils.isValidBcNumberFormat(
+                    persistentStorage.getOrDefault(STORAGE_BC_NUMBER, null));
+        }
+
+        // Fall back and migrate to persistent storage instead
+        boolean result = AbnAmroUtils.isValidBcNumberFormat(credentials.getPayload());
+        persistentStorage.put(STORAGE_BC_NUMBER, credentials.getPayload());
+        return result;
     }
 
     /**
@@ -180,6 +189,8 @@ public final class AbnAmroAgent extends AbstractAgent
         credentials.setStatusPayload(null);
 
         if (bcNumber.isPresent()) {
+            persistentStorage.put(STORAGE_BC_NUMBER, bcNumber.get());
+            // continue to store on payload until persistent storage is proven to work
             credentials.setPayload(bcNumber.get());
             credentials.setStatus(CredentialsStatus.UPDATING);
         } else {
@@ -222,7 +233,7 @@ public final class AbnAmroAgent extends AbstractAgent
             return accounts;
         }
 
-        final String bcNumber = credentials.getPayload();
+        final String bcNumber = persistentStorage.get(STORAGE_BC_NUMBER);
 
         Preconditions.checkState(AbnAmroUtils.isValidBcNumberFormat(bcNumber));
         try {
@@ -275,7 +286,7 @@ public final class AbnAmroAgent extends AbstractAgent
             logger.info("Fetching ICS transactions for contract: {}", accountNumber);
         }
 
-        String bcNumber = credentials.getPayload();
+        String bcNumber = persistentStorage.get(STORAGE_BC_NUMBER);
 
         List<CreditCardAccountEntity> entities =
                 subscriptionClient.getCreditCardAccountAndTransactions(bcNumber, accountNumber)
