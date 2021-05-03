@@ -1251,12 +1251,6 @@ public final class SEBApiAgent extends AbstractAgent
     @Override
     public boolean login() throws AuthenticationException, AuthorizationException {
 
-        logger.info(
-                "Credentials contain - supplemental Information: {}",
-                credentials.getSupplementalInformation());
-        logger.info("Credentials contain - status payload: {}", credentials.getStatusPayload());
-        logger.info("Credentials contain - status: {}", credentials.getStatus());
-
         switch (credentials.getType()) {
             case MOBILE_BANKID:
                 final String csrfToken = initiateBankId();
