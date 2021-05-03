@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.fetchers.credit;
 
-import java.sql.Date;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Optional;
@@ -9,6 +8,8 @@ import java.util.stream.Stream;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.ICSApiClient;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.fetchers.credit.entities.AccountDataEntity;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.fetchers.credit.entities.AccountEntity;
+import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.fetchers.credit.entities.CreditDataEntity;
+import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.fetchers.credit.entities.TransactionEntity;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.fetchers.credit.rpc.CreditAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.fetchers.credit.rpc.CreditTransactionsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
@@ -41,24 +42,19 @@ public class ICSAccountFetcher implements AccountFetcher<CreditCardAccount> {
     }
 
     private String getHolderName(String accountId) {
-        try {
-            CreditTransactionsResponse creditTransactionsResponse =
-                    client.getTransactionsByDate(
-                            accountId,
-                            Date.valueOf(LocalDate.now()),
-                            Date.valueOf(LocalDate.now().minusDays(30)));
-            if (creditTransactionsResponse.getData().getTransactions().stream()
-                    .findFirst()
-                    .isPresent()) {
-                return creditTransactionsResponse.getData().getTransactions().stream()
-                        .findFirst()
-                        .get()
-                        .getCreditCardHolderName();
-            } else {
-                return "N/A";
-            }
-        } catch (RuntimeException e) {
-            return "N/A";
-        }
+
+        CreditTransactionsResponse creditTransactionsResponse =
+                client.getTransactionsByDate(
+                        accountId, LocalDate.now(), LocalDate.now().minusDays(30));
+
+        return Optional.ofNullable(creditTransactionsResponse)
+                .map(CreditTransactionsResponse::getData)
+                .map(CreditDataEntity::getTransactions)
+                .map(Collection::stream)
+                .map(Stream::findFirst)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .map(TransactionEntity::getCreditCardHolderName)
+                .orElse(null);
     }
 }

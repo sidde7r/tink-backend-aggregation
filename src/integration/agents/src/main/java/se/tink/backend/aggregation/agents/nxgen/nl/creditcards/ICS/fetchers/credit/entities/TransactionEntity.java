@@ -104,6 +104,6 @@ public class TransactionEntity {
     }
 
     public String getCreditCardHolderName() {
-        return Optional.ofNullable(embossingName).orElse("N/A");
+        return embossingName;
     }
 }
