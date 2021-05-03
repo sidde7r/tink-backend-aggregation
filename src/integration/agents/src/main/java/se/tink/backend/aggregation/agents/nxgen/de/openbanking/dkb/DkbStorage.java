@@ -1,7 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeParseException;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +15,8 @@ public class DkbStorage {
     private static final String XSRF_TOKEN_KEY = "XSRF_TOKEN_KEY";
     private static final String ACCESS_TOKEN_KEY = "ACCESS_TOKEN_KEY";
     private static final String CONSENT_ID_KEY = "CONSENT_KEY";
-    private static final String CONSENT_CREATION_TIMESTAMP = "TIMESTAMP";
+    private static final String FIRST_FETCH_FLAG = "firstFetch";
+    private static final String DONE = "done";
 
     private final PersistentStorage persistentStorage;
 
@@ -51,29 +50,17 @@ public class DkbStorage {
 
     public void setConsentId(String consent) {
         persistentStorage.put(CONSENT_ID_KEY, consent);
-        storeConsentCreationTime();
     }
 
     public Optional<String> getConsentId() {
         return persistentStorage.get(CONSENT_ID_KEY, String.class);
     }
 
-    public void storeConsentCreationTime() {
-        persistentStorage.put(CONSENT_CREATION_TIMESTAMP, LocalDateTime.now().toString());
+    public boolean isFirstFetch() {
+        return !DONE.equals(persistentStorage.get(FIRST_FETCH_FLAG));
     }
 
-    public Optional<LocalDateTime> getConsentCreationTime() {
-        return persistentStorage
-                .get(CONSENT_CREATION_TIMESTAMP, String.class)
-                .map(this::deserializeConsentCreationTime);
-    }
-
-    private LocalDateTime deserializeConsentCreationTime(String consentCreationTime) {
-        try {
-            return LocalDateTime.parse(consentCreationTime);
-        } catch (DateTimeParseException e) {
-            log.warn("Could not parse consent creation time: " + consentCreationTime);
-            return null;
-        }
+    public void markFirstFetchAsDone() {
+        persistentStorage.put(FIRST_FETCH_FLAG, DONE);
     }
 }
