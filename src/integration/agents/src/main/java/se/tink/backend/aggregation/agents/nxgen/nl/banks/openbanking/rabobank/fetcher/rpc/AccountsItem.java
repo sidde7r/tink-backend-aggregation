@@ -8,7 +8,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants;
-import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.StorageKey;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.entity.Party;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
@@ -63,7 +62,6 @@ public class AccountsItem {
                                 .build())
                 .setApiIdentifier(resourceId)
                 .addParties(getParties())
-                .putInTemporaryStorage(StorageKey.RESOURCE_ID, getResourceId())
                 .build();
     }
 
