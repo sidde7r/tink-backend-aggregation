@@ -116,7 +116,7 @@ public class LansforsakringarApiClient {
 
     private void setPsuIp(RequestBuilder builder) {
         // LF API does not want to receive PSU_IP_ADDRESS for BG Refreshes
-        if (userIpInformation.isManualRequest()) {
+        if (userIpInformation.isUserPresent()) {
             builder.header(HeaderKeys.PSU_IP_ADDRESS, userIpInformation.getUserIp());
         }
     }
@@ -289,7 +289,7 @@ public class LansforsakringarApiClient {
 
     private String getDateFromForTransactions(LocalDateTimeSource localDateTimeSource) {
         LocalDateTime now = localDateTimeSource.now();
-        if (userIpInformation.isManualRequest()) {
+        if (userIpInformation.isUserPresent()) {
             now = now.minusMonths(LansforsakringarConstants.MONTHS_TO_FETCH);
         } else {
             now = now.minusDays(LansforsakringarConstants.DAYS_TO_FETCH_BG);
@@ -384,7 +384,7 @@ public class LansforsakringarApiClient {
     public Optional<AccountNumbersResponse> getAccountNumbers() {
         // Return stored account numbers if user isn't present. Can't call endpoint due to PSU IP
         // address being required.
-        if (!userIpInformation.isManualRequest()) {
+        if (!userIpInformation.isUserPresent()) {
             return storageHelper.getStoredAccountNumbers();
         }
 

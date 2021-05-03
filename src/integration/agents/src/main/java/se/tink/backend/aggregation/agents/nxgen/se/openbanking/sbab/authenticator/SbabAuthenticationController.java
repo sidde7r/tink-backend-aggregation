@@ -38,7 +38,7 @@ public class SbabAuthenticationController implements Authenticator {
             throw SessionError.SESSION_EXPIRED.exception();
         }
 
-        if (request.isManual()) {
+        if (request.getUserAvailability().isUserAvailableForInteraction()) {
             bankIdAuthenticationController.authenticate(credentials);
         } else {
             bankIdAuthenticationController.autoAuthenticate();

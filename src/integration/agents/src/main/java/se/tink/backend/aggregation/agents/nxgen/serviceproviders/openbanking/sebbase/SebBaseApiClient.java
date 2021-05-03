@@ -26,16 +26,19 @@ import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestB
 import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.TimeoutRetryFilter;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public abstract class SebBaseApiClient {
 
     protected final TinkHttpClient client;
     protected final PersistentStorage persistentStorage;
+    protected final CredentialsRequest credentialsRequest;
     protected SebConfiguration configuration;
-    private boolean isManualRequest;
 
     public SebBaseApiClient(
-            TinkHttpClient client, PersistentStorage persistentStorage, boolean isManualRequest) {
+            TinkHttpClient client,
+            PersistentStorage persistentStorage,
+            CredentialsRequest credentialsRequest) {
         this.client = client;
         this.persistentStorage = persistentStorage;
         client.addFilter(new SebBankFailureFilter());
@@ -43,7 +46,7 @@ public abstract class SebBaseApiClient {
                 new TimeoutRetryFilter(
                         HttpClient.NO_RESPONSE_MAX_RETRIES,
                         HttpClient.NO_RESPONSE_SLEEP_MILLISECONDS));
-        this.isManualRequest = isManualRequest;
+        this.credentialsRequest = credentialsRequest;
     }
 
     public void setConfiguration(SebConfiguration configuration) {
@@ -118,7 +121,7 @@ public abstract class SebBaseApiClient {
                                 Psd2Headers.getRequestId())
                         .addBearerToken(getTokenFromStorage());
 
-        if (isManualRequest) {
+        if (credentialsRequest.getUserAvailability().isUserPresent()) {
             requestBuilder.header(
                     SebCommonConstants.HeaderKeys.PSU_IP_ADDRESS,
                     SebCommonConstants.getPsuIpAddress());

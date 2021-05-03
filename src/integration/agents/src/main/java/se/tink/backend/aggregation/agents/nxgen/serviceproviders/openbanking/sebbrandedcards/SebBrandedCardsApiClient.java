@@ -17,6 +17,7 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class SebBrandedCardsApiClient extends SebBaseApiClient {
 
@@ -26,8 +27,8 @@ public class SebBrandedCardsApiClient extends SebBaseApiClient {
             TinkHttpClient client,
             PersistentStorage persistentStorage,
             String brandId,
-            boolean isManualRefresh) {
-        super(client, persistentStorage, isManualRefresh);
+            CredentialsRequest credentialsRequest) {
+        super(client, persistentStorage, credentialsRequest);
         this.brandId = brandId;
     }
 

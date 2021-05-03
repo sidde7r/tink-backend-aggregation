@@ -105,7 +105,8 @@ public final class LansforsakringarAgent extends NextGenerationAgent
     }
 
     private LansforsakringarUserIpInformation getUserIpInformation() {
-        return new LansforsakringarUserIpInformation(request.isManual(), userIp);
+        return new LansforsakringarUserIpInformation(
+                request.getUserAvailability().isUserPresent(), userIp);
     }
 
     private void setAgentConfiguration() {

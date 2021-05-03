@@ -59,7 +59,7 @@ public final class SebAgent extends SebBaseAgent<SebApiClient>
     public SebAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
         configureHttpClient(client);
-        this.apiClient = new SebApiClient(client, persistentStorage, request.isManual());
+        this.apiClient = new SebApiClient(client, persistentStorage, request);
         this.instanceStorage = new SebStorage();
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
         creditCardRefreshController =
