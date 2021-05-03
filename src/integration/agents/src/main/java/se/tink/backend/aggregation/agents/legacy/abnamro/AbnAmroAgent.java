@@ -49,6 +49,9 @@ import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.integrations.abnamro.AbnAmroConfiguration;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
+import se.tink.backend.aggregation.nxgen.controllers.session.CredentialsPersistence;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.RefreshableItem;
@@ -70,6 +73,8 @@ public final class AbnAmroAgent extends AbstractAgent
     private final Credentials credentials;
     private final Catalog catalog;
     private final User user;
+    private final PersistentStorage persistentStorage;
+    private final CredentialsPersistence credentialsPersistence;
 
     private IBSubscriptionClient subscriptionClient;
     private EnrollmentClient enrollmentService;
@@ -86,6 +91,12 @@ public final class AbnAmroAgent extends AbstractAgent
         this.credentials = request.getCredentials();
         this.catalog = Catalog.getCatalog(user.getLocale());
         this.existingAccounts = request.getAccounts();
+
+        this.persistentStorage = new PersistentStorage();
+        this.credentialsPersistence =
+                new CredentialsPersistence(
+                        persistentStorage, new SessionStorage(), this.credentials, null);
+        this.credentialsPersistence.load();
     }
 
     @Override
@@ -131,7 +142,12 @@ public final class AbnAmroAgent extends AbstractAgent
 
     @Override
     public boolean login() throws Exception {
-        return isAuthenticated() || authenticateWithMobileBanking();
+        boolean result = isAuthenticated() || authenticateWithMobileBanking();
+
+        if (result) {
+            credentialsPersistence.store();
+        }
+        return result;
     }
 
     /** User is authenticated if we have a the customer number stored in the payload. */
