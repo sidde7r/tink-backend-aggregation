@@ -77,15 +77,6 @@ public interface SupplementalInformationController {
     String openThirdPartyAppAsync(ThirdPartyAppAuthenticationPayload payload);
 
     /**
-     * Starts a decoupled dynamic authentication flow with Mobile BankID. This methods does the same
-     * as {@link SupplementalInformationController#openMobileBankIdSync}, but also starts waiting
-     * synchronously.
-     *
-     * @param autoStartToken it is possible to supply null
-     */
-    void openMobileBankIdSync(String autoStartToken);
-
-    /**
      * Starts a decoupled dynamic authentication flow with Mobile BankID. Requests the client to
      * open the decoupled Mobile BankId app. This should probably be deprecated and the generic
      * {@link SupplementalInformationController#openThirdPartyAppAsync} should be used instead.

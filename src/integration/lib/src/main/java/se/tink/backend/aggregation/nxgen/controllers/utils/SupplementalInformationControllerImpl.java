@@ -29,7 +29,6 @@ public class SupplementalInformationControllerImpl implements SupplementalInform
 
     private static final String UNIQUE_PREFIX_TPCB = "tpcb_%s";
     private static final int TIMEOUT_MINUTES_EMBEDDED_FIELDS = 5;
-    private static final int TIMEOUT_MINUTES_MOBILE_BANKID = 5;
 
     private final SupplementalRequester supplementalRequester;
     private final Credentials credentials;
@@ -171,14 +170,6 @@ public class SupplementalInformationControllerImpl implements SupplementalInform
         supplementalRequester.requestSupplementalInformation(mfaId, credentials);
 
         return mfaId;
-    }
-
-    @Override
-    public void openMobileBankIdSync(String autoStartToken) {
-        String mfaId = openMobileBankIdAsync(autoStartToken);
-
-        supplementalRequester.waitForSupplementalInformation(
-                mfaId, TIMEOUT_MINUTES_MOBILE_BANKID, TimeUnit.MINUTES, initiator);
     }
 
     @Override

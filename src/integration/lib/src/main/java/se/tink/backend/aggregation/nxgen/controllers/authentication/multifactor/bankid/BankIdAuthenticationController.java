@@ -30,6 +30,8 @@ import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformati
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsRequestType;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.UserAvailability;
 
 public class BankIdAuthenticationController<T> implements AutoAuthenticator, TypedAuthenticator {
@@ -41,83 +43,28 @@ public class BankIdAuthenticationController<T> implements AutoAuthenticator, Typ
 
     private final BankIdAuthenticator<T> authenticator;
     private final SupplementalInformationController supplementalInformationController;
-    private final boolean waitOnBankId;
     private final int tokenLifetime;
     private final TemporalUnit tokenLifetimeUnit;
     private final PersistentStorage persistentStorage;
     private final Credentials credentials;
     private final UserAvailability userAvailability;
+    private final CredentialsRequestType requestType;
 
     public BankIdAuthenticationController(
             SupplementalInformationController supplementalInformationController,
             BankIdAuthenticator<T> authenticator,
             PersistentStorage persistentStorage,
-            Credentials credentials,
-            UserAvailability userAvailability) {
-        this(
-                supplementalInformationController,
-                authenticator,
-                false,
-                persistentStorage,
-                credentials,
-                userAvailability);
-    }
+            CredentialsRequest request) {
 
-    public BankIdAuthenticationController(
-            SupplementalInformationController supplementalInformationController,
-            BankIdAuthenticator<T> authenticator,
-            PersistentStorage persistentStorage,
-            Credentials credentials,
-            int tokenLifetime,
-            TemporalUnit tokenLifetimeUnit,
-            UserAvailability userAvailability) {
-        this(
-                supplementalInformationController,
-                authenticator,
-                false,
-                persistentStorage,
-                credentials,
-                tokenLifetime,
-                tokenLifetimeUnit,
-                userAvailability);
-    }
-
-    public BankIdAuthenticationController(
-            SupplementalInformationController supplementalInformationController,
-            BankIdAuthenticator<T> authenticator,
-            boolean waitOnBankId,
-            PersistentStorage persistentStorage,
-            Credentials credentials,
-            UserAvailability userAvailability) {
-        this(
-                supplementalInformationController,
-                authenticator,
-                waitOnBankId,
-                persistentStorage,
-                credentials,
-                DEFAULT_TOKEN_LIFETIME,
-                DEFAULT_TOKEN_LIFETIME_UNIT,
-                userAvailability);
-    }
-
-    public BankIdAuthenticationController(
-            SupplementalInformationController supplementalInformationController,
-            BankIdAuthenticator<T> authenticator,
-            boolean waitOnBankId,
-            PersistentStorage persistentStorage,
-            Credentials credentials,
-            int tokenLifetime,
-            TemporalUnit tokenLifetimeUnit,
-            UserAvailability userAvailability) {
         this.authenticator = Preconditions.checkNotNull(authenticator);
         this.supplementalInformationController =
                 Preconditions.checkNotNull(supplementalInformationController);
-        this.waitOnBankId = waitOnBankId;
         this.persistentStorage = persistentStorage;
-        this.credentials = credentials;
-        this.tokenLifetime = tokenLifetime;
-        this.tokenLifetimeUnit = tokenLifetimeUnit;
-        this.userAvailability = userAvailability;
+        this.credentials = request.getCredentials();
+        this.userAvailability = request.getUserAvailability();
+        this.requestType = request.getType();
+        this.tokenLifetime = DEFAULT_TOKEN_LIFETIME;
+        this.tokenLifetimeUnit = DEFAULT_TOKEN_LIFETIME_UNIT;
     }
 
     @Override
@@ -143,6 +90,12 @@ public class BankIdAuthenticationController<T> implements AutoAuthenticator, Typ
         }
 
         if (!userAvailability.isUserAvailableForInteraction()) {
+            if (requestType == CredentialsRequestType.MANUAL_AUTHENTICATION) {
+                // note that request type "MANUAL_AUTHENTICATION" is misleading and will, in this
+                // case (with
+                // User _Not_ availableForInteraction), refer to the operation "authenticate-auto".
+                throw SessionError.SESSION_EXPIRED.exception();
+            }
             logger.warn("Triggering BankID even though user is not available for interaction!");
         }
 
@@ -158,11 +111,7 @@ public class BankIdAuthenticationController<T> implements AutoAuthenticator, Typ
 
     private void openBankId() {
         String autostartToken = authenticator.getAutostartToken().orElse(null);
-        if (waitOnBankId) {
-            supplementalInformationController.openMobileBankIdSync(autostartToken);
-        } else {
-            supplementalInformationController.openMobileBankIdAsync(autostartToken);
-        }
+        supplementalInformationController.openMobileBankIdAsync(autostartToken);
     }
 
     // throws exception unless the BankIdStatus was DONE

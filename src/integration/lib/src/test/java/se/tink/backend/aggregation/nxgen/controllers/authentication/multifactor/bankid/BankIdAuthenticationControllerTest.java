@@ -18,6 +18,7 @@ import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.libraries.credentials.service.UserAvailability;
 
 public class BankIdAuthenticationControllerTest {
@@ -29,7 +30,7 @@ public class BankIdAuthenticationControllerTest {
     private BankIdAuthenticator authenticator;
     private SupplementalInformationController supplementalInformationController;
     private PersistentStorage persistentStorage;
-    private UserAvailability userAvailability;
+    private RefreshInformationRequest request;
 
     @Before
     public void setup() throws AuthenticationException, AuthorizationException {
@@ -37,7 +38,11 @@ public class BankIdAuthenticationControllerTest {
         authenticator = Mockito.mock(BankIdAuthenticator.class);
         Mockito.when(authenticator.init(Mockito.anyString())).thenReturn(REFERENCE);
         Mockito.when(authenticator.collect(REFERENCE)).thenReturn(BankIdStatus.DONE);
-        userAvailability = new UserAvailability();
+        UserAvailability userAvailability = new UserAvailability();
+
+        request = new RefreshInformationRequest();
+        request.setUserAvailability(userAvailability);
+        request.setCredentials(credentials);
 
         persistentStorage = new PersistentStorage();
         authenticationController =
@@ -45,8 +50,7 @@ public class BankIdAuthenticationControllerTest {
                         supplementalInformationController,
                         authenticator,
                         persistentStorage,
-                        credentials,
-                        userAvailability);
+                        request);
 
         credentials.setType(CredentialsTypes.MOBILE_BANKID);
     }
@@ -54,24 +58,18 @@ public class BankIdAuthenticationControllerTest {
     @Test(expected = NullPointerException.class)
     public void ensureExceptionIsThrown_whenBankIdAuthenticator_isNull() {
         new BankIdAuthenticationController(
-                supplementalInformationController,
-                null,
-                persistentStorage,
-                credentials,
-                userAvailability);
+                supplementalInformationController, null, persistentStorage, request);
     }
 
     @Test(expected = NullPointerException.class)
     public void ensureExceptionIsThrown_whenSupplementalInfoCtrl_isNull() {
-        new BankIdAuthenticationController(
-                null, authenticator, persistentStorage, credentials, userAvailability);
+        new BankIdAuthenticationController(null, authenticator, persistentStorage, request);
     }
 
     @Test(expected = NullPointerException.class)
     public void
             ensureExceptionIsThrown_whenBothSupplementalInfoCtrlAndBankIdAuthenticator_isNull() {
-        new BankIdAuthenticationController(
-                null, null, persistentStorage, credentials, userAvailability);
+        new BankIdAuthenticationController(null, null, persistentStorage, request);
     }
 
     @Test

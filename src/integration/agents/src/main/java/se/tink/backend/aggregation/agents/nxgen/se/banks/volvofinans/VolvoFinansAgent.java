@@ -69,8 +69,7 @@ public final class VolvoFinansAgent extends NextGenerationAgent
                 supplementalInformationController,
                 new VolvoFinansBankIdAutenticator(apiClient, sessionStorage),
                 persistentStorage,
-                credentials,
-                request.getUserAvailability());
+                request);
     }
 
     @Override

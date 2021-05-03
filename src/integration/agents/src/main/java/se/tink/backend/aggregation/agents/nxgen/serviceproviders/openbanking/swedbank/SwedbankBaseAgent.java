@@ -115,8 +115,7 @@ public abstract class SwedbankBaseAgent extends NextGenerationAgent
                                 transactionalAccountFetcher,
                                 persistentStorage),
                         persistentStorage,
-                        credentials,
-                        request.getUserAvailability());
+                        request);
 
         return new AutoAuthenticationController(
                 request, context, bankIdAuthenticationController, bankIdAuthenticationController);

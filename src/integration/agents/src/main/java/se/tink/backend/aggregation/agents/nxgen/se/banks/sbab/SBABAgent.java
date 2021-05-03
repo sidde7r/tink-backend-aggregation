@@ -54,8 +54,7 @@ public final class SBABAgent extends NextGenerationAgent
                 supplementalInformationController,
                 new SBABAuthenticator(apiClient, sessionStorage),
                 persistentStorage,
-                credentials,
-                request.getUserAvailability());
+                request);
     }
 
     @Override

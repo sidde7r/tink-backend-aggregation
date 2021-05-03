@@ -98,8 +98,7 @@ public final class AvanzaAgent extends NextGenerationAgent
                         temporaryStorage,
                         sessionStorage),
                 persistentStorage,
-                credentials,
-                request.getUserAvailability());
+                request);
     }
 
     @Override

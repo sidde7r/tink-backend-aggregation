@@ -73,8 +73,7 @@ public final class HandelsbankenSEAgent
                             handelsbankenSessionStorage,
                             organisationNumber),
                     persistentStorage,
-                    credentials,
-                    request.getUserAvailability())
+                    request)
         };
     }
 
