@@ -18,6 +18,7 @@ java_library(
         "//src/integration/transfer:rpc",
         "//src/integration/user:rpc",
         "//src/libraries/agent-storage",
+        "//src/libraries/credentials-persistence",
         "//src/libraries/date",
         "//src/libraries/i18n",
         "//src/libraries/serialization",

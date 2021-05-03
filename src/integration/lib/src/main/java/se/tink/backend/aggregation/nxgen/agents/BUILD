@@ -34,6 +34,7 @@ java_library(
         "//src/integration/models",
         "//src/integration/transfer:rpc",
         "//src/libraries/agent-storage",
+        "//src/libraries/credentials-persistence",
         "//src/libraries/date",
         "//src/libraries/i18n",
         "//third_party:com_fasterxml_jackson_core_jackson_core",
