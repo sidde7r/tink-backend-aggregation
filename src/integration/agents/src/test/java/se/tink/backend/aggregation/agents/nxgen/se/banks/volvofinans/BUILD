@@ -12,7 +12,7 @@ junit_test(
         "//src/integration/lib",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions/bankservice",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/response",
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
+        "//src/libraries/agent-storage",
         "//src/libraries/serialization",
         "//third_party:com_github_tomakehurst_wiremock",
         "//third_party:org_apache_httpcomponents_httpcore",

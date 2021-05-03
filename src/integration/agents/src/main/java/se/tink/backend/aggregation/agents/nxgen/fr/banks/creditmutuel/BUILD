@@ -14,7 +14,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/signaturekeypair",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/client",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/form",
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
+        "//src/libraries/agent-storage",
         "//src/libraries/serialization",
         "//src/libraries/strings",
         "//third_party:org_assertj_assertj_core",

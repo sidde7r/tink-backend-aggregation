@@ -15,7 +15,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/eidassigner/module",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/client",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
+        "//src/libraries/agent-storage",
         "//third_party:com_google_guava_guava",
         "//third_party:com_google_inject_guice",
         "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",

@@ -14,7 +14,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/filter/filters/iface",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/request",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/response",
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
+        "//src/libraries/agent-storage",
         "//third_party:com_auth0_java_jwt",
         "//third_party:com_nimbusds_nimbus_jose_jwt",
         "//third_party:com_sun_jersey_jersey_core",

@@ -16,7 +16,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/client",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/filter/filterable/request",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
+        "//src/libraries/agent-storage",
         "//src/libraries/strings",
         "//third_party:com_sun_jersey_jersey_core",
         "//third_party:org_apache_commons_commons_lang3",

@@ -13,7 +13,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/refresh",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/core/account",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http",
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
+        "//src/libraries/agent-storage",
         "//src/libraries/pair",
         "//third_party:com_google_inject_guice",
     ],

@@ -15,7 +15,7 @@ junit_test(
         "//src/integration/amount",
         "//src/integration/credentials:service",
         "//src/integration/lib",
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
+        "//src/libraries/agent-storage",
         "//src/libraries/serialization",
         "//third_party:io_vavr",
         "//third_party:org_assertj_assertj_core",
