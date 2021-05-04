@@ -243,5 +243,5 @@ spec:
       annotations:
         description: {{ .Values.kibanaLink }}
           {{ .Values.grafanaLink }}
-        summary: Authentication failures due to user cancelletion is over 90% (<{ $value }>) for <{ $labels.className }> ( <{ $labels.provider }> for last 12h
+        summary: Authentication failures due to user cancelletion is over 90% (<{ $value }>) for <{ $labels.className }> ( <{ $labels.provider }> for last 12h. Please check if a redirect url is correct.
         tags: {{ .Values.tags }}
