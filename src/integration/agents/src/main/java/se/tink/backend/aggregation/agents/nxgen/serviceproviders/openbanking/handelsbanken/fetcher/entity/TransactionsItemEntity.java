@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.time.LocalDate;
-import java.util.Objects;
+import lombok.Getter;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
@@ -19,76 +19,43 @@ import se.tink.libraries.chrono.AvailableDateInformation;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @JsonObject
+@Getter
 public class TransactionsItemEntity {
+
+    /** The date on which the transaction is recorded in the account. Only available for SE. */
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    private LocalDate ledgerDate;
+
+    /** The date on which a transaction is booked on the account. Only available for FI. */
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    private LocalDate bookingDate;
+
+    /** The date on which the transaction took place. Only available for SE. */
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    private LocalDate transactionDate;
+
+    /** The date the transaction debits/credits the account. Only available for UK. */
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    private LocalDate valueDate;
+
+    @JsonAlias("transactionDetails")
+    private String remittanceInformation;
 
     @JsonProperty("amount")
     @JsonAlias("transactionAmount")
     private TransactionAmountEntity transactionAmountEntity;
 
-    @JsonDeserialize(using = LocalDateDeserializer.class)
-    private LocalDate ledgerDate;
-
     private String creditorName;
-
     private BalanceEntity balanceEntity;
-
-    @JsonAlias("transactionDetails")
-    private String remittanceInformation;
-
-    @JsonDeserialize(using = LocalDateDeserializer.class)
-    private LocalDate bookingDate;
-
     private String debtorName;
-
-    @JsonDeserialize(using = LocalDateDeserializer.class)
-    private LocalDate valueDate;
-
     private String creditDebit;
-
-    @JsonDeserialize(using = LocalDateDeserializer.class)
-    private LocalDate transactionDate;
-
     private String status;
-
-    public String getCreditorName() {
-        return creditorName;
-    }
-
-    public BalanceEntity getBalanceEntity() {
-        return balanceEntity;
-    }
-
-    public String getRemittanceInformation() {
-        return remittanceInformation;
-    }
-
-    public LocalDate getBookingDate() {
-        return bookingDate;
-    }
 
     public Boolean hasDate() {
         return ledgerDate != null || transactionDate != null || valueDate != null;
     }
 
-    public String getDebtorName() {
-        return debtorName;
-    }
-
-    @JsonDeserialize(using = LocalDateDeserializer.class)
-    public LocalDate getValueDate() {
-        return valueDate;
-    }
-
-    @JsonDeserialize(using = LocalDateDeserializer.class)
-    public LocalDate getTransactionDate() {
-        return transactionDate;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    protected ExactCurrencyAmount creditOrDebit() {
+    protected ExactCurrencyAmount getTinkAmount() {
         return HandelsbankenBaseConstants.Transactions.CREDITED.equalsIgnoreCase(creditDebit)
                 ? transactionAmountEntity.getAmount()
                 : transactionAmountEntity.getAmount().negate();
@@ -99,42 +66,45 @@ public class TransactionsItemEntity {
         return (Transaction)
                 Transaction.builder()
                         .setDate(ObjectUtils.firstNonNull(ledgerDate, transactionDate, valueDate))
-                        .setAmount(creditOrDebit())
+                        .setAmount(getTinkAmount())
                         .setDescription(remittanceInformation)
                         .setPending(
                                 HandelsbankenBaseConstants.Transactions.IS_PENDING.equalsIgnoreCase(
                                         status))
                         .setPayload(
                                 TransactionPayloadTypes.DETAILS,
-                                SerializationUtils.serializeToString(getTransactionDetails()))
+                                SerializationUtils.serializeToString(getTinkTransactionDetails()))
                         .setProprietaryFinancialInstitutionType(creditDebit)
-                        .setTransactionDates(getTransactionDates())
+                        .setTransactionDates(getTinkTransactionDates())
                         .setProviderMarket(providerMarket)
                         .build();
     }
 
-    private TransactionDates getTransactionDates() {
+    private TransactionDates getTinkTransactionDates() {
         TransactionDates.Builder builder = TransactionDates.builder();
 
-        builder.setValueDate(new AvailableDateInformation().setDate(getTinkValueDate()));
+        if (valueDate != null) {
+            builder.setValueDate(new AvailableDateInformation().setDate(valueDate));
+        }
 
-        if (Objects.nonNull(bookingDate)) {
-            builder.setBookingDate(new AvailableDateInformation().setDate(bookingDate));
+        LocalDate tinkBookingDate = getTinkBookingDate();
+        if (tinkBookingDate != null) {
+            builder.setBookingDate(new AvailableDateInformation().setDate(tinkBookingDate));
         }
 
         return builder.build();
     }
 
     /**
-     * transactionDate is not set for all transactions. In those cases valueDate corresponds to what
-     * we classify as value date at Tink so we use that instead.
+     * Booking date is only available in FI. Ledger date is only available in SE. Ledger date is
+     * another term for booking date so both are treated as Tink booking dates.
      */
-    private LocalDate getTinkValueDate() {
-        return Objects.nonNull(ledgerDate) ? ledgerDate : transactionDate;
+    private LocalDate getTinkBookingDate() {
+        return bookingDate != null ? bookingDate : ledgerDate;
     }
 
     @JsonIgnore
-    public TransactionDetails getTransactionDetails() {
+    public TransactionDetails getTinkTransactionDetails() {
         return new TransactionDetails(StringUtils.EMPTY, StringUtils.EMPTY);
     }
 }
