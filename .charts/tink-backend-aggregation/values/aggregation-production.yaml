@@ -450,6 +450,8 @@ clients:
     aggregatorIdentifier: "Anyfin"
   fr-mitrust-production:
     aggregatorIdentifier: "Mi-Trust"
+  xero-production:
+    aggregatorIdentifier: "Xero"
 
 tppSecretsServiceConfiguration:
   certificatesLocation: "cluster"
