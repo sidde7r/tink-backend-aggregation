@@ -50,11 +50,13 @@ spec:
     # Unknown errors (due to RuntimeException) alerts
     #-------------------------------------------------------------------------------------------------------------------
     # Authentication alerts
-    - alert: AuthenticationUnknownErrorRateOver5%PT
+    - alert: AuthenticationUnknownErrorRateOver10%PT
       expr: |
-        # Failed logins (due to unknown RuntimeException) over 5%
+        # Failed logins (due to unknown RuntimeException) over 10%
         (count(sum_over_time(tink_agent_login_total{action=~"login", outcome="failed", market="PT", provider_type!="test"}[30m])) by (action,className,provider)
-            / count(sum_over_time(tink_agent_login_total{action=~"login", market="PT", provider_type!="test"}[30m])) by (action,className,provider) > 0.05)
+            / count(sum_over_time(tink_agent_login_total{action=~"login", market="PT", provider_type!="test"}[30m])) by (action,className,provider) > 0.1)
+        # At least this many attempts.
+             and count(sum_over_time(tink_agent_login_total{action="login", market="PT", provider_type!="test"}[30m])) by (className,provider) > 1
       for: 5m
       labels:
         severity: urgent
@@ -63,7 +65,7 @@ spec:
       annotations:
         description: {{ .Values.kibanaLink }}
           {{ .Values.grafanaLink }}
-        summary: Authentication failures due to unknown RuntimeExceptions is over 5% (<{ $value }>) for <{ $labels.className }> ( <{ $labels.provider }>
+        summary: Authentication failures due to unknown RuntimeExceptions is over 10% (<{ $value }>) for <{ $labels.className }> ( <{ $labels.provider }>
           the last hour.
         tags: {{ .Values.tags }}
 
@@ -76,6 +78,7 @@ spec:
       for: 5m
       labels:
         severity: urgent
+        priority: P1
         who: integration-minions
       annotations:
         description: {{ .Values.kibanaLink }}
@@ -131,10 +134,10 @@ spec:
       expr: |
         # Failed logins (due to bank site errors) over 90%
         count(sum_over_time(tink_agent_login_total{action="login",outcome="unavailable", market="PT"}[12h])) BY (className,provider)
-        # All login attempts the last 6 hours
-          / count(sum_over_time(tink_agent_login_total{action="login", market="PT"}[6h])) BY (className,provider) > 0.90
+        # All login attempts the last 12 hours
+          / count(sum_over_time(tink_agent_login_total{action="login", market="PT"}[12h])) BY (className,provider) > 0.90
         # At least this many attempts.
-         and count(sum_over_time(tink_agent_login_total{action=~"login|is-logged-in", market="PT", provider_type!="test"}[12h])) by (className,provider) > 2
+         and count(sum_over_time(tink_agent_login_total{action="login", market="PT", provider_type!="test"}[12h])) by (className,provider) > 1
       for: 15m
       interval: 1h
       labels:
@@ -154,7 +157,7 @@ spec:
         (count(sum_over_time(tink_agent_refresh_total{label="refresh", outcome="unavailable", market="PT", provider_type!="test"}[4h])) by (className,provider)
             / count(sum_over_time(tink_agent_refresh_total{market="PT", provider_type!="test"}[4h])) by (className,provider,type) > 0.90)
         # At least this many attempts.
-           and count(sum_over_time(tink_agent_login_total{action=~"login|is-logged-in", market="PT", provider_type!="test"}[4h])) by (className,provider) > 10
+           and count(sum_over_time(tink_agent_login_total{action="refresh", market="PT", provider_type!="test"}[4h])) by (className,provider) > 10
       for: 5m
       labels:
         severity: urgent
@@ -208,11 +211,11 @@ spec:
     - alert: LongTermAuthenticationUserCancellationDueToThirdPartyAppTimeoutRateOver90%PT
       expr: |
         # Failed logins (due to third party app timeout) over 90%
-        count(sum_over_time(tink_agent_login_total{action="login",outcome="cancelled_due_to_third_party_app_timeout", market="PT"}[6h])) BY (className,provider)
+        count(sum_over_time(tink_agent_login_total{action="login",outcome="cancelled_due_to_third_party_app_timeout", market="PT"}[12h])) BY (className,provider)
         # All login attempts the last 6 hours
-          / count(sum_over_time(tink_agent_login_total{action="login", market="PT"}[6h])) BY (className,provider) > 0.90
+          / count(sum_over_time(tink_agent_login_total{action="login", market="PT"}[12h])) BY (className,provider) > 0.90
         # At least this many attempts.
-        and count(sum_over_time(tink_agent_login_total{action=~"login|is-logged-in", market="PT", provider_type!="test"}[6h])) by (className,provider) > 2
+        and count(sum_over_time(tink_agent_login_total{action="login", market="PT", provider_type!="test"}[12h])) by (className,provider) > 2
       for: 15m
       interval: 1h
       labels:
@@ -222,5 +225,5 @@ spec:
       annotations:
         description: {{ .Values.kibanaLink }}
           {{ .Values.grafanaLink }}
-        summary: Authentication failures due to user cancelletion is over 90% (<{ $value }>) for <{ $labels.className }> ( <{ $labels.provider }>
+        summary: Authentication failures due to user cancelletion is over 90% (<{ $value }>) for <{ $labels.className }> ( <{ $labels.provider }> for last 12h
         tags: {{ .Values.tags }}
