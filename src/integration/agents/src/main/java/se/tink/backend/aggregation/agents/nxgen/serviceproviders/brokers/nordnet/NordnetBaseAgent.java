@@ -24,7 +24,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public abstract class NordnetBaseAgent<T extends NordnetBaseApiClient> extends NextGenerationAgent
         implements RefreshInvestmentAccountsExecutor,
@@ -32,14 +31,12 @@ public abstract class NordnetBaseAgent<T extends NordnetBaseApiClient> extends N
                 RefreshSavingsAccountsExecutor,
                 RefreshIdentityDataExecutor {
 
-    protected final SessionStorage sessionStorage;
     protected T apiClient;
     protected InvestmentRefreshController investmentRefreshController;
     protected TransactionalAccountRefreshController transactionalAccountRefreshController;
 
     public NordnetBaseAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
-        this.sessionStorage = new SessionStorage();
         client.setFollowRedirects(false);
     }
 
