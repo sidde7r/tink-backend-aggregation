@@ -32,8 +32,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domesticscheduled.converter.RequiredReferenceRemittanceInfoDomesticSchedulerPaymentConverter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.validator.PaymentRequestWithRequiredReferenceRemittanceInfoValidator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.validator.UkOpenBankingPaymentRequestValidator;
+import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.consent.MonzoConsentExpirationFilter;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
@@ -46,7 +46,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 public final class MonzoV31Agent extends UkOpenBankingBaseAgent {
 
     private static final UkOpenBankingAisConfig aisConfig;
-    private final LocalDateTimeSource localDateTimeSource;
 
     static {
         aisConfig =
@@ -70,7 +69,8 @@ public final class MonzoV31Agent extends UkOpenBankingBaseAgent {
                         MonzoConstants.PIS_API_URL, MonzoConstants.WELL_KNOWN_URL),
                 createPisRequestFilterUsingPs256WithoutBase64Signature(
                         flowFacade.getJwtSinger(), componentProvider.getRandomValueGenerator()));
-        this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
+
+        client.addFilter(new MonzoConsentExpirationFilter(persistentStorage));
     }
 
     @Override
