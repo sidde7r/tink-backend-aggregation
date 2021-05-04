@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.apiclient.dto.data.AccountCategoryCode;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.apiclient.dto.response.AccountSummaryItemDto;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.apiclient.dto.response.TransactionInformationDto;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.apiclient.dto.response.TransactionsAndLockedEventsResponseDto;
@@ -66,14 +67,20 @@ public class AktiaTransactionalAccountConverter {
     private static Optional<TransactionalAccountType> getAccountType(
             AccountSummaryItemDto accountSummaryItem) {
 
-        String accountType = accountSummaryItem.getAccountType().getAccountType();
-
-        if (accountType.equals(CURRENT_ACCOUNT)) {
+        AccountCategoryCode categoryCode = accountSummaryItem.getAccountType().getCategoryCode();
+        if (AccountCategoryCode.CURRENT_ACCOUNT.equals(categoryCode)) {
             return Optional.of(TransactionalAccountType.CHECKING);
-        } else if (accountType.equals(SAVINGS_ACCOUNT)) {
+        } else if (AccountCategoryCode.SAVINGS_ACCOUNT.equals(categoryCode)) {
+            return Optional.of(TransactionalAccountType.SAVINGS);
+        }
+
+        String accountType = accountSummaryItem.getAccountType().getAccountType();
+        if (accountType.contains(CURRENT_ACCOUNT)) {
+            return Optional.of(TransactionalAccountType.CHECKING);
+        } else if (accountType.contains(SAVINGS_ACCOUNT)) {
             return Optional.of(TransactionalAccountType.SAVINGS);
         } else {
-            log.info("Got %s account category code.", accountType);
+            log.info(String.format("Got %s account category code.", accountType));
         }
         return Optional.empty();
     }

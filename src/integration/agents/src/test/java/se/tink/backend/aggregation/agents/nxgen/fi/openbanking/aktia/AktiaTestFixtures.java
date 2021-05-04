@@ -318,25 +318,29 @@ public final class AktiaTestFixtures {
     }
 
     public static AccountsSummaryResponse createSuccessfulAccountsSummaryResponse() {
-        return new AccountsSummaryResponse(createAccountsSummaryResponseDto("Savings Account"));
+        return new AccountsSummaryResponse(
+                createAccountsSummaryResponseDto("SAVINGS_ACCOUNT", "Savings Account"));
     }
 
     public static AccountsSummaryResponse createSuccessfulAccountsSummaryResponse(
-            String accountType) {
-        return new AccountsSummaryResponse(createAccountsSummaryResponseDto(accountType));
+            String categoryCode, String accountType) {
+        return new AccountsSummaryResponse(
+                createAccountsSummaryResponseDto(categoryCode, accountType));
     }
 
     public static AccountsSummaryResponse createAccountsSummaryResponseWithError() {
         return new AccountsSummaryResponse(createOpenAmErrorResponseDto());
     }
 
-    private static AccountsSummaryResponseDto createAccountsSummaryResponseDto(String accountType) {
+    private static AccountsSummaryResponseDto createAccountsSummaryResponseDto(
+            String categoryCode, String accountType) {
         return SerializationUtils.deserializeFromString(
-                createAccountsSummaryResponseJsonString(accountType),
+                createAccountsSummaryResponseJsonString(categoryCode, accountType),
                 AccountsSummaryResponseDto.class);
     }
 
-    private static String createAccountsSummaryResponseJsonString(String accountType) {
+    private static String createAccountsSummaryResponseJsonString(
+            String categoryCode, String accountType) {
         return "{"
                 + "   \"frontPageHighlight\":{"
                 + "       \"showHighlight\":false,"
