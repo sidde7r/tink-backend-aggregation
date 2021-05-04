@@ -17,36 +17,40 @@ public class ConsentStatusValidator {
         this.storage = storage;
     }
 
-    public void validate() {
-        String consentId =
-                storage.get(
-                                UkOpenBankingV31Constants.PersistentStorageKeys
-                                        .AIS_ACCOUNT_CONSENT_ID,
-                                String.class)
-                        .orElse(StringUtils.EMPTY);
+    public boolean validate() {
+        String consentId = restoreConsentId();
+        checkIfMarkedWithErrorFlag(consentId);
+        checkIfAuthorised(consentId);
 
-        // To be removed when consent management becomes stable
+        return true;
+    }
+
+    private String restoreConsentId() {
+        return storage.get(
+                        UkOpenBankingV31Constants.PersistentStorageKeys.AIS_ACCOUNT_CONSENT_ID,
+                        String.class)
+                .orElse(StringUtils.EMPTY);
+    }
+
+    private void checkIfAuthorised(String consentId) {
+        if (StringUtils.isNotEmpty(consentId) && isNotAuthorised(consentId)) {
+            cleanUpAndExpireSession("Invalid consent status. Expiring the session.");
+        }
+    }
+
+    // TODO: To be removed when consent management becomes stable
+    private void checkIfMarkedWithErrorFlag(String consentId) {
         if (consentId.equals(OpenIdAuthenticatorConstants.CONSENT_ERROR_OCCURRED)) {
             cleanUpAndExpireSession(
-                    consentId,
                     "These credentials were marked with CONSENT_ERROR_OCCURRED flag in the past. Expiring the session.");
-        }
-
-        if (StringUtils.isNotEmpty(consentId) && isNotAuthorised(consentId)) {
-            cleanUpAndExpireSession(consentId, "Invalid consent status. Expiring the session.");
         }
     }
 
     private boolean isNotAuthorised(String consentId) {
-
-        // PLACEHOLDER: Add permissions vs refresh items validation
-
         return apiClient.fetchConsent(consentId).getData().isNotAuthorised();
     }
 
-    private void cleanUpAndExpireSession(String consentId, String errorMsg) {
-        apiClient.deleteConsent(consentId);
-
+    private void cleanUpAndExpireSession(String errorMsg) {
         storage.remove(UkOpenBankingV31Constants.PersistentStorageKeys.AIS_ACCOUNT_CONSENT_ID);
         storage.remove(UkOpenBankingV31Constants.PersistentStorageKeys.AIS_ACCESS_TOKEN);
 
