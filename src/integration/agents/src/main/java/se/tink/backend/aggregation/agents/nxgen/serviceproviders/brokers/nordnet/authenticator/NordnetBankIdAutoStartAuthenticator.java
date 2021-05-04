@@ -63,7 +63,7 @@ public class NordnetBankIdAutoStartAuthenticator implements BankIdAuthenticator<
                     apiClient
                             .createRequestInSession(new URL(Urls.BANKID_POLL))
                             .type(MediaType.APPLICATION_JSON)
-                            .accept(MediaType.APPLICATION_JSON)
+                            .overrideHeader(HttpHeaders.USER_AGENT, HeaderValues.REACT_NATIVE_AGENT)
                             .body(request);
             response = apiClient.post(requestBuilder, PollBankIdResponse.class);
         } catch (HttpResponseException e) {
@@ -105,8 +105,7 @@ public class NordnetBankIdAutoStartAuthenticator implements BankIdAuthenticator<
                 apiClient
                         .createRequestInSession(new URL(Urls.BANKID_START))
                         .type(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .header(HttpHeaders.USER_AGENT, HeaderValues.NORDNET_AGENT)
+                        .overrideHeader(HttpHeaders.USER_AGENT, HeaderValues.NORDNET_AGENT)
                         .body(new InitBankIdRequest(HeaderValues.REACT_NATIVE_AGENT));
 
         try {
@@ -123,7 +122,7 @@ public class NordnetBankIdAutoStartAuthenticator implements BankIdAuthenticator<
                         .createBasicRequest(new URL(Urls.INIT_LOGIN))
                         .type(MediaType.APPLICATION_FORM_URLENCODED)
                         .accept(MediaType.APPLICATION_JSON)
-                        .header(HttpHeaders.USER_AGENT, HeaderValues.USER_AGENT)
+                        .overrideHeader(HttpHeaders.USER_AGENT, HeaderValues.REACT_NATIVE_AGENT)
                         .body(FormValues.ANONYMOUS_LOGIN.serialize());
 
         final LoginResponse response = apiClient.post(requestBuilder, LoginResponse.class);

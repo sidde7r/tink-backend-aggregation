@@ -7,10 +7,12 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
+import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
+import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
@@ -18,6 +20,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.ImaginBankCo
 import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.authenticator.ImaginBankPasswordAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.fetcher.creditcard.ImaginBankCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.fetcher.identitydata.ImaginBankIdentityDataFetcher;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.fetcher.investment.ImaginBankInvestmentFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.fetcher.transactionalaccount.ImaginBankAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.fetcher.transactionalaccount.ImaginBankTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.filter.ImaginBankRetryFilter;
@@ -27,6 +30,7 @@ import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
@@ -45,13 +49,15 @@ public final class ImaginBankAgent extends NextGenerationAgent
         implements RefreshIdentityDataExecutor,
                 RefreshCreditCardAccountsExecutor,
                 RefreshCheckingAccountsExecutor,
-                RefreshSavingsAccountsExecutor {
+                RefreshSavingsAccountsExecutor,
+                RefreshInvestmentAccountsExecutor {
 
     private final ImaginBankApiClient apiClient;
     private final ImaginBankSessionStorage imaginBankSessionStorage;
 
     private final CreditCardRefreshController creditCardRefreshController;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
+    private final InvestmentRefreshController investmentRefreshController;
 
     public ImaginBankAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -62,6 +68,7 @@ public final class ImaginBankAgent extends NextGenerationAgent
 
         creditCardRefreshController = constructCreditCardRefreshController();
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
+        investmentRefreshController = constructInvestmentController();
     }
 
     private void configureHttpClient(TinkHttpClient client) {
@@ -122,6 +129,16 @@ public final class ImaginBankAgent extends NextGenerationAgent
         return creditCardRefreshController.fetchCreditCardTransactions();
     }
 
+    @Override
+    public FetchInvestmentAccountsResponse fetchInvestmentAccounts() {
+        return investmentRefreshController.fetchInvestmentAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchInvestmentTransactions() {
+        return investmentRefreshController.fetchInvestmentTransactions();
+    }
+
     private CreditCardRefreshController constructCreditCardRefreshController() {
         ImaginBankCreditCardFetcher creditCardFetcher = new ImaginBankCreditCardFetcher(apiClient);
 
@@ -132,6 +149,13 @@ public final class ImaginBankAgent extends NextGenerationAgent
                 new TransactionFetcherController<>(
                         this.transactionPaginationHelper,
                         new TransactionPagePaginationController<>(creditCardFetcher, 0)));
+    }
+
+    private InvestmentRefreshController constructInvestmentController() {
+        return new InvestmentRefreshController(
+                metricRefreshController,
+                updateController,
+                new ImaginBankInvestmentFetcher(apiClient));
     }
 
     @Override

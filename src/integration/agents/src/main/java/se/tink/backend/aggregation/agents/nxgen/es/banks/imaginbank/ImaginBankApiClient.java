@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank;
 
 import java.lang.invoke.MethodHandles;
 import java.time.LocalDate;
+import java.util.List;
 import javax.ws.rs.core.MediaType;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpStatus;
@@ -20,10 +21,13 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.fetcher.cred
 import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.fetcher.creditcard.rpc.CardsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.fetcher.identitydata.rpc.UserDataRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.fetcher.identitydata.rpc.UserDataResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.fetcher.transactionalaccount.entities.AccountEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.fetcher.transactionalaccount.entities.HolderEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.fetcher.transactionalaccount.rpc.AccountTransactionResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.fetcher.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.fetcher.transactionalaccount.rpc.ListHoldersResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.rpc.ImaginBankErrorResponse;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Party;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
@@ -134,7 +138,13 @@ public class ImaginBankApiClient {
                 .get(CardsResponse.class);
     }
 
-    public ListHoldersResponse fetchHolderList(String accountReference) {
+    public List<Party> fetchPartiesForAccount(AccountEntity accountEntity) {
+        ListHoldersResponse listHoldersResponse =
+                fetchHolderList(accountEntity.getIdentifiers().getAccountReference());
+        return HolderEntity.toParties(listHoldersResponse);
+    }
+
+    private ListHoldersResponse fetchHolderList(String accountReference) {
         return createRequest(ImaginBankConstants.Urls.HOLDERS_LIST)
                 .queryParam(ImaginBankConstants.QueryParams.FROM_BEGIN, "true")
                 .queryParam(ImaginBankConstants.QueryParams.ACCOUNT_NUMBER, accountReference)

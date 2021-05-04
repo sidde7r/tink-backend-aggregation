@@ -10,7 +10,6 @@ import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.brokers.nordnet.NordnetBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.brokers.nordnet.NordnetBaseConstants.FormValues;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.brokers.nordnet.NordnetBaseConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.brokers.nordnet.NordnetBaseConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.brokers.nordnet.NordnetBaseConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.brokers.nordnet.NordnetBaseConstants.Urls;
@@ -52,7 +51,6 @@ public class NordnetPasswordAuthenticator implements PasswordAuthenticator {
                         .body(loginRequest);
         try {
             HttpResponse response = apiClient.post(requestBuilder, HttpResponse.class);
-            sessionStorage.put(HeaderKeys.NTAG, getNtag(response));
             sessionStorage.put(StorageKeys.SESSION_KEY, getSessionKey(response));
 
         } catch (HttpResponseException e) {
@@ -62,12 +60,6 @@ public class NordnetPasswordAuthenticator implements PasswordAuthenticator {
             // re-throw unknown login error
             throw e;
         }
-    }
-
-    private String getNtag(HttpResponse response) throws LoginException {
-        return response.getHeaders().get(HeaderKeys.NTAG).stream()
-                .findFirst()
-                .orElseThrow(LoginError.NOT_SUPPORTED::exception);
     }
 
     private String getSessionKey(HttpResponse response) throws LoginException {

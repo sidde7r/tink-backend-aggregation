@@ -1,0 +1,27 @@
+{
+    "cuenta": [
+        {
+            "id": "0",
+            "numeroCuenta": {
+                "iban": "ES7420387294088391363592",
+                "codigoPais": "ES",
+                "dcIban": "71",
+                "numeroCuenta": "0101010101",
+                "entidad": "0000",
+                "oficina": "0000",
+                "dc": "00",
+                "refvalCuenta": "1234",
+                "longitudModalidad": 0,
+                "longitudCuenta": 0
+            },
+            "alias": "imagin",
+            "moneda": "EUR",
+            "saldoDisponible": 30.35000000000000142108547152020037174224853515625,
+            "esTitular": false,
+            "esRepresentante": false,
+            "esApoderado": false
+        }
+    ],
+    "saldoTotal": 30.35,
+    "masDatos": false
+}

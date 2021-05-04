@@ -3,514 +3,3840 @@ REQUEST 1
 POST https://www.nordnet.se/api/2/login
 Content-Type: application/x-www-form-urlencoded
 Accept: application/json
-User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 13_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148
+User-Agent: Nordnet React Native App/ios-14.4.2/12.3.0
 
 username=<<anonymous>>&password=<<anonymous>>&service=MOBILE_IOS_2&country=SE&session_lang=en
 
 RESPONSE 1
 200
-Date: Thu, 03 Sep 2020 10:16:32 GMT
 Content-Type: application/json; charset=UTF-8
-Transfer-Encoding: chunked
-Connection: keep-alive
-Vary: Accept-Encoding
 
-{"remaining":300,"session_key":"0598b1717772cd57a6856c2586350abd85a00940","expires_in":3600,"environment":"prod","country":"SE","private_feed":{"hostname":"priv.next.nordnet.se","port":443,"encrypted":true},"public_feed":{"hostname":"pub.next.nordnet.se","port":443,"encrypted":true}}
-
-REQUEST 2
-GET https://www.nordnet.se/oauth2/authorize?authType=signin&client_id=MOBILE_IOS_2&response_type=code&redirect_uri=nordnet-react%3A%2F%2Foauth2%2Fauthorize-callback
-Accept: text/plain,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
-User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 13_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148
-
-RESPONSE 2 SET AUTH
-307
-Server: nginx
-Date: Thu, 03 Sep 2020 10:16:32 GMT
-Transfer-Encoding: chunked
-Connection: keep-alive
-Location: https://classic.nordnet.se/oauth2/authorize?authType=signin&client_id=MOBILE_IOS_2&response_type=code&redirect_uri=nordnet-react%3A%2F%2Foauth2%2Fauthorize-callback
-
-
-REQUEST 3 MATCH AUTH
-GET https://classic.nordnet.se/oauth2/authorize?authType=signin&client_id=MOBILE_IOS_2&response_type=code&redirect_uri=nordnet-react%3A%2F%2Foauth2%2Fauthorize-callback
-Accept: text/plain,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
-User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 13_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148
-
-RESPONSE 3
-303
-Date: Thu, 03 Sep 2020 10:16:31 GMT
-Server: Apache-Coyote/1.1
-P3P: CP="Nordnet does not have a P3P policy"
-Location: /mux/login/startSE.html?clearEndpoint=0&intent=mobile_ios_2&state=signin
-Content-Language: sv-SE
-Content-Length: 0
-Set-Cookie: ENDPOINT_URL=%2Foauth2%2Fauthorize%3Fclient_id%3DMOBILE_IOS_2%26response_type%3Dcode%26redirect_uri%3Dnordnet-react%3A%2F%2Foauth2%2Fauthorize-callback; Path=/; Secure; HttpOnly
-Set-Cookie: responsive=true; Path=/; Secure
-Set-Cookie: ElyHistory0='';expires=1; Max-Age=0; Path=/; Domain=.nordnet.se
-Keep-Alive: timeout=5, max=100
-Connection: Keep-Alive
-Content-Type: text/plain; charset=ISO-8859-1
-Strict-Transport-Security: max-age=31536000
-
-
-REQUEST 4
-GET https://classic.nordnet.se/mux/login/startSE.html?clearEndpoint=0&intent=mobile_ios_2&state=signin
-Accept: text/plain,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
-User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 13_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148
-
-
-RESPONSE 4
-200
-Date: Thu, 03 Sep 2020 10:16:32 GMT
-Server: Apache
-Content-Type: text/html; charset=ISO-8859-1
-Set-cookie: LOL=208d575e38fc7a432a01287f7c15e2a21c58e133; path=/; secure; HttpOnly
-Set-cookie: TUX-COOKIE=rd192o00000000000000000000ffff0a40c01fo80; path=/; Httponly
-Set-cookie: ElyHistory0='';expires=1; Max-Age=0; Path=/; Domain=.nordnet.se
-Vary: Accept-Encoding,User-Agent
-Keep-Alive: timeout=5, max=99
-Connection: Keep-Alive
-Transfer-Encoding: chunked
-Strict-Transport-Security: max-age=31536000
-
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="Author" content="Nordnet Bank AB" />
-<meta name="description" content="Spara i aktier, fonder och till din pension hos Nordnet. Utan fasta avgifter och alltid till ett l�gt courtage. V�lkommen som kund!" />
-<meta property="og:description" content="Spara i aktier, fonder och till din pension hos Nordnet. Utan fasta avgifter och alltid till ett l�gt courtage. V�lkommen som kund!" />
-<meta property="og:title" content="Spara i aktier, fonder och till din pension - Nordnet" />
-<meta property="og:type" content="website" />
-<meta property="og:url" content="https://www.nordnet.se" />
-<meta property="og:image" content="https://www.nordnet.se/now/images/OG_Image_logo.jpg" />
-  <title>Login - Nordnet</title>
-</head>
-<body>
-
-  <div id="authentication-login"
-    data-error=""
-    data-intent="V&auml;lkommen till Nordnet! "
-    data-subclient=""
-    data-redirecturl="/oauth2/authorize?client_id=MOBILE_IOS_2&amp;response_type=code&amp;redirect_uri=nordnet-react://oauth2/authorize-callback"
-  ></div>
-
-  <style>
-    #old-browsers {
-      display: none;
-      font-size: 18px;
-      text-align: center;
-      margin-top: 100px;
+{
+    "remaining": 300,
+    "session_key": "0598b1717772cd57a6856c2586350abd85a00940",
+    "expires_in": 3600,
+    "environment": "prod",
+    "country": "SE",
+    "private_feed": {
+        "hostname": "priv.next.nordnet.se",
+        "port": 443,
+        "encrypted": true
+    },
+    "public_feed": {
+        "hostname": "pub.next.nordnet.se",
+        "port": 443,
+        "encrypted": true
     }
-
-    #links {
-      display: block;
-      text-align: left;
-      width: 10%;
-      margin: auto;
-    }
-  </style>
-  <div id="old-browsers">
-    <p>
-      Din webbl�sare �r f�r�ldrad och �r en s�kerhetsrisk. D�rf�r st�ds den inte av Nordnet. <br /> Var v�nlig och uppdatera din webbl�sare till en nyare version.
-    </p>
-    <div id="links">
-      <a href="https://www.google.com/chrome/browser/desktop/index.html">Chrome</a>
-      <br />
-      <a href="https://www.mozilla.org/sv-SE/firefox/new/">Firefox</a>
-    </div>
-  </div>
-
-  <script src="/sc/bundle/vendor-bundle/4d35d7c4f4c7aa684adc50a885758f877cd49e3c.4/vendor.bundle.6.0.0.js"></script>
-  <script charset="UTF-8" src="/sc/authentication-login/init/base.js"></script>
-
-  <script>
-    (function(window, document) {
-      var appName = 'authentication-login';
-      var domElement = document.getElementById(appName);
-      if (domElement && window.Nordnet && window.Nordnet[appName]) {
-        window.Nordnet[appName](domElement);
-      } else {
-        document.getElementById("old-browsers").style.display = "block";
-      }
-    })(window, document);
-  </script>
-
-</body>
-</html>
-
-REQUEST 5
-POST https://classic.nordnet.se/api/2/login/anonymous
-Content-Type: application/x-www-form-urlencoded
-Accept: application/json
-ntag: NO_NTAG_RECEIVED_YET
-User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 13_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148
-Referer: https://classic.nordnet.se/mux/login/startSE.html?clearEndpoint=0&intent=mobile_ios_2&state=signin
-
-
-RESPONSE 5
-200
-Date: Thu, 03 Sep 2020 10:16:32 GMT
-Server: Nordnet API
-cache-control: no-cache, no-store, must-revalidate
-content-type: application/json; charset=UTF-8
-expires: 0
-ntag: 8A83DC013C2CA873E63D4278655F3E
-pragma: no-cache
-set-cookie: NOW=181fcd9bcb356a1df446ff40a7a45116b16c3f5c; Version=1; Expires=Mon, 07-Sep-2020 14:16:32 GMT; Max-Age=360000; Path=/; SecureOnly; SameSite=None
-set-cookie: ElyHistory0='';expires=1; Max-Age=0; Path=/; Domain=.nordnet.se
-Vary: Accept-Encoding,User-Agent
-Keep-Alive: timeout=5, max=98
-Connection: Keep-Alive
-Strict-Transport-Security: max-age=31536000
-
-{"expires_in":300,"environment":"prod","country":"SE","session_type":"anonymous","logged_in":true,"lang":"sv","session_id":"181fcd9bcb356a1df446ff40a7a45116b16c3f5c"}
-
+}
 
 REQUEST 6
-POST https://classic.nordnet.se/api/2/authentication/eid/se/bankid/start
-Content-Type: application/x-www-form-urlencoded
+POST https://www.nordnet.se/api/2/authentication/eid/se/bankid/start
+Content-Type: application/json
 Accept: application/json
-User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 13_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148
-ntag: 8A83DC013C2CA873E63D4278655F3E
-Referer: https://classic.nordnet.se/mux/login/startSE.html?clearEndpoint=0&intent=mobile_ios_2&state=signin
+User-Agent: Nordnet/4 CFNetwork/1220.1 Darwin/20.3.0
+
+{
+    "User-Agent": "Nordnet React Native App/ios-14.4.2/12.3.0"
+}
 
 RESPONSE 6
 200
-Date: Thu, 03 Sep 2020 10:16:32 GMT
-Server: Nordnet API
-cache-control: no-cache, no-store, must-revalidate
 content-type: application/json; charset=UTF-8
-expires: 0
-pragma: no-cache
-Vary: Accept-Encoding,User-Agent
-Set-Cookie: ElyHistory0='';expires=1; Max-Age=0; Path=/; Domain=.nordnet.se
-Keep-Alive: timeout=5, max=97
-Connection: Keep-Alive
-Strict-Transport-Security: max-age=31536000
 
-{"auto_start_token":"727fb6ea-580d-4d36-96f0-52c18069daa8","order_ref":"da39991b-ecea-45fc-9800-b484dc01b01b"}
+{
+    "auto_start_token": "727fb6ea-580d-4d36-96f0-52c18069daa8",
+    "order_ref": "da39991b-ecea-45fc-9800-b484dc01b01b"
+}
 
 
 REQUEST 10
-POST https://classic.nordnet.se/api/2/authentication/eid/se/bankid/poll
+POST https://www.nordnet.se/api/2/authentication/eid/se/bankid/poll
 Content-Type: application/json
 Accept: application/json
-ntag: 8A83DC013C2CA873E63D4278655F3E
+User-Agent: Nordnet React Native App/ios-14.4.2/12.3.0
 
-{"order_ref":"da39991b-ecea-45fc-9800-b484dc01b01b"}
+{
+    "order_ref": "da39991b-ecea-45fc-9800-b484dc01b01b"
+}
 
 
 RESPONSE 10
 200
-Date: Thu, 03 Sep 2020 10:16:38 GMT
-Server: Nordnet API
-cache-control: no-cache, no-store, must-revalidate
 content-type: application/json; charset=UTF-8
-expires: 0
-ntag: c3095190b633b675855e88470e24a25232386c8a1d0bfe8d4d2c9832ee979b12
-pragma: no-cache
-set-cookie: NN-JWT=eyJraWQiOiJhM2psbms2Wnp6MjNjVmJERnlSMXdUVXZPQm1lbEdMa0tTUTVmOWFPU1o4IiwidHlwIjoiSldUIiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiJ6aGFuZ2ZhbiIsImF1ZCI6InByb2QiLCJhdXoiOiJ7XCJjbm9cIjo5MDA0OTAxNzgsXCJhY2NcIjpbe1wiYW5vXCI6MTYzMjYzODEsXCJhaWRcIjozfSx7XCJhbm9cIjoxNzc5ODgxMCxcImFpZFwiOjR9LHtcImFub1wiOjE1ODIzNTI5LFwiYWlkXCI6Mn0se1wiYW5vXCI6MTM4NTE1MDYsXCJhaWRcIjoxfSx7XCJhbm9cIjoxODkwODgwNixcImFpZFwiOjV9XX0iLCJpc3MiOiJodHRwczpcL1wvd3d3Lm5vcmRuZXQuc2UiLCJyZWZyZXNoIjoiNzQzMjU5OGYyMzUzODZmODVlZGYwYTE0NDg4Nzk3MDZlMGUzZGRhYyIsImNzcmYiOiJjMzA5NTE5MGI2MzNiNjc1ODU1ZTg4NDcwZTI0YTI1MjMyMzg2YzhhMWQwYmZlOGQ0ZDJjOTgzMmVlOTc5YjEyIiwiZXhwIjoxNTk5MTI4MjI5LCJsYW5nIjoic3YiLCJjb3JnIjoiU0UifQ.j_KiPc37KI3QhLwlR8IUhIHQbMAzJ91iukGuulcyxE9k1K4bhoe5CbxtP_HA7nybRoRuaL3IMNZl-v8-2_YhY9cGgDaQwGBEwqeEyKIqgOevHNp2tgJ_Igh0vyMFZbCTSKYHkp0uFPx2THlPSOO1E7X_PDvIzL3_1QpapRogCLC-ZjenXUkaXzwrwbEVVE7kABq6XCQ9qf-VXS5pdGQkSHLPOUy_x23uYoucx_8DJIWd63PG1aslu7ibE_5dCLDH1S_0vlKJF6gPeNnihD8AhE3iEL5mmySJDsDc_hsFtgdfwkkzwOq3NkysKKR_xcv40haXodg9hzOkngh3VAK25w; Version=1; Expires=Thu, 03-Sep-2020 10:21:39 GMT; Max-Age=300; Domain=nordnet.se; Path=/; Secure; HttpOnly; SameSite=Lax
-set-cookie: NOW=7432598f235386f85edf0a1448879706e0e3ddac; Version=1; Path=/; Secure; HttpOnly
-set-cookie: xsrf=c3095190b633b675855e88470e24a25232386c8a1d0bfe8d4d2c9832ee979b12; Version=1; Path=/; Secure
-set-cookie: ElyHistory0='';expires=1; Max-Age=0; Path=/; Domain=.nordnet.se
-Vary: Accept-Encoding,User-Agent
-Keep-Alive: timeout=5, max=93
-Connection: Keep-Alive
-Strict-Transport-Security: max-age=31536000
 
-{"country":"SE","lang":"sv","logged_in":true,"session_type":"authenticated"}
-
-
-REQUEST 11
-GET https://classic.nordnet.se/customers/required_actions
-Accept: application/json
-User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 13_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148
-Referer: https://classic.nordnet.se/mux/login/startSE.html?clearEndpoint=0&intent=mobile_ios_2&state=signin
-
-RESPONSE 11
-302
-Date: Thu, 03 Sep 2020 10:16:39 GMT
-Server: Apache
-Location: https://www.nordnet.se/customers/required_actions
-Content-Length: 233
-Keep-Alive: timeout=5, max=92
-Connection: Keep-Alive
-Content-Type: text/html; charset=iso-8859-1
-Strict-Transport-Security: max-age=31536000
-
-<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
-<html><head>
-<title>302 Found</title>
-</head><body>
-<h1>Found</h1>
-<p>The document has moved <a href="https://www.nordnet.se/customers/required_actions">here</a>.</p>
-</body></html>
-
-
-REQUEST 12
-GET https://classic.nordnet.se/oauth2/authorize?client_id=MOBILE_IOS_2&response_type=code&redirect_uri=nordnet-react%3A%2F%2Foauth2%2Fauthorize-callback&b=1
-Accept: text/plain,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
-User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 13_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148
-Referer: https://classic.nordnet.se/mux/login/startSE.html?clearEndpoint=0&intent=mobile_ios_2&state=signin
-
-RESPONSE 12
-303
-Date: Thu, 03 Sep 2020 10:16:38 GMT
-Server: Apache-Coyote/1.1
-P3P: CP="Nordnet does not have a P3P policy"
-Location: nordnet-react://oauth2/authorize-callback?code=xxxxxxxxxxxxxxx
-Content-Language: sv-SE
-Content-Length: 0
-Set-Cookie: MOBILE_IOS_2=null; Path=/; Secure; HttpOnly
-Set-Cookie: ElyHistory0='';expires=1; Max-Age=0; Path=/; Domain=.nordnet.se
-Keep-Alive: timeout=5, max=91
-Connection: Keep-Alive
-Content-Type: text/plain; charset=ISO-8859-1
-Strict-Transport-Security: max-age=31536000
-
-REQUEST 13
-POST https://www.nordnet.se/oauth2/token
-Content-Type: application/x-www-form-urlencoded
-User-Agent: Nordnet/7 CFNetwork/1121.2.2 Darwin/19.3.0
-
-code=xxxxxxxxxxxxxxx&client_id=MOBILE_IOS_2&client_secret=6C2B9862-7FEE-CBACE053-3757570ADDEF&grant_type=authorization_code&redirect_uri=nordnet-react%3A%2F%2Foauth2%2Fauthorize-callback
-
-RESPONSE 13 SET OAUTH2
-307
-Server: nginx
-Date: Thu, 03 Sep 2020 10:16:39 GMT
-Transfer-Encoding: chunked
-Connection: keep-alive
-Location: https://classic.nordnet.se/oauth2/token
-Strict-Transport-Security: max-age=31536000
-
-
-REQUEST 14 MATCH OAUTH2
-POST https://classic.nordnet.se/oauth2/token
-Content-Type: application/x-www-form-urlencoded
-User-Agent: Nordnet/7 CFNetwork/1121.2.2 Darwin/19.3.0
-
-code=xxxxxxxxxxxxxxx&client_id=MOBILE_IOS_2&client_secret=6C2B9862-7FEE-CBACE053-3757570ADDEF&grant_type=authorization_code&redirect_uri=nordnet-react%3A%2F%2Foauth2%2Fauthorize-callback
-
-RESPONSE 14
-200
-Date: Thu, 03 Sep 2020 10:16:39 GMT
-Server: Apache-Coyote/1.1
-Cache-Control: no-store
-Pragma: no-cache
-Content-Type: application/json
-Content-Length: 157
-Set-Cookie: ElyHistory0='';expires=1; Max-Age=0; Path=/; Domain=.nordnet.se
-Keep-Alive: timeout=5, max=90
-Connection: Keep-Alive
-Strict-Transport-Security: max-age=31536000
-
-{"access_token":"e34e2957-48ed-4d0b-90e6-6b37d24eb4ce","token_type":"bearer","validation_token":"5a84531f-ecba-483a-96ea-d7f997d603e0","expires_in":10799999}
+{
+    "country": "SE",
+    "lang": "en",
+    "logged_in": true,
+    "session_key": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "session_type": "authenticated"
+}
 
 
 REQUEST 15
 GET https://www.nordnet.se/api/2/accounts
 Accept: application/json
-Authorization: Bearer e34e2957-48ed-4d0b-90e6-6b37d24eb4ce
-User-Agent: Nordnet React Native App/ios-13.3.1/10.10.0
+Authorization: Basic YWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYTphYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFh
+User-Agent: Nordnet React Native App/ios-14.4.2/12.3.0
 
 
 RESPONSE 15
 200
-Server: nginx
-Date: Thu, 03 Sep 2020 10:16:39 GMT
 Content-Type: application/json; charset=UTF-8
-Connection: keep-alive
-ntag: c3095190b633b675855e88470e24a25232386c8a1d0bfe8d4d2c9832ee979b12
-Strict-Transport-Security: max-age=31536000
 
-[{"accno":33333333,"accid":3,"bank_accno":"33333333333","type":"Investeringssparkonto","atyid":125,"symbol":"ISK","account_code":"ISK","role":"OWNER","default":true,"alias":"OF Aktier"},{"accno":44444444,"accid":4,"bank_accno":"44444444444","type":"Investeringssparkonto","atyid":125,"symbol":"ISK","account_code":"ISK","role":"OWNER","default":false,"alias":"OF Fonder"},{"accno":22222222,"accid":2,"bank_accno":"22222222222","type":"Sparkonto","atyid":123,"symbol":"S","account_code":"SPARKONTO","role":"OWNER","default":false,"alias":"OF Sparkonto"},{"accno":11111111,"accid":1,"type":"Tjänstepension","atyid":8,"symbol":"TJP","account_code":"TJF","role":"POLICYHOLDER","default":false,"alias":"Tjänstepension 1"},{"accno":55555555,"accid":5,"type":"Tjänstepension","atyid":8,"symbol":"TJP","account_code":"TJF","role":"POLICYHOLDER","default":false,"alias":"Tjänstepension 2"}]
+[
+    {
+        "accno": 33333333,
+        "accid": 3,
+        "bank_accno": "33333333333",
+        "type": "Investeringssparkonto",
+        "atyid": 125,
+        "symbol": "ISK",
+        "account_code": "ISK",
+        "role": "OWNER",
+        "default": true,
+        "alias": "OF Aktier"
+    },
+    {
+        "accno": 44444444,
+        "accid": 4,
+        "bank_accno": "44444444444",
+        "type": "Investeringssparkonto",
+        "atyid": 125,
+        "symbol": "ISK",
+        "account_code": "ISK",
+        "role": "OWNER",
+        "default": false,
+        "alias": "OF Fonder"
+    },
+    {
+        "accno": 22222222,
+        "accid": 2,
+        "bank_accno": "22222222222",
+        "type": "Sparkonto",
+        "atyid": 123,
+        "symbol": "S",
+        "account_code": "SPARKONTO",
+        "role": "OWNER",
+        "default": false,
+        "alias": "OF Sparkonto"
+    },
+    {
+        "accno": 11111111,
+        "accid": 1,
+        "type": "Tjänstepension",
+        "atyid": 8,
+        "symbol": "TJP",
+        "account_code": "TJF",
+        "role": "POLICYHOLDER",
+        "default": false,
+        "alias": "Tjänstepension 1"
+    },
+    {
+        "accno": 55555555,
+        "accid": 5,
+        "type": "Tjänstepension",
+        "atyid": 8,
+        "symbol": "TJP",
+        "account_code": "TJF",
+        "role": "POLICYHOLDER",
+        "default": false,
+        "alias": "Tjänstepension 2"
+    }
+]
 
 
 REQUEST 16
 GET https://www.nordnet.se/api/2/accounts/2/info
 Accept: application/json
-Authorization: Bearer e34e2957-48ed-4d0b-90e6-6b37d24eb4ce
-User-Agent: Nordnet React Native App/ios-13.3.1/10.10.0
+Authorization: Basic YWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYTphYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFh
+User-Agent: Nordnet React Native App/ios-14.4.2/12.3.0
 
 
 RESPONSE 16
 200
-Server: nginx
-Date: Thu, 03 Sep 2020 10:16:39 GMT
 Content-Type: application/json; charset=UTF-8
-Connection: keep-alive
-ntag: c3095190b633b675855e88470e24a25232386c8a1d0bfe8d4d2c9832ee979b12
-Strict-Transport-Security: max-age=31536000
 
-[{"account_credit":{"currency":"SEK","value":0.0},"collateral":{"currency":"SEK","value":0.0},"pawn_value":{"currency":"SEK","value":0.0},"trading_power":{"currency":"SEK","value":0.0},"loan_limit":{"currency":"SEK","value":0.0},"forward_sum":{"currency":"SEK","value":0.0},"future_sum":{"currency":"SEK","value":0.0},"account_currency":"SEK","interest":{"currency":"SEK","value":0.0},"account_sum":{"currency":"SEK","value":0.0},"unrealized_future_profit_loss":{"currency":"SEK","value":0.0},"own_capital":{"value":0.0,"currency":"SEK"},"own_capital_morning":{"currency":"SEK","value":0.0},"full_marketvalue":{"currency":"SEK","value":0.0},"account_code":"SPARKONTO","bank_accno":"22222222222","interest_rate":0.0,"registration_date":"2016-10-07","accno":22222222,"accid":2}]
+[
+    {
+        "account_credit": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "collateral": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "pawn_value": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "trading_power": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "loan_limit": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "forward_sum": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "future_sum": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "account_currency": "SEK",
+        "interest": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "account_sum": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "unrealized_future_profit_loss": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "own_capital": {
+            "value": 0.0,
+            "currency": "SEK"
+        },
+        "own_capital_morning": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "full_marketvalue": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "account_code": "SPARKONTO",
+        "bank_accno": "22222222222",
+        "interest_rate": 0.0,
+        "registration_date": "2016-10-07",
+        "accno": 22222222,
+        "accid": 2
+    }
+]
 
 REQUEST 17
 GET https://www.nordnet.se/api/2/accounts/3/info
 Accept: application/json
-Authorization: Bearer e34e2957-48ed-4d0b-90e6-6b37d24eb4ce
-User-Agent: Nordnet React Native App/ios-13.3.1/10.10.0
+Authorization: Basic YWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYTphYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFh
+User-Agent: Nordnet React Native App/ios-14.4.2/12.3.0
 
 
 RESPONSE 17
 200
-Server: nginx
-Date: Thu, 03 Sep 2020 10:16:39 GMT
 Content-Type: application/json; charset=UTF-8
-Connection: keep-alive
-ntag: c3095190b633b675855e88470e24a25232386c8a1d0bfe8d4d2c9832ee979b12
-Strict-Transport-Security: max-age=31536000
 
-[{"account_credit":{"currency":"SEK","value":0.0},"collateral":{"currency":"SEK","value":0.0},"pawn_value":{"currency":"SEK","value":0.0},"trading_power":{"currency":"SEK","value":0.27},"loan_limit":{"currency":"SEK","value":0.0},"forward_sum":{"currency":"SEK","value":0.0},"future_sum":{"currency":"SEK","value":0.0},"account_currency":"SEK","interest":{"currency":"SEK","value":0.0},"account_sum":{"currency":"SEK","value":0.27},"unrealized_future_profit_loss":{"currency":"SEK","value":0.0},"own_capital":{"value":175598.69999999998,"currency":"SEK"},"own_capital_morning":{"currency":"SEK","value":180191.14999999997},"full_marketvalue":{"currency":"SEK","value":175598.43},"account_code":"ISK","bank_accno":"33333333333","interest_rate":0.0,"registration_date":"2016-12-25","accno":33333333,"accid":3}]
+[
+    {
+        "account_credit": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "collateral": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "pawn_value": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "trading_power": {
+            "currency": "SEK",
+            "value": 0.27
+        },
+        "loan_limit": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "forward_sum": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "future_sum": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "account_currency": "SEK",
+        "interest": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "account_sum": {
+            "currency": "SEK",
+            "value": 0.27
+        },
+        "unrealized_future_profit_loss": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "own_capital": {
+            "value": 175598.69999999998,
+            "currency": "SEK"
+        },
+        "own_capital_morning": {
+            "currency": "SEK",
+            "value": 180191.14999999997
+        },
+        "full_marketvalue": {
+            "currency": "SEK",
+            "value": 175598.43
+        },
+        "account_code": "ISK",
+        "bank_accno": "33333333333",
+        "interest_rate": 0.0,
+        "registration_date": "2016-12-25",
+        "accno": 33333333,
+        "accid": 3
+    }
+]
 
 
 REQUEST 18
 GET https://www.nordnet.se/api/2/accounts/3/positions?include_instrument_loans=true
 Accept: application/json
-Authorization: Bearer e34e2957-48ed-4d0b-90e6-6b37d24eb4ce
-User-Agent: Nordnet React Native App/ios-13.3.1/10.10.0
+Authorization: Basic YWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYTphYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFh
+User-Agent: Nordnet React Native App/ios-14.4.2/12.3.0
 
 
 RESPONSE 18
 200
-Server: nginx
-Date: Thu, 03 Sep 2020 10:16:39 GMT
 Content-Type: application/json; charset=UTF-8
-Connection: keep-alive
-ntag: c3095190b633b675855e88470e24a25232386c8a1d0bfe8d4d2c9832ee979b12
-Strict-Transport-Security: max-age=31536000
 
-[{"accno":33333333,"accid":3,"instrument":{"mifid2_category":0,"price_type":"monetary_amount","tradables":[{"market_id":13,"tick_size_id":34830908,"display_order":0,"lot_size":1.0,"identifier":"5BTV"}],"instrument_id":16816742,"instrument_type":"ESHMTF","instrument_group_type":"EQ","currency":"SEK","number_of_securities":67716250.0,"leverage_percentage":100.0,"multiplier":1.0,"pawn_percentage":0.0,"margin_percentage":200.0,"symbol":"QBIT","isin_code":"SE0010662585","name":"QuickBit"},"main_market_price":{"currency":"SEK","value":12.03},"morning_price":{"currency":"SEK","value":11.24},"qty":2020.0,"pawn_percent":0,"market_value_acc":{"currency":"SEK","value":24300.6},"market_value":{"currency":"SEK","value":24300.6},"acq_price":{"currency":"SEK","value":5.271782178217822},"acq_price_acc":{"currency":"SEK","value":5.271782178217822},"is_custom_gav":false,"margin_percent":200},{"accno":33333333,"accid":3,"instrument":{"mifid2_category":0,"price_type":"monetary_amount","tradables":[{"market_id":11,"tick_size_id":14732,"display_order":0,"lot_size":1.0,"identifier":"108026"}],"instrument_id":16384190,"asset_class":"EQY","instrument_type":"ESHMTF","instrument_group_type":"EQ","currency":"SEK","number_of_securities":48332595.0,"multiplier":1.0,"pawn_percentage":0.0,"margin_percentage":200.0,"symbol":"SAVOS","isin_code":"FI4000425848","name":"Savosolar Plc"},"main_market_price":{"currency":"SEK","value":2.085},"morning_price":{"currency":"SEK","value":2.06},"qty":400.0,"pawn_percent":0,"market_value_acc":{"currency":"SEK","value":834.0},"market_value":{"currency":"SEK","value":834.0},"acq_price":{"currency":"SEK","value":16.8425},"acq_price_acc":{"currency":"SEK","value":16.8425},"is_custom_gav":false,"margin_percent":200},{"accno":33333333,"accid":3,"instrument":{"mifid2_category":0,"price_type":"monetary_amount","tradables":[{"market_id":13,"tick_size_id":34830905,"display_order":0,"lot_size":1.0,"identifier":"3SJQ"}],"instrument_id":16102370,"instrument_type":"ESHMTF","instrument_group_type":"EQ","currency":"SEK","number_of_securities":1406008935.0,"leverage_percentage":100.0,"multiplier":1.0,"pawn_percentage":0.0,"margin_percentage":200.0,"symbol":"ABIG","isin_code":"SE0003617075","name":"Abelco Investment Group"},"main_market_price":{"currency":"SEK","value":0.053},"morning_price":{"currency":"SEK","value":0.055},"qty":290000.0,"pawn_percent":0,"market_value_acc":{"currency":"SEK","value":15370.0},"market_value":{"currency":"SEK","value":15370.0},"acq_price":{"currency":"SEK","value":0.21347241379310344},"acq_price_acc":{"currency":"SEK","value":0.21347241379310344},"is_custom_gav":false,"margin_percent":200},{"accno":33333333,"accid":3,"instrument":{"mifid2_category":1,"price_type":"monetary_amount","expiration_date":"2021-06-28","tradables":[{"market_id":13,"tick_size_id":34830906,"display_order":0,"lot_size":1.0,"identifier":"598N"}],"instrument_id":17062390,"instrument_type":"ESR","instrument_group_type":"EQ","currency":"SEK","number_of_securities":204291224.0,"leverage_percentage":100.0,"multiplier":1.0,"pawn_percentage":0.0,"margin_percentage":200.0,"symbol":"ABIG TO2","isin_code":"SE0012728822","name":"Abelco Investment Group TO2"},"main_market_price":{"currency":"SEK","value":0.018},"morning_price":{"currency":"SEK","value":0.019},"qty":41750.0,"pawn_percent":0,"market_value_acc":{"currency":"SEK","value":751.5},"market_value":{"currency":"SEK","value":751.5},"acq_price":{"currency":"SEK","value":0.0},"acq_price_acc":{"currency":"SEK","value":0.0},"is_custom_gav":false,"margin_percent":200},{"accno":33333333,"accid":3,"instrument":{"mifid2_category":0,"price_type":"monetary_amount","tradables":[{"market_id":52,"tick_size_id":34830905,"display_order":0,"lot_size":1.0,"identifier":"412E"}],"instrument_id":16287741,"asset_class":"EQY","instrument_type":"ESHMTF","instrument_group_type":"EQ","currency":"SEK","number_of_securities":1802487955.0,"leverage_percentage":100.0,"multiplier":1.0,"pawn_percentage":0.0,"margin_percentage":160.0,"symbol":"FLOWS","isin_code":"SE0005937117","name":"Flowscape"},"main_market_price":{"currency":"SEK","value":0.103},"morning_price":{"currency":"SEK","value":0.11},"qty":650000.0,"pawn_percent":0,"market_value_acc":{"currency":"SEK","value":66950.0},"market_value":{"currency":"SEK","value":66950.0},"acq_price":{"currency":"SEK","value":0.12544347720326374},"acq_price_acc":{"currency":"SEK","value":0.12544347720326374},"is_custom_gav":false,"margin_percent":160},{"accno":33333333,"accid":3,"instrument":{"mifid2_category":0,"price_type":"monetary_amount","tradables":[{"market_id":11,"tick_size_id":14732,"display_order":0,"lot_size":1.0,"identifier":"110094"}],"instrument_id":16391933,"asset_class":"EQY","instrument_type":"ESHMTF","instrument_group_type":"EQ","currency":"SEK","number_of_securities":181044961.0,"multiplier":1.0,"pawn_percentage":0.0,"margin_percentage":200.0,"symbol":"SPEONE","isin_code":"SE0006994448","name":"SpectrumOne AB"},"main_market_price":{"currency":"SEK","value":2.1},"morning_price":{"currency":"SEK","value":2.16},"qty":22500.0,"pawn_percent":0,"market_value_acc":{"currency":"SEK","value":47250.0},"market_value":{"currency":"SEK","value":47250.0},"acq_price":{"currency":"SEK","value":0.5496410256410256},"acq_price_acc":{"currency":"SEK","value":0.5496410256410256},"is_custom_gav":false,"margin_percent":200},{"accno":33333333,"accid":3,"instrument":{"mifid2_category":0,"price_type":"monetary_amount","tradables":[{"market_id":11,"tick_size_id":14732,"display_order":0,"lot_size":1.0,"identifier":"184183"}],"instrument_id":16750575,"asset_class":"EQY","instrument_type":"ESHMTF","instrument_group_type":"EQ","currency":"SEK","number_of_securities":83985932.0,"leverage_percentage":100.0,"multiplier":1.0,"pawn_percentage":0.0,"margin_percentage":200.0,"symbol":"BUBL","isin_code":"SE0010270793","name":"Bublar Group AB"},"main_market_price":{"currency":"SEK","value":3.31},"morning_price":{"currency":"SEK","value":3.44},"qty":3050.0,"pawn_percent":0,"market_value_acc":{"currency":"SEK","value":10095.5},"market_value":{"currency":"SEK","value":10095.5},"acq_price":{"currency":"SEK","value":4.64},"acq_price_acc":{"currency":"SEK","value":4.64},"is_custom_gav":false,"margin_percent":200},{"accno":33333333,"accid":3,"instrument":{"mifid2_category":1,"price_type":"monetary_amount","expiration_date":"2021-02-24","tradables":[{"market_id":13,"tick_size_id":34830906,"display_order":0,"lot_size":1.0,"identifier":"6DH0"}],"instrument_id":17240419,"instrument_type":"ESR","instrument_group_type":"EQ","currency":"SEK","number_of_securities":145459707.0,"leverage_percentage":100.0,"multiplier":1.0,"pawn_percentage":0.0,"margin_percentage":200.0,"symbol":"ABIG TO3","isin_code":"SE0014262044","name":"Abelco Investment Group TO3"},"main_market_price":{"currency":"SEK","value":0.015},"morning_price":{"currency":"SEK","value":0.015},"qty":32222.0,"pawn_percent":0,"market_value_acc":{"currency":"SEK","value":483.33},"market_value":{"currency":"SEK","value":483.33},"acq_price":{"currency":"SEK","value":0.0},"acq_price_acc":{"currency":"SEK","value":0.0},"is_custom_gav":false,"margin_percent":200},{"accno":33333333,"accid":3,"instrument":{"mifid2_category":1,"price_type":"monetary_amount","expiration_date":"2020-12-29","tradables":[{"market_id":13,"tick_size_id":34830906,"display_order":0,"lot_size":1.0,"identifier":"5BTX"}],"instrument_id":16829673,"instrument_type":"ESR","instrument_group_type":"EQ","currency":"SEK","number_of_securities":20859125.0,"leverage_percentage":100.0,"multiplier":1.0,"pawn_percentage":0.0,"margin_percentage":200.0,"symbol":"QBIT TO1","isin_code":"SE0010920751","name":"QuickBit TO1"},"main_market_price":{"currency":"SEK","value":7.9},"morning_price":{"currency":"SEK","value":7.3},"qty":1200.0,"pawn_percent":0,"market_value_acc":{"currency":"SEK","value":9480.0},"market_value":{"currency":"SEK","value":9480.0},"acq_price":{"currency":"SEK","value":0.0},"acq_price_acc":{"currency":"SEK","value":0.0},"is_custom_gav":false,"margin_percent":200},{"accno":33333333,"accid":3,"instrument":{"mifid2_category":1,"price_type":"monetary_amount","expiration_date":"2020-11-26","tradables":[{"market_id":13,"tick_size_id":34830906,"display_order":0,"lot_size":1.0,"identifier":"4JV3"}],"instrument_id":16917875,"instrument_type":"ESR","instrument_group_type":"EQ","currency":"SEK","leverage_percentage":100.0,"multiplier":1.0,"pawn_percentage":0.0,"margin_percentage":200.0,"symbol":"ABIG TO1","isin_code":"SE0011642172","name":"Abelco Investment Group TO1"},"main_market_price":{"currency":"SEK","value":0.005},"morning_price":{"currency":"SEK","value":0.005},"qty":16700.0,"pawn_percent":0,"market_value_acc":{"currency":"SEK","value":83.5},"market_value":{"currency":"SEK","value":83.5},"acq_price":{"currency":"SEK","value":0.0},"acq_price_acc":{"currency":"SEK","value":0.0},"is_custom_gav":false,"margin_percent":200}]
+[
+    {
+        "accno": 33333333,
+        "accid": 3,
+        "instrument": {
+            "mifid2_category": 0,
+            "price_type": "monetary_amount",
+            "tradables": [
+                {
+                    "market_id": 13,
+                    "tick_size_id": 34830908,
+                    "display_order": 0,
+                    "lot_size": 1.0,
+                    "identifier": "5BTV"
+                }
+            ],
+            "instrument_id": 16816742,
+            "instrument_type": "ESHMTF",
+            "instrument_group_type": "EQ",
+            "currency": "SEK",
+            "number_of_securities": 67716250.0,
+            "leverage_percentage": 100.0,
+            "multiplier": 1.0,
+            "pawn_percentage": 0.0,
+            "margin_percentage": 200.0,
+            "symbol": "QBIT",
+            "isin_code": "SE0010662585",
+            "name": "QuickBit"
+        },
+        "main_market_price": {
+            "currency": "SEK",
+            "value": 12.03
+        },
+        "morning_price": {
+            "currency": "SEK",
+            "value": 11.24
+        },
+        "qty": 2020.0,
+        "pawn_percent": 0,
+        "market_value_acc": {
+            "currency": "SEK",
+            "value": 24300.6
+        },
+        "market_value": {
+            "currency": "SEK",
+            "value": 24300.6
+        },
+        "acq_price": {
+            "currency": "SEK",
+            "value": 5.271782178217822
+        },
+        "acq_price_acc": {
+            "currency": "SEK",
+            "value": 5.271782178217822
+        },
+        "is_custom_gav": false,
+        "margin_percent": 200
+    },
+    {
+        "accno": 33333333,
+        "accid": 3,
+        "instrument": {
+            "mifid2_category": 0,
+            "price_type": "monetary_amount",
+            "tradables": [
+                {
+                    "market_id": 11,
+                    "tick_size_id": 14732,
+                    "display_order": 0,
+                    "lot_size": 1.0,
+                    "identifier": "108026"
+                }
+            ],
+            "instrument_id": 16384190,
+            "asset_class": "EQY",
+            "instrument_type": "ESHMTF",
+            "instrument_group_type": "EQ",
+            "currency": "SEK",
+            "number_of_securities": 48332595.0,
+            "multiplier": 1.0,
+            "pawn_percentage": 0.0,
+            "margin_percentage": 200.0,
+            "symbol": "SAVOS",
+            "isin_code": "FI4000425848",
+            "name": "Savosolar Plc"
+        },
+        "main_market_price": {
+            "currency": "SEK",
+            "value": 2.085
+        },
+        "morning_price": {
+            "currency": "SEK",
+            "value": 2.06
+        },
+        "qty": 400.0,
+        "pawn_percent": 0,
+        "market_value_acc": {
+            "currency": "SEK",
+            "value": 834.0
+        },
+        "market_value": {
+            "currency": "SEK",
+            "value": 834.0
+        },
+        "acq_price": {
+            "currency": "SEK",
+            "value": 16.8425
+        },
+        "acq_price_acc": {
+            "currency": "SEK",
+            "value": 16.8425
+        },
+        "is_custom_gav": false,
+        "margin_percent": 200
+    },
+    {
+        "accno": 33333333,
+        "accid": 3,
+        "instrument": {
+            "mifid2_category": 0,
+            "price_type": "monetary_amount",
+            "tradables": [
+                {
+                    "market_id": 13,
+                    "tick_size_id": 34830905,
+                    "display_order": 0,
+                    "lot_size": 1.0,
+                    "identifier": "3SJQ"
+                }
+            ],
+            "instrument_id": 16102370,
+            "instrument_type": "ESHMTF",
+            "instrument_group_type": "EQ",
+            "currency": "SEK",
+            "number_of_securities": 1406008935.0,
+            "leverage_percentage": 100.0,
+            "multiplier": 1.0,
+            "pawn_percentage": 0.0,
+            "margin_percentage": 200.0,
+            "symbol": "ABIG",
+            "isin_code": "SE0003617075",
+            "name": "Abelco Investment Group"
+        },
+        "main_market_price": {
+            "currency": "SEK",
+            "value": 0.053
+        },
+        "morning_price": {
+            "currency": "SEK",
+            "value": 0.055
+        },
+        "qty": 290000.0,
+        "pawn_percent": 0,
+        "market_value_acc": {
+            "currency": "SEK",
+            "value": 15370.0
+        },
+        "market_value": {
+            "currency": "SEK",
+            "value": 15370.0
+        },
+        "acq_price": {
+            "currency": "SEK",
+            "value": 0.21347241379310344
+        },
+        "acq_price_acc": {
+            "currency": "SEK",
+            "value": 0.21347241379310344
+        },
+        "is_custom_gav": false,
+        "margin_percent": 200
+    },
+    {
+        "accno": 33333333,
+        "accid": 3,
+        "instrument": {
+            "mifid2_category": 1,
+            "price_type": "monetary_amount",
+            "expiration_date": "2021-06-28",
+            "tradables": [
+                {
+                    "market_id": 13,
+                    "tick_size_id": 34830906,
+                    "display_order": 0,
+                    "lot_size": 1.0,
+                    "identifier": "598N"
+                }
+            ],
+            "instrument_id": 17062390,
+            "instrument_type": "ESR",
+            "instrument_group_type": "EQ",
+            "currency": "SEK",
+            "number_of_securities": 204291224.0,
+            "leverage_percentage": 100.0,
+            "multiplier": 1.0,
+            "pawn_percentage": 0.0,
+            "margin_percentage": 200.0,
+            "symbol": "ABIG TO2",
+            "isin_code": "SE0012728822",
+            "name": "Abelco Investment Group TO2"
+        },
+        "main_market_price": {
+            "currency": "SEK",
+            "value": 0.018
+        },
+        "morning_price": {
+            "currency": "SEK",
+            "value": 0.019
+        },
+        "qty": 41750.0,
+        "pawn_percent": 0,
+        "market_value_acc": {
+            "currency": "SEK",
+            "value": 751.5
+        },
+        "market_value": {
+            "currency": "SEK",
+            "value": 751.5
+        },
+        "acq_price": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "acq_price_acc": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "is_custom_gav": false,
+        "margin_percent": 200
+    },
+    {
+        "accno": 33333333,
+        "accid": 3,
+        "instrument": {
+            "mifid2_category": 0,
+            "price_type": "monetary_amount",
+            "tradables": [
+                {
+                    "market_id": 52,
+                    "tick_size_id": 34830905,
+                    "display_order": 0,
+                    "lot_size": 1.0,
+                    "identifier": "412E"
+                }
+            ],
+            "instrument_id": 16287741,
+            "asset_class": "EQY",
+            "instrument_type": "ESHMTF",
+            "instrument_group_type": "EQ",
+            "currency": "SEK",
+            "number_of_securities": 1802487955.0,
+            "leverage_percentage": 100.0,
+            "multiplier": 1.0,
+            "pawn_percentage": 0.0,
+            "margin_percentage": 160.0,
+            "symbol": "FLOWS",
+            "isin_code": "SE0005937117",
+            "name": "Flowscape"
+        },
+        "main_market_price": {
+            "currency": "SEK",
+            "value": 0.103
+        },
+        "morning_price": {
+            "currency": "SEK",
+            "value": 0.11
+        },
+        "qty": 650000.0,
+        "pawn_percent": 0,
+        "market_value_acc": {
+            "currency": "SEK",
+            "value": 66950.0
+        },
+        "market_value": {
+            "currency": "SEK",
+            "value": 66950.0
+        },
+        "acq_price": {
+            "currency": "SEK",
+            "value": 0.12544347720326374
+        },
+        "acq_price_acc": {
+            "currency": "SEK",
+            "value": 0.12544347720326374
+        },
+        "is_custom_gav": false,
+        "margin_percent": 160
+    },
+    {
+        "accno": 33333333,
+        "accid": 3,
+        "instrument": {
+            "mifid2_category": 0,
+            "price_type": "monetary_amount",
+            "tradables": [
+                {
+                    "market_id": 11,
+                    "tick_size_id": 14732,
+                    "display_order": 0,
+                    "lot_size": 1.0,
+                    "identifier": "110094"
+                }
+            ],
+            "instrument_id": 16391933,
+            "asset_class": "EQY",
+            "instrument_type": "ESHMTF",
+            "instrument_group_type": "EQ",
+            "currency": "SEK",
+            "number_of_securities": 181044961.0,
+            "multiplier": 1.0,
+            "pawn_percentage": 0.0,
+            "margin_percentage": 200.0,
+            "symbol": "SPEONE",
+            "isin_code": "SE0006994448",
+            "name": "SpectrumOne AB"
+        },
+        "main_market_price": {
+            "currency": "SEK",
+            "value": 2.1
+        },
+        "morning_price": {
+            "currency": "SEK",
+            "value": 2.16
+        },
+        "qty": 22500.0,
+        "pawn_percent": 0,
+        "market_value_acc": {
+            "currency": "SEK",
+            "value": 47250.0
+        },
+        "market_value": {
+            "currency": "SEK",
+            "value": 47250.0
+        },
+        "acq_price": {
+            "currency": "SEK",
+            "value": 0.5496410256410256
+        },
+        "acq_price_acc": {
+            "currency": "SEK",
+            "value": 0.5496410256410256
+        },
+        "is_custom_gav": false,
+        "margin_percent": 200
+    },
+    {
+        "accno": 33333333,
+        "accid": 3,
+        "instrument": {
+            "mifid2_category": 0,
+            "price_type": "monetary_amount",
+            "tradables": [
+                {
+                    "market_id": 11,
+                    "tick_size_id": 14732,
+                    "display_order": 0,
+                    "lot_size": 1.0,
+                    "identifier": "184183"
+                }
+            ],
+            "instrument_id": 16750575,
+            "asset_class": "EQY",
+            "instrument_type": "ESHMTF",
+            "instrument_group_type": "EQ",
+            "currency": "SEK",
+            "number_of_securities": 83985932.0,
+            "leverage_percentage": 100.0,
+            "multiplier": 1.0,
+            "pawn_percentage": 0.0,
+            "margin_percentage": 200.0,
+            "symbol": "BUBL",
+            "isin_code": "SE0010270793",
+            "name": "Bublar Group AB"
+        },
+        "main_market_price": {
+            "currency": "SEK",
+            "value": 3.31
+        },
+        "morning_price": {
+            "currency": "SEK",
+            "value": 3.44
+        },
+        "qty": 3050.0,
+        "pawn_percent": 0,
+        "market_value_acc": {
+            "currency": "SEK",
+            "value": 10095.5
+        },
+        "market_value": {
+            "currency": "SEK",
+            "value": 10095.5
+        },
+        "acq_price": {
+            "currency": "SEK",
+            "value": 4.64
+        },
+        "acq_price_acc": {
+            "currency": "SEK",
+            "value": 4.64
+        },
+        "is_custom_gav": false,
+        "margin_percent": 200
+    },
+    {
+        "accno": 33333333,
+        "accid": 3,
+        "instrument": {
+            "mifid2_category": 1,
+            "price_type": "monetary_amount",
+            "expiration_date": "2021-02-24",
+            "tradables": [
+                {
+                    "market_id": 13,
+                    "tick_size_id": 34830906,
+                    "display_order": 0,
+                    "lot_size": 1.0,
+                    "identifier": "6DH0"
+                }
+            ],
+            "instrument_id": 17240419,
+            "instrument_type": "ESR",
+            "instrument_group_type": "EQ",
+            "currency": "SEK",
+            "number_of_securities": 145459707.0,
+            "leverage_percentage": 100.0,
+            "multiplier": 1.0,
+            "pawn_percentage": 0.0,
+            "margin_percentage": 200.0,
+            "symbol": "ABIG TO3",
+            "isin_code": "SE0014262044",
+            "name": "Abelco Investment Group TO3"
+        },
+        "main_market_price": {
+            "currency": "SEK",
+            "value": 0.015
+        },
+        "morning_price": {
+            "currency": "SEK",
+            "value": 0.015
+        },
+        "qty": 32222.0,
+        "pawn_percent": 0,
+        "market_value_acc": {
+            "currency": "SEK",
+            "value": 483.33
+        },
+        "market_value": {
+            "currency": "SEK",
+            "value": 483.33
+        },
+        "acq_price": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "acq_price_acc": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "is_custom_gav": false,
+        "margin_percent": 200
+    },
+    {
+        "accno": 33333333,
+        "accid": 3,
+        "instrument": {
+            "mifid2_category": 1,
+            "price_type": "monetary_amount",
+            "expiration_date": "2020-12-29",
+            "tradables": [
+                {
+                    "market_id": 13,
+                    "tick_size_id": 34830906,
+                    "display_order": 0,
+                    "lot_size": 1.0,
+                    "identifier": "5BTX"
+                }
+            ],
+            "instrument_id": 16829673,
+            "instrument_type": "ESR",
+            "instrument_group_type": "EQ",
+            "currency": "SEK",
+            "number_of_securities": 20859125.0,
+            "leverage_percentage": 100.0,
+            "multiplier": 1.0,
+            "pawn_percentage": 0.0,
+            "margin_percentage": 200.0,
+            "symbol": "QBIT TO1",
+            "isin_code": "SE0010920751",
+            "name": "QuickBit TO1"
+        },
+        "main_market_price": {
+            "currency": "SEK",
+            "value": 7.9
+        },
+        "morning_price": {
+            "currency": "SEK",
+            "value": 7.3
+        },
+        "qty": 1200.0,
+        "pawn_percent": 0,
+        "market_value_acc": {
+            "currency": "SEK",
+            "value": 9480.0
+        },
+        "market_value": {
+            "currency": "SEK",
+            "value": 9480.0
+        },
+        "acq_price": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "acq_price_acc": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "is_custom_gav": false,
+        "margin_percent": 200
+    },
+    {
+        "accno": 33333333,
+        "accid": 3,
+        "instrument": {
+            "mifid2_category": 1,
+            "price_type": "monetary_amount",
+            "expiration_date": "2020-11-26",
+            "tradables": [
+                {
+                    "market_id": 13,
+                    "tick_size_id": 34830906,
+                    "display_order": 0,
+                    "lot_size": 1.0,
+                    "identifier": "4JV3"
+                }
+            ],
+            "instrument_id": 16917875,
+            "instrument_type": "ESR",
+            "instrument_group_type": "EQ",
+            "currency": "SEK",
+            "leverage_percentage": 100.0,
+            "multiplier": 1.0,
+            "pawn_percentage": 0.0,
+            "margin_percentage": 200.0,
+            "symbol": "ABIG TO1",
+            "isin_code": "SE0011642172",
+            "name": "Abelco Investment Group TO1"
+        },
+        "main_market_price": {
+            "currency": "SEK",
+            "value": 0.005
+        },
+        "morning_price": {
+            "currency": "SEK",
+            "value": 0.005
+        },
+        "qty": 16700.0,
+        "pawn_percent": 0,
+        "market_value_acc": {
+            "currency": "SEK",
+            "value": 83.5
+        },
+        "market_value": {
+            "currency": "SEK",
+            "value": 83.5
+        },
+        "acq_price": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "acq_price_acc": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "is_custom_gav": false,
+        "margin_percent": 200
+    }
+]
 
 
 REQUEST 19
 GET https://www.nordnet.se/api/2/accounts/4/info
 Accept: application/json
-Authorization: Bearer e34e2957-48ed-4d0b-90e6-6b37d24eb4ce
-User-Agent: Nordnet React Native App/ios-13.3.1/10.10.0
+Authorization: Basic YWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYTphYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFh
+User-Agent: Nordnet React Native App/ios-14.4.2/12.3.0
 
 RESPONSE 19
 200
-Server: nginx
-Date: Thu, 03 Sep 2020 10:16:40 GMT
 Content-Type: application/json; charset=UTF-8
-Connection: keep-alive
-ntag: c3095190b633b675855e88470e24a25232386c8a1d0bfe8d4d2c9832ee979b12
-Strict-Transport-Security: max-age=31536000
 
-[{"account_credit":{"currency":"SEK","value":0.0},"collateral":{"currency":"SEK","value":0.0},"pawn_value":{"currency":"SEK","value":0.0},"trading_power":{"currency":"SEK","value":0.35},"loan_limit":{"currency":"SEK","value":0.0},"forward_sum":{"currency":"SEK","value":0.0},"future_sum":{"currency":"SEK","value":0.0},"account_currency":"SEK","interest":{"currency":"SEK","value":0.0},"account_sum":{"currency":"SEK","value":0.35},"unrealized_future_profit_loss":{"currency":"SEK","value":0.0},"own_capital":{"value":0.35,"currency":"SEK"},"own_capital_morning":{"currency":"SEK","value":0.35},"full_marketvalue":{"currency":"SEK","value":0.0},"account_code":"ISK","bank_accno":"44444444444","interest_rate":0.0,"registration_date":"2017-07-26","accno":44444444,"accid":4}]
+[
+    {
+        "account_credit": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "collateral": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "pawn_value": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "trading_power": {
+            "currency": "SEK",
+            "value": 0.35
+        },
+        "loan_limit": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "forward_sum": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "future_sum": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "account_currency": "SEK",
+        "interest": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "account_sum": {
+            "currency": "SEK",
+            "value": 0.35
+        },
+        "unrealized_future_profit_loss": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "own_capital": {
+            "value": 0.35,
+            "currency": "SEK"
+        },
+        "own_capital_morning": {
+            "currency": "SEK",
+            "value": 0.35
+        },
+        "full_marketvalue": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "account_code": "ISK",
+        "bank_accno": "44444444444",
+        "interest_rate": 0.0,
+        "registration_date": "2017-07-26",
+        "accno": 44444444,
+        "accid": 4
+    }
+]
 
 
 REQUEST 20
 GET https://www.nordnet.se/api/2/accounts/4/positions?include_instrument_loans=true
 Accept: application/json
-Authorization: Bearer e34e2957-48ed-4d0b-90e6-6b37d24eb4ce
-User-Agent: Nordnet React Native App/ios-13.3.1/10.10.0
+Authorization: Basic YWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYTphYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFh
+User-Agent: Nordnet React Native App/ios-14.4.2/12.3.0
 
 
 RESPONSE 20
 204
-Server: nginx
-Date: Thu, 03 Sep 2020 10:16:40 GMT
 Content-Type: application/json; charset=UTF-8
-Connection: keep-alive
-ntag: c3095190b633b675855e88470e24a25232386c8a1d0bfe8d4d2c9832ee979b12
-Strict-Transport-Security: max-age=31536000
 
 
 REQUEST 21
 GET https://www.nordnet.se/api/2/accounts/1/info
 Accept: application/json
-Authorization: Bearer e34e2957-48ed-4d0b-90e6-6b37d24eb4ce
-User-Agent: Nordnet React Native App/ios-13.3.1/10.10.0
+Authorization: Basic YWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYTphYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFh
+User-Agent: Nordnet React Native App/ios-14.4.2/12.3.0
 
 
 RESPONSE 21
 200
-Server: nginx
-Date: Thu, 03 Sep 2020 10:16:40 GMT
 Content-Type: application/json; charset=UTF-8
-Connection: keep-alive
-ntag: c3095190b633b675855e88470e24a25232386c8a1d0bfe8d4d2c9832ee979b12
-Strict-Transport-Security: max-age=31536000
 
-[{"account_credit":{"currency":"SEK","value":0.0},"collateral":{"currency":"SEK","value":0.0},"pawn_value":{"currency":"SEK","value":0.0},"trading_power":{"currency":"SEK","value":0.72},"loan_limit":{"currency":"SEK","value":0.0},"forward_sum":{"currency":"SEK","value":0.0},"future_sum":{"currency":"SEK","value":0.0},"account_currency":"SEK","interest":{"currency":"SEK","value":0.0},"account_sum":{"currency":"SEK","value":0.72},"unrealized_future_profit_loss":{"currency":"SEK","value":0.0},"own_capital":{"value":20108.3095671207,"currency":"SEK"},"own_capital_morning":{"currency":"SEK","value":20108.3095671207},"full_marketvalue":{"currency":"SEK","value":20107.5895671207},"account_code":"TJF","interest_rate":0.0,"registration_date":"2015-09-10","accno":11111111,"accid":1}]
+[
+    {
+        "account_credit": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "collateral": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "pawn_value": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "trading_power": {
+            "currency": "SEK",
+            "value": 0.72
+        },
+        "loan_limit": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "forward_sum": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "future_sum": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "account_currency": "SEK",
+        "interest": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "account_sum": {
+            "currency": "SEK",
+            "value": 0.72
+        },
+        "unrealized_future_profit_loss": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "own_capital": {
+            "value": 20108.3095671207,
+            "currency": "SEK"
+        },
+        "own_capital_morning": {
+            "currency": "SEK",
+            "value": 20108.3095671207
+        },
+        "full_marketvalue": {
+            "currency": "SEK",
+            "value": 20107.5895671207
+        },
+        "account_code": "TJF",
+        "interest_rate": 0.0,
+        "registration_date": "2015-09-10",
+        "accno": 11111111,
+        "accid": 1
+    }
+]
 
 
 REQUEST 22
 GET https://www.nordnet.se/api/2/accounts/1/positions?include_instrument_loans=true
 Accept: application/json
-Authorization: Bearer e34e2957-48ed-4d0b-90e6-6b37d24eb4ce
-User-Agent: Nordnet React Native App/ios-13.3.1/10.10.0
+Authorization: Basic YWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYTphYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFh
+User-Agent: Nordnet React Native App/ios-14.4.2/12.3.0
 
 
 RESPONSE 22
 200
-Server: nginx
-Date: Thu, 03 Sep 2020 10:16:40 GMT
 Content-Type: application/json; charset=UTF-8
-Connection: keep-alive
-ntag: c3095190b633b675855e88470e24a25232386c8a1d0bfe8d4d2c9832ee979b12
-Strict-Transport-Security: max-age=31536000
 
-[{"accno":11111111,"accid":1,"instrument":{"has_ucits":true,"no_of_decimals":4,"mifid2_category":0,"prospectus_url":"http://doc.morningstar.com/document/288418ed9ecc78efb362dbfaf8a9a52f.msdoc/?clientid=nordnet&key=b3a3825282b90bac","price_type":"monetary_amount","underlyings":[{"instrumment_id":16123344,"instrument_id":16123344,"symbol":"V","isin_code":"US92826C8394"},{"instrumment_id":16119063,"instrument_id":16119063,"symbol":"MSFT","isin_code":"US5949181045"},{"instrumment_id":16121793,"instrument_id":16121793,"symbol":"JNJ","isin_code":"US4781601046"},{"instrumment_id":16117575,"instrument_id":16117575,"symbol":"FB","isin_code":"US30303M1027"},{"instrumment_id":16118139,"instrument_id":16118139,"symbol":"AAPL","isin_code":"US0378331005"},{"instrumment_id":16118217,"instrument_id":16118217,"symbol":"AMZN","isin_code":"US0231351067"},{"instrumment_id":16457329,"instrument_id":16457329,"symbol":"GOOGL","isin_code":"US02079K3059"},{"instrumment_id":16457330,"instrument_id":16457330,"symbol":"GOOG","isin_code":"US02079K1079"},{"instrumment_id":16162041,"instrument_id":16162041,"symbol":"NESN.CH","isin_code":"CH0038863350"}],"tradables":[{"market_id":78,"tick_size_id":14729,"display_order":1,"lot_size":1.0,"identifier":"0P0000ZWWE"}],"instrument_id":16800874,"instrument_type":"FUCITS","instrument_group_type":"FND","currency":"SEK","management_fee":0.2,"multiplier":1.0,"pawn_percentage":85.0,"margin_percentage":200.0,"symbol":"DNB GL INDEKS A SEK","isin_code":"NO0010582984","name":"DNB Global Indeks A","has_fund_data":true,"category":"Global, mix bolag","institute":"DNB Asset Management AS","rating":4,"is_daily_traded":true,"min_investment":100.0,"sell_fee":0.0,"buy_fee":0.0,"performance_one_day":0.88,"performance_one_week":0.61,"performance_one_month":6.2,"performance_this_year":-1.34,"performance_three_years":44.46,"performance_five_years":72.63,"last_nav":366.0325,"last_nav_date":"2020-09-01"},"main_market_price":{"currency":"SEK","value":366.0325},"morning_price":{"currency":"SEK","value":366.0325},"qty":11.3578,"pawn_percent":85,"market_value_acc":{"currency":"SEK","value":4157.3239285},"market_value":{"currency":"SEK","value":4157.3239285},"acq_price":{"currency":"SEK","value":264.1356600750145},"acq_price_acc":{"currency":"SEK","value":264.1356600750145},"is_custom_gav":false,"margin_percent":200},{"accno":11111111,"accid":1,"instrument":{"no_of_decimals":4,"mifid2_category":0,"prospectus_url":"http://doc.morningstar.com/document/60dc89c668a4499db137c439e5145ac2.msdoc/?clientid=nordnet&key=b3a3825282b90bac","price_type":"monetary_amount","underlyings":[{"instrumment_id":16334653,"instrument_id":16334653,"symbol":"LIFCO B","isin_code":"SE0006370730"},{"instrumment_id":16096164,"instrument_id":16096164,"symbol":"INDT","isin_code":"SE0001515552"},{"instrumment_id":16099736,"instrument_id":16099736,"symbol":"LATO B","isin_code":"SE0010100958"},{"instrumment_id":16099821,"instrument_id":16099821,"symbol":"KINV B","isin_code":"SE0014684528"},{"instrumment_id":16099749,"instrument_id":16099749,"symbol":"XACT OMXS30","isin_code":"SE0000693293"},{"instrumment_id":16099713,"instrument_id":16099713,"symbol":"ICA","isin_code":"SE0000652216"},{"instrumment_id":16100055,"instrument_id":16100055,"symbol":"RATO B","isin_code":"SE0000111940"},{"instrumment_id":16099886,"instrument_id":16099886,"symbol":"LUND B","isin_code":"SE0000108847"},{"instrumment_id":16102308,"instrument_id":16102308,"symbol":"INVE B","isin_code":"SE0000107419"},{"instrumment_id":16102232,"instrument_id":16102232,"symbol":"INDU C","isin_code":"SE0000107203"}],"tradables":[{"market_id":78,"tick_size_id":14729,"display_order":1,"lot_size":1.0,"identifier":"F00000NBM7"}],"instrument_id":16801314,"instrument_type":"FOTH","instrument_group_type":"FND","currency":"SEK","management_fee":0.2,"multiplier":1.0,"pawn_percentage":85.0,"margin_percentage":120.0,"symbol":"SPILTAN INVESTMENTBOLAG","isin_code":"SE0004297927","name":"Spiltan Aktiefond Investmentbolag","has_fund_data":true,"category":"Sverige","institute":"Spiltan Fonder AB","rating":5,"is_daily_traded":true,"min_investment":100.0,"sell_fee":0.0,"buy_fee":0.0,"performance_one_day":1.07,"performance_one_week":-1.48,"performance_one_month":6.97,"performance_this_year":13.23,"performance_three_years":54.83,"performance_five_years":104.18,"last_nav":477.03,"last_nav_date":"2020-09-02"},"main_market_price":{"currency":"SEK","value":477.03},"morning_price":{"currency":"SEK","value":477.03},"qty":11.5892,"pawn_percent":85,"market_value_acc":{"currency":"SEK","value":5528.396076},"market_value":{"currency":"SEK","value":5528.396076},"acq_price":{"currency":"SEK","value":327.65972020068835},"acq_price_acc":{"currency":"SEK","value":327.65972020068835},"is_custom_gav":false,"margin_percent":120},{"accno":11111111,"accid":1,"instrument":{"has_ucits":true,"no_of_decimals":4,"mifid2_category":0,"prospectus_url":"http://doc.morningstar.com/document/cd4eec99efba8a2df66b5f495d23eebd.msdoc/?clientid=nordnet&key=b3a3825282b90bac","price_type":"monetary_amount","underlyings":[{"instrumment_id":16192788,"instrument_id":16192788,"symbol":"EE","isin_code":"FR0000125338"},{"instrumment_id":16377849,"instrument_id":16377849,"symbol":"EVO","isin_code":"SE0012673267"},{"instrumment_id":16454998,"instrument_id":16454998,"symbol":"SINCH","isin_code":"SE0007439112"},{"instrumment_id":16476927,"instrument_id":16476927,"symbol":"SF","isin_code":"SE0007704788"},{"instrumment_id":16111847,"instrument_id":16111847,"symbol":"FNOX","isin_code":"SE0001966656"},{"instrumment_id":16623696,"instrument_id":16623696,"symbol":"EMBRAC B","isin_code":"SE0013121589"},{"instrumment_id":16548250,"instrument_id":16548250,"symbol":"PDX","isin_code":"SE0008294953"},{"instrumment_id":16100440,"instrument_id":16100440,"symbol":"BIOT","isin_code":"SE0000454746"},{"instrumment_id":16119526,"instrument_id":16119526,"symbol":"TTWO","isin_code":"US8740541094"},{"instrumment_id":16794954,"instrument_id":16794954,"symbol":"CD Projekt SA","isin_code":"PLOPTTC00011"}],"tradables":[{"market_id":78,"tick_size_id":14729,"display_order":1,"lot_size":1.0,"identifier":"CL00010051"}],"instrument_id":16802242,"instrument_type":"FUCITS","instrument_group_type":"FND","currency":"SEK","management_fee":1.25,"multiplier":1.0,"pawn_percentage":80.0,"symbol":"ROBUR NY TEKNIK A","isin_code":"SE0000709123","name":"Swedbank Robur Ny Teknik A","has_fund_data":true,"category":"Branschfond, ny teknik","institute":"Swedbank Robur Fonder AB","rating":5,"is_daily_traded":true,"min_investment":100.0,"sell_fee":0.0,"buy_fee":0.0,"performance_one_day":1.09,"performance_one_week":2.72,"performance_one_month":11.47,"performance_this_year":54.78,"performance_three_years":125.64,"performance_five_years":308.4,"last_nav":1480.19,"last_nav_date":"2020-09-02"},"main_market_price":{"currency":"SEK","value":1480.19},"morning_price":{"currency":"SEK","value":1480.19},"qty":4.5136,"pawn_percent":80,"market_value_acc":{"currency":"SEK","value":6680.985584000001},"market_value":{"currency":"SEK","value":6680.985584000001},"acq_price":{"currency":"SEK","value":664.6579227224388},"acq_price_acc":{"currency":"SEK","value":664.6579227224388},"is_custom_gav":false},{"accno":11111111,"accid":1,"instrument":{"has_ucits":true,"no_of_decimals":6,"mifid2_category":0,"prospectus_url":"http://doc.morningstar.com/document/b1217de31ec50e3291bc2f4b965a37d9.msdoc/?clientid=nordnet&key=b3a3825282b90bac","price_type":"monetary_amount","underlyings":[{"instrumment_id":16720153,"instrument_id":16720153,"symbol":"ADMCM","isin_code":"FI4000251830"},{"instrumment_id":16476927,"instrument_id":16476927,"symbol":"SF","isin_code":"SE0007704788"},{"instrumment_id":16256554,"instrument_id":16256554,"symbol":"NOVO B","isin_code":"DK0060534915"},{"instrumment_id":16454997,"instrument_id":16454997,"symbol":"SECT B","isin_code":"SE0012853661"},{"instrumment_id":17022638,"instrument_id":17022638,"symbol":"NENT B","isin_code":"SE0012116390"},{"instrumment_id":17057518,"instrument_id":17057518,"symbol":"Xero Ltd","isin_code":"NZXROE0001S2"},{"instrumment_id":16119526,"instrument_id":16119526,"symbol":"TTWO","isin_code":"US8740541094"},{"instrumment_id":16623696,"instrument_id":16623696,"symbol":"EMBRAC B","isin_code":"SE0013121589"},{"instrumment_id":16548250,"instrument_id":16548250,"symbol":"PDX","isin_code":"SE0008294953"},{"instrumment_id":16377849,"instrument_id":16377849,"symbol":"EVO","isin_code":"SE0012673267"},{"instrumment_id":16214531,"instrument_id":16214531,"symbol":"NEM","isin_code":"DE0006452907"}],"tradables":[{"market_id":78,"tick_size_id":14729,"display_order":1,"lot_size":1.0,"identifier":"F000011XKU"}],"instrument_id":16994475,"instrument_type":"FUCITS","instrument_group_type":"FND","currency":"SEK","management_fee":1.5,"multiplier":1.0,"pawn_percentage":70.0,"margin_percentage":120.0,"symbol":"TIN NY TEKNIK A","isin_code":"SE0012193019","name":"TIN Ny Teknik A","has_fund_data":true,"category":"Branschfond, ny teknik","institute":"TIN Fonder","is_daily_traded":true,"min_investment":100.0,"sell_fee":0.0,"buy_fee":0.0,"performance_one_day":0.97,"performance_one_week":2.01,"performance_one_month":8.8,"performance_this_year":45.25,"last_nav":187.3857,"last_nav_date":"2020-09-02"},"main_market_price":{"currency":"SEK","value":187.3857},"morning_price":{"currency":"SEK","value":187.3857},"qty":19.963551,"pawn_percent":70,"market_value_acc":{"currency":"SEK","value":3740.8839786207},"market_value":{"currency":"SEK","value":3740.8839786207},"acq_price":{"currency":"SEK","value":178.17471450845593},"acq_price_acc":{"currency":"SEK","value":178.17471450845593},"is_custom_gav":false,"margin_percent":120}]
+[
+    {
+        "accno": 11111111,
+        "accid": 1,
+        "instrument": {
+            "has_ucits": true,
+            "no_of_decimals": 4,
+            "mifid2_category": 0,
+            "prospectus_url": "http://doc.morningstar.com/document/288418ed9ecc78efb362dbfaf8a9a52f.msdoc/?clientid=nordnet&key=b3a3825282b90bac",
+            "price_type": "monetary_amount",
+            "underlyings": [
+                {
+                    "instrumment_id": 16123344,
+                    "instrument_id": 16123344,
+                    "symbol": "V",
+                    "isin_code": "US92826C8394"
+                },
+                {
+                    "instrumment_id": 16119063,
+                    "instrument_id": 16119063,
+                    "symbol": "MSFT",
+                    "isin_code": "US5949181045"
+                },
+                {
+                    "instrumment_id": 16121793,
+                    "instrument_id": 16121793,
+                    "symbol": "JNJ",
+                    "isin_code": "US4781601046"
+                },
+                {
+                    "instrumment_id": 16117575,
+                    "instrument_id": 16117575,
+                    "symbol": "FB",
+                    "isin_code": "US30303M1027"
+                },
+                {
+                    "instrumment_id": 16118139,
+                    "instrument_id": 16118139,
+                    "symbol": "AAPL",
+                    "isin_code": "US0378331005"
+                },
+                {
+                    "instrumment_id": 16118217,
+                    "instrument_id": 16118217,
+                    "symbol": "AMZN",
+                    "isin_code": "US0231351067"
+                },
+                {
+                    "instrumment_id": 16457329,
+                    "instrument_id": 16457329,
+                    "symbol": "GOOGL",
+                    "isin_code": "US02079K3059"
+                },
+                {
+                    "instrumment_id": 16457330,
+                    "instrument_id": 16457330,
+                    "symbol": "GOOG",
+                    "isin_code": "US02079K1079"
+                },
+                {
+                    "instrumment_id": 16162041,
+                    "instrument_id": 16162041,
+                    "symbol": "NESN.CH",
+                    "isin_code": "CH0038863350"
+                }
+            ],
+            "tradables": [
+                {
+                    "market_id": 78,
+                    "tick_size_id": 14729,
+                    "display_order": 1,
+                    "lot_size": 1.0,
+                    "identifier": "0P0000ZWWE"
+                }
+            ],
+            "instrument_id": 16800874,
+            "instrument_type": "FUCITS",
+            "instrument_group_type": "FND",
+            "currency": "SEK",
+            "management_fee": 0.2,
+            "multiplier": 1.0,
+            "pawn_percentage": 85.0,
+            "margin_percentage": 200.0,
+            "symbol": "DNB GL INDEKS A SEK",
+            "isin_code": "NO0010582984",
+            "name": "DNB Global Indeks A",
+            "has_fund_data": true,
+            "category": "Global, mix bolag",
+            "institute": "DNB Asset Management AS",
+            "rating": 4,
+            "is_daily_traded": true,
+            "min_investment": 100.0,
+            "sell_fee": 0.0,
+            "buy_fee": 0.0,
+            "performance_one_day": 0.88,
+            "performance_one_week": 0.61,
+            "performance_one_month": 6.2,
+            "performance_this_year": -1.34,
+            "performance_three_years": 44.46,
+            "performance_five_years": 72.63,
+            "last_nav": 366.0325,
+            "last_nav_date": "2020-09-01"
+        },
+        "main_market_price": {
+            "currency": "SEK",
+            "value": 366.0325
+        },
+        "morning_price": {
+            "currency": "SEK",
+            "value": 366.0325
+        },
+        "qty": 11.3578,
+        "pawn_percent": 85,
+        "market_value_acc": {
+            "currency": "SEK",
+            "value": 4157.3239285
+        },
+        "market_value": {
+            "currency": "SEK",
+            "value": 4157.3239285
+        },
+        "acq_price": {
+            "currency": "SEK",
+            "value": 264.1356600750145
+        },
+        "acq_price_acc": {
+            "currency": "SEK",
+            "value": 264.1356600750145
+        },
+        "is_custom_gav": false,
+        "margin_percent": 200
+    },
+    {
+        "accno": 11111111,
+        "accid": 1,
+        "instrument": {
+            "no_of_decimals": 4,
+            "mifid2_category": 0,
+            "prospectus_url": "http://doc.morningstar.com/document/60dc89c668a4499db137c439e5145ac2.msdoc/?clientid=nordnet&key=b3a3825282b90bac",
+            "price_type": "monetary_amount",
+            "underlyings": [
+                {
+                    "instrumment_id": 16334653,
+                    "instrument_id": 16334653,
+                    "symbol": "LIFCO B",
+                    "isin_code": "SE0006370730"
+                },
+                {
+                    "instrumment_id": 16096164,
+                    "instrument_id": 16096164,
+                    "symbol": "INDT",
+                    "isin_code": "SE0001515552"
+                },
+                {
+                    "instrumment_id": 16099736,
+                    "instrument_id": 16099736,
+                    "symbol": "LATO B",
+                    "isin_code": "SE0010100958"
+                },
+                {
+                    "instrumment_id": 16099821,
+                    "instrument_id": 16099821,
+                    "symbol": "KINV B",
+                    "isin_code": "SE0014684528"
+                },
+                {
+                    "instrumment_id": 16099749,
+                    "instrument_id": 16099749,
+                    "symbol": "XACT OMXS30",
+                    "isin_code": "SE0000693293"
+                },
+                {
+                    "instrumment_id": 16099713,
+                    "instrument_id": 16099713,
+                    "symbol": "ICA",
+                    "isin_code": "SE0000652216"
+                },
+                {
+                    "instrumment_id": 16100055,
+                    "instrument_id": 16100055,
+                    "symbol": "RATO B",
+                    "isin_code": "SE0000111940"
+                },
+                {
+                    "instrumment_id": 16099886,
+                    "instrument_id": 16099886,
+                    "symbol": "LUND B",
+                    "isin_code": "SE0000108847"
+                },
+                {
+                    "instrumment_id": 16102308,
+                    "instrument_id": 16102308,
+                    "symbol": "INVE B",
+                    "isin_code": "SE0000107419"
+                },
+                {
+                    "instrumment_id": 16102232,
+                    "instrument_id": 16102232,
+                    "symbol": "INDU C",
+                    "isin_code": "SE0000107203"
+                }
+            ],
+            "tradables": [
+                {
+                    "market_id": 78,
+                    "tick_size_id": 14729,
+                    "display_order": 1,
+                    "lot_size": 1.0,
+                    "identifier": "F00000NBM7"
+                }
+            ],
+            "instrument_id": 16801314,
+            "instrument_type": "FOTH",
+            "instrument_group_type": "FND",
+            "currency": "SEK",
+            "management_fee": 0.2,
+            "multiplier": 1.0,
+            "pawn_percentage": 85.0,
+            "margin_percentage": 120.0,
+            "symbol": "SPILTAN INVESTMENTBOLAG",
+            "isin_code": "SE0004297927",
+            "name": "Spiltan Aktiefond Investmentbolag",
+            "has_fund_data": true,
+            "category": "Sverige",
+            "institute": "Spiltan Fonder AB",
+            "rating": 5,
+            "is_daily_traded": true,
+            "min_investment": 100.0,
+            "sell_fee": 0.0,
+            "buy_fee": 0.0,
+            "performance_one_day": 1.07,
+            "performance_one_week": -1.48,
+            "performance_one_month": 6.97,
+            "performance_this_year": 13.23,
+            "performance_three_years": 54.83,
+            "performance_five_years": 104.18,
+            "last_nav": 477.03,
+            "last_nav_date": "2020-09-02"
+        },
+        "main_market_price": {
+            "currency": "SEK",
+            "value": 477.03
+        },
+        "morning_price": {
+            "currency": "SEK",
+            "value": 477.03
+        },
+        "qty": 11.5892,
+        "pawn_percent": 85,
+        "market_value_acc": {
+            "currency": "SEK",
+            "value": 5528.396076
+        },
+        "market_value": {
+            "currency": "SEK",
+            "value": 5528.396076
+        },
+        "acq_price": {
+            "currency": "SEK",
+            "value": 327.65972020068835
+        },
+        "acq_price_acc": {
+            "currency": "SEK",
+            "value": 327.65972020068835
+        },
+        "is_custom_gav": false,
+        "margin_percent": 120
+    },
+    {
+        "accno": 11111111,
+        "accid": 1,
+        "instrument": {
+            "has_ucits": true,
+            "no_of_decimals": 4,
+            "mifid2_category": 0,
+            "prospectus_url": "http://doc.morningstar.com/document/cd4eec99efba8a2df66b5f495d23eebd.msdoc/?clientid=nordnet&key=b3a3825282b90bac",
+            "price_type": "monetary_amount",
+            "underlyings": [
+                {
+                    "instrumment_id": 16192788,
+                    "instrument_id": 16192788,
+                    "symbol": "EE",
+                    "isin_code": "FR0000125338"
+                },
+                {
+                    "instrumment_id": 16377849,
+                    "instrument_id": 16377849,
+                    "symbol": "EVO",
+                    "isin_code": "SE0012673267"
+                },
+                {
+                    "instrumment_id": 16454998,
+                    "instrument_id": 16454998,
+                    "symbol": "SINCH",
+                    "isin_code": "SE0007439112"
+                },
+                {
+                    "instrumment_id": 16476927,
+                    "instrument_id": 16476927,
+                    "symbol": "SF",
+                    "isin_code": "SE0007704788"
+                },
+                {
+                    "instrumment_id": 16111847,
+                    "instrument_id": 16111847,
+                    "symbol": "FNOX",
+                    "isin_code": "SE0001966656"
+                },
+                {
+                    "instrumment_id": 16623696,
+                    "instrument_id": 16623696,
+                    "symbol": "EMBRAC B",
+                    "isin_code": "SE0013121589"
+                },
+                {
+                    "instrumment_id": 16548250,
+                    "instrument_id": 16548250,
+                    "symbol": "PDX",
+                    "isin_code": "SE0008294953"
+                },
+                {
+                    "instrumment_id": 16100440,
+                    "instrument_id": 16100440,
+                    "symbol": "BIOT",
+                    "isin_code": "SE0000454746"
+                },
+                {
+                    "instrumment_id": 16119526,
+                    "instrument_id": 16119526,
+                    "symbol": "TTWO",
+                    "isin_code": "US8740541094"
+                },
+                {
+                    "instrumment_id": 16794954,
+                    "instrument_id": 16794954,
+                    "symbol": "CD Projekt SA",
+                    "isin_code": "PLOPTTC00011"
+                }
+            ],
+            "tradables": [
+                {
+                    "market_id": 78,
+                    "tick_size_id": 14729,
+                    "display_order": 1,
+                    "lot_size": 1.0,
+                    "identifier": "CL00010051"
+                }
+            ],
+            "instrument_id": 16802242,
+            "instrument_type": "FUCITS",
+            "instrument_group_type": "FND",
+            "currency": "SEK",
+            "management_fee": 1.25,
+            "multiplier": 1.0,
+            "pawn_percentage": 80.0,
+            "symbol": "ROBUR NY TEKNIK A",
+            "isin_code": "SE0000709123",
+            "name": "Swedbank Robur Ny Teknik A",
+            "has_fund_data": true,
+            "category": "Branschfond, ny teknik",
+            "institute": "Swedbank Robur Fonder AB",
+            "rating": 5,
+            "is_daily_traded": true,
+            "min_investment": 100.0,
+            "sell_fee": 0.0,
+            "buy_fee": 0.0,
+            "performance_one_day": 1.09,
+            "performance_one_week": 2.72,
+            "performance_one_month": 11.47,
+            "performance_this_year": 54.78,
+            "performance_three_years": 125.64,
+            "performance_five_years": 308.4,
+            "last_nav": 1480.19,
+            "last_nav_date": "2020-09-02"
+        },
+        "main_market_price": {
+            "currency": "SEK",
+            "value": 1480.19
+        },
+        "morning_price": {
+            "currency": "SEK",
+            "value": 1480.19
+        },
+        "qty": 4.5136,
+        "pawn_percent": 80,
+        "market_value_acc": {
+            "currency": "SEK",
+            "value": 6680.985584000001
+        },
+        "market_value": {
+            "currency": "SEK",
+            "value": 6680.985584000001
+        },
+        "acq_price": {
+            "currency": "SEK",
+            "value": 664.6579227224388
+        },
+        "acq_price_acc": {
+            "currency": "SEK",
+            "value": 664.6579227224388
+        },
+        "is_custom_gav": false
+    },
+    {
+        "accno": 11111111,
+        "accid": 1,
+        "instrument": {
+            "has_ucits": true,
+            "no_of_decimals": 6,
+            "mifid2_category": 0,
+            "prospectus_url": "http://doc.morningstar.com/document/b1217de31ec50e3291bc2f4b965a37d9.msdoc/?clientid=nordnet&key=b3a3825282b90bac",
+            "price_type": "monetary_amount",
+            "underlyings": [
+                {
+                    "instrumment_id": 16720153,
+                    "instrument_id": 16720153,
+                    "symbol": "ADMCM",
+                    "isin_code": "FI4000251830"
+                },
+                {
+                    "instrumment_id": 16476927,
+                    "instrument_id": 16476927,
+                    "symbol": "SF",
+                    "isin_code": "SE0007704788"
+                },
+                {
+                    "instrumment_id": 16256554,
+                    "instrument_id": 16256554,
+                    "symbol": "NOVO B",
+                    "isin_code": "DK0060534915"
+                },
+                {
+                    "instrumment_id": 16454997,
+                    "instrument_id": 16454997,
+                    "symbol": "SECT B",
+                    "isin_code": "SE0012853661"
+                },
+                {
+                    "instrumment_id": 17022638,
+                    "instrument_id": 17022638,
+                    "symbol": "NENT B",
+                    "isin_code": "SE0012116390"
+                },
+                {
+                    "instrumment_id": 17057518,
+                    "instrument_id": 17057518,
+                    "symbol": "Xero Ltd",
+                    "isin_code": "NZXROE0001S2"
+                },
+                {
+                    "instrumment_id": 16119526,
+                    "instrument_id": 16119526,
+                    "symbol": "TTWO",
+                    "isin_code": "US8740541094"
+                },
+                {
+                    "instrumment_id": 16623696,
+                    "instrument_id": 16623696,
+                    "symbol": "EMBRAC B",
+                    "isin_code": "SE0013121589"
+                },
+                {
+                    "instrumment_id": 16548250,
+                    "instrument_id": 16548250,
+                    "symbol": "PDX",
+                    "isin_code": "SE0008294953"
+                },
+                {
+                    "instrumment_id": 16377849,
+                    "instrument_id": 16377849,
+                    "symbol": "EVO",
+                    "isin_code": "SE0012673267"
+                },
+                {
+                    "instrumment_id": 16214531,
+                    "instrument_id": 16214531,
+                    "symbol": "NEM",
+                    "isin_code": "DE0006452907"
+                }
+            ],
+            "tradables": [
+                {
+                    "market_id": 78,
+                    "tick_size_id": 14729,
+                    "display_order": 1,
+                    "lot_size": 1.0,
+                    "identifier": "F000011XKU"
+                }
+            ],
+            "instrument_id": 16994475,
+            "instrument_type": "FUCITS",
+            "instrument_group_type": "FND",
+            "currency": "SEK",
+            "management_fee": 1.5,
+            "multiplier": 1.0,
+            "pawn_percentage": 70.0,
+            "margin_percentage": 120.0,
+            "symbol": "TIN NY TEKNIK A",
+            "isin_code": "SE0012193019",
+            "name": "TIN Ny Teknik A",
+            "has_fund_data": true,
+            "category": "Branschfond, ny teknik",
+            "institute": "TIN Fonder",
+            "is_daily_traded": true,
+            "min_investment": 100.0,
+            "sell_fee": 0.0,
+            "buy_fee": 0.0,
+            "performance_one_day": 0.97,
+            "performance_one_week": 2.01,
+            "performance_one_month": 8.8,
+            "performance_this_year": 45.25,
+            "last_nav": 187.3857,
+            "last_nav_date": "2020-09-02"
+        },
+        "main_market_price": {
+            "currency": "SEK",
+            "value": 187.3857
+        },
+        "morning_price": {
+            "currency": "SEK",
+            "value": 187.3857
+        },
+        "qty": 19.963551,
+        "pawn_percent": 70,
+        "market_value_acc": {
+            "currency": "SEK",
+            "value": 3740.8839786207
+        },
+        "market_value": {
+            "currency": "SEK",
+            "value": 3740.8839786207
+        },
+        "acq_price": {
+            "currency": "SEK",
+            "value": 178.17471450845593
+        },
+        "acq_price_acc": {
+            "currency": "SEK",
+            "value": 178.17471450845593
+        },
+        "is_custom_gav": false,
+        "margin_percent": 120
+    }
+]
 
 
 REQUEST 23
 GET https://www.nordnet.se/api/2/accounts/5/info
 Accept: application/json
-Authorization: Bearer e34e2957-48ed-4d0b-90e6-6b37d24eb4ce
-User-Agent: Nordnet React Native App/ios-13.3.1/10.10.0
+Authorization: Basic YWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYTphYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFh
+User-Agent: Nordnet React Native App/ios-14.4.2/12.3.0
 
 
 RESPONSE 23
 200
-Server: nginx
-Date: Thu, 03 Sep 2020 10:16:40 GMT
 Content-Type: application/json; charset=UTF-8
-Connection: keep-alive
-ntag: c3095190b633b675855e88470e24a25232386c8a1d0bfe8d4d2c9832ee979b12
-Strict-Transport-Security: max-age=31536000
 
-[{"account_credit":{"currency":"SEK","value":0.0},"collateral":{"currency":"SEK","value":0.0},"pawn_value":{"currency":"SEK","value":0.0},"trading_power":{"currency":"SEK","value":808.29},"loan_limit":{"currency":"SEK","value":0.0},"forward_sum":{"currency":"SEK","value":0.0},"future_sum":{"currency":"SEK","value":0.0},"account_currency":"SEK","interest":{"currency":"SEK","value":0.0},"account_sum":{"currency":"SEK","value":808.29},"unrealized_future_profit_loss":{"currency":"SEK","value":0.0},"own_capital":{"value":32701.1147,"currency":"SEK"},"own_capital_morning":{"currency":"SEK","value":33248.4522},"full_marketvalue":{"currency":"SEK","value":31892.824699999997},"account_code":"KF","bank_accno":"12341234123","interest_rate":0.0,"registration_date":"2005-12-23","accno":1231234,"accid":1}]
+[
+    {
+        "account_credit": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "collateral": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "pawn_value": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "trading_power": {
+            "currency": "SEK",
+            "value": 808.29
+        },
+        "loan_limit": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "forward_sum": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "future_sum": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "account_currency": "SEK",
+        "interest": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "account_sum": {
+            "currency": "SEK",
+            "value": 808.29
+        },
+        "unrealized_future_profit_loss": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "own_capital": {
+            "value": 32701.1147,
+            "currency": "SEK"
+        },
+        "own_capital_morning": {
+            "currency": "SEK",
+            "value": 33248.4522
+        },
+        "full_marketvalue": {
+            "currency": "SEK",
+            "value": 31892.824699999997
+        },
+        "account_code": "KF",
+        "bank_accno": "12341234123",
+        "interest_rate": 0.0,
+        "registration_date": "2005-12-23",
+        "accno": 1231234,
+        "accid": 1
+    }
+]
 
 
 REQUEST 24
 GET https://www.nordnet.se/api/2/accounts/5/positions?include_instrument_loans=true
 Accept: application/json
-Authorization: Bearer e34e2957-48ed-4d0b-90e6-6b37d24eb4ce
-User-Agent: Nordnet React Native App/ios-13.3.1/10.10.0
+Authorization: Basic YWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYTphYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFh
+User-Agent: Nordnet React Native App/ios-14.4.2/12.3.0
 
 
 RESPONSE 24
 200
-Server: nginx
-Date: Thu, 03 Sep 2020 10:16:40 GMT
 Content-Type: application/json; charset=UTF-8
-Connection: keep-alive
-ntag: c3095190b633b675855e88470e24a25232386c8a1d0bfe8d4d2c9832ee979b12
-Strict-Transport-Security: max-age=31536000
 
-[{"accno":1231234,"accid":1,"instrument":{"instrument_id":0,"name":"BLASIEHOLMEN INVEST","symbol":"BLASIEHOLMEN","isin_code":"SE0004548444","currency":"SEK","multiplier":1.0,"instrument_type":"A"},"main_market_price":{"currency":"SEK","value":0.0},"morning_price":{"currency":"SEK","value":0.0},"qty":1.0,"pawn_percent":0,"market_value_acc":{"currency":"SEK","value":0.0},"market_value":{"currency":"SEK","value":0.0},"acq_price":{"currency":"SEK","value":0.0},"acq_price_acc":{"currency":"SEK","value":0.0},"is_custom_gav":false,"margin_percent":200},{"accno":1231234,"accid":1,"instrument":{"mifid2_category":0,"price_type":"monetary_amount","tradables":[{"market_id":11,"tick_size_id":14731,"display_order":0,"lot_size":1.0,"identifier":"186989"}],"instrument_id":16886109,"asset_class":"EQY","instrument_type":"ESHMTF","instrument_group_type":"EQ","currency":"SEK","number_of_securities":76350297.0,"multiplier":1.0,"pawn_percentage":0.0,"margin_percentage":200.0,"symbol":"DIVIO B","isin_code":"SE0011311554","name":"Divio Technologies AB ser. B"},"main_market_price":{"currency":"SEK","value":1.38},"morning_price":{"currency":"SEK","value":1.33},"qty":10.0,"pawn_percent":0,"market_value_acc":{"currency":"SEK","value":13.799999999999999},"market_value":{"currency":"SEK","value":13.799999999999999},"acq_price":{"currency":"SEK","value":0.0},"acq_price_acc":{"currency":"SEK","value":0.0},"is_custom_gav":false,"margin_percent":200},{"accno":1231234,"accid":1,"instrument":{"mifid2_category":0,"price_type":"monetary_amount","tradables":[{"market_id":13,"tick_size_id":34830904,"display_order":0,"lot_size":1.0,"identifier":"3R03"}],"instrument_id":16161923,"instrument_type":"ESHMTF","instrument_group_type":"EQ","currency":"SEK","number_of_securities":37287652.0,"leverage_percentage":100.0,"multiplier":1.0,"pawn_percentage":0.0,"margin_percentage":200.0,"symbol":"RENT","isin_code":"SE0004548451","name":"Rentunder Holding"},"main_market_price":{"currency":"SEK","value":0.68},"morning_price":{"currency":"SEK","value":0.705},"qty":13.0,"pawn_percent":0,"market_value_acc":{"currency":"SEK","value":8.84},"market_value":{"currency":"SEK","value":8.84},"acq_price":{"currency":"SEK","value":0.0},"acq_price_acc":{"currency":"SEK","value":0.0},"is_custom_gav":false,"margin_percent":200},{"accno":1231234,"accid":1,"instrument":{"mifid2_category":0,"price_type":"monetary_amount","tradables":[{"market_id":11,"tick_size_id":14731,"display_order":0,"lot_size":1.0,"identifier":"163678"}],"instrument_id":16647088,"asset_class":"EQY","instrument_type":"ESHMTF","instrument_group_type":"EQ","currency":"SEK","number_of_securities":26503948.0,"multiplier":1.0,"pawn_percentage":0.0,"margin_percentage":200.0,"symbol":"AXOLOT","isin_code":"SE0009414303","name":"Axolot Solutions Holding AB"},"main_market_price":{"currency":"SEK","value":1.28},"morning_price":{"currency":"SEK","value":1.3},"qty":20.0,"pawn_percent":0,"market_value_acc":{"currency":"SEK","value":25.6},"market_value":{"currency":"SEK","value":25.6},"acq_price":{"currency":"SEK","value":0.0},"acq_price_acc":{"currency":"SEK","value":0.0},"is_custom_gav":false,"margin_percent":200},{"accno":1231234,"accid":1,"instrument":{"instrument_id":0,"name":"Ittot AB","symbol":"ITTOT","isin_code":"SE0011167162","currency":"SEK","multiplier":1.0,"instrument_type":"A"},"main_market_price":{"currency":"SEK","value":0.0},"morning_price":{"currency":"SEK","value":0.0},"qty":20.0,"pawn_percent":0,"market_value_acc":{"currency":"SEK","value":0.0},"market_value":{"currency":"SEK","value":0.0},"acq_price":{"currency":"SEK","value":0.0},"acq_price_acc":{"currency":"SEK","value":0.0},"is_custom_gav":false,"margin_percent":200},{"accno":1231234,"accid":1,"instrument":{"instrument_id":0,"name":"Opserc AB","symbol":"OPSERC","isin_code":"SE0011167212","currency":"SEK","multiplier":1.0,"instrument_type":"A"},"main_market_price":{"currency":"SEK","value":0.0},"morning_price":{"currency":"SEK","value":0.0},"qty":20.0,"pawn_percent":0,"market_value_acc":{"currency":"SEK","value":0.0},"market_value":{"currency":"SEK","value":0.0},"acq_price":{"currency":"SEK","value":0.0},"acq_price_acc":{"currency":"SEK","value":0.0},"is_custom_gav":false,"margin_percent":200},{"accno":1231234,"accid":1,"instrument":{"instrument_id":0,"name":"Oigres AB","symbol":"OIGRES","isin_code":"SE0011167170","currency":"SEK","multiplier":1.0,"instrument_type":"A"},"main_market_price":{"currency":"SEK","value":0.0},"morning_price":{"currency":"SEK","value":0.0},"qty":20.0,"pawn_percent":0,"market_value_acc":{"currency":"SEK","value":0.0},"market_value":{"currency":"SEK","value":0.0},"acq_price":{"currency":"SEK","value":0.0},"acq_price_acc":{"currency":"SEK","value":0.0},"is_custom_gav":false,"margin_percent":200},{"accno":1231234,"accid":1,"instrument":{"instrument_id":0,"name":"Sallisac AB","symbol":"SALLISAC","isin_code":"SE0011167246","currency":"SEK","multiplier":1.0,"instrument_type":"A"},"main_market_price":{"currency":"SEK","value":0.0},"morning_price":{"currency":"SEK","value":0.0},"qty":20.0,"pawn_percent":0,"market_value_acc":{"currency":"SEK","value":0.0},"market_value":{"currency":"SEK","value":0.0},"acq_price":{"currency":"SEK","value":0.0},"acq_price_acc":{"currency":"SEK","value":0.0},"is_custom_gav":false,"margin_percent":200},{"accno":1231234,"accid":1,"instrument":{"mifid2_category":0,"price_type":"monetary_amount","tradables":[{"market_id":11,"tick_size_id":14731,"display_order":0,"lot_size":1.0,"identifier":"101773"}],"instrument_id":16247832,"asset_class":"EQY","instrument_type":"ESHMTF","instrument_group_type":"EQ","currency":"SEK","number_of_securities":13830000.0,"multiplier":1.0,"pawn_percentage":0.0,"margin_percentage":200.0,"symbol":"NICO","isin_code":"SE0005506185","name":"Nicoccino Holding AB"},"main_market_price":{"currency":"SEK","value":3.46},"morning_price":{"currency":"SEK","value":3.3},"qty":24.0,"pawn_percent":0,"market_value_acc":{"currency":"SEK","value":83.03999999999999},"market_value":{"currency":"SEK","value":83.03999999999999},"acq_price":{"currency":"SEK","value":0.0},"acq_price_acc":{"currency":"SEK","value":0.0},"is_custom_gav":false,"margin_percent":200},{"accno":1231234,"accid":1,"instrument":{"mifid2_category":0,"price_type":"monetary_amount","tradables":[{"market_id":11,"tick_size_id":14732,"display_order":0,"lot_size":1.0,"identifier":"130818"}],"instrument_id":16530752,"asset_class":"EQY","instrument_type":"ESHMTF","instrument_group_type":"EQ","currency":"SEK","number_of_securities":78643079.0,"multiplier":1.0,"pawn_percentage":0.0,"margin_percentage":200.0,"symbol":"AERO","isin_code":"SE0008212161","name":"Svenska Aerogel Holding AB"},"main_market_price":{"currency":"SEK","value":0.8},"morning_price":{"currency":"SEK","value":0.839},"qty":115.0,"pawn_percent":0,"market_value_acc":{"currency":"SEK","value":92.0},"market_value":{"currency":"SEK","value":92.0},"acq_price":{"currency":"SEK","value":1.6252173913043477},"acq_price_acc":{"currency":"SEK","value":1.6252173913043477},"is_custom_gav":false,"margin_percent":200},{"accno":1231234,"accid":1,"instrument":{"instrument_id":0,"name":"Aligera","symbol":"ALIRA B","isin_code":"SE0009470271","currency":"SEK","multiplier":1.0,"instrument_type":"A"},"main_market_price":{"currency":"SEK","value":0.0},"morning_price":{"currency":"SEK","value":0.0},"qty":25.0,"pawn_percent":0,"market_value_acc":{"currency":"SEK","value":0.0},"market_value":{"currency":"SEK","value":0.0},"acq_price":{"currency":"SEK","value":0.0},"acq_price_acc":{"currency":"SEK","value":0.0},"is_custom_gav":false,"margin_percent":200},{"accno":1231234,"accid":1,"instrument":{"mifid2_category":0,"price_type":"monetary_amount","tradables":[{"market_id":11,"tick_size_id":14732,"display_order":0,"lot_size":1.0,"identifier":"108329"}],"instrument_id":16222219,"asset_class":"EQY","instrument_type":"ESHMTF","instrument_group_type":"EQ","currency":"SEK","number_of_securities":87936984.0,"multiplier":1.0,"pawn_percentage":0.0,"margin_percentage":200.0,"symbol":"SALT B","isin_code":"SE0005308541","name":"SaltX Technology Holding AB ser. B"},"main_market_price":{"currency":"SEK","value":3.03},"morning_price":{"currency":"SEK","value":3.07},"qty":34.0,"pawn_percent":0,"market_value_acc":{"currency":"SEK","value":103.02},"market_value":{"currency":"SEK","value":103.02},"acq_price":{"currency":"SEK","value":2.8279411764705884},"acq_price_acc":{"currency":"SEK","value":2.8279411764705884},"is_custom_gav":false,"margin_percent":200},{"accno":1231234,"accid":1,"instrument":{"mifid2_category":0,"price_type":"monetary_amount","tradables":[{"market_id":11,"tick_size_id":14732,"display_order":0,"lot_size":1.0,"identifier":"101187"}],"instrument_id":16247831,"asset_class":"EQY","instrument_type":"ESHMTF","instrument_group_type":"EQ","currency":"SEK","number_of_securities":156683087.0,"multiplier":1.0,"pawn_percentage":0.0,"margin_percentage":200.0,"symbol":"MYFC","isin_code":"SE0005505898","name":"myFC Holding AB"},"main_market_price":{"currency":"SEK","value":1.45},"morning_price":{"currency":"SEK","value":1.51},"qty":90.0,"pawn_percent":0,"market_value_acc":{"currency":"SEK","value":130.5},"market_value":{"currency":"SEK","value":130.5},"acq_price":{"currency":"SEK","value":1.5555555555555556},"acq_price_acc":{"currency":"SEK","value":1.5555555555555556},"is_custom_gav":false,"margin_percent":200},{"accno":1231234,"accid":1,"instrument":{"instrument_id":0,"name":"Nicoccino Holding TR","symbol":"NICO TR","isin_code":"SE0014956983","currency":"SEK","multiplier":1.0,"instrument_type":"A"},"main_market_price":{"currency":"SEK","value":0.063},"morning_price":{"currency":"SEK","value":0.063},"qty":24.0,"pawn_percent":0,"market_value_acc":{"currency":"SEK","value":1.512},"market_value":{"currency":"SEK","value":1.512},"acq_price":{"currency":"SEK","value":0.0},"acq_price_acc":{"currency":"SEK","value":0.0},"is_custom_gav":false,"margin_percent":200},{"accno":1231234,"accid":1,"instrument":{"instrument_id":0,"name":"BLASIEHOLMEN IGRSEED","symbol":"BH IGRSEED","isin_code":"SE0006994679","currency":"SEK","multiplier":1.0,"instrument_type":"A"},"main_market_price":{"currency":"SEK","value":0.0},"morning_price":{"currency":"SEK","value":0.0},"qty":1.0,"pawn_percent":0,"market_value_acc":{"currency":"SEK","value":0.0},"market_value":{"currency":"SEK","value":0.0},"acq_price":{"currency":"SEK","value":30.5},"acq_price_acc":{"currency":"SEK","value":30.5},"is_custom_gav":false,"margin_percent":200},{"accno":1231234,"accid":1,"instrument":{"mifid2_category":0,"price_type":"monetary_amount","tradables":[{"market_id":13,"tick_size_id":34830903,"display_order":0,"lot_size":1.0,"identifier":"47MN"}],"instrument_id":17251968,"instrument_type":"ESHMTF","instrument_group_type":"EQ","currency":"SEK","number_of_securities":509301804.0,"leverage_percentage":100.0,"multiplier":1.0,"pawn_percentage":0.0,"margin_percentage":200.0,"symbol":"COEGIN","isin_code":"SE0014262218","name":"Coegin Pharma"},"main_market_price":{"currency":"SEK","value":0.231},"morning_price":{"currency":"SEK","value":0.223},"qty":8.0,"pawn_percent":0,"market_value_acc":{"currency":"SEK","value":1.848},"market_value":{"currency":"SEK","value":1.848},"acq_price":{"currency":"SEK","value":0.1},"acq_price_acc":{"currency":"SEK","value":0.1},"is_custom_gav":false,"margin_percent":200},{"accno":1231234,"accid":1,"instrument":{"instrument_id":0,"name":"Enadiz AB","symbol":"ENADIZ","isin_code":"SE0011167139","currency":"SEK","multiplier":1.0,"instrument_type":"A"},"main_market_price":{"currency":"SEK","value":0.0},"morning_price":{"currency":"SEK","value":0.0},"qty":20.0,"pawn_percent":0,"market_value_acc":{"currency":"SEK","value":0.0},"market_value":{"currency":"SEK","value":0.0},"acq_price":{"currency":"SEK","value":0.0},"acq_price_acc":{"currency":"SEK","value":0.0},"is_custom_gav":false,"margin_percent":200},{"accno":1231234,"accid":1,"instrument":{"instrument_id":0,"name":"Nordic Retail","symbol":"NORDIC RETAIL","isin_code":"SE0012230860","currency":"SEK","multiplier":1.0,"instrument_type":"A"},"main_market_price":{"currency":"SEK","value":0.0},"morning_price":{"currency":"SEK","value":0.0},"qty":57.0,"pawn_percent":0,"market_value_acc":{"currency":"SEK","value":0.0},"market_value":{"currency":"SEK","value":0.0},"acq_price":{"currency":"SEK","value":0.3508771929824561},"acq_price_acc":{"currency":"SEK","value":0.3508771929824561},"is_custom_gav":false,"margin_percent":200},{"accno":1231234,"accid":1,"instrument":{"mifid2_category":0,"price_type":"monetary_amount","tradables":[{"market_id":11,"tick_size_id":14732,"display_order":0,"lot_size":1.0,"identifier":"147691"}],"instrument_id":16700520,"asset_class":"EQY","instrument_type":"ESHMTF","instrument_group_type":"EQ","currency":"SEK","number_of_securities":93868821.0,"multiplier":1.0,"pawn_percentage":0.0,"margin_percentage":200.0,"symbol":"HDW B","isin_code":"SE0009889405","name":"H&D Wireless Sweden Holding AB ser. B"},"main_market_price":{"currency":"SEK","value":0.625},"morning_price":{"currency":"SEK","value":0.666},"qty":86.0,"pawn_percent":0,"market_value_acc":{"currency":"SEK","value":53.75},"market_value":{"currency":"SEK","value":53.75},"acq_price":{"currency":"SEK","value":1.938953488372093},"acq_price_acc":{"currency":"SEK","value":1.938953488372093},"is_custom_gav":false,"margin_percent":200},{"accno":1231234,"accid":1,"instrument":{"instrument_id":0,"name":"BLASIEHOLMEN IGR EQU","symbol":"BH IGR EQU","isin_code":"SE0006994620","currency":"SEK","multiplier":1.0,"instrument_type":"A"},"main_market_price":{"currency":"SEK","value":0.0},"morning_price":{"currency":"SEK","value":0.0},"qty":1.0,"pawn_percent":0,"market_value_acc":{"currency":"SEK","value":0.0},"market_value":{"currency":"SEK","value":0.0},"acq_price":{"currency":"SEK","value":30.5},"acq_price_acc":{"currency":"SEK","value":30.5},"is_custom_gav":false,"margin_percent":200},{"accno":1231234,"accid":1,"instrument":{"has_ucits":true,"no_of_decimals":4,"mifid2_category":0,"prospectus_url":"http://doc.morningstar.com/document/867b3726134a9c9ae5d2c160c153464d.msdoc/?clientid=nordnet&key=b3a3825282b90bac","price_type":"monetary_amount","underlyings":[{"instrumment_id":16101863,"instrument_id":16101863,"symbol":"ELUX B","isin_code":"SE0000103814"},{"instrumment_id":16454998,"instrument_id":16454998,"symbol":"SINCH","isin_code":"SE0007439112"},{"instrumment_id":16096164,"instrument_id":16096164,"symbol":"INDT","isin_code":"SE0001515552"},{"instrumment_id":16100155,"instrument_id":16100155,"symbol":"SWEC B","isin_code":"SE0000489098"},{"instrumment_id":16099701,"instrument_id":16099701,"symbol":"FABG","isin_code":"SE0011166974"},{"instrumment_id":16084516,"instrument_id":16084516,"symbol":"BURE","isin_code":"SE0000195810"},{"instrumment_id":16082794,"instrument_id":16082794,"symbol":"BEIJ B","isin_code":"SE0011116508"},{"instrumment_id":16099742,"instrument_id":16099742,"symbol":"NIBE B","isin_code":"SE0008321293"},{"instrumment_id":16099785,"instrument_id":16099785,"symbol":"CAST","isin_code":"SE0000379190"},{"instrumment_id":16103597,"instrument_id":16103597,"symbol":"TREL B","isin_code":"SE0000114837"}],"tradables":[{"market_id":78,"tick_size_id":14729,"display_order":1,"lot_size":1.0,"identifier":"JWMAY00356"}],"instrument_id":16802618,"instrument_type":"FUCITS","instrument_group_type":"FND","currency":"SEK","management_fee":0.4,"multiplier":1.0,"pawn_percentage":80.0,"margin_percentage":100.0,"symbol":"AMF SMÅBOLAG","isin_code":"SE0001185000","name":"AMF Aktiefond Småbolag","has_fund_data":true,"category":"Sverige, små-/medelstora bolag","institute":"AMF Fonder","rating":3,"is_daily_traded":true,"min_investment":100.0,"sell_fee":0.0,"buy_fee":0.0,"performance_one_day":-2.71,"performance_one_week":-4.93,"performance_one_month":-0.93,"performance_this_year":20.26,"performance_three_years":64.85,"performance_five_years":123.16,"last_nav":996.2,"last_nav_date":"2020-10-26"},"main_market_price":{"currency":"SEK","value":996.2},"morning_price":{"currency":"SEK","value":996.2},"qty":2.0435,"pawn_percent":80,"market_value_acc":{"currency":"SEK","value":2035.7347},"market_value":{"currency":"SEK","value":2035.7347},"acq_price":{"currency":"SEK","value":488.90192627358954},"acq_price_acc":{"currency":"SEK","value":488.90192627358954},"is_custom_gav":false,"margin_percent":100},{"accno":1231234,"accid":1,"instrument":{"mifid2_category":0,"price_type":"monetary_amount","tradables":[{"market_id":11,"tick_size_id":14731,"display_order":0,"lot_size":1.0,"identifier":"135384"}],"instrument_id":16684022,"asset_class":"EQY","instrument_type":"ESHMTF","instrument_group_type":"EQ","currency":"SEK","number_of_securities":24718132.0,"multiplier":1.0,"pawn_percentage":0.0,"margin_percentage":200.0,"symbol":"ISR","isin_code":"SE0008212195","name":"ISR Immune System Regulation Holding AB"},"main_market_price":{"currency":"SEK","value":4.5},"morning_price":{"currency":"SEK","value":4.5},"qty":20.0,"pawn_percent":0,"market_value_acc":{"currency":"SEK","value":90.0},"market_value":{"currency":"SEK","value":90.0},"acq_price":{"currency":"SEK","value":0.0},"acq_price_acc":{"currency":"SEK","value":0.0},"is_custom_gav":false,"margin_percent":200},{"accno":1231234,"accid":1,"instrument":{"mifid2_category":0,"price_type":"monetary_amount","tradables":[{"market_id":11,"tick_size_id":14731,"display_order":0,"lot_size":1.0,"identifier":"171533"}],"instrument_id":16846430,"asset_class":"EQY","instrument_type":"ESHMTF","instrument_group_type":"EQ","currency":"SEK","number_of_securities":63120276.0,"multiplier":1.0,"pawn_percentage":0.0,"margin_percentage":200.0,"symbol":"FRILL B","isin_code":"SE0011062595","name":"Frill Holding AB ser. B"},"main_market_price":{"currency":"SEK","value":0.51},"morning_price":{"currency":"SEK","value":0.59},"qty":20.0,"pawn_percent":0,"market_value_acc":{"currency":"SEK","value":10.2},"market_value":{"currency":"SEK","value":10.2},"acq_price":{"currency":"SEK","value":0.0},"acq_price_acc":{"currency":"SEK","value":0.0},"is_custom_gav":false,"margin_percent":200},{"accno":1231234,"accid":1,"instrument":{"mifid2_category":0,"price_type":"monetary_amount","tradables":[{"market_id":11,"tick_size_id":14730,"display_order":0,"lot_size":1.0,"identifier":"131602"}],"instrument_id":16656132,"asset_class":"EQY","instrument_type":"ESHMTF","instrument_group_type":"EQ","currency":"SEK","number_of_securities":9038042.0,"multiplier":1.0,"pawn_percentage":10.0,"margin_percentage":200.0,"symbol":"EFFP","isin_code":"SE0009522451","name":"Effnetplattformen AB"},"main_market_price":{"currency":"SEK","value":7.7},"morning_price":{"currency":"SEK","value":7.95},"qty":22.0,"pawn_percent":10,"market_value_acc":{"currency":"SEK","value":169.4},"market_value":{"currency":"SEK","value":169.4},"acq_price":{"currency":"SEK","value":2.3636363636363638},"acq_price_acc":{"currency":"SEK","value":2.3636363636363638},"is_custom_gav":false,"margin_percent":200},{"accno":1231234,"accid":1,"instrument":{"instrument_id":0,"name":"NAIHSADRAK","symbol":"NAIHSADRAK","isin_code":"SE0006994521","currency":"SEK","multiplier":1.0,"instrument_type":"A"},"main_market_price":{"currency":"SEK","value":0.0},"morning_price":{"currency":"SEK","value":0.0},"qty":30.0,"pawn_percent":0,"market_value_acc":{"currency":"SEK","value":0.0},"market_value":{"currency":"SEK","value":0.0},"acq_price":{"currency":"SEK","value":0.05},"acq_price_acc":{"currency":"SEK","value":0.05},"is_custom_gav":false,"margin_percent":200},{"accno":1231234,"accid":1,"instrument":{"mifid2_category":0,"price_type":"monetary_amount","tradables":[{"market_id":11,"tick_size_id":14732,"display_order":0,"lot_size":1.0,"identifier":"123363"}],"instrument_id":16560049,"asset_class":"EQY","instrument_type":"ESH","instrument_group_type":"EQ","currency":"SEK","number_of_securities":105300103.0,"multiplier":1.0,"pawn_percentage":70.0,"margin_percentage":130.0,"symbol":"ACAD","isin_code":"SE0007897079","name":"AcadeMedia AB"},"main_market_price":{"currency":"SEK","value":69.7},"morning_price":{"currency":"SEK","value":70.2},"qty":111.0,"pawn_percent":70,"market_value_acc":{"currency":"SEK","value":7736.700000000001},"market_value":{"currency":"SEK","value":7736.700000000001},"acq_price":{"currency":"SEK","value":39.9009009009009},"acq_price_acc":{"currency":"SEK","value":39.9009009009009},"is_custom_gav":false,"margin_percent":130},{"accno":1231234,"accid":1,"instrument":{"mifid2_category":0,"price_type":"monetary_amount","tradables":[{"market_id":11,"tick_size_id":14731,"display_order":0,"lot_size":1.0,"identifier":"80255"}],"instrument_id":16348085,"asset_class":"EQY","instrument_type":"ESH","instrument_group_type":"EQ","currency":"SEK","number_of_securities":25871441.0,"multiplier":1.0,"pawn_percentage":40.0,"margin_percentage":160.0,"symbol":"STEF B","isin_code":"SE0006543344","name":"Stendörren Fastigheter AB ser. B"},"main_market_price":{"currency":"SEK","value":130.5},"morning_price":{"currency":"SEK","value":135.0},"qty":5.0,"pawn_percent":40,"market_value_acc":{"currency":"SEK","value":652.5},"market_value":{"currency":"SEK","value":652.5},"acq_price":{"currency":"SEK","value":0.0},"acq_price_acc":{"currency":"SEK","value":0.0},"is_custom_gav":false,"margin_percent":160},{"accno":1231234,"accid":1,"instrument":{"mifid2_category":0,"price_type":"monetary_amount","tradables":[{"market_id":11,"tick_size_id":14732,"display_order":0,"lot_size":1.0,"identifier":"190154"}],"instrument_id":17150954,"asset_class":"EQY","instrument_type":"ESHMTF","instrument_group_type":"EQ","currency":"SEK","number_of_securities":31969822.0,"multiplier":1.0,"pawn_percentage":0.0,"margin_percentage":200.0,"symbol":"HUDYA","isin_code":"SE0013486255","name":"Hudya AB"},"main_market_price":{"currency":"SEK","value":1.35},"morning_price":{"currency":"SEK","value":1.35},"qty":5.0,"pawn_percent":0,"market_value_acc":{"currency":"SEK","value":6.75},"market_value":{"currency":"SEK","value":6.75},"acq_price":{"currency":"SEK","value":0.0},"acq_price_acc":{"currency":"SEK","value":0.0},"is_custom_gav":false,"margin_percent":200},{"accno":1231234,"accid":1,"instrument":{"mifid2_category":0,"price_type":"monetary_amount","tradables":[{"market_id":11,"tick_size_id":14731,"display_order":0,"lot_size":1.0,"identifier":"100970"}],"instrument_id":16222220,"asset_class":"EQY","instrument_type":"ESHMTF","instrument_group_type":"EQ","currency":"SEK","number_of_securities":25659550.0,"multiplier":1.0,"pawn_percentage":0.0,"margin_percentage":200.0,"symbol":"CLAV","isin_code":"SE0005308558","name":"Clavister Holding AB"},"main_market_price":{"currency":"SEK","value":7.8},"morning_price":{"currency":"SEK","value":7.9},"qty":30.0,"pawn_percent":0,"market_value_acc":{"currency":"SEK","value":234.0},"market_value":{"currency":"SEK","value":234.0},"acq_price":{"currency":"SEK","value":0.0},"acq_price_acc":{"currency":"SEK","value":0.0},"is_custom_gav":false,"margin_percent":200},{"accno":1231234,"accid":1,"instrument":{"mifid2_category":0,"price_type":"monetary_amount","tradables":[{"market_id":11,"tick_size_id":14731,"display_order":0,"lot_size":1.0,"identifier":"127937"}],"instrument_id":16394564,"asset_class":"EQY","instrument_type":"ESHMTF","instrument_group_type":"EQ","currency":"SEK","number_of_securities":32204773.0,"multiplier":1.0,"pawn_percentage":0.0,"margin_percentage":200.0,"symbol":"FRISQ","isin_code":"SE0006994539","name":"FRISQ Holding AB"},"main_market_price":{"currency":"SEK","value":5.0},"morning_price":{"currency":"SEK","value":5.14},"qty":33.0,"pawn_percent":0,"market_value_acc":{"currency":"SEK","value":165.0},"market_value":{"currency":"SEK","value":165.0},"acq_price":{"currency":"SEK","value":0.8636363636363636},"acq_price_acc":{"currency":"SEK","value":0.8636363636363636},"is_custom_gav":false,"margin_percent":200},{"accno":1231234,"accid":1,"instrument":{"mifid2_category":0,"price_type":"monetary_amount","tradables":[{"market_id":11,"tick_size_id":14732,"display_order":0,"lot_size":1.0,"identifier":"127479"}],"instrument_id":16605710,"asset_class":"EQY","instrument_type":"ESHMTF","instrument_group_type":"EQ","currency":"SEK","number_of_securities":88781275.0,"multiplier":1.0,"pawn_percentage":0.0,"margin_percentage":200.0,"symbol":"INDEX","isin_code":"SE0008966295","name":"InDex Pharmaceuticals Holding AB"},"main_market_price":{"currency":"SEK","value":7.69},"morning_price":{"currency":"SEK","value":7.89},"qty":1750.0,"pawn_percent":0,"market_value_acc":{"currency":"SEK","value":13457.5},"market_value":{"currency":"SEK","value":13457.5},"acq_price":{"currency":"SEK","value":8.304533333333332},"acq_price_acc":{"currency":"SEK","value":8.304533333333332},"is_custom_gav":false,"margin_percent":200},{"accno":1231234,"accid":1,"instrument":{"instrument_id":0,"name":"AXXONEN HOLDING B","symbol":"AXX B","isin_code":"SE0010134049","currency":"SEK","multiplier":1.0,"instrument_type":"A"},"main_market_price":{"currency":"SEK","value":0.0},"morning_price":{"currency":"SEK","value":0.0},"qty":2.0,"pawn_percent":0,"market_value_acc":{"currency":"SEK","value":0.0},"market_value":{"currency":"SEK","value":0.0},"acq_price":{"currency":"SEK","value":0.0},"acq_price_acc":{"currency":"SEK","value":0.0},"is_custom_gav":false,"margin_percent":200},{"accno":1231234,"accid":1,"instrument":{"mifid2_category":0,"price_type":"monetary_amount","tradables":[{"market_id":11,"tick_size_id":14731,"display_order":0,"lot_size":1.0,"identifier":"126934"}],"instrument_id":16607035,"asset_class":"EQY","instrument_type":"ESH","instrument_group_type":"EQ","currency":"SEK","number_of_securities":40050000.0,"multiplier":1.0,"pawn_percentage":50.0,"margin_percentage":150.0,"symbol":"ENG","isin_code":"SE0008585525","name":"Internationella Engelska Skolan i Sve AB"},"main_market_price":{"currency":"SEK","value":78.0},"morning_price":{"currency":"SEK","value":78.0},"qty":60.0,"pawn_percent":50,"market_value_acc":{"currency":"SEK","value":4680.0},"market_value":{"currency":"SEK","value":4680.0},"acq_price":{"currency":"SEK","value":52.0},"acq_price_acc":{"currency":"SEK","value":52.0},"is_custom_gav":false,"margin_percent":150},{"accno":1231234,"accid":1,"instrument":{"mifid2_category":0,"price_type":"monetary_amount","tradables":[{"market_id":11,"tick_size_id":14731,"display_order":0,"lot_size":1.0,"identifier":"93656"}],"instrument_id":16187189,"asset_class":"EQY","instrument_type":"ESHMTF","instrument_group_type":"EQ","currency":"SEK","number_of_securities":67519019.0,"multiplier":1.0,"pawn_percentage":10.0,"margin_percentage":190.0,"symbol":"NEXAM","isin_code":"SE0005101003","name":"Nexam Chemical Holding AB"},"main_market_price":{"currency":"SEK","value":8.96},"morning_price":{"currency":"SEK","value":9.06},"qty":96.0,"pawn_percent":10,"market_value_acc":{"currency":"SEK","value":860.1600000000001},"market_value":{"currency":"SEK","value":860.1600000000001},"acq_price":{"currency":"SEK","value":0.0},"acq_price_acc":{"currency":"SEK","value":0.0},"is_custom_gav":false,"margin_percent":190},{"accno":1231234,"accid":1,"instrument":{"mifid2_category":0,"price_type":"monetary_amount","tradables":[{"market_id":52,"tick_size_id":34830903,"display_order":0,"lot_size":1.0,"identifier":"5Q13"}],"instrument_id":17122014,"instrument_type":"ESHMTF","instrument_group_type":"EQ","currency":"SEK","number_of_securities":4156259.0,"leverage_percentage":100.0,"multiplier":1.0,"pawn_percentage":0.0,"margin_percentage":200.0,"symbol":"GOGO","isin_code":"SE0013235553","name":"GOGO Lead Tech"},"main_market_price":{"currency":"SEK","value":4.17},"morning_price":{"currency":"SEK","value":4.4},"qty":1.0,"pawn_percent":0,"market_value_acc":{"currency":"SEK","value":4.17},"market_value":{"currency":"SEK","value":4.17},"acq_price":{"currency":"SEK","value":0.0},"acq_price_acc":{"currency":"SEK","value":0.0},"is_custom_gav":false,"margin_percent":200},{"accno":1231234,"accid":1,"instrument":{"mifid2_category":1,"price_type":"monetary_amount","underlyings":[{"instrumment_id":16700520,"instrument_id":16700520,"symbol":"HDW B","isin_code":"SE0009889405"}],"expiration_date":"2021-06-28","tradables":[{"market_id":11,"tick_size_id":14730,"display_order":0,"lot_size":1.0,"identifier":"175418"}],"instrument_id":17069305,"asset_class":"EQY","instrument_type":"WSO","instrument_group_type":"WOKO","currency":"SEK","number_of_securities":6975123.0,"leverage_percentage":100.0,"multiplier":1.0,"strike_price":5.5,"pawn_percentage":0.0,"margin_percentage":200.0,"symbol":"HDW TO 2 B","isin_code":"SE0012453645","name":"H&D Wireless Sweden Hol TO 2 B"},"main_market_price":{"currency":"SEK","value":0.04},"morning_price":{"currency":"SEK","value":0.0395},"qty":9.0,"pawn_percent":0,"market_value_acc":{"currency":"SEK","value":0.36},"market_value":{"currency":"SEK","value":0.36},"acq_price":{"currency":"SEK","value":0.0},"acq_price_acc":{"currency":"SEK","value":0.0},"is_custom_gav":false,"margin_percent":200},{"accno":1231234,"accid":1,"instrument":{"mifid2_category":0,"price_type":"monetary_amount","tradables":[{"market_id":11,"tick_size_id":14733,"display_order":0,"lot_size":1.0,"identifier":"103614"}],"instrument_id":16335289,"asset_class":"EQY","instrument_type":"ESH","instrument_group_type":"EQ","currency":"SEK","number_of_securities":1072223105.0,"multiplier":1.0,"pawn_percentage":60.0,"margin_percentage":140.0,"symbol":"SBB B","isin_code":"SE0009554454","name":"Samhällsbyggnadsbo. i Norden AB ser. B"},"main_market_price":{"currency":"SEK","value":25.0},"morning_price":{"currency":"SEK","value":25.5},"qty":19.0,"pawn_percent":60,"market_value_acc":{"currency":"SEK","value":475.0},"market_value":{"currency":"SEK","value":475.0},"acq_price":{"currency":"SEK","value":0.0},"acq_price_acc":{"currency":"SEK","value":0.0},"is_custom_gav":false,"margin_percent":140},{"accno":1231234,"accid":1,"instrument":{"mifid2_category":1,"price_type":"monetary_amount","underlyings":[{"instrumment_id":16247831,"instrument_id":16247831,"symbol":"MYFC","isin_code":"SE0005505898"}],"expiration_date":"2022-04-27","tradables":[{"market_id":11,"tick_size_id":14730,"display_order":0,"lot_size":1.0,"identifier":"176754"}],"instrument_id":17057480,"asset_class":"EQY","instrument_type":"WSO","instrument_group_type":"WOKO","currency":"SEK","number_of_securities":39958000.0,"leverage_percentage":100.0,"multiplier":1.0,"strike_price":2.0,"pawn_percentage":0.0,"margin_percentage":200.0,"symbol":"MYFC TO2","isin_code":"SE0012351575","name":"myFC Holding TO2"},"main_market_price":{"currency":"SEK","value":0.12},"morning_price":{"currency":"SEK","value":0.155},"qty":40.0,"pawn_percent":0,"market_value_acc":{"currency":"SEK","value":4.8},"market_value":{"currency":"SEK","value":4.8},"acq_price":{"currency":"SEK","value":0.0},"acq_price_acc":{"currency":"SEK","value":0.0},"is_custom_gav":false,"margin_percent":200},{"accno":1231234,"accid":1,"instrument":{"mifid2_category":0,"price_type":"monetary_amount","tradables":[{"market_id":11,"tick_size_id":14731,"display_order":0,"lot_size":1.0,"identifier":"114250"}],"instrument_id":16421512,"asset_class":"EQY","instrument_type":"ESHMTF","instrument_group_type":"EQ","currency":"SEK","number_of_securities":48226408.0,"multiplier":1.0,"pawn_percentage":0.0,"margin_percentage":200.0,"symbol":"KLAR","isin_code":"SE0007280326","name":"Klaria Pharma Holding AB"},"main_market_price":{"currency":"SEK","value":7.66},"morning_price":{"currency":"SEK","value":8.36},"qty":104.0,"pawn_percent":0,"market_value_acc":{"currency":"SEK","value":796.64},"market_value":{"currency":"SEK","value":796.64},"acq_price":{"currency":"SEK","value":0.01435725443352017},"acq_price_acc":{"currency":"SEK","value":0.01435725443352017},"is_custom_gav":false,"margin_percent":200}]
+[
+    {
+        "accno": 1231234,
+        "accid": 1,
+        "instrument": {
+            "instrument_id": 0,
+            "name": "BLASIEHOLMEN INVEST",
+            "symbol": "BLASIEHOLMEN",
+            "isin_code": "SE0004548444",
+            "currency": "SEK",
+            "multiplier": 1.0,
+            "instrument_type": "A"
+        },
+        "main_market_price": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "morning_price": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "qty": 1.0,
+        "pawn_percent": 0,
+        "market_value_acc": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "market_value": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "acq_price": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "acq_price_acc": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "is_custom_gav": false,
+        "margin_percent": 200
+    },
+    {
+        "accno": 1231234,
+        "accid": 1,
+        "instrument": {
+            "mifid2_category": 0,
+            "price_type": "monetary_amount",
+            "tradables": [
+                {
+                    "market_id": 11,
+                    "tick_size_id": 14731,
+                    "display_order": 0,
+                    "lot_size": 1.0,
+                    "identifier": "186989"
+                }
+            ],
+            "instrument_id": 16886109,
+            "asset_class": "EQY",
+            "instrument_type": "ESHMTF",
+            "instrument_group_type": "EQ",
+            "currency": "SEK",
+            "number_of_securities": 76350297.0,
+            "multiplier": 1.0,
+            "pawn_percentage": 0.0,
+            "margin_percentage": 200.0,
+            "symbol": "DIVIO B",
+            "isin_code": "SE0011311554",
+            "name": "Divio Technologies AB ser. B"
+        },
+        "main_market_price": {
+            "currency": "SEK",
+            "value": 1.38
+        },
+        "morning_price": {
+            "currency": "SEK",
+            "value": 1.33
+        },
+        "qty": 10.0,
+        "pawn_percent": 0,
+        "market_value_acc": {
+            "currency": "SEK",
+            "value": 13.799999999999999
+        },
+        "market_value": {
+            "currency": "SEK",
+            "value": 13.799999999999999
+        },
+        "acq_price": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "acq_price_acc": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "is_custom_gav": false,
+        "margin_percent": 200
+    },
+    {
+        "accno": 1231234,
+        "accid": 1,
+        "instrument": {
+            "mifid2_category": 0,
+            "price_type": "monetary_amount",
+            "tradables": [
+                {
+                    "market_id": 13,
+                    "tick_size_id": 34830904,
+                    "display_order": 0,
+                    "lot_size": 1.0,
+                    "identifier": "3R03"
+                }
+            ],
+            "instrument_id": 16161923,
+            "instrument_type": "ESHMTF",
+            "instrument_group_type": "EQ",
+            "currency": "SEK",
+            "number_of_securities": 37287652.0,
+            "leverage_percentage": 100.0,
+            "multiplier": 1.0,
+            "pawn_percentage": 0.0,
+            "margin_percentage": 200.0,
+            "symbol": "RENT",
+            "isin_code": "SE0004548451",
+            "name": "Rentunder Holding"
+        },
+        "main_market_price": {
+            "currency": "SEK",
+            "value": 0.68
+        },
+        "morning_price": {
+            "currency": "SEK",
+            "value": 0.705
+        },
+        "qty": 13.0,
+        "pawn_percent": 0,
+        "market_value_acc": {
+            "currency": "SEK",
+            "value": 8.84
+        },
+        "market_value": {
+            "currency": "SEK",
+            "value": 8.84
+        },
+        "acq_price": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "acq_price_acc": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "is_custom_gav": false,
+        "margin_percent": 200
+    },
+    {
+        "accno": 1231234,
+        "accid": 1,
+        "instrument": {
+            "mifid2_category": 0,
+            "price_type": "monetary_amount",
+            "tradables": [
+                {
+                    "market_id": 11,
+                    "tick_size_id": 14731,
+                    "display_order": 0,
+                    "lot_size": 1.0,
+                    "identifier": "163678"
+                }
+            ],
+            "instrument_id": 16647088,
+            "asset_class": "EQY",
+            "instrument_type": "ESHMTF",
+            "instrument_group_type": "EQ",
+            "currency": "SEK",
+            "number_of_securities": 26503948.0,
+            "multiplier": 1.0,
+            "pawn_percentage": 0.0,
+            "margin_percentage": 200.0,
+            "symbol": "AXOLOT",
+            "isin_code": "SE0009414303",
+            "name": "Axolot Solutions Holding AB"
+        },
+        "main_market_price": {
+            "currency": "SEK",
+            "value": 1.28
+        },
+        "morning_price": {
+            "currency": "SEK",
+            "value": 1.3
+        },
+        "qty": 20.0,
+        "pawn_percent": 0,
+        "market_value_acc": {
+            "currency": "SEK",
+            "value": 25.6
+        },
+        "market_value": {
+            "currency": "SEK",
+            "value": 25.6
+        },
+        "acq_price": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "acq_price_acc": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "is_custom_gav": false,
+        "margin_percent": 200
+    },
+    {
+        "accno": 1231234,
+        "accid": 1,
+        "instrument": {
+            "instrument_id": 0,
+            "name": "Ittot AB",
+            "symbol": "ITTOT",
+            "isin_code": "SE0011167162",
+            "currency": "SEK",
+            "multiplier": 1.0,
+            "instrument_type": "A"
+        },
+        "main_market_price": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "morning_price": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "qty": 20.0,
+        "pawn_percent": 0,
+        "market_value_acc": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "market_value": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "acq_price": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "acq_price_acc": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "is_custom_gav": false,
+        "margin_percent": 200
+    },
+    {
+        "accno": 1231234,
+        "accid": 1,
+        "instrument": {
+            "instrument_id": 0,
+            "name": "Opserc AB",
+            "symbol": "OPSERC",
+            "isin_code": "SE0011167212",
+            "currency": "SEK",
+            "multiplier": 1.0,
+            "instrument_type": "A"
+        },
+        "main_market_price": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "morning_price": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "qty": 20.0,
+        "pawn_percent": 0,
+        "market_value_acc": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "market_value": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "acq_price": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "acq_price_acc": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "is_custom_gav": false,
+        "margin_percent": 200
+    },
+    {
+        "accno": 1231234,
+        "accid": 1,
+        "instrument": {
+            "instrument_id": 0,
+            "name": "Oigres AB",
+            "symbol": "OIGRES",
+            "isin_code": "SE0011167170",
+            "currency": "SEK",
+            "multiplier": 1.0,
+            "instrument_type": "A"
+        },
+        "main_market_price": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "morning_price": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "qty": 20.0,
+        "pawn_percent": 0,
+        "market_value_acc": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "market_value": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "acq_price": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "acq_price_acc": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "is_custom_gav": false,
+        "margin_percent": 200
+    },
+    {
+        "accno": 1231234,
+        "accid": 1,
+        "instrument": {
+            "instrument_id": 0,
+            "name": "Sallisac AB",
+            "symbol": "SALLISAC",
+            "isin_code": "SE0011167246",
+            "currency": "SEK",
+            "multiplier": 1.0,
+            "instrument_type": "A"
+        },
+        "main_market_price": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "morning_price": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "qty": 20.0,
+        "pawn_percent": 0,
+        "market_value_acc": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "market_value": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "acq_price": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "acq_price_acc": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "is_custom_gav": false,
+        "margin_percent": 200
+    },
+    {
+        "accno": 1231234,
+        "accid": 1,
+        "instrument": {
+            "mifid2_category": 0,
+            "price_type": "monetary_amount",
+            "tradables": [
+                {
+                    "market_id": 11,
+                    "tick_size_id": 14731,
+                    "display_order": 0,
+                    "lot_size": 1.0,
+                    "identifier": "101773"
+                }
+            ],
+            "instrument_id": 16247832,
+            "asset_class": "EQY",
+            "instrument_type": "ESHMTF",
+            "instrument_group_type": "EQ",
+            "currency": "SEK",
+            "number_of_securities": 13830000.0,
+            "multiplier": 1.0,
+            "pawn_percentage": 0.0,
+            "margin_percentage": 200.0,
+            "symbol": "NICO",
+            "isin_code": "SE0005506185",
+            "name": "Nicoccino Holding AB"
+        },
+        "main_market_price": {
+            "currency": "SEK",
+            "value": 3.46
+        },
+        "morning_price": {
+            "currency": "SEK",
+            "value": 3.3
+        },
+        "qty": 24.0,
+        "pawn_percent": 0,
+        "market_value_acc": {
+            "currency": "SEK",
+            "value": 83.03999999999999
+        },
+        "market_value": {
+            "currency": "SEK",
+            "value": 83.03999999999999
+        },
+        "acq_price": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "acq_price_acc": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "is_custom_gav": false,
+        "margin_percent": 200
+    },
+    {
+        "accno": 1231234,
+        "accid": 1,
+        "instrument": {
+            "mifid2_category": 0,
+            "price_type": "monetary_amount",
+            "tradables": [
+                {
+                    "market_id": 11,
+                    "tick_size_id": 14732,
+                    "display_order": 0,
+                    "lot_size": 1.0,
+                    "identifier": "130818"
+                }
+            ],
+            "instrument_id": 16530752,
+            "asset_class": "EQY",
+            "instrument_type": "ESHMTF",
+            "instrument_group_type": "EQ",
+            "currency": "SEK",
+            "number_of_securities": 78643079.0,
+            "multiplier": 1.0,
+            "pawn_percentage": 0.0,
+            "margin_percentage": 200.0,
+            "symbol": "AERO",
+            "isin_code": "SE0008212161",
+            "name": "Svenska Aerogel Holding AB"
+        },
+        "main_market_price": {
+            "currency": "SEK",
+            "value": 0.8
+        },
+        "morning_price": {
+            "currency": "SEK",
+            "value": 0.839
+        },
+        "qty": 115.0,
+        "pawn_percent": 0,
+        "market_value_acc": {
+            "currency": "SEK",
+            "value": 92.0
+        },
+        "market_value": {
+            "currency": "SEK",
+            "value": 92.0
+        },
+        "acq_price": {
+            "currency": "SEK",
+            "value": 1.6252173913043477
+        },
+        "acq_price_acc": {
+            "currency": "SEK",
+            "value": 1.6252173913043477
+        },
+        "is_custom_gav": false,
+        "margin_percent": 200
+    },
+    {
+        "accno": 1231234,
+        "accid": 1,
+        "instrument": {
+            "instrument_id": 0,
+            "name": "Aligera",
+            "symbol": "ALIRA B",
+            "isin_code": "SE0009470271",
+            "currency": "SEK",
+            "multiplier": 1.0,
+            "instrument_type": "A"
+        },
+        "main_market_price": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "morning_price": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "qty": 25.0,
+        "pawn_percent": 0,
+        "market_value_acc": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "market_value": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "acq_price": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "acq_price_acc": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "is_custom_gav": false,
+        "margin_percent": 200
+    },
+    {
+        "accno": 1231234,
+        "accid": 1,
+        "instrument": {
+            "mifid2_category": 0,
+            "price_type": "monetary_amount",
+            "tradables": [
+                {
+                    "market_id": 11,
+                    "tick_size_id": 14732,
+                    "display_order": 0,
+                    "lot_size": 1.0,
+                    "identifier": "108329"
+                }
+            ],
+            "instrument_id": 16222219,
+            "asset_class": "EQY",
+            "instrument_type": "ESHMTF",
+            "instrument_group_type": "EQ",
+            "currency": "SEK",
+            "number_of_securities": 87936984.0,
+            "multiplier": 1.0,
+            "pawn_percentage": 0.0,
+            "margin_percentage": 200.0,
+            "symbol": "SALT B",
+            "isin_code": "SE0005308541",
+            "name": "SaltX Technology Holding AB ser. B"
+        },
+        "main_market_price": {
+            "currency": "SEK",
+            "value": 3.03
+        },
+        "morning_price": {
+            "currency": "SEK",
+            "value": 3.07
+        },
+        "qty": 34.0,
+        "pawn_percent": 0,
+        "market_value_acc": {
+            "currency": "SEK",
+            "value": 103.02
+        },
+        "market_value": {
+            "currency": "SEK",
+            "value": 103.02
+        },
+        "acq_price": {
+            "currency": "SEK",
+            "value": 2.8279411764705884
+        },
+        "acq_price_acc": {
+            "currency": "SEK",
+            "value": 2.8279411764705884
+        },
+        "is_custom_gav": false,
+        "margin_percent": 200
+    },
+    {
+        "accno": 1231234,
+        "accid": 1,
+        "instrument": {
+            "mifid2_category": 0,
+            "price_type": "monetary_amount",
+            "tradables": [
+                {
+                    "market_id": 11,
+                    "tick_size_id": 14732,
+                    "display_order": 0,
+                    "lot_size": 1.0,
+                    "identifier": "101187"
+                }
+            ],
+            "instrument_id": 16247831,
+            "asset_class": "EQY",
+            "instrument_type": "ESHMTF",
+            "instrument_group_type": "EQ",
+            "currency": "SEK",
+            "number_of_securities": 156683087.0,
+            "multiplier": 1.0,
+            "pawn_percentage": 0.0,
+            "margin_percentage": 200.0,
+            "symbol": "MYFC",
+            "isin_code": "SE0005505898",
+            "name": "myFC Holding AB"
+        },
+        "main_market_price": {
+            "currency": "SEK",
+            "value": 1.45
+        },
+        "morning_price": {
+            "currency": "SEK",
+            "value": 1.51
+        },
+        "qty": 90.0,
+        "pawn_percent": 0,
+        "market_value_acc": {
+            "currency": "SEK",
+            "value": 130.5
+        },
+        "market_value": {
+            "currency": "SEK",
+            "value": 130.5
+        },
+        "acq_price": {
+            "currency": "SEK",
+            "value": 1.5555555555555556
+        },
+        "acq_price_acc": {
+            "currency": "SEK",
+            "value": 1.5555555555555556
+        },
+        "is_custom_gav": false,
+        "margin_percent": 200
+    },
+    {
+        "accno": 1231234,
+        "accid": 1,
+        "instrument": {
+            "instrument_id": 0,
+            "name": "Nicoccino Holding TR",
+            "symbol": "NICO TR",
+            "isin_code": "SE0014956983",
+            "currency": "SEK",
+            "multiplier": 1.0,
+            "instrument_type": "A"
+        },
+        "main_market_price": {
+            "currency": "SEK",
+            "value": 0.063
+        },
+        "morning_price": {
+            "currency": "SEK",
+            "value": 0.063
+        },
+        "qty": 24.0,
+        "pawn_percent": 0,
+        "market_value_acc": {
+            "currency": "SEK",
+            "value": 1.512
+        },
+        "market_value": {
+            "currency": "SEK",
+            "value": 1.512
+        },
+        "acq_price": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "acq_price_acc": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "is_custom_gav": false,
+        "margin_percent": 200
+    },
+    {
+        "accno": 1231234,
+        "accid": 1,
+        "instrument": {
+            "instrument_id": 0,
+            "name": "BLASIEHOLMEN IGRSEED",
+            "symbol": "BH IGRSEED",
+            "isin_code": "SE0006994679",
+            "currency": "SEK",
+            "multiplier": 1.0,
+            "instrument_type": "A"
+        },
+        "main_market_price": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "morning_price": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "qty": 1.0,
+        "pawn_percent": 0,
+        "market_value_acc": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "market_value": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "acq_price": {
+            "currency": "SEK",
+            "value": 30.5
+        },
+        "acq_price_acc": {
+            "currency": "SEK",
+            "value": 30.5
+        },
+        "is_custom_gav": false,
+        "margin_percent": 200
+    },
+    {
+        "accno": 1231234,
+        "accid": 1,
+        "instrument": {
+            "mifid2_category": 0,
+            "price_type": "monetary_amount",
+            "tradables": [
+                {
+                    "market_id": 13,
+                    "tick_size_id": 34830903,
+                    "display_order": 0,
+                    "lot_size": 1.0,
+                    "identifier": "47MN"
+                }
+            ],
+            "instrument_id": 17251968,
+            "instrument_type": "ESHMTF",
+            "instrument_group_type": "EQ",
+            "currency": "SEK",
+            "number_of_securities": 509301804.0,
+            "leverage_percentage": 100.0,
+            "multiplier": 1.0,
+            "pawn_percentage": 0.0,
+            "margin_percentage": 200.0,
+            "symbol": "COEGIN",
+            "isin_code": "SE0014262218",
+            "name": "Coegin Pharma"
+        },
+        "main_market_price": {
+            "currency": "SEK",
+            "value": 0.231
+        },
+        "morning_price": {
+            "currency": "SEK",
+            "value": 0.223
+        },
+        "qty": 8.0,
+        "pawn_percent": 0,
+        "market_value_acc": {
+            "currency": "SEK",
+            "value": 1.848
+        },
+        "market_value": {
+            "currency": "SEK",
+            "value": 1.848
+        },
+        "acq_price": {
+            "currency": "SEK",
+            "value": 0.1
+        },
+        "acq_price_acc": {
+            "currency": "SEK",
+            "value": 0.1
+        },
+        "is_custom_gav": false,
+        "margin_percent": 200
+    },
+    {
+        "accno": 1231234,
+        "accid": 1,
+        "instrument": {
+            "instrument_id": 0,
+            "name": "Enadiz AB",
+            "symbol": "ENADIZ",
+            "isin_code": "SE0011167139",
+            "currency": "SEK",
+            "multiplier": 1.0,
+            "instrument_type": "A"
+        },
+        "main_market_price": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "morning_price": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "qty": 20.0,
+        "pawn_percent": 0,
+        "market_value_acc": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "market_value": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "acq_price": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "acq_price_acc": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "is_custom_gav": false,
+        "margin_percent": 200
+    },
+    {
+        "accno": 1231234,
+        "accid": 1,
+        "instrument": {
+            "instrument_id": 0,
+            "name": "Nordic Retail",
+            "symbol": "NORDIC RETAIL",
+            "isin_code": "SE0012230860",
+            "currency": "SEK",
+            "multiplier": 1.0,
+            "instrument_type": "A"
+        },
+        "main_market_price": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "morning_price": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "qty": 57.0,
+        "pawn_percent": 0,
+        "market_value_acc": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "market_value": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "acq_price": {
+            "currency": "SEK",
+            "value": 0.3508771929824561
+        },
+        "acq_price_acc": {
+            "currency": "SEK",
+            "value": 0.3508771929824561
+        },
+        "is_custom_gav": false,
+        "margin_percent": 200
+    },
+    {
+        "accno": 1231234,
+        "accid": 1,
+        "instrument": {
+            "mifid2_category": 0,
+            "price_type": "monetary_amount",
+            "tradables": [
+                {
+                    "market_id": 11,
+                    "tick_size_id": 14732,
+                    "display_order": 0,
+                    "lot_size": 1.0,
+                    "identifier": "147691"
+                }
+            ],
+            "instrument_id": 16700520,
+            "asset_class": "EQY",
+            "instrument_type": "ESHMTF",
+            "instrument_group_type": "EQ",
+            "currency": "SEK",
+            "number_of_securities": 93868821.0,
+            "multiplier": 1.0,
+            "pawn_percentage": 0.0,
+            "margin_percentage": 200.0,
+            "symbol": "HDW B",
+            "isin_code": "SE0009889405",
+            "name": "H&D Wireless Sweden Holding AB ser. B"
+        },
+        "main_market_price": {
+            "currency": "SEK",
+            "value": 0.625
+        },
+        "morning_price": {
+            "currency": "SEK",
+            "value": 0.666
+        },
+        "qty": 86.0,
+        "pawn_percent": 0,
+        "market_value_acc": {
+            "currency": "SEK",
+            "value": 53.75
+        },
+        "market_value": {
+            "currency": "SEK",
+            "value": 53.75
+        },
+        "acq_price": {
+            "currency": "SEK",
+            "value": 1.938953488372093
+        },
+        "acq_price_acc": {
+            "currency": "SEK",
+            "value": 1.938953488372093
+        },
+        "is_custom_gav": false,
+        "margin_percent": 200
+    },
+    {
+        "accno": 1231234,
+        "accid": 1,
+        "instrument": {
+            "instrument_id": 0,
+            "name": "BLASIEHOLMEN IGR EQU",
+            "symbol": "BH IGR EQU",
+            "isin_code": "SE0006994620",
+            "currency": "SEK",
+            "multiplier": 1.0,
+            "instrument_type": "A"
+        },
+        "main_market_price": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "morning_price": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "qty": 1.0,
+        "pawn_percent": 0,
+        "market_value_acc": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "market_value": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "acq_price": {
+            "currency": "SEK",
+            "value": 30.5
+        },
+        "acq_price_acc": {
+            "currency": "SEK",
+            "value": 30.5
+        },
+        "is_custom_gav": false,
+        "margin_percent": 200
+    },
+    {
+        "accno": 1231234,
+        "accid": 1,
+        "instrument": {
+            "has_ucits": true,
+            "no_of_decimals": 4,
+            "mifid2_category": 0,
+            "prospectus_url": "http://doc.morningstar.com/document/867b3726134a9c9ae5d2c160c153464d.msdoc/?clientid=nordnet&key=b3a3825282b90bac",
+            "price_type": "monetary_amount",
+            "underlyings": [
+                {
+                    "instrumment_id": 16101863,
+                    "instrument_id": 16101863,
+                    "symbol": "ELUX B",
+                    "isin_code": "SE0000103814"
+                },
+                {
+                    "instrumment_id": 16454998,
+                    "instrument_id": 16454998,
+                    "symbol": "SINCH",
+                    "isin_code": "SE0007439112"
+                },
+                {
+                    "instrumment_id": 16096164,
+                    "instrument_id": 16096164,
+                    "symbol": "INDT",
+                    "isin_code": "SE0001515552"
+                },
+                {
+                    "instrumment_id": 16100155,
+                    "instrument_id": 16100155,
+                    "symbol": "SWEC B",
+                    "isin_code": "SE0000489098"
+                },
+                {
+                    "instrumment_id": 16099701,
+                    "instrument_id": 16099701,
+                    "symbol": "FABG",
+                    "isin_code": "SE0011166974"
+                },
+                {
+                    "instrumment_id": 16084516,
+                    "instrument_id": 16084516,
+                    "symbol": "BURE",
+                    "isin_code": "SE0000195810"
+                },
+                {
+                    "instrumment_id": 16082794,
+                    "instrument_id": 16082794,
+                    "symbol": "BEIJ B",
+                    "isin_code": "SE0011116508"
+                },
+                {
+                    "instrumment_id": 16099742,
+                    "instrument_id": 16099742,
+                    "symbol": "NIBE B",
+                    "isin_code": "SE0008321293"
+                },
+                {
+                    "instrumment_id": 16099785,
+                    "instrument_id": 16099785,
+                    "symbol": "CAST",
+                    "isin_code": "SE0000379190"
+                },
+                {
+                    "instrumment_id": 16103597,
+                    "instrument_id": 16103597,
+                    "symbol": "TREL B",
+                    "isin_code": "SE0000114837"
+                }
+            ],
+            "tradables": [
+                {
+                    "market_id": 78,
+                    "tick_size_id": 14729,
+                    "display_order": 1,
+                    "lot_size": 1.0,
+                    "identifier": "JWMAY00356"
+                }
+            ],
+            "instrument_id": 16802618,
+            "instrument_type": "FUCITS",
+            "instrument_group_type": "FND",
+            "currency": "SEK",
+            "management_fee": 0.4,
+            "multiplier": 1.0,
+            "pawn_percentage": 80.0,
+            "margin_percentage": 100.0,
+            "symbol": "AMF SMÅBOLAG",
+            "isin_code": "SE0001185000",
+            "name": "AMF Aktiefond Småbolag",
+            "has_fund_data": true,
+            "category": "Sverige, små-/medelstora bolag",
+            "institute": "AMF Fonder",
+            "rating": 3,
+            "is_daily_traded": true,
+            "min_investment": 100.0,
+            "sell_fee": 0.0,
+            "buy_fee": 0.0,
+            "performance_one_day": -2.71,
+            "performance_one_week": -4.93,
+            "performance_one_month": -0.93,
+            "performance_this_year": 20.26,
+            "performance_three_years": 64.85,
+            "performance_five_years": 123.16,
+            "last_nav": 996.2,
+            "last_nav_date": "2020-10-26"
+        },
+        "main_market_price": {
+            "currency": "SEK",
+            "value": 996.2
+        },
+        "morning_price": {
+            "currency": "SEK",
+            "value": 996.2
+        },
+        "qty": 2.0435,
+        "pawn_percent": 80,
+        "market_value_acc": {
+            "currency": "SEK",
+            "value": 2035.7347
+        },
+        "market_value": {
+            "currency": "SEK",
+            "value": 2035.7347
+        },
+        "acq_price": {
+            "currency": "SEK",
+            "value": 488.90192627358954
+        },
+        "acq_price_acc": {
+            "currency": "SEK",
+            "value": 488.90192627358954
+        },
+        "is_custom_gav": false,
+        "margin_percent": 100
+    },
+    {
+        "accno": 1231234,
+        "accid": 1,
+        "instrument": {
+            "mifid2_category": 0,
+            "price_type": "monetary_amount",
+            "tradables": [
+                {
+                    "market_id": 11,
+                    "tick_size_id": 14731,
+                    "display_order": 0,
+                    "lot_size": 1.0,
+                    "identifier": "135384"
+                }
+            ],
+            "instrument_id": 16684022,
+            "asset_class": "EQY",
+            "instrument_type": "ESHMTF",
+            "instrument_group_type": "EQ",
+            "currency": "SEK",
+            "number_of_securities": 24718132.0,
+            "multiplier": 1.0,
+            "pawn_percentage": 0.0,
+            "margin_percentage": 200.0,
+            "symbol": "ISR",
+            "isin_code": "SE0008212195",
+            "name": "ISR Immune System Regulation Holding AB"
+        },
+        "main_market_price": {
+            "currency": "SEK",
+            "value": 4.5
+        },
+        "morning_price": {
+            "currency": "SEK",
+            "value": 4.5
+        },
+        "qty": 20.0,
+        "pawn_percent": 0,
+        "market_value_acc": {
+            "currency": "SEK",
+            "value": 90.0
+        },
+        "market_value": {
+            "currency": "SEK",
+            "value": 90.0
+        },
+        "acq_price": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "acq_price_acc": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "is_custom_gav": false,
+        "margin_percent": 200
+    },
+    {
+        "accno": 1231234,
+        "accid": 1,
+        "instrument": {
+            "mifid2_category": 0,
+            "price_type": "monetary_amount",
+            "tradables": [
+                {
+                    "market_id": 11,
+                    "tick_size_id": 14731,
+                    "display_order": 0,
+                    "lot_size": 1.0,
+                    "identifier": "171533"
+                }
+            ],
+            "instrument_id": 16846430,
+            "asset_class": "EQY",
+            "instrument_type": "ESHMTF",
+            "instrument_group_type": "EQ",
+            "currency": "SEK",
+            "number_of_securities": 63120276.0,
+            "multiplier": 1.0,
+            "pawn_percentage": 0.0,
+            "margin_percentage": 200.0,
+            "symbol": "FRILL B",
+            "isin_code": "SE0011062595",
+            "name": "Frill Holding AB ser. B"
+        },
+        "main_market_price": {
+            "currency": "SEK",
+            "value": 0.51
+        },
+        "morning_price": {
+            "currency": "SEK",
+            "value": 0.59
+        },
+        "qty": 20.0,
+        "pawn_percent": 0,
+        "market_value_acc": {
+            "currency": "SEK",
+            "value": 10.2
+        },
+        "market_value": {
+            "currency": "SEK",
+            "value": 10.2
+        },
+        "acq_price": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "acq_price_acc": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "is_custom_gav": false,
+        "margin_percent": 200
+    },
+    {
+        "accno": 1231234,
+        "accid": 1,
+        "instrument": {
+            "mifid2_category": 0,
+            "price_type": "monetary_amount",
+            "tradables": [
+                {
+                    "market_id": 11,
+                    "tick_size_id": 14730,
+                    "display_order": 0,
+                    "lot_size": 1.0,
+                    "identifier": "131602"
+                }
+            ],
+            "instrument_id": 16656132,
+            "asset_class": "EQY",
+            "instrument_type": "ESHMTF",
+            "instrument_group_type": "EQ",
+            "currency": "SEK",
+            "number_of_securities": 9038042.0,
+            "multiplier": 1.0,
+            "pawn_percentage": 10.0,
+            "margin_percentage": 200.0,
+            "symbol": "EFFP",
+            "isin_code": "SE0009522451",
+            "name": "Effnetplattformen AB"
+        },
+        "main_market_price": {
+            "currency": "SEK",
+            "value": 7.7
+        },
+        "morning_price": {
+            "currency": "SEK",
+            "value": 7.95
+        },
+        "qty": 22.0,
+        "pawn_percent": 10,
+        "market_value_acc": {
+            "currency": "SEK",
+            "value": 169.4
+        },
+        "market_value": {
+            "currency": "SEK",
+            "value": 169.4
+        },
+        "acq_price": {
+            "currency": "SEK",
+            "value": 2.3636363636363638
+        },
+        "acq_price_acc": {
+            "currency": "SEK",
+            "value": 2.3636363636363638
+        },
+        "is_custom_gav": false,
+        "margin_percent": 200
+    },
+    {
+        "accno": 1231234,
+        "accid": 1,
+        "instrument": {
+            "instrument_id": 0,
+            "name": "NAIHSADRAK",
+            "symbol": "NAIHSADRAK",
+            "isin_code": "SE0006994521",
+            "currency": "SEK",
+            "multiplier": 1.0,
+            "instrument_type": "A"
+        },
+        "main_market_price": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "morning_price": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "qty": 30.0,
+        "pawn_percent": 0,
+        "market_value_acc": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "market_value": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "acq_price": {
+            "currency": "SEK",
+            "value": 0.05
+        },
+        "acq_price_acc": {
+            "currency": "SEK",
+            "value": 0.05
+        },
+        "is_custom_gav": false,
+        "margin_percent": 200
+    },
+    {
+        "accno": 1231234,
+        "accid": 1,
+        "instrument": {
+            "mifid2_category": 0,
+            "price_type": "monetary_amount",
+            "tradables": [
+                {
+                    "market_id": 11,
+                    "tick_size_id": 14732,
+                    "display_order": 0,
+                    "lot_size": 1.0,
+                    "identifier": "123363"
+                }
+            ],
+            "instrument_id": 16560049,
+            "asset_class": "EQY",
+            "instrument_type": "ESH",
+            "instrument_group_type": "EQ",
+            "currency": "SEK",
+            "number_of_securities": 105300103.0,
+            "multiplier": 1.0,
+            "pawn_percentage": 70.0,
+            "margin_percentage": 130.0,
+            "symbol": "ACAD",
+            "isin_code": "SE0007897079",
+            "name": "AcadeMedia AB"
+        },
+        "main_market_price": {
+            "currency": "SEK",
+            "value": 69.7
+        },
+        "morning_price": {
+            "currency": "SEK",
+            "value": 70.2
+        },
+        "qty": 111.0,
+        "pawn_percent": 70,
+        "market_value_acc": {
+            "currency": "SEK",
+            "value": 7736.700000000001
+        },
+        "market_value": {
+            "currency": "SEK",
+            "value": 7736.700000000001
+        },
+        "acq_price": {
+            "currency": "SEK",
+            "value": 39.9009009009009
+        },
+        "acq_price_acc": {
+            "currency": "SEK",
+            "value": 39.9009009009009
+        },
+        "is_custom_gav": false,
+        "margin_percent": 130
+    },
+    {
+        "accno": 1231234,
+        "accid": 1,
+        "instrument": {
+            "mifid2_category": 0,
+            "price_type": "monetary_amount",
+            "tradables": [
+                {
+                    "market_id": 11,
+                    "tick_size_id": 14731,
+                    "display_order": 0,
+                    "lot_size": 1.0,
+                    "identifier": "80255"
+                }
+            ],
+            "instrument_id": 16348085,
+            "asset_class": "EQY",
+            "instrument_type": "ESH",
+            "instrument_group_type": "EQ",
+            "currency": "SEK",
+            "number_of_securities": 25871441.0,
+            "multiplier": 1.0,
+            "pawn_percentage": 40.0,
+            "margin_percentage": 160.0,
+            "symbol": "STEF B",
+            "isin_code": "SE0006543344",
+            "name": "Stendörren Fastigheter AB ser. B"
+        },
+        "main_market_price": {
+            "currency": "SEK",
+            "value": 130.5
+        },
+        "morning_price": {
+            "currency": "SEK",
+            "value": 135.0
+        },
+        "qty": 5.0,
+        "pawn_percent": 40,
+        "market_value_acc": {
+            "currency": "SEK",
+            "value": 652.5
+        },
+        "market_value": {
+            "currency": "SEK",
+            "value": 652.5
+        },
+        "acq_price": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "acq_price_acc": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "is_custom_gav": false,
+        "margin_percent": 160
+    },
+    {
+        "accno": 1231234,
+        "accid": 1,
+        "instrument": {
+            "mifid2_category": 0,
+            "price_type": "monetary_amount",
+            "tradables": [
+                {
+                    "market_id": 11,
+                    "tick_size_id": 14732,
+                    "display_order": 0,
+                    "lot_size": 1.0,
+                    "identifier": "190154"
+                }
+            ],
+            "instrument_id": 17150954,
+            "asset_class": "EQY",
+            "instrument_type": "ESHMTF",
+            "instrument_group_type": "EQ",
+            "currency": "SEK",
+            "number_of_securities": 31969822.0,
+            "multiplier": 1.0,
+            "pawn_percentage": 0.0,
+            "margin_percentage": 200.0,
+            "symbol": "HUDYA",
+            "isin_code": "SE0013486255",
+            "name": "Hudya AB"
+        },
+        "main_market_price": {
+            "currency": "SEK",
+            "value": 1.35
+        },
+        "morning_price": {
+            "currency": "SEK",
+            "value": 1.35
+        },
+        "qty": 5.0,
+        "pawn_percent": 0,
+        "market_value_acc": {
+            "currency": "SEK",
+            "value": 6.75
+        },
+        "market_value": {
+            "currency": "SEK",
+            "value": 6.75
+        },
+        "acq_price": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "acq_price_acc": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "is_custom_gav": false,
+        "margin_percent": 200
+    },
+    {
+        "accno": 1231234,
+        "accid": 1,
+        "instrument": {
+            "mifid2_category": 0,
+            "price_type": "monetary_amount",
+            "tradables": [
+                {
+                    "market_id": 11,
+                    "tick_size_id": 14731,
+                    "display_order": 0,
+                    "lot_size": 1.0,
+                    "identifier": "100970"
+                }
+            ],
+            "instrument_id": 16222220,
+            "asset_class": "EQY",
+            "instrument_type": "ESHMTF",
+            "instrument_group_type": "EQ",
+            "currency": "SEK",
+            "number_of_securities": 25659550.0,
+            "multiplier": 1.0,
+            "pawn_percentage": 0.0,
+            "margin_percentage": 200.0,
+            "symbol": "CLAV",
+            "isin_code": "SE0005308558",
+            "name": "Clavister Holding AB"
+        },
+        "main_market_price": {
+            "currency": "SEK",
+            "value": 7.8
+        },
+        "morning_price": {
+            "currency": "SEK",
+            "value": 7.9
+        },
+        "qty": 30.0,
+        "pawn_percent": 0,
+        "market_value_acc": {
+            "currency": "SEK",
+            "value": 234.0
+        },
+        "market_value": {
+            "currency": "SEK",
+            "value": 234.0
+        },
+        "acq_price": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "acq_price_acc": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "is_custom_gav": false,
+        "margin_percent": 200
+    },
+    {
+        "accno": 1231234,
+        "accid": 1,
+        "instrument": {
+            "mifid2_category": 0,
+            "price_type": "monetary_amount",
+            "tradables": [
+                {
+                    "market_id": 11,
+                    "tick_size_id": 14731,
+                    "display_order": 0,
+                    "lot_size": 1.0,
+                    "identifier": "127937"
+                }
+            ],
+            "instrument_id": 16394564,
+            "asset_class": "EQY",
+            "instrument_type": "ESHMTF",
+            "instrument_group_type": "EQ",
+            "currency": "SEK",
+            "number_of_securities": 32204773.0,
+            "multiplier": 1.0,
+            "pawn_percentage": 0.0,
+            "margin_percentage": 200.0,
+            "symbol": "FRISQ",
+            "isin_code": "SE0006994539",
+            "name": "FRISQ Holding AB"
+        },
+        "main_market_price": {
+            "currency": "SEK",
+            "value": 5.0
+        },
+        "morning_price": {
+            "currency": "SEK",
+            "value": 5.14
+        },
+        "qty": 33.0,
+        "pawn_percent": 0,
+        "market_value_acc": {
+            "currency": "SEK",
+            "value": 165.0
+        },
+        "market_value": {
+            "currency": "SEK",
+            "value": 165.0
+        },
+        "acq_price": {
+            "currency": "SEK",
+            "value": 0.8636363636363636
+        },
+        "acq_price_acc": {
+            "currency": "SEK",
+            "value": 0.8636363636363636
+        },
+        "is_custom_gav": false,
+        "margin_percent": 200
+    },
+    {
+        "accno": 1231234,
+        "accid": 1,
+        "instrument": {
+            "mifid2_category": 0,
+            "price_type": "monetary_amount",
+            "tradables": [
+                {
+                    "market_id": 11,
+                    "tick_size_id": 14732,
+                    "display_order": 0,
+                    "lot_size": 1.0,
+                    "identifier": "127479"
+                }
+            ],
+            "instrument_id": 16605710,
+            "asset_class": "EQY",
+            "instrument_type": "ESHMTF",
+            "instrument_group_type": "EQ",
+            "currency": "SEK",
+            "number_of_securities": 88781275.0,
+            "multiplier": 1.0,
+            "pawn_percentage": 0.0,
+            "margin_percentage": 200.0,
+            "symbol": "INDEX",
+            "isin_code": "SE0008966295",
+            "name": "InDex Pharmaceuticals Holding AB"
+        },
+        "main_market_price": {
+            "currency": "SEK",
+            "value": 7.69
+        },
+        "morning_price": {
+            "currency": "SEK",
+            "value": 7.89
+        },
+        "qty": 1750.0,
+        "pawn_percent": 0,
+        "market_value_acc": {
+            "currency": "SEK",
+            "value": 13457.5
+        },
+        "market_value": {
+            "currency": "SEK",
+            "value": 13457.5
+        },
+        "acq_price": {
+            "currency": "SEK",
+            "value": 8.304533333333332
+        },
+        "acq_price_acc": {
+            "currency": "SEK",
+            "value": 8.304533333333332
+        },
+        "is_custom_gav": false,
+        "margin_percent": 200
+    },
+    {
+        "accno": 1231234,
+        "accid": 1,
+        "instrument": {
+            "instrument_id": 0,
+            "name": "AXXONEN HOLDING B",
+            "symbol": "AXX B",
+            "isin_code": "SE0010134049",
+            "currency": "SEK",
+            "multiplier": 1.0,
+            "instrument_type": "A"
+        },
+        "main_market_price": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "morning_price": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "qty": 2.0,
+        "pawn_percent": 0,
+        "market_value_acc": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "market_value": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "acq_price": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "acq_price_acc": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "is_custom_gav": false,
+        "margin_percent": 200
+    },
+    {
+        "accno": 1231234,
+        "accid": 1,
+        "instrument": {
+            "mifid2_category": 0,
+            "price_type": "monetary_amount",
+            "tradables": [
+                {
+                    "market_id": 11,
+                    "tick_size_id": 14731,
+                    "display_order": 0,
+                    "lot_size": 1.0,
+                    "identifier": "126934"
+                }
+            ],
+            "instrument_id": 16607035,
+            "asset_class": "EQY",
+            "instrument_type": "ESH",
+            "instrument_group_type": "EQ",
+            "currency": "SEK",
+            "number_of_securities": 40050000.0,
+            "multiplier": 1.0,
+            "pawn_percentage": 50.0,
+            "margin_percentage": 150.0,
+            "symbol": "ENG",
+            "isin_code": "SE0008585525",
+            "name": "Internationella Engelska Skolan i Sve AB"
+        },
+        "main_market_price": {
+            "currency": "SEK",
+            "value": 78.0
+        },
+        "morning_price": {
+            "currency": "SEK",
+            "value": 78.0
+        },
+        "qty": 60.0,
+        "pawn_percent": 50,
+        "market_value_acc": {
+            "currency": "SEK",
+            "value": 4680.0
+        },
+        "market_value": {
+            "currency": "SEK",
+            "value": 4680.0
+        },
+        "acq_price": {
+            "currency": "SEK",
+            "value": 52.0
+        },
+        "acq_price_acc": {
+            "currency": "SEK",
+            "value": 52.0
+        },
+        "is_custom_gav": false,
+        "margin_percent": 150
+    },
+    {
+        "accno": 1231234,
+        "accid": 1,
+        "instrument": {
+            "mifid2_category": 0,
+            "price_type": "monetary_amount",
+            "tradables": [
+                {
+                    "market_id": 11,
+                    "tick_size_id": 14731,
+                    "display_order": 0,
+                    "lot_size": 1.0,
+                    "identifier": "93656"
+                }
+            ],
+            "instrument_id": 16187189,
+            "asset_class": "EQY",
+            "instrument_type": "ESHMTF",
+            "instrument_group_type": "EQ",
+            "currency": "SEK",
+            "number_of_securities": 67519019.0,
+            "multiplier": 1.0,
+            "pawn_percentage": 10.0,
+            "margin_percentage": 190.0,
+            "symbol": "NEXAM",
+            "isin_code": "SE0005101003",
+            "name": "Nexam Chemical Holding AB"
+        },
+        "main_market_price": {
+            "currency": "SEK",
+            "value": 8.96
+        },
+        "morning_price": {
+            "currency": "SEK",
+            "value": 9.06
+        },
+        "qty": 96.0,
+        "pawn_percent": 10,
+        "market_value_acc": {
+            "currency": "SEK",
+            "value": 860.1600000000001
+        },
+        "market_value": {
+            "currency": "SEK",
+            "value": 860.1600000000001
+        },
+        "acq_price": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "acq_price_acc": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "is_custom_gav": false,
+        "margin_percent": 190
+    },
+    {
+        "accno": 1231234,
+        "accid": 1,
+        "instrument": {
+            "mifid2_category": 0,
+            "price_type": "monetary_amount",
+            "tradables": [
+                {
+                    "market_id": 52,
+                    "tick_size_id": 34830903,
+                    "display_order": 0,
+                    "lot_size": 1.0,
+                    "identifier": "5Q13"
+                }
+            ],
+            "instrument_id": 17122014,
+            "instrument_type": "ESHMTF",
+            "instrument_group_type": "EQ",
+            "currency": "SEK",
+            "number_of_securities": 4156259.0,
+            "leverage_percentage": 100.0,
+            "multiplier": 1.0,
+            "pawn_percentage": 0.0,
+            "margin_percentage": 200.0,
+            "symbol": "GOGO",
+            "isin_code": "SE0013235553",
+            "name": "GOGO Lead Tech"
+        },
+        "main_market_price": {
+            "currency": "SEK",
+            "value": 4.17
+        },
+        "morning_price": {
+            "currency": "SEK",
+            "value": 4.4
+        },
+        "qty": 1.0,
+        "pawn_percent": 0,
+        "market_value_acc": {
+            "currency": "SEK",
+            "value": 4.17
+        },
+        "market_value": {
+            "currency": "SEK",
+            "value": 4.17
+        },
+        "acq_price": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "acq_price_acc": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "is_custom_gav": false,
+        "margin_percent": 200
+    },
+    {
+        "accno": 1231234,
+        "accid": 1,
+        "instrument": {
+            "mifid2_category": 1,
+            "price_type": "monetary_amount",
+            "underlyings": [
+                {
+                    "instrumment_id": 16700520,
+                    "instrument_id": 16700520,
+                    "symbol": "HDW B",
+                    "isin_code": "SE0009889405"
+                }
+            ],
+            "expiration_date": "2021-06-28",
+            "tradables": [
+                {
+                    "market_id": 11,
+                    "tick_size_id": 14730,
+                    "display_order": 0,
+                    "lot_size": 1.0,
+                    "identifier": "175418"
+                }
+            ],
+            "instrument_id": 17069305,
+            "asset_class": "EQY",
+            "instrument_type": "WSO",
+            "instrument_group_type": "WOKO",
+            "currency": "SEK",
+            "number_of_securities": 6975123.0,
+            "leverage_percentage": 100.0,
+            "multiplier": 1.0,
+            "strike_price": 5.5,
+            "pawn_percentage": 0.0,
+            "margin_percentage": 200.0,
+            "symbol": "HDW TO 2 B",
+            "isin_code": "SE0012453645",
+            "name": "H&D Wireless Sweden Hol TO 2 B"
+        },
+        "main_market_price": {
+            "currency": "SEK",
+            "value": 0.04
+        },
+        "morning_price": {
+            "currency": "SEK",
+            "value": 0.0395
+        },
+        "qty": 9.0,
+        "pawn_percent": 0,
+        "market_value_acc": {
+            "currency": "SEK",
+            "value": 0.36
+        },
+        "market_value": {
+            "currency": "SEK",
+            "value": 0.36
+        },
+        "acq_price": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "acq_price_acc": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "is_custom_gav": false,
+        "margin_percent": 200
+    },
+    {
+        "accno": 1231234,
+        "accid": 1,
+        "instrument": {
+            "mifid2_category": 0,
+            "price_type": "monetary_amount",
+            "tradables": [
+                {
+                    "market_id": 11,
+                    "tick_size_id": 14733,
+                    "display_order": 0,
+                    "lot_size": 1.0,
+                    "identifier": "103614"
+                }
+            ],
+            "instrument_id": 16335289,
+            "asset_class": "EQY",
+            "instrument_type": "ESH",
+            "instrument_group_type": "EQ",
+            "currency": "SEK",
+            "number_of_securities": 1072223105.0,
+            "multiplier": 1.0,
+            "pawn_percentage": 60.0,
+            "margin_percentage": 140.0,
+            "symbol": "SBB B",
+            "isin_code": "SE0009554454",
+            "name": "Samhällsbyggnadsbo. i Norden AB ser. B"
+        },
+        "main_market_price": {
+            "currency": "SEK",
+            "value": 25.0
+        },
+        "morning_price": {
+            "currency": "SEK",
+            "value": 25.5
+        },
+        "qty": 19.0,
+        "pawn_percent": 60,
+        "market_value_acc": {
+            "currency": "SEK",
+            "value": 475.0
+        },
+        "market_value": {
+            "currency": "SEK",
+            "value": 475.0
+        },
+        "acq_price": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "acq_price_acc": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "is_custom_gav": false,
+        "margin_percent": 140
+    },
+    {
+        "accno": 1231234,
+        "accid": 1,
+        "instrument": {
+            "mifid2_category": 1,
+            "price_type": "monetary_amount",
+            "underlyings": [
+                {
+                    "instrumment_id": 16247831,
+                    "instrument_id": 16247831,
+                    "symbol": "MYFC",
+                    "isin_code": "SE0005505898"
+                }
+            ],
+            "expiration_date": "2022-04-27",
+            "tradables": [
+                {
+                    "market_id": 11,
+                    "tick_size_id": 14730,
+                    "display_order": 0,
+                    "lot_size": 1.0,
+                    "identifier": "176754"
+                }
+            ],
+            "instrument_id": 17057480,
+            "asset_class": "EQY",
+            "instrument_type": "WSO",
+            "instrument_group_type": "WOKO",
+            "currency": "SEK",
+            "number_of_securities": 39958000.0,
+            "leverage_percentage": 100.0,
+            "multiplier": 1.0,
+            "strike_price": 2.0,
+            "pawn_percentage": 0.0,
+            "margin_percentage": 200.0,
+            "symbol": "MYFC TO2",
+            "isin_code": "SE0012351575",
+            "name": "myFC Holding TO2"
+        },
+        "main_market_price": {
+            "currency": "SEK",
+            "value": 0.12
+        },
+        "morning_price": {
+            "currency": "SEK",
+            "value": 0.155
+        },
+        "qty": 40.0,
+        "pawn_percent": 0,
+        "market_value_acc": {
+            "currency": "SEK",
+            "value": 4.8
+        },
+        "market_value": {
+            "currency": "SEK",
+            "value": 4.8
+        },
+        "acq_price": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "acq_price_acc": {
+            "currency": "SEK",
+            "value": 0.0
+        },
+        "is_custom_gav": false,
+        "margin_percent": 200
+    },
+    {
+        "accno": 1231234,
+        "accid": 1,
+        "instrument": {
+            "mifid2_category": 0,
+            "price_type": "monetary_amount",
+            "tradables": [
+                {
+                    "market_id": 11,
+                    "tick_size_id": 14731,
+                    "display_order": 0,
+                    "lot_size": 1.0,
+                    "identifier": "114250"
+                }
+            ],
+            "instrument_id": 16421512,
+            "asset_class": "EQY",
+            "instrument_type": "ESHMTF",
+            "instrument_group_type": "EQ",
+            "currency": "SEK",
+            "number_of_securities": 48226408.0,
+            "multiplier": 1.0,
+            "pawn_percentage": 0.0,
+            "margin_percentage": 200.0,
+            "symbol": "KLAR",
+            "isin_code": "SE0007280326",
+            "name": "Klaria Pharma Holding AB"
+        },
+        "main_market_price": {
+            "currency": "SEK",
+            "value": 7.66
+        },
+        "morning_price": {
+            "currency": "SEK",
+            "value": 8.36
+        },
+        "qty": 104.0,
+        "pawn_percent": 0,
+        "market_value_acc": {
+            "currency": "SEK",
+            "value": 796.64
+        },
+        "market_value": {
+            "currency": "SEK",
+            "value": 796.64
+        },
+        "acq_price": {
+            "currency": "SEK",
+            "value": 0.01435725443352017
+        },
+        "acq_price_acc": {
+            "currency": "SEK",
+            "value": 0.01435725443352017
+        },
+        "is_custom_gav": false,
+        "margin_percent": 200
+    }
+]
 
 REQUEST 25
 GET https://www.nordnet.se/api/2/customers/contact_info
 Accept: application/json,application/json
-Authorization: Bearer e34e2957-48ed-4d0b-90e6-6b37d24eb4ce
-User-Agent: Nordnet React Native App/ios-13.3.1/10.10.0
-Content-Type: application/json
+Authorization: Basic YWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYTphYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFh
+User-Agent: Nordnet React Native App/ios-14.4.2/12.3.0
 
 RESPONSE 25
 200
 Server: nginx
-Date: Thu, 03 Sep 2020 10:16:40 GMT
 Content-Type: application/json; charset=UTF-8
-Connection: keep-alive
-ntag: c3095190b633b675855e88470e24a25232386c8a1d0bfe8d4d2c9832ee979b12
-Strict-Transport-Security: max-age=31536000
 
-{"address1":"address 1","city":"Stockholm","country":"Sverige","citizen":"SE","email":"user@email.com","first_name":"FirstName","last_name":"LastName","mobile_phone_number":"0707070707","national_id_number":"9001010101","national_id_number_country_code":"SE","zip_code":"100 00","registration_date":"2013-06-11","person_type":"NAT"}
+{
+    "address1": "address 1",
+    "city": "Stockholm",
+    "country": "Sverige",
+    "citizen": "SE",
+    "email": "user@email.com",
+    "first_name": "FirstName",
+    "last_name": "LastName",
+    "mobile_phone_number": "0707070707",
+    "national_id_number": "9001010108",
+    "national_id_number_country_code": "SE",
+    "zip_code": "100 00",
+    "registration_date": "2013-06-11",
+    "person_type": "NAT"
+}
 
