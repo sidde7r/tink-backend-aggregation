@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.NoSuchElementException;
 import javax.ws.rs.core.MediaType;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +23,6 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.libraries.date.ThreadSafeDateFormat;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -80,14 +79,13 @@ public final class DkbApiClient {
     }
 
     public GetTransactionsResponse getTransactions(
-            TransactionalAccount account, Date fromDate, Date toDate) {
+            TransactionalAccount account, LocalDate fromDate, LocalDate toDate) {
 
         return createFetchingRequest(
                         Urls.GET_TRANSACTIONS.parameter(
                                 IdTags.ACCOUNT_ID, account.getApiIdentifier()))
-                .queryParam(
-                        QueryKeys.DATE_FROM, ThreadSafeDateFormat.FORMATTER_DAILY.format(fromDate))
-                .queryParam(QueryKeys.DATE_TO, ThreadSafeDateFormat.FORMATTER_DAILY.format(toDate))
+                .queryParam(QueryKeys.DATE_FROM, fromDate.toString())
+                .queryParam(QueryKeys.DATE_TO, toDate.toString())
                 .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BOTH)
                 .get(GetTransactionsResponse.class);
     }
