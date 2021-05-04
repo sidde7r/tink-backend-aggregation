@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.se.brokers.nordnet.wiremock;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesJsonFileParser;
@@ -9,24 +8,27 @@ import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockr
 import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.enums.MarketCode;
 
-@Ignore
 public class NordnetWireMockTest {
 
-    private static final String DUMMY_PSU = "199001010101";
+    private static final String RESOURCES_PATH =
+            "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/brokers/nordnet/wiremock/resources/";
+    private static final String DUMMY_PSU = "199001010108";
 
     @Test
     public void testRefresh() throws Exception {
 
         // given
-        final String wireMockServerFilePath =
-                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/brokers/nordnet/wiremock/resources/wireMock.aap";
-        final String contractFilePath =
-                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/brokers/nordnet/wiremock/resources/agent-contract.json";
+        final String wireMockFilePath = RESOURCES_PATH + "wireMock.aap";
+        final String contractFilePath = RESOURCES_PATH + "agent-contract.json";
 
         final AgentWireMockRefreshTest agentWireMockRefreshTest =
-                AgentWireMockRefreshTest.builder(
-                                MarketCode.SE, "nordnet-bankid", wireMockServerFilePath)
-                        .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
+                AgentWireMockRefreshTest.nxBuilder()
+                        .withMarketCode(MarketCode.SE)
+                        .withProviderName("nordnet-bankid")
+                        .withWireMockFilePath(wireMockFilePath)
+                        .withoutConfigFile()
+                        .testFullAuthentication()
+                        .withRefreshableItems(RefreshableItem.REFRESHABLE_ITEMS_ALL)
                         .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
                         .addCredentialField(Field.Key.USERNAME.getFieldKey(), DUMMY_PSU)
                         .build();
