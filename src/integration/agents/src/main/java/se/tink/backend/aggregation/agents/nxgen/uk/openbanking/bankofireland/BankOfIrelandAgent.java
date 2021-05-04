@@ -5,6 +5,8 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
 
 import com.google.inject.Inject;
+import java.util.Collections;
+import java.util.Set;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModulesForDecoupledMode;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModulesForProductionMode;
@@ -13,11 +15,13 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.authenticator.UkOpenBankingAisAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountOwnershipType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAis;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.module.UkOpenBankingFlowModule;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.module.UkOpenBankingLocalKeySignerModuleForDecoupledMode;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.UkOpenBankingAisConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.UkOpenBankingV31Ais;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.authenticator.UkOpenBankingAisAuthenticationController;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.authenticator.consent.ConsentPermissionsMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.authenticator.consent.ConsentStatusValidator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticationValidator;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
@@ -31,22 +35,31 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, CREDIT_CARDS})
 public class BankOfIrelandAgent extends UkOpenBankingBaseAgent {
 
-    private static final BankOfIrelandAisConfiguration aisConfig;
+    private static final UkOpenBankingAisConfig aisConfig;
 
     static {
         aisConfig =
-                new BankOfIrelandAisConfiguration(
-                        UkOpenBankingAisConfiguration.builder()
-                                .withAllowedAccountOwnershipType(AccountOwnershipType.PERSONAL)
-                                .withOrganisationId(BankOfIrelandConstants.ORGANISATION_ID)
-                                .withWellKnownURL(BankOfIrelandConstants.PERSONAL_WELL_KNOWN_URL)
-                                .withApiBaseURL(BankOfIrelandConstants.AIS_API_URL));
+                UkOpenBankingAisConfiguration.builder()
+                        .withAllowedAccountOwnershipType(AccountOwnershipType.PERSONAL)
+                        .withOrganisationId(BankOfIrelandConstants.ORGANISATION_ID)
+                        .withWellKnownURL(BankOfIrelandConstants.PERSONAL_WELL_KNOWN_URL)
+                        .withApiBaseURL(BankOfIrelandConstants.AIS_API_URL)
+                        .build();
     }
+
+    private Set<String> permissions;
 
     @Inject
     public BankOfIrelandAgent(
             AgentComponentProvider componentProvider, UkOpenBankingFlowFacade flowFacade) {
         super(componentProvider, flowFacade, aisConfig);
+        this.permissions = Collections.emptySet();
+
+        if (isFullAuthenticationRefresh()) {
+            this.permissions =
+                    new ConsentPermissionsMapper(aisConfig)
+                            .mapFrom(getItemsExpectedToBeRefreshed());
+        }
     }
 
     @Override
@@ -66,7 +79,7 @@ public class BankOfIrelandAgent extends UkOpenBankingBaseAgent {
                 this.persistentStorage,
                 this.supplementalInformationHelper,
                 this.apiClient,
-                new UkOpenBankingAisAuthenticator(this.apiClient),
+                new UkOpenBankingAisAuthenticator(this.apiClient, permissions),
                 this.credentials,
                 this.strongAuthenticationState,
                 this.request.getCallbackUri(),

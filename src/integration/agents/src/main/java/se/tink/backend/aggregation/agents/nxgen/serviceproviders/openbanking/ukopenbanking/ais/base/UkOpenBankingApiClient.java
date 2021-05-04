@@ -1,9 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base;
 
-import com.google.common.collect.ImmutableSet;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import javax.ws.rs.core.MediaType;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
@@ -153,9 +153,9 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
         }
     }
 
-    public String createConsent() {
+    public String createConsent(Set<String> permissions) {
         AccountPermissionRequest accountPermissionRequest =
-                AccountPermissionRequest.create(aisConfig.getPermissions());
+                AccountPermissionRequest.create(permissions);
         String intentId;
         try {
             intentId =
@@ -172,7 +172,7 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
             throw e;
         }
         saveIntentId(intentId);
-        saveAppliedPermissions(aisConfig.getPermissions());
+        saveAppliedPermissions(permissions);
 
         return intentId;
     }
@@ -193,7 +193,7 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
                 UkOpenBankingV31Constants.PersistentStorageKeys.AIS_ACCOUNT_CONSENT_ID, intentId);
     }
 
-    private String saveAppliedPermissions(ImmutableSet<String> permissions) {
+    private String saveAppliedPermissions(Set<String> permissions) {
         return persistentStorage.put(
                 UkOpenBankingV31Constants.PersistentStorageKeys.AIS_ACCOUNT_PERMISSIONS_GRANTED,
                 permissions);

@@ -3,6 +3,8 @@ package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.capitalone;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CREDIT_CARDS;
 
 import com.google.inject.Inject;
+import java.util.Collections;
+import java.util.Set;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModulesForProductionMode;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.UkOpenBankingBaseAgent;
@@ -11,10 +13,12 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.authenticator.UkOpenBankingAisAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountOwnershipType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAis;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.module.UkOpenBankingFlowModule;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.UkOpenBankingAisConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.UkOpenBankingV31Ais;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.authenticator.UkOpenBankingAisAuthenticationController;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.authenticator.consent.ConsentPermissionsMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.authenticator.consent.ConsentStatusValidator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.creditcards.CreditCardAccountMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.creditcards.DefaultCreditCardBalanceMapper;
@@ -34,18 +38,31 @@ import se.tink.libraries.mapper.PrioritizedValueExtractor;
 @AgentCapabilities({CREDIT_CARDS})
 public final class CapitalOneV31Agent extends UkOpenBankingBaseAgent {
 
-    private static final CapitalOneAisConfiguration aisConfig =
-            new CapitalOneAisConfiguration(
-                    UkOpenBankingAisConfiguration.builder()
-                            .withOrganisationId(CapitalOneConstants.ORGANISATION_ID)
-                            .withApiBaseURL(CapitalOneConstants.AIS_BASE_URL)
-                            .withWellKnownURL(CapitalOneConstants.WELL_KNOWN_URL)
-                            .withAllowedAccountOwnershipType(AccountOwnershipType.PERSONAL));
+    private static final UkOpenBankingAisConfig aisConfig;
+
+    static {
+        aisConfig =
+                UkOpenBankingAisConfiguration.builder()
+                        .withOrganisationId(CapitalOneConstants.ORGANISATION_ID)
+                        .withApiBaseURL(CapitalOneConstants.AIS_BASE_URL)
+                        .withWellKnownURL(CapitalOneConstants.WELL_KNOWN_URL)
+                        .withAllowedAccountOwnershipType(AccountOwnershipType.PERSONAL)
+                        .build();
+    }
+
+    private Set<String> permissions;
 
     @Inject
     public CapitalOneV31Agent(
             AgentComponentProvider componentProvider, UkOpenBankingFlowFacade flowFacade) {
         super(componentProvider, flowFacade, aisConfig);
+        this.permissions = Collections.emptySet();
+
+        if (isFullAuthenticationRefresh()) {
+            this.permissions =
+                    new ConsentPermissionsMapper(aisConfig)
+                            .mapFrom(getItemsExpectedToBeRefreshed());
+        }
     }
 
     @Override
@@ -92,7 +109,7 @@ public final class CapitalOneV31Agent extends UkOpenBankingBaseAgent {
                 this.persistentStorage,
                 this.supplementalInformationHelper,
                 this.apiClient,
-                new UkOpenBankingAisAuthenticator(this.apiClient),
+                new UkOpenBankingAisAuthenticator(this.apiClient, permissions),
                 this.credentials,
                 this.strongAuthenticationState,
                 this.request.getCallbackUri(),

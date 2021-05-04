@@ -19,6 +19,7 @@ public abstract class OpenIdAuthenticatorConstants {
      */
     public static final String ACR_SECURE_AUTHENTICATION_RTS = "urn:openbanking:psd2:sca";
 
+    // TODO: To be removed when Consent management is stable
     public enum ConsentPermission {
         READ_ACCOUNTS_DETAIL("ReadAccountsDetail"),
         READ_BALANCES("ReadBalances"),
