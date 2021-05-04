@@ -34,7 +34,103 @@ Expires: 0
 Content-Type: application/json
 X-Global-Transaction-ID: eb55ecf65eeb6e5ec360ec38
 
-{"results":[],"errors":[]}
+{
+  "results": [
+    {
+      "id": "1701577114358",
+      "from": "123456",
+      "from_account_number_type": "LBAN-SE",
+      "from_currency": "SEK",
+      "to": "3228756",
+      "to_account_number_type": "BG",
+      "recipient_name": "Luleå Energi AB",
+      "reference": "",
+      "amount": 4246.0,
+      "entry_date_time": "2019-09-08T22:00:00Z",
+      "status": "unconfirmed",
+      "type": "bankgiro",
+      "due": "2020-06-22",
+      "currency": "SEK",
+      "permissions": {
+        "delete": true,
+        "copy": false,
+        "modify": {
+          "from": true,
+          "to": false,
+          "amount": true,
+          "due": true,
+          "message": false,
+          "recurring_count": false,
+          "recurring_interval": false,
+          "recurring_repeats": false,
+          "recurring_lastday": false,
+          "type": false
+        }
+      },
+      "credit_notes": [],
+      "e_invoice": {
+        "e_invoice_url_external": "https://efaktura.informationslogistik.evry.se/visa/visa.ashx:invoicer_id=005561398255.04279224001.NB.SE"
+      }
+    }
+  ],
+  "errors": []
+}
+
+REQUEST 2a
+GET https://private.nordea.se/api/dbf/ca/payments-v2/payments/1701577114358
+Accept: application/json
+Accept-Language: en-SE
+X-Aggregator: Tink Testing
+
+RESPONSE 2a
+200
+Transfer-Encoding: chunked
+Date: Thu, 18 Jun 2020 13:38:38 GMT
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+Content-Type: application/json
+X-Global-Transaction-ID: eb55ecf65eeb6e5ec360ec38
+
+{
+  "id": "1701577114358",
+  "from": "123456",
+  "from_account_number_type": "LBAN-SE",
+  "from_currency": "SEK",
+  "to": "3228756",
+  "to_account_number_type": "BG",
+  "recipient_name": "Luleå Energi AB",
+  "message": "610550873500157",
+  "own_message":"",
+  "reference": "1701577114358",
+  "amount": 4246.0,
+  "entry_date_time": "2020-06-22T22:00:00Z",
+  "status": "unconfirmed",
+  "type": "bankgiro",
+  "status_message":"",
+  "due": "2020-06-22",
+  "currency": "SEK",
+  "permissions": {
+    "delete": true,
+    "copy": false,
+    "modify": {
+      "from": true,
+      "to": false,
+      "amount": true,
+      "due": true,
+      "message": false,
+      "recurring_count": false,
+      "recurring_interval": false,
+      "recurring_repeats": false,
+      "recurring_lastday": false,
+      "type": false
+    }
+  },
+  "credit_notes": [],
+  "e_invoice": {
+    "e_invoice_url_external": "dummyurl"
+  }
+}
 
 REQUEST 3
 GET https://private.nordea.se/api/dbf/ca/accounts-v3/accounts/
