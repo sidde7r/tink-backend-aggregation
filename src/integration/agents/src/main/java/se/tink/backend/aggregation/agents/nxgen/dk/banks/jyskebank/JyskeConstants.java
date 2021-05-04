@@ -39,8 +39,9 @@ public class JyskeConstants {
         public static final String REFERER =
                 "https://auth.jyskebank.dk/authentication/nemid_bank_twofactor";
         public static final String ACCEPT_LANGUAGE = "en-us";
-        public static final String ACCEPT =
+        public static final String ACCEPT_HTML =
                 "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8";
+        public static final String ACCEPT_JSON = "application/vnd.relationsbank-v3+json";
         public static final String USER_AGENT = "JyskeBank/2.21.0 (iPhone; iOS 13.3.1; Scale/3.00)";
         public static final String BUILD_NUMBER = "111";
         public static final String API_KEY = "w6FW248sXt42WZaaq8boFmXMGGTu06AG";

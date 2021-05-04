@@ -41,7 +41,7 @@ public class JyskeBankApiClient {
                         .queryParam(QueryKeys.ENROLLMENT_CHALLENGE, codeChallenge)
                         .header(HttpHeaders.ACCEPT_LANGUAGE, HeaderValues.ACCEPT_LANGUAGE)
                         .header(HttpHeaders.USER_AGENT, HeaderValues.USER_AGENT)
-                        .accept(HeaderValues.ACCEPT)
+                        .accept(HeaderValues.ACCEPT_HTML)
                         .get(HttpResponse.class);
 
         String url = httpResponse.getHeaders().getFirst(HttpHeaders.LOCATION);
@@ -52,28 +52,25 @@ public class JyskeBankApiClient {
     }
 
     public HttpResponse validateNemIdToken(String token) {
-        return client.request(Urls.VALIDATE_NEMID)
-                .header(HeaderKeys.ORIGIN, Urls.AUTH_HOST)
-                .header(HeaderKeys.REFERER, HeaderValues.REFERER)
-                .header(HttpHeaders.ACCEPT_LANGUAGE, HeaderValues.ACCEPT_LANGUAGE)
-                .header(HttpHeaders.USER_AGENT, HeaderValues.USER_AGENT)
-                .type(MediaType.APPLICATION_FORM_URLENCODED)
-                .accept(HeaderValues.ACCEPT)
+        return buildTokenRequest(Urls.VALIDATE_NEMID)
                 .post(HttpResponse.class, "response=" + EncodingUtils.encodeUrl(token));
     }
 
     public String fetchToken(String uri, Form form) {
         final HttpResponse httpResponse =
-                client.request(Urls.AUTH_HOST + uri)
-                        .header(HeaderKeys.ORIGIN, Urls.AUTH_HOST)
-                        .header(HeaderKeys.REFERER, HeaderValues.REFERER)
-                        .header(HttpHeaders.ACCEPT_LANGUAGE, HeaderValues.ACCEPT_LANGUAGE)
-                        .header(HttpHeaders.USER_AGENT, HeaderValues.USER_AGENT)
-                        .type(MediaType.APPLICATION_FORM_URLENCODED)
-                        .accept(HeaderValues.ACCEPT)
-                        .post(HttpResponse.class, form.serialize());
+                buildTokenRequest(Urls.AUTH_HOST + uri).post(HttpResponse.class, form.serialize());
 
         return httpResponse.getHeaders().getFirst(HttpHeaders.LOCATION);
+    }
+
+    private RequestBuilder buildTokenRequest(String url) {
+        return client.request(url)
+                .header(HeaderKeys.ORIGIN, Urls.AUTH_HOST)
+                .header(HeaderKeys.REFERER, HeaderValues.REFERER)
+                .header(HttpHeaders.ACCEPT_LANGUAGE, HeaderValues.ACCEPT_LANGUAGE)
+                .header(HttpHeaders.USER_AGENT, HeaderValues.USER_AGENT)
+                .type(MediaType.APPLICATION_FORM_URLENCODED)
+                .accept(HeaderValues.ACCEPT_HTML);
     }
 
     public ClientRegistrationResponse fetchClientSecret(String token) {
@@ -106,6 +103,7 @@ public class JyskeBankApiClient {
         return buildRequest(Urls.FETCH_TRANSACTIONS)
                 .queryParam(QueryKeys.PUBLIC_ID, publicId)
                 .queryParam(QueryKeys.PAGE, Integer.toString(page))
+                .accept(HeaderValues.ACCEPT_JSON)
                 .get(TransactionResponse.class);
     }
 
@@ -125,30 +123,24 @@ public class JyskeBankApiClient {
     }
 
     public String validateVersion(String correlationId) {
-        return client.request(Urls.VALIDATE_VERSION)
-                .header(HttpHeaders.USER_AGENT, HeaderValues.USER_AGENT)
-                .header(HeaderKeys.API_KEY, HeaderValues.API_KEY)
+        return buildServerStatusRequest(Urls.VALIDATE_VERSION, correlationId)
                 .header(HeaderKeys.BUILD_NUMBER, HeaderValues.BUILD_NUMBER)
-                .header(HeaderKeys.CORRELATION_ID, correlationId)
-                .accept(MediaType.WILDCARD_TYPE)
                 .get(String.class);
     }
 
     public String serverStatus(String correlationId) {
-        return client.request(Urls.SERVER_STATUS)
-                .header(HttpHeaders.USER_AGENT, HeaderValues.USER_AGENT)
-                .header(HeaderKeys.API_KEY, HeaderValues.API_KEY)
-                .header(HeaderKeys.CORRELATION_ID, correlationId)
-                .accept(MediaType.WILDCARD_TYPE)
-                .get(String.class);
+        return buildServerStatusRequest(Urls.SERVER_STATUS, correlationId).get(String.class);
     }
 
     public String generalHealth(String correlationId) {
-        return client.request(Urls.GENERAL_HEALTH)
+        return buildServerStatusRequest(Urls.GENERAL_HEALTH, correlationId).get(String.class);
+    }
+
+    private RequestBuilder buildServerStatusRequest(String url, String correlationId) {
+        return client.request(url)
                 .header(HttpHeaders.USER_AGENT, HeaderValues.USER_AGENT)
                 .header(HeaderKeys.API_KEY, HeaderValues.API_KEY)
                 .header(HeaderKeys.CORRELATION_ID, correlationId)
-                .accept(MediaType.WILDCARD_TYPE)
-                .get(String.class);
+                .accept(MediaType.WILDCARD_TYPE);
     }
 }
