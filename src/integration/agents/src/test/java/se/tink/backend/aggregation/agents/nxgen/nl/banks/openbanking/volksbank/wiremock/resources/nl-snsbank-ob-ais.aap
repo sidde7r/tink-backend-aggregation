@@ -1,0 +1,86 @@
+
+REQUEST 1
+POST https://psd.bancairediensten.nl/psd2/snsbank/v1/consents
+Accept: application/json
+
+RESPONSE 1
+201
+Content-Type: application/json
+
+{
+
+  "consentStatus" : "received",
+
+  "consentId" : "**HASHED:nZ**",
+
+  "_links" : {
+
+    "scaOAuth" : {
+
+      "href" : "https://psd.bancairediensten.nl/psd2/snsbank/v1/authorize"
+
+    }
+
+  }
+
+}
+
+REQUEST 2
+POST https://psd.bancairediensten.nl/psd2/snsbank/v1/token?code=dummyCode&grant_type=authorization_code&redirect_uri=https%3A%2F%2F127.0.0.1:7357%2Fapi%2Fv1%2Fthirdparty%2Fcallback
+Accept: application/json
+Content-Type: application/x-www-form-urlencoded
+
+RESPONSE 2
+200
+Content-Type: application/json
+
+{
+
+  "access_token":"**HASHED:Cj**",
+
+  "token_type":"bearer",
+
+  "expires_in":600,
+
+  "refresh_token":"**HASHED:ts**",
+
+  "scope":"AIS"
+
+}
+
+REQUEST 3
+GET https://psd.bancairediensten.nl/psd2/snsbank/v1/accounts
+
+RESPONSE 3
+200
+Content-Type: application/json
+
+{"accounts":[{"resourceId":"ff01d251-c885-4b86-b01e-c86ea7e9a3bd","iban":"NL2222222222","currency":"EUR","name":"SNS something","ownerName":"owner name","product":"SNS Compleet","customerBic":"SNSBNL2A"}]}
+
+REQUEST 4
+GET https://psd.bancairediensten.nl/psd2/snsbank/v1/accounts/ff01d251-c885-4b86-b01e-c86ea7e9a3bd/balances
+
+RESPONSE 4
+200
+Content-Type: application/json
+
+{"balances":[{"balanceType":"interimAvailable","balanceAmount":{"currency":"EUR","amount":"4495.30"},"lastChangeDateTime":"2021-04-28T22:00:00.000Z"}]}
+
+REQUEST 5
+GET https://psd.bancairediensten.nl/psd2/snsbank/v1/accounts/ff01d251-c885-4b86-b01e-c86ea7e9a3bd/transactions
+
+RESPONSE 5
+200
+Content-Type: application/json
+
+{"account":{"iban":"NL2222222222","currency":"EUR"},"transactions":{"booked":[{"entryReference":"20210129-90010221","endToEndId":"2021-01-28 21:53 0050005208137334","mandateId":"","creditorId":"","bookingDate":"2021-01-28","valueDate":"2021-01-28","transactionAmount":{"currency":"EUR","amount":"-54.99"},"creditorName":"WEHKAMP FINANCE","creditorAccount":{"iban":"NL05INGB0702278378","currency":"EUR"},"debtorAccount":{"iban":"","currency":"EUR"},"remittanceInformationUnstructured":"610000000000000005017830000521541370050005208137334 61000000000000000501783000052154137 Referentie: 2021-01-28 21:53 005000520813733","purposeCode":"","bankTransactionCode":9856,"proprietaryBankTransactionCode":"FIDM"},{"entryReference":"20210129-90198540","endToEndId":"2021-01-29 06:09 1150001436686883","mandateId":"","creditorId":"","bookingDate":"2021-01-29","valueDate":"2021-01-29","transactionAmount":{"currency":"EUR","amount":"-2.00"},"creditorName":"HERSENSTICHTING NEDERLAND VIA MOLLIE","creditorAccount":{"iban":"NL51DEUT0265262461","currency":"EUR"},"debtorAccount":{"iban":"","currency":"EUR"},"remittanceInformationUnstructured":"M06068464M951OVC 1150001436686883 DigiCollect Referentie: 2021-01-29 06:09 1150001436686883","purposeCode":"","bankTransactionCode":9856,"proprietaryBankTransactionCode":"FIDM"},{"entryReference":"20210129-90570084","endToEndId":"K2BWGW000000023941027","mandateId":"1382011","creditorId":"NL63ZZZ547500160000","bookingDate":"2021-01-29","valueDate":"2021-01-29","transactionAmount":{"currency":"EUR","amount":"-16.36"},"creditorName":"SVHW","creditorAccount":{"iban":"NL81BNGH0285084321","currency":"EUR"},"debtorAccount":{"iban":"","currency":"EUR"},"remittanceInformationUnstructured":"LOKALE BELASTINGEN JANUARI Betaalkenmerk 406563708  2020","purposeCode":"","bankTransactionCode":9714,"proprietaryBankTransactionCode":"FEIC"}],"_links":{"account":{"href":"/psd2/snsbank/v1/accounts/ff01d251-c885-4b86-b01e-c86ea7e9a3bd"},"next":{"href":"/psd2/snsbank/v1/accounts/ff01d251-c885-4b86-b01e-c86ea7e9a3bd/transactions?bookingStatus=booked&limit=1000&pageDirection=next&entryReferenceFrom=20210129-90570084"},"previous":{"href":"/psd2/snsbank/v1/accounts/ff01d251-c885-4b86-b01e-c86ea7e9a3bd/transactions?bookingStatus=booked&limit=1000&pageDirection=previous&entryReferenceFrom=20201101-90184560"}}}}
+
+REQUEST 8
+GET https://psd.bancairediensten.nl/psd2/snsbank/v1/accounts/ff01d251-c885-4b86-b01e-c86ea7e9a3bd/transactions?entryReferenceFrom=20210129-90570084&pageDirection=next&limit=1000&bookingStatus=booked
+
+RESPONSE 8
+200
+Content-Type: application/json
+
+{"account":{"iban":"NL2222222222","currency":"EUR"},"transactions":{"booked":[{"entryReference":"20210130-90008391","endToEndId":"2021-01-29 21:53 1151000438072000","mandateId":"","creditorId":"","bookingDate":"2021-01-29","valueDate":"2021-01-29","transactionAmount":{"currency":"EUR","amount":"-27.00"},"creditorName":"HIPTAFELZEIL BY MULTISAFEPAY","creditorAccount":{"iban":"NL17DEUT0265262879","currency":"EUR"},"debtorAccount":{"iban":"","currency":"EUR"},"remittanceInformationUnstructured":"438072000 1151000438072000 Order 500104977 Hiptafelzeil Referentie: 2021-01-29 21:53 115100043807200","purposeCode":"","bankTransactionCode":9856,"proprietaryBankTransactionCode":"FIDM"},{"entryReference":"20210130-90520238","endToEndId":"","mandateId":"","creditorId":"","bookingDate":"2021-01-30","valueDate":"2021-01-30","transactionAmount":{"currency":"EUR","amount":"-1.60"},"creditorAccount":{"iban":"","currency":"EUR"},"debtorAccount":{"iban":"","currency":"EUR"},"remittanceInformationUnstructured":"IKEA BV/Barendrecht   >BARENDREC30.01.2021 12U08 KV002 7VV70T   MCC:5712 Contactloze betaling NLNEDERLAND","purposeCode":"","bankTransactionCode":7913,"proprietaryBankTransactionCode":"FBEA"}],"_links":{"account":{"href":"/psd2/snsbank/v1/accounts/ff01d251-c885-4b86-b01e-c86ea7e9a3bd"},"previous":{"href":"/psd2/snsbank/v1/accounts/ff01d251-c885-4b86-b01e-c86ea7e9a3bd/transactions?limit=1000&bookingStatus=booked&pageDirection=previous&entryReferenceFrom=20210130-90008391"}}}}
+

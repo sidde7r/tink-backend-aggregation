@@ -1,0 +1,224 @@
+{
+    "accounts": [
+        {
+            "accountNumber": "2222",
+            "accountExclusion": "NONE",
+            "exactBalance": {
+                "currencyCode": "EUR",
+                "unscaledValue": 449530,
+                "scale": 2,
+                "doubleValue": 4495.3,
+                "exactValue": 4495.3
+            },
+            "currencyCode": "EUR",
+            "bankId": "NL2222222222",
+            "excluded": false,
+            "favored": false,
+            "name": "SNS something",
+            "ownership": 1.0,
+            "type": "CHECKING",
+            "userModifiedExcluded": false,
+            "userModifiedName": false,
+            "userModifiedType": false,
+            "identifiers": "[]",
+            "closed": false,
+            "holderName": "Owner Name",
+            "accountHolder": {
+                "accountId": null,
+                "type": "PERSONAL",
+                "identities": [
+                    {
+                        "name": "Owner Name",
+                        "role": "HOLDER"
+                    }
+                ]
+            },
+            "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
+            "balances": [],
+            "availableCredit": 0.0,
+            "balance": 4495.3
+        }
+    ],
+    "transactions": [
+        {
+            "amount": -54.99,
+            "date": 1611918000000,
+            "description": "WEHKAMP FINANCE",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "TRANSFER_ACCOUNT_EXTERNAL": "NL05INGB0702278378",
+                "MESSAGE": "610000000000000005017830000521541370050005208137334 61000000000000000501783000052154137 Referentie: 2021-01-28 21:53 005000520813733",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "WEHKAMP FINANCE"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -2.0,
+            "date": 1611918000000,
+            "description": "HERSENSTICHTING NEDERLAND VIA MOLLIE",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "TRANSFER_ACCOUNT_EXTERNAL": "NL51DEUT0265262461",
+                "MESSAGE": "M06068464M951OVC 1150001436686883 DigiCollect Referentie: 2021-01-29 06:09 1150001436686883",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "HERSENSTICHTING NEDERLAND VIA MOLLIE"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -16.36,
+            "date": 1611918000000,
+            "description": "SVHW",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "TRANSFER_ACCOUNT_EXTERNAL": "NL81BNGH0285084321",
+                "MESSAGE": "LOKALE BELASTINGEN JANUARI Betaalkenmerk 406563708  2020",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "SVHW"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -27.0,
+            "date": 1612004400000,
+            "description": "HIPTAFELZEIL BY MULTISAFEPAY",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "TRANSFER_ACCOUNT_EXTERNAL": "NL17DEUT0265262879",
+                "MESSAGE": "438072000 1151000438072000 Order 500104977 Hiptafelzeil Referentie: 2021-01-29 21:53 115100043807200",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "HIPTAFELZEIL BY MULTISAFEPAY"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -1.6,
+            "date": 1612004400000,
+            "description": "IKEA BV/Barendrecht >BARENDREC30.01.2021 12U08 KV002 7VV70T MCC:5712 Contactloze betaling NLNEDERLAND",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "TRANSFER_ACCOUNT_EXTERNAL": "",
+                "MESSAGE": "IKEA BV/Barendrecht   >BARENDREC30.01.2021 12U08 KV002 7VV70T   MCC:5712 Contactloze betaling NLNEDERLAND",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": ""
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -54.99,
+            "date": 1611918000000,
+            "description": "WEHKAMP FINANCE",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "TRANSFER_ACCOUNT_EXTERNAL": "NL05INGB0702278378",
+                "MESSAGE": "610000000000000005017830000521541370050005208137334 61000000000000000501783000052154137 Referentie: 2021-01-28 21:53 005000520813733",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "WEHKAMP FINANCE"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -2.0,
+            "date": 1611918000000,
+            "description": "HERSENSTICHTING NEDERLAND VIA MOLLIE",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "TRANSFER_ACCOUNT_EXTERNAL": "NL51DEUT0265262461",
+                "MESSAGE": "M06068464M951OVC 1150001436686883 DigiCollect Referentie: 2021-01-29 06:09 1150001436686883",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "HERSENSTICHTING NEDERLAND VIA MOLLIE"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -16.36,
+            "date": 1611918000000,
+            "description": "SVHW",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "TRANSFER_ACCOUNT_EXTERNAL": "NL81BNGH0285084321",
+                "MESSAGE": "LOKALE BELASTINGEN JANUARI Betaalkenmerk 406563708  2020",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "SVHW"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -27.0,
+            "date": 1612004400000,
+            "description": "HIPTAFELZEIL BY MULTISAFEPAY",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "TRANSFER_ACCOUNT_EXTERNAL": "NL17DEUT0265262879",
+                "MESSAGE": "438072000 1151000438072000 Order 500104977 Hiptafelzeil Referentie: 2021-01-29 21:53 115100043807200",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "HIPTAFELZEIL BY MULTISAFEPAY"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -1.6,
+            "date": 1612004400000,
+            "description": "IKEA BV/Barendrecht >BARENDREC30.01.2021 12U08 KV002 7VV70T MCC:5712 Contactloze betaling NLNEDERLAND",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "TRANSFER_ACCOUNT_EXTERNAL": "",
+                "MESSAGE": "IKEA BV/Barendrecht   >BARENDREC30.01.2021 12U08 KV002 7VV70T   MCC:5712 Contactloze betaling NLNEDERLAND",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": ""
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        }
+    ]
+}

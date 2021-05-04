@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank;
+package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.manual;
 
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -53,15 +53,6 @@ public final class VolksbankAgentTest {
     @Test
     public void testSnsBank() throws Exception {
         createAgentTest("nl-snsbank-oauth2").testRefresh();
-    }
-
-    @Test
-    public void testSnsBankContinuously() throws Exception {
-        for (int i = 0; i < 100; i++) {
-            System.out.println(String.format("Attempt number %d...", i));
-            createAgentTest("nl-snsbank-oauth2").testRefresh();
-            Thread.sleep(1000);
-        }
     }
 
     @Test
