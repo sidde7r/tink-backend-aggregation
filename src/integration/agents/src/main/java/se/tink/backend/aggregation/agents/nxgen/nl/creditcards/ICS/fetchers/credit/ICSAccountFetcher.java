@@ -45,7 +45,7 @@ public class ICSAccountFetcher implements AccountFetcher<CreditCardAccount> {
 
         CreditTransactionsResponse creditTransactionsResponse =
                 client.getTransactionsByDate(
-                        accountId, LocalDate.now(), LocalDate.now().minusDays(30));
+                        accountId, LocalDate.now().minusDays(30), LocalDate.now());
 
         return Optional.ofNullable(creditTransactionsResponse)
                 .map(CreditTransactionsResponse::getData)
