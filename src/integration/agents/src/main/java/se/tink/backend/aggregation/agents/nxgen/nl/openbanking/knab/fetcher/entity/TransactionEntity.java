@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import java.util.Date;
 import java.util.Objects;
 import java.util.stream.Stream;
+import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.KnabConstants.Formats;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
@@ -38,6 +39,8 @@ public class TransactionEntity {
                 .setDate(valueDate)
                 .setAmount(transactionAmount.toTinkAmount())
                 .setPending(pending)
+                .setPayload(
+                        TransactionPayloadTypes.TRANSFER_ACCOUNT_EXTERNAL, getCounterPartyAccount())
                 .build();
     }
 
