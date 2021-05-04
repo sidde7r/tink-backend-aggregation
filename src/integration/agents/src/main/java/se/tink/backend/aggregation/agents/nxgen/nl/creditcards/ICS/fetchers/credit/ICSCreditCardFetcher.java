@@ -34,7 +34,10 @@ public class ICSCreditCardFetcher implements TransactionDatePaginator<CreditCard
         }
 
         try {
-            return client.getTransactionsByDate(account.getApiIdentifier(), fromDate, toDate);
+            return client.getTransactionsByDate(
+                    account.getApiIdentifier(),
+                    ICSUtils.convertToLocalDate(fromDate),
+                    ICSUtils.convertToLocalDate(toDate));
         } catch (HttpResponseException exception) {
             if (exception.getResponse().getStatus() == HttpStatus.SC_UNAUTHORIZED) {
                 // Error when requesting transactions out of range. Happens when the whole requested

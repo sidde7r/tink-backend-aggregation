@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS;
 import static io.vavr.Predicates.not;
 
 import com.google.common.base.Strings;
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.Optional;
 import javax.ws.rs.core.MediaType;
@@ -49,7 +49,6 @@ public class ICSApiClient {
     private final String redirectUri;
     private final ICSConfiguration configuration;
     private final String customerIpAddress;
-    private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     public ICSApiClient(
             final TinkHttpClient client,
@@ -186,11 +185,11 @@ public class ICSApiClient {
     }
 
     public CreditTransactionsResponse getTransactionsByDate(
-            String accountId, Date fromDate, Date toDate) {
+            String accountId, LocalDate fromDate, LocalDate toDate) {
         final String url = String.format(Urls.TRANSACTIONS, accountId);
         return createRequestInSession(url, getToken())
-                .queryParam(QueryKeys.FROM_BOOKING_DATE, dateFormat.format(fromDate))
-                .queryParam(QueryKeys.TO_BOOKING_DATE, dateFormat.format(toDate))
+                .queryParam(QueryKeys.FROM_BOOKING_DATE, fromDate.toString())
+                .queryParam(QueryKeys.TO_BOOKING_DATE, toDate.toString())
                 .get(CreditTransactionsResponse.class);
     }
 }

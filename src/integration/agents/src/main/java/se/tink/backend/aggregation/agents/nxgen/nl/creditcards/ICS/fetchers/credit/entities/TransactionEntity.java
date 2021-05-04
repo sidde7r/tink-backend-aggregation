@@ -102,4 +102,8 @@ public class TransactionEntity {
 
         return result.negate();
     }
+
+    public String getCreditCardHolderName() {
+        return embossingName;
+    }
 }

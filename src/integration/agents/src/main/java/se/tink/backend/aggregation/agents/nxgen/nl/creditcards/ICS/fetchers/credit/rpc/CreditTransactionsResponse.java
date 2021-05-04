@@ -43,4 +43,8 @@ public class CreditTransactionsResponse implements PaginatorResponse {
     public Optional<Boolean> canFetchMore() {
         return Optional.empty();
     }
+
+    public CreditDataEntity getData() {
+        return data;
+    }
 }

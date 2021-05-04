@@ -29,6 +29,15 @@
             "userModifiedType": false,
             "identifiers": "[\"other://73297630011\"]",
             "closed": false,
+            "holderName" : "P.c.a. Rosier",
+            "accountHolder" : {
+                "accountId" : null,
+                "type" : "PERSONAL",
+                "identities" : [ {
+                    "name" : "P.c.a. Rosier",
+                    "role" : "HOLDER"
+                } ]
+            },
             "flags": "[]",
             "balances": [],
             "availableCredit": 945.23,

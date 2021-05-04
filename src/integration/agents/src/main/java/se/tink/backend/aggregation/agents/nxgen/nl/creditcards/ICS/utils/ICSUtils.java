@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.utils;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
@@ -50,5 +52,9 @@ public class ICSUtils {
         c.add(Calendar.YEAR, -2);
         c.add(Calendar.DATE, -89);
         return c.getTime();
+    }
+
+    public static LocalDate convertToLocalDate(Date date) {
+        return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
     }
 }
