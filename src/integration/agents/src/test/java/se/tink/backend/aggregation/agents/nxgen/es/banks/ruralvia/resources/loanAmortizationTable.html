@@ -1,0 +1,844 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+
+
+
+  <!--
+  <title>BANCA INTERNET</title>
+  -->
+  <!-- -->
+
+  <title>BANCA INTERNET</title>
+
+  <meta HTTP-EQUIV="Cache-Control" CONTENT="No-cache">
+  <META HTTP-EQUIV="Pragma" CONTENT="No-cache">
+  <META HTTP-EQUIV="Expires" CONTENT="Now">
+  <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1" />
+
+
+
+
+  <script language="javascript" src="/javascripts_portal/es_ES/js_portal/ValidateTO.js"></script>
+  <script language="javascript" src="/javascripts_portal/es_ES/js_portal/interface.js"></script>
+  <script language="javascript" >function ayuda(){var nuevaVentana=window.open('/es_ES/ayudas/P/prestamos/ay_FinPtmos_cuadro_amort.htm','AYUDA','width=370,height=300 ,top=0, left=0,menubar=yes,scrollbars=yes');}</script>
+
+  <script language="javascript" >
+    //*********P00010336 26-03-2007 SD INICIO******
+    var pulsada=0;
+    //*********P00010336 26-03-2007 SD FIN*********
+
+    function completar()
+    {
+      document.FORM_RVIA_0.clavePagina.value       = "PRE_AMORTIZACION";
+
+      document.FORM_RVIA_0.fechaDesde.value        = "29-04-2021";
+      document.FORM_RVIA_0.fechaHasta.value        = "29-04-2022";
+      document.FORM_RVIA_0.cuenta.value            = "31902042305022723752";
+      document.FORM_RVIA_0.descripcionCuenta.value = "PTMO. CONSUMO PERSONAL";
+
+      //*********P00010336 26-03-2007 SD INICIO******
+      if (pulsada == 0)
+      {
+        pulsada = 1;
+        document.FORM_RVIA_0.submit();
+      }
+      //*********P00010336 26-03-2007 SD FIN*********
+    }
+
+    // ********* P00011321 - 01/07/2008 - INICIO ********
+    function precon()
+    {
+      document.FORM_RVIA_0.clavePagina.value = document.FORM_RVIA_0.clavePaginaVolverPre.value;
+      document.FORM_RVIA_0.TAE_FIC.value = document.FORM_RVIA_0.TAE_SIMULACION.value;
+
+      if (pulsada == 0)
+      {
+        pulsada = 1;
+        document.FORM_RVIA_0.submit();
+      }
+    }
+    // ********* P00011321 - 01/07/2008 - FIN ***********
+  </script>
+
+
+
+  <link rel="Stylesheet" type="text/css" href="/estilos_prtl/css/skin.css?id=002">
+
+  <link rel="Stylesheet" type="text/css" href="/estilos_prtl/css/TM2/RVIA05_IE/skin.css?id=002">
+
+
+
+  <link rel="Stylesheet" type="text/css" href="/estilos_prtl/css/TM2/RVIA05_IE/PARTICULAR/skin.css?id=002">
+
+  <link rel="Stylesheet" type="text/css" href="/estilos_prtl/bi/style.css">
+  <link rel="Stylesheet" type="text/css" href="/estilos_prtl/bi/style_IE.css">
+
+
+  <link rel="Stylesheet" type="text/css" href="/estilos_prtl/css/TM2/RVIA05_IE/PARTICULAR/3190/skin.css?id=002">
+
+
+  <NO_TRANSFORM><script language="javascript" src="/javascripts_portal/es_ES/js_portal/interface.js"></script></NO_TRANSFORM>
+
+
+
+
+  <NO_TRANSFORM><script language="javascript" src="/javascripts_portal/es_ES/js_portal/multicanalidad.js"></script></NO_TRANSFORM>
+
+
+
+  <script language="JavaScript">
+    <!--
+    openMenuA = null;
+    openMenuB = null;
+
+    function cambiaKK(capa1, capa2){
+      oculta(capa1);
+      visualiza(capa2);
+      if (openMenuA != null){
+        oculta(openMenuB);
+        visualiza(openMenuA);
+      }
+      if (openMenuA == capa2){
+        openMenuA = null;
+        openMenuB = null;
+      }else{
+        openMenuA = capa1;
+        openMenuB = capa2;
+      }
+    }
+
+    function oculta(capaId){
+      capa = document.getElementById(capaId);
+      capa.style.display = 'none';
+      i = 0;
+      while (document.getElementById(capaId + "_" + i)){
+        caux = document.getElementById(capaId + "_" + i);
+        caux.style.display = 'none';
+        i++;
+      }
+    }
+
+    function visualiza(capaId){
+      capa = document.getElementById(capaId);
+      capa.style.display = 'block';
+      i = 0;
+      while (document.getElementById(capaId + "_" + i)){
+        caux = document.getElementById(capaId + "_" + i);
+        caux.style.display = 'block';
+        i++;
+      }
+    }
+
+
+
+
+
+
+    function pintarTablaMenu(texto)
+    {
+      document.write("<td class='fondoMenu' style=' vertical-align: bottom;'>");
+      document.write("	<table cellpadding='0' cellspacing='0' border='0'>");
+      document.write("	<tr>");
+      document.write("		<td nowrap='true' id='opcion'>" + texto + "</td>");
+      document.write("	</tr>");
+      document.write("	</table>");
+      document.write("</td>");
+    }
+
+    function pintarTablaMenuSeleccionada(texto)
+    {
+      document.write("<td class='fondoMenu' style=' vertical-align: bottom;'>");
+      document.write("			<table cellpadding='0' cellspacing='0' border='0'>");
+      document.write("			<tr>");
+      document.write("	 			<td class='izqFin' nowrap='true'></td>");
+      document.write("	 			<td class='centroFin' nowrap='true'>&nbsp;" + texto + "&nbsp;</td>");
+      document.write("				<td class='dchaFin' nowrap='true'>&nbsp;</td>");
+      document.write("			</tr>");
+      document.write("		 	</table>");
+      document.write("		</td>");
+
+
+    }
+
+    function pintarFinTablaMenu()
+    {
+      document.write("<td class='fondoMenu' style='vertical-align: bottom; padding-top:5px;' width='100%'>");
+      document.write("<table cellpadding='0' cellspacing='0' border='0' width='100%'>");
+      document.write("	<tr>");
+      document.write("		<td id='opcion'>&nbsp;</td>");
+      document.write("	</tr>");
+      document.write("	</table>");
+      document.write("</td>");
+    }
+
+    //-->
+  </script>
+  <script language="Javascript">
+    <!--
+    ie4 = (document.all)? true:false;
+    function pulsarTecla (e){
+      if ((ie4 && (event.keyCode == 13)) || (! ie4 && (e.which == 13))){
+        return false;
+      }
+    }
+    document.onkeydown = pulsarTecla;
+    //-->
+
+  </script>
+  <script language="javascript" src="/javascripts_portal/utils/funciones.js"></script>
+</head>
+
+<BODY>
+<DIV ID="RESOLUCION">
+
+  <!--CABECERA-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script language="JavaScript">
+    <!--
+    function resolucion(valor){
+      if (valor == "TM1"){
+        var tx = "Se va a proceder a modificar el modo de visualización de su pantalla. Le recomendamos que ajuste la configuración de su pantalla a 800 x 600 píxeles.";
+        alert(tx);
+      }else{
+        var tx = "Se va a proceder a modificar el modo de visualización de su pantalla. Le recomendamos que ajuste la configuración de su pantalla a un resolución mínima de 1024 x 768 píxeles.";
+        alert(tx);
+      }
+      url = window.location.href;
+      if (url.indexOf("?") != -1){
+        indice = url.indexOf("?");
+        if (indice != -1){
+          window.location.href = url.substring(0, indice) + "?RES=" + valor;
+        }else{
+          window.location.href = url + "&RES=" + valor;
+        }
+      }else{
+        window.location.href = url + "?RES=" + valor;
+      }
+    }
+    //-->
+
+    function salirConfirmacion(url){
+      load(url);
+      //location.href="/isum/srv.BDP_EXCLUSIVE_SALIR_EMP.BDP_EXCLUSIVE_SALIR_EMP";
+    }
+
+    var pgLogout = null ;
+
+    function load(url) {
+
+
+
+
+      url= 'https://bancaelectronica.evobanco.com'+url;
+
+
+      if (typeof window.ActiveXObject != 'undefined' ) {
+        pgLogout = new ActiveXObject("Microsoft.XMLHTTP");
+        pgLogout.onreadystatechange = process ;
+      }
+      else {
+        pgLogout = new XMLHttpRequest();
+        pgLogout.onload = process ;
+      }
+      pgLogout.open( 'POST', url, true );
+      pgLogout.send( null );
+    }
+
+    function process() {
+      if (pgLogout.readyState != 4 ) return ;
+      document.getElementById('CONTENIDO').innerHTML = pgLogout.responseText ;
+    }
+
+
+  </script>
+
+  <div class=CABECERA>
+
+    <div id=LOGO></div>
+    <div id=BARRALITERAL>
+
+
+
+      <a href="/isum/interfaces/ruralvia2005b/Logout.jsp?entidad=3190&modo_autenticacion=1" id="botonSalir" ></a>
+
+
+
+      <div id=CBLITERAL01>
+
+
+        <a href='Main?ISUM_ID=cabecera&ISUM_SCR=serviceScr&ISUM_CIPH=7rTlGDi4Q1aXSQrvU8vmsnSdI69oz38VCyiC8VIVgwI%3D' onMouseOut="MM_swapImgRestore()" onMouseOver="MM_swapImage('desconectar','','/es_ES/img/desconectar_b.gif',1)"><img name="desconectar" border="0" src="/es_ES/img/desconectar_a.gif" alt="Desconectar" ></a>
+
+
+
+      </div> <!-- CBLITERAL01 -->
+
+
+
+
+
+
+      <div id=CBLITERAL><a class="link0" href="/isum/Main?ISUM_ID=Utilities&ISUM_SCR=serviceScr&ISUM_CIPH=U31Z7iWTseeErHSYkS0f1g%3D%3D" target="_blank">Atención al Cliente</a>&nbsp;|&nbsp;</div>
+
+
+
+
+
+      <div id=CBLITERAL><a class="link0" href="/isum/Main?ISUM_ID=Utilities&ISUM_SCR=serviceScr&ISUM_CIPH=kwCMzo%2F3Ei32dhFM9pSjeQ%3D%3D" target="_blank">Seguridad</a>&nbsp;|&nbsp;</div>
+
+
+
+      <!--Adaptación Resoluciones-->
+
+
+
+      <!--***** P00009735 -- INICIO ***********-->
+
+      <!-- /*************************** P00017411 12/08/2013 INICIO *************************************** -->
+
+
+      <div id="CBLOGOTXT">
+        GLOBALCAJA
+
+
+        <div class="bix">BIC: BCOEESMM190</div>
+
+      </div>
+      <!-- /*************************** P00017411 12/08/2013 FIN ****************************************** -->
+
+      <!--***** P00009735 -- FIN ***********-->
+
+
+    </div> <!-- BARRALITERAL -->
+
+
+    <div id=ENTORNO>
+
+
+      <div id=DESTACADOS><a class="link1" HREF="/isum/Main?ISUM_ID=cabecera&ISUM_SCR=groupScr&ISUM_CIPH=qz1M1IumUvEyI8opzKHh97A%2BrhqeWvUx8Lf%2FrXS%2BS9Y%3D" id="BDP_RVIA05_BANCA_PRIVADA_PAR">Banca Privada</a></div>
+
+
+
+
+
+      <div id=DESTACADOS><a class="link1" HREF="/isum/Main?ISUM_ID=cabecera&ISUM_SCR=groupScr&ISUM_CIPH=11bxFoBE04HQzIeTLzlGU7bAfib8dZh4ckTtcBVXgTY%3D" id="BDP_RVIA05_COMERCIO_PAR">Comercio</a></div>
+
+
+      <div id=DESTACADOS><a class="link1" HREF="/isum/srv.PARTICULAR.BDP_RVIA05_SERV_CABECERA_GEST_FICHEROS"  id="PARTICULAR_IA">Gestión de Ficheros</a></div>
+
+      <INPUT type="hidden" name="PARTICULAR_IA_REDIRECT" id="PARTICULAR_IA_REDIRECT" value="/isum/Main?ISUM_ID=cabecera&ISUM_SCR=groupScr&ISUM_CIPH=YJx3dE2M7wqsrYErqhPuXupPwFnK5%2BGcc5r1z6kE7vI%3D">
+
+
+    </div>
+  </DIV>
+
+
+
+
+  <!--CONTENIDO-->
+  <DIV id="CONTENIDO" class="pos_global">
+
+
+    <FORM action="/isum/Main?ISUM_ID=portlets_area&ISUM_SCR=linkServiceScr&ISUM_CIPH=5hli71Fgo2gy75GMGNzQpwm9B9ZjAHLUXCzJ9zkNIXR4foi7jhitkFGhevEvQk2rlzH2haiVV2oi%2FCBTE%2FiR5NpbuvyetTrWRkvndVzO3jRyFJ%2BYU9BCNel757blBx1ugyTTVedYu7%2Fhl8xAmk8E2%2Bwy9gXoH5mr8B7ESyZ1WxVln%2FsXN26rzUVUvu7AVcSbvEQ%2BhJ%2BSpXV5krk%2Fbbr0ZMFEhHlyayTFf56UMtU8t6k%3D" name="FORM_RVIA_0" METHOD="post" ><input type="hidden" name="ISUM_OLD_METHOD" value="POST"/><input type="hidden" name="ISUM_ISFORM" value="true"/>
+      <div id="PORTLET-SECTION-HEADER">
+        <div id="HEADER">Cuadro de Amortización</div>
+        <div id="HDBOT"><A href="/isum/Main?ISUM_ID=portlets_area&ISUM_SCR=linkServiceScr&ISUM_CIPH=5hli71Fgo2gy75GMGNzQpwm9B9ZjAHLUXCzJ9zkNIXSW1vIzBG3kCbz7tG3dtFtG" onClick="ayuda(); return false;" onMouseOut="window.status=' ';MM_swapImgRestore()" onMouseOver="MM_swapImage('ico_ay','','/es_ES/img/P/ico_ay_b.gif',1);window.status='ICO_AY';return true" ><img name="ico_ay" border="0" src="/es_ES/img/P/ico_ay_a.gif"> Ayuda</A></div>
+        <div id="HDBOT"><A href='' onClick='javascript:abrir(document.getElementById("url_imprimir").href); return false;' onMouseOut="window.status=' ';MM_swapImgRestore()" onMouseOver="MM_swapImage('ico_imp','','/es_ES/img/P/ico_imp_b.gif',1);window.status='ICO_IMP';return true"><img name="ico_imp" border="0" src="/es_ES/img/P/ico_imp_a.gif"> Imprimir</A><a href="/isum/Main?ISUM_ID=portlets_area&ISUM_SCR=linkServiceScr&ISUM_CIPH=5hli71Fgo2gy75GMGNzQpwm9B9ZjAHLUXCzJ9zkNIXR4foi7jhitkFGhevEvQk2rlzH2haiVV2oi%2FCBTE%2FiR5LGZ0C928JhTdGUQiC2i%2Fg%2FztcItl0EgKKz2A72kiWqQVLczY4CmL7uRxvMoeEvlwA%3D%3D" id="url_imprimir" name="campourl" ></a><A href='' onClick='javascript:abrir(document.getElementById("url_guardar").href); return false;' onMouseOut="window.status=' ';MM_swapImgRestore()" onMouseOver="MM_swapImage('ico_guardar','','/es_ES/img/P/ico_guardar_b.gif',1);window.status='ICO_GUARDAR';return true"><img name="ico_guardar" border="0" src="/es_ES/img/P/ico_guardar_a.gif"> Guardar</A><a href="/isum/Main?ISUM_ID=portlets_area&ISUM_SCR=linkServiceScr&ISUM_CIPH=5hli71Fgo2gy75GMGNzQpwm9B9ZjAHLUXCzJ9zkNIXR4foi7jhitkFGhevEvQk2rlzH2haiVV2oi%2FCBTE%2FiR5LGZ0C928JhTdGUQiC2i%2Fg%2FztcItl0EgKKz2A72kiWqQpuas%2FRYLMlSjWAskPQVgGQ%3D%3D" id="url_guardar" name="campourl2" ></a><a href="/isum/Main?ISUM_ID=portlets_area&ISUM_SCR=linkServiceScr&ISUM_CIPH=5hli71Fgo2gy75GMGNzQpwm9B9ZjAHLUXCzJ9zkNIXR4foi7jhitkFGhevEvQk2rlzH2haiVV2oi%2FCBTE%2FiR5LGZ0C928JhTdGUQiC2i%2Fg%2FCEoFoC6mCkdP00Pbjo%2BZM" id="url_guardarxls" name="campourl3" ></a></div>
+      </div>
+      <div id="EXPLICA">
+        <!--********* R00004585 - 11/04/2006 - INICIO ***********-->
+        A continuación se detallan los datos de la cuenta '<b>00817839121293476712 | PTMO. CONSUMO PERSONAL</b>'.
+        <!--********* R00004585 - 11/04/2006 - FIN ***********-->
+      </div>
+
+
+
+
+
+
+      <script language="Javascript" >
+
+        function paginar(pag){
+          document.FORM_RVIA_0.primeraVez.value = "0";
+          document.FORM_RVIA_0.paginaActual.value = pag;
+          document.FORM_RVIA_0.tamanioPagina.value = "25";
+          document.FORM_RVIA_0.campoPaginacion.value = "lista";
+          document.FORM_RVIA_0.pagXpag.value = "5";
+          completar();
+        }
+
+      </script>
+
+
+
+      <div id="PAGINAR" align="right">
+
+
+      </div>
+      <INPUT type='hidden' name='primeraVez' value=''>
+      <INPUT type='hidden' name='paginaActual' value=''>
+      <INPUT type='hidden' name='tamanioPagina' value=''>
+      <INPUT type='hidden' name='campoPaginacion' value=''>
+      <INPUT type='hidden' name='pagXpag' value=''>
+      <DIV id="PORTLET-LISTA">
+        <div id="BODY_LISTA">
+          <table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%" >
+            <tr >
+              <td class="cblistaC" >Fecha Ejecución</td>
+              <td class="cblistaC" >Cuota</td>
+              <td class="cblistaC" >Capital</td>
+              <td class="cblistaC" >Capital Subvencionado</td>
+              <td class="cblistaC" >Capital Pendiente</td>
+              <td class="cblistaC" >Intereses</td>
+              <td class="cblistaC" >Intereses Subvencionados</td>
+              <td class="cblistaC" >Demora</td>
+
+              <td class="cblistaC" >Comisiones</td>
+
+              <td class="cblistaC" >Gastos</td>
+            </tr>
+
+
+            <tr class="PAR" >
+              <td class="listaC" >02-05-2021</td>
+              <td class="implista" >332,45</td>
+              <td class="implista" >233,51</td>
+              <td class="implista" >0,00</td>
+              <td class="implista" >18.762,11</td>
+              <td class="implista" >98,94</td>
+              <td class="implista" >0,00</td>
+              <td class="implista" >0,00</td>
+              <td class="implista" >0,00</td>
+              <td class="implista" >0,00</td>
+            </tr>
+
+            <tr class="IMPAR" >
+              <td class="listaC" >02-06-2021</td>
+              <td class="implista" >332,45</td>
+              <td class="implista" >234,73</td>
+              <td class="implista" >0,00</td>
+              <td class="implista" >18.527,38</td>
+              <td class="implista" >97,72</td>
+              <td class="implista" >0,00</td>
+              <td class="implista" >0,00</td>
+              <td class="implista" >0,00</td>
+              <td class="implista" >0,00</td>
+            </tr>
+
+            <tr class="PAR" >
+              <td class="listaC" >02-07-2021</td>
+              <td class="implista" >332,45</td>
+              <td class="implista" >235,95</td>
+              <td class="implista" >0,00</td>
+              <td class="implista" >18.291,43</td>
+              <td class="implista" >96,50</td>
+              <td class="implista" >0,00</td>
+              <td class="implista" >0,00</td>
+              <td class="implista" >0,00</td>
+              <td class="implista" >0,00</td>
+            </tr>
+
+            <tr class="IMPAR" >
+              <td class="listaC" >02-08-2021</td>
+              <td class="implista" >332,45</td>
+              <td class="implista" >237,18</td>
+              <td class="implista" >0,00</td>
+              <td class="implista" >18.054,25</td>
+              <td class="implista" >95,27</td>
+              <td class="implista" >0,00</td>
+              <td class="implista" >0,00</td>
+              <td class="implista" >0,00</td>
+              <td class="implista" >0,00</td>
+            </tr>
+
+            <tr class="PAR" >
+              <td class="listaC" >02-09-2021</td>
+              <td class="implista" >332,45</td>
+              <td class="implista" >238,42</td>
+              <td class="implista" >0,00</td>
+              <td class="implista" >17.815,83</td>
+              <td class="implista" >94,03</td>
+              <td class="implista" >0,00</td>
+              <td class="implista" >0,00</td>
+              <td class="implista" >0,00</td>
+              <td class="implista" >0,00</td>
+            </tr>
+
+            <tr class="IMPAR" >
+              <td class="listaC" >02-10-2021</td>
+              <td class="implista" >332,45</td>
+              <td class="implista" >239,66</td>
+              <td class="implista" >0,00</td>
+              <td class="implista" >17.576,17</td>
+              <td class="implista" >92,79</td>
+              <td class="implista" >0,00</td>
+              <td class="implista" >0,00</td>
+              <td class="implista" >0,00</td>
+              <td class="implista" >0,00</td>
+            </tr>
+
+            <tr class="PAR" >
+              <td class="listaC" >02-11-2021</td>
+              <td class="implista" >332,45</td>
+              <td class="implista" >240,91</td>
+              <td class="implista" >0,00</td>
+              <td class="implista" >17.335,26</td>
+              <td class="implista" >91,54</td>
+              <td class="implista" >0,00</td>
+              <td class="implista" >0,00</td>
+              <td class="implista" >0,00</td>
+              <td class="implista" >0,00</td>
+            </tr>
+
+            <tr class="IMPAR" >
+              <td class="listaC" >02-12-2021</td>
+              <td class="implista" >332,45</td>
+              <td class="implista" >242,16</td>
+              <td class="implista" >0,00</td>
+              <td class="implista" >17.093,10</td>
+              <td class="implista" >90,29</td>
+              <td class="implista" >0,00</td>
+              <td class="implista" >0,00</td>
+              <td class="implista" >0,00</td>
+              <td class="implista" >0,00</td>
+            </tr>
+
+            <tr class="PAR" >
+              <td class="listaC" >02-01-2022</td>
+              <td class="implista" >332,45</td>
+              <td class="implista" >243,42</td>
+              <td class="implista" >0,00</td>
+              <td class="implista" >16.849,68</td>
+              <td class="implista" >89,03</td>
+              <td class="implista" >0,00</td>
+              <td class="implista" >0,00</td>
+              <td class="implista" >0,00</td>
+              <td class="implista" >0,00</td>
+            </tr>
+
+            <tr class="IMPAR" >
+              <td class="listaC" >02-02-2022</td>
+              <td class="implista" >332,45</td>
+              <td class="implista" >244,69</td>
+              <td class="implista" >0,00</td>
+              <td class="implista" >16.604,99</td>
+              <td class="implista" >87,76</td>
+              <td class="implista" >0,00</td>
+              <td class="implista" >0,00</td>
+              <td class="implista" >0,00</td>
+              <td class="implista" >0,00</td>
+            </tr>
+
+            <tr class="PAR" >
+              <td class="listaC" >02-03-2022</td>
+              <td class="implista" >332,45</td>
+              <td class="implista" >245,97</td>
+              <td class="implista" >0,00</td>
+              <td class="implista" >16.359,02</td>
+              <td class="implista" >86,48</td>
+              <td class="implista" >0,00</td>
+              <td class="implista" >0,00</td>
+              <td class="implista" >0,00</td>
+              <td class="implista" >0,00</td>
+            </tr>
+
+            <tr class="IMPAR" >
+              <td class="listaC" >02-04-2022</td>
+              <td class="implista" >332,45</td>
+              <td class="implista" >247,25</td>
+              <td class="implista" >0,00</td>
+              <td class="implista" >16.111,77</td>
+              <td class="implista" >85,20</td>
+              <td class="implista" >0,00</td>
+              <td class="implista" >0,00</td>
+              <td class="implista" >0,00</td>
+              <td class="implista" >0,00</td>
+            </tr>
+
+          </TABLE>
+        </div>
+
+        <!--********* P00011321 - 01/07/2008 - INICIO ***********-->
+        <div id="NOTAINFO">
+          El TAE calculado para este Préstamo contratado es del 6,43 %.
+        </div>
+
+        <div id="FOOTER">
+          <div id="BOT">
+
+
+
+          </div>
+        </div>
+        <!--********* P00011321 - 01/07/2008 - FIN ***********-->
+      </DIV>
+
+      <div id=FOOTER>
+      </div>
+
+      <script language="javascript" >var URLtoPrinter = 'imprimir_inf.htm';var toPrinterCabecera =
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          '<div id=CABECERA_IMP>'+
+          '<div id=LOGOIMP><img src="/img/logoimp.gif" border=0></div>'+
+          '<div id=FECHAIMP>'+
+          '<table border="0" cellspacing="0">'+
+          '<tr>'+
+          '<td class=datoI>Fecha:</td><td class=datoI>29-04-2021</td>'+
+          '<td class=anchoG>&nbsp;</td>'+
+          '<td class=datoI>Hora:</td><td class=datoI>13:36:19</td>'+
+          '</tr>'+
+          '</table>'+
+          '</div>'+
+          '</div>'+
+
+
+          ''+
+          ''+
+          '<div id=CTAIBAN_IMP>'+
+          '<table width="100%" border="0" cellspacing="0" cellpadding="0">'+
+          '<TR>'+
+          '<td width=40%>'+
+          '<table border="0" cellspacing="0" cellpadding="2" width="98%">'+
+          '<tr>'+
+          '<td class=literal>IBAN:</td>'+
+
+          '<td class=datoI>ES4700817839121293476712 | PTMO. CONSUMO PERSONAL</td>'+
+
+          '</tr>'+
+          '</table>'+
+          '</td>'+
+          '</TR>'+
+          '</table></center>'+
+          '</div>'+
+          ''+
+          ''+
+
+
+          ''+
+          ''+
+          ''+
+
+          ''; var toPrinterCuerpo = '<div id="PORTLET-SECTION-HEADER">	<div id="HEADER">Cuadro de Amortización</div></div>  <DIV id="PORTLET-LISTA">	<div id="BODY_LISTA">		<TABLE BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%">	<tr>	  <td class="cblistaC">Fecha Ejecución</td>	  <td class="cblistaC">Cuota</td>	  <td class="cblistaC">Capital</td>	  <td class="cblistaC">Capital Subvencionado</td>	  <td class="cblistaC">Capital Pendiente</td>	  <td class="cblistaC">Intereses</td>	  <td class="cblistaC">Intereses Subvencionados</td>	  <td class="cblistaC">Demora</td>	  	  <td class="cblistaC">Comisiones</td>	  	  <td class="cblistaC">Gastos</td>	</tr>				            				<tr class="PAR">				  <td class="listaC">02-05-2021</td>				  <td class="implista">332,45</td>				  <td class="implista">233,51</td>				  <td class="implista">0,00</td>				  <td class="implista">18.762,11</td>				  <td class="implista">98,94</td>				  				  <td class="implista">0,00</td>				  <td class="implista">0,00</td>				  <td class="implista">0,00</td>				  <td class="implista">0,00</td>				</tr>				            				<tr class="IMPAR">				  <td class="listaC">02-06-2021</td>				  <td class="implista">332,45</td>				  <td class="implista">234,73</td>				  <td class="implista">0,00</td>				  <td class="implista">18.527,38</td>				  <td class="implista">97,72</td>				  				  <td class="implista">0,00</td>				  <td class="implista">0,00</td>				  <td class="implista">0,00</td>				  <td class="implista">0,00</td>				</tr>				            				<tr class="PAR">				  <td class="listaC">02-07-2021</td>				  <td class="implista">332,45</td>				  <td class="implista">235,95</td>				  <td class="implista">0,00</td>				  <td class="implista">18.291,43</td>				  <td class="implista">96,50</td>				  				  <td class="implista">0,00</td>				  <td class="implista">0,00</td>				  <td class="implista">0,00</td>				  <td class="implista">0,00</td>				</tr>				            				<tr class="IMPAR">				  <td class="listaC">02-08-2021</td>				  <td class="implista">332,45</td>				  <td class="implista">237,18</td>				  <td class="implista">0,00</td>				  <td class="implista">18.054,25</td>				  <td class="implista">95,27</td>				  				  <td class="implista">0,00</td>				  <td class="implista">0,00</td>				  <td class="implista">0,00</td>				  <td class="implista">0,00</td>				</tr>				            				<tr class="PAR">				  <td class="listaC">02-09-2021</td>				  <td class="implista">332,45</td>				  <td class="implista">238,42</td>				  <td class="implista">0,00</td>				  <td class="implista">17.815,83</td>				  <td class="implista">94,03</td>				  				  <td class="implista">0,00</td>				  <td class="implista">0,00</td>				  <td class="implista">0,00</td>				  <td class="implista">0,00</td>				</tr>				            				<tr class="IMPAR">				  <td class="listaC">02-10-2021</td>				  <td class="implista">332,45</td>				  <td class="implista">239,66</td>				  <td class="implista">0,00</td>				  <td class="implista">17.576,17</td>				  <td class="implista">92,79</td>				  				  <td class="implista">0,00</td>				  <td class="implista">0,00</td>				  <td class="implista">0,00</td>				  <td class="implista">0,00</td>				</tr>				            				<tr class="PAR">				  <td class="listaC">02-11-2021</td>				  <td class="implista">332,45</td>				  <td class="implista">240,91</td>				  <td class="implista">0,00</td>				  <td class="implista">17.335,26</td>				  <td class="implista">91,54</td>				  				  <td class="implista">0,00</td>				  <td class="implista">0,00</td>				  <td class="implista">0,00</td>				  <td class="implista">0,00</td>				</tr>				            				<tr class="IMPAR">				  <td class="listaC">02-12-2021</td>				  <td class="implista">332,45</td>				  <td class="implista">242,16</td>				  <td class="implista">0,00</td>				  <td class="implista">17.093,10</td>				  <td class="implista">90,29</td>				  				  <td class="implista">0,00</td>				  <td class="implista">0,00</td>				  <td class="implista">0,00</td>				  <td class="implista">0,00</td>				</tr>				            				<tr class="PAR">				  <td class="listaC">02-01-2022</td>				  <td class="implista">332,45</td>				  <td class="implista">243,42</td>				  <td class="implista">0,00</td>				  <td class="implista">16.849,68</td>				  <td class="implista">89,03</td>				  				  <td class="implista">0,00</td>				  <td class="implista">0,00</td>				  <td class="implista">0,00</td>				  <td class="implista">0,00</td>				</tr>				            				<tr class="IMPAR">				  <td class="listaC">02-02-2022</td>				  <td class="implista">332,45</td>				  <td class="implista">244,69</td>				  <td class="implista">0,00</td>				  <td class="implista">16.604,99</td>				  <td class="implista">87,76</td>				  				  <td class="implista">0,00</td>				  <td class="implista">0,00</td>				  <td class="implista">0,00</td>				  <td class="implista">0,00</td>				</tr>				            				<tr class="PAR">				  <td class="listaC">02-03-2022</td>				  <td class="implista">332,45</td>				  <td class="implista">245,97</td>				  <td class="implista">0,00</td>				  <td class="implista">16.359,02</td>				  <td class="implista">86,48</td>				  				  <td class="implista">0,00</td>				  <td class="implista">0,00</td>				  <td class="implista">0,00</td>				  <td class="implista">0,00</td>				</tr>				            				<tr class="IMPAR">				  <td class="listaC">02-04-2022</td>				  <td class="implista">332,45</td>				  <td class="implista">247,25</td>				  <td class="implista">0,00</td>				  <td class="implista">16.111,77</td>				  <td class="implista">85,20</td>				  				  <td class="implista">0,00</td>				  <td class="implista">0,00</td>				  <td class="implista">0,00</td>				  <td class="implista">0,00</td>				</tr>			</TABLE>	</div></DIV>' +
+
+
+
+          '<div id=DATOSPIE>'+
+          '<table border="0" cellspacing="0" cellpadding="0" align=right>'+
+          '<tr>'+
+          <!--*********P00018063 10-06-2015 COMENTAR TABLA INICIO******
+      '<td class="datocodeD"></td>'+
+      '<td class="datocodeD"></td>'+
+      <!--*********P00009840 02-04-2008 INICIO******  -->
+
+
+      <!--**********************************************************
+      '<td class="datocodeD"></td>'+
+      '<td class="datocodeD"></td>'+
+      '<td class="datocodeD"></td>'+
+      '<td class="datocodeD"></td>'+
+      <!--*********P00009840 02-04-2008 FIN******  -->
+      <!--*********P00018063 10-06-2015 COMENTAR TABLA  FIN*** -->
+      '</tr>'+
+      '</table><br><br>'+
+      '</div>'
+      ;function abrir(url){win2=window.open(url,'Imprimir','width=650,height=450,top=0,left=0,menubar=yes,scrollbars=yes');win2.creator=self; 	if (win2.opener == null) {   win2.opener = self;  } }</script>
+
+      <INPUT type='hidden' name='clavePagina' value=''>
+      <INPUT type='hidden' name='cuenta' value=''>
+      <INPUT type='hidden' name='descripcionCuenta' value=''>
+      <INPUT type='hidden' name='fechaDesde' value=''>
+      <INPUT type='hidden' name='fechaHasta' value=''>
+      <!--********* P00011321 - 01/07/2008 - INICIO ***********-->
+      <INPUT type="hidden" name="clavePaginaVolverPre" value="">
+      <INPUT type="hidden" name="ENTIDAD" value="4444">
+      <INPUT type="hidden" name="SITUAC" value=''>
+      <INPUT type="hidden" name="NUMORD" value=''>
+      <INPUT type='hidden' name="TIOPCF" value="">
+      <INPUT type='hidden' name="TIPOPE" value="">
+      <INPUT type="hidden" name="NIPUSU" value="12345678">
+      <INPUT type="hidden" name="NIFUSU" value="">
+      <INPUT type="hidden" name="IMPORT" value="">
+      <INPUT type="hidden" name="REFERENCIA_FIC" value=''>
+      <INPUT type="hidden" name="IMP_DESDE_FIC" value=''>
+      <INPUT type="hidden" name="IMP_HASTA_FIC" value=''>
+      <INPUT type="hidden" name="IMP_PROACT" value="">
+      <INPUT type="hidden" name="TIPO_FIC" value="">
+      <INPUT type="hidden" name="TARIFA_FIC" value=''>
+      <INPUT type="hidden" name="TARIFA" value=''>
+      <INPUT type="hidden" name="PDV" value=''>
+      <INPUT type="hidden" name="PLAZO_PRESTAMO_FIC" value=''>
+      <INPUT type="hidden" name="TITULAR" value="">
+      <INPUT type="hidden" name="SELCUENTAPASIVO" value="">
+      <INPUT type="hidden" name="CUENTAPASIVO" value="">
+      <INPUT type="hidden" name="CUENTAPASIVO_FORMATO" value="">
+      <INPUT type="hidden" name="DESCCUENTAPASIVO" value="">
+      <INPUT type="hidden" name="CTA_PRESTAMO" value="">
+      <INPUT type="hidden" name="DESCCTA_PRESTAMO" value="">
+      <INPUT type="hidden" name="IMP_PROACT" value="">
+      <INPUT type="hidden" name="FECHA_INI_FIC" value="">
+      <INPUT type="hidden" name="DUR_OFERTA_FIC" value="">
+      <INPUT type="hidden" name="DATOS_CAMPANA_FIC" value=''>
+      <INPUT type="hidden" name="DESC_FICHERO_FIC" value=''>
+      <INPUT type="hidden" name="MENSAJE_ID" value=''>
+      <INPUT type="hidden" name="CUOTA_SIMULACION" value="">
+      <INPUT type="hidden" name="TAE_SIMULACION" value="">
+      <INPUT type="hidden" name="TAE_FIC" value="">
+      <INPUT type="hidden" name="TAE_ALTA" value="">
+      <INPUT type="hidden" name="FECHA_DESDE" value="">
+      <INPUT type="hidden" name="FECHA_HASTA" value="">
+      <INPUT type="hidden" name="ESTADO_PRE" value="">
+      <INPUT type="hidden" name="CANAL_PRE" value="">
+      <INPUT type="hidden" name="FIRMADOPOR_PRE" value="">
+      <INPUT type="hidden" name="ORIGEN" value="">
+      <INPUT type="hidden" name="ORIGEN_CA" value="S">
+      <!--********* P00011321 - 01/07/2008 - FIN ***********-->
+
+
+
+      <INPUT type="hidden" name="PLAZO_PRESTAMO_HASTA_FIC" value=''>
+      <INPUT type="hidden" name="TXT_PLAZO" value=''>
+      <INPUT type="hidden" name="TIP_INT" value=''>
+      <INPUT type="hidden" name="INT_FIJ" value=''>
+      <INPUT type="hidden" name="DIFER" value=''>
+      <INPUT type="hidden" name="REFER" value=''>
+      <INPUT type="hidden" name="TIP_COM_APE" value=''>
+      <INPUT type="hidden" name="COM_APE_IMP" value=''>
+      <INPUT type="hidden" name="COM_APE_POR" value=''>
+      <INPUT type="hidden" name="TIP_COM_EST" value=''>
+      <INPUT type="hidden" name="COM_EST_IMP" value=''>
+      <INPUT type="hidden" name="COM_EST_POR" value=''>
+      <INPUT type="hidden" name="TIP_COM_LIQ_PARC" value=''>
+      <INPUT type="hidden" name="COM_LIQ_PARC_IMP" value=''>
+      <INPUT type="hidden" name="COM_LIQ_PARC_POR" value=''>
+      <INPUT type="hidden" name="TIP_COM_CANC" value=''>
+      <INPUT type="hidden" name="COM_CANC_IMP" value=''>
+      <INPUT type="hidden" name="COM_CANC_POR" value=''>
+      <INPUT type="hidden" name="TIP_COM_IMPA" value=''>
+      <INPUT type="hidden" name="COM_IMPA_IMP" value=''>
+      <INPUT type="hidden" name="COM_IMPA_POR" value=''>
+      <INPUT type="hidden" name="CAREN" value=''>
+      <INPUT type="hidden" name="COD_FRE" value=''>
+      <INPUT type="hidden" name="FREC" value=''>
+
+
+
+      <INPUT type="hidden" name="FECHADESDE" value=''>
+      <INPUT type="hidden" name="FECHAHASTA" value=''>
+      <INPUT type="hidden" name="INDICADOR" value=''>
+
+
+      <INPUT type="hidden" name="IND_PDF_COND_GENERALES" value="">
+
+
+      <INPUT type="hidden" name="IND_RGA" value=''>
+      <INPUT type="hidden" name="CONT_LABORAL" value=''>
+      <INPUT type="hidden" id="CONTRATA_SEGURO" name="CONTRATA_SEGURO" value=''>
+      <INPUT type="hidden" id="errorSeguro" name="errorSeguro" value=''>
+      <INPUT type="hidden" name="RGA_ACCION_E" value=''>
+      <INPUT type="hidden" name="RGA_NUM_POLIZ_CHAR_8" value=''>
+      <INPUT type="hidden" name="RGA_ACU_PROT_PAG" value=''>
+      <INPUT type="hidden" name="RGA_PRIMA_NETA" value=''>
+      <INPUT type="hidden" name="RGA_FRECUENCIA" value=''>
+      <INPUT type="hidden" id="namePDF" name="namePDF" value=''>
+      <INPUT type="hidden" id="ruta" name="ruta" value=''>
+      <INPUT type="hidden" id="RGA_PDF" name="RGA_PDF" value=''>
+      <INPUT type="hidden" id="RGA_PDF_J" name="RGA_PDF_J" value=''>
+      <INPUT type="hidden" name="NUMORD_AUX" value=''>
+
+    </FORM>
+
+
+    <!--/div-->
+
+
+
+
+
+  </DIV>
+
+
+
+
+
+
+
+</DIV>
+
+
+<div data-token="0Mn0IgQ77c5mQ57jprNqQu8JqEoctJBU" id="tokenValid">
+</div>
+
+
+<script language="Javascript">
+
+
+  var vcontrolBotonAtras = window.sessionStorage.getItem("controlBotonAtras");
+  if(vcontrolBotonAtras == 1){
+
+    console.log("Entro por aqui");
+    history.forward();
+  }else{
+    console.log("Me voy por el else");
+  }
+
+
+
+
+</script>
+
+</BODY>
+</html>
+
+

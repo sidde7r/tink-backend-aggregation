@@ -1,0 +1,483 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+
+
+
+  <!--
+  <title>BANCA INTERNET</title>
+  -->
+  <!-- -->
+
+  <title>BANCA INTERNET</title>
+
+  <meta HTTP-EQUIV="Cache-Control" CONTENT="No-cache">
+  <META HTTP-EQUIV="Pragma" CONTENT="No-cache">
+  <META HTTP-EQUIV="Expires" CONTENT="Now">
+  <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1" />
+
+
+
+
+  <script language="javascript" src="/javascripts_portal/es_ES/js_portal/ValidateTO.js"></script>
+
+  <script language="javascript" src="/javascripts_portal/es_ES/js_portal/interface.js"></script>
+  <script language="javascript" src="/javascripts_portal/es_ES/js_portal/calendar.js"></script>
+  <script language="javascript" >function ayuda(){var nuevaVentana=window.open('/es_ES/ayudas/P/prestamos/ay_FinPtmos_cuadro_amort.htm','AYUDA','width=370,height=300 ,top=0, left=0,menubar=yes,scrollbars=yes');}</script>
+
+  <script language="Javascript" >
+    //*********P00010336 26-03-2007 SD INICIO******
+    var pulsada=0;
+    //*********P00010336 26-03-2007 SD FIN*********
+
+    Fecha = 0;
+
+
+    var hoy = new Date("2021", "3", "29");
+
+    function getFechaSistema()
+    {
+      return formatearFecha(hoy);
+    }
+
+    function sumarDias(dias)
+    {
+      var salida = new Date(hoy.getFullYear(),hoy.getMonth(),parseInt(hoy.getDate(),10)+parseInt(dias,10));
+      return formatearFecha(salida);
+    }
+
+    function rellenarFecha()
+    {
+      document.FORM_RVIA_0.FECHAMOVDESDE.value        = getFechaSistema();
+      document.FORM_RVIA_0.FECHAMOVHASTA.value        = sumarDias(365);
+      document.FORM_RVIA_0.fechaActual.value  = getFechaSistema();
+    }
+
+    var seleccionado = 0 ;
+
+    function validar()
+    {
+      document.FORM_RVIA_0.primeraVez.value      = "1";
+      document.FORM_RVIA_0.paginaActual.value    = "0";
+      document.FORM_RVIA_0.tamanioPagina.value   = "25";
+      document.FORM_RVIA_0.campoPaginacion.value = "lista";
+
+      if ( checkDate(document.FORM_RVIA_0.FECHAMOVDESDE, "Fecha", false)
+          && checkDate(document.FORM_RVIA_0.FECHAMOVHASTA, "Fecha", false) )
+      {
+        <!-- Vamos a comprobar que la FechaDesde no es Mayor que la FechaHasta. -->
+        if ( checkDateMayorEquals( document.FORM_RVIA_0.FECHAMOVDESDE, document.FORM_RVIA_0.FECHAMOVHASTA, false) )
+        {
+          document.FORM_RVIA_0.clavePagina.value = "PRE_AMORTIZACION";
+          document.FORM_RVIA_0.fechaDesde.value = document.FORM_RVIA_0.FECHAMOVDESDE.value;
+          document.FORM_RVIA_0.fechaHasta.value = document.FORM_RVIA_0.FECHAMOVHASTA.value;
+
+          <!-- Recuperamos la cuenta seleccionada -->
+          var cuentaSelecc = document.FORM_RVIA_0.SELCTA[document.FORM_RVIA_0.SELCTA.selectedIndex].value;
+
+          if ( cuentaSelecc == "0" )
+          {
+            window.alert("Debe de seleccionar una cuenta.");
+            return;
+          }
+          document.FORM_RVIA_0.cuenta.value            = cuentaSelecc.substring(0,20);
+          document.FORM_RVIA_0.descripcionCuenta.value = cuentaSelecc.substring(20, cuentaSelecc.length);
+
+          //*********P00010336 26-03-2007 SD INICIO******
+          if (pulsada == 0) {
+            pulsada = 1;
+            document.FORM_RVIA_0.submit();
+          }
+          //*********P00010336 26-03-2007 SD FIN*********
+        }
+      }
+
+    }
+  </script>
+
+
+</head>
+
+<BODY>
+<DIV ID="RESOLUCION">
+
+  <!--CABECERA-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class=CABECERA>
+
+    <div id=LOGO></div>
+    <div id=BARRALITERAL>
+
+
+
+      <a href="/isum/interfaces/ruralvia2005b/Logout.jsp?entidad=3190&modo_autenticacion=1" id="botonSalir" ></a>
+
+
+
+      <div id=CBLITERAL01>
+
+
+        <a href='Main?ISUM_ID=cabecera&ISUM_SCR=serviceScr&ISUM_CIPH=7rTlGDi4Q1aXSQrvU8vmsnSdI69oz38VCyiC8VIVgwI%3D' onMouseOut="MM_swapImgRestore()" onMouseOver="MM_swapImage('desconectar','','/es_ES/img/desconectar_b.gif',1)"><img name="desconectar" border="0" src="/es_ES/img/desconectar_a.gif" alt="Desconectar" ></a>
+
+
+
+      </div> <!-- CBLITERAL01 -->
+
+
+
+
+
+
+      <div id=CBLITERAL><a class="link0" href="/isum/Main?ISUM_ID=Utilities&ISUM_SCR=serviceScr&ISUM_CIPH=U31Z7iWTseeErHSYkS0f1g%3D%3D" target="_blank">Atención al Cliente</a>&nbsp;|&nbsp;</div>
+
+
+
+
+
+      <div id=CBLITERAL><a class="link0" href="/isum/Main?ISUM_ID=Utilities&ISUM_SCR=serviceScr&ISUM_CIPH=kwCMzo%2F3Ei32dhFM9pSjeQ%3D%3D" target="_blank">Seguridad</a>&nbsp;|&nbsp;</div>
+
+
+
+      <!--Adaptación Resoluciones-->
+
+
+
+      <!--***** P00009735 -- INICIO ***********-->
+
+      <!-- /*************************** P00017411 12/08/2013 INICIO *************************************** -->
+
+
+      <div id="CBLOGOTXT">
+        GLOBALCAJA
+
+
+        <div class="bix">BIC: BCOEESMM190</div>
+
+      </div>
+      <!-- /*************************** P00017411 12/08/2013 FIN ****************************************** -->
+
+      <!--***** P00009735 -- FIN ***********-->
+
+
+
+
+      <script language="JavaScript">
+        <!--
+        desplegar =  false;
+        //-->
+      </script>
+      <DIV class="MENU2">
+
+
+        <div class="opcionGm2">Préstamo</div>
+
+
+
+        <div class="fondopciones">
+          <div class="subopcionm2"><a href="/isum/Main?ISUM_ID=submenu&ISUM_SCR=serviceScr&ISUM_CIPH=HFBG0OENO%2FmJPluZKQCnye45Foouy9acvSqYQxPHTjw%3D" >Situación</a></div>
+        </div>
+
+
+
+        <div class="fondopciones">
+          <div class="subopcionm2S"><a href="/isum/Main?ISUM_ID=submenu&ISUM_SCR=serviceScr&ISUM_CIPH=5hli71Fgo2gy75GMGNzQp%2Fz3ad%2BYwFQy5iQnB%2BFKJzI%3D" >Cuadro de amortización</a></div>
+        </div>
+
+
+        <div class="fondopciones">
+          <div class="subopcionm2"><a href="/isum/Main?ISUM_ID=submenu&ISUM_SCR=serviceScr&ISUM_CIPH=0McLUia8iW6yBZhphhsP1MGxI8RQXfnIim%2BBwr9tjZI%3D" >Liquidaciones</a></div>
+        </div>
+
+
+
+
+
+        <div class="fondopciones">
+          <script language="JavaScript">
+            <!--
+            gName = 'Amortización Anticipada';
+            //-->
+          </script>
+          <div id="ga1857" class="subopcionm2A">
+            <a href="javascript:cambiaKK('ga1857', 'gb1857');"><IMG SRC="/estilos_prtl/css/abrir.gif" border=0></script></a>
+            <a href="javascript:cambiaKK('ga1857', 'gb1857');"><script language="javascript">document.write(gName);</script></a>
+          </div>
+          <div id="gb1857" class="subopcionm2C" style="display: none;">
+            <a href="javascript:cambiaKK('gb1857', 'ga1857');"><IMG SRC="/estilos_prtl/css/cerrar.gif" border=0></script></a>
+            <a href="javascript:cambiaKK('gb1857', 'ga1857');"><script language="javascript">document.write(gName);</script></a>
+          </div>
+
+
+          <div id="gb1857_0" class="subopcionm3" style="display: none;"><a href="/isum/Main?ISUM_ID=submenu&ISUM_SCR=serviceScr&ISUM_CIPH=RK7fdCmjOm57fzE80GTfAxHWO2eKdoZMx0p9oO1rQDY%3D" >Alta</a></div>
+
+
+
+
+          <div id="gb1857_1" class="subopcionm3" style="display: none;"><a href="/isum/Main?ISUM_ID=submenu&ISUM_SCR=serviceScr&ISUM_CIPH=VW0Ryz87XGJDiom%2B7sxFEEF97H87mK13P1rdHIkT7z8%3D" >Consulta</a></div>
+
+
+
+
+          <div id="gb1857_2" class="subopcionm3" style="display: none;"><a href="/isum/Main?ISUM_ID=submenu&ISUM_SCR=serviceScr&ISUM_CIPH=nikOUDBqK%2F1pNr1iuTYtzXPZhC%2FsEuEhFlxxr9aIfj4%3D" >Anulación</a></div>
+
+
+
+
+
+        </div>
+
+
+
+
+
+
+
+
+
+        <div class="opcionSm2"><a href="/isum/Main?ISUM_ID=submenu&ISUM_SCR=serviceScr&ISUM_CIPH=wonjAvb6K9hnnzUwUazj3W8q7ul0RRMSXRmJAC4giKk%3D" >Préstamos</a></div>
+
+
+
+
+
+        <div class="opcionGm2">Cartera</div>
+
+
+
+        <div class="fondopciones">
+          <div class="subopcionm2"><a href="/isum/Main?ISUM_ID=submenu&ISUM_SCR=serviceScr&ISUM_CIPH=vfVoT3IhDjVfBa1MNtfv7%2Bj3TDZ%2Bx7obFOhka%2Bq36NE%3D" >Riesgo Cedente</a></div>
+        </div>
+
+
+
+
+        <div class="fondopciones">
+          <div class="subopcionm2"><a href="/isum/Main?ISUM_ID=submenu&ISUM_SCR=serviceScr&ISUM_CIPH=105tl096fQOwRmFSlmM%2BOTmhnqYD%2BWql2Ir7gX5Gxio%3D" >Consulta de Remesas</a></div>
+        </div>
+
+
+
+
+        <div class="fondopciones">
+          <div class="subopcionm2"><a href="/isum/Main?ISUM_ID=submenu&ISUM_SCR=serviceScr&ISUM_CIPH=Db8gIimf5HOPyWY%2FflBaVazykdKw6mOp8xvjY3VNkjY%3D" >Consulta de Efectos</a></div>
+        </div>
+
+
+
+
+        <div class="fondopciones">
+          <div class="subopcionm2"><a href="/isum/Main?ISUM_ID=submenu&ISUM_SCR=serviceScr&ISUM_CIPH=eSHpr5WSMhboIpRigeUBj3iovYT9CaUf7EqNncEfXms%3D" >Rebaja del Riesgo</a></div>
+        </div>
+
+
+
+
+        <div class="fondopciones">
+          <div class="subopcionm2"><a href="/isum/Main?ISUM_ID=submenu&ISUM_SCR=serviceScr&ISUM_CIPH=tVaTSkLTs%2FrPIl74chokrAJVtBYtpiF6ZYX9H40wLq4%3D" >Cobros Anticipados Pendientes de recibir</a></div>
+        </div>
+
+
+
+
+
+      </DIV>
+      <script language="JavaScript">
+        <!--
+        if (desplegar)
+          cambiaKK(toHide, toShow);
+        //-->
+      </script>
+
+
+
+
+
+
+
+
+      <div id="AdminToolbar">
+
+      </div>
+
+      <!--CONTENIDO-->
+      <DIV id="CONTENIDO" class="pos_global">
+
+
+
+
+        <!--div style="position: relative"-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+        <FORM action="/isum/Main?ISUM_ID=portlets_area&ISUM_SCR=linkServiceScr&ISUM_CIPH=5hli71Fgo2gy75GMGNzQpwm9B9ZjAHLUXCzJ9zkNIXR4foi7jhitkFGhevEvQk2rlzH2haiVV2oi%2FCBTE%2FiR5NpbuvyetTrWRkvndVzO3jRyFJ%2BYU9BCNel757blBx1uY7kMo%2BktmROL%2Ft4yCdis%2B2VwtlAxf6XHrg2IMIfwwLG9jIaa%2F9dLZX3wyncNjIm1dII13EJ5tMtrg1PX1yahdjMhUPwmEovI%2FjM4x73iyGc%3D" name="FORM_RVIA_0" METHOD="post" ><input type="hidden" name="ISUM_OLD_METHOD" value="POST"/><input type="hidden" name="ISUM_ISFORM" value="true"/>
+
+          <div id=PORTLET-SECTION-HEADER>
+            <div id=HEADER>Cuadro de Amortización</div>
+            <div id=HDBOT><A href="/isum/Main?ISUM_ID=portlets_area&ISUM_SCR=linkServiceScr&ISUM_CIPH=5hli71Fgo2gy75GMGNzQpwm9B9ZjAHLUXCzJ9zkNIXSW1vIzBG3kCbz7tG3dtFtG" onClick="ayuda(); return false;" onMouseOut="window.status=' ';MM_swapImgRestore()" onMouseOver="MM_swapImage('ico_ay','','/es_ES/img/P/ico_ay_b.gif',1);window.status='ICO_AY';return true" ><img name="ico_ay" border="0" src="/es_ES/img/P/ico_ay_a.gif"> Ayuda</A></div>
+          </div>
+
+          <div id="EXPLICA">Seleccione los criterios de consulta que desee realizar y pulse '<b>Aceptar</b>'.</div>
+
+          <DIV id="PORTLET-INPUT">
+            <div id="HEADER_INPUT">
+              <div id="HD_INPUT">Tipos de Operación</div></div>
+            <div id="BODY_INPUT">
+              <table CELLPADDING="0" CELLSPACING="0" BORDER="0" WIDTH="100%" >
+                <tr >
+                  <td class="datobl" >Cuenta</td>
+                  <td width="6" ></td>
+                  <td class="datoI" >
+
+                    <SELECT CLASS="dato" NAME="SELCTA" MAXLENGTH="20">					<option value="0">Seleccione una Cuenta</option>
+                      <option value='31902042305022723752PTMO. CONSUMO PERSONAL'>3190 2042 30 5022723752 | PTMO. CONSUMO PERSONAL </option>
+                      <option value='31902042315137920855Préstamos'>3190 2042 31 5137920855 | Préstamos </option>
+                    </SELECT>
+
+                  </td>
+                </tr>
+                <tr >
+                  <td class="datobl" >Fecha desde</td>
+                  <td width="6" ></td>
+                  <td >
+                    <table cellpadding="0" cellspacing="0" >
+                      <tr >
+                        <td class="datoI" >
+                          <INPUT class="dato" TYPE="text" NAME="FECHAMOVDESDE" SIZE="10" MAXLENGTH="10">
+                          <DIV id='cal_FECHAMOVDESDE' style='position:absolute;z-index:1;'></DIV><IMG src='/es_ES/img/P/calendar.gif' border=0 onMouseOver="this.style.cursor='hand'" onClick="javascript:showCalendar('FECHAMOVDESDE','idcal_FECHAMOVDESDE','-','espaniol','FORM_RVIA_0')"><DIV id='idcal_FECHAMOVDESDE' style='position:absolute; visibility: hidden;z-index:2;'></DIV>
+                        </td>
+                        <td width="6" >&nbsp;</td>
+                        <td class="datobl" >Hasta</td>
+                        <td width="6" >&nbsp;</td>
+                        <td class="datoI" >
+                          <INPUT class="dato" TYPE="text" NAME="FECHAMOVHASTA" SIZE="10" MAXLENGTH="10">
+                          <DIV id='cal_FECHAMOVHASTA' style='position:absolute;z-index:1;'></DIV><IMG src='/es_ES/img/P/calendar.gif' border=0 onMouseOver="this.style.cursor='hand'" onClick="javascript:showCalendar('FECHAMOVHASTA','idcal_FECHAMOVHASTA','-','espaniol','FORM_RVIA_0')"><DIV id='idcal_FECHAMOVHASTA' style='position:absolute; visibility: hidden;z-index:2;'></DIV>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </TABLE>
+            </div>
+
+            <div id="FOOTER">
+              <div id="BOT">
+                <a class="bot" href="/isum/Main?ISUM_ID=portlets_area&ISUM_SCR=linkServiceScr&ISUM_CIPH=5hli71Fgo2gy75GMGNzQpwm9B9ZjAHLUXCzJ9zkNIXSW1vIzBG3kCbz7tG3dtFtG" onClick="javascript:validar();return false;" >&#65;&#99;&#101;&#112;&#116;&#97;&#114;</a>
+              </div>
+            </div>
+
+          </DIV>
+
+          <INPUT type='hidden' name='clavePagina' value=''>
+          <INPUT type='hidden' name='primeraVez' value=''>
+          <INPUT type='hidden' name='paginaActual' value=''>
+          <INPUT type='hidden' name='tamanioPagina' value=''>
+          <INPUT type='hidden' name='campoPaginacion' value=''>
+          <INPUT type='hidden' name='cuenta' value='00000000000000000000'>
+          <INPUT type='hidden' name='descripcionCuenta' value=''>
+          <INPUT type='hidden' name='fechaDesde' value=''>
+          <INPUT type='hidden' name='fechaHasta' value=''>
+          <INPUT type='hidden' name='fechaActual' value=''>
+          <INPUT TYPE="hidden" NAME="TRANCODE" VALUE="">
+
+        </FORM>
+
+        <script language="javascript" >
+          rellenarFecha();
+        </script>
+
+
+
+
+
+        <!--/div-->
+
+
+
+
+
+      </DIV>
+
+
+
+
+
+
+
+    </DIV>
+
+
+    <div data-token="sjmVTCKA4uL3j9t3bJPAHGw1NB3TZBSD" id="tokenValid">
+    </div>
+
+
+    <script language="Javascript">
+
+
+      var vcontrolBotonAtras = window.sessionStorage.getItem("controlBotonAtras");
+      if(vcontrolBotonAtras == 1){
+
+        console.log("Entro por aqui");
+        history.forward();
+      }else{
+        console.log("Me voy por el else");
+      }
+
+
+
+
+    </script>
+
+</BODY>
+</html>
+
+
