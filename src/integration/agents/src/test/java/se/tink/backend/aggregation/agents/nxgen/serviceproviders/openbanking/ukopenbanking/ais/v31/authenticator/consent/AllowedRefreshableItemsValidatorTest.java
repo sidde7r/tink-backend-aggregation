@@ -45,7 +45,7 @@ public class AllowedRefreshableItemsValidatorTest {
         assertThat(restoredItems).isPresent();
         assertThat(restoredItems.get()).isNotEmpty();
         assertThat(restoredItems.get())
-                .containsExactly(
+                .containsExactlyInAnyOrder(
                         RefreshableItem.CHECKING_ACCOUNTS, RefreshableItem.SAVING_ACCOUNTS);
     }
 
