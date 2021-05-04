@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.JyskeConstant
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.JyskeConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.JyskeConstants.Storage;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.JyskeConstants.Urls;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.authenticator.rpc.ChallengeResponse;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.authenticator.rpc.ClientRegistrationRequest;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.authenticator.rpc.ClientRegistrationResponse;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.authenticator.rpc.OAuthResponse;
@@ -89,6 +90,13 @@ public class JyskeBankApiClient {
                 .type(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
                 .addBasicAuth(clientId, clientSecret)
                 .post(OAuthResponse.class, oauthForm.serialize());
+    }
+
+    public ChallengeResponse fetchChallengeCode(String kid) {
+        return client.request(Urls.AUTH_CHALLENGE + kid)
+                .accept(MediaType.WILDCARD_TYPE)
+                .header(HttpHeaders.USER_AGENT, HeaderValues.USER_AGENT)
+                .get(ChallengeResponse.class);
     }
 
     public IdentityResponse fetchIdentityData() {

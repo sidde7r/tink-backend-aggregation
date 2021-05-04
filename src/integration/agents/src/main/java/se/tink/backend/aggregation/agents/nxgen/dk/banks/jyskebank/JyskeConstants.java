@@ -14,6 +14,7 @@ public class JyskeConstants {
                 AUTH_HOST + "/authentication/nemid_bank_twofactor";
         public static final String CLIENT_SECRET = AUTH_HOST + "/client-registration";
         public static final String OAUTH_TOKEN = AUTH_HOST + "/oauth-token";
+        public static final String AUTH_CHALLENGE = AUTH_HOST + "/challenge/v1/ropc/";
         public static final String FETCH_ACCOUNTS = HOST + "/rel/micro/accounts";
         public static final String FETCH_TRANSACTIONS = HOST + "/rel/micro/transactions/booked";
         public static final String FETCH_IDENTITY = HOST + "/rel/general/userprofiles/name";
@@ -75,12 +76,13 @@ public class JyskeConstants {
         public static final String USER_ID = "userId";
         public static final String PIN_CODE = "pin";
         public static final String KEY_ID = "keyId";
-        public static final String PUBLIC_KEY = "publicKey";
-        public static final String PRIVATE_KEY = "privateKey";
-        public static final String AES_KEY = "aesKey";
+        public static final String KEY_PAIR = "keyPair";
+        public static final String CLIENT_ID = "clientId";
+        public static final String CLIENT_SECRET = "clientSecret";
         public static final String ACCESS_TOKEN = "accessToken";
         public static final String REFRESH_TOKEN = "refreshToken";
         public static final String PUBLIC_ID = "publicId";
+        public static final String COUNTER = "counter";
     }
 
     public static class Crypto {
@@ -102,13 +104,16 @@ public class JyskeConstants {
         public static final String KTY = "kty";
         public static final String APP = "app";
         public static final String AOS = "aos";
+        public static final String CHAL = "chal";
+        public static final String COUNT = "count";
     }
 
     public static class JwtValues {
         public static final String KTY = "RSA-2048";
         public static final String APP = "Relationsbank";
         public static final String AOS = "iPhone web 13.3.1";
-        public static final String TYPE = "enrollment";
+        public static final String ENROLLMENT_TYPE = "enrollment";
+        public static final String LOGIN_TYPE = "login";
     }
 
     public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =

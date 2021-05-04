@@ -3,12 +3,18 @@ package se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.authenticato
 import com.google.common.base.Strings;
 import com.nimbusds.jose.EncryptionMethod;
 import com.nimbusds.jose.JOSEException;
+import com.nimbusds.jose.JOSEObjectType;
 import com.nimbusds.jose.JWEAlgorithm;
 import com.nimbusds.jose.JWEHeader;
 import com.nimbusds.jose.JWEObject;
+import com.nimbusds.jose.JWSAlgorithm;
+import com.nimbusds.jose.JWSHeader;
+import com.nimbusds.jose.JWSSigner;
 import com.nimbusds.jose.Payload;
 import com.nimbusds.jose.crypto.RSAEncrypter;
+import com.nimbusds.jose.crypto.RSASSASigner;
 import com.nimbusds.jwt.JWTClaimsSet;
+import com.nimbusds.jwt.SignedJWT;
 import java.security.KeyPair;
 import java.security.NoSuchAlgorithmException;
 import java.security.interfaces.RSAPublicKey;
@@ -30,7 +36,6 @@ import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
-import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.JyskeBankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.JyskeBankPersistentStorage;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.JyskeConstants.Authentication;
@@ -39,6 +44,7 @@ import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.JyskeConstant
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.JyskeConstants.JwtKeys;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.JyskeConstants.JwtValues;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.JyskeConstants.Storage;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.authenticator.rpc.ChallengeResponse;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.authenticator.rpc.ClientRegistrationResponse;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.authenticator.rpc.JweRequest;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.authenticator.rpc.OAuthResponse;
@@ -99,13 +105,16 @@ public class JyskeBankNemidAuthenticator
         final Document validateNemIdTokenResponseBody = getNemIdTokenResponseBody(nemIdToken);
         final ClientRegistrationResponse clientRegistrationResponse =
                 fetchClientSecret(validateNemIdTokenResponseBody);
-        final Form oauthForm = buildOauthTokenForm(clientRegistrationResponse);
+        final String clientId = clientRegistrationResponse.getClientId();
+        final String clientSecret = clientRegistrationResponse.getClientSecret();
+        jyskePersistentStorage.setClientId(clientId);
+        jyskePersistentStorage.setClientSecret(clientSecret);
+
+        final String password = createEnrollmentPackage(clientId);
+        final Form oauthForm = buildOauthTokenForm(clientId, password);
 
         final OAuthResponse oAuthResponse =
-                apiClient.fetchAccessToken(
-                        clientRegistrationResponse.getClientId(),
-                        clientRegistrationResponse.getClientSecret(),
-                        oauthForm);
+                apiClient.fetchAccessToken(clientId, clientSecret, oauthForm);
         final String accessToken = oAuthResponse.getAccessToken();
         final String refreshToken = oAuthResponse.getRefreshToken();
         sessionStorage.put(Storage.ACCESS_TOKEN, accessToken);
@@ -177,9 +186,7 @@ public class JyskeBankNemidAuthenticator
         return formBuilder.build();
     }
 
-    private Form buildOauthTokenForm(ClientRegistrationResponse clientRegistrationResponse) {
-        final String clientId = clientRegistrationResponse.getClientId();
-        final String password = encryptPassword(clientRegistrationResponse);
+    private Form buildOauthTokenForm(String clientId, String password) {
         final String replayId = randomValueGenerator.generateUuidWithTinkTag();
 
         final Form.Builder formBuilder = Form.builder();
@@ -192,37 +199,39 @@ public class JyskeBankNemidAuthenticator
         return formBuilder.build();
     }
 
-    private String encryptPassword(ClientRegistrationResponse clientRegistrationResponse) {
+    private String createEnrollmentPackage(String clientId) {
+        final JWEAlgorithm alg = JWEAlgorithm.RSA_OAEP_256;
+        final EncryptionMethod enc = EncryptionMethod.A128CBC_HS256;
+
+        final KeyPair keyPair = RSA.generateKeyPair(2048);
+        final String publicKey =
+                EncodingUtils.encodeAsBase64String(keyPair.getPublic().getEncoded());
+
+        jyskePersistentStorage.setKeyPair(keyPair);
+
+        final JWTClaimsSet claimsSet =
+                new JWTClaimsSet.Builder()
+                        .issuer(clientId)
+                        .claim(JwtKeys.PWD, jyskePersistentStorage.getPincode())
+                        .claim(JwtKeys.KEY_ID, jyskePersistentStorage.getKeyId())
+                        .claim(JwtKeys.ECHA, sessionStorage.get(Storage.CODE_VERIFIER))
+                        .claim(JwtKeys.PUB, publicKey)
+                        .claim(JwtKeys.KTY, JwtValues.KTY)
+                        .claim(JwtKeys.APP, JwtValues.APP)
+                        .claim(JwtKeys.AOS, JwtValues.AOS)
+                        .build();
+        final JweRequest jweRequest =
+                new JweRequest(claimsSet.toString(), JwtValues.ENROLLMENT_TYPE);
+
+        return createJWE(alg, enc, jweRequest);
+    }
+
+    private String createJWE(JWEAlgorithm alg, EncryptionMethod enc, JweRequest jweRequest) {
         try {
-            final JWEAlgorithm alg = JWEAlgorithm.RSA_OAEP_256;
-            final EncryptionMethod enc = EncryptionMethod.A128CBC_HS256;
-
-            final KeyPair keyPair = RSA.generateKeyPair(2048);
-            final String publicKey =
-                    EncodingUtils.encodeAsBase64String(keyPair.getPublic().getEncoded());
-            final String privateKey =
-                    EncodingUtils.encodeAsBase64String(keyPair.getPrivate().getEncoded());
-
             final KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
             keyGenerator.init(enc.cekBitLength());
             final SecretKey cek = keyGenerator.generateKey();
 
-            jyskePersistentStorage.setPublicKey(publicKey);
-            jyskePersistentStorage.setPrivateKey(privateKey);
-            jyskePersistentStorage.setAesKey(cek);
-
-            final JWTClaimsSet claimsSet =
-                    new JWTClaimsSet.Builder()
-                            .issuer(clientRegistrationResponse.getClientId())
-                            .claim(JwtKeys.PWD, jyskePersistentStorage.getPincode())
-                            .claim(JwtKeys.KEY_ID, jyskePersistentStorage.getKeyId())
-                            .claim(JwtKeys.ECHA, sessionStorage.get(Storage.CODE_VERIFIER))
-                            .claim(JwtKeys.PUB, publicKey)
-                            .claim(JwtKeys.KTY, JwtValues.KTY)
-                            .claim(JwtKeys.APP, JwtValues.APP)
-                            .claim(JwtKeys.AOS, JwtValues.AOS)
-                            .build();
-            final JweRequest jweRequest = new JweRequest(claimsSet.toString(), JwtValues.TYPE);
             final String jweData = SerializationUtils.serializeToString(jweRequest);
             final Payload payload = new Payload(jweData);
 
@@ -275,7 +284,54 @@ public class JyskeBankNemidAuthenticator
     @Override
     public void autoAuthenticate()
             throws SessionException, LoginException, BankServiceException, AuthorizationException {
-        throw SessionError.SESSION_EXPIRED.exception();
+        initHttpCalls();
+        final String kid = jyskePersistentStorage.getKeyId();
+        final String clientId = jyskePersistentStorage.getClientId();
+        final String clientSecret = jyskePersistentStorage.getClientSecret();
+
+        final ChallengeResponse challengeResponse = apiClient.fetchChallengeCode(kid);
+        final String challenge = challengeResponse.getChallenge();
+
+        final String password = createLoginPackage(kid, clientId, challenge);
+        final Form oauthForm = buildOauthTokenForm(clientId, password);
+        final OAuthResponse oAuthResponse =
+                apiClient.fetchAccessToken(clientId, clientSecret, oauthForm);
+
+        final String accessToken = oAuthResponse.getAccessToken();
+        final String refreshToken = oAuthResponse.getRefreshToken();
+        sessionStorage.put(Storage.ACCESS_TOKEN, accessToken);
+        sessionStorage.put(Storage.REFRESH_TOKEN, refreshToken);
+    }
+
+    private String createLoginPackage(String kid, String clientId, String challenge) {
+        try {
+            final JWSHeader header =
+                    new JWSHeader.Builder(JWSAlgorithm.RS256)
+                            .keyID(kid)
+                            .type(JOSEObjectType.JWT)
+                            .build();
+
+            final JWTClaimsSet claimsSet =
+                    new JWTClaimsSet.Builder()
+                            .issuer(clientId)
+                            .claim(JwtKeys.CHAL, challenge)
+                            .claim(JwtKeys.COUNT, jyskePersistentStorage.getCount())
+                            .claim(JwtKeys.PWD, jyskePersistentStorage.getPincode())
+                            .build();
+
+            final KeyPair keyPair = jyskePersistentStorage.getKeyPair();
+
+            SignedJWT signedJWT = new SignedJWT(header, claimsSet);
+            JWSSigner signer = new RSASSASigner(keyPair.getPrivate());
+            signedJWT.sign(signer);
+
+            final JweRequest jweRequest =
+                    new JweRequest(signedJWT.serialize(), JwtValues.LOGIN_TYPE);
+
+            return createJWE(JWEAlgorithm.RSA_OAEP_256, EncryptionMethod.A128CBC_HS256, jweRequest);
+        } catch (JOSEException e) {
+            throw new IllegalStateException("Couldn't sign JWT object", e);
+        }
     }
 
     private String generateCodeVerifier() {

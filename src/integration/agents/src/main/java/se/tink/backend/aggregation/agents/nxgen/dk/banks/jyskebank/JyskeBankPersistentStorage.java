@@ -1,17 +1,17 @@
 package se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank;
 
-import javax.crypto.SecretKey;
+import java.math.BigInteger;
+import java.security.KeyPair;
+import lombok.AllArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.JyskeConstants.Storage;
 import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
+@AllArgsConstructor
 public class JyskeBankPersistentStorage {
     private final PersistentStorage persistentStorage;
-
-    public JyskeBankPersistentStorage(PersistentStorage storage) {
-        this.persistentStorage = storage;
-    }
 
     public void setUserId(String userId) {
         persistentStorage.put(Storage.USER_ID, userId);
@@ -38,23 +38,38 @@ public class JyskeBankPersistentStorage {
         return persistentStorage.get(Storage.KEY_ID);
     }
 
-    public void setPublicKey(String publicKeyAsBase64) {
-        persistentStorage.put(Storage.PUBLIC_KEY, publicKeyAsBase64);
+    public void setKeyPair(KeyPair keyPair) {
+        persistentStorage.put(Storage.KEY_PAIR, SerializationUtils.serializeKeyPair(keyPair));
     }
 
-    public String getPublicKey() {
-        return persistentStorage.get(Storage.PUBLIC_KEY);
+    public KeyPair getKeyPair() {
+        return SerializationUtils.deserializeKeyPair(persistentStorage.get(Storage.KEY_PAIR));
     }
 
-    public void setPrivateKey(String privateKeyAsBase64) {
-        persistentStorage.put(Storage.PRIVATE_KEY, privateKeyAsBase64);
+    public void setClientId(String clientId) {
+        persistentStorage.put(Storage.CLIENT_ID, clientId);
     }
 
-    public void setAesKey(SecretKey cek) {
-        persistentStorage.put(Storage.AES_KEY, cek);
+    public String getClientId() {
+        return persistentStorage.get(Storage.CLIENT_ID);
     }
 
-    public String getPrivateKey() {
-        return persistentStorage.get(Storage.PRIVATE_KEY);
+    public void setClientSecret(String clientSecret) {
+        persistentStorage.put(Storage.CLIENT_SECRET, clientSecret);
+    }
+
+    public String getClientSecret() {
+        return persistentStorage.get(Storage.CLIENT_SECRET);
+    }
+
+    public String getCount() {
+        BigInteger count =
+                persistentStorage
+                        .get(Storage.COUNTER, BigInteger.class)
+                        .orElse(BigInteger.ZERO)
+                        .add(BigInteger.ONE);
+        persistentStorage.put(Storage.COUNTER, count);
+
+        return count.toString();
     }
 }
