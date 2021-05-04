@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.filte
 
 import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants.ErrorMessages;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants.PsuErrorMessages;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.iface.Filter;
 import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
@@ -18,7 +18,7 @@ public class RequestNotProcessedFilter extends Filter {
 
         if ((response.getStatus() == HttpStatus.SC_INTERNAL_SERVER_ERROR)
                 && response.getBody(String.class)
-                        .contains(ErrorMessages.REQUEST_PROCESSING_ERROR)) {
+                        .contains(PsuErrorMessages.REQUEST_PROCESSING_ERROR)) {
             throw BankServiceError.NO_BANK_SERVICE.exception(
                     "Http status: " + HttpStatus.SC_INTERNAL_SERVER_ERROR);
         }

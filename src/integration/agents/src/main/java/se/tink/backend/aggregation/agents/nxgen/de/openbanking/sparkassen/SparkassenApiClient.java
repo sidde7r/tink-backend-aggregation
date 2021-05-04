@@ -1,15 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen;
 
-import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants.ErrorMessages.BLOCKED_ACCOUNT;
-import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants.ErrorMessages.CHALLENGE_FORMAT_INVALID;
-import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants.ErrorMessages.FORMAT_ERROR;
-import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants.ErrorMessages.NO_ACTIVE_TAN_MEDIUM;
-import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants.ErrorMessages.OTP_FORMAT_ERROR;
-import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants.ErrorMessages.PLEASE_CHANGE_PIN;
-import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants.ErrorMessages.PSU_CREDENTIALS_INVALID;
-import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants.ErrorMessages.PSU_ID_TOO_LONG;
-import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants.ErrorMessages.TEMPORARILY_BLOCKED_ACCOUNT;
-
 import java.time.LocalDate;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
@@ -18,9 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
-import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
-import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
-import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants.PathVariables;
@@ -129,30 +116,8 @@ public class SparkassenApiClient implements PaymentApiClient {
                     "FAILED_LOGIN username charset: [{}]  password charset: [{}]",
                     CharsetGuesser.getCharset(username),
                     CharsetGuesser.getCharset(password));
-            // ITE-2489 - temporary experiment
-            SparkassenExperimentalLoginErrorHandling.handleIncorrectLogin(e, provider);
-            String errorBody = e.getResponse().getBody(String.class);
-
-            if (errorBody.contains(TEMPORARILY_BLOCKED_ACCOUNT)
-                    || errorBody.contains(BLOCKED_ACCOUNT)) {
-                throw AuthorizationError.ACCOUNT_BLOCKED.exception(e);
-            }
-
-            if (errorBody.contains(PSU_CREDENTIALS_INVALID)) {
-                throw LoginError.INCORRECT_CREDENTIALS.exception(e);
-            }
-
-            if (errorBody.contains(FORMAT_ERROR) && errorBody.contains(PSU_ID_TOO_LONG)) {
-                throw LoginError.INCORRECT_CREDENTIALS.exception(e);
-            }
-
-            if (errorBody.contains(NO_ACTIVE_TAN_MEDIUM)) {
-                throw LoginError.NO_AVAILABLE_SCA_METHODS.exception(e);
-            }
-            if (errorBody.contains(PLEASE_CHANGE_PIN)) {
-                throw LoginError.PASSWORD_CHANGE_REQUIRED.exception(e);
-            }
-
+            SparkassenErrorHandler.handleError(
+                    e, SparkassenErrorHandler.ErrorSource.AUTHORISATION_USERNAME_PASSWORD);
             throw e;
         }
     }
@@ -179,12 +144,8 @@ public class SparkassenApiClient implements PaymentApiClient {
                             FinalizeAuthorizationResponse.class,
                             new FinalizeAuthorizationRequest(otp));
         } catch (HttpResponseException e) {
-            String errorBody = e.getResponse().getBody(String.class);
-            if (errorBody.contains(PSU_CREDENTIALS_INVALID)
-                    || errorBody.contains(CHALLENGE_FORMAT_INVALID)
-                    || (errorBody.contains(FORMAT_ERROR) && errorBody.contains(OTP_FORMAT_ERROR))) {
-                throw LoginError.INCORRECT_CHALLENGE_RESPONSE.exception(e);
-            }
+            SparkassenErrorHandler.handleError(
+                    e, SparkassenErrorHandler.ErrorSource.AUTHORISATION_OTP);
             throw e;
         }
     }
@@ -196,18 +157,9 @@ public class SparkassenApiClient implements PaymentApiClient {
     }
 
     public ConsentDetailsResponse getConsentDetails(String consentId) {
-        try {
-            return createRequest(
-                            Urls.CONSENT_DETAILS.parameter(PathVariables.CONSENT_ID, consentId))
-                    .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
-                    .get(ConsentDetailsResponse.class);
-        } catch (HttpResponseException e) {
-            if (e.getResponse().getStatus() == 503) {
-                throw BankServiceError.NO_BANK_SERVICE.exception(e);
-            } else {
-                throw e;
-            }
-        }
+        return createRequest(Urls.CONSENT_DETAILS.parameter(PathVariables.CONSENT_ID, consentId))
+                .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
+                .get(ConsentDetailsResponse.class);
     }
 
     public FetchAccountsResponse fetchAccounts(String consentId) {
@@ -288,12 +240,8 @@ public class SparkassenApiClient implements PaymentApiClient {
                             FinalizeAuthorizationResponse.class,
                             new FinalizeAuthorizationRequest(otp));
         } catch (HttpResponseException e) {
-            String errorBody = e.getResponse().getBody(String.class);
-            if (errorBody.contains(PSU_CREDENTIALS_INVALID)
-                    || errorBody.contains(CHALLENGE_FORMAT_INVALID)
-                    || (errorBody.contains(FORMAT_ERROR) && errorBody.contains(OTP_FORMAT_ERROR))) {
-                throw LoginError.INCORRECT_CHALLENGE_RESPONSE.exception(e);
-            }
+            SparkassenErrorHandler.handleError(
+                    e, SparkassenErrorHandler.ErrorSource.AUTHORISATION_OTP);
             throw e;
         }
     }
