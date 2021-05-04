@@ -11,6 +11,7 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import lombok.RequiredArgsConstructor;
 import org.apache.http.HttpStatus;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.CreditAgricoleBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.authenticator.rpc.TokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.authenticator.rpc.TokenResponse;
@@ -26,6 +27,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fro
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -152,24 +154,31 @@ public class CreditAgricoleBaseApiClient implements FrAispApiClient {
     }
 
     private TokenResponse sendTokenRequest(TokenRequest tokenRequest) {
-        return client.request(
-                        branchConfiguration.getBaseUrl()
-                                + CreditAgricoleBaseConstants.ApiServices.TOKEN)
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
-                .accept(MediaType.APPLICATION_JSON)
-                .header(
-                        CreditAgricoleBaseConstants.HeaderKeys.CORRELATION_ID,
-                        UUID.randomUUID().toString())
-                .header(
-                        CreditAgricoleBaseConstants.HeaderKeys.CATS_CONSOMMATEUR,
-                        CreditAgricoleBaseConstants.HeaderValues.CATS_CONSOMMATEUR)
-                .header(
-                        CreditAgricoleBaseConstants.HeaderKeys.CATS_CONSOMMATEURORIGINE,
-                        CreditAgricoleBaseConstants.HeaderValues.CATS_CONSOMMATEURORIGINE)
-                .header(
-                        CreditAgricoleBaseConstants.HeaderKeys.CATS_CANAL,
-                        CreditAgricoleBaseConstants.HeaderValues.CATS_CANAL)
-                .post(TokenResponse.class, tokenRequest.toData());
+        try {
+            return client.request(
+                            branchConfiguration.getBaseUrl()
+                                    + CreditAgricoleBaseConstants.ApiServices.TOKEN)
+                    .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
+                    .accept(MediaType.APPLICATION_JSON)
+                    .header(
+                            CreditAgricoleBaseConstants.HeaderKeys.CORRELATION_ID,
+                            UUID.randomUUID().toString())
+                    .header(
+                            CreditAgricoleBaseConstants.HeaderKeys.CATS_CONSOMMATEUR,
+                            CreditAgricoleBaseConstants.HeaderValues.CATS_CONSOMMATEUR)
+                    .header(
+                            CreditAgricoleBaseConstants.HeaderKeys.CATS_CONSOMMATEURORIGINE,
+                            CreditAgricoleBaseConstants.HeaderValues.CATS_CONSOMMATEURORIGINE)
+                    .header(
+                            CreditAgricoleBaseConstants.HeaderKeys.CATS_CANAL,
+                            CreditAgricoleBaseConstants.HeaderValues.CATS_CANAL)
+                    .post(TokenResponse.class, tokenRequest.toData());
+        } catch (HttpClientException ex) {
+            if (ex.getMessage().contains("failed to respond")) {
+                throw BankServiceError.BANK_SIDE_FAILURE.exception();
+            }
+            throw ex;
+        }
     }
 
     private URL constructTransactionsURL(String id, LocalDate dateFrom, LocalDate dateTo) {
