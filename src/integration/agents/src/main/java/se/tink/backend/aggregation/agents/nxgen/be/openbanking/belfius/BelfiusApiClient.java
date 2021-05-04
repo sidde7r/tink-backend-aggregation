@@ -82,14 +82,19 @@ public final class BelfiusApiClient {
                             .get(ConsentResponse[].class);
             return Arrays.asList(consentResponses);
         } catch (HttpResponseException e) {
-            HttpResponse response = e.getResponse();
-            ErrorResponse body = response.getBody(ErrorResponse.class);
-            if (response.getStatus() == HttpStatusCodes.STATUS_CODE_FORBIDDEN
-                    && ErrorCodes.ACCOUNT_NOT_SUPPORTED.equals(body.getErrorCode())) {
+            if (isAccountNotSupportedError(e)) {
                 throw LoginError.NO_ACCESS_TO_MOBILE_BANKING.exception();
             }
             throw e;
         }
+    }
+
+    private boolean isAccountNotSupportedError(HttpResponseException ex) {
+        HttpResponse response = ex.getResponse();
+        ErrorResponse body = response.getBody(ErrorResponse.class);
+        return response.getStatus() == HttpStatusCodes.STATUS_CODE_FORBIDDEN
+                && (ErrorCodes.ACCOUNT_NOT_SUPPORTED.equals(body.getErrorCode())
+                        || ErrorCodes.NOT_SUPPORTED.equals(body.getErrorCode()));
     }
 
     public TokenResponse postToken(URL url, String tokenEntity) {
