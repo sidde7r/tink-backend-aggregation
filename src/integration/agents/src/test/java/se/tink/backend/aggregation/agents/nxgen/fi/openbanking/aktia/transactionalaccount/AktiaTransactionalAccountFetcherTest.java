@@ -50,7 +50,7 @@ public class AktiaTransactionalAccountFetcherTest {
     public void shouldFetchEmptyAccountsList() {
         // given
         final AccountsSummaryResponse accountsSummaryResponse =
-                createSuccessfulAccountsSummaryResponse("Other");
+                createSuccessfulAccountsSummaryResponse("", "Other");
         when(aktiaApiClientMock.getAccountsSummary()).thenReturn(accountsSummaryResponse);
 
         // when
