@@ -39,7 +39,7 @@ public enum ProviderMapping {
     HONEFOSS("2230", AuthenticationType.PORTAL, "honefossbank"),
     HOLAND_OG_SETSKOG("1280", AuthenticationType.PORTAL, "hsbank"),
     INDRE_SOGN("3730", AuthenticationType.PORTAL, "sognbank"),
-    JAEREN("3290", AuthenticationType.PORTAL, "hsbank"),
+    JAEREN("3290", AuthenticationType.PORTAL, "jaerensparebank"),
     JERNBANEPERSONALETS_BANK_OG_FORSIKRING("1440", AuthenticationType.PORTAL, "jbf"),
     KLAEBU("4358", AuthenticationType.PORTAL, "nidaros-sparebank"),
     KVINESDAL("3080", AuthenticationType.PORTAL, "kvinesdalsparebank"),

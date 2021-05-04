@@ -35,6 +35,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.creditcards.norwegian.fetcher
 import se.tink.backend.aggregation.agents.nxgen.se.creditcards.norwegian.fetcher.creditcard.entity.CreditCardEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.creditcards.norwegian.fetcher.creditcard.entity.CreditCardOverviewResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.creditcards.norwegian.fetcher.creditcard.entity.CreditCardResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.creditcards.norwegian.fetcher.identity.rpc.ContactInfoResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.creditcards.norwegian.fetcher.savingsaccount.entity.SavingsAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.creditcards.norwegian.handler.NorwegianRedirectHandler;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
@@ -228,7 +229,7 @@ public final class NorwegianApiClient {
                 .getAccountNo();
     }
 
-    public String fetchIdentityPage() {
-        return createScrapeRequest(Urls.IDENTITY_URL).get(String.class);
+    public ContactInfoResponse fetchContactInfo() {
+        return createScrapeRequest(Urls.IDENTITY_URL).get(ContactInfoResponse.class);
     }
 }

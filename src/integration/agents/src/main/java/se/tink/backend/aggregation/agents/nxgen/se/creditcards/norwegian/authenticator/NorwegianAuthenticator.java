@@ -31,6 +31,7 @@ public class NorwegianAuthenticator implements BankIdAuthenticator<OrderBankIdRe
 
     @Override
     public OrderBankIdResponse init(String ssn) throws BankIdException, LoginException {
+        // NOTE: ssn is used as identity data
         String returnUrl = apiClient.fetchLoginReturnUrl();
 
         String initStartPage = apiClient.fetchBankIdInitPage(returnUrl);
@@ -75,7 +76,6 @@ public class NorwegianAuthenticator implements BankIdAuthenticator<OrderBankIdRe
 
             String url = apiClient.completeLogin(callbackResponse);
             apiClient.signicatRedirect(url);
-            tryFetchIdentityData();
             return bankIdStatus;
         } catch (HttpResponseException e) {
             if (e.getResponse().getStatus() == HttpStatus.SC_CONFLICT) {
@@ -98,14 +98,5 @@ public class NorwegianAuthenticator implements BankIdAuthenticator<OrderBankIdRe
     @Override
     public Optional<OAuth2Token> refreshAccessToken(String refreshToken) {
         return Optional.empty();
-    }
-
-    private void tryFetchIdentityData() {
-        try {
-            log.info("Fetching identity data");
-            apiClient.fetchIdentityPage();
-        } catch (HttpResponseException hre) {
-            log.warn("Could not fetch identity data");
-        }
     }
 }
