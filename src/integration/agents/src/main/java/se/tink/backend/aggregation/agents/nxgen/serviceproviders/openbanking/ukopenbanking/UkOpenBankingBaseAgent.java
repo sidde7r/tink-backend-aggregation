@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.reactivex.rxjava3.plugins.RxJavaPlugins;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -239,21 +240,41 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
 
     @Override
     public FetchAccountsResponse fetchCheckingAccounts() {
+        if (allowedItemsValidator.isForbiddenToBeRefreshed(RefreshableItem.CHECKING_ACCOUNTS)) {
+            log.info(FETCHING_FORBIDDEN_FOR_ITEM_MSG, RefreshableItem.CHECKING_ACCOUNTS);
+            return new FetchAccountsResponse(Collections.emptyList());
+        }
+
         return transactionalAccountRefreshController.fetchCheckingAccounts();
     }
 
     @Override
     public FetchTransactionsResponse fetchCheckingTransactions() {
+        if (allowedItemsValidator.isForbiddenToBeRefreshed(RefreshableItem.CHECKING_TRANSACTIONS)) {
+            log.info(FETCHING_FORBIDDEN_FOR_ITEM_MSG, RefreshableItem.CHECKING_TRANSACTIONS);
+            return new FetchTransactionsResponse(Collections.emptyMap());
+        }
+
         return transactionalAccountRefreshController.fetchCheckingTransactions();
     }
 
     @Override
     public FetchAccountsResponse fetchSavingsAccounts() {
+        if (allowedItemsValidator.isForbiddenToBeRefreshed(RefreshableItem.SAVING_ACCOUNTS)) {
+            log.info(FETCHING_FORBIDDEN_FOR_ITEM_MSG, RefreshableItem.SAVING_ACCOUNTS);
+            return new FetchAccountsResponse(Collections.emptyList());
+        }
+
         return transactionalAccountRefreshController.fetchSavingsAccounts();
     }
 
     @Override
     public FetchTransactionsResponse fetchSavingsTransactions() {
+        if (allowedItemsValidator.isForbiddenToBeRefreshed(RefreshableItem.SAVING_TRANSACTIONS)) {
+            log.info(FETCHING_FORBIDDEN_FOR_ITEM_MSG, RefreshableItem.SAVING_TRANSACTIONS);
+            return new FetchTransactionsResponse(Collections.emptyMap());
+        }
+
         return transactionalAccountRefreshController.fetchSavingsTransactions();
     }
 
@@ -272,11 +293,21 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
 
     @Override
     public FetchAccountsResponse fetchCreditCardAccounts() {
+        if (allowedItemsValidator.isForbiddenToBeRefreshed(RefreshableItem.CREDITCARD_ACCOUNTS)) {
+            log.info(FETCHING_FORBIDDEN_FOR_ITEM_MSG, RefreshableItem.CREDITCARD_ACCOUNTS);
+            return new FetchAccountsResponse(Collections.emptyList());
+        }
+
         return creditCardRefreshController.fetchCreditCardAccounts();
     }
 
     @Override
     public FetchTransactionsResponse fetchCreditCardTransactions() {
+        if (allowedItemsValidator.isForbiddenToBeRefreshed(RefreshableItem.CREDITCARD_ACCOUNTS)) {
+            log.info(FETCHING_FORBIDDEN_FOR_ITEM_MSG, RefreshableItem.CREDITCARD_ACCOUNTS);
+            return new FetchTransactionsResponse(Collections.emptyMap());
+        }
+
         return creditCardRefreshController.fetchCreditCardTransactions();
     }
 
@@ -294,11 +325,21 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
 
     @Override
     public FetchTransferDestinationsResponse fetchTransferDestinations(List<Account> accounts) {
+        if (allowedItemsValidator.isForbiddenToBeRefreshed(RefreshableItem.TRANSFER_DESTINATIONS)) {
+            log.info(FETCHING_FORBIDDEN_FOR_ITEM_MSG, RefreshableItem.TRANSFER_DESTINATIONS);
+            return new FetchTransferDestinationsResponse(Collections.emptyMap());
+        }
+
         return transferDestinationRefreshController.fetchTransferDestinations(accounts);
     }
 
     @Override
     public FetchTransferDestinationsResponse fetchBeneficiaries(List<Account> accounts) {
+        if (allowedItemsValidator.isForbiddenToBeRefreshed(RefreshableItem.LIST_BENEFICIARIES)) {
+            log.info(FETCHING_FORBIDDEN_FOR_ITEM_MSG, RefreshableItem.LIST_BENEFICIARIES);
+            return new FetchTransferDestinationsResponse(Collections.emptyMap());
+        }
+
         return transferDestinationRefreshController.fetchTransferDestinations(accounts);
     }
 
@@ -323,17 +364,21 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
 
     @Override
     public FetchIdentityDataResponse fetchIdentityData() {
+        FetchIdentityDataResponse responseWithEmptyIdentityData =
+                new FetchIdentityDataResponse(
+                        IdentityData.builder().setFullName(null).setDateOfBirth(null).build());
+
+        if (allowedItemsValidator.isForbiddenToBeRefreshed(RefreshableItem.IDENTITY_DATA)) {
+            log.info(FETCHING_FORBIDDEN_FOR_ITEM_MSG, RefreshableItem.IDENTITY_DATA);
+            return responseWithEmptyIdentityData;
+        }
+
         return getAisSupport()
                 .makePartyFetcher(apiClient)
                 .fetchParty()
                 .map(PartyMapper::toIdentityData)
                 .map(FetchIdentityDataResponse::new)
-                .orElse(
-                        new FetchIdentityDataResponse(
-                                IdentityData.builder()
-                                        .setFullName(null)
-                                        .setDateOfBirth(null)
-                                        .build()));
+                .orElse(responseWithEmptyIdentityData);
     }
 
     private boolean isItRefreshRequest() {
