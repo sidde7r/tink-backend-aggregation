@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter;
 
-import static se.tink.backend.aggregation.nxgen.core.account.entity.Party.*;
+import static se.tink.backend.aggregation.nxgen.core.account.entity.Party.Role;
 
 import com.google.common.collect.Sets;
 import java.util.Set;
@@ -111,6 +111,13 @@ public final class BankinterConstants {
         public static final String JSF_PARTIAL = "partial/ajax";
         public static final String REQUESTED_WITH = "XMLHttpRequest";
         public static final String ACCEPT_LANGUAGE = "es-ES";
+    }
+
+    public static class HtmlValues {
+        public static final String HTML_DECLARAITION = "DOCTYPE html PUBLIC";
+        public static final String ROOT_TAG = "#root";
+        public static final String TITLE_TAG = "title";
+        public static final String BANK_ERROR = "Error Bancaonline";
     }
 
     public static class StorageKeys {
