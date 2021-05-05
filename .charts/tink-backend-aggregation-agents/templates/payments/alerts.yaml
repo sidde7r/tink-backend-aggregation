@@ -47,16 +47,6 @@ spec:
         description: Check overall trend for this provider to assess the impact. https://grafana.global-production.tink.network/d/XvmDe8YMz/payments-overview-dashboard?orgId=1
         summary: Threshold exceed for ( <{ $labels.className }> ) for transfers with outcome ( <{ $labels.outcome }> ).
 
-    - alert: TransferFailedOutcomeThresholdIsPassedForSwedbankFallbackAgent
-      expr: sum by (className, outcome) (increase(tink_agent_transfer_total{market="SE", className=~".*(SwedbankFallbackAgent).*", outcome="failed"}[1h])) >= 10
-      labels:
-        severity: urgent
-        who: payments-connectivity
-        priority: P3
-      annotations:
-        description: Check overall trend for this provider to assess the impact. https://grafana.global-production.tink.network/d/XvmDe8YMz/payments-overview-dashboard?orgId=1
-        summary: Threshold exceed for ( <{ $labels.className }> ) for transfers with outcome ( <{ $labels.outcome }> ).
-
     - alert: TransferUnavailableOutcomeThresholdIsPassedForSwedenTier2Banks
       expr: sum by (className, outcome) (increase(tink_agent_transfer_total{market="SE", className!~".*(nordea|seb|swedbank|handelsbanken).*", outcome=~"unavailable"}[15m])) >= 15
       labels:
