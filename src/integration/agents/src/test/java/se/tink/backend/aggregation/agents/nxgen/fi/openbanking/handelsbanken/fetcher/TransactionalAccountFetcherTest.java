@@ -94,7 +94,7 @@ public class TransactionalAccountFetcherTest {
         // then
         assertThat(transaction)
                 .hasExactAmount(new ExactCurrencyAmount(BigDecimal.valueOf(-3), "EUR"));
-        assertThat(transaction).hasDescription("DUMMY NAME 1.-31.12.2020");
+        assertThat(transaction).hasDescription("CREDITOR NAME");
     }
 
     @Test
@@ -117,7 +117,7 @@ public class TransactionalAccountFetcherTest {
         // then
         assertThat(transaction)
                 .hasExactAmount(new ExactCurrencyAmount(BigDecimal.valueOf(3), "EUR"));
-        assertThat(transaction).hasDescription("DUMMY NAME 1.-31.12.2020");
+        assertThat(transaction).hasDescription("CREDITOR NAME");
     }
 
     @Test

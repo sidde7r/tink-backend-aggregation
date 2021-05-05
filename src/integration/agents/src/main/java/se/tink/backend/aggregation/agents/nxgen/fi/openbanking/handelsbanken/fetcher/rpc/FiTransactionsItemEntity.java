@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.openbanking.handelsbanken.fetcher.rpc;
 
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.fetcher.entity.TransactionsItemEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -14,7 +15,7 @@ public class FiTransactionsItemEntity extends TransactionsItemEntity {
         return Transaction.builder()
                 .setDate(getBookingDate())
                 .setAmount(getTinkAmount())
-                .setDescription(getRemittanceInformation())
+                .setDescription(getDescription())
                 .setPending(false)
                 .setPayload(
                         TransactionPayloadTypes.DETAILS,
@@ -25,5 +26,9 @@ public class FiTransactionsItemEntity extends TransactionsItemEntity {
     @Override
     public Boolean hasDate() {
         return getBookingDate() != null;
+    }
+
+    private String getDescription() {
+        return Optional.ofNullable(getDebtorName()).orElse(getCreditorName());
     }
 }
