@@ -35,6 +35,7 @@ import se.tink.backend.aggregation.agents.utils.authentication.encap3.models.Dev
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.bankid.BankIdAuthenticatorNO;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.i18n.Catalog;
 
@@ -66,9 +67,14 @@ public class SparebankenSorMultiFactorAuthenticator implements BankIdAuthenticat
 
         // TODO: Sor returns a 500 for incorrect nationalId, have to verify with check digits before
         // this request.
-        VerifyCustomerResponse response = apiClient.verifyCustomer(nationalId, mobilenumber);
-        if (!response.isValid()) {
-            throw LoginError.INCORRECT_CREDENTIALS.exception();
+        try {
+            VerifyCustomerResponse response = apiClient.verifyCustomer(nationalId, mobilenumber);
+            if (!response.isValid()) {
+                throw LoginError.INCORRECT_CREDENTIALS.exception();
+            }
+        } catch (HttpResponseException httpException) {
+            handleError(httpException);
+            throw httpException;
         }
 
         apiClient.configureBankId(nationalId, mobilenumber);
@@ -212,5 +218,11 @@ public class SparebankenSorMultiFactorAuthenticator implements BankIdAuthenticat
                         catalog.getString(
                                 SparebankenSorConstants.UserMessage.ACTIVATION_CODE_NOT_VALID))
                 .build();
+    }
+
+    private void handleError(HttpResponseException httpException) {
+        if (Integer.valueOf(500).equals(httpException.getResponse().getStatus())) {
+            throw LoginError.INCORRECT_CREDENTIALS.exception(httpException);
+        }
     }
 }
