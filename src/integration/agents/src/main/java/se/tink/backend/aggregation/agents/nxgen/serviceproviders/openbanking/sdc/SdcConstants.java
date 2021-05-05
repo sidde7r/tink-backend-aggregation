@@ -60,4 +60,9 @@ public final class SdcConstants {
     public static class CredentialKeys {
         public static final String IBAN = "iban";
     }
+
+    public static class ErrorMessages {
+        public static final String TOKEN_EXPIRED =
+                "Lifetime validation failed. The token is expired.";
+    }
 }
