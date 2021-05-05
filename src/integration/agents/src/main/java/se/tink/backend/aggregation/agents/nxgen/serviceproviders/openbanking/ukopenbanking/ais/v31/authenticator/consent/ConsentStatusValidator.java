@@ -1,9 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.authenticator.consent;
 
 import org.apache.commons.lang3.StringUtils;
-import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingV31Constants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.authenticator.SessionKiller;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticatorConstants;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
@@ -17,12 +17,14 @@ public class ConsentStatusValidator {
         this.storage = storage;
     }
 
-    public boolean validate() {
+    public void validate() {
         String consentId = restoreConsentId();
+        if (StringUtils.isEmpty(consentId)) {
+            return;
+        }
+
         checkIfMarkedWithErrorFlag(consentId);
         checkIfAuthorised(consentId);
-
-        return true;
     }
 
     private String restoreConsentId() {
@@ -32,28 +34,23 @@ public class ConsentStatusValidator {
                 .orElse(StringUtils.EMPTY);
     }
 
-    private void checkIfAuthorised(String consentId) {
-        if (StringUtils.isNotEmpty(consentId) && isNotAuthorised(consentId)) {
-            cleanUpAndExpireSession("Invalid consent status. Expiring the session.");
-        }
-    }
-
     // TODO: To be removed when consent management becomes stable
     private void checkIfMarkedWithErrorFlag(String consentId) {
         if (consentId.equals(OpenIdAuthenticatorConstants.CONSENT_ERROR_OCCURRED)) {
-            cleanUpAndExpireSession(
+            SessionKiller.cleanUpAndExpireSession(
+                    storage,
                     "These credentials were marked with CONSENT_ERROR_OCCURRED flag in the past. Expiring the session.");
+        }
+    }
+
+    private void checkIfAuthorised(String consentId) {
+        if (isNotAuthorised(consentId)) {
+            SessionKiller.cleanUpAndExpireSession(
+                    storage, "Invalid consent status. Expiring the session.");
         }
     }
 
     private boolean isNotAuthorised(String consentId) {
         return apiClient.fetchConsent(consentId).getData().isNotAuthorised();
-    }
-
-    private void cleanUpAndExpireSession(String errorMsg) {
-        storage.remove(UkOpenBankingV31Constants.PersistentStorageKeys.AIS_ACCOUNT_CONSENT_ID);
-        storage.remove(UkOpenBankingV31Constants.PersistentStorageKeys.AIS_ACCESS_TOKEN);
-
-        throw SessionError.CONSENT_INVALID.exception(errorMsg);
     }
 }
