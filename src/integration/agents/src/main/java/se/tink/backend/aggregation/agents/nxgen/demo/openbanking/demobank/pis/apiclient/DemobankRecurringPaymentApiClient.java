@@ -135,23 +135,28 @@ public class DemobankRecurringPaymentApiClient implements DemobankPaymentApiClie
             PaymentRequest paymentRequest) {
         final Payment payment = paymentRequest.getPayment();
 
-        final AccountIdentifierDto debtorAccount = mappers.createDebtorAccount(payment);
+        final Optional<AccountIdentifierDto> maybeDebtorAccount =
+                mappers.createDebtorAccount(payment);
         final AccountIdentifierDto creditorAccount = mappers.createCreditorAccount(payment);
         final AmountDto amountDto = mappers.createAmountDto(payment);
 
-        return RecurringPaymentInitiationDto.builder()
-                .debtorAccount(debtorAccount)
-                .creditorAccount(creditorAccount)
-                .amount(amountDto)
-                .creditorName(payment.getCreditor().getName())
-                .remittanceInformationUnstructured(
-                        mappers.createUnstructuredRemittanceInfo(payment))
-                .remittanceInformationStructured(mappers.createStructuredRemittanceInfo(payment))
-                .startDate(payment.getStartDate().toString())
-                .endDate(payment.getEndDate().toString())
-                .frequency(payment.getFrequency().toString())
-                .dayOfExecution(payment.getDayOfExecution())
-                .build();
+        RecurringPaymentInitiationDto.RecurringPaymentInitiationDtoBuilder builder =
+                RecurringPaymentInitiationDto.builder()
+                        .creditorAccount(creditorAccount)
+                        .amount(amountDto)
+                        .creditorName(payment.getCreditor().getName())
+                        .remittanceInformationUnstructured(
+                                mappers.createUnstructuredRemittanceInfo(payment))
+                        .remittanceInformationStructured(
+                                mappers.createStructuredRemittanceInfo(payment))
+                        .startDate(payment.getStartDate().toString())
+                        .endDate(payment.getEndDate().toString())
+                        .frequency(payment.getFrequency().toString())
+                        .dayOfExecution(payment.getDayOfExecution());
+
+        maybeDebtorAccount.ifPresent(builder::debtorAccount);
+
+        return builder.build();
     }
 
     private PaymentResponse convertResponseDtoToPaymentResponse(

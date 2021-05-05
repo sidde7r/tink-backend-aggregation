@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.ap
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.apiclient.dto.RemittanceInformationStructuredDto;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.entity.PaymentStatusDto;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.enums.PaymentStatus;
@@ -18,24 +19,23 @@ import se.tink.libraries.transfer.enums.RemittanceInformationType;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 public class DemobankDtoMappers {
-    public AccountIdentifierDto createDebtorAccount(Payment payment) {
-        final Debtor debtor = payment.getDebtor();
-
-        return AccountIdentifierDto.builder()
-                .accountId(debtor.getAccountNumber())
-                .identifier(debtor.getAccountIdentifier().getIdentifier())
-                .type(debtor.getAccountIdentifierType())
-                .build();
+    public Optional<AccountIdentifierDto> createDebtorAccount(Payment payment) {
+        return Optional.ofNullable(payment.getDebtor())
+                .map(
+                        debtor ->
+                                createAccountIdentifierDto(
+                                        debtor.getAccountNumber(),
+                                        debtor.getAccountIdentifier().getIdentifier(),
+                                        debtor.getAccountIdentifierType()));
     }
 
     public AccountIdentifierDto createCreditorAccount(Payment payment) {
         final Creditor creditor = payment.getCreditor();
 
-        return AccountIdentifierDto.builder()
-                .accountId(creditor.getAccountNumber())
-                .identifier(creditor.getAccountIdentifier().getIdentifier())
-                .type(creditor.getAccountIdentifierType())
-                .build();
+        return createAccountIdentifierDto(
+                creditor.getAccountNumber(),
+                creditor.getAccountIdentifier().getIdentifier(),
+                creditor.getAccountIdentifierType());
     }
 
     public AmountDto createAmountDto(Payment payment) {
@@ -94,7 +94,7 @@ public class DemobankDtoMappers {
         return new Creditor(createAccountIdentifier(accountIdentifier), creditorName);
     }
 
-    public AccountIdentifier createAccountIdentifier(AccountIdentifierDto accountIdentifier) {
+    private AccountIdentifier createAccountIdentifier(AccountIdentifierDto accountIdentifier) {
         return new IbanIdentifier(accountIdentifier.getIdentifier());
     }
 
@@ -120,5 +120,14 @@ public class DemobankDtoMappers {
             default:
                 return PaymentStatus.UNDEFINED;
         }
+    }
+
+    private static AccountIdentifierDto createAccountIdentifierDto(
+            String accountId, String identifier, AccountIdentifierType type) {
+        return AccountIdentifierDto.builder()
+                .accountId(accountId)
+                .identifier(identifier)
+                .type(type)
+                .build();
     }
 }
