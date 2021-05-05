@@ -46,11 +46,15 @@ public class SupplementalInformationController {
             log.error(
                     "[SupplementalInformationController] Timeout exception when writing to cache.",
                     e);
+        } catch (InterruptedException e) {
+            log.error(
+                    "[SupplementalInformationController] Interrupted exception when writing to cache.",
+                    e);
+            Thread.currentThread().interrupt();
         } catch (Exception e) {
             log.error(
                     "[SupplementalInformationController] Unhandled exception when writing to cache",
                     e);
-            Thread.currentThread().interrupt();
         }
 
         try {
@@ -84,9 +88,11 @@ public class SupplementalInformationController {
                 if (future == null || !future.get(10, TimeUnit.SECONDS)) {
                     log.error("Failed to clear the cache for {}", mfaId);
                 }
+            } catch (InterruptedException e) {
+                log.error("Interrupted in when clear the cache for {}", mfaId, e);
+                Thread.currentThread().interrupt();
             } catch (Exception e) {
                 log.error("Failed to clear the cache for {}", mfaId, e);
-                Thread.currentThread().interrupt();
             }
         }
     }

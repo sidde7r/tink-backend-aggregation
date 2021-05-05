@@ -14,9 +14,9 @@ import se.tink.libraries.date.ThreadSafeDateFormat;
 
 @JsonObject
 public class OpBankCreditCardTransaction {
-    public String transactionDate;
-    public String explanation;
-    public String amount;
+    private String transactionDate;
+    private String explanation;
+    private String amount;
     private int status;
     private String notEuroAmount;
     private String timestamp;
@@ -69,12 +69,16 @@ public class OpBankCreditCardTransaction {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof OpBankCreditCardTransaction)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof OpBankCreditCardTransaction)) {
+            return false;
+        }
         OpBankCreditCardTransaction that = (OpBankCreditCardTransaction) o;
         return status == that.status
-                && com.google.common.base.Objects.equal(transactionDate, that.transactionDate)
-                && com.google.common.base.Objects.equal(explanation, that.explanation)
-                && com.google.common.base.Objects.equal(amount, that.amount);
+                && Objects.equals(transactionDate, that.transactionDate)
+                && Objects.equals(explanation, that.explanation)
+                && Objects.equals(amount, that.amount);
     }
 }
