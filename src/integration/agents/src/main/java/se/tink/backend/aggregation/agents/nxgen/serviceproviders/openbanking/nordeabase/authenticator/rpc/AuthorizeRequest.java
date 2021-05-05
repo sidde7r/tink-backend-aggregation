@@ -26,7 +26,7 @@ public class AuthorizeRequest {
     private List<String> accountList = ImmutableList.of(BodyValues.ALL_ACCOUNTS);
 
     @JsonProperty("skip_account_selection")
-    private boolean skipAccountSelection = BodyValues.SKIP_ACCOUNT_SELECTION;
+    private boolean skipAccountSelection;
 
     private AuthorizeRequest(AuthorizeRequestBuilder builder) {
         this.country = builder.country;
@@ -36,6 +36,7 @@ public class AuthorizeRequest {
         this.redirectUri = builder.redirectUri;
         this.maxTransactionHistory = builder.maxTransactionHistory;
         this.duration = builder.duration;
+        this.skipAccountSelection = builder.skipAccountSelection;
     }
 
     public static class AuthorizeRequestBuilder {
@@ -46,6 +47,7 @@ public class AuthorizeRequest {
         private String state;
         private int maxTransactionHistory;
         private int duration;
+        private boolean skipAccountSelection;
 
         public AuthorizeRequestBuilder withAuthenticationMethod(String authenticationMethod) {
             this.authenticationMethod = authenticationMethod;
@@ -79,6 +81,11 @@ public class AuthorizeRequest {
 
         public AuthorizeRequestBuilder withDuration(int duration) {
             this.duration = duration;
+            return this;
+        }
+
+        public AuthorizeRequestBuilder withSkipAccountSelection(boolean selection) {
+            this.skipAccountSelection = selection;
             return this;
         }
 
