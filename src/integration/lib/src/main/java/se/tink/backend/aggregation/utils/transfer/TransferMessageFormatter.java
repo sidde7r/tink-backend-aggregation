@@ -3,10 +3,11 @@ package se.tink.backend.aggregation.utils.transfer;
 import com.google.common.base.CharMatcher;
 import com.google.common.base.Joiner;
 import com.google.common.base.Objects;
-import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import javax.annotation.Nonnull;
+import lombok.RequiredArgsConstructor;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.i18n.LocalizableParametrizedEnum;
 import se.tink.libraries.i18n.LocalizableParametrizedKey;
@@ -22,21 +23,11 @@ import se.tink.libraries.transfer.rpc.Transfer;
  * <p>The normalizer is an optional, but most banks only allow for a certain charset to be used as
  * message and at that point the normalizer can be used for ensuring validity of message.
  */
+@RequiredArgsConstructor
 public class TransferMessageFormatter {
     private final Catalog catalog;
     private final TransferMessageLengthConfig messageLengthConfig;
-    private final StringNormalizer stringNormalizer;
-
-    public TransferMessageFormatter(
-            Catalog catalog,
-            TransferMessageLengthConfig bankTransferMessageLengthConfig,
-            StringNormalizer bankTransferStringNormalizer) {
-        Preconditions.checkArgument(bankTransferStringNormalizer != null);
-
-        this.catalog = catalog;
-        this.messageLengthConfig = bankTransferMessageLengthConfig;
-        this.stringNormalizer = bankTransferStringNormalizer;
-    }
+    @Nonnull private final StringNormalizer stringNormalizer;
 
     /**
      * Returns formatted source/destination message for a transfer to be commonly used in agents,
