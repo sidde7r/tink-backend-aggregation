@@ -81,6 +81,6 @@ public class FieldBuilderTest {
         // then
         assertThat(exception)
                 .isInstanceOf(LoginException.class)
-                .hasMessage("Startcode fo Chip tan not found");
+                .hasMessage("Startcode for Chip tan not found");
     }
 }
