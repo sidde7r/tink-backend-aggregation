@@ -1028,31 +1028,12 @@ spec:
     ### Split login success rates - Authentication Errors - OB ###
     ##############################################################
 
-    - alert: split_login_success_rates_below50_and_greater30_with_authentication_errors_and_attempt_limit_it_ob
-      expr: |
-        (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="IT"}))
-                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="IT"})) < 0.5
-        and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="IT"}))
-                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="IT"})) >= 0.3
-        and sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="IT"})  > 10
-      for: {{ .Values.p4WaitTimeBeforeFiringAlert }}
-      labels:
-        severity: urgent
-        priority: P4
-        who: integration-nazguls
-      annotations:
-        description: {{ .Values.kibanaLink }}
-          {{ .Values.grafanaLink }}
-        summary: Login success rate for OB agents and for one of login type with authentication errors is between 30 - 50% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
-          the last 30 minutes.
-        tags: {{ .Values.tags }}
-
-    - alert: split_login_success_rates_below30_and_greater20_with_authentication_errors_and_attempt_limit_it_ob
+    - alert: split_login_success_rates_below30_and_greater10_with_authentication_errors_and_attempt_limit_it_ob
       expr: |
         (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="IT"}))
                     / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="IT"})) < 0.3
         and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="IT"}))
-                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="IT"})) >= 0.2
+                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="IT"})) >= 0.1
         and sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="IT"})  > 10
       for: {{ .Values.p3WaitTimeBeforeFiringAlert }}
       labels:
@@ -1062,26 +1043,7 @@ spec:
       annotations:
         description: {{ .Values.kibanaLink }}
           {{ .Values.grafanaLink }}
-        summary: Login success rate for OB agents and for one of login type with authentication errors is between 20 - 30% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
-          the last 30 minutes.
-        tags: {{ .Values.tags }}
-
-    - alert: split_login_success_rates_below20_and_greater10_with_authentication_errors_and_attempt_limit_it_ob
-      expr: |
-        (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="IT"}))
-                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="IT"})) < 0.2
-        and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="IT"}))
-                    / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="IT"})) >= 0.1
-        and sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="IT"})  > 10
-      for: {{ .Values.p2WaitTimeBeforeFiringAlert }}
-      labels:
-        severity: urgent
-        priority: P2
-        who: integration-nazguls
-      annotations:
-        description: {{ .Values.kibanaLink }}
-          {{ .Values.grafanaLink }}
-        summary: Login success rate for OB agents and for one of login type with authentication errors is between 10 - 20% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+        summary: Login action <{ $labels.action }>  success rate for OB agents and for one of login type with authentication errors is between 10 - 30% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
           the last 30 minutes.
         tags: {{ .Values.tags }}
 
@@ -1098,7 +1060,7 @@ spec:
       annotations:
         description: {{ .Values.kibanaLink }}
           {{ .Values.grafanaLink }}
-        summary: Login success rate for OB agents and for one of login type with authentication errors is below 10% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+        summary: Login action <{ $labels.action }>  success rate for OB agents and for one of login type with authentication errors is below 10% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
           the last 30 minutes.
         tags: {{ .Values.tags }}
 
