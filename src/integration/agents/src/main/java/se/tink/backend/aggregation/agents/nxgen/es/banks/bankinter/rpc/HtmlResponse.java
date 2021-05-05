@@ -34,6 +34,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterConstants;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterConstants.HtmlValues;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
@@ -207,7 +208,16 @@ public class HtmlResponse {
     }
 
     public boolean hasError() {
-        final String error = evaluateXPath("//div[contains(@class, 'genericError')]", String.class);
-        return StringUtils.isNotBlank(error);
+        if (this.jsoupDocument
+                .getElementsByTag(HtmlValues.ROOT_TAG)
+                .toString()
+                .contains(HtmlValues.HTML_DECLARAITION)) {
+            return this.jsoupDocument
+                    .select(HtmlValues.TITLE_TAG)
+                    .toString()
+                    .contains(HtmlValues.BANK_ERROR);
+        }
+        return StringUtils.isNotBlank(
+                evaluateXPath("//div[contains(@class, 'genericError')]", String.class));
     }
 }
