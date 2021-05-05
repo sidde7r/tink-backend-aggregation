@@ -186,6 +186,7 @@ public class ClientConfigurationMetaInfoHandler {
 
         int lastIndexPackageSubdivider = fullyQualifiedClassName.lastIndexOf('.');
         String packageToScan = fullyQualifiedClassName.substring(0, lastIndexPackageSubdivider);
+        log.info("Package to scan is : {}", packageToScan);
         Reflections reflectionsPackageToScan =
                 new Reflections(
                         ClasspathHelper.forPackage(packageToScan), new SubTypesScanner(false));
@@ -194,7 +195,9 @@ public class ClientConfigurationMetaInfoHandler {
                         reflectionsPackageToScan.getSubTypesOf(ClientConfiguration.class).stream()
                                 .filter(clazz -> !clazz.isInterface())
                                 .collect(Collectors.toSet()));
-
+        log.info(
+                "clientConfigurationClassForAgentSet are  : {}",
+                clientConfigurationClassForAgentSet);
         if (clientConfigurationClassForAgentSet.size() > 1) {
             throw new IllegalStateException(
                     "Found more than one class implementing ClientConfiguration: "
