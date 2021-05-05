@@ -131,13 +131,14 @@ public class SwedbankDefaultBankIdAuthenticator
                     return BankIdStatus.FAILED_UNKNOWN;
                 }
 
+                if (SwedbankBaseConstants.BankIdResponseStatus.USER_SIGN.equals(previousStatus)
+                        || pollCount > 35) {
+                    return BankIdStatus.TIMEOUT;
+                }
+
                 if (SwedbankBaseConstants.BankIdResponseStatus.CLIENT_NOT_STARTED.equals(
                         previousStatus)) {
                     return BankIdStatus.EXPIRED_AUTOSTART_TOKEN;
-                }
-
-                if (SwedbankBaseConstants.BankIdResponseStatus.USER_SIGN.equals(previousStatus)) {
-                    return BankIdStatus.TIMEOUT;
                 }
             } else if (errorResponse.hasErrorCode(
                     SwedbankBaseConstants.BankErrorMessage.SESSION_INVALIDATED)) {
