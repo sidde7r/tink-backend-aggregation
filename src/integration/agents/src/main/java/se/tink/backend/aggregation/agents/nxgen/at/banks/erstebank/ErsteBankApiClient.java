@@ -33,16 +33,16 @@ public class ErsteBankApiClient {
             String baseUrl, String resource, String accept, String bearer) {
         return getRequest(baseUrl, resource, accept)
                 .header(
-                        ErsteBankConstants.HEADERS.X_MOBILE_APP_ID,
-                        ErsteBankConstants.HEADERS.X_MOBILE_APP_ID_IOS)
+                        ErsteBankConstants.Headers.X_MOBILE_APP_ID,
+                        ErsteBankConstants.Headers.X_MOBILE_APP_ID_IOS)
                 .header(
-                        ErsteBankConstants.HEADERS.ENVIROMENT,
-                        ErsteBankConstants.HEADERS.ENVIROMENT_PROD)
-                .header(ErsteBankConstants.HEADERS.AUTHORIZATION, bearer)
+                        ErsteBankConstants.Headers.ENVIROMENT,
+                        ErsteBankConstants.Headers.ENVIROMENT_PROD)
+                .header(ErsteBankConstants.Headers.AUTHORIZATION, bearer)
                 .header(
-                        ErsteBankConstants.HEADERS.X_APP_ID,
-                        ErsteBankConstants.HEADERS.X_APP_ID_TRANSACTIONAPP)
-                .header(ErsteBankConstants.HEADERS.X_REQUEST_ID, generateGuid());
+                        ErsteBankConstants.Headers.X_APP_ID,
+                        ErsteBankConstants.Headers.X_APP_ID_TRANSACTIONAPP)
+                .header(ErsteBankConstants.Headers.X_REQUEST_ID, generateGuid());
     }
 
     private RequestBuilder getRequest(String baseUrl, String resource, String accept) {
@@ -53,23 +53,23 @@ public class ErsteBankApiClient {
             String baseUrl, String resource, String accept, String redirectUrl) {
         return getRequest(baseUrl, resource, accept)
                 .queryParam(
-                        ErsteBankConstants.QUERYPARAMS.RESPONSE_TYPE,
-                        ErsteBankConstants.QUERYPARAMS.RESPONSE_TYPE_TOKEN)
+                        ErsteBankConstants.QueryParams.RESPONSE_TYPE,
+                        ErsteBankConstants.QueryParams.RESPONSE_TYPE_TOKEN)
                 .queryParam(
-                        ErsteBankConstants.QUERYPARAMS.CLIENT_ID,
-                        ErsteBankConstants.QUERYPARAMS.CLIENT_ID_TRANSACTIONAPP)
-                .queryParam(ErsteBankConstants.QUERYPARAMS.REDIRECT_URI, redirectUrl);
+                        ErsteBankConstants.QueryParams.CLIENT_ID,
+                        ErsteBankConstants.QueryParams.CLIENT_ID_TRANSACTIONAPP)
+                .queryParam(ErsteBankConstants.QueryParams.REDIRECT_URI, redirectUrl);
     }
 
     private EncryptionValuesEntity GetEncryptionValues(String username) throws LoginException {
         String html =
                 getRequest(
-                                ErsteBankConstants.URLS.LOGIN_BASE,
-                                ErsteBankConstants.URLS.OAUTH,
-                                ErsteBankConstants.QUERYPARAMS.SPARKASSE_ACCEPT,
-                                ErsteBankConstants.QUERYPARAMS.REDIRECT_URI_AUTHENTICATION)
+                                ErsteBankConstants.Urls.LOGIN_BASE,
+                                ErsteBankConstants.Urls.OAUTH,
+                                ErsteBankConstants.QueryParams.SPARKASSE_ACCEPT,
+                                ErsteBankConstants.QueryParams.REDIRECT_URI_AUTHENTICATION)
                         .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
-                        .post(String.class, ErsteBankConstants.BODY.USERNAME + username);
+                        .post(String.class, ErsteBankConstants.Body.USERNAME + username);
 
         return ErsteBankCryptoUtil.getEncryptionValues(html);
     }
@@ -77,21 +77,21 @@ public class ErsteBankApiClient {
     private void getCookies() {
         HttpResponse response =
                 getRequest(
-                                ErsteBankConstants.URLS.LOGIN_BASE,
-                                ErsteBankConstants.URLS.OAUTH,
-                                ErsteBankConstants.QUERYPARAMS.SPARKASSE_ACCEPT,
-                                ErsteBankConstants.QUERYPARAMS.REDIRECT_URI_AUTHENTICATION)
+                                ErsteBankConstants.Urls.LOGIN_BASE,
+                                ErsteBankConstants.Urls.OAUTH,
+                                ErsteBankConstants.QueryParams.SPARKASSE_ACCEPT,
+                                ErsteBankConstants.QueryParams.REDIRECT_URI_AUTHENTICATION)
                         .get(HttpResponse.class);
     }
 
     private void sendJavascriptEnabled() {
         getRequest(
-                        ErsteBankConstants.URLS.LOGIN_BASE,
-                        ErsteBankConstants.URLS.OAUTH,
-                        ErsteBankConstants.QUERYPARAMS.SPARKASSE_ACCEPT,
-                        ErsteBankConstants.QUERYPARAMS.REDIRECT_URI_AUTHENTICATION)
+                        ErsteBankConstants.Urls.LOGIN_BASE,
+                        ErsteBankConstants.Urls.OAUTH,
+                        ErsteBankConstants.QueryParams.SPARKASSE_ACCEPT,
+                        ErsteBankConstants.QueryParams.REDIRECT_URI_AUTHENTICATION)
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
-                .post(HttpResponse.class, ErsteBankConstants.BODY.JAVASCRIPT_ENABLED);
+                .post(HttpResponse.class, ErsteBankConstants.Body.JAVASCRIPT_ENABLED);
     }
 
     public EncryptionValuesEntity getEncryptionValues(String username) throws LoginException {
@@ -104,24 +104,24 @@ public class ErsteBankApiClient {
 
         Form form =
                 Form.builder()
-                        .put(ErsteBankConstants.BODY.RSA_ENCRYPTED, rsa)
+                        .put(ErsteBankConstants.Body.RSA_ENCRYPTED, rsa)
                         .put(
-                                ErsteBankConstants.BODY.AUTHENTICATION_METHOD,
-                                ErsteBankConstants.BODY.AUTHENTICATION_METHOD_PASSWORD)
+                                ErsteBankConstants.Body.AUTHENTICATION_METHOD,
+                                ErsteBankConstants.Body.AUTHENTICATION_METHOD_PASSWORD)
                         .build();
 
         return getRequest(
-                        ErsteBankConstants.URLS.LOGIN_BASE,
-                        ErsteBankConstants.URLS.OAUTH,
-                        ErsteBankConstants.QUERYPARAMS.SPARKASSE_ACCEPT,
-                        ErsteBankConstants.QUERYPARAMS.REDIRECT_URI_AUTHENTICATION)
+                        ErsteBankConstants.Urls.LOGIN_BASE,
+                        ErsteBankConstants.Urls.OAUTH,
+                        ErsteBankConstants.QueryParams.SPARKASSE_ACCEPT,
+                        ErsteBankConstants.QueryParams.REDIRECT_URI_AUTHENTICATION)
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
                 .post(HttpResponse.class, form.serialize());
     }
 
     public TokenEntity getTokenFromStorage() {
         return persistentStorage
-                .get(ErsteBankConstants.STORAGE.TOKEN_ENTITY, TokenEntity.class)
+                .get(ErsteBankConstants.Storage.TOKEN_ENTITY, TokenEntity.class)
                 .orElseThrow(() -> new NoSuchElementException("Token missing"));
     }
 
@@ -131,67 +131,67 @@ public class ErsteBankApiClient {
 
     public AccountResponse fetchAccounts() {
         TokenEntity token = getTokenFromStorage();
-        String bearer = ErsteBankConstants.HEADERS.BEARER + token.getToken();
+        String bearer = ErsteBankConstants.Headers.BEARER + token.getToken();
 
         return getRequestWithHeaders(
-                        ErsteBankConstants.URLS.GEORGE_GO_BASE,
-                        ErsteBankConstants.URLS.ACCOUNT,
-                        ErsteBankConstants.HEADERS.ACCEPT,
+                        ErsteBankConstants.Urls.GEORGE_GO_BASE,
+                        ErsteBankConstants.Urls.ACCOUNT,
+                        ErsteBankConstants.Headers.ACCEPT,
                         bearer)
                 .queryParam(
-                        ErsteBankConstants.QUERYPARAMS.FEATURES,
-                        ErsteBankConstants.QUERYPARAMS.FEATURES_ALL)
+                        ErsteBankConstants.QueryParams.FEATURES,
+                        ErsteBankConstants.QueryParams.FEATURES_ALL)
                 .get(AccountResponse.class);
     }
 
     private String getTransactionUrl(String url) {
-        return String.format(ErsteBankConstants.PATTERN.TRANSACTION_FORMAT, url);
+        return String.format(ErsteBankConstants.Patterns.TRANSACTION_FORMAT, url);
     }
 
     public TransactionsResponse fetchTransactions(int page, String accountUrl) {
         TokenEntity token = getTokenFromStorage();
-        String bearer = ErsteBankConstants.HEADERS.BEARER + token.getToken();
+        String bearer = ErsteBankConstants.Headers.BEARER + token.getToken();
         String resource = getTransactionUrl(accountUrl);
 
         return getRequestWithHeaders(
-                        ErsteBankConstants.URLS.GEORGE_GO_BASE,
+                        ErsteBankConstants.Urls.GEORGE_GO_BASE,
                         resource,
-                        ErsteBankConstants.HEADERS.ACCEPT,
+                        ErsteBankConstants.Headers.ACCEPT,
                         bearer)
-                .queryParam(ErsteBankConstants.QUERYPARAMS.PAGE, Integer.toString(page))
+                .queryParam(ErsteBankConstants.QueryParams.PAGE, Integer.toString(page))
                 .queryParam(
-                        ErsteBankConstants.QUERYPARAMS.FEATURES,
-                        ErsteBankConstants.QUERYPARAMS.FEATURES_ALL)
+                        ErsteBankConstants.QueryParams.FEATURES,
+                        ErsteBankConstants.QueryParams.FEATURES_ALL)
                 .get(TransactionsResponse.class);
     }
 
     public void logout() {
         TokenEntity token = getTokenFromStorage();
-        String bearer = ErsteBankConstants.HEADERS.BEARER + token.getToken();
+        String bearer = ErsteBankConstants.Headers.BEARER + token.getToken();
 
         getRequestWithHeaders(
-                        ErsteBankConstants.URLS.SPARKASSE_BASE,
-                        ErsteBankConstants.URLS.LOGOUT,
+                        ErsteBankConstants.Urls.SPARKASSE_BASE,
+                        ErsteBankConstants.Urls.LOGOUT,
                         MediaType.APPLICATION_JSON,
                         bearer)
                 .delete(HttpResponse.class);
     }
 
     public void saveToken(TokenEntity tokenEntity) {
-        persistentStorage.put(ErsteBankConstants.STORAGE.TOKEN_ENTITY, tokenEntity);
+        persistentStorage.put(ErsteBankConstants.Storage.TOKEN_ENTITY, tokenEntity);
     }
 
     public boolean tokenExists() {
-        return persistentStorage.containsKey(ErsteBankConstants.STORAGE.TOKEN_ENTITY);
+        return persistentStorage.containsKey(ErsteBankConstants.Storage.TOKEN_ENTITY);
     }
 
     // Sidentity
 
     public PollResponse pollStatus() {
-        return getRequest(ErsteBankConstants.URLS.LOGIN_BASE, ErsteBankConstants.URLS.POLL, "*/*")
+        return getRequest(ErsteBankConstants.Urls.LOGIN_BASE, ErsteBankConstants.Urls.POLL, "*/*")
                 .queryParam(
-                        ErsteBankConstants.QUERYPARAMS.CLIENT_ID,
-                        ErsteBankConstants.QUERYPARAMS.CLIENT_ID_TRANSACTIONAPP)
+                        ErsteBankConstants.QueryParams.CLIENT_ID,
+                        ErsteBankConstants.QueryParams.CLIENT_ID_TRANSACTIONAPP)
                 .post(PollResponse.class);
     }
 
@@ -201,12 +201,12 @@ public class ErsteBankApiClient {
 
         String html =
                 getRequest(
-                                ErsteBankConstants.URLS.LOGIN_BASE,
-                                ErsteBankConstants.URLS.OAUTH,
-                                ErsteBankConstants.QUERYPARAMS.SPARKASSE_ACCEPT,
-                                ErsteBankConstants.QUERYPARAMS.REDIRECT_URI_AUTHENTICATION)
+                                ErsteBankConstants.Urls.LOGIN_BASE,
+                                ErsteBankConstants.Urls.OAUTH,
+                                ErsteBankConstants.QueryParams.SPARKASSE_ACCEPT,
+                                ErsteBankConstants.QueryParams.REDIRECT_URI_AUTHENTICATION)
                         .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
-                        .post(String.class, ErsteBankConstants.BODY.USERNAME + username);
+                        .post(String.class, ErsteBankConstants.Body.USERNAME + username);
 
         return ErsteBankCryptoUtil.getSidentityCode(html);
     }
@@ -214,10 +214,10 @@ public class ErsteBankApiClient {
     public TokenEntity getSidentityToken() throws LoginException {
         HttpResponse response =
                 getRequest(
-                                ErsteBankConstants.URLS.LOGIN_BASE,
-                                ErsteBankConstants.URLS.OAUTH,
-                                ErsteBankConstants.QUERYPARAMS.SPARKASSE_ACCEPT,
-                                ErsteBankConstants.QUERYPARAMS.REDIRECT_URI_AUTHENTICATION)
+                                ErsteBankConstants.Urls.LOGIN_BASE,
+                                ErsteBankConstants.Urls.OAUTH,
+                                ErsteBankConstants.QueryParams.SPARKASSE_ACCEPT,
+                                ErsteBankConstants.QueryParams.REDIRECT_URI_AUTHENTICATION)
                         .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
                         .post(HttpResponse.class);
 

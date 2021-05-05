@@ -6,7 +6,7 @@ import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.ErsteBankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.ErsteBankConstants;
-import se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.ErsteBankConstants.PAYLOAD;
+import se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.ErsteBankConstants.Payload;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.ErsteBankCryptoUtil;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.password.authenticator.entity.EncryptionValuesEntity;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.password.authenticator.entity.TokenEntity;
@@ -30,7 +30,7 @@ public class ErsteBankPasswordAuthenticator implements PasswordAuthenticator {
         final EncryptionValuesEntity encryptionValuesEntity =
                 ersteBankApiClient.getEncryptionValues(username);
         final String rsa = getRsa(encryptionValuesEntity, password);
-        credentials.setSensitivePayload(PAYLOAD.RSA, rsa);
+        credentials.setSensitivePayload(Payload.RSA, rsa);
         final HttpResponse response = ersteBankApiClient.sendPassword(rsa);
 
         if (containsToken(response)) {

@@ -7,19 +7,19 @@ public class ErsteBankConstants {
 
     public static final String LOCATION = "Location";
 
-    public static class ACCOUNTYPE {
+    public static class AccountType {
         public static final String CHECKING = "GIRO";
         public static final String SAVING = "SAVING";
         public static final String BUILDING_SAVING = "BUILDING_SAVING";
         public static final String CARD_CREDIT = "CARD_CREDIT";
     }
 
-    public static class ENCRYPTION {
+    public static class Encryption {
         public static final String RSA = "RSA";
         public static final String HEX_DIGITS = "0123456789ABCDEF";
     }
 
-    public static class URLS {
+    public static class Urls {
         public static final String LOGIN_BASE = "https://login.sparkasse.at";
         public static final String OAUTH = "/sts/oauth/authorize";
         public static final String GEORGE_GO_BASE = "https://georgego.sparkasse.at";
@@ -29,7 +29,7 @@ public class ErsteBankConstants {
         public static final String POLL = "/sts/secapp/secondfactor";
     }
 
-    public static class HEADERS {
+    public static class Headers {
         public static final String ACCEPT = "*/*";
         public static final String X_MOBILE_APP_ID = "x-mobile-app-id";
         public static final String X_MOBILE_APP_ID_IOS = "georgego-ios";
@@ -42,7 +42,7 @@ public class ErsteBankConstants {
         public static final String BEARER = "Bearer ";
     }
 
-    public static class QUERYPARAMS {
+    public static class QueryParams {
         public static final String RESPONSE_TYPE = "response_type";
         public static final String RESPONSE_TYPE_TOKEN = "token";
         public static final String CLIENT_ID = "client_id";
@@ -57,13 +57,13 @@ public class ErsteBankConstants {
         public static final String PAGE = "page";
     }
 
-    public static class STORAGE {
+    public static class Storage {
         public static final String TOKEN_ENTITY = "TOKEN_ENTITY";
         public static final String TRANSACTIONSURL = "ACCOUNT_URL";
         public static final String CREDITURL = "CREDIT_URL";
     }
 
-    public static class PATTERN {
+    public static class Patterns {
         public static final Pattern SALT =
                 Pattern.compile(
                         "\"saltCode\"\\s+value=\"(.+?)\".*", Pattern.DOTALL | Pattern.MULTILINE);
@@ -84,7 +84,7 @@ public class ErsteBankConstants {
         public static final String TRANSACTION_FORMAT = "/bff/b/products/%s/transactions";
     }
 
-    public static class BODY {
+    public static class Body {
         public static final String USERNAME = "j_username=";
         public static final String JAVASCRIPT_ENABLED = "javaScript=jsOK";
         public static final String RSA_ENCRYPTED = "rsaEncrypted";
@@ -92,7 +92,7 @@ public class ErsteBankConstants {
         public static final String AUTHENTICATION_METHOD_PASSWORD = "PASSWORD";
     }
 
-    public static class LOGTAG {
+    public static class LogTags {
         public static final LogTag UNKNOWN_ACCOUNT_TYPE =
                 LogTag.from("ERSTEBANK_SPARKASSE_ACCOUNT_TYPE");
         public static final LogTag ERROR_DATE_PARSING = LogTag.from("ERSTEBANK_ERROR_PARSING_DATE");
@@ -103,19 +103,19 @@ public class ErsteBankConstants {
         public static final LogTag CREDIT_ACC_ERR = LogTag.from("ERSTEBANK_CREDIT_ACC_ERR");
     }
 
-    public static class DATE {
+    public static class Date {
         public static final String YESTERDAY = "Yesterday";
         public static final String TODAY = "Today";
         public static final String TOMORROW = "Tomorrow";
     }
 
-    public static class SIDENTITY {
+    public static class Sidentity {
         public static final int MAX_SIDENTITY_POLLING_ATTEMPTS = 80;
         public static final String POLL_WAITING = "PENDING";
         public static final String POLL_DONE = "DONE";
     }
 
-    public static class PAYLOAD {
+    public static class Payload {
         public static final String VERIFICATION_CODE = "VERIFICATION_CODE";
         public static final String RSA = "RSA";
     }

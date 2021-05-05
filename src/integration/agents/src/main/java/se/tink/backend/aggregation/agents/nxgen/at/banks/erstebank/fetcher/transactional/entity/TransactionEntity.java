@@ -74,11 +74,11 @@ public class TransactionEntity {
     }
 
     private boolean isToday(String date) {
-        return ErsteBankConstants.DATE.TODAY.equalsIgnoreCase(date);
+        return ErsteBankConstants.Date.TODAY.equalsIgnoreCase(date);
     }
 
     private boolean isTomorrow(String date) {
-        return ErsteBankConstants.DATE.TOMORROW.equalsIgnoreCase(date);
+        return ErsteBankConstants.Date.TOMORROW.equalsIgnoreCase(date);
     }
 
     private Date getTomorrowsDate() {
@@ -88,12 +88,12 @@ public class TransactionEntity {
     }
 
     private boolean isYesterday(String date) {
-        return ErsteBankConstants.DATE.YESTERDAY.equalsIgnoreCase(date);
+        return ErsteBankConstants.Date.YESTERDAY.equalsIgnoreCase(date);
     }
 
     private Date toTinkDate() {
         try {
-            return new SimpleDateFormat(ErsteBankConstants.PATTERN.DATE_FORMAT).parse(getDate());
+            return new SimpleDateFormat(ErsteBankConstants.Patterns.DATE_FORMAT).parse(getDate());
         } catch (ParseException e) {
 
             if (isTomorrow(getDate())) {
@@ -109,7 +109,7 @@ public class TransactionEntity {
             }
 
             logger.error(
-                    "tag={} DateParsing error", ErsteBankConstants.LOGTAG.ERROR_DATE_PARSING, e);
+                    "tag={} DateParsing error", ErsteBankConstants.LogTags.ERROR_DATE_PARSING, e);
             throw new IllegalArgumentException("Cannot parse date: " + e.toString(), e);
         }
     }

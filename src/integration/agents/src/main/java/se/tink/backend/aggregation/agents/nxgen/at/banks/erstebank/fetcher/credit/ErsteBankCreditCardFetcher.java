@@ -29,7 +29,7 @@ public class ErsteBankCreditCardFetcher
 
     @Override
     public PaginatorResponse getTransactionsFor(CreditCardAccount account, int page) {
-        String creditUrl = account.getFromTemporaryStorage(ErsteBankConstants.STORAGE.CREDITURL);
+        String creditUrl = account.getFromTemporaryStorage(ErsteBankConstants.Storage.CREDITURL);
 
         if (Strings.isNullOrEmpty(creditUrl)) {
             return PaginatorResponseImpl.createEmpty(false);
@@ -41,7 +41,7 @@ public class ErsteBankCreditCardFetcher
             logger.error(
                     String.format(
                             "%s: %s",
-                            ErsteBankConstants.LOGTAG.CREDIT_TRANSACTIONS_ERROR.toString(),
+                            ErsteBankConstants.LogTags.CREDIT_TRANSACTIONS_ERROR.toString(),
                             e.toString()),
                     e);
             return PaginatorResponseImpl.createEmpty(false);
