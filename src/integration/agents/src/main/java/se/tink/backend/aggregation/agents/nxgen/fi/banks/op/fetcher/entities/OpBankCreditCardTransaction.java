@@ -14,9 +14,9 @@ import se.tink.libraries.date.ThreadSafeDateFormat;
 
 @JsonObject
 public class OpBankCreditCardTransaction {
-    public String transactionDate;
-    public String explanation;
-    public String amount;
+    private String transactionDate;
+    private String explanation;
+    private String amount;
     private int status;
     private String notEuroAmount;
     private String timestamp;
@@ -63,46 +63,22 @@ public class OpBankCreditCardTransaction {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (!(obj instanceof OpBankCreditCardTransaction)) {
-            return false;
-        }
-
-        OpBankCreditCardTransaction other = (OpBankCreditCardTransaction) obj;
-
-        if (amount == null && other.amount != null) {
-            return false;
-        }
-
-        if (!amount.equals(other.amount)) {
-            return false;
-        }
-
-        if (transactionDate == null && other.transactionDate != null) {
-            return false;
-        }
-
-        if (!transactionDate.equals(other.transactionDate)) {
-            return false;
-        }
-
-        if (explanation == null && other.explanation != null) {
-            return false;
-        }
-
-        if (!explanation.equals(other.explanation)) {
-            return false;
-        }
-
-        if (status != other.status) {
-            return false;
-        }
-
-        return true;
+    public int hashCode() {
+        return Objects.hash(amount, transactionDate, explanation, status);
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(amount, transactionDate, explanation, status);
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof OpBankCreditCardTransaction)) {
+            return false;
+        }
+        OpBankCreditCardTransaction that = (OpBankCreditCardTransaction) o;
+        return status == that.status
+                && Objects.equals(transactionDate, that.transactionDate)
+                && Objects.equals(explanation, that.explanation)
+                && Objects.equals(amount, that.amount);
     }
 }

@@ -3,11 +3,11 @@ package se.tink.backend.aggregation.utils.transfer;
 import com.google.common.base.CharMatcher;
 import com.google.common.base.Joiner;
 import com.google.common.base.Objects;
-import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
 import java.util.LinkedHashSet;
-import java.util.Optional;
 import java.util.Set;
+import javax.annotation.Nonnull;
+import lombok.RequiredArgsConstructor;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.i18n.LocalizableParametrizedEnum;
 import se.tink.libraries.i18n.LocalizableParametrizedKey;
@@ -23,32 +23,11 @@ import se.tink.libraries.transfer.rpc.Transfer;
  * <p>The normalizer is an optional, but most banks only allow for a certain charset to be used as
  * message and at that point the normalizer can be used for ensuring validity of message.
  */
+@RequiredArgsConstructor
 public class TransferMessageFormatter {
     private final Catalog catalog;
     private final TransferMessageLengthConfig messageLengthConfig;
-    private final Optional<StringNormalizer> stringNormalizer;
-
-    public TransferMessageFormatter(
-            Catalog catalog,
-            TransferMessageLengthConfig bankTransferMessageLengthConfig,
-            Optional<StringNormalizer> bankTransferStringNormalizer) {
-        Preconditions.checkArgument(bankTransferStringNormalizer != null);
-
-        this.catalog = catalog;
-        this.messageLengthConfig = bankTransferMessageLengthConfig;
-        this.stringNormalizer = bankTransferStringNormalizer;
-    }
-
-    public TransferMessageFormatter(
-            Catalog catalog,
-            TransferMessageLengthConfig bankTransferMessageLengthConfig,
-            StringNormalizer bankTransferStringNormalizer) {
-        Preconditions.checkArgument(bankTransferStringNormalizer != null);
-
-        this.catalog = catalog;
-        this.messageLengthConfig = bankTransferMessageLengthConfig;
-        this.stringNormalizer = Optional.of(bankTransferStringNormalizer);
-    }
+    @Nonnull private final StringNormalizer stringNormalizer;
 
     /**
      * Returns formatted source/destination message for a transfer to be commonly used in agents,
@@ -148,11 +127,7 @@ public class TransferMessageFormatter {
      * is most logical for the user to see when comparing the original message.
      */
     private LinkedHashSet<Character> getCharactersBeingNormalized(String sourceMessage) {
-        if (!stringNormalizer.isPresent()) {
-            return Sets.newLinkedHashSet();
-        }
-
-        String normalizedMessage = stringNormalizer.get().normalize(sourceMessage);
+        String normalizedMessage = stringNormalizer.normalize(sourceMessage);
         if (Objects.equal(normalizedMessage, sourceMessage)) {
             return Sets.newLinkedHashSet();
         }
@@ -176,7 +151,7 @@ public class TransferMessageFormatter {
     private String createTransferExecutionException(
             Transfer transfer, Set<Character> normalizedCharacters) {
         String prettyFormatNormalizedCharacters = prettyFormat(normalizedCharacters);
-        String allowedCharacters = stringNormalizer.get().getUnchangedCharactersHumanReadable();
+        String allowedCharacters = stringNormalizer.getUnchangedCharactersHumanReadable();
 
         String logMessage =
                 String.format(

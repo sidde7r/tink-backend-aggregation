@@ -67,7 +67,10 @@ public class UserDataResponse {
                                         .getIban()
                                         .contains(t.getAccountInfoOldFormat().getContractNumber()))
                 .findFirst()
-                .orElse(null)
+                .orElseThrow(
+                        () ->
+                                new IllegalStateException(
+                                        "No iban entity found to get account number"))
                 .getIbanEntity()
                 .getComposedIban();
     }

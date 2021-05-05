@@ -4,17 +4,15 @@ import com.google.inject.Inject;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.recipes.barriers.DistributedBarrier;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.locks.BarrierName;
 import se.tink.libraries.cache.CacheClient;
 import se.tink.libraries.cache.CacheScope;
 
+@Slf4j
 public class SupplementalInformationController {
-    private static final Logger logger =
-            LoggerFactory.getLogger(SupplementalInformationController.class);
     private final CacheClient cacheClient;
     private final CuratorFramework coordinationClient;
 
@@ -26,13 +24,13 @@ public class SupplementalInformationController {
     }
 
     public void setSupplementalInformation(String mfaId, String fields) {
-        logger.info("Received supplemental information for mfaId: {}", mfaId);
+        log.info("Received supplemental information for mfaId: {}", mfaId);
 
         Future<?> future =
                 cacheClient.set(
                         CacheScope.SUPPLEMENT_CREDENTIALS_BY_CREDENTIALSID, mfaId, 60 * 10, fields);
 
-        logger.info(
+        log.info(
                 "CacheClient cached the mfaId: {} with value status {}",
                 mfaId,
                 fields == null ? "null value" : "non null value");
@@ -45,11 +43,16 @@ public class SupplementalInformationController {
                 future.get(5, TimeUnit.SECONDS);
             }
         } catch (TimeoutException e) {
-            logger.error(
+            log.error(
                     "[SupplementalInformationController] Timeout exception when writing to cache.",
                     e);
+        } catch (InterruptedException e) {
+            log.error(
+                    "[SupplementalInformationController] Interrupted exception when writing to cache.",
+                    e);
+            Thread.currentThread().interrupt();
         } catch (Exception e) {
-            logger.error(
+            log.error(
                     "[SupplementalInformationController] Unhandled exception when writing to cache",
                     e);
         }
@@ -57,10 +60,10 @@ public class SupplementalInformationController {
         try {
             lock.removeBarrier();
         } catch (Exception e) {
-            logger.error("Could not remove barrier while supplementing credentials", e);
+            log.error("Could not remove barrier while supplementing credentials", e);
         }
 
-        logger.info("DistributedBarrier removed for mfaId: {}", mfaId);
+        log.info("DistributedBarrier removed for mfaId: {}", mfaId);
     }
 
     public String getSupplementalInformation(String mfaId) {
@@ -68,25 +71,28 @@ public class SupplementalInformationController {
             Object cacheResult =
                     cacheClient.get(CacheScope.SUPPLEMENT_CREDENTIALS_BY_CREDENTIALSID, mfaId);
 
-            logger.info(
+            log.info(
                     "CacheClient find the cache for mfaId: {} with value status {}",
                     mfaId,
                     cacheResult == null ? "null value" : "non null value");
             return (String) cacheResult;
         } catch (Exception e) {
-            logger.error("Could not fetch value for the mfaId {} with error", mfaId, e);
+            log.error("Could not fetch value for the mfaId {} with error", mfaId, e);
             throw e;
         } finally {
-            logger.info("CacheClient clear the cache for mfaId: {}", mfaId);
+            log.info("CacheClient clear the cache for mfaId: {}", mfaId);
             try {
                 Future<Boolean> future =
                         cacheClient.delete(
                                 CacheScope.SUPPLEMENT_CREDENTIALS_BY_CREDENTIALSID, mfaId);
                 if (future == null || !future.get(10, TimeUnit.SECONDS)) {
-                    logger.error("Failed to clear the cache for {}", mfaId);
+                    log.error("Failed to clear the cache for {}", mfaId);
                 }
+            } catch (InterruptedException e) {
+                log.error("Interrupted in when clear the cache for {}", mfaId, e);
+                Thread.currentThread().interrupt();
             } catch (Exception e) {
-                logger.error("Failed to clear the cache for {}", mfaId, e);
+                log.error("Failed to clear the cache for {}", mfaId, e);
             }
         }
     }

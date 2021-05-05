@@ -92,7 +92,7 @@ public class EncapStorage {
 
         Storage storageStructure =
                 SerializationUtils.deserializeFromString(storageData, SessionStorage.class);
-        if (Objects.isNull(storageData)) {
+        if (Objects.isNull(storageStructure)) {
             return false;
         }
 

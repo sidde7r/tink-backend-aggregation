@@ -26,22 +26,6 @@ public class IngAtAccountsListParser {
         this(Jsoup.parse(htmlText));
     }
 
-    private static String textToAccountType(String s) {
-        s = s.toLowerCase();
-        switch (s) {
-            case "girokonto":
-                return AccountTypes.CHECKING.toString();
-            case "direkt-sparkonto":
-                return AccountTypes.SAVINGS.toString();
-            default:
-                if (s.contains("kreditkarte")) {
-                    return AccountTypes.CREDIT_CARD.toString();
-                } else {
-                    return AccountTypes.OTHER.toString();
-                }
-        }
-    }
-
     public Optional<String> getAccountHolder() {
         final List<String> greeting =
                 doc.select("small[class=title__subheadline]").select("span").stream()
@@ -58,8 +42,7 @@ public class IngAtAccountsListParser {
 
     private AccountSummary parseAccount(Element r) {
         Elements columns = r.getElementsByTag("td");
-        AccountSummary res = new AccountSummary(columns);
-        return res;
+        return new AccountSummary(columns);
     }
 
     public List<AccountSummary> getAccountsSummary() {
@@ -80,18 +63,21 @@ public class IngAtAccountsListParser {
         private double balance;
 
         private AccountSummary(Elements columns) {
-            final Element link = columns.get(0);
-            this.type = textToAccountType(link.text());
-            this.link = link.getElementsByTag("a").attr("href");
+            final Element href = columns.get(0);
+            this.type = textToAccountType(href.text());
+            this.link = href.getElementsByTag("a").attr("href");
             this.accountName =
-                    Optional.ofNullable(link.getElementsByTag("span").last()).orElse(null).text();
+                    Optional.ofNullable(href.getElementsByTag("span").last())
+                            .orElseThrow(
+                                    () -> new IllegalStateException("Cannot find account name"))
+                            .text();
             this.id = columns.get(2).text();
             this.currency = "EUR";
-            String balance = columns.get(3).text();
-            if (balance.endsWith("€")) {
-                balance = balance.substring(0, balance.length() - 1).trim();
+            String fetchedBalance = columns.get(3).text();
+            if (fetchedBalance.endsWith("€")) {
+                fetchedBalance = fetchedBalance.substring(0, fetchedBalance.length() - 1).trim();
             }
-            this.balance = Double.parseDouble(balance.replace(".", "").replace(',', '.'));
+            this.balance = Double.parseDouble(fetchedBalance.replace(".", "").replace(',', '.'));
         }
 
         public String getType() {
@@ -123,6 +109,22 @@ public class IngAtAccountsListParser {
             return String.format(
                     "AccountSummary(type=%s, link=%s, accountName=%s, id=%s, currency=%s, balance=%s)",
                     type, link, accountName, id, currency, balance);
+        }
+
+        private static String textToAccountType(String s) {
+            s = s.toLowerCase();
+            switch (s) {
+                case "girokonto":
+                    return AccountTypes.CHECKING.toString();
+                case "direkt-sparkonto":
+                    return AccountTypes.SAVINGS.toString();
+                default:
+                    if (s.contains("kreditkarte")) {
+                        return AccountTypes.CREDIT_CARD.toString();
+                    } else {
+                        return AccountTypes.OTHER.toString();
+                    }
+            }
         }
     }
 }

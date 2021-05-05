@@ -21,12 +21,14 @@ public class WrappedCallableListenableFutureTask<T extends Callable<V>, V>
         public T apply(
                 @Nullable
                         WrappedCallableListenableFutureTask<T, ?> comparableListenableFutureTask) {
-            return comparableListenableFutureTask.getDelegate();
+            return comparableListenableFutureTask != null
+                    ? comparableListenableFutureTask.getDelegate()
+                    : null;
         }
     }
 
     private final ListenableFutureTask<V> delegateListenableFuture;
-    private T delegate;
+    private final T delegate;
 
     public T getDelegate() {
         return delegate;

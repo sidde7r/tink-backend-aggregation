@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase;
 
+import java.util.Objects;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
 public abstract class HttpResponseExceptionRequestRepeater<T> {
@@ -22,7 +23,7 @@ public abstract class HttpResponseExceptionRequestRepeater<T> {
                 httpResponseExceptionToRethrow = ex;
             }
         }
-        throw httpResponseExceptionToRethrow;
+        throw Objects.requireNonNull(httpResponseExceptionToRethrow);
     }
 
     public abstract T request();

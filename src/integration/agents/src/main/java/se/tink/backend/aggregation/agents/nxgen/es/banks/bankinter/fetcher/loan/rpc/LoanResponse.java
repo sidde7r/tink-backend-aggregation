@@ -50,24 +50,24 @@ public class LoanResponse extends HtmlResponse {
     }
 
     private Map<String, List<String>> parseDataValues() {
-        final HashMap<String, List<String>> dataValues = new HashMap<>();
+        final Map<String, List<String>> datas = new HashMap<>();
 
         // Parse values from "Datos del préstamo"
         final NodeList dataNodes =
                 evaluateXPath("//div[contains(@class,'pensionPlanSUBData')]/div", NodeList.class);
         for (int i = 0; i < dataNodes.getLength(); i++) {
             parseLoanDataItem(dataNodes.item(i))
-                    .map(entry -> dataValues.put(entry.getKey(), entry.getValue()));
+                    .ifPresent(entry -> datas.put(entry.getKey(), entry.getValue()));
         }
 
         // Parse values from "Condiciones del préstamo"
         final NodeList nodes = evaluateXPath("//div[contains(@class,'rowSaving')]", NodeList.class);
         for (int i = 0; i < nodes.getLength(); i++) {
             parseLoanConditionsItem(nodes.item(i))
-                    .map(entry -> dataValues.put(entry.getKey(), entry.getValue()));
+                    .ifPresent(entry -> datas.put(entry.getKey(), entry.getValue()));
         }
 
-        return dataValues;
+        return datas;
     }
 
     private Optional<Entry<String, List<String>>> parseLoanDataItem(Node node) {

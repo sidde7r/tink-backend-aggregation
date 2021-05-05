@@ -5,14 +5,15 @@ import static org.junit.Assert.assertEquals;
 
 import com.google.common.base.Objects;
 import java.util.Locale;
-import java.util.Optional;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.runners.Enclosed;
 import org.junit.rules.ExpectedException;
+import org.junit.runner.RunWith;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.transfer.enums.RemittanceInformationType;
@@ -21,7 +22,7 @@ import se.tink.libraries.transfer.mocks.TransferMock;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 import se.tink.libraries.transfer.rpc.Transfer;
 
-@Ignore
+@RunWith(Enclosed.class)
 public class TransferMessageFormatterTest {
 
     private static RemittanceInformation getRemittanceInformation(
@@ -33,11 +34,11 @@ public class TransferMessageFormatterTest {
     }
 
     public static class MessageLength {
-        private TransferMessageLengthConfig lengthConfig =
+        private final TransferMessageLengthConfig lengthConfig =
                 TransferMessageLengthConfig.createWithMaxLength(25, 12, 25);
-        private TransferMessageFormatter formatter =
+        private final TransferMessageFormatter formatter =
                 new TransferMessageFormatter(
-                        Catalog.getCatalog("en-US"), lengthConfig, Optional.empty());
+                        Catalog.getCatalog("en-US"), lengthConfig, new NoOpStringNormalizer());
 
         private static final String LONG_MESSAGE =
                 "Longest message ever written in the history of the world";
@@ -173,7 +174,8 @@ public class TransferMessageFormatterTest {
         @Test
         public void normalizerAbsent_doesntNormalizeUserMessages() {
             TransferMessageFormatter formatter =
-                    new TransferMessageFormatter(null, lengthConfig, Optional.empty());
+                    new TransferMessageFormatter(
+                            Catalog.getCatalog("en-US"), lengthConfig, new NoOpStringNormalizer());
 
             Transfer transfer =
                     TransferMock.bankTransfer()
@@ -194,7 +196,8 @@ public class TransferMessageFormatterTest {
         @Test
         public void normalizerAbsent_doesntNormalizeTinkGeneratedMessages() {
             TransferMessageFormatter formatter =
-                    new TransferMessageFormatter(null, lengthConfig, Optional.empty());
+                    new TransferMessageFormatter(
+                            Catalog.getCatalog("en-US"), lengthConfig, new NoOpStringNormalizer());
 
             Transfer transfer = TransferMock.bankTransfer().build();
             transfer.setSourceMessage("source:123åäöüÅÄÖÜ$©@£");
