@@ -12,7 +12,7 @@ public class MbnaAgentTest {
                 .saveCredentialsAfter(true)
                 .expectLoggedIn(false)
                 .setAppId("tink")
-                .setFinancialInstitutionId("mbna")
+                .setFinancialInstitutionId("32be621f0b3d41bf85f6834e372aeeba")
                 .build()
                 .testRefresh();
     }
