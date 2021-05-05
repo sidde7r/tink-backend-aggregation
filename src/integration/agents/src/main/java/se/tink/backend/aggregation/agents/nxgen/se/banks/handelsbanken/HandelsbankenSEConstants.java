@@ -19,7 +19,7 @@ import se.tink.libraries.i18n.LocalizableKey;
 public class HandelsbankenSEConstants {
 
     public static final class Currency {
-        public static String SEK = "SEK";
+        public static final String SEK = "SEK";
     }
 
     public static final class Urls {

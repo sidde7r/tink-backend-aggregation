@@ -13,9 +13,9 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 public class SpaceTransactionResponse implements TransactionKeyPaginatorResponse<String> {
 
     @JsonProperty("transactions")
-    public List<SpaceTransactionEntitiy> transactions;
+    private List<SpaceTransactionEntity> transactions;
 
-    public boolean hasMore;
+    private boolean hasMore;
 
     @Override
     public String nextKey() {

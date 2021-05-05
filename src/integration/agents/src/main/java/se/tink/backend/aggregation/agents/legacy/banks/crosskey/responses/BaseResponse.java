@@ -6,7 +6,7 @@ import se.tink.backend.aggregation.agents.banks.crosskey.errors.CrossKeyErrorHan
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class BaseResponse {
-    public StatusResponse status;
+    private StatusResponse status;
     private String deviceId;
     private String deviceToken;
     private String tanPosition;
@@ -75,8 +75,8 @@ public class BaseResponse {
          * status.errors.size() - will throw NullPointerException if: - The errors field doesn't
          * exist in the response - The response is empty
          */
-        if (status.errors.size() > 0) {
-            String errCode = status.errors.get(0);
+        if (status.getErrors().size() > 0) {
+            String errCode = status.getErrors().get(0);
 
             errorHandler.handleError(errCode);
         }

@@ -60,7 +60,7 @@ public class AccountEntity {
                 .filter(BalanceEntity::isAvailableBalance)
                 .findFirst()
                 .map(BalanceEntity::toAmount)
-                .orElse(BalanceEntity.Default);
+                .orElse(BalanceEntity.DEFAULT_CURRENCY);
     }
 
     private TransactionalAccountType getAccountType() {

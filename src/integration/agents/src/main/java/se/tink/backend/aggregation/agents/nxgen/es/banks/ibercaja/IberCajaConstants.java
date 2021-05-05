@@ -96,14 +96,14 @@ public class IberCajaConstants {
         public static final String TOKEN_IDENTITY = "TOKEN_IDENTITY";
     }
 
-    public static TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
+    public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
             TypeMapper.<AccountTypes>builder()
                     .put(AccountTypes.CHECKING, "0")
                     .put(AccountTypes.CREDIT_CARD, "1")
                     .put(AccountTypes.INVESTMENT, "6")
                     .build();
 
-    public static TypeMapper<AccountTypes> CARD_TYPE_MAPPER =
+    public static final TypeMapper<AccountTypes> CARD_TYPE_MAPPER =
             TypeMapper.<AccountTypes>builder()
                     .put(AccountTypes.CREDIT_CARD, "2")
                     .ignoreKeys("1") // 1 is debit card

@@ -32,10 +32,10 @@ public class RetryableWebResource {
             return new Candidate(uri.getScheme(), uri.getHost(), uri.getPort());
         }
 
-        public String host;
-        public int port;
+        private String host;
+        private int port;
 
-        public String scheme;
+        private String scheme;
 
         public Candidate(String scheme, String host, int port) {
             this.scheme = scheme;

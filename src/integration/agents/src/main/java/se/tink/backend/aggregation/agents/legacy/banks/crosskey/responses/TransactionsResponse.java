@@ -5,9 +5,9 @@ import java.util.List;
 import se.tink.backend.aggregation.agents.models.Transaction;
 
 public class TransactionsResponse extends BaseResponse {
-    public List<TransactionResponse> transactions;
+    private List<TransactionResponse> transactions;
 
-    public List<Transaction> toTinkTransactions() throws Exception {
+    public List<Transaction> toTinkTransactions() {
         List<Transaction> tinkTransactions = Lists.newArrayList();
 
         for (TransactionResponse transaction : getTransactions()) {

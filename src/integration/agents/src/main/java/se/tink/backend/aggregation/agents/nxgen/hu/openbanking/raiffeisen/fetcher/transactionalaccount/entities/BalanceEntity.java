@@ -7,7 +7,8 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 @JsonObject
 public class BalanceEntity {
 
-    public static ExactCurrencyAmount Default = ExactCurrencyAmount.zero("HUF");
+    static final ExactCurrencyAmount DEFAULT_CURRENCY = ExactCurrencyAmount.zero("HUF");
+
     private BalanceAmountEntity balanceAmount;
     private String balanceType;
     private String referenceDate;

@@ -184,7 +184,6 @@ public class KbcConstants {
         // == End Device enrollment ==
         // == Start Service Activation ==
         public static final int ITERATIONS = 1024;
-        public static final byte[] SALT = "0".getBytes();
         // == End Service Activation ==
     }
 

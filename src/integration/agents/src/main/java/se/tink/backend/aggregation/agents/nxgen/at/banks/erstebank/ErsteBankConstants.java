@@ -5,7 +5,7 @@ import se.tink.backend.aggregation.agents.utils.log.LogTag;
 
 public class ErsteBankConstants {
 
-    public static String LOCATION = "Location";
+    public static final String LOCATION = "Location";
 
     public static class ACCOUNTYPE {
         public static final String CHECKING = "GIRO";

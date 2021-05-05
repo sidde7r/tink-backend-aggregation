@@ -9,10 +9,12 @@ import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 
 public class KbcEnryptionUtils {
 
+    private static final byte[] SALT = "0".getBytes();
+
     static byte[] deriveKey(String activationPassword) {
         return KeyDerivation.pbkdf2WithHmacSha256(
                 activationPassword,
-                KbcConstants.Encryption.SALT,
+                SALT,
                 KbcConstants.Encryption.ITERATIONS,
                 KbcConstants.Encryption.AES_KEY_LENGTH);
     }

@@ -113,12 +113,12 @@ public class SparebankenVestConstants {
     }
 
     public static class Investments {
-        public static String FUND_TYPE = "Fond";
-        public static String PENSION_PORTFOLIO_TYPE = "Pensjonsfond";
+        public static final String FUND_TYPE = "Fond";
+        public static final String PENSION_PORTFOLIO_TYPE = "Pensjonsfond";
     }
 
     public static class Transactions {
-        public static String AGREEMENT_SUSPENDED = "AGREEMENT_SUSPENDED";
+        public static final String AGREEMENT_SUSPENDED = "AGREEMENT_SUSPENDED";
     }
 
     public static final class Headers {

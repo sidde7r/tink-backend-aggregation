@@ -6,14 +6,14 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class TransactionPaginationLinksEntity {
 
-    public LinksDetailsEntity account;
-    public LinksDetailsEntity next;
+    private LinksDetailsEntity account;
+    private LinksDetailsEntity next;
 
     public boolean hasMore() {
-        return next != null && !Strings.isNullOrEmpty(next.href);
+        return next != null && !Strings.isNullOrEmpty(next.getHref());
     }
 
     public String getNext() {
-        return hasMore() ? next.href : null;
+        return hasMore() ? next.getHref() : null;
     }
 }
