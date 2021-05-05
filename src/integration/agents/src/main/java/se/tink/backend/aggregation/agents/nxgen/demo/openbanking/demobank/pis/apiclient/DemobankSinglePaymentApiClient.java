@@ -127,20 +127,25 @@ public class DemobankSinglePaymentApiClient implements DemobankPaymentApiClient 
     private PaymentInitiationDto createPaymentInitiationDto(PaymentRequest paymentRequest) {
         final Payment payment = paymentRequest.getPayment();
 
-        final AccountIdentifierDto debtorAccount = mappers.createDebtorAccount(payment);
+        final Optional<AccountIdentifierDto> maybeDebtorAccount =
+                mappers.createDebtorAccount(payment);
         final AccountIdentifierDto creditorAccount = mappers.createCreditorAccount(payment);
         final AmountDto amountDto = mappers.createAmountDto(payment);
 
-        return PaymentInitiationDto.builder()
-                .debtorAccount(debtorAccount)
-                .creditorAccount(creditorAccount)
-                .amount(amountDto)
-                .creditorName(payment.getCreditor().getName())
-                .remittanceInformationUnstructured(
-                        mappers.createUnstructuredRemittanceInfo(payment))
-                .remittanceInformationStructured(mappers.createStructuredRemittanceInfo(payment))
-                .initiationDate(getNonNullExecutionDate(payment.getExecutionDate()))
-                .build();
+        PaymentInitiationDto.PaymentInitiationDtoBuilder builder =
+                PaymentInitiationDto.builder()
+                        .creditorAccount(creditorAccount)
+                        .amount(amountDto)
+                        .creditorName(payment.getCreditor().getName())
+                        .remittanceInformationUnstructured(
+                                mappers.createUnstructuredRemittanceInfo(payment))
+                        .remittanceInformationStructured(
+                                mappers.createStructuredRemittanceInfo(payment))
+                        .initiationDate(getNonNullExecutionDate(payment.getExecutionDate()));
+
+        maybeDebtorAccount.ifPresent(builder::debtorAccount);
+
+        return builder.build();
     }
 
     private PaymentResponse convertResponseDtoToPaymentResponse(PaymentResponseDto response) {
