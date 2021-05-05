@@ -26,7 +26,6 @@ junit_test(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/core/authentication",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/client",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/filter/filterable/request",
-        "//src/libraries/mapper",
         "//src/libraries/serialization",
         "//third_party:com_sun_jersey_jersey_core",
         "//third_party:lombok_libs",
