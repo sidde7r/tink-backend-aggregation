@@ -45,6 +45,7 @@ public class SparebankenSorMultiFactorAuthenticator implements BankIdAuthenticat
 
     private static final String ACTIVATION_CODE_FIELD_KEY = "activationCode";
     private static final int ACTIVATION_CODE_LENGTH = 8;
+    private static final String CODE_FOR_ERROR_INVALID_CREDENTIALS = "9999";
 
     private final SparebankenSorApiClient apiClient;
     private final EncapClient encapClient;
@@ -65,17 +66,7 @@ public class SparebankenSorMultiFactorAuthenticator implements BankIdAuthenticat
         apiClient.fetchAppInformation(); // only for getting a cookie, possible we must save this
         // cookie for later use in the first login request
 
-        // TODO: Sor returns a 500 for incorrect nationalId, have to verify with check digits before
-        // this request.
-        try {
-            VerifyCustomerResponse response = apiClient.verifyCustomer(nationalId, mobilenumber);
-            if (!response.isValid()) {
-                throw LoginError.INCORRECT_CREDENTIALS.exception();
-            }
-        } catch (HttpResponseException httpException) {
-            handleError(httpException);
-            throw httpException;
-        }
+        tryVerifyCustomerResponse(nationalId, mobilenumber);
 
         apiClient.configureBankId(nationalId, mobilenumber);
         apiClient.setSessionIdForBankIdUrls();
@@ -92,6 +83,26 @@ public class SparebankenSorMultiFactorAuthenticator implements BankIdAuthenticat
         } else handleLoginErrors(doc);
 
         throw new IllegalStateException("Unknown error code when missing reference words");
+    }
+
+    private void tryVerifyCustomerResponse(String nationalId, String mobilenumber) {
+        try {
+            VerifyCustomerResponse response = apiClient.verifyCustomer(nationalId, mobilenumber);
+            if (!response.isValid()) {
+                throw LoginError.INCORRECT_CREDENTIALS.exception();
+            }
+        } catch (HttpResponseException httpException) {
+            if (httpException.getResponse().getStatus() == 500
+                    && (httpException.getResponse().hasBody()
+                            && httpException
+                                    .getResponse()
+                                    .getBody(String.class)
+                                    .toLowerCase()
+                                    .contains(CODE_FOR_ERROR_INVALID_CREDENTIALS))) {
+                throw LoginError.INCORRECT_CREDENTIALS.exception(httpException);
+            }
+            throw httpException;
+        }
     }
 
     private void handleLoginErrors(final Document doc) throws BankIdException {
@@ -218,11 +229,5 @@ public class SparebankenSorMultiFactorAuthenticator implements BankIdAuthenticat
                         catalog.getString(
                                 SparebankenSorConstants.UserMessage.ACTIVATION_CODE_NOT_VALID))
                 .build();
-    }
-
-    private void handleError(HttpResponseException httpException) {
-        if (Integer.valueOf(500).equals(httpException.getResponse().getStatus())) {
-            throw LoginError.INCORRECT_CREDENTIALS.exception(httpException);
-        }
     }
 }
