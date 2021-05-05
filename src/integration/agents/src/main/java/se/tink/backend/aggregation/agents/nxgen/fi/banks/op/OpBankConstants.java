@@ -125,8 +125,6 @@ public class OpBankConstants {
         public static final String APPLICATION_GROUP_ID = "mob";
     }
 
-    // KEY for AUTH_TOKEN used by iphone
-    //    private static final String KEY = "f944972f20ea3de522f312d4a5baf0f9";
     public static class KeyGenerator {
         public static final String SALT = "f944972f20ea3de522f312d4a5baf0f9";
     }

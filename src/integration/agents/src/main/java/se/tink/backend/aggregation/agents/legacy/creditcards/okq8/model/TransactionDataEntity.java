@@ -2,8 +2,6 @@ package se.tink.backend.aggregation.agents.creditcards.okq8.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.common.base.Function;
-import com.google.common.base.Objects;
 import com.google.common.base.Strings;
 import java.util.Date;
 import se.tink.backend.aggregation.agents.models.Transaction;

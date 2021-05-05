@@ -58,25 +58,25 @@ public class KbcConstants {
         MOB_A031_SIGNING_CHALLENGE_UCR(createUrlWithHost("/MOB/A031/signing/challenge/ucr/1")),
         MOB_A031_SIGNING_VALIDATION_UCR(createUrlWithHost("/MOB/A031/signing/validation/ucr/1"));
 
-        private URL url;
+        private URL kbcUrl;
 
-        Url(String url) {
-            this.url = new URL(url);
+        Url(String kbcUrl) {
+            this.kbcUrl = new URL(kbcUrl);
         }
 
         @Override
         public URL get() {
-            return url.queryParam("version", VERSION);
+            return kbcUrl.queryParam("version", VERSION);
         }
 
         @Override
         public URL parameter(String key, String value) {
-            return url.parameter(key, value);
+            return kbcUrl.parameter(key, value);
         }
 
         @Override
         public URL queryParam(String key, String value) {
-            return url.queryParam(key, value);
+            return kbcUrl.queryParam(key, value);
         }
 
         public static final String HOST = "https://mobile.kbc-group.com";
@@ -283,15 +283,15 @@ public class KbcConstants {
                         "The card number you have entered is incorrect. Please try again.")),
         NOT_A_CUSTOMER(new LocalizableKey("The provided credentials are not for KBC."));
 
-        private LocalizableKey userMessage;
+        private LocalizableKey message;
 
-        UserMessage(LocalizableKey userMessage) {
-            this.userMessage = userMessage;
+        UserMessage(LocalizableKey message) {
+            this.message = message;
         }
 
         @Override
         public LocalizableKey getKey() {
-            return userMessage;
+            return message;
         }
     }
 
@@ -351,7 +351,7 @@ public class KbcConstants {
 
     public static class Investments {
         public static final String LEFT_TO_INVEST = "left to invest";
-        public static final String INVESTMENTS = "investments";
+        public static final String KBC_INVESTMENTS = "investments";
     }
 
     static class HttpClient {

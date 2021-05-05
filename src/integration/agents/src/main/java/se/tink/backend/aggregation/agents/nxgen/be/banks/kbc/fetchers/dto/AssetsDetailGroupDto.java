@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.fetchers.dto;
 
-import static se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.KbcConstants.Investments.INVESTMENTS;
+import static se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.KbcConstants.Investments.KBC_INVESTMENTS;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.lang.invoke.MethodHandles;
@@ -44,7 +44,7 @@ public class AssetsDetailGroupDto {
 
     public List<PortfolioModule> toTinkPortfolioModules(
             Double cashValue, List<String> investmentProductNames) {
-        if (!INVESTMENTS.equalsIgnoreCase(toLabel())) {
+        if (!KBC_INVESTMENTS.equalsIgnoreCase(toLabel())) {
             return Collections.emptyList();
         }
         return Stream.of(toTinkPortfolio(cashValue, investmentProductNames))

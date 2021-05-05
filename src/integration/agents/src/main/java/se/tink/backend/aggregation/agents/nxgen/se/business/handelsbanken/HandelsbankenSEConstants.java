@@ -9,7 +9,7 @@ import se.tink.libraries.i18n.LocalizableKey;
 
 public class HandelsbankenSEConstants {
 
-    public static final String CURRENY = "SEK";
+    public static final String CURRENCY = "SEK";
 
     public static final class Urls {
         public static final URL HOST = new URL("https://m2.handelsbanken.se");

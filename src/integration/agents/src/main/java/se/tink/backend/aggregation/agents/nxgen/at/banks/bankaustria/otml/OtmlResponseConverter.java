@@ -305,7 +305,7 @@ public class OtmlResponseConverter {
         return getValue(node);
     }
 
-    public Collection<? extends Transaction> getTransactions(String balanceMovementsForAccount) {
+    public Collection<Transaction> getTransactions(String balanceMovementsForAccount) {
         Document document = parseDocument(balanceMovementsForAccount);
         NodeList movements =
                 getNodeList(

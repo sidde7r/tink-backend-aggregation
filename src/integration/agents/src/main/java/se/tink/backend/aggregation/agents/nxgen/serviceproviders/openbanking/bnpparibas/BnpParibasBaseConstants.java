@@ -76,7 +76,7 @@ public final class BnpParibasBaseConstants {
         public static final String ALGORITHM = "algorithm";
         public static final String RSA_256 = "rsa-sha256";
         public static final String SIGNATURE = "signature";
-        public static final String headers = "headers";
+        public static final String HEADERS = "headers";
         public static final String X_REQUEST_ID = "x-request-id";
         public static final String AUTHORIZATION = "Authorization";
     }

@@ -28,7 +28,7 @@ public class SpaceTransactionResponse implements TransactionKeyPaginatorResponse
     @Override
     public Collection<? extends Transaction> getTinkTransactions() {
         return transactions.stream()
-                .map(SpaceTransactionEntitiy::toTinkTransaction)
+                .map(SpaceTransactionEntity::toTinkTransaction)
                 .collect(Collectors.toList());
     }
 

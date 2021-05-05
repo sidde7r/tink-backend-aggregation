@@ -40,12 +40,12 @@ public class TransactionResponse {
         this.currency = currency;
     }
 
-    public Date getDueDate() throws Exception {
+    public Date getDueDate() {
         if (dueDate.getTime() > 0) {
             return dueDate;
         }
 
-        throw new Exception();
+        throw new IllegalStateException("dueDate time is lower or equal 0");
     }
 
     public void setDueDate(String date) throws ParseException {
@@ -105,7 +105,7 @@ public class TransactionResponse {
         return textCode;
     }
 
-    public Transaction toTinkTransaction() throws Exception {
+    public Transaction toTinkTransaction() {
         Transaction tinkTransaction = new Transaction();
 
         tinkTransaction.setAmount(amount);

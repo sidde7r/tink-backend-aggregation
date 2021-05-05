@@ -7,8 +7,6 @@ public class BalanceEntity {
     private String currency;
     private Double amount;
 
-    public BalanceEntity() {}
-
     public String getCurrency() {
         return currency;
     }

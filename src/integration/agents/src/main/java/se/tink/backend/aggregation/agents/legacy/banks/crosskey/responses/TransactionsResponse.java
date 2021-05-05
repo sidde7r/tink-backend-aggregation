@@ -18,6 +18,6 @@ public class TransactionsResponse extends BaseResponse {
     }
 
     public List<TransactionResponse> getTransactions() {
-        return transactions != null ? transactions : Lists.<TransactionResponse>newArrayList();
+        return transactions != null ? transactions : Lists.newArrayList();
     }
 }

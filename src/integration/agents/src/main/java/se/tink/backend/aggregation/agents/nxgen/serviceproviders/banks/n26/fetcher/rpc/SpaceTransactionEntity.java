@@ -8,13 +8,13 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
-public class SpaceTransactionEntitiy {
-    public String id;
-    public double amount;
-    public String currency;
-    public String type;
-    public String displayText;
-    public long time;
+public class SpaceTransactionEntity {
+    private String id;
+    private double amount;
+    private String currency;
+    private String type;
+    private String displayText;
+    private long time;
 
     public Transaction toTinkTransaction() {
 
