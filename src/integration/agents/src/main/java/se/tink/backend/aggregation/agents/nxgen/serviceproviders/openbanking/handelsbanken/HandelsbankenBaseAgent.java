@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
@@ -31,6 +32,7 @@ public abstract class HandelsbankenBaseAgent extends NextGenerationAgent
     protected HandelsbankenBaseConfiguration handelsbankenBaseConfiguration;
     protected TransactionalAccountRefreshController transactionalAccountRefreshController;
     protected CreditCardRefreshController creditCardRefreshController;
+    protected final LocalDateTimeSource localDateTimeSource;
 
     public HandelsbankenBaseAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
@@ -38,6 +40,7 @@ public abstract class HandelsbankenBaseAgent extends NextGenerationAgent
         client.addFilter(new TimeoutFilter());
         client.addFilter(new HandelsbankenRejectedFilter());
         apiClient = constructApiClient();
+        this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
     }
 
     protected abstract HandelsbankenBaseAccountConverter getAccountConverter();
@@ -103,7 +106,9 @@ public abstract class HandelsbankenBaseAgent extends NextGenerationAgent
                 accountFetcher,
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
-                        new TransactionDatePaginationController.Builder<>(accountFetcher).build()));
+                        new TransactionDatePaginationController.Builder<>(accountFetcher)
+                                .setLocalDateTimeSource(localDateTimeSource)
+                                .build()));
     }
 
     protected CreditCardRefreshController getCreditCardRefreshController() {
@@ -117,6 +122,7 @@ public abstract class HandelsbankenBaseAgent extends NextGenerationAgent
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
                         new TransactionDatePaginationController.Builder<>(creditCardFetcher)
+                                .setLocalDateTimeSource(localDateTimeSource)
                                 .build()));
     }
 

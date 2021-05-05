@@ -49,7 +49,10 @@ public final class HandelsbankenSEAgent extends HandelsbankenBaseAgent
 
     @Override
     protected LocalDate getMaxPeriodTransactions() {
-        return LocalDate.now().minusMonths(HandelsbankenSEConstants.MAX_FETCH_PERIOD_MONTHS);
+        return localDateTimeSource
+                .now()
+                .minusMonths(HandelsbankenSEConstants.MAX_FETCH_PERIOD_MONTHS)
+                .toLocalDate();
     }
 
     @Override
