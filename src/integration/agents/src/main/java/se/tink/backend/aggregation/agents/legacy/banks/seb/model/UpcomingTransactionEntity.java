@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.banks.seb.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Function;
@@ -10,51 +9,52 @@ import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.base.Strings;
 import com.google.common.collect.FluentIterable;
-import java.lang.invoke.MethodHandles;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.Nullable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.libraries.date.DateUtils;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
+@Slf4j
 public class UpcomingTransactionEntity {
-    @JsonIgnore
-    private static final Logger logger =
-            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     @JsonProperty("BETAL_DATUM")
-    public String date;
+    private String date;
 
     @JsonProperty("MOTTAGARE")
-    public String displayDescription;
+    private String displayDescription;
 
     @JsonProperty("UPPDRAG_BEL")
-    public Double amount;
+    private Double amount;
 
     @JsonProperty("KONTO_NR")
-    public String accountNumber;
+    private String accountNumber;
 
-    // --- Unused properties that could be of use ---
-    // Long ROW_ID;
-    public String VERIF_TIME_STAMP;
-    public String VERIF_SUB_ID;
-    // String SEB_KUND_NR;
-    public String KTOSLAG_TXT;
-    // public String KHAV;
-    // public String UPPDRAGS_ID;
-    public String UPPDRAGS_TYP;
-    // public Double BOKF_SALDO;
-    // public Double DISP_BEL;
-    // public Double KREDBEL;
-    public String UPPDAT_FLG;
-    public String REG_TIMESTAMP;
-    // String TABORT_ID;
-    public String MOTTAGARE_PREFIX;
+    // Used in toString method
+    @JsonProperty("VERIF_TIME_STAMP")
+    private String verifTimeStamp;
+
+    @JsonProperty("VERIF_SUB_ID")
+    private String verifSubId;
+
+    @JsonProperty("KTOSLAG_TXT")
+    private String ktoslagTxt;
+
+    @JsonProperty("UPPDRAGS_TYP")
+    private String uppdragsTyp;
+
+    @JsonProperty("UPPDAT_FLG")
+    private String uppdatFlg;
+
+    @JsonProperty("REG_TIMESTAMP")
+    private String regTimestamp;
+
+    @JsonProperty("MOTTAGARE_PREFIX")
+    private String mottagarePrefix;
 
     public static List<Transaction> toTransactionsForAccount(
             List<UpcomingTransactionEntity> upcomingTransactionEntities,
@@ -79,8 +79,8 @@ public class UpcomingTransactionEntity {
                     try {
                         return upcomingTransactionEntity.toPendingTransaction();
                     } catch (ParseException e) {
-                        logger.error("Could not parse SEB upcoming transaction date", e);
-                        logger.error(upcomingTransactionEntity.toString());
+                        log.error("Could not parse SEB upcoming transaction date", e);
+                        log.error(upcomingTransactionEntity.toString());
                         return null;
                     }
                 }
@@ -101,10 +101,10 @@ public class UpcomingTransactionEntity {
 
     private Date getFlattenedDate() throws ParseException {
         try {
-            Date date = ThreadSafeDateFormat.FORMATTER_DAILY.parse(this.date);
-            return DateUtils.flattenTime(date);
+            Date dateToFlatten = ThreadSafeDateFormat.FORMATTER_DAILY.parse(this.date);
+            return DateUtils.flattenTime(dateToFlatten);
         } catch (ParseException pe) {
-            logger.warn(
+            log.warn(
                     String.format(
                             "[Expected format for date]: YYYY-MM-DD [Found]: %s [Account number non-empty]: %s [Amount]: %s [Description non-empty]: %s",
                             this.date,
@@ -122,13 +122,13 @@ public class UpcomingTransactionEntity {
                 .add("date", date)
                 .add("displayDescription", displayDescription)
                 .add("amount", amount)
-                .add("VERIF_TIME_STAMP", VERIF_TIME_STAMP)
-                .add("VERIF_SUB_ID", VERIF_SUB_ID)
-                .add("KTOSLAG_TXT", KTOSLAG_TXT)
-                .add("UPPDRAGS_TYP", UPPDRAGS_TYP)
-                .add("UPPDAT_FLG", UPPDAT_FLG)
-                .add("REG_TIMESTAMP", REG_TIMESTAMP)
-                .add("MOTTAGARE_PREFIX", MOTTAGARE_PREFIX)
+                .add("VERIF_TIME_STAMP", verifTimeStamp)
+                .add("VERIF_SUB_ID", verifSubId)
+                .add("KTOSLAG_TXT", ktoslagTxt)
+                .add("UPPDRAGS_TYP", uppdragsTyp)
+                .add("UPPDAT_FLG", uppdatFlg)
+                .add("REG_TIMESTAMP", regTimestamp)
+                .add("MOTTAGARE_PREFIX", mottagarePrefix)
                 .toString();
     }
 }

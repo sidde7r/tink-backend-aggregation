@@ -1,7 +1,10 @@
 package se.tink.backend.aggregation.agents.banks.seb.model;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Strings;
+import lombok.Getter;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException.Builder;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException.EndUserMessage;
@@ -10,21 +13,23 @@ import se.tink.libraries.signableoperation.enums.InternalStatus;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 
 @JsonObject
+@JsonNaming(PropertyNamingStrategy.UpperCamelCaseStrategy.class)
+@Getter
 public class ResultInfoMessage {
 
-    public String TableName;
-    public Integer ErrorRowId;
-    public String ErrorColumnName;
-    public String Level;
-    public String ErrorCode;
-    public String ErrorText;
+    private String tableName;
+    private Integer errorRowId;
+    private String errorColumnName;
+    private String level;
+    private String errorCode;
+    private String errorText;
 
     public String getErrorCode() {
-        return ErrorCode != null ? ErrorCode.trim() : null;
+        return errorCode != null ? errorCode.trim() : null;
     }
 
     public String getErrorText() {
-        String text = ErrorText != null ? ErrorText.trim() : null;
+        String text = errorText != null ? errorText.trim() : null;
         return "2000".equalsIgnoreCase(getErrorCode()) ? "Banken har blockerat överföringen" : text;
     }
 

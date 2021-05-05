@@ -9,7 +9,7 @@ public class SebRequestTest {
     @Test
     public void emptyServiceInputForEmptyConstruction() {
         SebRequest request = SebRequest.empty().build();
-        assertThat(request.request.ServiceInput).isEmpty();
+        assertThat(request.request.getServiceInput()).isEmpty();
     }
 
     @Test
@@ -18,8 +18,8 @@ public class SebRequestTest {
 
         SebRequest request = SebRequest.withSEB_KUND_NR("the customer id").build();
 
-        assertThat(request.request.ServiceInput).hasSize(1);
-        assertThat(request.request.ServiceInput.get(0))
+        assertThat(request.request.getServiceInput()).hasSize(1);
+        assertThat(request.request.getServiceInput().get(0))
                 .isEqualToComparingFieldByField(expectedServiceInput);
     }
 
@@ -29,8 +29,8 @@ public class SebRequestTest {
 
         SebRequest request = SebRequest.withUSER_ID("the user id").build();
 
-        assertThat(request.request.ServiceInput).hasSize(1);
-        assertThat(request.request.ServiceInput.get(0))
+        assertThat(request.request.getServiceInput()).hasSize(1);
+        assertThat(request.request.getServiceInput().get(0))
                 .isEqualToComparingFieldByField(expectedServiceInput);
     }
 
@@ -49,8 +49,8 @@ public class SebRequestTest {
                         .addServiceInputEQ("TESTING_SECOND_VARIABLE", 1)
                         .build();
 
-        assertThat(request.request.ServiceInput).hasSize(3);
-        assertThat(request.request.ServiceInput)
+        assertThat(request.request.getServiceInput()).hasSize(3);
+        assertThat(request.request.getServiceInput())
                 .usingFieldByFieldElementComparator()
                 .containsAll(expectedServiceInput);
     }

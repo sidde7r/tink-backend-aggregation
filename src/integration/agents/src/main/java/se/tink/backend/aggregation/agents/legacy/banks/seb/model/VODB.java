@@ -10,154 +10,173 @@ import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Lists;
 import java.util.Collections;
 import java.util.List;
+import lombok.Getter;
+import lombok.Setter;
 import se.tink.libraries.transfer.enums.TransferType;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class VODB {
     @JsonProperty("DBZV160")
-    public String[] DBZV160;
+    private String[] dbzv160;
 
     @JsonProperty("DEVID01")
-    public DEVID01 DEVID01 = new DEVID01();
+    private DEVID01 devid01 = new DEVID01();
 
     @JsonProperty("HWINFO01")
-    public HWINFO01 HWINFO01;
+    private HWINFO01 hwinfo01;
 
     @JsonProperty("CBEW501")
-    public String[] CBEW501;
+    private String[] cbew501;
 
     @JsonProperty("DBZV170")
-    public String[] DBZV170;
+    private String[] dbzv170;
 
     @JsonProperty("CBEW502")
-    public String[] CBEW502;
+    private String[] cbew502;
 
     // User info returned after activation, also sent as null now and then
     @JsonProperty("USRINF01")
-    public USRINF01 USRINF01;
+    @Getter
+    private USRINF01 usrinf01;
 
     // Query for a single accounts transactions
     @JsonProperty("PCBW4341")
-    public PCBW4341 PCBW4341;
+    @Setter
+    private PCBW4341 singleAccountsTransactionsQuery;
 
     // Query for a single accounts protected transactions
     @JsonProperty("PCBW431Z")
-    public PCBW431Z PCBW431Z;
+    @Setter
+    private PCBW431Z singleAccountsProtectedTransactionsQuery;
 
     // This is accounts
     @JsonProperty("PCBW4211")
-    public List<AccountEntity> accountEntities;
+    private List<AccountEntity> accountEntities;
 
     // This is probably account transactions
     @JsonProperty("PCBW4342")
-    public List<SebTransaction> PCBW4342;
+    @Getter
+    private List<SebTransaction> transactions;
 
     // This is probably pending account transactions
     @JsonProperty("PCBW4311")
-    public List<SebTransaction> PCBW4311;
+    @Getter
+    private List<SebTransaction> pendingTransactions;
 
     // This is mortgage information
     @JsonProperty("PCBW2581")
-    public List<PCBW2581> PCBW2581;
+    @Getter
+    private List<PCBW2581> mortgages;
 
     // This is blanco loan information
     @JsonProperty("PCBW2582")
-    public List<PCBW2582> PCBW2582;
+    @Getter
+    private List<PCBW2582> blancoLoans;
 
     // Credit card
 
     // This is probably credit card accounts
     @JsonProperty("PCBW3201")
-    public List<SebCreditCardAccount> PCBW3201;
+    @Getter
+    private List<SebCreditCardAccount> creditCardAccounts;
 
     // Credit card transactions (not yet billed)
     @JsonProperty("PCBW3241")
-    public List<SebCreditCardTransaction> PCBW3241;
+    @Getter
+    private List<SebCreditCardTransaction> creditCardTransactionsNotBilled;
 
     // Credit cards
     @JsonProperty("PCBW3242")
-    public List<SebCreditCard> PCBW3242;
+    @Getter
+    private List<SebCreditCard> creditCards;
 
     // Credit card transactions (billed)
     @JsonProperty("PCBW3243")
-    public List<SebBilledCreditCardTransaction> PCBW3243;
+    @Getter
+    private List<SebBilledCreditCardTransaction> creditCardTransactions;
 
     // Transfer and payment related entities
 
     // Transfer request for invoices
     @JsonProperty("PCBW5211")
-    public SebTransferRequestEntity InvoiceTransfer;
+    private SebTransferRequestEntity invoiceTransfer;
 
     // Transfer request between accounts
     @JsonProperty("PCBW1221")
-    public SebTransferRequestEntity BankTransfer;
+    private SebTransferRequestEntity bankTransfer;
 
     // External accounts
     @JsonProperty("PCBW189")
-    public List<ExternalAccount> ExternalAccounts;
+    @Getter
+    private List<ExternalAccount> externalAccounts;
 
     // External transfer verification
     @JsonProperty("PCBW024")
-    public SebTransferVerification TransferVerification;
+    @Getter
+    private SebTransferVerification transferVerification;
 
     // Response with payments (einvoices and bills)
     @JsonProperty("PCBW1241")
-    public List<InvoiceTransferListEntity> InvoiceTransfers;
+    private List<InvoiceTransferListEntity> invoiceTransfers;
 
     // Response with bank transfers
     @JsonProperty("PCBW1242")
-    public List<BankTransferListEntity> BankTransfers;
+    private List<BankTransferListEntity> bankTransfers;
 
     @JsonProperty("PCBW3041")
-    public List<GiroEntity> FindBGResult;
+    @Getter
+    private List<GiroEntity> findBGResult;
 
     @JsonProperty("PCBW096")
-    public List<GiroEntity> FindPGResult;
+    @Getter
+    private List<GiroEntity> findPGResult;
 
     @JsonProperty("PCBW1361")
-    public List<UpcomingTransactionEntity> UpcomingTransactions;
+    @Getter
+    private List<UpcomingTransactionEntity> upcomingTransactions;
 
     @JsonProperty("PCBW203")
-    public List<EInvoiceListEntity> EInvoices;
+    private List<EInvoiceListEntity> eInvoices;
 
     @JsonProperty("PCBW083")
-    public List<HoldingEntity> holdingEntities;
+    private List<HoldingEntity> holdingEntities;
 
     @JsonProperty("PCBW080")
-    public List<DepotEntity> depotEntities;
+    private List<DepotEntity> depotEntities;
 
     @JsonProperty("PCBWF041")
-    public List<InsuranceEntity> insuranceEntities;
+    private List<InsuranceEntity> insuranceEntities;
 
     @JsonProperty("PCBWF061")
-    public List<InsuranceAccountEntity> insuranceAccountEntities;
+    private List<InsuranceAccountEntity> insuranceAccountEntities;
 
     @JsonProperty("PCBW173")
-    public List<InsuranceHoldingEntity> insuranceHoldingEntities;
+    private List<InsuranceHoldingEntity> insuranceHoldingEntities;
 
     // Not certain of the object name: IpsHoldingEntity
     @JsonProperty("PCBW174")
-    public List<IpsHoldingEntity> ipsHoldingEntities;
+    private List<IpsHoldingEntity> ipsHoldingEntities;
 
     @JsonProperty("PCBW030")
-    public List<FundAccountEntity> fundAccounts;
+    private List<FundAccountEntity> fundAccounts;
 
     @JsonProperty("PCBW8801")
-    public List<PortfolioAccountMapperEntity> portfolioAccountMappers;
+    private List<PortfolioAccountMapperEntity> portfolioAccountMappers;
 
     @JsonProperty("RESULTO01")
-    public RESULTO01 RESULTO01;
+    @Getter
+    private RESULTO01 result;
 
     @JsonIgnore
     public List<TransferListEntity> getTransfers() {
         List<TransferListEntity> allTransfers = Lists.newArrayList();
 
-        if (InvoiceTransfers != null) {
-            allTransfers.addAll(InvoiceTransfers);
+        if (invoiceTransfers != null) {
+            allTransfers.addAll(invoiceTransfers);
         }
-        if (BankTransfers != null) {
-            allTransfers.addAll(BankTransfers);
+        if (bankTransfers != null) {
+            allTransfers.addAll(bankTransfers);
         }
 
         return FluentIterable.from(allTransfers).filter(Predicates.notNull()).toList();
@@ -171,23 +190,23 @@ public class VODB {
 
     @JsonIgnore
     public List<EInvoiceListEntity> getEInvoices() {
-        if (EInvoices == null) {
+        if (eInvoices == null) {
             return Lists.newArrayList();
         }
 
         return Lists.newArrayList(
-                FluentIterable.from(EInvoices).filter(Predicates.not(EInvoiceListEntity.IS_EMPTY)));
+                FluentIterable.from(eInvoices).filter(Predicates.not(EInvoiceListEntity.IS_EMPTY)));
     }
 
     @JsonIgnore
     public void setTransfer(TransferType transferType, SebTransferRequestEntity transfer)
             throws IllegalArgumentException {
         if (Objects.equal(transferType, TransferType.BANK_TRANSFER)) {
-            this.BankTransfer = transfer;
-            this.InvoiceTransfer = null;
+            this.bankTransfer = transfer;
+            this.invoiceTransfer = null;
         } else if (Objects.equal(transferType, TransferType.PAYMENT)) {
-            this.BankTransfer = null;
-            this.InvoiceTransfer = transfer;
+            this.bankTransfer = null;
+            this.invoiceTransfer = transfer;
         } else {
             throw new IllegalArgumentException("Transfer type not supported");
         }

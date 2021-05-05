@@ -16,7 +16,7 @@ public class SebGiroRequest extends SebRequest {
         SebGiroRequest sebGiroRequest = new SebGiroRequest();
 
         List<ServiceInput> serviceInput = createServiceInput(bgOrPgDestination);
-        sebGiroRequest.request.ServiceInput.addAll(serviceInput);
+        sebGiroRequest.request.setServiceInput(serviceInput);
 
         return sebGiroRequest;
     }

@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.banks.seb;
 
 import java.util.EnumSet;
+import java.util.Set;
 import se.tink.backend.agents.rpc.AccountTypes;
 
 public class SEBApiConstants {
@@ -25,6 +26,6 @@ public class SEBApiConstants {
         public static final String X_SEB_CSRF = "x-seb-csrf";
     }
 
-    public static EnumSet<AccountTypes> PSD2_Account_Types =
+    public static final Set<AccountTypes> PSD2_Account_Types =
             EnumSet.of(AccountTypes.CHECKING, AccountTypes.SAVINGS);
 }
