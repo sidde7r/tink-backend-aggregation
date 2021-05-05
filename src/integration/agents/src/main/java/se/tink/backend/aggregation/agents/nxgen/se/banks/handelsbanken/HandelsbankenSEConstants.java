@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
-import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
@@ -120,8 +120,8 @@ public class HandelsbankenSEConstants {
     }
 
     public enum PortfolioType {
-        ISK("isk", Portfolio.Type.ISK),
-        NORMAL("normal", Portfolio.Type.DEPOT),
+        ISK(Investments.ISK, Portfolio.Type.ISK),
+        NORMAL(Investments.NORMAL, Portfolio.Type.DEPOT),
         OTHER("", Portfolio.Type.OTHER);
 
         private final String rawType;
@@ -176,7 +176,7 @@ public class HandelsbankenSEConstants {
 
         public static class Statuses {
             public static final List<String> TRANSFER_APPROVAL_STATUSES =
-                    Arrays.asList("OK", "E-fakturan är ändrad");
+                    ImmutableList.of("OK", "E-fakturan är ändrad");
 
             public static final String SIGN_CONFIRMED = "SIGN_CONFIRMED";
             public static final String CONTINUE = "CONTINUE";

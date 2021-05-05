@@ -269,8 +269,7 @@ public class CrosskeyBaseApiClient {
 
         final AccessConsentRequest accessConsentRequest =
                 new AccessConsentRequest(
-                        new RequestDataEntity(
-                                "", Arrays.asList(OIDCValues.CONSENT_PERMISSIONS), "", ""),
+                        new RequestDataEntity("", OIDCValues.CONSENT_PERMISSIONS, "", ""),
                         new RiskEntity());
 
         return createAuthorizationRequest(clientCredentials, new URL(url))

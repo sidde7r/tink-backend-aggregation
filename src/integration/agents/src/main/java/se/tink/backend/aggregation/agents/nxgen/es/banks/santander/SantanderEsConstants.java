@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.santander;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import java.util.Arrays;
 import java.util.List;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
@@ -39,8 +39,8 @@ public class SantanderEsConstants {
 
     public static final class ErrorCodes {
         public static final List<String> INCORRECT_CREDENTIALS =
-                Arrays.asList("SBAMOV_00002", "SBAMOV_00003");
-        public static final List<String> BLOCKED_CREDENTIALS = Arrays.asList("SBAMOV_00004");
+                ImmutableList.of("SBAMOV_00002", "SBAMOV_00003");
+        public static final List<String> BLOCKED_CREDENTIALS = ImmutableList.of("SBAMOV_00004");
     }
 
     public static final class Storage {

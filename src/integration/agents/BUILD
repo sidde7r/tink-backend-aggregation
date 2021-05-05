@@ -95,6 +95,7 @@ java_library(
         "//third_party:io_dropwizard_dropwizard_metrics",
         "//third_party:io_vavr",
         "//third_party:javax_validation_validation_api",
+        "//third_party:lombok_libs",
         "//third_party:net_minidev_json_smart",
         "//third_party:net_sourceforge_tess4j",
         "//third_party:org_apache_commons_commons_collections4",

@@ -1,8 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.kbc;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableList;
+import java.util.List;
 import java.util.Locale;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
+import se.tink.backend.aggregation.nxgen.core.account.GenericTypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.backend.aggregation.nxgen.http.UrlEnum;
@@ -196,22 +199,22 @@ public class KbcConstants {
         public static final LogTag ERROR_CODE_MESSAGE = LogTag.from("#be_kbc_error_message");
     }
 
-    public static final String[] IGNORED_ACCOUNT_TYPES = {
-        "0029", // KBC-Derdenrekening
-        "0038", // KBC-Rubriekrekening
-        "1013", // KBC-Beleggersrekening
-        "2117", // KBC-Pandrekening
-        "3123", // ESOP-rekening
-        "0346", // KBC-Vermogensrekening
-        "3465", // KBC-Business Comfortrekening
-        "3637", // KBC-Business Compactrekening
-        "3774", // Compte épargne Call32 corporate KBC
-        "4012", // KBC Brussels Security Deposit Account
-        "4057", // KBC Security Deposit Account
-        "4058"
-    }; // Compte d'épargne gar.locative KBC Brussels
+    private static final List<String> IGNORED_ACCOUNT_TYPES =
+            ImmutableList.of(
+                    "0029", // KBC-Derdenrekening
+                    "0038", // KBC-Rubriekrekening
+                    "1013", // KBC-Beleggersrekening
+                    "2117", // KBC-Pandrekening
+                    "3123", // ESOP-rekening
+                    "0346", // KBC-Vermogensrekening
+                    "3465", // KBC-Business Comfortrekening
+                    "3637", // KBC-Business Compactrekening
+                    "3774", // Compte épargne Call32 corporate KBC
+                    "4012", // KBC Brussels Security Deposit Account
+                    "4057", // KBC Security Deposit Account
+                    "4058"); // Compte d'épargne gar.locative KBC Brussels
 
-    public static final TypeMapper<TransactionalAccountType> ACCOUNT_TYPE_MAPPER =
+    public static final GenericTypeMapper<TransactionalAccountType, String> ACCOUNT_TYPE_MAPPER =
             TypeMapper.<TransactionalAccountType>builder()
                     .put(
                             TransactionalAccountType.CHECKING,
@@ -270,9 +273,8 @@ public class KbcConstants {
         public static final String INCORRECT_LOGIN_CODE_TWO_ATTEMPT_LEFT = "D9FE50";
         public static final String INCORRECT_LOGIN_CODE_ONE_ATTEMPT_LEFT = "D9E028";
         public static final String INCORRECT_CARD_NUMBER = "D93058";
-        public static final String[] CANNOT_LOGIN_USING_THIS_CARD_CONTACT_KBC = {
-            "D9FE51", "D93060"
-        };
+        public static final List<String> CANNOT_LOGIN_USING_THIS_CARD_CONTACT_KBC =
+                ImmutableList.of("D9FE51", "D93060");
     }
 
     public enum UserMessage implements LocalizableEnum {

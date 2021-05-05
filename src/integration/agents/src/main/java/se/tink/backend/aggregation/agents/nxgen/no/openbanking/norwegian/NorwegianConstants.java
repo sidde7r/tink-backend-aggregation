@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.no.openbanking.norwegian;
 
-import java.util.Arrays;
+import com.google.common.collect.ImmutableList;
 import java.util.List;
 
 public class NorwegianConstants {
@@ -8,7 +8,7 @@ public class NorwegianConstants {
     public static final String SIGNATURE_FORMAT =
             "keyId=\"%s\",algorithm=\"rsa-sha256\",headers=\"%s\",signature=\"%s\"";
     public static final List<String> SIGNABLE_HEADERS =
-            Arrays.asList(
+            ImmutableList.of(
                     "(request-target)",
                     HeaderKeys.DATE,
                     HeaderKeys.DIGEST,
