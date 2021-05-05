@@ -24,7 +24,7 @@ spec:
         priority: P4
         who: integration-nazguls
       annotations:
-        description: {{ .Values.kibanaLink }}
+        description: {{ .Values.kibanaClassLink }}
           {{ .Values.grafanaLink }}
         summary: Login success rate is between 70 - 80% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
           the last {{ .Values.p4WaitTimeBeforeFiringAlert }} minutes..
@@ -44,7 +44,7 @@ spec:
         priority: P3
         who: integration-nazguls
       annotations:
-        description: {{ .Values.kibanaLink }}
+        description: {{ .Values.kibanaClassLink }}
           {{ .Values.grafanaLink }}
         summary: Login success rate is between 60 - 70% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
           the {{ .Values.p3WaitTimeBeforeFiringAlert }} minutes.
@@ -64,7 +64,7 @@ spec:
         priority: P2
         who: integration-nazguls
       annotations:
-        description: {{ .Values.kibanaLink }}
+        description: {{ .Values.kibanaClassLink }}
           {{ .Values.grafanaLink }}
         summary: Login success rate is between 50 - 60 % ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
           the last {{ .Values.p2WaitTimeBeforeFiringAlert }} minutes.
@@ -82,7 +82,7 @@ spec:
         priority: P1
         who: integration-nazguls
       annotations:
-        description: {{ .Values.kibanaLink }}
+        description: {{ .Values.kibanaClassLink }}
           {{ .Values.grafanaLink }}
         summary: Login success rate is below 50% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
           the last {{ .Values.p1WaitTimeBeforeFiringAlert }} minutes.
@@ -219,7 +219,7 @@ spec:
         priority: P4
         who: integration-nazguls
       annotations:
-        description: {{ .Values.kibanaLink }}
+        description: {{ .Values.kibanaClassLink }}
           {{ .Values.grafanaLink }}
         summary: Login success rate is between 10 - 20% ( <{ $value }> ) the last 6 hours because of all errors.
         tags: {{ .Values.tags }}
@@ -236,7 +236,7 @@ spec:
         priority: P1
         who: integration-nazguls
       annotations:
-        description: {{ .Values.kibanaLink }}
+        description: {{ .Values.kibanaClassLink }}
           {{ .Values.grafanaLink }}
         summary: Login success rate is below 10% ( <{ $value }> ) the last 6 hours because of all errors.
         tags: {{ .Values.tags }}
@@ -253,7 +253,7 @@ spec:
         priority: P4
         who: integration-nazguls
       annotations:
-        description: {{ .Values.kibanaLink }}
+        description: {{ .Values.kibanaClassLink }}
           {{ .Values.grafanaLink }}
         summary: Login success rate is between 10 - 20% ( <{ $value }> ) the last 6 hours because of all errors.
         tags: {{ .Values.tags }}
@@ -270,7 +270,7 @@ spec:
         priority: P1
         who: integration-nazguls
       annotations:
-        description: {{ .Values.kibanaLink }}
+        description: {{ .Values.kibanaClassLink }}
           {{ .Values.grafanaLink }}
         summary: Login success rate is below 10% ( <{ $value }> ) the last 6 hours.
         tags: {{ .Values.tags }}
