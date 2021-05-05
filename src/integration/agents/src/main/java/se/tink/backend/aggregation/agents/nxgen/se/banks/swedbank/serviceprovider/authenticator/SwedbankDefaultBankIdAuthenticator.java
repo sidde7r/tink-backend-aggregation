@@ -146,13 +146,6 @@ public class SwedbankDefaultBankIdAuthenticator
                 // invalidated
                 throw SessionError.SESSION_ALREADY_ACTIVE.exception();
             }
-        } else if (responseStatus == HttpStatus.SC_INTERNAL_SERVER_ERROR
-                && SwedbankBaseConstants.BankIdResponseStatus.CLIENT_NOT_STARTED.equals(
-                        previousStatus)) {
-            // This code is a temporary fix until Swedbank returns a better error message.
-            // What we belive to be the problem is that when multiple request are sent to bankid
-            // at the same time bankid cancels all requests.
-            return BankIdStatus.INTERRUPTED;
         }
 
         // unknown error re-throw
