@@ -33,7 +33,6 @@ import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.signatu
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.storage.BpceOAuth2TokenStorage;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.transactionalaccount.BpceGroupTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.transactionalaccount.BpceGroupTransactionalAccountFetcher;
-import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.transactionalaccount.converter.BpceGroupTransactionalAccountConverter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.FrOpenBankingPaymentExecutor;
 import se.tink.backend.aggregation.client.provider_configuration.rpc.PisCapability;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
@@ -177,12 +176,9 @@ public final class BpceGroupAgent extends NextGenerationAgent
     }
 
     private TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
-        final BpceGroupTransactionalAccountConverter bpceGroupTransactionalAccountConverter =
-                new BpceGroupTransactionalAccountConverter();
 
         final BpceGroupTransactionalAccountFetcher accountFetcher =
-                new BpceGroupTransactionalAccountFetcher(
-                        bpceGroupApiClient, bpceGroupTransactionalAccountConverter);
+                new BpceGroupTransactionalAccountFetcher(bpceGroupApiClient);
 
         final BpceGroupTransactionFetcher transactionFetcher =
                 new BpceGroupTransactionFetcher(bpceGroupApiClient);

@@ -61,7 +61,7 @@ public class LclAccountFetcher implements AccountFetcher<TransactionalAccount> {
                         IdModule.builder()
                                 .withUniqueIdentifier(iban)
                                 .withAccountNumber(iban)
-                                .withAccountName(account.getName())
+                                .withAccountName(account.getProduct())
                                 .addIdentifier(new IbanIdentifier(account.getBicFi(), iban))
                                 .setProductName(account.getProduct())
                                 .build())

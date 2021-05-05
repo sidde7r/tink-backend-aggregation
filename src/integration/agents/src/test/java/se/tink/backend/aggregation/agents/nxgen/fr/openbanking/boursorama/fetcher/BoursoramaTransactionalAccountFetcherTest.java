@@ -69,8 +69,8 @@ public class BoursoramaTransactionalAccountFetcherTest {
         assertAccountEquals(
                 accounts.get(0),
                 "FR4810096000504122942551L38",
-                "Compte factice pour la sandbox DSP2",
-                "005001",
+                "CAV - BOURSORAMA BANQUE",
+                "CAV - BOURSORAMA BANQUE",
                 1642.68,
                 "EUR",
                 AccountTypes.CHECKING,

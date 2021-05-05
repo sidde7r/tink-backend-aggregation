@@ -69,7 +69,7 @@ public class AccountEntity {
                         IdModule.builder()
                                 .withUniqueIdentifier(iban)
                                 .withAccountNumber(iban)
-                                .withAccountName(name)
+                                .withAccountName(product)
                                 .addIdentifier(new IbanIdentifier(iban))
                                 .build())
                 .setApiIdentifier(resourceId)
@@ -90,7 +90,7 @@ public class AccountEntity {
                         IdModule.builder()
                                 .withUniqueIdentifier(resourceId)
                                 .withAccountNumber(linkedAccount)
-                                .withAccountName(name)
+                                .withAccountName(product)
                                 .addIdentifier(
                                         AccountIdentifier.create(
                                                 AccountIdentifierType.PAYMENT_CARD_NUMBER,

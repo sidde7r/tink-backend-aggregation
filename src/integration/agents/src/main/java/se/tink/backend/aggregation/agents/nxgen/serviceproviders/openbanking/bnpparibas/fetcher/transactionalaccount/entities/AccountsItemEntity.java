@@ -91,7 +91,7 @@ public class AccountsItemEntity {
                         IdModule.builder()
                                 .withUniqueIdentifier(accountId.getIban())
                                 .withAccountNumber(accountId.getIban())
-                                .withAccountName(name)
+                                .withAccountName(getAccountName())
                                 .addIdentifier(new IbanIdentifier(bicFi, accountId.getIban()))
                                 .build())
                 .setApiIdentifier(resourceId)
@@ -170,6 +170,18 @@ public class AccountsItemEntity {
         return Optional.ofNullable(
                         balanceResponse.getBalances().get(0).getAmountEntity().toAmount())
                 .orElse(null);
+    }
+
+    /**
+     * Under {@link #name } value in response we get sth like: Compte de chèques ****1234. This
+     * method cuts last part of it
+     */
+    private String getAccountName() {
+        if (!name.contains("*")) {
+            return name;
+        }
+        int endIndex = name.indexOf("*") - 1;
+        return name.substring(0, endIndex);
     }
 
     public boolean isCreditCard() {

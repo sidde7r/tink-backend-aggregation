@@ -32,7 +32,7 @@ RESPONSE 3
 200
 Content-Type: application/json
 
-{"accounts":[{"resourceId":"DUMMY_RESOURCE_ID","bicFi":"SOGEFRPP","accountId":{"iban":"DUMMY_IBAN"},"name":"DUMMY_NAME","usage":"PRIV","cashAccountType":"CACC","balances":[{"name":"Solde instantané au 04/05/2020","balanceAmount":{"currency":"EUR","amount":"27873.93"},"balanceType":"XPCD","lastChangeDateTime":"2020-05-04T00:00:00Z","referenceDate":"2020-05-04"}],"psuStatus":"Account Holder","_links":{"balances":{"href":"/accounts/DUMMY_RESOURCE_ID/balances"},"transactions":{"href":"/accounts/DUMMY_RESOURCE_ID/transactions"}}}],"_links":{"self":{"href":"/accounts"},"endUserIdentity":{"href":"/end-user-identity"},"beneficiaries":{"href":"/trusted-beneficiaries"}}}
+{"accounts":[{"resourceId":"DUMMY_RESOURCE_ID","bicFi":"SOGEFRPP","accountId":{"iban":"DUMMY_IBAN"},"name":"DUMMY_NAME","usage":"PRIV","cashAccountType":"CACC","product":"Compte de dépôts","balances":[{"name":"Solde instantané au 04/05/2020","balanceAmount":{"currency":"EUR","amount":"27873.93"},"balanceType":"XPCD","lastChangeDateTime":"2020-05-04T00:00:00Z","referenceDate":"2020-05-04"}],"psuStatus":"Account Holder","_links":{"balances":{"href":"/accounts/DUMMY_RESOURCE_ID/balances"},"transactions":{"href":"/accounts/DUMMY_RESOURCE_ID/transactions"}}}],"_links":{"self":{"href":"/accounts"},"endUserIdentity":{"href":"/end-user-identity"},"beneficiaries":{"href":"/trusted-beneficiaries"}}}
 
 REQUEST 4
 GET https://psd.lcl.fr/aisp/accounts/DUMMY_RESOURCE_ID/transactions

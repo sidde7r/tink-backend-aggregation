@@ -21,6 +21,8 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 @Slf4j
 public class CmcicTransactionalAccountConverter {
 
+    private static final String ACCOUNT_NAME = "COMPTE COURANT";
+
     public Optional<TransactionalAccount> convertAccountResourceToTinkAccount(
             AccountResourceDto accountResource) {
         if (accountResource.getCashAccountType() != CashAccountTypeEnumEntity.CACC) {
@@ -37,7 +39,7 @@ public class CmcicTransactionalAccountConverter {
                         IdModule.builder()
                                 .withUniqueIdentifier(iban)
                                 .withAccountNumber(iban)
-                                .withAccountName(accountResource.getName())
+                                .withAccountName(getAccountName(accountResource))
                                 .addIdentifier(
                                         AccountIdentifier.create(AccountIdentifierType.IBAN, iban))
                                 .build())
@@ -85,5 +87,10 @@ public class CmcicTransactionalAccountConverter {
         return ExactCurrencyAmount.of(
                 balanceResource.getBalanceAmount().getAmount(),
                 balanceResource.getBalanceAmount().getCurrency());
+    }
+
+    private String getAccountName(AccountResourceDto accountResource) {
+        String accountName = accountResource.getName();
+        return accountName.contains(ACCOUNT_NAME) ? ACCOUNT_NAME : accountName;
     }
 }

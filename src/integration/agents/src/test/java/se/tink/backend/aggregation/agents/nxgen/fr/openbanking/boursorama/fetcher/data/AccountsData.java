@@ -18,7 +18,7 @@ public class AccountsData {
                     + "            \"details\": \"\",\n"
                     + "            \"usage\": \"PRIV\",\n"
                     + "            \"cashAccountType\": \"CACC\",\n"
-                    + "            \"product\": \"005001\",\n"
+                    + "            \"product\": \"CAV - BOURSORAMA BANQUE\",\n"
                     + "            \"_links\": {\n"
                     + "                \"endUserIdentity\": {\n"
                     + "                    \"href\": \"\\/services\\/api\\/v1.7\\/_user_\\/_70352f41061eda4_\\/dsp2\\/users\\/identity\",\n"

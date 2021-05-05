@@ -54,7 +54,7 @@ public class CreditAgricoleCreditCardsAccountTransactionalFetcherTest {
         assertThat(response.size()).isEqualTo(1);
         assertThat(expectedCreditCardAccount.getExactBalance())
                 .isEqualTo(ExactCurrencyAmount.of(0, "EUR"));
-        assertThat(response.iterator().next().getName()).isEqualTo("SAMPLE NAME");
+        assertThat(response.iterator().next().getName()).isEqualTo("SAMPLE PRODUCT");
         assertThat(expectedCreditCardAccount.getCardModule().getCardNumber())
                 .isEqualTo("3123213123123123123");
         assertThat(expectedCreditCardAccount.getAccountNumber()).isEqualTo("FR3123123123123123");

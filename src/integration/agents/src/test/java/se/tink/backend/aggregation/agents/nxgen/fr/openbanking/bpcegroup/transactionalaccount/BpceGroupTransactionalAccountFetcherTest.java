@@ -8,12 +8,11 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Optional;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.apiclient.BpceGroupApiClient;
-import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.transactionalaccount.converter.BpceGroupTransactionalAccountConverter;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.transactionalaccount.rpc.BalancesResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -27,28 +26,19 @@ public class BpceGroupTransactionalAccountFetcherTest {
 
     private BpceGroupApiClient bpceGroupApiClientMock;
 
-    private BpceGroupTransactionalAccountConverter bpceGroupTransactionalAccountConverterMock;
-
     @Before
     public void setUp() {
         bpceGroupApiClientMock = mock(BpceGroupApiClient.class);
         when(bpceGroupApiClientMock.fetchBalances(RESOURCE_ID)).thenReturn(getBalancesResponse());
 
-        bpceGroupTransactionalAccountConverterMock =
-                mock(BpceGroupTransactionalAccountConverter.class);
-
         bpceGroupTransactionalAccountFetcher =
-                new BpceGroupTransactionalAccountFetcher(
-                        bpceGroupApiClientMock, bpceGroupTransactionalAccountConverterMock);
+                new BpceGroupTransactionalAccountFetcher(bpceGroupApiClientMock);
     }
 
     @Test
     public void shouldFetchAccounts() {
         // given
         when(bpceGroupApiClientMock.fetchAccounts()).thenReturn(getAccountsResponse());
-        final TransactionalAccount transactionalAccountMock = mock(TransactionalAccount.class);
-        when(bpceGroupTransactionalAccountConverterMock.toTransactionalAccount(any(), any()))
-                .thenReturn(Optional.of(transactionalAccountMock));
 
         // when
         final Collection<TransactionalAccount> result =
@@ -58,7 +48,7 @@ public class BpceGroupTransactionalAccountFetcherTest {
         verify(bpceGroupApiClientMock, times(2)).fetchAccounts();
         verify(bpceGroupApiClientMock).recordCustomerConsent(any());
         verify(bpceGroupApiClientMock).fetchBalances(RESOURCE_ID);
-        assertThat(result).containsExactly(transactionalAccountMock);
+        assertThat(result).hasSize(1);
     }
 
     @Test
@@ -83,9 +73,6 @@ public class BpceGroupTransactionalAccountFetcherTest {
         // given
         when(bpceGroupApiClientMock.fetchAccounts())
                 .thenReturn(getAccountsResponseWhenNoConsentIsNeeded());
-        final TransactionalAccount transactionalAccountMock = mock(TransactionalAccount.class);
-        when(bpceGroupTransactionalAccountConverterMock.toTransactionalAccount(any(), any()))
-                .thenReturn(Optional.of(transactionalAccountMock));
 
         // when
         final Collection<TransactionalAccount> result =
@@ -95,7 +82,9 @@ public class BpceGroupTransactionalAccountFetcherTest {
         verify(bpceGroupApiClientMock).fetchAccounts();
         verify(bpceGroupApiClientMock, never()).recordCustomerConsent(any());
         verify(bpceGroupApiClientMock).fetchBalances(RESOURCE_ID);
-        assertThat(result).containsExactly(transactionalAccountMock);
+        ArrayList<TransactionalAccount> transactionalAccounts = new ArrayList<>(result);
+        assertThat(transactionalAccounts).hasSize(1);
+        assertThat(transactionalAccounts.get(0).getName()).isEqualTo("COMPTE DE DEPOT");
     }
 
     private static AccountsResponse getAccountsResponse() {
@@ -110,7 +99,8 @@ public class BpceGroupTransactionalAccountFetcherTest {
                         + "      \"resourceId\": \""
                         + RESOURCE_ID
                         + "\",\n"
-                        + "      \"name\": \"Account\",\n"
+                        + "      \"name\": \"COMPTE DE DEPOT\",\n"
+                        + "      \"details\": \"details\",\n"
                         + "      \"_links\": {}\n"
                         + "    }\n"
                         + "  ]\n"
@@ -150,7 +140,8 @@ public class BpceGroupTransactionalAccountFetcherTest {
                         + "      \"resourceId\": \""
                         + RESOURCE_ID
                         + "\",\n"
-                        + "      \"name\": \"Account\",\n"
+                        + "      \"name\": \"COMPTE DE DEPOT\",\n"
+                        + "      \"details\": \"COMPTE DE DEPOT\",\n"
                         + "      \"_links\": {\n"
                         + "         \"balances\": {\n"
                         + "            \"href\": \"https://balances-url\",\n"

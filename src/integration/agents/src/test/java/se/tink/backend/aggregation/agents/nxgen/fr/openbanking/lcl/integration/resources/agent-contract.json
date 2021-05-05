@@ -12,7 +12,7 @@
       },
       "currencyCode":"EUR",
       "bankId":"DUMMYIBAN",
-      "name":"DUMMY_NAME",
+      "name":"Compte de dépôts",
       "ownership":1.0,
       "type":"CHECKING",
       "identifiers":"[]",
