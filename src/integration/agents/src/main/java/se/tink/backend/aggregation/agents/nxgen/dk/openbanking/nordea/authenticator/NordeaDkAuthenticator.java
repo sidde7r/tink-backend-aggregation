@@ -16,6 +16,9 @@ public class NordeaDkAuthenticator extends NordeaBaseAuthenticator {
     @Override
     public URL buildAuthorizeUrl(String state) {
         return apiClient.getAuthorizeUrl(
-                new AuthorizeRequestBuilder().withCountry(COUNTRY).withState(state));
+                new AuthorizeRequestBuilder()
+                        .withCountry(COUNTRY)
+                        .withState(state)
+                        .withSkipAccountSelection(true));
     }
 }
