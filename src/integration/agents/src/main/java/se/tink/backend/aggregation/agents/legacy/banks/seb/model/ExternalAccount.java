@@ -15,7 +15,7 @@ public class ExternalAccount implements GeneralAccountEntity {
     private static final SebAccountIdentifierFormatter FORMATTER =
             new SebAccountIdentifierFormatter();
 
-    private Optional<? extends AccountIdentifier> parsedIdentifier;
+    private Optional<? extends AccountIdentifier> parsedIdentifier = Optional.empty();
 
     @JsonProperty("ROW_ID")
     public String RowId;
