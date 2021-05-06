@@ -39,7 +39,6 @@ public class JyskeConstants {
     public static class HeaderValues {
         public static final String REFERER =
                 "https://auth.jyskebank.dk/authentication/nemid_bank_twofactor";
-        public static final String ACCEPT_LANGUAGE = "en-us";
         public static final String ACCEPT_HTML =
                 "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8";
         public static final String ACCEPT_JSON = "application/vnd.relationsbank-v3+json";

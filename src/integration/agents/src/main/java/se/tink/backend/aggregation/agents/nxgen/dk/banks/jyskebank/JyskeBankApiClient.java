@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank;
 
+import java.util.Locale;
 import java.util.UUID;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
@@ -40,7 +41,7 @@ public class JyskeBankApiClient {
                         .queryParam(QueryKeys.RESPONSE_MODE, QueryValues.RESPONSE_MODE)
                         .queryParam(QueryKeys.UI_LOCALES, QueryValues.UI_LOCALES)
                         .queryParam(QueryKeys.ENROLLMENT_CHALLENGE, codeChallenge)
-                        .header(HttpHeaders.ACCEPT_LANGUAGE, HeaderValues.ACCEPT_LANGUAGE)
+                        .acceptLanguage(Locale.US)
                         .header(HttpHeaders.USER_AGENT, HeaderValues.USER_AGENT)
                         .accept(HeaderValues.ACCEPT_HTML)
                         .get(HttpResponse.class);
@@ -68,9 +69,9 @@ public class JyskeBankApiClient {
         return client.request(url)
                 .header(HeaderKeys.ORIGIN, Urls.AUTH_HOST)
                 .header(HeaderKeys.REFERER, HeaderValues.REFERER)
-                .header(HttpHeaders.ACCEPT_LANGUAGE, HeaderValues.ACCEPT_LANGUAGE)
                 .header(HttpHeaders.USER_AGENT, HeaderValues.USER_AGENT)
                 .type(MediaType.APPLICATION_FORM_URLENCODED)
+                .acceptLanguage(Locale.US)
                 .accept(HeaderValues.ACCEPT_HTML);
     }
 
