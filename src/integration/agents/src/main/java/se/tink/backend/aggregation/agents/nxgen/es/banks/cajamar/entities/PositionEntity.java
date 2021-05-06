@@ -9,7 +9,7 @@ public class PositionEntity {
     private List<CardEntity> cards;
     private List<ProductEntity> otherProducts;
     private List<FinancialMarketAccountEntity> financialMarketAccounts;
-    private List<SavingInvestmentEntity> savingInvestment;
+    private List<SavingAccountEntity> savingInvestment;
     private String currency;
     private Integer globalBalance;
     private Integer whatIhave;
@@ -27,7 +27,7 @@ public class PositionEntity {
         return financialMarketAccounts;
     }
 
-    public List<SavingInvestmentEntity> getSavingInvestment() {
+    public List<SavingAccountEntity> getSavingInvestment() {
         return savingInvestment;
     }
 

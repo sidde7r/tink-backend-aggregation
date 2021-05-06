@@ -15,7 +15,7 @@ REQUEST 2
 POST https://api.cajamar.es/amea-web/abh/enrollment
 Content-Type: application/json
 
-{"hasScreenLock":true,"jailbreak":false,"screenHeight":667,"screenWidth":375,"appName":"WEFFERENT","deviceName":"iPhone 8","deviceId":"1101031615543534457519899","osName":"IOS","language":"eng","osVersion":"14.4.1","appVersion":"1.67.28","pushToken":"D3812F47DB01F91A8AB0A3C4F89CC534E83239312D3D6D28AE4D04DE3CD64BF6","user":"dummyUsername","password":"dummyPassword"}
+{"hasScreenLock":true,"jailbreak":false,"screenHeight":667,"screenWidth":375,"appName":"WEFFERENT","deviceName":"iPhone 8","deviceId":"1101031615543534457519899","osName":"IOS","language":"eng","osVersion":"14.4.1","appVersion":"1.73.5","pushToken":"D3812F47DB01F91A8AB0A3C4F89CC534E83239312D3D6D28AE4D04DE3CD64BF6","user":"dummyUsername","password":"dummyPassword"}
 
 RESPONSE 2
 200
@@ -28,7 +28,7 @@ POST https://api.cajamar.es/amea-web/abh/login
 Content-Type: application/json
 Accept: */*
 
-{"osVersion":"14.4.1","appVersion":"1.67.28","language":"eng","deviceName":"iPhone 8","screenWidth":375,"screenHeight":667,"jailbreak":false,"hasScreenLock":true,"password":"dummyPassword"}
+{"osVersion":"14.4.1","appVersion":"1.73.5","language":"eng","deviceName":"iPhone 8","screenWidth":375,"screenHeight":667,"jailbreak":false,"hasScreenLock":true,"password":"dummyPassword"}
 
 RESPONSE 3
 200

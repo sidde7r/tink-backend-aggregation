@@ -9,6 +9,7 @@ import io.vavr.jackson.datatype.VavrModule;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.Collection;
+import java.util.Optional;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -31,9 +32,10 @@ public class CajamarCardFetcherTest {
     public void shouldFetchCajamarAccount() throws IOException {
         // given
         final PositionEntity position = loadSampleData("positions.json", PositionEntity.class);
-        final CreditCardResponse account = loadSampleData("card.json", CreditCardResponse.class);
-        when(apiClient.fetchPositions()).thenReturn(position);
-        when(apiClient.fetchCreditCardDetails(any())).thenReturn(account);
+        final CreditCardResponse cardResponse =
+                loadSampleData("card.json", CreditCardResponse.class);
+        when(apiClient.getPositions()).thenReturn(Optional.of(position));
+        when(apiClient.fetchCreditCardDetails(any())).thenReturn(cardResponse);
 
         // when
         final CajamarCreditCardFetcher cajamarCardFetcher = new CajamarCreditCardFetcher(apiClient);
@@ -48,7 +50,7 @@ public class CajamarCardFetcherTest {
         // given
         final PositionEntity position =
                 loadSampleData("positions_without_cards.json", PositionEntity.class);
-        when(apiClient.fetchPositions()).thenReturn(position);
+        when(apiClient.getPositions()).thenReturn(Optional.of(position));
 
         // when
         final CajamarCreditCardFetcher cajamarCardFetcher = new CajamarCreditCardFetcher(apiClient);

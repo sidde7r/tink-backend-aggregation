@@ -13,7 +13,7 @@ import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
-public class SavingInvestmentEntity {
+public class SavingAccountEntity {
     private String associatedAccount;
     private String policyAccount;
     private String depositId;
