@@ -4,6 +4,7 @@ junit_test(
     name = "metrics",
     srcs = glob(["*.java"]),
     deps = [
+        "//src/aggregation/api/src/main/java/se/tink/backend/aggregation/cluster/identification",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/workers/commands/metrics",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/workers/metrics",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/workers/operation/type",

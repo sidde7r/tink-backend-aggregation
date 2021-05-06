@@ -9,6 +9,7 @@ java_library(
     runtime_deps = [
     ],
     deps = [
+        "//src/aggregation/api/src/main/java/se/tink/backend/aggregation/cluster/identification",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/workers/commands/metrics",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/workers/operation/type",
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",

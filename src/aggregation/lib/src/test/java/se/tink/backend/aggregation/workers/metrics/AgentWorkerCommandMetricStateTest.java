@@ -9,6 +9,7 @@ import org.junit.Test;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Provider;
+import se.tink.backend.aggregation.cluster.identification.ClientInfo;
 import se.tink.backend.aggregation.workers.commands.metrics.MetricsCommand;
 import se.tink.backend.aggregation.workers.operation.type.AgentWorkerOperationMetricType;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsRequestType;
@@ -25,6 +26,7 @@ public class AgentWorkerCommandMetricStateTest {
     private Provider provider;
     private Credentials credentials;
     private CredentialsRequestType requestType;
+    private ClientInfo clientInfo;
 
     @Before
     public void setup() {
@@ -35,11 +37,11 @@ public class AgentWorkerCommandMetricStateTest {
         when(metricRegistry.meter(any())).thenReturn(mock(Counter.class));
         provider = mockProvider();
         credentials = mockCredentials();
+        clientInfo = mockClientInfo();
         requestType = CredentialsRequestType.UPDATE;
-
         metrics =
                 new AgentWorkerCommandMetricState(
-                        provider, credentials, metricRegistry, requestType);
+                        provider, credentials, metricRegistry, requestType, clientInfo);
         metrics.init(command);
     }
 
@@ -77,11 +79,22 @@ public class AgentWorkerCommandMetricStateTest {
         return provider;
     }
 
+    private ClientInfo mockClientInfo() {
+        ClientInfo clientInfo = mock(ClientInfo.class);
+        when(clientInfo.getAppId()).thenReturn("test_app_id");
+        when(clientInfo.getClientName()).thenReturn("test_client_name");
+        when(clientInfo.getClusterEnvironment()).thenReturn("test_environment");
+        when(clientInfo.getClusterId()).thenReturn("test_cluster_id");
+        when(clientInfo.getClusterName()).thenReturn("test_cluster_name");
+
+        return clientInfo;
+    }
+
     @Test(expected = IllegalStateException.class)
     public void ensureExceptionIsThrown_whenMetricsState_notInitiatedByCommand_onStart() {
         metrics =
                 new AgentWorkerCommandMetricState(
-                        provider, credentials, metricRegistry, requestType);
+                        provider, credentials, metricRegistry, requestType, clientInfo);
         metrics.start(AgentWorkerOperationMetricType.EXECUTE_COMMAND);
     }
 
@@ -95,7 +108,7 @@ public class AgentWorkerCommandMetricStateTest {
     public void ensureExceptionIsThrown_whenMetricsState_notInitiatedByCommand_onGetAction() {
         metrics =
                 new AgentWorkerCommandMetricState(
-                        provider, credentials, metricRegistry, requestType);
+                        provider, credentials, metricRegistry, requestType, clientInfo);
         buildAction("should-throw-exception");
     }
 

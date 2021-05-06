@@ -170,8 +170,8 @@ public class AgentWorkerOperationFactory {
             @ShouldAddExtraCommands Predicate<Provider> shouldAddExtraCommands,
             RegulatoryRestrictions regulatoryRestrictions,
             AccountInformationServiceEventsProducer accountInformationServiceEventsProducer) {
-        this.cacheClient = cacheClient;
 
+        this.cacheClient = cacheClient;
         this.cryptoConfigurationDao = cryptoConfigurationDao;
         this.controllerWrapperProvider = controllerWrapperProvider;
         this.aggregatorInfoProvider = aggregatorInfoProvider;
@@ -205,9 +205,14 @@ public class AgentWorkerOperationFactory {
         this.accountInformationServiceEventsProducer = accountInformationServiceEventsProducer;
     }
 
-    private AgentWorkerCommandMetricState createCommandMetricState(CredentialsRequest request) {
+    private AgentWorkerCommandMetricState createCommandMetricState(
+            CredentialsRequest request, ClientInfo clientInfo) {
         return new AgentWorkerCommandMetricState(
-                request.getProvider(), request.getCredentials(), metricRegistry, request.getType());
+                request.getProvider(),
+                request.getCredentials(),
+                metricRegistry,
+                request.getType(),
+                clientInfo);
     }
 
     // Remove `ACCOUNTS` and `TRANSACTIONAL_ACCOUNTS_AND_TRANSACTIONS` and replace them with
@@ -231,7 +236,8 @@ public class AgentWorkerOperationFactory {
             CredentialsRequest request,
             AgentWorkerCommandContext context,
             Set<RefreshableItem> itemsToRefresh,
-            ControllerWrapper controllerWrapper) {
+            ControllerWrapper controllerWrapper,
+            ClientInfo clientInfo) {
 
         itemsToRefresh = convertLegacyItems(itemsToRefresh);
 
@@ -253,15 +259,15 @@ public class AgentWorkerOperationFactory {
         if (accountItems.size() > 0) {
             commands.add(
                     new SendAccountsToUpdateServiceAgentWorkerCommand(
-                            context, createCommandMetricState(request)));
+                            context, createCommandMetricState(request, clientInfo)));
 
             commands.add(
                     new SendAccountsHoldersToUpdateServiceAgentWorkerCommand(
-                            context, createCommandMetricState(request)));
+                            context, createCommandMetricState(request, clientInfo)));
             commands.add(
                     new SendPsd2PaymentClassificationToUpdateServiceAgentWorkerCommand(
                             context,
-                            createCommandMetricState(request),
+                            createCommandMetricState(request, clientInfo),
                             psd2PaymentAccountClassifier,
                             controllerWrapper));
 
@@ -279,7 +285,7 @@ public class AgentWorkerOperationFactory {
                     new RefreshItemAgentWorkerCommand(
                             context,
                             item,
-                            createCommandMetricState(request),
+                            createCommandMetricState(request, clientInfo),
                             refreshEventProducer));
         }
 
@@ -287,7 +293,7 @@ public class AgentWorkerOperationFactory {
             commands.add(
                     new SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand(
                             context,
-                            createCommandMetricState(request),
+                            createCommandMetricState(request, clientInfo),
                             agentDataAvailabilityTrackerClient,
                             dataTrackerEventProducer));
         }
@@ -319,20 +325,20 @@ public class AgentWorkerOperationFactory {
                             context, accountInformationServiceEventsProducer));
             commands.add(
                     new SendAccountsToUpdateServiceAgentWorkerCommand(
-                            context, createCommandMetricState(request)));
+                            context, createCommandMetricState(request, clientInfo)));
             commands.add(
                     new SendAccountsHoldersToUpdateServiceAgentWorkerCommand(
-                            context, createCommandMetricState(request)));
+                            context, createCommandMetricState(request, clientInfo)));
             commands.add(
                     new SendPsd2PaymentClassificationToUpdateServiceAgentWorkerCommand(
                             context,
-                            createCommandMetricState(request),
+                            createCommandMetricState(request, clientInfo),
                             psd2PaymentAccountClassifier,
                             controllerWrapper));
             commands.add(
                     new SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand(
                             context,
-                            createCommandMetricState(request),
+                            createCommandMetricState(request, clientInfo),
                             agentDataAvailabilityTrackerClient,
                             dataTrackerEventProducer));
         }
@@ -435,7 +441,7 @@ public class AgentWorkerOperationFactory {
         commands.add(
                 new SendDataForProcessingAgentWorkerCommand(
                         context,
-                        createCommandMetricState(request),
+                        createCommandMetricState(request, clientInfo),
                         ProcessableItem.fromRefreshableItems(
                                 RefreshableItem.convertLegacyItems(request.getItemsToRefresh()))));
         commands.add(
@@ -448,11 +454,12 @@ public class AgentWorkerOperationFactory {
         commands.add(
                 new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
         addClearSensitivePayloadOnForceAuthenticateCommandAndLoginAgentWorkerCommand(
-                commands, context);
+                commands, context, clientInfo);
         commands.add(
                 new SetCredentialsStatusAgentWorkerCommand(context, CredentialsStatus.UPDATING));
         commands.addAll(
-                createRefreshAccountsCommands(request, context, request.getItemsToRefresh()));
+                createRefreshAccountsCommands(
+                        request, context, request.getItemsToRefresh(), clientInfo));
         commands.add(
                 new SendAccountSourceInfoEventWorkerCommand(
                         context, accountInformationServiceEventsProducer));
@@ -475,7 +482,11 @@ public class AgentWorkerOperationFactory {
                         context, accountInformationServiceEventsProducer));
         commands.addAll(
                 createOrderedRefreshableItemsCommands(
-                        request, context, request.getItemsToRefresh(), controllerWrapper));
+                        request,
+                        context,
+                        request.getItemsToRefresh(),
+                        controllerWrapper,
+                        clientInfo));
 
         log.debug("Created refresh operation chain for credential");
         return new AgentWorkerOperation(
@@ -564,7 +575,7 @@ public class AgentWorkerOperationFactory {
                 new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
 
         addClearSensitivePayloadOnForceAuthenticateCommandAndLoginAgentWorkerCommand(
-                commands, context);
+                commands, context, clientInfo);
 
         commands.add(
                 new SetCredentialsStatusAgentWorkerCommand(context, CredentialsStatus.UPDATING));
@@ -619,7 +630,10 @@ public class AgentWorkerOperationFactory {
             if (shouldRefresh) {
                 commands.addAll(
                         createRefreshAccountsCommands(
-                                request, context, RefreshableItem.REFRESHABLE_ITEMS_ALL));
+                                request,
+                                context,
+                                RefreshableItem.REFRESHABLE_ITEMS_ALL,
+                                clientInfo));
                 commands.add(
                         new SendAccountSourceInfoEventWorkerCommand(
                                 context, accountInformationServiceEventsProducer));
@@ -644,7 +658,8 @@ public class AgentWorkerOperationFactory {
                                 request,
                                 context,
                                 RefreshableItem.REFRESHABLE_ITEMS_ALL,
-                                controllerWrapper));
+                                controllerWrapper,
+                                clientInfo));
             }
         }
 
@@ -777,7 +792,7 @@ public class AgentWorkerOperationFactory {
 
         if (isAisPlusPisFlow(request)) {
             addClearSensitivePayloadOnForceAuthenticateCommandAndLoginAgentWorkerCommand(
-                    commands, context);
+                    commands, context, clientInfo);
             commands.add(
                     new SetCredentialsStatusAgentWorkerCommand(
                             context, CredentialsStatus.UPDATING));
@@ -785,7 +800,7 @@ public class AgentWorkerOperationFactory {
 
         commands.add(
                 new TransferAgentWorkerCommand(
-                        context, request, createCommandMetricState(request)));
+                        context, request, createCommandMetricState(request, clientInfo)));
 
         // TODO: this is only for test purposes, remove it later
         if (Objects.equals("aec3753f2f7d42ffb0fd71740f029992", context.getAppId())
@@ -798,7 +813,7 @@ public class AgentWorkerOperationFactory {
         if (shouldRefreshAfterPis) {
             commands.addAll(
                     createRefreshAccountsCommands(
-                            request, context, RefreshableItem.REFRESHABLE_ITEMS_ALL));
+                            request, context, RefreshableItem.REFRESHABLE_ITEMS_ALL, clientInfo));
             commands.add(
                     new SendAccountSourceInfoEventWorkerCommand(
                             context, accountInformationServiceEventsProducer));
@@ -823,7 +838,8 @@ public class AgentWorkerOperationFactory {
                             request,
                             context,
                             RefreshableItem.REFRESHABLE_ITEMS_ALL,
-                            controllerWrapper));
+                            controllerWrapper,
+                            clientInfo));
         }
 
         return new AgentWorkerOperation(
@@ -878,7 +894,8 @@ public class AgentWorkerOperationFactory {
                         request,
                         context,
                         RefreshableItem.REFRESHABLE_ITEMS_ALL,
-                        controllerWrapper));
+                        controllerWrapper,
+                        clientInfo));
 
         return new AgentWorkerOperation(
                 agentWorkerOperationState, operationName, request, commands, context);
@@ -941,7 +958,7 @@ public class AgentWorkerOperationFactory {
         commands.add(
                 new SendDataForProcessingAgentWorkerCommand(
                         context,
-                        createCommandMetricState(request),
+                        createCommandMetricState(request, clientInfo),
                         ProcessableItem.fromRefreshableItems(
                                 RefreshableItem.convertLegacyItems(
                                         RefreshableItem.REFRESHABLE_ITEMS_ALL))));
@@ -955,12 +972,12 @@ public class AgentWorkerOperationFactory {
         commands.add(
                 new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
         addClearSensitivePayloadOnForceAuthenticateCommandAndLoginAgentWorkerCommand(
-                commands, context);
+                commands, context, clientInfo);
         commands.add(
                 new SetCredentialsStatusAgentWorkerCommand(context, CredentialsStatus.UPDATING));
         commands.add(
                 new TransferAgentWorkerCommand(
-                        context, request, createCommandMetricState(request)));
+                        context, request, createCommandMetricState(request, clientInfo)));
 
         return commands;
     }
@@ -1020,7 +1037,7 @@ public class AgentWorkerOperationFactory {
                 new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
         commands.add(
                 new TransferAgentWorkerCommand(
-                        context, request, createCommandMetricState(request)));
+                        context, request, createCommandMetricState(request, clientInfo)));
 
         return commands;
     }
@@ -1159,7 +1176,8 @@ public class AgentWorkerOperationFactory {
     List<AgentWorkerCommand> createRefreshAccountsCommands(
             CredentialsRequest request,
             AgentWorkerCommandContext context,
-            Set<RefreshableItem> itemsToRefresh) {
+            Set<RefreshableItem> itemsToRefresh,
+            ClientInfo clientInfo) {
 
         List<RefreshableItem> items = RefreshableItem.sort(convertLegacyItems(itemsToRefresh));
 
@@ -1171,7 +1189,7 @@ public class AgentWorkerOperationFactory {
                         new RefreshItemAgentWorkerCommand(
                                 context,
                                 item,
-                                createCommandMetricState(request),
+                                createCommandMetricState(request, clientInfo),
                                 refreshEventProducer));
             }
         }
@@ -1272,7 +1290,7 @@ public class AgentWorkerOperationFactory {
         commands.add(
                 new SendDataForProcessingAgentWorkerCommand(
                         context,
-                        createCommandMetricState(request),
+                        createCommandMetricState(request, clientInfo),
                         ProcessableItem.fromRefreshableItems(
                                 RefreshableItem.convertLegacyItems(request.getItemsToRefresh()))));
         commands.add(
@@ -1285,12 +1303,16 @@ public class AgentWorkerOperationFactory {
         commands.add(
                 new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
         addClearSensitivePayloadOnForceAuthenticateCommandAndLoginAgentWorkerCommand(
-                commands, context);
+                commands, context, clientInfo);
         commands.add(
                 new SetCredentialsStatusAgentWorkerCommand(context, CredentialsStatus.UPDATING));
         commands.addAll(
                 createWhitelistRefreshableItemsCommands(
-                        request, context, request.getItemsToRefresh(), controllerWrapper));
+                        request,
+                        context,
+                        request.getItemsToRefresh(),
+                        controllerWrapper,
+                        clientInfo));
 
         log.debug("Created whitelist refresh operation chain for credential");
         return new AgentWorkerOperation(
@@ -1389,7 +1411,7 @@ public class AgentWorkerOperationFactory {
         commands.add(
                 new SendDataForProcessingAgentWorkerCommand(
                         context,
-                        createCommandMetricState(request),
+                        createCommandMetricState(request, clientInfo),
                         ProcessableItem.fromRefreshableItems(
                                 RefreshableItem.convertLegacyItems(request.getItemsToRefresh()))));
         commands.add(
@@ -1402,11 +1424,15 @@ public class AgentWorkerOperationFactory {
         commands.add(
                 new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
         addClearSensitivePayloadOnForceAuthenticateCommandAndLoginAgentWorkerCommand(
-                commands, context);
+                commands, context, clientInfo);
 
         commands.addAll(
                 createWhitelistRefreshableItemsCommands(
-                        request, context, request.getItemsToRefresh(), controllerWrapper));
+                        request,
+                        context,
+                        request.getItemsToRefresh(),
+                        controllerWrapper,
+                        clientInfo));
 
         return new AgentWorkerOperation(
                 agentWorkerOperationState, operationMetricName, request, commands, context);
@@ -1416,7 +1442,8 @@ public class AgentWorkerOperationFactory {
             CredentialsRequest request,
             AgentWorkerCommandContext context,
             Set<RefreshableItem> itemsToRefresh,
-            ControllerWrapper controllerWrapper) {
+            ControllerWrapper controllerWrapper,
+            ClientInfo clientInfo) {
 
         // Convert legacy items to corresponding new refreshable items
         itemsToRefresh = convertLegacyItems(itemsToRefresh);
@@ -1435,7 +1462,8 @@ public class AgentWorkerOperationFactory {
         // === START REFRESHING ===
         if (accountItems.size() > 0) {
             // Start refreshing all account items
-            commands.addAll(createRefreshAccountsCommands(request, context, accountItems));
+            commands.addAll(
+                    createRefreshAccountsCommands(request, context, accountItems, clientInfo));
 
             commands.add(
                     new SendAccountSourceInfoEventWorkerCommand(
@@ -1475,14 +1503,14 @@ public class AgentWorkerOperationFactory {
                             context, accountInformationServiceEventsProducer));
             commands.add(
                     new SendAccountsToUpdateServiceAgentWorkerCommand(
-                            context, createCommandMetricState(request)));
+                            context, createCommandMetricState(request, clientInfo)));
             commands.add(
                     new SendAccountsHoldersToUpdateServiceAgentWorkerCommand(
-                            context, createCommandMetricState(request)));
+                            context, createCommandMetricState(request, clientInfo)));
             commands.add(
                     new SendPsd2PaymentClassificationToUpdateServiceAgentWorkerCommand(
                             context,
-                            createCommandMetricState(request),
+                            createCommandMetricState(request, clientInfo),
                             psd2PaymentAccountClassifier,
                             controllerWrapper));
 
@@ -1502,14 +1530,14 @@ public class AgentWorkerOperationFactory {
                                         new RefreshItemAgentWorkerCommand(
                                                 context,
                                                 item,
-                                                createCommandMetricState(request),
+                                                createCommandMetricState(request, clientInfo),
                                                 refreshEventProducer)));
 
         if (accountItems.size() > 0) {
             commands.add(
                     new SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand(
                             context,
-                            createCommandMetricState(request),
+                            createCommandMetricState(request, clientInfo),
                             agentDataAvailabilityTrackerClient,
                             dataTrackerEventProducer));
         }
@@ -1563,7 +1591,9 @@ public class AgentWorkerOperationFactory {
     }
 
     private void addClearSensitivePayloadOnForceAuthenticateCommandAndLoginAgentWorkerCommand(
-            List<AgentWorkerCommand> commands, AgentWorkerCommandContext context) {
+            List<AgentWorkerCommand> commands,
+            AgentWorkerCommandContext context,
+            ClientInfo clientInfo) {
 
         /* LoginAgentWorkerCommand needs to always be used together with ClearSensitivePayloadOnForceAuthenticateCommand */
 
@@ -1572,7 +1602,7 @@ public class AgentWorkerOperationFactory {
                 new LoginAgentWorkerCommand(
                         context,
                         loginAgentWorkerCommandState,
-                        createCommandMetricState(context.getRequest()),
+                        createCommandMetricState(context.getRequest(), clientInfo),
                         metricRegistry,
                         loginAgentEventProducer));
     }
