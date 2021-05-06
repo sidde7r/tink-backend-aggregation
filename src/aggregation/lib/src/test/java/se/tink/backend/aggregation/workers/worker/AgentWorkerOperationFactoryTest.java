@@ -52,6 +52,7 @@ import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.cache.CacheClient;
 import se.tink.libraries.credentials.service.ManualAuthenticateRequest;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
+import se.tink.libraries.credentials.service.UserAvailability;
 import se.tink.libraries.enums.MarketCode;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 import se.tink.libraries.provider.ProviderDto;
@@ -100,6 +101,7 @@ public final class AgentWorkerOperationFactoryTest {
         ManualAuthenticateRequest authenticateRequest = mock(ManualAuthenticateRequest.class);
         when(authenticateRequest.getProvider()).thenReturn(provider);
         when(authenticateRequest.getType()).thenReturn(credentialsRequestType);
+        when(authenticateRequest.getUserAvailability()).thenReturn(new UserAvailability());
 
         // when
         AgentWorkerOperation operation =
@@ -114,6 +116,7 @@ public final class AgentWorkerOperationFactoryTest {
         // given
         RefreshInformationRequest refreshRequest = mock(RefreshInformationRequest.class);
         when(refreshRequest.getProvider()).thenReturn(provider);
+        when(refreshRequest.getUserAvailability()).thenReturn(new UserAvailability());
         when(refreshRequest.getType()).thenReturn(credentialsRequestType);
 
         // when
@@ -129,6 +132,7 @@ public final class AgentWorkerOperationFactoryTest {
         RefreshInformationRequest refreshRequest = mock(RefreshInformationRequest.class);
         when(refreshRequest.getProvider()).thenReturn(provider);
         when(refreshRequest.getType()).thenReturn(credentialsRequestType);
+        when(refreshRequest.getUserAvailability()).thenReturn(new UserAvailability());
         when(refreshRequest.getRefreshId()).thenReturn(CORRELATION_ID);
 
         // when
@@ -144,6 +148,7 @@ public final class AgentWorkerOperationFactoryTest {
         ConfigureWhitelistInformationRequest refreshRequest =
                 mock(ConfigureWhitelistInformationRequest.class);
         when(refreshRequest.getProvider()).thenReturn(provider);
+        when(refreshRequest.getUserAvailability()).thenReturn(new UserAvailability());
         when(refreshRequest.getType()).thenReturn(credentialsRequestType);
         when(refreshRequest.getRefreshId()).thenReturn(CORRELATION_ID);
 
@@ -162,6 +167,7 @@ public final class AgentWorkerOperationFactoryTest {
         AgentWorkerOperationFactory factorySpy = spy(this.factory);
         when(clientInfo.getAppId()).thenReturn(APP_ID);
         when(request.getProvider()).thenReturn(provider);
+        when(request.getUserAvailability()).thenReturn(new UserAvailability());
         when(request.getType()).thenReturn(CredentialsRequestType.TRANSFER);
 
         // Act
@@ -177,6 +183,7 @@ public final class AgentWorkerOperationFactoryTest {
         TransferRequest request = mock(TransferRequest.class);
         AgentWorkerOperationFactory factorySpy = spy(this.factory);
         when(clientInfo.getAppId()).thenReturn(APP_ID);
+        when(request.getUserAvailability()).thenReturn(new UserAvailability());
         when(request.getProvider()).thenReturn(provider);
         when(request.isSkipRefresh()).thenReturn(true);
         when(request.getType()).thenReturn(CredentialsRequestType.TRANSFER);
@@ -195,6 +202,7 @@ public final class AgentWorkerOperationFactoryTest {
         AgentWorkerOperationFactory factorySpy = spy(this.factory);
         when(clientInfo.getAppId()).thenReturn(APP_ID);
         when(request.getProvider()).thenReturn(provider);
+        when(request.getUserAvailability()).thenReturn(new UserAvailability());
         when(request.getType()).thenReturn(CredentialsRequestType.TRANSFER);
         when(provider.getMarket()).thenReturn(MarketCode.GB.toString());
         when(provider.isOpenBanking()).thenReturn(true);
@@ -214,6 +222,7 @@ public final class AgentWorkerOperationFactoryTest {
         AgentWorkerOperationFactory factorySpy = spy(this.factory);
         when(clientInfo.getAppId()).thenReturn(APP_ID);
         when(request.getProvider()).thenReturn(provider);
+        when(request.getUserAvailability()).thenReturn(new UserAvailability());
         when(request.getType()).thenReturn(CredentialsRequestType.TRANSFER);
         when(provider.getMarket()).thenReturn(MarketCode.FR.toString());
         when(provider.getType()).thenReturn(ProviderDto.ProviderTypes.TEST);
@@ -232,6 +241,7 @@ public final class AgentWorkerOperationFactoryTest {
         RefreshWhitelistInformationRequest refreshRequest =
                 mock(RefreshWhitelistInformationRequest.class);
         when(refreshRequest.getProvider()).thenReturn(provider);
+        when(refreshRequest.getUserAvailability()).thenReturn(new UserAvailability());
         when(refreshRequest.getType()).thenReturn(credentialsRequestType);
         when(refreshRequest.getRefreshId()).thenReturn(CORRELATION_ID);
 
