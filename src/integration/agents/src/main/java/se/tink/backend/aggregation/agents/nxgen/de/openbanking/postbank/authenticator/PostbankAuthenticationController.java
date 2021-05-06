@@ -28,6 +28,7 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.Postbank
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenticator.entities.ChallengeData;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenticator.entities.ScaMethod;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenticator.rpc.AuthorisationResponse;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AuthenticationType;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.OtpFormat;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.CommonFields;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.GermanFields;
@@ -42,10 +43,6 @@ import se.tink.libraries.i18n.Catalog;
 public class PostbankAuthenticationController implements TypedAuthenticator {
 
     private static final Pattern STARTCODE_CHIP_PATTERN = Pattern.compile("Startcode:\\s(\\d+)");
-
-    private static final String CHIP_OTP = "CHIP_OTP";
-    private static final String SMS_OTP = "SMS_OTP";
-    private static final String PUSH_OTP = "PUSH_OTP";
 
     private final Catalog catalog;
     private final SupplementalInformationController supplementalInformationController;
@@ -92,7 +89,7 @@ public class PostbankAuthenticationController implements TypedAuthenticator {
             String username, AuthorisationResponse initValues, ScaMethod chosenScaMethod) {
         String authenticationType = chosenScaMethod.getAuthenticationType();
         log.info("[Postbank 2FA] User for authenticationType {} started 2FA", authenticationType);
-        switch (authenticationType.toUpperCase()) {
+        switch (AuthenticationType.fromString(authenticationType).get()) {
             case PUSH_OTP:
                 finishWithAcceptingPush(initValues, username);
                 break;
