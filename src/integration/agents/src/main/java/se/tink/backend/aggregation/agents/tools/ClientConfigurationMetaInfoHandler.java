@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.reflections.Reflections;
 import org.reflections.scanners.SubTypesScanner;
+import org.reflections.util.ClasspathHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Provider;
@@ -185,14 +186,18 @@ public class ClientConfigurationMetaInfoHandler {
 
         int lastIndexPackageSubdivider = fullyQualifiedClassName.lastIndexOf('.');
         String packageToScan = fullyQualifiedClassName.substring(0, lastIndexPackageSubdivider);
+        log.info("Package to scan is : {}", packageToScan);
         Reflections reflectionsPackageToScan =
-                new Reflections(packageToScan, new SubTypesScanner(false));
+                new Reflections(
+                        ClasspathHelper.forPackage(packageToScan), new SubTypesScanner(false));
         Set<Class<? extends ClientConfiguration>> clientConfigurationClassForAgentSet =
                 removeSuperClasses(
                         reflectionsPackageToScan.getSubTypesOf(ClientConfiguration.class).stream()
                                 .filter(clazz -> !clazz.isInterface())
                                 .collect(Collectors.toSet()));
-
+        log.info(
+                "clientConfigurationClassForAgentSet are  : {}",
+                clientConfigurationClassForAgentSet);
         if (clientConfigurationClassForAgentSet.size() > 1) {
             throw new IllegalStateException(
                     "Found more than one class implementing ClientConfiguration: "
