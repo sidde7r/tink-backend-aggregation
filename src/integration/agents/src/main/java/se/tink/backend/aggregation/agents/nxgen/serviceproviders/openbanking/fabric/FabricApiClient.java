@@ -14,8 +14,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fab
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.authenticator.rpc.ConsentStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.authenticator.rpc.CreateConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.authenticator.rpc.CreateConsentResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.executor.payment.rpc.CreatePaymentRequest;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.executor.payment.rpc.CreatePaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.executor.payment.rpc.FabricPaymentRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.executor.payment.rpc.FabricPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.executor.payment.rpc.PaymentAuthorizationStatus;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.executor.payment.rpc.PaymentAuthorizationsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.fetcher.transactionalaccount.rpc.AccountDetailsResponse;
@@ -130,8 +130,8 @@ public class FabricApiClient {
                 .get(TransactionResponse.class);
     }
 
-    public CreatePaymentResponse createPayment(
-            CreatePaymentRequest createPaymentRequest, Payment payment) {
+    public FabricPaymentResponse createPayment(
+            FabricPaymentRequest fabricPaymentRequest, Payment payment) {
         return createPaymentRequest(
                         new URL(Urls.INITIATE_A_PAYMENT_URL)
                                 .parameter(
@@ -147,12 +147,12 @@ public class FabricApiClient {
                         new URL(redirectUrl)
                                 .queryParam(QueryKeys.CODE, FabricConstants.QueryValues.CODE)
                                 .queryParam(QueryKeys.STATE, sessionStorage.get(QueryKeys.STATE)))
-                .post(CreatePaymentResponse.class, createPaymentRequest);
+                .post(FabricPaymentResponse.class, fabricPaymentRequest);
     }
 
-    public CreatePaymentResponse getPayment(Payment payment) {
+    public FabricPaymentResponse getPayment(Payment payment) {
         return createPaymentRequest(
-                        new URL(Urls.GET_PAYMENT_URL)
+                        new URL(Urls.PAYMENT_URL)
                                 .parameter(
                                         FabricConstants.PathParameterKeys.PAYMENT_SERVICE,
                                         getPaymentService(payment))
@@ -163,10 +163,10 @@ public class FabricApiClient {
                                         FabricConstants.PathParameterKeys.PAYMENT_ID,
                                         payment.getUniqueId()))
                 .type(MediaType.APPLICATION_JSON)
-                .get(CreatePaymentResponse.class);
+                .get(FabricPaymentResponse.class);
     }
 
-    public CreatePaymentResponse getPaymentStatus(Payment payment) {
+    public FabricPaymentResponse getPaymentStatus(Payment payment) {
         return createPaymentRequest(
                         new URL(Urls.GET_PAYMENT_STATUS_URL)
                                 .parameter(
@@ -178,7 +178,7 @@ public class FabricApiClient {
                                 .parameter(
                                         FabricConstants.PathParameterKeys.PAYMENT_ID,
                                         payment.getUniqueId()))
-                .get(CreatePaymentResponse.class);
+                .get(FabricPaymentResponse.class);
     }
 
     public PaymentAuthorizationsResponse getPaymentAuthorizations(Payment payment) {
@@ -200,6 +200,22 @@ public class FabricApiClient {
                     StorageKeys.PAYMENT_AUTHORIZATION_ID, result.getLastAuthorisationId());
         }
         return result;
+    }
+
+    public FabricPaymentResponse deletePayment(Payment payment) {
+        return createPaymentRequest(
+                        new URL(Urls.PAYMENT_URL)
+                                .parameter(
+                                        FabricConstants.PathParameterKeys.PAYMENT_SERVICE,
+                                        getPaymentService(payment))
+                                .parameter(
+                                        FabricConstants.PathParameterKeys.PAYMENT_PRODUCT,
+                                        getPaymentProduct(payment))
+                                .parameter(
+                                        FabricConstants.PathParameterKeys.PAYMENT_ID,
+                                        payment.getUniqueId()))
+                .type(MediaType.APPLICATION_JSON)
+                .delete(FabricPaymentResponse.class);
     }
 
     public PaymentAuthorizationStatus getPaymentAuthorizationStatus(Payment payment) {

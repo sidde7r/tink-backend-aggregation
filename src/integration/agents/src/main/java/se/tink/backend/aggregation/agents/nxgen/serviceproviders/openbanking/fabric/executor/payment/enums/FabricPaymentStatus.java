@@ -44,8 +44,11 @@ public enum FabricPaymentStatus {
 
     private String statusText;
 
-    private static EnumMap<FabricPaymentStatus, PaymentStatus> paymentStatusToTinkMapper =
+    private static final EnumMap<FabricPaymentStatus, PaymentStatus> paymentStatusToTinkMapper =
             new EnumMap<>(FabricPaymentStatus.class);
+
+    private static final EnumMap<FabricPaymentStatus, PaymentStatus>
+            paymentStatusToTinkMapperDelete;
 
     static {
         paymentStatusToTinkMapper.put(ACCP, PaymentStatus.SIGNED);
@@ -58,6 +61,9 @@ public enum FabricPaymentStatus {
         paymentStatusToTinkMapper.put(RJCT, PaymentStatus.REJECTED);
         paymentStatusToTinkMapper.put(PDNG, PaymentStatus.SIGNED);
         paymentStatusToTinkMapper.put(CANC, PaymentStatus.CANCELLED);
+
+        paymentStatusToTinkMapperDelete = new EnumMap<>(paymentStatusToTinkMapper);
+        paymentStatusToTinkMapperDelete.put(ACTC, PaymentStatus.PENDING);
     }
 
     FabricPaymentStatus(String status) {
@@ -77,6 +83,16 @@ public enum FabricPaymentStatus {
 
     public static PaymentStatus mapToTinkPaymentStatus(FabricPaymentStatus paymentStatus) {
         return Optional.ofNullable(paymentStatusToTinkMapper.get(paymentStatus))
+                .orElseThrow(
+                        () ->
+                                new IllegalArgumentException(
+                                        String.format(
+                                                FabricConstants.ErrorMessages.MAPPING,
+                                                paymentStatus.toString())));
+    }
+
+    public static PaymentStatus mapToTinkPaymentStatusDelete(FabricPaymentStatus paymentStatus) {
+        return Optional.ofNullable(paymentStatusToTinkMapperDelete.get(paymentStatus))
                 .orElseThrow(
                         () ->
                                 new IllegalArgumentException(

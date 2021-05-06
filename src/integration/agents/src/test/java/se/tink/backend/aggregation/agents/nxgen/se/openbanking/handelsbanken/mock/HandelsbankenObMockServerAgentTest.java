@@ -29,12 +29,15 @@ public class HandelsbankenObMockServerAgentTest {
                 AgentsServiceConfigurationReader.read(CONFIGURATION_PATH);
 
         final AgentWireMockRefreshTest agentWireMockRefreshTest =
-                AgentWireMockRefreshTest.builder(
-                                MarketCode.SE, "se-handelsbanken-ob", WIREMOCK_SERVER_FILEPATH)
-                        .addCredentialField(Field.Key.USERNAME.getFieldKey(), MOCKED_SSN)
+                AgentWireMockRefreshTest.nxBuilder()
+                        .withMarketCode(MarketCode.SE)
+                        .withProviderName("se-handelsbanken-ob")
+                        .withWireMockFilePath(WIREMOCK_SERVER_FILEPATH)
+                        .withConfigFile(configuration)
+                        .testFullAuthentication()
                         .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
                         .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
-                        .withConfigurationFile(configuration)
+                        .addCredentialField(Field.Key.USERNAME.getFieldKey(), MOCKED_SSN)
                         .build();
 
         final AgentContractEntity expected =

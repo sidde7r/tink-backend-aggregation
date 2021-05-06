@@ -1,17 +1,16 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.openbanking.handelsbanken;
 
+import com.google.inject.Inject;
 import java.time.LocalDate;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
-import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.handelsbanken.executor.payment.HandelsbankenPaymentExecutorSelector;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseAccountConverter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.Market;
-import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
 @AgentCapabilities(generateFromImplementedExecutors = true)
 public final class HandelsbankenAgent extends HandelsbankenBaseAgent {
@@ -19,9 +18,9 @@ public final class HandelsbankenAgent extends HandelsbankenBaseAgent {
     private static final int MAX_FETCH_PERIOD_MONTHS = 13;
     private final HandelsbankenBaseAccountConverter accountConverter;
 
-    public HandelsbankenAgent(
-            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair);
+    @Inject
+    public HandelsbankenAgent(AgentComponentProvider componentProvider) {
+        super(componentProvider);
         this.accountConverter = new HandelsbankenAccountConverter();
 
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();

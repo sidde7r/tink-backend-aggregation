@@ -12,7 +12,7 @@ import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.FabricConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.executor.payment.enums.FabricPaymentStatus;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.executor.payment.rpc.CreatePaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.executor.payment.rpc.FabricPaymentResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
@@ -59,12 +59,12 @@ public class FabricPaymentController {
     }
 
     PaymentMultiStepResponse response(
-            CreatePaymentResponse createPaymentResponse,
+            FabricPaymentResponse fabricPaymentResponse,
             PaymentMultiStepRequest paymentMultiStepRequest)
             throws PaymentException {
 
         FabricPaymentStatus paymentStatus =
-                FabricPaymentStatus.fromString(createPaymentResponse.getTransactionStatus());
+                FabricPaymentStatus.fromString(fabricPaymentResponse.getTransactionStatus());
         switch (paymentStatus) {
                 // After signing PIS
             case ACCP:
@@ -75,12 +75,12 @@ public class FabricPaymentController {
             case ACWP:
             case PDNG:
                 return new PaymentMultiStepResponse(
-                        createPaymentResponse.toTinkPaymentResponse(
+                        fabricPaymentResponse.toTinkPaymentResponse(
                                 paymentMultiStepRequest.getPayment()),
                         AuthenticationStepConstants.STEP_FINALIZE,
                         new ArrayList<>());
             case RCVD:
-                return responsePendingPayment(paymentMultiStepRequest, createPaymentResponse);
+                return responsePendingPayment(paymentMultiStepRequest, fabricPaymentResponse);
             case RJCT:
             case CANC:
                 throw new PaymentRejectedException();
@@ -94,16 +94,16 @@ public class FabricPaymentController {
 
     private PaymentMultiStepResponse responsePendingPayment(
             PaymentMultiStepRequest paymentMultiStepRequest,
-            CreatePaymentResponse createPaymentResponse)
+            FabricPaymentResponse fabricPaymentResponse)
             throws PaymentAuthorizationException {
         if (System.currentTimeMillis() - this.startPointPollingPendingStatus
                 >= FabricConstants.Timer.WAITING_FOR_QUIT_PENDING_STATUS_MILISEC) {
             logger.error(
-                    "Payment timeout in {} status", createPaymentResponse.getTransactionStatus());
+                    "Payment timeout in {} status", fabricPaymentResponse.getTransactionStatus());
             throw new PaymentAuthorizationException();
         } else {
             return new PaymentMultiStepResponse(
-                    createPaymentResponse.toTinkPaymentResponse(
+                    fabricPaymentResponse.toTinkPaymentResponse(
                             paymentMultiStepRequest.getPayment()),
                     FabricConstants.PaymentStep.IN_PROGRESS,
                     new ArrayList<>());
