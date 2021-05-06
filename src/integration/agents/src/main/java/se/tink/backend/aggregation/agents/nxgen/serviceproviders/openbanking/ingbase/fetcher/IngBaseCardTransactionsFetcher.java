@@ -24,13 +24,17 @@ public class IngBaseCardTransactionsFetcher
     @Override
     public TransactionKeyPaginatorResponse<String> getTransactionsFor(
             CreditCardAccount account, String key) {
+        String transactionsUrl = account.getFromTemporaryStorage(StorageKeys.TRANSACTIONS_URL);
+
+        if (transactionsUrl == null) {
+            throw new IllegalStateException(
+                    "Transactions link not present, can't fetch credit card transactions.");
+        }
+
         if (Objects.isNull(key)) {
             final LocalDate fromDate = fromDateSupplier.get();
             final LocalDate toDate = LocalDate.now();
-            return apiClient.fetchCardTransactions(
-                    account.getFromTemporaryStorage(StorageKeys.TRANSACTIONS_URL),
-                    fromDate,
-                    toDate);
+            return apiClient.fetchCardTransactions(transactionsUrl, fromDate, toDate);
         }
         return apiClient.fetchCardTransactionsPage(key);
     }

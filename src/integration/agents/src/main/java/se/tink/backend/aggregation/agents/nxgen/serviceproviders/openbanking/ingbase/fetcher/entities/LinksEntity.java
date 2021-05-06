@@ -14,7 +14,7 @@ public class LinksEntity {
     }
 
     public String getTransactionsUrl() {
-        return transactions.getHref();
+        return transactions != null ? transactions.getHref() : null;
     }
 
     public String getNext() {

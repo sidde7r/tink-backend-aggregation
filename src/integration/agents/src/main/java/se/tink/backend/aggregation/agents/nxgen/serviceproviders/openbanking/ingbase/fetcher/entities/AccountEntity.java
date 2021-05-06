@@ -12,10 +12,12 @@ import se.tink.backend.aggregation.agents.utils.berlingroup.BalanceEntity;
 import se.tink.backend.aggregation.agents.utils.berlingroup.BalanceMapper;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.creditcard.CreditCardBuildStep;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.builder.BalanceBuilderStep;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.creditcard.CreditCardModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.transactional.TransactionalBuildStep;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.AccountIdentifier;
@@ -78,27 +80,33 @@ public class AccountEntity {
         if (!isTransactionalAccount()) {
             throw new IllegalStateException("Not a transactional account.");
         }
-        return TransactionalAccount.nxBuilder()
-                .withType(TransactionalAccountType.CHECKING)
-                .withPaymentAccountFlag()
-                .withBalance(getBalanceModule(balances))
-                .withId(
-                        IdModule.builder()
-                                .withUniqueIdentifier(
-                                        getUniqueIdentifier(
-                                                marketConfiguration
-                                                        .shouldReturnLowercaseAccountId()))
-                                .withAccountNumber(iban)
-                                .withAccountName(product)
-                                .addIdentifier(new IbanIdentifier(iban))
-                                .build())
-                .addParties(marketConfiguration.convertHolderNamesToParties(name))
-                .setApiIdentifier(resourceId)
-                .setBankIdentifier(maskedPan)
-                .putInTemporaryStorage(IngBaseConstants.StorageKeys.ACCOUNT_ID, resourceId)
-                .putInTemporaryStorage(
-                        IngBaseConstants.StorageKeys.TRANSACTIONS_URL, links.getTransactionsUrl())
-                .build();
+
+        TransactionalBuildStep buildStep =
+                TransactionalAccount.nxBuilder()
+                        .withType(TransactionalAccountType.CHECKING)
+                        .withPaymentAccountFlag()
+                        .withBalance(getBalanceModule(balances))
+                        .withId(
+                                IdModule.builder()
+                                        .withUniqueIdentifier(
+                                                getUniqueIdentifier(
+                                                        marketConfiguration
+                                                                .shouldReturnLowercaseAccountId()))
+                                        .withAccountNumber(iban)
+                                        .withAccountName(product)
+                                        .addIdentifier(new IbanIdentifier(iban))
+                                        .build())
+                        .addParties(marketConfiguration.convertHolderNamesToParties(name))
+                        .setApiIdentifier(resourceId)
+                        .setBankIdentifier(maskedPan)
+                        .putInTemporaryStorage(IngBaseConstants.StorageKeys.ACCOUNT_ID, resourceId);
+
+        if (links.getTransactionsUrl() != null) {
+            buildStep.putInTemporaryStorage(
+                    IngBaseConstants.StorageKeys.TRANSACTIONS_URL, links.getTransactionsUrl());
+        }
+
+        return buildStep.build();
     }
 
     @JsonIgnore
@@ -106,33 +114,40 @@ public class AccountEntity {
         if (!isCardAccount()) {
             throw new IllegalStateException("Not a credit card account.");
         }
-        return CreditCardAccount.nxBuilder()
-                .withCardDetails(
-                        CreditCardModule.builder()
-                                .withCardNumber(maskedPan)
-                                .withBalance(BalanceMapper.getBookedBalance(balances))
-                                .withAvailableCredit(
-                                        BalanceMapper.getAvailableBalance(balances)
-                                                .orElse(ExactCurrencyAmount.zero(currency)))
-                                .withCardAlias(maskedPan)
-                                .build())
-                .withoutFlags()
-                .withId(
-                        IdModule.builder()
-                                .withUniqueIdentifier(resourceId)
-                                .withAccountNumber(maskedPan)
-                                .withAccountName(product)
-                                .addIdentifier(
-                                        AccountIdentifier.create(
-                                                AccountIdentifierType.MASKED_PAN, maskedPan))
-                                .build())
-                .addHolderName(name)
-                .setApiIdentifier(resourceId)
-                .setBankIdentifier(resourceId)
-                .putInTemporaryStorage(IngBaseConstants.StorageKeys.ACCOUNT_ID, resourceId)
-                .putInTemporaryStorage(
-                        IngBaseConstants.StorageKeys.TRANSACTIONS_URL, links.getTransactionsUrl())
-                .build();
+
+        CreditCardBuildStep buildStep =
+                CreditCardAccount.nxBuilder()
+                        .withCardDetails(
+                                CreditCardModule.builder()
+                                        .withCardNumber(maskedPan)
+                                        .withBalance(BalanceMapper.getBookedBalance(balances))
+                                        .withAvailableCredit(
+                                                BalanceMapper.getAvailableBalance(balances)
+                                                        .orElse(ExactCurrencyAmount.zero(currency)))
+                                        .withCardAlias(maskedPan)
+                                        .build())
+                        .withoutFlags()
+                        .withId(
+                                IdModule.builder()
+                                        .withUniqueIdentifier(resourceId)
+                                        .withAccountNumber(maskedPan)
+                                        .withAccountName(product)
+                                        .addIdentifier(
+                                                AccountIdentifier.create(
+                                                        AccountIdentifierType.MASKED_PAN,
+                                                        maskedPan))
+                                        .build())
+                        .addHolderName(name)
+                        .setApiIdentifier(resourceId)
+                        .setBankIdentifier(resourceId)
+                        .putInTemporaryStorage(IngBaseConstants.StorageKeys.ACCOUNT_ID, resourceId);
+
+        if (links.getTransactionsUrl() != null) {
+            buildStep.putInTemporaryStorage(
+                    IngBaseConstants.StorageKeys.TRANSACTIONS_URL, links.getTransactionsUrl());
+        }
+
+        return buildStep.build();
     }
 
     private BalanceModule getBalanceModule(List<BalanceEntity> balances) {
