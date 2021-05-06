@@ -8,6 +8,7 @@ import static org.mockito.Mockito.mock;
 import java.time.LocalDate;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.fetcher.rpc.BaseFetchTransactionsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -31,6 +32,8 @@ public class IngBaseTransactionsFetcherTest {
     public void shouldFetchAndMapTransactionsToTinkModel() {
         // given
         TransactionalAccount transactionalAccount = mock(TransactionalAccount.class);
+        given(transactionalAccount.getFromTemporaryStorage(StorageKeys.TRANSACTIONS_URL))
+                .willReturn("link");
         given(apiClient.fetchTransactionsPage(anyString())).willReturn(TRANSACTIONS_RESPONSE);
 
         // when

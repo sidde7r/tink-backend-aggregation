@@ -10,6 +10,7 @@ import java.util.Iterator;
 import java.util.Optional;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.fetcher.rpc.FetchCardTransactionsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
@@ -72,6 +73,8 @@ public class IngBaseCardTransactionsFetcherTest {
     public void shouldFetchAndMapTransactionsToTinkModel() {
         // given
         CreditCardAccount creditCardAccount = mock(CreditCardAccount.class);
+        given(creditCardAccount.getFromTemporaryStorage(StorageKeys.TRANSACTIONS_URL))
+                .willReturn("link");
         given(apiClient.fetchCardTransactionsPage(anyString())).willReturn(TEST_RESPONSE);
 
         // when
