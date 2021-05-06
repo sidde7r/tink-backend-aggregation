@@ -59,6 +59,19 @@ public class AccountEntity {
         return !Strings.nullToEmpty(maskedPan).isEmpty();
     }
 
+    /**
+     * To parse an account we need to have links to balances. Not checking this before parsing will
+     * lead to NPE later. For now throws an IllegalStateException if the links aren't present. We
+     * may want to handle this differently later.
+     */
+    public boolean isParsableAccount() {
+        if (links.getBalancesUrl() == null) {
+            throw new IllegalStateException("Balances link not present, can't parse account.");
+        }
+
+        return true;
+    }
+
     @JsonIgnore
     public Optional<TransactionalAccount> toTinkAccount(
             List<BalanceEntity> balances, MarketConfiguration marketConfiguration) {

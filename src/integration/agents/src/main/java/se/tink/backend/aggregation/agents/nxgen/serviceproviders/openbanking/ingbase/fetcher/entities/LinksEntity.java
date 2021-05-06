@@ -10,7 +10,7 @@ public class LinksEntity {
     private LinkEntity next;
 
     public String getBalancesUrl() {
-        return balances.getHref();
+        return balances != null ? balances.getHref() : null;
     }
 
     public String getTransactionsUrl() {
