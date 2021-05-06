@@ -4,12 +4,15 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.CreditAgricoleBaseConstants.BalanceTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.AccountTypeMapperBuilder;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.CreditAgricoleHolderNameExtractor;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Party;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.builder.BalanceBuilderStep;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.creditcard.CreditCardModule;
@@ -73,6 +76,7 @@ public class AccountEntity {
                                 .addIdentifier(new IbanIdentifier(iban))
                                 .build())
                 .setApiIdentifier(resourceId)
+                .addParties(getHolderNames())
                 .build();
     }
 
@@ -98,6 +102,7 @@ public class AccountEntity {
                                 .setProductName(product)
                                 .build())
                 .setApiIdentifier(resourceId)
+                .addParties(getHolderNames())
                 .build();
     }
 
@@ -148,5 +153,11 @@ public class AccountEntity {
 
     private ExactCurrencyAmount getAvailableCredits() {
         return ExactCurrencyAmount.of(BigDecimal.ZERO, "EUR");
+    }
+
+    private List<Party> getHolderNames() {
+        return CreditAgricoleHolderNameExtractor.extract(name).stream()
+                .map(holderName -> new Party(holderName, Party.Role.HOLDER))
+                .collect(Collectors.toList());
     }
 }

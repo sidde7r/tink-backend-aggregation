@@ -13,6 +13,7 @@
       "currencyCode":"EUR",
       "bankId":"FR7630004000000000000123400",
       "name":"COMPTE CHEQUE",
+      "holderName":"Name Surname",
       "ownership":1.0,
       "type":"CHECKING",
       "identifiers":"[]",
