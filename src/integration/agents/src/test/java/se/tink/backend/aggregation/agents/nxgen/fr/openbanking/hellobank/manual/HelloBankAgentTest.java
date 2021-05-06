@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.hellobank;
+package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.hellobank.manual;
 
 import org.junit.Before;
 import org.junit.Ignore;

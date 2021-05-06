@@ -1,0 +1,151 @@
+REQUEST 1
+POST https://api-psd2.bddf.bnpparibas/as/psd2/hellobank/token
+Accept: application/json
+Content-Type: application/x-www-form-urlencoded
+X-Aggregator: Tink Testing
+
+RESPONSE 1
+200
+Content-Type: application/json;charset=utf-8
+
+{
+    "access_token": "DUMMY_ACCESS_TOKEN",
+    "token_type": "bearer",
+    "expires_in": "900"
+}
+
+REQUEST 2
+POST https://api-psd2.bddf.bnpparibas/psd2/hellobank/V1.4/payment-requests
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer DUMMY_ACCESS_TOKEN
+X-Aggregator: Tink Testing
+
+{
+    "numberOfTransactions": 1,
+    "initiatingParty": {
+        "name": "TINK"
+    },
+    "paymentTypeInformation": {
+        "serviceLevel": "SEPA",
+        "localInstrument": "INST",
+        "categoryPurpose": "CASH"
+    },
+    "debtorAccount": {
+        "iban": "FR7630004033750000835128353"
+    },
+    "beneficiary": {
+        "creditor": {
+            "name": "Payment Creditor"
+        },
+        "creditorAccount": {
+            "iban": "FR7618106008109365541005030"
+        }
+    },
+    "creditTransferTransaction": [
+        {
+            "remittanceInformation": [
+                "Message"
+            ],
+            "instructedAmount": {
+                "amount": "1.0",
+                "currency": "EUR"
+            }
+        }
+    ],
+    "chargeBearer": "SLEV",
+    "supplementaryData": {
+        "acceptedAuthenticationApproach": [
+            "REDIRECT"
+        ],
+        "successfulReportUrl": "https://127.0.0.1:7357/api/v1/thirdparty/callback?state=00000000-0000-4000-0000-000000000000",
+        "unsuccessfulReportUrl": "https://127.0.0.1:7357/api/v1/thirdparty/callback?state=00000000-0000-4000-0000-000000000000"
+    }
+}
+
+RESPONSE 2
+201
+X-Request-ID: 3c930caa-ba23-4da3-bcae-d19c3f852740
+Content-Type: application/json;charset=utf-8
+
+{
+    "appliedAuthenticationApproach": "REDIRECT",
+    "_links": {
+        "consentApproval": {
+            "href": "https://psd2.hellobank.fr/paiement/client/payer.html?i=dc472a11c35f4d1dbe52bb61fea32c46"
+        }
+    }
+}
+
+REQUEST 3
+GET https://api-psd2.bddf.bnpparibas/psd2/hellobank/V1.4/payment-requests/dc472a11c35f4d1dbe52bb61fea32c46
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer DUMMY_ACCESS_TOKEN
+X-Aggregator: Tink Testing
+
+RESPONSE 3
+200
+X-Request-ID: b39767be-3975-462c-8098-a575a850c400
+Content-Type: application/json;charset=utf-8
+
+{
+    "paymentRequest": {
+        "resourceId": "dc472a11c35f4d1dbe52bb61fea32c46",
+        "paymentInformationId": "ZccbuSP37EtO1qFFKpomDOUC3ovu5CfFH6C",
+        "numberOfTransactions": 1,
+        "initiatingParty": {
+            "name": "TINK"
+        },
+        "paymentTypeInformation": {
+            "serviceLevel": "SEPA",
+            "localInstrument": "INST",
+            "categoryPurpose": "CASH"
+        },
+        "debtorAccount": {
+            "iban": "FR7630004033750000835128353"
+        },
+        "beneficiary": {
+            "isTrusted": false,
+            "creditor": {
+                "name": "Payment Creditor"
+            },
+            "creditorAccount": {
+                "iban": "FR7618106008109365541005030"
+            }
+        },
+        "chargeBearer": "SLEV",
+        "paymentInformationStatus": "ACSC",
+        "fundsAvailability": true,
+        "booking": true,
+        "creditTransferTransaction": [
+            {
+                "paymentId": {
+                    "instructionId": "rZCctk7cXniPSJy6DGGkZo1IoEFr3xoplKT",
+                    "endToEndId": "palRkyfiXtJYBpdpkUisdhWNOCnTXrkbzba"
+                },
+                "instructedAmount": {
+                    "currency": "EUR",
+                    "amount": "1.0"
+                },
+                "remittanceInformation": [
+                    "Message"
+                ],
+                "transactionStatus": "ACSC"
+            }
+        ],
+        "supplementaryData": {
+            "acceptedAuthenticationApproach": [
+                "REDIRECT"
+            ],
+            "appliedAuthenticationApproach": "REDIRECT",
+            "successfulReportUrl": "https://127.0.0.1:7357/api/v1/thirdparty/callback?state=00000000-0000-4000-0000-000000000000",
+            "unsuccessfulReportUrl": "https://127.0.0.1:7357/api/v1/thirdparty/callback?state=00000000-0000-4000-0000-000000000000"
+        }
+    },
+    "_links": {
+        "request": {
+            "href": "https://api-psd2.bddf.bnpparibas/psd2/hellobank/V1.4/payment-requests/dc472a11c35f4d1dbe52bb61fea32c46"
+        }
+    }
+}
