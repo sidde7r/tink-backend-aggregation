@@ -39,6 +39,7 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaCo
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.entities.ScaMethod;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.rpc.ScaResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.rpc.ScaStatusResponse;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AuthenticationType;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentDetailsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
@@ -302,13 +303,15 @@ public class FiduciaAuthenticatorTest {
     private String getFieldName(ScaResponse scaResponse) {
         ScaMethod chosenScaMethod = scaResponse.getChosenScaMethod();
         if (chosenScaMethod != null) {
-            String authenticationType = chosenScaMethod.getAuthenticationType();
-            if ("CHIP_OTP".equalsIgnoreCase(authenticationType)) {
-                return "chipTan";
-            } else if ("SMS_OTP".equalsIgnoreCase(authenticationType)) {
-                return "smsTan";
-            } else if ("PUSH_OTP".equalsIgnoreCase(authenticationType)) {
-                return "pushTan";
+            AuthenticationType authenticationType =
+                    AuthenticationType.fromString(chosenScaMethod.getAuthenticationType()).get();
+            switch (authenticationType) {
+                case CHIP_OTP:
+                    return "chipTan";
+                case SMS_OTP:
+                    return "smsTan";
+                case PUSH_OTP:
+                    return "pushTan";
             }
         }
         return "tanField";
