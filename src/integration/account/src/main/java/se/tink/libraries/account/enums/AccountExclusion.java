@@ -1,6 +1,7 @@
 package se.tink.libraries.account.enums;
 
 import java.util.EnumSet;
+import java.util.Set;
 import se.tink.libraries.enums.TinkFeature;
 
 public enum AccountExclusion {
@@ -23,9 +24,13 @@ public enum AccountExclusion {
 
     NONE(EnumSet.noneOf(TinkFeature.class));
 
-    public EnumSet<TinkFeature> excludedFeatures;
+    private final Set<TinkFeature> excludedFeatures;
 
     AccountExclusion(EnumSet<TinkFeature> excludedFeatures) {
         this.excludedFeatures = excludedFeatures;
+    }
+
+    public Set<TinkFeature> getExcludedFeatures() {
+        return excludedFeatures;
     }
 }

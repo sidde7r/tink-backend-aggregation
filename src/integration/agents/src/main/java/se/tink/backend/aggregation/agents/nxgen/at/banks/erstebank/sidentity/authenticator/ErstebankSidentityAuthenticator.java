@@ -9,7 +9,7 @@ import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.ErsteBankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.ErsteBankConstants;
-import se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.ErsteBankConstants.PAYLOAD;
+import se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.ErsteBankConstants.Payload;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.password.authenticator.entity.TokenEntity;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.sidentity.authenticator.rpc.PollResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -33,7 +33,7 @@ public class ErstebankSidentityAuthenticator implements Authenticator {
             throws AuthenticationException, AuthorizationException {
         String username = credentials.getUsername();
         String verificationCode = ersteBankApiClient.getSidentityVerificationCode(username);
-        credentials.setSensitivePayload(PAYLOAD.VERIFICATION_CODE, verificationCode);
+        credentials.setSensitivePayload(Payload.VERIFICATION_CODE, verificationCode);
         supplementalInformationHelper.waitAndShowLoginDescription(verificationCode);
         poll();
         TokenEntity token = ersteBankApiClient.getSidentityToken();
@@ -41,7 +41,7 @@ public class ErstebankSidentityAuthenticator implements Authenticator {
     }
 
     private void poll() throws LoginException {
-        for (int i = 0; i < ErsteBankConstants.SIDENTITY.MAX_SIDENTITY_POLLING_ATTEMPTS; i++) {
+        for (int i = 0; i < ErsteBankConstants.Sidentity.MAX_SIDENTITY_POLLING_ATTEMPTS; i++) {
             PollResponse response;
             try {
                 response = ersteBankApiClient.pollStatus();
@@ -50,9 +50,9 @@ public class ErstebankSidentityAuthenticator implements Authenticator {
             }
 
             switch (response.getSecondFactorStatus()) {
-                case ErsteBankConstants.SIDENTITY.POLL_DONE:
+                case ErsteBankConstants.Sidentity.POLL_DONE:
                     return;
-                case ErsteBankConstants.SIDENTITY.POLL_WAITING:
+                case ErsteBankConstants.Sidentity.POLL_WAITING:
                     break;
                 default:
                     throw new IllegalStateException(

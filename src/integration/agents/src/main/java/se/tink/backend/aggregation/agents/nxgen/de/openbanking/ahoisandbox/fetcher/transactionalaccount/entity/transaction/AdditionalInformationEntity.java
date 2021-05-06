@@ -5,10 +5,10 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class AdditionalInformationEntity {
 
-    public String type;
-    public String id;
-    public String name;
-    public String originId;
-    public String origin;
-    public Integer contractorId;
+    private String type;
+    private String id;
+    private String name;
+    private String originId;
+    private String origin;
+    private Integer contractorId;
 }

@@ -1,8 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.kbc;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableList;
+import java.util.List;
 import java.util.Locale;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
+import se.tink.backend.aggregation.nxgen.core.account.GenericTypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.backend.aggregation.nxgen.http.UrlEnum;
@@ -55,25 +58,25 @@ public class KbcConstants {
         MOB_A031_SIGNING_CHALLENGE_UCR(createUrlWithHost("/MOB/A031/signing/challenge/ucr/1")),
         MOB_A031_SIGNING_VALIDATION_UCR(createUrlWithHost("/MOB/A031/signing/validation/ucr/1"));
 
-        private URL url;
+        private URL kbcUrl;
 
-        Url(String url) {
-            this.url = new URL(url);
+        Url(String kbcUrl) {
+            this.kbcUrl = new URL(kbcUrl);
         }
 
         @Override
         public URL get() {
-            return url.queryParam("version", VERSION);
+            return kbcUrl.queryParam("version", VERSION);
         }
 
         @Override
         public URL parameter(String key, String value) {
-            return url.parameter(key, value);
+            return kbcUrl.parameter(key, value);
         }
 
         @Override
         public URL queryParam(String key, String value) {
-            return url.queryParam(key, value);
+            return kbcUrl.queryParam(key, value);
         }
 
         public static final String HOST = "https://mobile.kbc-group.com";
@@ -184,7 +187,6 @@ public class KbcConstants {
         // == End Device enrollment ==
         // == Start Service Activation ==
         public static final int ITERATIONS = 1024;
-        public static final byte[] SALT = "0".getBytes();
         // == End Service Activation ==
     }
 
@@ -197,22 +199,22 @@ public class KbcConstants {
         public static final LogTag ERROR_CODE_MESSAGE = LogTag.from("#be_kbc_error_message");
     }
 
-    public static final String[] IGNORED_ACCOUNT_TYPES = {
-        "0029", // KBC-Derdenrekening
-        "0038", // KBC-Rubriekrekening
-        "1013", // KBC-Beleggersrekening
-        "2117", // KBC-Pandrekening
-        "3123", // ESOP-rekening
-        "0346", // KBC-Vermogensrekening
-        "3465", // KBC-Business Comfortrekening
-        "3637", // KBC-Business Compactrekening
-        "3774", // Compte épargne Call32 corporate KBC
-        "4012", // KBC Brussels Security Deposit Account
-        "4057", // KBC Security Deposit Account
-        "4058"
-    }; // Compte d'épargne gar.locative KBC Brussels
+    private static final List<String> IGNORED_ACCOUNT_TYPES =
+            ImmutableList.of(
+                    "0029", // KBC-Derdenrekening
+                    "0038", // KBC-Rubriekrekening
+                    "1013", // KBC-Beleggersrekening
+                    "2117", // KBC-Pandrekening
+                    "3123", // ESOP-rekening
+                    "0346", // KBC-Vermogensrekening
+                    "3465", // KBC-Business Comfortrekening
+                    "3637", // KBC-Business Compactrekening
+                    "3774", // Compte épargne Call32 corporate KBC
+                    "4012", // KBC Brussels Security Deposit Account
+                    "4057", // KBC Security Deposit Account
+                    "4058"); // Compte d'épargne gar.locative KBC Brussels
 
-    public static final TypeMapper<TransactionalAccountType> ACCOUNT_TYPE_MAPPER =
+    public static final GenericTypeMapper<TransactionalAccountType, String> ACCOUNT_TYPE_MAPPER =
             TypeMapper.<TransactionalAccountType>builder()
                     .put(
                             TransactionalAccountType.CHECKING,
@@ -271,9 +273,8 @@ public class KbcConstants {
         public static final String INCORRECT_LOGIN_CODE_TWO_ATTEMPT_LEFT = "D9FE50";
         public static final String INCORRECT_LOGIN_CODE_ONE_ATTEMPT_LEFT = "D9E028";
         public static final String INCORRECT_CARD_NUMBER = "D93058";
-        public static final String[] CANNOT_LOGIN_USING_THIS_CARD_CONTACT_KBC = {
-            "D9FE51", "D93060"
-        };
+        public static final List<String> CANNOT_LOGIN_USING_THIS_CARD_CONTACT_KBC =
+                ImmutableList.of("D9FE51", "D93060");
     }
 
     public enum UserMessage implements LocalizableEnum {
@@ -282,15 +283,15 @@ public class KbcConstants {
                         "The card number you have entered is incorrect. Please try again.")),
         NOT_A_CUSTOMER(new LocalizableKey("The provided credentials are not for KBC."));
 
-        private LocalizableKey userMessage;
+        private LocalizableKey message;
 
-        UserMessage(LocalizableKey userMessage) {
-            this.userMessage = userMessage;
+        UserMessage(LocalizableKey message) {
+            this.message = message;
         }
 
         @Override
         public LocalizableKey getKey() {
-            return userMessage;
+            return message;
         }
     }
 
@@ -350,7 +351,7 @@ public class KbcConstants {
 
     public static class Investments {
         public static final String LEFT_TO_INVEST = "left to invest";
-        public static final String INVESTMENTS = "investments";
+        public static final String KBC_INVESTMENTS = "investments";
     }
 
     static class HttpClient {

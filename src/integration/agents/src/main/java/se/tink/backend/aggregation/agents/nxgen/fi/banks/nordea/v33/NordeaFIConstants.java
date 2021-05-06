@@ -53,7 +53,7 @@ public class NordeaFIConstants {
                                             "Another client is already trying to sign in. \nPlease close the Codes app and try again."))
                             .build();
 
-    public static TypeMapper<ThirdPartyAppStatus> AUTHENTICATION_RESPONSE =
+    public static final TypeMapper<ThirdPartyAppStatus> AUTHENTICATION_RESPONSE =
             TypeMapper.<ThirdPartyAppStatus>builder()
                     .put(
                             ThirdPartyAppStatus.WAITING,
@@ -65,7 +65,7 @@ public class NordeaFIConstants {
                     .put(ThirdPartyAppStatus.ALREADY_IN_PROGRESS, "authentication_collision")
                     .build();
 
-    public static TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
+    public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
             TypeMapper.<AccountTypes>builder()
                     .put(AccountTypes.CHECKING, "transaction", "savings")
                     .put(AccountTypes.CREDIT_CARD, "credit", "combined")

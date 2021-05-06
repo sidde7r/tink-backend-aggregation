@@ -73,13 +73,13 @@ public class ProductEntity {
     private TransactionalAccountType getAccountType() {
         String accountType = getType().toUpperCase();
         switch (accountType) {
-            case ErsteBankConstants.ACCOUNTYPE.CHECKING:
+            case ErsteBankConstants.AccountType.CHECKING:
                 return TransactionalAccountType.CHECKING;
-            case ErsteBankConstants.ACCOUNTYPE.BUILDING_SAVING:
-            case ErsteBankConstants.ACCOUNTYPE.SAVING:
+            case ErsteBankConstants.AccountType.BUILDING_SAVING:
+            case ErsteBankConstants.AccountType.SAVING:
                 return TransactionalAccountType.SAVINGS;
             default:
-                logger.warn("{} {}", ErsteBankConstants.LOGTAG.UNKNOWN_ACCOUNT_TYPE, accountType);
+                logger.warn("{} {}", ErsteBankConstants.LogTags.UNKNOWN_ACCOUNT_TYPE, accountType);
                 throw new IllegalStateException("Unknown account type");
         }
     }
@@ -105,7 +105,7 @@ public class ProductEntity {
             toTransactionalAccount();
             return true;
         } catch (Exception e) {
-            logger.warn("{} {}", ErsteBankConstants.LOGTAG.TRANSANSACTIONAL_ACC_ERR, getType(), e);
+            logger.warn("{} {}", ErsteBankConstants.LogTags.TRANSANSACTIONAL_ACC_ERR, getType(), e);
             return false;
         }
     }
@@ -125,12 +125,12 @@ public class ProductEntity {
                                                 AccountIdentifierType.IBAN, getIban()))
                                 .build())
                 .addHolderName(getHolderName().toString())
-                .putInTemporaryStorage(ErsteBankConstants.STORAGE.TRANSACTIONSURL, getId())
+                .putInTemporaryStorage(ErsteBankConstants.Storage.TRANSACTIONSURL, getId())
                 .build();
     }
 
     public boolean isCreditCardAccount() {
-        return ErsteBankConstants.ACCOUNTYPE.CARD_CREDIT.equalsIgnoreCase(getType());
+        return ErsteBankConstants.AccountType.CARD_CREDIT.equalsIgnoreCase(getType());
     }
 
     public boolean isValidCreditCardAccount() {
@@ -138,7 +138,7 @@ public class ProductEntity {
             toCreditCardAccount();
             return true;
         } catch (Exception e) {
-            logger.warn("{} {}", ErsteBankConstants.LOGTAG.CREDIT_ACC_ERR, e.toString(), e);
+            logger.warn("{} {}", ErsteBankConstants.LogTags.CREDIT_ACC_ERR, e.toString(), e);
             return false;
         }
     }
@@ -152,7 +152,7 @@ public class ProductEntity {
                 .setAccountNumber(identifier)
                 .setName(description)
                 .setHolderName(getHolderName())
-                .putInTemporaryStorage(ErsteBankConstants.STORAGE.CREDITURL, getId())
+                .putInTemporaryStorage(ErsteBankConstants.Storage.CREDITURL, getId())
                 .build();
     }
 }

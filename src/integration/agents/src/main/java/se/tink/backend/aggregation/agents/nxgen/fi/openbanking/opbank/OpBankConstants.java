@@ -25,7 +25,7 @@ public final class OpBankConstants {
     }
 
     public static class Urls {
-        public static String BASE_URL = "https://mtls.apis.op.fi";
+        public static final String BASE_URL = "https://mtls.apis.op.fi";
         public static final String OAUTH_TOKEN = BASE_URL + "/oauth/token";
         public static final String ACCOUNTS_AUTHORIZATION =
                 BASE_URL + "/accounts-psd2/v1/authorizations";

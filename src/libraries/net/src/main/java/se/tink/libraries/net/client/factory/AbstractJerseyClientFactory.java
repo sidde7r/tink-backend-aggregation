@@ -4,21 +4,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.config.ClientConfig;
-import com.sun.jersey.api.client.config.DefaultClientConfig;
-import com.sun.jersey.api.client.filter.GZIPContentEncodingFilter;
 import com.sun.jersey.client.apache4.ApacheHttpClient4;
 import com.sun.jersey.client.apache4.config.ApacheHttpClient4Config;
 import com.sun.jersey.client.apache4.config.DefaultApacheHttpClient4Config;
-import com.sun.jersey.client.urlconnection.HTTPSProperties;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
-import java.security.cert.X509Certificate;
-import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.config.Registry;
 import org.apache.http.config.RegistryBuilder;
@@ -277,46 +269,6 @@ public abstract class AbstractJerseyClientFactory {
         setTimeouts(client);
 
         // client.addFilter(new GZIPContentEncodingFilter(false));
-
-        return client;
-    }
-
-    public Client createNaiveClient() throws Exception {
-        // System.setProperty("javax.net.debug", "all");
-
-        // Create a trust manager that does not validate certificate chains
-        TrustManager[] trustAllCerts =
-                new TrustManager[] {
-                    new X509TrustManager() {
-                        @Override
-                        public void checkClientTrusted(X509Certificate[] certs, String authType) {}
-
-                        @Override
-                        public void checkServerTrusted(X509Certificate[] certs, String authType) {}
-
-                        @Override
-                        public X509Certificate[] getAcceptedIssuers() {
-                            return null;
-                        }
-                    }
-                };
-
-        // Install the all-trusting trust manager
-        SSLContext sc = SSLContext.getInstance("TLS");
-        sc.init(null, trustAllCerts, new SecureRandom());
-
-        HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
-
-        ClientConfig config = new DefaultClientConfig();
-        config.getProperties()
-                .put(
-                        HTTPSProperties.PROPERTY_HTTPS_PROPERTIES,
-                        new HTTPSProperties((s, sslSession) -> true, sc));
-
-        Client client = Client.create(config);
-        setTimeouts(client);
-
-        client.addFilter(new GZIPContentEncodingFilter(false));
 
         return client;
     }

@@ -24,7 +24,9 @@ public class AccountWhitelistRestrictionWorkerCommand extends AgentWorkerCommand
 
     // Remove any account that is flagged as excluded.
     private boolean filterExcludedAccounts(Account account) {
-        return !account.getAccountExclusion().excludedFeatures.contains(TinkFeature.AGGREGATION);
+        return !account.getAccountExclusion()
+                .getExcludedFeatures()
+                .contains(TinkFeature.AGGREGATION);
     }
 
     // Remove any account that was not present in the original refreshRequest (i.e. whitelisted).

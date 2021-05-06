@@ -9,7 +9,7 @@ import se.tink.libraries.i18n.LocalizableKey;
 
 public class HandelsbankenSEConstants {
 
-    public static final String CURRENY = "SEK";
+    public static final String CURRENCY = "SEK";
 
     public static final class Urls {
         public static final URL HOST = new URL("https://m2.handelsbanken.se");
@@ -25,7 +25,7 @@ public class HandelsbankenSEConstants {
     }
 
     public static final class DeviceAuthentication {
-        public static String APP_ID = "oFrZfGc1/M0yN4jZVSqZnpprq4N0rqnRgtPMT7onHxQ=";
+        public static final String APP_ID = "oFrZfGc1/M0yN4jZVSqZnpprq4N0rqnRgtPMT7onHxQ=";
         public static final String AUTH_TP = "1";
         public static final String VALID_SIGNATURE_RESULT = "AUTHENTICATED";
         public static final String SELECTION_REQUIRED = "SELECTION_REQUIRED";

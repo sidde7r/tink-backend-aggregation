@@ -1,6 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey;
 
-public abstract class CrosskeyBaseConstants {
+import com.google.common.collect.ImmutableList;
+import java.util.List;
+
+public class CrosskeyBaseConstants {
 
     public static class Urls {
 
@@ -80,13 +83,13 @@ public abstract class CrosskeyBaseConstants {
         public static final String SCOPE_PAYMENTS = SCOPE_OPEN_ID + " payments";
         public static final String SCOPE_ACCOUNTS = SCOPE_OPEN_ID + " accounts";
         public static final String SCOPE_ALL = SCOPE_OPEN_ID + " accounts payments";
-        public static final String[] CONSENT_PERMISSIONS = {
-            "ReadAccountsDetail",
-            "ReadBalances",
-            "ReadTransactionsDetail",
-            "ReadTransactionsCredits",
-            "ReadTransactionsDebits",
-        };
+        public static final List<String> CONSENT_PERMISSIONS =
+                ImmutableList.of(
+                        "ReadAccountsDetail",
+                        "ReadBalances",
+                        "ReadTransactionsDetail",
+                        "ReadTransactionsCredits",
+                        "ReadTransactionsDebits");
         public static final String B_64_STR = "b64";
         public static final Boolean B_64 = Boolean.FALSE;
         public static final String IAT = "http://openbanking.org.uk/iat";

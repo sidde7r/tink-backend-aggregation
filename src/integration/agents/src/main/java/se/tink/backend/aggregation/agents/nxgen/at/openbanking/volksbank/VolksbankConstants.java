@@ -21,7 +21,7 @@ public final class VolksbankConstants {
 
     public static class Urls {
 
-        public static String BASE_URL = "https://www.banking.co.at/xs2a-sandbox/m044/v1";
+        private static final String BASE_URL = "https://www.banking.co.at/xs2a-sandbox/m044/v1";
 
         public static final URL CONSENTS = new URL(BASE_URL + Endpoints.CONSENTS);
         public static final URL CONSENT_STATUS = new URL(BASE_URL + Endpoints.CONSENT_STATUS);

@@ -6,28 +6,32 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.Getter;
+import lombok.Setter;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(Include.NON_NULL)
+@Getter
+@Setter
 public class Payload {
 
     @JsonProperty("ResultInfo")
-    public ResultInfo resultInfo;
+    private ResultInfo resultInfo;
 
     @JsonProperty("VODB")
-    public VODB VODB;
+    private VODB vodb;
 
     @JsonProperty("__type")
-    public String type = "SEB_CS.SEBCSService";
+    private String type = "SEB_CS.SEBCSService";
 
     @JsonProperty("ServiceInput")
-    public List<ServiceInput> ServiceInput = new ArrayList<ServiceInput>();
+    private List<ServiceInput> serviceInput = new ArrayList<>();
 
     @JsonProperty("UserCredentials")
-    public UserCredentials UserCredentials;
+    private UserCredentials userCredentials;
 
     @JsonProperty("ServiceInfo")
-    public String getServiceInfo() {
+    private String getServiceInfo() {
         return null;
     }
 }

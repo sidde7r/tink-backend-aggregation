@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class CreditCardAccountResponse {
 
-    public MetadataEntity metadataEntity;
+    private MetadataEntity metadataEntity;
 
     private List<AccountEntity> account;
 

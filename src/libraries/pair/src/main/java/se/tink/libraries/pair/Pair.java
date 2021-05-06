@@ -5,8 +5,8 @@ import java.util.Objects;
 /** @deprecated use {@link org.apache.commons.lang3.tuple.Pair } */
 @Deprecated
 public class Pair<T, U> {
-    public T first;
-    public U second;
+    public final T first;
+    public final U second;
 
     public Pair(T t, U u) {
         this.first = t;

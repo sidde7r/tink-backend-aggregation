@@ -2,8 +2,6 @@ package se.tink.backend.aggregation.agents.creditcards.okq8.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.common.base.Function;
-import com.google.common.base.Objects;
 import com.google.common.base.Strings;
 import java.util.Date;
 import se.tink.backend.aggregation.agents.models.Transaction;
@@ -15,13 +13,7 @@ import se.tink.libraries.strings.StringUtils;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TransactionDataEntity {
 
-    private static String PENDING_TRANSACTION_DESCRIPTION = "Reserverat belopp";
-
-    /**
-     * Transformation function to be used by e.g. Iterables or List.transform(entities, TRANSFORM)
-     */
-    public static Function<TransactionDataEntity, Transaction> TO_TINK_TRANSACTION_TRANSFORM =
-            TransactionDataEntity::toTinkTransaction;
+    private static final String PENDING_TRANSACTION_DESCRIPTION = "Reserverat belopp";
 
     private String amount;
 
@@ -109,7 +101,7 @@ public class TransactionDataEntity {
             transaction.setType(TransactionTypes.CREDIT_CARD);
         }
 
-        if (Objects.equal(getDescription(), PENDING_TRANSACTION_DESCRIPTION)) {
+        if (PENDING_TRANSACTION_DESCRIPTION.equals(getDescription())) {
             transaction.setPending(true);
         }
 

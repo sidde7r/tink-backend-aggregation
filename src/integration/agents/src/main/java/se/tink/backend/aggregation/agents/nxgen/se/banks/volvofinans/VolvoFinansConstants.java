@@ -52,14 +52,14 @@ public class VolvoFinansConstants {
     }
 
     public static class Pagination {
-        public static int LIMIT = 100;
+        public static final int LIMIT = 100;
     }
 
     public static class Storage {
         public static final String CUSTOMER = "Customer";
     }
 
-    public class Fetcher {
+    public static class Fetcher {
         public static final String ACCOUNT_ROLE_MAIN_APPLICANT = "HUVUDSOKANDE";
     }
 

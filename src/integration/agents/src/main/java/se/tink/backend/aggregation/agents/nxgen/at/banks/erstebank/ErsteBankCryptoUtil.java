@@ -11,7 +11,6 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
 import java.security.spec.RSAPublicKeySpec;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
@@ -26,22 +25,23 @@ public class ErsteBankCryptoUtil {
 
     public static TokenEntity getTokenFromResponse(HttpResponse response) throws LoginException {
         String location = response.getHeaders().getFirst(ErsteBankConstants.LOCATION);
-        String accessToken = matchOrThrow(ErsteBankConstants.PATTERN.ACCESS_TOKEN, location);
-        String tokenType = matchOrThrow(ErsteBankConstants.PATTERN.TOKEN_TYPE, location);
-        String expiresIn = matchOrThrow(ErsteBankConstants.PATTERN.EXPIRES_IN, location);
+        String accessToken = matchOrThrow(ErsteBankConstants.Patterns.ACCESS_TOKEN, location);
+        String tokenType = matchOrThrow(ErsteBankConstants.Patterns.TOKEN_TYPE, location);
+        String expiresIn = matchOrThrow(ErsteBankConstants.Patterns.EXPIRES_IN, location);
 
         return new TokenEntity(accessToken, tokenType, expiresIn);
     }
 
     public static EncryptionValuesEntity getEncryptionValues(String html) throws LoginException {
-        String salt = matchOrThrow(ErsteBankConstants.PATTERN.SALT, html);
-        String exponent = matchOrThrow(ErsteBankConstants.PATTERN.EXPONENT, html);
-        String modulus = matchOrThrow(ErsteBankConstants.PATTERN.MODULUS, html);
+        String salt = matchOrThrow(ErsteBankConstants.Patterns.SALT, html);
+        String exponent = matchOrThrow(ErsteBankConstants.Patterns.EXPONENT, html);
+        String modulus = matchOrThrow(ErsteBankConstants.Patterns.MODULUS, html);
 
         return new EncryptionValuesEntity(salt, exponent, modulus);
     }
 
-    private static String matchOrThrow(Pattern pattern, String html) throws LoginException {
+    private static String matchOrThrow(java.util.regex.Pattern pattern, String html)
+            throws LoginException {
         Matcher matcher = pattern.matcher(html);
         if (matcher.find()) {
             return matcher.group(1);
@@ -51,7 +51,7 @@ public class ErsteBankCryptoUtil {
     }
 
     public static String getSidentityCode(String html) throws LoginException {
-        return matchOrThrow(ErsteBankConstants.PATTERN.SIDENTITY_VERIFICATION_CODE, html);
+        return matchOrThrow(ErsteBankConstants.Patterns.SIDENTITY_VERIFICATION_CODE, html);
     }
 
     public static String getRSAPassword(
@@ -74,13 +74,13 @@ public class ErsteBankCryptoUtil {
         String var1 = builder.toString();
 
         PublicKey publicKey =
-                KeyFactory.getInstance(ErsteBankConstants.ENCRYPTION.RSA)
+                KeyFactory.getInstance(ErsteBankConstants.Encryption.RSA)
                         .generatePublic(
                                 (KeySpec)
                                         (new RSAPublicKeySpec(
                                                 new BigInteger(privateExponent, 16),
                                                 new BigInteger(publicModulus, 16))));
-        Cipher cipher = Cipher.getInstance(ErsteBankConstants.ENCRYPTION.RSA);
+        Cipher cipher = Cipher.getInstance(ErsteBankConstants.Encryption.RSA);
         cipher.init(Cipher.ENCRYPT_MODE, (Key) publicKey);
 
         byte[] var6 = var1.getBytes(StandardCharsets.UTF_8);
@@ -90,7 +90,7 @@ public class ErsteBankCryptoUtil {
 
     private static final String shift(byte[] var1) {
         int var2 = 0;
-        char[] var0 = ErsteBankConstants.ENCRYPTION.HEX_DIGITS.toCharArray();
+        char[] var0 = ErsteBankConstants.Encryption.HEX_DIGITS.toCharArray();
 
         char[] var6 = new char[var1.length * 2];
 

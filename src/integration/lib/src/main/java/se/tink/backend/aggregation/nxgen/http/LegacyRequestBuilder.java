@@ -13,8 +13,6 @@ import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
@@ -41,9 +39,6 @@ public class LegacyRequestBuilder extends LegacyFilterable<RequestBuilder>
     private MultivaluedMap<String, Object> headers;
     private List<String> cookies = new ArrayList<>();
     private HttpResponseStatusHandler responseStatusHandler;
-
-    // TODO: REMOVE THIS ONCE AGGREGATOR IDENTIFIER IS VERIFIED
-    public static Logger logger = LoggerFactory.getLogger(RequestBuilder.class);
 
     public LegacyRequestBuilder(
             LegacyFilterable filterChain,

@@ -155,9 +155,8 @@ public class KbcAuthenticator implements AutoAuthenticator, ProgressiveTypedAuth
     }
 
     boolean isIncorrectCard(IllegalStateException e) {
-        return Arrays.stream(
-                        KbcConstants.HeaderErrorMessage.CANNOT_LOGIN_USING_THIS_CARD_CONTACT_KBC)
-                .allMatch(Arrays.asList(e.getMessage().split(" "))::contains);
+        return KbcConstants.HeaderErrorMessage.CANNOT_LOGIN_USING_THIS_CARD_CONTACT_KBC.containsAll(
+                Arrays.asList(e.getMessage().split(" ")));
     }
 
     private boolean possibleUnhandledErrorCodeLogAndCheckTextMessage(

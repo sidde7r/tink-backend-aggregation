@@ -31,7 +31,8 @@ public class HandelsbankenSETransactionEntity {
 
         return Transaction.builder()
                 .setAmount(
-                        ExactCurrencyAmount.of(transactionAmount, HandelsbankenSEConstants.CURRENY))
+                        ExactCurrencyAmount.of(
+                                transactionAmount, HandelsbankenSEConstants.CURRENCY))
                 .setDate(date)
                 .setDescription(description)
                 .setPending(pending)

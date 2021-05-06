@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca;
 
+import com.google.common.collect.ImmutableList;
 import java.time.ZoneId;
-import java.util.Arrays;
 import java.util.List;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -82,7 +82,7 @@ public final class ChebancaConstants {
         public static final String PUT_METHOD = "put";
         public static final String TPP_REDIRECT_URI = "TPP-Redirect-URI";
         public static final List<String> HEADERS_TO_SIGN =
-                Arrays.asList("(request-target)", "Digest", "TPP-Request-ID", "Date");
+                ImmutableList.of(QueryKeys.REQUEST_TARGET, DIGEST, TPP_REQUEST_ID, DATE);
     }
 
     public static class HeaderValues {

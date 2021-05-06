@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.creditcards.okq8.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.collect.Lists;
+import java.util.Collections;
 import java.util.List;
 import se.tink.backend.aggregation.agents.models.Transaction;
 
@@ -32,11 +33,10 @@ public class LoginResponse {
 
     public List<Transaction> getTransactionsDataAsTinkTransactions() {
         if (transactionsData == null) {
-            return null;
+            return Collections.emptyList();
         }
 
         return Lists.newArrayList(
-                Lists.transform(
-                        transactionsData, TransactionDataEntity.TO_TINK_TRANSACTION_TRANSFORM));
+                Lists.transform(transactionsData, TransactionDataEntity::toTinkTransaction));
     }
 }

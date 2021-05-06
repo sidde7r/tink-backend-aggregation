@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 @JsonInclude(Include.NON_NULL)
 public class AccessEntity {
-    public static AccessEntity ALL_PSD2 = AccessEntity.ofAllPsd2Accounts();
+    public static final AccessEntity ALL_PSD2 = AccessEntity.ofAllPsd2Accounts();
 
     @JsonProperty private List<AccountInfoEntity> accounts = null;
 

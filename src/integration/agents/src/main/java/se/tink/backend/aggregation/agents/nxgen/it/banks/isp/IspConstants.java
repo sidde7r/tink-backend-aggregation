@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.it.banks.isp;
 
 public class IspConstants {
 
-    public static String BASE_URL = "https://app-api.intesasanpaolo.com";
+    public static final String BASE_URL = "https://app-api.intesasanpaolo.com";
     public static final String DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss xxxx";
 
     public static class Endpoints {

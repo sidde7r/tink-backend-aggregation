@@ -15,9 +15,10 @@ public class SebRequest {
     public static SebRequest createWithTransfer(
             TransferType transferType, SebTransferRequestEntity externalTransfer) {
         SebRequest createRequest = new SebRequest();
-        createRequest.request.ServiceInput = null;
-        createRequest.request.VODB = new VODB();
-        createRequest.request.VODB.setTransfer(transferType, externalTransfer);
+        createRequest.request.setServiceInput(null);
+        VODB vodb = new VODB();
+        vodb.setTransfer(transferType, externalTransfer);
+        createRequest.request.setVodb(vodb);
         return createRequest;
     }
 
@@ -47,7 +48,7 @@ public class SebRequest {
 
         public SebRequest build() {
             SebRequest sebRequest = new SebRequest();
-            sebRequest.request.ServiceInput = serviceInputs;
+            sebRequest.request.setServiceInput(serviceInputs);
             return sebRequest;
         }
 

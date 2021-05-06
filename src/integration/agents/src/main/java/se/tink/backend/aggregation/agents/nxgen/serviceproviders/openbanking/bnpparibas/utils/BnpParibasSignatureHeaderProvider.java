@@ -37,7 +37,7 @@ public class BnpParibasSignatureHeaderProvider {
 
         return String.format(
                 "%s=\"%s %s\"",
-                BnpParibasBaseConstants.SignatureKeys.headers,
+                BnpParibasBaseConstants.SignatureKeys.HEADERS,
                 BnpParibasBaseConstants.SignatureKeys.AUTHORIZATION,
                 BnpParibasBaseConstants.SignatureKeys.X_REQUEST_ID);
     }

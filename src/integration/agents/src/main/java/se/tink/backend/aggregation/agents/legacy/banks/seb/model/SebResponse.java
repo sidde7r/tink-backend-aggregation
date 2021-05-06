@@ -22,14 +22,14 @@ public class SebResponse {
      */
     public boolean hasErrors() {
         return d != null
-                && d.resultInfo != null
-                && d.resultInfo.Messages != null
-                && d.resultInfo.Messages.size() > 0;
+                && d.getResultInfo() != null
+                && d.getResultInfo().Messages != null
+                && d.getResultInfo().Messages.size() > 0;
     }
 
     public List<ResultInfoMessage> getErrors() {
         if (hasErrors()) {
-            return d.resultInfo.Messages;
+            return d.getResultInfo().Messages;
         } else {
             return ImmutableList.of();
         }
@@ -41,20 +41,20 @@ public class SebResponse {
                 .filter(
                         input ->
                                 input != null
-                                        && input.ErrorText != null
-                                        && !input.ErrorText.trim().isEmpty())
+                                        && input.getErrorText() != null
+                                        && !input.getErrorText().trim().isEmpty())
                 .findFirst();
     }
 
     public Optional<String> getFirstErrorMessage() {
-        return getFirstErrorWithErrorText().map(input -> input.ErrorText.trim());
+        return getFirstErrorWithErrorText().map(input -> input.getErrorText().trim());
     }
 
     public List<AccountEntity> getAccountEntities() {
         if (!isValid()) {
             return Collections.emptyList();
         }
-        return d.VODB.getAccountEntities();
+        return d.getVodb().getAccountEntities();
     }
 
     public boolean isValid() {
@@ -62,9 +62,8 @@ public class SebResponse {
             return false;
         }
 
-        if (Objects.isNull(d) || Objects.isNull(d.VODB) || Objects.isNull(d.VODB.accountEntities)) {
-            return false;
-        }
-        return true;
+        return !(Objects.isNull(d)
+                || Objects.isNull(d.getVodb())
+                || Objects.isNull(d.getVodb().getAccountEntities()));
     }
 }

@@ -7,25 +7,21 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
+@Slf4j
+@RequiredArgsConstructor
 public final class CSVTransactionsPage implements PaginatorResponse {
-    public static Logger logger = LoggerFactory.getLogger(CSVTransactionsPage.class);
 
     private final String csvBody;
     private final boolean keepFetching;
-
-    public CSVTransactionsPage(final String csvBody, final boolean keepFetching) {
-        this.csvBody = csvBody;
-        this.keepFetching = keepFetching;
-    }
 
     private static double toValue(final String valueString) {
         return Double.parseDouble(valueString.replace(".", "").replace(",", "."));
@@ -51,7 +47,7 @@ public final class CSVTransactionsPage implements PaginatorResponse {
         final double incomingValue = toValue(incomingAmount);
 
         if (Math.min(outgoingValue, incomingValue) != 0.0) {
-            logger.warn(
+            log.warn(
                     "Found a transaction where both the outgoing and incoming amounts were nonzero");
         }
 

@@ -11,6 +11,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -43,7 +44,7 @@ public class OtmlResponseConverter {
     private static final String XPATH_NOT_VALID = "Xpath expression not valid, test in unittest";
 
     private final DocumentBuilderFactory factory;
-    private XPathFactory xPathfactory;
+    private final XPathFactory xPathfactory;
 
     public OtmlResponseConverter() {
         factory = DocumentBuilderFactory.newInstance();
@@ -52,6 +53,8 @@ public class OtmlResponseConverter {
 
     private Document parseDocument(String otmlDocument) {
         try {
+            factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+            factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
             DocumentBuilder documentBuilder = factory.newDocumentBuilder();
             return documentBuilder.parse(
                     new ByteArrayInputStream(otmlDocument.getBytes(StandardCharsets.UTF_8)));
@@ -305,7 +308,7 @@ public class OtmlResponseConverter {
         return getValue(node);
     }
 
-    public Collection<? extends Transaction> getTransactions(String balanceMovementsForAccount) {
+    public Collection<Transaction> getTransactions(String balanceMovementsForAccount) {
         Document document = parseDocument(balanceMovementsForAccount);
         NodeList movements =
                 getNodeList(

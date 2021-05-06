@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class AccountsResponse {
 
-    public List<AccountEntity> accounts;
+    private List<AccountEntity> accounts;
 
     public List<AccountEntity> getAccounts() {
         return ListUtils.emptyIfNull(accounts);

@@ -20,6 +20,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
         "//src/libraries/agent-storage",
         "//third_party:com_google_code_findbugs_jsr305",
+        "//third_party:lombok_libs",
         "//third_party:org_apache_commons_commons_csv",
         "//third_party:org_apache_commons_commons_lang3",
         "//third_party:org_assertj_assertj_core",

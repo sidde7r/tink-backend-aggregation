@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.auth
 import com.google.common.base.Preconditions;
 import java.util.Calendar;
 import java.util.Date;
+import lombok.Getter;
 import org.apache.commons.codec.binary.Base64;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.authenticator.rpc.ChallengeResponse;
@@ -47,9 +48,10 @@ public class DeviceToken {
     }
 
     @JsonObject
+    @Getter
     private static class Header {
-        public String alg = SdcConstants.Jwt.JWT_ALGORITHM;
-        public String typ = SdcConstants.Jwt.JWT_TYPE;
+        private String alg = SdcConstants.Jwt.JWT_ALGORITHM;
+        private String typ = SdcConstants.Jwt.JWT_TYPE;
 
         public Header setTyp(String typ) {
             this.typ = typ;
