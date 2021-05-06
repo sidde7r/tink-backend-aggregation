@@ -15,7 +15,7 @@ public class CrossBorderTransactionEntity {
     private CreditorAddressEntity creditorAddress;
     private String creditorAgentBIC;
     private String creditorName;
-    private AccountEntity debtorAccount;
+    private ResponseAccountEntity debtorAccount;
     private String endToEndIdentification;
     private String paymentType;
     private String remittanceInformationUnstrucured;
