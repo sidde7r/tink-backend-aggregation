@@ -1,12 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.uk.banks.metro.auth.steps.fetchseedposition;
 
 import static io.vavr.API.Match;
+import static se.tink.backend.aggregation.agents.nxgen.uk.banks.metro.MetroServiceConstants.HEADER_VERSION;
 
 import agents_platform_agents_framework.org.springframework.http.RequestEntity;
 import agents_platform_agents_framework.org.springframework.http.ResponseEntity;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.vavr.control.Option;
+import java.util.UUID;
 import lombok.SneakyThrows;
+import se.tink.backend.aggregation.agents.nxgen.uk.banks.metro.GlobalConstants;
 import se.tink.backend.aggregation.agents.nxgen.uk.banks.metro.MetroServiceConstants;
 import se.tink.backend.aggregation.agents.nxgen.uk.banks.metro.MetroServiceConstants.Services;
 import se.tink.backend.aggregation.agents.nxgen.uk.banks.metro.auth.model.rpc.mobileapp.SecurityNumberSeedResponse;
@@ -35,6 +38,15 @@ public class FetchSeedPositionCall
                                 .url()
                                 .path("registration/users/" + arg.getUserId())
                                 .build())
+                .headers(
+                        httpHeaders ->
+                                httpHeaders.add(
+                                        "X-REQUEST-ID",
+                                        String.format(
+                                                "%s-%s-%s",
+                                                UUID.randomUUID().toString().toUpperCase(),
+                                                GlobalConstants.PLATFORM.getValue(),
+                                                HEADER_VERSION)))
                 .headers(Services.MOBILE_APP_SERVICE.defaultHeaders())
                 .build();
     }

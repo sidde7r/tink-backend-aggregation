@@ -39,6 +39,7 @@ java_library(
         "//third_party:io_vavr",
         "//third_party:lombok_libs",
         "//third_party:org_apache_commons_commons_lang3",
+        "//third_party:org_apache_httpcomponents_httpclient",
         "//third_party:org_apache_httpcomponents_httpcore",
         "//third_party:org_bouncycastle_bcprov_jdk15on",
         "//third_party:org_jsoup_jsoup",
@@ -47,5 +48,6 @@ java_library(
         "@aggregation//:com_fasterxml_jackson_core_jackson_core",
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
         "@aggregation//:com_google_guava_guava",
+        "@tink_backend//src/libraries/account_identifier",
     ],
 )
