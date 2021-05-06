@@ -18,7 +18,7 @@ public class AccountEntity extends HandelsbankenSEAccount {
         final TransactionsSEResponse transactionsResponse =
                 (TransactionsSEResponse) client.transactions(this);
 
-        return toTransactionalAccount(client, transactionsResponse);
+        return toTransactionalAccount(client, transactionsResponse, null);
     }
 
     public boolean find(Account account) {

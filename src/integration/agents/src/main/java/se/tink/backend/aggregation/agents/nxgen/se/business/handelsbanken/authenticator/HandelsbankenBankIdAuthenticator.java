@@ -78,7 +78,7 @@ public class HandelsbankenBankIdAuthenticator implements BankIdAuthenticator<Ini
                         client.applicationEntryPoint(authorizeResponse);
                 persistentStorage.persist(authorizeResponse);
                 sessionStorage.persist(applicationEntryPoint);
-
+                persistentStorage.persist(organisationNumber);
                 OrganisationNumberSeLogger.logIfUnknownOrgnumberForSuccessfulLogin(
                         organisationNumber);
 

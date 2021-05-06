@@ -132,6 +132,7 @@ public class HandelsbankenConstants {
         public static final String APPLICATION_ENTRY_POINT = "applicationEntryPoint";
         public static final String ACCOUNT_LIST = "accountList";
         public static final String CREDIT_CARDS = "creditCards";
+        public static final String ORGANISATION_NUMBER = "organisationNumber";
     }
 
     public static final class Authentication {

@@ -10,16 +10,23 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsba
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class AccountListSEResponse extends AccountListResponse {
 
     private List<AccountGroup> accountGroups;
 
-    @Override
     public Stream<TransactionalAccount> toTinkAccounts(HandelsbankenApiClient client) {
         return accountGroups == null
                 ? Stream.empty()
                 : accountGroups.stream().flatMap(accountGroup -> accountGroup.toAccounts(client));
+    }
+
+    // not used by banks, used by business
+    @Override
+    public Stream<TransactionalAccount> toTinkAccounts(
+            HandelsbankenApiClient client, PersistentStorage persistentStorage) {
+        return Stream.empty();
     }
 
     @Override

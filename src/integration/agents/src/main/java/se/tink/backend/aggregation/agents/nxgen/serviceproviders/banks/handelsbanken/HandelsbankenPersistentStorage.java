@@ -138,7 +138,15 @@ public class HandelsbankenPersistentStorage {
         persist(HandelsbankenConstants.Storage.AUTHORIZE_END_POINT, authorize, false);
     }
 
+    public void persist(String organisationNumber) {
+        persist(HandelsbankenConstants.Storage.ORGANISATION_NUMBER, organisationNumber, false);
+    }
+
     private void persist(String storageKey, BaseResponse response, boolean mask) {
+        this.persistentStorage.put(storageKey, response, mask);
+    }
+
+    private void persist(String storageKey, String response, boolean mask) {
         this.persistentStorage.put(storageKey, response, mask);
     }
 

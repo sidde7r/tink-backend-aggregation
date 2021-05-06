@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsba
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class AccountListFIResponse extends AccountListResponse {
     private List<HandelsbankenFIAccount> accounts;
@@ -20,6 +21,12 @@ public class AccountListFIResponse extends AccountListResponse {
                 .map(HandelsbankenFIAccount::toTinkAccount)
                 .filter(Optional::isPresent)
                 .map(Optional::get);
+    }
+
+    @Override
+    public Stream<TransactionalAccount> toTinkAccounts(
+            HandelsbankenApiClient client, PersistentStorage persistentStorage) {
+        return Stream.empty();
     }
 
     @Override

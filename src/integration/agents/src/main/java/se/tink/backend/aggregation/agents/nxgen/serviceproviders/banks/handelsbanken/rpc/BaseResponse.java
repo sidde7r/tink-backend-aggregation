@@ -15,6 +15,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.entities.EmbeddedEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.entities.Link;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.entities.Mandate;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.entities.ErrorResponse;
@@ -44,6 +45,16 @@ public abstract class BaseResponse {
     private int initialSleepTime;
 
     private int status;
+
+    private EmbeddedEntity embedded;
+
+    public EmbeddedEntity getEmbedded() {
+        return embedded;
+    }
+
+    public void setEmbedded(EmbeddedEntity embedded) {
+        this.embedded = embedded;
+    }
 
     @JsonProperty("_links")
     public Map<String, Link> getLinks() {
