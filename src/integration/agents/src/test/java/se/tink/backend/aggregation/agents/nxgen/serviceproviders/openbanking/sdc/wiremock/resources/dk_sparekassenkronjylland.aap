@@ -18,7 +18,7 @@ X-Powered-By: ASP.NET
 {"access_token":"dummyAccessToken","refresh_token":"dummyRefreshToken"}
 
 REQUEST 2
-GET https://api-proxy.sdc.dk/api/psd2/v1/accounts?withBalance=true
+GET https://api-proxy.sdc.dk/api/psd2/v1/accounts
 Accept: application/json
 Content-Type: application/json
 
