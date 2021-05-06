@@ -12,6 +12,7 @@ public class ResursBankAgentTest {
     public void setup() {
         builder =
                 new AgentIntegrationTest.Builder("se", "se-resursbank-ob")
+                        .setFinancialInstitutionId("resursbank")
                         .setAppId("tink")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
