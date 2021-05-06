@@ -18,8 +18,6 @@ junit_test(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions/bankservice",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/core/account",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/response",
-        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
-        "//src/libraries/agent-storage",
         "//src/libraries/serialization",
         "//third_party:io_vavr",
         "//third_party:org_apache_pdfbox_pdfbox",
