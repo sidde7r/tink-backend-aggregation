@@ -87,10 +87,11 @@ public class CrossKeyTransactionalAccountFetcher implements AccountFetcher<Trans
     }
 
     private Optional<ExactCurrencyAmount> getBalance(AccountBalancesDataEntity balances) {
-        Optional<AccountBalanceEntity> interimBookedBalance = balances.getInterimBookedBalance();
-        if (interimBookedBalance.isPresent()) {
-            return interimBookedBalance.map(AccountBalanceEntity::getExactAmount);
+        Optional<AccountBalanceEntity> interimAvailableBalance =
+                balances.getInterimAvailableBalance();
+        if (interimAvailableBalance.isPresent()) {
+            return interimAvailableBalance.map(AccountBalanceEntity::getExactAmount);
         }
-        return balances.getInterimAvailableBalance().map(AccountBalanceEntity::getExactAmount);
+        return balances.getInterimBookedBalance().map(AccountBalanceEntity::getExactAmount);
     }
 }
