@@ -1,8 +1,9 @@
-package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.hellobank;
+package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.hellobank.manual;
 
 import java.util.UUID;
 import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
@@ -13,7 +14,9 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
+import se.tink.libraries.payments.common.model.PaymentScheme;
 
+@Ignore
 public class HelloBankAgentPaymentTest {
 
     private AgentIntegrationTest.Builder builder;
@@ -35,14 +38,25 @@ public class HelloBankAgentPaymentTest {
     }
 
     @Test
-    public void testPayments() throws Exception {
+    public void testSepaPayments() throws Exception {
         manager.before();
         creditorDebtorManager.before();
 
-        builder.build().testTinkLinkPayment(createRealDomesticPayment());
+        builder.build()
+                .testTinkLinkPayment(createRealDomesticPayment(PaymentScheme.SEPA_CREDIT_TRANSFER));
     }
 
-    private Payment createRealDomesticPayment() {
+    @Test
+    public void testSepaInstantPayments() throws Exception {
+        manager.before();
+        creditorDebtorManager.before();
+
+        builder.build()
+                .testTinkLinkPayment(
+                        createRealDomesticPayment(PaymentScheme.SEPA_INSTANT_CREDIT_TRANSFER));
+    }
+
+    private Payment createRealDomesticPayment(final PaymentScheme paymentScheme) {
         AccountIdentifier creditorAccountIdentifier =
                 new IbanIdentifier(
                         creditorDebtorManager.get(HelloBankAgentPaymentTest.Arg.CREDITOR_ACCOUNT));
@@ -56,6 +70,7 @@ public class HelloBankAgentPaymentTest {
                 .withDebtor(new Debtor(debtorAccountIdentifier))
                 .withExactCurrencyAmount(ExactCurrencyAmount.inEUR(1))
                 .withCurrency("EUR")
+                .withPaymentScheme(paymentScheme)
                 .withRemittanceInformation(
                         RemittanceInformationUtils.generateUnstructuredRemittanceInformation(
                                 "Message"))

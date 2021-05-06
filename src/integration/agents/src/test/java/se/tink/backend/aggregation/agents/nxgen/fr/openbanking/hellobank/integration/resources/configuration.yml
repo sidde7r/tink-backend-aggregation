@@ -1,0 +1,15 @@
+agentsServiceConfiguration:
+  integrations:
+    222d954b3cda4a9bb60cca46cd89748e:
+      tink:
+        authorizeUrl: https://api-nav-psd2.bddf.bnpparibas/as/psd2/hellobank/authorize
+        baseUrl: https://api-psd2.bddf.bnpparibas/psd2/hellobank/V1.4
+        clientId: dummyClientId
+        clientSecret: dummyClientSecret
+        eidasQwac: Tink
+        keyId: dummyKeyId
+        redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+        tokenUrl: https://api-psd2.bddf.bnpparibas/as/psd2/hellobank/token
+  eidasProxy:
+    host: https://eidas-proxy.staging.aggregation.tink.network
+    localEidasDev: true
