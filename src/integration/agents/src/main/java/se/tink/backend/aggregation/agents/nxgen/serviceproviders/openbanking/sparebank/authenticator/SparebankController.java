@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.authenticator.AutoAuthenticator;
@@ -19,6 +20,7 @@ import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformati
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.i18n.LocalizableKey;
 
+@Slf4j
 @RequiredArgsConstructor
 public class SparebankController implements AutoAuthenticator, ThirdPartyAppAuthenticator<String> {
 
@@ -35,10 +37,22 @@ public class SparebankController implements AutoAuthenticator, ThirdPartyAppAuth
 
     @Override
     public void autoAuthenticate() {
-        if (!authenticator.psuAndSessionPresent() || !authenticator.isTppSessionStillValid()) {
+        if (hasSessionExpired()) {
             authenticator.clearSessionData();
             throw SessionError.SESSION_EXPIRED.exception();
         }
+    }
+
+    private boolean hasSessionExpired() {
+        if (!authenticator.psuAndSessionPresent()) {
+            log.info("Session expired - missing PSU/session id");
+            return true;
+        }
+        if (!authenticator.isTppSessionStillValid()) {
+            log.info("Session expired - TPP session invalid");
+            return true;
+        }
+        return false;
     }
 
     @Override

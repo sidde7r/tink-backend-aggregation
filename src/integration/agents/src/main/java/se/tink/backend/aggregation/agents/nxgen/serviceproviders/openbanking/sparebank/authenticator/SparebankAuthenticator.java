@@ -7,6 +7,7 @@ import io.vavr.control.Try;
 import java.time.Instant;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.SparebankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.SparebankConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.SparebankStorage;
@@ -19,8 +20,10 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.spa
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
+@Slf4j
 @AllArgsConstructor
 public class SparebankAuthenticator {
+
     private final SparebankApiClient apiClient;
     private final SparebankStorage storage;
 
@@ -50,7 +53,10 @@ public class SparebankAuthenticator {
     void storeSessionData(String psuId, String tppSessionId) {
         storage.storePsuId(psuId);
         storage.storeTppSessionId(tppSessionId);
-        storage.storeConsentCreationTimestamp(Instant.now().toEpochMilli());
+
+        long now = Instant.now().toEpochMilli();
+        log.info("Consent creation timestamp: {}", now);
+        storage.storeConsentCreationTimestamp(now);
     }
 
     void clearSessionData() {
@@ -66,6 +72,7 @@ public class SparebankAuthenticator {
         Optional<CardResponse> maybeCards = storage.getStoredCards();
 
         if (!maybeAccounts.isPresent() && !maybeCards.isPresent()) {
+            log.info("TPP session invalid - empty accounts & cards storage");
             return false;
         }
         try {
@@ -95,10 +102,12 @@ public class SparebankAuthenticator {
                 storage.storeBalanceResponse(resourceId, balanceResponse);
                 return true;
             } else {
+                log.info("TPP session invalid - no accounts or cards in storage");
                 return false;
             }
         } catch (HttpResponseException e) {
             if (isExceptionWithScaRedirect(e)) {
+                log.info("TPP session invalid - fetch balances unauthorized error");
                 // We are sure that the session is invalid and will require full auth again
                 return false;
             } else {

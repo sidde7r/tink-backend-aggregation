@@ -12,6 +12,7 @@ import java.util.Optional;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.SparebankConstants.HEADERS_TO_SIGN;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.SparebankConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.SparebankConstants.HeaderValues;
@@ -35,6 +36,7 @@ import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestB
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
+@Slf4j
 @RequiredArgsConstructor
 public class SparebankApiClient {
 
@@ -137,8 +139,10 @@ public class SparebankApiClient {
     private RequestBuilder fetchTransactions(String transactionUrl, String resourceId) {
         LocalDate fromDate;
         if (storage.isStoredConsentTooOldForFullFetch()) {
+            log.info("Fetching transactions from last 90 days");
             fromDate = LocalDate.now().minusDays(89);
         } else {
+            log.info("Fetching all transactions");
             fromDate = LocalDate.of(1970, 1, 1);
         }
         LocalDate toDate = LocalDate.now();
