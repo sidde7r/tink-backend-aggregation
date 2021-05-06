@@ -44,6 +44,7 @@ public class JyskeConstants {
         public static final String ACCEPT_JSON = "application/vnd.relationsbank-v3+json";
         public static final String USER_AGENT = "JyskeBank/2.21.0 (iPhone; iOS 13.3.1; Scale/3.00)";
         public static final String BUILD_NUMBER = "111";
+        // API_KEY is retrieved from tracing the mobile app traffic in header "x-api-key"
         public static final String API_KEY = "w6FW248sXt42WZaaq8boFmXMGGTu06AG";
         public static final String APP_VERSION = "2.21.0.111";
     }
@@ -113,6 +114,10 @@ public class JyskeConstants {
         public static final String AOS = "iPhone web 13.3.1";
         public static final String ENROLLMENT_TYPE = "enrollment";
         public static final String LOGIN_TYPE = "login";
+    }
+
+    public static class Fetcher {
+        public static final int START_PAGE = 0;
     }
 
     public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =

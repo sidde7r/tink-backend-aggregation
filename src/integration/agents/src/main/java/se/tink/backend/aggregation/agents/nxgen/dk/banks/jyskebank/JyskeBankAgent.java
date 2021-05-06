@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.JyskeConstants.Fetcher;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.authenticator.JyskeBankNemidAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.fetcher.identity.JyskeIdentityDataFetcher;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.fetcher.transactionalaccount.JyskeBankAccountFetcher;
@@ -33,7 +34,7 @@ public class JyskeBankAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor,
                 RefreshIdentityDataExecutor {
-    protected final JyskeBankApiClient apiClient;
+    private final JyskeBankApiClient apiClient;
     private final StatusUpdater statusUpdater;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final JyskeIdentityDataFetcher identityDataFetcher;
@@ -96,7 +97,7 @@ public class JyskeBankAgent extends NextGenerationAgent
                 fetcher,
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
-                        new TransactionPagePaginationController<>(fetcher, 0)));
+                        new TransactionPagePaginationController<>(fetcher, Fetcher.START_PAGE)));
     }
 
     @Override
