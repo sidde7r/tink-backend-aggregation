@@ -76,9 +76,16 @@ public class JyskeBankNemidAuthenticator
     public void authenticate(Credentials credentials)
             throws AuthenticationException, AuthorizationException {
         checkCredentials(credentials);
-        initHttpCalls();
-        final String nemIdToken = iFrameController.logInWithCredentials(credentials);
-        final Document validateNemIdTokenResponseBody = getNemIdTokenResponseBody(nemIdToken);
+        callInitialHttpRequests();
+        final Document validateNemIdTokenResponseBody = nemIdAuthenticate(credentials);
+        final OAuthResponse oAuthResponse = getOAuthResponse(validateNemIdTokenResponseBody);
+        final String accessToken = oAuthResponse.getAccessToken();
+        final String refreshToken = oAuthResponse.getRefreshToken();
+        sessionStorage.put(Storage.ACCESS_TOKEN, accessToken);
+        sessionStorage.put(Storage.REFRESH_TOKEN, refreshToken);
+    }
+
+    private OAuthResponse getOAuthResponse(Document validateNemIdTokenResponseBody) {
         final ClientRegistrationResponse clientRegistrationResponse =
                 fetchClientSecret(validateNemIdTokenResponseBody);
         final String clientId = clientRegistrationResponse.getClientId();
@@ -89,12 +96,12 @@ public class JyskeBankNemidAuthenticator
         final String password = createEnrollmentPackage(clientId);
         final Form oauthForm = buildOauthTokenForm(clientId, password);
 
-        final OAuthResponse oAuthResponse =
-                apiClient.fetchAccessToken(clientId, clientSecret, oauthForm);
-        final String accessToken = oAuthResponse.getAccessToken();
-        final String refreshToken = oAuthResponse.getRefreshToken();
-        sessionStorage.put(Storage.ACCESS_TOKEN, accessToken);
-        sessionStorage.put(Storage.REFRESH_TOKEN, refreshToken);
+        return apiClient.fetchAccessToken(clientId, clientSecret, oauthForm);
+    }
+
+    private Document nemIdAuthenticate(Credentials credentials) {
+        final String nemIdToken = iFrameController.logInWithCredentials(credentials);
+        return getNemIdTokenResponseBody(nemIdToken);
     }
 
     private ClientRegistrationResponse fetchClientSecret(Document validateNemidTokenResponseBody) {
@@ -127,7 +134,7 @@ public class JyskeBankNemidAuthenticator
         return Jsoup.parse(validateNemidTokenResponseString);
     }
 
-    private void initHttpCalls() {
+    private void callInitialHttpRequests() {
         final String correlationId = randomValueGenerator.generateUuidWithTinkTag();
         apiClient.validateVersion(correlationId);
         apiClient.serverStatus(correlationId);
@@ -260,7 +267,7 @@ public class JyskeBankNemidAuthenticator
     @Override
     public void autoAuthenticate()
             throws SessionException, LoginException, BankServiceException, AuthorizationException {
-        initHttpCalls();
+        callInitialHttpRequests();
         final String kid = jyskePersistentStorage.getKeyId();
         final String clientId = jyskePersistentStorage.getClientId();
         final String clientSecret = jyskePersistentStorage.getClientSecret();
