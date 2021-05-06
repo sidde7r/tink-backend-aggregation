@@ -23,6 +23,7 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.Spareban
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.SparebankenSorConstants.ErrorText;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.SparebankenSorConstants.HTMLTags;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.SparebankenSorConstants.Storage;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.authenticator.rpc.ErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.authenticator.rpc.FinalizeBankIdBody;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.authenticator.rpc.FirstLoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.authenticator.rpc.FirstLoginResponse;
@@ -92,17 +93,22 @@ public class SparebankenSorMultiFactorAuthenticator implements BankIdAuthenticat
                 throw LoginError.INCORRECT_CREDENTIALS.exception();
             }
         } catch (HttpResponseException httpException) {
-            if (httpException.getResponse().getStatus() == 500
-                    && (httpException.getResponse().hasBody()
-                            && httpException
-                                    .getResponse()
-                                    .getBody(String.class)
-                                    .toLowerCase()
-                                    .contains(CODE_FOR_ERROR_INVALID_CREDENTIALS))) {
+            if (check500ErrorWithBodyAndCode(httpException)
+                    && httpException
+                            .getResponse()
+                            .getBody(ErrorResponse.class)
+                            .getCode()
+                            .equals(CODE_FOR_ERROR_INVALID_CREDENTIALS)) {
                 throw LoginError.INCORRECT_CREDENTIALS.exception(httpException);
             }
             throw httpException;
         }
+    }
+
+    private boolean check500ErrorWithBodyAndCode(HttpResponseException httpException) {
+        return ((httpException.getResponse().getStatus() == 500
+                        && httpException.getResponse().hasBody())
+                && httpException.getResponse().getBody(ErrorResponse.class).getCode() != null);
     }
 
     private void handleLoginErrors(final Document doc) throws BankIdException {
