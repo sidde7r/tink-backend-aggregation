@@ -22,14 +22,14 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Field;
-import se.tink.backend.aggregation.agents.contexts.MetricContext;
-import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
@@ -52,49 +52,25 @@ import se.tink.backend.aggregation.agents.utils.crypto.RSA;
 import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGeneratorImpl;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.authenticator.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdParameters;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdParametersFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.NemIdIFrameController;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.NemIdIFrameControllerInitializer;
-import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.http.form.Form;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
-import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
+@RequiredArgsConstructor
+@AllArgsConstructor
 public class JyskeBankNemidAuthenticator
         implements MultiFactorAuthenticator, AutoAuthenticator, NemIdParametersFetcher {
     private final JyskeBankApiClient apiClient;
     private final JyskeBankPersistentStorage jyskePersistentStorage;
     private final RandomValueGenerator randomValueGenerator;
     private final SessionStorage sessionStorage;
-    private final NemIdIFrameController iFrameController;
-
-    public JyskeBankNemidAuthenticator(
-            JyskeBankApiClient apiClient,
-            SessionStorage sessionStorage,
-            PersistentStorage persistentStorage,
-            Catalog catalog,
-            StatusUpdater statusUpdater,
-            SupplementalInformationController supplementalInformationController,
-            MetricContext metricContext) {
-        this.apiClient = apiClient;
-        this.sessionStorage = sessionStorage;
-        this.jyskePersistentStorage = new JyskeBankPersistentStorage(persistentStorage);
-        this.iFrameController =
-                NemIdIFrameControllerInitializer.initNemIdIframeController(
-                        this,
-                        catalog,
-                        statusUpdater,
-                        supplementalInformationController,
-                        metricContext);
-        this.randomValueGenerator = new RandomValueGeneratorImpl();
-    }
+    private NemIdIFrameController iFrameController;
 
     @Override
     public void authenticate(Credentials credentials)

@@ -18,8 +18,11 @@ import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.fetcher.ident
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.fetcher.transactionalaccount.JyskeBankAccountFetcher;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.NemIdIFrameController;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.NemIdIFrameControllerInitializer;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
@@ -34,12 +37,14 @@ public class JyskeBankAgent extends NextGenerationAgent
     private final StatusUpdater statusUpdater;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final JyskeIdentityDataFetcher identityDataFetcher;
+    private final RandomValueGenerator randomValueGenerator;
 
     @Inject
     public JyskeBankAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
+        this.randomValueGenerator = componentProvider.getRandomValueGenerator();
         client.setFollowRedirects(false);
-        this.apiClient = new JyskeBankApiClient(client, sessionStorage);
+        this.apiClient = new JyskeBankApiClient(client, sessionStorage, randomValueGenerator);
         this.transactionalAccountRefreshController =
                 constructTransactionalAccountRefreshController();
         this.statusUpdater = componentProvider.getContext();
@@ -55,18 +60,31 @@ public class JyskeBankAgent extends NextGenerationAgent
 
     @Override
     protected Authenticator constructAuthenticator() {
-        JyskeBankNemidAuthenticator jyskeBankNemidAuthenticator =
+        final JyskeBankPersistentStorage jyskePersistentStorage =
+                new JyskeBankPersistentStorage(persistentStorage);
+
+        final JyskeBankNemidAuthenticator jyskeBankAuthenticator =
                 new JyskeBankNemidAuthenticator(
-                        apiClient,
-                        sessionStorage,
-                        persistentStorage,
+                        apiClient, jyskePersistentStorage, randomValueGenerator, sessionStorage);
+
+        final NemIdIFrameController iFrameController =
+                NemIdIFrameControllerInitializer.initNemIdIframeController(
+                        jyskeBankAuthenticator,
                         catalog,
                         statusUpdater,
                         supplementalInformationController,
                         metricContext);
 
+        final JyskeBankNemidAuthenticator jyskeBankNemidAuthenticator =
+                new JyskeBankNemidAuthenticator(
+                        apiClient,
+                        jyskePersistentStorage,
+                        randomValueGenerator,
+                        sessionStorage,
+                        iFrameController);
+
         return new AutoAuthenticationController(
-                request, systemUpdater, jyskeBankNemidAuthenticator, jyskeBankNemidAuthenticator);
+                request, systemUpdater, jyskeBankNemidAuthenticator, jyskeBankAuthenticator);
     }
 
     private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {

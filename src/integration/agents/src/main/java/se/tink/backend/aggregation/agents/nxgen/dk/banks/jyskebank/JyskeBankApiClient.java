@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank;
 
 import java.util.Locale;
-import java.util.UUID;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +18,7 @@ import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.fetcher.ident
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.fetcher.transactionalaccount.rpc.AccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.fetcher.transactionalaccount.rpc.TransactionResponse;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.form.Form;
@@ -29,6 +29,7 @@ import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 public class JyskeBankApiClient {
     private final TinkHttpClient client;
     private final SessionStorage sessionStorage;
+    private final RandomValueGenerator randomValueGenerator;
     private String bidCorrId = "";
 
     public HttpResponse nemIdInit(String codeChallenge) {
@@ -85,10 +86,10 @@ public class JyskeBankApiClient {
     }
 
     public OAuthResponse fetchAccessToken(String clientId, String clientSecret, Form oauthForm) {
-        final UUID corrId = UUID.randomUUID();
+        final String corrId = randomValueGenerator.generateUuidWithTinkTag();
 
         return client.request(Urls.OAUTH_TOKEN)
-                .header(HeaderKeys.CORR_ID, corrId.toString())
+                .header(HeaderKeys.CORR_ID, corrId)
                 .header(HttpHeaders.USER_AGENT, HeaderValues.USER_AGENT)
                 .type(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
                 .addBasicAuth(clientId, clientSecret)
@@ -120,7 +121,7 @@ public class JyskeBankApiClient {
 
     private RequestBuilder buildRequest(String url) {
         if (bidCorrId.isEmpty()) {
-            bidCorrId = UUID.randomUUID().toString();
+            bidCorrId = randomValueGenerator.generateUuidWithTinkTag();
         }
 
         return client.request(url)
