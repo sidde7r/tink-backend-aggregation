@@ -1,5 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.executor.payment.entities;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
@@ -7,11 +10,14 @@ import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Payment;
 
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @JsonObject
 public class DomesticTransactionEntity {
     private AmountEntity amount;
-    private AccountEntity creditorAccount;
-    private AccountEntity debtorAccount;
+    private ResponseAccountEntity creditorAccount;
+    private ResponseAccountEntity debtorAccount;
     private String requestedExecutionDate;
     private String transactionStatus;
 
