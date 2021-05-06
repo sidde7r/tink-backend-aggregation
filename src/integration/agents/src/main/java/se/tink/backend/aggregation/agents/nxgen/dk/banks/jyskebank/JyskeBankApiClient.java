@@ -46,6 +46,8 @@ public class JyskeBankApiClient {
                         .accept(HeaderValues.ACCEPT_HTML)
                         .get(HttpResponse.class);
 
+        // HTTP 302 redirects has been disabled for this agent which is why we have to follow
+        // redirects manually here
         String url = httpResponse.getHeaders().getFirst(HttpHeaders.LOCATION);
         httpResponse = client.request(url).get(HttpResponse.class);
 
