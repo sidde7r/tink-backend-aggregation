@@ -156,6 +156,15 @@ public final class ArgumentManager<ArgumentEnum extends Enum<ArgumentEnum> & Arg
         }
     }
 
+    public enum SecurityNumberArgumentEnum implements ArgumentManagerEnum {
+        SECURITY_NUMBER;
+
+        @Override
+        public boolean isOptional() {
+            return false;
+        }
+    }
+
     public interface ArgumentManagerEnum {
         boolean isOptional();
     }

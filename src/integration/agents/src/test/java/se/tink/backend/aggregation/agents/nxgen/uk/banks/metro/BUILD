@@ -1,0 +1,41 @@
+load("//tools/bzl:junit.bzl", "junit_test")
+
+junit_test(
+    name = "metro",
+    srcs = glob(["**/*.java"]),
+    data = [
+        "//data:aggregation_test",
+        "//data:cryptography_test",
+        "//data:provider_configurations",
+        "//etc:development",
+    ],
+    tags = [
+        "external",
+        "manual",
+    ],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/agents_platform/agents_framework",
+        "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/agents_platform/framework",
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/uk/banks/metro",
+        "//src/integration/amount",
+        "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
+        "//src/integration/credentials:service",
+        "//src/integration/lib",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/agentplatform",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/crypto",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/encoding",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/response",
+        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
+        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/configuration",
+        "//src/integration/payment:rpc",
+        "//src/integration/transfer:enums",
+        "//src/integration/transfer:rpc",
+        "//src/libraries/serialization",
+        "//third_party:com_github_tomakehurst_wiremock",
+        "//third_party:io_vavr",
+        "//third_party:org_assertj_assertj_core",
+        "//third_party:org_bouncycastle_bcpkix_jdk15on",
+        "//third_party:org_mockito_mockito_core",
+    ],
+)
