@@ -8,7 +8,7 @@ linechanger = '\n'
 state = 'STATE'
 state_count = 1
 api_call_count = 1
-white_list_headers = ['Accept', 'Content-Type', 'Date']
+-white_list_headers = ['Accept', 'Content-Type', 'Date', 'x-fapi-financial-id', 'x-fapi-interaction-id' ]
 parsed_content = []
 parsing_phase = ''
 
