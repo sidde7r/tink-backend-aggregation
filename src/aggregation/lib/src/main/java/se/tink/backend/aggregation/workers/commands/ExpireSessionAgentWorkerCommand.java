@@ -15,17 +15,17 @@ public class ExpireSessionAgentWorkerCommand extends AgentWorkerCommand {
     private static final Logger log =
             LoggerFactory.getLogger(ExpireSessionAgentWorkerCommand.class);
 
-    private final boolean isManualRefresh;
+    private final boolean isUserAvailableForInteraction;
     private final SystemUpdater systemUpdater;
     private final Credentials credentials;
     private final Provider provider;
 
     public ExpireSessionAgentWorkerCommand(
-            boolean isManualRefresh,
+            boolean isUserAvailableForInteraction,
             SystemUpdater systemUpdater,
             Credentials credentials,
             Provider provider) {
-        this.isManualRefresh = isManualRefresh;
+        this.isUserAvailableForInteraction = isUserAvailableForInteraction;
         this.systemUpdater = systemUpdater;
         this.credentials = credentials;
         this.provider = provider;
@@ -33,7 +33,7 @@ public class ExpireSessionAgentWorkerCommand extends AgentWorkerCommand {
 
     @Override
     protected AgentWorkerCommandResult doExecute() throws Exception {
-        if (isManualRefresh) {
+        if (isUserAvailableForInteraction) {
             return AgentWorkerCommandResult.CONTINUE;
         }
 
