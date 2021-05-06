@@ -188,8 +188,7 @@ public class ClientConfigurationMetaInfoHandler {
         String packageToScan = fullyQualifiedClassName.substring(0, lastIndexPackageSubdivider);
         log.info("Package to scan is : {}", packageToScan);
         Reflections reflectionsPackageToScan =
-                new Reflections(
-                        ClasspathHelper.forPackage(packageToScan), new SubTypesScanner(false));
+                new Reflections(packageToScan, new SubTypesScanner(false));
         Set<Class<? extends ClientConfiguration>> clientConfigurationClassForAgentSet =
                 removeSuperClasses(
                         reflectionsPackageToScan.getSubTypesOf(ClientConfiguration.class).stream()
