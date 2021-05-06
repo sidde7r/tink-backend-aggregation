@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.enums.AccountIdentifierType;
+import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
@@ -70,7 +71,8 @@ public class AccountsEntity {
                 .withAccountName(name)
                 .addIdentifier(
                         AccountIdentifier.create(
-                                AccountIdentifierType.DK, accountNumber.getAccountNo()))
+                                AccountIdentifierType.DK, accountNumber.getAccountNo(), name))
+                .addIdentifier(new IbanIdentifier(iban))
                 .build();
     }
 }
