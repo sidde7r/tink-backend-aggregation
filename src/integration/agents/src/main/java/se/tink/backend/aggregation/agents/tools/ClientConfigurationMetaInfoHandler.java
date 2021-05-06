@@ -179,6 +179,25 @@ public class ClientConfigurationMetaInfoHandler {
                 .collect(Collectors.toSet());
     }
 
+    private Set<Class<? extends ClientConfiguration>>
+            removeClassesUnderWrongPackageSharingSamePrefix(
+                    Set<Class<? extends ClientConfiguration>> classes, String agentPackageName) {
+        if (classes.size() < 2) {
+            return classes;
+        }
+
+        String expectedPackageName = agentPackageName + "\\..*";
+
+        final Set<Class<?>> classesUnderWrongPackage =
+                classes.stream()
+                        .filter(clazz -> !clazz.getPackage().getName().matches(expectedPackageName))
+                        .collect(Collectors.toSet());
+
+        return classes.stream()
+                .filter(clazz -> !classesUnderWrongPackage.contains(clazz))
+                .collect(Collectors.toSet());
+    }
+
     private Optional<Class<? extends ClientConfiguration>>
             searchForClosestConfigurationClassInSamePackageTree(
                     final String fullyQualifiedClassName) {
@@ -189,10 +208,13 @@ public class ClientConfigurationMetaInfoHandler {
         Reflections reflectionsPackageToScan =
                 new Reflections(packageToScan, new SubTypesScanner(false));
         Set<Class<? extends ClientConfiguration>> clientConfigurationClassForAgentSet =
-                removeSuperClasses(
-                        reflectionsPackageToScan.getSubTypesOf(ClientConfiguration.class).stream()
-                                .filter(clazz -> !clazz.isInterface())
-                                .collect(Collectors.toSet()));
+                removeClassesUnderWrongPackageSharingSamePrefix(
+                        removeSuperClasses(
+                                reflectionsPackageToScan.getSubTypesOf(ClientConfiguration.class)
+                                        .stream()
+                                        .filter(clazz -> !clazz.isInterface())
+                                        .collect(Collectors.toSet())),
+                        packageToScan);
         log.info(
                 "clientConfigurationClassForAgentSet are  : {}",
                 clientConfigurationClassForAgentSet);
