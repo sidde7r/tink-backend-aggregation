@@ -517,6 +517,12 @@ public class AgentWorkerOperationFactory {
 
         commands.add(new ValidateProviderAgentWorkerStatus(context, controllerWrapper));
         commands.add(
+            new ExpireSessionAgentWorkerCommand(
+                request.isManual(),
+                context,
+                request.getCredentials(),
+                request.getProvider()));
+        commands.add(
                 new CircuitBreakerAgentWorkerCommand(context, circuitBreakAgentWorkerCommandState));
         commands.add(
                 new LockAgentWorkerCommand(context, metricsName, interProcessSemaphoreMutexFactory)
