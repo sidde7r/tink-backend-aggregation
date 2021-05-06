@@ -2,11 +2,20 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovid
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.stream.Collectors;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankBaseConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class ErrorResponse {
     private ErrorMessagesEntity errorMessages;
+
+    public boolean isLoginFailedError() {
+        return hasErrorCode(SwedbankBaseConstants.BankErrorMessage.LOGIN_FAILED);
+    }
+
+    public boolean isSessionInvalidatedError() {
+        return hasErrorCode(SwedbankBaseConstants.BankErrorMessage.SESSION_INVALIDATED);
+    }
 
     @JsonIgnore
     public boolean hasErrorCode(String errorCode) {

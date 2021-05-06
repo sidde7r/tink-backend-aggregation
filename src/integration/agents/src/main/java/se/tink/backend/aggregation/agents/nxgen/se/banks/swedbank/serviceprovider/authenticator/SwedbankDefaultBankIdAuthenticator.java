@@ -122,40 +122,38 @@ public class SwedbankDefaultBankIdAuthenticator
 
     private BankIdStatus handleBankIdErrors(HttpResponseException hre) {
         HttpResponse httpResponse = hre.getResponse();
-        // when timing out, this can also be the response
-        int responseStatus = httpResponse.getStatus();
-        if (responseStatus == HttpStatus.SC_UNAUTHORIZED) {
+
+        if (httpResponse.getStatus() == HttpStatus.SC_UNAUTHORIZED) {
             ErrorResponse errorResponse = httpResponse.getBody(ErrorResponse.class);
-            if (errorResponse.hasErrorCode(SwedbankBaseConstants.BankErrorMessage.LOGIN_FAILED)) {
+            if (errorResponse.isLoginFailedError()) {
                 if (pollCount < 10) {
                     return BankIdStatus.FAILED_UNKNOWN;
                 }
 
-                if (SwedbankBaseConstants.BankIdResponseStatus.CLIENT_NOT_STARTED.equals(
-                        previousStatus)) {
-                    return BankIdStatus.EXPIRED_AUTOSTART_TOKEN;
-                }
-
-                if (SwedbankBaseConstants.BankIdResponseStatus.USER_SIGN.equals(previousStatus)) {
+                if (previousStatusWasUserSign() || pollCount > 35) {
                     return BankIdStatus.TIMEOUT;
                 }
-            } else if (errorResponse.hasErrorCode(
-                    SwedbankBaseConstants.BankErrorMessage.SESSION_INVALIDATED)) {
+
+                if (previousStatusWasClientNotStarted()) {
+                    return BankIdStatus.EXPIRED_AUTOSTART_TOKEN;
+                }
+            } else if (errorResponse.isSessionInvalidatedError()) {
                 // When user has bank app running, and starts a refresh, both sessions will be
                 // invalidated
                 throw SessionError.SESSION_ALREADY_ACTIVE.exception();
             }
-        } else if (responseStatus == HttpStatus.SC_INTERNAL_SERVER_ERROR
-                && SwedbankBaseConstants.BankIdResponseStatus.CLIENT_NOT_STARTED.equals(
-                        previousStatus)) {
-            // This code is a temporary fix until Swedbank returns a better error message.
-            // What we belive to be the problem is that when multiple request are sent to bankid
-            // at the same time bankid cancels all requests.
-            return BankIdStatus.INTERRUPTED;
         }
 
         // unknown error re-throw
         throw hre;
+    }
+
+    private boolean previousStatusWasUserSign() {
+        return SwedbankBaseConstants.BankIdResponseStatus.USER_SIGN.equals(previousStatus);
+    }
+
+    private boolean previousStatusWasClientNotStarted() {
+        return SwedbankBaseConstants.BankIdResponseStatus.CLIENT_NOT_STARTED.equals(previousStatus);
     }
 
     @Override
