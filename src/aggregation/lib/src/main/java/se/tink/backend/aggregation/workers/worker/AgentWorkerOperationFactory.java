@@ -393,7 +393,7 @@ public class AgentWorkerOperationFactory {
         commands.add(new ValidateProviderAgentWorkerStatus(context, controllerWrapper));
         commands.add(
                 new ExpireSessionAgentWorkerCommand(
-                        request.isManual(),
+                        request.getUserAvailability().isUserAvailableForInteraction(),
                         context,
                         request.getCredentials(),
                         request.getProvider()));
@@ -516,6 +516,12 @@ public class AgentWorkerOperationFactory {
         String metricsName = (request.isManual() ? "authenticate-manual" : "authenticate-auto");
 
         commands.add(new ValidateProviderAgentWorkerStatus(context, controllerWrapper));
+        commands.add(
+                new ExpireSessionAgentWorkerCommand(
+                        request.getUserAvailability().isUserAvailableForInteraction(),
+                        context,
+                        request.getCredentials(),
+                        request.getProvider()));
         commands.add(
                 new CircuitBreakerAgentWorkerCommand(context, circuitBreakAgentWorkerCommandState));
         commands.add(
@@ -689,7 +695,7 @@ public class AgentWorkerOperationFactory {
 
         commands.add(
                 new ExpireSessionAgentWorkerCommand(
-                        request.isManual(),
+                        request.getUserAvailability().isUserAvailableForInteraction(),
                         context,
                         request.getCredentials(),
                         request.getProvider()));
@@ -894,7 +900,7 @@ public class AgentWorkerOperationFactory {
         commands.add(new ValidateProviderAgentWorkerStatus(context, controllerWrapper));
         commands.add(
                 new ExpireSessionAgentWorkerCommand(
-                        request.isManual(),
+                        request.getUserAvailability().isUserAvailableForInteraction(),
                         context,
                         request.getCredentials(),
                         request.getProvider()));
@@ -977,7 +983,7 @@ public class AgentWorkerOperationFactory {
         commands.add(new ValidateProviderAgentWorkerStatus(context, controllerWrapper));
         commands.add(
                 new ExpireSessionAgentWorkerCommand(
-                        request.isManual(),
+                        request.getUserAvailability().isUserAvailableForInteraction(),
                         context,
                         request.getCredentials(),
                         request.getProvider()));
@@ -1229,7 +1235,7 @@ public class AgentWorkerOperationFactory {
         commands.add(new ValidateProviderAgentWorkerStatus(context, controllerWrapper));
         commands.add(
                 new ExpireSessionAgentWorkerCommand(
-                        request.isManual(),
+                        request.getUserAvailability().isUserAvailableForInteraction(),
                         context,
                         request.getCredentials(),
                         request.getProvider()));
@@ -1341,7 +1347,7 @@ public class AgentWorkerOperationFactory {
         commands.add(new ValidateProviderAgentWorkerStatus(context, controllerWrapper));
         commands.add(
                 new ExpireSessionAgentWorkerCommand(
-                        request.isManual(),
+                        request.getUserAvailability().isUserAvailableForInteraction(),
                         context,
                         request.getCredentials(),
                         request.getProvider()));

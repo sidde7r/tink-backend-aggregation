@@ -34,6 +34,10 @@
         "updated": "695260800",
         "userId": "userId"
     },
+    "userAvailability": {
+        "userAvailableForInteraction": true,
+        "userPresent": true
+    },
     "provider": {
         "accessType": "OPEN_BANKING",
         "agentSources": [
