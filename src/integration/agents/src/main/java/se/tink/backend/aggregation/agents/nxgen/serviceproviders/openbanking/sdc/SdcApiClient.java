@@ -11,8 +11,12 @@ import static se.tink.backend.aggregation.api.Psd2Headers.Keys.X_REQUEST_ID;
 import static se.tink.libraries.date.ThreadSafeDateFormat.FORMATTER_DAILY;
 
 import java.util.Date;
+import java.util.concurrent.Callable;
 import javax.ws.rs.core.MediaType;
+import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sdc.SdcConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sdc.SdcConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sdc.SdcConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sdc.SdcConstants.HeaderValues;
@@ -33,9 +37,11 @@ import se.tink.backend.aggregation.api.Psd2Headers;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
+@Slf4j
 public class SdcApiClient {
 
     private final TinkHttpClient client;
@@ -60,25 +66,6 @@ public class SdcApiClient {
         this.client.addFilter(new BankInternalErrorRetryFilter());
     }
 
-    private RequestBuilder createRequest(URL url) {
-        return client.request(url)
-                .accept(MediaType.APPLICATION_JSON)
-                .type(MediaType.APPLICATION_JSON);
-    }
-
-    private RequestBuilder createRequestInSession(URL url) {
-        final OAuth2Token authToken = getTokenFromStorage();
-        OAuth2TokenEnricher.enrich(authToken);
-        return createRequest(url).addBearerToken(authToken);
-    }
-
-    private OAuth2Token getTokenFromStorage() {
-        return persistentStorage
-                .get(StorageKeys.OAUTH_TOKEN, OAuth2Token.class)
-                .orElseThrow(
-                        () -> new IllegalStateException(SessionError.SESSION_EXPIRED.exception()));
-    }
-
     public URL buildAuthorizeUrl(String state) {
         return createRequest(urlProvider.getAuthorizationUrl())
                 .queryParam(QueryKeys.SCOPE, HeaderValues.SCOPE_AIS)
@@ -90,7 +77,7 @@ public class SdcApiClient {
     }
 
     public OAuth2Token exchangeAuthorizationCode(String code) {
-        TokenRequest tokenRequest =
+        return postForAccessToken(
                 new TokenRequest(
                         FormValues.AUTHORIZATION_CODE,
                         code,
@@ -99,58 +86,121 @@ public class SdcApiClient {
                         configuration.getClientSecret(),
                         FormValues.SCOPE_AIS,
                         null,
-                        "");
-
-        return createRequest(urlProvider.getTokenUrl())
-                .header(HeaderKeys.X_REQUEST_ID, Psd2Headers.getRequestId())
-                .post(TokenResponse.class, tokenRequest)
-                .toTinkToken();
+                        ""));
     }
 
-    public OAuth2Token refreshAccessToken(String refreshToken) {
-        RefreshAccessTokenRequest tokenRequest =
-                new RefreshAccessTokenRequest(
-                        FormValues.REFRESH_TOKEN,
-                        refreshToken,
-                        redirectUrl,
-                        configuration.getClientId(),
-                        configuration.getClientSecret(),
-                        FormValues.SCOPE_AIS);
+    public void refreshAccessToken() {
+        OAuth2Token accessToken =
+                postForAccessToken(
+                        new RefreshAccessTokenRequest(
+                                FormValues.REFRESH_TOKEN,
+                                getRefreshTokenFromStorage(),
+                                redirectUrl,
+                                configuration.getClientId(),
+                                configuration.getClientSecret(),
+                                FormValues.SCOPE_AIS));
+        persistentStorage.put(StorageKeys.OAUTH_TOKEN, accessToken);
+    }
 
-        return createRequest(urlProvider.getTokenUrl())
-                .header(HeaderKeys.X_REQUEST_ID, Psd2Headers.getRequestId())
-                .post(TokenResponse.class, tokenRequest)
-                .toTinkToken();
+    private <T> OAuth2Token postForAccessToken(T tokenRequest) {
+        OAuth2Token accessToken =
+                createRequest(urlProvider.getTokenUrl())
+                        .header(HeaderKeys.X_REQUEST_ID, Psd2Headers.getRequestId())
+                        .post(TokenResponse.class, tokenRequest)
+                        .toTinkToken();
+
+        // SDC provides Oauth2 Token without information about token type
+        OAuth2TokenEnricher.enrich(accessToken);
+
+        return accessToken;
     }
 
     public AccountsResponse fetchAccounts() {
-        return createRequestInSession(urlProvider.getAccountsUrl())
-                .header(X_REQUEST_ID, Psd2Headers.getRequestId())
-                .header(CONSENT_ID, Psd2Headers.getRequestId())
-                .header(OCP_APIM_SUBSCRIPTION_KEY, configuration.getOcpApimSubscriptionKey())
-                .queryParam(QueryKeys.WITH_BALANCE, String.valueOf(true))
-                .get(AccountsResponse.class);
+        return sendSessionRequest(
+                () ->
+                        createRequestInSession(urlProvider.getAccountsUrl())
+                                .header(X_REQUEST_ID, Psd2Headers.getRequestId())
+                                .header(CONSENT_ID, Psd2Headers.getRequestId())
+                                .header(
+                                        OCP_APIM_SUBSCRIPTION_KEY,
+                                        configuration.getOcpApimSubscriptionKey())
+                                .queryParam(QueryKeys.WITH_BALANCE, "true")
+                                .get(AccountsResponse.class));
     }
 
     public BalancesResponse fetchAccountBalances(String accountId) {
-        return createRequestInSession(urlProvider.getBalancesUrl().parameter(ACCOUNT_ID, accountId))
-                .header(X_REQUEST_ID, Psd2Headers.getRequestId())
-                .header(CONSENT_ID, Psd2Headers.getRequestId())
-                .header(OCP_APIM_SUBSCRIPTION_KEY, configuration.getOcpApimSubscriptionKey())
-                .get(BalancesResponse.class);
+        return sendSessionRequest(
+                () ->
+                        createRequestInSession(
+                                        urlProvider
+                                                .getBalancesUrl()
+                                                .parameter(ACCOUNT_ID, accountId))
+                                .header(X_REQUEST_ID, Psd2Headers.getRequestId())
+                                .header(CONSENT_ID, Psd2Headers.getRequestId())
+                                .header(
+                                        OCP_APIM_SUBSCRIPTION_KEY,
+                                        configuration.getOcpApimSubscriptionKey())
+                                .get(BalancesResponse.class));
     }
 
     public TransactionsResponse getTransactionsFor(
             String accountId, Date fromDate, Date toDate, String providerMarket) {
-        return createRequestInSession(
-                        urlProvider.getTransactionsUrl().parameter(ACCOUNT_ID, accountId))
-                .header(X_REQUEST_ID, Psd2Headers.getRequestId())
-                .header(CONSENT_ID, Psd2Headers.getRequestId())
-                .header(OCP_APIM_SUBSCRIPTION_KEY, configuration.getOcpApimSubscriptionKey())
-                .queryParam(BOOKING_STATUS, BOOKED)
-                .queryParam(DATE_FROM, FORMATTER_DAILY.format(fromDate))
-                .queryParam(DATE_TO, FORMATTER_DAILY.format(toDate))
-                .get(TransactionsResponse.class)
-                .setProviderMarket(providerMarket);
+        return sendSessionRequest(
+                () ->
+                        createRequestInSession(
+                                        urlProvider
+                                                .getTransactionsUrl()
+                                                .parameter(ACCOUNT_ID, accountId))
+                                .header(X_REQUEST_ID, Psd2Headers.getRequestId())
+                                .header(CONSENT_ID, Psd2Headers.getRequestId())
+                                .header(
+                                        OCP_APIM_SUBSCRIPTION_KEY,
+                                        configuration.getOcpApimSubscriptionKey())
+                                .queryParam(BOOKING_STATUS, BOOKED)
+                                .queryParam(DATE_FROM, FORMATTER_DAILY.format(fromDate))
+                                .queryParam(DATE_TO, FORMATTER_DAILY.format(toDate))
+                                .get(TransactionsResponse.class)
+                                .setProviderMarket(providerMarket));
+    }
+
+    private RequestBuilder createRequestInSession(URL url) {
+        OAuth2Token authToken = getTokenFromStorage();
+        return createRequest(url).addBearerToken(authToken);
+    }
+
+    private RequestBuilder createRequest(URL url) {
+        return client.request(url)
+                .accept(MediaType.APPLICATION_JSON)
+                .type(MediaType.APPLICATION_JSON);
+    }
+
+    private String getRefreshTokenFromStorage() {
+        return getTokenFromStorage()
+                .getRefreshToken()
+                .orElseThrow(SessionError.SESSION_EXPIRED::exception);
+    }
+
+    private OAuth2Token getTokenFromStorage() {
+        return persistentStorage
+                .get(StorageKeys.OAUTH_TOKEN, OAuth2Token.class)
+                .orElseThrow(SessionError.SESSION_EXPIRED::exception);
+    }
+
+    @SneakyThrows
+    private <T> T sendSessionRequest(Callable<T> requestCallable) {
+        try {
+            return requestCallable.call();
+
+        } catch (HttpResponseException e) {
+            /*
+            Sometimes fetching data (mainly transactions) takes so long than current access token expires
+             */
+            if (e.getMessage().contains(ErrorMessages.TOKEN_EXPIRED)) {
+                log.info("Refreshing access token to continue fetching data");
+                refreshAccessToken();
+                return requestCallable.call();
+            }
+            throw e;
+        }
     }
 }

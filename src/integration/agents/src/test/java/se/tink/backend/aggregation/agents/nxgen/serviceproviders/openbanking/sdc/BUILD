@@ -26,8 +26,11 @@ junit_test(
         "//src/libraries/agent-storage",
         "//src/libraries/serialization",
         "//third_party:com_github_tomakehurst_wiremock",
+        "//third_party:lombok_libs",
         "//third_party:org_assertj_assertj_core",
         "//third_party:org_mockito_mockito_core",
+        "//third_party:pl_pragmatists_junitparams",
+        "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
         "@tink_backend//src/libraries/account_identifier",
     ],
 )
