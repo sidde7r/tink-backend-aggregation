@@ -13,5 +13,7 @@ public class PaymentConstants {
         public static final String TIMEOUT = "BankID signing of payment timed out.";
         public static final String INTERRUPTED = "BankID signing of payment was interrupted.";
         public static final String UNKNOWN = "Unknown problem when signing payment with BankID.";
+        public static final String NO_EXTENDED_USE =
+                "To add a new recipient, activate Mobile BankID for extended use.";
     }
 }

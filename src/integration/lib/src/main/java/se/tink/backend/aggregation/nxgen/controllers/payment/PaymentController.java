@@ -55,6 +55,11 @@ public class PaymentController {
                                 PaymentConstants.BankId.INTERRUPTED,
                                 InternalStatus.BANKID_INTERRUPTED,
                                 e);
+                    case ACTIVATE_EXTENDED_BANKID:
+                        throw new PaymentAuthorizationException(
+                                PaymentConstants.BankId.NO_EXTENDED_USE,
+                                InternalStatus.BANKID_NEEDS_EXTENDED_USE_ENABLED,
+                                e);
                     case UNKNOWN:
                     default:
                         throw new PaymentAuthorizationException(

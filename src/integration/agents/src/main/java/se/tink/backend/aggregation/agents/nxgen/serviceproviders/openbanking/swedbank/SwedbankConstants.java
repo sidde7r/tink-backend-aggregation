@@ -161,6 +161,8 @@ public final class SwedbankConstants {
                 "No SwedbankPaymentType found for AccountIdentifiers pair %s";
         public static final String INVALID_REMITTANCE_INFORMATION_VALUE =
                 "Invalid destination message.";
+        public static final String ACTIVATE_EXTENDED_BANKID =
+                "To add a new recipient, activate Mobile BankID for extended use.";
     }
 
     public static class ConsentStatus {

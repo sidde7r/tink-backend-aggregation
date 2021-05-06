@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sw
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.SwedbankPaymentAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.rpc.AuthenticationResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.common.SwedbankOpenBankingPaymentApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.executor.payment.enums.SwedbankPaymentType;
@@ -11,7 +10,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swe
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.signing.multifactor.bankid.BankIdSigningController;
-import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -20,7 +18,6 @@ public class SwedbankPaymentSigner {
     private final SwedbankBankIdSigner swedbankIdSigner;
     private final StrongAuthenticationState strongAuthenticationState;
     private final BankIdSigningController<PaymentMultiStepRequest> signingController;
-    private final SwedbankPaymentAuthenticator paymentAuthenticator;
 
     public boolean authorize(String paymentId) throws PaymentException {
         boolean readyForSigning = isReadyForSigning(paymentId);
@@ -60,21 +57,7 @@ public class SwedbankPaymentSigner {
     }
 
     public void sign(PaymentMultiStepRequest request) {
-        this.signingController.sign(request);
-
-        // left as it was until I'm a bit more brave to dig into changing lib code and the way we
-        // handle BankIdStatus. It's ugly and has double dependency on SigningController and Signer.
-        if (swedbankIdSigner.isMissingExtendedBankId()) {
-            throw new MissingExtendedBankIdException();
-        }
-    }
-
-    public void signWithRedirect(String paymentId) throws PaymentException {
-        final String state = strongAuthenticationState.getState();
-        final PaymentAuthorisationResponse paymentAuthResponse =
-                startAuthorisationProcess(paymentId, true);
-        URL redirectUrl = paymentAuthResponse.getScaRedirectUrl();
-        paymentAuthenticator.openThirdPartyApp(redirectUrl, state);
+        signingController.sign(request);
     }
 
     static class MissingExtendedBankIdException extends RuntimeException {}
