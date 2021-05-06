@@ -110,8 +110,8 @@ public class CrosskeyBaseApiClient {
                         .queryParam(QueryKeys.CODE, code)
                         .post(TokenResponse.class)
                         .toTinkToken();
-        if (!oAuth2Token.getRefreshToken().isPresent()) {
-            log.warn("Refresh token not present in response");
+        if (oAuth2Token.getExpiresInSeconds() == 0) {
+            log.warn("ExpiresIn not present in response");
         }
         return oAuth2Token;
     }
