@@ -31,7 +31,6 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.fetcher.creditca
 import se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.fetcher.creditcard.rpc.FindMovementsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.rpc.BaseResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.rpc.OtpEntity;
-import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
@@ -43,15 +42,10 @@ public class WizinkApiClient {
             DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private final TinkHttpClient httpClient;
     private final WizinkStorage wizinkStorage;
-    private final SupplementalInformationHelper supplementalInformationHelper;
 
-    public WizinkApiClient(
-            TinkHttpClient httpClient,
-            WizinkStorage wizinkStorage,
-            SupplementalInformationHelper supplementalInformationHelper) {
+    public WizinkApiClient(TinkHttpClient httpClient, WizinkStorage wizinkStorage) {
         this.httpClient = httpClient;
         this.wizinkStorage = wizinkStorage;
-        this.supplementalInformationHelper = supplementalInformationHelper;
     }
 
     public CustomerLoginResponse login(CustomerLoginRequest request) {
@@ -106,13 +100,33 @@ public class WizinkApiClient {
                 .post(FindMovementsResponse.class);
     }
 
+    public String fetchSessionIdForUnmaskIban() {
+        log.info("Starting fetching sessionId");
+        return createRequest(Urls.UNMASK_DATA)
+                .body(new UnmaskDataRequest(new UnmaskDataRequestBody()))
+                .put(UnmaskDataResponse.class)
+                .getSessionId()
+                .orElseThrow(() -> new IllegalStateException("No sessionId retrieved from bank"));
+    }
+
+    public void fetchCookieForUnmaskIban(String otpCode) {
+        log.info("Starting fetching cookie");
+        UnmaskDataResponse response =
+                createRequest(Urls.UNMASK_DATA)
+                        .body(
+                                new UnmaskDataRequest(
+                                        UnmaskDataRequestBody.builder()
+                                                .otpEntity(
+                                                        new OtpEntity(
+                                                                otpCode,
+                                                                wizinkStorage.getSessionId()))
+                                                .build()))
+                        .put(UnmaskDataResponse.class);
+        handleOtpResponse(response.getUnmaskDataResponseEntity());
+    }
+
     public GlobalPositionResponse fetchProductDetailsWithUnmaskedIban() {
-        Optional<String> sessionId = fetchSessionIdForUnmaskIban().getSessionId();
-        if (!sessionId.isPresent()) {
-            log.info("No sessionId retrieved from bank");
-            throw new IllegalStateException();
-        }
-        fetchCookieForUnmaskIban(sessionId.get());
+        log.info("Starting fetching unmask data");
         return createRequest(Urls.GET_UNMASKED_DATA)
                 .body(new GlobalPositionRequest())
                 .post(GlobalPositionResponse.class);
@@ -129,26 +143,6 @@ public class WizinkApiClient {
             return false;
         }
         return true;
-    }
-
-    private UnmaskDataResponse fetchSessionIdForUnmaskIban() {
-        return createRequest(Urls.UNMASK_DATA)
-                .body(new UnmaskDataRequest(new UnmaskDataRequestBody()))
-                .put(UnmaskDataResponse.class);
-    }
-
-    private UnmaskDataResponse fetchCookieForUnmaskIban(String sessionId) {
-        String otpInput = supplementalInformationHelper.waitForOtpInput();
-        UnmaskDataResponse response =
-                createRequest(Urls.UNMASK_DATA)
-                        .body(
-                                new UnmaskDataRequest(
-                                        UnmaskDataRequestBody.builder()
-                                                .otpEntity(new OtpEntity(otpInput, sessionId))
-                                                .build()))
-                        .put(UnmaskDataResponse.class);
-        handleOtpResponse(response.getUnmaskDataResponseEntity());
-        return response;
     }
 
     private Map<String, Object> prepareHeaders() {
@@ -182,14 +176,17 @@ public class WizinkApiClient {
     }
 
     private void handleOtpResponse(BaseResponse response) {
-        if (ResultCodes.WRONG_OTP.equalsIgnoreCase(response.getResult().getCode())) {
+        String resultCode = response.getResult().getCode();
+        if (ResultCodes.WRONG_OTP.equalsIgnoreCase(resultCode)) {
             throw SupplementalInfoError.NO_VALID_CODE.exception();
-        } else if (ResultCodes.EXPIRED_OTP.equalsIgnoreCase(response.getResult().getCode())) {
+        } else if (ResultCodes.EXPIRED_OTP.equalsIgnoreCase(resultCode)) {
             throw SupplementalInfoError.WAIT_TIMEOUT.exception();
+        } else if (!ResultCodes.OK.equalsIgnoreCase(resultCode)) {
+            log.error(
+                    "Unknown error code {} with message {}",
+                    resultCode,
+                    response.getResult().getMessage());
+            throw SupplementalInfoError.UNKNOWN.exception();
         }
-        log.warn(
-                "Unknown error code {} with message {}",
-                response.getResult().getCode(),
-                response.getResult().getMessage());
     }
 }

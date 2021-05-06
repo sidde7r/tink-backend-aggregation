@@ -14,7 +14,6 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.WizinkConstants.
 import se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.WizinkConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.authenticator.rpc.CustomerLoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.fetcher.account.rpc.UnmaskDataResponse;
-import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
@@ -25,16 +24,13 @@ public class WizinkApiClientTest {
     private static final String DUMMY_X_TOKEN_ID = "DUMMY_X_TOKEN_ID";
     private WizinkApiClient wizinkApiClient;
     private TinkHttpClient httpClient;
-    private SupplementalInformationHelper supplementalInformationHelper;
     private WizinkStorage wizinkStorage;
 
     @Before
     public void setup() {
         httpClient = mock(TinkHttpClient.class);
-        supplementalInformationHelper = mock(SupplementalInformationHelper.class);
         wizinkStorage = mock(WizinkStorage.class);
-        wizinkApiClient =
-                new WizinkApiClient(httpClient, wizinkStorage, supplementalInformationHelper);
+        wizinkApiClient = new WizinkApiClient(httpClient, wizinkStorage);
     }
 
     @Test
@@ -66,7 +62,7 @@ public class WizinkApiClientTest {
                 .thenReturn(prepareUnmaskDataResponseWithNullAsSessionId());
 
         // when
-        wizinkApiClient.fetchProductDetailsWithUnmaskedIban();
+        wizinkApiClient.fetchSessionIdForUnmaskIban();
     }
 
     @Test(expected = IllegalStateException.class)
@@ -77,7 +73,7 @@ public class WizinkApiClientTest {
                 .thenReturn(prepareUnmaskDataResponseWithoutOtp());
 
         // when
-        wizinkApiClient.fetchProductDetailsWithUnmaskedIban();
+        wizinkApiClient.fetchSessionIdForUnmaskIban();
     }
 
     private RequestBuilder prepareRequestBuilder(String url) {

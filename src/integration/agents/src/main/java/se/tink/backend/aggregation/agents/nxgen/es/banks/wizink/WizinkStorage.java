@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.WizinkConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.authenticator.entities.CardEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.authenticator.entities.LoginResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.fetcher.account.entities.ProductEntity;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
@@ -48,6 +49,10 @@ public class WizinkStorage {
         sessionStorage.put(LOGIN_RESPONSE, response);
     }
 
+    public void storeProductsResponse(List<ProductEntity> products) {
+        persistentStorage.put(StorageKeys.PRODUCTS_LIST, products);
+    }
+
     public List<CardEntity> getCreditCardList() {
         return persistentStorage
                 .get(StorageKeys.CARDS_LIST, new TypeReference<List<CardEntity>>() {})
@@ -67,6 +72,16 @@ public class WizinkStorage {
                                         "Login response not found in session storage"));
     }
 
+    public List<ProductEntity> getProductsList() {
+        return persistentStorage
+                .get(StorageKeys.PRODUCTS_LIST, new TypeReference<List<ProductEntity>>() {})
+                .orElseGet(
+                        () -> {
+                            log.info("No products found");
+                            return Collections.emptyList();
+                        });
+    }
+
     public void storeXTokenId(String token) {
         sessionStorage.put(StorageKeys.X_TOKEN_ID, token);
     }
@@ -81,5 +96,13 @@ public class WizinkStorage {
 
     public String getXTokenUser() {
         return sessionStorage.get(StorageKeys.X_TOKEN_USER);
+    }
+
+    public void storeSessionId(String sessionId) {
+        sessionStorage.put(StorageKeys.SESSION_ID, sessionId);
+    }
+
+    public String getSessionId() {
+        return sessionStorage.get(StorageKeys.SESSION_ID);
     }
 }

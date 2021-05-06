@@ -11,6 +11,7 @@ import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.WizinkApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.WizinkStorage;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.authenticator.rpc.CustomerLoginResponse;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationFormer;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.serialization.utils.SerializationUtils;
@@ -27,7 +28,9 @@ public class WizinkAuthenticatorTest {
     public void setup() {
         wizinkApiClient = mock(WizinkApiClient.class);
         wizinkStorage = new WizinkStorage(new PersistentStorage(), new SessionStorage());
-        wizinkAuthenticator = new WizinkAuthenticator(wizinkApiClient, wizinkStorage);
+        wizinkAuthenticator =
+                new WizinkAuthenticator(
+                        wizinkApiClient, wizinkStorage, mock(SupplementalInformationFormer.class));
     }
 
     @Test

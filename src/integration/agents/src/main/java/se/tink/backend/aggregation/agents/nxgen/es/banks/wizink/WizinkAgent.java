@@ -47,7 +47,7 @@ public class WizinkAgent extends SubsequentProgressiveGenerationAgent
     protected WizinkAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
         this.wizinkStorage = new WizinkStorage(persistentStorage, sessionStorage);
-        this.apiClient = new WizinkApiClient(client, wizinkStorage, supplementalInformationHelper);
+        this.apiClient = new WizinkApiClient(client, wizinkStorage);
         creditCardRefreshController = constructCreditCardRefreshController();
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
     }
@@ -59,7 +59,7 @@ public class WizinkAgent extends SubsequentProgressiveGenerationAgent
 
     @Override
     public StatelessProgressiveAuthenticator getAuthenticator() {
-        return new WizinkAuthenticator(apiClient, wizinkStorage);
+        return new WizinkAuthenticator(apiClient, wizinkStorage, supplementalInformationFormer);
     }
 
     @Override
@@ -94,7 +94,7 @@ public class WizinkAgent extends SubsequentProgressiveGenerationAgent
 
     private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {
         AccountFetcher<TransactionalAccount> accountFetcher =
-                new WizinkAccountFetcher(apiClient, wizinkStorage);
+                new WizinkAccountFetcher(wizinkStorage);
         TransactionFetcher<TransactionalAccount> transactionFetcher =
                 new WizinkTransactionFetcher(apiClient);
         return new TransactionalAccountRefreshController(
