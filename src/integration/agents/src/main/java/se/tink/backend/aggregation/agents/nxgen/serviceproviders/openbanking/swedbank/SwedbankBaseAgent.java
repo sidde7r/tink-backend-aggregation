@@ -11,7 +11,6 @@ import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.SwedbankDecoupledAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.SwedbankPaymentAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.SwedbankRedirectAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.configuration.SwedbankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.executor.payment.SwedbankBankIdSigner;
@@ -189,8 +188,7 @@ public abstract class SwedbankBaseAgent extends NextGenerationAgent
                 swedbankBankIdSigner,
                 strongAuthenticationState,
                 new BankIdSigningController<>(
-                        supplementalInformationController, swedbankBankIdSigner),
-                new SwedbankPaymentAuthenticator(supplementalInformationHelper));
+                        supplementalInformationController, swedbankBankIdSigner));
     }
 
     @Override
