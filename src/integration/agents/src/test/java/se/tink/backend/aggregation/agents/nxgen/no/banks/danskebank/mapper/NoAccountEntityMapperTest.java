@@ -5,18 +5,23 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
+import java.nio.file.Paths;
 import org.junit.Before;
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.AccountDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.AccountEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.CardEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.CardsListResponse;
 import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class NoAccountEntityMapperTest {
+
+    private static final String TEST_DATA_PATH =
+            "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/no/banks/danskebank/resources";
 
     private static final String BBAN = "bban";
     private static final String IBAN = "iban";
@@ -25,19 +30,24 @@ public class NoAccountEntityMapperTest {
     private static final String ACCOUNT_EXT_NO = "12345678901";
     private static final String ACCOUNT_INT_NO = "1234567890";
 
-    private DanskeBankApiClient apiClient;
     private DanskeBankConfiguration configuration;
     private NoAccountEntityMapper noAccountEntityMapper;
     private AccountEntity accountEntity;
     private AccountDetailsResponse accountDetailsResponse;
+    private CardEntity cardEntity;
 
     @Before
     public void setUp() {
-        apiClient = mock(DanskeBankApiClient.class);
         noAccountEntityMapper = new NoAccountEntityMapper();
         configuration = getDanskeBankConfiguration();
         accountEntity = getAccountEntity();
         accountDetailsResponse = getAccountDetailsReponse();
+        cardEntity =
+                SerializationUtils.deserializeFromString(
+                                Paths.get(TEST_DATA_PATH, "cards_response.json").toFile(),
+                                CardsListResponse.class)
+                        .getCards()
+                        .get(0);
     }
 
     @Test
@@ -61,7 +71,7 @@ public class NoAccountEntityMapperTest {
                                 .filter(id -> id.getIdentifier().equals(ACCOUNT_EXT_NO))
                                 .filter(id -> id.getType().toString().equals(BBAN))
                                 .findFirst()
-                                .get()
+                                .orElseThrow(IllegalStateException::new)
                                 .getIdentifier())
                 .isNotEmpty();
         assertThat(
@@ -69,7 +79,7 @@ public class NoAccountEntityMapperTest {
                                 .filter(id -> id.getIdentifier().equals(IBAN_NUMBER))
                                 .filter(id -> id.getType().toString().equals(IBAN))
                                 .findFirst()
-                                .get()
+                                .orElseThrow(IllegalStateException::new)
                                 .getIdentifier())
                 .isNotEmpty();
         assertThat(result.getAccountNumber()).isEqualTo(ACCOUNT_EXT_NO);
@@ -95,7 +105,7 @@ public class NoAccountEntityMapperTest {
         // given & when
         CreditCardAccount result =
                 noAccountEntityMapper.toCreditCardAccount(
-                        configuration, accountEntity, accountDetailsResponse);
+                        configuration, accountEntity, accountDetailsResponse, cardEntity);
 
         // then
         assertThat(result.getAccountNumber()).isEqualTo(ACCOUNT_EXT_NO);

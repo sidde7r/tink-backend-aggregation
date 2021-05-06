@@ -69,15 +69,6 @@ public class DanskeBankTransactionalAccountFetcher implements AccountFetcher<Tra
 
     private List<TransactionalAccount> logAndGetTransactionalAccountsOfUnknownType(
             ListAccountsResponse listAccounts) {
-        List<AccountEntity> accountEntities = listAccounts.getAccounts();
-
-        Map<String, AccountDetailsResponse> accountDetails = new HashMap<>();
-        for (AccountEntity accountEntity : accountEntities) {
-            accountDetails.put(
-                    accountEntity.getAccountNoExt(),
-                    accountDetailsFetcher.fetchAccountDetails(accountEntity.getAccountNoInt()));
-        }
-
         return listAccounts.getAccounts().stream()
                 .filter(DanskeBankPredicates.CREDIT_CARDS.negate())
                 .filter(accountEntity -> !accountEntity.isLoanAccount())
@@ -99,7 +90,8 @@ public class DanskeBankTransactionalAccountFetcher implements AccountFetcher<Tra
                         accountEntity ->
                                 accountEntityMapper.toUnknownAccount(
                                         accountEntity,
-                                        accountDetails.get(accountEntity.getAccountNoExt())))
+                                        accountDetailsFetcher.fetchAccountDetails(
+                                                accountEntity.getAccountNoInt())))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toList());

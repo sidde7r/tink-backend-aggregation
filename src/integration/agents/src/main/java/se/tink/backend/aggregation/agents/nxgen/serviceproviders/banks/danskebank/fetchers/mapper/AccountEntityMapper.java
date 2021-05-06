@@ -12,13 +12,14 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeban
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankPredicates;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.AccountDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.AccountEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.CardEntity;
 import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
-import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.entity.Party;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.creditcard.CreditCardModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.loan.LoanModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.transactional.TransactionalBuildStep;
@@ -29,6 +30,7 @@ import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.enums.AccountFlag;
 import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
+import se.tink.libraries.account.identifiers.MaskedPanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @Slf4j
@@ -76,15 +78,42 @@ public class AccountEntityMapper {
     public List<CreditCardAccount> toTinkCreditCardAccounts(
             DanskeBankConfiguration configuration,
             List<AccountEntity> accounts,
-            Map<String, AccountDetailsResponse> accountDetails) {
+            Map<String, AccountDetailsResponse> accountDetails,
+            List<CardEntity> cardEntities) {
+
         return accounts.stream()
                 .map(
                         account ->
                                 toCreditCardAccount(
                                         configuration,
                                         account,
-                                        accountDetails.get(account.getAccountNoExt())))
+                                        accountDetails.get(account.getAccountNoExt()),
+                                        getCardEntity(account, cardEntities)))
                 .collect(Collectors.toList());
+    }
+
+    private CardEntity getCardEntity(AccountEntity accountEntity, List<CardEntity> cardEntities) {
+        List<CardEntity> cardsOfAccount =
+                cardEntities.stream()
+                        .filter(cardEntity -> accountNumbersAreEqual(accountEntity, cardEntity))
+                        .collect(Collectors.toList());
+
+        if (cardsOfAccount.isEmpty()) {
+            log.warn(
+                    "Couldn't find a card for credit card account! Is cards list empty: {}",
+                    cardEntities.isEmpty());
+            return new CardEntity();
+        }
+        if (cardsOfAccount.size() > 1) {
+            log.warn(
+                    "Credit card account has more than 1 credit card. Size of cards: {}",
+                    cardEntities.size());
+        }
+        return cardEntities.get(0);
+    }
+
+    private boolean accountNumbersAreEqual(AccountEntity accountEntity, CardEntity cardEntity) {
+        return accountEntity.getAccountNoInt().equals(cardEntity.getAccountNumber());
     }
 
     public LoanAccount toLoanAccount(
@@ -156,22 +185,34 @@ public class AccountEntityMapper {
     public CreditCardAccount toCreditCardAccount(
             DanskeBankConfiguration configuration,
             AccountEntity accountEntity,
-            AccountDetailsResponse accountDetailsResponse) {
+            AccountDetailsResponse accountDetailsResponse,
+            CardEntity cardEntity) {
 
-        HolderName holderName =
-                getAccountParties(accountDetailsResponse.getAccountOwners(marketCode)).stream()
-                        .map(party -> new HolderName(party.getName()))
-                        .findFirst()
-                        .orElse(null);
-
-        return CreditCardAccount.builder(
-                        getUniqueIdentifier(accountEntity),
-                        ExactCurrencyAmount.of(
-                                accountEntity.getBalance(), accountEntity.getCurrency()),
-                        calculateAvailableCredit(accountEntity))
-                .setAccountNumber(accountEntity.getAccountNoExt())
-                .setName(accountEntity.getAccountName())
+        return CreditCardAccount.nxBuilder()
+                .withCardDetails(
+                        CreditCardModule.builder()
+                                .withCardNumber(
+                                        StringUtils.isNotBlank(cardEntity.getMaskedCardNumber())
+                                                ? cardEntity.getMaskedCardNumber()
+                                                : accountEntity.getAccountNoExt())
+                                .withBalance(
+                                        ExactCurrencyAmount.of(
+                                                accountEntity.getBalance(),
+                                                accountEntity.getCurrency()))
+                                .withAvailableCredit(calculateAvailableCredit(accountEntity))
+                                .withCardAlias(
+                                        StringUtils.isNotBlank(cardEntity.getCardType())
+                                                ? cardEntity.getCardType()
+                                                : accountEntity.getAccountName())
+                                .build())
+                .withoutFlags()
+                .withId(
+                        buildIdModule(
+                                accountEntity,
+                                getCreditCardAccountIdentifiers(
+                                        accountEntity, accountDetailsResponse, cardEntity)))
                 .setBankIdentifier(accountEntity.getAccountNoInt())
+                .setApiIdentifier(accountEntity.getAccountNoInt())
                 .canExecuteExternalTransfer(
                         configuration.canExecuteExternalTransfer(accountEntity.getAccountProduct()))
                 .canReceiveExternalTransfer(
@@ -179,8 +220,19 @@ public class AccountEntityMapper {
                 .canPlaceFunds(configuration.canPlaceFunds(accountEntity.getAccountProduct()))
                 .canWithdrawCash(configuration.canWithdrawCash(accountEntity.getAccountProduct()))
                 .sourceInfo(createAccountSourceInfo(accountEntity))
-                .setHolderName(holderName)
+                .addParties(getAccountParties(accountDetailsResponse.getAccountOwners(marketCode)))
                 .build();
+    }
+
+    private List<AccountIdentifier> getCreditCardAccountIdentifiers(
+            AccountEntity accountEntity,
+            AccountDetailsResponse accountDetailsResponse,
+            CardEntity cardEntity) {
+        List<AccountIdentifier> identifiers = getIdentifiers(accountEntity, accountDetailsResponse);
+        if (StringUtils.isNotBlank(cardEntity.getMaskedCardNumber())) {
+            identifiers.add(new MaskedPanIdentifier(cardEntity.getMaskedCardNumber()));
+        }
+        return identifiers;
     }
 
     protected String getUniqueIdentifier(AccountEntity accountEntity) {
@@ -200,7 +252,10 @@ public class AccountEntityMapper {
                                                 accountEntity.getCurrency()))
                                 .setAvailableCredit(calculateAvailableCredit(accountEntity))
                                 .build())
-                .withId(buildIdModule(accountEntity, accountDetailsResponse))
+                .withId(
+                        buildIdModule(
+                                accountEntity,
+                                getIdentifiers(accountEntity, accountDetailsResponse)))
                 .setBankIdentifier(accountEntity.getAccountNoInt())
                 .setApiIdentifier(accountEntity.getAccountNoInt())
                 .canExecuteExternalTransfer(AccountCapabilities.Answer.UNKNOWN)
@@ -224,7 +279,10 @@ public class AccountEntityMapper {
                                                 accountEntity.getCurrency()))
                                 .setAvailableCredit(calculateAvailableCredit(accountEntity))
                                 .build())
-                .withId(buildIdModule(accountEntity, accountDetailsResponse))
+                .withId(
+                        buildIdModule(
+                                accountEntity,
+                                getIdentifiers(accountEntity, accountDetailsResponse)))
                 .setBankIdentifier(accountEntity.getAccountNoInt())
                 .setApiIdentifier(accountEntity.getAccountNoInt())
                 .canExecuteExternalTransfer(AccountCapabilities.Answer.YES)
@@ -238,12 +296,12 @@ public class AccountEntityMapper {
     }
 
     private IdModule buildIdModule(
-            AccountEntity accountEntity, AccountDetailsResponse accountDetailsResponse) {
+            AccountEntity accountEntity, List<AccountIdentifier> identifiers) {
         return IdModule.builder()
                 .withUniqueIdentifier(getUniqueIdentifier(accountEntity))
                 .withAccountNumber(accountEntity.getAccountNoExt())
                 .withAccountName(accountEntity.getAccountName())
-                .addIdentifiers(getIdentifiers(accountEntity, accountDetailsResponse))
+                .addIdentifiers(identifiers)
                 .build();
     }
 
@@ -278,7 +336,10 @@ public class AccountEntityMapper {
                                         ExactCurrencyAmount.of(
                                                 accountEntity.getBalance(),
                                                 accountEntity.getCurrency())))
-                        .withId(buildIdModule(accountEntity, accountDetailsResponse))
+                        .withId(
+                                buildIdModule(
+                                        accountEntity,
+                                        getIdentifiers(accountEntity, accountDetailsResponse)))
                         .setBankIdentifier(accountEntity.getAccountNoInt())
                         .setApiIdentifier(accountEntity.getAccountNoInt())
                         .canExecuteExternalTransfer(

@@ -12,6 +12,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeban
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.mapper.AccountEntityMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.AccountDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.AccountEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.CardEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.CardsListRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.ListAccountsRequest;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
@@ -43,13 +44,22 @@ public class DanskeBankCreditCardFetcher implements AccountFetcher<CreditCardAcc
                     accountDetailsFetcher.fetchAccountDetails(accountEntity.getAccountNoInt()));
         }
 
-        reachCardEndpointsForDebugPurposes();
-
         return accountEntityMapper.toTinkCreditCardAccounts(
-                configuration, cardAccounts, accountDetails);
+                configuration, cardAccounts, accountDetails, getCards(cardAccounts));
     }
 
-    private void reachCardEndpointsForDebugPurposes() {
-        this.apiClient.listCards(CardsListRequest.create(configuration.getLanguageCode()));
+    private List<CardEntity> getCards(List<AccountEntity> cardAccounts) {
+        return this.apiClient.listCards(CardsListRequest.create(configuration.getLanguageCode()))
+                .getCards().stream()
+                .filter(cardEntity -> isItCardOfCreditCardAccount(cardAccounts, cardEntity))
+                .collect(Collectors.toList());
+    }
+
+    private boolean isItCardOfCreditCardAccount(
+            List<AccountEntity> cardAccounts, CardEntity cardEntity) {
+        return cardAccounts.stream()
+                .map(AccountEntity::getAccountNoInt)
+                .collect(Collectors.toList())
+                .contains(cardEntity.getAccountNumber());
     }
 }

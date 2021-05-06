@@ -8,16 +8,16 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @EqualsAndHashCode
 public class CardEntity {
     private String maskedCardNumberDebit;
-    private String maskedCardNumber;
+    @Getter private String maskedCardNumber;
     private String expireYY;
     private String expireMM;
     private String createDate;
-    private String cardType;
+    @Getter private String cardType;
     private String cardStatus;
     private String cardLogo;
     @Getter private String cardId;
     private String cardGroup;
     private String cardCategory;
     private String blockStatus;
-    private String accountNumber;
+    @Getter private String accountNumber;
 }

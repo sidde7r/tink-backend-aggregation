@@ -1,0 +1,55 @@
+{
+    "traceId": null,
+    "statusCode": 200,
+    "responseCode": 200,
+    "responseMessage": null,
+    "eupToken": null,
+    "otherCards": [],
+    "cards": [
+        {
+            "maskedCardNumberDebit": "",
+            "maskedCardNumber": "654321XXXXXX1111",
+            "expireYY": "31",
+            "expireMM": "01",
+            "createDate": "20200102",
+            "cardType": "365Privat",
+            "cardStatus": "A",
+            "cardLogo": "MC",
+            "cardId": "Panid=6543212222221111//",
+            "cardGroup": "O",
+            "cardCategory": "TMC",
+            "blockStatus": "Active",
+            "accountNumber": "1234124"
+        },
+        {
+            "maskedCardNumberDebit": "",
+            "maskedCardNumber": "123456XXXXXX1234",
+            "expireYY": "31",
+            "expireMM": "01",
+            "createDate": "20200101",
+            "cardType": "Mastercard Corporate Gold",
+            "cardStatus": "A",
+            "cardLogo": "MC",
+            "cardId": "Panid=1234566543211234//",
+            "cardGroup": "O",
+            "cardCategory": "TMC",
+            "blockStatus": "Active",
+            "accountNumber": "1234512345"
+        },
+        {
+            "maskedCardNumberDebit": "",
+            "maskedCardNumber": "999999XXXXXX2222",
+            "expireYY": "31",
+            "expireMM": "01",
+            "createDate": "20200103",
+            "cardType": "Mastercard Business Debit",
+            "cardStatus": "A",
+            "cardLogo": "MC",
+            "cardId": "Panid=9999993333332222//",
+            "cardGroup": "O",
+            "cardCategory": "TMC",
+            "blockStatus": "Active",
+            "accountNumber": "1234512345"
+        }
+    ]
+}

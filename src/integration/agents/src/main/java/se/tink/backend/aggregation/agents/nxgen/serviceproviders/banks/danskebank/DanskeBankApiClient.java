@@ -146,34 +146,33 @@ public class DanskeBankApiClient {
         return accounts;
     }
 
+    public CardsListResponse listCards(CardsListRequest request) {
+        CardsListResponse cardsListResponse =
+                postRequest(Urls.CARDS_LIST_URL, CardsListResponse.class, request);
+        fetchCardDetails(cardsListResponse);
+        return cardsListResponse;
+    }
+
     /**
      * This method is used only for debug purposes, all data fetched by this method is available in
      * s3 for further analysis.
      *
      * <p>No business output is required from this method, thus it's ok to not care about potential
      * exceptions.
-     *
-     * @param request request object for cards/list endpoint
      */
-    public void listCards(CardsListRequest request) {
+    private void fetchCardDetails(CardsListResponse cardsListResponse) {
         try {
-            fetchCardDetails(request);
+            cardsListResponse
+                    .getCards()
+                    .forEach(
+                            cardEntity ->
+                                    postRequest(
+                                            Urls.CARD_DETAILS_URL,
+                                            CardDetailsResponse.class,
+                                            new CardDetailsRequest(cardEntity.getCardId())));
         } catch (RuntimeException e) {
-            logger.warn(e.getMessage());
+            logger.warn("Failed to fetch card details: ", e);
         }
-    }
-
-    private void fetchCardDetails(CardsListRequest request) {
-        CardsListResponse cardsListResponse =
-                postRequest(Urls.CARDS_LIST_URL, CardsListResponse.class, request);
-        cardsListResponse
-                .getCards()
-                .forEach(
-                        cardEntity ->
-                                postRequest(
-                                        Urls.CARD_DETAILS_URL,
-                                        CardDetailsResponse.class,
-                                        new CardDetailsRequest(cardEntity.getCardId())));
     }
 
     public ListLoansResponse listLoans(ListLoansRequest request) {

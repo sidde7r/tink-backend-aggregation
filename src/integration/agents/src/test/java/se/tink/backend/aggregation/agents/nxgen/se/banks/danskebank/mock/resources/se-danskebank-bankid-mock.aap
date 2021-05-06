@@ -137,7 +137,7 @@ Content-Type: application/json; charset=utf-8
 Connection: close
 Strict-Transport-Security: max-age=157680000
 
-{"traceId":null,"statusCode":200,"responseCode":200,"responseMessage":null,"eupToken":null,"lastUpdated":"0001-01-01T00:00:00","languageCode":"SV","accounts":[{"showAvailableOverdraft":false,"overdraftAvailable":0,"showCategory":"Y","sortValue":1,"isFixedTermDeposit":false,"isInLimitGroup":false,"isJisaAccountProduct":false,"isSavingGoalAccountProduct":true,"isBreadcrumbAccountProduct":true,"isLoanAccount":false,"invIdOwner":"8302945919","mandateAccMk":"E","showAvailable":false,"accessToCredit":true,"accessToDebit":true,"accessToQuery":true,"currency":"SEK","cardType":"006","accountType":"","accountName":"Danske Konto","accountProduct":"2EX","accountRegNoExt":"1331","accountNoExt":"22222222222","accountNoInt":"3064045148","languageCode":null,"balanceAvailable":4.31,"balance":4.31},{"showAvailableOverdraft":false,"overdraftAvailable":0,"showCategory":"Y","sortValue":2,"isFixedTermDeposit":false,"isInLimitGroup":false,"isJisaAccountProduct":false,"isSavingGoalAccountProduct":true,"isBreadcrumbAccountProduct":true,"isLoanAccount":false,"invIdOwner":"8302945919","mandateAccMk":"E","showAvailable":false,"accessToCredit":true,"accessToDebit":true,"accessToQuery":true,"currency":"SEK","cardType":"","accountType":"","accountName":"Depåkonto","accountProduct":"2AB","accountRegNoExt":"1331","accountNoExt":"33333333333","accountNoInt":"3064050087","languageCode":null,"balanceAvailable":0.99,"balance":0.99},{"showAvailableOverdraft":false,"overdraftAvailable":0,"showCategory":"N","sortValue":3,"isFixedTermDeposit":false,"isInLimitGroup":false,"isJisaAccountProduct":false,"isSavingGoalAccountProduct":false,"isBreadcrumbAccountProduct":false,"isLoanAccount":false,"invIdOwner":"8302945919","mandateAccMk":"E","showAvailable":false,"accessToCredit":true,"accessToDebit":true,"accessToQuery":true,"currency":"SEK","cardType":"","accountType":"","accountName":"Investeringssparkto.","accountProduct":"2DC","accountRegNoExt":"1331","accountNoExt":"88888888888","accountNoInt":"3367905360","languageCode":null,"balanceAvailable":0.98,"balance":0.98},{"showAvailableOverdraft":false,"overdraftAvailable":0,"showCategory":"N","sortValue":4,"isFixedTermDeposit":false,"isInLimitGroup":false,"isJisaAccountProduct":false,"isSavingGoalAccountProduct":false,"isBreadcrumbAccountProduct":false,"isLoanAccount":false,"invIdOwner":"8302945919","mandateAccMk":"E","showAvailable":false,"accessToCredit":true,"accessToDebit":true,"accessToQuery":true,"currency":"SEK","cardType":"","accountType":"","accountName":"Sparkonto XL","accountProduct":"2C2","accountRegNoExt":"1331","accountNoExt":"55555555555","accountNoInt":"3367905344","languageCode":null,"balanceAvailable":0.97,"balance":0.97}]}
+{"traceId":null,"statusCode":200,"responseCode":200,"responseMessage":null,"eupToken":null,"lastUpdated":"0001-01-01T00:00:00","languageCode":"SV","accounts":[{"showAvailableOverdraft":false,"overdraftAvailable":0,"showCategory":"Y","sortValue":1,"isFixedTermDeposit":false,"isInLimitGroup":false,"isJisaAccountProduct":false,"isSavingGoalAccountProduct":true,"isBreadcrumbAccountProduct":true,"isLoanAccount":false,"invIdOwner":"8302945919","mandateAccMk":"E","showAvailable":false,"accessToCredit":true,"accessToDebit":true,"accessToQuery":true,"currency":"SEK","cardType":"006","accountType":"","accountName":"Danske Konto","accountProduct":"2EX","accountRegNoExt":"1331","accountNoExt":"22222222222","accountNoInt":"3064045148","languageCode":null,"balanceAvailable":4.31,"balance":4.31},{"showAvailableOverdraft":false,"overdraftAvailable":0,"showCategory":"Y","sortValue":2,"isFixedTermDeposit":false,"isInLimitGroup":false,"isJisaAccountProduct":false,"isSavingGoalAccountProduct":true,"isBreadcrumbAccountProduct":true,"isLoanAccount":false,"invIdOwner":"8302945919","mandateAccMk":"E","showAvailable":false,"accessToCredit":true,"accessToDebit":true,"accessToQuery":true,"currency":"SEK","cardType":"","accountType":"","accountName":"Depåkonto","accountProduct":"2AB","accountRegNoExt":"1331","accountNoExt":"33333333333","accountNoInt":"3064050087","languageCode":null,"balanceAvailable":0.99,"balance":0.99},{"showAvailableOverdraft":false,"overdraftAvailable":0,"showCategory":"N","sortValue":3,"isFixedTermDeposit":false,"isInLimitGroup":false,"isJisaAccountProduct":false,"isSavingGoalAccountProduct":false,"isBreadcrumbAccountProduct":false,"isLoanAccount":false,"invIdOwner":"8302945919","mandateAccMk":"E","showAvailable":false,"accessToCredit":true,"accessToDebit":true,"accessToQuery":true,"currency":"SEK","cardType":"","accountType":"","accountName":"Investeringssparkto.","accountProduct":"2DC","accountRegNoExt":"1331","accountNoExt":"88888888888","accountNoInt":"3367905360","languageCode":null,"balanceAvailable":0.98,"balance":0.98},{"showAvailableOverdraft":false,"overdraftAvailable":0,"showCategory":"N","sortValue":4,"isFixedTermDeposit":false,"isInLimitGroup":false,"isJisaAccountProduct":false,"isSavingGoalAccountProduct":false,"isBreadcrumbAccountProduct":false,"isLoanAccount":false,"invIdOwner":"8302945919","mandateAccMk":"E","showAvailable":false,"accessToCredit":true,"accessToDebit":true,"accessToQuery":true,"currency":"SEK","cardType":"","accountType":"","accountName":"Sparkonto XL","accountProduct":"2C2","accountRegNoExt":"1331","accountNoExt":"55555555555","accountNoInt":"3367905344","languageCode":null,"balanceAvailable":0.97,"balance":0.97},{"showAvailableOverdraft":false,"overdraftAvailable":0,"showCategory":"Y","sortValue":5,"isFixedTermDeposit":false,"isInLimitGroup":false,"isJisaAccountProduct":false,"isSavingGoalAccountProduct":false,"isBreadcrumbAccountProduct":false,"isLoanAccount":false,"invIdOwner":"8302945919","mandateAccMk":"E","showAvailable":true,"accessToCredit":true,"accessToDebit":true,"accessToQuery":true,"currency":"SEK","cardType":"101","accountType":"","accountName":"Mastercard Guld","accountProduct":"2A3","accountRegNoExt":"1331","accountNoExt":"70626761838","accountNoInt":"1234512345","languageCode":null,"balanceAvailable":33479.87,"balance":-16520.13}]}
 
 REQUEST 7
 POST https://apiebank3.danskebank.com/ebanking/ext/e4/account/details
@@ -237,8 +237,7 @@ Referer: MobileBanking3 SE
 Accept: application/json
 Content-Type: application/json
 
-{"accountNumberInternal":"3064045148","languageCode":"EN"}
-
+{"accountNumberInternal":"1234512345","languageCode":"EN"}
 
 
 RESPONSE 11 SET STATE_5
@@ -253,79 +252,9 @@ Content-Type: application/json; charset=utf-8
 Connection: close
 Strict-Transport-Security: max-age=157680000
 
-{"traceId":null,"statusCode":200,"responseCode":200,"responseMessage":null,"eupToken":null,"accountInterestDetails":{"interestIntervalDetails":[{"showToAmount":true,"currency":"","interestRate":0,"amountTo":15000,"amountFrom":0},{"showToAmount":true,"currency":"","interestRate":0,"amountTo":100000,"amountFrom":15000},{"showToAmount":true,"currency":"","interestRate":0,"amountTo":250000,"amountFrom":100000},{"showToAmount":false,"currency":"","interestRate":0,"amountTo":0,"amountFrom":250000}],"interestDetails":null,"interestIntervalType":"","bodyText":"","headline":"Interest rate"},"accountOwners":["9901011230  - Test Testson"],"feeAmount":0,"feeCurrency":"SEK","accountType":"Danske Konto","accountNumber":null,"registrationNumber":null,"iban":"SE7112000000022222222222","bic":"DABASESX"}
+{"traceId":null,"statusCode":200,"responseCode":200,"responseMessage":null,"eupToken":null,"accountInterestDetails":{"interestIntervalDetails":null,"interestDetails":[{"text":"Interest on credit balance:","rate":"0.000","period":""},{"text":"Interest on debit balance:","rate":"10.150","period":""}],"interestIntervalType":"","bodyText":"","headline":"Interest rate"},"accountOwners":["9001011234  - NAME LASTNAME"],"feeAmount":0,"feeCurrency":"SEK","accountType":"Mastercard Guld","accountNumber":null,"registrationNumber":null,"iban":"SE9342285670261463981921","bic":"DABASESX"}
 
-REQUEST 12 MATCH STATE_5
-POST https://apiebank3.danskebank.com/ebanking/ext/e4/account/details
-Referer: MobileBanking3 SE
-Accept: application/json
-Content-Type: application/json
-
-{"accountNumberInternal":"3064050087","languageCode":"EN"}
-
-
-RESPONSE 12 SET STATE_6
-200
-Date: Fri, 12 Mar 2021 07:55:52 GMT
-Server: Apache
-Cache-control: no-store
-Pragma: no-cache
-Expires: 0
-Vary: Origin
-Content-Type: application/json; charset=utf-8
-Connection: close
-Strict-Transport-Security: max-age=157680000
-
-{"traceId":null,"statusCode":200,"responseCode":200,"responseMessage":null,"eupToken":null,"accountInterestDetails":{"interestIntervalDetails":null,"interestDetails":[{"text":"Interest on credit balance:","rate":"0.000","period":""}],"interestIntervalType":"","bodyText":"","headline":"Interest rate"},"accountOwners":["9901011230  - Test Testson"],"feeAmount":0,"feeCurrency":"SEK","accountType":"Depåkonto","accountNumber":null,"registrationNumber":null,"iban":"SE7812000000033333333333","bic":"DABASESX"}
-
-REQUEST 13 MATCH STATE_6
-POST https://apiebank3.danskebank.com/ebanking/ext/e4/account/details
-Referer: MobileBanking3 SE
-Accept: application/json
-Content-Type: application/json
-
-{"accountNumberInternal":"3367905360","languageCode":"EN"}
-
-
-RESPONSE 13 SET STATE_7
-200
-Date: Fri, 12 Mar 2021 07:55:53 GMT
-Server: Apache
-Cache-control: no-store
-Pragma: no-cache
-Expires: 0
-Vary: Origin
-Content-Type: application/json; charset=utf-8
-Connection: close
-Strict-Transport-Security: max-age=157680000
-
-{"traceId":null,"statusCode":200,"responseCode":200,"responseMessage":null,"eupToken":null,"accountInterestDetails":{"interestIntervalDetails":null,"interestDetails":[{"text":"Interest on credit balance:","rate":"0.000","period":""}],"interestIntervalType":"","bodyText":"","headline":"Interest rate"},"accountOwners":["9901011230  - Test Testson"],"feeAmount":0,"feeCurrency":"SEK","accountType":"Investeringssparkonto","accountNumber":null,"registrationNumber":null,"iban":"SE5012000000088888888888","bic":"DABASESX"}
-
-REQUEST 14 MATCH STATE_7
-POST https://apiebank3.danskebank.com/ebanking/ext/e4/account/details
-Referer: MobileBanking3 SE
-Accept: application/json
-Content-Type: application/json
-
-{"accountNumberInternal":"3367905344","languageCode":"EN"}
-
-
-RESPONSE 14
-200
-Date: Fri, 12 Mar 2021 07:55:53 GMT
-Server: Apache
-Cache-control: no-store
-Pragma: no-cache
-Expires: 0
-Vary: Origin
-Content-Type: application/json; charset=utf-8
-Connection: close
-Strict-Transport-Security: max-age=157680000
-
-{"traceId":null,"statusCode":200,"responseCode":200,"responseMessage":null,"eupToken":null,"accountInterestDetails":{"interestIntervalDetails":null,"interestDetails":[{"text":"Interest on credit balance:","rate":"0.000","period":""}],"interestIntervalType":"","bodyText":"","headline":"Interest rate"},"accountOwners":["9901011230  - Test Testson"],"feeAmount":0,"feeCurrency":"SEK","accountType":"Sparkonto XL","accountNumber":null,"registrationNumber":null,"iban":"SE9412000000055555555555","bic":"DABASESX"}
-
-
-REQUEST 15
+REQUEST 12
 POST https://apiebank3.danskebank.com/ebanking/ext/kk/api/cards/getlist
 Referer: MobileBanking3 SE
 Accept: application/json
@@ -334,7 +263,7 @@ Content-Type: application/json
 {"languageCode":"SV"}
 
 
-RESPONSE 15
+RESPONSE 12
 200
 Date: Fri, 12 Mar 2021 07:55:54 GMT
 Server: Apache
@@ -346,9 +275,9 @@ Content-Type: application/json; charset=utf-8
 Connection: close
 Strict-Transport-Security: max-age=157680000
 
-{"traceId":null,"statusCode":200,"responseCode":200,"responseMessage":null,"eupToken":null,"otherCards":[],"cards":[{"maskedCardNumberDebit":"","maskedCardNumber":"557447XXXXXX4851","expireYY":"24","expireMM":"03","createDate":"20210205","cardType":"Mastercard Bankkort","cardStatus":"N","cardLogo":"MC","cardId":"Panid=5574473846684851//","cardGroup":"O","cardCategory":"TMC","blockStatus":"Active","accountNumber":"3064045148"},{"maskedCardNumberDebit":"","maskedCardNumber":"557447XXXXXX2767","expireYY":"21","expireMM":"03","createDate":"20180316","cardType":"Mastercard Bankkort","cardStatus":"A","cardLogo":"MC","cardId":"Panid=5574476335182767//","cardGroup":"O","cardCategory":"TMC","blockStatus":"Active","accountNumber":"3064045148"}]}
+{"traceId":null,"statusCode":200,"responseCode":200,"responseMessage":null,"eupToken":null,"otherCards":[],"cards":[{"maskedCardNumberDebit":"","maskedCardNumber":"557447XXXXXX4851","expireYY":"24","expireMM":"03","createDate":"20210205","cardType":"Mastercard Bankkort","cardStatus":"N","cardLogo":"MC","cardId":"Panid=5574473846684851//","cardGroup":"O","cardCategory":"TMC","blockStatus":"Active","accountNumber":"3064045148"},{"maskedCardNumberDebit":"","maskedCardNumber":"557447XXXXXX2767","expireYY":"21","expireMM":"03","createDate":"20180316","cardType":"Mastercard Bankkort","cardStatus":"A","cardLogo":"MC","cardId":"Panid=5574476335182767//","cardGroup":"O","cardCategory":"TMC","blockStatus":"Active","accountNumber":"3064045148"},{"maskedCardNumberDebit":"","maskedCardNumber":"123456XXXXXX1234","expireYY":"31","expireMM":"03","createDate":"20180415","cardType":"Guldkort","cardStatus":"A","cardLogo":"MC","cardId":"Panid=1234560987651234//","cardGroup":"O","cardCategory":"TMC","blockStatus":"Active","accountNumber":"1234512345"}]}
 
-REQUEST 16
+REQUEST 13
 POST https://apiebank3.danskebank.com/ebanking/ext/kk/api/cards/getcarddetails
 Referer: MobileBanking3 SE
 Accept: application/json
@@ -357,7 +286,7 @@ Content-Type: application/json
 {"CardId":"Panid=5574473846684851//"}
 
 
-RESPONSE 16
+RESPONSE 13
 200
 Date: Fri, 12 Mar 2021 07:55:54 GMT
 Server: Apache
@@ -371,7 +300,8 @@ Strict-Transport-Security: max-age=157680000
 
 {"traceId":null,"statusCode":200,"responseCode":200,"responseMessage":null,"eupToken":null,"panIdDebit":"","panIdCredit":"5574473846684851","maskedCardNumberDebit":"","maskedCardNumber":"557447XXXXXX4851","expireYY":"24","expireMM":"03","customerName":"","createDate":"20210205","cardType":"Mastercard Bankkort","cardStatus":"N","cardLogo":"MC","cardCategory":"TMC","blockStatus":"Active","actions":"Activate,BlockUnblock,Reorder,Geo,Limit,","accountNumber":"3064045148"}
 
-REQUEST 17
+
+REQUEST 14
 POST https://apiebank3.danskebank.com/ebanking/ext/kk/api/cards/getcarddetails
 Referer: MobileBanking3 SE
 Accept: application/json
@@ -380,7 +310,7 @@ Content-Type: application/json
 {"CardId":"Panid=5574476335182767//"}
 
 
-RESPONSE 17
+RESPONSE 14
 200
 Date: Fri, 12 Mar 2021 07:55:55 GMT
 Server: Apache
@@ -395,10 +325,31 @@ Strict-Transport-Security: max-age=157680000
 {"traceId":null,"statusCode":200,"responseCode":200,"responseMessage":null,"eupToken":null,"panIdDebit":"","panIdCredit":"5574476335182767","maskedCardNumberDebit":"","maskedCardNumber":"557447XXXXXX2767","expireYY":"21","expireMM":"03","customerName":"","createDate":"20180316","cardType":"Mastercard Bankkort","cardStatus":"A","cardLogo":"MC","cardCategory":"TMC","blockStatus":"Active","actions":"BlockUnblock,Reorder,Geo,Limit,","accountNumber":"3064045148"}
 
 
+REQUEST 15
+POST https://apiebank3.danskebank.com/ebanking/ext/kk/api/cards/getcarddetails
+Referer: MobileBanking3 SE
+Accept: application/json
+Content-Type: application/json
+
+{"CardId":"Panid=1234560987651234//"}
 
 
+RESPONSE 15
+200
+Date: Fri, 12 Mar 2021 07:55:56 GMT
+Server: Apache
+Cache-control: no-store
+Pragma: no-cache
+Expires: 0
+Vary: Origin
+Content-Type: application/json; charset=utf-8
+Connection: close
+Strict-Transport-Security: max-age=157680000
 
-REQUEST 18
+{"traceId":null,"statusCode":200,"responseCode":200,"responseMessage":null,"eupToken":null,"panIdDebit":"","panIdCredit":"1234560987651234","maskedCardNumberDebit":"","maskedCardNumber":"123456XXXXXX1234","expireYY":"31","expireMM":"03","customerName":"","createDate":"20180316","cardType":"Guldkort","cardStatus":"A","cardLogo":"MC","cardCategory":"TMC","blockStatus":"Active","actions":"BlockUnblock,Reorder,Geo,Limit,","accountNumber":"1234512345"}
+
+
+REQUEST 16
 POST https://apiebank3.danskebank.com/ebanking/ext/fi/initialization/get
 Referer: MobileBanking3 SE
 Accept: application/json
@@ -407,7 +358,7 @@ Content-Type: application/json
 {}
 
 
-RESPONSE 18
+RESPONSE 16
 200
 Date: Fri, 12 Mar 2021 07:55:55 GMT
 Server: Apache
@@ -421,13 +372,63 @@ Strict-Transport-Security: max-age=157680000
 
 {"traceId":null,"statusCode":200,"responseCode":200,"responseMessage":null,"eupToken":null,"disableInvestment":false,"customerProfile":{"smsFee":0,"noContactInfo":false,"notificationsAgreement":false,"emailFormat":null,"emailAddress":null,"phoneNo":null,"agentUserId":null},"custodyAccounts":{"selectedAccount":"G5","groups":[{"accounts":[{"custodyAccounts":null,"cashAccounts":null,"isTimeHorizonReadOnly":true,"package":null,"type":"Group","displayValue":null,"value":"G5","name":"Alla depåer"}],"name":"Grupper"},{"accounts":[{"custodyAccounts":null,"cashAccounts":null,"isTimeHorizonReadOnly":true,"package":null,"type":"CustodyAccount","displayValue":"4444444444","value":"D4444444444","name":"Depå"},{"custodyAccounts":null,"cashAccounts":null,"isTimeHorizonReadOnly":true,"package":null,"type":"CustodyAccount","displayValue":"9999999999","value":"D9999999999","name":"Investeringssparkont"}],"name":"Avtal och depåer"}]},"package":1}
 
-REQUEST 19
+REQUEST 17
 POST https://apiebank3.danskebank.com/ebanking/ext/fi/marketvalue/listSecurities
 Referer: MobileBanking3 SE
 Accept: application/json
 Content-Type: application/json
 
 {"custodyAccount":"D4444444444"}
+
+
+RESPONSE 17
+200
+Date: Fri, 12 Mar 2021 07:55:56 GMT
+Server: Apache
+Cache-control: no-store
+Pragma: no-cache
+Expires: 0
+Vary: Origin
+Content-Type: application/json; charset=utf-8
+Connection: close
+Strict-Transport-Security: max-age=157680000
+
+{"traceId":null,"statusCode":200,"responseCode":200,"responseMessage":null,"eupToken":null,"cashAccounts":[],"securities":[],"dailyPerformancePct":0,"dailyPerformance":0,"performance":0,"performancePct":0,"marketValueCurrency":"SEK","marketValue":0}
+
+REQUEST 18
+POST https://apiebank3.danskebank.com/ebanking/ext/fi/marketvalue/listSecurities
+Referer: MobileBanking3 SE
+Accept: application/json
+Content-Type: application/json
+
+{"custodyAccount":"D9999999999"}
+
+
+RESPONSE 18
+200
+Date: Fri, 12 Mar 2021 07:55:56 GMT
+Server: Apache
+Cache-control: no-store
+Pragma: no-cache
+Expires: 0
+Vary: Origin
+Content-Type: application/json; charset=utf-8
+Connection: close
+Strict-Transport-Security: max-age=157680000
+
+{"traceId":null,"statusCode":200,"responseCode":200,"responseMessage":null,"eupToken":null,"cashAccounts":[],"securities":[],"dailyPerformancePct":0,"dailyPerformance":0,"performance":0,"performancePct":0,"marketValueCurrency":"SEK","marketValue":0}
+
+
+
+
+
+REQUEST 19
+POST https://apiebank3.danskebank.com/ebanking/ext/e4/transaction/future
+Referer: MobileBanking3 SE
+Accept: application/json
+Content-Type: application/json
+
+{"languageCode":"SV","accountNoInt":"3064045148"}
 
 
 RESPONSE 19
@@ -442,59 +443,9 @@ Content-Type: application/json; charset=utf-8
 Connection: close
 Strict-Transport-Security: max-age=157680000
 
-{"traceId":null,"statusCode":200,"responseCode":200,"responseMessage":null,"eupToken":null,"cashAccounts":[],"securities":[],"dailyPerformancePct":0,"dailyPerformance":0,"performance":0,"performancePct":0,"marketValueCurrency":"SEK","marketValue":0}
-
-REQUEST 20
-POST https://apiebank3.danskebank.com/ebanking/ext/fi/marketvalue/listSecurities
-Referer: MobileBanking3 SE
-Accept: application/json
-Content-Type: application/json
-
-{"custodyAccount":"D9999999999"}
-
-
-RESPONSE 20
-200
-Date: Fri, 12 Mar 2021 07:55:56 GMT
-Server: Apache
-Cache-control: no-store
-Pragma: no-cache
-Expires: 0
-Vary: Origin
-Content-Type: application/json; charset=utf-8
-Connection: close
-Strict-Transport-Security: max-age=157680000
-
-{"traceId":null,"statusCode":200,"responseCode":200,"responseMessage":null,"eupToken":null,"cashAccounts":[],"securities":[],"dailyPerformancePct":0,"dailyPerformance":0,"performance":0,"performancePct":0,"marketValueCurrency":"SEK","marketValue":0}
-
-
-
-
-
-REQUEST 21
-POST https://apiebank3.danskebank.com/ebanking/ext/e4/transaction/future
-Referer: MobileBanking3 SE
-Accept: application/json
-Content-Type: application/json
-
-{"languageCode":"SV","accountNoInt":"3064045148"}
-
-
-RESPONSE 21
-200
-Date: Fri, 12 Mar 2021 07:55:56 GMT
-Server: Apache
-Cache-control: no-store
-Pragma: no-cache
-Expires: 0
-Vary: Origin
-Content-Type: application/json; charset=utf-8
-Connection: close
-Strict-Transport-Security: max-age=157680000
-
 {"traceId":null,"statusCode":200,"responseCode":200,"responseMessage":null,"eupToken":null,"accountNoInt":"3064045148","lastUpdated":null,"transactions":[],"repositionKey":null,"numberFuture":0}
 
-REQUEST 22
+REQUEST 20
 POST https://apiebank3.danskebank.com/ebanking/ext/e4/transaction/list
 Referer: MobileBanking3 SE
 Accept: application/json
@@ -503,7 +454,7 @@ Content-Type: application/json
 {"languageCode":"SV","accountNoInt":"3064045148","bookingDateFrom":"19920112","bookingDateTo":"19920410","fetchPcatDetails":true,"minNumberToReturn":9999,"repositionKey":""}
 
 
-RESPONSE 22
+RESPONSE 20
 200
 Date: Fri, 12 Mar 2021 07:55:57 GMT
 Server: Apache
@@ -518,7 +469,7 @@ Strict-Transport-Security: max-age=157680000
 {"traceId":null,"statusCode":200,"responseCode":200,"responseMessage":null,"eupToken":null,"totalPages":null,"totalTransactions":6,"accountNo":"3064045148","request":{"searchResultPage":null,"searchTerm":null,"bookingDateTo":"19920410","languageCode":"SV","accountNoInt":"3064045148"},"lastSearchPage":null,"endOfList":true,"transactions":[{"subPaymentType":"185","typeOfPayment":"BC","hasMoreDetails":true,"transactionKey":"<pa>BC<pb>185<pc>013064045148SEK20210311  2021-03-11-15.23.12.013045 0              ASE                           185<pe>20210311<pd><pf>3064045148<pg>2021-03-11-15.23.12.013045","pcatIdSub":"","pcatId":"OI016","reconciled":false,"showReconciled":true,"balanceDecimals":2,"balance":4.31,"showBalance":true,"status":null,"currency":"SEK","amountDecimals":2,"amount":0.01,"advice":"0","text":"Test Testson","bookingDate":"20210311"},{"subPaymentType":"185","typeOfPayment":"BC","hasMoreDetails":true,"transactionKey":"<pa>BC<pb>185<pc>013064045148SEK20210311  2021-03-11-15.22.58.516927 0              ASE                           185<pe>20210311<pd><pf>3064045148<pg>2021-03-11-15.22.58.516927","pcatIdSub":"","pcatId":"OI016","reconciled":false,"showReconciled":true,"balanceDecimals":2,"balance":4.3,"showBalance":true,"status":null,"currency":"SEK","amountDecimals":2,"amount":0.03,"advice":"0","text":"Test Testson","bookingDate":"20210311"},{"subPaymentType":"185","typeOfPayment":"BC","hasMoreDetails":true,"transactionKey":"<pa>BC<pb>185<pc>013064045148SEK20210311  2021-03-11-15.22.39.969789 0              ASE                           185<pe>20210311<pd><pf>3064045148<pg>2021-03-11-15.22.39.969789","pcatIdSub":"","pcatId":"OI016","reconciled":false,"showReconciled":true,"balanceDecimals":2,"balance":4.27,"showBalance":true,"status":null,"currency":"SEK","amountDecimals":2,"amount":0.02,"advice":"0","text":"Test Testson","bookingDate":"20210311"},{"subPaymentType":"185","typeOfPayment":"BO","hasMoreDetails":true,"transactionKey":"<pa>BO<pb>185<pc>013064045148SEK20210311  2021-03-11-15.21.56.460201 0              ASE                           185<pe>20210311<pd><pf>3064045148<pg>2021-03-11-15.21.56.460201","pcatIdSub":"","pcatId":"OU016","reconciled":false,"showReconciled":true,"balanceDecimals":2,"balance":4.25,"showBalance":true,"status":null,"currency":"SEK","amountDecimals":2,"amount":-1,"advice":"0","text":"Till: 88888888888","bookingDate":"20210311"},{"subPaymentType":"380","typeOfPayment":"BO","hasMoreDetails":true,"transactionKey":"<pa>BO<pb>380<pc>013064045148SEK20210311  2021-03-11-15.19.22.063520 0              ASE                           380<pe>20210311<pd><pf>3064045148<pg>2021-03-11-15.19.22.063520<pz>U02021-03-11-15.19.22.063520 20210311     3064045148","pcatIdSub":"","pcatId":"OU016","reconciled":false,"showReconciled":true,"balanceDecimals":2,"balance":5.25,"showBalance":true,"status":null,"currency":"SEK","amountDecimals":2,"amount":-1,"advice":"0","text":"1212-05-16677","bookingDate":"20210311"},{"subPaymentType":"185","typeOfPayment":"BO","hasMoreDetails":true,"transactionKey":"<pa>BO<pb>185<pc>013064045148SEK20210311  2021-03-11-15.07.30.853822 0              ASE                           185<pe>20210311<pd><pf>3064045148<pg>2021-03-11-15.07.30.853822","pcatIdSub":"","pcatId":"OU016","reconciled":false,"showReconciled":true,"balanceDecimals":2,"balance":6.25,"showBalance":true,"status":null,"currency":"SEK","amountDecimals":2,"amount":-1,"advice":"0","text":"Till: 33333333333","bookingDate":"20210311"}],"repositionKey":null}
 
 
-REQUEST 23
+REQUEST 21
 POST https://apiebank3.danskebank.com/ebanking/ext/e4/transaction/list
 Referer: MobileBanking3 SE
 Accept: application/json
@@ -527,7 +478,7 @@ Content-Type: application/json
 {"languageCode":"SV","accountNoInt":"3064045148","bookingDateFrom":"19911014","bookingDateTo":"19920111","fetchPcatDetails":true,"minNumberToReturn":9999,"repositionKey":""}
 
 
-RESPONSE 23
+RESPONSE 21
 200
 Date: Fri, 12 Mar 2021 07:55:57 GMT
 Server: Apache
@@ -542,7 +493,7 @@ Strict-Transport-Security: max-age=157680000
 {"traceId":null,"statusCode":200,"responseCode":200,"responseMessage":null,"eupToken":null,"totalPages":null,"totalTransactions":0,"accountNo":"3064045148","request":{"searchResultPage":null,"searchTerm":null,"bookingDateTo":"20201212","languageCode":"SV","accountNoInt":"3064045148"},"lastSearchPage":null,"endOfList":true,"transactions":[],"repositionKey":null}
 
 
-REQUEST 24
+REQUEST 22
 POST https://apiebank3.danskebank.com/ebanking/ext/e4/transaction/list
 Referer: MobileBanking3 SE
 Accept: application/json
@@ -551,7 +502,7 @@ Content-Type: application/json
 {"languageCode":"SV","accountNoInt":"3064045148","bookingDateFrom":"19910716","bookingDateTo":"19911013","fetchPcatDetails":true,"minNumberToReturn":9999,"repositionKey":""}
 
 
-RESPONSE 24
+RESPONSE 22
 200
 Date: Fri, 12 Mar 2021 07:55:58 GMT
 Server: Apache
@@ -566,7 +517,7 @@ Strict-Transport-Security: max-age=157680000
 {"traceId":null,"statusCode":200,"responseCode":200,"responseMessage":null,"eupToken":null,"totalPages":null,"totalTransactions":6,"accountNo":"3064045148","request":{"searchResultPage":null,"searchTerm":null,"bookingDateTo":"20200913","languageCode":"SV","accountNoInt":"3064045148"},"lastSearchPage":null,"endOfList":true,"transactions":[{"subPaymentType":"180","typeOfPayment":"BO","hasMoreDetails":true,"transactionKey":"<pa>BO<pb>180<pc>013064045148SEK20200825  2020-08-25-04.41.39.228189 1KTEG35YA8EHA1FHSE                           180<pe>20200825<pd>EG35YA8EHA1F<pf>3064045148<pg>2020-08-25-04.41.39.228189<pz>U12020-08-25-04.41.39.228189 20200825     3064045148","pcatIdSub":"","pcatId":"MD009","reconciled":false,"showReconciled":true,"balanceDecimals":2,"balance":7.25,"showBalance":true,"status":null,"currency":"SEK","amountDecimals":2,"amount":-4.49,"advice":"1","text":"COOP VÄSTRA SKOGEN   ))))","bookingDate":"20200825"},{"subPaymentType":"180","typeOfPayment":"BO","hasMoreDetails":true,"transactionKey":"<pa>BO<pb>180<pc>013064045148SEK20200818  2020-08-18-04.48.22.839984 1KTKG1ZVAOAWC1DHSE                           180<pe>20200818<pd>KG1ZVAOAWC1D<pf>3064045148<pg>2020-08-18-04.48.22.839984<pz>U12020-08-18-04.48.22.839984 20200818     3064045148","pcatIdSub":"","pcatId":"MD009","reconciled":false,"showReconciled":true,"balanceDecimals":2,"balance":11.74,"showBalance":true,"status":null,"currency":"SEK","amountDecimals":2,"amount":-3.57,"advice":"1","text":"COOP VÄSTRA SKOGEN   ))))","bookingDate":"20200818"},{"subPaymentType":"177","typeOfPayment":"BC","hasMoreDetails":true,"transactionKey":"<pa>BC<pb>177<pc>013064045148SEK20200817  2020-08-17-10.36.50.583764 0              HSE                           177<pe>20200817<pd><pf>3064045148<pg>2020-08-17-10.36.50.583764<pz>U02020-08-17-10.36.50.583764 20200817     3064045148","pcatIdSub":"","pcatId":"OI017","reconciled":false,"showReconciled":true,"balanceDecimals":2,"balance":15.31,"showBalance":true,"status":null,"currency":"SEK","amountDecimals":2,"amount":10,"advice":"0","text":"ÖVERFÖRING","bookingDate":"20200817"},{"subPaymentType":"180","typeOfPayment":"BO","hasMoreDetails":true,"transactionKey":"<pa>BO<pb>180<pc>013064045148SEK20200817  2020-08-15-04.16.13.706871 1KTEG015S77LK1RHSE                           180<pe>20200817<pd>EG015S77LK1R<pf>3064045148<pg>2020-08-15-04.16.13.706871<pz>U12020-08-15-04.16.13.706871 20200817     3064045148","pcatIdSub":"","pcatId":"MD009","reconciled":false,"showReconciled":true,"balanceDecimals":2,"balance":5.31,"showBalance":true,"status":null,"currency":"SEK","amountDecimals":2,"amount":-4.69,"advice":"1","text":"COOP VÄSTRA SKOGEN","bookingDate":"20200817"},{"subPaymentType":"185","typeOfPayment":"BC","hasMoreDetails":true,"transactionKey":"<pa>BC<pb>185<pc>013064045148SEK20200811  2020-08-11-22.49.22.557078 0              HSE                           185<pe>20200811<pd><pf>3064045148<pg>2020-08-11-22.49.22.557078","pcatIdSub":"","pcatId":"OI016","reconciled":false,"showReconciled":true,"balanceDecimals":2,"balance":10,"showBalance":true,"status":null,"currency":"SEK","amountDecimals":2,"amount":6,"advice":"0","text":"Test Testson","bookingDate":"20200811"},{"subPaymentType":"185","typeOfPayment":"BO","hasMoreDetails":true,"transactionKey":"<pa>BO<pb>185<pc>013064045148SEK20200618  2020-06-18-10.54.59.054190 0              HSE                           185<pe>20200618<pd><pf>3064045148<pg>2020-06-18-10.54.59.054190","pcatIdSub":"","pcatId":"OU016","reconciled":false,"showReconciled":true,"balanceDecimals":2,"balance":4,"showBalance":true,"status":null,"currency":"SEK","amountDecimals":2,"amount":-5,"advice":"0","text":"Till Depåkonto","bookingDate":"20200618"}],"repositionKey":null}
 
 
-REQUEST 25
+REQUEST 23
 POST https://apiebank3.danskebank.com/ebanking/ext/e4/transaction/list
 Referer: MobileBanking3 SE
 Accept: application/json
@@ -575,7 +526,7 @@ Content-Type: application/json
 {"languageCode":"SV","accountNoInt":"3064045148","bookingDateFrom":"19910417","bookingDateTo":"19910715","fetchPcatDetails":true,"minNumberToReturn":9999,"repositionKey":""}
 
 
-RESPONSE 25
+RESPONSE 23
 200
 Date: Fri, 12 Mar 2021 07:55:58 GMT
 Server: Apache
@@ -590,7 +541,7 @@ Strict-Transport-Security: max-age=157680000
 {"traceId":null,"statusCode":200,"responseCode":200,"responseMessage":null,"eupToken":null,"totalPages":null,"totalTransactions":0,"accountNo":"3064045148","request":{"searchResultPage":null,"searchTerm":null,"bookingDateTo":"20200615","languageCode":"SV","accountNoInt":"3064045148"},"lastSearchPage":null,"endOfList":true,"transactions":[],"repositionKey":null}
 
 
-REQUEST 26
+REQUEST 24
 POST https://apiebank3.danskebank.com/ebanking/ext/e4/transaction/list
 Referer: MobileBanking3 SE
 Accept: application/json
@@ -599,7 +550,7 @@ Content-Type: application/json
 {"languageCode":"SV","accountNoInt":"3064045148","bookingDateFrom":"19910117","bookingDateTo":"19910416","fetchPcatDetails":true,"minNumberToReturn":9999,"repositionKey":""}
 
 
-RESPONSE 26
+RESPONSE 24
 200
 Date: Fri, 12 Mar 2021 07:55:59 GMT
 Server: Apache
@@ -614,7 +565,7 @@ Strict-Transport-Security: max-age=157680000
 {"traceId":null,"statusCode":200,"responseCode":200,"responseMessage":null,"eupToken":null,"totalPages":null,"totalTransactions":6,"accountNo":"3064045148","request":{"searchResultPage":null,"searchTerm":null,"bookingDateTo":"20200317","languageCode":"SV","accountNoInt":"3064045148"},"lastSearchPage":null,"endOfList":true,"transactions":[{"subPaymentType":"D","typeOfPayment":"SE","hasMoreDetails":true,"transactionKey":"<pa>SE<pb>D<pc>01306404514820200313  307L007136<pe>20200313<pd><pf>3064045148<pg><pz>I307L007136                               3064045148","pcatIdSub":"","pcatId":"","reconciled":false,"showReconciled":false,"balanceDecimals":2,"balance":0,"showBalance":false,"status":null,"currency":"SEK","amountDecimals":2,"amount":-1.59,"advice":"0","text":"900-8004 SVENSKA RÖD","bookingDate":"20200313"},{"subPaymentType":"D","typeOfPayment":"SE","hasMoreDetails":true,"transactionKey":"<pa>SE<pb>D<pc>01306404514820200313  171L007134<pe>20200313<pd><pf>3064045148<pg><pz>I171L007134                               3064045148","pcatIdSub":"","pcatId":"","reconciled":false,"showReconciled":false,"balanceDecimals":2,"balance":0,"showBalance":false,"status":null,"currency":"SEK","amountDecimals":2,"amount":-1,"advice":"0","text":"900-8004 SVENSKA RÖD","bookingDate":"20200313"},{"subPaymentType":"D","typeOfPayment":"FP","hasMoreDetails":true,"transactionKey":"<pa>FP<pb>D<pc>01045E0296799522233064045148SEK20200312  H1KYFOHA6YP6I1BSE<pe>20200312<pd><pf>3064045148<pg>","pcatIdSub":"","pcatId":"","reconciled":false,"showReconciled":false,"balanceDecimals":2,"balance":0,"showBalance":false,"status":null,"currency":"SEK","amountDecimals":2,"amount":-1,"advice":"0","text":"T6","bookingDate":"20200312"},{"subPaymentType":"D","typeOfPayment":"FP","hasMoreDetails":true,"transactionKey":"<pa>FP<pb>D<pc>01118E0296798928883064045148SEK20200312  H1KUFOG94W9XM1DSE<pe>20200312<pd><pf>3064045148<pg>","pcatIdSub":"","pcatId":"","reconciled":false,"showReconciled":false,"balanceDecimals":2,"balance":0,"showBalance":false,"status":null,"currency":"SEK","amountDecimals":2,"amount":-1,"advice":"0","text":"T5","bookingDate":"20200312"},{"subPaymentType":"185","typeOfPayment":"BO","hasMoreDetails":true,"transactionKey":"<pa>BO<pb>185<pc>013064045148SEK20200311  2020-03-11-10.33.21.748782 0              HSE                           185<pe>20200311<pd><pf>3064045148<pg>2020-03-11-10.33.21.748782","pcatIdSub":"","pcatId":"OU016","reconciled":true,"showReconciled":true,"balanceDecimals":2,"balance":9,"showBalance":true,"status":null,"currency":"SEK","amountDecimals":2,"amount":-1,"advice":"0","text":"Till Depåkonto","bookingDate":"20200311"},{"subPaymentType":"177","typeOfPayment":"BC","hasMoreDetails":true,"transactionKey":"<pa>BC<pb>177<pc>013064045148SEK20200311  2020-03-11-07.35.47.953402 0              HSE                           177<pe>20200311<pd><pf>3064045148<pg>2020-03-11-07.35.47.953402<pz>U02020-03-11-07.35.47.953402 20200311     3064045148","pcatIdSub":"","pcatId":"OI017","reconciled":true,"showReconciled":true,"balanceDecimals":2,"balance":10,"showBalance":true,"status":null,"currency":"SEK","amountDecimals":2,"amount":10,"advice":"0","text":"ÖVERFÖRING","bookingDate":"20200311"}],"repositionKey":null}
 
 
-REQUEST 27
+REQUEST 25
 POST https://apiebank3.danskebank.com/ebanking/ext/e4/transaction/list
 Referer: MobileBanking3 SE
 Accept: application/json
@@ -623,7 +574,7 @@ Content-Type: application/json
 {"languageCode":"SV","accountNoInt":"3064045148","bookingDateFrom":"19901019","bookingDateTo":"19910116","fetchPcatDetails":true,"minNumberToReturn":9999,"repositionKey":""}
 
 
-RESPONSE 27
+RESPONSE 25
 200
 Date: Fri, 12 Mar 2021 07:55:59 GMT
 Server: Apache
@@ -638,7 +589,7 @@ Strict-Transport-Security: max-age=157680000
 {"traceId":null,"statusCode":200,"responseCode":200,"responseMessage":null,"eupToken":null,"totalPages":null,"totalTransactions":1,"accountNo":"3064045148","request":{"searchResultPage":null,"searchTerm":null,"bookingDateTo":"20191218","languageCode":"SV","accountNoInt":"3064045148"},"lastSearchPage":null,"endOfList":true,"transactions":[{"subPaymentType":"185","typeOfPayment":"BO","hasMoreDetails":true,"transactionKey":"<pa>BO<pb>185<pc>013064045148SEK20190926  2019-09-26-03.30.59.115518 0              HSE                           185<pe>20190926<pd><pf>3064045148<pg>2019-09-26-03.30.59.115518","pcatIdSub":"","pcatId":"00001","reconciled":false,"showReconciled":true,"balanceDecimals":2,"balance":0,"showBalance":true,"status":null,"currency":"SEK","amountDecimals":2,"amount":-4350,"advice":"0","text":"Till: 92721984896","bookingDate":"20190926"}],"repositionKey":null}
 
 
-REQUEST 28
+REQUEST 26
 POST https://apiebank3.danskebank.com/ebanking/ext/e4/transaction/list
 Referer: MobileBanking3 SE
 Accept: application/json
@@ -647,7 +598,7 @@ Content-Type: application/json
 {"languageCode":"SV","accountNoInt":"3064045148","bookingDateFrom":"19900721","bookingDateTo":"19901018","fetchPcatDetails":true,"minNumberToReturn":9999,"repositionKey":""}
 
 
-RESPONSE 28
+RESPONSE 26
 200
 Date: Fri, 12 Mar 2021 07:55:59 GMT
 Server: Apache
@@ -662,7 +613,7 @@ Strict-Transport-Security: max-age=157680000
 {"traceId":null,"statusCode":200,"responseCode":200,"responseMessage":null,"eupToken":null,"totalPages":null,"totalTransactions":0,"accountNo":"3064045148","request":{"searchResultPage":null,"searchTerm":null,"bookingDateTo":"20190919","languageCode":"SV","accountNoInt":"3064045148"},"lastSearchPage":null,"endOfList":true,"transactions":[],"repositionKey":null}
 
 
-REQUEST 29
+REQUEST 27
 POST https://apiebank3.danskebank.com/ebanking/ext/e4/transaction/list
 Referer: MobileBanking3 SE
 Accept: application/json
@@ -671,7 +622,7 @@ Content-Type: application/json
 {"languageCode":"SV","accountNoInt":"3064045148","bookingDateFrom":"19900422","bookingDateTo":"19900720","fetchPcatDetails":true,"minNumberToReturn":9999,"repositionKey":""}
 
 
-RESPONSE 29
+RESPONSE 27
 200
 Date: Fri, 12 Mar 2021 07:56:00 GMT
 Server: Apache
@@ -686,7 +637,7 @@ Strict-Transport-Security: max-age=157680000
 {"traceId":null,"statusCode":200,"responseCode":200,"responseMessage":null,"eupToken":null,"totalPages":null,"totalTransactions":0,"accountNo":"3064045148","request":{"searchResultPage":null,"searchTerm":null,"bookingDateTo":"20190621","languageCode":"SV","accountNoInt":"3064045148"},"lastSearchPage":null,"endOfList":true,"transactions":[],"repositionKey":null}
 
 
-REQUEST 30
+REQUEST 28
 POST https://apiebank3.danskebank.com/ebanking/ext/e4/transaction/list
 Referer: MobileBanking3 SE
 Accept: application/json
@@ -695,7 +646,7 @@ Content-Type: application/json
 {"languageCode":"SV","accountNoInt":"3064045148","bookingDateFrom":"19900122","bookingDateTo":"19900421","fetchPcatDetails":true,"minNumberToReturn":9999,"repositionKey":""}
 
 
-RESPONSE 30
+RESPONSE 28
 200
 Date: Fri, 12 Mar 2021 07:56:00 GMT
 Server: Apache
@@ -710,13 +661,59 @@ Strict-Transport-Security: max-age=157680000
 {"traceId":null,"statusCode":200,"responseCode":200,"responseMessage":null,"eupToken":null,"totalPages":null,"totalTransactions":0,"accountNo":"3064045148","request":{"searchResultPage":null,"searchTerm":null,"bookingDateTo":"20190323","languageCode":"SV","accountNoInt":"3064045148"},"lastSearchPage":null,"endOfList":true,"transactions":[],"repositionKey":null}
 
 
-REQUEST 31
+REQUEST 29
 POST https://apiebank3.danskebank.com/ebanking/ext/e4/transaction/list
 Referer: MobileBanking3 SE
 Accept: application/json
 Content-Type: application/json
 
 {"languageCode":"SV","accountNoInt":"3064045148","bookingDateFrom":"19891024","bookingDateTo":"19900121","fetchPcatDetails":true,"minNumberToReturn":9999,"repositionKey":""}
+
+
+RESPONSE 29
+200
+Date: Fri, 12 Mar 2021 07:56:01 GMT
+Server: Apache
+Cache-control: no-store
+Pragma: no-cache
+Expires: 0
+Vary: Origin
+Content-Type: application/json; charset=utf-8
+Connection: close
+Strict-Transport-Security: max-age=157680000
+
+{"traceId":null,"statusCode":200,"responseCode":200,"responseMessage":null,"eupToken":null,"totalPages":null,"totalTransactions":0,"accountNo":"3064045148","request":{"searchResultPage":null,"searchTerm":null,"bookingDateTo":"20181223","languageCode":"SV","accountNoInt":"3064045148"},"lastSearchPage":null,"endOfList":true,"transactions":[],"repositionKey":null}
+
+REQUEST 30
+POST https://apiebank3.danskebank.com/ebanking/ext/e4/transaction/list
+Referer: MobileBanking3 SE
+Accept: application/json
+Content-Type: application/json
+
+{"languageCode":"SV","accountNoInt":"3064045148","bookingDateFrom":"19890726","bookingDateTo":"19891023","fetchPcatDetails":true,"minNumberToReturn":9999,"repositionKey":""}
+
+
+RESPONSE 30
+200
+Date: Fri, 12 Mar 2021 07:56:01 GMT
+Server: Apache
+Cache-control: no-store
+Pragma: no-cache
+Expires: 0
+Vary: Origin
+Content-Type: application/json; charset=utf-8
+Connection: close
+Strict-Transport-Security: max-age=157680000
+
+{"traceId":null,"statusCode":200,"responseCode":200,"responseMessage":null,"eupToken":null,"totalPages":null,"totalTransactions":0,"accountNo":"3064045148","request":{"searchResultPage":null,"searchTerm":null,"bookingDateTo":"20181223","languageCode":"SV","accountNoInt":"3064045148"},"lastSearchPage":null,"endOfList":true,"transactions":[],"repositionKey":null}
+
+REQUEST 31
+POST https://apiebank3.danskebank.com/ebanking/ext/e4/transaction/list
+Referer: MobileBanking3 SE
+Accept: application/json
+Content-Type: application/json
+
+{"languageCode":"SV","accountNoInt":"3064045148","bookingDateFrom":"19890427","bookingDateTo":"19890725","fetchPcatDetails":true,"minNumberToReturn":9999,"repositionKey":""}
 
 
 RESPONSE 31
@@ -734,12 +731,12 @@ Strict-Transport-Security: max-age=157680000
 {"traceId":null,"statusCode":200,"responseCode":200,"responseMessage":null,"eupToken":null,"totalPages":null,"totalTransactions":0,"accountNo":"3064045148","request":{"searchResultPage":null,"searchTerm":null,"bookingDateTo":"20181223","languageCode":"SV","accountNoInt":"3064045148"},"lastSearchPage":null,"endOfList":true,"transactions":[],"repositionKey":null}
 
 REQUEST 32
-POST https://apiebank3.danskebank.com/ebanking/ext/e4/transaction/list
+POST https://apiebank3.danskebank.com/ebanking/ext/e4/transaction/future
 Referer: MobileBanking3 SE
 Accept: application/json
 Content-Type: application/json
 
-{"languageCode":"SV","accountNoInt":"3064045148","bookingDateFrom":"19890726","bookingDateTo":"19891023","fetchPcatDetails":true,"minNumberToReturn":9999,"repositionKey":""}
+{"languageCode":"SV","accountNoInt":"3064050087"}
 
 
 RESPONSE 32
@@ -754,55 +751,9 @@ Content-Type: application/json; charset=utf-8
 Connection: close
 Strict-Transport-Security: max-age=157680000
 
-{"traceId":null,"statusCode":200,"responseCode":200,"responseMessage":null,"eupToken":null,"totalPages":null,"totalTransactions":0,"accountNo":"3064045148","request":{"searchResultPage":null,"searchTerm":null,"bookingDateTo":"20181223","languageCode":"SV","accountNoInt":"3064045148"},"lastSearchPage":null,"endOfList":true,"transactions":[],"repositionKey":null}
-
-REQUEST 33
-POST https://apiebank3.danskebank.com/ebanking/ext/e4/transaction/list
-Referer: MobileBanking3 SE
-Accept: application/json
-Content-Type: application/json
-
-{"languageCode":"SV","accountNoInt":"3064045148","bookingDateFrom":"19890427","bookingDateTo":"19890725","fetchPcatDetails":true,"minNumberToReturn":9999,"repositionKey":""}
-
-
-RESPONSE 33
-200
-Date: Fri, 12 Mar 2021 07:56:01 GMT
-Server: Apache
-Cache-control: no-store
-Pragma: no-cache
-Expires: 0
-Vary: Origin
-Content-Type: application/json; charset=utf-8
-Connection: close
-Strict-Transport-Security: max-age=157680000
-
-{"traceId":null,"statusCode":200,"responseCode":200,"responseMessage":null,"eupToken":null,"totalPages":null,"totalTransactions":0,"accountNo":"3064045148","request":{"searchResultPage":null,"searchTerm":null,"bookingDateTo":"20181223","languageCode":"SV","accountNoInt":"3064045148"},"lastSearchPage":null,"endOfList":true,"transactions":[],"repositionKey":null}
-
-REQUEST 34
-POST https://apiebank3.danskebank.com/ebanking/ext/e4/transaction/future
-Referer: MobileBanking3 SE
-Accept: application/json
-Content-Type: application/json
-
-{"languageCode":"SV","accountNoInt":"3064050087"}
-
-
-RESPONSE 34
-200
-Date: Fri, 12 Mar 2021 07:56:01 GMT
-Server: Apache
-Cache-control: no-store
-Pragma: no-cache
-Expires: 0
-Vary: Origin
-Content-Type: application/json; charset=utf-8
-Connection: close
-Strict-Transport-Security: max-age=157680000
-
 {"traceId":null,"statusCode":200,"responseCode":200,"responseMessage":null,"eupToken":null,"accountNoInt":"3064050087","lastUpdated":null,"transactions":[],"repositionKey":null,"numberFuture":0}
 
-REQUEST 35
+REQUEST 33
 POST https://apiebank3.danskebank.com/ebanking/ext/e4/transaction/list
 Referer: MobileBanking3 SE
 Accept: application/json
@@ -811,7 +762,7 @@ Content-Type: application/json
 {"languageCode":"SV","accountNoInt":"3064050087","bookingDateFrom":"19920112","bookingDateTo":"19920410","fetchPcatDetails":true,"minNumberToReturn":9999,"repositionKey":""}
 
 
-RESPONSE 35
+RESPONSE 33
 200
 Date: Fri, 12 Mar 2021 07:56:02 GMT
 Server: Apache
@@ -826,7 +777,7 @@ Strict-Transport-Security: max-age=157680000
 {"traceId":null,"statusCode":200,"responseCode":200,"responseMessage":null,"eupToken":null,"totalPages":null,"totalTransactions":2,"accountNo":"3064050087","request":{"searchResultPage":null,"searchTerm":null,"bookingDateTo":"19920410","languageCode":"SV","accountNoInt":"3064050087"},"lastSearchPage":null,"endOfList":true,"transactions":[{"subPaymentType":"185","typeOfPayment":"BO","hasMoreDetails":true,"transactionKey":"<pa>BO<pb>185<pc>013064050087SEK20210311  2021-03-11-15.23.12.011909 0              ASE                           185<pe>20210311<pd><pf>3064050087<pg>2021-03-11-15.23.12.011909","pcatIdSub":"","pcatId":"OU016","reconciled":false,"showReconciled":true,"balanceDecimals":2,"balance":0.99,"showBalance":true,"status":null,"currency":"SEK","amountDecimals":2,"amount":-0.01,"advice":"0","text":"Till: 22222222222","bookingDate":"20210311"},{"subPaymentType":"185","typeOfPayment":"BC","hasMoreDetails":true,"transactionKey":"<pa>BC<pb>185<pc>013064050087SEK20210311  2021-03-11-15.07.30.855341 0              ASE                           185<pe>20210311<pd><pf>3064050087<pg>2021-03-11-15.07.30.855341","pcatIdSub":"","pcatId":"OI016","reconciled":false,"showReconciled":true,"balanceDecimals":2,"balance":1,"showBalance":true,"status":null,"currency":"SEK","amountDecimals":2,"amount":1,"advice":"0","text":"Test Testson","bookingDate":"20210311"}],"repositionKey":null}
 
 
-REQUEST 36
+REQUEST 34
 POST https://apiebank3.danskebank.com/ebanking/ext/e4/transaction/list
 Referer: MobileBanking3 SE
 Accept: application/json
@@ -835,7 +786,7 @@ Content-Type: application/json
 {"languageCode":"SV","accountNoInt":"3064050087","bookingDateFrom":"19911014","bookingDateTo":"19920111","fetchPcatDetails":true,"minNumberToReturn":9999,"repositionKey":""}
 
 
-RESPONSE 36
+RESPONSE 34
 200
 Date: Fri, 12 Mar 2021 07:56:02 GMT
 Server: Apache
@@ -850,7 +801,7 @@ Strict-Transport-Security: max-age=157680000
 {"traceId":null,"statusCode":200,"responseCode":200,"responseMessage":null,"eupToken":null,"totalPages":null,"totalTransactions":0,"accountNo":"3064050087","request":{"searchResultPage":null,"searchTerm":null,"bookingDateTo":"20201212","languageCode":"SV","accountNoInt":"3064050087"},"lastSearchPage":null,"endOfList":true,"transactions":[],"repositionKey":null}
 
 
-REQUEST 37
+REQUEST 35
 POST https://apiebank3.danskebank.com/ebanking/ext/e4/transaction/list
 Referer: MobileBanking3 SE
 Accept: application/json
@@ -859,7 +810,7 @@ Content-Type: application/json
 {"languageCode":"SV","accountNoInt":"3064050087","bookingDateFrom":"19910716","bookingDateTo":"19911013","fetchPcatDetails":true,"minNumberToReturn":9999,"repositionKey":""}
 
 
-RESPONSE 37
+RESPONSE 35
 200
 Date: Fri, 12 Mar 2021 07:56:02 GMT
 Server: Apache
@@ -874,7 +825,7 @@ Strict-Transport-Security: max-age=157680000
 {"traceId":null,"statusCode":200,"responseCode":200,"responseMessage":null,"eupToken":null,"totalPages":null,"totalTransactions":2,"accountNo":"3064050087","request":{"searchResultPage":null,"searchTerm":null,"bookingDateTo":"20200913","languageCode":"SV","accountNoInt":"3064050087"},"lastSearchPage":null,"endOfList":true,"transactions":[{"subPaymentType":"185","typeOfPayment":"BO","hasMoreDetails":true,"transactionKey":"<pa>BO<pb>185<pc>013064050087SEK20200811  2020-08-11-22.49.22.554982 0              HSE                           185<pe>20200811<pd><pf>3064050087<pg>2020-08-11-22.49.22.554982","pcatIdSub":"","pcatId":"OU016","reconciled":false,"showReconciled":true,"balanceDecimals":2,"balance":0,"showBalance":true,"status":null,"currency":"SEK","amountDecimals":2,"amount":-6,"advice":"0","text":"Till Danske Konto","bookingDate":"20200811"},{"subPaymentType":"185","typeOfPayment":"BC","hasMoreDetails":true,"transactionKey":"<pa>BC<pb>185<pc>013064050087SEK20200618  2020-06-18-10.54.59.056903 0              HSE                           185<pe>20200618<pd><pf>3064050087<pg>2020-06-18-10.54.59.056903","pcatIdSub":"","pcatId":"OI016","reconciled":false,"showReconciled":true,"balanceDecimals":2,"balance":6,"showBalance":true,"status":null,"currency":"SEK","amountDecimals":2,"amount":5,"advice":"0","text":"Från Danske Konto","bookingDate":"20200618"}],"repositionKey":null}
 
 
-REQUEST 38
+REQUEST 36
 POST https://apiebank3.danskebank.com/ebanking/ext/e4/transaction/list
 Referer: MobileBanking3 SE
 Accept: application/json
@@ -883,7 +834,7 @@ Content-Type: application/json
 {"languageCode":"SV","accountNoInt":"3064050087","bookingDateFrom":"19910417","bookingDateTo":"19910715","fetchPcatDetails":true,"minNumberToReturn":9999,"repositionKey":""}
 
 
-RESPONSE 38
+RESPONSE 36
 200
 Date: Fri, 12 Mar 2021 07:56:03 GMT
 Server: Apache
@@ -898,7 +849,7 @@ Strict-Transport-Security: max-age=157680000
 {"traceId":null,"statusCode":200,"responseCode":200,"responseMessage":null,"eupToken":null,"totalPages":null,"totalTransactions":0,"accountNo":"3064050087","request":{"searchResultPage":null,"searchTerm":null,"bookingDateTo":"20200615","languageCode":"SV","accountNoInt":"3064050087"},"lastSearchPage":null,"endOfList":true,"transactions":[],"repositionKey":null}
 
 
-REQUEST 39
+REQUEST 37
 POST https://apiebank3.danskebank.com/ebanking/ext/e4/transaction/list
 Referer: MobileBanking3 SE
 Accept: application/json
@@ -907,7 +858,7 @@ Content-Type: application/json
 {"languageCode":"SV","accountNoInt":"3064050087","bookingDateFrom":"19910117","bookingDateTo":"19910416","fetchPcatDetails":true,"minNumberToReturn":9999,"repositionKey":""}
 
 
-RESPONSE 39
+RESPONSE 37
 200
 Date: Fri, 12 Mar 2021 07:56:03 GMT
 Server: Apache
@@ -922,7 +873,7 @@ Strict-Transport-Security: max-age=157680000
 {"traceId":null,"statusCode":200,"responseCode":200,"responseMessage":null,"eupToken":null,"totalPages":null,"totalTransactions":1,"accountNo":"3064050087","request":{"searchResultPage":null,"searchTerm":null,"bookingDateTo":"20200317","languageCode":"SV","accountNoInt":"3064050087"},"lastSearchPage":null,"endOfList":true,"transactions":[{"subPaymentType":"185","typeOfPayment":"BC","hasMoreDetails":true,"transactionKey":"<pa>BC<pb>185<pc>013064050087SEK20200311  2020-03-11-10.33.21.749991 0              HSE                           185<pe>20200311<pd><pf>3064050087<pg>2020-03-11-10.33.21.749991","pcatIdSub":"","pcatId":"OI016","reconciled":false,"showReconciled":true,"balanceDecimals":2,"balance":1,"showBalance":true,"status":null,"currency":"SEK","amountDecimals":2,"amount":1,"advice":"0","text":"Från Danske Konto","bookingDate":"20200311"}],"repositionKey":null}
 
 
-REQUEST 40
+REQUEST 38
 POST https://apiebank3.danskebank.com/ebanking/ext/e4/transaction/list
 Referer: MobileBanking3 SE
 Accept: application/json
@@ -931,7 +882,7 @@ Content-Type: application/json
 {"languageCode":"SV","accountNoInt":"3064050087","bookingDateFrom":"19901019","bookingDateTo":"19910116","fetchPcatDetails":true,"minNumberToReturn":9999,"repositionKey":""}
 
 
-RESPONSE 40
+RESPONSE 38
 200
 Date: Fri, 12 Mar 2021 07:56:04 GMT
 Server: Apache
@@ -946,7 +897,7 @@ Strict-Transport-Security: max-age=157680000
 {"traceId":null,"statusCode":200,"responseCode":200,"responseMessage":null,"eupToken":null,"totalPages":null,"totalTransactions":0,"accountNo":"3064050087","request":{"searchResultPage":null,"searchTerm":null,"bookingDateTo":"20191218","languageCode":"SV","accountNoInt":"3064050087"},"lastSearchPage":null,"endOfList":true,"transactions":[],"repositionKey":null}
 
 
-REQUEST 41
+REQUEST 39
 POST https://apiebank3.danskebank.com/ebanking/ext/e4/transaction/list
 Referer: MobileBanking3 SE
 Accept: application/json
@@ -955,7 +906,7 @@ Content-Type: application/json
 {"languageCode":"SV","accountNoInt":"3064050087","bookingDateFrom":"19900721","bookingDateTo":"19901018","fetchPcatDetails":true,"minNumberToReturn":9999,"repositionKey":""}
 
 
-RESPONSE 41
+RESPONSE 39
 200
 Date: Fri, 12 Mar 2021 07:56:04 GMT
 Server: Apache
@@ -970,7 +921,7 @@ Strict-Transport-Security: max-age=157680000
 {"traceId":null,"statusCode":200,"responseCode":200,"responseMessage":null,"eupToken":null,"totalPages":null,"totalTransactions":0,"accountNo":"3064050087","request":{"searchResultPage":null,"searchTerm":null,"bookingDateTo":"20190919","languageCode":"SV","accountNoInt":"3064050087"},"lastSearchPage":null,"endOfList":true,"transactions":[],"repositionKey":null}
 
 
-REQUEST 42
+REQUEST 40
 POST https://apiebank3.danskebank.com/ebanking/ext/e4/transaction/list
 Referer: MobileBanking3 SE
 Accept: application/json
@@ -979,7 +930,7 @@ Content-Type: application/json
 {"languageCode":"SV","accountNoInt":"3064050087","bookingDateFrom":"19900422","bookingDateTo":"19900720","fetchPcatDetails":true,"minNumberToReturn":9999,"repositionKey":""}
 
 
-RESPONSE 42
+RESPONSE 40
 200
 Date: Fri, 12 Mar 2021 07:56:04 GMT
 Server: Apache
@@ -994,7 +945,7 @@ Strict-Transport-Security: max-age=157680000
 {"traceId":null,"statusCode":200,"responseCode":200,"responseMessage":null,"eupToken":null,"totalPages":null,"totalTransactions":0,"accountNo":"3064050087","request":{"searchResultPage":null,"searchTerm":null,"bookingDateTo":"20190621","languageCode":"SV","accountNoInt":"3064050087"},"lastSearchPage":null,"endOfList":true,"transactions":[],"repositionKey":null}
 
 
-REQUEST 43
+REQUEST 41
 POST https://apiebank3.danskebank.com/ebanking/ext/e4/transaction/list
 Referer: MobileBanking3 SE
 Accept: application/json
@@ -1003,7 +954,7 @@ Content-Type: application/json
 {"languageCode":"SV","accountNoInt":"3064050087","bookingDateFrom":"19900122","bookingDateTo":"19900421","fetchPcatDetails":true,"minNumberToReturn":9999,"repositionKey":""}
 
 
-RESPONSE 43
+RESPONSE 41
 200
 Date: Fri, 12 Mar 2021 07:56:05 GMT
 Server: Apache
@@ -1018,7 +969,7 @@ Strict-Transport-Security: max-age=157680000
 {"traceId":null,"statusCode":200,"responseCode":200,"responseMessage":null,"eupToken":null,"totalPages":null,"totalTransactions":0,"accountNo":"3064050087","request":{"searchResultPage":null,"searchTerm":null,"bookingDateTo":"20190323","languageCode":"SV","accountNoInt":"3064050087"},"lastSearchPage":null,"endOfList":true,"transactions":[],"repositionKey":null}
 
 
-REQUEST 44
+REQUEST 42
 POST https://apiebank3.danskebank.com/ebanking/ext/e4/transaction/list
 Referer: MobileBanking3 SE
 Accept: application/json
@@ -1027,7 +978,7 @@ Content-Type: application/json
 {"languageCode":"SV","accountNoInt":"3064050087","bookingDateFrom":"19891024","bookingDateTo":"19900121","fetchPcatDetails":true,"minNumberToReturn":9999,"repositionKey":""}
 
 
-RESPONSE 44
+RESPONSE 42
 200
 Date: Fri, 12 Mar 2021 07:56:05 GMT
 Server: Apache
@@ -1042,7 +993,7 @@ Strict-Transport-Security: max-age=157680000
 {"traceId":null,"statusCode":200,"responseCode":200,"responseMessage":null,"eupToken":null,"totalPages":null,"totalTransactions":0,"accountNo":"3064050087","request":{"searchResultPage":null,"searchTerm":null,"bookingDateTo":"20181223","languageCode":"SV","accountNoInt":"3064050087"},"lastSearchPage":null,"endOfList":true,"transactions":[],"repositionKey":null}
 
 
-REQUEST 45
+REQUEST 43
 POST https://apiebank3.danskebank.com/ebanking/ext/e4/transaction/list
 Referer: MobileBanking3 SE
 Accept: application/json
@@ -1051,7 +1002,7 @@ Content-Type: application/json
 {"languageCode":"SV","accountNoInt":"3064050087","bookingDateFrom":"19890726","bookingDateTo":"19891023","fetchPcatDetails":true,"minNumberToReturn":9999,"repositionKey":""}
 
 
-RESPONSE 45
+RESPONSE 43
 200
 Date: Fri, 12 Mar 2021 07:56:01 GMT
 Server: Apache
@@ -1067,7 +1018,7 @@ Strict-Transport-Security: max-age=157680000
 
 
 
-REQUEST 46
+REQUEST 44
 POST https://apiebank3.danskebank.com/ebanking/ext/e4/transaction/list
 Referer: MobileBanking3 SE
 Accept: application/json
@@ -1076,7 +1027,7 @@ Content-Type: application/json
 {"languageCode":"SV","accountNoInt":"3064050087","bookingDateFrom":"19890427","bookingDateTo":"19890725","fetchPcatDetails":true,"minNumberToReturn":9999,"repositionKey":""}
 
 
-RESPONSE 46
+RESPONSE 44
 200
 Date: Fri, 12 Mar 2021 07:56:01 GMT
 Server: Apache
@@ -1092,7 +1043,7 @@ Strict-Transport-Security: max-age=157680000
 
 
 
-REQUEST 47
+REQUEST 45
 POST https://apiebank3.danskebank.com/ebanking/ext/e4/transaction/future
 Referer: MobileBanking3 SE
 Accept: application/json
@@ -1101,7 +1052,7 @@ Content-Type: application/json
 {"languageCode":"SV","accountNoInt":"3367905360"}
 
 
-RESPONSE 47
+RESPONSE 45
 200
 Date: Fri, 12 Mar 2021 07:56:05 GMT
 Server: Apache
@@ -1115,7 +1066,7 @@ Strict-Transport-Security: max-age=157680000
 
 {"traceId":null,"statusCode":200,"responseCode":200,"responseMessage":null,"eupToken":null,"accountNoInt":"3367905360","lastUpdated":null,"transactions":[],"repositionKey":null,"numberFuture":0}
 
-REQUEST 48
+REQUEST 46
 POST https://apiebank3.danskebank.com/ebanking/ext/e4/transaction/list
 Referer: MobileBanking3 SE
 Accept: application/json
@@ -1124,7 +1075,7 @@ Content-Type: application/json
 {"languageCode":"SV","accountNoInt":"3367905360","bookingDateFrom":"19920112","bookingDateTo":"19920410","fetchPcatDetails":true,"minNumberToReturn":9999,"repositionKey":""}
 
 
-RESPONSE 48
+RESPONSE 46
 200
 Date: Fri, 12 Mar 2021 07:56:06 GMT
 Server: Apache
@@ -1139,7 +1090,7 @@ Strict-Transport-Security: max-age=157680000
 {"traceId":null,"statusCode":200,"responseCode":200,"responseMessage":null,"eupToken":null,"totalPages":null,"totalTransactions":2,"accountNo":"3367905360","request":{"searchResultPage":null,"searchTerm":null,"bookingDateTo":"19920410","languageCode":"SV","accountNoInt":"3367905360"},"lastSearchPage":null,"endOfList":true,"transactions":[{"subPaymentType":"185","typeOfPayment":"BO","hasMoreDetails":true,"transactionKey":"<pa>BO<pb>185<pc>013367905360SEK20210311  2021-03-11-15.22.39.968577 0              ASE                           185<pe>20210311<pd><pf>3367905360<pg>2021-03-11-15.22.39.968577","pcatIdSub":"","pcatId":"00001","reconciled":false,"showReconciled":true,"balanceDecimals":2,"balance":0.98,"showBalance":true,"status":null,"currency":"SEK","amountDecimals":2,"amount":-0.02,"advice":"0","text":"Till: 22222222222","bookingDate":"20210311"},{"subPaymentType":"185","typeOfPayment":"BC","hasMoreDetails":true,"transactionKey":"<pa>BC<pb>185<pc>013367905360SEK20210311  2021-03-11-15.21.56.461300 0              ASE                           185<pe>20210311<pd><pf>3367905360<pg>2021-03-11-15.21.56.461300","pcatIdSub":"","pcatId":"01001","reconciled":false,"showReconciled":true,"balanceDecimals":2,"balance":1,"showBalance":true,"status":null,"currency":"SEK","amountDecimals":2,"amount":1,"advice":"0","text":"Test Testson","bookingDate":"20210311"}],"repositionKey":null}
 
 
-REQUEST 49
+REQUEST 47
 POST https://apiebank3.danskebank.com/ebanking/ext/e4/transaction/list
 Referer: MobileBanking3 SE
 Accept: application/json
@@ -1148,7 +1099,7 @@ Content-Type: application/json
 {"languageCode":"SV","accountNoInt":"3367905360","bookingDateFrom":"19911014","bookingDateTo":"19920111","fetchPcatDetails":true,"minNumberToReturn":9999,"repositionKey":""}
 
 
-RESPONSE 49
+RESPONSE 47
 200
 Date: Fri, 12 Mar 2021 07:56:06 GMT
 Server: Apache
@@ -1163,7 +1114,7 @@ Strict-Transport-Security: max-age=157680000
 {"traceId":null,"statusCode":200,"responseCode":200,"responseMessage":null,"eupToken":null,"totalPages":null,"totalTransactions":0,"accountNo":"3367905360","request":{"searchResultPage":null,"searchTerm":null,"bookingDateTo":"20201212","languageCode":"SV","accountNoInt":"3367905360"},"lastSearchPage":null,"endOfList":true,"transactions":[],"repositionKey":null}
 
 
-REQUEST 50
+REQUEST 48
 POST https://apiebank3.danskebank.com/ebanking/ext/e4/transaction/list
 Referer: MobileBanking3 SE
 Accept: application/json
@@ -1172,7 +1123,7 @@ Content-Type: application/json
 {"languageCode":"SV","accountNoInt":"3367905360","bookingDateFrom":"19910716","bookingDateTo":"19911013","fetchPcatDetails":true,"minNumberToReturn":9999,"repositionKey":""}
 
 
-RESPONSE 50
+RESPONSE 48
 200
 Date: Fri, 12 Mar 2021 07:56:07 GMT
 Server: Apache
@@ -1187,7 +1138,7 @@ Strict-Transport-Security: max-age=157680000
 {"traceId":null,"statusCode":200,"responseCode":200,"responseMessage":null,"eupToken":null,"totalPages":null,"totalTransactions":0,"accountNo":"3367905360","request":{"searchResultPage":null,"searchTerm":null,"bookingDateTo":"19901018","languageCode":"SV","accountNoInt":"3367905360"},"lastSearchPage":null,"endOfList":true,"transactions":[],"repositionKey":null}
 
 
-REQUEST 51
+REQUEST 49
 POST https://apiebank3.danskebank.com/ebanking/ext/e4/transaction/list
 Referer: MobileBanking3 SE
 Accept: application/json
@@ -1196,7 +1147,7 @@ Content-Type: application/json
 {"languageCode":"SV","accountNoInt":"3367905360","bookingDateFrom":"19910417","bookingDateTo":"19910715","fetchPcatDetails":true,"minNumberToReturn":9999,"repositionKey":""}
 
 
-RESPONSE 51
+RESPONSE 49
 200
 Date: Fri, 12 Mar 2021 07:56:07 GMT
 Server: Apache
@@ -1211,7 +1162,7 @@ Strict-Transport-Security: max-age=157680000
 {"traceId":null,"statusCode":200,"responseCode":200,"responseMessage":null,"eupToken":null,"totalPages":null,"totalTransactions":0,"accountNo":"3367905360","request":{"searchResultPage":null,"searchTerm":null,"bookingDateTo":"20200615","languageCode":"SV","accountNoInt":"3367905360"},"lastSearchPage":null,"endOfList":true,"transactions":[],"repositionKey":null}
 
 
-REQUEST 52
+REQUEST 50
 POST https://apiebank3.danskebank.com/ebanking/ext/e4/transaction/list
 Referer: MobileBanking3 SE
 Accept: application/json
@@ -1220,7 +1171,7 @@ Content-Type: application/json
 {"languageCode":"SV","accountNoInt":"3367905360","bookingDateFrom":"19910117","bookingDateTo":"19910416","fetchPcatDetails":true,"minNumberToReturn":9999,"repositionKey":""}
 
 
-RESPONSE 52
+RESPONSE 50
 200
 Date: Fri, 12 Mar 2021 07:56:07 GMT
 Server: Apache
@@ -1235,7 +1186,7 @@ Strict-Transport-Security: max-age=157680000
 {"traceId":null,"statusCode":200,"responseCode":200,"responseMessage":null,"eupToken":null,"totalPages":null,"totalTransactions":0,"accountNo":"3367905360","request":{"searchResultPage":null,"searchTerm":null,"bookingDateTo":"20200317","languageCode":"SV","accountNoInt":"3367905360"},"lastSearchPage":null,"endOfList":true,"transactions":[],"repositionKey":null}
 
 
-REQUEST 53
+REQUEST 51
 POST https://apiebank3.danskebank.com/ebanking/ext/e4/transaction/list
 Referer: MobileBanking3 SE
 Accept: application/json
@@ -1244,7 +1195,7 @@ Content-Type: application/json
 {"languageCode":"SV","accountNoInt":"3367905360","bookingDateFrom":"19901019","bookingDateTo":"19910116","fetchPcatDetails":true,"minNumberToReturn":9999,"repositionKey":""}
 
 
-RESPONSE 53
+RESPONSE 51
 200
 Date: Fri, 12 Mar 2021 07:56:08 GMT
 Server: Apache
@@ -1259,7 +1210,7 @@ Strict-Transport-Security: max-age=157680000
 {"traceId":null,"statusCode":200,"responseCode":200,"responseMessage":null,"eupToken":null,"totalPages":null,"totalTransactions":0,"accountNo":"3367905360","request":{"searchResultPage":null,"searchTerm":null,"bookingDateTo":"20191218","languageCode":"SV","accountNoInt":"3367905360"},"lastSearchPage":null,"endOfList":true,"transactions":[],"repositionKey":null}
 
 
-REQUEST 54
+REQUEST 52
 POST https://apiebank3.danskebank.com/ebanking/ext/e4/transaction/list
 Referer: MobileBanking3 SE
 Accept: application/json
@@ -1268,7 +1219,7 @@ Content-Type: application/json
 {"languageCode":"SV","accountNoInt":"3367905360","bookingDateFrom":"19900721","bookingDateTo":"19901018","fetchPcatDetails":true,"minNumberToReturn":9999,"repositionKey":""}
 
 
-RESPONSE 54
+RESPONSE 52
 200
 Date: Fri, 12 Mar 2021 07:56:08 GMT
 Server: Apache
@@ -1283,7 +1234,7 @@ Strict-Transport-Security: max-age=157680000
 {"traceId":null,"statusCode":200,"responseCode":200,"responseMessage":null,"eupToken":null,"totalPages":null,"totalTransactions":0,"accountNo":"3367905360","request":{"searchResultPage":null,"searchTerm":null,"bookingDateTo":"20190919","languageCode":"SV","accountNoInt":"3367905360"},"lastSearchPage":null,"endOfList":true,"transactions":[],"repositionKey":null}
 
 
-REQUEST 55
+REQUEST 53
 POST https://apiebank3.danskebank.com/ebanking/ext/e4/transaction/list
 Referer: MobileBanking3 SE
 Accept: application/json
@@ -1292,7 +1243,7 @@ Content-Type: application/json
 {"languageCode":"SV","accountNoInt":"3367905360","bookingDateFrom":"19900422","bookingDateTo":"19900720","fetchPcatDetails":true,"minNumberToReturn":9999,"repositionKey":""}
 
 
-RESPONSE 55
+RESPONSE 53
 200
 Date: Fri, 12 Mar 2021 07:56:09 GMT
 Server: Apache
@@ -1307,7 +1258,7 @@ Strict-Transport-Security: max-age=157680000
 {"traceId":null,"statusCode":200,"responseCode":200,"responseMessage":null,"eupToken":null,"totalPages":null,"totalTransactions":0,"accountNo":"3367905360","request":{"searchResultPage":null,"searchTerm":null,"bookingDateTo":"20190621","languageCode":"SV","accountNoInt":"3367905360"},"lastSearchPage":null,"endOfList":true,"transactions":[],"repositionKey":null}
 
 
-REQUEST 56
+REQUEST 54
 POST https://apiebank3.danskebank.com/ebanking/ext/e4/transaction/list
 Referer: MobileBanking3 SE
 Accept: application/json
@@ -1316,7 +1267,7 @@ Content-Type: application/json
 {"languageCode":"SV","accountNoInt":"3367905360","bookingDateFrom":"19900122","bookingDateTo":"19900421","fetchPcatDetails":true,"minNumberToReturn":9999,"repositionKey":""}
 
 
-RESPONSE 56
+RESPONSE 54
 200
 Date: Fri, 12 Mar 2021 07:56:09 GMT
 Server: Apache
@@ -1331,7 +1282,7 @@ Strict-Transport-Security: max-age=157680000
 {"traceId":null,"statusCode":200,"responseCode":200,"responseMessage":null,"eupToken":null,"totalPages":null,"totalTransactions":0,"accountNo":"3367905360","request":{"searchResultPage":null,"searchTerm":null,"bookingDateTo":"20190323","languageCode":"SV","accountNoInt":"3367905360"},"lastSearchPage":null,"endOfList":true,"transactions":[],"repositionKey":null}
 
 
-REQUEST 57
+REQUEST 55
 POST https://apiebank3.danskebank.com/ebanking/ext/e4/transaction/list
 Referer: MobileBanking3 SE
 Accept: application/json
@@ -1340,7 +1291,7 @@ Content-Type: application/json
 {"languageCode":"SV","accountNoInt":"3367905360","bookingDateFrom":"19891024","bookingDateTo":"19900121","fetchPcatDetails":true,"minNumberToReturn":9999,"repositionKey":""}
 
 
-RESPONSE 57
+RESPONSE 55
 200
 Date: Fri, 12 Mar 2021 07:56:10 GMT
 Server: Apache
@@ -1356,7 +1307,7 @@ Strict-Transport-Security: max-age=157680000
 
 
 
-REQUEST 58
+REQUEST 56
 POST https://apiebank3.danskebank.com/ebanking/ext/e4/transaction/future
 Referer: MobileBanking3 SE
 Accept: application/json
@@ -1365,7 +1316,7 @@ Content-Type: application/json
 {"languageCode":"SV","accountNoInt":"3367905344"}
 
 
-RESPONSE 58
+RESPONSE 56
 200
 Date: Fri, 12 Mar 2021 07:56:10 GMT
 Server: Apache
@@ -1379,7 +1330,7 @@ Strict-Transport-Security: max-age=157680000
 
 {"traceId":null,"statusCode":200,"responseCode":200,"responseMessage":null,"eupToken":null,"accountNoInt":"3367905344","lastUpdated":null,"transactions":[],"repositionKey":null,"numberFuture":0}
 
-REQUEST 59
+REQUEST 57
 POST https://apiebank3.danskebank.com/ebanking/ext/e4/transaction/list
 Referer: MobileBanking3 SE
 Accept: application/json
@@ -1388,7 +1339,7 @@ Content-Type: application/json
 {"languageCode":"SV","accountNoInt":"3367905344","bookingDateFrom":"19920112","bookingDateTo":"19920410","fetchPcatDetails":true,"minNumberToReturn":9999,"repositionKey":""}
 
 
-RESPONSE 59
+RESPONSE 57
 200
 Date: Fri, 12 Mar 2021 07:56:11 GMT
 Server: Apache
@@ -1403,7 +1354,7 @@ Strict-Transport-Security: max-age=157680000
 {"traceId":null,"statusCode":200,"responseCode":200,"responseMessage":null,"eupToken":null,"totalPages":null,"totalTransactions":2,"accountNo":"3367905344","request":{"searchResultPage":null,"searchTerm":null,"bookingDateTo":"19920410","languageCode":"SV","accountNoInt":"3367905344"},"lastSearchPage":null,"endOfList":true,"transactions":[{"subPaymentType":"185","typeOfPayment":"BO","hasMoreDetails":true,"transactionKey":"<pa>BO<pb>185<pc>013367905344SEK20210311  2021-03-11-15.22.58.515501 0              ASE                           185<pe>20210311<pd><pf>3367905344<pg>2021-03-11-15.22.58.515501","pcatIdSub":"","pcatId":"00001","reconciled":false,"showReconciled":true,"balanceDecimals":2,"balance":0.97,"showBalance":true,"status":null,"currency":"SEK","amountDecimals":2,"amount":-0.03,"advice":"0","text":"Till: 22222222222","bookingDate":"20210311"},{"subPaymentType":"380","typeOfPayment":"BC","hasMoreDetails":true,"transactionKey":"<pa>BC<pb>380<pc>013367905344SEK20210311  2021-03-11-15.19.22.067148 0              ASE                           380<pe>20210311<pd><pf>3367905344<pg>2021-03-11-15.19.22.067148","pcatIdSub":"","pcatId":"01001","reconciled":false,"showReconciled":true,"balanceDecimals":2,"balance":1,"showBalance":true,"status":null,"currency":"SEK","amountDecimals":2,"amount":1,"advice":"0","text":"2489-09-33557","bookingDate":"20210311"}],"repositionKey":null}
 
 
-REQUEST 60
+REQUEST 58
 POST https://apiebank3.danskebank.com/ebanking/ext/e4/transaction/list
 Referer: MobileBanking3 SE
 Accept: application/json
@@ -1412,7 +1363,7 @@ Content-Type: application/json
 {"languageCode":"SV","accountNoInt":"3367905344","bookingDateFrom":"19911014","bookingDateTo":"19920111","fetchPcatDetails":true,"minNumberToReturn":9999,"repositionKey":""}
 
 
-RESPONSE 60
+RESPONSE 58
 200
 Date: Fri, 12 Mar 2021 07:56:11 GMT
 Server: Apache
@@ -1427,7 +1378,7 @@ Strict-Transport-Security: max-age=157680000
 {"traceId":null,"statusCode":200,"responseCode":200,"responseMessage":null,"eupToken":null,"totalPages":null,"totalTransactions":0,"accountNo":"3367905344","request":{"searchResultPage":null,"searchTerm":null,"bookingDateTo":"20201212","languageCode":"SV","accountNoInt":"3367905344"},"lastSearchPage":null,"endOfList":true,"transactions":[],"repositionKey":null}
 
 
-REQUEST 61
+REQUEST 59
 POST https://apiebank3.danskebank.com/ebanking/ext/e4/transaction/list
 Referer: MobileBanking3 SE
 Accept: application/json
@@ -1436,7 +1387,7 @@ Content-Type: application/json
 {"languageCode":"SV","accountNoInt":"3367905344","bookingDateFrom":"19910716","bookingDateTo":"19911013","fetchPcatDetails":true,"minNumberToReturn":9999,"repositionKey":""}
 
 
-RESPONSE 61
+RESPONSE 59
 200
 Date: Fri, 12 Mar 2021 07:56:12 GMT
 Server: Apache
@@ -1451,7 +1402,7 @@ Strict-Transport-Security: max-age=157680000
 {"traceId":null,"statusCode":200,"responseCode":200,"responseMessage":null,"eupToken":null,"totalPages":null,"totalTransactions":0,"accountNo":"3367905344","request":{"searchResultPage":null,"searchTerm":null,"bookingDateTo":"20200913","languageCode":"SV","accountNoInt":"3367905344"},"lastSearchPage":null,"endOfList":true,"transactions":[],"repositionKey":null}
 
 
-REQUEST 62
+REQUEST 60
 POST https://apiebank3.danskebank.com/ebanking/ext/e4/transaction/list
 Referer: MobileBanking3 SE
 Accept: application/json
@@ -1460,7 +1411,7 @@ Content-Type: application/json
 {"languageCode":"SV","accountNoInt":"3367905344","bookingDateFrom":"19910417","bookingDateTo":"19910715","fetchPcatDetails":true,"minNumberToReturn":9999,"repositionKey":""}
 
 
-RESPONSE 62
+RESPONSE 60
 200
 Date: Fri, 12 Mar 2021 07:56:12 GMT
 Server: Apache
@@ -1475,7 +1426,7 @@ Strict-Transport-Security: max-age=157680000
 {"traceId":null,"statusCode":200,"responseCode":200,"responseMessage":null,"eupToken":null,"totalPages":null,"totalTransactions":0,"accountNo":"3367905344","request":{"searchResultPage":null,"searchTerm":null,"bookingDateTo":"20200615","languageCode":"SV","accountNoInt":"3367905344"},"lastSearchPage":null,"endOfList":true,"transactions":[],"repositionKey":null}
 
 
-REQUEST 63
+REQUEST 61
 POST https://apiebank3.danskebank.com/ebanking/ext/e4/transaction/list
 Referer: MobileBanking3 SE
 Accept: application/json
@@ -1484,7 +1435,7 @@ Content-Type: application/json
 {"languageCode":"SV","accountNoInt":"3367905344","bookingDateFrom":"19910117","bookingDateTo":"19910416","fetchPcatDetails":true,"minNumberToReturn":9999,"repositionKey":""}
 
 
-RESPONSE 63
+RESPONSE 61
 200
 Date: Fri, 12 Mar 2021 07:56:13 GMT
 Server: Apache
@@ -1499,7 +1450,7 @@ Strict-Transport-Security: max-age=157680000
 {"traceId":null,"statusCode":200,"responseCode":200,"responseMessage":null,"eupToken":null,"totalPages":null,"totalTransactions":0,"accountNo":"3367905344","request":{"searchResultPage":null,"searchTerm":null,"bookingDateTo":"20200317","languageCode":"SV","accountNoInt":"3367905344"},"lastSearchPage":null,"endOfList":true,"transactions":[],"repositionKey":null}
 
 
-REQUEST 64
+REQUEST 62
 POST https://apiebank3.danskebank.com/ebanking/ext/e4/transaction/list
 Referer: MobileBanking3 SE
 Accept: application/json
@@ -1508,7 +1459,7 @@ Content-Type: application/json
 {"languageCode":"SV","accountNoInt":"3367905344","bookingDateFrom":"19901019","bookingDateTo":"19910116","fetchPcatDetails":true,"minNumberToReturn":9999,"repositionKey":""}
 
 
-RESPONSE 64
+RESPONSE 62
 200
 Date: Fri, 12 Mar 2021 07:56:13 GMT
 Server: Apache
@@ -1523,7 +1474,7 @@ Strict-Transport-Security: max-age=157680000
 {"traceId":null,"statusCode":200,"responseCode":200,"responseMessage":null,"eupToken":null,"totalPages":null,"totalTransactions":0,"accountNo":"3367905344","request":{"searchResultPage":null,"searchTerm":null,"bookingDateTo":"20191218","languageCode":"SV","accountNoInt":"3367905344"},"lastSearchPage":null,"endOfList":true,"transactions":[],"repositionKey":null}
 
 
-REQUEST 65
+REQUEST 63
 POST https://apiebank3.danskebank.com/ebanking/ext/e4/transaction/list
 Referer: MobileBanking3 SE
 Accept: application/json
@@ -1532,7 +1483,7 @@ Content-Type: application/json
 {"languageCode":"SV","accountNoInt":"3367905344","bookingDateFrom":"19900721","bookingDateTo":"19901018","fetchPcatDetails":true,"minNumberToReturn":9999,"repositionKey":""}
 
 
-RESPONSE 65
+RESPONSE 63
 200
 Date: Fri, 12 Mar 2021 07:56:13 GMT
 Server: Apache
@@ -1547,7 +1498,7 @@ Strict-Transport-Security: max-age=157680000
 {"traceId":null,"statusCode":200,"responseCode":200,"responseMessage":null,"eupToken":null,"totalPages":null,"totalTransactions":0,"accountNo":"3367905344","request":{"searchResultPage":null,"searchTerm":null,"bookingDateTo":"20190919","languageCode":"SV","accountNoInt":"3367905344"},"lastSearchPage":null,"endOfList":true,"transactions":[],"repositionKey":null}
 
 
-REQUEST 66
+REQUEST 64
 POST https://apiebank3.danskebank.com/ebanking/ext/e4/transaction/list
 Referer: MobileBanking3 SE
 Accept: application/json
@@ -1556,7 +1507,7 @@ Content-Type: application/json
 {"languageCode":"SV","accountNoInt":"3367905344","bookingDateFrom":"19900422","bookingDateTo":"19900720","fetchPcatDetails":true,"minNumberToReturn":9999,"repositionKey":""}
 
 
-RESPONSE 66
+RESPONSE 64
 200
 Date: Fri, 12 Mar 2021 07:56:14 GMT
 Server: Apache
@@ -1571,7 +1522,7 @@ Strict-Transport-Security: max-age=157680000
 {"traceId":null,"statusCode":200,"responseCode":200,"responseMessage":null,"eupToken":null,"totalPages":null,"totalTransactions":0,"accountNo":"3367905344","request":{"searchResultPage":null,"searchTerm":null,"bookingDateTo":"20190621","languageCode":"SV","accountNoInt":"3367905344"},"lastSearchPage":null,"endOfList":true,"transactions":[],"repositionKey":null}
 
 
-REQUEST 67
+REQUEST 65
 POST https://apiebank3.danskebank.com/ebanking/ext/e4/transaction/list
 Referer: MobileBanking3 SE
 Accept: application/json
@@ -1580,7 +1531,7 @@ Content-Type: application/json
 {"languageCode":"SV","accountNoInt":"3367905344","bookingDateFrom":"19900122","bookingDateTo":"19900421","fetchPcatDetails":true,"minNumberToReturn":9999,"repositionKey":""}
 
 
-RESPONSE 67
+RESPONSE 65
 200
 Date: Fri, 12 Mar 2021 07:56:14 GMT
 Server: Apache
@@ -1595,7 +1546,7 @@ Strict-Transport-Security: max-age=157680000
 {"traceId":null,"statusCode":200,"responseCode":200,"responseMessage":null,"eupToken":null,"totalPages":null,"totalTransactions":0,"accountNo":"3367905344","request":{"searchResultPage":null,"searchTerm":null,"bookingDateTo":"20190323","languageCode":"SV","accountNoInt":"3367905344"},"lastSearchPage":null,"endOfList":true,"transactions":[],"repositionKey":null}
 
 
-REQUEST 68
+REQUEST 66
 POST https://apiebank3.danskebank.com/ebanking/ext/e4/transaction/list
 Referer: MobileBanking3 SE
 Accept: application/json
@@ -1604,7 +1555,7 @@ Content-Type: application/json
 {"languageCode":"SV","accountNoInt":"3367905344","bookingDateFrom":"19891024","bookingDateTo":"19900121","fetchPcatDetails":true,"minNumberToReturn":9999,"repositionKey":""}
 
 
-RESPONSE 68
+RESPONSE 66
 200
 Date: Fri, 12 Mar 2021 07:56:15 GMT
 Server: Apache
@@ -1617,3 +1568,267 @@ Connection: close
 Strict-Transport-Security: max-age=157680000
 
 {"traceId":null,"statusCode":200,"responseCode":200,"responseMessage":null,"eupToken":null,"totalPages":null,"totalTransactions":0,"accountNo":"3367905344","request":{"searchResultPage":null,"searchTerm":null,"bookingDateTo":"20181223","languageCode":"SV","accountNoInt":"3367905344"},"lastSearchPage":null,"endOfList":true,"transactions":[],"repositionKey":null}
+
+
+REQUEST 67
+POST https://apiebank3.danskebank.com/ebanking/ext/e4/transaction/future
+Referer: MobileBanking3 SE
+Accept: application/json
+Content-Type: application/json
+
+{"languageCode":"SV","accountNoInt":"1234512345"}
+
+
+RESPONSE 67
+200
+Date: Fri, 12 Mar 2021 07:56:16 GMT
+Server: Apache
+Cache-control: no-store
+Pragma: no-cache
+Expires: 0
+Vary: Origin
+Content-Type: application/json; charset=utf-8
+Connection: close
+Strict-Transport-Security: max-age=157680000
+
+{"traceId":null,"statusCode":200,"responseCode":200,"responseMessage":null,"eupToken":null,"accountNoInt":"1234512345","lastUpdated":null,"transactions":[],"repositionKey":null,"numberFuture":0}
+
+
+REQUEST 68
+POST https://apiebank3.danskebank.com/ebanking/ext/e4/transaction/list
+Referer: MobileBanking3 SE
+Accept: application/json
+Content-Type: application/json
+
+{"languageCode":"SV","accountNoInt":"1234512345","bookingDateFrom":"19920112","bookingDateTo":"19920410","fetchPcatDetails":true,"minNumberToReturn":9999,"repositionKey":""}
+
+
+RESPONSE 68
+200
+Date: Fri, 12 Mar 2021 07:56:11 GMT
+Server: Apache
+Cache-control: no-store
+Pragma: no-cache
+Expires: 0
+Vary: Origin
+Content-Type: application/json; charset=utf-8
+Connection: close
+Strict-Transport-Security: max-age=157680000
+
+{"traceId":null,"statusCode":200,"responseCode":200,"responseMessage":null,"eupToken":null,"totalPages":null,"totalTransactions":2,"accountNo":"1234512345","request":{"searchResultPage":null,"searchTerm":null,"bookingDateTo":"19920410","languageCode":"SV","accountNoInt":"1234512345"},"lastSearchPage":null,"endOfList":true,"transactions":[{"subPaymentType":"185","typeOfPayment":"BO","hasMoreDetails":true,"transactionKey":"<pa>BO<pb>111<pc>011345345345SEK20210311  2021-03-11-15.20.58.515501 0              ASE                           185<pe>20210311<pd><pf>1234512345<pg>2021-03-11-15.20.58.515501","pcatIdSub":"","pcatId":"23232","reconciled":false,"showReconciled":true,"balanceDecimals":2,"balance":-40.46,"showBalance":true,"status":null,"currency":"SEK","amountDecimals":2,"amount":-13.09,"advice":"0","text":"ram pam pam","bookingDate":"20210311"},{"subPaymentType":"180","typeOfPayment":"BO","hasMoreDetails":true,"transactionKey":"<pa>BC<pb>380<pc>011234512345SEK20210311  2021-03-11-15.19.22.067148 0              ASE                           380<pe>20210311<pd><pf>1234512345<pg>2021-03-11-15.19.22.067148","pcatIdSub":"","pcatId":"12345","reconciled":false,"showReconciled":true,"balanceDecimals":2,"balance":-27.37,"showBalance":true,"status":null,"currency":"SEK","amountDecimals":2,"amount":-27.37,"advice":"0","text":"money money","bookingDate":"20210311"}],"repositionKey":null}
+
+
+REQUEST 69
+POST https://apiebank3.danskebank.com/ebanking/ext/e4/transaction/list
+Referer: MobileBanking3 SE
+Accept: application/json
+Content-Type: application/json
+
+{"languageCode":"SV","accountNoInt":"1234512345","bookingDateFrom":"19911014","bookingDateTo":"19920111","fetchPcatDetails":true,"minNumberToReturn":9999,"repositionKey":""}
+
+
+RESPONSE 69
+200
+Date: Fri, 12 Mar 2021 07:56:11 GMT
+Server: Apache
+Cache-control: no-store
+Pragma: no-cache
+Expires: 0
+Vary: Origin
+Content-Type: application/json; charset=utf-8
+Connection: close
+Strict-Transport-Security: max-age=157680000
+
+{"traceId":null,"statusCode":200,"responseCode":200,"responseMessage":null,"eupToken":null,"totalPages":null,"totalTransactions":0,"accountNo":"1234512345","request":{"searchResultPage":null,"searchTerm":null,"bookingDateTo":"20201212","languageCode":"SV","accountNoInt":"1234512345"},"lastSearchPage":null,"endOfList":true,"transactions":[],"repositionKey":null}
+
+
+REQUEST 70
+POST https://apiebank3.danskebank.com/ebanking/ext/e4/transaction/list
+Referer: MobileBanking3 SE
+Accept: application/json
+Content-Type: application/json
+
+{"languageCode":"SV","accountNoInt":"1234512345","bookingDateFrom":"19910716","bookingDateTo":"19911013","fetchPcatDetails":true,"minNumberToReturn":9999,"repositionKey":""}
+
+
+RESPONSE 70
+200
+Date: Fri, 12 Mar 2021 07:56:12 GMT
+Server: Apache
+Cache-control: no-store
+Pragma: no-cache
+Expires: 0
+Vary: Origin
+Content-Type: application/json; charset=utf-8
+Connection: close
+Strict-Transport-Security: max-age=157680000
+
+{"traceId":null,"statusCode":200,"responseCode":200,"responseMessage":null,"eupToken":null,"totalPages":null,"totalTransactions":0,"accountNo":"1234512345","request":{"searchResultPage":null,"searchTerm":null,"bookingDateTo":"20200913","languageCode":"SV","accountNoInt":"1234512345"},"lastSearchPage":null,"endOfList":true,"transactions":[],"repositionKey":null}
+
+
+REQUEST 71
+POST https://apiebank3.danskebank.com/ebanking/ext/e4/transaction/list
+Referer: MobileBanking3 SE
+Accept: application/json
+Content-Type: application/json
+
+{"languageCode":"SV","accountNoInt":"1234512345","bookingDateFrom":"19910417","bookingDateTo":"19910715","fetchPcatDetails":true,"minNumberToReturn":9999,"repositionKey":""}
+
+
+RESPONSE 71
+200
+Date: Fri, 12 Mar 2021 07:56:12 GMT
+Server: Apache
+Cache-control: no-store
+Pragma: no-cache
+Expires: 0
+Vary: Origin
+Content-Type: application/json; charset=utf-8
+Connection: close
+Strict-Transport-Security: max-age=157680000
+
+{"traceId":null,"statusCode":200,"responseCode":200,"responseMessage":null,"eupToken":null,"totalPages":null,"totalTransactions":0,"accountNo":"1234512345","request":{"searchResultPage":null,"searchTerm":null,"bookingDateTo":"20200615","languageCode":"SV","accountNoInt":"1234512345"},"lastSearchPage":null,"endOfList":true,"transactions":[],"repositionKey":null}
+
+
+REQUEST 72
+POST https://apiebank3.danskebank.com/ebanking/ext/e4/transaction/list
+Referer: MobileBanking3 SE
+Accept: application/json
+Content-Type: application/json
+
+{"languageCode":"SV","accountNoInt":"1234512345","bookingDateFrom":"19910117","bookingDateTo":"19910416","fetchPcatDetails":true,"minNumberToReturn":9999,"repositionKey":""}
+
+
+RESPONSE 72
+200
+Date: Fri, 12 Mar 2021 07:56:13 GMT
+Server: Apache
+Cache-control: no-store
+Pragma: no-cache
+Expires: 0
+Vary: Origin
+Content-Type: application/json; charset=utf-8
+Connection: close
+Strict-Transport-Security: max-age=157680000
+
+{"traceId":null,"statusCode":200,"responseCode":200,"responseMessage":null,"eupToken":null,"totalPages":null,"totalTransactions":0,"accountNo":"1234512345","request":{"searchResultPage":null,"searchTerm":null,"bookingDateTo":"20200317","languageCode":"SV","accountNoInt":"1234512345"},"lastSearchPage":null,"endOfList":true,"transactions":[],"repositionKey":null}
+
+
+REQUEST 73
+POST https://apiebank3.danskebank.com/ebanking/ext/e4/transaction/list
+Referer: MobileBanking3 SE
+Accept: application/json
+Content-Type: application/json
+
+{"languageCode":"SV","accountNoInt":"1234512345","bookingDateFrom":"19901019","bookingDateTo":"19910116","fetchPcatDetails":true,"minNumberToReturn":9999,"repositionKey":""}
+
+
+RESPONSE 73
+200
+Date: Fri, 12 Mar 2021 07:56:13 GMT
+Server: Apache
+Cache-control: no-store
+Pragma: no-cache
+Expires: 0
+Vary: Origin
+Content-Type: application/json; charset=utf-8
+Connection: close
+Strict-Transport-Security: max-age=157680000
+
+{"traceId":null,"statusCode":200,"responseCode":200,"responseMessage":null,"eupToken":null,"totalPages":null,"totalTransactions":0,"accountNo":"1234512345","request":{"searchResultPage":null,"searchTerm":null,"bookingDateTo":"20191218","languageCode":"SV","accountNoInt":"1234512345"},"lastSearchPage":null,"endOfList":true,"transactions":[],"repositionKey":null}
+
+
+REQUEST 74
+POST https://apiebank3.danskebank.com/ebanking/ext/e4/transaction/list
+Referer: MobileBanking3 SE
+Accept: application/json
+Content-Type: application/json
+
+{"languageCode":"SV","accountNoInt":"1234512345","bookingDateFrom":"19900721","bookingDateTo":"19901018","fetchPcatDetails":true,"minNumberToReturn":9999,"repositionKey":""}
+
+
+RESPONSE 74
+200
+Date: Fri, 12 Mar 2021 07:56:13 GMT
+Server: Apache
+Cache-control: no-store
+Pragma: no-cache
+Expires: 0
+Vary: Origin
+Content-Type: application/json; charset=utf-8
+Connection: close
+Strict-Transport-Security: max-age=157680000
+
+{"traceId":null,"statusCode":200,"responseCode":200,"responseMessage":null,"eupToken":null,"totalPages":null,"totalTransactions":0,"accountNo":"1234512345","request":{"searchResultPage":null,"searchTerm":null,"bookingDateTo":"20190919","languageCode":"SV","accountNoInt":"1234512345"},"lastSearchPage":null,"endOfList":true,"transactions":[],"repositionKey":null}
+
+
+REQUEST 75
+POST https://apiebank3.danskebank.com/ebanking/ext/e4/transaction/list
+Referer: MobileBanking3 SE
+Accept: application/json
+Content-Type: application/json
+
+{"languageCode":"SV","accountNoInt":"1234512345","bookingDateFrom":"19900422","bookingDateTo":"19900720","fetchPcatDetails":true,"minNumberToReturn":9999,"repositionKey":""}
+
+
+RESPONSE 75
+200
+Date: Fri, 12 Mar 2021 07:56:14 GMT
+Server: Apache
+Cache-control: no-store
+Pragma: no-cache
+Expires: 0
+Vary: Origin
+Content-Type: application/json; charset=utf-8
+Connection: close
+Strict-Transport-Security: max-age=157680000
+
+{"traceId":null,"statusCode":200,"responseCode":200,"responseMessage":null,"eupToken":null,"totalPages":null,"totalTransactions":0,"accountNo":"1234512345","request":{"searchResultPage":null,"searchTerm":null,"bookingDateTo":"20190621","languageCode":"SV","accountNoInt":"1234512345"},"lastSearchPage":null,"endOfList":true,"transactions":[],"repositionKey":null}
+
+
+REQUEST 76
+POST https://apiebank3.danskebank.com/ebanking/ext/e4/transaction/list
+Referer: MobileBanking3 SE
+Accept: application/json
+Content-Type: application/json
+
+{"languageCode":"SV","accountNoInt":"1234512345","bookingDateFrom":"19900122","bookingDateTo":"19900421","fetchPcatDetails":true,"minNumberToReturn":9999,"repositionKey":""}
+
+
+RESPONSE 76
+200
+Date: Fri, 12 Mar 2021 07:56:14 GMT
+Server: Apache
+Cache-control: no-store
+Pragma: no-cache
+Expires: 0
+Vary: Origin
+Content-Type: application/json; charset=utf-8
+Connection: close
+Strict-Transport-Security: max-age=157680000
+
+{"traceId":null,"statusCode":200,"responseCode":200,"responseMessage":null,"eupToken":null,"totalPages":null,"totalTransactions":0,"accountNo":"1234512345","request":{"searchResultPage":null,"searchTerm":null,"bookingDateTo":"20190323","languageCode":"SV","accountNoInt":"1234512345"},"lastSearchPage":null,"endOfList":true,"transactions":[],"repositionKey":null}
+
+
+REQUEST 77
+POST https://apiebank3.danskebank.com/ebanking/ext/e4/transaction/list
+Referer: MobileBanking3 SE
+Accept: application/json
+Content-Type: application/json
+
+{"languageCode":"SV","accountNoInt":"1234512345","bookingDateFrom":"19891024","bookingDateTo":"19900121","fetchPcatDetails":true,"minNumberToReturn":9999,"repositionKey":""}
+
+
+RESPONSE 77
+200
+Date: Fri, 12 Mar 2021 07:56:15 GMT
+Server: Apache
+Cache-control: no-store
+Pragma: no-cache
+Expires: 0
+Vary: Origin
+Content-Type: application/json; charset=utf-8
+Connection: close
+Strict-Transport-Security: max-age=157680000
+
+{"traceId":null,"statusCode":200,"responseCode":200,"responseMessage":null,"eupToken":null,"totalPages":null,"totalTransactions":0,"accountNo":"1234512345","request":{"searchResultPage":null,"searchTerm":null,"bookingDateTo":"20181223","languageCode":"SV","accountNoInt":"1234512345"},"lastSearchPage":null,"endOfList":true,"transactions":[],"repositionKey":null}
