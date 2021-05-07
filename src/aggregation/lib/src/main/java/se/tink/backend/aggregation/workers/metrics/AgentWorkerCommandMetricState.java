@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Provider;
+import se.tink.backend.aggregation.cluster.identification.ClientInfo;
 import se.tink.backend.aggregation.workers.commands.metrics.MetricsCommand;
 import se.tink.backend.aggregation.workers.operation.type.AgentWorkerOperationMetricType;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsRequestType;
@@ -25,6 +26,7 @@ public class AgentWorkerCommandMetricState {
     private MetricId.MetricLabels defaultLabels;
     private MetricsCommand command;
     private CredentialsRequestType requestType;
+    private ClientInfo clientInfo;
 
     private final List<MetricAction> actions = Lists.newArrayList();
     private MetricAction baseAction;
@@ -33,11 +35,13 @@ public class AgentWorkerCommandMetricState {
             Provider provider,
             Credentials credentials,
             MetricRegistry metricRegistry,
-            CredentialsRequestType requestType) {
+            CredentialsRequestType requestType,
+            ClientInfo clientInfo) {
         this.provider = provider;
         this.credentials = credentials;
         this.metricRegistry = metricRegistry;
         this.requestType = requestType;
+        this.clientInfo = clientInfo;
         this.defaultLabels = MetricId.MetricLabels.createEmpty();
     }
 
@@ -166,6 +170,7 @@ public class AgentWorkerCommandMetricState {
                         .label("market", provider.getMarket())
                         .label("className", provider.getClassName())
                         .label("credential", credentials.getMetricTypeName())
-                        .label("request_type", requestType.name()));
+                        .label("request_type", requestType.name())
+                        .label("client_cluster_id", clientInfo.getClusterId()));
     }
 }

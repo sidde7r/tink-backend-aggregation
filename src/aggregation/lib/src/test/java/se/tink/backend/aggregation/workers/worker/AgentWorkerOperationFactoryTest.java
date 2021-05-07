@@ -174,7 +174,7 @@ public final class AgentWorkerOperationFactoryTest {
         factorySpy.createOperationExecuteTransfer(request, clientInfo);
 
         // Assert
-        verify(factorySpy).createRefreshAccountsCommands(any(), any(), any());
+        verify(factorySpy).createRefreshAccountsCommands(any(), any(), any(), any());
     }
 
     @Test
@@ -192,7 +192,7 @@ public final class AgentWorkerOperationFactoryTest {
         factorySpy.createOperationExecuteTransfer(request, clientInfo);
 
         // Assert
-        verify(factorySpy, times(0)).createRefreshAccountsCommands(any(), any(), any());
+        verify(factorySpy, times(0)).createRefreshAccountsCommands(any(), any(), any(), any());
     }
 
     @Test

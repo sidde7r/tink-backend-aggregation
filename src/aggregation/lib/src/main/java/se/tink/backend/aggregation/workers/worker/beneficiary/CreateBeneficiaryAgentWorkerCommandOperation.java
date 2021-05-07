@@ -155,26 +155,34 @@ public class CreateBeneficiaryAgentWorkerCommandOperation {
                 new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
 
         addClearSensitivePayloadOnForceAuthenticateCommandAndLoginAgentWorkerCommand(
-                commands, context);
+                commands, context, clientInfo);
 
         commands.add(
                 new SetCredentialsStatusAgentWorkerCommand(context, CredentialsStatus.UPDATING));
         commands.add(
                 new CreateBeneficiaryAgentWorkerCommand(
-                        context, request, createCommandMetricState(request, metricRegistry)));
+                        context,
+                        request,
+                        createCommandMetricState(request, metricRegistry, clientInfo)));
         return new AgentWorkerOperation(
                 agentWorkerOperationState, metricsName, request, commands, context);
     }
 
     private static AgentWorkerCommandMetricState createCommandMetricState(
-            CredentialsRequest request, MetricRegistry metricRegistry) {
+            CredentialsRequest request, MetricRegistry metricRegistry, ClientInfo clientInfo) {
         return new AgentWorkerCommandMetricState(
-                request.getProvider(), request.getCredentials(), metricRegistry, request.getType());
+                request.getProvider(),
+                request.getCredentials(),
+                metricRegistry,
+                request.getType(),
+                clientInfo);
     }
 
     private static void
             addClearSensitivePayloadOnForceAuthenticateCommandAndLoginAgentWorkerCommand(
-                    List<AgentWorkerCommand> commands, AgentWorkerCommandContext context) {
+                    List<AgentWorkerCommand> commands,
+                    AgentWorkerCommandContext context,
+                    ClientInfo clientInfo) {
 
         /* LoginAgentWorkerCommand needs to always be used together with ClearSensitivePayloadOnForceAuthenticateCommand */
 
@@ -183,7 +191,7 @@ public class CreateBeneficiaryAgentWorkerCommandOperation {
                 new LoginAgentWorkerCommand(
                         context,
                         loginAgentWorkerCommandState,
-                        createCommandMetricState(context.getRequest(), metricRegistry),
+                        createCommandMetricState(context.getRequest(), metricRegistry, clientInfo),
                         metricRegistry,
                         loginAgentEventProducer));
     }
