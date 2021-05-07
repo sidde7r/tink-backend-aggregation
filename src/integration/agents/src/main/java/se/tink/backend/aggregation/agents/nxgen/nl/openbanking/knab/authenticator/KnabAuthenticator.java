@@ -11,7 +11,6 @@ import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.KnabConstant
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.KnabConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.KnabConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.KnabConstants.StorageKeys;
-import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.configuration.KnabConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.constants.ThirdPartyAppConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
@@ -50,11 +49,7 @@ public class KnabAuthenticator implements OAuth2Authenticator {
 
     @Override
     public URL buildAuthorizeUrl(final String state) {
-        String consentId = getScopeConsent().getConsentId();
-        persistentStorage.put(StorageKeys.CONSENT_ID, consentId);
-
-        return apiClient.buildAuthorizeUrl(
-                state, String.format(QueryValues.CONSENTED_SCOPE, consentId));
+        return apiClient.buildAuthorizeUrl(state, QueryValues.INITIAL_SCOPE);
     }
 
     @Override
@@ -67,20 +62,30 @@ public class KnabAuthenticator implements OAuth2Authenticator {
             throws SessionException, BankServiceException {
         final OAuth2Token accessToken = apiClient.refreshToken(refreshToken);
         persistentStorage.put(StorageKeys.OAUTH_TOKEN, accessToken);
-
         return accessToken;
     }
 
     @Override
     public void useAccessToken(final OAuth2Token accessToken) {
-        persistentStorage.put(StorageKeys.OAUTH_TOKEN, accessToken);
+        // No need to create a new consent if the current one is still valid
+        if (!apiClient.isConsentValid(persistentStorage.get(StorageKeys.CONSENT_ID), accessToken)) {
+            handleConsentFlow(accessToken);
+        } else {
+            persistentStorage.put(StorageKeys.OAUTH_TOKEN, accessToken);
+        }
     }
 
-    private ConsentResponse getScopeConsent() {
+    private void handleConsentFlow(final OAuth2Token accessToken) {
+
+        persistentStorage.put(
+                StorageKeys.CONSENT_ID, apiClient.getConsent(accessToken).getConsentId());
 
         URL authorizeUrl =
                 apiClient.buildAuthorizeUrl(
-                        strongAuthenticationState.getState(), QueryValues.INITIAL_SCOPE);
+                        strongAuthenticationState.getState(),
+                        String.format(
+                                QueryValues.CONSENTED_SCOPE,
+                                persistentStorage.get(StorageKeys.CONSENT_ID)));
 
         supplementalInformationHelper.openThirdPartyApp(
                 ThirdPartyAppAuthenticationPayload.of(authorizeUrl));
@@ -98,6 +103,6 @@ public class KnabAuthenticator implements OAuth2Authenticator {
                 apiClient.exchangeAuthorizationCode(
                         codeValue, strongAuthenticationState.getState());
 
-        return apiClient.getConsent(oAuth2Token);
+        persistentStorage.put(StorageKeys.OAUTH_TOKEN, oAuth2Token);
     }
 }
