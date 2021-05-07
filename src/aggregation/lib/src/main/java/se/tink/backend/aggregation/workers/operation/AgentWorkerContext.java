@@ -566,11 +566,11 @@ public class AgentWorkerContext extends AgentContext implements Managed {
 
         String cleaned = numberSeries.replace("-", "").replace(" ", "");
 
-        // 12-19 digits, and luhn validation comes from:
+        // 15-16 digits, and luhn validation comes from:
         // https://en.wikipedia.org/wiki/Payment_card_number
         if (StringUtils.isNumeric(cleaned)
-                && cleaned.length() >= 12
-                && cleaned.length() <= 19
+                && cleaned.length() >= 15
+                && cleaned.length() <= 16
                 && LuhnCheck.isLastCharCorrectLuhnMod10Check(cleaned)) {
 
             String agent = request.getProvider().getClassName();
