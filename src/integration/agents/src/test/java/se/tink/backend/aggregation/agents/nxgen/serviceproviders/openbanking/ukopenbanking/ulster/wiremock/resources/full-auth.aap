@@ -124,16 +124,7 @@ x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
 
 {
     "Data": {
-        "Permissions": [
-            "ReadAccountsDetail",
-            "ReadTransactionsCredits",
-            "ReadDirectDebits",
-            "ReadTransactionsDebits",
-            "ReadBeneficiariesDetail",
-            "ReadBalances",
-            "ReadStandingOrdersDetail",
-            "ReadTransactionsDetail"
-        ]
+        "Permissions": []
     },
     "Risk": {}
 }
@@ -147,16 +138,7 @@ x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
 {
     "Data": {
         "ConsentId": "DUMMY_CONSENT_ID",
-        "Permissions": [
-                    "ReadAccountsDetail",
-                    "ReadTransactionsCredits",
-                    "ReadDirectDebits",
-                    "ReadTransactionsDebits",
-                    "ReadBeneficiariesDetail",
-                    "ReadBalances",
-                    "ReadStandingOrdersDetail",
-                    "ReadTransactionsDetail"
-        ],
+        "Permissions": [],
         "CreationDateTime": "2021-02-18T14:40:42.485Z",
         "StatusUpdateDateTime": "2021-02-18T14:40:42.485Z",
         "Status": "AwaitingAuthorisation"

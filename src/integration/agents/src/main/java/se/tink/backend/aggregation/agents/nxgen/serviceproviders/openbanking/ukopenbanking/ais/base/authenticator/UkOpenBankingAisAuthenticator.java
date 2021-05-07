@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.authenticator;
 
+import java.util.Set;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticatorConstants;
@@ -12,16 +13,19 @@ public class UkOpenBankingAisAuthenticator implements OpenIdAuthenticator {
 
     private final UkOpenBankingApiClient apiClient;
     private final ClientInfo clientInfo;
+    private final Set<String> permissions;
 
-    public UkOpenBankingAisAuthenticator(UkOpenBankingApiClient apiClient) {
+    public UkOpenBankingAisAuthenticator(
+            UkOpenBankingApiClient apiClient, Set<String> permissions) {
         this.apiClient = apiClient;
         this.clientInfo = apiClient.getProviderConfiguration();
+        this.permissions = permissions;
     }
 
     @Override
     public URL decorateAuthorizeUrl(
             URL authorizeUrl, String state, String nonce, String callbackUri) {
-        String intentId = apiClient.createConsent();
+        String intentId = apiClient.createConsent(permissions);
 
         WellKnownResponse wellKnownConfiguration = apiClient.getWellKnownConfiguration();
 

@@ -72,7 +72,7 @@ public class MbnaV31Agent extends UkOpenBankingBaseAgent {
                 this.persistentStorage,
                 this.supplementalInformationHelper,
                 this.apiClient,
-                new UkOpenBankingAisAuthenticator(this.apiClient),
+                new UkOpenBankingAisAuthenticator(this.apiClient, aisConfig.getPermissions()),
                 this.credentials,
                 this.strongAuthenticationState,
                 this.request.getCallbackUri(),

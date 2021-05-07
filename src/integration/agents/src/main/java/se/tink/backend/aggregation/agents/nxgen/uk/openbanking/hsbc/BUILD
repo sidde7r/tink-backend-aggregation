@@ -19,5 +19,6 @@ java_library(
         "//third_party:com_google_inject_guice",
         "//third_party:org_apache_commons_commons_lang3",
         "//third_party:org_assertj_assertj_core",
+        "@aggregation//:com_google_guava_guava",
     ],
 )

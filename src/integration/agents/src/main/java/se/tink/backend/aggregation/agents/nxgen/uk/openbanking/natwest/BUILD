@@ -15,5 +15,6 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/module/annotation",
         "//src/libraries/mapper",
         "//third_party:com_google_inject_guice",
+        "@aggregation//:com_google_guava_guava",
     ],
 )

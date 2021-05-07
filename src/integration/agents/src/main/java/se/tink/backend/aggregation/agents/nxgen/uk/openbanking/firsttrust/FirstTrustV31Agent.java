@@ -8,6 +8,8 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.PisCapability.PIS_UK_FASTER_PAYMENT;
 
 import com.google.inject.Inject;
+import java.util.Collections;
+import java.util.Set;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentPisCapability;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModulesForDecoupledMode;
@@ -23,6 +25,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.UkOpenBankingAisConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.UkOpenBankingV31Ais;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.authenticator.UkOpenBankingAisAuthenticationController;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.authenticator.consent.ConsentPermissionsMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.authenticator.consent.ConsentStatusValidator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticationValidator;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.firsttrust.pis.config.FirstTrustPisConfig;
@@ -52,6 +55,8 @@ public final class FirstTrustV31Agent extends UkOpenBankingBaseAgent {
                         .build();
     }
 
+    private Set<String> permissions;
+
     @Inject
     public FirstTrustV31Agent(
             AgentComponentProvider componentProvider, UkOpenBankingFlowFacade flowFacade) {
@@ -64,6 +69,14 @@ public final class FirstTrustV31Agent extends UkOpenBankingBaseAgent {
                 createPisRequestFilterUsingPs256Base64Signature(
                         flowFacade.getJwtSinger(), componentProvider.getRandomValueGenerator()));
         this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
+
+        this.permissions = Collections.emptySet();
+
+        if (isFullAuthenticationRefresh()) {
+            this.permissions =
+                    new ConsentPermissionsMapper(aisConfig)
+                            .mapFrom(getItemsExpectedToBeRefreshed());
+        }
     }
 
     @Override
@@ -83,7 +96,7 @@ public final class FirstTrustV31Agent extends UkOpenBankingBaseAgent {
                 this.persistentStorage,
                 this.supplementalInformationHelper,
                 this.apiClient,
-                new UkOpenBankingAisAuthenticator(this.apiClient),
+                new UkOpenBankingAisAuthenticator(this.apiClient, permissions),
                 this.credentials,
                 this.strongAuthenticationState,
                 this.request.getCallbackUri(),

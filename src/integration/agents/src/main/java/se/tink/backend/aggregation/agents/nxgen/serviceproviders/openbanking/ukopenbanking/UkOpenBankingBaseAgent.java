@@ -389,11 +389,11 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
         return request.getUserAvailability().isUserAvailableForInteraction();
     }
 
-    private boolean isFullAuthenticationRefresh() {
+    protected boolean isFullAuthenticationRefresh() {
         return isItRefreshRequest() && isFullAuthentication();
     }
 
-    private Set<RefreshableItem> getItemsExpectedToBeRefreshed() {
+    protected Set<RefreshableItem> getItemsExpectedToBeRefreshed() {
         Set<RefreshableItem> itemsExpectedToBeRefreshed =
                 ((RefreshInformationRequest) request).getItemsToRefresh();
         log.info("Items expected to be refreshed: `{}`", itemsExpectedToBeRefreshed);
@@ -434,7 +434,7 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
     }
 
     protected OpenIdAuthenticator getAisAuthenticator() {
-        return new UkOpenBankingAisAuthenticator(this.apiClient);
+        return new UkOpenBankingAisAuthenticator(this.apiClient, aisConfig.getPermissions());
     }
 
     @Override
