@@ -19,7 +19,7 @@ spec:
             / sum(sum_over_time(tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"}[60m])) by (provider) >= 0.9
       for: 15m
       labels:
-        severity: urgent
+        severity: ping
         priority: P4
         who: integration-fluffy
       annotations:
@@ -93,7 +93,7 @@ spec:
             / sum(sum_over_time(tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"}[60m])) by (provider, action) >= 0.9
       for: 15m
       labels:
-        severity: urgent
+        severity: ping
         priority: P4
         who: integration-fluffy
       annotations:
@@ -168,7 +168,7 @@ spec:
                 and sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"}) > 3
       for: {{ .Values.p4WaitTimeBeforeFiringAlert }}
       labels:
-        severity: urgent
+        severity: ping
         priority: P4
         who: integration-fluffy
       annotations:
@@ -246,7 +246,7 @@ spec:
           and sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"}) > 3
       for: {{ .Values.p4WaitTimeBeforeFiringAlert }}
       labels:
-        severity: urgent
+        severity: ping
         priority: P4
         who: integration-fluffy
       annotations:
@@ -339,7 +339,7 @@ spec:
                / count(count_over_time(tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"}[50m])) by (provider) < 0.5
       for: 10m
       labels:
-        severity: urgent
+        severity: ping
         priority: P4
         who: integration-fluffy
       annotations:
@@ -380,7 +380,7 @@ spec:
               / count(count_over_time(tink_agent_login_total{ {{ .Values.loginActionsWithoutManual }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"}[50m])) by (provider, action) < 0.5
       for: 10m
       labels:
-        severity: urgent
+        severity: ping
         priority: P4
         who: integration-fluffy
       annotations:
@@ -420,7 +420,7 @@ spec:
             / count(count_over_time(tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="ES"}[50m])) by (provider) < 0.6
       for: 10m
       labels:
-        severity: urgent
+        severity: ping
         priority: P4
         who: integration-fluffy
       annotations:
@@ -458,7 +458,7 @@ spec:
           / count(count_over_time(tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="ES"}[50m])) by (provider, action) < 0.6
       for: 10m
       labels:
-        severity: urgent
+        severity: ping
         priority: P4
         who: integration-fluffy
       annotations:
@@ -496,7 +496,7 @@ spec:
           / count(count_over_time(tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="ES"}[50m])) by (provider) < 0.6
       for: 10m
       labels:
-        severity: urgent
+        severity: ping
         priority: P4
         who: integration-fluffy
       annotations:
@@ -534,7 +534,7 @@ spec:
           / count(count_over_time(tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="ES"}[50m])) by (provider, action) < 0.6
       for: 10m
       labels:
-        severity: urgent
+        severity: ping
         priority: P4
         who: integration-fluffy
       annotations:
@@ -572,7 +572,7 @@ spec:
           / count(count_over_time(tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="ES"}[50m])) by (provider) < 0.5
       for: 10m
       labels:
-        severity: urgent
+        severity: ping
         priority: P4
         who: integration-fluffy
       annotations:
@@ -610,7 +610,7 @@ spec:
           / count(count_over_time(tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="ES"}[50m])) by (provider, action) < 0.5
       for: 10m
       labels:
-        severity: urgent
+        severity: ping
         priority: P4
         who: integration-fluffy
       annotations:
@@ -635,7 +635,7 @@ spec:
           and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="ES"}) > 4
       for: {{ .Values.p4WaitTimeBeforeFiringAlert }}
       labels:
-        severity: urgent
+        severity: ping
         priority: P4
         who: integration-fluffy
       annotations:
@@ -713,7 +713,7 @@ spec:
           and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="ES"}) > 4
       for: {{ .Values.p4WaitTimeBeforeFiringAlert }}
       labels:
-        severity: urgent
+        severity: ping
         priority: P4
         who: integration-fluffy
       annotations:
@@ -791,7 +791,7 @@ spec:
            and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="ES"}) > 4
       for: {{ .Values.p4WaitTimeBeforeFiringAlert }}
       labels:
-        severity: urgent
+        severity: ping
         priority: P4
         who: integration-fluffy
       annotations:
@@ -869,7 +869,7 @@ spec:
            and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="ES"}) > 4
       for: {{ .Values.p4WaitTimeBeforeFiringAlert }}
       labels:
-        severity: urgent
+        severity: ping
         priority: P4
         who: integration-fluffy
       annotations:
