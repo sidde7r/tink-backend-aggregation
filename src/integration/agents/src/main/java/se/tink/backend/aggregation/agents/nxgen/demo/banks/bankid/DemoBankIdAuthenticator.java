@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.demo.banks.bankid;
 
 import com.google.common.base.Strings;
 import java.lang.invoke.MethodHandles;
+import java.security.SecureRandom;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Random;
@@ -23,7 +24,7 @@ public class DemoBankIdAuthenticator implements BankIdAuthenticator<String>, Pas
     private static final Logger logger =
             LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    private static final Random RANDOM = new Random();
+    private static final Random RANDOM = new SecureRandom();
 
     private final Credentials credentials;
     private final boolean successfulAuthentication;
