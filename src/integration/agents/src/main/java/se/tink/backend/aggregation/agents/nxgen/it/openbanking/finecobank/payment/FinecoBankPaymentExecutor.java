@@ -31,6 +31,7 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.rpc.Payment;
@@ -49,7 +50,7 @@ public class FinecoBankPaymentExecutor implements PaymentExecutor {
     private final SupplementalInformationController supplementalInformationController;
 
     @Override
-    public PaymentResponse create(PaymentRequest paymentRequest) {
+    public PaymentResponse create(PaymentRequest paymentRequest) throws PaymentException {
         Payment payment = paymentRequest.getPayment();
 
         FinecoBankPaymentProduct finecoPaymentProduct =
@@ -58,21 +59,27 @@ public class FinecoBankPaymentExecutor implements PaymentExecutor {
                 FinecoBankPaymentService.fromTinkPayment(payment);
 
         CreatePaymentRequest createPaymentRequest = buildCreatePaymentRequest(payment);
+        CreatePaymentResponse createPaymentResponse;
+        try {
+            createPaymentResponse =
+                    apiClient.createPayment(
+                            createPaymentRequest,
+                            finecoPaymentService,
+                            finecoPaymentProduct,
+                            strongAuthenticationState.getState());
+        } catch (HttpResponseException e) {
+            FinecoPaymentErrorHandler.checkForErrors(e);
+            throw e;
+        }
 
-        CreatePaymentResponse createPaymentResponse =
-                apiClient.createPayment(
-                        createPaymentRequest,
-                        finecoPaymentService,
-                        finecoPaymentProduct,
-                        strongAuthenticationState.getState());
         String paymentId = createPaymentResponse.getPaymentId();
         GetPaymentAuthsResponse paymentAuths =
                 apiClient.getPaymentAuths(finecoPaymentService, finecoPaymentProduct, paymentId);
 
         validateCreatedPayment(createPaymentResponse, paymentAuths);
 
-        storage.storePaymentAuthId(paymentId, paymentAuths.getAuthorisationIds().get(0));
-        storage.storePaymentAuthorizationUrl(paymentId, createPaymentResponse.getScaRedirectLink());
+        storage.storePaymentAuthId(paymentAuths.getAuthorisationIds().get(0));
+        storage.storePaymentAuthorizationUrl(createPaymentResponse.getScaRedirectLink());
         return createPaymentResponse.toTinkPaymentResponse(paymentRequest);
     }
 
@@ -89,6 +96,11 @@ public class FinecoBankPaymentExecutor implements PaymentExecutor {
                         .instructedAmount(amountEntity)
                         .remittanceInformationUnstructured(remittanceInformation.getValue())
                         .requestedExecutionDate(payment.getExecutionDate());
+
+        if (payment.getDebtor() != null) {
+            createPaymentRequestBuilder.debtorAccount(
+                    new AccountEntity(payment.getDebtor().getAccountNumber()));
+        }
 
         if (payment.getPaymentServiceType() == PaymentServiceType.PERIODIC) {
             createPaymentRequestBuilder
@@ -124,7 +136,7 @@ public class FinecoBankPaymentExecutor implements PaymentExecutor {
         Payment payment = paymentMultiStepRequest.getPayment();
         switch (paymentMultiStepRequest.getStep()) {
             case AuthenticationStepConstants.STEP_INIT:
-                nextStep = handleInitStep(payment.getUniqueId());
+                nextStep = handleInitStep();
                 break;
             case PAYMENT_POST_SIGN_STATE:
                 nextStep = handlePostSignStep(payment);
@@ -138,10 +150,10 @@ public class FinecoBankPaymentExecutor implements PaymentExecutor {
         return new PaymentMultiStepResponse(payment, nextStep, Collections.emptyList());
     }
 
-    private String handleInitStep(String paymentId) {
+    private String handleInitStep() {
         supplementalInformationController.openThirdPartyAppSync(
                 ThirdPartyAppAuthenticationPayload.of(
-                        new URL(storage.getPaymentAuthorizationUrl(paymentId))));
+                        new URL(storage.getPaymentAuthorizationUrl())));
         return PAYMENT_POST_SIGN_STATE;
     }
 
@@ -157,7 +169,7 @@ public class FinecoBankPaymentExecutor implements PaymentExecutor {
                         finecoPaymentService,
                         finecoPaymentProduct,
                         paymentId,
-                        storage.getPaymentAuthId(paymentId));
+                        storage.getPaymentAuthId());
         if (!paymentAuthStatus.authFinishedSuccessfully()) {
             throw new PaymentAuthorizationException();
         }

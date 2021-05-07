@@ -8,6 +8,7 @@ import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.rpc.Creditor;
+import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.payments.common.model.PaymentScheme;
 import se.tink.libraries.transfer.enums.RemittanceInformationType;
@@ -43,17 +44,20 @@ public class FinecoBankAgentPaymentTest {
 
     private Payment.Builder createRealDomesticPayment() {
         RemittanceInformation remittanceInformation = new RemittanceInformation();
-        remittanceInformation.setValue("from fineco to");
+        remittanceInformation.setValue("Remittance goes here");
         remittanceInformation.setType(RemittanceInformationType.UNSTRUCTURED);
 
-        AccountIdentifier creditorAccountIdentifier = new IbanIdentifier("Iban goes here");
-        Creditor creditor = new Creditor(creditorAccountIdentifier, "Creditor name goes here");
+        AccountIdentifier creditorAccountIdentifier = new IbanIdentifier("zxcv");
+        Creditor creditor = new Creditor(creditorAccountIdentifier, "Creditor Name");
+        AccountIdentifier debtorIdentifier = new IbanIdentifier("asdf");
+        Debtor debtor = new Debtor(debtorIdentifier);
 
         ExactCurrencyAmount amount = ExactCurrencyAmount.inEUR(1);
-        LocalDate executionDate = LocalDate.now();
+        LocalDate executionDate = LocalDate.now().plusDays(1);
         String currency = "EUR";
 
         return new Payment.Builder()
+                .withDebtor(debtor)
                 .withCreditor(creditor)
                 .withExactCurrencyAmount(amount)
                 .withExecutionDate(executionDate)
@@ -65,10 +69,12 @@ public class FinecoBankAgentPaymentTest {
 
     private Payment.Builder createRealDomesticRecurringPayment() {
         return createRealDomesticPayment()
+                .withExecutionDate(null)
+                .withPaymentScheme(PaymentScheme.SEPA_CREDIT_TRANSFER)
                 .withPaymentServiceType(PaymentServiceType.PERIODIC)
                 .withFrequency(Frequency.MONTHLY)
-                .withStartDate(LocalDate.now().plusDays(3))
-                .withEndDate(LocalDate.now().plusMonths(3))
+                .withStartDate(LocalDate.now().plusDays(2))
+                .withEndDate(LocalDate.now().plusMonths(1).plusDays(4))
                 .withExecutionRule(ExecutionRule.FOLLOWING);
     }
 }

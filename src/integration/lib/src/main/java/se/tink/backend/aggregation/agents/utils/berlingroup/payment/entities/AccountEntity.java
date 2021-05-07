@@ -4,8 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.enums.AccountIdentifierType;
+import se.tink.libraries.account.identifiers.IbanIdentifier;
+import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 
 @JsonObject
@@ -15,7 +15,11 @@ import se.tink.libraries.payment.rpc.Debtor;
 public class AccountEntity {
     private String iban;
 
+    public Creditor toTinkCreditor() {
+        return new Creditor(new IbanIdentifier(iban));
+    }
+
     public Debtor toTinkDebtor() {
-        return new Debtor(AccountIdentifier.create(AccountIdentifierType.IBAN, iban));
+        return new Debtor(new IbanIdentifier(iban));
     }
 }

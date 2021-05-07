@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.payment.rpc;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import java.time.LocalDate;
@@ -11,11 +12,13 @@ import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.paymen
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @Builder
 @EqualsAndHashCode
 public class CreatePaymentRequest {
     private final AmountEntity instructedAmount;
     private final AccountEntity creditorAccount;
+    private final AccountEntity debtorAccount;
     private final String creditorName;
     private final String remittanceInformationUnstructured;
 

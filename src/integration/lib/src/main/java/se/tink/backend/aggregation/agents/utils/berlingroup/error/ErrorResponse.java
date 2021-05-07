@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.utils.berlingroup.error;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 import lombok.Getter;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -49,5 +50,13 @@ public class ErrorResponse {
                 errorResponse != null
                         && errorResponse.getTppMessages().stream()
                                 .anyMatch(x -> x.matches(matcher));
+    }
+
+    public static Predicate<ErrorResponse> anyTppMessageMatchesPredicate(
+            TppMessage matcher, BiPredicate<String, String> tppMsgBiPredicate) {
+        return errorResponse ->
+                errorResponse != null
+                        && errorResponse.getTppMessages().stream()
+                                .anyMatch(x -> x.matches(matcher, tppMsgBiPredicate));
     }
 }

@@ -72,4 +72,45 @@ public class TppMessageTest {
         // then
         assertThat(result).isFalse();
     }
+
+    @Test
+    public void shouldNotThrowWhenLeftSideIsFullOfNulls() {
+        // given
+        TppMessage knownError =
+                TppMessage.builder()
+                        .category("ErroR")
+                        .code("codE")
+                        .path("pAth OOPS")
+                        .text("text")
+                        .build();
+        // when
+        boolean result = new TppMessage().matches(knownError);
+
+        // then
+        assertThat(result).isFalse();
+    }
+
+    @Test
+    public void shouldTestProperlyWithDifferentMatchingMethod() {
+        // given
+        TppMessage knownError =
+                TppMessage.builder()
+                        .category("ErroR")
+                        .code("codE")
+                        .path("pAth OOPS")
+                        .text("text")
+                        .build();
+        // when
+        boolean result =
+                TppMessage.builder()
+                        .category("___ErroRS___")
+                        .code("___codE___")
+                        .path("___pAth OOPS___")
+                        .text("___text___")
+                        .build()
+                        .matches(knownError, String::contains);
+
+        // then
+        assertThat(result).isTrue();
+    }
 }

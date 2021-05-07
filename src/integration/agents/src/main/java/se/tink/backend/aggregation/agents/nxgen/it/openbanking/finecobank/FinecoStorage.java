@@ -80,19 +80,19 @@ public class FinecoStorage {
 
     // Session
 
-    public void storePaymentAuthorizationUrl(String paymentId, String authUrl) {
+    public void storePaymentAuthorizationUrl(String authUrl) {
         sessionStorage.put(PAYMENT_AUTH_URL, authUrl);
     }
 
-    public String getPaymentAuthorizationUrl(String paymentId) {
+    public String getPaymentAuthorizationUrl() {
         return sessionStorage.get(PAYMENT_AUTH_URL);
     }
 
-    public void storePaymentAuthId(String paymentId, String authId) {
+    public void storePaymentAuthId(String authId) {
         sessionStorage.put(PAYMENT_AUTH_ID, authId);
     }
 
-    public String getPaymentAuthId(String paymentId) {
+    public String getPaymentAuthId() {
         return sessionStorage.get(PAYMENT_AUTH_ID);
     }
 }

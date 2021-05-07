@@ -31,7 +31,7 @@ public enum FinecoBankPaymentStatus {
         finecoPaymentStatusToTinkMapper.put(ACCP, PaymentStatus.PENDING);
         finecoPaymentStatusToTinkMapper.put(ACSC, PaymentStatus.PAID);
         finecoPaymentStatusToTinkMapper.put(ACSP, PaymentStatus.PENDING);
-        finecoPaymentStatusToTinkMapper.put(ACTC, PaymentStatus.PENDING);
+        finecoPaymentStatusToTinkMapper.put(ACTC, PaymentStatus.SIGNED);
         finecoPaymentStatusToTinkMapper.put(ACWC, PaymentStatus.PENDING);
         finecoPaymentStatusToTinkMapper.put(ACWP, PaymentStatus.PENDING);
         finecoPaymentStatusToTinkMapper.put(RCVD, PaymentStatus.CREATED);

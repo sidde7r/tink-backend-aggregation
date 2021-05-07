@@ -96,7 +96,7 @@ public class FinecoBankPaymentExecutorTest {
     }
 
     @Test
-    public void shouldCreatePaymentSuccessfully() {
+    public void shouldCreatePaymentSuccessfully() throws PaymentException {
         // given
         PaymentRequest paymentRequest = new PaymentRequest(buildTestPayment());
         LinksEntity linksEntity = new LinksEntity(TEST_SCA_REDIRECT);
@@ -122,8 +122,8 @@ public class FinecoBankPaymentExecutorTest {
         assertThat(payment.getPaymentServiceType()).isEqualTo(PaymentServiceType.SINGLE);
         assertThat(payment.getPaymentScheme()).isEqualTo(PaymentScheme.SEPA_CREDIT_TRANSFER);
 
-        verify(mockStorage).storePaymentAuthorizationUrl(TEST_PAYMENT_ID, TEST_SCA_REDIRECT);
-        verify(mockStorage).storePaymentAuthId(TEST_PAYMENT_ID, TEST_AUTH_ID);
+        verify(mockStorage).storePaymentAuthorizationUrl(TEST_SCA_REDIRECT);
+        verify(mockStorage).storePaymentAuthId(TEST_AUTH_ID);
     }
 
     private Object[] linksEntitiesWithoutScaRedirect() {
@@ -189,7 +189,7 @@ public class FinecoBankPaymentExecutorTest {
                         null,
                         null);
 
-        when(mockStorage.getPaymentAuthorizationUrl(TEST_PAYMENT_ID)).thenReturn(TEST_SCA_REDIRECT);
+        when(mockStorage.getPaymentAuthorizationUrl()).thenReturn(TEST_SCA_REDIRECT);
 
         // when
         PaymentMultiStepResponse paymentMultiStepResponse =
@@ -219,7 +219,7 @@ public class FinecoBankPaymentExecutorTest {
                         TEST_AUTH_ID))
                 .thenReturn(new GetPaymentAuthStatusResponse(okAuthStatus));
 
-        when(mockStorage.getPaymentAuthId(TEST_PAYMENT_ID)).thenReturn(TEST_AUTH_ID);
+        when(mockStorage.getPaymentAuthId()).thenReturn(TEST_AUTH_ID);
 
         when(mockApiClient.getPaymentStatus(
                         FinecoBankPaymentService.SINGLE,
@@ -261,7 +261,7 @@ public class FinecoBankPaymentExecutorTest {
                         TEST_AUTH_ID))
                 .thenReturn(new GetPaymentAuthStatusResponse(authStatus));
 
-        when(mockStorage.getPaymentAuthId(TEST_PAYMENT_ID)).thenReturn(TEST_AUTH_ID);
+        when(mockStorage.getPaymentAuthId()).thenReturn(TEST_AUTH_ID);
 
         when(mockApiClient.getPaymentStatus(
                         FinecoBankPaymentService.SINGLE,
