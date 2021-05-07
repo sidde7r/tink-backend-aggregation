@@ -6,8 +6,6 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.TRANSFERS;
 
 import com.google.inject.Inject;
-import java.util.Collections;
-import java.util.Set;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModulesForDecoupledMode;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModulesForProductionMode;
@@ -21,7 +19,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.UkOpenBankingAisConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.UkOpenBankingV31Ais;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.authenticator.UkOpenBankingAisAuthenticationController;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.authenticator.consent.ConsentPermissionsMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.authenticator.consent.ConsentStatusValidator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticationValidator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.configuration.UkOpenBankingPisConfiguration;
@@ -47,8 +44,6 @@ public final class AibV31CorporateAgent extends UkOpenBankingBaseAgent {
                         .build();
     }
 
-    private Set<String> permissions;
-
     @Inject
     public AibV31CorporateAgent(
             AgentComponentProvider componentProvider, UkOpenBankingFlowFacade flowFacade) {
@@ -60,13 +55,6 @@ public final class AibV31CorporateAgent extends UkOpenBankingBaseAgent {
                         AibConstants.PIS_API_URL, AibConstants.WELL_KNOWN_PERSONAL_URL),
                 createPisRequestFilterUsingPs256WithoutBase64Signature(
                         flowFacade.getJwtSinger(), componentProvider.getRandomValueGenerator()));
-        this.permissions = Collections.emptySet();
-
-        if (isFullAuthenticationRefresh()) {
-            this.permissions =
-                    new ConsentPermissionsMapper(aisConfig)
-                            .mapFrom(getItemsExpectedToBeRefreshed());
-        }
     }
 
     @Override
@@ -86,7 +74,7 @@ public final class AibV31CorporateAgent extends UkOpenBankingBaseAgent {
                 this.persistentStorage,
                 this.supplementalInformationHelper,
                 this.apiClient,
-                new UkOpenBankingAisAuthenticator(this.apiClient, permissions),
+                new UkOpenBankingAisAuthenticator(this.apiClient, aisConfig.getPermissions()),
                 this.credentials,
                 this.strongAuthenticationState,
                 this.request.getCallbackUri(),
