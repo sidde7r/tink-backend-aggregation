@@ -50,6 +50,21 @@
             "cardCategory": "TMC",
             "blockStatus": "Active",
             "accountNumber": "1234512345"
+        },
+        {
+            "maskedCardNumberDebit": "",
+            "maskedCardNumber": "111111XXXXXX4321",
+            "expireYY": "29",
+            "expireMM": "01",
+            "createDate": "20200103",
+            "cardType": "Mastercard Test Card",
+            "cardStatus": "A",
+            "cardLogo": "MC",
+            "cardId": "Panid=1111110101014321//",
+            "cardGroup": "O",
+            "cardCategory": "TMC",
+            "blockStatus": "Active",
+            "accountNumber": "0978563412"
         }
     ]
 }

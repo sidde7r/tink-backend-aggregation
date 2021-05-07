@@ -107,9 +107,9 @@ public class AccountEntityMapper {
         if (cardsOfAccount.size() > 1) {
             log.warn(
                     "Credit card account has more than 1 credit card. Size of cards: {}",
-                    cardEntities.size());
+                    cardsOfAccount.size());
         }
-        return cardEntities.get(0);
+        return cardsOfAccount.get(0);
     }
 
     private boolean accountNumbersAreEqual(AccountEntity accountEntity, CardEntity cardEntity) {
