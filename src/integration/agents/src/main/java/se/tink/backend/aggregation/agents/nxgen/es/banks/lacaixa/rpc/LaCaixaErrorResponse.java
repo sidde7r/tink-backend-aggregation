@@ -41,6 +41,11 @@ public class LaCaixaErrorResponse {
     }
 
     @JsonIgnore
+    public boolean hasNoFunds() {
+        return Strings.nullToEmpty(code).trim().isEmpty();
+    }
+
+    @JsonIgnore
     public boolean isUserHasNoLoans() {
         return Strings.nullToEmpty(code)
                 .trim()
