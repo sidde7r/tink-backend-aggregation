@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.authent
 import com.google.api.client.http.HttpStatusCodes;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -93,22 +94,22 @@ public class SparebankenSorMultiFactorAuthenticator implements BankIdAuthenticat
                 throw LoginError.INCORRECT_CREDENTIALS.exception();
             }
         } catch (HttpResponseException httpException) {
-            if (check500ErrorWithBodyAndCode(httpException)
-                    && httpException
-                            .getResponse()
-                            .getBody(ErrorResponse.class)
-                            .getCode()
-                            .equals(CODE_FOR_ERROR_INVALID_CREDENTIALS)) {
+            if (isInvalidCredentialsErrorResponse(httpException)) {
                 throw LoginError.INCORRECT_CREDENTIALS.exception(httpException);
             }
             throw httpException;
         }
     }
 
-    private boolean check500ErrorWithBodyAndCode(HttpResponseException httpException) {
-        return ((httpException.getResponse().getStatus() == 500
-                        && httpException.getResponse().hasBody())
-                && httpException.getResponse().getBody(ErrorResponse.class).getCode() != null);
+    private boolean isInvalidCredentialsErrorResponse(HttpResponseException httpException) {
+        if (httpException.getResponse().getStatus() != 500
+                || !httpException.getResponse().hasBody()) {
+            return false;
+        }
+        return Optional.ofNullable(httpException.getResponse().getBody(ErrorResponse.class))
+                .map(ErrorResponse::getCode)
+                .map(CODE_FOR_ERROR_INVALID_CREDENTIALS::equalsIgnoreCase)
+                .orElse(false);
     }
 
     private void handleLoginErrors(final Document doc) throws BankIdException {

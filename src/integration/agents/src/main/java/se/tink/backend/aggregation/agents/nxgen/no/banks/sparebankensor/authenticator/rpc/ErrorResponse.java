@@ -6,5 +6,5 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 @Getter
 public class ErrorResponse {
-    private Integer code;
+    private String code;
 }
