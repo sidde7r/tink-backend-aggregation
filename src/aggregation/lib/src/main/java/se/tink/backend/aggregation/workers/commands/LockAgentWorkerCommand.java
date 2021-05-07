@@ -78,7 +78,7 @@ public class LockAgentWorkerCommand extends AgentWorkerCommand {
                         LOCKING_SUCCESS_METRIC
                                 .label("acquired", hasAcquiredLock ? "true" : "false")
                                 .label("operation", operation)
-                                .label("cluster", context.getClusterId()))
+                                .label("cluster_id", context.getClusterId()))
                 .inc();
 
         if (!hasAcquiredLock) {
