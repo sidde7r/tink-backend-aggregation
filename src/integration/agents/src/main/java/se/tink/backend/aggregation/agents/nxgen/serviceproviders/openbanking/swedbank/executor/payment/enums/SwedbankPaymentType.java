@@ -53,7 +53,15 @@ public enum SwedbankPaymentType {
                                     new AccountTypePair(
                                             AccountIdentifierType.SE, AccountIdentifierType.SE_BG),
                                     new AccountTypePair(
-                                            AccountIdentifierType.SE, AccountIdentifierType.SE_PG))
+                                            AccountIdentifierType.SE, AccountIdentifierType.SE_PG),
+                                    new AccountTypePair(
+                                            AccountIdentifierType.IBAN, AccountIdentifierType.SE),
+                                    new AccountTypePair(
+                                            AccountIdentifierType.IBAN,
+                                            AccountIdentifierType.SE_BG),
+                                    new AccountTypePair(
+                                            AccountIdentifierType.IBAN,
+                                            AccountIdentifierType.SE_PG))
                             .put(
                                     SwedbankPaymentType.SE_INTERNATIONAL_CREDIT_TRANSFERS,
                                     new AccountTypePair(

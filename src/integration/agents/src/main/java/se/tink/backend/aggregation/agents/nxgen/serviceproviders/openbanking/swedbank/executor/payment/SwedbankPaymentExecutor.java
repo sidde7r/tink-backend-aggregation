@@ -7,6 +7,8 @@ import static se.tink.backend.aggregation.nxgen.controllers.signing.SigningStepC
 
 import java.util.ArrayList;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.common.SwedbankOpenBankingPaymentApiClient;
@@ -40,6 +42,7 @@ public class SwedbankPaymentExecutor implements PaymentExecutor, FetchablePaymen
     private final SwedbankOpenBankingPaymentApiClient apiClient;
     private final List<PaymentResponse> createdPaymentsList = new ArrayList<>();
     private final SwedbankPaymentSigner swedbankPaymentSigner;
+    private static final Logger log = LoggerFactory.getLogger(SwedbankPaymentExecutor.class);
 
     public SwedbankPaymentExecutor(
             SwedbankOpenBankingPaymentApiClient apiClient,
@@ -76,8 +79,11 @@ public class SwedbankPaymentExecutor implements PaymentExecutor, FetchablePaymen
         CreatePaymentRequest createPaymentRequest = builder.build();
 
         AccountTypePair accountTypePair =
-                new AccountTypePair(paymentRequest.getPayment().getCreditorAndDebtorAccountType());
-
+                new AccountTypePair(payment.getCreditorAndDebtorAccountType());
+        log.info(
+                "DebtorAccountType: {}, CreditorAccountType: {}",
+                accountTypePair.getDebtorAccountType(),
+                accountTypePair.getCreditorAccountType());
         SwedbankPaymentType paymentType = SwedbankPaymentType.getPaymentType(accountTypePair);
 
         PaymentResponse paymentResponse =

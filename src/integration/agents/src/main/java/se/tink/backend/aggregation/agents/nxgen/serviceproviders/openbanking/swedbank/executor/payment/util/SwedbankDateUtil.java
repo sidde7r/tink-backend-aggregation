@@ -48,7 +48,7 @@ public class SwedbankDateUtil {
 
     private static Date getExecutionDateOrCurrentDateForBankTransfers(Payment payment) {
         Date executionDate = localDateToDate(payment.getExecutionDate());
-        return IntraBankChecker.isAccountIdentifierIntraBank(
+        return IntraBankChecker.isSwedishMarketIntraBank(
                         payment.getDebtor().getAccountIdentifier(),
                         payment.getCreditor().getAccountIdentifier())
                 ? getTransferDateForInternalTransfer(executionDate)

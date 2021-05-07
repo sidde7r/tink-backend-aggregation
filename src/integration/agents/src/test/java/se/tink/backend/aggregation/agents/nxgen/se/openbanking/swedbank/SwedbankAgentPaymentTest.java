@@ -1,8 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank;
 
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -78,11 +75,10 @@ public class SwedbankAgentPaymentTest {
         List<Payment> listOfMockedPayments = new ArrayList<>();
 
         for (int i = 0; i < numberOfMockedPayments; ++i) {
-            Creditor creditor = mock(Creditor.class);
 
             AccountIdentifier sourceAccountIdentifier =
                     AccountIdentifier.create(
-                            AccountIdentifierType.SE,
+                            AccountIdentifierType.IBAN,
                             toFromManager.get(ToAccountFromAccountArgumentEnum.FROM_ACCOUNT));
 
             AccountIdentifier destinationAccountIdentifier =
@@ -90,26 +86,13 @@ public class SwedbankAgentPaymentTest {
                             creditorType,
                             toFromManager.get(ToAccountFromAccountArgumentEnum.TO_ACCOUNT));
 
-            doReturn(creditorType).when(creditor).getAccountIdentifierType();
-            doReturn(destinationAccountIdentifier.getIdentifier())
-                    .when(creditor)
-                    .getAccountNumber();
-            doReturn("TinkTest").when(creditor).getName();
-
-            doReturn(destinationAccountIdentifier).when(creditor).getAccountIdentifier();
-
-            Debtor debtor = mock(Debtor.class);
-            doReturn(AccountIdentifierType.SE).when(debtor).getAccountIdentifierType();
-            doReturn(sourceAccountIdentifier.getIdentifier()).when(debtor).getAccountNumber();
-            doReturn(sourceAccountIdentifier).when(debtor).getAccountIdentifier();
-
             listOfMockedPayments.add(
                     new Payment.Builder()
-                            .withCreditor(creditor)
-                            .withDebtor(debtor)
+                            .withCreditor(new Creditor(destinationAccountIdentifier, "TinkTest"))
+                            .withDebtor(new Debtor(sourceAccountIdentifier))
                             .withExactCurrencyAmount(ExactCurrencyAmount.inSEK(1))
                             .withCurrency("SEK")
-                            .withExecutionDate(LocalDate.now().minusDays(4))
+                            .withExecutionDate(LocalDate.now().plusDays(4))
                             .withRemittanceInformation(remittanceInformation)
                             .build());
         }
