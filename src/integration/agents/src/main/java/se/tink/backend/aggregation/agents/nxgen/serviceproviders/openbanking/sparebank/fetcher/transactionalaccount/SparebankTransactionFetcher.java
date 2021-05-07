@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.fetcher.transactionalaccount;
 
 import javax.annotation.Nullable;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.SparebankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.SparebankConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.fetcher.transactionalaccount.entities.TransactionEntity;
@@ -11,14 +13,12 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
+@Slf4j
+@RequiredArgsConstructor
 public class SparebankTransactionFetcher
         implements TransactionKeyPaginator<TransactionalAccount, String> {
 
-    private SparebankApiClient apiClient;
-
-    public SparebankTransactionFetcher(final SparebankApiClient apiClient) {
-        this.apiClient = apiClient;
-    }
+    private final SparebankApiClient apiClient;
 
     @Override
     public TransactionKeyPaginatorResponse<String> getTransactionsFor(
@@ -32,7 +32,9 @@ public class SparebankTransactionFetcher
             }
         } catch (HttpResponseException e) {
             String exceptionMessage = e.getResponse().getBody(String.class);
-            if (exceptionMessage.contains(SparebankConstants.TransactionsResponse.ERROR_MESSAGE)) {
+            if (exceptionMessage.contains(
+                    SparebankConstants.TransactionsResponse.SCA_REDIRECT_ERROR_MESSAGE)) {
+                log.info("Cannot fetch transactions - SCA redirect error");
                 return TransactionKeyPaginatorResponseImpl.createEmpty();
             }
             throw e;
