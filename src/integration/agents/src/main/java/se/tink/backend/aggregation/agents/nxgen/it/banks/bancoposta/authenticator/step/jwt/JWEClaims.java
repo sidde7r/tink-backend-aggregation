@@ -2,9 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticat
 
 import com.google.common.collect.ImmutableMap;
 import com.nimbusds.jwt.JWTClaimsSet;
+import java.security.SecureRandom;
 import java.util.Date;
 import java.util.Map;
-import java.util.Random;
 import java.util.UUID;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.BancoPostaConstants.JWT.Claims;
 import se.tink.backend.aggregation.agents.utils.crypto.HOTP;
@@ -61,7 +61,7 @@ public class JWEClaims {
         }
 
         public static Map<String, String> getOtpSpecClaims(byte[] otpSecretKey) {
-            long movingFactor = new Random().nextInt();
+            long movingFactor = new SecureRandom().nextInt();
             String hotp =
                     HOTP.generateOTP(
                             otpSecretKey,

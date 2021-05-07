@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.demo.banks.multisupplemental.au
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
+import java.security.SecureRandom;
 import java.util.Map;
 import java.util.Random;
 import se.tink.backend.agents.rpc.Credentials;
@@ -37,7 +38,7 @@ public class MultiSupplementalManualAuthenticator implements TypedAuthenticator 
                     + "Provide the given return code in the input field to continue \n";
 
     private final SupplementalInformationHelper supplementalInformationHelper;
-    private static final Random random = new Random();
+    private static final Random random = new SecureRandom();
 
     public MultiSupplementalManualAuthenticator(
             SupplementalInformationHelper supplementalInformationHelper, Catalog catalog) {
