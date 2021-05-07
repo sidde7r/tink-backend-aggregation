@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.aggregation.agents.exceptions.refresh.InvestmentAccountRefreshException;
 import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaConstants;
@@ -49,7 +50,19 @@ public class LaCaixaInvestmentFetcher implements AccountFetcher<InvestmentAccoun
 
     private List<InvestmentAccount> getFundInvestments(
             UserDataResponse userDataResponse, EngagementResponse engagements) {
+        try {
+            return getAllFundInvestments(userDataResponse, engagements);
+        } catch (HttpResponseException e) {
+            HttpResponse response = e.getResponse();
+            if (hasNoFundInvestments(response)) {
+                return Collections.emptyList();
+            }
+            throw new InvestmentAccountRefreshException("Unable to fetch fund investments");
+        }
+    }
 
+    private List<InvestmentAccount> getAllFundInvestments(
+            UserDataResponse userDataResponse, EngagementResponse engagements) {
         List<InvestmentAccount> fundInvestments = new ArrayList<>();
         boolean moreData = false;
         do {
@@ -59,8 +72,15 @@ public class LaCaixaInvestmentFetcher implements AccountFetcher<InvestmentAccoun
                     fundsListResponse.getTinkInvestments(
                             apiClient, userDataResponse.getHolderName(), engagements));
         } while (moreData);
-
         return fundInvestments;
+    }
+
+    private boolean hasNoFundInvestments(HttpResponse response) {
+        if (response.getStatus() == HttpStatus.SC_CONFLICT) {
+            LaCaixaErrorResponse error = response.getBody(LaCaixaErrorResponse.class);
+            return error.hasNoFunds();
+        }
+        return false;
     }
 
     private List<InvestmentAccount> getStockInvestments(
