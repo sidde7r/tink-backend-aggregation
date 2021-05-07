@@ -8,7 +8,8 @@ import java.util.Collections;
 import java.util.List;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
-import org.junit.Before;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
@@ -43,13 +44,18 @@ public class BankIdIframeDriverXpathsTest {
     private static final String AVAILABLE_METHODS_LIST_SECOND =
             Paths.get(BASE_PATH, "availableMethodsListSecond.html").toUri().toString();
 
-    private WebDriver driver;
+    private static WebDriver driver;
 
-    @Before
-    public void setup() {
+    @BeforeClass
+    public static void setupDriver() {
         driver =
                 ChromeDriverInitializer.constructChromeDriver(
                         DanskeBankConstants.Javascript.USER_AGENT);
+    }
+
+    @AfterClass
+    public static void quitDriver() {
+        ChromeDriverInitializer.quitChromeDriver(driver);
     }
 
     @Test
