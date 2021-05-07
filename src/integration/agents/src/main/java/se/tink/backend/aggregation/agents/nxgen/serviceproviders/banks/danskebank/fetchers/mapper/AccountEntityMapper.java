@@ -189,22 +189,7 @@ public class AccountEntityMapper {
             CardEntity cardEntity) {
 
         return CreditCardAccount.nxBuilder()
-                .withCardDetails(
-                        CreditCardModule.builder()
-                                .withCardNumber(
-                                        StringUtils.isNotBlank(cardEntity.getMaskedCardNumber())
-                                                ? cardEntity.getMaskedCardNumber()
-                                                : accountEntity.getAccountNoExt())
-                                .withBalance(
-                                        ExactCurrencyAmount.of(
-                                                accountEntity.getBalance(),
-                                                accountEntity.getCurrency()))
-                                .withAvailableCredit(calculateAvailableCredit(accountEntity))
-                                .withCardAlias(
-                                        StringUtils.isNotBlank(cardEntity.getCardType())
-                                                ? cardEntity.getCardType()
-                                                : accountEntity.getAccountName())
-                                .build())
+                .withCardDetails(buildCreditCardModule(accountEntity, cardEntity))
                 .withoutFlags()
                 .withId(
                         buildIdModule(
@@ -221,6 +206,24 @@ public class AccountEntityMapper {
                 .canWithdrawCash(configuration.canWithdrawCash(accountEntity.getAccountProduct()))
                 .sourceInfo(createAccountSourceInfo(accountEntity))
                 .addParties(getAccountParties(accountDetailsResponse.getAccountOwners(marketCode)))
+                .build();
+    }
+
+    private CreditCardModule buildCreditCardModule(
+            AccountEntity accountEntity, CardEntity cardEntity) {
+        return CreditCardModule.builder()
+                .withCardNumber(
+                        StringUtils.isNotBlank(cardEntity.getMaskedCardNumber())
+                                ? cardEntity.getMaskedCardNumber()
+                                : accountEntity.getAccountNoExt())
+                .withBalance(
+                        ExactCurrencyAmount.of(
+                                accountEntity.getBalance(), accountEntity.getCurrency()))
+                .withAvailableCredit(calculateAvailableCredit(accountEntity))
+                .withCardAlias(
+                        StringUtils.isNotBlank(cardEntity.getCardType())
+                                ? cardEntity.getCardType()
+                                : accountEntity.getAccountName())
                 .build();
     }
 
