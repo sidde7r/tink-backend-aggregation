@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.dnb.fetchers.oauth;
 
+import java.security.SecureRandom;
 import java.util.Random;
 
 public class DnbTimestampUtil {
@@ -24,7 +25,7 @@ public class DnbTimestampUtil {
     }
 
     static class Timer {
-        private final Random rand = new Random();
+        private final Random rand = new SecureRandom();
 
         Timer() {}
 

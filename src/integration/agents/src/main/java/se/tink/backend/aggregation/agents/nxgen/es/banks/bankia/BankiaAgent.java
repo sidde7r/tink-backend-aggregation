@@ -8,8 +8,8 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.MORTGAGE_AGGREGATION;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
 
+import java.security.SecureRandom;
 import java.util.Base64;
-import java.util.Random;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
@@ -100,7 +100,7 @@ public final class BankiaAgent extends NextGenerationAgent
 
         if (base64 == null || safe == null) {
             byte[] bytes = new byte[128];
-            new Random().nextBytes(bytes);
+            new SecureRandom().nextBytes(bytes);
 
             String base64Encoded = EncodingUtils.encodeAsBase64String(bytes);
             String base64EncodedSafe =

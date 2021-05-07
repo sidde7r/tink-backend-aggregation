@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta;
 
+import java.security.SecureRandom;
 import java.util.Map;
-import java.util.Random;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import lombok.RequiredArgsConstructor;
@@ -181,9 +181,8 @@ public class BancoPostaApiClient {
     }
 
     private String generateXKey(String appUid, byte[] otpSecretKey) {
-        byte[] otpSecretKeyByte = otpSecretKey;
-        long movingFactor = new Random().nextInt();
-        String otp = HOTP.generateOTP(otpSecretKeyByte, movingFactor, 8, 20);
+        long movingFactor = new SecureRandom().nextInt();
+        String otp = HOTP.generateOTP(otpSecretKey, movingFactor, 8, 20);
         return String.format("%s:%s:%s", appUid, otp, movingFactor);
     }
 

@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.at.banks.volksbank;
 
+import java.security.SecureRandom;
 import java.security.interfaces.RSAPublicKey;
 import java.util.Random;
 import javax.script.Invocable;
@@ -13,7 +14,7 @@ import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 public final class VolksbankCryptoHelper {
 
     private static final int PUSH_TOKEN_LENGTH = 32;
-    private static final Random RANDOM = new Random();
+    private static final Random RANDOM = new SecureRandom();
 
     // jsSHA: https://github.com/Caligatio/jsSHA/blob/master/src/sha1.js
     private static final String js =

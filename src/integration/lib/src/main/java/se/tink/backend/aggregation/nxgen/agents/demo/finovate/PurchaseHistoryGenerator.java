@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.nxgen.agents.demo.finovate;
 
 import static java.util.stream.Collectors.toList;
 
+import java.security.SecureRandom;
 import java.text.DecimalFormat;
 import java.time.Duration;
 import java.time.LocalDate;
@@ -36,7 +37,7 @@ public class PurchaseHistoryGenerator {
     public PurchaseHistoryGenerator(String basePath) {
         this.demoFileHandler = new DemoFileHandler(basePath);
         generatePurchaseBase = this.demoFileHandler.getGeneratePurchaseBase();
-        this.randomGenerator = new Random();
+        this.randomGenerator = new SecureRandom();
     }
 
     private double randomisePurchase(GeneratePurchaseBase base, String currency) {

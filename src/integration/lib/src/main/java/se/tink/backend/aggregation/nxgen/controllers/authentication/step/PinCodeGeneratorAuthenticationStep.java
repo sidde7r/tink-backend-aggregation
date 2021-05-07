@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.step;
 
+import java.security.SecureRandom;
 import java.util.Random;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
@@ -9,7 +10,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.
 public class PinCodeGeneratorAuthenticationStep extends AbstractAuthenticationStep {
 
     private static final int DEFAULT_LENGTH = 4;
-    private static final Random RAND = new Random();
+    private static final Random RAND = new SecureRandom();
     private final int length;
     private final CallbackProcessorSingleData callbackProcessor;
 

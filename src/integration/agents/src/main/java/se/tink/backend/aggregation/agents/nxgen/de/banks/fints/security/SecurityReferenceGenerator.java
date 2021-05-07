@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.de.banks.fints.security;
 
-import java.util.Random;
+import java.security.SecureRandom;
 
 public class SecurityReferenceGenerator {
 
@@ -8,6 +8,6 @@ public class SecurityReferenceGenerator {
     private static final int MAX_RANDOM = 9999999;
 
     public int generate() {
-        return MIN_RANDOM + new Random().nextInt(MAX_RANDOM - MIN_RANDOM + 1);
+        return MIN_RANDOM + new SecureRandom().nextInt(MAX_RANDOM - MIN_RANDOM + 1);
     }
 }
