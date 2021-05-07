@@ -36,8 +36,7 @@ public class SwedbankBankIdSigner implements BankIdSigner<PaymentRequest> {
         }
 
         if (scaResponse.isMissingExtendedBankId()) {
-            isMissingExtendedBankId = true;
-            return BankIdStatus.DONE;
+            return BankIdStatus.NO_EXTENDED_USE;
         }
 
         switch (scaResponse.getScaStatus().toLowerCase()) {

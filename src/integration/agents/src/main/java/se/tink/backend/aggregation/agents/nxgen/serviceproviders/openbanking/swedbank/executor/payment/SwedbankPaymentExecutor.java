@@ -10,9 +10,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
-import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.common.SwedbankOpenBankingPaymentApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.executor.payment.SwedbankPaymentSigner.MissingExtendedBankIdException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.executor.payment.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.executor.payment.entities.AmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.executor.payment.enums.SwedbankPaymentStatus;
@@ -137,14 +135,9 @@ public class SwedbankPaymentExecutor implements PaymentExecutor, FetchablePaymen
             throws PaymentException {
         final Payment payment = request.getPayment();
         final String paymentId = payment.getUniqueId();
-        try {
-            swedbankPaymentSigner.sign(request);
-            if (isPaymentInPendingStatus(paymentId)) {
-                return new PaymentMultiStepResponse(payment, STEP_INIT, emptyList());
-            }
-        } catch (MissingExtendedBankIdException | PaymentRejectedException exception) {
-            // fallback to redirect flow if we're missing extended BankID
-            swedbankPaymentSigner.signWithRedirect(paymentId);
+        swedbankPaymentSigner.sign(request);
+        if (isPaymentInPendingStatus(paymentId)) {
+            return new PaymentMultiStepResponse(payment, STEP_INIT, emptyList());
         }
         payment.setStatus(getTinkPaymentStatus(paymentId));
         return new PaymentMultiStepResponse(payment, STEP_FINALIZE, emptyList());

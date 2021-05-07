@@ -76,21 +76,6 @@ public class SwedbankPaymentExecutorTest {
     }
 
     @Test
-    public void shouldFallBackToRedirectFlowIfMissingExtendedBankId() throws PaymentException {
-        // given
-        final PaymentMultiStepRequest request = createPaymentMultiStepRequest(STEP_SIGN);
-        givenPaymentWithStatus("");
-        givenMissingExtendedBankId();
-
-        // when
-        final PaymentMultiStepResponse result = swedbankPaymentExecutor.sign(request);
-
-        // then
-        assertThat(result.getStep(), is(STEP_FINALIZE));
-        verify(swedbankPaymentSigner, times(1)).signWithRedirect(INSTRUCTION_ID);
-    }
-
-    @Test
     public void shouldTryToSignPayment() throws PaymentException {
         // given
         final PaymentMultiStepRequest request = createPaymentMultiStepRequest(STEP_SIGN);

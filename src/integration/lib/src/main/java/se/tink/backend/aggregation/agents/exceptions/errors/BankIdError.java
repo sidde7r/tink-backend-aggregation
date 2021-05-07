@@ -29,7 +29,10 @@ public enum BankIdError implements AgentError {
     UNKNOWN(new LocalizableKey("Something went wrong with the BankId authentication")),
     INVALID_STATUS_OF_MOBILE_BANKID_CERTIFICATE(
             new LocalizableKey(
-                    "The mobile operator you use may have blocked BankID on mobile. To resolve this, log in to the internet bank using another authentication method and reorder BankID on mobile.")); // NO
+                    "The mobile operator you use may have blocked BankID on mobile. To resolve this, log in to the internet bank using another authentication method and reorder BankID on mobile.")), // NO
+    ACTIVATE_EXTENDED_BANKID(
+            new LocalizableKey(
+                    "In order to add new recipients you need to activate Mobile BankID for extended use. You can find more information on how to extend your Mobile BankID in your Internet bank."));
 
     private final LocalizableKey userMessage;
 

@@ -54,6 +54,8 @@ public class BankIdSigningController<T> implements Signer<T> {
                     throw BankIdError.TIMEOUT.exception();
                 case INTERRUPTED:
                     throw BankIdError.INTERRUPTED.exception();
+                case NO_EXTENDED_USE:
+                    throw BankIdError.ACTIVATE_EXTENDED_BANKID.exception();
                 default:
                     logger.warn(String.format("Unknown BankIdStatus (%s)", status));
                     throw BankIdError.UNKNOWN.exception();

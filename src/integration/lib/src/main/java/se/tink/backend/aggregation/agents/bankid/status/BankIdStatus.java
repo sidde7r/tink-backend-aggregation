@@ -8,5 +8,6 @@ public enum BankIdStatus {
     WAITING,
     INTERRUPTED,
     EXPIRED_AUTOSTART_TOKEN,
-    NO_CLIENT
+    NO_CLIENT,
+    NO_EXTENDED_USE
 }

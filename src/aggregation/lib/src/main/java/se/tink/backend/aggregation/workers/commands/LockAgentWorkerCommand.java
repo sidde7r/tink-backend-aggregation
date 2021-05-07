@@ -13,6 +13,8 @@ import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
 import se.tink.eventproducerservice.events.grpc.AgentLoginCompletedEventProto;
 import se.tink.eventproducerservice.events.grpc.AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResult;
 import se.tink.libraries.credentials.service.CredentialsRequest;
+import se.tink.libraries.metrics.core.MetricId;
+import se.tink.libraries.metrics.registry.MetricRegistry;
 
 /*
    LockAgentWorkerCommand ensures exclusive access to the credentials in the current request
@@ -21,13 +23,16 @@ public class LockAgentWorkerCommand extends AgentWorkerCommand {
     private static final Logger log = LoggerFactory.getLogger(LockAgentWorkerCommand.class);
     private static final String LOCK_FORMAT =
             "/locks/aggregation/LockAgentWorkerCommand/%s/%s"; // % (userId, credentialsId)
+    private static final MetricId LOCKING_SUCCESS_METRIC =
+            MetricId.newId("aggregation_locking_credentials_id");
 
-    private InterProcessLock lock;
-    private AgentWorkerCommandContext context;
+    private final AgentWorkerCommandContext context;
     private boolean hasAcquiredLock;
     private final String operation;
     private final InterProcessSemaphoreMutexFactory interProcessSemaphoreMutexFactory;
+    private final MetricRegistry metricRegistry;
 
+    private InterProcessLock lock;
     private LoginAgentEventProducer loginAgentEventProducer;
     private Long startTime;
 
@@ -38,6 +43,7 @@ public class LockAgentWorkerCommand extends AgentWorkerCommand {
         this.context = context;
         this.operation = operation;
         this.interProcessSemaphoreMutexFactory = interProcessSemaphoreMutexFactory;
+        this.metricRegistry = context.getMetricRegistry();
     }
 
     public LockAgentWorkerCommand withLoginEvent(LoginAgentEventProducer loginAgentEventProducer) {
@@ -66,6 +72,14 @@ public class LockAgentWorkerCommand extends AgentWorkerCommand {
                 credentialsId,
                 hasAcquiredLock ? "acquired" : "NOT acquired",
                 operation);
+
+        metricRegistry
+                .meter(
+                        LOCKING_SUCCESS_METRIC
+                                .label("acquired", hasAcquiredLock ? "true" : "false")
+                                .label("operation", operation)
+                                .label("cluster", context.getClusterId()))
+                .inc();
 
         if (!hasAcquiredLock) {
             emitLockFailedEvent();

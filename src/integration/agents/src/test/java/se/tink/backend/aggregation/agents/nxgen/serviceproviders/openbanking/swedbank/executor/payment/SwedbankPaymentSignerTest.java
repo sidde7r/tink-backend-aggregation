@@ -9,7 +9,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.executor.payment.SwedbankTestHelper.INSTRUCTION_ID;
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.executor.payment.SwedbankTestHelper.REDIRECT_URL;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.executor.payment.SwedbankTestHelper.STRONG_AUTH_STATE;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.executor.payment.SwedbankTestHelper.createPaymentAuthorisationResponse;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.executor.payment.SwedbankTestHelper.createPaymentMultiStepRequest;
@@ -20,9 +19,7 @@ import static se.tink.backend.aggregation.nxgen.controllers.signing.SigningStepC
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.SwedbankPaymentAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.common.SwedbankOpenBankingPaymentApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.executor.payment.SwedbankPaymentSigner.MissingExtendedBankIdException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.executor.payment.enums.SwedbankPaymentType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.executor.payment.rpc.PaymentAuthorisationResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.executor.payment.rpc.PaymentStatusResponse;
@@ -35,7 +32,6 @@ public class SwedbankPaymentSignerTest {
     private SwedbankOpenBankingPaymentApiClient swedbankApiClient;
     private SwedbankBankIdSigner swedbankIdSigner;
     private BankIdSigningController<PaymentMultiStepRequest> bankIdSigningController;
-    private SwedbankPaymentAuthenticator swedbankPaymentAuthenticator;
 
     @Before
     @SuppressWarnings("unchecked")
@@ -44,15 +40,13 @@ public class SwedbankPaymentSignerTest {
         swedbankIdSigner = mock(SwedbankBankIdSigner.class);
         StrongAuthenticationState strongAuthenticationState = createStrongAuthenticationStateMock();
         bankIdSigningController = mock(BankIdSigningController.class);
-        swedbankPaymentAuthenticator = mock(SwedbankPaymentAuthenticator.class);
 
         swedbankPaymentSigner =
                 new SwedbankPaymentSigner(
                         swedbankApiClient,
                         swedbankIdSigner,
                         strongAuthenticationState,
-                        bankIdSigningController,
-                        swedbankPaymentAuthenticator);
+                        bankIdSigningController);
 
         givenSelectedAuthenticationMethodWithRedirect(false);
     }
@@ -121,30 +115,6 @@ public class SwedbankPaymentSignerTest {
 
         // then
         verify(bankIdSigningController, times(1)).sign(request);
-    }
-
-    @Test(expected = MissingExtendedBankIdException.class)
-    public void signShouldThrowMissingExtendedBankIdException() {
-        // given
-        when(swedbankIdSigner.isMissingExtendedBankId()).thenReturn(true);
-
-        // when
-        swedbankPaymentSigner.sign(any());
-
-        // then - assert in annotation
-    }
-
-    @Test
-    public void signWithRedirectShouldSignPaymentWithRedirectFlow() throws PaymentException {
-        // given
-        givenSelectedAuthenticationMethodWithRedirect(true);
-
-        // when
-        swedbankPaymentSigner.signWithRedirect(INSTRUCTION_ID);
-
-        // then
-        verify(swedbankPaymentAuthenticator, times(1))
-                .openThirdPartyApp(REDIRECT_URL, STRONG_AUTH_STATE);
     }
 
     private void givenPaymentIs(boolean readyToSign) throws PaymentException {
