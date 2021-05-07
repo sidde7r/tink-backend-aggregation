@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.fetcher.mapp
 
 import java.util.Arrays;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.exceptions.refresh.AccountRefreshException;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.DnbConstants;
@@ -21,8 +22,14 @@ public class DnbAccountMapper {
     private static final String[] SAVING_ACCOUNT_PRODUCT_NAMES = {
         "SPAREKONTO", "SAVING", "SUPERSPAR", "PLASSERINGSKONTO"
     };
-    private static final String[] BOOKED_BALANCE_TYPE_PRIORITIES = {
-        "openingBooked", "closingBooked", "expected", "authorised", "interimAvailable"
+    private static final DnbBalanceType[] BOOKED_BALANCE_TYPE_PRIORITIES = {
+        DnbBalanceType.OPENING_BOOKED,
+        DnbBalanceType.CLOSING_BOOKED,
+        DnbBalanceType.EXPECTED,
+        DnbBalanceType.INTERIM_AVAILABLE
+    };
+    private static final DnbBalanceType[] AVAILABLE_BALANCE_TYPE_PRIORITIES = {
+        DnbBalanceType.INTERIM_AVAILABLE, DnbBalanceType.EXPECTED, DnbBalanceType.FORWARD_AVAILABLE
     };
 
     public Optional<TransactionalAccount> toTinkAccount(
@@ -31,7 +38,7 @@ public class DnbAccountMapper {
             return TransactionalAccount.nxBuilder()
                     .withType(getAccountType(accountEntity.getName()))
                     .withPaymentAccountFlag()
-                    .withBalance(BalanceModule.of(getAmount(balancesResponse)))
+                    .withBalance(getBalanceModule(balancesResponse))
                     .withId(
                             IdModule.builder()
                                     .withUniqueIdentifier(accountEntity.getBban())
@@ -57,16 +64,50 @@ public class DnbAccountMapper {
         return isSavings ? TransactionalAccountType.SAVINGS : TransactionalAccountType.CHECKING;
     }
 
-    private ExactCurrencyAmount getAmount(BalancesResponse balancesResponse) {
-        return Arrays.stream(BOOKED_BALANCE_TYPE_PRIORITIES)
-                .map(balancesResponse::getBalanceOfType)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .map(Balance::toTinkAmount)
-                .findFirst()
+    private BalanceModule getBalanceModule(BalancesResponse balancesResponse) {
+        ExactCurrencyAmount bookedBalance = getBookedBalance(balancesResponse);
+        Optional<ExactCurrencyAmount> availableBalance = tryGetAvailableBalance(balancesResponse);
+
+        if (availableBalance.isPresent()) {
+            return BalanceModule.builder()
+                    .withBalance(bookedBalance)
+                    .setAvailableBalance(availableBalance.get())
+                    .build();
+        }
+
+        return BalanceModule.of(bookedBalance);
+    }
+
+    private ExactCurrencyAmount getBookedBalance(BalancesResponse balancesResponse) {
+        return getBalanceAmount(balancesResponse, BOOKED_BALANCE_TYPE_PRIORITIES)
                 .orElseThrow(
                         () ->
                                 new AccountRefreshException(
                                         DnbConstants.ErrorMessages.WRONG_BALANCE_TYPE));
+    }
+
+    private Optional<ExactCurrencyAmount> tryGetAvailableBalance(
+            BalancesResponse balancesResponse) {
+        Optional<ExactCurrencyAmount> maybeAvailableBalance =
+                getBalanceAmount(balancesResponse, AVAILABLE_BALANCE_TYPE_PRIORITIES);
+
+        if (!maybeAvailableBalance.isPresent()) {
+            log.info(
+                    "Could not map available balance from balance types: {}",
+                    balancesResponse.getBalances().stream()
+                            .map(Balance::getBalanceType)
+                            .collect(Collectors.toList()));
+        }
+        return maybeAvailableBalance;
+    }
+
+    private Optional<ExactCurrencyAmount> getBalanceAmount(
+            BalancesResponse balancesResponse, DnbBalanceType[] types) {
+        return Arrays.stream(types)
+                .map(balancesResponse::getBalanceOfType)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .map(Balance::toTinkAmount)
+                .findFirst();
     }
 }
