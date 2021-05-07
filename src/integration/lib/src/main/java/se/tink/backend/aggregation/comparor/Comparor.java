@@ -1,18 +1,23 @@
 package se.tink.backend.aggregation.comparor;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.MapDifference;
 import com.google.common.collect.MapDifference.ValueDifference;
 import com.google.common.collect.Maps;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import lombok.SneakyThrows;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class Comparor {
+
+    private static final String ACCOUNT_IDENTIFIERS_KEY = "identifiers";
 
     private static final ObjectMapper mapper = new ObjectMapper();
     private static final Logger log = LoggerFactory.getLogger(Comparor.class);
@@ -101,6 +106,7 @@ public class Comparor {
         }
     }
 
+    @SneakyThrows
     private <T> List<Map<String, Object>> convertToMapList(List<T> data) {
         List<Map<String, Object>> result = new ArrayList<>();
         data.forEach(
@@ -111,6 +117,18 @@ public class Comparor {
                         throw new RuntimeException(e);
                     }
                 });
+
+        // This is a temporary solution to get account's identifiers in the expected order
+        for (Map<String, Object> accountMap : result) {
+            if (accountMap.containsKey(ACCOUNT_IDENTIFIERS_KEY)) {
+                List<String> identifiers =
+                        mapper.readValue(
+                                accountMap.get(ACCOUNT_IDENTIFIERS_KEY).toString(),
+                                new TypeReference<List<String>>() {});
+                Collections.sort(identifiers);
+                accountMap.put(ACCOUNT_IDENTIFIERS_KEY, mapper.writeValueAsString(identifiers));
+            }
+        }
         return result;
     }
 }
