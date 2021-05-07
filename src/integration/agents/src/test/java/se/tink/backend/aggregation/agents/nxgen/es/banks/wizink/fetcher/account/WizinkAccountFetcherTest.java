@@ -7,10 +7,10 @@ import static org.mockito.Mockito.when;
 import java.math.BigDecimal;
 import java.nio.file.Paths;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import org.junit.Before;
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.WizinkApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.WizinkStorage;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.fetcher.account.rpc.GlobalPositionResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -20,21 +20,31 @@ public class WizinkAccountFetcherTest {
     private static final String TEST_DATA_PATH_ACCOUNT =
             "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/es/banks/wizink/resources/fetcher/account";
 
-    private WizinkApiClient wizinkApiClient;
     private WizinkAccountFetcher wizinkAccountFetcher;
     private WizinkStorage wizinkStorage;
 
     @Before
     public void setup() {
-        wizinkApiClient = mock(WizinkApiClient.class);
         wizinkStorage = mock(WizinkStorage.class);
-        wizinkAccountFetcher = new WizinkAccountFetcher(wizinkApiClient, wizinkStorage);
+        wizinkAccountFetcher = new WizinkAccountFetcher(wizinkStorage);
     }
 
     @Test
     public void shouldReturnEmptyCollectionWhenNoProductsAvailable() {
         // given
         prepareData("global_position_response_without_products.json");
+
+        // when
+        Collection<TransactionalAccount> accounts = wizinkAccountFetcher.fetchAccounts();
+
+        // then
+        assertThat(accounts).isEmpty();
+    }
+
+    @Test
+    public void shouldReturnEmptyCollectionWhenNoProductsInStorage() {
+        // given
+        when(wizinkStorage.getProductsList()).thenReturn(Collections.emptyList());
 
         // when
         Collection<TransactionalAccount> accounts = wizinkAccountFetcher.fetchAccounts();
@@ -78,11 +88,12 @@ public class WizinkAccountFetcherTest {
     }
 
     private void prepareData(String filePath) {
-        when(wizinkApiClient.fetchProductDetailsWithUnmaskedIban())
+        when(wizinkStorage.getProductsList())
                 .thenReturn(
                         SerializationUtils.deserializeFromString(
-                                Paths.get(TEST_DATA_PATH_ACCOUNT, filePath).toFile(),
-                                GlobalPositionResponse.class));
+                                        Paths.get(TEST_DATA_PATH_ACCOUNT, filePath).toFile(),
+                                        GlobalPositionResponse.class)
+                                .getProducts());
         when(wizinkStorage.getXTokenUser())
                 .thenReturn("00D4D0BEE260C666B839EFEE572461D089A3716BE117D512383E9499B44A66F2");
     }
