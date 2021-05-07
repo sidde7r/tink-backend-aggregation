@@ -27,7 +27,7 @@ public class GetUnmaskDataStep implements AuthenticationStep {
                 wizinkApiClient.fetchProductDetailsWithUnmaskedIban();
         wizinkStorage.storeProductsResponse(globalResponseWithUnmaskedData.getProducts());
 
-        return AuthenticationStepResponse.executeNextStep();
+        return AuthenticationStepResponse.authenticationSucceeded();
     }
 
     @Override
