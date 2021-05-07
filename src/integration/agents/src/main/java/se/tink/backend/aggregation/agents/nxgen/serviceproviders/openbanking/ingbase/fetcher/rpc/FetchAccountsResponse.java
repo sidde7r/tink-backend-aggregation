@@ -17,6 +17,7 @@ public class FetchAccountsResponse {
     @JsonIgnore
     public Collection<AccountEntity> getTransactionalAccounts(String currency) {
         return Optional.ofNullable(accounts).orElse(Collections.emptyList()).stream()
+                .filter(AccountEntity::isParsableAccount)
                 .filter(AccountEntity::isTransactionalAccount)
                 .filter(account -> currency.equalsIgnoreCase(account.getCurrency()))
                 .collect(Collectors.toList());
@@ -25,6 +26,7 @@ public class FetchAccountsResponse {
     @JsonIgnore
     public Collection<AccountEntity> getCreditCardAccounts(String currency) {
         return Optional.ofNullable(accounts).orElse(Collections.emptyList()).stream()
+                .filter(AccountEntity::isParsableAccount)
                 .filter(AccountEntity::isCardAccount)
                 .filter(account -> currency.equalsIgnoreCase(account.getCurrency()))
                 .collect(Collectors.toList());

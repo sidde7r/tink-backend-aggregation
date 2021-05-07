@@ -22,7 +22,7 @@ public class IngBaseAccountsFetcherTest {
     private MarketConfiguration marketConfiguration = mock(MarketConfiguration.class);
     private static final FetchAccountsResponse ACCOUNTS_RESPONSE =
             SerializationUtils.deserializeFromString(
-                    "{\"accounts\" : [{\"_links\" : { \"transactions\" : {\"href\" : \"HREF\"}} , \"iban\" : \"PL666\", \"resourceId\" : \"1\", \"name\" : \"NAME\", \"currency\" : \"EUR\", \"product\" : \"PRODUCT\"}]}",
+                    "{\"accounts\" : [{\"_links\" : { \"balances\": {\"href\": \"HREF\"}, \"transactions\" : {\"href\" : \"HREF\"}} , \"iban\" : \"PL666\", \"resourceId\" : \"1\", \"name\" : \"NAME\", \"currency\" : \"EUR\", \"product\" : \"PRODUCT\"}]}",
                     FetchAccountsResponse.class);
 
     private static final FetchBalancesResponse BALANCE_RESPONSE =
