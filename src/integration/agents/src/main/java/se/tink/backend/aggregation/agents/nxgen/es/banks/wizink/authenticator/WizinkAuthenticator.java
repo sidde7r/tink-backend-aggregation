@@ -67,6 +67,6 @@ public class WizinkAuthenticator extends StatelessProgressiveAuthenticator {
 
     private AuthenticationStepResponse processOtp(String otpCode) {
         apiClient.fetchCookieForUnmaskIban(otpCode);
-        return AuthenticationStepResponse.authenticationSucceeded();
+        return AuthenticationStepResponse.executeNextStep();
     }
 }
