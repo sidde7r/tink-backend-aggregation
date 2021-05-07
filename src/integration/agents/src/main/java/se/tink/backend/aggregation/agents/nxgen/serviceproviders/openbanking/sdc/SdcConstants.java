@@ -24,7 +24,6 @@ public final class SdcConstants {
         public static final String STATE = "state";
         public static final String DATE_FROM = "dateFrom";
         public static final String DATE_TO = "dateTo";
-        public static final String WITH_BALANCE = "withBalance";
         public static final String BOOKING_STATUS = "bookingStatus";
     }
 

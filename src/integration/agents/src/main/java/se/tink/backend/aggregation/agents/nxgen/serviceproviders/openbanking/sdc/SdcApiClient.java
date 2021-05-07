@@ -124,7 +124,6 @@ public class SdcApiClient {
                                 .header(
                                         OCP_APIM_SUBSCRIPTION_KEY,
                                         configuration.getOcpApimSubscriptionKey())
-                                .queryParam(QueryKeys.WITH_BALANCE, "true")
                                 .get(AccountsResponse.class));
     }
 
