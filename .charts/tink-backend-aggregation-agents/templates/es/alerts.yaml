@@ -333,7 +333,7 @@ spec:
               for <{ $labels.className }> ( <{ $labels.provider }> ) and it was below for the last 60 minutes.
         tags: {{ .Values.tags }}
 
-    - alert: AllLoginSuccessRatesBelow50WithAllErrorsWithoutAttemptLimitES_RE
+    - alert: AllLoginSuccessRatesBelow50WithAllErrorsWithoutAttemptLimit_EXPERIMENTAL_ES_RE
       expr: |
         count(count_over_time(tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="ES"}[50m])) by (provider)
                / count(count_over_time(tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"}[50m])) by (provider) < 0.5
@@ -352,7 +352,6 @@ spec:
     ###################################################
     ### Split login success rates - All Errors - RE ###
     ###################################################
-
     # As there is a lot of errors for incorrect credentials and blocked account for Spanish market login-manual action is excluded from this alert
     # to decrease the number of non-actionable alerts. If something will be really wrong it will be covered by `All login success rates` alert
 
@@ -374,7 +373,7 @@ spec:
               for <{ $labels.className }> ( <{ $labels.provider }> ) and it was below for the last 60 minutes.
         tags: {{ .Values.tags }}
 
-    - alert: SplitLoginSuccessRatesBelow50WithAllErrorsWithoutAttemptLimitES_RE
+    - alert: SplitLoginSuccessRatesBelow50WithAllErrorsWithoutAttemptLimit_EXPERIMENTAL_ES_RE
       expr: |
         count(count_over_time(tink_agent_login_total{ {{ .Values.loginActionsWithoutManual }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="ES"}[50m])) by (provider, action)
               / count(count_over_time(tink_agent_login_total{ {{ .Values.loginActionsWithoutManual }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"}[50m])) by (provider, action) < 0.5
@@ -414,7 +413,7 @@ spec:
           for <{ $labels.className }> ( <{ $labels.provider }> ) and it was below for the last 60 minutes.
         tags: {{ .Values.tags }}
 
-    - alert: AllLoginSuccessRatesBelow60WithTemporaryErrorsWithoutAttemptLimitES_OB
+    - alert: AllLoginSuccessRatesBelow60WithTemporaryErrorsWithoutAttemptLimit_EXPERIMENTAL_ES_OB
       expr: |
         count(count_over_time(tink_agent_login_total{ {{ .Values.obAgents }}, {{ .Values.temporaryErrorsAuth }}, market="ES"}[50m])) by (provider)
             / count(count_over_time(tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="ES"}[50m])) by (provider) < 0.6
@@ -452,7 +451,7 @@ spec:
              the last 60m.
         tags: {{ .Values.tags }}
 
-    - alert: SplitLoginSuccessRatesBelow60WithTemporaryErrorsWithoutAttemptLimitES_OB
+    - alert: SplitLoginSuccessRatesBelow60WithTemporaryErrorsWithoutAttemptLimit_EXPERIMENTAL_ES_OB
       expr: |
         count(count_over_time(tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="ES"}[50m])) by (provider, action)
           / count(count_over_time(tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="ES"}[50m])) by (provider, action) < 0.6
@@ -490,7 +489,7 @@ spec:
              the last 60m.
         tags: {{ .Values.tags }}
 
-    - alert: AllLoginSuccessRatesBelow60WithBankErrorsWithoutAttemptLimitES_OB
+    - alert: AllLoginSuccessRatesBelow60WithBankErrorsWithoutAttemptLimit_EXPERIMENTAL_ES_OB
       expr: |
         count(count_over_time(tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="ES"}[50m])) by (provider)
           / count(count_over_time(tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="ES"}[50m])) by (provider) < 0.6
@@ -528,7 +527,7 @@ spec:
              the last 60m.
         tags: {{ .Values.tags }}
 
-    - alert: SplitLoginSuccessRatesBelow60WithBankErrorsWithoutAttemptLimitES_OB
+    - alert: SplitLoginSuccessRatesBelow60WithBankErrorsWithoutAttemptLimit_EXPERIMENTAL_ES_OB
       expr: |
         count(count_over_time(tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="ES"}[50m])) by (provider, action)
           / count(count_over_time(tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="ES"}[50m])) by (provider, action) < 0.6
@@ -566,7 +565,7 @@ spec:
               for <{ $labels.className }> ( <{ $labels.provider }> ) and it was below for the last 60 minutes.
         tags: {{ .Values.tags }}
 
-    - alert: AllLoginSuccessRatesBelow50WithAllErrorsWithoutAttemptLimitES_OB
+    - alert: AllLoginSuccessRatesBelow50WithAllErrorsWithoutAttemptLimit_EXPERIMENTAL_ES_OB
       expr: |
         count(count_over_time(tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="ES"}[50m])) by (provider)
           / count(count_over_time(tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="ES"}[50m])) by (provider) < 0.5
@@ -585,13 +584,15 @@ spec:
     ###################################################
     ### Split login success rates - All Errors - OB ###
     ###################################################
+    # As there is a lot of errors for incorrect credentials and blocked account for Spanish market login-manual action is excluded from this alert
+    # to decrease the number of non-actionable alerts. If something will be really wrong it will be covered by `All login success rates` alert
 
     - alert: SplitLoginSuccessRatesBelow50WithAllErrorsAndAttemptLimitES_OB
       expr: |
-          count(count_over_time(tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="ES"}[50m])) by (provider, action)
-            / count(count_over_time(tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="ES"}[50m])) by (provider, action) < 0.5
+          count(count_over_time(tink_agent_login_total{ {{ .Values.loginActionsWithoutManual }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="ES"}[50m])) by (provider, action)
+            / count(count_over_time(tink_agent_login_total{ {{ .Values.loginActionsWithoutManual }}, {{ .Values.obAgents }}, provider_type!="test", market="ES"}[50m])) by (provider, action) < 0.5
           # At least this many attempts
-          and count(count_over_time(tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, market="ES", provider_type!="test"}[50m])) by (provider, action) > 5
+          and count(count_over_time(tink_agent_login_total{ {{ .Values.loginActionsWithoutManual }}, {{ .Values.obAgents }}, market="ES", provider_type!="test"}[50m])) by (provider, action) > 5
       for: 10m
       labels:
         severity: urgent
@@ -604,10 +605,10 @@ spec:
              for <{ $labels.className }> ( <{ $labels.provider }> ) and it was below for the last 60 minutes.
         tags: {{ .Values.tags }}
 
-    - alert: SplitLoginSuccessRatesBelow50WithAllErrorsWithoutAttemptLimitES_OB
+    - alert: SplitLoginSuccessRatesBelow50WithAllErrorsWithoutAttemptLimit_EXPERIMENTAL_ES_OB
       expr: |
-        count(count_over_time(tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="ES"}[50m])) by (provider, action)
-          / count(count_over_time(tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="ES"}[50m])) by (provider, action) < 0.5
+        count(count_over_time(tink_agent_login_total{ {{ .Values.loginActionsWithoutManual }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="ES"}[50m])) by (provider, action)
+          / count(count_over_time(tink_agent_login_total{ {{ .Values.loginActionsWithoutManual }}, {{ .Values.obAgents }}, provider_type!="test", market="ES"}[50m])) by (provider, action) < 0.5
       for: 10m
       labels:
         severity: ping
