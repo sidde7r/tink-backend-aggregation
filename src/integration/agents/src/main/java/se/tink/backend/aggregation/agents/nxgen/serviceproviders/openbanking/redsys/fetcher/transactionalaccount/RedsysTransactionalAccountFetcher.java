@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import org.apache.http.HttpStatus;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.ErrorCodes;
@@ -79,6 +81,9 @@ public class RedsysTransactionalAccountFetcher
                 // (Bankinter)
                 apiClient.fetchAccounts(consentId);
                 return apiClient.fetchTransactions(account.getApiIdentifier(), consentId, key);
+            } else if (HttpStatus.SC_BAD_REQUEST == hre.getResponse().getStatus()
+                    && error.hasErrorCode(ErrorCodes.SERVER_ERROR)) {
+                throw BankServiceError.BANK_SIDE_FAILURE.exception();
             }
             throw hre;
         }
