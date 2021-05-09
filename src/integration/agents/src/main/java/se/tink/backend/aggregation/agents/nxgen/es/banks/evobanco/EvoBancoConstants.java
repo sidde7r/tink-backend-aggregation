@@ -69,7 +69,6 @@ public class EvoBancoConstants {
 
         public static final String NO_TRANSACTIONS_FOUND = "00350";
         public static final String AUTHENTICATION_ERROR = "1500";
-        public static final String UNAUTHORIZED_ERROR = "15";
     }
 
     public static class ErrorMessages {

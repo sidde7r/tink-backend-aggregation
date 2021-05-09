@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.EvoBancoApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.EvoBancoConstants;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.EvoBancoConstants.ErrorCodes;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.EvoBancoConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.authenticator.entities.EeILoginEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.authenticator.rpc.EELoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.authenticator.rpc.EELoginResponse;
@@ -50,15 +50,8 @@ public class EvoBancoAutoAuthenticator implements AutoAuthenticator {
             bankClient.login(new LoginRequest(username, password));
         } catch (HttpResponseException e) {
             HttpResponse response = e.getResponse();
-            if (response.getStatus() >= 400) {
-                if (response.getBody(ErrorEntity.class)
-                        .getCode()
-                        .equalsIgnoreCase(ErrorCodes.UNAUTHORIZED_ERROR)) {
-                    throw AuthorizationError.UNAUTHORIZED.exception();
-                }
-                throw SessionError.SESSION_EXPIRED.exception(e);
-            }
-            throw e;
+            handleErrorResponses(response);
+            throw SessionError.SESSION_EXPIRED.exception(e);
         }
 
         try {
@@ -97,5 +90,14 @@ public class EvoBancoAutoAuthenticator implements AutoAuthenticator {
         // immediately after the eeLogin, keep alive requests will fail if this is not done
         // first.
         bankClient.globalPositionFirstTime().handleReturnCode();
+    }
+
+    private void handleErrorResponses(HttpResponse response) {
+        if (response.getStatus() == 403
+                || response.getBody(ErrorEntity.class)
+                        .getMessage()
+                        .equalsIgnoreCase(ErrorMessages.AUTHENTICATION_ERROR_MSG)) {
+            throw AuthorizationError.UNAUTHORIZED.exception();
+        }
     }
 }
