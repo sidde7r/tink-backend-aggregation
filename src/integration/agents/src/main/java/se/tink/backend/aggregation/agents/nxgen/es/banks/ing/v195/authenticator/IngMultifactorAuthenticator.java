@@ -65,6 +65,6 @@ public class IngMultifactorAuthenticator extends StatelessProgressiveAuthenticat
     }
 
     private boolean isManualAuthentication(CredentialsRequest request) {
-        return request.isCreate() || request.isUpdate();
+        return request.getUserAvailability().isUserAvailableForInteraction();
     }
 }
