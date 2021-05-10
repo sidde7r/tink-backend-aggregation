@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.configuration.ArgentaConfiguration;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.eidassigner.QsealcSignerImpl;
 
@@ -19,13 +18,15 @@ public class SignatureHeaderProviderTest {
 
     @Before
     public void init() {
-        ArgentaConfiguration configuration = mock(ArgentaConfiguration.class);
-        when(configuration.getKeyId()).thenReturn("KEY_ID");
+        CertificateValues certificateValues = mock(CertificateValues.class);
+        when(certificateValues.getSerialNumber()).thenReturn("SERIAL_NUM");
+        when(certificateValues.getCertificateAuthority()).thenReturn("DUMMY_CA");
+
         QsealcSigner qsealcSigner = mock(QsealcSignerImpl.class);
         String headersWithValues =
                 "digest: HEADER_TO_SIGN_ONE\n" + "x-request-id: HEADER_TO_SIGN_TWO";
         when(qsealcSigner.getSignatureBase64(headersWithValues.getBytes())).thenReturn("=SCVBrdxv");
-        signatureHeaderProvider = new SignatureHeaderProvider(configuration, qsealcSigner);
+        signatureHeaderProvider = new SignatureHeaderProvider(qsealcSigner, certificateValues);
     }
 
     @Test
@@ -42,6 +43,6 @@ public class SignatureHeaderProviderTest {
         // then
         assertThat(result)
                 .isEqualTo(
-                        "keyId=\"KEY_ID\",algorithm=\"rsa-sha256\",headers=\"digest x-request-id\",signature=\"=SCVBrdxv\"");
+                        "keyId=\"SN=SERIAL_NUM,CA=DUMMY_CA\",algorithm=\"rsa-sha256\",headers=\"digest x-request-id\",signature=\"=SCVBrdxv\"");
     }
 }
