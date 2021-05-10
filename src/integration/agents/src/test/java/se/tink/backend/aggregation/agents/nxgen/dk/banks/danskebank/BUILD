@@ -23,6 +23,7 @@ junit_test(
             "DanskeBankDKAgentTest.java",
         ],
     ),
+    data = ["//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/dk/banks/danskebank/resources"],
     visibility = ["//visibility:public"],
     deps = [
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/dk/banks/danskebank",

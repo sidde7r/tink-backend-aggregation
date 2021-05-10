@@ -1,0 +1,25 @@
+{
+    "traceId": null,
+    "statusCode": 200,
+    "responseCode": 200,
+    "responseMessage": null,
+    "eupToken": null,
+    "otherCards": [],
+    "cards": [
+        {
+            "maskedCardNumberDebit": "",
+            "maskedCardNumber": "123456XXXXXX1234",
+            "expireYY": "30",
+            "expireMM": "01",
+            "createDate": "20210101",
+            "cardType": "Mastercard Guld",
+            "cardStatus": "A",
+            "cardLogo": "MC",
+            "cardId": "Panid=1234561234561234//",
+            "cardGroup": "O",
+            "cardCategory": "TMC",
+            "blockStatus": "Active",
+            "accountNumber": "1234567890"
+        }
+    ]
+}

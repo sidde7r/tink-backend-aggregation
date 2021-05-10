@@ -1,0 +1,35 @@
+{
+    "traceId": null,
+    "statusCode": 200,
+    "responseCode": 200,
+    "responseMessage": null,
+    "eupToken": null,
+    "accountInterestDetails": {
+        "interestIntervalDetails": null,
+        "interestDetails": [
+            {
+                "text": "Interest on credit balance:",
+                "rate": "0.000",
+                "period": ""
+            },
+            {
+                "text": "Interest on debit balance:",
+                "rate": "11.200",
+                "period": ""
+            }
+        ],
+        "interestIntervalType": "",
+        "bodyText": "",
+        "headline": "Interest rate"
+    },
+    "accountOwners": [
+        "9001011234 - NAME LASTNAME"
+    ],
+    "feeAmount": 0,
+    "feeCurrency": "NOK",
+    "accountType": "MC Corporate Card",
+    "accountNumber": null,
+    "registrationNumber": null,
+    "iban": "NO9570626761838",
+    "bic": "DABANO22"
+}

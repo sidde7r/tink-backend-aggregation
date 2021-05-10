@@ -188,6 +188,51 @@
         },
         {
             "accountExclusion": "NONE",
+            "accountHolder": {
+                "accountId": null,
+                "identities": [
+                    {
+                        "name": "Name Lastname",
+                        "role": "HOLDER"
+                    }
+                ],
+                "type": "PERSONAL"
+            },
+            "accountNumber": "70626761838",
+            "availableCredit": 50000.0,
+            "balance": -16520.13,
+            "balances": [],
+            "bankId": "70626761838",
+            "closed": false,
+            "currencyCode": "SEK",
+            "exactAvailableCredit": {
+                "currencyCode": "SEK",
+                "doubleValue": 50000.0,
+                "exactValue": 50000.0,
+                "scale": 1,
+                "unscaledValue": 500000
+            },
+            "exactBalance": {
+                "currencyCode": "SEK",
+                "doubleValue": -16520.13,
+                "exactValue": -16520.13,
+                "scale": 2,
+                "unscaledValue": -1652013
+            },
+            "excluded": false,
+            "favored": false,
+            "flags": "[]",
+            "holderName": "Name Lastname",
+            "identifiers": "[\"iban://SE9342285670261463981921\",\"masked-pan://123456XXXXXX1234\",\"se://70626761838\"]",
+            "name": "Mastercard Guld",
+            "ownership": 1.0,
+            "type": "CREDIT_CARD",
+            "userModifiedExcluded": false,
+            "userModifiedName": false,
+            "userModifiedType": false
+        },
+        {
+            "accountExclusion": "NONE",
             "accountNumber": "9999999999",
             "availableCredit": 0.0,
             "balance": 0.0,
@@ -623,6 +668,34 @@
             "amount": -1.00,
             "date": 1583924400000,
             "description": "Till Depåkonto",
+            "externalSystemIds": {},
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "transactionDates": [],
+            "type": "DEFAULT",
+            "upcoming": false
+        },
+        {
+            "amount": -13.09,
+            "date": 1615460400000,
+            "description": "ram pam pam",
+            "externalSystemIds": {},
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "transactionDates": [],
+            "type": "DEFAULT",
+            "upcoming": false
+        },
+        {
+            "amount": -27.37,
+            "date": 1615460400000,
+            "description": "money money",
             "externalSystemIds": {},
             "internalPayload": {},
             "originalAmount": 0.0,

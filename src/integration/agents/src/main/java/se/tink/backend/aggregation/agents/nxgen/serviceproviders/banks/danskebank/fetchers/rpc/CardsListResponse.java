@@ -2,12 +2,16 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeba
 
 import java.util.List;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import org.apache.commons.collections4.ListUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.rpc.AbstractResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = false)
 public class CardsListResponse extends AbstractResponse {
-    @Getter private List<CardEntity> cards;
+    private List<CardEntity> cards;
+
+    public List<CardEntity> getCards() {
+        return ListUtils.emptyIfNull(cards);
+    }
 }

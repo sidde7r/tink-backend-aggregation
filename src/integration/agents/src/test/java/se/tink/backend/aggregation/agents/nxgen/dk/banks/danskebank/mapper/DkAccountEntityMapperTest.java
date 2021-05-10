@@ -5,13 +5,15 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
+import java.nio.file.Paths;
 import java.util.NoSuchElementException;
 import org.junit.Before;
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.AccountDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.AccountEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.CardEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.CardsListResponse;
 import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -19,6 +21,9 @@ import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class DkAccountEntityMapperTest {
+
+    private static final String TEST_DATA_PATH =
+            "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/dk/banks/danskebank/resources";
 
     private static final String ACCOUNT_NO_EXT = "123234345";
     private static final String ACCOUNT_NO_INT = "567678789";
@@ -30,19 +35,24 @@ public class DkAccountEntityMapperTest {
     private static final String TEN_DIGIT_ACCOUNT_NO_EXT = ZERO + ACCOUNT_NO_EXT;
     private static final String TEN_DIGIT_ACCOUNT_NO_INT = ZERO + ACCOUNT_NO_INT;
 
-    private DanskeBankApiClient apiClient;
     private DkAccountEntityMapper dkAccountEntityMapper;
     private AccountEntity accountEntity;
     private AccountDetailsResponse accountDetailsResponse;
     private DanskeBankConfiguration configuration;
+    private CardEntity cardEntity;
 
     @Before
     public void setUp() {
-        apiClient = mock(DanskeBankApiClient.class);
         dkAccountEntityMapper = new DkAccountEntityMapper();
         accountEntity = getAccountEntity(ACCOUNT_NO_EXT, ACCOUNT_NO_INT);
         accountDetailsResponse = getAccountDetailsReponse();
         configuration = getDanskeBankConfiguration();
+        cardEntity =
+                SerializationUtils.deserializeFromString(
+                                Paths.get(TEST_DATA_PATH, "cards_response.json").toFile(),
+                                CardsListResponse.class)
+                        .getCards()
+                        .get(0);
     }
 
     @Test
@@ -69,7 +79,7 @@ public class DkAccountEntityMapperTest {
                                 .filter(id -> id.getIdentifier().equals(ACCOUNT_NO_EXT))
                                 .filter(id -> id.getType().toString().equals(DK_MARKET_CODE))
                                 .findFirst()
-                                .get()
+                                .orElseThrow(IllegalStateException::new)
                                 .getIdentifier())
                 .isNotEmpty();
         assertThat(
@@ -77,7 +87,7 @@ public class DkAccountEntityMapperTest {
                                 .filter(id -> id.getIdentifier().equals(IBAN_NUMBER))
                                 .filter(id -> id.getType().toString().equals(IBAN))
                                 .findFirst()
-                                .get()
+                                .orElseThrow(IllegalStateException::new)
                                 .getIdentifier())
                 .isNotEmpty();
         assertThat(result.getAccountNumber()).isEqualTo(ACCOUNT_NO_EXT);
@@ -104,14 +114,14 @@ public class DkAccountEntityMapperTest {
                         result.getIdentifiers().stream()
                                 .filter(id -> id.getIdentifier().equals(TEN_DIGIT_ACCOUNT_NO_EXT))
                                 .findFirst()
-                                .get()
+                                .orElseThrow(IllegalStateException::new)
                                 .getIdentifier())
                 .isNotEmpty();
         assertThat(
                         result.getIdentifiers().stream()
                                 .filter(id -> id.getIdentifier().equals(IBAN_NUMBER))
                                 .findFirst()
-                                .get()
+                                .orElseThrow(IllegalStateException::new)
                                 .getIdentifier())
                 .isNotEmpty();
         assertThat(result.getAccountNumber()).isEqualTo(TEN_DIGIT_ACCOUNT_NO_EXT);
@@ -136,14 +146,14 @@ public class DkAccountEntityMapperTest {
                         result.getIdentifiers().stream()
                                 .filter(id -> id.getIdentifier().equals(ACCOUNT_NO_EXT))
                                 .findFirst()
-                                .get()
+                                .orElseThrow(IllegalStateException::new)
                                 .getIdentifier())
                 .isNotEmpty();
         assertThat(
                         result.getIdentifiers().stream()
                                 .filter(id -> id.getIdentifier().equals(IBAN_NUMBER))
                                 .findFirst()
-                                .get()
+                                .orElseThrow(IllegalStateException::new)
                                 .getIdentifier())
                 .isNotEmpty();
         assertThat(result.getAccountNumber()).isEqualTo(ACCOUNT_NO_EXT);
@@ -170,14 +180,14 @@ public class DkAccountEntityMapperTest {
                         result.getIdentifiers().stream()
                                 .filter(id -> id.getIdentifier().equals(TEN_DIGIT_ACCOUNT_NO_EXT))
                                 .findFirst()
-                                .get()
+                                .orElseThrow(IllegalStateException::new)
                                 .getIdentifier())
                 .isNotEmpty();
         assertThat(
                         result.getIdentifiers().stream()
                                 .filter(id -> id.getIdentifier().equals(IBAN_NUMBER))
                                 .findFirst()
-                                .get()
+                                .orElseThrow(IllegalStateException::new)
                                 .getIdentifier())
                 .isNotEmpty();
         assertThat(result.getAccountNumber()).isEqualTo(TEN_DIGIT_ACCOUNT_NO_EXT);
@@ -191,7 +201,7 @@ public class DkAccountEntityMapperTest {
         // given & when
         CreditCardAccount result =
                 dkAccountEntityMapper.toCreditCardAccount(
-                        configuration, accountEntity, accountDetailsResponse);
+                        configuration, accountEntity, accountDetailsResponse, cardEntity);
 
         // then
         assertThat(result.getAccountNumber()).isEqualTo(ACCOUNT_NO_EXT);
@@ -207,7 +217,7 @@ public class DkAccountEntityMapperTest {
         // when
         CreditCardAccount result =
                 dkAccountEntityMapper.toCreditCardAccount(
-                        configuration, accountEntity, accountDetailsResponse);
+                        configuration, accountEntity, accountDetailsResponse, cardEntity);
 
         // then
         assertThat(result.getAccountNumber()).isEqualTo(TEN_DIGIT_ACCOUNT_NO_EXT);
