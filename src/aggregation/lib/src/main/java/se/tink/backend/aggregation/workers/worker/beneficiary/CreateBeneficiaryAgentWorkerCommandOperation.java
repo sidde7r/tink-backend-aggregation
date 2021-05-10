@@ -171,11 +171,7 @@ public class CreateBeneficiaryAgentWorkerCommandOperation {
     private static AgentWorkerCommandMetricState createCommandMetricState(
             CredentialsRequest request, MetricRegistry metricRegistry, ClientInfo clientInfo) {
         return new AgentWorkerCommandMetricState(
-                request.getProvider(),
-                request.getCredentials(),
-                metricRegistry,
-                request.getType(),
-                clientInfo);
+                request, metricRegistry, request.getType(), clientInfo);
     }
 
     private static void

@@ -14,6 +14,9 @@ import se.tink.backend.aggregation.workers.commands.metrics.MetricsCommand;
 import se.tink.backend.aggregation.workers.operation.type.AgentWorkerOperationMetricType;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsRequestType;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
+import se.tink.libraries.credentials.service.CreateCredentialsRequest;
+import se.tink.libraries.credentials.service.CredentialsRequest;
+import se.tink.libraries.credentials.service.UserAvailability;
 import se.tink.libraries.metrics.core.MetricId;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 import se.tink.libraries.metrics.types.counters.Counter;
@@ -23,25 +26,26 @@ import se.tink.libraries.provider.ProviderDto.ProviderTypes;
 public class AgentWorkerCommandMetricStateTest {
     private AgentWorkerCommandMetricState metrics;
     private MetricRegistry metricRegistry;
-    private Provider provider;
-    private Credentials credentials;
+    private CredentialsRequest request;
     private CredentialsRequestType requestType;
     private ClientInfo clientInfo;
 
     @Before
     public void setup() {
-        MetricsCommand command = mockCommand();
+        request = new CreateCredentialsRequest();
+        request.setProvider(mockProvider());
+        request.setCredentials(mockCredentials());
+        request.setUserAvailability(mockUserAvailability());
 
+        MetricsCommand command = mockCommand();
         metricRegistry = mock(MetricRegistry.class);
         when(metricRegistry.timer(any())).thenReturn(mock(Timer.class));
         when(metricRegistry.meter(any())).thenReturn(mock(Counter.class));
-        provider = mockProvider();
-        credentials = mockCredentials();
+
         clientInfo = mockClientInfo();
         requestType = CredentialsRequestType.UPDATE;
         metrics =
-                new AgentWorkerCommandMetricState(
-                        provider, credentials, metricRegistry, requestType, clientInfo);
+                new AgentWorkerCommandMetricState(request, metricRegistry, requestType, clientInfo);
         metrics.init(command);
     }
 
@@ -90,11 +94,16 @@ public class AgentWorkerCommandMetricStateTest {
         return clientInfo;
     }
 
+    private UserAvailability mockUserAvailability() {
+        UserAvailability userAvailability = mock(UserAvailability.class);
+        userAvailability.setUserPresent(false);
+        return userAvailability;
+    }
+
     @Test(expected = IllegalStateException.class)
     public void ensureExceptionIsThrown_whenMetricsState_notInitiatedByCommand_onStart() {
         metrics =
-                new AgentWorkerCommandMetricState(
-                        provider, credentials, metricRegistry, requestType, clientInfo);
+                new AgentWorkerCommandMetricState(request, metricRegistry, requestType, clientInfo);
         metrics.start(AgentWorkerOperationMetricType.EXECUTE_COMMAND);
     }
 
@@ -107,8 +116,7 @@ public class AgentWorkerCommandMetricStateTest {
     @Test(expected = IllegalStateException.class)
     public void ensureExceptionIsThrown_whenMetricsState_notInitiatedByCommand_onGetAction() {
         metrics =
-                new AgentWorkerCommandMetricState(
-                        provider, credentials, metricRegistry, requestType, clientInfo);
+                new AgentWorkerCommandMetricState(request, metricRegistry, requestType, clientInfo);
         buildAction("should-throw-exception");
     }
 

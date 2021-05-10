@@ -10,10 +10,10 @@ import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
-import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.cluster.identification.ClientInfo;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsRequestType;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.metrics.core.MetricId;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 import se.tink.libraries.metrics.types.counters.Counter;
@@ -40,13 +40,12 @@ public class MetricActionTest {
     }
 
     private AgentWorkerCommandMetricState mockMetricState() {
-        Provider provider = mock(Provider.class);
+        CredentialsRequest request = mock(CredentialsRequest.class);
         ClientInfo clientInfo = mock(ClientInfo.class);
-        Credentials credentials = mockCredentials();
         CredentialsRequestType requestType = CredentialsRequestType.UPDATE;
+        request.setCredentials(mockCredentials());
 
-        return new AgentWorkerCommandMetricState(
-                provider, credentials, metricRegistry, requestType, clientInfo);
+        return new AgentWorkerCommandMetricState(request, metricRegistry, requestType, clientInfo);
     }
 
     private Credentials mockCredentials() {
