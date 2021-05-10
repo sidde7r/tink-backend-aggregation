@@ -40,6 +40,8 @@ import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.JyskeBankApiC
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.JyskeBankPersistentStorage;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.JyskeConstants.Authentication;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.JyskeConstants.Crypto;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.JyskeConstants.FormKeys;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.JyskeConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.JyskeConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.JyskeConstants.JwtKeys;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.JyskeConstants.JwtValues;
@@ -173,11 +175,11 @@ public class JyskeBankNemidAuthenticator
         final String replayId = randomValueGenerator.generateUuidWithTinkTag();
 
         final Form.Builder formBuilder = Form.builder();
-        formBuilder.put("client_id", clientId);
-        formBuilder.put("grant_type", "password");
-        formBuilder.put("password", password);
-        formBuilder.put("scope", "digitalbanking replayId:" + replayId);
-        formBuilder.put("username", "NOT_USED");
+        formBuilder.put(FormKeys.CLIENT_ID, clientId);
+        formBuilder.put(FormKeys.GRANT_TYPE, FormValues.PASSWORD);
+        formBuilder.put(FormKeys.PASSWORD, password);
+        formBuilder.put(FormKeys.SCOPE, FormValues.REPLAY_ID + replayId);
+        formBuilder.put(FormKeys.USERNAME, FormValues.NOT_USED);
 
         return formBuilder.build();
     }

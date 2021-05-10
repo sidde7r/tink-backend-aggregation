@@ -116,6 +116,22 @@ public class JyskeConstants {
         public static final String LOGIN_TYPE = "login";
     }
 
+    public static class FormKeys {
+        public static final String CLIENT_ID = "client_id";
+        public static final String GRANT_TYPE = "grant_type";
+        public static final String PASSWORD = "password";
+        public static final String SCOPE = "scope";
+        public static final String USERNAME = "username";
+        public static final String REFRESH_TOKEN = "refresh_token";
+    }
+
+    public static class FormValues {
+        public static final String PASSWORD = "password";
+        public static final String REPLAY_ID = "digitalbanking replayId:";
+        public static final String NOT_USED = "NOT_USED";
+        public static final String REFRESH_TOKEN = "refresh_token";
+    }
+
     public static class Fetcher {
         public static final int START_PAGE = 0;
     }
