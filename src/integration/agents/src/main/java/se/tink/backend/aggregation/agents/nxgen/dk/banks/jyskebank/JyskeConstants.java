@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank;
 
 import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 
 public class JyskeConstants {
@@ -135,6 +136,11 @@ public class JyskeConstants {
     public static class HttpClient {
         public static final int MAX_RETRIES = 3;
         public static final int RETRY_SLEEP_MILLISECONDS = 2000;
+    }
+
+    public static final class Log {
+        public static final LogTag UNKOWN_ACCOUNT_TYPE =
+                LogTag.from("#dk_jyske_unknown_account_type");
     }
 
     public static class Fetcher {
