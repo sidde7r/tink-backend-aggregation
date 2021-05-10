@@ -30,6 +30,7 @@ public final class SdcConstants {
     public static class QueryValues {
         public static final String CODE = "code";
         public static final String BOOKED = "booked";
+        public static final String BOTH = "both";
     }
 
     public static class HeaderKeys {
