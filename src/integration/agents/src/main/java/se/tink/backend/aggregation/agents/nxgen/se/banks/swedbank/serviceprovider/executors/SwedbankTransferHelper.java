@@ -61,7 +61,8 @@ public class SwedbankTransferHelper {
         this.isBankId = isBankId;
     }
 
-    public LinksEntity collectBankId(AbstractBankIdSignResponse bankIdSignResponse) {
+    public LinksEntity collectBankId(
+            AbstractBankIdSignResponse bankIdSignResponse, String autoStartTokenn) {
         boolean didOpenBankId = false;
 
         for (int i = 0; i < SwedbankBaseConstants.BankId.MAX_ATTEMPTS; i++) {
@@ -81,7 +82,8 @@ public class SwedbankTransferHelper {
                             log.info("Got autoStartToken from encodedImage: {}", autoStartToken);
                             supplementalInformationController.openMobileBankIdAsync(autoStartToken);
                         } else {
-                            supplementalInformationController.openMobileBankIdAsync(null);
+                            supplementalInformationController.openMobileBankIdAsync(
+                                    autoStartTokenn);
                         }
                         didOpenBankId = true;
                     }
@@ -349,7 +351,8 @@ public class SwedbankTransferHelper {
         if (isBankId) {
             InitiateSignTransferResponse initiateSignTransfer =
                     apiClient.signExternalTransferBankId(signLink);
-            return Optional.ofNullable(collectBankId(initiateSignTransfer));
+            return Optional.ofNullable(
+                    collectBankId(initiateSignTransfer, initiateSignTransfer.getAutoStartToken()));
         } else {
             InitiateSecurityTokenSignTransferResponse initiateSecurityTokenSignTransferResponse =
                     apiClient.signExternalTransferSecurityToken(signLink);
