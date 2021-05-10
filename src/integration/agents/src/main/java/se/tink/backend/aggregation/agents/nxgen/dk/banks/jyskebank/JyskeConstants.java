@@ -132,6 +132,11 @@ public class JyskeConstants {
         public static final String REFRESH_TOKEN = "refresh_token";
     }
 
+    public static class HttpClient {
+        public static final int MAX_RETRIES = 3;
+        public static final int RETRY_SLEEP_MILLISECONDS = 2000;
+    }
+
     public static class Fetcher {
         public static final int START_PAGE = 0;
     }
