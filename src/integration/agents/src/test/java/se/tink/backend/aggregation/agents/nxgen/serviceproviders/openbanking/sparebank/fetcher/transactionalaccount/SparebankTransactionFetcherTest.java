@@ -11,6 +11,7 @@ import static org.mockito.Mockito.when;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.SparebankApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.SparebankStorage;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
@@ -27,6 +28,7 @@ public class SparebankTransactionFetcherTest {
     @Before
     public void setup() {
         apiClient = mock(SparebankApiClient.class);
+        when(apiClient.getStorage()).thenReturn(mock(SparebankStorage.class));
         account = mock(TransactionalAccount.class);
         when(account.getApiIdentifier()).thenReturn("doesNotMatter");
         httpResponse = mock(HttpResponse.class);

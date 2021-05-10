@@ -34,7 +34,9 @@ public class SparebankTransactionFetcher
             String exceptionMessage = e.getResponse().getBody(String.class);
             if (exceptionMessage.contains(
                     SparebankConstants.TransactionsResponse.SCA_REDIRECT_ERROR_MESSAGE)) {
-                log.info("Cannot fetch transactions - SCA redirect error");
+                log.info(
+                        "Cannot fetch transactions - SCA redirect error. Consent creation ts: {}",
+                        apiClient.getStorage().getConsentCreationTimestamp());
                 return TransactionKeyPaginatorResponseImpl.createEmpty();
             }
             throw e;

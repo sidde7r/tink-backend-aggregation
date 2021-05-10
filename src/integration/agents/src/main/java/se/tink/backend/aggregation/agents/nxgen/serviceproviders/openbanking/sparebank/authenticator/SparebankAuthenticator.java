@@ -107,7 +107,9 @@ public class SparebankAuthenticator {
             }
         } catch (HttpResponseException e) {
             if (isExceptionWithScaRedirect(e)) {
-                log.info("TPP session invalid - fetch balances unauthorized error");
+                log.info(
+                        "TPP session invalid - fetch balances unauthorized error. Consent creation ts: {}",
+                        storage.getConsentCreationTimestamp());
                 // We are sure that the session is invalid and will require full auth again
                 return false;
             } else {
