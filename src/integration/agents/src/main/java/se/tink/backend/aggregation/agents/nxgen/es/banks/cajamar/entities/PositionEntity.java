@@ -22,4 +22,8 @@ public class PositionEntity {
     public List<CardEntity> getCards() {
         return cards;
     }
+
+    public List<FinancialMarketAccountEntity> getFinancialMarketAccounts() {
+        return financialMarketAccounts;
+    }
 }

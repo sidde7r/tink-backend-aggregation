@@ -19,6 +19,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.cajamar.fetcher.account
 import se.tink.backend.aggregation.agents.nxgen.es.banks.cajamar.fetcher.creditcard.rpc.CajamarCreditCardTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.cajamar.fetcher.creditcard.rpc.CreditCardResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.cajamar.fetcher.identitydata.rpc.CajamarIdentityDataResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.cajamar.fetcher.investment.rpc.InvestmentAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.cajamar.session.KeepAliveRequest;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -87,6 +88,12 @@ public class CajamarApiClient {
             CreditCardAccount account, String key) {
         return createCardTransactionsRequest(account.getApiIdentifier(), key)
                 .post(CajamarCreditCardTransactionsResponse.class);
+    }
+
+    public InvestmentAccountResponse fetchInvestmentAccountDetails(String accountId) {
+        return createAuthorizedRequest(
+                        URL.of(URLs.INVESTMENT_ACCOUNT).parameter(URLs.PARAM_ID, accountId).get())
+                .post(InvestmentAccountResponse.class);
     }
 
     public CajamarIdentityDataResponse fetchIdentityData(String accountId) {

@@ -15,5 +15,6 @@
     "currency": "EUR",
     "globalBalance": 3133.86,
     "whatIhave": 3133.86,
-    "whatIowe": 0.00
+    "whatIowe": 0.00,
+    "financialMarketAccounts": []
 }

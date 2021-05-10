@@ -31,5 +31,19 @@
     "currency": "EUR",
     "globalBalance": 3133.86,
     "whatIhave": 3133.86,
-    "whatIowe": 0.00
+    "whatIowe": 0.00,
+    "financialMarketAccounts": [
+        {
+            "accountId": "1234",
+            "account": "3000/0000/00/00000000",
+            "profile": "43",
+            "lastOperationDate": "2021-03-02",
+            "currency": "EUR",
+            "stockMarketBalance": 28.00,
+            "stockMarketDate": "2021-04-20",
+            "investmentFundBalance": 0.00,
+            "investmentFundDate": "2008-11-05",
+            "totalBalance": 28.00
+        }
+    ]
 }
