@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.SparebankConstants.HEADERS_TO_SIGN;
@@ -44,7 +45,7 @@ public class SparebankApiClient {
     private final EidasProxyConfiguration eidasProxyConfiguration;
     private final EidasIdentity eidasIdentity;
     private final SparebankApiConfiguration apiConfiguration;
-    private final SparebankStorage storage;
+    @Getter private final SparebankStorage storage;
 
     private RequestBuilder createRequest(URL url) {
         return createRequest(url, Optional.empty());
