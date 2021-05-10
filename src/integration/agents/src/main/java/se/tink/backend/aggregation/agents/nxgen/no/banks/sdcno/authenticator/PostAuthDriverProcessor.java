@@ -4,7 +4,6 @@ import static se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.config.Sdc
 
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
@@ -24,9 +23,9 @@ public class PostAuthDriverProcessor {
     private final WebDriver driver;
     private final CookieManager cookieManager;
 
-    private static final By ERROR_MESSAGE_CONTENT = By.xpath("//*[@id='error-message']/ul/li");
-    private static final By AGREEMENT_LIST = By.className("agreement-list");
-    private static final By AGREEMENT_LIST_FIRST_OPTION = By.xpath("//a[@data-id='0']");
+    static final By ERROR_MESSAGE_CONTENT = By.xpath("//*[@id='error-message']/ul/li");
+    static final By AGREEMENT_LIST = By.className("agreement-list");
+    static final By AGREEMENT_LIST_FIRST_OPTION = By.xpath("//a[@data-id='0']");
 
     private static final By TARGET_ELEMENT_XPATH = By.xpath("//input[@value='Logg ut']");
 
@@ -42,17 +41,20 @@ public class PostAuthDriverProcessor {
     }
 
     public void processLogonCasesAfterSuccessfulBankIdAuthentication() {
-        try {
-            checkForErrors();
-            checkIfMultipleAgreements();
-        } catch (NoSuchElementException e) {
-            // If we do not find error element or agreement list element,
-            // we know that login was successful.
-        }
+        checkForErrors();
+        checkIfMultipleAgreements();
     }
 
     private void checkForErrors() {
-        String errorMessage = driver.findElement(ERROR_MESSAGE_CONTENT).getAttribute("innerText");
+        String errorMessage =
+                driver.findElements(ERROR_MESSAGE_CONTENT).stream()
+                        .map(element -> element.getAttribute("innerText"))
+                        .findFirst()
+                        .orElse(null);
+        if (errorMessage == null) {
+            log.info("[SDC] Did not found any error message");
+            return;
+        }
 
         if (isNotACustomer(errorMessage)) {
             throw LoginError.NOT_CUSTOMER.exception();
@@ -80,11 +82,23 @@ public class PostAuthDriverProcessor {
     }
 
     private void checkIfMultipleAgreements() {
-        log.info(
-                "[SDC] Checking for multiple agreements, verify page source: {}",
-                driver.getPageSource());
-        WebElement agreementsList = driver.findElement(AGREEMENT_LIST);
-        WebElement firstAgreement = agreementsList.findElement(AGREEMENT_LIST_FIRST_OPTION);
+        WebElement agreementsList =
+                driver.findElements(AGREEMENT_LIST).stream().findFirst().orElse(null);
+        if (agreementsList == null) {
+            log.info(
+                    "[SDC] Did not found multiple agreements, verify page source: {}",
+                    driver.getPageSource());
+            return;
+        }
+
+        WebElement firstAgreement =
+                agreementsList.findElements(AGREEMENT_LIST_FIRST_OPTION).stream()
+                        .findFirst()
+                        .orElseThrow(
+                                () ->
+                                        new IllegalStateException(
+                                                "Could not find first agreements option, verify page source: \n"
+                                                        + driver.getPageSource()));
         chooseFirstAgreement(firstAgreement);
         // ITE-1457 - we are not sure that it will work correctly
         // Probably there is a chance that we need to iterate through all agreements,
