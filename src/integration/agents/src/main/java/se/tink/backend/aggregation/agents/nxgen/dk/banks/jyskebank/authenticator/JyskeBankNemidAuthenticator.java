@@ -24,6 +24,7 @@ import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import org.apache.http.HttpStatus;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -36,6 +37,7 @@ import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
+import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.JyskeBankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.JyskeBankPersistentStorage;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.JyskeConstants.Authentication;
@@ -48,6 +50,7 @@ import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.JyskeConstant
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.JyskeConstants.Storage;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.authenticator.rpc.ChallengeResponse;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.authenticator.rpc.ClientRegistrationResponse;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.authenticator.rpc.ErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.authenticator.rpc.JweRequest;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.authenticator.rpc.OAuthResponse;
 import se.tink.backend.aggregation.agents.utils.crypto.RSA;
@@ -61,6 +64,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.NemIdIFrameController;
 import se.tink.backend.aggregation.nxgen.http.form.Form;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
@@ -279,13 +283,22 @@ public class JyskeBankNemidAuthenticator
 
         final String password = createLoginPackage(kid, clientId, challenge);
         final Form oauthForm = buildOauthTokenForm(clientId, password);
-        final OAuthResponse oAuthResponse =
-                apiClient.fetchAccessToken(clientId, clientSecret, oauthForm);
 
-        final String accessToken = oAuthResponse.getAccessToken();
-        final String refreshToken = oAuthResponse.getRefreshToken();
-        sessionStorage.put(Storage.ACCESS_TOKEN, accessToken);
-        sessionStorage.put(Storage.REFRESH_TOKEN, refreshToken);
+        try {
+            final OAuthResponse oAuthResponse =
+                    apiClient.fetchAccessToken(clientId, clientSecret, oauthForm);
+            final String accessToken = oAuthResponse.getAccessToken();
+            final String refreshToken = oAuthResponse.getRefreshToken();
+            sessionStorage.put(Storage.ACCESS_TOKEN, accessToken);
+            sessionStorage.put(Storage.REFRESH_TOKEN, refreshToken);
+        } catch (HttpResponseException e) {
+            final String error = e.getResponse().getBody(ErrorResponse.class).getError();
+            if (e.getResponse().getStatus() == HttpStatus.SC_BAD_REQUEST
+                    && "invalid_grant".equals(error)) {
+                throw SessionError.SESSION_EXPIRED.exception();
+            }
+            throw e;
+        }
     }
 
     private String createLoginPackage(String kid, String clientId, String challenge) {
