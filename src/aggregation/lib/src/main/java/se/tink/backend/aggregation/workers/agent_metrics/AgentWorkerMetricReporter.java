@@ -24,6 +24,11 @@ public class AgentWorkerMetricReporter {
     private final ProviderTierConfiguration providerTierConfiguration;
     private static final Logger log = LoggerFactory.getLogger(AgentWorkerMetricReporter.class);
 
+    private static final String MARKET_KEY = "market";
+    private static final String OPERATION_KEY = "operation";
+    private static final String TIER_KEY = "tier";
+    private static final String PROVIDER_KEY = "provider";
+
     private enum Metric {
         TOTAL_OPERATIONS(MetricId.newId("aggregation_total_operations")),
         FAILED_OPERATIONS(MetricId.newId("aggregation_failed_operations")),
@@ -133,12 +138,12 @@ public class AgentWorkerMetricReporter {
         final MetricLabels marketOperationLabels =
                 MetricLabels.from(
                         ImmutableMap.of(
-                                "market",
+                                MARKET_KEY,
                                 context.getRequest().getProvider().getMarket(),
-                                "operation",
+                                OPERATION_KEY,
                                 operationName));
         final MetricLabels operationLabels =
-                MetricLabels.from(ImmutableMap.of("operation", operationName));
+                MetricLabels.from(ImmutableMap.of(OPERATION_KEY, operationName));
 
         metricLabelPairs.add(
                 new MetricLabelPair(Metric.TOTAL_MARKET_OPERATIONS, marketOperationLabels));
@@ -164,7 +169,8 @@ public class AgentWorkerMetricReporter {
         final List<MetricLabelPair> metricLabelPairs = new ArrayList<>();
         final MetricLabels marketLabels =
                 MetricLabels.from(
-                        ImmutableMap.of("market", context.getRequest().getProvider().getMarket()));
+                        ImmutableMap.of(
+                                MARKET_KEY, context.getRequest().getProvider().getMarket()));
 
         metricLabelPairs.add(new MetricLabelPair(Metric.TOTAL_MARKET, marketLabels));
         metricLabelPairs.add(
@@ -187,17 +193,20 @@ public class AgentWorkerMetricReporter {
         final MetricLabels tierLabels =
                 MetricLabels.from(
                         ImmutableMap.of(
-                                "market",
+                                MARKET_KEY,
                                 context.getRequest().getProvider().getMarket(),
-                                "tier",
+                                TIER_KEY,
                                 tierName));
 
         final MetricLabels tierProviderLabel =
                 MetricLabels.from(
                         ImmutableMap.of(
-                                "market", context.getRequest().getProvider().getMarket(),
-                                "tier", tierName,
-                                "provider", providerName));
+                                MARKET_KEY,
+                                context.getRequest().getProvider().getMarket(),
+                                TIER_KEY,
+                                tierName,
+                                PROVIDER_KEY,
+                                providerName));
 
         metricLabelPairs.add(new MetricLabelPair(Metric.TOTAL_TIER_MARKET, tierLabels));
         metricLabelPairs.add(
