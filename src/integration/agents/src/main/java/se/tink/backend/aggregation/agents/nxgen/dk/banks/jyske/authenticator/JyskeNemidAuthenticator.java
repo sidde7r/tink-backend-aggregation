@@ -56,12 +56,9 @@ public class JyskeNemidAuthenticator extends NemIdCodeAppAuthenticator<NemIdGene
                         .decrypt(token, NemIdChallengeEntity.class);
         jyskePersistentStorage.setChallengeEntity(challengeResponse);
 
-        NemIdGenerateCodeResponse response =
-                apiClient
-                        .generateCode(new NemIdGenerateCodeRequest().setPushEnabled(true), token)
-                        .decrypt(token, NemIdGenerateCodeResponse.class);
-
-        return response;
+        return apiClient
+                .generateCode(new NemIdGenerateCodeRequest().setPushEnabled(true), token)
+                .decrypt(token, NemIdGenerateCodeResponse.class);
     }
 
     @Override
@@ -124,7 +121,7 @@ public class JyskeNemidAuthenticator extends NemIdCodeAppAuthenticator<NemIdGene
         Token token =
                 jyskePersistentStorage
                         .getToken()
-                        .orElseThrow(() -> SessionError.SESSION_EXPIRED.exception());
+                        .orElseThrow(SessionError.SESSION_EXPIRED::exception);
 
         NemIdLoginInstallIdEncryptionEntity installIdResponse =
                 jyskePersistentStorage.getNemidLoginEntity();
