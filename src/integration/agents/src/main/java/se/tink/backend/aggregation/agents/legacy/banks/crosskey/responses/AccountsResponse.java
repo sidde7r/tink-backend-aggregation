@@ -6,9 +6,9 @@ import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AccountsResponse extends BaseResponse {
-    public List<AccountResponse> accounts;
+    private List<AccountResponse> accounts;
 
     public List<AccountResponse> getAccounts() {
-        return accounts != null ? accounts : Lists.<AccountResponse>newArrayList();
+        return accounts != null ? accounts : Lists.newArrayList();
     }
 }

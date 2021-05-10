@@ -1,8 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.executor.payment.rpc;
 
-import org.apache.commons.lang3.RandomStringUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.executor.payment.entites.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.executor.payment.entites.AmountEntity;
+import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
@@ -18,7 +18,7 @@ public class CreatePaymentRequest {
         this.debtorAccount = builder.debtorAccount;
         this.creditorAccount = builder.creditorAccount;
         this.creditorName = builder.creditorName;
-        this.endToEndIdentification = RandomStringUtils.random(10, false, true);
+        this.endToEndIdentification = RandomUtils.generateRandomNumericString(10);
     }
 
     public static class Builder {

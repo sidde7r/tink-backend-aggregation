@@ -36,4 +36,26 @@ public class RandomUtilsTest {
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("bound must be greater than origin");
     }
+
+    @Test
+    public void shouldGenerate10LongDigitsOnly() {
+        // given
+
+        // when
+        String result = RandomUtils.generateRandomNumericString(10);
+
+        // then
+        assertThat(result).containsOnlyDigits();
+    }
+
+    @Test
+    public void shouldGenerate10LongLettersOnly() {
+        // given
+
+        // when
+        String result = RandomUtils.generateRandomAlphabeticString(10);
+
+        // then
+        assertThat(result).doesNotContainPattern("\\d");
+    }
 }
