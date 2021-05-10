@@ -208,11 +208,7 @@ public class AgentWorkerOperationFactory {
     private AgentWorkerCommandMetricState createCommandMetricState(
             CredentialsRequest request, ClientInfo clientInfo) {
         return new AgentWorkerCommandMetricState(
-                request.getProvider(),
-                request.getCredentials(),
-                metricRegistry,
-                request.getType(),
-                clientInfo);
+                request, metricRegistry, request.getType(), clientInfo);
     }
 
     // Remove `ACCOUNTS` and `TRANSACTIONAL_ACCOUNTS_AND_TRANSACTIONS` and replace them with

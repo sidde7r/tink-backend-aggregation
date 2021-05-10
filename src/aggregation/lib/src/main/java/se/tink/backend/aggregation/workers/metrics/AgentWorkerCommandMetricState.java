@@ -8,11 +8,11 @@ import java.util.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.cluster.identification.ClientInfo;
 import se.tink.backend.aggregation.workers.commands.metrics.MetricsCommand;
 import se.tink.backend.aggregation.workers.operation.type.AgentWorkerOperationMetricType;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsRequestType;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.metrics.core.MetricId;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 
@@ -21,7 +21,7 @@ public class AgentWorkerCommandMetricState {
             LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final MetricRegistry metricRegistry;
-    private final Provider provider;
+    private final CredentialsRequest request;
     private final Credentials credentials;
     private MetricId.MetricLabels defaultLabels;
     private MetricsCommand command;
@@ -32,13 +32,12 @@ public class AgentWorkerCommandMetricState {
     private MetricAction baseAction;
 
     public AgentWorkerCommandMetricState(
-            Provider provider,
-            Credentials credentials,
+            CredentialsRequest request,
             MetricRegistry metricRegistry,
             CredentialsRequestType requestType,
             ClientInfo clientInfo) {
-        this.provider = provider;
-        this.credentials = credentials;
+        this.request = request;
+        this.credentials = request.getCredentials();
         this.metricRegistry = metricRegistry;
         this.requestType = requestType;
         this.clientInfo = clientInfo;
@@ -166,11 +165,12 @@ public class AgentWorkerCommandMetricState {
                 MetricId.newId(command.getMetricName())
                         .label(defaultLabels)
                         .label(action)
-                        .label("provider_type", provider.getMetricTypeName())
-                        .label("market", provider.getMarket())
-                        .label("className", provider.getClassName())
+                        .label("provider_type", request.getProvider().getMetricTypeName())
+                        .label("market", request.getProvider().getMarket())
+                        .label("className", request.getProvider().getClassName())
                         .label("credential", credentials.getMetricTypeName())
                         .label("request_type", requestType.name())
-                        .label("client_cluster_id", clientInfo.getClusterId()));
+                        .label("client_cluster_id", clientInfo.getClusterId())
+                        .label("is_user_present", request.getUserAvailability().isUserPresent()));
     }
 }
