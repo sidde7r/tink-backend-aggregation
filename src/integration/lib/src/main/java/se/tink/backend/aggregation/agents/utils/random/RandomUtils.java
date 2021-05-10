@@ -31,6 +31,18 @@ public class RandomUtils {
         return RandomStringUtils.random(size, 0, 0, true, true, null, random);
     }
 
+    public static String generateRandomAlphanumericString(Integer size, String chars) {
+        return RandomStringUtils.random(size, 0, 0, true, true, chars.toCharArray(), random);
+    }
+
+    public static String generateRandomNumericString(Integer size) {
+        return RandomStringUtils.random(size, 0, 0, false, true, null, random);
+    }
+
+    public static String generateRandomAlphabeticString(Integer size) {
+        return RandomStringUtils.random(size, 0, 0, true, false, null, random);
+    }
+
     public static int randomInt(int bound) {
         return random.nextInt(bound);
     }

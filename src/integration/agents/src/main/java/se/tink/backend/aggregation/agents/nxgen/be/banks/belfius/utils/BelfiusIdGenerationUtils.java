@@ -1,8 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.utils;
 
+import java.security.SecureRandom;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import org.apache.commons.lang3.RandomStringUtils;
+import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class BelfiusIdGenerationUtils {
@@ -11,43 +12,35 @@ public class BelfiusIdGenerationUtils {
        This will enable unit testing of the code, which uses them.
        However they are used mainly by DTOs (which is also a bad practice).
     */
+    private static final SecureRandom RANDOM = new SecureRandom();
 
     public static String generateTransactionId() {
-        return "signIWSAuthentication"
-                + System.currentTimeMillis() / 1000
-                + "."
-                + String.format("%06d", (int) (Math.random() * 1000000));
+        return "signIWSAuthentication" + buildSuffix();
     }
 
     public static String generateTransactionIdRegisterDevice() {
-        return "signDeviceRegistration"
-                + System.currentTimeMillis() / 1000
-                + "."
-                + String.format("%06d", (int) (Math.random() * 1000000));
+        return "signDeviceRegistration" + buildSuffix();
     }
 
     public static String generateTransferId() {
-        return "submitTransfer"
-                + System.currentTimeMillis() / 1000
-                + "."
-                + String.format("%06d", (int) (Math.random() * 1000000));
+        return "submitTransfer" + buildSuffix();
     }
 
     public static String generateBeneficiaryId() {
-        return "signBeneficiary"
-                + System.currentTimeMillis() / 1000
-                + "."
-                + String.format("%06d", (int) (Math.random() * 1000000));
+        return "signBeneficiary" + buildSuffix();
     }
 
     public static String generateSignTransferId() {
-        return "signTransfer"
-                + System.currentTimeMillis() / 1000
+        return "signTransfer" + buildSuffix();
+    }
+
+    private static String buildSuffix() {
+        return System.currentTimeMillis() / 1000
                 + "."
-                + String.format("%06d", (int) (Math.random() * 1000000));
+                + String.format("%06d", (int) (RANDOM.nextDouble() * 1000000));
     }
 
     public static String generateDeviceToken() {
-        return RandomStringUtils.random(53, "0123456789ABCDEF");
+        return RandomUtils.generateRandomAlphanumericString(53, "0123456789ABCDEF");
     }
 }

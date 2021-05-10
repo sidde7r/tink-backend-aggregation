@@ -7,7 +7,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
 import lombok.Getter;
-import org.apache.commons.lang.RandomStringUtils;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.LaBanquePostaleConstants;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.LaBanquePostaleConstants.PaymentTypeInformation;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.entities.BeneficiaryEntity;
@@ -21,6 +20,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fro
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.entities.InitiatingPartyEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.entities.PaymentIdEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.entities.SupplementaryDataEntity;
+import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.payment.enums.PaymentType;
@@ -51,7 +51,7 @@ public class CreatePaymentRequest {
     private SupplementaryDataEntity supplementaryData;
 
     private CreatePaymentRequest(Builder builder) {
-        paymentInformationId = RandomStringUtils.random(35, true, true);
+        paymentInformationId = RandomUtils.generateRandomAlphanumericString(35);
         creationDateTime = builder.creationDateTime;
         requestedExecutionDate = builder.requestedExecutionDate;
         numberOfTransactions = 1;

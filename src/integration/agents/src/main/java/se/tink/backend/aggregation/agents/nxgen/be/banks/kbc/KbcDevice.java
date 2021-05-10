@@ -13,7 +13,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.bouncycastle.jce.interfaces.ECPrivateKey;
 import org.bouncycastle.jce.interfaces.ECPublicKey;
@@ -86,7 +85,8 @@ public class KbcDevice {
 
     private void generateFingerprint() {
         fingerprint =
-                RandomStringUtils.randomAlphanumeric(KbcConstants.Encryption.FINGERPRINT_LENGTH);
+                RandomUtils.generateRandomAlphanumericString(
+                        KbcConstants.Encryption.FINGERPRINT_LENGTH);
     }
 
     public static byte[] generateIv() {
