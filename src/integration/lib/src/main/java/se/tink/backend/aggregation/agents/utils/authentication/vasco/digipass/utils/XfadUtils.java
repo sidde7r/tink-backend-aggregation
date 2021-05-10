@@ -19,7 +19,7 @@ public class XfadUtils {
         byte lengthIndicator = (byte) (xfad[1] & 0xf);
         int length = 56;
         if ((lengthIndicator & 0xf8) > 0) {
-            length = xfad[3] | (xfad[2] << 8) | 4;
+            length = (xfad[3] & 0xff) | (xfad[2] << 8) | 4;
         }
 
         Preconditions.checkArgument(length < xfad.length, "Xfad length is invalid.");
