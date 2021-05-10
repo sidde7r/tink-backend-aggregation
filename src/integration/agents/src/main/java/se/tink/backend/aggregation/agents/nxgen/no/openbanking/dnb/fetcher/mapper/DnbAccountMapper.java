@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.fetcher.mapper;
 
+import com.google.common.collect.ImmutableList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
@@ -22,15 +24,17 @@ public class DnbAccountMapper {
     private static final String[] SAVING_ACCOUNT_PRODUCT_NAMES = {
         "SPAREKONTO", "SAVING", "SUPERSPAR", "PLASSERINGSKONTO"
     };
-    private static final DnbBalanceType[] BOOKED_BALANCE_TYPE_PRIORITIES = {
-        DnbBalanceType.OPENING_BOOKED,
-        DnbBalanceType.CLOSING_BOOKED,
-        DnbBalanceType.EXPECTED,
-        DnbBalanceType.INTERIM_AVAILABLE
-    };
-    private static final DnbBalanceType[] AVAILABLE_BALANCE_TYPE_PRIORITIES = {
-        DnbBalanceType.INTERIM_AVAILABLE, DnbBalanceType.EXPECTED, DnbBalanceType.FORWARD_AVAILABLE
-    };
+    private static final List<DnbBalanceType> BOOKED_BALANCE_TYPE_PRIORITIES =
+            ImmutableList.of(
+                    DnbBalanceType.OPENING_BOOKED,
+                    DnbBalanceType.CLOSING_BOOKED,
+                    DnbBalanceType.EXPECTED,
+                    DnbBalanceType.INTERIM_AVAILABLE);
+    private static final List<DnbBalanceType> AVAILABLE_BALANCE_TYPE_PRIORITIES =
+            ImmutableList.of(
+                    DnbBalanceType.INTERIM_AVAILABLE,
+                    DnbBalanceType.EXPECTED,
+                    DnbBalanceType.FORWARD_AVAILABLE);
 
     public Optional<TransactionalAccount> toTinkAccount(
             AccountEntity accountEntity, BalancesResponse balancesResponse) {
@@ -102,8 +106,8 @@ public class DnbAccountMapper {
     }
 
     private Optional<ExactCurrencyAmount> getBalanceAmount(
-            BalancesResponse balancesResponse, DnbBalanceType[] types) {
-        return Arrays.stream(types)
+            BalancesResponse balancesResponse, List<DnbBalanceType> matchingBalanceTypes) {
+        return matchingBalanceTypes.stream()
                 .map(balancesResponse::getBalanceOfType)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
