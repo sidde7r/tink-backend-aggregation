@@ -14,7 +14,7 @@ public class LclConstants {
                 new URL(SECURITY_HOST + "outil/UAUT/AccueilService/setIdentSC");
         public static final URL LOGIN = new URL(SECURITY_HOST + "outil/UAUT/AccueilService/login");
         public static final URL KEEP_ALIVE =
-                new URL(SECURITY_HOST + "outil/UWOA/api/v2/auth/token");
+                new URL(SECURITY_HOST + "outil/UWOA/api/v1/auth/token");
 
         public static final URL ACCOUNT_DETAILS_LIST =
                 new URL(SECURITY_HOST + "outil/UWRI/AccueilService");
@@ -60,7 +60,11 @@ public class LclConstants {
         X_AP_OS("X-AP-OS", DeviceConfiguration.OS),
         X_AP_SDK_VERSION("X-AP-SDKVersion", DeviceConfiguration.SDK_VERSION),
         X_AP_APP_VERSION("X-AP-AppVersion", DeviceConfiguration.APP_VERSION),
-        X_AP_KEY("X-AP-Key", "sygU9znL");
+        X_AP_KEY("X-AP-Key", "sygU9znL"),
+        USER_AGENT(
+                "User-Agent",
+                "mescomptes/5.1.0 iPhone10,4 iOS/14.0.1 CFNetwork/1197 Darwin/20.0.0"),
+        X_API_KEY("x-api-key", "D9DB89FB8DC38629E2D26A6036FAD2E904A9172CB8B6EF19A69798991B53E8F1");
 
         private final String key;
         private final String value;
@@ -95,7 +99,7 @@ public class LclConstants {
         DEVICE("device", "04"),
         IDENTIFIANT_ROUTING("identifiantRouting", "CLI"),
         MOBILE("mobile", "true"),
-        AUDIENCE("audience", "MONETIQUE");
+        AUDIENCE("audience", "WSAGREG0");
 
         private final String key;
         private final String value;
