@@ -978,7 +978,7 @@ public final class SEBApiAgent extends AbstractAgent
             KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance("SunX509");
             keyManagerFactory.init(keyStore, PASSWORD.toCharArray());
 
-            SSLContext sslContext = SSLContext.getInstance("SSL");
+            SSLContext sslContext = SSLContext.getInstance("TLSv1.2");
             sslContext.init(keyManagerFactory.getKeyManagers(), null, new SecureRandom());
 
             ApacheHttpClient4Config config = new DefaultApacheHttpClient4Config();
