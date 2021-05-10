@@ -14,6 +14,7 @@ import java.util.Optional;
 import java.util.UUID;
 import javax.annotation.Nullable;
 import javax.ws.rs.core.MediaType;
+import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.ErrorCodes;
@@ -65,7 +66,7 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.pair.Pair;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
-public final class RedsysApiClient {
+public class RedsysApiClient {
 
     private final TinkHttpClient client;
     private final SessionStorage sessionStorage;
@@ -102,6 +103,11 @@ public final class RedsysApiClient {
                         HttpErrorCodes.TOO_MANY_REQUESTS,
                         ErrorCodes.ACCESS_EXCEEDED,
                         BankServiceError.ACCESS_EXCEEDED));
+        client.addFilter(
+                new ErrorFilter(
+                        HttpStatus.SC_INTERNAL_SERVER_ERROR,
+                        ErrorCodes.SERVER_ERROR,
+                        BankServiceError.BANK_SIDE_FAILURE));
     }
 
     private RedsysConfiguration getConfiguration() {

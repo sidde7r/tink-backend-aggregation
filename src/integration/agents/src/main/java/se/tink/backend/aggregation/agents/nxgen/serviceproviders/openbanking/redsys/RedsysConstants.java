@@ -40,16 +40,12 @@ public final class RedsysConstants {
         public static final String BALANCES = "/v1/accounts/%s/balances";
         public static final String CREATE_PAYMENT = "/v1/payments/%s";
         public static final String GET_PAYMENT = "/v1/payments/%s/%s";
-        public static final String PAYMENT_STATUS = "/v1/payments/%s/%s/status";
-        public static final String PAYMENT_CANCEL = "/v1/payments/%s/%s";
     }
 
     public static class StorageKeys {
         public static final String OAUTH_TOKEN = PersistentStorageKeys.OAUTH_2_TOKEN;
         public static final String CONSENT_ID = "consentId";
         public static final String CONSENT_VALID_FROM = "consentValidFrom";
-        public static final String SCA_REDIRECT = "scaRedirect";
-        public static final String SCA_SUPPLEMENTAL_KEY = "scaSupplementalKey";
         public static final String FETCHED_TRANSACTIONS = "fetchedTxUntil:";
     }
 
@@ -80,11 +76,6 @@ public final class RedsysConstants {
             public static final String BOOKED = "booked";
             public static final String PENDING = "pending";
         }
-    }
-
-    public static class ConfigurationValues {
-        public static final String AIS = "AIS";
-        public static final String PIS = "PIS";
     }
 
     public static class HeaderKeys {
@@ -125,7 +116,6 @@ public final class RedsysConstants {
 
     public static class Signature {
         public static final String DIGEST_PREFIX = "SHA-256=";
-        public static final String KEY_ID_FORMAT = "SN=%d,CA=%s";
         public static final String FORMAT =
                 "keyId=\"%s\",algorithm=\"SHA-256\",headers=\"%s\",signature=\"%s\"";
     }
@@ -138,6 +128,7 @@ public final class RedsysConstants {
     public static class ErrorCodes {
         public static final String ACCESS_EXCEEDED = "ACCESS_EXCEEDED";
         public static final String CONSENT_EXPIRED = "CONSENT_EXPIRED";
+        public static final String SERVER_ERROR = "server_error";
     }
 
     public static class HttpErrorCodes {
