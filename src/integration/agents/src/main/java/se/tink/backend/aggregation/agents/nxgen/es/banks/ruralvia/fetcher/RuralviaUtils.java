@@ -28,4 +28,12 @@ public final class RuralviaUtils {
     public static ExactCurrencyAmount parseAmountInEuros(String amountString) {
         return parseAmount(amountString, "EUR");
     }
+
+    public static String extractToken(
+            String html, String startToSearchAt, String searchFor, String searchStop) {
+        int beginIndex = html.indexOf(startToSearchAt);
+        beginIndex = html.indexOf(searchFor, beginIndex) + searchFor.length();
+        int endIndex = html.indexOf(searchStop, beginIndex);
+        return html.substring(beginIndex, endIndex);
+    }
 }

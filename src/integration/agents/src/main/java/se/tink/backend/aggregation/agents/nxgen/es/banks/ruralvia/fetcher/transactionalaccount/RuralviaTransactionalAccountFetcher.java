@@ -114,9 +114,7 @@ public class RuralviaTransactionalAccountFetcher
         bodyForm = requestTransactionsBetweenDatesBodyForm(html, fromDate, toDate);
         html = apiClient.navigateAccountTransactionsBetweenDates(url, bodyForm);
 
-        paginatorResponse = fetchAccountTransactions(html, accEntity.getCurrency());
-
-        return paginatorResponse;
+        return fetchAccountTransactions(html, account.getExactBalance().getCurrencyCode());
     }
 
     @VisibleForTesting
