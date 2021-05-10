@@ -1,10 +1,16 @@
-package se.tink.backend.aggregation.agents.nxgen.pl.placeholder;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.instantor_bsp.placeholder;
 
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.IDENTITY_DATA;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
 
 import com.google.inject.Inject;
+import se.tink.backend.aggregation.agents.FetchAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
+import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
+import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.agent.AgentVisitor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
@@ -21,7 +27,10 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
  * own.
  */
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, IDENTITY_DATA})
-public class PlaceholderBankAgent extends NextGenerationAgent {
+public class PlaceholderBankAgent extends NextGenerationAgent
+        implements RefreshIdentityDataExecutor,
+                RefreshCheckingAccountsExecutor,
+                RefreshSavingsAccountsExecutor {
 
     private static final String PLACEHOLDER_AGENT_SHOULD_NEVER_BE_INSTANTIATED =
             "Placeholder agent should never be instantiated.";
@@ -44,6 +53,31 @@ public class PlaceholderBankAgent extends NextGenerationAgent {
 
     @Override
     public void accept(AgentVisitor visitor) {
+        throw new UnsupportedOperationException(PLACEHOLDER_AGENT_SHOULD_NEVER_BE_INSTANTIATED);
+    }
+
+    @Override
+    public FetchAccountsResponse fetchCheckingAccounts() {
+        throw new UnsupportedOperationException(PLACEHOLDER_AGENT_SHOULD_NEVER_BE_INSTANTIATED);
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCheckingTransactions() {
+        throw new UnsupportedOperationException(PLACEHOLDER_AGENT_SHOULD_NEVER_BE_INSTANTIATED);
+    }
+
+    @Override
+    public FetchIdentityDataResponse fetchIdentityData() {
+        throw new UnsupportedOperationException(PLACEHOLDER_AGENT_SHOULD_NEVER_BE_INSTANTIATED);
+    }
+
+    @Override
+    public FetchAccountsResponse fetchSavingsAccounts() {
+        throw new UnsupportedOperationException(PLACEHOLDER_AGENT_SHOULD_NEVER_BE_INSTANTIATED);
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchSavingsTransactions() {
         throw new UnsupportedOperationException(PLACEHOLDER_AGENT_SHOULD_NEVER_BE_INSTANTIATED);
     }
 }
