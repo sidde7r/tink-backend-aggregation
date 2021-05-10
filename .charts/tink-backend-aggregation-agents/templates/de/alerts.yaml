@@ -20,7 +20,7 @@ spec:
         and sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, market="DE", provider_type!="test"}[60m])) by (action,className) > 5
       for: {{ .Values.p4WaitTimeBeforeFiringAlert }}
       labels:
-        severity: urgent
+        severity: ping
         priority: P4
         who: integration-nazguls
       annotations:
@@ -100,7 +100,7 @@ spec:
         and sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, market="DE" }[60m])) by (action,className) > 5
       for: {{ .Values.p4WaitTimeBeforeFiringAlert }}
       labels:
-        severity: urgent
+        severity: ping
         priority: P4
         who: integration-nazguls
       annotations:
@@ -215,7 +215,7 @@ spec:
           / sum(sum_over_time(tink_agent_login_total{ {{ .Values.manualLoginActions }}, market="DE"}[6h])) BY (className) >= 0.1
       for: 1h
       labels:
-        severity: urgent
+        severity: ping
         priority: P4
         who: integration-nazguls
       annotations:
@@ -249,7 +249,7 @@ spec:
           / sum(sum_over_time(tink_agent_login_total{ {{ .Values.manualLoginActions }}, market="DE"}[6h])) BY (className) > 0.1)
       for: 1h
       labels:
-        severity: urgent
+        severity: ping
         priority: P4
         who: integration-nazguls
       annotations:
@@ -287,7 +287,7 @@ spec:
          and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"}) > 20
       for: 5m
       labels:
-        severity: urgent
+        severity: ping
         priority: P4
         who: integration-nazguls
       annotations:
@@ -365,7 +365,7 @@ spec:
          and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"}) > 20
       for: 5m
       labels:
-        severity: urgent
+        severity: ping
         priority: P4
         who: integration-nazguls
       annotations:
