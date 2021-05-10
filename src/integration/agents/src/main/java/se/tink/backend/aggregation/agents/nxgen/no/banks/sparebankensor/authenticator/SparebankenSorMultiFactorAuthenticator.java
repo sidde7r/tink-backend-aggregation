@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.authent
 import com.google.api.client.http.HttpStatusCodes;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -23,6 +24,7 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.Spareban
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.SparebankenSorConstants.ErrorText;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.SparebankenSorConstants.HTMLTags;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.SparebankenSorConstants.Storage;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.authenticator.rpc.ErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.authenticator.rpc.FinalizeBankIdBody;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.authenticator.rpc.FirstLoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.authenticator.rpc.FirstLoginResponse;
@@ -35,6 +37,7 @@ import se.tink.backend.aggregation.agents.utils.authentication.encap3.models.Dev
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.bankid.BankIdAuthenticatorNO;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.i18n.Catalog;
 
@@ -44,6 +47,7 @@ public class SparebankenSorMultiFactorAuthenticator implements BankIdAuthenticat
 
     private static final String ACTIVATION_CODE_FIELD_KEY = "activationCode";
     private static final int ACTIVATION_CODE_LENGTH = 8;
+    private static final String CODE_FOR_ERROR_INVALID_CREDENTIALS = "9999";
 
     private final SparebankenSorApiClient apiClient;
     private final EncapClient encapClient;
@@ -64,12 +68,7 @@ public class SparebankenSorMultiFactorAuthenticator implements BankIdAuthenticat
         apiClient.fetchAppInformation(); // only for getting a cookie, possible we must save this
         // cookie for later use in the first login request
 
-        // TODO: Sor returns a 500 for incorrect nationalId, have to verify with check digits before
-        // this request.
-        VerifyCustomerResponse response = apiClient.verifyCustomer(nationalId, mobilenumber);
-        if (!response.isValid()) {
-            throw LoginError.INCORRECT_CREDENTIALS.exception();
-        }
+        tryVerifyCustomerResponse(nationalId, mobilenumber);
 
         apiClient.configureBankId(nationalId, mobilenumber);
         apiClient.setSessionIdForBankIdUrls();
@@ -86,6 +85,31 @@ public class SparebankenSorMultiFactorAuthenticator implements BankIdAuthenticat
         } else handleLoginErrors(doc);
 
         throw new IllegalStateException("Unknown error code when missing reference words");
+    }
+
+    private void tryVerifyCustomerResponse(String nationalId, String mobilenumber) {
+        try {
+            VerifyCustomerResponse response = apiClient.verifyCustomer(nationalId, mobilenumber);
+            if (!response.isValid()) {
+                throw LoginError.INCORRECT_CREDENTIALS.exception();
+            }
+        } catch (HttpResponseException httpException) {
+            if (isInvalidCredentialsErrorResponse(httpException)) {
+                throw LoginError.INCORRECT_CREDENTIALS.exception(httpException);
+            }
+            throw httpException;
+        }
+    }
+
+    private boolean isInvalidCredentialsErrorResponse(HttpResponseException httpException) {
+        if (httpException.getResponse().getStatus() != 500
+                || !httpException.getResponse().hasBody()) {
+            return false;
+        }
+        return Optional.ofNullable(httpException.getResponse().getBody(ErrorResponse.class))
+                .map(ErrorResponse::getCode)
+                .map(CODE_FOR_ERROR_INVALID_CREDENTIALS::equalsIgnoreCase)
+                .orElse(false);
     }
 
     private void handleLoginErrors(final Document doc) throws BankIdException {
