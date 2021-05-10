@@ -1,5 +1,5 @@
 REQUEST 1
-POST https://site1.sibsapimarket.com/sibs/apimarket/CGDPT/v1-0-2/payments/sepa-credit-transfers?tppRedirectPreferred=true
+POST https://site1.sibsapimarket.com/sibs/apimarket/CGDPT/v1-0-3/payments/sepa-credit-transfers?tppRedirectPreferred=true
 Accept: application/json
 Content-Type: application/json
 
@@ -33,7 +33,7 @@ Content-Type: application/json
 }
 
 REQUEST 2
-GET https://site1.sibsapimarket.com/sibs/apimarket/CGDPT/v1-0-2/payments/sepa-credit-transfers/0fb3c1e5a1524e4ebcb5194d7d3d7a80/status
+GET https://site1.sibsapimarket.com/sibs/apimarket/CGDPT/v1-0-3/payments/sepa-credit-transfers/0fb3c1e5a1524e4ebcb5194d7d3d7a80/status
 
 RESPONSE 2
 200
