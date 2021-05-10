@@ -31,7 +31,7 @@ public class CajamarIdentityDataFetcherTest {
     }
 
     @Test
-    public void shouldFetchCajamarAccount() throws IOException {
+    public void shouldFetchCajamarIdentity() throws IOException {
         // given
         final PositionEntity position = loadSampleData("positions.json", PositionEntity.class);
         final CajamarIdentityDataResponse identityDataResponse =
@@ -48,6 +48,27 @@ public class CajamarIdentityDataFetcherTest {
         // then
         Assert.assertEquals("00111111A", identityData.getSsn());
         Assert.assertEquals("ALEJANDRO ROBERTO", identityData.getFullName());
+    }
+
+    @Test
+    public void shouldFetchEmptyCajamarIdentity() throws IOException {
+        // given
+        final PositionEntity position = loadSampleData("positions.json", PositionEntity.class);
+        final CajamarIdentityDataResponse identityDataResponse =
+                loadSampleData("unmapped_identity.json", CajamarIdentityDataResponse.class);
+
+        when(apiClient.fetchPositions()).thenReturn(position);
+        when(apiClient.fetchIdentityData(any())).thenReturn(identityDataResponse);
+        when(sessionStorage.get(SessionKeys.ACCOUNT_HOLDER_NAME)).thenReturn("GONZALEZ MYSZOJELEN");
+
+        // when
+        final CajamarIdentityDataFetcher cajamarIdentityDataFetcher =
+                new CajamarIdentityDataFetcher(apiClient, sessionStorage);
+        final IdentityData identityData = cajamarIdentityDataFetcher.fetchIdentityData();
+
+        // then
+        Assert.assertEquals("", identityData.getSsn());
+        Assert.assertEquals("GONZALEZ MYSZOJELEN", identityData.getFullName());
     }
 
     private <T> T loadSampleData(String path, Class<T> cls) throws IOException {

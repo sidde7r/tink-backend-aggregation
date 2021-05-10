@@ -57,31 +57,42 @@ public class CajamarIdentityDataFetcher implements IdentityDataFetcher {
             throw new IllegalStateException("Could not deserialize or decrypt extra", e);
         }
 
-        if (identityData.contains(SplitValues.NIF)) {
-            return builder.setNifNumber(getDocumentId(identityData, SplitValues.NIF));
-        }
-        if (identityData.contains(SplitValues.WITH_NIF)) {
-            return builder.setNifNumber(getDocumentId(identityData, SplitValues.WITH_NIF));
-        }
         if (identityData.contains(SplitValues.PASSPORT)) {
             return builder.setPassportNumber(getDocumentId(identityData, SplitValues.PASSPORT));
         }
-        log.info(
-                "Unmapped type of documentId with name of account holder and number of document: "
-                        + getUnmappedDocumentId(identityData));
-        return builder.setDocumentNumber("");
+
+        return builder.setNifNumber(
+                SplitValues.NIF.stream()
+                        .filter(identityData::contains)
+                        .map(s -> getDocumentId(identityData, s))
+                        .findFirst()
+                        .orElseGet(
+                                () -> {
+                                    log.warn(
+                                            "Unmapped type of documentId with name of account holder and number of document");
+                                    return "";
+                                }));
     }
 
     private String getDocumentId(String identityData, String documentType) {
         int begin = identityData.indexOf(documentType);
-        int end = identityData.indexOf(SplitValues.END_OF_DOCUMENT_ID, begin);
+        int end = findEndOfDocumentId(identityData, begin);
         String documentId = identityData.substring(begin, end).trim();
         return documentId.split(documentType)[1];
     }
 
-    private String getUnmappedDocumentId(String identityData) {
-        int begin = identityData.indexOf(SplitValues.ADDITIONAL_PARSER);
-        int end = identityData.indexOf(SplitValues.ADDITIONAL_END_PARSER, begin);
-        return identityData.substring(begin, end);
+    private int findEndOfDocumentId(String identityData, int begin) {
+        int end = 0;
+        for (String endOfDocumentId : SplitValues.END_OF_DOCUMENT_ID) {
+            int endInDocument = identityData.indexOf(endOfDocumentId, begin);
+            if (end == 0) {
+                end = endInDocument;
+                continue;
+            }
+            if (endInDocument != -1 && end > endInDocument) {
+                end = endInDocument;
+            }
+        }
+        return end;
     }
 }
