@@ -94,7 +94,9 @@ public class BaseTransferExecutor {
                 if (transferHelper.isBankId()) {
                     InitiateSignTransferResponse initiateSignTransfer =
                             apiClient.signExternalTransferBankId(links.getSignOrThrow());
-                    links = transferHelper.collectBankId(initiateSignTransfer);
+                    links =
+                            transferHelper.collectBankId(
+                                    initiateSignTransfer, initiateSignTransfer.getAutoStartToken());
                 } else {
                     links = transferHelper.tokenSignTransfer(links);
                 }
