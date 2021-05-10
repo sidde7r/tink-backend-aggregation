@@ -30,6 +30,7 @@ java_library(
         "//third_party:lombok_libs",
         "//third_party:org_apache_commons_commons_collections4",
         "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
+        "@aggregation//:com_google_guava_guava",
         "@aggregation//:com_kjetland_mbknor_jackson_jsonschema_2_12",
         "@tink_backend//src/libraries/account_identifier",
     ],

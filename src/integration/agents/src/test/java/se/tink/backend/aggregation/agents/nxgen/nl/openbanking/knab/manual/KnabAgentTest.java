@@ -26,8 +26,8 @@ public class KnabAgentTest {
                 new AgentIntegrationTest.Builder("nl", "nl-knab-ob")
                         .addCredentialField(
                                 CredentialKeys.IBANS, manager.get(IbanArgumentEnum.IBAN))
-                        .loadCredentialsBefore(false)
-                        .saveCredentialsAfter(false)
+                        .loadCredentialsBefore(true)
+                        .saveCredentialsAfter(true)
                         .setFinancialInstitutionId("knab")
                         .setAppId("tink")
                         .expectLoggedIn(false);

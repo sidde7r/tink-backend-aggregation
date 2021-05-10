@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab;
 
+import com.google.common.base.Strings;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Calendar;
@@ -12,6 +13,7 @@ import java.util.stream.Stream;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
+import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.KnabConstants.BodyValues;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.KnabConstants.CredentialKeys;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.KnabConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.KnabConstants.Formats;
@@ -20,6 +22,7 @@ import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.KnabConstant
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.KnabConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.KnabConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.KnabConstants.StorageKeys;
+import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.KnabConstants.UrlParameters;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.KnabConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.authenticator.entity.ConsentRequestAccessEntity;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.authenticator.entity.IbanEntity;
@@ -99,6 +102,18 @@ public class KnabApiClient {
                 .queryParam(QueryKeys.SCOPE, scope)
                 .queryParam(QueryKeys.REDIRECT_URI, redirectUrl)
                 .getUrl();
+    }
+
+    public boolean isConsentValid(String consentId, OAuth2Token oAuth2Token) {
+        if (Strings.isNullOrEmpty(consentId)) {
+            return false;
+        }
+
+        return createRequest(Urls.CONSENT_STATUS.parameter(UrlParameters.CONSENT_ID, consentId))
+                .addBearerToken(oAuth2Token)
+                .get(ConsentResponse.class)
+                .getConsentStatus()
+                .equalsIgnoreCase(BodyValues.VALID);
     }
 
     public ConsentResponse getConsent(OAuth2Token token) {

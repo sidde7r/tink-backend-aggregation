@@ -37,6 +37,7 @@ public final class KnabConstants {
         public static final URL AUTHORIZE = new URL(BASE_AUTH_URL + Endpoints.AUTHORIZE);
         public static final URL TOKEN = new URL(BASE_AUTH_URL + Endpoints.TOKEN);
         public static final URL CONSENT = new URL(BASE_API_URL + Endpoints.CONSENT);
+        public static final URL CONSENT_STATUS = new URL(CONSENT + "/{consent-id}/status");
         public static final URL ACCOUNTS = new URL(BASE_API_URL + Endpoints.ACCOUNTS);
         public static final URL BALANCES = new URL(BASE_API_URL + Endpoints.BALANCES);
         public static final URL TRANSACTIONS = new URL(BASE_API_URL + Endpoints.TRANSACTIONS);
@@ -50,6 +51,10 @@ public final class KnabConstants {
         public static final String BALANCES = "/openbanking/v1/accounts/{accountId}/balances";
         public static final String TRANSACTIONS =
                 "/openbanking/v1/accounts/{accountId}/transactions";
+    }
+
+    public static final class UrlParameters {
+        public static final String CONSENT_ID = "consent-id";
     }
 
     public static class PathVariables {
@@ -74,6 +79,10 @@ public final class KnabConstants {
         public static final String INITIAL_SCOPE = "openid profile psd2 offline_access";
         public static final String CONSENTED_SCOPE = INITIAL_SCOPE.concat(" AIS:%s");
         public static final String BOOKED = "booked";
+    }
+
+    public static class BodyValues {
+        public static final String VALID = "valid";
     }
 
     public static class FormKeys {
