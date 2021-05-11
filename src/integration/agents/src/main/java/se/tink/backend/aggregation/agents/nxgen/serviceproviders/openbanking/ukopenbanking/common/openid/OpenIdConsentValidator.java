@@ -32,12 +32,14 @@ public interface OpenIdConsentValidator {
                 response -> {
                     ErrorResponse errorBody = response.getBody(ErrorResponse.class);
                     return errorBody.hasErrorCode("UK.OBIE.Resource.NotFound")
-                            || errorBody.hasErrorCode("UK.OBIE.Resource.InvalidConsentStatus");
+                            || errorBody.hasErrorCode("UK.OBIE.Resource.InvalidConsentStatus")
+                            || errorBody.hasErrorCode("UK.OBIE.Reauthenticate");
                 }),
         ERROR_MESSAGE(
                 response -> {
                     ErrorResponse errorBody = response.getBody(ErrorResponse.class);
-                    return errorBody.messageContains("Consent");
+                    return errorBody.messageContains("Consent")
+                            || errorBody.messageContains("Reauthenticate");
                 });
 
         private final Predicate<HttpResponse> responsePredicate;
