@@ -89,7 +89,8 @@ public class PostbankAuthenticationController implements TypedAuthenticator {
             String username, AuthorisationResponse initValues, ScaMethod chosenScaMethod) {
         String authenticationType = chosenScaMethod.getAuthenticationType();
         log.info("[Postbank 2FA] User for authenticationType {} started 2FA", authenticationType);
-        switch (AuthenticationType.fromString(authenticationType).get()) {
+        switch (AuthenticationType.fromString(authenticationType)
+                .orElseThrow(LoginError.NOT_SUPPORTED::exception)) {
             case PUSH_OTP:
                 finishWithAcceptingPush(initValues, username);
                 break;

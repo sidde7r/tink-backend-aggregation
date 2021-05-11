@@ -303,15 +303,17 @@ public class FiduciaAuthenticatorTest {
     private String getFieldName(ScaResponse scaResponse) {
         ScaMethod chosenScaMethod = scaResponse.getChosenScaMethod();
         if (chosenScaMethod != null) {
-            AuthenticationType authenticationType =
-                    AuthenticationType.fromString(chosenScaMethod.getAuthenticationType()).get();
-            switch (authenticationType) {
-                case CHIP_OTP:
-                    return "chipTan";
-                case SMS_OTP:
-                    return "smsTan";
-                case PUSH_OTP:
-                    return "pushTan";
+            Optional<AuthenticationType> authenticationType =
+                    AuthenticationType.fromString(chosenScaMethod.getAuthenticationType());
+            if (authenticationType.isPresent()) {
+                switch (authenticationType.get()) {
+                    case CHIP_OTP:
+                        return "chipTan";
+                    case SMS_OTP:
+                        return "smsTan";
+                    case PUSH_OTP:
+                        return "pushTan";
+                }
             }
         }
         return "tanField";
