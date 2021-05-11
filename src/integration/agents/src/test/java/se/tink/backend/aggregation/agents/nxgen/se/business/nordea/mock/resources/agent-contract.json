@@ -22,6 +22,15 @@
             "userModifiedType": false,
             "identifiers": "[]",
             "closed": false,
+            "holderName" : "La La",
+            "accountHolder" : {
+                "accountId" : null,
+                "type" : "BUSINESS",
+                "identities" : [ {
+                    "name" : "La La",
+                    "role" : "HOLDER"
+                } ]
+            },
             "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
             "availableCredit": 0.0,
             "balance": 908386.3
@@ -884,11 +893,24 @@
     "identityData" : {
         "nameElements" : [ {
             "type" : "FIRST_NAME",
-            "value" : null
+            "value" : "SANTA"
         }, {
             "type" : "SURNAME",
-            "value" : null
+            "value" : "CLAUS"
         } ],
-        "dateOfBirth" : null
+        "dateOfBirth" : {
+            "year" : 1976,
+            "month" : "MARCH",
+            "dayOfWeek" : "THURSDAY",
+            "leapYear" : true,
+            "dayOfYear" : 85,
+            "chronology" : {
+                "id" : "ISO",
+                "calendarType" : "iso8601"
+            },
+            "era" : "CE",
+            "monthValue" : 3,
+            "dayOfMonth" : 25
+        }
     }
 }
