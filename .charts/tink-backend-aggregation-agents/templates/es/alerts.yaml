@@ -320,7 +320,7 @@ spec:
           count(count_over_time(tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="ES"}[50m])) by (provider)
                  / count(count_over_time(tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"}[50m])) by (provider) < 0.5
           # At least this many attempts
-          and count(count_over_time(tink_agent_login_total{ {{ .Values.reAgents }}, market="ES", provider_type!="test"}[50m])) by (provider) > 5
+          and count(count_over_time(tink_agent_login_total{ {{ .Values.reAgents }}, market="ES", provider_type!="test"}[50m])) by (provider) > 3
       for: 10m
       labels:
         severity: urgent
@@ -331,22 +331,6 @@ spec:
              {{ .Values.grafanaLink }}
         summary: Login success rate for RE agents and for all login types with All Errors is below 50% with the value ( <{ $value }> )
               for <{ $labels.className }> ( <{ $labels.provider }> ) and it was below for the last 60 minutes.
-        tags: {{ .Values.tags }}
-
-    - alert: AllLoginSuccessRatesBelow50WithAllErrorsWithoutAttemptLimit_EXPERIMENTAL_ES_RE
-      expr: |
-        count(count_over_time(tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="ES"}[50m])) by (provider)
-               / count(count_over_time(tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"}[50m])) by (provider) < 0.5
-      for: 10m
-      labels:
-        severity: ping
-        priority: P4
-        who: integration-fluffy
-      annotations:
-        description: {{ .Values.kibanaLink }}
-          {{ .Values.grafanaLink }}
-        summary: Login success rate for RE agents and for all login types with All Errors is below 50% with the value ( <{ $value }> )
-          for <{ $labels.className }> ( <{ $labels.provider }> ) and it was below for the last 60 minutes.
         tags: {{ .Values.tags }}
 
     ###################################################
@@ -360,7 +344,7 @@ spec:
           count(count_over_time(tink_agent_login_total{ {{ .Values.loginActionsWithoutManual }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="ES"}[50m])) by (provider, action)
                 / count(count_over_time(tink_agent_login_total{ {{ .Values.loginActionsWithoutManual }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"}[50m])) by (provider, action) < 0.5
           # At least this many attempts
-          and count(count_over_time(tink_agent_login_total{ {{ .Values.loginActionsWithoutManual }}, {{ .Values.reAgents }}, market="ES", provider_type!="test"}[50m])) by (provider, action) > 5
+          and count(count_over_time(tink_agent_login_total{ {{ .Values.loginActionsWithoutManual }}, {{ .Values.reAgents }}, market="ES", provider_type!="test"}[50m])) by (provider, action) > 3
       for: 10m
       labels:
         severity: urgent
@@ -371,22 +355,6 @@ spec:
              {{ .Values.grafanaLink }}
         summary: Login success rate for RE agents and for one of login type with All Errors is below 50% with the value ( <{ $value }> )
               for <{ $labels.className }> ( <{ $labels.provider }> ) and it was below for the last 60 minutes.
-        tags: {{ .Values.tags }}
-
-    - alert: SplitLoginSuccessRatesBelow50WithAllErrorsWithoutAttemptLimit_EXPERIMENTAL_ES_RE
-      expr: |
-        count(count_over_time(tink_agent_login_total{ {{ .Values.loginActionsWithoutManual }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="ES"}[50m])) by (provider, action)
-              / count(count_over_time(tink_agent_login_total{ {{ .Values.loginActionsWithoutManual }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"}[50m])) by (provider, action) < 0.5
-      for: 10m
-      labels:
-        severity: ping
-        priority: P4
-        who: integration-fluffy
-      annotations:
-        description: {{ .Values.kibanaLink }}
-          {{ .Values.grafanaLink }}
-        summary: Login success rate for RE agents and for one of login type with All Errors is below 50% with the value ( <{ $value }> )
-          for <{ $labels.className }> ( <{ $labels.provider }> ) and it was below for the last 60 minutes.
         tags: {{ .Values.tags }}
 
     ##### OpenBanking #####
@@ -400,7 +368,7 @@ spec:
           count(count_over_time(tink_agent_login_total{ {{ .Values.obAgents }}, {{ .Values.temporaryErrorsAuth }}, market="ES"}[50m])) by (provider)
               / count(count_over_time(tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="ES"}[50m])) by (provider) < 0.6
           # At least this many attempts
-          and count(count_over_time(tink_agent_login_total{ {{ .Values.obAgents }}, market="ES", provider_type!="test"}[50m])) by (provider) > 5
+          and count(count_over_time(tink_agent_login_total{ {{ .Values.obAgents }}, market="ES", provider_type!="test"}[50m])) by (provider) > 3
       for: 10m
       labels:
         severity: urgent
@@ -409,22 +377,6 @@ spec:
       annotations:
         description: {{ .Values.kibanaLink }}
              {{ .Values.grafanaLink }}
-        summary: Login success rate for OB agents and for all authentication types with temporary errors is below 60% with value ( <{ $value }> )
-          for <{ $labels.className }> ( <{ $labels.provider }> ) and it was below for the last 60 minutes.
-        tags: {{ .Values.tags }}
-
-    - alert: AllLoginSuccessRatesBelow60WithTemporaryErrorsWithoutAttemptLimit_EXPERIMENTAL_ES_OB
-      expr: |
-        count(count_over_time(tink_agent_login_total{ {{ .Values.obAgents }}, {{ .Values.temporaryErrorsAuth }}, market="ES"}[50m])) by (provider)
-            / count(count_over_time(tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="ES"}[50m])) by (provider) < 0.6
-      for: 10m
-      labels:
-        severity: ping
-        priority: P4
-        who: integration-fluffy
-      annotations:
-        description: {{ .Values.kibanaLink }}
-          {{ .Values.grafanaLink }}
         summary: Login success rate for OB agents and for all authentication types with temporary errors is below 60% with value ( <{ $value }> )
           for <{ $labels.className }> ( <{ $labels.provider }> ) and it was below for the last 60 minutes.
         tags: {{ .Values.tags }}
@@ -438,7 +390,7 @@ spec:
           count(count_over_time(tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="ES"}[50m])) by (provider, action)
             / count(count_over_time(tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="ES"}[50m])) by (provider, action) < 0.6
           # At least this many attempts
-          and count(count_over_time(tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, market="ES", provider_type!="test"}[50m])) by (provider, action) > 5
+          and count(count_over_time(tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, market="ES", provider_type!="test"}[50m])) by (provider, action) > 3
       for: 10m
       labels:
         severity: urgent
@@ -449,22 +401,6 @@ spec:
              {{ .Values.grafanaLink }}
         summary: Login success rate for OB agents and for one of login type with temporary errors is below 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
              the last 60m.
-        tags: {{ .Values.tags }}
-
-    - alert: SplitLoginSuccessRatesBelow60WithTemporaryErrorsWithoutAttemptLimit_EXPERIMENTAL_ES_OB
-      expr: |
-        count(count_over_time(tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="ES"}[50m])) by (provider, action)
-          / count(count_over_time(tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="ES"}[50m])) by (provider, action) < 0.6
-      for: 10m
-      labels:
-        severity: ping
-        priority: P4
-        who: integration-fluffy
-      annotations:
-        description: {{ .Values.kibanaLink }}
-          {{ .Values.grafanaLink }}
-        summary: Login success rate for OB agents and for one of login type with temporary errors is below 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
-          the last 60m.
         tags: {{ .Values.tags }}
 
     ##################################################
@@ -476,7 +412,7 @@ spec:
           count(count_over_time(tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="ES"}[50m])) by (provider)
             / count(count_over_time(tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="ES"}[50m])) by (provider) < 0.6
           # At least this many attempts
-          and count(count_over_time(tink_agent_login_total{ {{ .Values.obAgents }}, market="ES", provider_type!="test"}[50m])) by (provider) > 5
+          and count(count_over_time(tink_agent_login_total{ {{ .Values.obAgents }}, market="ES", provider_type!="test"}[50m])) by (provider) > 3
       for: 10m
       labels:
         severity: urgent
@@ -487,22 +423,6 @@ spec:
              {{ .Values.grafanaLink }}
         summary: Login success rate for OB agents and for all Bank types with Bank errors is below 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
              the last 60m.
-        tags: {{ .Values.tags }}
-
-    - alert: AllLoginSuccessRatesBelow60WithBankErrorsWithoutAttemptLimit_EXPERIMENTAL_ES_OB
-      expr: |
-        count(count_over_time(tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="ES"}[50m])) by (provider)
-          / count(count_over_time(tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="ES"}[50m])) by (provider) < 0.6
-      for: 10m
-      labels:
-        severity: ping
-        priority: P4
-        who: integration-fluffy
-      annotations:
-        description: {{ .Values.kibanaLink }}
-          {{ .Values.grafanaLink }}
-        summary: Login success rate for OB agents and for all Bank types with Bank errors is below 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
-          the last 60m.
         tags: {{ .Values.tags }}
 
     ####################################################
@@ -514,7 +434,7 @@ spec:
           count(count_over_time(tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="ES"}[50m])) by (provider, action)
             / count(count_over_time(tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="ES"}[50m])) by (provider, action) < 0.6
           # At least this many attempts
-          and count(count_over_time(tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, market="ES", provider_type!="test"}[50m])) by (provider, action) > 5
+          and count(count_over_time(tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, market="ES", provider_type!="test"}[50m])) by (provider, action) > 3
       for: 10m
       labels:
         severity: urgent
@@ -527,22 +447,6 @@ spec:
              the last 60m.
         tags: {{ .Values.tags }}
 
-    - alert: SplitLoginSuccessRatesBelow60WithBankErrorsWithoutAttemptLimit_EXPERIMENTAL_ES_OB
-      expr: |
-        count(count_over_time(tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="ES"}[50m])) by (provider, action)
-          / count(count_over_time(tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="ES"}[50m])) by (provider, action) < 0.6
-      for: 10m
-      labels:
-        severity: ping
-        priority: P4
-        who: integration-fluffy
-      annotations:
-        description: {{ .Values.kibanaLink }}
-          {{ .Values.grafanaLink }}
-        summary: Login success rate for OB agents and for one of login type with Bank errors is below 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
-          the last 60m.
-        tags: {{ .Values.tags }}
-
     #################################################
     ### All login success rates - All Errors - OB ###
     #################################################
@@ -552,7 +456,7 @@ spec:
           count(count_over_time(tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="ES"}[50m])) by (provider)
             / count(count_over_time(tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="ES"}[50m])) by (provider) < 0.5
           # At least this many attempts
-            and count(count_over_time(tink_agent_login_total{ {{ .Values.obAgents }}, market="ES", provider_type!="test"}[50m])) by (provider) > 5
+            and count(count_over_time(tink_agent_login_total{ {{ .Values.obAgents }}, market="ES", provider_type!="test"}[50m])) by (provider) > 3
       for: 10m
       labels:
         severity: urgent
@@ -563,22 +467,6 @@ spec:
              {{ .Values.grafanaLink }}
         summary: Login success rate for OB agents and for all login types with All Errors is below 50% with the value ( <{ $value }> )
               for <{ $labels.className }> ( <{ $labels.provider }> ) and it was below for the last 60 minutes.
-        tags: {{ .Values.tags }}
-
-    - alert: AllLoginSuccessRatesBelow50WithAllErrorsWithoutAttemptLimit_EXPERIMENTAL_ES_OB
-      expr: |
-        count(count_over_time(tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="ES"}[50m])) by (provider)
-          / count(count_over_time(tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="ES"}[50m])) by (provider) < 0.5
-      for: 10m
-      labels:
-        severity: ping
-        priority: P4
-        who: integration-fluffy
-      annotations:
-        description: {{ .Values.kibanaLink }}
-          {{ .Values.grafanaLink }}
-        summary: Login success rate for OB agents and for all login types with All Errors is below 50% with the value ( <{ $value }> )
-          for <{ $labels.className }> ( <{ $labels.provider }> ) and it was below for the last 60 minutes.
         tags: {{ .Values.tags }}
 
     ###################################################
@@ -592,7 +480,7 @@ spec:
           count(count_over_time(tink_agent_login_total{ {{ .Values.loginActionsWithoutManual }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="ES"}[50m])) by (provider, action)
             / count(count_over_time(tink_agent_login_total{ {{ .Values.loginActionsWithoutManual }}, {{ .Values.obAgents }}, provider_type!="test", market="ES"}[50m])) by (provider, action) < 0.5
           # At least this many attempts
-          and count(count_over_time(tink_agent_login_total{ {{ .Values.loginActionsWithoutManual }}, {{ .Values.obAgents }}, market="ES", provider_type!="test"}[50m])) by (provider, action) > 5
+          and count(count_over_time(tink_agent_login_total{ {{ .Values.loginActionsWithoutManual }}, {{ .Values.obAgents }}, market="ES", provider_type!="test"}[50m])) by (provider, action) > 3
       for: 10m
       labels:
         severity: urgent
@@ -603,22 +491,6 @@ spec:
              {{ .Values.grafanaLink }}
         summary: Login success rate for OB agents and for one of login type with All Errors is below 50% with the value ( <{ $value }> )
              for <{ $labels.className }> ( <{ $labels.provider }> ) and it was below for the last 60 minutes.
-        tags: {{ .Values.tags }}
-
-    - alert: SplitLoginSuccessRatesBelow50WithAllErrorsWithoutAttemptLimit_EXPERIMENTAL_ES_OB
-      expr: |
-        count(count_over_time(tink_agent_login_total{ {{ .Values.loginActionsWithoutManual }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="ES"}[50m])) by (provider, action)
-          / count(count_over_time(tink_agent_login_total{ {{ .Values.loginActionsWithoutManual }}, {{ .Values.obAgents }}, provider_type!="test", market="ES"}[50m])) by (provider, action) < 0.5
-      for: 10m
-      labels:
-        severity: ping
-        priority: P4
-        who: integration-fluffy
-      annotations:
-        description: {{ .Values.kibanaLink }}
-          {{ .Values.grafanaLink }}
-        summary: Login success rate for OB agents and for one of login type with All Errors is below 50% with the value ( <{ $value }> )
-          for <{ $labels.className }> ( <{ $labels.provider }> ) and it was below for the last 60 minutes.
         tags: {{ .Values.tags }}
 
     #### Agent refresh ####
