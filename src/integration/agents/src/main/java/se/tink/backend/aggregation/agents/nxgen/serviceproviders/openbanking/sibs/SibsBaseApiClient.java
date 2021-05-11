@@ -49,7 +49,7 @@ public class SibsBaseApiClient {
     private static final String PAGINATION_DATE_FORMAT = "yyyy-MM-dd";
     private static final DateTimeFormatter DATE_FORMATTER =
             DateTimeFormatter.ofPattern(PAGINATION_DATE_FORMAT);
-    private final boolean manualRefresh;
+    private final boolean isUserPresent;
     private final String isPsuInvolved;
     private final SibsUserState userState;
     private final TinkHttpClient client;
@@ -72,13 +72,13 @@ public class SibsBaseApiClient {
             TinkHttpClient client,
             SibsUserState userState,
             String aspspCode,
-            boolean isRequestManual,
+            boolean isUserPresent,
             String userIp) {
         this.client = client;
         this.userState = userState;
         this.aspspCode = aspspCode;
-        this.isPsuInvolved = String.valueOf(isRequestManual);
-        this.manualRefresh = isRequestManual;
+        this.isPsuInvolved = String.valueOf(isUserPresent);
+        this.isUserPresent = isUserPresent;
         this.userIp = userIp;
     }
 
@@ -304,7 +304,7 @@ public class SibsBaseApiClient {
 
     private RequestBuilder createRequestBuilder(URL url) {
         RequestBuilder requestBuilder = client.request(url);
-        if (manualRefresh) {
+        if (isUserPresent) {
             requestBuilder.header(HeaderKeys.PSU_IP_ADDRESS, userIp);
         }
         return requestBuilder;
