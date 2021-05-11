@@ -54,6 +54,13 @@ public class UnicreditBaseApiClient {
     protected final UnicreditProviderConfiguration providerConfiguration;
     protected final UnicreditBaseHeaderValues headerValues;
 
+    public UnicreditBaseApiClient(UnicreditBaseApiClient unicreditBaseApiClient) {
+        this.client = unicreditBaseApiClient.client;
+        this.unicreditStorage = unicreditBaseApiClient.unicreditStorage;
+        this.providerConfiguration = unicreditBaseApiClient.providerConfiguration;
+        this.headerValues = unicreditBaseApiClient.headerValues;
+    }
+
     protected ConsentRequest getConsentRequest() {
         LocalDateTime validUntil =
                 LocalDateTime.now().plusDays(FormValues.CONSENT_VALIDATION_PERIOD_IN_DAYS);

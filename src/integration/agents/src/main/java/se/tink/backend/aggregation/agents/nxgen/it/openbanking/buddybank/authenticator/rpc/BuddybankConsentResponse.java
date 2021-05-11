@@ -14,6 +14,7 @@ public class BuddybankConsentResponse implements ConsentResponse {
 
     private String consentStatus;
     private String consentId;
+    private String psuMessage;
 
     @JsonProperty("_links")
     private BuddybankConsentLinksEntity links;
@@ -29,5 +30,9 @@ public class BuddybankConsentResponse implements ConsentResponse {
 
     public String getScaRedirect() {
         return getLinks().getScaRedirect().getHref();
+    }
+
+    public String getPsuMessage() {
+        return psuMessage;
     }
 }

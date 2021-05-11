@@ -30,7 +30,7 @@ public final class BuddybankAgent extends UnicreditBaseAgent {
     @Override
     protected Authenticator constructAuthenticator() {
         return new BuddybankAuthenticationController(
-                new BuddybankAuthenticator((BuddybankApiClient) apiClient),
+                new BuddybankAuthenticator(apiClient, unicreditStorage, credentials),
                 strongAuthenticationState,
                 supplementalInformationController,
                 catalog);
@@ -41,7 +41,6 @@ public final class BuddybankAgent extends UnicreditBaseAgent {
         return Optional.of(
                 new BuddybankPaymentController(
                         new UnicreditPaymentExecutor(apiClient),
-                        (BuddybankApiClient) apiClient,
-                        persistentStorage));
+                        new BuddybankApiClient(apiClient)));
     }
 }
