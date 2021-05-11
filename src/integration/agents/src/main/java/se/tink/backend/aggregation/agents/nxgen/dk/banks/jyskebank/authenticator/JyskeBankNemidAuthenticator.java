@@ -24,6 +24,7 @@ import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpStatus;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -70,6 +71,7 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @RequiredArgsConstructor
 @AllArgsConstructor
+@Slf4j
 public class JyskeBankNemidAuthenticator
         implements MultiFactorAuthenticator, AutoAuthenticator, NemIdParametersFetcher {
     private final JyskeBankApiClient apiClient;
@@ -111,12 +113,14 @@ public class JyskeBankNemidAuthenticator
     }
 
     private ClientRegistrationResponse fetchClientSecret(Document validateNemidTokenResponseBody) {
+        log.info("Building form object from NemId token html response");
         final String uri =
                 validateNemidTokenResponseBody
                         .getElementById("form1")
                         .getElementsByAttribute("action")
                         .attr("action");
         final Form form = buildTokenForm(validateNemidTokenResponseBody);
+        log.info("Fetching response object to extract access token from the redirect header");
         final String redirect = apiClient.fetchToken(uri, form);
         final String token = getAccessTokenFromUrl(redirect);
 
@@ -124,6 +128,7 @@ public class JyskeBankNemidAuthenticator
     }
 
     private Document getNemIdTokenResponseBody(String nemIdToken) {
+        log.info("Validating NemId token and parsing KeyId from response cookie");
         final HttpResponse validateNemIdTokenResponse = apiClient.validateNemIdToken(nemIdToken);
         final String keyId =
                 validateNemIdTokenResponse.getCookies().stream()
@@ -189,6 +194,7 @@ public class JyskeBankNemidAuthenticator
     }
 
     private String createEnrollmentPackage(String clientId) {
+        log.info("Creating enrollment package for manual authentication");
         final JWEAlgorithm alg = JWEAlgorithm.RSA_OAEP_256;
         final EncryptionMethod enc = EncryptionMethod.A128CBC_HS256;
 
@@ -303,6 +309,7 @@ public class JyskeBankNemidAuthenticator
 
     private String createLoginPackage(String kid, String clientId, String challenge) {
         try {
+            log.info("Creating login package for auto authentication");
             final JWSHeader header =
                     new JWSHeader.Builder(JWSAlgorithm.RS256)
                             .keyID(kid)
