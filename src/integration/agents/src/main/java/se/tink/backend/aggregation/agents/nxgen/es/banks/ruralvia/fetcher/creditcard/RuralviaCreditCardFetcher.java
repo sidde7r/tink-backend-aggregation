@@ -50,7 +50,6 @@ public class RuralviaCreditCardFetcher
 
     @Override
     public Collection<CreditCardAccount> fetchAccounts() {
-        // save temporary CreditCardsEntities
         temporalStorageCreditCardEntities = fetchCreditCardAccounts();
 
         return temporalStorageCreditCardEntities.stream()
@@ -60,7 +59,6 @@ public class RuralviaCreditCardFetcher
 
     public List<CreditCardEntity> fetchCreditCardAccounts() {
         List<CreditCardEntity> creditCardEntities = new ArrayList<>();
-        // get the cards in global position if there is anyone
         String[] creditCardsData =
                 apiClient.getGlobalPositionHtml().split("(?=name=\"form_tarjmp)");
 
@@ -140,9 +138,8 @@ public class RuralviaCreditCardFetcher
 
     @Override
     public PaginatorResponse getTransactionsFor(CreditCardAccount account, int page) {
-
         globalPosition = new GlobalPositionResponse(apiClient.getGlobalPositionHtml());
-        PaginatorResponse response = PaginatorResponseImpl.createEmpty();
+        PaginatorResponse response = PaginatorResponseImpl.createEmpty(false);
 
         LocalDate toDate = LocalDate.now();
         LocalDate fromDate = toDate.minusMonths(3);
@@ -161,7 +158,6 @@ public class RuralviaCreditCardFetcher
 
     private PaginatorResponse parseTransactions(
             String transactionHtmlPage, PaginatorResponse response) {
-
         if (transactionHtmlPage.contains(THERE_IS_NOT_DATA_FOR_THIS_CONSULT)
                 || transactionHtmlPage.contains(INVALID_PERIOD)) {
             log.warn("WARN: NO exist transactions for the current period");
@@ -185,7 +181,6 @@ public class RuralviaCreditCardFetcher
 
     private String getTransactionsByPeriod(
             CreditCardEntity card, LocalDate fromDate, LocalDate toDate) {
-
         log.info("Go to Credit Cards tab");
         URL url =
                 URL.of(

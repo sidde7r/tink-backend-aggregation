@@ -8,6 +8,8 @@ public class RuralviaConstants {
     public static final By USER_FIELD_INPUT = By.tagName(Tags.INPUT_TAG);
     public static final String THERE_IS_NOT_DATA_FOR_THIS_CONSULT =
             "NO EXISTEN DATOS PARA LA CONSULTA REALIZADA";
+    public static final String NOT_AVAILABLE_AT_THE_MOMENT =
+            "disponible en estos momentos. Por favor, in";
     public static final String INVALID_PERIOD = "Periodo Invalido";
     public static final DateTimeFormatter LOCAL_DATE_PATTERN =
             DateTimeFormatter.ofPattern("dd-MM-uuuu");

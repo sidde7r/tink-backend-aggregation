@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.fetcher;
 import static org.junit.Assert.assertEquals;
 
 import java.util.Locale;
+import org.junit.Assert;
 import org.junit.Test;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
@@ -40,5 +41,20 @@ public class RuralviaUtilsTest {
         // then
         assertEquals("EUR", result.getCurrencyCode());
         assertEquals("100,00", result.getStringValue(locale));
+    }
+
+    @Test
+    public void extractTokenShouldReturnToken() {
+        // given
+        String text =
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.";
+
+        // when
+        String result1 = RuralviaUtils.extractToken(text, ". Ut", "nostrud ", " ullamco");
+        String result2 = RuralviaUtils.extractToken(text, "Lorem", " ", " d");
+
+        // then
+        Assert.assertEquals("exercitation", result1);
+        Assert.assertEquals("ipsum", result2);
     }
 }

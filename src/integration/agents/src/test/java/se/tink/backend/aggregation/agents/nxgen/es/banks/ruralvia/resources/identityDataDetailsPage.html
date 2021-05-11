@@ -1,0 +1,994 @@
+
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+
+
+  <!--
+  <title>BANCA INTERNET</title>
+  -->
+  <!-- -->
+
+  <title>BANCA INTERNET</title>
+
+  <meta HTTP-EQUIV="Cache-Control" CONTENT="No-cache">
+  <META HTTP-EQUIV="Pragma" CONTENT="No-cache">
+  <META HTTP-EQUIV="Expires" CONTENT="Now">
+  <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1" />
+
+
+
+
+  <script language="javascript" src="/javascripts_portal/es_ES/js_portal/ValidateTO.js"></script>
+  <script language="javascript" src="/javascripts_portal/es_ES/js_portal/interface.js"></script>
+
+  <script language="javascript" >function ayuda(){var nuevaVentana=window.open('/es_ES/ayudas/P/datperso/ay_ServPersonal_det_part.htm','AYUDA','width=370,height=300 ,top=0, left=0,menubar=yes,scrollbars=yes');}</script>
+
+
+
+
+  <link rel="Stylesheet" type="text/css" href="/estilos_prtl/css/skin.css?id=002">
+
+  <link rel="Stylesheet" type="text/css" href="/estilos_prtl/css/TM2/RVIA05_IE/skin.css?id=002">
+
+
+
+  <link rel="Stylesheet" type="text/css" href="/estilos_prtl/css/TM2/RVIA05_IE/PARTICULAR/skin.css?id=002">
+
+  <link rel="Stylesheet" type="text/css" href="/estilos_prtl/bi/style.css">
+  <link rel="Stylesheet" type="text/css" href="/estilos_prtl/bi/style_IE.css">
+
+
+  <link rel="Stylesheet" type="text/css" href="/estilos_prtl/css/TM2/RVIA05_IE/PARTICULAR/3190/skin.css?id=002">
+
+
+  <NO_TRANSFORM><script language="javascript" src="/javascripts_portal/es_ES/js_portal/interface.js"></script></NO_TRANSFORM>
+
+
+
+
+  <NO_TRANSFORM><script language="javascript" src="/javascripts_portal/es_ES/js_portal/multicanalidad.js"></script></NO_TRANSFORM>
+
+
+</head>
+
+<BODY>
+<DIV ID="RESOLUCION">
+
+  <!--CABECERA-->
+
+
+
+  <script language="JavaScript">
+    <!--
+    function resolucion(valor){
+      if (valor == "TM1"){
+        var tx = "Se va a proceder a modificar el modo de visualización de su pantalla. Le recomendamos que ajuste la configuración de su pantalla a 800 x 600 píxeles.";
+        alert(tx);
+      }else{
+        var tx = "Se va a proceder a modificar el modo de visualización de su pantalla. Le recomendamos que ajuste la configuración de su pantalla a un resolución mínima de 1024 x 768 píxeles.";
+        alert(tx);
+      }
+      url = window.location.href;
+      if (url.indexOf("?") != -1){
+        indice = url.indexOf("?");
+        if (indice != -1){
+          window.location.href = url.substring(0, indice) + "?RES=" + valor;
+        }else{
+          window.location.href = url + "&RES=" + valor;
+        }
+      }else{
+        window.location.href = url + "?RES=" + valor;
+      }
+    }
+    //-->
+
+    function salirConfirmacion(url){
+      load(url);
+      //location.href="/isum/srv.BDP_EXCLUSIVE_SALIR_EMP.BDP_EXCLUSIVE_SALIR_EMP";
+    }
+
+    var pgLogout = null ;
+
+    function load(url) {
+
+
+
+
+      url= 'https://bancaelectronica.evobanco.com'+url;
+
+
+      if (typeof window.ActiveXObject != 'undefined' ) {
+        pgLogout = new ActiveXObject("Microsoft.XMLHTTP");
+        pgLogout.onreadystatechange = process ;
+      }
+      else {
+        pgLogout = new XMLHttpRequest();
+        pgLogout.onload = process ;
+      }
+      pgLogout.open( 'POST', url, true );
+      pgLogout.send( null );
+    }
+
+    function process() {
+      if (pgLogout.readyState != 4 ) return ;
+      document.getElementById('CONTENIDO').innerHTML = pgLogout.responseText ;
+    }
+
+
+  </script>
+
+  <div class=CABECERA>
+
+    <div id=LOGO></div>
+    <div id=BARRALITERAL>
+
+
+
+      <a href="/isum/interfaces/ruralvia2005b/Logout.jsp?entidad=3190&modo_autenticacion=1" id="botonSalir" ></a>
+
+
+
+      <div id=CBLITERAL01>
+
+
+        <a href='Main?ISUM_ID=cabecera&ISUM_SCR=serviceScr&ISUM_CIPH=7rTlGDi4Q1aXSQrvU8vmsnSdI69oz38VCyiC8VIVgwI%3D' onMouseOut="MM_swapImgRestore()" onMouseOver="MM_swapImage('desconectar','','/es_ES/img/desconectar_b.gif',1)"><img name="desconectar" border="0" src="/es_ES/img/desconectar_a.gif" alt="Desconectar" ></a>
+
+
+
+      </div> <!-- CBLITERAL01 -->
+
+
+
+
+
+
+      <div id=CBLITERAL><a class="link0" href="/isum/Main?ISUM_ID=Utilities&ISUM_SCR=serviceScr&ISUM_CIPH=U31Z7iWTseeErHSYkS0f1g%3D%3D" target="_blank">Atención al Cliente</a>&nbsp;|&nbsp;</div>
+
+
+
+
+
+      <div id=CBLITERAL><a class="link0" href="/isum/Main?ISUM_ID=Utilities&ISUM_SCR=serviceScr&ISUM_CIPH=kwCMzo%2F3Ei32dhFM9pSjeQ%3D%3D" target="_blank">Seguridad</a>&nbsp;|&nbsp;</div>
+
+
+
+      <!--Adaptación Resoluciones-->
+
+
+
+      <!--***** P00009735 -- INICIO ***********-->
+
+      <!-- /*************************** P00017411 12/08/2013 INICIO *************************************** -->
+
+
+      <div id="CBLOGOTXT">
+        GLOBALCAJA
+
+
+        <div class="bix">BIC: BCOEESMM190</div>
+
+      </div>
+      <!-- /*************************** P00017411 12/08/2013 FIN ****************************************** -->
+
+      <!--***** P00009735 -- FIN ***********-->
+
+
+
+
+
+
+    </div> <!-- BARRALITERAL -->
+
+
+    <div id=ENTORNO>
+
+
+
+      <div id=DESTACADOS><a class="link1" HREF="/isum/Main?ISUM_ID=cabecera&ISUM_SCR=groupScr&ISUM_CIPH=qz1M1IumUvEyI8opzKHh97A%2BrhqeWvUx8Lf%2FrXS%2BS9Y%3D" id="BDP_RVIA05_BANCA_PRIVADA_PAR">Banca Privada</a></div>
+
+
+
+      <div id=DESTACADOS><a class="link1" HREF="/isum/Main?ISUM_ID=cabecera&ISUM_SCR=groupScr&ISUM_CIPH=11bxFoBE04HQzIeTLzlGU7bAfib8dZh4ckTtcBVXgTY%3D" id="BDP_RVIA05_COMERCIO_PAR">Comercio</a></div>
+
+
+
+      <div id=DESTACADOS><a class="link1" HREF="/isum/srv.PARTICULAR.BDP_RVIA05_SERV_CABECERA_GEST_FICHEROS"  id="PARTICULAR_IA">Gestión de Ficheros</a></div>
+
+      <INPUT type="hidden" name="PARTICULAR_IA_REDIRECT" id="PARTICULAR_IA_REDIRECT" value="/isum/Main?ISUM_ID=cabecera&ISUM_SCR=groupScr&ISUM_CIPH=YJx3dE2M7wqsrYErqhPuXupPwFnK5%2BGcc5r1z6kE7vI%3D">
+
+
+
+    </div>
+  </DIV>
+
+
+
+
+
+
+
+  <!--MENU SUPERIOR-->
+
+
+
+
+
+
+  <!--	<DIV MENU> //-->
+  <div id="menuHorizontal">
+    <table cellpadding="0" align="center" cellspacing="0" border="0" style="border-top: 1px solid #000000; border-left: 1px solid #949494;">
+      <tr>
+
+        <script>pintarTablaMenu('<a href="/isum/Main?ISUM_ID=menu&ISUM_SCR=groupScr&ISUM_CIPH=vHFigDiTGLnDNYt8yIybWs%2BdkNdI1NHIhZt2KUuy01s%3D">Inicio</a>');</script>
+
+
+        <script>pintarTablaMenu('<a href="/isum/Main?ISUM_ID=menu&ISUM_SCR=groupScr&ISUM_CIPH=2SE0%2Ba4RovcRVQ1GAI5zsv8kSC%2FwAU5jBXfdbeJmYWY%3D">Cuentas</a>');</script>
+
+
+        <script>pintarTablaMenu('<a href="/isum/Main?ISUM_ID=menu&ISUM_SCR=groupScr&ISUM_CIPH=zLtXpsq4GNq%2FwqRZGtsMLFdWE5WexZ1X9lufEB8%2F4YY%3D">Transferencias</a>');</script>
+
+
+        <script>pintarTablaMenu('<a href="/isum/Main?ISUM_ID=menu&ISUM_SCR=groupScr&ISUM_CIPH=yRcHqcYLrTARQGHj7Pi1ff%2BtpwJgrOU6HbLmlQS9dEE%3D">Tarjetas</a>');</script>
+
+
+        <script>pintarTablaMenu('<a href="/isum/Main?ISUM_ID=menu&ISUM_SCR=groupScr&ISUM_CIPH=LmiigXoP4vRpMeljAtnV3v1ZgIBeocHT8yM1ae4KgTI%3D">Ahorro/Inversión</a>');</script>
+
+
+        <script>pintarTablaMenu('<a href="/isum/Main?ISUM_ID=menu&ISUM_SCR=groupScr&ISUM_CIPH=HPicfOzvGMcbLd500kVJHPaOA1c%2BeoIFkEJFksIQfds%3D">Valores</a>');</script>
+
+
+        <script>pintarTablaMenu('<a href="/isum/Main?ISUM_ID=menu&ISUM_SCR=groupScr&ISUM_CIPH=3P8ak%2Fw%2BLq%2F1kXcFZjHlkxA7hAm2%2FGXSOqdyAMHJ15w%3D">Financiación</a>');</script>
+
+
+        <script>pintarTablaMenu('<a href="/isum/Main?ISUM_ID=menu&ISUM_SCR=groupScr&ISUM_CIPH=8BlyulHrQLTEYbnaUP3QUm%2FdR4NNTNBkixw74ISu73s%3D">Internacional</a>');</script>
+
+
+        <script>pintarTablaMenu('<a href="/isum/Main?ISUM_ID=menu&ISUM_SCR=groupScr&ISUM_CIPH=73hcwk0XZo8SEP2dxczbgnnexVvPQ3ilwzh0%2F769H14%3D">Seguros</a>');</script>
+
+
+        <script>pintarTablaMenu('<a href="/isum/Main?ISUM_ID=menu&ISUM_SCR=groupScr&ISUM_CIPH=Y9LhU13F2LWEUuChfGupvRa1F%2FGwMaJ0bDvCMnSrrlA%3D">Impuestos</a>');</script>
+
+
+        <script>pintarTablaMenu('<a href="/isum/Main?ISUM_ID=menu&ISUM_SCR=groupScr&ISUM_CIPH=3pvGhvjKGR1CcYjyBXAuoEU%2BIkbvF6Z3BIEEkFjA3ZM%3D">Ficheros</a>');</script>
+
+
+        <script>pintarTablaMenuSeleccionada('Servicios');</script>
+
+        <script>pintarTablaMenu('<a href="/isum/Main?ISUM_ID=menu&ISUM_SCR=groupScr&ISUM_CIPH=aGsDKZ99JKy7PWazhPJl0NjKIySPuQOURkgfiBxZ2U4%3D">Buzón</a>');</script>
+
+
+        <script>pintarFinTablaMenu();</script>
+      </tr>
+    </table>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <DIV class="MENU2">
+
+
+    <div class="opcionGm2">DIMO - Dinero Móvil</div>
+
+
+
+    <div class="fondopciones"><!-- 000003 -->
+      <div     class="subopcionm2"  ><a href="/isum/Main?ISUM_ID=submenu&ISUM_SCR=serviceScr&ISUM_CIPH=XVspfI0hw1QmhnszAGTFkHndFkv2a3Cv03PkGNnR76o%3D" >Nueva Orden</a></div>
+    </div>
+
+
+
+    <div class="fondopciones"><!-- 000003 -->
+      <div     class="subopcionm2"  ><a href="/isum/Main?ISUM_ID=submenu&ISUM_SCR=serviceScr&ISUM_CIPH=663kDzhrNUmy%2Bp6m%2BQAp18s%2FkumcEiCEkUoQx17aSxc%3D" >Gestionar Órdenes</a></div>
+    </div>
+
+
+
+
+
+
+
+
+    <div class="opcionGm2">Test de Conveniencia</div>
+
+
+
+    <div class="fondopciones"><!-- 000003 -->
+      <div     class="subopcionm2"  ><a href="/isum/Main?ISUM_ID=submenu&ISUM_SCR=serviceScr&ISUM_CIPH=SKtmGbPj1fr8rtnlYL%2FK2Tq5rTT5XF3MAfWJrCV8GxM%3D" >Fondos de Inversión Garantizados</a></div>
+    </div>
+
+
+
+    <div class="fondopciones"><!-- 000003 -->
+      <div     class="subopcionm2"  ><a href="/isum/Main?ISUM_ID=submenu&ISUM_SCR=serviceScr&ISUM_CIPH=Cy0W%2BNiUmsTRYQKA0N%2BywJ99GPVYZh5d%2B6Zswx3X7a4%3D" >Fondos de Inversión No Garantizados</a></div>
+    </div>
+
+
+
+    <div class="fondopciones"><!-- 000003 -->
+      <div     class="subopcionm2"  ><a href="/isum/Main?ISUM_ID=submenu&ISUM_SCR=serviceScr&ISUM_CIPH=HpSEhCWr2Ormh2FQuvyYDfbBuxgyYaZ69ozAbgB9E18%3D" >Renta Variable No Cotizada</a></div>
+    </div>
+
+
+
+    <div class="fondopciones"><!-- 000003 -->
+      <div     class="subopcionm2"  ><a href="/isum/Main?ISUM_ID=submenu&ISUM_SCR=serviceScr&ISUM_CIPH=%2FdX46bzaSnmwv4jfcrXoDqpxiLp9X%2F2FrsCIEKYfq%2B4%3D" >Renta Variable Cotizada</a></div>
+    </div>
+
+
+
+    <div class="fondopciones"><!-- 000003 -->
+      <div     class="subopcionm2"  ><a href="/isum/Main?ISUM_ID=submenu&ISUM_SCR=serviceScr&ISUM_CIPH=A3IwzepnnjiI8ueb4GvXVZZVciCEL%2F1r8CMucPr%2Bb3Y%3D" >Renta Fija</a></div>
+    </div>
+
+
+
+    <div class="fondopciones"><!-- 000003 -->
+      <div     class="subopcionm2"  ><a href="/isum/Main?ISUM_ID=submenu&ISUM_SCR=serviceScr&ISUM_CIPH=Gs7MvFBXj2D4oicTsHo6rwhuNmg%2BJ%2FDQayAfM1gSjtQ%3D" >Fondos de Inversión Cotizados (ETF)</a></div>
+    </div>
+
+
+
+    <div class="fondopciones"><!-- 000003 -->
+      <div     class="subopcionm2"  ><a href="/isum/Main?ISUM_ID=submenu&ISUM_SCR=serviceScr&ISUM_CIPH=6qpQ3L%2FH7uT5fuMKHhE44Wbuicutim214t0vN107aeQ%3D" >Derechos de Suscripción</a></div>
+    </div>
+
+
+
+    <div class="fondopciones"><!-- 000003 -->
+      <div     class="subopcionm2"  ><a href="/isum/Main?ISUM_ID=submenu&ISUM_SCR=serviceScr&ISUM_CIPH=xmCCcZUZYTyX5ZQL3oVmYA56pigvxEQwddX9j4MG2y4%3D" >Otros Productos Complejos (Warrants)</a></div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+    <div class="opcionSm2"><a href="/isum/Main?ISUM_ID=submenu&ISUM_SCR=serviceScr&ISUM_CIPH=FBy92xcVjE4FLTLueNcnYgUMMpVKy8BA9%2BD4DDK0hu0%3D" >Recarga Móviles </a></div>
+
+
+
+
+
+    <div class="opcionGm2">Divisas</div>
+
+
+
+    <div class="fondopciones"><!-- 000003 -->
+      <div     class="subopcionm2"  ><a href="/isum/Main?ISUM_ID=submenu&ISUM_SCR=serviceScr&ISUM_CIPH=I4M0tYFHh7suCXCR4aVvmaouoCyfEdxW0VRqO8IXJ0s%3D" >Compra</a></div>
+    </div>
+
+
+
+    <div class="fondopciones"><!-- 000003 -->
+      <div     class="subopcionm2"  ><a href="/isum/Main?ISUM_ID=submenu&ISUM_SCR=serviceScr&ISUM_CIPH=pVWv9tCTgaZibNemSbGHd0GD5bRyUVfdFR6vW0Szm1M%3D" >Venta</a></div>
+    </div>
+
+
+
+    <div class="fondopciones"><!-- 000003 -->
+      <div     class="subopcionm2"  ><a href="/isum/Main?ISUM_ID=submenu&ISUM_SCR=serviceScr&ISUM_CIPH=wNSjEvXUDZ%2Fpz8tZ5vtbxjaJYYj9NMK9ffrLlDU5VTY%3D" >Consulta Operaciones</a></div>
+    </div>
+
+
+
+
+
+
+
+
+    <div class="opcionGm2">Correspondencia</div>
+
+
+
+    <div class="fondopciones"><!-- 000003 -->
+      <div     class="subopcionm2"  ><a href="/isum/Main?ISUM_ID=submenu&ISUM_SCR=serviceScr&ISUM_CIPH=vsfxez4eOAtmTcbakWucYbnMU2ZzEx10v4jjv8Cdo90%3D" >Consulta</a></div>
+    </div>
+
+
+
+    <div class="fondopciones"><!-- 000003 -->
+      <div     class="subopcionm2"  ><a href="/isum/Main?ISUM_ID=submenu&ISUM_SCR=serviceScr&ISUM_CIPH=WOTIwQd5rq%2BiPQzlTVRh%2FRp6SJODppwA4BrU2biKcKY%3D" >Alta Buzón Virtual</a></div>
+    </div>
+
+
+
+    <div class="fondopciones"><!-- 000003 -->
+      <div     class="subopcionm2"  ><a href="/isum/Main?ISUM_ID=submenu&ISUM_SCR=serviceScr&ISUM_CIPH=f5r01QqG3CeYglKxwevtMY3u1yWIWmJVILN2Lip5V%2FM%3D" >Baja Buzón Virtual</a></div>
+    </div>
+
+
+
+    <div class="fondopciones"><!-- 000003 -->
+      <div     class="subopcionm2"  ><a href="/isum/Main?ISUM_ID=submenu&ISUM_SCR=serviceScr&ISUM_CIPH=oNMTmri74ZMEnuGkPV%2BXEUVmoIhp1eddagGumUs6mHY%3D" >Alta Infomail</a></div>
+    </div>
+
+
+
+    <div class="fondopciones"><!-- 000003 -->
+      <div     class="subopcionm2"  ><a href="/isum/Main?ISUM_ID=submenu&ISUM_SCR=serviceScr&ISUM_CIPH=F%2FUTHIArHczHGZzmQZ0rJhVA5NUjfrsl%2BuKu6XAs%2Bp0%3D" >Baja Infomail</a></div>
+    </div>
+
+
+
+
+
+
+
+
+    <div class="opcionGm2">Alertas</div>
+
+
+
+
+    <div class="fondopciones">
+      <script language="JavaScript">
+        <!--
+        gName = 'Alertas SMS';
+        //-->
+      </script>
+
+      <div id="ga1708" class="subopcionm2A">
+        <a href="javascript:cambiaKK('ga1708', 'gb1708');"><IMG SRC="/estilos_prtl/css/abrir.gif" border=0></a>
+        <a href="javascript:cambiaKK('ga1708', 'gb1708');"><script language="javascript">document.write(gName);</script></a></div>
+
+      <div id="gb1708" class="subopcionm2C" style="display: none;">
+        <a href="javascript:cambiaKK('gb1708', 'ga1708');"><IMG SRC="/estilos_prtl/css/cerrar.gif" border=0></script></a>
+        <a href="javascript:cambiaKK('gb1708', 'ga1708');"><script language="javascript">document.write(gName);</script></a>
+      </div>
+
+
+      <div id="gb1708_0" class="subopcionm3" style="display: none;"><a href="/isum/Main?ISUM_ID=submenu&ISUM_SCR=serviceScr&ISUM_CIPH=2FGlwO%2FrWoUDUOH8rQWftJozP4k0VUoWqIBusZByQaI%3D" >Alertas Cuentas</a></div>
+
+
+
+      <div id="gb1708_1" class="subopcionm3" style="display: none;"><a href="/isum/Main?ISUM_ID=submenu&ISUM_SCR=serviceScr&ISUM_CIPH=hTF5NOPkDqK%2Bg3yONFma2SLNmEe26YnyRT984TdzBUA%3D" >Alertas Tarjetas</a></div>
+
+
+
+      <div id="gb1708_2" class="subopcionm3" style="display: none;"><a href="/isum/Main?ISUM_ID=submenu&ISUM_SCR=serviceScr&ISUM_CIPH=1mPd7KehdhRTN8DP6Yfpb6BwEObwTkjVwYYv8kkoodQ%3D" >Alertas Bolsa</a></div>
+
+
+
+      <div id="gb1708_3" class="subopcionm3" style="display: none;"><a href="/isum/Main?ISUM_ID=submenu&ISUM_SCR=serviceScr&ISUM_CIPH=CSrzwnL63dtKRxa9NsF6cJiqOIUOvX%2FRZUCQGC5iFOc%3D" >Alertas Extranjero</a></div>
+
+
+
+      <div id="gb1708_4" class="subopcionm3" style="display: none;"><a href="/isum/Main?ISUM_ID=submenu&ISUM_SCR=serviceScr&ISUM_CIPH=YsydeohXYCAoJK7LKW2lxm5lOUXjDP4cnJvmJypSQOs%3D" >Alertas Seguridad</a></div>
+
+
+
+      <div id="gb1708_5" class="subopcionm3" style="display: none;"><a href="/isum/Main?ISUM_ID=submenu&ISUM_SCR=serviceScr&ISUM_CIPH=Tz9kOsAWHkUI2Uyxtjfw8NYxTO5ylDd%2Bqk2gXdSfLSY%3D" >Alertas Banca a Distancia</a></div>
+
+
+
+      <div id="gb1708_6" class="subopcionm3" style="display: none;"><a href="/isum/Main?ISUM_ID=submenu&ISUM_SCR=serviceScr&ISUM_CIPH=UFtRFmN3AiIM6B9Se%2BTgMc0MFisXFW9N%2BfD6T7d7Dkk%3D" >Consulta Alertas Facturables</a></div>
+
+
+
+      <div id="gb1708_7" class="subopcionm3" style="display: none;"><a href="/isum/Main?ISUM_ID=submenu&ISUM_SCR=serviceScr&ISUM_CIPH=SXJUwH9TEeORtObbTIpqg4YhlNYUsFq7yuDzXq6mk8Y%3D" >Extracto Alertas SMS</a></div>
+
+
+
+      <div id="gb1708_8" class="subopcionm3" style="display: none;"><a href="/isum/Main?ISUM_ID=submenu&ISUM_SCR=serviceScr&ISUM_CIPH=HpUYlLtnCUYjIsver2rJuUlt6vNnH7hQ%2BdfltQhI1ZE%3D" >Simulación extracto alertas SMS</a></div>
+
+
+
+      <div id="gb1708_9" class="subopcionm3" style="display: none;"><a href="/isum/Main?ISUM_ID=submenu&ISUM_SCR=serviceScr&ISUM_CIPH=ELAAq%2BSM7Jt3IB%2FZSWhuR2fiS5GEFwn9V66xN7ca0Bo%3D" >Consulta condiciones servicio Alertas</a></div>
+      
+
+    </div>
+
+
+    <div id="gb1707_0" class="subopcionm3" style="display: none;"><a href="/isum/Main?ISUM_ID=submenu&ISUM_SCR=serviceScr&ISUM_CIPH=rqA1wV%2Ffd2XzmptW7OCl%2FScfjY3NU2DFrfilXll6FE4%3D" >Alertas Cuentas	</a></div>
+
+
+
+    <div id="gb1707_1" class="subopcionm3" style="display: none;"><a href="/isum/Main?ISUM_ID=submenu&ISUM_SCR=serviceScr&ISUM_CIPH=Odnl2t4w%2FOE1xN4EbMNDhrYvP4Vy%2FLQ3nFUsEfck8CY%3D" >Alertas Tarjetas</a></div>
+
+
+
+    <div id="gb1707_2" class="subopcionm3" style="display: none;"><a href="/isum/Main?ISUM_ID=submenu&ISUM_SCR=serviceScr&ISUM_CIPH=g2KbQXJB0S5papd89RFWQXvG%2F5FHZZMYpLtmATx7b14%3D" >Alertas Bolsa</a></div>
+
+
+
+    <div id="gb1707_3" class="subopcionm3" style="display: none;"><a href="/isum/Main?ISUM_ID=submenu&ISUM_SCR=serviceScr&ISUM_CIPH=%2FAa22fBVpJkgA8k7H4J04ANHmK1cffPNA5Mjmx8aH5Y%3D" >Alertas Extranjero</a></div>
+
+
+
+    <div id="gb1707_4" class="subopcionm3" style="display: none;"><a href="/isum/Main?ISUM_ID=submenu&ISUM_SCR=serviceScr&ISUM_CIPH=8fZi7PRNQQqc9c2JB4i%2F4XfHvZa7bsuoM3gD5BIKKzI%3D" >Alertas Seguridad</a></div>
+
+
+
+    <div id="gb1707_5" class="subopcionm3" style="display: none;"><a href="/isum/Main?ISUM_ID=submenu&ISUM_SCR=serviceScr&ISUM_CIPH=bv%2FqAWwTIcyWqWB%2Ftqr1syC%2FUHVikiSFJM9opJcx9E8%3D" >Alertas Banca a Distancia</a></div>
+
+
+
+
+
+
+  </div>
+  
+
+
+  <div id="gb2100_0" class="subopcionm3" style="display: none;"><a href="/isum/Main?ISUM_ID=submenu&ISUM_SCR=serviceScr&ISUM_CIPH=TJqUcLz8HvpWCHA%2BCdzdDpCAGvMTnneYW0dVxBQagL8%3D" >Alertas Cuentas	</a></div>
+
+
+
+  <div id="gb2100_1" class="subopcionm3" style="display: none;"><a href="/isum/Main?ISUM_ID=submenu&ISUM_SCR=serviceScr&ISUM_CIPH=cMDxXBik6mb4uTK9X8cspiqQUAdJZIg91FhDQ4%2BPWAE%3D" >Alertas Tarjetas</a></div>
+
+
+
+  <div id="gb2100_2" class="subopcionm3" style="display: none;"><a href="/isum/Main?ISUM_ID=submenu&ISUM_SCR=serviceScr&ISUM_CIPH=FKP08trtqhvfPx2EiTY6XujJvnkpoUuiWyIbs6KEmss%3D" >Alertas Extranjero</a></div>
+
+
+
+  <div id="gb2100_3" class="subopcionm3" style="display: none;"><a href="/isum/Main?ISUM_ID=submenu&ISUM_SCR=serviceScr&ISUM_CIPH=XBne%2FUahOZ2CB5ZAyco4KsiTMHPB0LzUj4Y5%2F3dR0VI%3D" >Alertas Bolsa</a></div>
+
+
+
+  <div id="gb2100_4" class="subopcionm3" style="display: none;"><a href="/isum/Main?ISUM_ID=submenu&ISUM_SCR=serviceScr&ISUM_CIPH=ESQeWxTZFJH40R%2F9nm3NJOhT4zhe0K4Wa4vzVnzipgU%3D" >Alertas Seguridad</a></div>
+
+
+
+  <div id="gb2100_5" class="subopcionm3" style="display: none;"><a href="/isum/Main?ISUM_ID=submenu&ISUM_SCR=serviceScr&ISUM_CIPH=D%2FZQf8BYZnBuZlK1rDckE9seikyveaon%2Bas7p5qd64E%3D" >Alertas Banca a Distancia</a></div>
+
+
+
+
+
+
+</div>
+
+
+
+
+
+<div class="opcionGm2">Datos personales</div>
+
+
+
+<div id="gb129_0" class="subopcionm3" style="display: none;"><a href="/isum/Main?ISUM_ID=submenu&ISUM_SCR=serviceScr&ISUM_CIPH=KytyMspRoOLoOk8s8MscR4kJlOLNupMrwbhrUOOnjjs%3D" >Alta </a></div>
+
+
+
+<div id="gb129_1" class="subopcionm3" style="display: none;"><a href="/isum/Main?ISUM_ID=submenu&ISUM_SCR=serviceScr&ISUM_CIPH=XCOagXIiDmiSU7lwowHLCBm2jiAx%2BbLbO4dGHoPUy2k%3D" >Baja dirección de correo</a></div>
+
+
+
+<div id="gb129_2" class="subopcionm3" style="display: none;"><a href="/isum/Main?ISUM_ID=submenu&ISUM_SCR=serviceScr&ISUM_CIPH=apoWzQm6AyLoNNByi%2BYTP9AeDiWB896H8bp9liz7tqI%3D" >Consulta/Modificación</a></div>
+
+</div>
+
+
+<div id="gb130_0" class="subopcionm3" style="display: none;"><a href="/isum/Main?ISUM_ID=submenu&ISUM_SCR=serviceScr&ISUM_CIPH=dbFQ2qsxBWGiq77a4ZhXdiSrSkZMQ6s9L1xB99MNZ7o%3D" >Consulta/Modificación</a></div>
+
+</div>
+
+<div class="fondopciones">
+
+
+
+  <div class="subopcionm2"><a href="/isum/Main?ISUM_ID=submenu&ISUM_SCR=serviceScr&ISUM_CIPH=6wPYhjpq3Woa1sBa%2FXt3ZmuzkWgTFaOhU7KGE4auo1Q%3D" >Consulta datos personales</a></div>
+
+</div>
+
+<div class="opcionGm2">Cambio de claves</div>
+
+
+
+<div class="fondopciones"><!-- 000003 -->
+  <div     class="subopcionm2"  ><a href="/isum/Main?ISUM_ID=submenu&ISUM_SCR=serviceScr&ISUM_CIPH=nCuNWjUfaTscftAt8Aa%2BWXCwNyS4x9jOTAWSVx9f5sA%3D" >Cambio de PIN</a></div>
+</div>
+
+
+
+<div class="fondopciones"><!-- 000003 -->
+  <div     class="subopcionm2"  ><a href="/isum/Main?ISUM_ID=submenu&ISUM_SCR=serviceScr&ISUM_CIPH=%2Bt%2FJqNVBkhSHO2s7vXhsnaK2B02LJtVel0oLsaQq89s%3D" >Cambio de contraseña</a></div>
+</div>
+
+
+
+<div class="fondopciones"><!-- 000003 -->
+  <div     class="subopcionm2"  ><a href="/isum/Main?ISUM_ID=submenu&ISUM_SCR=serviceScr&ISUM_CIPH=oZMT6XeGIo6GtsAZxlg%2Fu1fsYzMSjtdImS30varxIXM%3D" >Validación de contraseña</a></div>
+</div>
+
+
+
+<div class="fondopciones"><!-- 000003 -->
+  <div     class="subopcionm2"  ><a href="/isum/Main?ISUM_ID=submenu&ISUM_SCR=serviceScr&ISUM_CIPH=KebZy9D13bGEOvzvF5Xr9Z%2Bj8VNyMOiohdwYIeW6AxU%3D" >Cambio de clave de firma</a></div>
+</div>
+
+
+
+<div class="fondopciones"><!-- 000003 -->
+  <div     class="subopcionm2"  ><a href="/isum/Main?ISUM_ID=submenu&ISUM_SCR=serviceScr&ISUM_CIPH=aY98my0bthyxiRQfzj6eXnmIF1Eq2rQFIyQPRN9ET6I%3D" >Solicitud clave de firma</a></div>
+</div>
+
+<div class="opcionGm2">Utilidades</div>
+
+<div class="fondopciones"><!-- 000003 -->
+  <div     class="subopcionm2"  ><a href="/isum/Main?ISUM_ID=submenu&ISUM_SCR=serviceScr&ISUM_CIPH=mGxKTfhaH38E88LSiS8%2BvpxpXncziDpApixMuueY9fo%3D" >Lista entidad/oficina/cajero</a></div>
+</div>
+
+
+
+<div class="fondopciones"><!-- 000003 -->
+  <div     class="subopcionm2"  ><a href="/isum/Main?ISUM_ID=submenu&ISUM_SCR=serviceScr&ISUM_CIPH=%2FqiyHigKwcIPghM9CwUuCwtcFpwP8a5F%2FzQm7W%2BDMxk%3D" >Cálculo dígito de control</a></div>
+</div>
+
+
+
+<div class="fondopciones"><!-- 000003 -->
+  <div     class="subopcionm2"  ><a href="/isum/Main?ISUM_ID=submenu&ISUM_SCR=serviceScr&ISUM_CIPH=teFA2MLgsjxLhy7jsN0hfXxjoK54O%2FYmMpIDuXStKg4%3D" >Cálculo letra del NIF</a></div>
+</div>
+
+
+
+<div class="fondopciones"><!-- 000003 -->
+  <div     class="subopcionm2"  ><a href="/isum/Main?ISUM_ID=submenu&ISUM_SCR=serviceScr&ISUM_CIPH=YYYseFE1eGjIzDsNKUxHrwtuZVTlfB%2FUsll6sWZil44%3D" target="_blank">Buscador Oficinas y Cajeros</a></div>
+</div>
+
+
+
+<div class="opcionSm2"><a href="/isum/Main?ISUM_ID=submenu&ISUM_SCR=serviceScr&ISUM_CIPH=iEfVf5Eg%2BSZtF06uAyUvXRjFlOTV%2B%2BYmg%2BnZUK32qH4%3D" >Documentos Pendientes de Firma</a></div>
+
+
+
+
+
+<div class="opcionGm2">Operaciones y firma</div>
+
+
+
+<div class="fondopciones"><!-- 000003 -->
+  <div     class="subopcionm2"  ><a href="/isum/Main?ISUM_ID=submenu&ISUM_SCR=serviceScr&ISUM_CIPH=QshBe1MWQ6G%2FZaS1dn%2F5ATZh4syK2YG%2FZU7S4%2FyLBOc%3D" >Órdenes Pendientes de Firma</a></div>
+</div>
+
+
+
+<div class="fondopciones"><!-- 000003 -->
+  <div     class="subopcionm2"  ><a href="/isum/Main?ISUM_ID=submenu&ISUM_SCR=serviceScr&ISUM_CIPH=3p8j4zydJkj3qmqQCLNBMy98SW3L8q0SxXuEtbT5SPg%3D" >Operaciones Pendientes</a></div>
+</div>
+
+
+
+<div class="fondopciones"><!-- 000003 -->
+  <div     class="subopcionm2"  ><a href="/isum/Main?ISUM_ID=submenu&ISUM_SCR=serviceScr&ISUM_CIPH=AVsk8xGm01Ct9hFfi3%2BojMVQlNWIsazW6mylGVM4txk%3D" >Órdenes Anuladas</a></div>
+</div>
+
+
+
+<div class="fondopciones"><!-- 000003 -->
+  <div     class="subopcionm2"  ><a href="/isum/Main?ISUM_ID=submenu&ISUM_SCR=serviceScr&ISUM_CIPH=tgwvX8AwcsWLFNRyvU6oEh9iVFNmxRIqQbTe88DXtoA%3D" >Órdenes No realizadas</a></div>
+</div>
+
+
+
+<div class="fondopciones"><!-- 000003 -->
+  <div     class="subopcionm2"  ><a href="/isum/Main?ISUM_ID=submenu&ISUM_SCR=serviceScr&ISUM_CIPH=XB80DYTsqw0IG2KP7SCppnfP4c8q8rge88uyvaKSG10%3D" >Órdenes Contratadas</a></div>
+</div>
+
+
+
+<div class="fondopciones"><!-- 000003 -->
+  <div     class="subopcionm2"  ><a href="/isum/Main?ISUM_ID=submenu&ISUM_SCR=serviceScr&ISUM_CIPH=TN57ZUrPYtQXh0OEFDB0HmQenM4L8AD3oC8ILnbgrCs%3D" >Límites del contrato</a></div>
+</div>
+
+
+
+<div class="fondopciones"><!-- 000003 -->
+  <div     class="subopcionm2"  ><a href="/isum/Main?ISUM_ID=submenu&ISUM_SCR=serviceScr&ISUM_CIPH=ujt4iOVk5%2BQk3XZws0Eu4hQt3qR0rA5NKh%2BNFaUPWKA%3D" >Operaciones pdtes firma resto titulares</a></div>
+</div>
+
+
+</DIV>
+
+
+
+<div id="AdminToolbar">
+
+</div>
+
+<!--CONTENIDO-->
+<DIV id="CONTENIDO" class="pos_global">
+
+
+  <FORM name="FORM_RVIA_0" method="post"action="/isum/Main?ISUM_ID=portlets_area&ISUM_SCR=linkServiceScr&ISUM_CIPH=WrIk9EJuH55V6XWI0nSLe8BW05Q64FNxUkwcMy9GLFma6tw0cozOP1mF8R%2BuxpFWUW4Deu94gEfFT4FbpZJ4U60l%2B0rrYjSZa85goB9DrYR458Zwgn%2F7fcJk8emP7r34hbqVsQj364L%2BehuOGhETg4H%2BK9HcEAompjvr7LioVMzSP51gTOZGksWGrkzQRch3VrAz2oj0UuYYT34iXcGasup4SZJLbbAGvVrN3DcLBkg%3D" method="post"><input type="hidden" name="ISUM_OLD_METHOD" value="get"/><input type="hidden" name="ISUM_ISFORM" value="true"/>
+
+    <div id="PORTLET-SECTION-HEADER">
+
+      <div id="HEADER">
+        Datos Personales
+      </div>
+
+      <div id="HDBOT">
+        <A href="/isum/Main?ISUM_ID=portlets_area&ISUM_SCR=linkServiceScr&ISUM_CIPH=WrIk9EJuH55V6XWI0nSLe8BW05Q64FNxUkwcMy9GLFnWNq9BqV2ll8rYvZPCS9yh" onClick="ayuda(); return false;" onMouseOut="window.status=' ';MM_swapImgRestore()" onMouseOver="MM_swapImage('ico_ay','','/es_ES/img/P/ico_ay_b.gif',1);window.status='ICO_AY';return true" ><img name="ico_ay" border="0" src="/es_ES/img/P/ico_ay_a.gif"> Ayuda</A>
+      </div>
+    </div>
+
+    <div id="EXPLICA">
+      Por motivos de seguridad, algunos de sus datos personales aparecen parcialmente ocultos.<br>Si lo desea puede hacerlos visibles, pulsando el botón "Consultar Datos"
+    </div>
+
+    <DIV id="PORTLET-DATO">
+      <div id="HEADER_DATO">
+        <div id="HD_DATO">
+          Datos de la Persona
+        </div>
+      </div>
+      <div id="BODY_DATO">
+        <table BORDER="0" CELLPADDING="0" CELLSPACING="0" width="100%" >
+          <tr >
+            <td class="literal" >Nombre</td>
+            <td class="datoI" >JOHN</td>
+          </tr>
+          <tr >
+            <td class="literal" >Apellido 1.</td>
+            <td class="datoI" >TINKER</td>
+          </tr>
+          <tr >
+            <td class="literal" >Apellido 2.</td>
+
+            <td class="datoI" >DOE</td>
+
+          </tr>
+          <tr >
+            <td class="literal" >NIF</td>
+
+            <td class="datoI" >76229620F</td>
+
+          </tr>
+          <tr >
+            <td class="literal" >Sexo</td>
+            <td class="datoI" >HOMBRE</td>
+          </tr>
+          <tr >
+            <td class="literal" >Estado Civil</td>
+            <td class="datoI" >CASADO</td>
+          </TR>
+        </TABLE>
+      </div>
+      <div id="HEADER_DATO">
+        <div id="HD_DATO">
+          Datos Nacimiento
+        </div>
+      </div>
+      <div id="BODY_DATO">
+        <table BORDER="0" CELLPADDING="0" CELLSPACING="0" width="100%" >
+
+          <tr >
+            <td class="literal" >Fecha</td>
+
+            <td class="datoI" >29-09-1900</td>
+
+          </tr>
+
+          <tr >
+            <td class="literal" >Provincia</td>
+            <td class="datoI" >BARCELONA</td>
+          </tr>
+          <tr >
+            <td class="literal" >Localidad</td>
+            <td class="datoI" >BARCELONA</td>
+          </tr>
+          <tr >
+            <td class="literal" >País</td>
+            <td class="datoI" >ESPAÑA</td>
+          </tr>
+        </TABLE>
+      </div>
+      <div id="HEADER_DATO">
+        <div id="HD_DATO">
+          Datos Domicilio
+        </div>
+      </div>
+      <div id="BODY_DATO">
+        <table BORDER="0" CELLPADDING="0" CELLSPACING="0" width="100%" >
+          <tr >
+            <td class="literal" >Tp. Vía</td>
+            <td class="datoI" >CALLE</td>
+          </tr>
+
+          <tr >
+            <td class="literal" >Nombre Vía</td>
+
+            <td class="datoI" >Calle falsa</td>
+
+          </tr>
+
+
+
+          <tr >
+
+            <td class="literal" >Num.</td>
+
+
+            <td class="datoI" >123</td>
+
+          </tr>
+
+          <tr >
+            <td class="literal" >Portal</td>
+            <td class="datoI" >--</td>
+          </tr>
+
+          <tr >
+            <td class="literal" >Bloque</td>
+            <td class="datoI" >--</td>
+          </tr>
+
+          <tr >
+            <td class="literal" >Planta</td>
+            <td class="datoI" >--</td>
+          </tr>
+
+          <tr >
+            <td class="literal" >Puerta</td>
+            <td class="datoI" >--</td>
+          </tr>
+          <tr >
+            <td class="literal" >Escalera</td>
+            <td class="datoI" >--</td>
+          </tr>
+          <tr >
+            <td class="literal" >Urbanización</td>
+            <td class="datoI" >--</td>
+          </tr>
+          <tr >
+            <td class="literal" >Barrio</td>
+            <td class="datoI" >--</td>
+          </tr>
+          <tr >
+            <td class="literal" >Fase</td>
+            <td class="datoI" >--</td>
+          </tr>
+          <tr >
+            <td class="literal" >Parcela</td>
+            <td class="datoI" >--</td>
+          </tr>
+          <tr >
+            <td class="literal" >Id. Edif.</td>
+            <td class="datoI" >--</td>
+          </tr>
+          <tr >
+            <td class="literal" >Polígono</td>
+            <td class="datoI" >--</td>
+          </tr>
+          <tr >
+
+            <td class="literal" >C. Postal</td>
+
+
+            <td class="datoI" >08022</td>
+
+          </tr>
+          <tr >
+            <td class="literal" >Localidad</td>
+            <td class="datoI" >BARCELONA</td>
+          </tr>
+          <tr >
+            <td class="literal" >Comarca</td>
+            <td class="datoI" >BARCELONES</td>
+          </tr>
+          <tr >
+            <td class="literal" >Com. Aut.</td>
+            <td class="datoI" >CATALUNA</td>
+          </tr>
+          <tr >
+            <td class="literal" >Provincia</td>
+            <td class="datoI" >BARCELONA</td>
+          </tr>
+          <tr >
+            <td class="literal" >País</td>
+            <td class="datoI" >ESPAÑA</td>
+          </tr>
+          <tr >
+            <td class="literal" >Teléfono</td>
+
+
+            <td class="datoI" >--</td>
+
+
+
+          </tr>
+          <tr >
+            <td class="literal" >Otros Datos</td>
+            <td class="datoI" >--</td>
+          </tr>
+        </table>
+
+      </div>
+
+      <div id=FOOTER>
+
+        <div id="BOT">
+          <a class="bot" href="/isum/Main?ISUM_ID=portlets_area&ISUM_SCR=linkServiceScr&ISUM_CIPH=WrIk9EJuH55V6XWI0nSLe8BW05Q64FNxUkwcMy9GLFnWNq9BqV2ll8rYvZPCS9yh" onClick="javaScript:consultarDatos(); return false;" >Consultar Datos</a>
+        </div>
+
+
+
+
+
+
+
+      </div>
+
+    </DIV>
+
+    <INPUT type='hidden' name='clavePagina' value=''> <INPUT
+        type='hidden' name='primeraVez' value='1'> <INPUT
+        type='hidden' name='paginaActual' value='0'> <INPUT
+        type='hidden' name='tamanioPagina' value='25'> <INPUT
+        type='hidden' name='campoPaginacion' value='lista'>
+
+
+    <INPUT type='hidden' name='NIPUSU' value=''>
+    <INPUT type='hidden' name='NIFUSU' value=''/>
+    <input type='hidden' name='CONSULTA' value=''>
+    <INPUT type='hidden' name='NIPUSU_SELECCIONADO' value=''>
+
+  </FORM>
+
+
+
+
+
+
+
+
+</DIV>
+
+
+
+
+
+
+
+
+</DIV>
+
+
+<div data-token="0tnEObmo1zG-dvFO7gnhGflJCG1He8NP" id="tokenValid">
+</div>
+
+
+<script language="Javascript">
+
+
+  var vcontrolBotonAtras = window.sessionStorage.getItem("controlBotonAtras");
+  if(vcontrolBotonAtras == 1){
+
+  console.log("Entro por aqui");
+  history.forward();
+  }else{
+  console.log("Me voy por el else");
+  }
+
+
+
+
+</script>
+
+</BODY>
+</html>
+
+

@@ -94,6 +94,10 @@ public class RuralviaApiClient {
         return createBodyFormRequest(url, params).post(String.class);
     }
 
+    public String navigateThroughIdentity(URL url) {
+        return client.request(url).get(String.class);
+    }
+
     public void logout() {
         Element html = Jsoup.parse(globalPositionHtml);
         Elements logout = html.select("a:has(img[name=desconectar])");

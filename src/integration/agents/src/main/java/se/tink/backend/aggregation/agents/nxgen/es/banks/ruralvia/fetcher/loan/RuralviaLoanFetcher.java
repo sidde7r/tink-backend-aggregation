@@ -29,6 +29,7 @@ import org.jsoup.select.Elements;
 import se.tink.backend.aggregation.agents.exceptions.refresh.LoanAccountRefreshException;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.ParamValues;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.fetcher.RuralviaUtils;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.fetcher.loan.entities.LoanEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.fetcher.loan.entities.LoanEntity.LoanEntityBuilder;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.rpc.GlobalPositionResponse;
@@ -48,7 +49,6 @@ public class RuralviaLoanFetcher implements AccountFetcher<LoanAccount> {
 
     @Override
     public Collection<LoanAccount> fetchAccounts() {
-
         temporalStorageLoans = fetchLoanAccounts();
         return temporalStorageLoans.stream()
                 .map(LoanEntity::toTinkLoanAccount)
@@ -124,9 +124,7 @@ public class RuralviaLoanFetcher implements AccountFetcher<LoanAccount> {
                                         .attr(ATTRIBUTE_TAG_ACTION));
         String params = extractAmortitzationTableRequestParams(loan, doc);
 
-        html = apiClient.navigateToLoanAmortizationTableDetails(url, params);
-
-        return html;
+        return apiClient.navigateToLoanAmortizationTableDetails(url, params);
     }
 
     private String extractAmortitzationTableRequestParams(LoanEntity loan, Element html) {
@@ -238,10 +236,8 @@ public class RuralviaLoanFetcher implements AccountFetcher<LoanAccount> {
                             .attr(ATTRIBUTE_TAG_VALUE);
         }
 
-        int beginIndex = html.indexOf("FORM_RVIA_0.TRANCODE.value =");
-        beginIndex = html.indexOf("\"", beginIndex) + 1;
-        int endIndex = html.indexOf("\";", beginIndex);
-        String tranCode = html.substring(beginIndex, endIndex);
+        String tranCode =
+                RuralviaUtils.extractToken(html, "FORM_RVIA_0.TRANCODE.value =", "\"", "\";");
 
         Builder formBuilder = getParamsFromInputTags(form, loan, selectedAccount, tranCode);
         formBuilder.put(
