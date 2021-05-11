@@ -11,4 +11,6 @@ public interface UkOpenBankingPisConfig {
     boolean useMaxAge();
 
     boolean compatibleWithFundsConfirming();
+
+    boolean useOtherPaymentContext();
 }

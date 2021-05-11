@@ -20,6 +20,8 @@ import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedExce
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.rpc.ErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.UkOpenBankingPaymentApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.UkOpenBankingRequestBuilder;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.dto.PartyToPartyRisk;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.dto.Risk;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.configuration.UkOpenBankingPisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domestic.converter.DomesticPaymentConverter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domestic.dto.DomesticPaymentConsentFundsConfirmationResponse;
@@ -231,8 +233,11 @@ public class DomesticPaymentApiClient implements UkOpenBankingPaymentApiClient {
                         payment, payment.getUniqueIdForUKOPenBanking(), payment.getUniqueId());
         final DomesticPaymentConsentRequestData consentRequestData =
                 new DomesticPaymentConsentRequestData(initiation);
-
-        return new DomesticPaymentConsentRequest(consentRequestData);
+        if (pisConfig.useOtherPaymentContext()) {
+            return new DomesticPaymentConsentRequest(new Risk(), consentRequestData);
+        } else {
+            return new DomesticPaymentConsentRequest(new PartyToPartyRisk(), consentRequestData);
+        }
     }
 
     private DomesticPaymentRequest createDomesticPaymentRequest(
@@ -246,8 +251,11 @@ public class DomesticPaymentApiClient implements UkOpenBankingPaymentApiClient {
                         payment, endToEndIdentification, instructionIdentification);
         final DomesticPaymentRequestData requestData =
                 createDomesticPaymentRequestData(consentId, initiation);
-
-        return new DomesticPaymentRequest(requestData);
+        if (pisConfig.useOtherPaymentContext()) {
+            return new DomesticPaymentRequest(new Risk(), requestData);
+        } else {
+            return new DomesticPaymentRequest(new PartyToPartyRisk(), requestData);
+        }
     }
 
     private DomesticPaymentRequestData createDomesticPaymentRequestData(

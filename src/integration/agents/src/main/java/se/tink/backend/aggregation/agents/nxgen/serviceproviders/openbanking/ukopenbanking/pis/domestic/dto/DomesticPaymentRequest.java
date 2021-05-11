@@ -13,6 +13,6 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @RequiredArgsConstructor
 public class DomesticPaymentRequest {
 
-    private final Risk risk = new Risk();
+    private final Risk risk;
     private final DomesticPaymentRequestData data;
 }
