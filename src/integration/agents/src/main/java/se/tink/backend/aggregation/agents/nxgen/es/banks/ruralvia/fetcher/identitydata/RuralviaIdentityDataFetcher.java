@@ -1,8 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.fetcher.identitydata;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.NOT_AVAILABLE_AT_THE_MOMENT;
+
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,7 +35,7 @@ public class RuralviaIdentityDataFetcher implements IdentityDataFetcher {
     }
 
     private IdentityData parseIdentityFromHtml(String detailsToParse) {
-        if (detailsToParse.contains("disponible en estos momentos. Por favor, in")) {
+        if (detailsToParse.contains(NOT_AVAILABLE_AT_THE_MOMENT)) {
             throw BankServiceError.DEFAULT_MESSAGE.exception(
                     "Identity is not available at this time due to bank unavailability");
         }
@@ -47,27 +46,14 @@ public class RuralviaIdentityDataFetcher implements IdentityDataFetcher {
                                         new IdentityRefreshException(
                                                 "ERROR parsing the Identity data, element not found"));
 
-        String name = dataContainer.select("td:containsOwn(Nombre) + td").first().ownText();
-        String firtsSurname =
-                dataContainer.select("td:containsOwn(Apellido 1) + td").first().ownText();
-        String lastSurname =
-                dataContainer.select("td:containsOwn(Apellido 2) + td").first().ownText();
-
-        LocalDate birthDate = null;
-        try {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-uuuu");
-            String date = dataContainer.select("td:containsOwn(Fecha) + td").first().ownText();
-            birthDate = LocalDate.parse(date, formatter);
-        } catch (DateTimeParseException e) {
-            log.error("ERROR parsing the birth Date for Identity Data");
-        }
+        IdentityDataPage dataFetcher = new IdentityDataPage(dataContainer);
 
         return EsIdentityData.builder()
                 .setDocumentNumber(credentials.getField(Key.NATIONAL_ID_NUMBER))
-                .addFirstNameElement(name)
-                .addSurnameElement(firtsSurname)
-                .addSurnameElement(lastSurname)
-                .setDateOfBirth(birthDate)
+                .addFirstNameElement(dataFetcher.getName())
+                .addSurnameElement(dataFetcher.getFirstSurname())
+                .addSurnameElement(dataFetcher.getLastSurname())
+                .setDateOfBirth(dataFetcher.getBirthDate())
                 .build();
     }
 
