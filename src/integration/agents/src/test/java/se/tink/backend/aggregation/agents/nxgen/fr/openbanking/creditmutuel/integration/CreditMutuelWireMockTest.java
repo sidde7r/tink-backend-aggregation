@@ -93,6 +93,7 @@ public class CreditMutuelWireMockTest {
                         .withConfigurationFile(configuration)
                         .addCallbackData("code", "DUMMY_AUTH_CODE")
                         .withAgentModule(new CreditMutuelWireMockTestModule())
+                        .dumpContentForContractFile()
                         .build();
 
         final AgentContractEntity expected =

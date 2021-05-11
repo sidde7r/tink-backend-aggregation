@@ -1,50 +1,38 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.converter;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount;
 
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.converter.CmcicAccountBaseConverter;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.converter.CmcicAccountNameAndHolderName;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.dto.AccountResourceDto;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.dto.BalanceResourceDto;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.entity.BalanceStatusEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.entity.CashAccountTypeEnumEntity;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.builder.BalanceBuilderStep;
-import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
-import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @RequiredArgsConstructor
 @Slf4j
-public class CmcicTransactionalAccountConverter {
+public class CmcicTransactionalAccountConverter
+        extends CmcicAccountBaseConverter<TransactionalAccount> {
 
-    private static final String ACCOUNT_NAME = "COMPTE COURANT";
-
-    public Optional<TransactionalAccount> convertAccountResourceToTinkAccount(
-            AccountResourceDto accountResource) {
-        if (accountResource.getCashAccountType() != CashAccountTypeEnumEntity.CACC) {
-            log.info("Account type different than CACC.");
-            return Optional.empty();
-        }
-
-        final String iban = accountResource.getAccountId().getIban();
+    @Override
+    public Optional<TransactionalAccount> convertToAccount(AccountResourceDto accountResourceDto) {
+        final String iban = accountResourceDto.getAccountId().getIban();
+        CmcicAccountNameAndHolderName accountNameAndHolderName =
+                getAccountNameAndHolderName(accountResourceDto);
         return TransactionalAccount.nxBuilder()
                 .withType(TransactionalAccountType.CHECKING)
                 .withInferredAccountFlags()
-                .withBalance(getBalanceModule(accountResource.getBalances()))
-                .withId(
-                        IdModule.builder()
-                                .withUniqueIdentifier(iban)
-                                .withAccountNumber(iban)
-                                .withAccountName(getAccountName(accountResource))
-                                .addIdentifier(
-                                        AccountIdentifier.create(AccountIdentifierType.IBAN, iban))
-                                .build())
-                .setApiIdentifier(accountResource.getResourceId())
+                .withBalance(getBalanceModule(accountResourceDto.getBalances()))
+                .withId(getIdModule(accountResourceDto, accountNameAndHolderName.getAccountName()))
+                .setApiIdentifier(accountResourceDto.getResourceId())
                 .setBankIdentifier(iban)
+                .addHolderName(accountNameAndHolderName.getAccountName())
                 .build();
     }
 
@@ -87,10 +75,5 @@ public class CmcicTransactionalAccountConverter {
         return ExactCurrencyAmount.of(
                 balanceResource.getBalanceAmount().getAmount(),
                 balanceResource.getBalanceAmount().getCurrency());
-    }
-
-    private String getAccountName(AccountResourceDto accountResource) {
-        String accountName = accountResource.getName();
-        return accountName.contains(ACCOUNT_NAME) ? ACCOUNT_NAME : accountName;
     }
 }
