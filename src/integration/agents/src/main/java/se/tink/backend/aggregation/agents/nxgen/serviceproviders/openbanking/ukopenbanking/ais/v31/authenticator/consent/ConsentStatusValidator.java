@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.authenticator.consent;
 
 import org.apache.commons.lang3.StringUtils;
+import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingV31Constants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.authenticator.SessionKiller;
@@ -39,14 +40,17 @@ public class ConsentStatusValidator {
         if (consentId.equals(OpenIdAuthenticatorConstants.CONSENT_ERROR_OCCURRED)) {
             SessionKiller.cleanUpAndExpireSession(
                     storage,
-                    "These credentials were marked with CONSENT_ERROR_OCCURRED flag in the past. Expiring the session.");
+                    SessionError.CONSENT_INVALID.exception(
+                            "These credentials were marked with CONSENT_ERROR_OCCURRED flag in the past. Expiring the session."));
         }
     }
 
     private void checkIfAuthorised(String consentId) {
         if (isNotAuthorised(consentId)) {
             SessionKiller.cleanUpAndExpireSession(
-                    storage, "Invalid consent status. Expiring the session.");
+                    storage,
+                    SessionError.CONSENT_INVALID.exception(
+                            "Invalid consent status. Expiring the session."));
         }
     }
 

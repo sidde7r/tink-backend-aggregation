@@ -5,6 +5,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOf
 
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
+import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingV31Constants;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
@@ -19,10 +20,11 @@ public class SessionKillerTest {
         storage.put(
                 UkOpenBankingV31Constants.PersistentStorageKeys.AIS_ACCESS_TOKEN, "DUMMY_TOKEN");
         String DUMMY_ERROR_MSG = "DUMMY ERROR MSG";
+        SessionException exception = SessionError.CONSENT_EXPIRED.exception(DUMMY_ERROR_MSG);
 
         // expected
         assertThatExceptionOfType(SessionException.class)
-                .isThrownBy(() -> SessionKiller.cleanUpAndExpireSession(storage, DUMMY_ERROR_MSG))
+                .isThrownBy(() -> SessionKiller.cleanUpAndExpireSession(storage, exception))
                 .withMessage(DUMMY_ERROR_MSG);
         assertThat(
                         storage.get(
