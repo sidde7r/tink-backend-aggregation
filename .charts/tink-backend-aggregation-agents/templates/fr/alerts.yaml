@@ -1,7 +1,7 @@
 kind: RuleGroup
 apiVersion: monitoring.tink.se/v1
 metadata:
-  name: alerts-be
+  name: alerts-fr
   namespace: agents
 spec:
   rules:
