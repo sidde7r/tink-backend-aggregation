@@ -8,7 +8,7 @@ linechanger = '\n'
 state = 'STATE'
 state_count = 1
 api_call_count = 1
--white_list_headers = ['Accept', 'Content-Type', 'Date', 'x-fapi-financial-id', 'x-fapi-interaction-id' ]
+white_list_headers = ['Accept', 'Content-Type', 'Date', 'x-fapi-financial-id', 'x-fapi-interaction-id' ]
 parsed_content = []
 parsing_phase = ''
 
@@ -24,11 +24,10 @@ def assign_set_match_state(line):
     pair = line.split(' ')
     #REQUEST / RESPONSE
     request_or_response = pair[0]
-    #N
-    number = int(pair[1])
-    if number > 3 and request_or_response == 'REQUEST':
+    if request_or_response == 'REQUEST':
+        print 'REQUEST ' + str(api_call_count) + ' MATCH ' + state + str(state_count) + linechanger
         return 'REQUEST ' + str(api_call_count) + ' MATCH ' + state + str(state_count) + linechanger
-    elif number > 2 and request_or_response == 'RESPONSE':
+    elif request_or_response == 'RESPONSE':
         return 'RESPONSE ' + str(api_call_count) + ' SET ' + state + str(state_count) + linechanger
     else:
         return line
