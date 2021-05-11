@@ -1,12 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.fetcher.transactionalaccount.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.Href;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.BnpParibasBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.BnpParibasBaseConstants.ResponseValues;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.exception.RequiredDataMissingException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.fetcher.transactionalaccount.rpc.BalanceResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
@@ -167,9 +170,15 @@ public class AccountsItemEntity {
     }
 
     private ExactCurrencyAmount getBalanceCard(BalanceResponse balanceResponse) {
-        return Optional.ofNullable(
-                        balanceResponse.getBalances().get(0).getAmountEntity().toAmount())
-                .orElse(null);
+        return Optional.ofNullable(balanceResponse.getBalances())
+                .map(Collection::stream)
+                .flatMap(Stream::findFirst)
+                .map(BalancesItemEntity::getAmountEntity)
+                .map(AmountEntity::toAmount)
+                .orElseThrow(
+                        () ->
+                                new RequiredDataMissingException(
+                                        "Unable to map account, missing balance information"));
     }
 
     /**

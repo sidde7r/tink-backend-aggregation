@@ -1,14 +1,17 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.fetcher.card;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.util.Collection;
+import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.BnpParibasApiBaseClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.exception.RequiredDataMissingException;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.libraries.amount.ExactCurrencyAmount;
@@ -50,5 +53,22 @@ public class BnpParibasCreditCardFetcherTest {
         assertThat(creditCardAccount.getName()).isEqualTo("card visa");
         assertThat(creditCardAccount.getCardModule().getCardNumber()).isEqualTo("FR3213123131231");
         assertThat(creditCardAccount.getAccountNumber()).isEqualTo("FR333123311");
+    }
+
+    @Test
+    public void shouldThrowExceptionWhenNoBalance() {
+        // given
+        when(bnpParibasApiBaseClient.fetchAccounts())
+                .thenReturn(BnpParibasCreditCardFetcherTestData.CREDIT_CARDS_RESPONSE);
+        when(bnpParibasApiBaseClient.getBalance("31231231dqeqweqw312"))
+                .thenReturn(BnpParibasCreditCardFetcherTestData.BALANCE_RESPONSE_NO_BALANCE);
+
+        // when
+        ThrowingCallable callable = () -> objectUnderTest.fetchAccounts();
+
+        // then
+        assertThatThrownBy(callable)
+                .isInstanceOf(RequiredDataMissingException.class)
+                .hasMessage("Unable to map account, missing balance information");
     }
 }
