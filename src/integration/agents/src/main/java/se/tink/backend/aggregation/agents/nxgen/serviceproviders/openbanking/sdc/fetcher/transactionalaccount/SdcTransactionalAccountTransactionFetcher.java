@@ -27,8 +27,8 @@ public class SdcTransactionalAccountTransactionFetcher
                     account.getApiIdentifier(), fromDate, toDate, providerMarket, BOTH);
         } catch (Exception e) {
             log.error(
-                    "Unable to fetch both pending and booked transactions. Re-trying only booked."
-                            + e.getMessage());
+                    "Unable to fetch both pending and booked transactions. Re-trying only booked.",
+                    e);
             return apiClient.getTransactionsFor(
                     account.getApiIdentifier(), fromDate, toDate, providerMarket, BOOKED);
         }
