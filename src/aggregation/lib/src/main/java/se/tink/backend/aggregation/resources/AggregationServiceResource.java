@@ -70,6 +70,8 @@ public class AggregationServiceResource implements AggregationService {
             MetricId.newId("aggregation_user_availability_values");
     private static final MetricId REFRESH_SCOPE_PRESENCE =
             MetricId.newId("aggregation_refresh_scope_presence");
+    private static final MetricId REFRESH_INCLUDED_IN_PAYMENT =
+            MetricId.newId("aggregation_refresh_included_in_payment");
 
     private final MetricRegistry metricRegistry;
     private final QueueProducer producer;
@@ -249,6 +251,7 @@ public class AggregationServiceResource implements AggregationService {
     public void transfer(final TransferRequest request, ClientInfo clientInfo) throws Exception {
         trackUserPresentFlagPresence("transfer", request);
         trackRefreshScopePresence("transfer", request);
+        trackRefreshIncludedInPayment("transfer", !request.isSkipRefresh());
         logger.info(
                 "Transfer Request received from main. skipRefresh is: {}", request.isSkipRefresh());
         agentWorker.execute(
@@ -259,6 +262,7 @@ public class AggregationServiceResource implements AggregationService {
     public void payment(final TransferRequest request, ClientInfo clientInfo) {
         trackUserPresentFlagPresence("payment", request);
         trackRefreshScopePresence("payment", request);
+        trackRefreshIncludedInPayment("payment", !request.isSkipRefresh());
         logger.info(
                 "Transfer Request received from main. skipRefresh is: {}", request.isSkipRefresh());
         try {
@@ -273,6 +277,7 @@ public class AggregationServiceResource implements AggregationService {
     public void recurringPayment(RecurringPaymentRequest request, ClientInfo clientInfo) {
         trackUserPresentFlagPresence("recurring_payment", request);
         trackRefreshScopePresence("recurring_payment", request);
+        trackRefreshIncludedInPayment("recurring_payment", !request.isSkipRefresh());
         logger.info("Recurring Payment Request received from main" + request);
         try {
             agentWorker.execute(
@@ -287,6 +292,7 @@ public class AggregationServiceResource implements AggregationService {
             throws Exception {
         trackUserPresentFlagPresence("whitelisted_transfer", request);
         trackRefreshScopePresence("whitelisted_transfer", request);
+        trackRefreshIncludedInPayment("whitelisted_transfer", !request.isSkipRefresh());
         agentWorker.execute(
                 agentWorkerCommandFactory.createOperationExecuteWhitelistedTransfer(
                         request, clientInfo));
@@ -483,6 +489,15 @@ public class AggregationServiceResource implements AggregationService {
                                                 && CollectionUtils.isNotEmpty(
                                                         refreshScope
                                                                 .getFinancialServiceSegmentsIn())))
+                .inc();
+    }
+
+    private void trackRefreshIncludedInPayment(String method, boolean refreshIncluded) {
+        metricRegistry
+                .meter(
+                        REFRESH_INCLUDED_IN_PAYMENT
+                                .label("method", method)
+                                .label("refresh_included", refreshIncluded))
                 .inc();
     }
 }

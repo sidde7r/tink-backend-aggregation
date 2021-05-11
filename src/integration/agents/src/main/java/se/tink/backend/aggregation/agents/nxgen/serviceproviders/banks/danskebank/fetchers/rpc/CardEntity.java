@@ -13,7 +13,7 @@ public class CardEntity {
     private String expireMM;
     private String createDate;
     @Getter private String cardType;
-    private String cardStatus;
+    @Getter private String cardStatus;
     private String cardLogo;
     @Getter private String cardId;
     private String cardGroup;
