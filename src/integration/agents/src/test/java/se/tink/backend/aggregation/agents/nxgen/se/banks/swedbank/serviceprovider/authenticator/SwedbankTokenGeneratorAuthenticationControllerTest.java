@@ -13,7 +13,6 @@ import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankDefaultApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.authenticator.rpc.InitSecurityTokenChallengeResponse;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class SwedbankTokenGeneratorAuthenticationControllerTest {
@@ -32,9 +31,7 @@ public class SwedbankTokenGeneratorAuthenticationControllerTest {
 
         swedbankTokenGeneratorAuthenticationController =
                 new SwedbankTokenGeneratorAuthenticationController(
-                        mock(SwedbankDefaultApiClient.class),
-                        new SessionStorage(),
-                        supplementalInformationHelperMock);
+                        mock(SwedbankDefaultApiClient.class), supplementalInformationHelperMock);
     }
 
     @Test

@@ -14,7 +14,6 @@ import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceExce
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.SwedbankSEConstants.StorageKey;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankDefaultApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.authenticator.rpc.AbstractBankIdAuthResponse;
@@ -28,7 +27,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class SwedbankDefaultBankIdAuthenticator
         implements BankIdAuthenticator<AbstractBankIdAuthResponse> {
@@ -36,7 +34,6 @@ public class SwedbankDefaultBankIdAuthenticator
             LoggerFactory.getLogger(SwedbankDefaultBankIdAuthenticator.class);
 
     private final SwedbankDefaultApiClient apiClient;
-    private final SessionStorage sessionStorage;
     private final String organisationNumber;
 
     private SwedbankBaseConstants.BankIdResponseStatus previousStatus;
@@ -45,11 +42,8 @@ public class SwedbankDefaultBankIdAuthenticator
     private int pollCount;
 
     public SwedbankDefaultBankIdAuthenticator(
-            SwedbankDefaultApiClient apiClient,
-            SessionStorage sessionStorage,
-            String organisationNumber) {
+            SwedbankDefaultApiClient apiClient, String organisationNumber) {
         this.apiClient = apiClient;
-        this.sessionStorage = sessionStorage;
         this.organisationNumber = organisationNumber;
     }
 
@@ -100,9 +94,6 @@ public class SwedbankDefaultBankIdAuthenticator
                 case INTERRUPTED:
                     return BankIdStatus.INTERRUPTED;
                 case COMPLETE:
-                    // Store if bankID has extended usage for when fetching transfer destinations
-                    sessionStorage.put(
-                            StorageKey.HAS_EXTENDED_USAGE, collectBankIdResponse.isExtendedUsage());
                     completeBankIdLogin(collectBankIdResponse);
                     return BankIdStatus.DONE;
                 case TIMEOUT:
