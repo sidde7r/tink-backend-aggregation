@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers;
 
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConstants.Card;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -51,8 +53,13 @@ public class DanskeBankCreditCardFetcher implements AccountFetcher<CreditCardAcc
     private List<CardEntity> getCards(List<AccountEntity> cardAccounts) {
         return this.apiClient.listCards(CardsListRequest.create(configuration.getLanguageCode()))
                 .getCards().stream()
+                .filter(this::isCardActive)
                 .filter(cardEntity -> isItCardOfCreditCardAccount(cardAccounts, cardEntity))
                 .collect(Collectors.toList());
+    }
+
+    private boolean isCardActive(CardEntity cardEntity) {
+        return Card.ACTIVE_STATUS.equalsIgnoreCase(cardEntity.getCardStatus());
     }
 
     private boolean isItCardOfCreditCardAccount(
