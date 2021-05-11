@@ -174,7 +174,7 @@ X-Frame-Options: DENY
 X-Global-Transaction-ID: c53680ad5f61f133115a5959
 strict-transport-security: max-age=31536000; includeSubDomains
 
-{"agreement_id":101359,"id":152643,"legacy_user_id":"C0147633","nem_id":null,"payment_signing_rule":"single_sign","poas":[194409],"signing_information":{"signing_limit":50000000},"ssn":"192012246676","status":"ACTIVE","technical_user_id":"C0147644","user_base_info":{"country_code":"SE","email_address":"santa@tomten.com","name":"SANTA CLAUS","phone_number":null}}
+{"customer_id":"200012121212","segment":"corporate","loyalty_group":"home_owners","loyalty_group_in_raw":"F","company_id":"**HASHED:/b**","branch_id":"1234567890","birth_date":"1976-03-25","preferred_name":{"family_name":"CLAUS","given_name":"SANTA"},"address":{"street_line":"SOMESTREET 19","city":"STOCKHOLM","postal_code":"12345","country_code":"SE"},"emails":[{"value":"info@santa.se","tags":["work"]}],"phone_numbers":[{"value":"12345678","country_code":"46","tags":["home"]},{"value":"771234567","country_code":"46","tags":["mobile"]}]}
 
 REQUEST 5a
 GET https://private.nordea.se/api/dbf/se/payments-v2/payments/?status=unconfirmed%2Cconfirmed%2Crejected%2Cinprogress

@@ -140,6 +140,10 @@ public class AccountEntity implements GeneralAccountEntity {
                                         .build())
                         .setApiIdentifier(accountId);
 
+        if (hasAccountOwnerName()) {
+            transactionalBuildStep.addHolderName(generalGetName());
+        }
+
         return transactionalBuildStep.build();
     }
 

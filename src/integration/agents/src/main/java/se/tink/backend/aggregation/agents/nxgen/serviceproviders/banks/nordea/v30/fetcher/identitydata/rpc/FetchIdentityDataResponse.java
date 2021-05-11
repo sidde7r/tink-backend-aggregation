@@ -30,14 +30,6 @@ public class FetchIdentityDataResponse {
     @JsonProperty("customer_id")
     private String customerId;
 
-    // only available in nordea business server response
-    @JsonProperty("first_name")
-    private String firstName;
-
-    // only available in nordea business server response
-    @JsonProperty("last_name")
-    private String lastName;
-
     @JsonProperty("loyalty_group")
     private String loyaltyGroup;
 
@@ -62,9 +54,10 @@ public class FetchIdentityDataResponse {
 
     private IdentityData toBusinessIdentityData() {
         return IdentityData.builder()
-                .addFirstNameElement(firstName)
-                .addSurnameElement(lastName)
-                .setDateOfBirth(null)
+                .setSsn(customerId)
+                .addFirstNameElement(preferredName.getGivenName())
+                .addSurnameElement(preferredName.getFamilyName())
+                .setDateOfBirth(LocalDate.parse(birthDate))
                 .build();
     }
 
