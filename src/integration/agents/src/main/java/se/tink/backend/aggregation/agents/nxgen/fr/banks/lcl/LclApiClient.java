@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.Optional;
 import javax.ws.rs.core.MediaType;
 import org.assertj.core.util.Strings;
+import se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.LclConstants.HeaderValuePairs;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.authenticator.rpc.DeviceConfigurationRequest;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.authenticator.rpc.DeviceConfigurationResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.authenticator.rpc.LoginRequest;
@@ -51,7 +52,13 @@ public class LclApiClient {
         LoginRequest body = LoginRequest.create(username, bpiMetaData, xorPin);
 
         return postFormAndGetJsonResponse(
-                getPostFormRequest(LclConstants.Urls.LOGIN),
+                getPostFormRequest(LclConstants.Urls.LOGIN)
+                        .header(
+                                HeaderValuePairs.USER_AGENT.getKey(),
+                                HeaderValuePairs.USER_AGENT.getValue())
+                        .header(
+                                HeaderValuePairs.X_API_KEY.getKey(),
+                                HeaderValuePairs.X_API_KEY.getValue()),
                 body.getBodyValue(),
                 LoginResponse.class);
     }

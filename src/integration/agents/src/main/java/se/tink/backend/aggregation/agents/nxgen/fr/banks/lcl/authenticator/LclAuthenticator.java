@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.authenticator;
 
+import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.util.Objects;
 import java.util.Optional;
@@ -35,7 +36,6 @@ public class LclAuthenticator implements PasswordAuthenticator {
         configureDeviceIfNotConfigured();
         String agentKey = getAgentKeyForSessionId();
         String sessionId = generateSessionId(agentKey);
-
         BpiMetaData bpiMetaDataEntity = BpiMetaData.create(sessionId);
         String bpiMetaDataB64String =
                 EncodingUtils.encodeAsBase64String(
@@ -43,7 +43,6 @@ public class LclAuthenticator implements PasswordAuthenticator {
                                 SerializationUtils.serializeToString(bpiMetaDataEntity)));
 
         String xorPinB64String = getXorPinInB64(password);
-
         LoginResponse loginResponse =
                 apiClient.login(username, bpiMetaDataB64String, xorPinB64String);
 
@@ -69,7 +68,7 @@ public class LclAuthenticator implements PasswordAuthenticator {
 
     private void configureDeviceIfNotConfigured() {
         if (Strings.isNullOrEmpty(lclPersistentStorage.getDeviceId())) {
-            String deviceId = UUID.randomUUID().toString().replace("-", "");
+            String deviceId = UUID.randomUUID().toString();
             lclPersistentStorage.saveDeviceId(deviceId);
             apiClient.configureDevice();
         }
@@ -93,17 +92,8 @@ public class LclAuthenticator implements PasswordAuthenticator {
 
     private static String generateSessionId(String agentKey) {
         String timeStamp = Long.toString(System.currentTimeMillis());
-        long randomSessionIdSuffix = positiveRandomLong();
-        return timeStamp + agentKey + randomSessionIdSuffix;
-    }
-
-    private static long positiveRandomLong() {
-        while (true) {
-            long randomLong = RANDOM.nextLong();
-            if (randomLong > 0) {
-                return randomLong;
-            }
-        }
+        BigInteger sessionIdSuffix = new BigInteger(64, new SecureRandom());
+        return String.format("MP%s%s%s", timeStamp, agentKey, sessionIdSuffix);
     }
 
     private String getXorPinInB64(String password) {
