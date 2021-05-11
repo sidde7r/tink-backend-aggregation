@@ -5,7 +5,6 @@ import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbank
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sdc.SdcConstants.QueryKeys.BOOKING_STATUS;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sdc.SdcConstants.QueryKeys.DATE_FROM;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sdc.SdcConstants.QueryKeys.DATE_TO;
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sdc.SdcConstants.QueryValues.BOOKED;
 import static se.tink.backend.aggregation.api.Psd2Headers.Keys.CONSENT_ID;
 import static se.tink.backend.aggregation.api.Psd2Headers.Keys.X_REQUEST_ID;
 import static se.tink.libraries.date.ThreadSafeDateFormat.FORMATTER_DAILY;
@@ -143,7 +142,11 @@ public class SdcApiClient {
     }
 
     public TransactionsResponse getTransactionsFor(
-            String accountId, Date fromDate, Date toDate, String providerMarket) {
+            String accountId,
+            Date fromDate,
+            Date toDate,
+            String providerMarket,
+            String bookingStatus) {
         return sendSessionRequest(
                 () ->
                         createRequestInSession(
@@ -155,7 +158,7 @@ public class SdcApiClient {
                                 .header(
                                         OCP_APIM_SUBSCRIPTION_KEY,
                                         configuration.getOcpApimSubscriptionKey())
-                                .queryParam(BOOKING_STATUS, BOOKED)
+                                .queryParam(BOOKING_STATUS, bookingStatus)
                                 .queryParam(DATE_FROM, FORMATTER_DAILY.format(fromDate))
                                 .queryParam(DATE_TO, FORMATTER_DAILY.format(toDate))
                                 .get(TransactionsResponse.class)

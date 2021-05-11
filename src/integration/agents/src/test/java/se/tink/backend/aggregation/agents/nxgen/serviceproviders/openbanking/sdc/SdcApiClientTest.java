@@ -214,7 +214,8 @@ public class SdcApiClientTest {
                                             "SAMPLE_ACCOUNT_ID_321",
                                             mock(Date.class),
                                             mock(Date.class),
-                                            "SAMPLE_PROVIDER_MARKET"))
+                                            "SAMPLE_PROVIDER_MARKET",
+                                            "both"))
         };
     }
 
