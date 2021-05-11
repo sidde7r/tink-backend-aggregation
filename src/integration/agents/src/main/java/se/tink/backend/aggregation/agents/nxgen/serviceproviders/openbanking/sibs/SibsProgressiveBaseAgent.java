@@ -63,7 +63,7 @@ public abstract class SibsProgressiveBaseAgent extends SubsequentProgressiveGene
                         client,
                         userState,
                         request.getProvider().getPayload(),
-                        request.isManual(),
+                        request.getUserAvailability().isUserPresent(),
                         userIp);
 
         final AgentConfiguration<SibsConfiguration> agentConfiguration = getAgentConfiguration();
