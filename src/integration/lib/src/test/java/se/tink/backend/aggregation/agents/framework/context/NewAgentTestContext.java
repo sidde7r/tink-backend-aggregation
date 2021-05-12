@@ -23,7 +23,6 @@ import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Account;
-import se.tink.backend.agents.rpc.AccountHolder;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Provider;
@@ -199,11 +198,6 @@ public final class NewAgentTestContext extends AgentContext {
             return null;
         }
         return optionalAccountData.get().getAccount();
-    }
-
-    @Override
-    public AccountHolder sendAccountHolderToUpdateService(Account processedAccount) {
-        return processedAccount.getAccountHolder();
     }
 
     @Override

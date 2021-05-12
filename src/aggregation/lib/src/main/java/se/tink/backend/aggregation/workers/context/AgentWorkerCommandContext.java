@@ -4,8 +4,6 @@ import com.google.api.client.util.Lists;
 import com.google.common.base.Splitter;
 import java.util.AbstractMap;
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -17,11 +15,8 @@ import org.apache.curator.framework.CuratorFramework;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Account;
-import se.tink.backend.agents.rpc.AccountHolder;
-import se.tink.backend.agents.rpc.AccountHolderType;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.agents.rpc.HolderIdentity;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.AgentEventListener;
 import se.tink.backend.aggregation.agents.agent.Agent;
@@ -261,39 +256,6 @@ public class AgentWorkerCommandContext extends AgentWorkerContext {
                         // Note: these calls should be done synchronously, making them
                         // simultaneous can cause unwanted effects
                         filteredAccount -> sendAccountToUpdateService(filteredAccount.getBankId()));
-    }
-
-    public void sendAllCachedAccountsHoldersToUpdateService() {
-        getAccountDataCache()
-                .getProcessedAccounts()
-                .forEach(
-                        account -> {
-                            AccountHolder accountHolder = sendAccountHolderToUpdateService(account);
-                            sendAccountHoldersRefreshedEvent(account.getId(), accountHolder);
-                        });
-    }
-
-    private void sendAccountHoldersRefreshedEvent(
-            String tinkAccountId, AccountHolder accountHolder) {
-        accountInformationServiceEventsProducer.sendAccountHoldersRefreshedEvent(
-                getClusterId(),
-                getAppId(),
-                getRequest().getUser().getId(),
-                getRequest().getProvider().getName(),
-                correlationId,
-                tinkAccountId,
-                Optional.ofNullable(accountHolder)
-                        .map(AccountHolder::getType)
-                        .map(AccountHolderType::name)
-                        .orElse(null),
-                Optional.ofNullable(accountHolder)
-                        .map(AccountHolder::getIdentities)
-                        .map(Collection::size)
-                        .orElse(0),
-                Optional.ofNullable(accountHolder).map(AccountHolder::getIdentities)
-                        .orElse(Collections.emptyList()).stream()
-                        .map(HolderIdentity::getRole)
-                        .collect(Collectors.toList()));
     }
 
     public Agent getAgent() {

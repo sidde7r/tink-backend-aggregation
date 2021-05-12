@@ -6,7 +6,6 @@ import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import javax.annotation.Nonnull;
 import se.tink.backend.agents.rpc.Account;
-import se.tink.backend.agents.rpc.AccountHolder;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
@@ -133,12 +132,6 @@ public class FakeIntegrationArgumentsCreator {
 
                     @Override
                     public Account updateAccountMetaData(String accountId, String newBankId) {
-                        return null;
-                    }
-
-                    @Override
-                    public AccountHolder sendAccountHolderToUpdateService(
-                            Account processedAccount) {
                         return null;
                     }
 

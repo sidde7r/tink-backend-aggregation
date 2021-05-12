@@ -24,7 +24,6 @@ import org.apache.curator.framework.recipes.barriers.DistributedBarrier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Account;
-import se.tink.backend.agents.rpc.AccountHolder;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.agents.AgentEventListener;
@@ -37,7 +36,6 @@ import se.tink.backend.aggregation.agents.utils.mappers.CoreAccountHolderMapper;
 import se.tink.backend.aggregation.agents.utils.mappers.CoreAccountMapper;
 import se.tink.backend.aggregation.agents.utils.mappers.CoreCredentialsMapper;
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
-import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateAccountHolderRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateIdentityDataRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateTransactionsRequest;
 import se.tink.backend.aggregation.api.AggregatorInfo;
@@ -582,28 +580,6 @@ public class AgentWorkerContext extends AgentContext implements Managed {
                     label,
                     agent,
                     request.getCredentials().getId());
-        }
-    }
-
-    public AccountHolder sendAccountHolderToUpdateService(Account processedAccount) {
-        String tinkAccountId = processedAccount.getId();
-        AccountHolder accountHolder = processedAccount.getAccountHolder();
-        if (Objects.isNull(accountHolder)) {
-            logger.debug("tinkAccountId: {} has no account holder", tinkAccountId);
-            return null;
-        }
-        accountHolder.setAccountId(tinkAccountId);
-        UpdateAccountHolderRequest updateAccountHolderRequest = new UpdateAccountHolderRequest();
-        updateAccountHolderRequest.setAccountHolder(accountHolder);
-        updateAccountHolderRequest.setAppId(this.getAppId());
-        updateAccountHolderRequest.setUserId(request.getCredentials().getUserId());
-        try {
-            return controllerWrapper.updateAccountHolder(updateAccountHolderRequest);
-        } catch (UniformInterfaceException e) {
-            logger.error(
-                    "Account holder update request failed, response: {}",
-                    (e.getResponse().hasEntity() ? e.getResponse().getEntity(String.class) : ""));
-            throw e;
         }
     }
 

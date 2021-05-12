@@ -24,7 +24,6 @@ import se.tink.backend.aggregation.workers.commands.RefreshItemAgentWorkerComman
 import se.tink.backend.aggregation.workers.commands.ReportProviderMetricsAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.ReportProviderTransferMetricsAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.RequestUserOptInAccountsAgentWorkerCommand;
-import se.tink.backend.aggregation.workers.commands.SendAccountsHoldersToUpdateServiceAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.SendAccountsToUpdateServiceAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.SendDataForProcessingAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand;
@@ -72,9 +71,6 @@ public class WorkerCommandNameFormatterTest {
         assertEquals(
                 "request-user-opt-in-accounts",
                 get(RequestUserOptInAccountsAgentWorkerCommand.class));
-        assertEquals(
-                "send-accounts-holders-to-update-service",
-                get(SendAccountsHoldersToUpdateServiceAgentWorkerCommand.class));
         assertEquals(
                 "send-fetched-data-to-data-availability-tracker",
                 get(SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand.class));
