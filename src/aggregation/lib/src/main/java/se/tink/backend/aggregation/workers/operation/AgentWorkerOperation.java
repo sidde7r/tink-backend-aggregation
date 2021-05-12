@@ -3,13 +3,11 @@ package se.tink.backend.aggregation.workers.operation;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.Lists;
-import java.lang.invoke.MethodHandles;
 import java.util.List;
 import java.util.Stack;
 import java.util.concurrent.ExecutionException;
 import javax.inject.Inject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
 import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
 import se.tink.backend.aggregation.workers.metrics.TimerCacheLoader;
@@ -24,6 +22,7 @@ import se.tink.libraries.metrics.types.timers.Timer;
 import se.tink.libraries.metrics.types.timers.Timer.Context;
 import src.libraries.connectivity_errors.ConnectivityErrorFactory;
 
+@Slf4j
 public class AgentWorkerOperation implements Runnable {
     public static class AgentWorkerOperationState {
         private LoadingCache<MetricId.MetricLabels, Timer> commandExecutionsTimers;
@@ -41,9 +40,6 @@ public class AgentWorkerOperation implements Runnable {
             return commandExecutionsTimers;
         }
     }
-
-    private static final Logger logger =
-            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private static final String AGENT_WORKER_OPERATION_MDC_KEY = "operation";
 
@@ -104,19 +100,14 @@ public class AgentWorkerOperation implements Runnable {
     }
 
     private void executeAllCommands() {
-        logger.info(
-                String.format(
-                        "Starting with command execution for operation '%s'", operationMetricName));
+        log.info("Starting with command execution for operation '{}'", operationMetricName);
 
         AgentWorkerCommandResult commandResult = null;
         Stack<AgentWorkerCommand> executedCommands = new Stack<>();
 
         for (AgentWorkerCommand command : commands) {
             try {
-                logger.info(
-                        String.format(
-                                "Executing command '%s' for operation '%s'",
-                                command.toString(), operationMetricName));
+                log.info("Executing command '{}' for operation '{}'", command, operationMetricName);
 
                 List<Context> contexts =
                         startCommandTimerContexts(
@@ -127,36 +118,34 @@ public class AgentWorkerOperation implements Runnable {
                 stopCommandContexts(contexts);
 
                 if (commandResult == AgentWorkerCommandResult.ABORT) {
-                    logger.info(
-                            String.format(
-                                    "Got ABORT from command '%s' for operation '%s'",
-                                    command.toString(), operationMetricName));
-
+                    log.info(
+                            "Got ABORT from command '{}' for operation '{}'",
+                            command,
+                            operationMetricName);
                     break;
                 }
 
                 if (commandResult == AgentWorkerCommandResult.REJECT) {
-                    logger.info(
-                            String.format(
-                                    "Got REJECT from command '%s' for operation '%s'",
-                                    command.toString(), operationMetricName));
+                    log.info(
+                            "Got REJECT from command '{}' for operation '{}'",
+                            command,
+                            operationMetricName);
                     break;
                 }
 
                 if (Thread.interrupted()) {
-                    logger.info(
-                            String.format(
-                                    "Thread was interrupted when executing '%s' for operation '%s'. Aborting.",
-                                    command.toString(), operationMetricName));
-
+                    log.info(
+                            "Thread was interrupted when executing '{}' for operation '{}'. Aborting.",
+                            command,
+                            operationMetricName);
                     break;
                 }
 
             } catch (Exception e) {
-                logger.error(
-                        String.format(
-                                "Caught exception while executing command '%s' for operation '%s'",
-                                command.toString(), operationMetricName),
+                log.error(
+                        "Caught exception while executing command '{}' for operation '{}'",
+                        command,
+                        operationMetricName,
                         e);
 
                 commandResult = AgentWorkerCommandResult.ABORT;
@@ -175,21 +164,15 @@ public class AgentWorkerOperation implements Runnable {
         // Handle the status of the last executed command.
 
         if (commandResult == AgentWorkerCommandResult.CONTINUE) {
-            logger.info(
-                    String.format(
-                            "Done with command execution for operation '%s'", operationMetricName));
+            log.info("Done with command execution for operation '{}'", operationMetricName);
         }
 
         if (commandResult == AgentWorkerCommandResult.ABORT) {
-            logger.info(
-                    String.format(
-                            "Aborted command execution for operation '%s'", operationMetricName));
+            log.info("Aborted command execution for operation '{}'", operationMetricName);
         }
 
         if (commandResult == AgentWorkerCommandResult.REJECT) {
-            logger.info(
-                    String.format(
-                            "Rejected command execution for operation '%s'", operationMetricName));
+            log.info("Rejected command execution for operation '{}'", operationMetricName);
             // At the time of writing this comment, it can only occur if we fail to acquire lock
             ConnectivityError error =
                     ConnectivityErrorFactory.tinkSideError(
@@ -201,10 +184,8 @@ public class AgentWorkerOperation implements Runnable {
         while (!executedCommands.isEmpty()) {
             AgentWorkerCommand command = executedCommands.pop();
             try {
-                logger.info(
-                        String.format(
-                                "Finalizing command '%s' for operation '%s'",
-                                command.toString(), operationMetricName));
+                log.info(
+                        "Finalizing command '{}' for operation '{}'", command, operationMetricName);
 
                 List<Context> contexts =
                         startCommandTimerContexts(
@@ -215,17 +196,15 @@ public class AgentWorkerOperation implements Runnable {
                 stopCommandContexts(contexts);
 
             } catch (Exception e) {
-                logger.error(
-                        String.format(
-                                "Caught exception while finalizing command '%s' for operation '%s'",
-                                command.toString(), operationMetricName),
+                log.error(
+                        "Caught exception while finalizing command '{}' for operation '{}'",
+                        command,
+                        operationMetricName,
                         e);
             }
         }
 
-        logger.info(
-                String.format(
-                        "Done with command finalization for operation '%s'", operationMetricName));
+        log.info("Done with command finalization for operation '{}'", operationMetricName);
     }
 
     private void stopCommandContexts(List<Context> contexts) {
