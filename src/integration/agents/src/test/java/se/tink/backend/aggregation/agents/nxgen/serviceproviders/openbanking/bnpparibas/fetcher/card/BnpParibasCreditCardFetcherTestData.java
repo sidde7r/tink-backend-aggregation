@@ -64,4 +64,17 @@ public class BnpParibasCreditCardFetcherTestData {
                             + "    }\n"
                             + "}",
                     BalanceResponse.class);
+
+    static final BalanceResponse BALANCE_RESPONSE_NO_BALANCE =
+            SerializationUtils.deserializeFromString(
+                    "{\n"
+                            + "    \"balances\": [\n"
+                            + "    ],\n"
+                            + "    \"_links\": {\n"
+                            + "        \"self\": {\n"
+                            + "            \"href\": \"/accounts/xxx/balances\"\n"
+                            + "        }\n"
+                            + "    }\n"
+                            + "}",
+                    BalanceResponse.class);
 }

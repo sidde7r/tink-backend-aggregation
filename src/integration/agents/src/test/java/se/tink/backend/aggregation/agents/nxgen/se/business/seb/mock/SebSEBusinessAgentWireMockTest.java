@@ -34,6 +34,7 @@ public class SebSEBusinessAgentWireMockTest {
                         .addRefreshableItems(RefreshableItem.CHECKING_TRANSACTIONS)
                         .addRefreshableItems(RefreshableItem.SAVING_ACCOUNTS)
                         .addRefreshableItems(RefreshableItem.SAVING_TRANSACTIONS)
+                        .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
                         .build();
 
         final AgentContractEntity expected =

@@ -994,5 +994,25 @@
         "upcoming" : false,
         "externalSystemIds" : { },
         "transactionDates" : [ ]
-    } ]
+    } ],
+    "identityData" : {
+        "nameElements" : [ {
+            "type" : "FULLNAME",
+            "value" : "Seb Sebsson"
+        } ],
+        "dateOfBirth" : {
+            "year" : 2000,
+            "month" : "DECEMBER",
+            "monthValue" : 12,
+            "dayOfMonth" : 12,
+            "dayOfWeek" : "TUESDAY",
+            "leapYear" : true,
+            "dayOfYear" : 347,
+            "chronology" : {
+                "calendarType" : "iso8601",
+                "id" : "ISO"
+            },
+            "era" : "CE"
+        }
+    }
 }
