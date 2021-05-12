@@ -148,5 +148,8 @@ public class JyskeConstants {
     }
 
     public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
-            TypeMapper.<AccountTypes>builder().put(AccountTypes.CHECKING, "7248").build();
+            TypeMapper.<AccountTypes>builder()
+                    .put(AccountTypes.CHECKING, "7248")
+                    .put(AccountTypes.SAVINGS, "5051")
+                    .build();
 }
