@@ -156,6 +156,7 @@ public abstract class BecConstants {
         public static final String SHA_256 = "SHA-256=";
         public static final String SIGNATURE_HEADER =
                 "keyId=\"%s\",algorithm=\"rsa-sha256\",headers=\"%s\",signature=\"%s\"";
+        public static final String KEY_ID_FORMAT = "SN=%s,CA=%s";
     }
 
     public static class IdTags {
