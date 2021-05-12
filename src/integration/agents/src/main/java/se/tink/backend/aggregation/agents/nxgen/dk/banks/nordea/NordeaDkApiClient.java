@@ -180,7 +180,8 @@ public class NordeaDkApiClient {
                         .put(FormKeys.SCOPE, FormValues.SCOPE)
                         .build()
                         .serialize();
-        return basePrivateRequest(URLs.EXCHANGE_TOKEN).post(OauthCallbackResponse.class, body);
+        return baseIdentifyRequestForNemID(URLs.EXCHANGE_TOKEN)
+                .post(OauthCallbackResponse.class, body);
     }
 
     public OauthCallbackResponse exchangeRefreshToken(String refreshToken) {
@@ -193,7 +194,8 @@ public class NordeaDkApiClient {
                         .build()
                         .serialize();
 
-        return basePrivateRequest(URLs.EXCHANGE_TOKEN).post(OauthCallbackResponse.class, body);
+        return baseIdentifyRequestForNemID(URLs.EXCHANGE_TOKEN)
+                .post(OauthCallbackResponse.class, body);
     }
 
     private RequestBuilder baseIdentifyRequest(String url) {
@@ -213,22 +215,6 @@ public class NordeaDkApiClient {
             builder.header(HeaderKeys.ACCEPT_LANGUAGE, HeaderValues.ACCEPT_LANGUAGE);
         }
         return builder;
-    }
-
-    private RequestBuilder basePrivateRequest(String url) {
-        return client.request(url)
-                .header(HeaderKeys.ACCEPT_ENCODING, HeaderValues.BR_GZIP_ENCODING)
-                .header(HeaderKeys.PLATFORM_TYPE, HeaderValues.PLATFORM_TYPE)
-                .header(HeaderKeys.ACCEPT_LANGUAGE, HeaderValues.ACCEPT_LANGUAGE)
-                .accept(MediaType.APPLICATION_JSON)
-                .header(HeaderKeys.HOST, HeaderValues.NORDEA_PRIVATE_HOST)
-                .header(HeaderKeys.APP_LANGUAGE, HeaderValues.APP_LANGUAGE)
-                .header(HeaderKeys.PLATFORM_VERSION, HeaderValues.PLATFORM_VERSION)
-                .header(HeaderKeys.APP_SEGMENT, HeaderValues.HOUSEHOLD_APP_SEGMENT)
-                .header(HeaderKeys.DEVICE_ID, getOrGenerateDeviceId())
-                .header(HeaderKeys.DEVICE_MODEL, HeaderValues.DEVICE_MODEL)
-                .header(HeaderKeys.APP_COUNTRY, HeaderValues.APP_COUNTRY)
-                .type(MediaType.APPLICATION_FORM_URLENCODED);
     }
 
     private String getOrGenerateDeviceId() {
@@ -309,6 +295,29 @@ public class NordeaDkApiClient {
 
     public IdentityDataResponse fetchIdentityData() {
         return baseAuthorizedRequest(URLs.FETCH_IDENTITY_DATA).get(IdentityDataResponse.class);
+    }
+
+    private RequestBuilder baseRequest(String url) {
+        return client.request(url)
+                .header(HeaderKeys.ACCEPT_ENCODING, HeaderValues.BR_GZIP_ENCODING)
+                .header(HeaderKeys.PLATFORM_TYPE, HeaderValues.PLATFORM_TYPE)
+                .header(HeaderKeys.ACCEPT_LANGUAGE, HeaderValues.ACCEPT_LANGUAGE)
+                .accept(MediaType.APPLICATION_JSON)
+                .header(HeaderKeys.APP_LANGUAGE, HeaderValues.APP_LANGUAGE)
+                .header(HeaderKeys.PLATFORM_VERSION, HeaderValues.PLATFORM_VERSION)
+                .header(HeaderKeys.APP_SEGMENT, HeaderValues.HOUSEHOLD_APP_SEGMENT)
+                .header(HeaderKeys.DEVICE_ID, getOrGenerateDeviceId())
+                .header(HeaderKeys.DEVICE_MODEL, HeaderValues.DEVICE_MODEL)
+                .header(HeaderKeys.APP_COUNTRY, HeaderValues.APP_COUNTRY)
+                .type(MediaType.APPLICATION_FORM_URLENCODED);
+    }
+
+    private RequestBuilder baseIdentifyRequestForNemID(String url) {
+        return baseRequest(url).header(HeaderKeys.HOST, HeaderValues.NORDEA_AUTH_HOST);
+    }
+
+    private RequestBuilder basePrivateRequest(String url) {
+        return baseRequest(url).header(HeaderKeys.HOST, HeaderValues.NORDEA_PRIVATE_HOST);
     }
 
     private RequestBuilder baseAuthorizedRequest(String url) {
