@@ -8,14 +8,10 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsba
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public abstract class AccountListResponse extends BaseResponse {
 
     public abstract Stream<TransactionalAccount> toTinkAccounts(HandelsbankenApiClient client);
-
-    public abstract Stream<TransactionalAccount> toTinkAccounts(
-            HandelsbankenApiClient client, PersistentStorage persistentStorage);
 
     public abstract Stream<CreditCardAccount> toTinkCreditCard(HandelsbankenApiClient client);
 

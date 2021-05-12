@@ -20,13 +20,12 @@ public class AccountListSEResponse extends AccountListResponse {
     @JsonProperty("data")
     private List<AccountEntity> accountList;
 
-    // not used by business, used by banks
+    // not used by business
     @Override
     public Stream<TransactionalAccount> toTinkAccounts(HandelsbankenApiClient client) {
         return Stream.empty();
     }
 
-    @Override
     public Stream<TransactionalAccount> toTinkAccounts(
             HandelsbankenApiClient client, PersistentStorage persistentStorage) {
         return accountList == null
