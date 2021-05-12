@@ -24,4 +24,9 @@ public class UkOpenBankingPisConfiguration implements UkOpenBankingPisConfig {
     public boolean compatibleWithFundsConfirming() {
         return true;
     }
+
+    @Override
+    public boolean useOtherPaymentContext() {
+        return true;
+    }
 }
