@@ -13,7 +13,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.authenticator.UkOpenBankingAisAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountOwnershipType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAis;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.module.UkOpenBankingFlowModule;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.module.UkOpenBankingLocalKeySignerModuleForDecoupledMode;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.UkOpenBankingAisConfiguration;
@@ -32,16 +31,16 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, CREDIT_CARDS})
 public class BankOfIrelandBusinessAgent extends UkOpenBankingBaseAgent {
 
-    private static final UkOpenBankingAisConfig aisConfig;
+    private static final BankOfIrelandAisConfiguration aisConfig;
 
     static {
         aisConfig =
-                UkOpenBankingAisConfiguration.builder()
-                        .withAllowedAccountOwnershipType(AccountOwnershipType.BUSINESS)
-                        .withOrganisationId(BankOfIrelandConstants.ORGANISATION_ID)
-                        .withWellKnownURL(BankOfIrelandConstants.BUSINESS_WELL_KNOWN_URL)
-                        .withApiBaseURL(BankOfIrelandConstants.AIS_API_URL)
-                        .build();
+                new BankOfIrelandAisConfiguration(
+                        UkOpenBankingAisConfiguration.builder()
+                                .withAllowedAccountOwnershipType(AccountOwnershipType.BUSINESS)
+                                .withOrganisationId(BankOfIrelandConstants.ORGANISATION_ID)
+                                .withWellKnownURL(BankOfIrelandConstants.BUSINESS_WELL_KNOWN_URL)
+                                .withApiBaseURL(BankOfIrelandConstants.AIS_API_URL));
     }
 
     @Inject
