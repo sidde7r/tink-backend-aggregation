@@ -73,6 +73,8 @@ spec:
         # Failed logins (due to unknown RuntimeException) over 10%
         (count(sum_over_time(tink_agent_login_total{action="login", outcome="failed", market="FR", provider_type!="test"}[30m])) by (action,className,provider)
             / count(sum_over_time(tink_agent_login_total{action="login", market="FR", provider_type!="test"}[30m])) by (action,className,provider) > 0.1)
+        # At least this many attempts.
+            and count(sum_over_time(tink_agent_login_total{action="login", market="FR", provider_type!="test"}[30m])) by (className,provider) > 1
       for: 5m
       labels:
         severity: urgent
