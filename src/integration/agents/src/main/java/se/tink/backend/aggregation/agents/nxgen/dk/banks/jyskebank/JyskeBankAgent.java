@@ -14,9 +14,12 @@ import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.JyskeConstants.Fetcher;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.JyskeConstants.HttpClient;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.authenticator.JyskeBankNemidAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.fetcher.identity.JyskeIdentityDataFetcher;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.fetcher.transactionalaccount.JyskeBankAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.filters.JyskeBankRetryFilter;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.filters.JyskeBankUnavailableFilter;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
@@ -28,6 +31,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
+import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, IDENTITY_DATA})
 public class JyskeBankAgent extends NextGenerationAgent
@@ -43,8 +47,8 @@ public class JyskeBankAgent extends NextGenerationAgent
     @Inject
     public JyskeBankAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
+        configureHttpClient(client);
         this.randomValueGenerator = componentProvider.getRandomValueGenerator();
-        client.setFollowRedirects(false);
         this.apiClient = new JyskeBankApiClient(client, sessionStorage, randomValueGenerator);
         this.transactionalAccountRefreshController =
                 constructTransactionalAccountRefreshController();
@@ -123,5 +127,13 @@ public class JyskeBankAgent extends NextGenerationAgent
     @Override
     public FetchIdentityDataResponse fetchIdentityData() {
         return new FetchIdentityDataResponse(identityDataFetcher.fetchIdentityData());
+    }
+
+    private void configureHttpClient(final TinkHttpClient client) {
+        client.setFollowRedirects(false);
+        client.addFilter(new JyskeBankUnavailableFilter());
+        client.addFilter(
+                new JyskeBankRetryFilter(
+                        HttpClient.MAX_RETRIES, HttpClient.RETRY_SLEEP_MILLISECONDS));
     }
 }

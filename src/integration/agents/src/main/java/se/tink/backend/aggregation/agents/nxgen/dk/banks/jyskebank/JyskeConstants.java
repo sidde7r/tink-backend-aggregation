@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank;
 
 import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 
 public class JyskeConstants {
@@ -114,6 +115,32 @@ public class JyskeConstants {
         public static final String AOS = "iPhone web 13.3.1";
         public static final String ENROLLMENT_TYPE = "enrollment";
         public static final String LOGIN_TYPE = "login";
+    }
+
+    public static class FormKeys {
+        public static final String CLIENT_ID = "client_id";
+        public static final String GRANT_TYPE = "grant_type";
+        public static final String PASSWORD = "password";
+        public static final String SCOPE = "scope";
+        public static final String USERNAME = "username";
+        public static final String REFRESH_TOKEN = "refresh_token";
+    }
+
+    public static class FormValues {
+        public static final String PASSWORD = "password";
+        public static final String REPLAY_ID = "digitalbanking replayId:";
+        public static final String NOT_USED = "NOT_USED";
+        public static final String REFRESH_TOKEN = "refresh_token";
+    }
+
+    public static class HttpClient {
+        public static final int MAX_RETRIES = 3;
+        public static final int RETRY_SLEEP_MILLISECONDS = 2000;
+    }
+
+    public static final class Log {
+        public static final LogTag UNKOWN_ACCOUNT_TYPE =
+                LogTag.from("#dk_jyske_unknown_account_type");
     }
 
     public static class Fetcher {

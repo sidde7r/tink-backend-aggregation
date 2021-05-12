@@ -24,6 +24,8 @@ import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.http.HttpStatus;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -36,16 +38,20 @@ import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
+import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.JyskeBankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.JyskeBankPersistentStorage;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.JyskeConstants.Authentication;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.JyskeConstants.Crypto;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.JyskeConstants.FormKeys;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.JyskeConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.JyskeConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.JyskeConstants.JwtKeys;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.JyskeConstants.JwtValues;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.JyskeConstants.Storage;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.authenticator.rpc.ChallengeResponse;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.authenticator.rpc.ClientRegistrationResponse;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.authenticator.rpc.ErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.authenticator.rpc.JweRequest;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.authenticator.rpc.OAuthResponse;
 import se.tink.backend.aggregation.agents.utils.crypto.RSA;
@@ -59,11 +65,13 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.NemIdIFrameController;
 import se.tink.backend.aggregation.nxgen.http.form.Form;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @RequiredArgsConstructor
 @AllArgsConstructor
+@Slf4j
 public class JyskeBankNemidAuthenticator
         implements MultiFactorAuthenticator, AutoAuthenticator, NemIdParametersFetcher {
     private final JyskeBankApiClient apiClient;
@@ -105,12 +113,14 @@ public class JyskeBankNemidAuthenticator
     }
 
     private ClientRegistrationResponse fetchClientSecret(Document validateNemidTokenResponseBody) {
+        log.info("Building form object from NemId token html response");
         final String uri =
                 validateNemidTokenResponseBody
                         .getElementById("form1")
                         .getElementsByAttribute("action")
                         .attr("action");
         final Form form = buildTokenForm(validateNemidTokenResponseBody);
+        log.info("Fetching response object to extract access token from the redirect header");
         final String redirect = apiClient.fetchToken(uri, form);
         final String token = getAccessTokenFromUrl(redirect);
 
@@ -118,6 +128,7 @@ public class JyskeBankNemidAuthenticator
     }
 
     private Document getNemIdTokenResponseBody(String nemIdToken) {
+        log.info("Validating NemId token and parsing KeyId from response cookie");
         final HttpResponse validateNemIdTokenResponse = apiClient.validateNemIdToken(nemIdToken);
         final String keyId =
                 validateNemIdTokenResponse.getCookies().stream()
@@ -173,16 +184,17 @@ public class JyskeBankNemidAuthenticator
         final String replayId = randomValueGenerator.generateUuidWithTinkTag();
 
         final Form.Builder formBuilder = Form.builder();
-        formBuilder.put("client_id", clientId);
-        formBuilder.put("grant_type", "password");
-        formBuilder.put("password", password);
-        formBuilder.put("scope", "digitalbanking replayId:" + replayId);
-        formBuilder.put("username", "NOT_USED");
+        formBuilder.put(FormKeys.CLIENT_ID, clientId);
+        formBuilder.put(FormKeys.GRANT_TYPE, FormValues.PASSWORD);
+        formBuilder.put(FormKeys.PASSWORD, password);
+        formBuilder.put(FormKeys.SCOPE, FormValues.REPLAY_ID + replayId);
+        formBuilder.put(FormKeys.USERNAME, FormValues.NOT_USED);
 
         return formBuilder.build();
     }
 
     private String createEnrollmentPackage(String clientId) {
+        log.info("Creating enrollment package for manual authentication");
         final JWEAlgorithm alg = JWEAlgorithm.RSA_OAEP_256;
         final EncryptionMethod enc = EncryptionMethod.A128CBC_HS256;
 
@@ -277,17 +289,27 @@ public class JyskeBankNemidAuthenticator
 
         final String password = createLoginPackage(kid, clientId, challenge);
         final Form oauthForm = buildOauthTokenForm(clientId, password);
-        final OAuthResponse oAuthResponse =
-                apiClient.fetchAccessToken(clientId, clientSecret, oauthForm);
 
-        final String accessToken = oAuthResponse.getAccessToken();
-        final String refreshToken = oAuthResponse.getRefreshToken();
-        sessionStorage.put(Storage.ACCESS_TOKEN, accessToken);
-        sessionStorage.put(Storage.REFRESH_TOKEN, refreshToken);
+        try {
+            final OAuthResponse oAuthResponse =
+                    apiClient.fetchAccessToken(clientId, clientSecret, oauthForm);
+            final String accessToken = oAuthResponse.getAccessToken();
+            final String refreshToken = oAuthResponse.getRefreshToken();
+            sessionStorage.put(Storage.ACCESS_TOKEN, accessToken);
+            sessionStorage.put(Storage.REFRESH_TOKEN, refreshToken);
+        } catch (HttpResponseException e) {
+            final String error = e.getResponse().getBody(ErrorResponse.class).getError();
+            if (e.getResponse().getStatus() == HttpStatus.SC_BAD_REQUEST
+                    && "invalid_grant".equals(error)) {
+                throw SessionError.SESSION_EXPIRED.exception();
+            }
+            throw e;
+        }
     }
 
     private String createLoginPackage(String kid, String clientId, String challenge) {
         try {
+            log.info("Creating login package for auto authentication");
             final JWSHeader header =
                     new JWSHeader.Builder(JWSAlgorithm.RS256)
                             .keyID(kid)
