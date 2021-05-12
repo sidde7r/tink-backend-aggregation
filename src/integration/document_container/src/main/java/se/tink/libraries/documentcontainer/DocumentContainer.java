@@ -20,7 +20,6 @@ public class DocumentContainer {
             base64Representation =
                     new String(Base64.encode(IOUtils.toByteArray(documentInputStream)));
         } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 

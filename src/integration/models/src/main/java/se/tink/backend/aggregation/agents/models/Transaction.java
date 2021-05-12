@@ -10,9 +10,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.uuid.UUIDUtils;
 
+@Slf4j
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Transaction implements Comparable<Transaction>, Cloneable {
     // TODO: Find out if we can add ExactCurrencyAmount in this model
@@ -135,7 +137,7 @@ public class Transaction implements Comparable<Transaction>, Cloneable {
         try {
             this.payloadSerialized = OBJECT_MAPPER.writeValueAsString(getPayload());
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
+            log.warn("Couldn't serialize payload", e);
         }
     }
 

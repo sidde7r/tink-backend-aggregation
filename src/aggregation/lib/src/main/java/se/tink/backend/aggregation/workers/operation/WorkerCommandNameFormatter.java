@@ -10,7 +10,6 @@ public final class WorkerCommandNameFormatter {
         try {
             return formatCommandName(clazz.getSimpleName());
         } catch (RuntimeException e) {
-            e.printStackTrace();
             log.error("unknown error when generating command name", e);
             return "";
         }
