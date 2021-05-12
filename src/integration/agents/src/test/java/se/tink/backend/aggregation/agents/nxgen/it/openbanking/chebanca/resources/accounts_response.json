@@ -1,0 +1,45 @@
+{
+    "data": {
+        "accounts": [
+            {
+                "accountId": "0001658072",
+                "product": {
+                    "code": "0633",
+                    "description": "CONTO YELLOW"
+                },
+                "currency": "EUR",
+                "iban": "IT04G0305801604100571657883",
+                "name": "71657883"
+            },
+            {
+                "accountId": "0001712638",
+                "product": {
+                    "code": "0649",
+                    "description": "CONTO CORRENTE 0649"
+                },
+                "currency": "EUR",
+                "iban": "IT87P03058016041005737885636",
+                "name": "37885636"
+            }
+        ]
+    },
+    "result": {
+        "requestId": "056336878538284929555964",
+        "outcome": "SUCCESS",
+        "flushMessages": true,
+        "messages": []
+    },
+    "_links": {
+        "self": {
+            "href": " ",
+            "method": "GET"
+        },
+        "curies": [
+            {
+                "href": "https://sandbox-api.chebanca.io/private/customers/4450923/accounts/{rel}",
+                "name": "accounts"
+            }
+        ]
+    },
+    "_embedded": {}
+}

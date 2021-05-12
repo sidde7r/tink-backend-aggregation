@@ -8,6 +8,7 @@ junit_test(
     ),
     data = [
         "//data/test/agents/it/ob/chebanca",
+        "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/it/openbanking/chebanca/resources",
     ],
     tags = [
     ],
@@ -21,6 +22,7 @@ junit_test(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/core/authentication",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/response",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
+        "//src/libraries/date",
         "//src/libraries/serialization",
         "//third_party:lombok_libs",
         "//third_party:org_assertj_assertj_core",

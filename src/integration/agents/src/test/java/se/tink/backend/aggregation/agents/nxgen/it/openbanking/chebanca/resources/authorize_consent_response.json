@@ -1,0 +1,15 @@
+{
+  "data": {
+      "scaRedirectURL": "https://developer.chebanca.it/sandbox/sca/simulate?resourceId=89237de7-175f-447d-b1ed-47704fe23a72",
+      "chosenScaApproach": "REDIRECT"
+  },
+  "result": {
+      "requestId": 908497645230254113240748,
+      "outcome": "SUCCESS",
+      "flushMessages": true,
+      "messages": []
+  },
+  "resources": {
+      "resourceId": "89237de7-175f-447d-b1ed-47704fe23a72"
+  }
+}

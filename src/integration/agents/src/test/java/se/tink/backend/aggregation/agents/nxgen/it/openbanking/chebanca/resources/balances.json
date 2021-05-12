@@ -1,0 +1,21 @@
+{
+    "accountBalance": {
+        "amount": "14719.000",
+        "currency": "EUR"
+    },
+    "availableBalance": {
+        "amount": "15719.000",
+        "currency": "EUR"
+    },
+    "accountAvailability": {
+        "amount": "16719.000",
+        "currency": "EUR"
+    },
+    "accountAvailableCredit": {
+        "amount": "17719.000",
+        "currency": "EUR"
+    },
+    "date": "29/04/2021",
+    "hour": "16:52",
+    "isPocketAccount": false
+}

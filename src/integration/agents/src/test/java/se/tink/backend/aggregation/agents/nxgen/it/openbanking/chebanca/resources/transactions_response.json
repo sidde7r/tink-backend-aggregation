@@ -1,0 +1,110 @@
+{
+    "_embedded": {
+        "transactions:generateExcel": {
+            "href": "retrieve?text=&nextAccounting=1&dateTo=2019-12-30&fromAmount=&period=&transactionsType=&nextNotAccounting=1&description=&accountingElementsNumber=&exportType=xls&notAccountingElementsNumber=&toAmount=&dateFrom=2019-09-30",
+            "method": "GET"
+        },
+        "transactions:generatePdf": {
+            "href": "retrieve?text=&nextAccounting=1&dateTo=2019-12-30&fromAmount=&period=&transactionsType=&nextNotAccounting=1&description=&accountingElementsNumber=&exportType=pdf&notAccountingElementsNumber=&toAmount=&dateFrom=2019-09-30",
+            "method": "GET"
+        }
+    },
+    "_links": {
+        "curies": [
+            {
+                "href": "https://api.chebanca.io/private/customers/2264691/products/0001470199/transactions/{rel}",
+                "name": "transactions"
+            }
+        ],
+        "self": {
+            "href": "retrieve",
+            "method": "GET"
+        }
+    },
+    "data": {
+        "numberTransactionsAccounting": 529,
+        "numberTransactionsNotAccounting": 2,
+        "showNotAccounting": true,
+        "totalEnter": {
+            "amount": "100507.790",
+            "currency": "EUR"
+        },
+        "totalOutput": {
+            "amount": "-130007.980",
+            "currency": "EUR"
+        },
+        "transactionDescriptions": [
+            {
+                "label": "Disposizione di pagamento",
+                "value": "Disposizione di pagamento"
+            },
+            {
+                "label": "Pagamento tramite POS",
+                "value": "Pagamento tramite POS"
+            }
+        ],
+        "transactionsAccounting": [
+            {
+                "amountTransaction": {
+                    "amount": "-488.000",
+                    "currency": "EUR"
+                },
+                "codeDescription": "C266",
+                "dateAccountingCurrency": "20191230T00:00:00",
+                "dateLiquidationValue": "20191230T00:00:00",
+                "extendedDescription": "Disposizione - RIF:077707111BEN. Giacomo Tia Fattuka n.187/2019 acconto libreria",
+                "idMoneyTransfer": "077707111",
+                "index": "A1",
+                "shortDescription": "Disposizione di pagamento"
+            },
+            {
+                "amountTransaction": {
+                    "amount": "-9.500",
+                    "currency": "EUR"
+                },
+                "codeDescription": "C296",
+                "dateAccountingCurrency": "20191227T00:00:00",
+                "dateLiquidationValue": "20191224T00:00:00",
+                "extendedDescription": "Pagam. POS - DEL 24/12 ORE 18:10 CARTA 1107425 C/O 4899111-CIOCCOLATITALIANI, MILANO CAU 43040 NDS 270824096",
+                "idMoneyTransfer": "",
+                "index": "A3",
+                "shortDescription": "Pagamento tramite POS"
+            }
+        ],
+        "transactionsNotAccounting": [
+            {
+                "amountTransaction": {
+                    "amount": "-7.000",
+                    "currency": "EUR"
+                },
+                "codeDescription": "",
+                "dateLiquidationValue": "20191228T10:52:04",
+                "extendedDescription": "",
+                "idMoneyTransfer": "",
+                "index": "N1",
+                "preAuthorized": false,
+                "shortDescription": ""
+            },
+            {
+                "amountTransaction": {
+                    "amount": "-13.000",
+                    "currency": "EUR"
+                },
+                "codeDescription": "",
+                "dateLiquidationValue": "20191227T20:50:04",
+                "extendedDescription": "",
+                "idMoneyTransfer": "",
+                "index": "N2",
+                "preAuthorized": false,
+                "shortDescription": ""
+            }
+        ]
+    },
+    "result": {
+        "flushMessages": true,
+        "messages": [
+        ],
+        "outcome": "SUCCESS",
+        "requestId": "717900376891617312259372"
+    }
+}
