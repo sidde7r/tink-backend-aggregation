@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.authenticator
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.authenticator.rpc.ClientRegistrationResponse;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.authenticator.rpc.OAuthResponse;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.fetcher.identity.rpc.IdentityResponse;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.fetcher.investment.rpc.InvestmentResponse;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.fetcher.transactionalaccount.rpc.AccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.fetcher.transactionalaccount.rpc.TransactionResponse;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
@@ -117,6 +118,14 @@ public class JyskeBankApiClient {
                 .queryParam(QueryKeys.PAGE, Integer.toString(page))
                 .accept(HeaderValues.ACCEPT_JSON)
                 .get(TransactionResponse.class);
+    }
+
+    public InvestmentResponse fetchInvestments() {
+        return buildRequest(Urls.FETCH_INVESTMENTS)
+                .queryParam(QueryKeys.CLASSIFICATIONS, QueryValues.CLASSIFICATIONS)
+                .queryParam(QueryKeys.LISTINGS, QueryValues.LISTINGS)
+                .accept(HeaderValues.ACCEPT_JSON)
+                .get(InvestmentResponse.class);
     }
 
     private RequestBuilder buildRequest(String url) {
