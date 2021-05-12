@@ -24,16 +24,16 @@ import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenApiClient;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenStorage;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.payment.PaymentTestHelper;
-import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.i18n.LocalizableKey;
 
 public class PaymentAuthenticatorTest {
 
-    private SupplementalInformationHelper supplementalInformationHelper;
+    private SupplementalInformationController supplementalInformationController;
     private SparkassenApiClient apiClient;
-    private SparkassenStorage persistentStorage;
+    private SparkassenStorage storage;
 
     private SparkassenPaymentAuthenticator authenticator;
     private Credentials credentials;
@@ -42,9 +42,9 @@ public class PaymentAuthenticatorTest {
     @Before
     public void setup() {
         Catalog catalog = mock(Catalog.class);
-        supplementalInformationHelper = mock(SupplementalInformationHelper.class);
+        supplementalInformationController = mock(SupplementalInformationController.class);
         apiClient = mock(SparkassenApiClient.class);
-        persistentStorage = new SparkassenStorage(new PersistentStorage());
+        storage = new SparkassenStorage(new PersistentStorage());
 
         credentials = new Credentials();
         credentials.setType(CredentialsTypes.PASSWORD);
@@ -53,12 +53,12 @@ public class PaymentAuthenticatorTest {
         when(catalog.getString(any(LocalizableKey.class))).thenReturn("");
         authenticator =
                 new SparkassenPaymentAuthenticator(
-                        catalog,
-                        supplementalInformationHelper,
                         apiClient,
-                        persistentStorage,
-                        credentials);
-        paymentTestHelper = new PaymentTestHelper(supplementalInformationHelper, apiClient);
+                        supplementalInformationController,
+                        storage,
+                        credentials,
+                        catalog);
+        paymentTestHelper = new PaymentTestHelper(supplementalInformationController, apiClient);
     }
 
     @Test
@@ -70,7 +70,7 @@ public class PaymentAuthenticatorTest {
                 PAYMENT_SCA_METHOD_SELECTION_RESPONSE);
         paymentTestHelper.whenCreatePaymentFinalizeAuthorizationReturn(
                 PAYMENT_SCA_AUTHENTICATION_STATUS_RESPONSE);
-        paymentTestHelper.whenSupplementalInformationHelperReturn(SELECT_AUTH_METHOD_OK);
+        paymentTestHelper.whenSupplementalInformationControllerReturn(SELECT_AUTH_METHOD_OK);
 
         // when
         authenticator.authenticatePayment(credentials, PAYMENT_CREATE_RESPONSE);
@@ -81,7 +81,7 @@ public class PaymentAuthenticatorTest {
         paymentTestHelper.verifyFinalizePaymentAuthorizationCalled();
         paymentTestHelper.verifyAskSupplementalInformationCalled(2);
         verifyNoMoreInteractions(apiClient);
-        verifyNoMoreInteractions(supplementalInformationHelper);
+        verifyNoMoreInteractions(supplementalInformationController);
     }
 
     @Test
@@ -93,7 +93,7 @@ public class PaymentAuthenticatorTest {
                 PAYMENT_SCA_METHOD_SELECTION_RESPONSE);
         paymentTestHelper.whenCreatePaymentFinalizeAuthorizationReturn(
                 PAYMENT_SCA_AUTHENTICATION_FAILED_STATUS_RESPONSE);
-        paymentTestHelper.whenSupplementalInformationHelperReturn(SELECT_AUTH_METHOD_OK);
+        paymentTestHelper.whenSupplementalInformationControllerReturn(SELECT_AUTH_METHOD_OK);
 
         // when
         Throwable throwable =

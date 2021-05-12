@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 @Getter
-public class AuthenticationMethodResponse {
+public class AuthorizationResponse {
 
     @JsonProperty("_links")
     private ScaAuthorizationLinksEntity links;

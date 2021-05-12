@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 import se.tink.backend.aggregation.agents.utils.berlingroup.BerlingroupConstants.StatusValues;
+import se.tink.backend.aggregation.agents.utils.berlingroup.common.LinksEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject

@@ -1,0 +1,125 @@
+
+REQUEST 1
+POST https://xs2a.f-i-apim.de:8443/fixs2aop-env/xs2a-api/70150000/v1/consents
+Accept: application/json
+Content-Type: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-IP-Address: 127.0.0.1
+TPP-Redirect-Preferred: false
+X-Aggregator: Tink Testing
+
+{"access":{"availableAccountsWithBalance":"allAccounts"},"recurringIndicator":true,"validUntil":"1992-07-09","frequencyPerDay":4,"combinedServiceIndicator":false}
+
+RESPONSE 1
+201
+Date: Wed, 12 May 2021 13:58:13 GMT
+Date: Wed, 12 May 2021 13:58:13 GMT
+Server: Apache
+Content-Type: application/json;charset=utf-8
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+Location: ***
+ASPSP-SCA-Approach: ***
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-XSS-Protection: 1; mode=block
+X-Frame-Options: DENY
+X-Content-Type-Options: nosniff
+Content-Security-Policy: ***
+Content-Language: de-DE
+Strict-Transport-Security: max-age=31536000
+Content-Length: 618
+
+{"consentStatus":"received","consentId":"**HASHED:dA**","_links":{"self":{"href":"https://xs2a.f-i-apim.de:8443/fixs2aop-env/xs2a-api/70150000/v1/consents/**HASHED:dA**"},"status":{"href":"https://xs2a.f-i-apim.de:8443/fixs2aop-env/xs2a-api/70150000/v1/consents/**HASHED:dA**/status"},"startAuthorisationWithPsuAuthentication":{"href":"https://xs2a.f-i-apim.de:8443/fixs2aop-env/xs2a-api/70150000/v1/consents/**HASHED:dA**/authorisations"}},"psuMessage":"Bitte geben Sie Ihren Anmeldenamen/Legitimations-ID und Ihre PIN ein."}
+
+REQUEST 2
+POST https://xs2a.f-i-apim.de:8443/fixs2aop-env/xs2a-api/70150000/v1/consents/**HASHED:dA**/authorisations
+Accept: application/json
+Content-Type: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-IP-Address: 127.0.0.1
+PSU-ID: test_username
+X-Aggregator: Tink Testing
+
+{"psuData":{"password":"test_password"}}
+
+RESPONSE 2
+201
+Date: Wed, 12 May 2021 13:58:13 GMT
+Date: Wed, 12 May 2021 13:58:14 GMT
+Server: Apache
+Content-Type: application/json;charset=utf-8
+Location: ***
+ASPSP-SCA-Approach: ***
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-XSS-Protection: 1; mode=block
+X-Frame-Options: DENY
+X-Content-Type-Options: nosniff
+Content-Security-Policy: ***
+Content-Language: de-DE
+Strict-Transport-Security: max-age=31536000
+Content-Length: 791
+
+{"scaStatus":"scaMethodSelected","chosenScaMethod":{"authenticationType":"PUSH_OTP","authenticationMethodId":"Classic - nummer2","name":"pushTAN | nummer2"},"challengeData":{"otpMaxLength":6,"otpFormat":"integer","additionalInformation":"Bitte tragen Sie die TAN aus der pushTAN-App ein."},"_links":{"scaStatus":{"href":"https://xs2a.f-i-apim.de:8443/fixs2aop-env/xs2a-api/70150000/v1/consents/**HASHED:dA**/authorisations/**HASHED:+O**"},"authoriseTransaction":{"href":"https://xs2a.f-i-apim.de:8443/fixs2aop-env/xs2a-api/70150000/v1/consents/**HASHED:dA**/authorisations/**HASHED:+O**"}},"psuMessage":"Bitte tragen Sie die TAN aus der pushTAN-App ein."}
+
+REQUEST 3
+PUT https://xs2a.f-i-apim.de:8443/fixs2aop-env/xs2a-api/70150000/v1/consents/**HASHED:dA**/authorisations/**HASHED:+O**
+Accept: application/json
+Content-Type: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-IP-Address: 127.0.0.1
+X-Aggregator: Tink Testing
+
+{"scaAuthenticationData":"123456"}
+
+RESPONSE 3
+200
+Date: Wed, 12 May 2021 13:58:22 GMT
+Date: Wed, 12 May 2021 13:58:23 GMT
+Server: Apache
+Content-Type: application/json;charset=utf-8
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+ASPSP-SCA-Approach: ***
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-XSS-Protection: 1; mode=block
+X-Frame-Options: DENY
+X-Content-Type-Options: nosniff
+Content-Security-Policy: ***
+Content-Language: de-DE
+Strict-Transport-Security: max-age=31536000
+Content-Length: 358
+
+{"scaStatus":"finalised","_links":{"scaStatus":{"href":"https://xs2a.f-i-apim.de:8443/fixs2aop-env/xs2a-api/70150000/v1/consents/**HASHED:dA**/authorisations/**HASHED:+O**"},"status":{"href":"https://xs2a.f-i-apim.de:8443/fixs2aop-env/xs2a-api/70150000/v1/consents/**HASHED:dA**/status"}}}
+
+REQUEST 4
+GET https://xs2a.f-i-apim.de:8443/fixs2aop-env/xs2a-api/70150000/v1/consents/**HASHED:dA**
+Accept: application/json
+Content-Type: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-IP-Address: 127.0.0.1
+X-Aggregator: Tink Testing
+
+RESPONSE 4
+200
+Date: Wed, 12 May 2021 13:58:23 GMT
+Date: Wed, 12 May 2021 13:58:23 GMT
+Server: Apache
+Content-Type: application/json;charset=utf-8
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-XSS-Protection: 1; mode=block
+X-Frame-Options: DENY
+X-Content-Type-Options: nosniff
+Content-Security-Policy: ***
+Content-Language: de-DE
+Strict-Transport-Security: max-age=31536000
+Content-Length: 385
+
+{"access":{"accounts":[{"iban":"DE9070150000**HASHED:lJ**"},{"iban":"DE12345677"}],"balances":[{"iban":"DE9070150000**HASHED:lJ**"},{"iban":"DE12345677"}],"transactions":[{"iban":"DE9070150000**HASHED:lJ**"},{"iban":"DE12345677"}]},"recurringIndicator":true,"validUntil":"2021-08-10","frequencyPerDay":4,"lastActionDate":"2021-05-12","consentStatus":"valid"}

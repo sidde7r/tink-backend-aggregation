@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.utils.berlingroup.payment.entities;
+package se.tink.backend.aggregation.agents.utils.berlingroup.common;
 
 import lombok.Getter;
 import se.tink.backend.aggregation.agents.Href;
@@ -10,6 +10,7 @@ public class LinksEntity {
 
     private Href startAuthorisationWithPsuAuthentication;
     private Href scaOAuth;
+    private Href scaRedirect;
     private Href self;
     private Href status;
 }

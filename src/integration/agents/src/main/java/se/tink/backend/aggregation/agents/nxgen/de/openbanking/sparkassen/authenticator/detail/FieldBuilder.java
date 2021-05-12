@@ -15,12 +15,16 @@ import se.tink.backend.aggregation.agents.utils.supplementalfields.CommonFields;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.GermanFields;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.TanBuilder;
 import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.i18n.LocalizableParametrizedKey;
 
 @RequiredArgsConstructor
 public class FieldBuilder {
 
     private static final Pattern STARTCODE_CHIP_PATTERN = Pattern.compile("Startcode\\s(\\d+)");
     private static final String CHIP_TYPE = "CHIP_OTP";
+    private static final LocalizableParametrizedKey INSTRUCTIONS =
+            new LocalizableParametrizedKey(
+                    "Please open the S-pushTAN app on device \"{0}\" and confirm login. Then click the \"Submit\" button");
 
     private final Catalog catalog;
 
@@ -57,5 +61,9 @@ public class FieldBuilder {
     public Field getChooseScaMethodField(List<ScaMethodEntity> scaMethods) {
         return CommonFields.Selection.build(
                 catalog, null, GermanFields.SelectOptions.prepareSelectOptions(scaMethods));
+    }
+
+    public Field getInstructionsField(ScaMethodEntity scaMethod) {
+        return CommonFields.Instruction.build(catalog.getString(INSTRUCTIONS, scaMethod.getName()));
     }
 }

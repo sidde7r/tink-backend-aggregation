@@ -7,6 +7,7 @@ java_library(
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/credentials:service",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/berlingroup",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/annotations",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/authentication/progressive",

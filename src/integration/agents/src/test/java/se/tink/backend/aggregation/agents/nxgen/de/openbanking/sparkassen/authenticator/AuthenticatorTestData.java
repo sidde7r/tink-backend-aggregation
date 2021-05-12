@@ -6,13 +6,12 @@ import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SupplementalInfoError;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.rpc.AuthenticationMethodResponse;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.rpc.AuthorizationResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.rpc.FinalizeAuthorizationResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.rpc.OauthEndpointsResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentDetailsResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
-import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @Ignore
@@ -29,9 +28,10 @@ public class AuthenticatorTestData {
 
     static final String TEST_CONSENT_ID = "147852369";
     static final String TEST_AUTHORIZATION_ID = "1234567890";
-    static final URL TEST_AUTH_URL =
-            new URL(
-                    "https://xs2a.f-i-apim.de:8443/fixs2aop-env/xs2a-api/75050000/v1/consents/147852369/authorisations");
+    static final String TEST_AUTH_URL =
+            "https://xs2a.f-i-apim.de:8443/fixs2aop-env/xs2a-api/75050000/v1/consents/147852369/authorisations";
+    static final String TEST_AUTH_SINGLE_URL =
+            "https://xs2a.f-i-apim.de:8443/fixs2aop-env/xs2a-api/75050000/v1/consents/147852369/authorisations/1234567890";
     static final String TEST_SCA_OAUTH_URL =
             "https://xs2a.f-i-apim.de:8443/fixs2aop-env/oauth/75050000/.well-known";
     static final HttpResponseException HTTP_RESPONSE_EXCEPTION =
@@ -70,30 +70,30 @@ public class AuthenticatorTestData {
                         ConsentResponse.class);
     }
 
-    static final AuthenticationMethodResponse INIT_AUTH_RESPONSE_NO_METHOD =
+    static final AuthorizationResponse INIT_AUTH_RESPONSE_NO_METHOD =
             SerializationUtils.deserializeFromString(
                     Paths.get(TEST_DATA_PATH, "init_auth_response_no_method.json").toFile(),
-                    AuthenticationMethodResponse.class);
+                    AuthorizationResponse.class);
 
-    static final AuthenticationMethodResponse INIT_AUTH_RESPONSE_OK_ONE_METHOD =
+    static final AuthorizationResponse INIT_AUTH_RESPONSE_OK_ONE_METHOD =
             SerializationUtils.deserializeFromString(
                     Paths.get(TEST_DATA_PATH, "init_auth_response_ok_one_method.json").toFile(),
-                    AuthenticationMethodResponse.class);
+                    AuthorizationResponse.class);
 
-    static final AuthenticationMethodResponse INIT_AUTH_RESPONSE_OK_TWO_METHODS =
+    static final AuthorizationResponse INIT_AUTH_RESPONSE_OK_TWO_METHODS =
             SerializationUtils.deserializeFromString(
                     Paths.get(TEST_DATA_PATH, "init_auth_response_ok_two_methods.json").toFile(),
-                    AuthenticationMethodResponse.class);
+                    AuthorizationResponse.class);
 
-    public static final AuthenticationMethodResponse SELECT_AUTH_METHOD_OK =
+    public static final AuthorizationResponse SELECT_AUTH_METHOD_OK =
             SerializationUtils.deserializeFromString(
                     Paths.get(TEST_DATA_PATH, "select_auth_method_ok.json").toFile(),
-                    AuthenticationMethodResponse.class);
+                    AuthorizationResponse.class);
 
-    static final AuthenticationMethodResponse SELECT_AUTH_METHOD_NO_CHALLENGE_DATA =
+    static final AuthorizationResponse SELECT_AUTH_METHOD_NO_CHALLENGE_DATA =
             SerializationUtils.deserializeFromString(
                     Paths.get(TEST_DATA_PATH, "select_auth_method_no_challenge_data.json").toFile(),
-                    AuthenticationMethodResponse.class);
+                    AuthorizationResponse.class);
 
     static final FinalizeAuthorizationResponse FINALIZE_AUTH_FAILED =
             SerializationUtils.deserializeFromString(

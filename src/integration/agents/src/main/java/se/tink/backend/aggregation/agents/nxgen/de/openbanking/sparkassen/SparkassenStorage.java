@@ -28,14 +28,6 @@ public class SparkassenStorage {
         persistentStorage.put(CONSENT_ID, consentId);
     }
 
-    public String getAuthorizationId() {
-        return persistentStorage.get(AUTHORIZATION_ID);
-    }
-
-    public void saveAuthorizationId(String authorizationId) {
-        persistentStorage.put(AUTHORIZATION_ID, authorizationId);
-    }
-
     public boolean isFirstFetch() {
         return !DONE.equals(persistentStorage.get(FIRST_FETCH_FLAG));
     }

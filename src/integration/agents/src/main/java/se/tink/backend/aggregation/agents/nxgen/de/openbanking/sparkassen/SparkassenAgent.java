@@ -29,6 +29,8 @@ import se.tink.backend.aggregation.client.provider_configuration.rpc.PisCapabili
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
@@ -55,10 +57,14 @@ public class SparkassenAgent extends NextGenerationAgent
 
     protected final SparkassenApiClient apiClient;
     protected final SparkassenStorage sparkassenStorage;
+    protected RandomValueGenerator randomValueGenerator;
+    protected LocalDateTimeSource localDateTimeSource;
 
     @Inject
     public SparkassenAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
+        randomValueGenerator = componentProvider.getRandomValueGenerator();
+        localDateTimeSource = componentProvider.getLocalDateTimeSource();
         sparkassenStorage = new SparkassenStorage(persistentStorage);
 
         apiClient = constructApiClient();
@@ -77,19 +83,24 @@ public class SparkassenAgent extends NextGenerationAgent
     protected SparkassenApiClient constructApiClient() {
         String bankCode = provider.getPayload();
         SparkassenHeaderValues headerValues =
-                new SparkassenHeaderValues(bankCode, request.isManual() ? userIp : null);
-        return new SparkassenApiClient(client, headerValues, sparkassenStorage, provider);
+                new SparkassenHeaderValues(
+                        bankCode,
+                        request.getUserAvailability().isUserPresent()
+                                ? request.getUserAvailability().getOriginatingUserIp()
+                                : null);
+        return new SparkassenApiClient(
+                client, headerValues, sparkassenStorage, randomValueGenerator, localDateTimeSource);
     }
 
     @Override
     protected Authenticator constructAuthenticator() {
         SparkassenAuthenticator sparkassenAuthenticator =
                 new SparkassenAuthenticator(
-                        catalog,
-                        supplementalInformationHelper,
                         apiClient,
+                        supplementalInformationController,
                         sparkassenStorage,
-                        credentials);
+                        credentials,
+                        catalog);
 
         return new AutoAuthenticationController(
                 request, context, sparkassenAuthenticator, sparkassenAuthenticator);
@@ -137,11 +148,11 @@ public class SparkassenAgent extends NextGenerationAgent
     public Optional<PaymentController> constructPaymentController() {
         PaymentAuthenticator sparkassenPaymentAuthenticator =
                 new SparkassenPaymentAuthenticator(
-                        catalog,
-                        supplementalInformationHelper,
                         apiClient,
+                        supplementalInformationController,
                         sparkassenStorage,
-                        credentials);
+                        credentials,
+                        catalog);
         BasePaymentExecutor paymentExecutor =
                 new BasePaymentExecutor(
                         apiClient,

@@ -11,7 +11,6 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authen
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agents.utils.CertificateUtils;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
@@ -20,12 +19,9 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS})
 public class SparkassenRedirectAgent extends SparkassenAgent {
 
-    private RandomValueGenerator randomValueGenerator;
-
     @Inject
     public SparkassenRedirectAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
-        this.randomValueGenerator = componentProvider.getRandomValueGenerator();
     }
 
     @Override
@@ -35,8 +31,13 @@ public class SparkassenRedirectAgent extends SparkassenAgent {
         String redirectUrl = agentConfiguration.getRedirectUrl();
         SparkassenHeaderValues headerValues =
                 SparkassenHeaderValues.forRedirect(
-                        bankCode, redirectUrl, request.isManual() ? userIp : null);
-        return new SparkassenApiClient(client, headerValues, sparkassenStorage, provider);
+                        bankCode,
+                        redirectUrl,
+                        request.getUserAvailability().isUserPresent()
+                                ? request.getUserAvailability().getOriginatingUserIp()
+                                : null);
+        return new SparkassenApiClient(
+                client, headerValues, sparkassenStorage, randomValueGenerator, localDateTimeSource);
     }
 
     @Override
@@ -59,7 +60,7 @@ public class SparkassenRedirectAgent extends SparkassenAgent {
         return new AutoAuthenticationController(
                 request,
                 context,
-                new ThirdPartyAppAuthenticationController<String>(
+                new ThirdPartyAppAuthenticationController<>(
                         authenticator, supplementalInformationHelper),
                 authenticator);
     }

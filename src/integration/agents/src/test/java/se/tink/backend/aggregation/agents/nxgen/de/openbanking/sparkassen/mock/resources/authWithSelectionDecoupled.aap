@@ -1,0 +1,241 @@
+REQUEST 1
+POST https://xs2a.f-i-apim.de:8443/fixs2aop-env/xs2a-api/70150000/v1/consents
+Accept: application/json
+Content-Type: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-IP-Address: 127.0.0.1
+TPP-Redirect-Preferred: false
+X-Aggregator: Tink Testing
+
+{"access":{"availableAccountsWithBalance":"allAccounts"},"recurringIndicator":true,"validUntil":"1992-07-09","frequencyPerDay":4,"combinedServiceIndicator":false}
+
+RESPONSE 1
+201
+Date: Tue, 11 May 2021 17:49:51 GMT
+Date: Tue, 11 May 2021 17:49:52 GMT
+Server: Apache
+Content-Type: application/json;charset=utf-8
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+Location: ***
+ASPSP-SCA-Approach: ***
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-XSS-Protection: 1; mode=block
+X-Frame-Options: DENY
+X-Content-Type-Options: nosniff
+Content-Security-Policy: ***
+Content-Language: de-DE
+Strict-Transport-Security: max-age=31536000
+Content-Length: 618
+
+{"consentStatus":"received","consentId":"**HASHED:xD**","_links":{"self":{"href":"https://xs2a.f-i-apim.de:8443/fixs2aop-env/xs2a-api/70150000/v1/consents/**HASHED:xD**"},"status":{"href":"https://xs2a.f-i-apim.de:8443/fixs2aop-env/xs2a-api/70150000/v1/consents/**HASHED:xD**/status"},"startAuthorisationWithPsuAuthentication":{"href":"https://xs2a.f-i-apim.de:8443/fixs2aop-env/xs2a-api/70150000/v1/consents/**HASHED:xD**/authorisations"}},"psuMessage":"Bitte geben Sie Ihren Anmeldenamen/Legitimations-ID und Ihre PIN ein."}
+
+REQUEST 2
+POST https://xs2a.f-i-apim.de:8443/fixs2aop-env/xs2a-api/70150000/v1/consents/**HASHED:xD**/authorisations
+Accept: application/json
+Content-Type: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-IP-Address: 127.0.0.1
+PSU-ID: test_username
+X-Aggregator: Tink Testing
+
+{"psuData":{"password":"test_password"}}
+
+RESPONSE 2
+201
+Date: Tue, 11 May 2021 17:49:52 GMT
+Date: Tue, 11 May 2021 17:49:52 GMT
+Server: Apache
+Content-Type: application/json;charset=utf-8
+Location: ***
+ASPSP-SCA-Approach: ***
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-XSS-Protection: 1; mode=block
+X-Frame-Options: DENY
+X-Content-Type-Options: nosniff
+Content-Security-Policy: ***
+Content-Language: de-DE
+Strict-Transport-Security: max-age=31536000
+Content-Length: 777
+
+{"scaStatus":"psuAuthenticated","authorisationId":"**HASHED:l8**","scaMethods":[{"authenticationType":"PUSH_OTP","authenticationMethodId":"Classic - Mobil","name":"pushTAN | Mobil"},{"authenticationType":"PUSH_DEC","authenticationMethodId":"Mobil","name":"pushTAN | Mobil"}],"_links":{"scaStatus":{"href":"https://xs2a.f-i-apim.de:8443/fixs2aop-env/xs2a-api/70150000/v1/consents/**HASHED:xD**/authorisations/**HASHED:l8**"},"selectAuthenticationMethod":{"href":"https://xs2a.f-i-apim.de:8443/fixs2aop-env/xs2a-api/70150000/v1/consents/**HASHED:xD**/authorisations/**HASHED:l8**"}},"psuMessage":"Bitte wählen Sie Ihr mobiles Endgerät für den pushTAN-Versand."}
+
+REQUEST 3
+PUT https://xs2a.f-i-apim.de:8443/fixs2aop-env/xs2a-api/70150000/v1/consents/**HASHED:xD**/authorisations/**HASHED:l8**
+Accept: application/json
+Content-Type: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-IP-Address: 127.0.0.1
+X-Aggregator: Tink Testing
+
+{"authenticationMethodId":"Mobil"}
+
+RESPONSE 3
+200
+Date: Tue, 11 May 2021 17:49:55 GMT
+Date: Tue, 11 May 2021 17:49:56 GMT
+Server: Apache
+Content-Type: application/json;charset=utf-8
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+ASPSP-SCA-Approach: ***
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-XSS-Protection: 1; mode=block
+X-Frame-Options: DENY
+X-Content-Type-Options: nosniff
+Content-Security-Policy: ***
+Content-Language: de-DE
+Strict-Transport-Security: max-age=31536000
+Content-Length: 536
+
+{"scaStatus":"started","chosenScaMethod":{"authenticationType":"PUSH_DEC","authenticationMethodId":"Mobil","name":"pushTAN | Mobil"},"_links":{"scaStatus":{"href":"https://xs2a.f-i-apim.de:8443/fixs2aop-env/xs2a-api/70150000/v1/consents/**HASHED:xD**/authorisations/**HASHED:l8**"},"status":{"href":"https://xs2a.f-i-apim.de:8443/fixs2aop-env/xs2a-api/70150000/v1/consents/**HASHED:xD**/status"}},"psuMessage":"Bitte geben Sie den Auftrag in Ihrer pushTAN-App frei."}
+
+REQUEST 4
+GET https://xs2a.f-i-apim.de:8443/fixs2aop-env/xs2a-api/70150000/v1/consents/**HASHED:xD**/authorisations/**HASHED:l8**
+Accept: application/json
+Content-Type: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-IP-Address: 127.0.0.1
+X-Aggregator: Tink Testing
+
+RESPONSE 4 SET 001
+200
+Date: Tue, 11 May 2021 17:49:55 GMT
+Date: Tue, 11 May 2021 17:49:56 GMT
+Server: Apache
+Content-Type: application/json;charset=utf-8
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+ASPSP-SCA-Approach: ***
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-XSS-Protection: 1; mode=block
+X-Frame-Options: DENY
+X-Content-Type-Options: nosniff
+Content-Security-Policy: ***
+Content-Language: de-DE
+Strict-Transport-Security: max-age=31536000
+Content-Length: 536
+
+{"scaStatus":"started","chosenScaMethod":{"authenticationType":"PUSH_DEC","authenticationMethodId":"Mobil","name":"pushTAN | Mobil"},"_links":{"scaStatus":{"href":"https://xs2a.f-i-apim.de:8443/fixs2aop-env/xs2a-api/70150000/v1/consents/**HASHED:xD**/authorisations/**HASHED:l8**"},"status":{"href":"https://xs2a.f-i-apim.de:8443/fixs2aop-env/xs2a-api/70150000/v1/consents/**HASHED:xD**/status"}},"psuMessage":"Bitte geben Sie den Auftrag in Ihrer pushTAN-App frei."}
+
+REQUEST 5 MATCH 001
+GET https://xs2a.f-i-apim.de:8443/fixs2aop-env/xs2a-api/70150000/v1/consents/**HASHED:xD**/authorisations/**HASHED:l8**
+Accept: application/json
+Content-Type: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-IP-Address: 127.0.0.1
+X-Aggregator: Tink Testing
+
+RESPONSE 5 SET 002
+200
+Date: Tue, 11 May 2021 17:49:55 GMT
+Date: Tue, 11 May 2021 17:49:56 GMT
+Server: Apache
+Content-Type: application/json;charset=utf-8
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+ASPSP-SCA-Approach: ***
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-XSS-Protection: 1; mode=block
+X-Frame-Options: DENY
+X-Content-Type-Options: nosniff
+Content-Security-Policy: ***
+Content-Language: de-DE
+Strict-Transport-Security: max-age=31536000
+Content-Length: 536
+
+{"scaStatus":"started","chosenScaMethod":{"authenticationType":"PUSH_DEC","authenticationMethodId":"Mobil","name":"pushTAN | Mobil"},"_links":{"scaStatus":{"href":"https://xs2a.f-i-apim.de:8443/fixs2aop-env/xs2a-api/70150000/v1/consents/**HASHED:xD**/authorisations/**HASHED:l8**"},"status":{"href":"https://xs2a.f-i-apim.de:8443/fixs2aop-env/xs2a-api/70150000/v1/consents/**HASHED:xD**/status"}},"psuMessage":"Bitte geben Sie den Auftrag in Ihrer pushTAN-App frei."}
+
+REQUEST 6 MATCH 002
+GET https://xs2a.f-i-apim.de:8443/fixs2aop-env/xs2a-api/70150000/v1/consents/**HASHED:xD**/authorisations/**HASHED:l8**
+Accept: application/json
+Content-Type: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-IP-Address: 127.0.0.1
+X-Aggregator: Tink Testing
+
+RESPONSE 6 SET 003
+200
+Date: Tue, 11 May 2021 17:49:55 GMT
+Date: Tue, 11 May 2021 17:49:56 GMT
+Server: Apache
+Content-Type: application/json;charset=utf-8
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+ASPSP-SCA-Approach: ***
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-XSS-Protection: 1; mode=block
+X-Frame-Options: DENY
+X-Content-Type-Options: nosniff
+Content-Security-Policy: ***
+Content-Language: de-DE
+Strict-Transport-Security: max-age=31536000
+Content-Length: 536
+
+{"scaStatus":"started","chosenScaMethod":{"authenticationType":"PUSH_DEC","authenticationMethodId":"Mobil","name":"pushTAN | Mobil"},"_links":{"scaStatus":{"href":"https://xs2a.f-i-apim.de:8443/fixs2aop-env/xs2a-api/70150000/v1/consents/**HASHED:xD**/authorisations/**HASHED:l8**"},"status":{"href":"https://xs2a.f-i-apim.de:8443/fixs2aop-env/xs2a-api/70150000/v1/consents/**HASHED:xD**/status"}},"psuMessage":"Bitte geben Sie den Auftrag in Ihrer pushTAN-App frei."}
+
+REQUEST 7 MATCH 003
+GET https://xs2a.f-i-apim.de:8443/fixs2aop-env/xs2a-api/70150000/v1/consents/**HASHED:xD**/authorisations/**HASHED:l8**
+Accept: application/json
+Content-Type: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-IP-Address: 127.0.0.1
+X-Aggregator: Tink Testing
+
+RESPONSE 7 SET 004
+200
+Date: Tue, 11 May 2021 17:49:55 GMT
+Date: Tue, 11 May 2021 17:49:56 GMT
+Server: Apache
+Content-Type: application/json;charset=utf-8
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+ASPSP-SCA-Approach: ***
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-XSS-Protection: 1; mode=block
+X-Frame-Options: DENY
+X-Content-Type-Options: nosniff
+Content-Security-Policy: ***
+Content-Language: de-DE
+Strict-Transport-Security: max-age=31536000
+Content-Length: 536
+
+{"scaStatus":"finalised","chosenScaMethod":{"authenticationType":"PUSH_DEC","authenticationMethodId":"Mobil","name":"pushTAN | Mobil"},"_links":{"scaStatus":{"href":"https://xs2a.f-i-apim.de:8443/fixs2aop-env/xs2a-api/70150000/v1/consents/**HASHED:xD**/authorisations/**HASHED:l8**"},"status":{"href":"https://xs2a.f-i-apim.de:8443/fixs2aop-env/xs2a-api/70150000/v1/consents/**HASHED:xD**/status"}},"psuMessage":"Bitte geben Sie den Auftrag in Ihrer pushTAN-App frei."}
+
+REQUEST 8 MATCH 004
+GET https://xs2a.f-i-apim.de:8443/fixs2aop-env/xs2a-api/70150000/v1/consents/**HASHED:xD**
+Accept: application/json
+Content-Type: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-IP-Address: 127.0.0.1
+X-Aggregator: Tink Testing
+
+RESPONSE 8
+200
+Date: Wed, 12 May 2021 13:58:23 GMT
+Date: Wed, 12 May 2021 13:58:23 GMT
+Server: Apache
+Content-Type: application/json;charset=utf-8
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-XSS-Protection: 1; mode=block
+X-Frame-Options: DENY
+X-Content-Type-Options: nosniff
+Content-Security-Policy: ***
+Content-Language: de-DE
+Strict-Transport-Security: max-age=31536000
+Content-Length: 385
+
+{"access":{"accounts":[{"iban":"DE9070150000**HASHED:lJ**"},{"iban":"DE12345678"}],"balances":[{"iban":"DE9070150000**HASHED:lJ**"},{"iban":"DE12345678"}],"transactions":[{"iban":"DE9070150000**HASHED:lJ**"},{"iban":"DE12345678"}]},"recurringIndicator":true,"validUntil":"2021-08-10","frequencyPerDay":4,"lastActionDate":"2021-05-12","consentStatus":"valid"}
+
