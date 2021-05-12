@@ -4,7 +4,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.seb
 
 public class EurocardSeAgentTest extends SebAgentBaseTest {
 
-    private static final String PROVIDER_NAME = "se-eurocard-oauth2";
+    private static final String PROVIDER_NAME = "se-eurocard-ob";
 
     private static final String MARKET = "se";
 

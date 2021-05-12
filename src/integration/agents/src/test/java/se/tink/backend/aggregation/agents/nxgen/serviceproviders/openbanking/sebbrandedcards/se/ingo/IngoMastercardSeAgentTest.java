@@ -4,7 +4,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.seb
 
 public class IngoMastercardSeAgentTest extends SebAgentBaseTest {
 
-    private static final String PROVIDER_NAME = "se-ingomastercard-oauth2";
+    private static final String PROVIDER_NAME = "se-jetmastercard-ob";
 
     private static final String MARKET = "se";
 
