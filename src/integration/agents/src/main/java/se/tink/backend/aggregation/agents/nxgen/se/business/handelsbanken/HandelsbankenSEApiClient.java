@@ -4,8 +4,10 @@ import se.tink.backend.aggregation.agents.nxgen.se.business.handelsbanken.authen
 import se.tink.backend.aggregation.agents.nxgen.se.business.handelsbanken.authenticator.bankid.AuthorizeMandateRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.business.handelsbanken.authenticator.bankid.InitBankIdRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.business.handelsbanken.authenticator.bankid.InitBankIdResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.business.handelsbanken.fetcher.transactionalaccount.rpc.AccountListSEResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.business.handelsbanken.fetcher.transactionalaccount.rpc.TransactionsSEResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.rpc.ApplicationEntryPointResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.rpc.auto.AuthorizeResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.rpc.auto.ValidateSignatureResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.entities.HandelsbankenAccount;
@@ -42,6 +44,12 @@ public class HandelsbankenSEApiClient extends HandelsbankenApiClient {
             AuthorizeResponse authorizeResponse, AuthorizeMandateRequest authorizeMandateRequest) {
         return createPostRequest(authorizeResponse.toAuthorizeMandate())
                 .post(AuthorizeResponse.class, authorizeMandateRequest);
+    }
+
+    public AccountListSEResponse accountList(ApplicationEntryPointResponse applicationEntryPoint) {
+        return (AccountListSEResponse)
+                createRequest(applicationEntryPoint.toAccounts())
+                        .get(handelsbankenConfiguration.getAccountListResponse());
     }
 
     @Override

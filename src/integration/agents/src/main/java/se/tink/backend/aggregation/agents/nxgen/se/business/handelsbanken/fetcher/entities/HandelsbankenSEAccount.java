@@ -14,14 +14,19 @@ import se.tink.backend.aggregation.agents.nxgen.se.business.handelsbanken.Handel
 import se.tink.backend.aggregation.agents.nxgen.se.business.handelsbanken.fetcher.transactionalaccount.rpc.TransactionsSEResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenConstants.Storage;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.entities.Mandate;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.rpc.auto.AuthorizeResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.entities.HandelsbankenAccount;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.fetcher.transactionalaccount.rpc.AccountInfoResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.transactional.TransactionalBuildStep;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.source_info.AccountSourceInfo;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.BankGiroIdentifier;
@@ -45,7 +50,9 @@ public class HandelsbankenSEAccount extends HandelsbankenAccount {
     private String currentBalanceFormatted; // e.g. "123 456,78"
 
     public Optional<TransactionalAccount> toTransactionalAccount(
-            HandelsbankenApiClient client, TransactionsSEResponse transactionsResponse) {
+            HandelsbankenApiClient client,
+            TransactionsSEResponse transactionsResponse,
+            PersistentStorage persistentStorage) {
         if (isCreditCard()) {
             return Optional.empty();
         }
@@ -70,20 +77,40 @@ public class HandelsbankenSEAccount extends HandelsbankenAccount {
 
         final String accountTypeName = getAccountTypeName(accountInfo);
 
-        return TransactionalAccount.nxBuilder()
-                .withTypeAndFlagsFrom(Accounts.ACCOUNT_TYPE_MAPPER, accountTypeName)
-                .withBalance(getBalance())
-                .withId(
-                        IdModule.builder()
-                                .withUniqueIdentifier(accountNo)
-                                .withAccountNumber(accountNumber)
-                                .withAccountName(accountName)
-                                .addIdentifiers(getIdentifiers(accountInfo))
-                                .build())
-                .setApiIdentifier(accountNo)
-                .setBankIdentifier(accountNo)
-                .sourceInfo(createAccountSourceInfo())
-                .build();
+        final String orgNumber = persistentStorage.get(Storage.ORGANISATION_NUMBER);
+
+        Optional<String> customerName =
+                persistentStorage
+                        .get(Storage.AUTHORIZE_END_POINT, AuthorizeResponse.class)
+                        .flatMap(
+                                response ->
+                                        response.getMandates().stream()
+                                                .filter(
+                                                        mandate ->
+                                                                orgNumber.equalsIgnoreCase(
+                                                                        mandate
+                                                                                .getCustomerNumber()))
+                                                .map(Mandate::getCustomerName)
+                                                .findFirst());
+
+        TransactionalBuildStep transactionalAccount =
+                TransactionalAccount.nxBuilder()
+                        .withTypeAndFlagsFrom(Accounts.ACCOUNT_TYPE_MAPPER, accountTypeName)
+                        .withBalance(getBalance())
+                        .withId(
+                                IdModule.builder()
+                                        .withUniqueIdentifier(accountNo)
+                                        .withAccountNumber(accountNumber)
+                                        .withAccountName(accountName)
+                                        .addIdentifiers(getIdentifiers(accountInfo))
+                                        .build())
+                        .setApiIdentifier(accountNo)
+                        .setBankIdentifier(accountNo)
+                        .sourceInfo(createAccountSourceInfo());
+
+        customerName.ifPresent(transactionalAccount::addHolderName);
+
+        return transactionalAccount.build();
     }
 
     private AccountSourceInfo createAccountSourceInfo() {

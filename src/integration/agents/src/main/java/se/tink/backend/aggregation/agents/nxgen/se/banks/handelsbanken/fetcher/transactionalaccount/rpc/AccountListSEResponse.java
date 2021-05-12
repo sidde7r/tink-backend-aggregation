@@ -15,7 +15,6 @@ public class AccountListSEResponse extends AccountListResponse {
 
     private List<AccountGroup> accountGroups;
 
-    @Override
     public Stream<TransactionalAccount> toTinkAccounts(HandelsbankenApiClient client) {
         return accountGroups == null
                 ? Stream.empty()

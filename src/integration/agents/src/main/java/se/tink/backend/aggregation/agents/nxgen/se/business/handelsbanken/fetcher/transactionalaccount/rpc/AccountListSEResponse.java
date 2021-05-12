@@ -13,28 +13,38 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 @JsonObject
 public class AccountListSEResponse extends AccountListResponse {
     @JsonProperty("data")
     private List<AccountEntity> accountList;
 
+    // not used by business
     @Override
     public Stream<TransactionalAccount> toTinkAccounts(HandelsbankenApiClient client) {
+        return Stream.empty();
+    }
+
+    public Stream<TransactionalAccount> toTinkAccounts(
+            HandelsbankenApiClient client, PersistentStorage persistentStorage) {
         return accountList == null
                 ? Stream.empty()
                 : accountList.stream()
-                        .map(a -> getTransactionalAccount(client, a))
+                        .map(a -> getTransactionalAccount(client, a, persistentStorage))
                         .filter(Optional::isPresent)
                         .map(Optional::get);
     }
 
     private Optional<TransactionalAccount> getTransactionalAccount(
-            HandelsbankenApiClient client, HandelsbankenSEAccount handelsbankenAccount) {
+            HandelsbankenApiClient client,
+            HandelsbankenSEAccount handelsbankenAccount,
+            PersistentStorage persistentStorage) {
         final TransactionsSEResponse transactionsResponse =
                 (TransactionsSEResponse) client.transactions(handelsbankenAccount);
 
-        return handelsbankenAccount.toTransactionalAccount(client, transactionsResponse);
+        return handelsbankenAccount.toTransactionalAccount(
+                client, transactionsResponse, persistentStorage);
     }
 
     @Override

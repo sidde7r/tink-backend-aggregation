@@ -15,12 +15,12 @@ import se.tink.backend.aggregation.agents.contexts.CompositeAgentContext;
 import se.tink.backend.aggregation.agents.nxgen.se.business.handelsbanken.authenticator.HandelsbankenBankIdAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.business.handelsbanken.fetcher.identity.HandelsbankenSEIdentityFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.business.handelsbanken.fetcher.transactionalaccount.HandelsbankenSEAccountTransactionPaginator;
+import se.tink.backend.aggregation.agents.nxgen.se.business.handelsbanken.fetcher.transactionalaccount.HandelsbankenSETransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.business.handelsbanken.filters.HandelsbankenSEBankSideErrorFilter;
 import se.tink.backend.aggregation.agents.nxgen.se.business.handelsbanken.filters.HandelsbankenSEContentTypeFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenPersistentStorage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenSessionStorage;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.fetcher.transactionalaccount.HandelsbankenTransactionalAccountFetcher;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticationController;
@@ -91,8 +91,8 @@ public final class HandelsbankenSEAgent
         return new TransactionalAccountRefreshController(
                 this.metricRefreshController,
                 this.updateController,
-                new HandelsbankenTransactionalAccountFetcher(
-                        this.bankClient, this.handelsbankenSessionStorage),
+                new HandelsbankenSETransactionalAccountFetcher(
+                        this.bankClient, this.handelsbankenSessionStorage, persistentStorage),
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
                         new TransactionIndexPaginationController<>(
@@ -110,6 +110,6 @@ public final class HandelsbankenSEAgent
 
     @Override
     public FetchIdentityDataResponse fetchIdentityData() {
-        return HandelsbankenSEIdentityFetcher.fetchIdentityData(persistentStorage);
+        return HandelsbankenSEIdentityFetcher.fetchIdentityData(sessionStorage);
     }
 }

@@ -65,6 +65,10 @@ public class HandelsbankenSEConfiguration
         return AccountListSEResponse.class;
     }
 
+    public Class<? extends AccountListSEResponse> getAccountListSEResponse() {
+        return AccountListSEResponse.class;
+    }
+
     @Override
     public Class<? extends TransactionsResponse> getTransactionsReponse() {
         return TransactionsSEResponse.class;
