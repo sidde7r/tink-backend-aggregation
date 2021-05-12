@@ -36,6 +36,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deu
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.rpc.ConsentDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.rpc.ConsentStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.configuration.DeutscheMarketConfiguration;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AuthenticationType;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.CommonFields;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.GermanFields;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
@@ -297,13 +298,15 @@ public class PostbankAuthenticationControllerTest {
 
     private String getFieldName(ScaMethod scaMethod) {
         if (scaMethod != null) {
-            String authenticationType = scaMethod.getAuthenticationType();
-            if ("CHIP_OTP".equalsIgnoreCase(authenticationType)) {
-                return "chipTan";
-            } else if ("SMS_OTP".equalsIgnoreCase(authenticationType)) {
-                return "smsTan";
-            } else if ("PUSH_OTP".equalsIgnoreCase(authenticationType)) {
-                return "pushTan";
+            AuthenticationType authenticationType =
+                    AuthenticationType.fromString(scaMethod.getAuthenticationType()).get();
+            switch (authenticationType) {
+                case CHIP_OTP:
+                    return "chipTan";
+                case SMS_OTP:
+                    return "smsTan";
+                case PUSH_OTP:
+                    return "pushTan";
             }
         }
         return "tanField";

@@ -1,0 +1,147 @@
+REQUEST 1
+GET https://psd.sbab.se/psd2/auth/1.0/authorize?user_id=psu
+Accept: application/json
+
+RESPONSE 1 SET STATE2
+200
+Date: Tue, 11 May 2021 14:36:43 GMT
+Date: Tue, 11 May 2021 14:36:44 GMT
+Content-Type: application/json
+
+{
+    "autostart_token": "a4bb191d-500b-4df9-b963-af3330b9a093",
+    "pending_authorization_code": "197b411d-ea32-49b2-bdb6-1f1e083641a6"
+}
+
+REQUEST 2 MATCH STATE2
+POST https://psd.sbab.se/psd2/auth/1.0/token
+Accept: application/json
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=pending_authorization_code&redirect_uri=https%3A%2F%2Fapi.tink.se%2Fapi%2Fv1%2Fcredentials%2Fthird-party%2Fcallback&pending_code=197b411d-ea32-49b2-bdb6-1f1e083641a6
+
+RESPONSE 2 SET STATE3
+400
+Date: Tue, 11 May 2021 14:36:49 GMT
+Date: Tue, 11 May 2021 14:36:49 GMT
+Content-Type: application/json
+
+{
+    "error": "authorization_not_completed"
+}
+
+REQUEST 3 MATCH STATE3
+POST https://psd.sbab.se/psd2/auth/1.0/token
+Accept: application/json
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=pending_authorization_code&redirect_uri=https%3A%2F%2Fapi.tink.se%2Fapi%2Fv1%2Fcredentials%2Fthird-party%2Fcallback&pending_code=197b411d-ea32-49b2-bdb6-1f1e083641a6
+
+RESPONSE 3 SET STATE4
+200
+Date: Tue, 11 May 2021 14:36:52 GMT
+Date: Tue, 11 May 2021 14:36:53 GMT
+Content-Type: application/json
+
+{
+    "access_token": "**MASKEDii**",
+    "expires_in": 300,
+    "refresh_token": "**MASKEDfi**",
+    "token_type": "**MASKEDJF**"
+}
+
+REQUEST 4 MATCH STATE4
+POST https://psd.sbab.se/psd2/savings/2.0/accounts/3300123456/transfers
+Accept: application/json
+Content-Type: application/json
+
+{
+    "transfer_data": {
+        "amount_to_transfer": 1.0, 
+        "counter_part_account": "52871234567",
+        "counter_part_statement": "Rr1234", 
+        "currency": "SEK", 
+        "statement": null
+    }
+}
+
+RESPONSE 4 SET STATE5
+202
+Date: Tue, 11 May 2021 14:37:07 GMT
+Date: Tue, 11 May 2021 14:37:08 GMT
+Content-Type: application/json
+
+{
+    "reference_id": "211b66b9-4bd2-4c7d-83e4-68d179d035a2", 
+    "sign_options": {
+        "autostart_token": "a442cbcc-68df-47e6-be15-a790b8495f79"
+    }, 
+    "status": "NEED_SIGNATURE"
+}
+
+
+REQUEST 5 MATCH STATE5
+GET https://psd.sbab.se/psd2/savings/2.0/accounts/3300123456/transfers/status/211b66b9-4bd2-4c7d-83e4-68d179d035a2
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 5 SET STATE6
+202
+Date: Tue, 11 May 2021 14:37:18 GMT
+Date: Tue, 11 May 2021 14:37:18 GMT
+Content-Type: application/json
+
+{
+    "reference_id": "211b66b9-4bd2-4c7d-83e4-68d179d035a2", 
+    "status": "NEED_SIGNATURE"
+}
+
+REQUEST 6 MATCH STATE6
+GET https://psd.sbab.se/psd2/savings/2.0/accounts/3300123456/transfers/status/211b66b9-4bd2-4c7d-83e4-68d179d035a2
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 6 SET STATE7
+202
+Date: Tue, 11 May 2021 14:37:21 GMT
+Date: Tue, 11 May 2021 14:37:21 GMT
+Content-Type: application/json
+
+{
+    "reference_id": "211b66b9-4bd2-4c7d-83e4-68d179d035a2", 
+    "status": "PROCESSING"
+}
+
+REQUEST 7 MATCH STATE7
+GET https://psd.sbab.se/psd2/savings/2.0/accounts/3300123456/transfers/status/211b66b9-4bd2-4c7d-83e4-68d179d035a2
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 7 SET STATE8
+201
+Date: Tue, 11 May 2021 14:37:23 GMT
+Date: Tue, 11 May 2021 14:37:23 GMT
+Content-Type: application/json
+
+{
+    "reference_id": "211b66b9-4bd2-4c7d-83e4-68d179d035a2", 
+    "status": "PENDING", 
+    "transfer_id": "245362"
+}
+
+REQUEST 8 MATCH STATE8
+GET https://psd.sbab.se/psd2/savings/2.0/accounts/3300123456/transfers/status/211b66b9-4bd2-4c7d-83e4-68d179d035a2
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 8
+201
+Date: Tue, 11 May 2021 14:37:23 GMT
+Date: Tue, 11 May 2021 14:37:23 GMT
+Content-Type: application/json
+
+{
+    "reference_id": "211b66b9-4bd2-4c7d-83e4-68d179d035a2",
+    "status": "PENDING",
+    "transfer_id": "245362"
+}
