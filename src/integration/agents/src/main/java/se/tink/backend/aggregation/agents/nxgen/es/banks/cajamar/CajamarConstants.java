@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.cajamar;
 
+import com.google.common.collect.ImmutableList;
+import java.util.List;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapper;
@@ -105,12 +107,10 @@ public class CajamarConstants {
     }
 
     public static final class SplitValues {
-        public static final String NIF = "con N.I.F. ";
-        public static final String WITH_NIF = "with N.I.F.-FISCAL I.D. NUMBER - ";
+        public static final List<String> NIF =
+                ImmutableList.of("con N.I.F. ", "with N.I.F.-FISCAL I.D. NUMBER - ", "NIF-");
         public static final String PASSPORT = "con PASAPORTE ";
-        public static final String END_OF_DOCUMENT_ID = ", ";
-        public static final String ADDITIONAL_PARSER = "Que según consta en nuestros archivos,";
-        public static final String ADDITIONAL_END_PARSER = "desde el ";
+        public static final List<String> END_OF_DOCUMENT_ID = ImmutableList.of(", ", ". BIC");
     }
 
     public static class CardTypes {
