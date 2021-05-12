@@ -73,12 +73,16 @@ public class SupplementalInformationControllerImpl implements SupplementalInform
 
         String mfaId = askSupplementalInformationAsync(fields);
 
-        Optional<String> results =
-                supplementalRequester.waitForSupplementalInformation(
-                        mfaId, TIMEOUT_MINUTES_EMBEDDED_FIELDS, TimeUnit.MINUTES, initiator);
+        String results =
+                supplementalRequester
+                        .waitForSupplementalInformation(
+                                mfaId, TIMEOUT_MINUTES_EMBEDDED_FIELDS, TimeUnit.MINUTES, initiator)
+                        .orElse(null);
+
+        logSupplementalInfoResponse(results);
 
         String supplementalInformation =
-                Optional.ofNullable(Strings.emptyToNull(results.orElse(null)))
+                Optional.ofNullable(Strings.emptyToNull(results))
                         .orElseThrow(SupplementalInfoError.NO_VALID_CODE::exception);
 
         Map<String, String> suplementalInformation =
@@ -86,6 +90,45 @@ public class SupplementalInformationControllerImpl implements SupplementalInform
         logger.info("Finished requesting supplemental information");
         suplementalInformation.forEach(this::logSupplementalInformation);
         return suplementalInformation;
+    }
+
+    private void logSupplementalInfoResponse(String supplementalResponse) {
+        try {
+            String masked = maskSupplementalInfoResponse(supplementalResponse);
+            logger.info("Supplemental info response: [{}]", masked);
+        } catch (Exception e) {
+            logger.warn("Could not log supplemental info response", e);
+        }
+    }
+
+    private String maskSupplementalInfoResponse(String supplementalResponse) {
+        if (Strings.isNullOrEmpty(supplementalResponse)) {
+            return supplementalResponse;
+        }
+
+        Map<String, String> supplementalResponseMap =
+                deserializeSupplementalInformation(supplementalResponse);
+
+        for (Map.Entry<String, String> entry : supplementalResponseMap.entrySet()) {
+            String key = entry.getKey();
+            String value = maskAllCharactersAfterIndex(entry.getValue(), 3);
+
+            supplementalResponseMap.put(key, value);
+        }
+        return SerializationUtils.serializeToString(supplementalResponseMap);
+    }
+
+    @SuppressWarnings("SameParameterValue")
+    private String maskAllCharactersAfterIndex(String value, int index) {
+        if (Strings.isNullOrEmpty(value)) {
+            return value;
+        }
+        if (index >= value.length()) {
+            return value;
+        }
+        String unescaped = value.substring(0, index);
+        String escaped = Strings.repeat("*", value.substring(index).length());
+        return unescaped + escaped;
     }
 
     private String loggableSupplementalInformationKey(String key) {
