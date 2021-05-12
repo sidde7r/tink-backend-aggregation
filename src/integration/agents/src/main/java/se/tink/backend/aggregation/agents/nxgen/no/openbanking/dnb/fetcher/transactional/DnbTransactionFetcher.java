@@ -17,6 +17,8 @@ import se.tink.libraries.credentials.service.UserAvailability;
 public class DnbTransactionFetcher
         implements TransactionKeyPaginator<TransactionalAccount, String> {
 
+    private static final int MAX_MONTHS_TO_FETCH = 13;
+
     private final DnbStorage storage;
     private final DnbApiClient apiClient;
     private final DnbTransactionMapper transactionMapper;
@@ -29,8 +31,8 @@ public class DnbTransactionFetcher
 
         String fromDate =
                 userAvailability.isUserPresent()
-                        ? "1970-01-01"
-                        : localDateTimeSource.now().minusDays(89).toLocalDate().toString();
+                        ? getFromDateWhenUserIsPresent()
+                        : getFromDateWhenUserIsAbsent();
 
         TransactionResponse transactionResponse =
                 nextUrl == null
@@ -41,5 +43,18 @@ public class DnbTransactionFetcher
         return new TransactionKeyPaginatorResponseImpl<>(
                 transactionMapper.toTinkTransactions(transactionResponse.getTransactions()),
                 transactionResponse.getNextKey().orElse(null));
+    }
+
+    private String getFromDateWhenUserIsPresent() {
+        return localDateTimeSource
+                .now()
+                .minusMonths(MAX_MONTHS_TO_FETCH)
+                .plusDays(1)
+                .toLocalDate()
+                .toString();
+    }
+
+    private String getFromDateWhenUserIsAbsent() {
+        return localDateTimeSource.now().minusDays(89).toLocalDate().toString();
     }
 }

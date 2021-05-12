@@ -29,7 +29,7 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class DnbTransactionFetcherTest {
 
-    private static final String FROM_DATE = "1970-01-01";
+    private static final int MAX_MONTHS_TO_FETCH = 13;
 
     private static final String TEST_DATA_PATH =
             "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/no/openbanking/dnb/resources";
@@ -78,8 +78,15 @@ public class DnbTransactionFetcherTest {
     @Test
     public void shouldReturnPageWithSomeTransactionsAndNextKey() {
         // given
+        LocalDateTime startDate = LocalDateTime.of(2021, Month.APRIL, 19, 12, 0);
+        given(mockLocalDateTimeSource.now()).willReturn(startDate);
+
         given(testAccount.getApiIdentifier()).willReturn(TEST_ACCOUNT_ID);
-        given(mockApiClient.fetchTransactions(FROM_DATE, TEST_CONSENT_ID, TEST_ACCOUNT_ID))
+
+        LocalDate fromDate = startDate.toLocalDate().minusMonths(MAX_MONTHS_TO_FETCH).plusDays(1);
+        given(
+                        mockApiClient.fetchTransactions(
+                                fromDate.toString(), TEST_CONSENT_ID, TEST_ACCOUNT_ID))
                 .willReturn(getTransactionsResponse());
         given(mockUserAvailability.isUserPresent()).willReturn(true);
 
@@ -93,7 +100,8 @@ public class DnbTransactionFetcherTest {
 
         verify(testAccount).getApiIdentifier();
         verify(mockStorage).getConsentId();
-        verify(mockApiClient).fetchTransactions(FROM_DATE, TEST_CONSENT_ID, TEST_ACCOUNT_ID);
+        verify(mockApiClient)
+                .fetchTransactions(fromDate.toString(), TEST_CONSENT_ID, TEST_ACCOUNT_ID);
         verify(mockTransactionMapper).toTinkTransactions(any(TransactionEntity.class));
         verifyNoMoreInteractionsOnAllMocks();
     }
@@ -101,6 +109,9 @@ public class DnbTransactionFetcherTest {
     @Test
     public void shouldFetchSubsequentPageIfContinuationKeyPresent() {
         // given
+        LocalDateTime startDate = LocalDateTime.of(2021, Month.APRIL, 19, 12, 0);
+        given(mockLocalDateTimeSource.now()).willReturn(startDate);
+
         given(mockUserAvailability.isUserPresent()).willReturn(true);
         given(mockApiClient.fetchNextTransactions(TEST_CONSENT_ID, TEST_NEXT_URL_PART))
                 .willReturn(getTransactionsLastPageResponse());
@@ -122,9 +133,18 @@ public class DnbTransactionFetcherTest {
     @Test
     public void shouldAllTransactionsHaveDateFilled() {
         // given
-        given(testAccount.getApiIdentifier()).willReturn(TEST_ACCOUNT_ID);
-        given(mockApiClient.fetchTransactions(FROM_DATE, TEST_CONSENT_ID, TEST_ACCOUNT_ID))
+        LocalDateTime startDate = LocalDateTime.of(2021, Month.APRIL, 19, 12, 0);
+        given(mockLocalDateTimeSource.now()).willReturn(startDate);
+
+        LocalDate fromDate = startDate.toLocalDate().minusMonths(MAX_MONTHS_TO_FETCH).plusDays(1);
+        given(
+                        mockApiClient.fetchTransactions(
+                                fromDate.toString(), TEST_CONSENT_ID, TEST_ACCOUNT_ID))
                 .willReturn(getTransactionsResponse());
+
+        given(mockUserAvailability.isUserPresent()).willReturn(true);
+        given(mockLocalDateTimeSource.now()).willReturn(startDate);
+        given(testAccount.getApiIdentifier()).willReturn(TEST_ACCOUNT_ID);
         given(mockUserAvailability.isUserPresent()).willReturn(true);
 
         // when
