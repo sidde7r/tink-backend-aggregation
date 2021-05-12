@@ -62,6 +62,11 @@ public abstract class NordeaPartnerAgent extends NextGenerationAgent
                         credentials,
                         getApiLocale(request.getUser().getLocale()));
         client.registerJacksonModule(new JavaTimeModule());
+
+        // Don't add signature/aggregator headers; this is not a RE agent
+        client.disableAggregatorHeader();
+        client.disableSignatureRequestHeader();
+
         // By request of Nordea, do not paginate further back than one year when fetching
         // transactions. This is done to limit the load on their systems.
         transactionDateLimit =
