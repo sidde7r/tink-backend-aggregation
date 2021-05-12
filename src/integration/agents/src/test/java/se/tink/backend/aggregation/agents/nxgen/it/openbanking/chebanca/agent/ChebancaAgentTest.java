@@ -15,7 +15,8 @@ public class ChebancaAgentTest {
                         .setFinancialInstitutionId("chebanca")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(true)
-                        .saveCredentialsAfter(true);
+                        .saveCredentialsAfter(true)
+                        .setFinancialInstitutionId("ddc68d1c7a184a568c3b6eefd68caa78");
     }
 
     @Test

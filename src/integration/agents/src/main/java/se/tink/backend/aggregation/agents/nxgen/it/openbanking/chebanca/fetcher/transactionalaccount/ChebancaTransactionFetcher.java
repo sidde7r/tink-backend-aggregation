@@ -12,6 +12,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.ChebancaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.detail.HttpResponseChecker;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.fetcher.transactionalaccount.detail.TransactionMapper;
@@ -25,16 +26,14 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 
+@RequiredArgsConstructor
 public class ChebancaTransactionFetcher implements TransactionDatePaginator<TransactionalAccount> {
     private final ChebancaApiClient apiClient;
-
-    public ChebancaTransactionFetcher(ChebancaApiClient apiClient) {
-        this.apiClient = apiClient;
-    }
 
     @Override
     public PaginatorResponse getTransactionsFor(
             TransactionalAccount account, Date fromDate, Date toDate) {
+
         List<Transaction> transactions = new ArrayList<>();
         Long nextAccounting = null;
         Long nextNotAccounting = null;
