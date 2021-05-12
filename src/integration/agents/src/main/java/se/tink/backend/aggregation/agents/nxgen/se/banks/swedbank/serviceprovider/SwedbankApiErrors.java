@@ -3,12 +3,15 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovid
 import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SupplementalInfoError;
+import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankBaseConstants.ErrorCode;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankBaseConstants.ErrorMessage;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankBaseConstants.Url;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.ErrorResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
+import se.tink.libraries.signableoperation.enums.InternalStatus;
+import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 
 public class SwedbankApiErrors {
     private static boolean isSecurityTokenInvalidFormat(HttpResponseException hre) {
@@ -130,19 +133,18 @@ public class SwedbankApiErrors {
         return errorResponse.hasErrorField(SwedbankBaseConstants.ErrorField.RECIPIENT_NUMBER);
     }
 
-    public static boolean isTransferAlreadyExists(HttpResponseException hre) {
-        // This method expects an response with the following characteristics:
-        // - Http status: 400
-        // - Http body: `ErrorResponse` with error code of "TRANSFER_ALREADY_EXISTS"
-
+    public static void throwIfPaymentOrTransferAlreadyExists(HttpResponseException hre) {
         HttpResponse httpResponse = hre.getResponse();
-        if (httpResponse.getStatus() != HttpStatus.SC_BAD_REQUEST) {
-            return false;
-        }
-
         ErrorResponse errorResponse = httpResponse.getBody(ErrorResponse.class);
-        return errorResponse.hasErrorCode(ErrorCode.TRANSFER_ALREADY_EXISTS)
-                || errorResponse.hasErrorCode(ErrorCode.PAYMENT_ALREADY_EXISTS);
+        if (errorResponse.hasErrorCode(ErrorCode.TRANSFER_ALREADY_EXISTS)
+                || errorResponse.hasErrorCode(ErrorCode.PAYMENT_ALREADY_EXISTS)) {
+            throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
+                    .setEndUserMessage(TransferExecutionException.EndUserMessage.DUPLICATE_PAYMENT)
+                    .setMessage(ErrorMessage.DUPLICATE_PAYMENT)
+                    .setInternalStatus(InternalStatus.DUPLICATE_PAYMENT.toString())
+                    .setException(hre)
+                    .build();
+        }
     }
 
     public static boolean isSessionTerminated(HttpResponseException hre) {
