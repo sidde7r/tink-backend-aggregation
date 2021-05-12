@@ -55,14 +55,14 @@ public final class BankinterConstants {
         public static final String USERNAME_FIELD = "uid";
         public static final String PASSWORD_FIELD = "password";
         public static final String ERROR_PANEL = "errorPanel";
-        public static final long SUBMIT_TIMEOUT_SECONDS = 5;
+        public static final long SUBMIT_TIMEOUT_SECONDS = 10;
     }
 
     public static class ScaForm {
         public static final String CODE_FIELD_SELECTOR =
                 "input[name$=inputSignCodeOtp].claveseguridad";
         public static final String SUBMIT_BUTTON_SELECTOR = "button[onclick*=enviarYFinalizar]";
-        public static final long SUBMIT_TIMEOUT_SECONDS = 15;
+        public static final long SUBMIT_TIMEOUT_SECONDS = 30;
     }
 
     public static class FormKeys {
