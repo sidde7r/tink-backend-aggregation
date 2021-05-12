@@ -11,7 +11,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingFlowFacade;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountOwnershipType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAis;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.module.UkOpenBankingFlowModule;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.module.UkOpenBankingLocalKeySignerModuleForDecoupledMode;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.UkOpenBankingAisConfiguration;
@@ -31,16 +30,16 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 @AgentCapabilities({CHECKING_ACCOUNTS, CREDIT_CARDS})
 public class SiliconValleyBusinessAgent extends UkOpenBankingBaseAgent {
 
-    private static final UkOpenBankingAisConfig aisConfig;
+    private static final SiliconValleyConfiguration aisConfig;
 
     static {
         aisConfig =
-                UkOpenBankingAisConfiguration.builder()
-                        .withOrganisationId(SiliconValleyConstants.ORGANISATION_ID)
-                        .withWellKnownURL(SiliconValleyConstants.WELL_KNOWN_URL)
-                        .withAllowedAccountOwnershipType(AccountOwnershipType.BUSINESS)
-                        .withApiBaseURL(SiliconValleyConstants.AIS_API_URL)
-                        .build();
+                new SiliconValleyConfiguration(
+                        UkOpenBankingAisConfiguration.builder()
+                                .withOrganisationId(SiliconValleyConstants.ORGANISATION_ID)
+                                .withWellKnownURL(SiliconValleyConstants.WELL_KNOWN_URL)
+                                .withAllowedAccountOwnershipType(AccountOwnershipType.BUSINESS)
+                                .withApiBaseURL(SiliconValleyConstants.AIS_API_URL));
     }
 
     @Inject

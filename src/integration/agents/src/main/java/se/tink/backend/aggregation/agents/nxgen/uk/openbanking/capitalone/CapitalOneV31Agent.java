@@ -11,7 +11,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.authenticator.UkOpenBankingAisAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountOwnershipType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAis;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.module.UkOpenBankingFlowModule;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.UkOpenBankingAisConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.UkOpenBankingV31Ais;
@@ -35,16 +34,16 @@ import se.tink.libraries.mapper.PrioritizedValueExtractor;
 @AgentCapabilities({CREDIT_CARDS})
 public final class CapitalOneV31Agent extends UkOpenBankingBaseAgent {
 
-    private static final UkOpenBankingAisConfig aisConfig;
+    private static final CapitalOneAisConfiguration aisConfig;
 
     static {
         aisConfig =
-                UkOpenBankingAisConfiguration.builder()
-                        .withOrganisationId(CapitalOneConstants.ORGANISATION_ID)
-                        .withApiBaseURL(CapitalOneConstants.AIS_BASE_URL)
-                        .withWellKnownURL(CapitalOneConstants.WELL_KNOWN_URL)
-                        .withAllowedAccountOwnershipType(AccountOwnershipType.PERSONAL)
-                        .build();
+                new CapitalOneAisConfiguration(
+                        UkOpenBankingAisConfiguration.builder()
+                                .withOrganisationId(CapitalOneConstants.ORGANISATION_ID)
+                                .withApiBaseURL(CapitalOneConstants.AIS_BASE_URL)
+                                .withWellKnownURL(CapitalOneConstants.WELL_KNOWN_URL)
+                                .withAllowedAccountOwnershipType(AccountOwnershipType.PERSONAL));
     }
 
     @Inject
