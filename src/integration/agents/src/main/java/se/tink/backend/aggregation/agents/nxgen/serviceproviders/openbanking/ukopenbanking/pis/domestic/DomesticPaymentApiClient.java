@@ -233,11 +233,11 @@ public class DomesticPaymentApiClient implements UkOpenBankingPaymentApiClient {
                         payment, payment.getUniqueIdForUKOPenBanking(), payment.getUniqueId());
         final DomesticPaymentConsentRequestData consentRequestData =
                 new DomesticPaymentConsentRequestData(initiation);
-        if (pisConfig.useOtherPaymentContext()) {
-            return new DomesticPaymentConsentRequest(new Risk(), consentRequestData);
-        } else {
-            return new DomesticPaymentConsentRequest(new PartyToPartyRisk(), consentRequestData);
-        }
+        return new DomesticPaymentConsentRequest(selectRiskBasedOnPisConfig(), consentRequestData);
+    }
+
+    private Risk selectRiskBasedOnPisConfig() {
+        return pisConfig.useOtherPaymentContext() ? new Risk() : new PartyToPartyRisk();
     }
 
     private DomesticPaymentRequest createDomesticPaymentRequest(
@@ -251,11 +251,7 @@ public class DomesticPaymentApiClient implements UkOpenBankingPaymentApiClient {
                         payment, endToEndIdentification, instructionIdentification);
         final DomesticPaymentRequestData requestData =
                 createDomesticPaymentRequestData(consentId, initiation);
-        if (pisConfig.useOtherPaymentContext()) {
-            return new DomesticPaymentRequest(new Risk(), requestData);
-        } else {
-            return new DomesticPaymentRequest(new PartyToPartyRisk(), requestData);
-        }
+        return new DomesticPaymentRequest(selectRiskBasedOnPisConfig(), requestData);
     }
 
     private DomesticPaymentRequestData createDomesticPaymentRequestData(
