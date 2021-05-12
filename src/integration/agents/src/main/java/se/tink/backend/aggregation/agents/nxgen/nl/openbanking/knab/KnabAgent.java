@@ -12,6 +12,7 @@ import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.authenticato
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.configuration.KnabConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.fetcher.KnabAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.fetcher.KnabTransactionFetcher;
+import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.filter.KnabRetryFilter;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.session.KnabSessionHandler;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
@@ -25,6 +26,8 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
+import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.GatewayTimeoutFilter;
 
 @AgentCapabilities({CHECKING_ACCOUNTS})
 public final class KnabAgent extends NextGenerationAgent
@@ -38,9 +41,18 @@ public final class KnabAgent extends NextGenerationAgent
     public KnabAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
 
+        configureHttpClient(client);
         this.apiClient =
                 new KnabApiClient(client, persistentStorage, request.getCredentials(), userIp);
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
+    }
+
+    private void configureHttpClient(TinkHttpClient client) {
+        client.addFilter(
+                new KnabRetryFilter(
+                        KnabConstants.HttpClient.MAX_RETRIES,
+                        KnabConstants.HttpClient.RETRY_SLEEP_MILLISECONDS));
+        client.addFilter(new GatewayTimeoutFilter());
     }
 
     @Override

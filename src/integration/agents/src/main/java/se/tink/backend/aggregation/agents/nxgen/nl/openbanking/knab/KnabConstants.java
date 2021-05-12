@@ -112,4 +112,9 @@ public final class KnabConstants {
         public static final String CONSENT_DATE_FORMAT = "EEE, dd MMM yyyy HH:mm:ss z";
         public static final String DATE_FORMAT = "yyyy-MM-dd";
     }
+
+    public static class HttpClient {
+        public static final int MAX_RETRIES = 3;
+        public static final int RETRY_SLEEP_MILLISECONDS = 3000;
+    }
 }
