@@ -4,7 +4,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.seb
 
 public class CircleKMastercardSeAgentTest extends SebAgentBaseTest {
 
-    private static final String PROVIDER_NAME = "se-circlekmastercard-oauth2";
+    private static final String PROVIDER_NAME = "se-statoilmastercard-ob";
 
     private static final String MARKET = "se";
 
