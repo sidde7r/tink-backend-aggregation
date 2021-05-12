@@ -27,7 +27,7 @@ spec:
     {{- if .Values.Environment }}
     {{- if eq .Values.Environment "production" }}
     - alert: TransferFailedOutcomeThresholdIsPassedForSwedenTier2Banks
-      expr: sum by (className, outcome) (increase(tink_agent_transfer_total{market="SE", className!~".*(nordea|seb|swedbank|handelsbanken).*", outcome="failed"}[30m])) >= 10
+      expr: sum by (className, outcome) (increase(tink_agent_transfer_total{market="SE", className!~".*(nordea|seb|swedbank|handelsbanken|lansforsakringar).*", outcome="failed"}[30m])) >= 10
       labels:
         severity: urgent
         who: payments-connectivity
@@ -48,7 +48,7 @@ spec:
         summary: Threshold exceed for ( <{ $labels.className }> ) for transfers with outcome ( <{ $labels.outcome }> ).
 
     - alert: TransferUnavailableOutcomeThresholdIsPassedForSwedenTier2Banks
-      expr: sum by (className, outcome) (increase(tink_agent_transfer_total{market="SE", className!~".*(nordea|seb|swedbank|handelsbanken).*", outcome=~"unavailable"}[15m])) >= 15
+      expr: sum by (className, outcome) (increase(tink_agent_transfer_total{market="SE", className!~".*(nordea|seb|swedbank|handelsbanken|lansforsakringar).*", outcome=~"unavailable"}[15m])) >= 15
       labels:
         severity: urgent
         who: payments-connectivity
@@ -63,6 +63,26 @@ spec:
         severity: urgent
         who: payments-connectivity
         priority: P3
+      annotations:
+        description: This can indicate that the bank is having issues or that their api has changed. Check overall trend for this provider to assess the impact. https://grafana.global-production.tink.network/d/XvmDe8YMz/payments-overview-dashboard?orgId=1
+        summary: Threshold exceed for ( <{ $labels.className }> ) for transfers with outcome ( <{ $labels.outcome }> ).
+
+    - alert: TransferFailedOutcomeThresholdIsPassedForLansforsakringar
+      expr: sum(increase(tink_agent_transfer_total{market="SE", className="banks.LansforsakringarAgent", outcome="failed"}[6h])) / sum(increase(tink_agent_transfer_total{market="SE", className="banks.LansforsakringarAgent"}[6h])) > 0.5
+      labels:
+        severity: urgent
+        who: payments-connectivity
+        priority: P4
+      annotations:
+        description: Check overall trend for this provider to assess the impact. https://grafana.global-production.tink.network/d/XvmDe8YMz/payments-overview-dashboard?orgId=1
+        summary: Threshold exceed for ( <{ $labels.className }> ) for transfers with outcome ( <{ $labels.outcome }> ).
+
+    - alert: TransferUnavailableOutcomeThresholdIsPassedForLansforsakringar
+      expr: sum(increase(tink_agent_transfer_total{market="SE", className="banks.LansforsakringarAgent", outcome="unavailable"}[6h])) / sum(increase(tink_agent_transfer_total{market="SE", className="banks.LansforsakringarAgent"}[6h])) > 0.5
+      labels:
+        severity: urgent
+        who: payments-connectivity
+        priority: P4
       annotations:
         description: This can indicate that the bank is having issues or that their api has changed. Check overall trend for this provider to assess the impact. https://grafana.global-production.tink.network/d/XvmDe8YMz/payments-overview-dashboard?orgId=1
         summary: Threshold exceed for ( <{ $labels.className }> ) for transfers with outcome ( <{ $labels.outcome }> ).
