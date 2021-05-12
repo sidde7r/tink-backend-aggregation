@@ -1,5 +1,16 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec;
 
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.BecConstants.ApiService;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.BecConstants.FormValues;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.BecConstants.HeaderKeys;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.BecConstants.HeaderValues;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.BecConstants.HeadersToSign;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.BecConstants.IdTags;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.BecConstants.QueryKeys;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.BecConstants.QueryValues;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.BecConstants.StorageKeys;
+
+import java.security.cert.CertificateException;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Base64;
@@ -10,15 +21,6 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import javax.ws.rs.core.MediaType;
 import lombok.RequiredArgsConstructor;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.BecConstants.ApiService;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.BecConstants.FormValues;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.BecConstants.HeaderKeys;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.BecConstants.HeaderValues;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.BecConstants.HeadersToSign;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.BecConstants.IdTags;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.BecConstants.QueryKeys;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.BecConstants.QueryValues;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.BecConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.authenticator.entities.AccessEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.authenticator.rpc.ConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.authenticator.rpc.ConsentResponse;
@@ -29,6 +31,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.fetcher.transactionalaccount.rpc.GetTransactionsResponse;
 import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
+import se.tink.backend.aggregation.configuration.agents.utils.CertificateUtils;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.eidassigner.QsealcAlg;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
@@ -46,11 +49,14 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @RequiredArgsConstructor
 public final class BecApiClient {
+
+    private static final int HEX_FORMAT_RADIX = 16;
+
     private final TinkHttpClient client;
     private final PersistentStorage persistentStorage;
     private final BecApiConfiguration apiConfiguration;
     private String state;
-    private BecConfiguration becConfiguration;
+    private AgentConfiguration<BecConfiguration> agentConfiguration;
     private String redirectUrl;
     private AgentsServiceConfiguration config;
     private EidasIdentity eidasIdentity;
@@ -59,7 +65,7 @@ public final class BecApiClient {
             AgentConfiguration<BecConfiguration> agentConfiguration,
             final AgentsServiceConfiguration configuration,
             EidasIdentity eidasIdentity) {
-        this.becConfiguration = agentConfiguration.getProviderSpecificConfiguration();
+        this.agentConfiguration = agentConfiguration;
         this.redirectUrl = agentConfiguration.getRedirectUrl();
         this.config = configuration;
         this.eidasIdentity = eidasIdentity;
@@ -74,11 +80,20 @@ public final class BecApiClient {
         headers.put(HeaderKeys.TPP_REDIRECT_URI, tppRedirectUrl);
         headers.put(HeaderKeys.TPP_NOK_REDIRECT_URI, tppRedirectUrl);
         headers.put(HeaderKeys.DIGEST, digest);
-        headers.put(HeaderKeys.TPP_SIGNATURE_CERTIFICATE, becConfiguration.getQsealCertificate());
+        headers.put(HeaderKeys.TPP_SIGNATURE_CERTIFICATE, getQsealCertificate());
         if (apiConfiguration.isManual()) {
             headers.put(HeaderKeys.PSU_IP, apiConfiguration.getUserIp());
         }
         return headers;
+    }
+
+    private String getQsealCertificate() {
+        try {
+            return CertificateUtils.getDerEncodedCertFromBase64EncodedCertificate(
+                    agentConfiguration.getQsealc());
+        } catch (CertificateException e) {
+            throw new IllegalStateException("Failed to extract Qsealc from agent configuration", e);
+        }
     }
 
     private Map<String, Object> getPisHeaders(String requestId, String digest) {
@@ -90,7 +105,7 @@ public final class BecApiClient {
         headers.put(HeaderKeys.TPP_REDIRECT_URI, tppRedirectUrl);
         headers.put(HeaderKeys.TPP_NOK_REDIRECT_URI, tppRedirectUrl);
         headers.put(HeaderKeys.DIGEST, digest);
-        headers.put(HeaderKeys.TPP_SIGNATURE_CERTIFICATE, becConfiguration.getQsealCertificate());
+        headers.put(HeaderKeys.TPP_SIGNATURE_CERTIFICATE, getQsealCertificate());
 
         return headers;
     }
@@ -206,11 +221,20 @@ public final class BecApiClient {
 
         String signature = signer.getSignatureBase64(signedHeadersWithValues.getBytes());
 
-        return String.format(
-                BecConstants.HeaderValues.SIGNATURE_HEADER,
-                becConfiguration.getKeyId(),
-                signedHeaders,
-                signature);
+        return String.format(HeaderValues.SIGNATURE_HEADER, getKeyId(), signedHeaders, signature);
+    }
+
+    private String getKeyId() {
+        try {
+            return String.format(
+                    HeaderValues.KEY_ID_FORMAT,
+                    CertificateUtils.getSerialNumber(
+                            agentConfiguration.getQsealc(), HEX_FORMAT_RADIX),
+                    CertificateUtils.getCertificateIssuerDN(agentConfiguration.getQsealc()));
+        } catch (CertificateException e) {
+            throw new IllegalStateException(
+                    "Failed to extract serial number or certificate issuer from QSealC", e);
+        }
     }
 
     private String createDigest(String body) {
