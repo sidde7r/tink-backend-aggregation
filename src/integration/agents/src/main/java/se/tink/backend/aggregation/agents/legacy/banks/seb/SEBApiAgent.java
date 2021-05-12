@@ -1054,7 +1054,9 @@ public final class SEBApiAgent extends AbstractAgent
             }
             return sebResponse.get().getAccountEntities();
         } finally {
-            response.close();
+            if (response != null) {
+                response.close();
+            }
         }
     }
 
