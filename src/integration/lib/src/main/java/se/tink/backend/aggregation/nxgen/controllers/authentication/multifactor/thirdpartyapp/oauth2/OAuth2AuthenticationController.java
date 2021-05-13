@@ -172,7 +172,7 @@ public class OAuth2AuthenticationController
 
         String code = callbackData.getOrDefault(CallbackParams.CODE, null);
         if (Strings.isNullOrEmpty(code)) {
-            throw new IllegalStateException(
+            throw new NoCodeParamException(
                     "callbackData did not contain 'code' and no error was handled");
         }
 

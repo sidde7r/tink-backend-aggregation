@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.authenticator.CreditAgricoleBaseAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.authenticator.CreditAgricoleOAuth2AuthenticationController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.configuration.CreditAgricoleBaseConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.configuration.CreditAgricoleBranchConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.payment.CreditAgricolePaymentApiClient;
@@ -139,7 +140,7 @@ public class CreditAgricoleBaseAgent extends NextGenerationAgent
     @Override
     protected Authenticator constructAuthenticator() {
         final OAuth2AuthenticationController controller =
-                new OAuth2AuthenticationController(
+                new CreditAgricoleOAuth2AuthenticationController(
                         persistentStorage,
                         supplementalInformationHelper,
                         new CreditAgricoleBaseAuthenticator(
