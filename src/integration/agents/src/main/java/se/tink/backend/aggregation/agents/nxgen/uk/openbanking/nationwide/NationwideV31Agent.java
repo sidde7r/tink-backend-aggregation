@@ -23,7 +23,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.module.UkOpenBankingFlowModule;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.module.UkOpenBankingLocalKeySignerModuleForDecoupledMode;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.UkOpenBankingAisConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.UkOpenBankingV31Ais;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.authenticator.UkOpenBankingAisAuthenticationController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.authenticator.consent.ConsentStatusValidator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.creditcards.CreditCardAccountMapper;
@@ -39,7 +38,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.nationwide.pis.config.NationwidePisConfig;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.nationwide.pis.filter.NationwidePisRequestFilter;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
@@ -54,7 +52,6 @@ import se.tink.libraries.mapper.PrioritizedValueExtractor;
 public final class NationwideV31Agent extends UkOpenBankingBaseAgent {
 
     private static final UkOpenBankingAisConfig aisConfig;
-    private final LocalDateTimeSource localDateTimeSource;
 
     static {
         aisConfig =
@@ -78,21 +75,31 @@ public final class NationwideV31Agent extends UkOpenBankingBaseAgent {
                         NationwideConstants.PIS_API_URL, NationwideConstants.WELL_KNOWN_URL),
                 createPisRequestFilter(
                         flowFacade.getJwtSinger(), componentProvider.getRandomValueGenerator()));
-        this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
     }
 
     @Override
     protected UkOpenBankingAis makeAis() {
+        return new NationwideV31Ais(
+                aisConfig,
+                persistentStorage,
+                createCreditCardAccountMapper(),
+                localDateTimeSource,
+                apiClient);
+    }
 
+    @Override
+    public Authenticator constructAuthenticator() {
+        UkOpenBankingAisAuthenticationController authController = createUkObAuthController();
+
+        return createAutoAuthController(authController);
+    }
+
+    private CreditCardAccountMapper createCreditCardAccountMapper() {
         PrioritizedValueExtractor valueExtractor = new PrioritizedValueExtractor();
-
-        CreditCardAccountMapper creditCardAccountMapper =
-                new CreditCardAccountMapper(
-                        new NationwideCreditCardBalanceMapper(
-                                new DefaultCreditCardBalanceMapper(valueExtractor)),
-                        new DefaultIdentifierMapper(valueExtractor));
-        return new UkOpenBankingV31Ais(
-                aisConfig, persistentStorage, creditCardAccountMapper, localDateTimeSource);
+        return new CreditCardAccountMapper(
+                new NationwideCreditCardBalanceMapper(
+                        new DefaultCreditCardBalanceMapper(valueExtractor)),
+                new DefaultIdentifierMapper(valueExtractor));
     }
 
     private static NationwidePisRequestFilter createPisRequestFilter(
@@ -109,13 +116,6 @@ public final class NationwideV31Agent extends UkOpenBankingBaseAgent {
 
         return new NationwidePisRequestFilter(
                 jwtSignatureHelper, paymentStorage, randomValueGenerator);
-    }
-
-    @Override
-    public Authenticator constructAuthenticator() {
-        UkOpenBankingAisAuthenticationController authController = createUkObAuthController();
-
-        return createAutoAuthController(authController);
     }
 
     private UkOpenBankingAisAuthenticationController createUkObAuthController() {
