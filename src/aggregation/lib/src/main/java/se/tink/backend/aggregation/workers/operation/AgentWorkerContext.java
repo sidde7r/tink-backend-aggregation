@@ -60,6 +60,7 @@ import se.tink.libraries.identitydata.IdentityData;
 import se.tink.libraries.metrics.core.MetricId;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 import se.tink.libraries.transfer.rpc.Transfer;
+import se.tink.libraries.unleash.UnleashClient;
 
 public class AgentWorkerContext extends AgentContext implements Managed {
     private static final Logger logger =
@@ -95,7 +96,6 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     private static class SupplementalInformationMetrics {
         private static final String CLUSTER_LABEL = "client_cluster";
         private static final String INITIATOR = "initiator";
-
         public static final MetricId duration =
                 MetricId.newId("aggregation_supplemental_information_seconds");
         public static final MetricId attempts =
@@ -131,12 +131,10 @@ public class AgentWorkerContext extends AgentContext implements Managed {
                     .update(duration);
         }
     }
-
     // a collection of account numbers that the Opt-in user selected during the opt-in flow
     // True or false if system has been requested to process transactions.
     protected boolean isSystemProcessingTransactions;
     protected ControllerWrapper controllerWrapper;
-
     protected IdentityData identityData;
 
     public AgentWorkerContext(
@@ -150,7 +148,8 @@ public class AgentWorkerContext extends AgentContext implements Managed {
             String clusterId,
             String appId,
             String correlationId,
-            AccountInformationServiceEventsProducer accountInformationServiceEventsProducer) {
+            AccountInformationServiceEventsProducer accountInformationServiceEventsProducer,
+            UnleashClient unleashClient) {
 
         this.accountDataCache = new AccountDataCache();
         this.correlationId = correlationId;
@@ -177,6 +176,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         }
 
         this.setMetricRegistry(metricRegistry);
+        this.setUnleashClient(unleashClient);
 
         this.supplementalInformationController = supplementalInformationController;
         this.providerSessionCacheController = providerSessionCacheController;

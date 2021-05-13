@@ -39,5 +39,6 @@ java_library(
         "@tink_backend//src/libraries/account_identifier",
         "@tink_backend//src/libraries/connectivity_errors/proto:java_proto",
         "@tink_backend//src/libraries/metrics/core/src/main/java/se/tink/libraries/metrics/registry",
+        "@tink_backend//src/libraries/unleash",
     ],
 )

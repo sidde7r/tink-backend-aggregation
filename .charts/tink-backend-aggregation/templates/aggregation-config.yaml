@@ -163,3 +163,7 @@ data:
       serviceName: "aggregation-service"
       sampleRate: 0.01
       tracingEnabled: true
+
+    unleashConfig:
+      apiUrl: http://unleash-api.unleash.svc.cluster.local:4242/api/
+      applicationName: aggregation-service

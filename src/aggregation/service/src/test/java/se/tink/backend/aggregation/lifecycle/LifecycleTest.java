@@ -48,6 +48,7 @@ import se.tink.backend.integration.agent_data_availability_tracker.client.AsAgen
 import se.tink.backend.integration.tpp_secrets_service.client.ManagedTppSecretsServiceClient;
 import se.tink.libraries.draining.DrainModeTask;
 import se.tink.libraries.queue.QueueConsumer;
+import se.tink.libraries.unleash.UnleashClient;
 
 public class LifecycleTest {
     private DefaultServerFactory serverFactory;
@@ -78,6 +79,7 @@ public class LifecycleTest {
 
         setUpInjectorMock(injector, AggregationServiceConfiguration.class);
         setUpInjectorMock(injector, DevelopmentConfigurationSeeder.class);
+        setUpInjectorMock(injector, UnleashClient.class);
         CryptoConfigurationDao dao = setUpInjectorMock(injector, CryptoConfigurationDao.class);
 
         ConfigurationValidator validator =

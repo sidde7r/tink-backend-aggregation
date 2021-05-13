@@ -15,5 +15,6 @@ java_library(
         "//third_party:org_apache_commons_commons_lang3",
         "//third_party:org_slf4j_slf4j_api",
         "@aggregation//:no_finn_unleash_unleash_client_java",
+        "@tink_backend//src/libraries/unleash",
     ],
 )

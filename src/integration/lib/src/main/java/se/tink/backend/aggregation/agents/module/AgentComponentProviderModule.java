@@ -15,6 +15,8 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementali
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.SupplementalInformationProviderImpl;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.tinkhttpclient.NextGenTinkHttpClientProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.tinkhttpclient.TinkHttpClientProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.unleashclient.UnleashClientProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.unleashclient.UnleashClientProviderImpl;
 import se.tink.backend.aggregation.nxgen.http.event.DefaultNextGenTinkHttpClientEventProducer;
 import se.tink.backend.aggregation.nxgen.http.event.NextGenTinkHttpClientEventProducer;
 
@@ -32,6 +34,7 @@ public final class AgentComponentProviderModule extends AbstractModule {
         bind(RandomValueGenerator.class).to(RandomValueGeneratorImpl.class);
         bind(LocalDateTimeSource.class).to(ActualLocalDateTimeSource.class);
         bind(GeneratedValueProvider.class).to(GeneratedValueProviderImpl.class);
+        bind(UnleashClientProvider.class).to(UnleashClientProviderImpl.class);
 
         bind(AgentComponentProvider.class).in(Scopes.SINGLETON);
     }

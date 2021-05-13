@@ -15,5 +15,6 @@ java_library(
         "//third_party:com_google_code_findbugs_jsr305",
         "@tink_backend//src/aggregation-controller/api/src/main/java/se/tink/backend/aggregationcontroller/v1/rpc/enums",
         "@tink_backend//src/libraries/connectivity_errors/proto:java_proto",
+        "@tink_backend//src/libraries/unleash",
     ],
 )

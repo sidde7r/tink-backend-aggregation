@@ -28,5 +28,6 @@ junit_test(
         "//third_party:jetty_server9",
         "//third_party:org_mockito_mockito_core",
         "@tink_backend//src/libraries/metrics/core/src/main/java/se/tink/libraries/metrics/registry",
+        "@tink_backend//src/libraries/unleash",
     ],
 )

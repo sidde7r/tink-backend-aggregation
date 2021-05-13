@@ -169,6 +169,14 @@ git_repository(
     shallow_since = "1595000000 +0000",
 )
 
+new_git_repository(
+    name = "dropwizard_jersey",
+    build_file = "//third_party:dropwizard_jersey.BUILD",
+    commit = "0c2f90f4358e262d0fe0af3f6d31eb0fa3cabc40",
+    remote = "git@github.com:tink-ab/dropwizard.git",
+    shallow_since = "1490898663 +0200",
+)
+
 # Docker dependencies
 http_archive(
     name = "io_bazel_rules_docker",

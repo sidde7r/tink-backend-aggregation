@@ -13,4 +13,5 @@ public interface CompositeAgentContext
                 AgentConfigurationControllerContext,
                 LogOutputStreamable,
                 EidasContext,
-                TestContext {}
+                TestContext,
+                UnleashContext {}

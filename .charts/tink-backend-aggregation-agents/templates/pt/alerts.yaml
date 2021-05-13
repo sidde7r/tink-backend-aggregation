@@ -13,8 +13,8 @@ spec:
     - alert: AuthenticationErrorRateOver50%PT
       expr: |
         # Failed logins over 50%
-        (count(sum_over_time(tink_agent_login_total{action="login", outcome="completed", market="PT", provider_type!="test"}[30m])) by (action,className,provider)
-            / count(sum_over_time(tink_agent_login_total{action="login", market="PT", provider_type!="test"}[30m])) by (action,className,provider) < 0.5)
+        (count(sum_over_time(tink_agent_login_total{action="login", outcome="completed", market="PT", provider_type!="test"}[30m])) by (className,provider)
+            / count(sum_over_time(tink_agent_login_total{action="login", market="PT", provider_type!="test"}[30m])) by (className,provider) < 0.5)
         # At least this many attempts.
             and count(sum_over_time(tink_agent_login_total{action="login", market="PT", provider_type!="test"}[30m])) by (className,provider) > 3
       for: 5m
@@ -32,8 +32,8 @@ spec:
     - alert: LongTermAuthenticationErrorRateOver90%PT
       expr: |
         # Failed logins over 90%
-        (count(sum_over_time(tink_agent_login_total{action="login", outcome="completed", market="PT", provider_type!="test"}[12h])) by (action,className,provider)
-            / count(sum_over_time(tink_agent_login_total{action="login", market="PT", provider_type!="test"}[12h])) by (action,className,provider) < 0.1)
+        (count(sum_over_time(tink_agent_login_total{action="login", outcome="completed", market="PT", provider_type!="test"}[12h])) by (className,provider)
+            / count(sum_over_time(tink_agent_login_total{action="login", market="PT", provider_type!="test"}[12h])) by (className,provider) < 0.1)
       for: 5m
       interval: 1h
       labels:
@@ -71,8 +71,8 @@ spec:
     - alert: AuthenticationUnknownErrorRateOver10%PT
       expr: |
         # Failed logins (due to unknown RuntimeException) over 10%
-        (count(sum_over_time(tink_agent_login_total{action=~"login", outcome="failed", market="PT", provider_type!="test"}[30m])) by (action,className,provider)
-            / count(sum_over_time(tink_agent_login_total{action=~"login", market="PT", provider_type!="test"}[30m])) by (action,className,provider) > 0.1)
+        (count(sum_over_time(tink_agent_login_total{action=~"login", outcome="failed", market="PT", provider_type!="test"}[30m])) by (className,provider)
+            / count(sum_over_time(tink_agent_login_total{action=~"login", market="PT", provider_type!="test"}[30m])) by (className,provider) > 0.1)
         # At least this many attempts.
              and count(sum_over_time(tink_agent_login_total{action="login", market="PT", provider_type!="test"}[30m])) by (className,provider) > 1
       for: 5m

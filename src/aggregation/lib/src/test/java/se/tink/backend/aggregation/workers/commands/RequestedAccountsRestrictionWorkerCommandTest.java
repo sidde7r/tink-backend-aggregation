@@ -31,6 +31,7 @@ import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.libraries.metrics.registry.MetricRegistry;
+import se.tink.libraries.unleash.UnleashClient;
 import se.tink.libraries.user.rpc.User;
 import se.tink.libraries.user.rpc.UserProfile;
 
@@ -40,6 +41,7 @@ public class RequestedAccountsRestrictionWorkerCommandTest {
     private AgentWorkerCommandContext context;
     @Mock private ControllerWrapper controllerWrapper;
     @Mock private AgentsServiceConfiguration agentsServiceConfiguration;
+    @Mock private UnleashClient unleashClient;
 
     @Before
     public void init() {
@@ -69,7 +71,8 @@ public class RequestedAccountsRestrictionWorkerCommandTest {
                         "oxford-production",
                         "",
                         "",
-                        mock(AccountInformationServiceEventsProducer.class));
+                        mock(AccountInformationServiceEventsProducer.class),
+                        unleashClient);
     }
 
     @Test

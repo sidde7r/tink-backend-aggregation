@@ -28,5 +28,6 @@ junit_test(
         "@tink_backend//src/libraries/metrics/core/src/main/java/se/tink/libraries/metrics/core",
         "@tink_backend//src/libraries/metrics/core/src/main/java/se/tink/libraries/metrics/registry",
         "@tink_backend//src/libraries/metrics/core/src/main/java/se/tink/libraries/metrics/types/timers",
+        "@tink_backend//src/libraries/unleash",
     ],
 )

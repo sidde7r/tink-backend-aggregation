@@ -14,6 +14,8 @@ import se.tink.libraries.events.guice.EventsModule;
 import se.tink.libraries.events.guice.configuration.EventSubmitterConfiguration;
 import se.tink.libraries.queue.sqs.configuration.SqsQueueConfiguration;
 import se.tink.libraries.tracing.configuration.guice.TracingModuleFactory;
+import se.tink.libraries.unleash.module.UnleashModule;
+import se.tink.libraries.unleash.strategies.ServiceType;
 
 public class AggregationModuleFactory {
 
@@ -73,7 +75,10 @@ public class AggregationModuleFactory {
                                         "aggregation",
                                         configuration
                                                 .getEndpoints()
-                                                .getEventProducerServiceConfiguration())));
+                                                .getEventProducerServiceConfiguration())))
+                .add(
+                        new UnleashModule(
+                                configuration.getUnleashConfiguration(), ServiceType.AGGREGATION));
 
         // TODO: Switch to TracingModuleFactory once we've solved cross-cluster jaeger setup
     }

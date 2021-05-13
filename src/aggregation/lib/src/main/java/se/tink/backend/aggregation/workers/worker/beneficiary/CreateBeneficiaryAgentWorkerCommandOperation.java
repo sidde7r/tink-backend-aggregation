@@ -49,6 +49,7 @@ import se.tink.backend.integration.tpp_secrets_service.client.iface.TppSecretsSe
 import se.tink.libraries.cache.CacheClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.metrics.registry.MetricRegistry;
+import se.tink.libraries.unleash.UnleashClient;
 
 public class CreateBeneficiaryAgentWorkerCommandOperation {
 
@@ -81,7 +82,8 @@ public class CreateBeneficiaryAgentWorkerCommandOperation {
             LoginAgentEventProducer loginAgentEventProducer,
             AgentWorkerOperationState agentWorkerOperationState,
             ProviderTierConfiguration providerTierConfiguration,
-            AccountInformationServiceEventsProducer accountInformationServiceEventsProducer) {
+            AccountInformationServiceEventsProducer accountInformationServiceEventsProducer,
+            UnleashClient unleashClient) {
 
         CreateBeneficiaryAgentWorkerCommandOperation.metricRegistry = metricRegistry;
         CreateBeneficiaryAgentWorkerCommandOperation.loginAgentEventProducer =
@@ -102,7 +104,8 @@ public class CreateBeneficiaryAgentWorkerCommandOperation {
                         clientInfo.getClusterId(),
                         clientInfo.getAppId(),
                         correlationId,
-                        accountInformationServiceEventsProducer);
+                        accountInformationServiceEventsProducer,
+                        unleashClient);
 
         List<AgentWorkerCommand> commands = Lists.newArrayList();
         String metricsName = "create-beneficiary";

@@ -104,6 +104,7 @@ import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.enums.MarketCode;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 import se.tink.libraries.payments_validations.java.se.tink.libraries.payments.validations.ProviderBasedValidationsUtil;
+import se.tink.libraries.unleash.UnleashClient;
 import se.tink.libraries.uuid.UUIDUtils;
 
 public class AgentWorkerOperationFactory {
@@ -124,18 +125,19 @@ public class AgentWorkerOperationFactory {
     private final Predicate<Provider> shouldAddExtraCommands;
 
     // States
-    private AgentWorkerOperationState agentWorkerOperationState;
-    private CircuitBreakerAgentWorkerCommandState circuitBreakAgentWorkerCommandState;
-    private DebugAgentWorkerCommandState debugAgentWorkerCommandState;
-    private InstantiateAgentWorkerCommandState instantiateAgentWorkerCommandState;
-    private LoginAgentWorkerCommandState loginAgentWorkerCommandState;
-    private ReportProviderMetricsAgentWorkerCommandState reportMetricsAgentWorkerCommandState;
-    private MetricRegistry metricRegistry;
-    private SupplementalInformationController supplementalInformationController;
-    private ProviderSessionCacheController providerSessionCacheController;
-    private AsAgentDataAvailabilityTrackerClient agentDataAvailabilityTrackerClient;
-    private TppSecretsServiceClient tppSecretsServiceClient;
-    private InterProcessSemaphoreMutexFactory interProcessSemaphoreMutexFactory;
+    private final AgentWorkerOperationState agentWorkerOperationState;
+    private final CircuitBreakerAgentWorkerCommandState circuitBreakAgentWorkerCommandState;
+    private final DebugAgentWorkerCommandState debugAgentWorkerCommandState;
+    private final InstantiateAgentWorkerCommandState instantiateAgentWorkerCommandState;
+    private final LoginAgentWorkerCommandState loginAgentWorkerCommandState;
+    private final ReportProviderMetricsAgentWorkerCommandState reportMetricsAgentWorkerCommandState;
+    private final MetricRegistry metricRegistry;
+    private final SupplementalInformationController supplementalInformationController;
+    private final ProviderSessionCacheController providerSessionCacheController;
+    private final AsAgentDataAvailabilityTrackerClient agentDataAvailabilityTrackerClient;
+    private final TppSecretsServiceClient tppSecretsServiceClient;
+    private final InterProcessSemaphoreMutexFactory interProcessSemaphoreMutexFactory;
+    private final UnleashClient unleashClient;
     private final RegulatoryRestrictions regulatoryRestrictions;
     private final Psd2PaymentAccountClassifier psd2PaymentAccountClassifier;
     private final AccountInformationServiceEventsProducer accountInformationServiceEventsProducer;
@@ -169,8 +171,8 @@ public class AgentWorkerOperationFactory {
             ProviderTierConfiguration providerTierConfiguration,
             @ShouldAddExtraCommands Predicate<Provider> shouldAddExtraCommands,
             RegulatoryRestrictions regulatoryRestrictions,
-            AccountInformationServiceEventsProducer accountInformationServiceEventsProducer) {
-
+            AccountInformationServiceEventsProducer accountInformationServiceEventsProducer,
+            UnleashClient unleashClient) {
         this.cacheClient = cacheClient;
         this.cryptoConfigurationDao = cryptoConfigurationDao;
         this.controllerWrapperProvider = controllerWrapperProvider;
@@ -203,6 +205,7 @@ public class AgentWorkerOperationFactory {
         this.psd2PaymentAccountClassifier =
                 Psd2PaymentAccountClassifier.createWithMetrics(metricRegistry);
         this.accountInformationServiceEventsProducer = accountInformationServiceEventsProducer;
+        this.unleashClient = unleashClient;
     }
 
     private AgentWorkerCommandMetricState createCommandMetricState(
@@ -374,7 +377,8 @@ public class AgentWorkerOperationFactory {
                         clientInfo.getClusterId(),
                         clientInfo.getAppId(),
                         correlationId,
-                        accountInformationServiceEventsProducer);
+                        accountInformationServiceEventsProducer,
+                        unleashClient);
         CryptoWrapper cryptoWrapper =
                 cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
 
@@ -513,7 +517,8 @@ public class AgentWorkerOperationFactory {
                         clientInfo.getClusterId(),
                         clientInfo.getAppId(),
                         correlationId,
-                        accountInformationServiceEventsProducer);
+                        accountInformationServiceEventsProducer,
+                        unleashClient);
         CryptoWrapper cryptoWrapper =
                 cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
 
@@ -603,7 +608,8 @@ public class AgentWorkerOperationFactory {
                         clientInfo.getClusterId(),
                         clientInfo.getAppId(),
                         correlationId,
-                        accountInformationServiceEventsProducer);
+                        accountInformationServiceEventsProducer,
+                        unleashClient);
         String operationName;
         List<AgentWorkerCommand> commands;
 
@@ -685,7 +691,8 @@ public class AgentWorkerOperationFactory {
                         clientInfo.getClusterId(),
                         clientInfo.getAppId(),
                         correlationId,
-                        accountInformationServiceEventsProducer);
+                        accountInformationServiceEventsProducer,
+                        unleashClient);
         String operationName;
         List<AgentWorkerCommand> commands = new ArrayList<>();
 
@@ -878,7 +885,8 @@ public class AgentWorkerOperationFactory {
                         clientInfo.getClusterId(),
                         clientInfo.getAppId(),
                         correlationId,
-                        accountInformationServiceEventsProducer);
+                        accountInformationServiceEventsProducer,
+                        unleashClient);
 
         String operationName = "execute-whitelisted-transfer";
 
@@ -1059,7 +1067,8 @@ public class AgentWorkerOperationFactory {
                         clientInfo.getClusterId(),
                         clientInfo.getAppId(),
                         correlationId,
-                        accountInformationServiceEventsProducer);
+                        accountInformationServiceEventsProducer,
+                        unleashClient);
         CryptoWrapper cryptoWrapper =
                 cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
         CredentialsCrypto credentialsCrypto =
@@ -1100,7 +1109,8 @@ public class AgentWorkerOperationFactory {
                         clientInfo.getClusterId(),
                         clientInfo.getAppId(),
                         correlationId,
-                        accountInformationServiceEventsProducer);
+                        accountInformationServiceEventsProducer,
+                        unleashClient);
         CryptoWrapper cryptoWrapper =
                 cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
         CredentialsCrypto credentialsCrypto =
@@ -1140,7 +1150,8 @@ public class AgentWorkerOperationFactory {
                         clientInfo.getClusterId(),
                         clientInfo.getAppId(),
                         correlationId,
-                        accountInformationServiceEventsProducer);
+                        accountInformationServiceEventsProducer,
+                        unleashClient);
         CryptoWrapper cryptoWrapper =
                 cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
 
@@ -1226,7 +1237,8 @@ public class AgentWorkerOperationFactory {
                         clientInfo.getClusterId(),
                         clientInfo.getAppId(),
                         correlationId,
-                        accountInformationServiceEventsProducer);
+                        accountInformationServiceEventsProducer,
+                        unleashClient);
         CryptoWrapper cryptoWrapper =
                 cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
         CredentialsCrypto credentialsCrypto =
@@ -1350,7 +1362,8 @@ public class AgentWorkerOperationFactory {
                         clientInfo.getClusterId(),
                         clientInfo.getAppId(),
                         correlationId,
-                        accountInformationServiceEventsProducer);
+                        accountInformationServiceEventsProducer,
+                        unleashClient);
         List<AgentWorkerCommand> commands = Lists.newArrayList();
 
         commands.add(
@@ -1576,7 +1589,8 @@ public class AgentWorkerOperationFactory {
                         loginAgentEventProducer,
                         agentWorkerOperationState,
                         this.providerTierConfiguration,
-                        accountInformationServiceEventsProducer));
+                        accountInformationServiceEventsProducer,
+                        unleashClient));
     }
 
     private static String generateOrGetCorrelationId(String correlationId) {

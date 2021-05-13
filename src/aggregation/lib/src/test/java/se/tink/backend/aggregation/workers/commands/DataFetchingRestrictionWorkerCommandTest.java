@@ -41,6 +41,7 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.DataFetchingRestrictions;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.libraries.metrics.registry.MetricRegistry;
+import se.tink.libraries.unleash.UnleashClient;
 import se.tink.libraries.user.rpc.User;
 import se.tink.libraries.user.rpc.UserProfile;
 
@@ -50,6 +51,7 @@ public class DataFetchingRestrictionWorkerCommandTest {
     private CredentialsRequest request;
     @Mock private ControllerWrapper controllerWrapper;
     @Mock private AgentsServiceConfiguration agentsServiceConfiguration;
+    @Mock private UnleashClient unleashClient;
 
     @Before
     public void init() {
@@ -78,7 +80,8 @@ public class DataFetchingRestrictionWorkerCommandTest {
                         "oxford-production",
                         "",
                         "",
-                        mock(AccountInformationServiceEventsProducer.class));
+                        mock(AccountInformationServiceEventsProducer.class),
+                        unleashClient);
     }
 
     private Provider getProvider() {

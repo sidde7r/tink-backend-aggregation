@@ -27,6 +27,7 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.libraries.metrics.collection.MetricCollector;
 import se.tink.libraries.metrics.registry.MetricRegistry;
+import se.tink.libraries.unleash.UnleashClient;
 
 public class AgentWorkerContextTest {
 
@@ -37,6 +38,7 @@ public class AgentWorkerContextTest {
     private ProviderSessionCacheController providerSessionCacheController;
     private ControllerWrapper controllerWrapper;
     private AccountInformationServiceEventsProducer accountInformationServiceEventsProducer;
+    private UnleashClient unleashClient;
 
     @Before
     public void setUp() {
@@ -49,6 +51,7 @@ public class AgentWorkerContextTest {
         this.controllerWrapper = Mockito.mock(ControllerWrapper.class);
         this.accountInformationServiceEventsProducer =
                 Mockito.mock(AccountInformationServiceEventsProducer.class);
+        this.unleashClient = Mockito.mock(UnleashClient.class);
     }
 
     private AgentWorkerContext buildAgentWorkerContext(CredentialsRequest request) {
@@ -63,7 +66,8 @@ public class AgentWorkerContextTest {
                 "test",
                 "two",
                 "correlationId1234",
-                accountInformationServiceEventsProducer);
+                accountInformationServiceEventsProducer,
+                unleashClient);
     }
 
     @Test

@@ -38,6 +38,7 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.ran
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.factory.SupplementalInformationProviderFactory;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.factory.SupplementalInformationProviderFactoryImpl;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.tinkhttpclient.WireMockTinkHttpClientProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.unleashclient.UnleashClientProviderImpl;
 import se.tink.backend.aggregation.nxgen.controllers.configuration.AgentConfigurationController;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
 import se.tink.backend.integration.tpp_secrets_service.client.iface.TppSecretsServiceClient;
@@ -77,7 +78,8 @@ public abstract class IntegrationTestBase {
                 agentContextProviderFactory.createAgentContextProvider(
                         credentialsRequest, agentContext),
                 new GeneratedValueProviderImpl(
-                        new ActualLocalDateTimeSource(), new RandomValueGeneratorImpl()));
+                        new ActualLocalDateTimeSource(), new RandomValueGeneratorImpl()),
+                new UnleashClientProviderImpl(agentContext));
     }
 
     CredentialsRequest createCredentialsRequest() {
