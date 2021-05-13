@@ -8,5 +8,5 @@ import lombok.Data;
 public class BecApiConfiguration {
     private String url;
     private String userIp;
-    private boolean isManual;
+    private boolean isUserPresent;
 }

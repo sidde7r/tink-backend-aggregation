@@ -13,5 +13,5 @@ public class SparebankApiConfiguration {
     private String certificateSerialNumberInHex;
     private String certificateIssuerDN;
     private String userIp;
-    private boolean isManual;
+    private boolean isUserPresent;
 }

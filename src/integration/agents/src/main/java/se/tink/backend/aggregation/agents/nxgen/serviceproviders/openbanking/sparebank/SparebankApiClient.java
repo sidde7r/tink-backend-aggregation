@@ -181,7 +181,7 @@ public class SparebankApiClient {
 
         // if this condition is correct is currently a mistery while auto auth is not implemented.
         // Added info about that in ticket ITE-1648
-        if (apiConfiguration.isManual()) {
+        if (apiConfiguration.isUserPresent()) {
             headers.put(HeaderKeys.PSU_IP_ADDRESS, apiConfiguration.getUserIp());
         }
 
