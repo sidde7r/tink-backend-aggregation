@@ -86,6 +86,25 @@ spec:
         summary: Authentication failures due to unknown RuntimeExceptions is over 10% (<{ $value }>) for <{ $labels.className }> ( <{ $labels.provider }>
           the last hour.
         tags: {{ .Values.tags }}
+        
+    - alert: LongTermAuthenticationUnknownErrorRateOver10%PT
+      expr: |
+        # Failed logins (due to unknown RuntimeException) over 10%
+        (count(sum_over_time(tink_agent_login_total{action="login", outcome="failed", market="PT", provider_type!="test"}[6h])) by (className,provider)
+            / count(sum_over_time(tink_agent_login_total{action="login", market="PT", provider_type!="test"}[6h])) by (className,provider) > 0.1)
+        # At least this many attempts.
+             and count(sum_over_time(tink_agent_login_total{action="login", market="PT", provider_type!="test"}[6h])) by (className,provider) > 1
+      for: 5m
+      labels:
+        severity: urgent
+        priority: P2
+        who: integration-minions
+      annotations:
+        description: {{ .Values.kibanaLink }}
+          {{ .Values.grafanaLink }}
+        summary: Authentication failures due to unknown RuntimeExceptions is over 10% (<{ $value }>) for <{ $labels.className }> ( <{ $labels.provider }> for last 6 hours
+          the last hour.
+        tags: {{ .Values.tags }}
 
     # Refresh alerts
     - alert: RefreshUnknownErrorRateOver5%PT
