@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.mapper;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -9,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankPredicates;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.AccountDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.AccountEntity;
@@ -93,9 +95,11 @@ public class AccountEntityMapper {
     }
 
     private CardEntity getCardEntity(AccountEntity accountEntity, List<CardEntity> cardEntities) {
+        // Wiski delete logs after getting more data
         List<CardEntity> cardsOfAccount =
                 cardEntities.stream()
                         .filter(cardEntity -> accountNumbersAreEqual(accountEntity, cardEntity))
+                        .peek(this::logInactiveCardsOrWithUnknownStatus)
                         .collect(Collectors.toList());
 
         if (cardsOfAccount.isEmpty()) {
@@ -104,12 +108,54 @@ public class AccountEntityMapper {
                     cardEntities.isEmpty());
             return new CardEntity();
         }
-        if (cardsOfAccount.size() > 1) {
-            log.warn(
-                    "Credit card account has more than 1 credit card. Size of cards: {}",
-                    cardsOfAccount.size());
+
+        return cardsOfAccount.stream()
+                .filter(this::isCardNotBlocked)
+                .filter(this::isCardActive)
+                .findFirst()
+                .orElseGet(() -> logAndGetFirstCard(cardsOfAccount));
+    }
+
+    private void logInactiveCardsOrWithUnknownStatus(CardEntity cardEntity) {
+        if (!DanskeBankConstants.Card.ACTIVE_BLOCK_STATUS.equalsIgnoreCase(
+                        cardEntity.getBlockStatus())
+                && !"b".equalsIgnoreCase(cardEntity.getCardStatus())) {
+            log.info(
+                    "Found inactive card with blockStatus:[{}] and cardStatus:[{}]",
+                    cardEntity.getBlockStatus(),
+                    cardEntity.getCardStatus());
         }
-        return cardsOfAccount.get(0);
+        if (!Arrays.asList("A", "B", "G", "N", "U").contains(cardEntity.getCardStatus())) {
+            log.info("Found unknown cardStatus: [{}]", cardEntity.getCardStatus());
+        }
+    }
+
+    private boolean isCardNotBlocked(CardEntity cardEntity) {
+        return DanskeBankConstants.Card.ACTIVE_BLOCK_STATUS.equalsIgnoreCase(
+                cardEntity.getBlockStatus());
+    }
+
+    private boolean isCardActive(CardEntity cardEntity) {
+        return DanskeBankConstants.Card.ACTIVE_STATUS.equalsIgnoreCase(cardEntity.getCardStatus());
+    }
+
+    private CardEntity logAndGetFirstCard(List<CardEntity> cardsOfAccount) {
+        log.info(
+                "Credit card account has [{}] cards. Cards statuses: [{}]",
+                cardsOfAccount.size(),
+                cardsOfAccount.stream()
+                        .map(
+                                cardEntity ->
+                                        "\nblockStatus: "
+                                                + cardEntity.getBlockStatus()
+                                                + ", cardStatus: "
+                                                + cardEntity.getCardStatus())
+                        .collect(Collectors.toList()));
+
+        return cardsOfAccount.stream()
+                .filter(this::isCardNotBlocked)
+                .findFirst()
+                .orElseGet(() -> cardsOfAccount.get(0));
     }
 
     private boolean accountNumbersAreEqual(AccountEntity accountEntity, CardEntity cardEntity) {
