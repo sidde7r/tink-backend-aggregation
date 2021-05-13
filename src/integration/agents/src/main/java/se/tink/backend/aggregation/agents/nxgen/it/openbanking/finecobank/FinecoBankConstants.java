@@ -30,13 +30,10 @@ public final class FinecoBankConstants {
         public static final int BAD_REQUEST_ERROR_CODE = 400;
         public static final String PERIOD_INVALID_ERROR = "PERIOD_INVALID";
         public static final String UNKNOWN_SIGNING_STEP = "Unknown step %s";
-        public static final String MISSING_SIGNING_LINK = "Signing link is missing";
         public static final String MAPPING_STATUS_TO_TINK_STATUS_ERROR =
                 "Cannot map: %s to Fineco payment status";
         public static final String FINECO_STATUS_MAPPING_ERROR =
                 "Cannot map: %s to Fineco payment status";
-        public static final String STATE_MISSING_ERROR =
-                "State could not be retrieved from storage";
     }
 
     public static class QueryKeys {

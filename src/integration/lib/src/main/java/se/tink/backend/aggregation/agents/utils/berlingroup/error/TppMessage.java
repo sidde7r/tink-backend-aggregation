@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.utils.berlingroup.error;
 
+import java.util.function.BiPredicate;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -30,9 +31,14 @@ public class TppMessage {
     }
 
     public boolean matches(TppMessage another) {
-        return (another.category == null || another.category.equalsIgnoreCase(category))
-                && (another.code == null || another.code.equalsIgnoreCase(code))
-                && (another.path == null || another.path.equalsIgnoreCase(path))
-                && (another.text == null || another.text.equalsIgnoreCase(text));
+        return matches(another, String::equalsIgnoreCase);
+    }
+
+    public boolean matches(TppMessage another, BiPredicate<String, String> bipredicate) {
+        return (another.category == null
+                        || (category != null && bipredicate.test(category, another.category)))
+                && (another.code == null || (code != null && bipredicate.test(code, another.code)))
+                && (another.path == null || (path != null && bipredicate.test(path, another.path)))
+                && (another.text == null || (text != null && bipredicate.test(text, another.text)));
     }
 }

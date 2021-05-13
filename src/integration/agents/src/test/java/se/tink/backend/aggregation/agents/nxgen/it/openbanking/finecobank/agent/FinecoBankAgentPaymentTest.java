@@ -8,9 +8,13 @@ import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.rpc.Creditor;
+import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.payments.common.model.PaymentScheme;
 import se.tink.libraries.transfer.enums.RemittanceInformationType;
+import se.tink.libraries.transfer.rpc.ExecutionRule;
+import se.tink.libraries.transfer.rpc.Frequency;
+import se.tink.libraries.transfer.rpc.PaymentServiceType;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 public class FinecoBankAgentPaymentTest {
@@ -30,29 +34,47 @@ public class FinecoBankAgentPaymentTest {
 
     @Test
     public void testPayments() throws Exception {
-        builder.build().testTinkLinkPayment(createRealDomesticPayment());
+        builder.build().testTinkLinkPayment(createRealDomesticPayment().build());
     }
 
-    private Payment createRealDomesticPayment() {
+    @Test
+    public void testRecurringPayments() throws Exception {
+        builder.build().testTinkLinkPayment(createRealDomesticRecurringPayment().build());
+    }
+
+    private Payment.Builder createRealDomesticPayment() {
         RemittanceInformation remittanceInformation = new RemittanceInformation();
-        remittanceInformation.setValue("fineco");
+        remittanceInformation.setValue("Remittance goes here");
         remittanceInformation.setType(RemittanceInformationType.UNSTRUCTURED);
 
-        AccountIdentifier creditorAccountIdentifier =
-                new IbanIdentifier("IT95N0300203280155761664887");
+        AccountIdentifier creditorAccountIdentifier = new IbanIdentifier("zxcv");
         Creditor creditor = new Creditor(creditorAccountIdentifier, "Creditor Name");
+        AccountIdentifier debtorIdentifier = new IbanIdentifier("asdf");
+        Debtor debtor = new Debtor(debtorIdentifier);
 
         ExactCurrencyAmount amount = ExactCurrencyAmount.inEUR(1);
-        LocalDate executionDate = LocalDate.now();
+        LocalDate executionDate = LocalDate.now().plusDays(1);
         String currency = "EUR";
 
         return new Payment.Builder()
+                .withDebtor(debtor)
                 .withCreditor(creditor)
                 .withExactCurrencyAmount(amount)
                 .withExecutionDate(executionDate)
                 .withCurrency(currency)
                 .withRemittanceInformation(remittanceInformation)
                 .withPaymentScheme(PaymentScheme.SEPA_CREDIT_TRANSFER)
-                .build();
+                .withPaymentServiceType(PaymentServiceType.SINGLE);
+    }
+
+    private Payment.Builder createRealDomesticRecurringPayment() {
+        return createRealDomesticPayment()
+                .withExecutionDate(null)
+                .withPaymentScheme(PaymentScheme.SEPA_CREDIT_TRANSFER)
+                .withPaymentServiceType(PaymentServiceType.PERIODIC)
+                .withFrequency(Frequency.MONTHLY)
+                .withStartDate(LocalDate.now().plusDays(2))
+                .withEndDate(LocalDate.now().plusMonths(1).plusDays(4))
+                .withExecutionRule(ExecutionRule.FOLLOWING);
     }
 }

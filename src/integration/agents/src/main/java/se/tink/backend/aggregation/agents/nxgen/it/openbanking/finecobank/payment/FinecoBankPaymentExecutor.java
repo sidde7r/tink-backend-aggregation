@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.client
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.payment.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.payment.entities.AmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.payment.enums.FinecoBankPaymentProduct;
+import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.payment.enums.FinecoBankPaymentService;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.payment.enums.FinecoBankPaymentStatus;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.payment.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.payment.rpc.CreatePaymentResponse;
@@ -30,10 +31,12 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.transfer.enums.RemittanceInformationType;
+import se.tink.libraries.transfer.rpc.PaymentServiceType;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 @RequiredArgsConstructor
@@ -47,22 +50,36 @@ public class FinecoBankPaymentExecutor implements PaymentExecutor {
     private final SupplementalInformationController supplementalInformationController;
 
     @Override
-    public PaymentResponse create(PaymentRequest paymentRequest) {
+    public PaymentResponse create(PaymentRequest paymentRequest) throws PaymentException {
         Payment payment = paymentRequest.getPayment();
+
+        FinecoBankPaymentProduct finecoPaymentProduct =
+                FinecoBankPaymentProduct.fromTinkPayment(payment);
+        FinecoBankPaymentService finecoPaymentService =
+                FinecoBankPaymentService.fromTinkPayment(payment);
+
         CreatePaymentRequest createPaymentRequest = buildCreatePaymentRequest(payment);
+        CreatePaymentResponse createPaymentResponse;
+        try {
+            createPaymentResponse =
+                    apiClient.createPayment(
+                            createPaymentRequest,
+                            finecoPaymentService,
+                            finecoPaymentProduct,
+                            strongAuthenticationState.getState());
+        } catch (HttpResponseException e) {
+            FinecoPaymentErrorHandler.checkForErrors(e);
+            throw e;
+        }
 
-        FinecoBankPaymentProduct finecoProduct = FinecoBankPaymentProduct.fromTinkPayment(payment);
-
-        CreatePaymentResponse createPaymentResponse =
-                apiClient.createPayment(
-                        createPaymentRequest, finecoProduct, strongAuthenticationState.getState());
         String paymentId = createPaymentResponse.getPaymentId();
-        GetPaymentAuthsResponse paymentAuths = apiClient.getPaymentAuths(finecoProduct, paymentId);
+        GetPaymentAuthsResponse paymentAuths =
+                apiClient.getPaymentAuths(finecoPaymentService, finecoPaymentProduct, paymentId);
 
         validateCreatedPayment(createPaymentResponse, paymentAuths);
 
-        storage.storePaymentAuthId(paymentId, paymentAuths.getAuthorisationIds().get(0));
-        storage.storePaymentAuthorizationUrl(paymentId, createPaymentResponse.getScaRedirectLink());
+        storage.storePaymentAuthId(paymentAuths.getAuthorisationIds().get(0));
+        storage.storePaymentAuthorizationUrl(createPaymentResponse.getScaRedirectLink());
         return createPaymentResponse.toTinkPaymentResponse(paymentRequest);
     }
 
@@ -72,12 +89,29 @@ public class FinecoBankPaymentExecutor implements PaymentExecutor {
         RemittanceInformationValidator.validateSupportedRemittanceInformationTypesOrThrow(
                 remittanceInformation, RemittanceInformationType.UNSTRUCTURED);
         AmountEntity amountEntity = new AmountEntity(payment.getExactCurrencyAmountFromField());
-        return CreatePaymentRequest.builder()
-                .creditorAccount(creditorAccount)
-                .creditorName(payment.getCreditor().getName())
-                .instructedAmount(amountEntity)
-                .remittanceInformationUnstructured(remittanceInformation.getValue())
-                .build();
+        CreatePaymentRequest.CreatePaymentRequestBuilder createPaymentRequestBuilder =
+                CreatePaymentRequest.builder()
+                        .creditorAccount(creditorAccount)
+                        .creditorName(payment.getCreditor().getName())
+                        .instructedAmount(amountEntity)
+                        .remittanceInformationUnstructured(remittanceInformation.getValue())
+                        .requestedExecutionDate(payment.getExecutionDate());
+
+        if (payment.getDebtor() != null) {
+            createPaymentRequestBuilder.debtorAccount(
+                    new AccountEntity(payment.getDebtor().getAccountNumber()));
+        }
+
+        if (payment.getPaymentServiceType() == PaymentServiceType.PERIODIC) {
+            createPaymentRequestBuilder
+                    .frequency(payment.getFrequency().toString())
+                    .startDate(payment.getStartDate())
+                    .endDate(payment.getEndDate());
+            if (payment.getExecutionRule() != null) {
+                createPaymentRequestBuilder.executionRule(payment.getExecutionRule().toString());
+            }
+        }
+        return createPaymentRequestBuilder.build();
     }
 
     private void validateCreatedPayment(
@@ -102,7 +136,7 @@ public class FinecoBankPaymentExecutor implements PaymentExecutor {
         Payment payment = paymentMultiStepRequest.getPayment();
         switch (paymentMultiStepRequest.getStep()) {
             case AuthenticationStepConstants.STEP_INIT:
-                nextStep = handleInitStep(payment.getUniqueId());
+                nextStep = handleInitStep();
                 break;
             case PAYMENT_POST_SIGN_STATE:
                 nextStep = handlePostSignStep(payment);
@@ -116,26 +150,32 @@ public class FinecoBankPaymentExecutor implements PaymentExecutor {
         return new PaymentMultiStepResponse(payment, nextStep, Collections.emptyList());
     }
 
-    private String handleInitStep(String paymentId) {
+    private String handleInitStep() {
         supplementalInformationController.openThirdPartyAppSync(
                 ThirdPartyAppAuthenticationPayload.of(
-                        new URL(storage.getPaymentAuthorizationUrl(paymentId))));
+                        new URL(storage.getPaymentAuthorizationUrl())));
         return PAYMENT_POST_SIGN_STATE;
     }
 
     private String handlePostSignStep(Payment payment) throws PaymentException {
         String paymentId = payment.getUniqueId();
-        FinecoBankPaymentProduct finecoProduct = FinecoBankPaymentProduct.fromTinkPayment(payment);
+        FinecoBankPaymentProduct finecoPaymentProduct =
+                FinecoBankPaymentProduct.fromTinkPayment(payment);
+        FinecoBankPaymentService finecoPaymentService =
+                FinecoBankPaymentService.fromTinkPayment(payment);
 
         GetPaymentAuthStatusResponse paymentAuthStatus =
                 apiClient.getPaymentAuthStatus(
-                        finecoProduct, paymentId, storage.getPaymentAuthId(paymentId));
+                        finecoPaymentService,
+                        finecoPaymentProduct,
+                        paymentId,
+                        storage.getPaymentAuthId());
         if (!paymentAuthStatus.authFinishedSuccessfully()) {
             throw new PaymentAuthorizationException();
         }
-        apiClient.getPayment(finecoProduct, paymentId);
+        apiClient.getPayment(finecoPaymentService, finecoPaymentProduct, paymentId);
         GetPaymentStatusResponse paymentStatus =
-                apiClient.getPaymentStatus(finecoProduct, paymentId);
+                apiClient.getPaymentStatus(finecoPaymentService, finecoPaymentProduct, paymentId);
         PaymentStatus tinkPaymentStatus =
                 FinecoBankPaymentStatus.mapToTinkPaymentStatus(
                         FinecoBankPaymentStatus.fromString(paymentStatus.getTransactionStatus()));

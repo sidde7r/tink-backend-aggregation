@@ -34,20 +34,11 @@ public class CreatePaymentResponse {
 
     @JsonIgnore
     public PaymentResponse toTinkPaymentResponse(PaymentRequest paymentRequest) {
-        Payment payment =
-                new Payment.Builder()
-                        .withExactCurrencyAmount(
-                                paymentRequest.getPayment().getExactCurrencyAmount())
-                        .withCreditor(paymentRequest.getPayment().getCreditor())
-                        .withCurrency(paymentRequest.getPayment().getCurrency())
-                        .withUniqueId(paymentId)
-                        .withStatus(
-                                FinecoBankPaymentStatus.mapToTinkPaymentStatus(
-                                        FinecoBankPaymentStatus.fromString(transactionStatus)))
-                        .withRemittanceInformation(
-                                paymentRequest.getPayment().getRemittanceInformation())
-                        .build();
-
+        Payment payment = paymentRequest.getPayment();
+        payment.setUniqueId(paymentId);
+        payment.setStatus(
+                FinecoBankPaymentStatus.mapToTinkPaymentStatus(
+                        FinecoBankPaymentStatus.fromString(transactionStatus)));
         return new PaymentResponse(payment);
     }
 }

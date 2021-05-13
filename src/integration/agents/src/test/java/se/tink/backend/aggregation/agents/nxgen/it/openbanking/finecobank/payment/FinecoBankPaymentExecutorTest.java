@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Collections;
 import junitparams.JUnitParamsRunner;
@@ -28,6 +29,7 @@ import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.paymen
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.payment.entities.AmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.payment.entities.LinksEntity;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.payment.enums.FinecoBankPaymentProduct;
+import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.payment.enums.FinecoBankPaymentService;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.payment.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.payment.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.payment.rpc.GetPaymentAuthStatusResponse;
@@ -48,7 +50,9 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Payment;
+import se.tink.libraries.payments.common.model.PaymentScheme;
 import se.tink.libraries.transfer.enums.RemittanceInformationType;
+import se.tink.libraries.transfer.rpc.PaymentServiceType;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 @RunWith(JUnitParamsRunner.class)
@@ -70,6 +74,8 @@ public class FinecoBankPaymentExecutorTest {
     private static final Creditor TEST_CREDITOR =
             new Creditor(new IbanIdentifier(TEST_CREDITOR_IBAN), TEST_CREDITOR_NAME);
 
+    private static final LocalDate TEST_EXECUTION_DATE = LocalDate.of(2020, 12, 12);
+
     @Mock private FinecoBankApiClient mockApiClient;
     @Mock private FinecoStorage mockStorage;
     @Mock private StrongAuthenticationState mockStrongAuthenticationState;
@@ -90,7 +96,7 @@ public class FinecoBankPaymentExecutorTest {
     }
 
     @Test
-    public void shouldCreatePaymentSuccessfully() {
+    public void shouldCreatePaymentSuccessfully() throws PaymentException {
         // given
         PaymentRequest paymentRequest = new PaymentRequest(buildTestPayment());
         LinksEntity linksEntity = new LinksEntity(TEST_SCA_REDIRECT);
@@ -113,9 +119,11 @@ public class FinecoBankPaymentExecutorTest {
         assertThat(payment.getRemittanceInformation().getValue()).isEqualTo(TEST_REMITTANCE_INFO);
         assertThat(payment.getRemittanceInformation().getType())
                 .isEqualTo(RemittanceInformationType.UNSTRUCTURED);
+        assertThat(payment.getPaymentServiceType()).isEqualTo(PaymentServiceType.SINGLE);
+        assertThat(payment.getPaymentScheme()).isEqualTo(PaymentScheme.SEPA_CREDIT_TRANSFER);
 
-        verify(mockStorage).storePaymentAuthorizationUrl(TEST_PAYMENT_ID, TEST_SCA_REDIRECT);
-        verify(mockStorage).storePaymentAuthId(TEST_PAYMENT_ID, TEST_AUTH_ID);
+        verify(mockStorage).storePaymentAuthorizationUrl(TEST_SCA_REDIRECT);
+        verify(mockStorage).storePaymentAuthId(TEST_AUTH_ID);
     }
 
     private Object[] linksEntitiesWithoutScaRedirect() {
@@ -181,7 +189,7 @@ public class FinecoBankPaymentExecutorTest {
                         null,
                         null);
 
-        when(mockStorage.getPaymentAuthorizationUrl(TEST_PAYMENT_ID)).thenReturn(TEST_SCA_REDIRECT);
+        when(mockStorage.getPaymentAuthorizationUrl()).thenReturn(TEST_SCA_REDIRECT);
 
         // when
         PaymentMultiStepResponse paymentMultiStepResponse =
@@ -205,15 +213,18 @@ public class FinecoBankPaymentExecutorTest {
                         buildTestPayment(), new Storage(), "payment_post_sign_state", null, null);
 
         when(mockApiClient.getPaymentAuthStatus(
+                        FinecoBankPaymentService.SINGLE,
                         FinecoBankPaymentProduct.SEPA_CREDIT_TRANSFER,
                         TEST_PAYMENT_ID,
                         TEST_AUTH_ID))
                 .thenReturn(new GetPaymentAuthStatusResponse(okAuthStatus));
 
-        when(mockStorage.getPaymentAuthId(TEST_PAYMENT_ID)).thenReturn(TEST_AUTH_ID);
+        when(mockStorage.getPaymentAuthId()).thenReturn(TEST_AUTH_ID);
 
         when(mockApiClient.getPaymentStatus(
-                        FinecoBankPaymentProduct.SEPA_CREDIT_TRANSFER, TEST_PAYMENT_ID))
+                        FinecoBankPaymentService.SINGLE,
+                        FinecoBankPaymentProduct.SEPA_CREDIT_TRANSFER,
+                        TEST_PAYMENT_ID))
                 .thenReturn(new GetPaymentStatusResponse(okPaymentStatus));
         // when
 
@@ -244,15 +255,18 @@ public class FinecoBankPaymentExecutorTest {
                         buildTestPayment(), new Storage(), "payment_post_sign_state", null, null);
 
         when(mockApiClient.getPaymentAuthStatus(
+                        FinecoBankPaymentService.SINGLE,
                         FinecoBankPaymentProduct.SEPA_CREDIT_TRANSFER,
                         TEST_PAYMENT_ID,
                         TEST_AUTH_ID))
                 .thenReturn(new GetPaymentAuthStatusResponse(authStatus));
 
-        when(mockStorage.getPaymentAuthId(TEST_PAYMENT_ID)).thenReturn(TEST_AUTH_ID);
+        when(mockStorage.getPaymentAuthId()).thenReturn(TEST_AUTH_ID);
 
         when(mockApiClient.getPaymentStatus(
-                        FinecoBankPaymentProduct.SEPA_CREDIT_TRANSFER, TEST_PAYMENT_ID))
+                        FinecoBankPaymentService.SINGLE,
+                        FinecoBankPaymentProduct.SEPA_CREDIT_TRANSFER,
+                        TEST_PAYMENT_ID))
                 .thenReturn(new GetPaymentStatusResponse(paymentStatus));
         // when
 
@@ -274,6 +288,9 @@ public class FinecoBankPaymentExecutorTest {
                 .withCurrency("EUR")
                 .withRemittanceInformation(remittanceInformation)
                 .withUniqueId(TEST_PAYMENT_ID)
+                .withExecutionDate(TEST_EXECUTION_DATE)
+                .withPaymentServiceType(PaymentServiceType.SINGLE)
+                .withPaymentScheme(PaymentScheme.SEPA_CREDIT_TRANSFER)
                 .build();
     }
 
@@ -284,7 +301,9 @@ public class FinecoBankPaymentExecutorTest {
                                 .creditorName(TEST_CREDITOR_NAME)
                                 .instructedAmount(new AmountEntity(TEST_AMOUNT))
                                 .remittanceInformationUnstructured(TEST_REMITTANCE_INFO)
+                                .requestedExecutionDate(TEST_EXECUTION_DATE)
                                 .build(),
+                        FinecoBankPaymentService.SINGLE,
                         FinecoBankPaymentProduct.SEPA_CREDIT_TRANSFER,
                         TEST_STATE))
                 .thenReturn(createPaymentResponse);
@@ -292,7 +311,9 @@ public class FinecoBankPaymentExecutorTest {
 
     private void mockGetPaymentAuthsCall(GetPaymentAuthsResponse getPaymentAuthsResponse) {
         when(mockApiClient.getPaymentAuths(
-                        FinecoBankPaymentProduct.SEPA_CREDIT_TRANSFER, TEST_PAYMENT_ID))
+                        FinecoBankPaymentService.SINGLE,
+                        FinecoBankPaymentProduct.SEPA_CREDIT_TRANSFER,
+                        TEST_PAYMENT_ID))
                 .thenReturn(getPaymentAuthsResponse);
     }
 }
