@@ -178,7 +178,10 @@ public class DanskeBankConstants {
     }
 
     public static class Card {
+        // This status means probably that a card is active, but some users have only a card with
+        // status N or G
         public static final String ACTIVE_STATUS = "a";
+        public static final String ACTIVE_BLOCK_STATUS = "active";
     }
 
     public static class SecuritySystem {

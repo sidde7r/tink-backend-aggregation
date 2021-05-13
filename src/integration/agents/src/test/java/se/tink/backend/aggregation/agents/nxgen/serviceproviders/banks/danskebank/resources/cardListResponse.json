@@ -83,18 +83,48 @@
         },
         {
             "maskedCardNumberDebit": "",
+            "maskedCardNumber": "111111XXXXXX7676",
+            "expireYY": "21",
+            "expireMM": "01",
+            "createDate": "20200103",
+            "cardType": "Mastercard Test Card",
+            "cardStatus": "B",
+            "cardLogo": "MC",
+            "cardId": "Panid=1111110101017676//",
+            "cardGroup": "O",
+            "cardCategory": "TMC",
+            "blockStatus": "HBlock",
+            "accountNumber": "0978563412"
+        },
+        {
+            "maskedCardNumberDebit": "",
             "maskedCardNumber": "111111XXXXXX4321",
             "expireYY": "29",
             "expireMM": "01",
             "createDate": "20200103",
             "cardType": "Mastercard Test Card",
-            "cardStatus": "A",
+            "cardStatus": "G",
             "cardLogo": "MC",
             "cardId": "Panid=1111110101014321//",
             "cardGroup": "O",
             "cardCategory": "TMC",
             "blockStatus": "Active",
             "accountNumber": "0978563412"
+        },
+        {
+            "maskedCardNumberDebit": "",
+            "maskedCardNumber": "102938XXXXXX8888",
+            "expireYY": "21",
+            "expireMM": "03",
+            "createDate": "20190103",
+            "cardType": "Mastercard Another Card",
+            "cardStatus": "B",
+            "cardLogo": "MC",
+            "cardId": "Panid=1029380101018888//",
+            "cardGroup": "O",
+            "cardCategory": "TMC",
+            "blockStatus": "HBlock",
+            "accountNumber": "1928374650"
         }
     ]
 }
