@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.santander.fetche
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.PartyDataStorage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.ScaExpirationValidator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingApiClient;
@@ -12,6 +13,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
+@Slf4j
 public class SantanderPartyFetcher implements PartyFetcher {
 
     private final UkOpenBankingApiClient apiClient;
@@ -37,6 +39,8 @@ public class SantanderPartyFetcher implements PartyFetcher {
         }
 
         if (scaValidator.isScaExpired()) {
+            log.info(
+                    "[FETCH PARTY] 5 minutes passed since last SCA. Restoring party from persistent storage.");
             return storage.restoreParty();
         }
 
@@ -52,6 +56,8 @@ public class SantanderPartyFetcher implements PartyFetcher {
 
         if (config.isAccountPartiesEndpointEnabled()) {
             if (scaValidator.isScaExpired()) {
+                log.info(
+                        "[FETCH ACCOUNT PARTIES] 5 minutes passed since last SCA. Restoring account parties from persistent storage.");
                 return storage.restoreParties();
             }
 
@@ -61,6 +67,8 @@ public class SantanderPartyFetcher implements PartyFetcher {
 
         if (parties.isEmpty() && config.isAccountPartyEndpointEnabled()) {
             if (scaValidator.isScaExpired()) {
+                log.info(
+                        "[FETCH ACCOUNT PARTY] 5 minutes passed since last SCA. Restoring account party from persistent storage.");
                 return storage.restoreParties();
             }
 
