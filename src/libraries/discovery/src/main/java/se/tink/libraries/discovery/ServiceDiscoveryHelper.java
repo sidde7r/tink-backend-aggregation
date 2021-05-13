@@ -203,7 +203,7 @@ public class ServiceDiscoveryHelper implements Managed {
         try {
             return cache.get().getInstances();
         } catch (Exception e) {
-            e.printStackTrace();
+            log.warn("Error during getting instances from cache", e);
             return null;
         }
     }

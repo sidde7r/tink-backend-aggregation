@@ -52,7 +52,6 @@ public class LegacyAgentWiremockStrategy implements LegacyAgentStrategyInterface
                         uri.getQuery(),
                         uri.getFragment());
             } catch (URISyntaxException e) {
-                e.printStackTrace();
                 return uri;
             }
         };

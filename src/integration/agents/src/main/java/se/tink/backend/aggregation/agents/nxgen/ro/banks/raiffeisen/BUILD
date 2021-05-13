@@ -21,6 +21,7 @@ java_library(
         "//src/libraries/agent-storage",
         "//src/libraries/uuid",
         "//third_party:com_sun_jersey_jersey_core",
+        "//third_party:lombok_libs",
         "//third_party:org_apache_httpcomponents_httpclient",
         "//third_party:org_apache_httpcomponents_httpcore",
         "//third_party:org_assertj_assertj_core",

@@ -6,11 +6,13 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.nxgen.ro.banks.raiffeisen.RaiffeisenConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
+@Slf4j
 @JsonObject
 public class PendingEntity {
     private String transactionId;
@@ -119,7 +121,7 @@ public class PendingEntity {
             return new SimpleDateFormat(RaiffeisenConstants.DATE.FORMAT).parse(valueDate);
 
         } catch (ParseException e) {
-            e.printStackTrace();
+            log.warn("Couldn't parse the date", e);
         }
         return new Date(); // TODO: fix
     }

@@ -7,6 +7,7 @@ import com.mchange.v2.c3p0.ComboPooledDataSource;
 import java.util.concurrent.TimeUnit;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.orm.hibernate3.HibernateExceptionTranslator;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -15,6 +16,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 import se.tink.libraries.repository.config.DatabaseConfiguration;
 
 /** Does the heavy lifting for {@link AggregationRepositoryConfiguration}. */
+@Slf4j
 public class SingletonRepositoryConfiguration {
     private static DatabaseConfiguration configuration;
 
@@ -97,7 +99,7 @@ public class SingletonRepositoryConfiguration {
 
             return dataSource;
         } catch (Exception e) {
-            e.printStackTrace();
+            log.warn("Couldn't create data source", e);
             return null;
         }
     }
