@@ -1,13 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen;
 
 import java.time.LocalDate;
-import java.util.UUID;
 import javax.ws.rs.core.MediaType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import se.tink.backend.agents.rpc.Provider;
-import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
-import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants.PathVariables;
@@ -16,7 +12,7 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.Sparka
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.entities.AccessEntity;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.entities.PsuDataEntity;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.rpc.AuthenticationMethodResponse;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.rpc.AuthorizationResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.rpc.ConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.rpc.ConsentStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.rpc.FinalizeAuthorizationRequest;
@@ -37,6 +33,8 @@ import se.tink.backend.aggregation.agents.utils.berlingroup.payment.rpc.CreatePa
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.rpc.FetchPaymentStatusResponse;
 import se.tink.backend.aggregation.agents.utils.charsetguesser.CharsetGuesser;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -51,7 +49,8 @@ public class SparkassenApiClient implements PaymentApiClient {
     private final TinkHttpClient client;
     private final SparkassenHeaderValues headerValues;
     private final SparkassenStorage storage;
-    private final Provider provider;
+    private final RandomValueGenerator randomValueGenerator;
+    private final LocalDateTimeSource localDateTimeSource;
 
     private RequestBuilder createRequest(URL url) {
         if (url.get().contains("{" + PathVariables.BANK_CODE + "}")) {
@@ -61,7 +60,7 @@ public class SparkassenApiClient implements PaymentApiClient {
         return client.request(url)
                 .accept(MediaType.APPLICATION_JSON)
                 .type(MediaType.APPLICATION_JSON)
-                .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID())
+                .header(HeaderKeys.X_REQUEST_ID, randomValueGenerator.getUUID().toString())
                 .header(HeaderKeys.PSU_IP_ADDRESS, headerValues.getUserIp());
     }
 
@@ -78,8 +77,8 @@ public class SparkassenApiClient implements PaymentApiClient {
                 .get(OauthEndpointsResponse.class);
     }
 
-    public ConsentResponse createConsent() throws LoginException {
-        LocalDate validUntil = LocalDate.now().plusDays(90);
+    public ConsentResponse createConsent() {
+        LocalDate validUntil = localDateTimeSource.now().toLocalDate().plusDays(90);
         ConsentRequest consentRequest =
                 new ConsentRequest(
                         new AccessEntity(),
@@ -95,21 +94,21 @@ public class SparkassenApiClient implements PaymentApiClient {
                 .post(ConsentResponse.class, consentRequest);
     }
 
-    public AuthenticationMethodResponse initializeAuthorization(
-            URL url, String username, String password) throws AuthenticationException {
+    public AuthorizationResponse initializeAuthorization(
+            String url, String username, String password) {
         try {
-            AuthenticationMethodResponse authenticationMethodResponse =
-                    createRequest(url)
+            AuthorizationResponse authorizationResponse =
+                    createRequest(new URL(url))
                             .header(HeaderKeys.PSU_ID, username)
                             .post(
-                                    AuthenticationMethodResponse.class,
+                                    AuthorizationResponse.class,
                                     new InitAuthorizationRequest(new PsuDataEntity(password)));
             // NZG-283 temporary login
             log.info(
                     "SUCCESS_LOGIN username charset: [{}]  password charset: [{}]",
                     CharsetGuesser.getCharset(username),
                     CharsetGuesser.getCharset(password));
-            return authenticationMethodResponse;
+            return authorizationResponse;
         } catch (HttpResponseException e) {
             // NZG-283 temporary login
             log.info(
@@ -122,24 +121,18 @@ public class SparkassenApiClient implements PaymentApiClient {
         }
     }
 
-    public AuthenticationMethodResponse selectAuthorizationMethod(
-            String consentId, String authorizationId, String methodId) {
-        return createRequest(
-                        Urls.UPDATE_SCA_METHOD
-                                .parameter(PathVariables.CONSENT_ID, consentId)
-                                .parameter(PathVariables.AUTHORIZATION_ID, authorizationId))
-                .put(
-                        AuthenticationMethodResponse.class,
-                        new SelectAuthenticationMethodRequest(methodId));
+    public AuthorizationResponse selectAuthorizationMethod(String url, String methodId) {
+        return createRequest(new URL(url))
+                .put(AuthorizationResponse.class, new SelectAuthenticationMethodRequest(methodId));
     }
 
-    public FinalizeAuthorizationResponse finalizeAuthorization(
-            String consentId, String authorizationId, String otp) {
+    public AuthorizationResponse getAuthorizationStatus(String url) {
+        return createRequest(new URL(url)).get(AuthorizationResponse.class);
+    }
+
+    public FinalizeAuthorizationResponse finalizeAuthorization(String url, String otp) {
         try {
-            return createRequest(
-                            Urls.FINALIZE_AUTHORIZATION
-                                    .parameter(PathVariables.CONSENT_ID, consentId)
-                                    .parameter(PathVariables.AUTHORIZATION_ID, authorizationId))
+            return createRequest(new URL(url))
                     .put(
                             FinalizeAuthorizationResponse.class,
                             new FinalizeAuthorizationRequest(otp));
@@ -152,13 +145,11 @@ public class SparkassenApiClient implements PaymentApiClient {
 
     public ConsentStatusResponse getConsentStatus(String consentId) {
         return createRequest(Urls.CONSENT_STATUS.parameter(PathVariables.CONSENT_ID, consentId))
-                .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
                 .get(ConsentStatusResponse.class);
     }
 
     public ConsentDetailsResponse getConsentDetails(String consentId) {
         return createRequest(Urls.CONSENT_DETAILS.parameter(PathVariables.CONSENT_ID, consentId))
-                .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
                 .get(ConsentDetailsResponse.class);
     }
 
@@ -214,7 +205,6 @@ public class SparkassenApiClient implements PaymentApiClient {
     }
 
     public FetchPaymentStatusResponse fetchPaymentStatus(PaymentRequest paymentRequest) {
-
         String paymentId = paymentRequest.getPayment().getUniqueId();
         return createRequest(
                         SparkassenConstants.Urls.FETCH_PAYMENT_STATUS
@@ -230,27 +220,5 @@ public class SparkassenApiClient implements PaymentApiClient {
                                                 paymentRequest.getPayment().getPaymentScheme()))
                                 .parameter(PaymentConstants.PathVariables.PAYMENT_ID, paymentId))
                 .get(FetchPaymentStatusResponse.class);
-    }
-
-    public FinalizeAuthorizationResponse finalizePaymentAuthorization(
-            String transactionAuthorizationUrl, String otp) {
-        try {
-            return createRequest(new URL(transactionAuthorizationUrl))
-                    .put(
-                            FinalizeAuthorizationResponse.class,
-                            new FinalizeAuthorizationRequest(otp));
-        } catch (HttpResponseException e) {
-            SparkassenErrorHandler.handleError(
-                    e, SparkassenErrorHandler.ErrorSource.AUTHORISATION_OTP);
-            throw e;
-        }
-    }
-
-    public AuthenticationMethodResponse selectPaymentAuthorizationMethod(
-            String url, String methodId) {
-        return createRequest(new URL(url))
-                .put(
-                        AuthenticationMethodResponse.class,
-                        new SelectAuthenticationMethodRequest(methodId));
     }
 }

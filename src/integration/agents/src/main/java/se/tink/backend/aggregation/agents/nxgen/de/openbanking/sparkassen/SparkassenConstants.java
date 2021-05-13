@@ -17,6 +17,7 @@ public final class SparkassenConstants {
         public static final String COULD_NOT_INITIALIZE_JAXBCONTEXT =
                 "Could not initialize JAXBContext";
         public static final String STARTCODE_NOT_FOUND = "Startcode for Chip tan not found";
+        public static final String NO_SUPPORTED_METHOD_FOUND = "No supported method found";
     }
 
     public static class PsuErrorMessages {

@@ -37,7 +37,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
-import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.i18n.LocalizableKey;
@@ -49,16 +49,16 @@ public class SparkassenPaymentExecutorTest {
     BasePaymentExecutor paymentExecutor;
     private Credentials credentials;
 
-    private SupplementalInformationHelper supplementalInformationHelper;
-    private SparkassenStorage persistentStorage;
+    private SupplementalInformationController supplementalInformationController;
+    private SparkassenStorage storage;
     PaymentTestHelper paymentTestHelper;
 
     @Before
     public void setup() {
         Catalog catalog = mock(Catalog.class);
-        supplementalInformationHelper = mock(SupplementalInformationHelper.class);
+        supplementalInformationController = mock(SupplementalInformationController.class);
         apiClient = mock(SparkassenApiClient.class);
-        persistentStorage = new SparkassenStorage(new PersistentStorage());
+        storage = new SparkassenStorage(new PersistentStorage());
 
         credentials = new Credentials();
         credentials.setType(CredentialsTypes.PASSWORD);
@@ -67,13 +67,13 @@ public class SparkassenPaymentExecutorTest {
 
         paymentAuthenticator =
                 new SparkassenPaymentAuthenticator(
-                        catalog,
-                        supplementalInformationHelper,
                         apiClient,
-                        persistentStorage,
-                        credentials);
+                        supplementalInformationController,
+                        storage,
+                        credentials,
+                        catalog);
         when(catalog.getString(any(LocalizableKey.class))).thenReturn("");
-        paymentTestHelper = new PaymentTestHelper(supplementalInformationHelper, apiClient);
+        paymentTestHelper = new PaymentTestHelper(supplementalInformationController, apiClient);
 
         paymentExecutor =
                 new BasePaymentExecutor(
@@ -92,7 +92,7 @@ public class SparkassenPaymentExecutorTest {
                 PAYMENT_SCA_METHOD_SELECTION_RESPONSE);
         paymentTestHelper.whenCreatePaymentFinalizeAuthorizationReturn(
                 PAYMENT_SCA_AUTHENTICATION_STATUS_RESPONSE);
-        paymentTestHelper.whenSupplementalInformationHelperReturn(SELECT_AUTH_METHOD_OK);
+        paymentTestHelper.whenSupplementalInformationControllerReturn(SELECT_AUTH_METHOD_OK);
 
         PaymentRequest paymentRequest = paymentTestHelper.createPaymentRequest();
         paymentTestHelper.whenCreatePaymentReturn(paymentRequest);
@@ -107,7 +107,7 @@ public class SparkassenPaymentExecutorTest {
         paymentTestHelper.verifyAskSupplementalInformationCalled(2);
         paymentTestHelper.verifyCreatePaymentCalled();
         verifyNoMoreInteractions(apiClient);
-        verifyNoMoreInteractions(supplementalInformationHelper);
+        verifyNoMoreInteractions(supplementalInformationController);
     }
 
     @Test
@@ -119,7 +119,7 @@ public class SparkassenPaymentExecutorTest {
                 PAYMENT_SCA_METHOD_SELECTION_RESPONSE);
         paymentTestHelper.whenCreatePaymentFinalizeAuthorizationReturn(
                 PAYMENT_SCA_AUTHENTICATION_STATUS_RESPONSE);
-        paymentTestHelper.whenSupplementalInformationHelperReturn(SELECT_AUTH_METHOD_OK);
+        paymentTestHelper.whenSupplementalInformationControllerReturn(SELECT_AUTH_METHOD_OK);
 
         PaymentRequest paymentRequest = paymentTestHelper.createPaymentRequest();
         paymentTestHelper.whenCreatePaymentReturn(paymentRequest);
@@ -133,14 +133,14 @@ public class SparkassenPaymentExecutorTest {
         paymentTestHelper.verifyAskSupplementalInformationCalled(1);
         paymentTestHelper.verifyCreatePaymentCalled();
         verifyNoMoreInteractions(apiClient);
-        verifyNoMoreInteractions(supplementalInformationHelper);
+        verifyNoMoreInteractions(supplementalInformationController);
     }
 
     @Test
     public void shouldCreatePaymentWithSCAExemption() throws PaymentException {
         // given
         paymentTestHelper.whenCreatePaymentAuthorizationReturn(PAYMENT_SCA_EXEMPTION_RESPONSE);
-        paymentTestHelper.whenSupplementalInformationHelperReturn(SELECT_AUTH_METHOD_OK);
+        paymentTestHelper.whenSupplementalInformationControllerReturn(SELECT_AUTH_METHOD_OK);
         PaymentRequest paymentRequest = paymentTestHelper.createPaymentRequest();
         paymentTestHelper.whenCreatePaymentReturn(paymentRequest);
 
@@ -152,7 +152,7 @@ public class SparkassenPaymentExecutorTest {
         paymentTestHelper.verifyAskSupplementalInformationCalled(0);
         paymentTestHelper.verifyCreatePaymentCalled();
         verifyNoMoreInteractions(apiClient);
-        verifyNoMoreInteractions(supplementalInformationHelper);
+        verifyNoMoreInteractions(supplementalInformationController);
     }
 
     @Test
@@ -172,11 +172,11 @@ public class SparkassenPaymentExecutorTest {
 
         paymentTestHelper.verifyFetchPaymentStatusCalled();
         verifyNoMoreInteractions(apiClient);
-        verifyNoMoreInteractions(supplementalInformationHelper);
+        verifyNoMoreInteractions(supplementalInformationController);
     }
 
     @Test
-    public void shouldSignAndPaymentIsRejected() throws PaymentException {
+    public void shouldSignAndPaymentIsRejected() {
         // given
         PaymentRequest paymentRequest = paymentTestHelper.createPaymentRequest();
         paymentTestHelper.whenFetchPaymentStatusReturn(
@@ -195,11 +195,11 @@ public class SparkassenPaymentExecutorTest {
         assertThat(throwable).isInstanceOf(PaymentRejectedException.class);
         paymentTestHelper.verifyFetchPaymentStatusCalled();
         verifyNoMoreInteractions(apiClient);
-        verifyNoMoreInteractions(supplementalInformationHelper);
+        verifyNoMoreInteractions(supplementalInformationController);
     }
 
     @Test
-    public void shouldSignAndPaymentIsCancelled() throws PaymentException {
+    public void shouldSignAndPaymentIsCancelled() {
         // given
         PaymentRequest paymentRequest = paymentTestHelper.createPaymentRequest();
         paymentTestHelper.whenFetchPaymentStatusReturn(
@@ -218,6 +218,6 @@ public class SparkassenPaymentExecutorTest {
         assertThat(throwable).isInstanceOf(PaymentCancelledException.class);
         paymentTestHelper.verifyFetchPaymentStatusCalled();
         verifyNoMoreInteractions(apiClient);
-        verifyNoMoreInteractions(supplementalInformationHelper);
+        verifyNoMoreInteractions(supplementalInformationController);
     }
 }

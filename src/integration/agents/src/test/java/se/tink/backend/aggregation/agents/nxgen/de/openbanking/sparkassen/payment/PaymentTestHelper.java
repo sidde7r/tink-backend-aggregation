@@ -16,7 +16,7 @@ import java.util.Map;
 import org.junit.Ignore;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenApiClient;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.entities.ScaMethodEntity;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.rpc.AuthenticationMethodResponse;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.rpc.AuthorizationResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.rpc.FinalizeAuthorizationResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AuthenticationType;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.rpc.CreatePaymentRequest;
@@ -24,8 +24,7 @@ import se.tink.backend.aggregation.agents.utils.berlingroup.payment.rpc.CreatePa
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.rpc.FetchPaymentStatusResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
-import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
-import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
@@ -40,20 +39,19 @@ import se.tink.libraries.transfer.rpc.RemittanceInformation;
 @Ignore
 public class PaymentTestHelper {
 
-    private SupplementalInformationHelper supplementalInformationHelper;
+    private SupplementalInformationController supplementalInformationController;
     private SparkassenApiClient apiClient;
 
     public PaymentTestHelper(
-            SupplementalInformationHelper supplementalInformationHelper,
+            SupplementalInformationController supplementalInformationController,
             SparkassenApiClient apiClient) {
-        this.supplementalInformationHelper = supplementalInformationHelper;
+        this.supplementalInformationController = supplementalInformationController;
         this.apiClient = apiClient;
     }
 
-    public static final URL TEST_PAYMENT_AUTH_URL =
-            new URL(
-                    "https://xs2a.f-i-apim.de:8443/fixs2aop-env/xs2a-api/70150000/v1/payments/sepa-credit-transfers"
-                            + "/433018b6-0929-454b-8d35-a276bbfd7b1e/authorisations");
+    public static final String TEST_PAYMENT_AUTH_URL =
+            "https://xs2a.f-i-apim.de:8443/fixs2aop-env/xs2a-api/70150000/v1/payments/sepa-credit-transfers"
+                    + "/433018b6-0929-454b-8d35-a276bbfd7b1e/authorisations";
     public static final String TEST_PAYMENT_SCA_OAUTH_URL =
             "https://xs2a.f-i-apim.de:8443/fixs2aop-env/xs2a-api/70150000/v1/payments/sepa-credit-transfers"
                     + "/433018b6-0929-454b-8d35-a276bbfd7b1e/authorisations/**HASHED:B3**";
@@ -65,34 +63,34 @@ public class PaymentTestHelper {
                     Paths.get(TEST_DATA_PATH, "payment_create_response.json").toFile(),
                     CreatePaymentResponse.class);
 
-    public static final AuthenticationMethodResponse
+    public static final AuthorizationResponse
             PAYMENT_AUTHORIZATION_RESPONSE_WITH_MULTIPLE_SCA_METHOD =
                     SerializationUtils.deserializeFromString(
                             Paths.get(
                                             TEST_DATA_PATH,
                                             "payment_init_authorizations_with_multiple_sca_method_response.json")
                                     .toFile(),
-                            AuthenticationMethodResponse.class);
+                            AuthorizationResponse.class);
 
-    public static final AuthenticationMethodResponse
+    public static final AuthorizationResponse
             PAYMENT_AUTHORIZATION_RESPONSE_WITH_SINGLE_SCA_METHOD =
                     SerializationUtils.deserializeFromString(
                             Paths.get(
                                             TEST_DATA_PATH,
                                             "payment_init_authorizations_with_single_sca_method_response.json")
                                     .toFile(),
-                            AuthenticationMethodResponse.class);
+                            AuthorizationResponse.class);
 
-    public static final AuthenticationMethodResponse PAYMENT_SCA_METHOD_SELECTION_RESPONSE =
+    public static final AuthorizationResponse PAYMENT_SCA_METHOD_SELECTION_RESPONSE =
             SerializationUtils.deserializeFromString(
                     Paths.get(TEST_DATA_PATH, "payment_sca_method_selection_response.json")
                             .toFile(),
-                    AuthenticationMethodResponse.class);
+                    AuthorizationResponse.class);
 
-    public static final AuthenticationMethodResponse PAYMENT_SCA_EXEMPTION_RESPONSE =
+    public static final AuthorizationResponse PAYMENT_SCA_EXEMPTION_RESPONSE =
             SerializationUtils.deserializeFromString(
                     Paths.get(TEST_DATA_PATH, "payment_sca_exemption_response.json").toFile(),
-                    AuthenticationMethodResponse.class);
+                    AuthorizationResponse.class);
 
     public static final FinalizeAuthorizationResponse PAYMENT_SCA_AUTHENTICATION_STATUS_RESPONSE =
             SerializationUtils.deserializeFromString(
@@ -138,22 +136,21 @@ public class PaymentTestHelper {
                 .thenReturn(fetchPaymentStatusResponse);
     }
 
-    public void whenCreatePaymentAuthorizationReturn(
-            AuthenticationMethodResponse authenticationMethodResponse) {
+    public void whenCreatePaymentAuthorizationReturn(AuthorizationResponse authorizationResponse) {
         when(apiClient.initializeAuthorization(TEST_PAYMENT_AUTH_URL, USERNAME, PASSWORD))
-                .thenReturn(authenticationMethodResponse);
+                .thenReturn(authorizationResponse);
     }
 
     public void whenSelectPaymentAuthorizationMethodReturn(
-            AuthenticationMethodResponse authenticationMethodResponse) {
-        when(apiClient.selectPaymentAuthorizationMethod(
+            AuthorizationResponse authorizationResponse) {
+        when(apiClient.selectAuthorizationMethod(
                         TEST_PAYMENT_SCA_OAUTH_URL, AUTHENTICATION_METHOD_ID))
-                .thenReturn(authenticationMethodResponse);
+                .thenReturn(authorizationResponse);
     }
 
     public void whenCreatePaymentFinalizeAuthorizationReturn(
             FinalizeAuthorizationResponse finalizeAuthorizationResponse) {
-        when(apiClient.finalizePaymentAuthorization(TEST_PAYMENT_SCA_OAUTH_URL, TEST_OTP))
+        when(apiClient.finalizeAuthorization(TEST_PAYMENT_SCA_OAUTH_URL, TEST_OTP))
                 .thenReturn(finalizeAuthorizationResponse);
     }
 
@@ -163,12 +160,11 @@ public class PaymentTestHelper {
 
     public void verifySelectPaymentAuthorizationMethodCalled() {
         verify(apiClient)
-                .selectPaymentAuthorizationMethod(
-                        TEST_PAYMENT_SCA_OAUTH_URL, AUTHENTICATION_METHOD_ID);
+                .selectAuthorizationMethod(TEST_PAYMENT_SCA_OAUTH_URL, AUTHENTICATION_METHOD_ID);
     }
 
     public void verifyFinalizePaymentAuthorizationCalled() {
-        verify(apiClient).finalizePaymentAuthorization(TEST_PAYMENT_SCA_OAUTH_URL, TEST_OTP);
+        verify(apiClient).finalizeAuthorization(TEST_PAYMENT_SCA_OAUTH_URL, TEST_OTP);
     }
 
     public void verifyCreatePaymentCalled() {
@@ -180,17 +176,18 @@ public class PaymentTestHelper {
     }
 
     public void verifyAskSupplementalInformationCalled(int times) {
-        verify(supplementalInformationHelper, times(times)).askSupplementalInformation(any());
+        verify(supplementalInformationController, times(times))
+                .askSupplementalInformationSync(any());
     }
 
-    public void whenSupplementalInformationHelperReturn(
-            AuthenticationMethodResponse authenticationMethodResponse) {
+    public void whenSupplementalInformationControllerReturn(
+            AuthorizationResponse authorizationResponse) {
         Map<String, String> supplementalInformation = new HashMap<>();
         supplementalInformation.put(
-                getFieldName(authenticationMethodResponse.getChosenScaMethod()), TEST_OTP);
+                getFieldName(authorizationResponse.getChosenScaMethod()), TEST_OTP);
         supplementalInformation.put("selectAuthMethodField", "1");
 
-        when(supplementalInformationHelper.askSupplementalInformation(any()))
+        when(supplementalInformationController.askSupplementalInformationSync(any()))
                 .thenReturn(supplementalInformation);
     }
 

@@ -9,7 +9,6 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 public class SparkassenStorage {
 
     private static final String CONSENT_ID = "consentId";
-    private static final String AUTHORIZATION_ID = "authorizationId";
     private static final String FIRST_FETCH_FLAG = "firstFetch";
     private static final String DONE = "done";
     private static final String CODE_VERIFIER = "codeVerifier";
@@ -26,14 +25,6 @@ public class SparkassenStorage {
 
     public void saveConsentId(String consentId) {
         persistentStorage.put(CONSENT_ID, consentId);
-    }
-
-    public String getAuthorizationId() {
-        return persistentStorage.get(AUTHORIZATION_ID);
-    }
-
-    public void saveAuthorizationId(String authorizationId) {
-        persistentStorage.put(AUTHORIZATION_ID, authorizationId);
     }
 
     public boolean isFirstFetch() {
