@@ -136,6 +136,8 @@ public final class SparebankConstants {
                 "Cross border credit transfers are still not supported";
         public static final String DOMESTIC_FETCHING_NOT_SUPPORTED =
                 "Fetching domestic payments not supported by this bank";
+        public static final String SCA_REDIRECT_MESSAGE = "scaRedirect";
+        public static final String CONSENT_REVOKED_MESSAGE = "CONSENT_UNKNOWN";
     }
 
     enum HEADERS_TO_SIGN {

@@ -37,22 +37,10 @@ public class SparebankController implements AutoAuthenticator, ThirdPartyAppAuth
 
     @Override
     public void autoAuthenticate() {
-        if (hasSessionExpired()) {
+        if (authenticator.hasSessionExpired()) {
             authenticator.clearSessionData();
             throw SessionError.SESSION_EXPIRED.exception();
         }
-    }
-
-    private boolean hasSessionExpired() {
-        if (!authenticator.psuAndSessionPresent()) {
-            log.info("Session expired - missing PSU/session id");
-            return true;
-        }
-        if (!authenticator.isTppSessionStillValid()) {
-            log.info("Session expired - TPP session invalid");
-            return true;
-        }
-        return false;
     }
 
     @Override

@@ -8,7 +8,9 @@ java_library(
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/core/account",
         "//src/libraries/serialization",
+        "//third_party:lombok_libs",
         "//third_party:org_assertj_assertj_core",
+        "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
         "@tink_backend//src/libraries/account_identifier",
     ],
 )

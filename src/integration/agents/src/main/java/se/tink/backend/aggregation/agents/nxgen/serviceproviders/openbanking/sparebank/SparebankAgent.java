@@ -28,6 +28,7 @@ import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agents.utils.CertificateUtils;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.ActualLocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
@@ -102,7 +103,8 @@ public final class SparebankAgent extends NextGenerationAgent
         final SparebankController controller =
                 new SparebankController(
                         supplementalInformationHelper,
-                        new SparebankAuthenticator(apiClient, storage),
+                        new SparebankAuthenticator(
+                                apiClient, storage, credentials, new ActualLocalDateTimeSource()),
                         strongAuthenticationState,
                         credentials);
 

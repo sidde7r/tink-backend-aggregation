@@ -1,161 +1,33 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.util;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.File;
+import java.nio.file.Paths;
+import lombok.SneakyThrows;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.fetcher.card.rpc.CardResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.fetcher.transactionalaccount.rpc.AccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.fetcher.transactionalaccount.rpc.BalanceResponse;
-import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class AccountTestData {
 
+    private static final String TEST_DATA_DIR =
+            "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/sparebank/resources";
+
     public static AccountResponse getAccountResponse() {
-        return SerializationUtils.deserializeFromString(
-                "{\n"
-                        + "  \"accounts\": [\n"
-                        + "    {\n"
-                        + "      \"_links\": {\n"
-                        + "        \"self\": {\n"
-                        + "          \"href\": \"https://openbanking.etne-sparebank.no/\",\n"
-                        + "          \"verbs\": [\n"
-                        + "            \"GET\"\n"
-                        + "          ]\n"
-                        + "        },\n"
-                        + "        \"transactions\": {\n"
-                        + "          \"href\": \"/v1/sandbox/accounts/asdf/transactions\",\n"
-                        + "          \"verbs\": [\n"
-                        + "            \"GET\",\n"
-                        + "            \"POST\",\n"
-                        + "            \"DELETE\"\n"
-                        + "          ]\n"
-                        + "        }\n"
-                        + "      },\n"
-                        + "      \"balances\": [\n"
-                        + "        {\n"
-                        + "          \"balanceAmount\": {\n"
-                        + "            \"amount\": \"100.26\",\n"
-                        + "            \"currency\": \"NOK\"\n"
-                        + "          },\n"
-                        + "          \"balanceType\": \"authorised\"\n"
-                        + "        }\n"
-                        + "      ],\n"
-                        + "      \"bban\": \"95360573002\",\n"
-                        + "      \"bic\": \"AAA100\",\n"
-                        + "      \"cashAccountType\": \"Current\",\n"
-                        + "      \"currency\": \"NOK\",\n"
-                        + "      \"iban\": \"NO0995360573002\",\n"
-                        + "      \"name\": \"Brukskonto\",\n"
-                        + "      \"product\": \"BRUKSKONTO\",\n"
-                        + "      \"resourceId\": \"enc!!aI55HS7YpeXJhHqCXFPEGfF992bjRx2Gw==\"\n"
-                        + "    },\n"
-                        + "    {\n"
-                        + "      \"_links\": {\n"
-                        + "        \"self\": {\n"
-                        + "          \"href\": \"/v1/sandbox/accounts/enc!!90hSjpSdpeftHiDSYiPaHVGoKHriD-6ARR4JlXcEebYbYa_WNwJvqevSrba4WtnD\",\n"
-                        + "          \"verbs\": [\n"
-                        + "            \"GET\",\n"
-                        + "            \"DELETE\"\n"
-                        + "          ]\n"
-                        + "        },\n"
-                        + "        \"transactions\": {\n"
-                        + "          \"href\": \"/v1/sandbox/accounts/zxcv/transactions\",\n"
-                        + "          \"verbs\": [\n"
-                        + "            \"GET\",\n"
-                        + "            \"POST\",\n"
-                        + "            \"DELETE\"\n"
-                        + "          ]\n"
-                        + "        }\n"
-                        + "      },\n"
-                        + "      \"accountName\": \"kontotest\",\n"
-                        + "      \"balances\": [\n"
-                        + "        {\n"
-                        + "          \"balanceAmount\": {\n"
-                        + "            \"amount\": 10000,\n"
-                        + "            \"currency\": \"NOK\"\n"
-                        + "          },\n"
-                        + "          \"balanceType\": \"expected\"\n"
-                        + "        }\n"
-                        + "      ],\n"
-                        + "      \"bban\": \"91351631959\",\n"
-                        + "      \"cashAccountType\": \"CACC\",\n"
-                        + "      \"creditLine\": 0,\n"
-                        + "      \"currency\": \"NOK\",\n"
-                        + "      \"customerNumber\": \"01085800481\",\n"
-                        + "      \"iban\": \"NO8591351631959\",\n"
-                        + "      \"resourceId\": \"enc!!90hSjpSdpeftHiDSYiPaHVGoKHriD-6ARR4JlXcEebYbYa_WNwJvqevSrba4WtnD\",\n"
-                        + "      \"product\": \"TEST PRODUKT\"\n"
-                        + "    }\n"
-                        + "  ]\n"
-                        + "}",
-                AccountResponse.class);
+        return deserializeFromFile("accounts.json", AccountResponse.class);
+    }
+
+    public static CardResponse getCardResponse() {
+        return deserializeFromFile("cardAccount.json", CardResponse.class);
     }
 
     public static BalanceResponse getBalanceResponse() {
-        return SerializationUtils.deserializeFromString(
-                "{\n"
-                        + "    \"_links\": {\n"
-                        + "        \"self\": {\n"
-                        + "            \"href\": \"/v1/accounts/enc!!bcvncvbn-f-cvbncvbn=/balances\",\n"
-                        + "            \"verbs\": [\n"
-                        + "                \"GET\"\n"
-                        + "            ]\n"
-                        + "        }\n"
-                        + "    },\n"
-                        + "    \"account\": {\n"
-                        + "        \"bban\": \"23452346234\",\n"
-                        + "        \"currency\": \"NOK\",\n"
-                        + "        \"iban\": \"NO23452346234\"\n"
-                        + "    },\n"
-                        + "    \"balances\": [\n"
-                        + "        {\n"
-                        + "            \"balanceAmount\": {\n"
-                        + "                \"amount\": \"100.26\",\n"
-                        + "                \"currency\": \"NOK\"\n"
-                        + "            },\n"
-                        + "            \"balanceType\": \"closingBooked\"\n"
-                        + "        },\n"
-                        + "        {\n"
-                        + "            \"balanceAmount\": {\n"
-                        + "                \"amount\": \"100.26\",\n"
-                        + "                \"currency\": \"NOK\"\n"
-                        + "            },\n"
-                        + "            \"balanceType\": \"expected\"\n"
-                        + "        }\n"
-                        + "    ]\n"
-                        + "}",
-                BalanceResponse.class);
+        return deserializeFromFile("accountBalances.json", BalanceResponse.class);
     }
 
-    public static AccountResponse getAccountResponseWithNoBalance() {
-        return SerializationUtils.deserializeFromString(
-                "{\n"
-                        + "  \"accounts\": [\n"
-                        + "    {\n"
-                        + "      \"_links\": {\n"
-                        + "        \"self\": {\n"
-                        + "          \"href\": \"https://openbanking.etne-sparebank.no/\",\n"
-                        + "          \"verbs\": [\n"
-                        + "            \"GET\"\n"
-                        + "          ]\n"
-                        + "        },\n"
-                        + "        \"transactions\": {\n"
-                        + "          \"href\": \"/v1/sandbox/accounts/asdf/transactions\",\n"
-                        + "          \"verbs\": [\n"
-                        + "            \"GET\",\n"
-                        + "            \"POST\",\n"
-                        + "            \"DELETE\"\n"
-                        + "          ]\n"
-                        + "        }\n"
-                        + "      },\n"
-                        + "      \"balances\": [],\n"
-                        + "      \"bban\": \"95360573002\",\n"
-                        + "      \"bic\": \"AAA100\",\n"
-                        + "      \"cashAccountType\": \"Current\",\n"
-                        + "      \"currency\": \"NOK\",\n"
-                        + "      \"iban\": \"NO0995360573002\",\n"
-                        + "      \"name\": \"Brukskonto\",\n"
-                        + "      \"product\": \"BRUKSKONTO\",\n"
-                        + "      \"resourceId\": \"enc!!aI55HS7YpeXJhHqCXFPEGfF992bjRx2Gw==\"\n"
-                        + "    }\n"
-                        + "  ]\n"
-                        + "}",
-                AccountResponse.class);
+    @SneakyThrows
+    private static <T> T deserializeFromFile(String fileName, Class<T> tClass) {
+        File file = Paths.get(TEST_DATA_DIR, fileName).toFile();
+        return new ObjectMapper().readValue(file, tClass);
     }
 }

@@ -1,0 +1,31 @@
+{
+    "_links": {
+        "self": {
+            "href": "/v1/accounts/enc!!bcvncvbn-f-cvbncvbn=/balances",
+            "verbs": [
+                "GET"
+            ]
+        }
+    },
+    "account": {
+        "bban": "23452346234",
+        "currency": "NOK",
+        "iban": "NO23452346234"
+    },
+    "balances": [
+        {
+            "balanceAmount": {
+                "amount": "100.26",
+                "currency": "NOK"
+            },
+            "balanceType": "closingBooked"
+        },
+        {
+            "balanceAmount": {
+                "amount": "100.26",
+                "currency": "NOK"
+            },
+            "balanceType": "expected"
+        }
+    ]
+}
