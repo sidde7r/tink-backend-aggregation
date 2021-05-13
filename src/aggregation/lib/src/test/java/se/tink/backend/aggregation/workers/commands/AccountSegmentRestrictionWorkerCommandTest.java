@@ -24,6 +24,7 @@ import se.tink.backend.agents.rpc.AccountHolder;
 import se.tink.backend.agents.rpc.AccountHolderType;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.FinancialService;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
@@ -37,7 +38,7 @@ import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
 import se.tink.libraries.account_data_cache.AccountData;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
-import se.tink.libraries.credentials.service.RefreshableSegment;
+import se.tink.libraries.credentials.service.RefreshScope;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 import se.tink.libraries.user.rpc.User;
 import se.tink.libraries.user.rpc.UserProfile;
@@ -101,7 +102,9 @@ public class AccountSegmentRestrictionWorkerCommandTest {
     @Test
     public void nullSegmentsShouldNotFilter() throws Exception {
         // given
-        request.setSegmentsToRefresh(null);
+        RefreshScope refreshScope = new RefreshScope();
+        refreshScope.setFinancialServiceSegmentsIn(null);
+        request.setRefreshScope(refreshScope);
         AccountSegmentRestrictionWorkerCommand command =
                 new AccountSegmentRestrictionWorkerCommand(context);
 
@@ -126,7 +129,9 @@ public class AccountSegmentRestrictionWorkerCommandTest {
     @Test
     public void emptySegmentsShouldNotFilter() throws Exception {
         // given
-        request.setSegmentsToRefresh(Collections.emptySet());
+        RefreshScope refreshScope = new RefreshScope();
+        refreshScope.setFinancialServiceSegmentsIn(Collections.emptySet());
+        request.setRefreshScope(refreshScope);
         AccountSegmentRestrictionWorkerCommand command =
                 new AccountSegmentRestrictionWorkerCommand(context);
 
@@ -151,10 +156,15 @@ public class AccountSegmentRestrictionWorkerCommandTest {
     @Test
     public void shouldFilterOutNonPersonalSegments() throws Exception {
         // given
-        Set<RefreshableSegment> refreshableSegments =
-                ImmutableSet.<RefreshableSegment>builder().add(RefreshableSegment.PERSONAL).build();
+        Set<FinancialService.FinancialServiceSegment> refreshableSegments =
+                ImmutableSet.<FinancialService.FinancialServiceSegment>builder()
+                        .add(FinancialService.FinancialServiceSegment.PERSONAL)
+                        .build();
 
-        request.setSegmentsToRefresh(refreshableSegments);
+        RefreshScope refreshScope = new RefreshScope();
+        refreshScope.setFinancialServiceSegmentsIn(refreshableSegments);
+        request.setRefreshScope(refreshScope);
+
         AccountSegmentRestrictionWorkerCommand command =
                 new AccountSegmentRestrictionWorkerCommand(context);
 
@@ -176,10 +186,15 @@ public class AccountSegmentRestrictionWorkerCommandTest {
     @Test
     public void shouldFilterOutNonBusinessSegments() throws Exception {
         // given
-        Set<RefreshableSegment> refreshableSegments =
-                ImmutableSet.<RefreshableSegment>builder().add(RefreshableSegment.BUSINESS).build();
+        Set<FinancialService.FinancialServiceSegment> refreshableSegments =
+                ImmutableSet.<FinancialService.FinancialServiceSegment>builder()
+                        .add(FinancialService.FinancialServiceSegment.BUSINESS)
+                        .build();
 
-        request.setSegmentsToRefresh(refreshableSegments);
+        RefreshScope refreshScope = new RefreshScope();
+        refreshScope.setFinancialServiceSegmentsIn(refreshableSegments);
+        request.setRefreshScope(refreshScope);
+
         AccountSegmentRestrictionWorkerCommand command =
                 new AccountSegmentRestrictionWorkerCommand(context);
 
@@ -201,12 +216,15 @@ public class AccountSegmentRestrictionWorkerCommandTest {
     @Test
     public void shouldFilterOutNonUndeterminedSegments() throws Exception {
         // given
-        Set<RefreshableSegment> refreshableSegments =
-                ImmutableSet.<RefreshableSegment>builder()
-                        .add(RefreshableSegment.UNDETERMINED)
+        Set<FinancialService.FinancialServiceSegment> refreshableSegments =
+                ImmutableSet.<FinancialService.FinancialServiceSegment>builder()
+                        .add(FinancialService.FinancialServiceSegment.UNDETERMINED)
                         .build();
 
-        request.setSegmentsToRefresh(refreshableSegments);
+        RefreshScope refreshScope = new RefreshScope();
+        refreshScope.setFinancialServiceSegmentsIn(refreshableSegments);
+        request.setRefreshScope(refreshScope);
+
         AccountSegmentRestrictionWorkerCommand command =
                 new AccountSegmentRestrictionWorkerCommand(context);
 
@@ -233,12 +251,15 @@ public class AccountSegmentRestrictionWorkerCommandTest {
                                 .USE_ACCOUNT_SEGMENT_RESTRICTION_FEATURE_NAME))
                 .thenReturn(false);
 
-        Set<RefreshableSegment> refreshableSegments =
-                ImmutableSet.<RefreshableSegment>builder()
-                        .add(RefreshableSegment.UNDETERMINED)
+        Set<FinancialService.FinancialServiceSegment> refreshableSegments =
+                ImmutableSet.<FinancialService.FinancialServiceSegment>builder()
+                        .add(FinancialService.FinancialServiceSegment.UNDETERMINED)
                         .build();
 
-        request.setSegmentsToRefresh(refreshableSegments);
+        RefreshScope refreshScope = new RefreshScope();
+        refreshScope.setFinancialServiceSegmentsIn(refreshableSegments);
+        request.setRefreshScope(refreshScope);
+
         AccountSegmentRestrictionWorkerCommand command =
                 new AccountSegmentRestrictionWorkerCommand(context);
 
