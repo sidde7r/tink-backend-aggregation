@@ -27,6 +27,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.libraries.credentials.service.CredentialsRequest;
+import se.tink.libraries.credentials.service.UserAvailability;
 
 public abstract class BankdataAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
@@ -49,11 +50,12 @@ public abstract class BankdataAgent extends NextGenerationAgent
     }
 
     private BankdataApiConfiguration getApiConfiguration(String baseUrl, String baseAuthUrl) {
+        UserAvailability userAvailability = request.getUserAvailability();
         return BankdataApiConfiguration.builder()
                 .baseUrl(baseUrl)
                 .baseAuthUrl(baseAuthUrl)
-                .userIp(userIp)
-                .isManual(request.isManual())
+                .userIp(userAvailability.getOriginatingUserIp())
+                .isUserPresent(userAvailability.isUserPresent())
                 .build();
     }
 

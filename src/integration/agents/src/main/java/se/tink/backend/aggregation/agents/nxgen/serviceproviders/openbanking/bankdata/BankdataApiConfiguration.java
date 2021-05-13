@@ -9,5 +9,5 @@ public class BankdataApiConfiguration {
     private String baseUrl;
     private String baseAuthUrl;
     private String userIp;
-    private boolean isManual;
+    private boolean isUserPresent;
 }

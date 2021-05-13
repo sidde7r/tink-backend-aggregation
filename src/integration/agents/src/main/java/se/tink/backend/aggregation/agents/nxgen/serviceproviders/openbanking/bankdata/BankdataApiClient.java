@@ -239,7 +239,7 @@ public class BankdataApiClient {
                         .header(HeaderKeys.X_API_KEY, configuration.getApiKey())
                         .header(HeaderKeys.X_REQUEST_ID, requestId);
 
-        if (apiConfiguration.isManual()) {
+        if (apiConfiguration.isUserPresent()) {
             requestBuilder.header(HeaderKeys.PSU_IP_ADDRESS, apiConfiguration.getUserIp());
         }
         return requestBuilder;

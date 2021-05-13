@@ -37,6 +37,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.credentials.service.CredentialsRequest;
+import se.tink.libraries.credentials.service.UserAvailability;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, CREDIT_CARDS})
 public final class SparebankAgent extends NextGenerationAgent
@@ -79,6 +80,7 @@ public final class SparebankAgent extends NextGenerationAgent
                     CertificateUtils.getDerEncodedCertFromBase64EncodedCertificate(
                             agentConfiguration.getQsealc());
 
+            UserAvailability userAvailability = request.getUserAvailability();
             return SparebankApiConfiguration.builder()
                     .baseUrl(splitPayload(request.getProvider().getPayload()).get(1))
                     .redirectUrl(agentConfiguration.getRedirectUrl())
@@ -86,8 +88,8 @@ public final class SparebankAgent extends NextGenerationAgent
                     .certificateIssuerDN(CertificateUtils.getCertificateIssuerDN(qsealcBase64))
                     .certificateSerialNumberInHex(
                             CertificateUtils.getSerialNumber(qsealcBase64, 16))
-                    .userIp(userIp)
-                    .isManual(request.isManual())
+                    .userIp(userAvailability.getOriginatingUserIp())
+                    .isUserPresent(userAvailability.isUserPresent())
                     .build();
         } catch (CertificateException e) {
             throw new IllegalStateException(

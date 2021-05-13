@@ -25,6 +25,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.ServiceUnavailableBankServiceErrorFilter;
 import se.tink.libraries.credentials.service.CredentialsRequest;
+import se.tink.libraries.credentials.service.UserAvailability;
 
 @AgentCapabilities({CHECKING_ACCOUNTS})
 public final class BecAgent extends NextGenerationAgent
@@ -55,10 +56,11 @@ public final class BecAgent extends NextGenerationAgent
 
     private BecApiConfiguration getApiConfigurration() {
         String url = request.getProvider().getPayload().split(",")[1];
+        UserAvailability userAvailability = request.getUserAvailability();
         return BecApiConfiguration.builder()
                 .url(url)
-                .userIp(userIp)
-                .isManual(request.isManual())
+                .userIp(userAvailability.getOriginatingUserIp())
+                .isUserPresent(userAvailability.isUserPresent())
                 .build();
     }
 

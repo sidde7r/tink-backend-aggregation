@@ -81,7 +81,7 @@ public final class BecApiClient {
         headers.put(HeaderKeys.TPP_NOK_REDIRECT_URI, tppRedirectUrl);
         headers.put(HeaderKeys.DIGEST, digest);
         headers.put(HeaderKeys.TPP_SIGNATURE_CERTIFICATE, getQsealCertificate());
-        if (apiConfiguration.isManual()) {
+        if (apiConfiguration.isUserPresent()) {
             headers.put(HeaderKeys.PSU_IP, apiConfiguration.getUserIp());
         }
         return headers;
