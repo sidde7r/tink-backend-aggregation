@@ -10,11 +10,11 @@ spec:
     # All errors alerts
     #-------------------------------------------------------------------------------------------------------------------
     # Authentication alerts
-    - alert: AuthenticationErrorRateOver50%BE
+    - alert: AuthenticationErrorRateOver80%BE
       expr: |
-        # Failed logins over 50%
+        # Failed logins over 80%
         (count(sum_over_time(tink_agent_login_total{action="login", outcome="completed", market="BE", provider_type!="test"}[30m])) by (className,provider)
-            / count(sum_over_time(tink_agent_login_total{action="login", market="BE", provider_type!="test"}[30m])) by (className,provider) < 0.5)
+            / count(sum_over_time(tink_agent_login_total{action="login", market="BE", provider_type!="test"}[30m])) by (className,provider) < 0.2)
         # At least this many attempts.
             and count(sum_over_time(tink_agent_login_total{action="login", market="BE", provider_type!="test"}[30m])) by (className,provider) > 3
       for: 5m
@@ -25,7 +25,7 @@ spec:
       annotations:
         description: {{ .Values.kibanaLink }}
           {{ .Values.grafanaLink }}
-        summary: Authentication failures is over 50% (<{ $value }>) for <{ $labels.className }> ( <{ $labels.provider }> for last 30m
+        summary: Authentication failures is over 80% (<{ $value }>) for <{ $labels.className }> ( <{ $labels.provider }> for last 30m
           the last hour.
         tags: {{ .Values.tags }}
 
