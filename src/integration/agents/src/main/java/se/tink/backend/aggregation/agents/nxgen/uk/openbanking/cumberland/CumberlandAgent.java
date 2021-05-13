@@ -31,14 +31,14 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 @AgentDependencyModulesForDecoupledMode(
         modules = UkOpenBankingLocalKeySignerModuleForDecoupledMode.class)
 @AgentCapabilities({CHECKING_ACCOUNTS, IDENTITY_DATA, SAVINGS_ACCOUNTS})
-public class CumberlandBusinessAgent extends UkOpenBankingBaseAgent {
+public class CumberlandAgent extends UkOpenBankingBaseAgent {
 
     private static final UkOpenBankingAisConfig aisConfig;
 
     static {
         aisConfig =
                 UkOpenBankingAisConfiguration.builder()
-                        .withAllowedAccountOwnershipType(AccountOwnershipType.BUSINESS)
+                        .withAllowedAccountOwnershipType(AccountOwnershipType.PERSONAL)
                         .withOrganisationId(CumberlandConstants.ORGANISATION_ID)
                         .withWellKnownURL(CumberlandConstants.WELL_KNOWN_URL)
                         .withApiBaseURL(CumberlandConstants.AIS_API_URL)
@@ -47,7 +47,7 @@ public class CumberlandBusinessAgent extends UkOpenBankingBaseAgent {
     }
 
     @Inject
-    public CumberlandBusinessAgent(
+    public CumberlandAgent(
             AgentComponentProvider componentProvider, UkOpenBankingFlowFacade flowFacade) {
         super(componentProvider, flowFacade, aisConfig);
     }
