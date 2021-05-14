@@ -24,7 +24,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.authenticator.UkOpenBankingAisAuthenticationController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.authenticator.consent.ConsentStatusValidator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticationValidator;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.configuration.UkOpenBankingPisConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.halifax.pis.config.HalifaxPisConfig;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -58,8 +58,7 @@ public final class HalifaxV31Agent extends UkOpenBankingBaseAgent {
                 componentProvider,
                 flowFacade,
                 aisConfig,
-                new UkOpenBankingPisConfiguration(
-                        HalifaxConstants.PIS_API_URL, HalifaxConstants.WELL_KNOWN_URL),
+                new HalifaxPisConfig(HalifaxConstants.PIS_API_URL, HalifaxConstants.WELL_KNOWN_URL),
                 createPisRequestFilterUsingPs256WithoutBase64Signature(
                         flowFacade.getJwtSinger(), componentProvider.getRandomValueGenerator()));
         this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
