@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank;
 
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.SparebankConstants.CONSENT_FULL_FETCH_VALIDITY_IN_MINUTES;
+
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -19,9 +21,6 @@ public class SparebankStorage {
     private static final String PSU_ID = "PSU_ID";
     private static final String STATE = "STATE";
     private static final String CONSENT_CREATED_TIMESTAMP = "CONSENT_CREATED_TIMESTAMP";
-
-    private static final int TIME_LIMIT_FOR_FULL_FETCH_IN_MINUTES =
-            55; // True value is 60, we leave 5 min buffer for ourselves
 
     public final PersistentStorage persistentStorage;
 
@@ -93,7 +92,7 @@ public class SparebankStorage {
         Optional<Long> consentCreationTimestamp = getConsentCreationTimestamp();
         return !consentCreationTimestamp.isPresent()
                 || LocalDateTime.now()
-                        .minusMinutes(TIME_LIMIT_FOR_FULL_FETCH_IN_MINUTES)
+                        .minusMinutes(CONSENT_FULL_FETCH_VALIDITY_IN_MINUTES)
                         .isAfter(
                                 LocalDateTime.ofInstant(
                                         Instant.ofEpochMilli(consentCreationTimestamp.get()),

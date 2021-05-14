@@ -441,12 +441,4 @@ public class SparebankAuthenticatorTest {
     private Long stringToTimestamp(String date) {
         return stringToDate(date).getTime();
     }
-
-    private ScaResponse getScaResponse() {
-        return SerializationUtils.deserializeFromString(getScaResponseString(), ScaResponse.class);
-    }
-
-    private String getScaResponseString() {
-        return "{\"_links\": {\"scaRedirect\": {\"href\": \"http://example.com\"}}}";
-    }
 }

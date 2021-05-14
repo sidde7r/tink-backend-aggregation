@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.authenticator;
 
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.SparebankConstants.CONSENT_VALIDITY_IN_DAYS;
+
 import java.time.LocalDate;
 import java.util.Map;
 import java.util.Optional;
@@ -62,7 +64,8 @@ public class SparebankController implements AutoAuthenticator, ThirdPartyAppAuth
                 authenticator.storeSessionData(
                         supplementalInformation.get(FIELD_PSU_ID),
                         supplementalInformation.get(FIELD_TPP_SESSION_ID));
-                credentials.setSessionExpiryDate(LocalDate.now().plusDays(90));
+                credentials.setSessionExpiryDate(
+                        LocalDate.now().plusDays(CONSENT_VALIDITY_IN_DAYS));
                 return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.DONE);
             } else {
                 errorMessage = supplementalInformation.get(FIELD_MESSAGE);

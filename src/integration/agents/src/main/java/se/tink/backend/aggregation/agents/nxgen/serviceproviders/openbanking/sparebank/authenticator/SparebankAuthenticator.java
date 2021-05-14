@@ -1,12 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.authenticator;
 
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.SparebankConstants.CONSENT_VALIDITY_IN_DAYS;
+
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.Optional;
 import java.util.TimeZone;
-import java.util.stream.Stream;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -75,11 +76,19 @@ public class SparebankAuthenticator {
     }
 
     private boolean isSessionDataPresent() {
-        return Stream.of(
-                        storage.getPsuId(),
-                        storage.getSessionId(),
-                        storage.getConsentCreationTimestamp())
-                .allMatch(Optional::isPresent);
+        if (!storage.getPsuId().isPresent()) {
+            log.info("Session expired - missing PSU id");
+            return false;
+        }
+        if (!storage.getSessionId().isPresent()) {
+            log.info("Session expired - missing session id");
+            return false;
+        }
+        if (!storage.getConsentCreationTimestamp().isPresent()) {
+            log.info("Session expired - missing consent creation timestamp");
+            return false;
+        }
+        return true;
     }
 
     private boolean hasReachedSessionExpiryDate() {
@@ -104,7 +113,7 @@ public class SparebankAuthenticator {
                 LocalDateTime.ofInstant(
                         Instant.ofEpochMilli(consentCreationTs), TimeZone.getDefault().toZoneId());
 
-        LocalDateTime sessionExpiryDate = consentCreationDate.plusDays(90);
+        LocalDateTime sessionExpiryDate = consentCreationDate.plusDays(CONSENT_VALIDITY_IN_DAYS);
 
         credentials.setSessionExpiryDate(sessionExpiryDate.toLocalDate());
         return sessionExpiryDate;

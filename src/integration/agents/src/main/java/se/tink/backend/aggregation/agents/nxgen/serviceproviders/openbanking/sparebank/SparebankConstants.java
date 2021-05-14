@@ -8,6 +8,10 @@ public final class SparebankConstants {
 
     public static final String REGEX = "\\s*,\\s*";
 
+    public static final int CONSENT_VALIDITY_IN_DAYS = 90;
+    // true value is 60 but we leave 5 min buffer for ourselves
+    public static final int CONSENT_FULL_FETCH_VALIDITY_IN_MINUTES = 55;
+
     public static final TransactionalAccountTypeMapper ACCOUNT_TYPE_MAPPER =
             TransactionalAccountTypeMapper.builder()
                     .put(
@@ -31,10 +35,6 @@ public final class SparebankConstants {
 
     public static class Market {
         public static final String INTEGRATION_NAME = "sparebank";
-    }
-
-    public static class TransactionsResponse {
-        public static final String SCA_REDIRECT_ERROR_MESSAGE = "scaRedirect";
     }
 
     public static class Urls {
