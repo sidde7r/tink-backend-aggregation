@@ -17,7 +17,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/annotations",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/agents",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/agentsservice",
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/eidassigner/identity",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/eidasidentity/identity",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/agents/componentproviders",
         "//third_party:com_google_inject_guice",
         "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",

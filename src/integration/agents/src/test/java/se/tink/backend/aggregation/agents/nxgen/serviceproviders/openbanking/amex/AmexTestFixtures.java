@@ -34,6 +34,7 @@ public class AmexTestFixtures {
     public static final String DATA_MAC_VALUE = "MAC923";
     public static final String APP_ID = "appId";
     public static final String CLUSTER_ID = "clusterId";
+    public static final String CERT_ID = "certId";
     public static final String MAC_SIGNATURE = "signature";
     public static final String NONCE = "abd9b15f-2227-4218-8cbc-9376ed57496b:AMEX";
     private static final long TIMESTAMP = 1583331760L;

@@ -6,10 +6,10 @@ import com.google.inject.Singleton;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.module.agentclass.AgentClass;
 import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
+import se.tink.backend.aggregation.eidasidentity.identity.EidasIdentity;
 import se.tink.backend.aggregation.eidassigner.QsealcAlg;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.eidassigner.QsealcSignerImpl;
-import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
 
 public final class QSealcSignerModule extends AbstractModule {
 
@@ -30,6 +30,10 @@ public final class QSealcSignerModule extends AbstractModule {
     @Provides
     public EidasIdentity provideEidasIdentity(
             AgentContext agentContext, @AgentClass Class agentClass) {
-        return new EidasIdentity(agentContext.getClusterId(), agentContext.getAppId(), agentClass);
+        return new EidasIdentity(
+                agentContext.getClusterId(),
+                agentContext.getAppId(),
+                agentContext.getCertId(),
+                agentClass);
     }
 }

@@ -8,8 +8,8 @@ junit_test(
     ],
     deps = [
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/eidas",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/eidasidentity/identity",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/eidassigner",
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/eidassigner/identity",
         "//src/libraries/simple_http_server",
         "//third_party:commons_io_commons_io",
         "//third_party:jetty_server9",

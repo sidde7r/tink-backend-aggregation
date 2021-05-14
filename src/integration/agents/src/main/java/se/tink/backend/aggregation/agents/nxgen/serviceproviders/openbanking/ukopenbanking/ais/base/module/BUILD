@@ -9,7 +9,7 @@ java_library(
         "//src/integration/lib",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/module/agentclass",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/agents",
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/eidassigner/identity",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/eidasidentity/identity",
         "//third_party:com_google_inject_guice",
         "//third_party:lombok_libs",
         "//third_party:org_apache_commons_commons_lang3",
