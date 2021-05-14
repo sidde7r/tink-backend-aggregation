@@ -1,0 +1,76 @@
+{
+    "accounts": [
+        {
+            "_links": {
+                "self": {
+                    "href": "https://openbanking.etne-sparebank.no/",
+                    "verbs": [
+                        "GET"
+                    ]
+                },
+                "transactions": {
+                    "href": "/v1/sandbox/accounts/asdf/transactions",
+                    "verbs": [
+                        "GET",
+                        "POST",
+                        "DELETE"
+                    ]
+                }
+            },
+            "balances": [
+                {
+                    "balanceAmount": {
+                        "amount": "100.26",
+                        "currency": "NOK"
+                    },
+                    "balanceType": "authorised"
+                }
+            ],
+            "bban": "95360573002",
+            "bic": "AAA100",
+            "cashAccountType": "Current",
+            "currency": "NOK",
+            "iban": "NO0995360573002",
+            "name": "Brukskonto",
+            "product": "BRUKSKONTO",
+            "resourceId": "enc!!aI55HS7YpeXJhHqCXFPEGfF992bjRx2Gw=="
+        },
+        {
+            "_links": {
+                "self": {
+                    "href": "/v1/sandbox/accounts/enc!!90hSjpSdpeftHiDSYiPaHVGoKHriD-6ARR4JlXcEebYbYa_WNwJvqevSrba4WtnD",
+                    "verbs": [
+                        "GET",
+                        "DELETE"
+                    ]
+                },
+                "transactions": {
+                    "href": "/v1/sandbox/accounts/zxcv/transactions",
+                    "verbs": [
+                        "GET",
+                        "POST",
+                        "DELETE"
+                    ]
+                }
+            },
+            "accountName": "kontotest",
+            "balances": [
+                {
+                    "balanceAmount": {
+                        "amount": 10000,
+                        "currency": "NOK"
+                    },
+                    "balanceType": "expected"
+                }
+            ],
+            "bban": "91351631959",
+            "cashAccountType": "CACC",
+            "creditLine": 0,
+            "currency": "NOK",
+            "customerNumber": "01085800481",
+            "iban": "NO8591351631959",
+            "resourceId": "enc!!90hSjpSdpeftHiDSYiPaHVGoKHriD-6ARR4JlXcEebYbYa_WNwJvqevSrba4WtnD",
+            "product": "TEST PRODUKT"
+        }
+    ]
+}

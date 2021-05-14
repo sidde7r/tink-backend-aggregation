@@ -12,7 +12,6 @@ import java.util.Optional;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.SparebankConstants.HEADERS_TO_SIGN;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.SparebankConstants.HeaderKeys;
@@ -27,6 +26,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.spa
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.fetcher.transactionalaccount.rpc.AccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.fetcher.transactionalaccount.rpc.BalanceResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.fetcher.transactionalaccount.rpc.TransactionResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.filters.ConsentErrorsFilter;
 import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
 import se.tink.backend.aggregation.eidassigner.QsealcAlg;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
@@ -38,7 +38,6 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 @Slf4j
-@RequiredArgsConstructor
 public class SparebankApiClient {
 
     private final TinkHttpClient client;
@@ -46,6 +45,21 @@ public class SparebankApiClient {
     private final EidasIdentity eidasIdentity;
     private final SparebankApiConfiguration apiConfiguration;
     @Getter private final SparebankStorage storage;
+
+    public SparebankApiClient(
+            TinkHttpClient client,
+            EidasProxyConfiguration eidasProxyConfiguration,
+            EidasIdentity eidasIdentity,
+            SparebankApiConfiguration apiConfiguration,
+            SparebankStorage storage) {
+        this.client = client;
+        this.eidasProxyConfiguration = eidasProxyConfiguration;
+        this.eidasIdentity = eidasIdentity;
+        this.apiConfiguration = apiConfiguration;
+        this.storage = storage;
+
+        this.client.addFilter(new ConsentErrorsFilter());
+    }
 
     private RequestBuilder createRequest(URL url) {
         return createRequest(url, Optional.empty());

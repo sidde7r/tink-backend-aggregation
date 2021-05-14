@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.authenticator;
 
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.SparebankConstants.CONSENT_VALIDITY_IN_DAYS;
+
 import java.time.LocalDate;
 import java.util.Map;
 import java.util.Optional;
@@ -37,22 +39,10 @@ public class SparebankController implements AutoAuthenticator, ThirdPartyAppAuth
 
     @Override
     public void autoAuthenticate() {
-        if (hasSessionExpired()) {
+        if (authenticator.hasSessionExpired()) {
             authenticator.clearSessionData();
             throw SessionError.SESSION_EXPIRED.exception();
         }
-    }
-
-    private boolean hasSessionExpired() {
-        if (!authenticator.psuAndSessionPresent()) {
-            log.info("Session expired - missing PSU/session id");
-            return true;
-        }
-        if (!authenticator.isTppSessionStillValid()) {
-            log.info("Session expired - TPP session invalid");
-            return true;
-        }
-        return false;
     }
 
     @Override
@@ -74,7 +64,8 @@ public class SparebankController implements AutoAuthenticator, ThirdPartyAppAuth
                 authenticator.storeSessionData(
                         supplementalInformation.get(FIELD_PSU_ID),
                         supplementalInformation.get(FIELD_TPP_SESSION_ID));
-                credentials.setSessionExpiryDate(LocalDate.now().plusDays(90));
+                credentials.setSessionExpiryDate(
+                        LocalDate.now().plusDays(CONSENT_VALIDITY_IN_DAYS));
                 return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.DONE);
             } else {
                 errorMessage = supplementalInformation.get(FIELD_MESSAGE);
