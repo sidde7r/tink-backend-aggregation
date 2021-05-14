@@ -1,17 +1,20 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.authentication;
 
+import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import java.util.Optional;
+import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.EuroInformationApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.EuroInformationConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.EuroInformationConstants;
@@ -91,5 +94,16 @@ public class EuroInformationPasswordAuthenticatorTest {
 
         authenticator.authenticate("", "");
         assertFalse(sessionStorage.containsKey(EuroInformationConstants.Tags.PFM_ENABLED));
+    }
+
+    @Test
+    public void shouldThrowBankSideExceptionDueToDowntimeCode() {
+        LoginResponse logon = Mockito.mock(LoginResponse.class);
+        when(apiClient.logon(any(), any())).thenReturn(logon);
+        when(logon.getReturnCode()).thenReturn(EuroInformationErrorCodes.DOWNTIME.getCodeNumber());
+
+        Throwable thrown = catchThrowable(() -> authenticator.authenticate(any(), any()));
+
+        Assertions.assertThat(thrown).isExactlyInstanceOf(BankServiceException.class);
     }
 }

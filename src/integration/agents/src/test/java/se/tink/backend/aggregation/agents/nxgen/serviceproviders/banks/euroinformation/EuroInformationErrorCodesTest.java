@@ -13,4 +13,11 @@ public class EuroInformationErrorCodesTest {
                 EuroInformationErrorCodes.NO_ENUM_VALUE,
                 EuroInformationErrorCodes.getByCodeNumber("777777"));
     }
+
+    @Test
+    public void getByCodeNumberWhenCodeIsKnown() {
+        assertEquals(
+                EuroInformationErrorCodes.DOWNTIME,
+                EuroInformationErrorCodes.getByCodeNumber("3000"));
+    }
 }

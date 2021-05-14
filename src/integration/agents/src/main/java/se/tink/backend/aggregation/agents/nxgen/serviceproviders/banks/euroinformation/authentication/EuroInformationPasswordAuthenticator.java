@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.EuroInformationApiClient;
@@ -90,6 +91,8 @@ public class EuroInformationPasswordAuthenticator implements PasswordAuthenticat
             case TECHNICAL_PROBLEM:
                 throw new IllegalStateException(
                         EuroInformationErrorCodes.TECHNICAL_PROBLEM.getCodeNumber());
+            case DOWNTIME:
+                throw BankServiceError.NO_BANK_SERVICE.exception();
             case NO_ENUM_VALUE:
                 throw new IllegalArgumentException(
                         "Unknown bank value code " + SerializationUtils.serializeToString(logon));
