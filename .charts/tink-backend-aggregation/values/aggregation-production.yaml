@@ -420,6 +420,8 @@ clients:
     aggregatorIdentifier: "Lån og Spar SE"
   se-lan-spar-sverige-testing:
     aggregatorIdentifier: "Lån & Spar Sverige"
+  se-minna-production:
+    aggregatorIdentifier: "Minna Tjanster"
   se-rocker-production:
     aggregatorIdentifier: "Rocker"
   se-skandiabanken:
