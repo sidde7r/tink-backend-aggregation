@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import org.apache.http.HttpStatus;
@@ -94,8 +95,13 @@ public class LoginStep extends AbstractAuthenticationStep {
             throw AuthorizationError.ACCOUNT_BLOCKED.exception();
         }
 
-        final String password = Strings.emptyToNull(credentials.getField(Field.Key.PASSWORD));
-        Preconditions.checkNotNull(password);
+        final String password =
+                Optional.ofNullable(Strings.emptyToNull(credentials.getField(Field.Key.PASSWORD)))
+                        .orElseThrow(
+                                () ->
+                                        LoginError.INCORRECT_CREDENTIALS.exception(
+                                                "You didn't provide a password"));
+
         final List<Integer> pinPositions =
                 getPinPositionsForPassword(
                         getPasswordStringAsIntegerList(password),
