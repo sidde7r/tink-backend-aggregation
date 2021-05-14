@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.contexts;
 import java.util.List;
 import java.util.Map;
 import se.tink.backend.agents.rpc.Account;
-import se.tink.backend.agents.rpc.AccountHolder;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
 import se.tink.libraries.transfer.rpc.Transfer;
@@ -15,8 +14,6 @@ public interface SystemUpdater {
     Account sendAccountToUpdateService(String bankAccountId);
 
     Account updateAccountMetaData(String accountId, String newBankId);
-
-    AccountHolder sendAccountHolderToUpdateService(Account processedAccount);
 
     void updateTransferDestinationPatterns(Map<Account, List<TransferDestinationPattern>> map);
 

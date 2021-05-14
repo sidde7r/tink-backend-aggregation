@@ -66,7 +66,6 @@ import se.tink.backend.aggregation.workers.commands.RequestUserOptInAccountsAgen
 import se.tink.backend.aggregation.workers.commands.RequestedAccountsRestrictionWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.SendAccountRestrictionEventsWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.SendAccountSourceInfoEventWorkerCommand;
-import se.tink.backend.aggregation.workers.commands.SendAccountsHoldersToUpdateServiceAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.SendAccountsToUpdateServiceAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.SendDataForProcessingAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand;
@@ -259,10 +258,6 @@ public class AgentWorkerOperationFactory {
             commands.add(
                     new SendAccountsToUpdateServiceAgentWorkerCommand(
                             context, createCommandMetricState(request, clientInfo)));
-
-            commands.add(
-                    new SendAccountsHoldersToUpdateServiceAgentWorkerCommand(
-                            context, createCommandMetricState(request, clientInfo)));
             commands.add(
                     new SendPsd2PaymentClassificationToUpdateServiceAgentWorkerCommand(
                             context,
@@ -324,9 +319,6 @@ public class AgentWorkerOperationFactory {
                             context, accountInformationServiceEventsProducer));
             commands.add(
                     new SendAccountsToUpdateServiceAgentWorkerCommand(
-                            context, createCommandMetricState(request, clientInfo)));
-            commands.add(
-                    new SendAccountsHoldersToUpdateServiceAgentWorkerCommand(
                             context, createCommandMetricState(request, clientInfo)));
             commands.add(
                     new SendPsd2PaymentClassificationToUpdateServiceAgentWorkerCommand(
@@ -1512,9 +1504,6 @@ public class AgentWorkerOperationFactory {
                             context, accountInformationServiceEventsProducer));
             commands.add(
                     new SendAccountsToUpdateServiceAgentWorkerCommand(
-                            context, createCommandMetricState(request, clientInfo)));
-            commands.add(
-                    new SendAccountsHoldersToUpdateServiceAgentWorkerCommand(
                             context, createCommandMetricState(request, clientInfo)));
             commands.add(
                     new SendPsd2PaymentClassificationToUpdateServiceAgentWorkerCommand(

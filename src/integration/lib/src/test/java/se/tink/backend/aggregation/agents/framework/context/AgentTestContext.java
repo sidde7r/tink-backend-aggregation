@@ -15,7 +15,6 @@ import org.assertj.core.util.Preconditions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Account;
-import se.tink.backend.agents.rpc.AccountHolder;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.models.AccountFeatures;
@@ -195,11 +194,6 @@ public class AgentTestContext extends AgentContext {
             return null;
         }
         return optionalAccountData.get().getAccount();
-    }
-
-    @Override
-    public AccountHolder sendAccountHolderToUpdateService(Account processedAccount) {
-        return processedAccount.getAccountHolder();
     }
 
     @Override

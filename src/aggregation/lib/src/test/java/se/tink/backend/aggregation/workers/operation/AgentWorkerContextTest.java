@@ -1,19 +1,14 @@
 package se.tink.backend.aggregation.workers.operation;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import org.apache.curator.framework.CuratorFramework;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
-import se.tink.backend.agents.rpc.Account;
-import se.tink.backend.agents.rpc.AccountHolder;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
@@ -122,62 +117,5 @@ public class AgentWorkerContextTest {
                         argThat(
                                 (UpdateCredentialsStatusRequest controllerRequest) ->
                                         controllerRequest.getRefreshId() == null));
-    }
-
-    @Test
-    public void
-            whenUpdatingAccountHolderForAccountWithNullAccountHolderControllerWrapperNotCalled() {
-        // given
-        String tinkId = "id";
-        String uniqueId = "uniqueId";
-        Account account = Mockito.mock(Account.class);
-        Mockito.when(account.getBankId()).thenReturn(uniqueId);
-
-        AgentWorkerContext context =
-                buildAgentWorkerContext(Mockito.mock(RefreshInformationRequest.class));
-        context.getAccountDataCache().cacheAccount(account);
-        context.getAccountDataCache().setProcessedTinkAccountId(uniqueId, tinkId);
-
-        // when
-        AccountHolder accountHolder = context.sendAccountHolderToUpdateService(account);
-
-        // then
-        Assert.assertNull(accountHolder);
-        verify(controllerWrapper, times(0)).updateAccountHolder(any());
-    }
-
-    @Test
-    public void whenUpdatingAccountHolderControllerWrapperCalledWithSameObject() {
-        // given
-        String tinkId = "id";
-        String uniqueId = "uniqueId";
-        String userId = "userId";
-
-        Credentials credentials = new Credentials();
-        credentials.setUserId(userId);
-
-        AccountHolder holder = new AccountHolder();
-        Account account = Mockito.mock(Account.class);
-        Mockito.when(account.getBankId()).thenReturn(uniqueId);
-        Mockito.when(account.getAccountHolder()).thenReturn(holder);
-
-        RefreshInformationRequest credentialsRequest =
-                Mockito.mock(RefreshInformationRequest.class);
-        Mockito.when(credentialsRequest.getCredentials()).thenReturn(credentials);
-
-        AgentWorkerContext context = buildAgentWorkerContext(credentialsRequest);
-
-        context.getAccountDataCache().cacheAccount(account);
-        context.getAccountDataCache().setProcessedTinkAccountId(uniqueId, tinkId);
-
-        // when
-        AccountHolder accountHolder = context.sendAccountHolderToUpdateService(account);
-
-        // then
-        Assert.assertNull(accountHolder);
-        verify(controllerWrapper, times(1))
-                .updateAccountHolder(
-                        Mockito.argThat(
-                                request -> Objects.equals(request.getAccountHolder(), holder)));
     }
 }

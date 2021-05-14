@@ -2,20 +2,16 @@ package se.tink.backend.aggregation.events;
 
 import com.google.protobuf.Any;
 import java.time.Instant;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.inject.Named;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.agents.rpc.HolderRole;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
 import se.tink.backend.aggregation.source_info.AccountSourceInfo;
 import se.tink.eventproducerservice.events.grpc.AccountAggregationRestrictedEventProto;
 import se.tink.eventproducerservice.events.grpc.AccountAggregationRestrictedEventProto.AccountAggregationRestrictedEvent;
-import se.tink.eventproducerservice.events.grpc.AccountHoldersRefreshedEventProto;
 import se.tink.eventproducerservice.events.grpc.AccountSourceInfoEventProto;
 import se.tink.eventproducerservice.events.grpc.Psd2PaymentAccountClassificationEventProto;
 import se.tink.libraries.event_producer_service_client.grpc.EventProducerServiceClient;
@@ -33,65 +29,6 @@ public class AccountInformationServiceEventsProducer {
             EventProducerServiceClient eventProducerServiceClient) {
         this.eventsEnabled = eventsEnabled;
         this.eventProducerServiceClient = eventProducerServiceClient;
-    }
-
-    public void sendAccountHoldersRefreshedEvent(
-            String clusterId,
-            String appId,
-            String userId,
-            String providerName,
-            String correlationId,
-            String accountId,
-            String holderType,
-            int holdersCount,
-            List<HolderRole> roles) {
-        if (!eventsEnabled) {
-            return;
-        }
-        try {
-            AccountHoldersRefreshedEventProto.AccountHoldersRefreshedEvent.Builder builder =
-                    AccountHoldersRefreshedEventProto.AccountHoldersRefreshedEvent.newBuilder()
-                            .setTimestamp(ProtobufTypeUtil.toProtobufTimestamp(Instant.now()))
-                            .setClusterId(clusterId)
-                            .setAppId(appId)
-                            .setUserId(userId)
-                            .setProviderName(providerName)
-                            .setCorrelationId(correlationId)
-                            .setAccountId(accountId)
-                            .setHoldersCount(holdersCount)
-                            .addAllHoldersRoles(
-                                    roles.stream()
-                                            .map(this::mapHolderRoleToGrpc)
-                                            .collect(Collectors.toList()));
-
-            Optional.ofNullable(holderType).ifPresent(builder::setHolderType);
-
-            AccountHoldersRefreshedEventProto.AccountHoldersRefreshedEvent event = builder.build();
-
-            eventProducerServiceClient.postEventFireAndForget(Any.pack(event));
-        } catch (RuntimeException e) {
-            log.warn(
-                    "Could not produce event: AccountHoldersRefreshedEvent for (userId, correlationId): ({}, {})",
-                    userId,
-                    correlationId,
-                    e);
-        }
-    }
-
-    private AccountHoldersRefreshedEventProto.HolderRole mapHolderRoleToGrpc(
-            HolderRole holderRole) {
-        if (holderRole == null) {
-            return AccountHoldersRefreshedEventProto.HolderRole.HOLDER_ROLE_UNKNOWN;
-        } else {
-            switch (holderRole) {
-                case HOLDER:
-                    return AccountHoldersRefreshedEventProto.HolderRole.HOLDER_ROLE_HOLDER;
-                case AUTHORIZED_USER:
-                    return AccountHoldersRefreshedEventProto.HolderRole.HOLDER_ROLE_AUTHORIZED_USER;
-                default:
-                    return AccountHoldersRefreshedEventProto.HolderRole.HOLDER_ROLE_UNKNOWN;
-            }
-        }
     }
 
     public void sendAccountAggregationRestrictedEvent(

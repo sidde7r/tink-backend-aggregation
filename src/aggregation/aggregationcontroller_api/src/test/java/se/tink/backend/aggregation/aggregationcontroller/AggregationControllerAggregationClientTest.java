@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.aggregationcontroller;
 
 import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
@@ -24,18 +23,13 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.MessageBodyReader;
 import javax.ws.rs.ext.MessageBodyWriter;
 import javax.ws.rs.ext.Provider;
-import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import se.tink.backend.agents.rpc.AccountHolder;
-import se.tink.backend.agents.rpc.AccountHolderType;
-import se.tink.backend.agents.rpc.HolderIdentity;
 import se.tink.backend.aggregation.agents.framework.wiremock.WireMockTestServer;
 import se.tink.backend.aggregation.agents.framework.wiremock.utils.AapFileParser;
 import se.tink.backend.aggregation.agents.framework.wiremock.utils.ResourceFileReader;
 import se.tink.backend.aggregation.aggregationcontroller.iface.AggregationControllerAggregationClient;
 import se.tink.backend.aggregation.aggregationcontroller.v1.core.HostConfiguration;
-import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateAccountHolderRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateCredentialsStatusRequest;
 import se.tink.backend.aggregation.configuration.models.AccountInformationServiceConfiguration;
 import se.tink.libraries.credentials.rpc.Credentials;
@@ -169,31 +163,5 @@ public final class AggregationControllerAggregationClientTest {
 
         // then
         // (expecting UniformInterfaceException)
-    }
-
-    @Test
-    public void updateAccountHolderSuccessful() {
-        // given
-        UpdateAccountHolderRequest request = createUpdateAccountHolderRequest("dummy_id");
-
-        // when
-        AccountHolder response = client.updateAccountHolder(hostConfiguration, request);
-
-        // then
-        Assert.assertEquals(request.getAccountHolder(), response);
-    }
-
-    private UpdateAccountHolderRequest createUpdateAccountHolderRequest(String id) {
-        UpdateAccountHolderRequest request = new UpdateAccountHolderRequest();
-        AccountHolder holder = new AccountHolder();
-        holder.setAccountId(id);
-        holder.setType(AccountHolderType.BUSINESS);
-        HolderIdentity identity = new HolderIdentity();
-        identity.setName("Dummy Name");
-        holder.setIdentities(ImmutableList.of(identity));
-        request.setAccountHolder(holder);
-        request.setAppId(id);
-        request.setUserId(id);
-        return request;
     }
 }

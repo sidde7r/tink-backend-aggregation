@@ -20,7 +20,6 @@ import javax.ws.rs.core.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Account;
-import se.tink.backend.agents.rpc.AccountHolder;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.aggregationcontroller.iface.AggregationControllerAggregationClient;
 import se.tink.backend.aggregation.aggregationcontroller.v1.core.HostConfiguration;
@@ -29,7 +28,6 @@ import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.GenerateStatisti
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.OptOutAccountsRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.ProcessAccountsRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.RestrictAccountsRequest;
-import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateAccountHolderRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateAccountRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateCredentialsStatusRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateIdentityDataRequest;
@@ -216,13 +214,6 @@ public class FakeAggregationControllerAggregationClient
             HostConfiguration hostConfiguration, UpdateIdentityDataRequest request) {
         callFakeAggregationController("updateIdentity", request);
         return Response.ok().build();
-    }
-
-    @Override
-    public AccountHolder updateAccountHolder(
-            HostConfiguration hostConfiguration, UpdateAccountHolderRequest request) {
-        callFakeAggregationController("updateAccountHolder", request);
-        return request.getAccountHolder();
     }
 
     @Override
