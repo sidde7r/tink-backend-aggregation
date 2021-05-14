@@ -60,6 +60,7 @@ public class SparebankApiClient {
     public ScaResponse getScaRedirect(String state) throws HttpResponseException {
         storage.storeState(state);
         return createRequest(new URL(apiConfiguration.getBaseUrl() + Urls.GET_SCA_REDIRECT))
+                .header(HeaderKeys.PSU_CONTEXT, HeaderValues.PSU_CONTEXT_PRIVATE)
                 .post(ScaResponse.class);
     }
 
