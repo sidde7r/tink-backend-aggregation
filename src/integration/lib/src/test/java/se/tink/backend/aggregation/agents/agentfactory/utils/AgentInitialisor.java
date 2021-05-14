@@ -126,6 +126,7 @@ public class AgentInitialisor {
 
         AgentContext context = mock(AgentContext.class);
         doReturn(testClusterId).when(context).getClusterId();
+        doReturn("default").when(context).getCertId();
         doReturn("tink").when(context).getAppId();
         doReturn(mock(MetricRegistry.class)).when(context).getMetricRegistry();
         doReturn(false).when(context).isTestContext();
@@ -145,6 +146,7 @@ public class AgentInitialisor {
                         credentialsRequest.getProvider(),
                         context.getAppId(),
                         "clusterIdForSecretsService",
+                        context.getCertId(),
                         credentialsRequest.getCallbackUri());
 
         doReturn(agentConfigurationController).when(context).getAgentConfigurationController();

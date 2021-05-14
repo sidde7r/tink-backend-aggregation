@@ -24,6 +24,7 @@ public abstract class AgentContext implements CompositeAgentContext {
     private AgentsServiceConfiguration configuration;
     protected InteractionCounter supplementalInteractionCounter = new LocalInteractionCounter();
     private UnleashClient unleashClient;
+    private String certId;
 
     public InteractionCounter getSupplementalInteractionCounter() {
         return supplementalInteractionCounter;
@@ -123,5 +124,15 @@ public abstract class AgentContext implements CompositeAgentContext {
     @Override
     public void setUnleashClient(UnleashClient unleashClient) {
         this.unleashClient = unleashClient;
+    }
+
+    @Override
+    public String getCertId() {
+        return certId;
+    }
+
+    @Override
+    public void setCertId(String certId) {
+        this.certId = certId;
     }
 }

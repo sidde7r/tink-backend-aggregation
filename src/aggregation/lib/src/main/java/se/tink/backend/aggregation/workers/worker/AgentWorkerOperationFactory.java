@@ -24,6 +24,7 @@ import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConf
 import se.tink.backend.aggregation.configuration.models.ProviderTierConfiguration;
 import se.tink.backend.aggregation.controllers.ProviderSessionCacheController;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
+import se.tink.backend.aggregation.eidasidentity.CertificateIdProvider;
 import se.tink.backend.aggregation.events.AccountInformationServiceEventsProducer;
 import se.tink.backend.aggregation.events.CredentialsEventProducer;
 import se.tink.backend.aggregation.events.DataTrackerEventProducer;
@@ -46,6 +47,7 @@ import se.tink.backend.aggregation.workers.commands.CircuitBreakerAgentWorkerCom
 import se.tink.backend.aggregation.workers.commands.ClearSensitiveInformationCommand;
 import se.tink.backend.aggregation.workers.commands.ClearSensitivePayloadOnForceAuthenticateCommand;
 import se.tink.backend.aggregation.workers.commands.CreateAgentConfigurationControllerWorkerCommand;
+import se.tink.backend.aggregation.workers.commands.CreateCertIdWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.CreateLogMaskerWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.DataFetchingRestrictionWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.DebugAgentWorkerCommand;
@@ -141,6 +143,7 @@ public class AgentWorkerOperationFactory {
     private final RegulatoryRestrictions regulatoryRestrictions;
     private final Psd2PaymentAccountClassifier psd2PaymentAccountClassifier;
     private final AccountInformationServiceEventsProducer accountInformationServiceEventsProducer;
+    private final CertificateIdProvider certificateIdProvider;
 
     @Inject
     public AgentWorkerOperationFactory(
@@ -172,7 +175,8 @@ public class AgentWorkerOperationFactory {
             @ShouldAddExtraCommands Predicate<Provider> shouldAddExtraCommands,
             RegulatoryRestrictions regulatoryRestrictions,
             AccountInformationServiceEventsProducer accountInformationServiceEventsProducer,
-            UnleashClient unleashClient) {
+            UnleashClient unleashClient,
+            CertificateIdProvider certificateIdProvider) {
         this.cacheClient = cacheClient;
         this.cryptoConfigurationDao = cryptoConfigurationDao;
         this.controllerWrapperProvider = controllerWrapperProvider;
@@ -206,6 +210,7 @@ public class AgentWorkerOperationFactory {
                 Psd2PaymentAccountClassifier.createWithMetrics(metricRegistry);
         this.accountInformationServiceEventsProducer = accountInformationServiceEventsProducer;
         this.unleashClient = unleashClient;
+        this.certificateIdProvider = certificateIdProvider;
     }
 
     private AgentWorkerCommandMetricState createCommandMetricState(
@@ -444,6 +449,7 @@ public class AgentWorkerOperationFactory {
                         createCommandMetricState(request, clientInfo),
                         ProcessableItem.fromRefreshableItems(
                                 RefreshableItem.convertLegacyItems(request.getItemsToRefresh()))));
+        commands.add(new CreateCertIdWorkerCommand(context, certificateIdProvider));
         commands.add(
                 new CreateAgentConfigurationControllerWorkerCommand(
                         context, tppSecretsServiceClient));
@@ -565,6 +571,7 @@ public class AgentWorkerOperationFactory {
                         new AgentWorkerMetricReporter(
                                 metricRegistry, this.providerTierConfiguration)));
 
+        commands.add(new CreateCertIdWorkerCommand(context, certificateIdProvider));
         commands.add(
                 new CreateAgentConfigurationControllerWorkerCommand(
                         context, tppSecretsServiceClient));
@@ -780,6 +787,7 @@ public class AgentWorkerOperationFactory {
                     new ReportProviderTransferMetricsAgentWorkerCommand(context, operationName));
         }
 
+        commands.add(new CreateCertIdWorkerCommand(context, certificateIdProvider));
         commands.add(
                 new CreateAgentConfigurationControllerWorkerCommand(
                         context, tppSecretsServiceClient));
@@ -966,6 +974,7 @@ public class AgentWorkerOperationFactory {
                         ProcessableItem.fromRefreshableItems(
                                 RefreshableItem.convertLegacyItems(
                                         RefreshableItem.REFRESHABLE_ITEMS_ALL))));
+        commands.add(new CreateCertIdWorkerCommand(context, certificateIdProvider));
         commands.add(
                 new CreateAgentConfigurationControllerWorkerCommand(
                         context, tppSecretsServiceClient));
@@ -1030,6 +1039,7 @@ public class AgentWorkerOperationFactory {
                                 metricRegistry, this.providerTierConfiguration)));
         commands.add(new ReportProviderTransferMetricsAgentWorkerCommand(context, operationName));
 
+        commands.add(new CreateCertIdWorkerCommand(context, certificateIdProvider));
         commands.add(
                 new CreateAgentConfigurationControllerWorkerCommand(
                         context, tppSecretsServiceClient));
@@ -1301,6 +1311,7 @@ public class AgentWorkerOperationFactory {
                         createCommandMetricState(request, clientInfo),
                         ProcessableItem.fromRefreshableItems(
                                 RefreshableItem.convertLegacyItems(request.getItemsToRefresh()))));
+        commands.add(new CreateCertIdWorkerCommand(context, certificateIdProvider));
         commands.add(
                 new CreateAgentConfigurationControllerWorkerCommand(
                         context, tppSecretsServiceClient));
@@ -1423,6 +1434,7 @@ public class AgentWorkerOperationFactory {
                         createCommandMetricState(request, clientInfo),
                         ProcessableItem.fromRefreshableItems(
                                 RefreshableItem.convertLegacyItems(request.getItemsToRefresh()))));
+        commands.add(new CreateCertIdWorkerCommand(context, certificateIdProvider));
         commands.add(
                 new CreateAgentConfigurationControllerWorkerCommand(
                         context, tppSecretsServiceClient));

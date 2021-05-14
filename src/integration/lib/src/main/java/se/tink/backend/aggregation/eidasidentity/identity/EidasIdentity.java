@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.eidassigner.identity;
+package se.tink.backend.aggregation.eidasidentity.identity;
 
 public class EidasIdentity {
     private final String clusterId;
@@ -9,7 +9,7 @@ public class EidasIdentity {
 
     private static final String DEFAULT_CERT_ID = "DEFAULT";
 
-    public EidasIdentity(String clusterId, String appId, Class requester) {
+    public EidasIdentity(String clusterId, String appId, Class<?> requester) {
         this.clusterId = clusterId;
         this.appId = appId;
         this.certId = DEFAULT_CERT_ID;
@@ -23,7 +23,7 @@ public class EidasIdentity {
         this.requester = requester;
     }
 
-    public EidasIdentity(String clusterId, String appId, String certId, Class requester) {
+    public EidasIdentity(String clusterId, String appId, String certId, Class<?> requester) {
         this.clusterId = clusterId;
         this.appId = appId;
         this.certId = certId;

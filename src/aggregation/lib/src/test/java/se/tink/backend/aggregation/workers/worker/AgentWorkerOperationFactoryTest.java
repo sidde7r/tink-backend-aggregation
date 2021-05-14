@@ -24,6 +24,7 @@ import se.tink.backend.aggregation.cluster.identification.ClientInfo;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.controllers.ProviderSessionCacheController;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
+import se.tink.backend.aggregation.eidasidentity.CertificateIdProvider;
 import se.tink.backend.aggregation.events.AccountInformationServiceEventsProducer;
 import se.tink.backend.aggregation.events.CredentialsEventProducer;
 import se.tink.backend.aggregation.events.DataTrackerEventProducer;
@@ -338,6 +339,7 @@ public final class AgentWorkerOperationFactoryTest {
             bind(AccountInformationServiceEventsProducer.class)
                     .toInstance(mock(AccountInformationServiceEventsProducer.class));
             bind(UnleashClient.class).toInstance(mock(UnleashClient.class));
+            bind(CertificateIdProvider.class).toInstance(mock(CertificateIdProvider.class));
         }
     }
 }

@@ -17,6 +17,8 @@ import se.tink.backend.aggregation.api.MonitoringService;
 import se.tink.backend.aggregation.client.provider_configuration.ProviderConfigurationService;
 import se.tink.backend.aggregation.cluster.jersey.JerseyClientProvider;
 import se.tink.backend.aggregation.configuration.models.AggregationServiceConfiguration;
+import se.tink.backend.aggregation.eidasidentity.CertificateIdProvider;
+import se.tink.backend.aggregation.eidasidentity.CertificateIdProviderImpl;
 import se.tink.backend.aggregation.log.AggregationLoggerRequestFilter;
 import se.tink.backend.aggregation.resources.AggregationServiceResource;
 import se.tink.backend.aggregation.resources.CreditSafeServiceResource;
@@ -59,7 +61,7 @@ public class AggregationModule extends AbstractModule {
         bind(ManagedTppSecretsServiceClient.class)
                 .to(TppSecretsServiceClientImpl.class)
                 .in(Scopes.SINGLETON);
-
+        bind(CertificateIdProvider.class).to(CertificateIdProviderImpl.class).in(Scopes.SINGLETON);
         bind(ClientConfig.class).toInstance(new DefaultApacheHttpClient4Config());
 
         if (Objects.nonNull(configuration.getS3StorageConfiguration())

@@ -12,7 +12,7 @@ import se.tink.backend.aggregation.agents.SuperAbstractAgent;
 import se.tink.backend.aggregation.agents.TransferExecutorNxgen;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
-import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
+import se.tink.backend.aggregation.eidasidentity.identity.EidasIdentity;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.metrics.MetricRefreshController;
@@ -119,7 +119,8 @@ public abstract class SubsequentGenerationAgent<Auth> extends SuperAbstractAgent
     }
 
     protected EidasIdentity getEidasIdentity() {
-        return new EidasIdentity(context.getClusterId(), context.getAppId(), getAgentClass());
+        return new EidasIdentity(
+                context.getClusterId(), context.getAppId(), context.getCertId(), getAgentClass());
     }
 
     @Override
