@@ -92,7 +92,8 @@ public class Credentials implements Cloneable {
         try {
             return (Credentials) super.clone();
         } catch (CloneNotSupportedException e) {
-            return null;
+            // it is unexpected error, if this impossible situation exists, just break the flow
+            throw new CredentialsCloningException("Clone of credentials object failed.", e);
         }
     }
 
@@ -516,5 +517,11 @@ public class Credentials implements Cloneable {
     @JsonIgnore
     public String getMetricTypeName() {
         return CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.LOWER_UNDERSCORE, getType().name());
+    }
+}
+
+class CredentialsCloningException extends RuntimeException {
+    CredentialsCloningException(final String msg, final Throwable t) {
+        super(msg, t);
     }
 }
