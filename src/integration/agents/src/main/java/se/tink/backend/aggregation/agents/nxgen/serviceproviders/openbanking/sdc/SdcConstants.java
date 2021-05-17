@@ -14,6 +14,7 @@ public final class SdcConstants {
 
     public static class StorageKeys {
         public static final String OAUTH_TOKEN = PersistentStorageKeys.OAUTH_2_TOKEN;
+        public static final String BOOKING_STATUS = "booking_status";
     }
 
     public static class QueryKeys {
