@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.banks.seb.mock;
+package se.tink.backend.aggregation.agents.legacy.banks.seb.mock;
 
 import java.time.LocalDate;
 import java.time.ZoneId;

@@ -1,9 +1,9 @@
-package se.tink.backend.aggregation.agents.banks.seb.mortgage.model;
+package se.tink.backend.aggregation.agents.legacy.banks.seb.mortgage.model;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.banks.seb.mortgage.ApiRequest;
+import se.tink.backend.aggregation.agents.legacy.banks.seb.mortgage.ApiRequest;
 
 public class LoanPostRequestTest {
     @Test

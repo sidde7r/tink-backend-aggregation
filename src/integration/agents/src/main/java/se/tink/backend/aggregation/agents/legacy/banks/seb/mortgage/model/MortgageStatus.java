@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.banks.seb.mortgage.model;
+package se.tink.backend.aggregation.agents.legacy.banks.seb.mortgage.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;

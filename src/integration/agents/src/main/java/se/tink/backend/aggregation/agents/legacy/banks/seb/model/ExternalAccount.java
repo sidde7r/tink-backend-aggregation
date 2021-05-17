@@ -1,11 +1,11 @@
-package se.tink.backend.aggregation.agents.banks.seb.model;
+package se.tink.backend.aggregation.agents.legacy.banks.seb.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Strings;
 import java.util.Optional;
-import se.tink.backend.aggregation.agents.banks.seb.SebAccountIdentifierFormatter;
 import se.tink.backend.aggregation.agents.general.models.GeneralAccountEntity;
+import se.tink.backend.aggregation.agents.legacy.banks.seb.SebAccountIdentifierFormatter;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;

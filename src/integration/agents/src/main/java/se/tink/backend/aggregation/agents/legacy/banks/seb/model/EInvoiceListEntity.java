@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.banks.seb.model;
+package se.tink.backend.aggregation.agents.legacy.banks.seb.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -13,8 +13,8 @@ import java.text.ParseException;
 import java.util.Date;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.aggregation.agents.banks.seb.SEBAgentUtils;
-import se.tink.backend.aggregation.agents.banks.seb.SebAccountIdentifierFormatter;
+import se.tink.backend.aggregation.agents.legacy.banks.seb.SEBAgentUtils;
+import se.tink.backend.aggregation.agents.legacy.banks.seb.SebAccountIdentifierFormatter;
 import se.tink.backend.aggregation.annotations.JsonDouble;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.enums.AccountIdentifierType;

@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.banks.seb.mortgage.model;
+package se.tink.backend.aggregation.agents.legacy.banks.seb.mortgage.model;
 
 import com.google.api.client.repackaged.com.google.common.base.Strings;
 import com.google.common.base.MoreObjects;
@@ -9,7 +9,7 @@ import com.google.common.net.UrlEscapers;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
-import se.tink.backend.aggregation.agents.banks.seb.mortgage.ApiRequest;
+import se.tink.backend.aggregation.agents.legacy.banks.seb.mortgage.ApiRequest;
 
 /**
  * Query string request model for GET: indicative interest rate

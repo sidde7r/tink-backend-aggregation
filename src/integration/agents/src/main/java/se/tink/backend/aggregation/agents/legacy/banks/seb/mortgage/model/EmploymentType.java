@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.banks.seb.mortgage.model;
+package se.tink.backend.aggregation.agents.legacy.banks.seb.mortgage.model;
 
 public enum EmploymentType {
     PERMANENT_EMPLOYMENT("TILLSVIDARE"),

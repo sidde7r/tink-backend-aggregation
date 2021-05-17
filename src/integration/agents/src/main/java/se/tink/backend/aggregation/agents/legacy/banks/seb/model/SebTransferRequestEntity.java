@@ -1,12 +1,12 @@
-package se.tink.backend.aggregation.agents.banks.seb.model;
+package se.tink.backend.aggregation.agents.legacy.banks.seb.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import se.tink.backend.aggregation.agents.banks.seb.SEBAgentUtils;
-import se.tink.backend.aggregation.agents.banks.seb.SebAccountIdentifierFormatter;
+import se.tink.backend.aggregation.agents.legacy.banks.seb.SEBAgentUtils;
+import se.tink.backend.aggregation.agents.legacy.banks.seb.SebAccountIdentifierFormatter;
 import se.tink.libraries.account.identifiers.formatters.AccountIdentifierFormatter;
 import se.tink.libraries.account.identifiers.formatters.DefaultAccountIdentifierFormatter;
 import se.tink.libraries.transfer.rpc.Transfer;

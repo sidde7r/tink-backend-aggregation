@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.banks.seb.model;
+package se.tink.backend.aggregation.agents.legacy.banks.seb.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -6,7 +6,7 @@ import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.AccountHolder;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.AgentParsingUtils;
-import se.tink.backend.aggregation.agents.banks.seb.SEBAgentUtils;
+import se.tink.backend.aggregation.agents.legacy.banks.seb.SEBAgentUtils;
 import se.tink.backend.aggregation.agents.models.Loan;
 import se.tink.backend.aggregation.source_info.AccountSourceInfo;
 import se.tink.libraries.date.ThreadSafeDateFormat;

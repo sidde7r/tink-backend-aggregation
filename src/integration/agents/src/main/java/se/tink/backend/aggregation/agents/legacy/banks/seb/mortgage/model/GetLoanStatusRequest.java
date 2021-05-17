@@ -1,11 +1,11 @@
-package se.tink.backend.aggregation.agents.banks.seb.mortgage.model;
+package se.tink.backend.aggregation.agents.legacy.banks.seb.mortgage.model;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.net.UrlEscapers;
-import se.tink.backend.aggregation.agents.banks.seb.mortgage.ApiRequest;
+import se.tink.backend.aggregation.agents.legacy.banks.seb.mortgage.ApiRequest;
 
 public class GetLoanStatusRequest implements ApiRequest {
     private final String applicationId;

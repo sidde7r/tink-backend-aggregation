@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.banks.seb.manual;
+package se.tink.backend.aggregation.agents.legacy.banks.seb.manual;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
@@ -13,11 +13,11 @@ import org.junit.Test;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.agents.banks.seb.SEBApiAgent;
-import se.tink.backend.aggregation.agents.banks.seb.model.HoldingEntity;
-import se.tink.backend.aggregation.agents.banks.seb.model.Session;
-import se.tink.backend.aggregation.agents.banks.seb.utilities.SEBDateUtil;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
 import se.tink.backend.aggregation.agents.framework.legacy.AbstractAgentTest;
+import se.tink.backend.aggregation.agents.legacy.banks.seb.model.HoldingEntity;
+import se.tink.backend.aggregation.agents.legacy.banks.seb.model.Session;
+import se.tink.backend.aggregation.agents.legacy.banks.seb.utilities.SEBDateUtil;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageException;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
