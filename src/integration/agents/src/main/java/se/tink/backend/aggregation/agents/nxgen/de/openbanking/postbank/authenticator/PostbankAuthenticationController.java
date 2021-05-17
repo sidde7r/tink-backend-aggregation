@@ -223,9 +223,16 @@ public class PostbankAuthenticationController implements TypedAuthenticator {
         }
         fields.add(tanBuilder.build());
 
-        return supplementalInformationController
-                .askSupplementalInformationSync(fields.toArray(new Field[0]))
-                .get(fields.get(fields.size() - 1).getName());
+        String otp =
+                supplementalInformationController
+                        .askSupplementalInformationSync(fields.toArray(new Field[0]))
+                        .get(fields.get(fields.size() - 1).getName());
+        if (otp == null) {
+            throw SupplementalInfoError.NO_VALID_CODE.exception(
+                    "Supplemental info did not come with otp code!");
+        } else {
+            return otp;
+        }
     }
 
     private Optional<String> extractStartcode(AuthorisationResponse authResponse) {

@@ -269,6 +269,12 @@ public class SparkassenAuthenticator implements MultiFactorAuthenticator, AutoAu
         Map<String, String> supplementalInformation =
                 supplementalInformationController.askSupplementalInformationSync(
                         fields.toArray(new Field[0]));
-        return supplementalInformation.get(fields.get(fields.size() - 1).getName());
+        String otp = supplementalInformation.get(fields.get(fields.size() - 1).getName());
+        if (otp == null) {
+            throw SupplementalInfoError.NO_VALID_CODE.exception(
+                    "Supplemental info did not come with otp code!");
+        } else {
+            return otp;
+        }
     }
 }

@@ -40,9 +40,16 @@ public class DkbSupplementalDataProvider {
             ConsentAuthorization.ChallengeData challengeData)
             throws SupplementalInfoException {
         List<Field> fields = getSupplementalFields(scaMethod, data, challengeData);
-        return supplementalInformationHelper
-                .askSupplementalInformation(fields.toArray(new Field[0]))
-                .get(fields.get(fields.size() - 1).getName());
+        String otp =
+                supplementalInformationHelper
+                        .askSupplementalInformation(fields.toArray(new Field[0]))
+                        .get(fields.get(fields.size() - 1).getName());
+        if (otp == null) {
+            throw SupplementalInfoError.NO_VALID_CODE.exception(
+                    "Supplemental info did not come with otp code!");
+        } else {
+            return otp;
+        }
     }
 
     List<Field> getSupplementalFields(

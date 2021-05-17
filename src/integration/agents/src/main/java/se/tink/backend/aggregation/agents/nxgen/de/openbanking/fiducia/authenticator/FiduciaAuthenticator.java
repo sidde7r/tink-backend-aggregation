@@ -224,6 +224,10 @@ public class FiduciaAuthenticator implements MultiFactorAuthenticator, AutoAuthe
                 supplementalInformationHelper
                         .askSupplementalInformation(fields.toArray(new Field[0]))
                         .get(fields.get(fields.size() - 1).getName());
+        if (otpCode == null) {
+            throw SupplementalInfoError.NO_VALID_CODE.exception(
+                    "Supplemental info did not come with otp code!");
+        }
 
         String authoriseTransactionHref = scaResponse.getLinks().getAuthoriseTransaction();
         ScaStatusResponse scaStatusResponse =
