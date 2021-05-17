@@ -1,9 +1,9 @@
-package se.tink.backend.aggregation.agents.banks.seb.model;
+package se.tink.backend.aggregation.agents.legacy.banks.seb.model;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
 import java.util.Optional;
-import se.tink.backend.aggregation.agents.banks.seb.SebAccountIdentifierFormatter;
+import se.tink.backend.aggregation.agents.legacy.banks.seb.SebAccountIdentifierFormatter;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;

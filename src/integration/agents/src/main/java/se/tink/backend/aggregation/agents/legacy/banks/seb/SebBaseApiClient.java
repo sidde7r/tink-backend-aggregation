@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.banks.seb;
+package se.tink.backend.aggregation.agents.legacy.banks.seb;
 
 import com.sun.jersey.api.client.WebResource.Builder;
 import java.net.URI;
@@ -20,7 +20,7 @@ public class SebBaseApiClient {
         this.sebUUID = UUID.randomUUID().toString().toUpperCase();
     }
 
-    Builder resource(String url) {
+    public Builder resource(String url) {
         return client.resource(uriFunction.apply(BASE_URL + url))
                 .header("User-Agent", CommonHeaders.DEFAULT_USER_AGENT)
                 .header(SEBApiConstants.HeaderKeys.X_SEB_UUID, sebUUID)

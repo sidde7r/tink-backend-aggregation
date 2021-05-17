@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.banks.seb.model;
+package se.tink.backend.aggregation.agents.legacy.banks.seb.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -6,7 +6,7 @@ import com.google.common.base.Splitter;
 import com.google.common.collect.Iterables;
 import java.util.Date;
 import java.util.List;
-import se.tink.backend.aggregation.agents.banks.seb.utilities.SEBDateUtil;
+import se.tink.backend.aggregation.agents.legacy.banks.seb.utilities.SEBDateUtil;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.transfer.enums.RemittanceInformationType;

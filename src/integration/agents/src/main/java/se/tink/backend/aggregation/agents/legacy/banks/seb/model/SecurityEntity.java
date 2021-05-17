@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.banks.seb.model;
+package se.tink.backend.aggregation.agents.legacy.banks.seb.model;
 
 public class SecurityEntity {
     private String objectInfo1;

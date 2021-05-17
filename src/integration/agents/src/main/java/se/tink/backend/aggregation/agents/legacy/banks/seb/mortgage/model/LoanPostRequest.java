@@ -1,11 +1,11 @@
-package se.tink.backend.aggregation.agents.banks.seb.mortgage.model;
+package se.tink.backend.aggregation.agents.legacy.banks.seb.mortgage.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import java.util.List;
-import se.tink.backend.aggregation.agents.banks.seb.mortgage.ApiRequest;
+import se.tink.backend.aggregation.agents.legacy.banks.seb.mortgage.ApiRequest;
 
 public class LoanPostRequest implements ApiRequest {
 

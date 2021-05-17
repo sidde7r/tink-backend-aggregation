@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.banks.seb.mortgage;
+package se.tink.backend.aggregation.agents.legacy.banks.seb.mortgage;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;

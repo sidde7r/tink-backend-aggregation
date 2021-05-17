@@ -1,9 +1,9 @@
-package se.tink.backend.aggregation.agents.banks.seb.model;
+package se.tink.backend.aggregation.agents.legacy.banks.seb.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Strings;
-import se.tink.backend.aggregation.agents.banks.seb.utilities.SEBDateUtil;
+import se.tink.backend.aggregation.agents.legacy.banks.seb.utilities.SEBDateUtil;
 import se.tink.backend.aggregation.utils.accountidentifier.IntraBankChecker;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageException;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;

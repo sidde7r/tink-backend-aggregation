@@ -1,8 +1,8 @@
-package se.tink.backend.aggregation.agents.banks.seb;
+package se.tink.backend.aggregation.agents.legacy.banks.seb;
 
 import com.google.common.base.Objects;
 import java.util.Optional;
-import se.tink.backend.aggregation.agents.banks.seb.model.ExternalAccount;
+import se.tink.backend.aggregation.agents.legacy.banks.seb.model.ExternalAccount;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.account.identifiers.BankGiroIdentifier;

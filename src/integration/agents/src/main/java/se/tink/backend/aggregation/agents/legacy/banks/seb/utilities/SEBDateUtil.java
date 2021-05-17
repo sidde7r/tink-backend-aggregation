@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.banks.seb.utilities;
+package se.tink.backend.aggregation.agents.legacy.banks.seb.utilities;
 
 import java.time.Clock;
 import java.time.ZoneId;

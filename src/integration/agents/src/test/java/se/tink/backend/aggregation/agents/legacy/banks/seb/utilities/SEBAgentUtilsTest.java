@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.banks.seb.utilities;
+package se.tink.backend.aggregation.agents.legacy.banks.seb.utilities;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -7,8 +7,8 @@ import static org.junit.Assert.assertTrue;
 import java.util.Date;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.banks.seb.SEBAgentUtils;
-import se.tink.backend.aggregation.agents.banks.seb.SEBAgentUtils.AbroadTransactionParser;
+import se.tink.backend.aggregation.agents.legacy.banks.seb.SEBAgentUtils;
+import se.tink.backend.aggregation.agents.legacy.banks.seb.SEBAgentUtils.AbroadTransactionParser;
 import se.tink.backend.aggregation.agents.models.TransactionTypes;
 import se.tink.libraries.date.DateUtils;
 import se.tink.libraries.i18n.Catalog;

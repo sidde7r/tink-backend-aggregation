@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.banks.seb;
+package se.tink.backend.aggregation.agents.legacy.banks.seb;
 
 import java.util.EnumSet;
 import java.util.Set;

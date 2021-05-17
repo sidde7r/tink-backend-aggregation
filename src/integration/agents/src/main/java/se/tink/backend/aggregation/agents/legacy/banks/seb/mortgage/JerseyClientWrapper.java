@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.banks.seb.mortgage;
+package se.tink.backend.aggregation.agents.legacy.banks.seb.mortgage;
 
 import com.google.inject.Inject;
 import com.sun.jersey.api.client.Client;

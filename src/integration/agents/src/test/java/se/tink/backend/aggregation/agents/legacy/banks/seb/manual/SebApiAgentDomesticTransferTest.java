@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.banks.seb.manual;
+package se.tink.backend.aggregation.agents.legacy.banks.seb.manual;
 
 import java.util.Date;
 import org.junit.AfterClass;

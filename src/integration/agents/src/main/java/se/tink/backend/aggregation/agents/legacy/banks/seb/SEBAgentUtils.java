@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.banks.seb;
+package se.tink.backend.aggregation.agents.legacy.banks.seb;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.ComparisonChain;
@@ -22,8 +22,8 @@ import se.tink.backend.agents.rpc.AccountHolderType;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.agents.rpc.HolderIdentity;
 import se.tink.backend.agents.rpc.HolderRole;
-import se.tink.backend.aggregation.agents.banks.seb.model.SebCreditCard;
-import se.tink.backend.aggregation.agents.banks.seb.model.SebCreditCardAccount;
+import se.tink.backend.aggregation.agents.legacy.banks.seb.model.SebCreditCard;
+import se.tink.backend.aggregation.agents.legacy.banks.seb.model.SebCreditCardAccount;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.models.TransactionTypes;
 import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
@@ -65,7 +65,7 @@ public class SEBAgentUtils {
         return str1.replace("-", "").trim().equalsIgnoreCase(str2.replace("-", "").trim());
     }
 
-    static AccountTypes guessAccountType(Integer accountTypeCode) {
+    public static AccountTypes guessAccountType(Integer accountTypeCode) {
         if (accountTypeCode.equals(SEBAccountType.PRIVATKONTO.getCode())
                 || accountTypeCode.equals(SEBAccountType.SPECIALINLONEKONTO.getCode())
                 || accountTypeCode.equals(SEBAccountType.PERSONALLONEKONTO.getCode())) {

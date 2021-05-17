@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.banks.seb;
+package se.tink.backend.aggregation.agents.legacy.banks.seb;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
