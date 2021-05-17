@@ -14,6 +14,7 @@ temporaryErrorsAuth: outcome!~"failed"
 authErrorsAuth: outcome!~"cancelled|cancelled_due_to_third_party_app_timeout"
 bankErrorsAuth: outcome!~"unavailable"
 agentErrorsAuth: outcome!~"failed|cancelled|cancelled_due_to_third_party_app_timeout"
+bankAndTemporaryErrorsAuth: outcome!~"failed|unavailable"
 allErrorsAuth: outcome!~"cancelled|cancelled_due_to_third_party_app_timeout|unavailable|failed"
 
 agentErrorsRefresh: outcome!~"failed"
