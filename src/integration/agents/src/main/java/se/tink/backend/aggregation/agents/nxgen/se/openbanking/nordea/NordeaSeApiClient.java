@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.ws.rs.HttpMethod;
 import javax.ws.rs.core.MediaType;
+import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.authenticator.rpc.DecoupledAuthenticationRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.authenticator.rpc.DecoupledAuthenticationResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.authenticator.rpc.DecoupledAuthorizationRequest;
@@ -15,9 +16,11 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nor
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.authenticator.rpc.GetTokenForm;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.authenticator.rpc.GetTokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.authenticator.rpc.RefreshTokenForm;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.rpc.NordeaErrorResponse;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
@@ -75,9 +78,17 @@ public final class NordeaSeApiClient extends NordeaBaseApiClient {
 
     public OAuth2Token refreshTokenDecoupled(String refreshToken) {
         String requestBody = RefreshTokenForm.of(refreshToken).getBodyValue();
-        return createRequest(Urls.DECOUPLED_TOKEN, HttpMethod.POST, requestBody)
-                .body(requestBody, MediaType.APPLICATION_FORM_URLENCODED_TYPE)
-                .post(GetTokenResponse.class)
-                .toTinkToken();
+        try {
+            return createRequest(Urls.DECOUPLED_TOKEN, HttpMethod.POST, requestBody)
+                    .body(requestBody, MediaType.APPLICATION_FORM_URLENCODED_TYPE)
+                    .post(GetTokenResponse.class)
+                    .toTinkToken();
+        } catch (HttpResponseException e) {
+            final NordeaErrorResponse error = e.getResponse().getBody(NordeaErrorResponse.class);
+            if (error.isRefreshTokenInvalid()) {
+                throw SessionError.SESSION_EXPIRED.exception();
+            }
+            throw e;
+        }
     }
 }

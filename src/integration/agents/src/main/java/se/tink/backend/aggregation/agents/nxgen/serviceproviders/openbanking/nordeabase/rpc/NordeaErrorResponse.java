@@ -25,6 +25,11 @@ public class NordeaErrorResponse extends NordeaBaseResponse {
     }
 
     @JsonIgnore
+    public boolean isRefreshTokenInvalid() {
+        return error != null && error.isRefreshTokenInvalid();
+    }
+
+    @JsonIgnore
     public void checkPisError(Throwable cause) throws PaymentException {
         if (error != null) {
             error.parseAndThrowPis(cause);

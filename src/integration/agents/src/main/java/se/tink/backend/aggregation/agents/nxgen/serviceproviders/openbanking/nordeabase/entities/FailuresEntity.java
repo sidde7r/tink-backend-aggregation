@@ -76,6 +76,11 @@ public class FailuresEntity {
     }
 
     @JsonIgnore
+    public boolean isRefreshTokenInvalid() {
+        return NordeaBaseConstants.ErrorMessages.TOKEN_INVALID.equalsIgnoreCase(description);
+    }
+
+    @JsonIgnore
     @Override
     public String toString() {
         return "FailuresEntity[code : "
