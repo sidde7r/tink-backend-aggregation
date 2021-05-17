@@ -83,7 +83,8 @@ public final class BelfiusApiClient {
             return Arrays.asList(consentResponses);
         } catch (HttpResponseException e) {
             if (isAccountNotSupportedError(e)) {
-                throw LoginError.NO_ACCESS_TO_MOBILE_BANKING.exception();
+                throw LoginError.NOT_SUPPORTED.exception(
+                        "This account can't be consulted via electronic channel");
             }
             throw e;
         }

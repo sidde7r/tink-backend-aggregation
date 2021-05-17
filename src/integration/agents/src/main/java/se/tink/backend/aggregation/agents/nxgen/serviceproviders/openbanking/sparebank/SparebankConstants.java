@@ -89,6 +89,7 @@ public final class SparebankConstants {
         public static final String DIGEST = "digest";
         public static final String ACCEPT = "accept";
         public static final String X_ACCEPT_FIX = "x-accept-fix";
+        public static final String PSU_CONTEXT = "PSU-Context";
     }
 
     public static class HeaderValues {
@@ -99,6 +100,7 @@ public final class SparebankConstants {
         public static final String X_ACCEPT_FIX_LONGER_NAMES = "longer-names";
         public static final String X_ACCEPT_FIX_AMOUNT_SWITCH =
                 "cardaccount-switch-originalamount-and-transactionamount";
+        public static final String PSU_CONTEXT_PRIVATE = "PRIVATE";
     }
 
     public static class FormKeys {
