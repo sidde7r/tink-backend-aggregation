@@ -104,4 +104,21 @@ public class CertificateIdProviderTest {
         // then
         assertThat(result).isEqualTo("DEFAULT");
     }
+
+    @Test
+    public void shouldReturnDEFAULTCertIdWhenQwacCertificateDoesNotExistInSecretService() {
+        // given
+        when(tppSecretsServiceClient.isEnabled()).thenReturn(true);
+        SecretsEntityCore secretEntity = new Builder().setQwac("").build();
+        when(tppSecretsServiceClient.getAllSecrets(APP_ID, CLUSTER_ID, "DEFAULT", PROVIDER_NAME))
+                .thenReturn(Optional.of(secretEntity));
+
+        // when
+        String result =
+                certificateIdentityService.getCertId(
+                        APP_ID, CLUSTER_ID, PROVIDER_NAME, MARKET_CODE);
+
+        // then
+        assertThat(result).isEqualTo("DEFAULT");
+    }
 }
