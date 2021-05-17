@@ -28,7 +28,7 @@ public abstract class RevolutBaseAgent extends UkOpenBankingBaseAgent {
     static {
         aisConfig =
                 UkOpenBankingAisConfiguration.builder()
-                        .withAllowedAccountOwnershipType(AccountOwnershipType.PERSONAL)
+                        .withAllowedAccountOwnershipTypes(AccountOwnershipType.PERSONAL)
                         .withOrganisationId(RevolutConstants.ORGANISATION_ID)
                         .withApiBaseURL(RevolutConstants.AIS_API_URL)
                         .withWellKnownURL(RevolutConstants.WELL_KNOWN_URL)

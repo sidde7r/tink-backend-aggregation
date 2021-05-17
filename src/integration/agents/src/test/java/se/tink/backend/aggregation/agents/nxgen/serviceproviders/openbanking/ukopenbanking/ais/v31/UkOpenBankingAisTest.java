@@ -17,7 +17,7 @@ public class UkOpenBankingAisTest {
                         .withApiBaseURL("apiBaseURL")
                         .withOrganisationId("orgId")
                         .withWellKnownURL("wellKnown")
-                        .withAllowedAccountOwnershipType(AccountOwnershipType.PERSONAL)
+                        .withAllowedAccountOwnershipTypes(AccountOwnershipType.PERSONAL)
                         .withPartyEndpoints(PartyEndpoint.PARTY)
                         .build();
         UkOpenBankingAisConfiguration configWithTwoPartyPermissions =
@@ -25,7 +25,7 @@ public class UkOpenBankingAisTest {
                         .withApiBaseURL("apiBaseURL")
                         .withOrganisationId("orgId")
                         .withWellKnownURL("wellKnown")
-                        .withAllowedAccountOwnershipType(AccountOwnershipType.PERSONAL)
+                        .withAllowedAccountOwnershipTypes(AccountOwnershipType.PERSONAL)
                         .withPartyEndpoints(
                                 PartyEndpoint.PARTY,
                                 PartyEndpoint.ACCOUNT_ID_PARTIES,

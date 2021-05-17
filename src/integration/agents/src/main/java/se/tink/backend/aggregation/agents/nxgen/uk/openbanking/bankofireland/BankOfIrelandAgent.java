@@ -37,7 +37,7 @@ public class BankOfIrelandAgent extends UkOpenBankingBaseAgent {
         aisConfig =
                 new BankOfIrelandAisConfiguration(
                         UkOpenBankingAisConfiguration.builder()
-                                .withAllowedAccountOwnershipType(AccountOwnershipType.PERSONAL)
+                                .withAllowedAccountOwnershipTypes(AccountOwnershipType.PERSONAL)
                                 .withOrganisationId(BankOfIrelandConstants.ORGANISATION_ID)
                                 .withWellKnownURL(BankOfIrelandConstants.PERSONAL_WELL_KNOWN_URL)
                                 .withApiBaseURL(BankOfIrelandConstants.AIS_API_URL));

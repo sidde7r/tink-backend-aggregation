@@ -43,7 +43,7 @@ public final class CapitalOneV31Agent extends UkOpenBankingBaseAgent {
                                 .withOrganisationId(CapitalOneConstants.ORGANISATION_ID)
                                 .withApiBaseURL(CapitalOneConstants.AIS_BASE_URL)
                                 .withWellKnownURL(CapitalOneConstants.WELL_KNOWN_URL)
-                                .withAllowedAccountOwnershipType(AccountOwnershipType.PERSONAL));
+                                .withAllowedAccountOwnershipTypes(AccountOwnershipType.PERSONAL));
     }
 
     @Inject

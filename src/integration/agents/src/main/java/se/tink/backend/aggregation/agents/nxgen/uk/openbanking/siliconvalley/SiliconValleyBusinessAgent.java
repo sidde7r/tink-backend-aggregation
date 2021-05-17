@@ -38,7 +38,7 @@ public class SiliconValleyBusinessAgent extends UkOpenBankingBaseAgent {
                         UkOpenBankingAisConfiguration.builder()
                                 .withOrganisationId(SiliconValleyConstants.ORGANISATION_ID)
                                 .withWellKnownURL(SiliconValleyConstants.WELL_KNOWN_URL)
-                                .withAllowedAccountOwnershipType(AccountOwnershipType.BUSINESS)
+                                .withAllowedAccountOwnershipTypes(AccountOwnershipType.BUSINESS)
                                 .withApiBaseURL(SiliconValleyConstants.AIS_API_URL));
     }
 

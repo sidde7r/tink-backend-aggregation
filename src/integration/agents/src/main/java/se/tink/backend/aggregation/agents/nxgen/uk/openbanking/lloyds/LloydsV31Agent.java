@@ -44,7 +44,7 @@ public final class LloydsV31Agent extends UkOpenBankingBaseAgent {
     static {
         aisConfig =
                 UkOpenBankingAisConfiguration.builder()
-                        .withAllowedAccountOwnershipType(AccountOwnershipType.PERSONAL)
+                        .withAllowedAccountOwnershipTypes(AccountOwnershipType.PERSONAL)
                         .withOrganisationId(LloydsConstants.ORGANISATION_ID)
                         .withApiBaseURL(LloydsConstants.AIS_API_URL)
                         .withWellKnownURL(LloydsConstants.WELL_KNOWN_PERSONAL_URL)

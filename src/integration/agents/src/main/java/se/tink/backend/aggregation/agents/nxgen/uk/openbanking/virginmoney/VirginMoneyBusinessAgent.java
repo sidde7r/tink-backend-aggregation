@@ -34,7 +34,7 @@ public class VirginMoneyBusinessAgent extends UkOpenBankingBaseAgent {
     static {
         aisConfig =
                 UkOpenBankingAisConfiguration.builder()
-                        .withAllowedAccountOwnershipType(AccountOwnershipType.BUSINESS)
+                        .withAllowedAccountOwnershipTypes(AccountOwnershipType.BUSINESS)
                         .withOrganisationId(VirginMoneyConstants.ORGANISATION_ID)
                         .withWellKnownURL(VirginMoneyConstants.WELL_KNOWN_URL)
                         .withApiBaseURL(VirginMoneyConstants.AIS_API_URL)

@@ -38,7 +38,7 @@ public class YorkshireBusinessAgent extends UkOpenBankingBaseAgent {
                         .withWellKnownURL(YorkshireConstants.WELL_KNOWN_URL)
                         .withApiBaseURL(YorkshireConstants.AIS_API_URL)
                         .withPartyEndpoints(PartyEndpoint.ACCOUNT_ID_PARTY, PartyEndpoint.PARTY)
-                        .withAllowedAccountOwnershipType(AccountOwnershipType.BUSINESS)
+                        .withAllowedAccountOwnershipTypes(AccountOwnershipType.BUSINESS)
                         .build();
     }
 

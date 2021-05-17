@@ -16,7 +16,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.PartyV31Entity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.AccountMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.identifier.IdentifierMapper;
-import se.tink.backend.aggregation.nxgen.core.account.AccountHolderType;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.builder.BalanceBuilderStep;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
@@ -106,15 +105,5 @@ public class TransactionalAccountMapper implements AccountMapper<TransactionalAc
         }
         throw new IllegalStateException(
                 "Cannot map to transactional account. Wrong account type passed to the mapper");
-    }
-
-    private AccountHolderType mapAccountHolderType(AccountEntity account) {
-        if ("Personal".equalsIgnoreCase(account.getRawAccountType())) {
-            return AccountHolderType.PERSONAL;
-        } else if ("Business".equalsIgnoreCase(account.getRawAccountType())) {
-            return AccountHolderType.BUSINESS;
-        }
-
-        return AccountHolderType.UNKNOWN;
     }
 }

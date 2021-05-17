@@ -179,7 +179,7 @@ public class UkOpenBankingAisConfiguration implements UkOpenBankingAisConfig {
             return this;
         }
 
-        public Builder withAllowedAccountOwnershipType(
+        public Builder withAllowedAccountOwnershipTypes(
                 final AccountOwnershipType... allowedAccountOwnershipTypes) {
             this.allowedAccountOwnershipTypes = Sets.newHashSet(allowedAccountOwnershipTypes);
             return this;

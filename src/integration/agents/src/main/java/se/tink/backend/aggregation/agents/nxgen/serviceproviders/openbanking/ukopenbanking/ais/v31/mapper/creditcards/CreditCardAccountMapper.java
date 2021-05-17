@@ -67,7 +67,8 @@ public class CreditCardAccountMapper implements AccountMapper<CreditCardAccount>
                                         .addIdentifier(
                                                 identifierMapper.mapIdentifier(cardIdentifier))
                                         .build())
-                        .setApiIdentifier(account.getAccountId());
+                        .setApiIdentifier(account.getAccountId())
+                        .setHolderType(mapAccountHolderType(account));
 
         collectHolders(cardIdentifier, parties).forEach(builder::addHolderName);
         return Optional.of(builder.build());

@@ -40,7 +40,7 @@ public final class BankOfScotlandBusinessV31Agent extends UkOpenBankingBaseAgent
                         .withApiBaseURL(BankOfScotlandConstants.AIS_API_URL)
                         .withWellKnownURL(BankOfScotlandConstants.WELL_KNOWN_URL_BUSINESS)
                         .withOrganisationId(BankOfScotlandConstants.ORGANIZATION_ID)
-                        .withAllowedAccountOwnershipType(AccountOwnershipType.BUSINESS)
+                        .withAllowedAccountOwnershipTypes(AccountOwnershipType.BUSINESS)
                         .build();
     }
 

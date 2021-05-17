@@ -40,7 +40,7 @@ public final class MarkAndSpencerV31Agent extends UkOpenBankingBaseAgent {
     static {
         aisConfig =
                 UkOpenBankingAisConfiguration.builder()
-                        .withAllowedAccountOwnershipType(AccountOwnershipType.PERSONAL)
+                        .withAllowedAccountOwnershipTypes(AccountOwnershipType.PERSONAL)
                         .withOrganisationId("0015800000jeukaAAA")
                         .withApiBaseURL(MarksAndSpencerConstants.AIS_API_URL)
                         .withWellKnownURL(MarksAndSpencerConstants.WELL_KNOWN_URL)

@@ -42,7 +42,7 @@ public final class BarclaysV31BusinessAgent extends UkOpenBankingBaseAgent {
                         .withApiBaseURL(BarclaysConstants.AIS_API_URL)
                         .withWellKnownURL(BarclaysConstants.BUSINESS_WELL_KNOWN_URL)
                         .withPartyEndpoints(UkOpenBankingConstants.PartyEndpoint.ACCOUNT_ID_PARTIES)
-                        .withAllowedAccountOwnershipType(AccountOwnershipType.BUSINESS)
+                        .withAllowedAccountOwnershipTypes(AccountOwnershipType.BUSINESS)
                         .build();
     }
 

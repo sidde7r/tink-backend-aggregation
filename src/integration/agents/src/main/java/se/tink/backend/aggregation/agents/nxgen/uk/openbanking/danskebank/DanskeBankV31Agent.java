@@ -47,7 +47,7 @@ public final class DanskeBankV31Agent extends UkOpenBankingBaseAgent {
     static {
         aisConfig =
                 UkOpenBankingAisConfiguration.builder()
-                        .withAllowedAccountOwnershipType(AccountOwnershipType.PERSONAL)
+                        .withAllowedAccountOwnershipTypes(AccountOwnershipType.PERSONAL)
                         .withOrganisationId(DanskeBankConstants.ORGANISATION_ID)
                         .withApiBaseURL(DanskeBankConstants.AIS_API_URL)
                         .withWellKnownURL(DanskeBankConstants.WELL_KNOWN_URL)

@@ -38,9 +38,16 @@ public final class AccountV31Fetcher<T extends Account> implements AccountFetche
         List<AccountEntity> allAccountEntities = apiClient.fetchV31Accounts();
         instrument(allAccountEntities);
         log.info(
-                "Type of accounts {}",
+                "Available accounts: {}",
                 allAccountEntities.stream()
-                        .map(AccountEntity::getRawAccountSubType)
+                        .map(
+                                accountEntity ->
+                                        new StringBuilder()
+                                                .append("type: ")
+                                                .append(accountEntity.getRawAccountType())
+                                                .append("and subtype: ")
+                                                .append(accountEntity.getRawAccountSubType())
+                                                .toString())
                         .collect(Collectors.toList()));
         return Observable.fromIterable(allAccountEntities)
                 .filter(accountTypeMapper::supportsAccountOwnershipType)

@@ -45,7 +45,7 @@ public final class FirstTrustV31Agent extends UkOpenBankingBaseAgent {
     static {
         aisConfig =
                 UkOpenBankingAisConfiguration.builder()
-                        .withAllowedAccountOwnershipType(AccountOwnershipType.PERSONAL)
+                        .withAllowedAccountOwnershipTypes(AccountOwnershipType.PERSONAL)
                         .withOrganisationId(FirstTrustConstants.ORGANISATION_ID)
                         .withApiBaseURL(FirstTrustConstants.AIS_API_URL)
                         .withWellKnownURL(FirstTrustConstants.WELL_KNOWN_URL)

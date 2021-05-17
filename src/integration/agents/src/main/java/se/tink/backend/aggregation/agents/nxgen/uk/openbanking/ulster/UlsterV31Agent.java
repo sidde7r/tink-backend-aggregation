@@ -42,7 +42,7 @@ public final class UlsterV31Agent extends UkOpenBankingBaseAgent {
     static {
         aisConfig =
                 UkOpenBankingAisConfiguration.builder()
-                        .withAllowedAccountOwnershipType(AccountOwnershipType.PERSONAL)
+                        .withAllowedAccountOwnershipTypes(AccountOwnershipType.PERSONAL)
                         .withOrganisationId(UlsterConstants.ORG_ID)
                         .withApiBaseURL(UlsterConstants.AIS_API_URL)
                         .withWellKnownURL(UlsterConstants.WELL_KNOWN_URL)

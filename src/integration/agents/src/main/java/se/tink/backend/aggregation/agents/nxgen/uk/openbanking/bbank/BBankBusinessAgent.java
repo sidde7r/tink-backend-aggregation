@@ -36,7 +36,7 @@ public class BBankBusinessAgent extends UkOpenBankingBaseAgent {
                         .withOrganisationId(BBankConstants.ORGANISATION_ID)
                         .withWellKnownURL(BBankConstants.WELL_KNOWN_URL)
                         .withApiBaseURL(BBankConstants.AIS_API_URL)
-                        .withAllowedAccountOwnershipType(AccountOwnershipType.BUSINESS)
+                        .withAllowedAccountOwnershipTypes(AccountOwnershipType.BUSINESS)
                         .withPartyEndpoints(PartyEndpoint.ACCOUNT_ID_PARTY, PartyEndpoint.PARTY)
                         .build();
     }

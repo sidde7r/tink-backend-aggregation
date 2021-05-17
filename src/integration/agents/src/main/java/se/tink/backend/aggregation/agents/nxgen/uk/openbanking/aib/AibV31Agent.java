@@ -43,7 +43,7 @@ public final class AibV31Agent extends UkOpenBankingBaseAgent {
     static {
         aisConfig =
                 UkOpenBankingAisConfiguration.builder()
-                        .withAllowedAccountOwnershipType(AccountOwnershipType.PERSONAL)
+                        .withAllowedAccountOwnershipTypes(AccountOwnershipType.PERSONAL)
                         .withApiBaseURL(AibConstants.AIS_API_URL)
                         .withWellKnownURL(AibConstants.WELL_KNOWN_PERSONAL_URL)
                         .withOrganisationId(AibConstants.ORGANISATION_ID)

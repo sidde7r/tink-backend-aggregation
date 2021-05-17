@@ -43,7 +43,7 @@ public final class TescoV31Agent extends UkOpenBankingBaseAgent {
     static {
         aisConfig =
                 UkOpenBankingAisConfiguration.builder()
-                        .withAllowedAccountOwnershipType(AccountOwnershipType.PERSONAL)
+                        .withAllowedAccountOwnershipTypes(AccountOwnershipType.PERSONAL)
                         .withOrganisationId(TescoConstants.ORG_ID)
                         .withApiBaseURL(TescoConstants.AIS_API_URL)
                         .withWellKnownURL(TescoConstants.WELL_KNOWN_URL)

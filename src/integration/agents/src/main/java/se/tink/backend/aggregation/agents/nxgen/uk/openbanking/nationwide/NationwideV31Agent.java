@@ -56,7 +56,7 @@ public final class NationwideV31Agent extends UkOpenBankingBaseAgent {
     static {
         aisConfig =
                 UkOpenBankingAisConfiguration.builder()
-                        .withAllowedAccountOwnershipType(AccountOwnershipType.PERSONAL)
+                        .withAllowedAccountOwnershipTypes(AccountOwnershipType.PERSONAL)
                         .withOrganisationId(NationwideConstants.ORGANISATION_ID)
                         .withApiBaseURL(NationwideConstants.AIS_API_URL)
                         .withWellKnownURL(NationwideConstants.WELL_KNOWN_URL)

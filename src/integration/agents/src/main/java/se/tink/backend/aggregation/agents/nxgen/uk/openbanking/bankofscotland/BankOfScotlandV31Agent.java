@@ -44,7 +44,7 @@ public final class BankOfScotlandV31Agent extends UkOpenBankingBaseAgent {
     static {
         aisConfig =
                 UkOpenBankingAisConfiguration.builder()
-                        .withAllowedAccountOwnershipType(AccountOwnershipType.PERSONAL)
+                        .withAllowedAccountOwnershipTypes(AccountOwnershipType.PERSONAL)
                         .withApiBaseURL(BankOfScotlandConstants.AIS_API_URL)
                         .withWellKnownURL(BankOfScotlandConstants.WELL_KNOWN_URL_PERSONAL)
                         .withOrganisationId(BankOfScotlandConstants.ORGANIZATION_ID)

@@ -60,7 +60,7 @@ public final class HsbcV31Agent extends UkOpenBankingBaseAgent {
     static {
         aisConfig =
                 UkOpenBankingAisConfiguration.builder()
-                        .withAllowedAccountOwnershipType(AccountOwnershipType.PERSONAL)
+                        .withAllowedAccountOwnershipTypes(AccountOwnershipType.PERSONAL)
                         .withOrganisationId(HsbcConstants.ORGANISATION_ID)
                         .withApiBaseURL(HsbcConstants.PERSONAL_AIS_API_URL)
                         .withWellKnownURL(HsbcConstants.PERSONAL_WELL_KNOWN_URL)

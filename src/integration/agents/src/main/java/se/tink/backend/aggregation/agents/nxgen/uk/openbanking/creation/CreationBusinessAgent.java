@@ -36,7 +36,7 @@ public class CreationBusinessAgent extends UkOpenBankingBaseAgent {
     static {
         aisConfig =
                 UkOpenBankingAisConfiguration.builder()
-                        .withAllowedAccountOwnershipType(AccountOwnershipType.BUSINESS)
+                        .withAllowedAccountOwnershipTypes(AccountOwnershipType.BUSINESS)
                         .withOrganisationId(CreationConstants.ORGANISATION_ID)
                         .withWellKnownURL(CreationConstants.WELL_KNOWN_URL)
                         .withApiBaseURL(CreationConstants.AIS_API_URL)
