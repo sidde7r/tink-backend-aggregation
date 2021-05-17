@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta;
 
 import com.google.common.base.Preconditions;
-import java.time.LocalDate;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -24,7 +23,6 @@ import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.authentic
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.authenticator.rpc.ConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.authenticator.rpc.RefreshTokenRequest;
-import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.authenticator.rpc.ScaSelectionRequest;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.authenticator.rpc.TokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.configuration.ArgentaConfiguration;
@@ -34,6 +32,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.utils.Sig
 import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 import se.tink.backend.aggregation.api.Psd2Headers;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
@@ -50,13 +49,18 @@ public class ArgentaApiClient {
     private final PersistentStorage persistentStorage;
     private final SessionStorage sessionStorage;
     private final SignatureHeaderProvider signatureHeaderProvider;
+    private final LocalDateTimeSource localDateTimeSource;
+    private final String userIp;
 
     public ArgentaApiClient(
             TinkHttpClient client,
             AgentConfiguration<ArgentaConfiguration> agentConfiguration,
             PersistentStorage persistentStorage,
             SessionStorage sessionStorage,
-            SignatureHeaderProvider signatureHeaderProvider) {
+            SignatureHeaderProvider signatureHeaderProvider,
+            LocalDateTimeSource localDateTimeSource,
+            String originatingUserIp) {
+        this.localDateTimeSource = localDateTimeSource;
         Preconditions.checkNotNull(agentConfiguration);
 
         this.client = client;
@@ -66,6 +70,7 @@ public class ArgentaApiClient {
         this.persistentStorage = persistentStorage;
         this.sessionStorage = sessionStorage;
         this.signatureHeaderProvider = signatureHeaderProvider;
+        this.userIp = originatingUserIp;
     }
 
     private RequestBuilder createRequest(URL url) {
@@ -83,7 +88,7 @@ public class ArgentaApiClient {
                 .headers(headers)
                 .header(HeaderKeys.API_KEY, configuration.getApiKey())
                 .header(HeaderKeys.CERTIFICATE, configuration.getClientSigningCertificate())
-                .header(HeaderKeys.PSU_ID_ADDRESS, configuration.getPsuIpAddress())
+                .header(HeaderKeys.PSU_ID_ADDRESS, userIp)
                 .header(
                         HeaderKeys.SIGNATURE,
                         signatureHeaderProvider.generateSignatureHeader(headers));
@@ -121,23 +126,13 @@ public class ArgentaApiClient {
     public ConsentResponse getConsent(List<IbanEntity> ibans) {
         ConsentRequest consentRequest =
                 new ConsentRequest(
-                        LocalDate.now().plusDays(FormValues.NUMBER_OF_VALID_DAYS).toString(),
+                        localDateTimeSource.now().plusDays(89).format(DateTimeFormatter.ISO_DATE),
                         true,
                         new ConsentRequestAccessEntity(ibans),
                         4);
 
         return createRequest(Urls.CONSENT, SerializationUtils.serializeToString(consentRequest))
                 .post(ConsentResponse.class, consentRequest);
-    }
-
-    public void selectAuthenticationMethod(
-            String selectAuthenticationMethodUrl, String authenticationMethodId) {
-        ScaSelectionRequest scaSelectionRequest = new ScaSelectionRequest(authenticationMethodId);
-        createRequest(
-                        new URL(Urls.BASE_BERLIN_GROUP + selectAuthenticationMethodUrl),
-                        SerializationUtils.serializeToString(scaSelectionRequest))
-                .type(HeaderValues.JSON_UTF_8)
-                .put(String.class, scaSelectionRequest);
     }
 
     public OAuth2Token exchangeAuthorizationCode(String code) {

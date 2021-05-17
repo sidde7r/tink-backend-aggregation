@@ -2,13 +2,14 @@ package se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta;
 
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
 
+import com.google.inject.Inject;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
-import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
+import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModules;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.authenticator.ArgentaAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.configuration.ArgentaConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.fetcher.transactionalaccount.ArgentaTransactionalAccountFetcher;
@@ -16,11 +17,10 @@ import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.fetcher.t
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.utils.SignatureHeaderProvider;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
-import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
-import se.tink.backend.aggregation.eidassigner.QsealcAlg;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
-import se.tink.backend.aggregation.eidassigner.QsealcSignerImpl;
+import se.tink.backend.aggregation.eidassigner.module.QSealcSignerModuleRSASHA256;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
@@ -30,8 +30,8 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
+@AgentDependencyModules(modules = QSealcSignerModuleRSASHA256.class)
 @AgentCapabilities({CHECKING_ACCOUNTS})
 public final class ArgentaAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
@@ -39,25 +39,14 @@ public final class ArgentaAgent extends NextGenerationAgent
     private final ArgentaApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
-    public ArgentaAgent(
-            CredentialsRequest request,
-            AgentContext context,
-            AgentsServiceConfiguration agentsServiceConfiguration) {
-        super(request, context, agentsServiceConfiguration.getSignatureKeyPair());
-
-        super.setConfiguration(agentsServiceConfiguration);
+    @Inject
+    public ArgentaAgent(AgentComponentProvider componentProvider, QsealcSigner qsealcSigner) {
+        super(componentProvider);
 
         final AgentConfiguration<ArgentaConfiguration> agentConfiguration =
                 getAgentConfigurationController().getAgentConfiguration(ArgentaConfiguration.class);
         final ArgentaConfiguration argentaConfiguration =
                 agentConfiguration.getProviderSpecificConfiguration();
-
-        EidasProxyConfiguration eidasProxy = agentsServiceConfiguration.getEidasProxy();
-        QsealcSigner qsealcSigner =
-                QsealcSignerImpl.build(
-                        eidasProxy.toInternalConfig(),
-                        QsealcAlg.EIDAS_RSA_SHA256,
-                        getEidasIdentity());
 
         SignatureHeaderProvider signatureHeaderProvider =
                 new SignatureHeaderProvider(argentaConfiguration, qsealcSigner);
@@ -67,10 +56,17 @@ public final class ArgentaAgent extends NextGenerationAgent
                         agentConfiguration,
                         persistentStorage,
                         sessionStorage,
-                        signatureHeaderProvider);
+                        signatureHeaderProvider,
+                        componentProvider.getLocalDateTimeSource(),
+                        request.getOriginatingUserIp());
 
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
-        client.setEidasProxy(agentsServiceConfiguration.getEidasProxy());
+    }
+
+    @Override
+    public void setConfiguration(AgentsServiceConfiguration configuration) {
+        super.setConfiguration(configuration);
+        client.setEidasProxy(configuration.getEidasProxy());
     }
 
     @Override
@@ -79,12 +75,7 @@ public final class ArgentaAgent extends NextGenerationAgent
                 new OAuth2AuthenticationController(
                         persistentStorage,
                         supplementalInformationHelper,
-                        new ArgentaAuthenticator(
-                                credentials,
-                                apiClient,
-                                persistentStorage,
-                                supplementalInformationHelper,
-                                catalog),
+                        new ArgentaAuthenticator(credentials, apiClient, persistentStorage),
                         credentials,
                         strongAuthenticationState);
 
