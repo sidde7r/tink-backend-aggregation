@@ -362,8 +362,13 @@ public class AgentWorkerContext extends AgentContext implements Managed {
                             getClusterId(),
                             initiator);
                 } else {
-                    logger.info(
-                            "Supplemental information response (non-null &  non-empty) has been received");
+                    if ("{}".equals(result)) {
+                        logger.info(
+                                "Supplemental information response (empty map) has been received");
+                    } else {
+                        logger.info(
+                                "Supplemental information response (non-null &  non-empty) has been received");
+                    }
                     SupplementalInformationMetrics.inc(
                             getMetricRegistry(),
                             SupplementalInformationMetrics.finished,
