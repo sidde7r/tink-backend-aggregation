@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Envelope xmlns:soap-env="http://schemas.xmlsoap.org/soap/envelope/"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Header>
+    <Infra Version="1.0" soap-env:actor="http://www.isban.es/soap/actor/coexistence"
+      soap-env:mustUnderstand="0">
+      <Control>
+        <GroupID Type="1">
+          AC162967F872428354554591
+        </GroupID>
+        <GroupID Type="2">
+          AC162967F872458354554593
+        </GroupID>
+        <Created>
+          2021-03-21T11:12:13-548 CET
+        </Created>
+      </Control>
+    </Infra>
+    <Security
+      xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"
+      xmlns:S12="http://www.w3.org/2003/05/soap-envelope"
+      soap-env:actor="http://www.isban.es/soap/actor/wssecurity" soap-env:mustUnderstand="1"
+      S12:role="wsssecurity">
+      <BinarySecurityToken
+        xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
+        wsu:Id="SSOToken" ValueType="esquema" EncodingType="wsse:Base64Binary">
+        AC16290896CFB7295454456D#54.77.97.26#1616322793548#PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iSVNPLTg4NTktMSI/Pjx0b2tlbkRlZmluaXRpb24+PHVzZXJJRD4wMEFGWE1YMjwvdXNlcklEPjxjb2RpZ29QZXJzb25hPjE0NzU2NjQxPC9jb2RpZ29QZXJzb25hPjxuYW1lPk1BUklBIElTQUJFTCBNRU5FTkRFWiBMT1BFWjwvbmFtZT48dGlwb1BlcnNvbmE+RjwvdGlwb1BlcnNvbmE+PC90b2tlbkRlZmluaXRpb24+#DESede/CBC/PKCS5Padding#v1#ParticularesSANPRO#NOT
+        USED#SHA1withRSA#ZRaFODpctozbTuR5uzEFzzCr6nFvoDdvz4JWofABi4SiJrlGFVNZurwVvOUswF4IZE4tbQKCq7BZkORWXyHD2OH5GHEzeitirgJGq8WzufDZejaGp2jiuG9JFXc4bgsysg4eizDGjr8lklOZGtsQn4qoMKwgxXAHW/UTXGPus3E=
+      </BinarySecurityToken>
+    </Security>
+  </Header>
+  <Body>
+    <Fault>
+      <faultcode>
+        soap-env:Server
+      </faultcode>
+      <faultstring>
+        Exception Code: BAMOBI_00000. Executing Facade: BAMOBIPGL, Method: obtenerPosGlobal_LIP
+      </faultstring>
+      <faultactor>
+        http://www.isban.es/soap/banksphere
+      </faultactor>
+      <detail>
+        <com.isb.bamobi.posicionglobal.lip.f.exc.EX_BAMOBI_Error_LIP
+          xmlns:prefixRigel0="http://www.isban.es/webservices/BAMOBI/Posicionglobal_lip/F_bamobi_posicionglobal_lip/santander/internet/functionalFaults/v1">
+          <error>
+            <errorDesc>
+              No dispone de los permisos necesarios para realizar esta operaci?n
+            </errorDesc>
+            <errorCode>
+              1
+            </errorCode>
+          </error>
+        </com.isb.bamobi.posicionglobal.lip.f.exc.EX_BAMOBI_Error_LIP>
+      </detail>
+    </Fault>
+  </Body>
+</Envelope>

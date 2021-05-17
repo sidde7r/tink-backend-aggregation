@@ -90,9 +90,6 @@ public class SantanderEsAuthenticatorTest {
 
         // when
         authenticator.authenticate("incorrect", "incorrect");
-
-        // then
-
     }
 
     @Test(expected = AuthorizationException.class)
@@ -112,9 +109,6 @@ public class SantanderEsAuthenticatorTest {
 
         // when
         authenticator.authenticate("blockedUser", "mockedpassword");
-
-        // then
-
     }
 
     @Test(expected = HttpResponseException.class)
@@ -133,8 +127,31 @@ public class SantanderEsAuthenticatorTest {
 
         // when
         authenticator.authenticate("mock1", "mock1password");
+    }
 
-        // then
+    @Test(expected = LoginException.class)
+    public void authenticateShouldThrowLoginException() throws IOException {
+        // given
+        when(apiClient.authenticateCredentials(any(), any()))
+                .thenReturn(
+                        new String(
+                                Files.readAllBytes(
+                                        Paths.get(
+                                                TEST_DATA_PATH,
+                                                "authenticateCredentialsResponse.xml"))));
+        when(apiClient.login()).thenThrow(httpResponseException);
+        when(httpResponseException.getResponse()).thenReturn(httpResponse);
+        when(httpResponse.getBody(any()))
+                .thenReturn(
+                        new String(
+                                Files.readAllBytes(
+                                        Paths.get(
+                                                TEST_DATA_PATH,
+                                                "authenticatorLoginExceptionResponse.xml"))));
+        SantanderEsAuthenticator authenticator =
+                new SantanderEsAuthenticator(apiClient, santanderEsSessionStorage);
 
+        // when
+        authenticator.authenticate("mocked", "mocked");
     }
 }
