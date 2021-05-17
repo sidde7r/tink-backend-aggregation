@@ -4,6 +4,8 @@ import com.google.common.base.Strings;
 import javax.annotation.Nullable;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33.NordeaFIConstants.QueryParams;
@@ -24,14 +26,11 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
+@Slf4j
+@RequiredArgsConstructor
 public class NordeaFIApiClient {
     private final TinkHttpClient httpClient;
     private final SessionStorage sessionStorage;
-
-    public NordeaFIApiClient(TinkHttpClient httpClient, SessionStorage sessionStorage) {
-        this.httpClient = httpClient;
-        this.sessionStorage = sessionStorage;
-    }
 
     public AuthenticateResponse initCodesAuthentication() throws HttpResponseException {
         Form formBuilder = new Form(NordeaFIConstants.DEFAULT_FORM_PARAMS);
@@ -165,6 +164,7 @@ public class NordeaFIApiClient {
                     .get(responseType);
 
         } catch (HttpResponseException hre) {
+            log.warn("[Nordea FI] Exception while calling Nordea API");
             tryRefreshAccessToken(hre);
             // use the new access token
             request.overrideHeader(
@@ -180,7 +180,9 @@ public class NordeaFIApiClient {
         ErrorResponse error = response.getBody(ErrorResponse.class);
 
         if (error.isInvalidAccessToken()) {
+            log.info("[Nordea FI] Attempting to refresh access token");
             refreshAccessToken(getRefreshToken());
+            log.info("[Nordea FI] Access token refreshed successfully");
         } else {
             throw hre;
         }
