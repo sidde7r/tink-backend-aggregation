@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.workers.commands;
 
 import com.google.common.base.Preconditions;
-import java.util.HashSet;
+import java.util.Collections;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -34,11 +34,10 @@ public class AccountSegmentRestrictionWorkerCommand extends AgentWorkerCommand {
                 (RefreshInformationRequest) context.getRequest();
 
         RefreshScope refreshScope = refreshInformationRequest.getRefreshScope();
-        if (Objects.nonNull(refreshScope)) {
-            this.segmentsToRefresh = refreshScope.getFinancialServiceSegmentsIn();
-        } else {
-            this.segmentsToRefresh = new HashSet<>();
-        }
+        this.segmentsToRefresh =
+                Objects.nonNull(refreshScope)
+                        ? refreshScope.getFinancialServiceSegmentsIn()
+                        : Collections.emptySet();
         this.context = context;
     }
 
