@@ -1,14 +1,16 @@
 package se.tink.backend.aggregation.eidasidentity;
 
 import com.google.inject.Inject;
+import java.security.cert.CertificateException;
 import java.util.stream.Stream;
-import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.configuration.agents.utils.CertificateUtils;
 import se.tink.backend.integration.tpp_secrets_service.client.ManagedTppSecretsServiceClient;
 import se.tink.backend.integration.tpp_secrets_service.client.entities.SecretsEntityCore;
 import se.tink.backend.integration.tpp_secrets_service.client.iface.TppSecretsServiceClient;
 import se.tink.libraries.unleash.UnleashClient;
 
+@Slf4j
 public class CertificateIdProviderImpl implements CertificateIdProvider {
     private static final String TINK_ORGANIZATION_ID = "PSDSE-FINA-44059";
     private final TppSecretsServiceClient tppSecretsServiceClient;
@@ -27,7 +29,9 @@ public class CertificateIdProviderImpl implements CertificateIdProvider {
         if (Stream.of("UK", "GB").anyMatch(market -> market.equalsIgnoreCase(marketCode))) {
             return AvailableCertIds.UKOB.getValue();
         } else if (isUnderTinkLicence(appId, clusterId, providerName)) {
-            return eidasMigrationToggle.getEnabledCertId(marketCode, providerName).getValue();
+            AvailableCertIds certId =
+                    eidasMigrationToggle.getEnabledCertId(marketCode, providerName);
+            return certId.getValue();
         } else {
             return AvailableCertIds.DEFAULT.getValue();
         }
@@ -45,8 +49,12 @@ public class CertificateIdProviderImpl implements CertificateIdProvider {
         return true;
     }
 
-    @SneakyThrows
     private boolean isTinkCertificate(String qwac) {
-        return CertificateUtils.getOrganizationIdentifier(qwac).equals(TINK_ORGANIZATION_ID);
+        try {
+            return CertificateUtils.getOrganizationIdentifier(qwac).equals(TINK_ORGANIZATION_ID);
+        } catch (CertificateException | IllegalStateException e) {
+            log.warn("Couldn't extract organization_id from QWAC certificate.", e);
+            return false;
+        }
     }
 }
