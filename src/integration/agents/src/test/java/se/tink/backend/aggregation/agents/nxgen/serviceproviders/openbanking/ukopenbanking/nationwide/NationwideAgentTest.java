@@ -23,7 +23,7 @@ public class NationwideAgentTest {
                 .loadCredentialsBefore(false)
                 .saveCredentialsAfter(true)
                 .expectLoggedIn(false)
-                .setFinancialInstitutionId("nationwide")
+                .setFinancialInstitutionId("75567817eaba4709b392ae7a4255790a")
                 .setAppId("tink")
                 .build()
                 .testRefresh();
