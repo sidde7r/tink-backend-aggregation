@@ -24,7 +24,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import com.google.common.io.Files;
 import com.google.common.util.concurrent.Uninterruptibles;
 import com.google.inject.Inject;
 import com.sun.jersey.api.client.ClientHandlerException;
@@ -32,11 +31,8 @@ import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.UniformInterfaceException;
 import com.sun.jersey.client.apache4.config.ApacheHttpClient4Config;
 import com.sun.jersey.client.apache4.config.DefaultApacheHttpClient4Config;
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.lang.invoke.MethodHandles;
-import java.security.KeyStore;
 import java.security.SecureRandom;
 import java.security.Security;
 import java.text.ParseException;
@@ -56,7 +52,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
 import javax.ws.rs.core.MediaType;
 import org.apache.commons.lang3.time.DateFormatUtils;
@@ -306,7 +301,6 @@ public final class SEBApiAgent extends AbstractAgent
     // private static final String USER_AGENT =
     // "Dalvik/1.6.0 (Linux; U; Android 4.3; Nexus 4 Build/JWR66Y) SEBapp/1.0 (os=android/4.3;
     // app=se.seb.privatkund/5.2.1)";
-    private static final String PASSWORD = "markeryd";
     private static final int MAX_ATTEMPTS = 90;
 
     private static final Predicate<ResultInfoMessage> ERROR_IS_BANKID_TRANSFER_SIGN_CANCELLED =
@@ -975,15 +969,9 @@ public final class SEBApiAgent extends AbstractAgent
     }
 
     private TinkApacheHttpClient4 createClient() {
-        try (InputStream stream =
-                Files.asByteSource(new File("data/agents/seb/seb.p12")).openStream()) {
-            KeyStore keyStore = KeyStore.getInstance("PKCS12", "BC");
-            keyStore.load(stream, PASSWORD.toCharArray());
-            KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance("SunX509");
-            keyManagerFactory.init(keyStore, PASSWORD.toCharArray());
-
+        try {
             SSLContext sslContext = SSLContext.getInstance("TLSv1.2");
-            sslContext.init(keyManagerFactory.getKeyManagers(), null, new SecureRandom());
+            sslContext.init(null, null, new SecureRandom());
 
             ApacheHttpClient4Config config = new DefaultApacheHttpClient4Config();
 
