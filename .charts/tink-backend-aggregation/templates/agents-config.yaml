@@ -101,24 +101,12 @@ data:
         {{- end }}
 
       featureFlags:
-        {{- if $featureFlagsConfig.esProxy }}
-          esProxy: {{ $featureFlagsConfig.esProxy | default false }}
-        {{- end }}
-        {{- if $featureFlagsConfig.beProxy }}
-          beProxy: {{ $featureFlagsConfig.beProxy | default false }}
-        {{- end }}
-        {{- if $featureFlagsConfig.createBeneficiary }}
-          createBeneficiary: {{ $featureFlagsConfig.createBeneficiary | default false }}
-        {{- end }}
-        {{- if $featureFlagsConfig.allowRefreshRegardlessOfRestrictions }}
-          allowRefreshRegardlessOfRestrictions: {{ $featureFlagsConfig.allowRefreshRegardlessOfRestrictions | default false }}
-        {{- end }}
-        {{- if $featureFlagsConfig.supportIndividualAccountsRefresh }}
-          supportIndividualAccountsRefresh: {{ $featureFlagsConfig.supportIndividualAccountsRefresh | default false }}
-        {{- end }}
-        {{- if $featureFlagsConfig.useAccountSegmentRestriction }}
-          useAccountSegmentRestriction: {{ $featureFlagsConfig.useAccountSegmentRestriction | default false }}
-        {{- end }}
+        esProxy: {{ $featureFlagsConfig.esProxy | default false }}
+        beProxy: {{ $featureFlagsConfig.beProxy | default false }}
+        createBeneficiary: {{ $featureFlagsConfig.createBeneficiary | default false }}
+        allowRefreshRegardlessOfRestrictions: {{ $featureFlagsConfig.allowRefreshRegardlessOfRestrictions | default false }}
+        supportIndividualAccountsRefresh: {{ $featureFlagsConfig.supportIndividualAccountsRefresh | default false }}
+        useAccountSegmentRestriction: {{ $featureFlagsConfig.useAccountSegmentRestriction | default false }}
 
       integrations:
         {{- if $agentsConfig.collectorSubscriptionKey }}
