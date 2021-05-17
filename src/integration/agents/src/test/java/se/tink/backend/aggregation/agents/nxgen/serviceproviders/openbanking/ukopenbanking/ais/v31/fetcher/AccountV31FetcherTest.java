@@ -14,7 +14,7 @@ import com.google.common.collect.ImmutableList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-import org.junit.Before;
+import org.assertj.core.util.Sets;
 import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.AccountHolderType;
@@ -42,32 +42,10 @@ public class AccountV31FetcherTest {
     private UkOpenBankingApiClient apiClient;
     private FetcherInstrumentationRegistry instrumentation;
 
-    @Before
-    public void setUp() {
-        Account mockedAccount = mock(Account.class);
-        UkOpenBankingAisConfig aisConfig = mock(UkOpenBankingAisConfig.class);
-        when(aisConfig.getAllowedAccountOwnershipType()).thenReturn(AccountOwnershipType.PERSONAL);
-        accountMapper = mock(AccountMapper.class);
-        when(accountMapper.map(any(), anyCollection(), anyCollection()))
-                .thenReturn(Optional.of(mockedAccount));
-        when(accountMapper.supportsAccountType(any())).thenReturn(true);
-
-        partyFetcher = mock(PartyV31Fetcher.class);
-        apiClient = mock(UkOpenBankingApiClient.class);
-        instrumentation = new FetcherInstrumentationRegistry();
-
-        accountFetcher =
-                new AccountV31Fetcher(
-                        apiClient,
-                        partyFetcher,
-                        new AccountTypeMapper(aisConfig),
-                        accountMapper,
-                        instrumentation);
-    }
-
     @Test
     public void returnOnlyAccountsSupportedByMapper() {
         // when
+        setUpWithoutBusiness();
         when(apiClient.fetchV31Accounts())
                 .thenReturn(
                         ImmutableList.of(
@@ -122,6 +100,7 @@ public class AccountV31FetcherTest {
     @Test
     public void returnOnlyAccountsSupportedByMapperEvenIfBusinessAccountsAreReturned() {
         // when
+        setUpWithoutBusiness();
         when(apiClient.fetchV31Accounts())
                 .thenReturn(
                         ImmutableList.of(
@@ -172,9 +151,63 @@ public class AccountV31FetcherTest {
     }
 
     @Test
+    public void returnPersonalAndBusinessAccountsToTheMapper() {
+        // when
+        setUpWithBusiness();
+        when(apiClient.fetchV31Accounts())
+                .thenReturn(
+                        ImmutableList.of(
+                                TransactionalAccountFixtures.currentAccount(),
+                                TransactionalAccountFixtures.currentAccountBusiness()));
+
+        when(accountMapper.supportsAccountType(AccountTypes.CHECKING)).thenReturn(true);
+        Collection<Account> result = accountFetcher.fetchAccounts();
+
+        // then
+        verify(accountMapper, times(1))
+                .map(
+                        eq(TransactionalAccountFixtures.currentAccount()),
+                        anyCollection(),
+                        anyCollection());
+        verify(accountMapper, times(1))
+                .map(
+                        eq(TransactionalAccountFixtures.currentAccountBusiness()),
+                        anyCollection(),
+                        anyCollection());
+        assertThat(result).hasSize(2);
+
+        // even though CHECKING is not asked for, the instrumentation will pick it up
+        assertEquals(
+                1,
+                instrumentation.getNumberAccountsSeen(
+                        AccountHolderType.PERSONAL, AccountTypes.CHECKING));
+        assertEquals(
+                0,
+                instrumentation.getNumberAccountsSeen(
+                        AccountHolderType.PERSONAL, AccountTypes.SAVINGS));
+        assertEquals(
+                0,
+                instrumentation.getNumberAccountsSeen(
+                        AccountHolderType.PERSONAL, AccountTypes.CREDIT_CARD));
+        assertEquals(
+                1,
+                instrumentation.getNumberAccountsSeen(
+                        AccountHolderType.BUSINESS, AccountTypes.CHECKING));
+        assertEquals(
+                0,
+                instrumentation.getNumberAccountsSeen(
+                        AccountHolderType.BUSINESS, AccountTypes.SAVINGS));
+        assertEquals(
+                0,
+                instrumentation.getNumberAccountsSeen(
+                        AccountHolderType.BUSINESS, AccountTypes.CREDIT_CARD));
+    }
+
+    @Test
     @Ignore
     public void allFetchedDataIsPassedToMapper() {
         // given
+        setUpWithoutBusiness();
         AccountEntity account = TransactionalAccountFixtures.savingsAccount();
         AccountBalanceEntity balance = BalanceFixtures.balanceCredit();
         List<PartyV31Entity> parties = PartyFixtures.parties();
@@ -188,5 +221,36 @@ public class AccountV31FetcherTest {
         accountFetcher.fetchAccounts();
         // then
         verify(accountMapper).map(account, ImmutableList.of(balance), parties);
+    }
+
+    private void setUpWithoutBusiness() {
+        setUpTest(AccountOwnershipType.PERSONAL);
+    }
+
+    private void setUpWithBusiness() {
+        setUpTest(AccountOwnershipType.PERSONAL, AccountOwnershipType.BUSINESS);
+    }
+
+    private void setUpTest(AccountOwnershipType... accountOwnershipTypes) {
+        Account mockedAccount = mock(Account.class);
+        UkOpenBankingAisConfig aisConfig = mock(UkOpenBankingAisConfig.class);
+        when(aisConfig.getAllowedAccountOwnershipTypes())
+                .thenReturn(Sets.newLinkedHashSet(accountOwnershipTypes));
+        accountMapper = mock(AccountMapper.class);
+        when(accountMapper.map(any(), anyCollection(), anyCollection()))
+                .thenReturn(Optional.of(mockedAccount));
+        when(accountMapper.supportsAccountType(any())).thenReturn(true);
+
+        partyFetcher = mock(PartyV31Fetcher.class);
+        apiClient = mock(UkOpenBankingApiClient.class);
+        instrumentation = new FetcherInstrumentationRegistry();
+
+        accountFetcher =
+                new AccountV31Fetcher(
+                        apiClient,
+                        partyFetcher,
+                        new AccountTypeMapper(aisConfig),
+                        accountMapper,
+                        instrumentation);
     }
 }
