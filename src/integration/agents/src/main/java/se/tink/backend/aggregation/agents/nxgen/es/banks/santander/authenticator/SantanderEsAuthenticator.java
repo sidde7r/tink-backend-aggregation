@@ -37,30 +37,7 @@ public class SantanderEsAuthenticator implements PasswordAuthenticator {
         try {
             responseString = apiClient.authenticateCredentials(username, password);
         } catch (HttpResponseException e) {
-            Node n =
-                    SantanderEsXmlUtils.getTagNodeFromSoapString(
-                            e.getResponse().getBody(String.class),
-                            SantanderEsConstants.NodeTags.CODIGO_ERROR);
-
-            Optional.ofNullable(n)
-                    .map(
-                            node -> {
-                                String errorCode =
-                                        node.getFirstChild().getTextContent().trim().toUpperCase();
-
-                                if (ErrorCodes.INCORRECT_CREDENTIALS.stream()
-                                        .anyMatch(code -> code.equalsIgnoreCase(errorCode))) {
-                                    throw new LoginException(LoginError.INCORRECT_CREDENTIALS, e);
-
-                                } else if (ErrorCodes.BLOCKED_CREDENTIALS.stream()
-                                        .anyMatch(code -> code.equalsIgnoreCase(errorCode))) {
-                                    throw new AuthorizationException(
-                                            AuthorizationError.ACCOUNT_BLOCKED, e);
-                                } else {
-                                    throw e;
-                                }
-                            })
-                    .orElseThrow(() -> e);
+            handleHttpResponseException(e);
         }
 
         // Parse token credential and add it to api client to be used for future requests
@@ -79,11 +56,43 @@ public class SantanderEsAuthenticator implements PasswordAuthenticator {
         try {
             responseString = apiClient.login();
         } catch (HttpResponseException e) {
+            if (e.getResponse().getBody(String.class).contains(ErrorCodes.AUTHENTICATION_ERROR)) {
+                throw new LoginException(LoginError.DEFAULT_MESSAGE, e);
+            }
             handleNotCustomer(e);
             throw e;
         }
         santanderEsSessionStorage.setLoginResponse(responseString);
         santanderEsSessionStorage.setIdNumber(username);
+    }
+
+    private void handleHttpResponseException(HttpResponseException e) {
+        Node n =
+                SantanderEsXmlUtils.getTagNodeFromSoapString(
+                        e.getResponse().getBody(String.class),
+                        SantanderEsConstants.NodeTags.CODIGO_ERROR);
+
+        Optional.ofNullable(n)
+                .map(
+                        node -> {
+                            String errorCode =
+                                    node.getFirstChild().getTextContent().trim().toUpperCase();
+                            if (ErrorCodes.INCORRECT_CREDENTIALS.stream()
+                                    .anyMatch(code -> code.equalsIgnoreCase(errorCode))) {
+                                throw new LoginException(LoginError.INCORRECT_CREDENTIALS, e);
+
+                            } else if (ErrorCodes.BLOCKED_CREDENTIALS.stream()
+                                    .anyMatch(code -> code.equalsIgnoreCase(errorCode))) {
+                                throw new AuthorizationException(
+                                        AuthorizationError.ACCOUNT_BLOCKED, e);
+                            } else if (ErrorCodes.AUTHENTICATION_ERROR.equalsIgnoreCase(
+                                    errorCode)) {
+                                throw new LoginException(LoginError.DEFAULT_MESSAGE, e);
+                            } else {
+                                throw e;
+                            }
+                        })
+                .orElseThrow(() -> e);
     }
 
     private void handleNotCustomer(HttpResponseException e) throws LoginException {

@@ -41,6 +41,7 @@ public class SantanderEsConstants {
         public static final List<String> INCORRECT_CREDENTIALS =
                 ImmutableList.of("SBAMOV_00002", "SBAMOV_00003");
         public static final List<String> BLOCKED_CREDENTIALS = ImmutableList.of("SBAMOV_00004");
+        public static final String AUTHENTICATION_ERROR = "BAMOBI_00000";
     }
 
     public static final class Storage {
