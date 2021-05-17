@@ -473,6 +473,7 @@ featureFlags:
   createBeneficiary: true
   allowRefreshRegardlessOfRestrictions: true
   supportIndividualAccountsRefresh: true
+  useAccountSegmentRestriction: false
 
 providerConfigurationServiceConfiguration:
   enabled: true
