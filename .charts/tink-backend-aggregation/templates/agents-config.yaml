@@ -116,6 +116,9 @@ data:
         {{- if $featureFlagsConfig.supportIndividualAccountsRefresh }}
           supportIndividualAccountsRefresh: {{ $featureFlagsConfig.supportIndividualAccountsRefresh | default false }}
         {{- end }}
+        {{- if $featureFlagsConfig.useAccountSegmentRestriction }}
+          useAccountSegmentRestriction: {{ $featureFlagsConfig.useAccountSegmentRestriction | default false }}
+        {{- end }}
 
       integrations:
         {{- if $agentsConfig.collectorSubscriptionKey }}
