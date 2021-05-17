@@ -26,8 +26,8 @@ import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.authentica
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.authenticator.rpc.AuthorizationResponse;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.configuration.OpBankConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.jwt.kid.KeyIdProvider;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
-import se.tink.backend.aggregation.configuration.agents.utils.CertificateUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.PersistentStorageKeys;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.OpenBankingTokenExpirationDateHelper;
@@ -43,21 +43,21 @@ public class OpBankAuthenticator implements OAuth2Authenticator {
     private final OpBankConfiguration configuration;
     private final String redirectUrl;
     private final Credentials credentials;
-    private String organizationIdentifier;
+    private final KeyIdProvider keyIdProvider;
 
     @SneakyThrows
     public OpBankAuthenticator(
             OpBankApiClient apiClient,
             PersistentStorage persistentStorage,
             Credentials credentials,
-            AgentConfiguration<OpBankConfiguration> agentConfiguration) {
+            AgentConfiguration<OpBankConfiguration> agentConfiguration,
+            KeyIdProvider keyIdProvider) {
         this.apiClient = apiClient;
         this.persistentStorage = persistentStorage;
         this.configuration = agentConfiguration.getProviderSpecificConfiguration();
         this.redirectUrl = agentConfiguration.getRedirectUrl();
         this.credentials = credentials;
-        this.organizationIdentifier =
-                CertificateUtils.getOrganizationIdentifier(agentConfiguration.getQsealc());
+        this.keyIdProvider = keyIdProvider;
     }
 
     private String getRedirectUrl() {
@@ -115,8 +115,9 @@ public class OpBankAuthenticator implements OAuth2Authenticator {
     @SneakyThrows
     private URL buildAuthorizationURL(TokenBodyEntity tokenBody) {
         String tokenBodyJson = SerializationUtils.serializeToString(tokenBody);
+
         String tokenHeadJson =
-                SerializationUtils.serializeToString(new TokenHeaderEntity(organizationIdentifier));
+                SerializationUtils.serializeToString(new TokenHeaderEntity(keyIdProvider.get()));
 
         String baseTokenString =
                 String.format(
