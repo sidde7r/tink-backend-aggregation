@@ -10,12 +10,14 @@ import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
+import se.tink.backend.aggregation.agents.exceptions.errors.SupplementalInfoError;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenApiClient;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants.AuthMethods;
@@ -184,10 +186,15 @@ public class SparkassenAuthenticator implements MultiFactorAuthenticator, AutoAu
         Field scaMethodField = fieldBuilder.getChooseScaMethodField(scaMethods);
         Map<String, String> supplementalInformation =
                 supplementalInformationController.askSupplementalInformationSync(scaMethodField);
-        int selectedIndex =
-                Integer.parseInt(supplementalInformation.get(scaMethodField.getName())) - 1;
-
-        return scaMethods.get(selectedIndex);
+        String selectedValue = supplementalInformation.get(scaMethodField.getName());
+        if (StringUtils.isNumeric(selectedValue)) {
+            int index = Integer.parseInt(selectedValue) - 1;
+            if (index >= 0 && index < scaMethods.size()) {
+                return scaMethods.get(index);
+            }
+        }
+        throw SupplementalInfoError.NO_VALID_CODE.exception(
+                "Could not map user input to list of available options.");
     }
 
     protected void authorizeWithSelectedMethod(AuthorizationResponse authorizationResponse) {

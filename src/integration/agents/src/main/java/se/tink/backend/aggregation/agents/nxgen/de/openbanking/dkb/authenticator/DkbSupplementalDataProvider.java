@@ -6,8 +6,10 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
+import se.tink.backend.aggregation.agents.exceptions.errors.SupplementalInfoError;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.OtpFormat;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.CommonFields;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.GermanFields;
@@ -92,8 +94,14 @@ public class DkbSupplementalDataProvider {
     }
 
     private String getSelectedAuthMethodId(
-            String selectedIndex, List<? extends SelectableMethod> methods) {
-        int index = Integer.parseInt(selectedIndex) - 1;
-        return methods.get(index).getIdentifier();
+            String selectedValue, List<? extends SelectableMethod> methods) {
+        if (StringUtils.isNumeric(selectedValue)) {
+            int index = Integer.parseInt(selectedValue) - 1;
+            if (index >= 0 && index < methods.size()) {
+                return methods.get(index).getIdentifier();
+            }
+        }
+        throw SupplementalInfoError.NO_VALID_CODE.exception(
+                "Could not map user input to list of available options.");
     }
 }
