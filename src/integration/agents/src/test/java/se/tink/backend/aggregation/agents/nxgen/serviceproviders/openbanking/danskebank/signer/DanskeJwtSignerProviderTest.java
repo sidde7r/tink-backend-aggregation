@@ -19,7 +19,7 @@ import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.eidas.InternalEidasProxyConfiguration;
 import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
-import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
+import se.tink.backend.aggregation.eidasidentity.identity.EidasIdentity;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.agentcontext.AgentContextProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.GeneratedValueProvider;

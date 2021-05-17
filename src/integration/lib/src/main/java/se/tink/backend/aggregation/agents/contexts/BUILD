@@ -6,6 +6,7 @@ java_library(
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/identity_data",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/api",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/eidasidentity/identity",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/logmasker",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/configuration/iface",
         "//src/integration/models",

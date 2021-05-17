@@ -50,6 +50,8 @@ import se.tink.backend.aggregation.configuration.AbstractConfigurationBase;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationWrapper;
 import se.tink.backend.aggregation.configuration.ProviderConfig;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
+import se.tink.backend.aggregation.eidasidentity.CertificateIdProvider;
+import se.tink.backend.aggregation.eidasidentity.CertificateIdProviderImpl;
 import se.tink.backend.aggregation.fakelogmasker.FakeLogMasker;
 import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.logmasker.LogMaskerImpl;
@@ -228,6 +230,15 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                     new TppSecretsServiceClientImpl(
                             configuration.getTppSecretsServiceConfiguration());
             tppSecretsServiceClient.start();
+            CertificateIdProvider certIdProvider =
+                    new CertificateIdProviderImpl(
+                            tppSecretsServiceClient, context.getUnleashClient());
+            context.setCertId(
+                    certIdProvider.getCertId(
+                            context.getAppId(),
+                            context.getClusterId(),
+                            provider.getName(),
+                            provider.getMarket()));
             AgentConfigurationControllerable agentConfigurationController =
                     new AgentConfigurationController(
                             tppSecretsServiceClient,
@@ -235,12 +246,12 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                             provider,
                             context.getAppId(),
                             clusterIdForSecretsService,
+                            context.getCertId(),
                             credentialsRequest.getCallbackUri());
             context.getLogMasker()
                     .addSensitiveValuesSetObservable(
                             agentConfigurationController.getSecretValuesObservable());
             context.setAgentConfigurationController(agentConfigurationController);
-
             final Injector injector =
                     Guice.createInjector(new AgentIntegrationTestModule(configuration));
             final AgentFactory factory = injector.getInstance(AgentFactory.class);

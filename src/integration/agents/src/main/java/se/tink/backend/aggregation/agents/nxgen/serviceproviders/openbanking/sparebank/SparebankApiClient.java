@@ -28,10 +28,10 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.spa
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.fetcher.transactionalaccount.rpc.TransactionResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.filters.ConsentErrorsFilter;
 import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
+import se.tink.backend.aggregation.eidasidentity.identity.EidasIdentity;
 import se.tink.backend.aggregation.eidassigner.QsealcAlg;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.eidassigner.QsealcSignerImpl;
-import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;

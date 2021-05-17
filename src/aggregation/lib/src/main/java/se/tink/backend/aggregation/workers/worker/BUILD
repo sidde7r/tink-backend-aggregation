@@ -38,6 +38,8 @@ java_library(
         "//src/integration/enums",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/agentsservice",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/controllers",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/eidasidentity/identity",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/eidasidentity",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/authentication",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/authentication/multifactor/thirdpartyapp/constants",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/compliance/account_classification/psd2_payment_account",

@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
@@ -53,6 +52,7 @@ public final class AgentConfigurationController implements AgentConfigurationCon
     private final String appId;
     private final String clusterId;
     private final String redirectUrl;
+    private final String certId;
     private final boolean isOpenBankingAgent;
     private final boolean isTestProvider;
     private Map<String, Object> allSecretsMapObj = new HashMap<>();
@@ -63,8 +63,6 @@ public final class AgentConfigurationController implements AgentConfigurationCon
     private static final String QWAC_KEY = "qwac";
     private static final String QSEALC_KEY = "qsealc";
 
-    private static final Pattern UK_OB_PROVIDER_PATTERN = Pattern.compile("^uk-.*-(ob|oauth2)$");
-
     // Package private for testing purposes.
     AgentConfigurationController() {
         isOpenBankingAgent = false;
@@ -72,6 +70,7 @@ public final class AgentConfigurationController implements AgentConfigurationCon
         redirectUrl = null;
         clusterId = null;
         appId = null;
+        certId = null;
         financialInstitutionId = null;
         providerId = null;
         tppSecretsServiceEnabled = false;
@@ -85,6 +84,7 @@ public final class AgentConfigurationController implements AgentConfigurationCon
             Provider provider,
             String appId,
             String clusterId,
+            String certId,
             String redirectUrl) {
 
         Preconditions.checkNotNull(
@@ -100,6 +100,7 @@ public final class AgentConfigurationController implements AgentConfigurationCon
         Preconditions.checkNotNull(provider.getType(), "provider.getType() cannot be null.");
         Preconditions.checkNotNull(
                 Strings.emptyToNull(clusterId), "clusterId cannot be empty/null.");
+        Preconditions.checkNotNull(Strings.emptyToNull(certId), "certId cannot be empty/null.");
 
         // TODO: Enable precondiction and remove logging when verified by Access team that we don't
         //  get empty or null appIds.
@@ -120,6 +121,7 @@ public final class AgentConfigurationController implements AgentConfigurationCon
         this.providerId = provider.getName();
         this.appId = appId;
         this.clusterId = clusterId;
+        this.certId = certId;
         this.redirectUrl = redirectUrl;
         this.isOpenBankingAgent = AccessType.OPEN_BANKING == provider.getAccessType();
         this.isTestProvider = ProviderTypes.TEST == provider.getType();
@@ -154,12 +156,6 @@ public final class AgentConfigurationController implements AgentConfigurationCon
     private void initSecrets() {
         if (tppSecretsServiceEnabled && isOpenBankingAgent && !isTestProvider) {
             try {
-                // TPA-525: needs to know what certId to use
-                // Temporary workaround to set certId to "UKOB" for UK OB provider
-                String certId = "";
-                if (isUkOpenBankingProvider()) {
-                    certId = "UKOB";
-                }
                 Optional<SecretsEntityCore> allSecretsOpt =
                         tppSecretsServiceClient.getAllSecrets(appId, clusterId, certId, providerId);
 
@@ -204,10 +200,6 @@ public final class AgentConfigurationController implements AgentConfigurationCon
                 }
             }
         }
-    }
-
-    private boolean isUkOpenBankingProvider() {
-        return UK_OB_PROVIDER_PATTERN.matcher(providerId).matches();
     }
 
     private void initCertsData(String qwac, String qsealc) {
@@ -457,7 +449,7 @@ public final class AgentConfigurationController implements AgentConfigurationCon
                                         .filter(config -> !config.isRedirectUrlNullOrEmpty())
                                         .map(AgentConfiguration::getRedirectUrl)
                                         .orElse(null));
-        if (isUkOpenBankingProvider()) {
+        if ("UKOB".equals(certId)) {
             return configurationBuilder
                     .setQwac(EIdasTinkCert.OBWAC)
                     .setQsealc(EIdasTinkCert.OBSEAL)

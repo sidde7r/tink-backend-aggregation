@@ -12,10 +12,10 @@ import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 import se.tink.backend.aggregation.api.Psd2Headers;
 import se.tink.backend.aggregation.configuration.agents.utils.CertificateUtils;
 import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
+import se.tink.backend.aggregation.eidasidentity.identity.EidasIdentity;
 import se.tink.backend.aggregation.eidassigner.QsealcAlg;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.eidassigner.QsealcSignerImpl;
-import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
 import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 

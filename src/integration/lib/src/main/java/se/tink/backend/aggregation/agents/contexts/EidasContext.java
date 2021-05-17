@@ -9,4 +9,8 @@ public interface EidasContext {
     String getClusterId();
 
     void setClusterId(String clusterId);
+
+    String getCertId();
+
+    void setCertId(String certId);
 }

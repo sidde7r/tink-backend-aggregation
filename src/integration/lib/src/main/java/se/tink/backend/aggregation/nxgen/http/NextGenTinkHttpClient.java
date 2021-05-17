@@ -71,7 +71,7 @@ import se.tink.backend.aggregation.configuration.eidas.InternalEidasProxyConfigu
 import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.constants.CommonHeaders;
-import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
+import se.tink.backend.aggregation.eidasidentity.identity.EidasIdentity;
 import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.logmasker.LogMaskerImpl;
 import se.tink.backend.aggregation.logmasker.LogMaskerImpl.LoggingMode;

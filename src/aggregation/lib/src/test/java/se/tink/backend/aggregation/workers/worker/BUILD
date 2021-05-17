@@ -23,6 +23,7 @@ junit_test(
         "//src/integration/enums",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/agentsservice",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/controllers",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/eidasidentity",
         "//src/integration/tpp_secrets_service/client/src/main/java/se/tink/backend/integration/tpp_secrets_service/client:tpp-secrets-service-client",
         "//src/integration/transfer:rpc",
         "//src/libraries/cache",

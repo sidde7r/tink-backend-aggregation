@@ -58,6 +58,8 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/compliance/customer_restrictions",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/compliance/regulatory_restrictions",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/agentsservice",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/eidasidentity",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/eidasidentity/identity",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/logmasker",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/configuration",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/configuration/iface",

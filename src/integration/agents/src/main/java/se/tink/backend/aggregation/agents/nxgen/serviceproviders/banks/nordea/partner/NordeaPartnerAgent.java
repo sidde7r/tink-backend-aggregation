@@ -24,7 +24,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.pa
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.filter.NordeaServiceUnavailableFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.session.NordeaPartnerSessionHandler;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
-import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
+import se.tink.backend.aggregation.eidasidentity.identity.EidasIdentity;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;

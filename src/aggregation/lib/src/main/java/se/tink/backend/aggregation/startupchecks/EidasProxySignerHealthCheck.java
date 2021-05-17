@@ -5,10 +5,10 @@ import java.util.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
+import se.tink.backend.aggregation.eidasidentity.identity.EidasIdentity;
 import se.tink.backend.aggregation.eidassigner.QsealcAlg;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.eidassigner.QsealcSignerImpl;
-import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
 import se.tink.backend.libraries.healthcheckhandler.HealthCheck;
 import se.tink.backend.libraries.healthcheckhandler.NotHealthyException;
 

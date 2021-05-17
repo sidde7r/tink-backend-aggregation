@@ -8,9 +8,9 @@ import java.util.Map;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.Signature;
 import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
+import se.tink.backend.aggregation.eidasidentity.identity.EidasIdentity;
 import se.tink.backend.aggregation.eidassigner.QsealcAlg;
 import se.tink.backend.aggregation.eidassigner.QsealcSignerImpl;
-import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
 
 public class RedsysUtils {
     private static String signPayload(

@@ -12,7 +12,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/integrations",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/signaturekeypair",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/constants",
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/eidassigner/identity",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/eidasidentity/identity",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/logmasker",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/core/authentication",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/exceptions",
