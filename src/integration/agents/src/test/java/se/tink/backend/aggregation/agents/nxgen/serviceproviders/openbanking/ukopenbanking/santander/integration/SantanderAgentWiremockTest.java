@@ -9,6 +9,7 @@ import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbank
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.santander.integration.SantanderAgentWiremockTestFixtures.createFarFutureDomesticPayment;
 
 import java.time.LocalDateTime;
+import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationCancelledByUserException;
 import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesJsonFileParser;
@@ -108,6 +109,7 @@ public class SantanderAgentWiremockTest {
                 .buildWithoutLogin(PaymentGBCommand.class);
     }
 
+    @Ignore
     @Test
     public void shouldRunFullAuthRefreshSuccessfully() throws Exception {
 
@@ -144,6 +146,7 @@ public class SantanderAgentWiremockTest {
         agentWireMockRefreshTest.assertExpectedData(expected);
     }
 
+    @Ignore
     @Test
     public void shouldRestorePartyDataSuccessfully() throws Exception {
 

@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 import java.time.Clock;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.result.error.AgentPlatformAuthenticationProcessException;
 import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesJsonFileParser;
@@ -48,6 +49,7 @@ public class StarlingAgentWireMockTest {
     }
 
     @Test
+    @Ignore
     public void shouldAutoRefreshSuccessfully() throws Exception {
 
         final AgentWireMockRefreshTest test =
