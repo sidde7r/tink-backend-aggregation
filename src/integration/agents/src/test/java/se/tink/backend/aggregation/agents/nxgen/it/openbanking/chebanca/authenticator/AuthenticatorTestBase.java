@@ -17,22 +17,23 @@ public class AuthenticatorTestBase {
     static final String CLIENT_ID = "client123";
     static final String CLIENT_SECRET = "clientSecret";
     static final String REDIRECT_URL = "http://foo.bar";
-    static final String CERTIFICATE_ID = "certificateId";
     static final String APP_ID = "appId";
     static final String CLIENT_STATE = "clientState";
     static final int ERROR_RESPONSE_CODE = 500;
-    ChebancaAuthenticator authenticator;
+    ChebancaOAuth2Authenticator authenticator;
 
     void setUpAuthenticatorToCreateToken(HttpResponse response) {
         ChebancaApiClient apiClient = mock(ChebancaApiClient.class);
         AgentConfiguration<ChebancaConfiguration> agentConfiguration =
                 mock(AgentConfiguration.class);
         when(apiClient.createToken(any())).thenReturn(response);
-        ChebancaConfiguration config = new ChebancaConfiguration(CLIENT_ID, CLIENT_SECRET, APP_ID);
+        ChebancaConfiguration config =
+                new ChebancaConfiguration(
+                        CLIENT_ID, CLIENT_SECRET, APP_ID, CLIENT_ID, CLIENT_SECRET, APP_ID);
         when(agentConfiguration.getProviderSpecificConfiguration()).thenReturn(config);
         when(agentConfiguration.getRedirectUrl()).thenReturn(REDIRECT_URL);
         StrongAuthenticationState state = new StrongAuthenticationState(CLIENT_STATE);
-        authenticator = new ChebancaAuthenticator(apiClient, agentConfiguration, state);
+        authenticator = new ChebancaOAuth2Authenticator(apiClient, agentConfiguration, state);
     }
 
     HttpResponse getMockedSuccessfulResponse(TokenResponse tokenResponse) {

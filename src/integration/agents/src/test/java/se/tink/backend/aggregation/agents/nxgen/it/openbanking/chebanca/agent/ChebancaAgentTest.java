@@ -12,7 +12,6 @@ public class ChebancaAgentTest {
         builder =
                 new AgentIntegrationTest.Builder("it", "it-chebanca-oauth2")
                         .setAppId("tink")
-                        .setFinancialInstitutionId("chebanca")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(true)
                         .saveCredentialsAfter(true);

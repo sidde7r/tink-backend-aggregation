@@ -5418,13 +5418,6 @@ agentsServiceConfiguration:
     cfe477674f634334ab851a9246ae8644:
       tink:
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
-    chebanca:
-      tink:
-        applicationId: dummyApplicationId
-        certificateId: dummyCertificateId
-        clientId: dummyClientId
-        clientSecret: dummyClientSecret
-        redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
     cic:
       tink:
         authBaseUrl: https://www.cic.fr/oauth2/en/banque/oauth2_authorization.aspx
@@ -5817,10 +5810,12 @@ agentsServiceConfiguration:
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
     ddc68d1c7a184a568c3b6eefd68caa78:
       tink:
-        applicationId: dummyApplicationId
-        certificateId: dummyCertificateId
-        clientId: dummyClientId
-        clientSecret: dummyClientSecret
+        manualRefreshApplicationId: dummyApplicationId
+        autoRefreshApplicationId: dummyApplicationId
+        manualRefreshClientId: dummyClientId
+        manualRefreshClientSecret: dummyClientSecret
+        autoRefreshClientId: dummyClientId
+        autoRefreshClientSecret: dummyClientSecret,
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
     dde2463acf40501389de4fca5a3693a4:
       tink:

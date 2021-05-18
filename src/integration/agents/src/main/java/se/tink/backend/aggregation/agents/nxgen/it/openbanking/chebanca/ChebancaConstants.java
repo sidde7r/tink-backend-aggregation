@@ -56,6 +56,8 @@ public final class ChebancaConstants {
         public static final String OAUTH_TOKEN =
                 OAuth2Constants.PersistentStorageKeys.OAUTH_2_TOKEN;
         public static final String CUSTOMER_ID = "customer-id";
+        public static final String ACCOUNTS = "accounts";
+        public static final String AUTO_OAUTH_TOKEN = "auto-auth-token";
     }
 
     public static class QueryKeys {
@@ -107,6 +109,7 @@ public final class ChebancaConstants {
 
     public static class FormValues {
         public static final String AUTHORIZATION_CODE = "authorization_code";
+        public static final String CLIENT_CREDENTIALS = "client_credentials";
         public static final String REFRESH_TOKEN = "refresh_token";
         public static final String ACCOUNT_INFO = "ACCOUNT_INFO";
     }

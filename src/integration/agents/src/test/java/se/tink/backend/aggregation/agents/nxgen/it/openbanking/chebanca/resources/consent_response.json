@@ -1,0 +1,20 @@
+{
+    "data": {
+        "categoriesOutcome": [
+            {
+                "name": "ACCOUNT_INFO",
+                "outcome": true
+            }
+        ]
+    },
+    "result": {
+        "requestId": "852923860913816585143842",
+        "outcome": "SUCCESS",
+        "flushMessages": true,
+        "messages": []
+    },
+    "_embedded": {},
+    "resources": {
+        "resourceId": "89237de7-175f-447d-b1ed-47704fe23a72"
+    }
+}

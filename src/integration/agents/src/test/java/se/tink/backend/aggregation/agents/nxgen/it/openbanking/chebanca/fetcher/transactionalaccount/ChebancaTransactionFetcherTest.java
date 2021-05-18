@@ -12,6 +12,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
+import java.nio.file.Paths;
 import java.util.Calendar;
 import java.util.Date;
 import org.assertj.core.api.Assertions;
@@ -19,12 +20,12 @@ import org.junit.Test;
 import org.mockito.InOrder;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.ChebancaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.exception.UnsuccessfulApiCallException;
-import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.fetcher.transactionalaccount.data.TransactionTestData;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.fetcher.transactionalaccount.data.TransactionTestData.PagedTransactionTestData;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.fetcher.transactionalaccount.rpc.GetTransactionsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class ChebancaTransactionFetcherTest {
 
@@ -34,15 +35,20 @@ public class ChebancaTransactionFetcherTest {
     private static final Date SOME_DATE = new Date();
     private static final Date PAGING_FROM = new Date(150, Calendar.JUNE, 30);
     private static final Date PAGING_TO = new Date(150, Calendar.DECEMBER, 31);
+    private static final String TEST_DATA_PATH =
+            "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/it/openbanking/chebanca/resources";
     private ChebancaApiClient apiClient;
     private final TransactionalAccount account = mock(TransactionalAccount.class);
 
     @Test
     public void shouldReturnProperAmountOfTransactions() {
         // given
-        init(
-                getMockedSuccessfulTransactionsResponse(
-                        TransactionTestData.getTransactionsResponse()));
+        GetTransactionsResponse transactionsResponse =
+                SerializationUtils.deserializeFromString(
+                        Paths.get(TEST_DATA_PATH, "transactions_response.json").toFile(),
+                        GetTransactionsResponse.class);
+
+        init(getMockedSuccessfulTransactionsResponse(transactionsResponse));
         ChebancaTransactionFetcher fetcher = new ChebancaTransactionFetcher(apiClient);
 
         // when

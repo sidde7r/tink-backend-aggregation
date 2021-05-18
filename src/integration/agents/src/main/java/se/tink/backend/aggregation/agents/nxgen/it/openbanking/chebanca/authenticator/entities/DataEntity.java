@@ -1,9 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.authenticator.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Getter;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
+@Getter
 public class DataEntity {
 
     @JsonProperty("access_token")
@@ -22,28 +24,4 @@ public class DataEntity {
 
     @JsonProperty("token_type")
     private String tokenType;
-
-    public String getAccessToken() {
-        return accessToken;
-    }
-
-    public long getExpiresIn() {
-        return expiresIn;
-    }
-
-    public String getRefreshToken() {
-        return refreshToken;
-    }
-
-    public long getRtExpiresIn() {
-        return rtExpiresIn;
-    }
-
-    public String getScope() {
-        return scope;
-    }
-
-    public String getTokenType() {
-        return tokenType;
-    }
 }

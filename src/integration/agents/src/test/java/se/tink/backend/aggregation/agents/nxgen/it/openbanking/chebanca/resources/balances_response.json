@@ -1,0 +1,42 @@
+{
+    "data": {
+        "accountBalance": {
+            "amount": "849881.560",
+            "currency": "EUR"
+        },
+        "availableBalance": {
+            "amount": "814047.160",
+            "currency": "EUR"
+        },
+        "accountAvailability": {
+            "amount": "814047.160",
+            "currency": "EUR"
+        },
+        "accountAvailableCredit": {
+            "amount": "0.000",
+            "currency": "EUR"
+        },
+        "date": "21/02/2019",
+        "hour": "15:39",
+        "isPocketAccount": false
+    },
+    "result": {
+        "requestId": "128876430262614637647642",
+        "outcome": "SUCCESS",
+        "flushMessages": false,
+        "messages": []
+    },
+    "_links": {
+        "self": {
+            "href": "retrieve",
+            "method": "GET"
+        },
+        "curies": [{
+            "href": "https://sandbox-api.chebanca.io/private/customers/4450923/products/0001712638/balance/{rel}",
+            "name": "balance"
+        }]
+    },
+    "_embedded": {
+
+    }
+}

@@ -22,14 +22,14 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
-public class ChebancaAuthenticator implements OAuth2Authenticator {
+public class ChebancaOAuth2Authenticator implements OAuth2Authenticator {
 
     private final ChebancaApiClient apiClient;
     private final ChebancaConfiguration configuration;
     private final String redirectUrl;
     private AuthorizationURLBuilder authorizationUrlBuilder;
 
-    public ChebancaAuthenticator(
+    public ChebancaOAuth2Authenticator(
             ChebancaApiClient apiClient,
             AgentConfiguration<ChebancaConfiguration> agentConfiguration,
             StrongAuthenticationState strongAuthenticationState) {
@@ -56,8 +56,8 @@ public class ChebancaAuthenticator implements OAuth2Authenticator {
     public OAuth2Token exchangeAuthorizationCode(String code) {
         TokenRequest tokenRequest =
                 new TokenRequest(
-                        configuration.getClientId(),
-                        configuration.getClientSecret(),
+                        configuration.getManualRefreshClientId(),
+                        configuration.getManualRefreshClientSecret(),
                         code,
                         FormValues.AUTHORIZATION_CODE,
                         redirectUrl);
@@ -73,8 +73,8 @@ public class ChebancaAuthenticator implements OAuth2Authenticator {
     public OAuth2Token refreshAccessToken(String refreshToken) throws SessionException {
         TokenRequest tokenRequest =
                 new TokenRequest(
-                        configuration.getClientId(),
-                        configuration.getClientSecret(),
+                        configuration.getManualRefreshClientId(),
+                        configuration.getManualRefreshClientSecret(),
                         refreshToken,
                         FormValues.REFRESH_TOKEN);
         HttpResponse response = apiClient.createToken(tokenRequest);
@@ -93,6 +93,8 @@ public class ChebancaAuthenticator implements OAuth2Authenticator {
             StrongAuthenticationState strongAuthenticationState,
             ChebancaConfiguration chebancaConfig) {
         return new AuthorizationURLBuilder(
-                chebancaConfig.getClientId(), redirectUrl, strongAuthenticationState.getState());
+                chebancaConfig.getManualRefreshClientId(),
+                redirectUrl,
+                strongAuthenticationState.getState());
     }
 }

@@ -67,11 +67,13 @@ public class BuildAuthorizeUrlTest extends AuthenticatorTestBase {
         AgentConfiguration<ChebancaConfiguration> agentConfiguration =
                 mock(AgentConfiguration.class);
         when(apiClient.getLoginUrl(any())).thenReturn(response);
-        ChebancaConfiguration config = new ChebancaConfiguration(CLIENT_ID, CLIENT_SECRET, APP_ID);
+        ChebancaConfiguration config =
+                new ChebancaConfiguration(
+                        CLIENT_ID, CLIENT_SECRET, APP_ID, CLIENT_ID, CLIENT_SECRET, APP_ID);
         when(agentConfiguration.getProviderSpecificConfiguration()).thenReturn(config);
         when(agentConfiguration.getRedirectUrl()).thenReturn(REDIRECT_URL);
         StrongAuthenticationState state = new StrongAuthenticationState(CLIENT_STATE);
-        authenticator = new ChebancaAuthenticator(apiClient, agentConfiguration, state);
+        authenticator = new ChebancaOAuth2Authenticator(apiClient, agentConfiguration, state);
     }
 
     private String getLocationRedirectOfLoginEndpoint() {
