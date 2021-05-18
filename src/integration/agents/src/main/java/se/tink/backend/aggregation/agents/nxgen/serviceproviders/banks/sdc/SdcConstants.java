@@ -38,6 +38,8 @@ public class SdcConstants {
                 "{\r\n  \"pin\" : \"The string must contain exactly 4 characters\"\r\n}", false),
         PIN_4_CHARACTERS_DK(
                 "{\r\n  \"pin\" : \"Værdien skal indeholde præcis 4 karakterer\"\r\n}", false),
+        OTP_4_CHARACTERS_EN(
+                "{\r\n  \"otp\" : \"The string must contain exactly 4 characters\"\r\n}", false),
         OTP_4_CHARACTERS_DK(
                 "{\r\n  \"otp\" : \"Værdien skal indeholde præcis 4 karakterer\"\r\n}", false);
 
