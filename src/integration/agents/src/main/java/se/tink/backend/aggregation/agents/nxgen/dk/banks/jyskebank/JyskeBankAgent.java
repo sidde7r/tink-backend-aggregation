@@ -24,6 +24,7 @@ import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.fetcher.inves
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.fetcher.transactionalaccount.JyskeBankAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.filters.JyskeBankRetryFilter;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.filters.JyskeBankUnavailableFilter;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.session.JyskeBankSessionHandler;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
@@ -68,7 +69,8 @@ public class JyskeBankAgent extends NextGenerationAgent
 
     @Override
     protected SessionHandler constructSessionHandler() {
-        return SessionHandler.alwaysFail();
+        return new JyskeBankSessionHandler(
+                apiClient, new JyskeBankPersistentStorage(persistentStorage), sessionStorage);
     }
 
     @Override
