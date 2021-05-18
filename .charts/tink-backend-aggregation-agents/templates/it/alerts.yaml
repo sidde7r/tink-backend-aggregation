@@ -38,16 +38,16 @@ spec:
                     / sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, market="IT", provider_type!="test"}[60m])) by (action,className) >= 0.60)
         # At least this many attempts.
         and sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, market="IT", provider_type!="test"}[60m])) by (action,className) > 5
-      for: {{ .Values.p3WaitTimeBeforeFiringAlert }}
+      for: {{ .Values.p4WaitTimeBeforeFiringAlert }}
       labels:
-        severity: urgent
-        priority: P3
+        severity: ping
+        priority: P4
         who: integration-nazguls
       annotations:
         description: {{ .Values.kibanaClassLink }}
           {{ .Values.grafanaLink }}
         summary: Login success rate is between 60 - 70% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
-          the {{ .Values.p3WaitTimeBeforeFiringAlert }} minutes.
+          the {{ .Values.p4WaitTimeBeforeFiringAlert }} minutes.
         tags: {{ .Values.tags }}
 
     - alert: login_success_rate_between_50_and_60_it
@@ -76,16 +76,16 @@ spec:
             / sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, market="IT", provider_type!="test"}[60m])) by (action,className) < 0.50)
         # At least this many attempts.
         and sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, market="IT", provider_type!="test"}[60m])) by (action,className) > 5
-      for: {{ .Values.p1WaitTimeBeforeFiringAlert }}
+      for: {{ .Values.p3WaitTimeBeforeFiringAlert }}
       labels:
         severity: urgent
-        priority: P1
+        priority: P3
         who: integration-nazguls
       annotations:
         description: {{ .Values.kibanaClassLink }}
           {{ .Values.grafanaLink }}
         summary: Login success rate is below 50% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
-          the last {{ .Values.p1WaitTimeBeforeFiringAlert }} minutes.
+          the last {{ .Values.p3WaitTimeBeforeFiringAlert }} minutes.
         tags: {{ .Values.tags }}
 
     ### Bank side failures
@@ -119,16 +119,16 @@ spec:
                     / sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, market="IT" }[60m])) by (action,className) >= 0.60)
         # At least this many attempts.
         and sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, market="IT" }[60m])) by (action,className) > 5
-      for: {{ .Values.p3WaitTimeBeforeFiringAlert }}
+      for: {{ .Values.p4WaitTimeBeforeFiringAlert }}
       labels:
-        severity: urgent
-        priority: P3
+        severity: ping
+        priority: P4
         who: integration-nazguls
       annotations:
         description: {{ .Values.kibanaClassLink }}
           {{ .Values.grafanaLink }}
         summary: Bank errors rate is between 30 - 40% ( <{ $value }> ) for <{ $labels.className }>
-          the last {{ .Values.p3WaitTimeBeforeFiringAlert }} minutes.
+          the last {{ .Values.p4WaitTimeBeforeFiringAlert }} minutes.
         tags: {{ .Values.tags }}
 
     - alert: bank_success_rate_between_50_and_60_it
@@ -140,16 +140,16 @@ spec:
                         / sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, market="IT" }[60m])) by (action,className) >= 0.50)
         # At least this many attempts.
         and sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, market="IT" }[60m])) by (action,className) > 5
-      for: {{ .Values.p2WaitTimeBeforeFiringAlert }}
+      for: {{ .Values.p3WaitTimeBeforeFiringAlert }}
       labels:
         severity: urgent
-        priority: P2
+        priority: P3
         who: integration-nazguls
       annotations:
         description: {{ .Values.kibanaClassLink }}
           {{ .Values.grafanaLink }}
         summary: Bank errors rate is between 40 - 50% ( <{ $value }> ) for <{ $labels.className }>
-          the {{ .Values.p2WaitTimeBeforeFiringAlert }} 30 minutes.
+          the {{ .Values.p3WaitTimeBeforeFiringAlert }} 30 minutes.
         tags: {{ .Values.tags }}
 
     - alert: bank_success_rate_below_50_it
@@ -159,19 +159,19 @@ spec:
             / sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, market="IT" }[60m])) by (action,className) < 0.50)
         # At least this many attempts.
         and sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, market="IT" }[60m])) by (action,className) > 5
-      for: {{ .Values.p1WaitTimeBeforeFiringAlert }}
+      for: {{ .Values.p3WaitTimeBeforeFiringAlert }}
       labels:
         severity: urgent
-        priority: P1
+        priority: P3
         who: integration-nazguls
       annotations:
         description: {{ .Values.kibanaClassLink }}
           {{ .Values.grafanaLink }}
         summary: Bank errors rate is above 50% ( <{ $value }> ) for <{ $labels.className }>
-          the last {{ .Values.p1WaitTimeBeforeFiringAlert }} minutes.
+          the last {{ .Values.p3WaitTimeBeforeFiringAlert }} minutes.
         tags: {{ .Values.tags }}
 
-    - alert: manual_login_due_to_bank_side_error_rate_over_50%_it
+    - alert: manual_login_error_rate_over_50%_due_to_bank_side_error_it
       expr: |
         (count by(provider, className) (count_over_time (tink_agent_login_total{ environment="production",market="IT", outcome="unavailable", action="login-manual"}[1h]))
         / count by(provider, className) (count_over_time (tink_agent_login_total{ environment="production",market="IT", action="login-manual"}[1h])) > 0.5 )
@@ -188,7 +188,7 @@ spec:
           the last {{ .Values.p2WaitTimeBeforeFiringAlert }} minutes.
         tags: {{ .Values.tags }}
 
-    - alert: auto_login_due_to_bank_side_error_rate_over_50%_it
+    - alert: auto_login_error_rate_over_50%_due_to_bank_side_error_it
       expr: |
         (count by(provider, className, action) (count_over_time (tink_agent_login_total{ environment="production",market="IT", outcome="unavailable", action=~"login-auto|login-cron"}[1h]))
         / count by(provider, className, action) (count_over_time (tink_agent_login_total{ environment="production",market="IT", action=~"login-auto|login-cron"}[1h])) > 0.5 )
