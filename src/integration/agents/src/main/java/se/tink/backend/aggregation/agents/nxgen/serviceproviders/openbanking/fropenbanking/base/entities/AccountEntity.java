@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -43,5 +44,15 @@ public class AccountEntity {
         }
 
         return new Debtor(new IbanIdentifier(iban));
+    }
+
+    @JsonIgnore
+    public boolean isFrenchIban() {
+        return iban != null && iban.startsWith("FR");
+    }
+
+    @JsonIgnore
+    public boolean isMonacoIban() {
+        return iban != null && iban.startsWith("MC");
     }
 }
