@@ -6,6 +6,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class CreateTicketResponse {
     private String deeplinkUrl;
     private String ticket;
+    private String universalLink;
 
     public String getDeeplinkUrl() {
         return deeplinkUrl;
@@ -13,5 +14,9 @@ public class CreateTicketResponse {
 
     public String getTicket() {
         return ticket;
+    }
+
+    public String getUniversalLink() {
+        return universalLink;
     }
 }
