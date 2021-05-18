@@ -13,8 +13,6 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.i18n.LocalizableKey;
 
 public class NordeaFIConstants {
-    public static final String CURRENCY = "EUR";
-
     public static final ImmutableMap<String, String> DEFAULT_FORM_PARAMS =
             ImmutableMap.<String, String>builder()
                     .put(FormParams.AUTH_METHOD, "mta")
@@ -165,7 +163,8 @@ public class NordeaFIConstants {
                 LogTag.from("NORDEA_FI_TRANSACTIONS_ERROR");
         public static final LogTag NORDEA_FI_AUTHENTICATE =
                 LogTag.from("NORDEA_FI_AUTHENTICATION_ERROR");
-        public static final LogTag LOAN_ACCOUNT = LogTag.from("NORDEA_FI_LOAN_ACCOUNT");
+        public static final LogTag NORDEA_FI_ACCOUNT_TYPE =
+                LogTag.from("NORDEA_FI_UNKNOWN_ACCOUNT_TYPE");
     }
 
     public static class NordeaCodesPayload {

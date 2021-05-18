@@ -1,28 +1,21 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33.fetcher.creditcard;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.util.Strings;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33.NordeaFIApiClient;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33.NordeaFIConstants;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginator;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
+@RequiredArgsConstructor
+@Slf4j
 public class NordeaCreditCardTransactionsFetcher
         implements TransactionPagePaginator<CreditCardAccount> {
-    private static final Logger logger =
-            LoggerFactory.getLogger(NordeaCreditCardTransactionsFetcher.class);
     private final NordeaFIApiClient apiClient;
-    private final SessionStorage sessionStorage;
-
-    public NordeaCreditCardTransactionsFetcher(
-            NordeaFIApiClient apiClient, SessionStorage sessionStorage) {
-        this.apiClient = apiClient;
-        this.sessionStorage = sessionStorage;
-    }
 
     @Override
     public PaginatorResponse getTransactionsFor(CreditCardAccount account, int page) {
@@ -34,13 +27,8 @@ public class NordeaCreditCardTransactionsFetcher
 
         try {
             return apiClient.fetchCardTransactions(page, accountId);
-        } catch (Exception e) {
-            logger.error(
-                    String.format(
-                            "%s: %s",
-                            NordeaFIConstants.LogTags.CREDIT_TRANSACTIONS_ERROR.toString(),
-                            e.toString()),
-                    e);
+        } catch (HttpResponseException e) {
+            log.error(NordeaFIConstants.LogTags.CREDIT_TRANSACTIONS_ERROR.toString(), e);
             return PaginatorResponseImpl.createEmpty(false);
         }
     }

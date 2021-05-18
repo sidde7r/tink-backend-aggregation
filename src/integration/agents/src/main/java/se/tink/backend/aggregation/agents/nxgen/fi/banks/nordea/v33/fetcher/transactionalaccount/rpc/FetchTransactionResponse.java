@@ -21,7 +21,9 @@ public class FetchTransactionResponse implements TransactionKeyPaginatorResponse
 
     @Override
     public Collection<? extends Transaction> getTinkTransactions() {
-        return toTinkTransactions();
+        return transactions.stream()
+                .map(TransactionEntity::toTinkTransaction)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -33,11 +35,5 @@ public class FetchTransactionResponse implements TransactionKeyPaginatorResponse
     @Override
     public String nextKey() {
         return continuationKey;
-    }
-
-    private Collection<Transaction> toTinkTransactions() {
-        return transactions.stream()
-                .map(TransactionEntity::toTinkTransaction)
-                .collect(Collectors.toList());
     }
 }

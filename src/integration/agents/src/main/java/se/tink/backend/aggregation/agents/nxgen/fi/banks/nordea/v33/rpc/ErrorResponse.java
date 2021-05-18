@@ -1,18 +1,16 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33.rpc;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33.NordeaFIConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
+@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class ErrorResponse {
-    @JsonProperty("http_status")
     private int httpStatus;
-
     private String error;
-
-    @JsonProperty("error_description")
     private String errorDescription;
 
     @JsonIgnore

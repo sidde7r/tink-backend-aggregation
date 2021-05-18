@@ -1,34 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33.fetcher.loan.entities;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import lombok.Getter;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
+@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class InterestEntity {
-    @JsonProperty private double rate;
-
-    @JsonProperty("reference_rate_type")
+    @Getter private double rate;
     private String referenceRateType;
-
-    @JsonProperty("period_start_date")
     private String periodStartDate;
-
-    @JsonProperty("base_rate")
     private double baseRate;
-
-    public double getRate() {
-        return rate;
-    }
-
-    public String getReferenceRateType() {
-        return referenceRateType;
-    }
-
-    public String getPeriodStartDate() {
-        return periodStartDate;
-    }
-
-    public double getBaseRate() {
-        return baseRate;
-    }
 }

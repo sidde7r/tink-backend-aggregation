@@ -1,28 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33.fetcher.creditcard.entities;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import lombok.Getter;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
+@Getter
 @JsonObject
+@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class CreditEntity {
-    @JsonProperty("masked_credit_card_number")
     private String maskedCreditCardNumber;
-
-    @JsonProperty("credit_available_balance")
     private double creditAvailableBalance;
-
-    @JsonProperty("credit_booked_balance")
     private double creditBookedBalance;
-
-    public String getMaskedCreditCardNumber() {
-        return maskedCreditCardNumber;
-    }
-
-    public double getCreditAvailableBalance() {
-        return creditAvailableBalance;
-    }
-
-    public double getCreditBookedBalance() {
-        return creditBookedBalance;
-    }
 }

@@ -1,23 +1,26 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33.fetcher.investment.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import lombok.Getter;
 import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33.NordeaFIConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
+@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class InstrumentEntity {
-    @JsonProperty private String id;
-    @JsonProperty private double price;
-    @JsonProperty private String currency;
-
-    @JsonProperty("instrument_name")
+    private String id;
+    private double price;
+    private String currency;
     private String instrumentName;
 
     @JsonProperty("instrument_type")
+    @Getter
     private String rawType;
 
-    @JsonProperty private String isin;
+    private String isin;
 
     public Instrument toTinkInstrument() {
         Instrument instrument = new Instrument();
@@ -48,9 +51,5 @@ public class InstrumentEntity {
     private String idFormat() {
         // id format TRADER-ISIN-MARKET-ZONE
         return id.split("-")[2];
-    }
-
-    public String getRawType() {
-        return rawType;
     }
 }

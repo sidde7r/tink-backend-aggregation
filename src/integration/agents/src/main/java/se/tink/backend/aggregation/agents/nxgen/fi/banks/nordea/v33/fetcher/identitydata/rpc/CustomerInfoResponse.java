@@ -1,7 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33.fetcher.identitydata.rpc;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.google.common.base.Strings;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -11,32 +12,20 @@ import se.tink.libraries.identitydata.IdentityData;
 import se.tink.libraries.identitydata.countries.FiIdentityData;
 
 @JsonObject
+@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class CustomerInfoResponse {
     private static final DateTimeFormatter DATE_FORMATTER =
             DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-    @JsonProperty("customer_id")
     private String customerId;
-
-    @JsonProperty("first_name")
     private String firstName;
-
-    @JsonProperty("last_name")
     private String lastName;
-
-    @JsonProperty("birth_date")
     private String birthDate;
-
-    @JsonProperty("loyalty_group")
     private String loyaltyGroup;
-
     private String segment;
     private AddressEntity address;
     private boolean employee;
-
-    @JsonProperty("us_resident")
     private boolean usResident;
-
     private String gender;
 
     @JsonIgnore
