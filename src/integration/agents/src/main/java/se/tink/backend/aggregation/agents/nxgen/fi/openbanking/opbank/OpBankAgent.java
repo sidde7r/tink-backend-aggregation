@@ -5,6 +5,9 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
 
 import com.google.inject.Inject;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
+import lombok.SneakyThrows;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
@@ -17,7 +20,11 @@ import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.authentica
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.configuration.OpBankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.fetcher.creditcard.OpBankCreditCardAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.fetcher.transactionalaccount.OpBankTransactionalAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.jwt.JwksClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.jwt.kid.JwksKeyIdProvider;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.jwt.kid.KeyIdProvider;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
+import se.tink.backend.aggregation.configuration.agents.utils.CertificateUtils;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.eidassigner.module.QSealcSignerModuleRSASHA256;
@@ -43,10 +50,12 @@ public final class OpBankAgent extends NextGenerationAgent
     private final OpBankApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final CreditCardRefreshController creditCardRefreshController;
+    private final AgentComponentProvider agentComponentProvider;
 
     @Inject
     public OpBankAgent(AgentComponentProvider componentProvider, QsealcSigner qsealcSigner) {
         super(componentProvider);
+        this.agentComponentProvider = componentProvider;
 
         apiClient =
                 new OpBankApiClient(
@@ -98,12 +107,23 @@ public final class OpBankAgent extends NextGenerationAgent
 
     @Override
     protected Authenticator constructAuthenticator() {
+        KeyIdProvider keyIdProvider =
+                new JwksKeyIdProvider(
+                        new JwksClient(agentComponentProvider.getTinkHttpClient()),
+                        getAgentConfiguration()
+                                .getProviderSpecificConfiguration()
+                                .getJwksEndpoint(),
+                        extractQSealCertificate());
         final OAuth2AuthenticationController controller =
                 new OAuth2AuthenticationController(
                         persistentStorage,
                         supplementalInformationHelper,
                         new OpBankAuthenticator(
-                                apiClient, persistentStorage, credentials, getAgentConfiguration()),
+                                apiClient,
+                                persistentStorage,
+                                credentials,
+                                getAgentConfiguration(),
+                                keyIdProvider),
                         credentials,
                         strongAuthenticationState);
 
@@ -113,6 +133,15 @@ public final class OpBankAgent extends NextGenerationAgent
                 new ThirdPartyAppAuthenticationController<>(
                         controller, supplementalInformationHelper),
                 controller);
+    }
+
+    @SneakyThrows
+    private X509Certificate extractQSealCertificate() {
+        return CertificateUtils.getX509CertificatesFromBase64EncodedCert(
+                        getAgentConfiguration().getQsealc())
+                .stream()
+                .findFirst() // first from the chain will always be the right one
+                .orElseThrow(() -> new CertificateException("No certificate found"));
     }
 
     @Override

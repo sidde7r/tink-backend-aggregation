@@ -10,11 +10,13 @@ import se.tink.backend.aggregation.annotations.SensitiveSecret;
 import se.tink.backend.aggregation.configuration.agents.ClientConfiguration;
 import se.tink.backend.aggregation.configuration.agents.ClientIdConfiguration;
 import se.tink.backend.aggregation.configuration.agents.ClientSecretsConfiguration;
+import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 @JsonObject
 public class OpBankConfiguration implements ClientConfiguration {
 
     @JsonProperty @Secret @ClientIdConfiguration private String clientId;
+    @JsonProperty @Secret private String jwksEndpoint;
     @JsonProperty @SensitiveSecret @ClientSecretsConfiguration private String clientSecret;
     @JsonProperty @SensitiveSecret private String apiKey;
 
@@ -24,6 +26,14 @@ public class OpBankConfiguration implements ClientConfiguration {
                 String.format(ErrorMessages.INVALID_CONFIGURATION, "Client ID"));
 
         return clientId;
+    }
+
+    public URL getJwksEndpoint() {
+        Preconditions.checkNotNull(
+                Strings.emptyToNull(jwksEndpoint),
+                String.format(ErrorMessages.INVALID_CONFIGURATION, "JWKS Endpoint"));
+
+        return URL.of(jwksEndpoint);
     }
 
     public String getClientSecret() {
