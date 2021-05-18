@@ -31,9 +31,21 @@ public class SdcExceptionFilter extends Filter {
     private static final Map<String, LoginException> defaultMessagesToExceptionMapping =
             new ImmutableMap.Builder<String, LoginException>()
                     .put(
-                            ErrorMessage.PIN_4_CHARACTERS.getCriteria(),
+                            ErrorMessage.PIN_4_CHARACTERS_EN.getCriteria(),
                             LoginError.INCORRECT_CREDENTIALS.exception(
-                                    "Your PIN has illegal characters."))
+                                    "Your PIN must contain exactly 4 characters."))
+                    .put(
+                            ErrorMessage.PIN_4_CHARACTERS_DK.getCriteria(),
+                            LoginError.INCORRECT_CREDENTIALS.exception(
+                                    "Your PIN must contain exactly 4 characters."))
+                    .put(
+                            ErrorMessage.OTP_4_CHARACTERS_EN.getCriteria(),
+                            LoginError.INCORRECT_CREDENTIALS.exception(
+                                    "Your OTP must contain exactly 4 characters."))
+                    .put(
+                            ErrorMessage.OTP_4_CHARACTERS_DK.getCriteria(),
+                            LoginError.INCORRECT_CREDENTIALS.exception(
+                                    "Your OTP must contain exactly 4 characters."))
                     .put(
                             ErrorMessage.PIN_BLOCKED.getCriteria(),
                             LoginError.INCORRECT_CREDENTIALS.exception("Your PIN code is blocked."))

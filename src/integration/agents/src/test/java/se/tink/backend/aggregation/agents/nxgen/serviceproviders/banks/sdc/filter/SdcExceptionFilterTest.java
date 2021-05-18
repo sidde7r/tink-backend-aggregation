@@ -36,8 +36,8 @@ public class SdcExceptionFilterTest {
     private static final String UNKNOWN_MSG = "Unknown Msg";
     private static final String UNKNOWN_HEADER = "Unknown header";
     private static final String YOUR_PIN_CODE_IS_BLOCKED = "Your PIN code is blocked.";
-    private static final String YOUR_PIN_HAS_ILLEGAL_CHARACTERS =
-            "Your PIN has illegal characters.";
+    private static final String PIN_LENGTH_ERROR = "Your PIN must contain exactly 4 characters.";
+    private static final String OTP_LENGTH_ERROR = "Your OTP must contain exactly 4 characters.";
 
     private final HttpRequest httpRequest = Mockito.mock(HttpRequest.class);
 
@@ -106,9 +106,7 @@ public class SdcExceptionFilterTest {
     private Object[] knownMessages() {
         return new Object[] {
             new Object[] {ErrorMessage.PIN_BLOCKED.getCriteria(), YOUR_PIN_CODE_IS_BLOCKED},
-            new Object[] {
-                ErrorMessage.PIN_4_CHARACTERS.getCriteria(), YOUR_PIN_HAS_ILLEGAL_CHARACTERS
-            }
+            new Object[] {ErrorMessage.PIN_4_CHARACTERS_EN.getCriteria(), PIN_LENGTH_ERROR}
         };
     }
 
@@ -153,7 +151,7 @@ public class SdcExceptionFilterTest {
         when(mockHttpResponse.getHeaders())
                 .thenReturn(createHeaderMap(UNKNOWN_HEADER, UNKNOWN_MSG));
         when(mockHttpResponse.getBody(String.class))
-                .thenReturn(ErrorMessage.PIN_4_CHARACTERS.getCriteria());
+                .thenReturn(ErrorMessage.PIN_4_CHARACTERS_EN.getCriteria());
         when(mockFilter.handle(httpRequest)).thenReturn(mockHttpResponse);
 
         // when
@@ -162,7 +160,27 @@ public class SdcExceptionFilterTest {
         // then
         assertThat(thrown)
                 .isExactlyInstanceOf(LoginException.class)
-                .hasMessageContaining(YOUR_PIN_HAS_ILLEGAL_CHARACTERS);
+                .hasMessageContaining(PIN_LENGTH_ERROR);
+    }
+
+    @Test
+    public void shouldHandleResponseWithTooShortOtpErrorMessage() {
+        // given
+        HttpResponse mockHttpResponse = Mockito.mock(HttpResponse.class);
+        when(mockHttpResponse.getStatus()).thenReturn(HTTP_UNAUTHORIZED);
+        when(mockHttpResponse.getHeaders())
+                .thenReturn(createHeaderMap(UNKNOWN_HEADER, UNKNOWN_MSG));
+        when(mockHttpResponse.getBody(String.class))
+                .thenReturn(ErrorMessage.OTP_4_CHARACTERS_DK.getCriteria());
+        when(mockFilter.handle(httpRequest)).thenReturn(mockHttpResponse);
+
+        // when
+        final Throwable thrown = catchThrowable(() -> sdcExceptionFilter.handle(httpRequest));
+
+        // then
+        assertThat(thrown)
+                .isExactlyInstanceOf(LoginException.class)
+                .hasMessageContaining(OTP_LENGTH_ERROR);
     }
 
     @Test
