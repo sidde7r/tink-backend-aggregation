@@ -3,10 +3,10 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sd
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sdc.SdcConstants.QueryKeys.BOOKING_STATUS;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sdc.SdcConstants.QueryValues.BOOKED;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sdc.SdcConstants.QueryValues.BOTH;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sdc.SdcConstants.StorageKeys.TIMESTAMP;
 
 import java.time.LocalDateTime;
 import java.util.Date;
-import java.util.HashMap;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sdc.SdcApiClient;
@@ -23,17 +23,17 @@ public class SdcTransactionalAccountTransactionFetcher
     private final SdcApiClient apiClient;
     private final String providerMarket;
     private final PersistentStorage persistentStorage;
-    private final HashMap<String, LocalDateTime> bookingStatusUpdateTimeMap = new HashMap<>();
-    private final String TIMESTAMP = "timestamp";
 
     @Override
     public TransactionsResponse getTransactionsFor(
             TransactionalAccount account, Date fromDate, Date toDate) {
 
-        if (bookingStatusUpdateTimeMap.isEmpty()
+        if (!persistentStorage.getOptional(TIMESTAMP).isPresent()
                 || LocalDateTime.now()
-                        .isAfter(bookingStatusUpdateTimeMap.get(TIMESTAMP).plusHours(24))) {
-            bookingStatusUpdateTimeMap.put(TIMESTAMP, LocalDateTime.now());
+                        .isAfter(
+                                LocalDateTime.parse(persistentStorage.get(TIMESTAMP))
+                                        .plusHours(24))) {
+            persistentStorage.put(TIMESTAMP, LocalDateTime.now(), false);
             persistentStorage.put(BOOKING_STATUS, BOTH, false);
         }
 
@@ -48,7 +48,7 @@ public class SdcTransactionalAccountTransactionFetcher
             log.error(
                     "Unable to fetch both pending and booked transactions. Re-trying only booked.",
                     e);
-            bookingStatusUpdateTimeMap.put(TIMESTAMP, LocalDateTime.now());
+            persistentStorage.put(TIMESTAMP, LocalDateTime.now(), false);
             persistentStorage.put(BOOKING_STATUS, BOOKED, false);
             return apiClient.getTransactionsFor(
                     account.getApiIdentifier(),
