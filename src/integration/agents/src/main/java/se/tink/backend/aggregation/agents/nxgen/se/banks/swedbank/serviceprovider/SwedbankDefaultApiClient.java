@@ -472,8 +472,8 @@ public class SwedbankDefaultApiClient {
             log.warn(
                     "User not authorized to perform request with key: [{}], name: [{}], authorization: [{}]",
                     menuItemKey,
-                    menuItem.getName(),
-                    menuItem.getAuthorization());
+                    menuItem == null ? "" : menuItem.getName(),
+                    menuItem == null ? "" : menuItem.getAuthorization());
             throw new IllegalStateException();
         }
 
