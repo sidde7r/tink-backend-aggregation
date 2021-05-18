@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator;
 
 import java.util.Optional;
+import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
@@ -29,6 +30,7 @@ public class DemobankAppToAppAuthenticator
     private final String callbackUri;
     private final String state;
     private final Credentials credentials;
+    private final String useUniversalLink;
 
     private CreateTicketResponse createTicketResponse = null;
 
@@ -43,6 +45,10 @@ public class DemobankAppToAppAuthenticator
         this.password = credentials.getField("password");
         this.callbackUri = callbackUri;
         this.state = state;
+        this.useUniversalLink =
+                !StringUtils.isBlank(credentials.getField("useUniversalLink"))
+                        ? credentials.getField("useUniversalLink")
+                        : "false";
     }
 
     @Override
@@ -121,7 +127,12 @@ public class DemobankAppToAppAuthenticator
         Ios ios = new Ios();
         ios.setAppScheme("tink-demobank-auth");
         ios.setAppStoreUrl("https://demobank.production.global.tink.se/appstore");
-        ios.setDeepLinkUrl(createTicketResponse.getDeeplinkUrl());
+        if ("true".equalsIgnoreCase(useUniversalLink)) {
+            ios.setDeepLinkUrl(createTicketResponse.getUniversalLink());
+        } else {
+            ios.setDeepLinkUrl(createTicketResponse.getDeeplinkUrl());
+        }
+
         payload.setIos(ios);
 
         Android android = new Android();

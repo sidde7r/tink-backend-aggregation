@@ -1,0 +1,530 @@
+REQUEST 1
+POST https://private.nordea.se/api/dbf/ca/bankidse-v1/bankidse/authentications/
+Accept: application/json
+Content-Type: application/json
+X-Aggregator: Tink Testing
+
+RESPONSE 1
+200
+X-Backside-Transport: ***
+nnCoection: ***
+Transfer-Encoding: chunked
+Date: Fri, 14 May 2021 09:32:12 GMT
+X-Application-Context: ***
+Content-Type: application/json
+X-Global-Transaction-ID: eaf52b95609e439c59ba1ba3
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+X-Frame-Options: DENY
+X-XSS-Protection: 1; mode=block
+Pragma: no-cache
+Strict-Transport-Security: max-age=157680000; includeSubDomains
+
+{"session_id":"178827ea-eb8b-4b05-801e-d300fc028efa","auto_start_token":"c894ee7f-6f52-4387-9b02-6c475736365b","status":"assignment_pending","verify_after":2000}
+
+REQUEST 2
+GET https://private.nordea.se/api/dbf/ca/bankidse-v1/bankidse/authentications/178827ea-eb8b-4b05-801e-d300fc028efa
+Accept: application/json
+X-Aggregator: Tink Testing
+
+RESPONSE 2
+200
+X-Backside-Transport: ***
+nnCoection: ***
+Transfer-Encoding: chunked
+Date: Fri, 14 May 2021 09:32:17 GMT
+X-Application-Context: ***
+Content-Type: application/json
+X-Global-Transaction-ID: 2760e24c609e43a022e01883
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+X-Frame-Options: DENY
+X-XSS-Protection: 1; mode=block
+Pragma: no-cache
+Strict-Transport-Security: max-age=157680000; includeSubDomains
+
+{"session_id":"178827ea-eb8b-4b05-801e-d300fc028efa","status":"completed","verify_after":2000,"code":"eyJ6aXAiOiJERUYiLCJ0dHlwIjoiYXV0aGVudGljYXRpb25fdG9rZW4iLCJ2ZXIiOiIyLjAuMyIsImtpZCI6Im5hc2YtYXV0aGVudGljYXRpb24tdG9rZW4tZW5jcnlwdGlvbi1wcm9kIiwiY3R5IjoiSldUIiwiZW5jIjoiQTEyOEdDTSIsImFsZyI6ImRpciJ9..yqApOLd1NmseskuF.yZ9UsjiYKhcDELLYcBBlypAcX5PnkRqeA9YafVHU3X_2DYnNN1Yuozh8Fau1GNB_RvJuFUyeb9rIS5kH17Ueco7GkQ3uYvWy9nyeSusl5saJ7eq2CuqWxBgHlQkvl9PvlpXXthE5gZZeCTQOTBncclDqrzZ7025Ep06JXzC3MNkKn6LvPfmu6WKIWdhBOzSJKkIo1AYNh7P84k-WfugBpCYoRSIHZL-yHy0DIFOd6WAPndisdB5g0c8f-U0UIlQOR0fQbGSuGHqkIObqS5C4zckptAsqZ3jP6991VmrihYXoNnzBkEv3zwnGaNSGZkSNSbzj1WJKEDU3TiiYoLdHWlwY_QKSpY3fIztzqpgSkucTgKr5vlvsfLndjErcZuXcHdkcG-eTA_TbcmeU2Uy26B4ODHKHgGQzc0US8ZYCYfZ7-EeMivfL-WkYzxXj1peCthDUqGSF3lUNhdDMpaRSq33kqzrYZUYwmaxWjcxRD-1ZJrm4FB5rhyyQl8JnmBB_PsrCbEjD1nymiujtOam6ErBdpb1bZt15kWG9sMbYILvdJm2fC7xM_1l5McqmaZdI2IUIJkh83zJcJbREDqwnW9vFKEVd54QEi5M-8J6liI91OZOHJDzNwosu-FliEXukEmWz2v4WA6YnkS3VMWS4Wzjmgy3yX5nx9hbl6H9SJEwZXjR9UaHZEgG1E1vedHkzCn1QEz4tzRg74dv5cxE2yhNb9HNzKwUWK8CZl90agkUs6yzK31dCuyieidHqMQYMUvCpQ0Sm1HNcON64O0wyrCNMjO4Dp2Y6SjfH9Qu1PG9vCCTG_TNfax9YI3P5QOsDbgBWHNS0wcwOqSEqMUCCWeTPkl9FLWlVHKGXBC0UHYm4ablCryaSgj37jFkNS49XkGpFAo34kd6S0nUWaCtXuiwXaO7TbpWh0SBeHftr9XBC2pu3-26eigiLRStSQD1ucB7VWDHTYIC8I8PEP5c35g4s0LjmcvtdfiDfK850hAs9CcwKVGuFBZvnq7T69XDp4A-gyUWLHNGXAgMxIm_t6GgGOHz_durIBn04PYyltmlMneu8tFkQj0phchHhGA7vTJ2dfAST7vUYf42kTHdFj9n0JLsvqPoW-LTwekEmB1aKI7dZ4gl_7x6uiglMXmMydAhHZ55NF2A1Nmv-uCZ0fQACsAkPAmeYKY88fIiLWZQ_YiknUrufx_jeoEdEZWJ_nMgj7h8jnz9w7Axn0gOOnifVs1wWm1miVXzSvfg1jr2oEBotZ2hsb79sW7r5ID1bQxxTIhp2iz-U42F8e9skaYtrfxNTvMzLSftAQUJCtmHsqLiFafmkWJJXZ4yde23N3loRtOz_T21xZQ1jBar5kRLApSQlfhsvknNHy1rOzjJXFKYroYwTEfJoJ4ROVDNdqptLErAmQHWxeZCCBiBz_5lPVROf1LzA7Hg15wccMlDjwqfSVN-IYLWTz67UYM7t-0q0tW6xEN8i1r3g3SvwzdVzKUOOH0KZGJucHhiZcbWzAGFz-Ys9H-RXJV8IMD84owMC1IW9rYOgEG5YkZdO18PUWF43qFnuJc5LiIKTw0qKWM9vQXX4o3MlaDQXoY2C.WAutv7le9U8lgwwxN_l1bA","user_id":"**HASHED:g9**"}
+
+REQUEST 3
+POST https://private.nordea.se/api/dbf/ca/user-accounts-service-v1/user-accounts/primary/authorization
+Accept: application/json
+Content-Type: application/json
+X-Aggregator: Tink Testing
+
+{"code":"eyJ6aXAiOiJERUYiLCJ0dHlwIjoiYXV0aGVudGljYXRpb25fdG9rZW4iLCJ2ZXIiOiIyLjAuMyIsImtpZCI6Im5hc2YtYXV0aGVudGljYXRpb24tdG9rZW4tZW5jcnlwdGlvbi1wcm9kIiwiY3R5IjoiSldUIiwiZW5jIjoiQTEyOEdDTSIsImFsZyI6ImRpciJ9..yqApOLd1NmseskuF.yZ9UsjiYKhcDELLYcBBlypAcX5PnkRqeA9YafVHU3X_2DYnNN1Yuozh8Fau1GNB_RvJuFUyeb9rIS5kH17Ueco7GkQ3uYvWy9nyeSusl5saJ7eq2CuqWxBgHlQkvl9PvlpXXthE5gZZeCTQOTBncclDqrzZ7025Ep06JXzC3MNkKn6LvPfmu6WKIWdhBOzSJKkIo1AYNh7P84k-WfugBpCYoRSIHZL-yHy0DIFOd6WAPndisdB5g0c8f-U0UIlQOR0fQbGSuGHqkIObqS5C4zckptAsqZ3jP6991VmrihYXoNnzBkEv3zwnGaNSGZkSNSbzj1WJKEDU3TiiYoLdHWlwY_QKSpY3fIztzqpgSkucTgKr5vlvsfLndjErcZuXcHdkcG-eTA_TbcmeU2Uy26B4ODHKHgGQzc0US8ZYCYfZ7-EeMivfL-WkYzxXj1peCthDUqGSF3lUNhdDMpaRSq33kqzrYZUYwmaxWjcxRD-1ZJrm4FB5rhyyQl8JnmBB_PsrCbEjD1nymiujtOam6ErBdpb1bZt15kWG9sMbYILvdJm2fC7xM_1l5McqmaZdI2IUIJkh83zJcJbREDqwnW9vFKEVd54QEi5M-8J6liI91OZOHJDzNwosu-FliEXukEmWz2v4WA6YnkS3VMWS4Wzjmgy3yX5nx9hbl6H9SJEwZXjR9UaHZEgG1E1vedHkzCn1QEz4tzRg74dv5cxE2yhNb9HNzKwUWK8CZl90agkUs6yzK31dCuyieidHqMQYMUvCpQ0Sm1HNcON64O0wyrCNMjO4Dp2Y6SjfH9Qu1PG9vCCTG_TNfax9YI3P5QOsDbgBWHNS0wcwOqSEqMUCCWeTPkl9FLWlVHKGXBC0UHYm4ablCryaSgj37jFkNS49XkGpFAo34kd6S0nUWaCtXuiwXaO7TbpWh0SBeHftr9XBC2pu3-26eigiLRStSQD1ucB7VWDHTYIC8I8PEP5c35g4s0LjmcvtdfiDfK850hAs9CcwKVGuFBZvnq7T69XDp4A-gyUWLHNGXAgMxIm_t6GgGOHz_durIBn04PYyltmlMneu8tFkQj0phchHhGA7vTJ2dfAST7vUYf42kTHdFj9n0JLsvqPoW-LTwekEmB1aKI7dZ4gl_7x6uiglMXmMydAhHZ55NF2A1Nmv-uCZ0fQACsAkPAmeYKY88fIiLWZQ_YiknUrufx_jeoEdEZWJ_nMgj7h8jnz9w7Axn0gOOnifVs1wWm1miVXzSvfg1jr2oEBotZ2hsb79sW7r5ID1bQxxTIhp2iz-U42F8e9skaYtrfxNTvMzLSftAQUJCtmHsqLiFafmkWJJXZ4yde23N3loRtOz_T21xZQ1jBar5kRLApSQlfhsvknNHy1rOzjJXFKYroYwTEfJoJ4ROVDNdqptLErAmQHWxeZCCBiBz_5lPVROf1LzA7Hg15wccMlDjwqfSVN-IYLWTz67UYM7t-0q0tW6xEN8i1r3g3SvwzdVzKUOOH0KZGJucHhiZcbWzAGFz-Ys9H-RXJV8IMD84owMC1IW9rYOgEG5YkZdO18PUWF43qFnuJc5LiIKTw0qKWM9vQXX4o3MlaDQXoY2C.WAutv7le9U8lgwwxN_l1bA"}
+
+RESPONSE 3
+200
+X-Backside-Transport: ***
+nnCoection: ***
+Transfer-Encoding: chunked
+X-Nordea-App: ***
+Vary: Origin,Access-Control-Request-Method,Access-Control-Request-Headers
+Content-Type: application/json
+Date: Fri, 14 May 2021 09:32:17 GMT
+X-Global-Transaction-ID: eb55ecf6609e43a1eced5ecf
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+X-Frame-Options: DENY
+X-XSS-Protection: 1; mode=block
+Pragma: no-cache
+Strict-Transport-Security: max-age=157680000; includeSubDomains
+
+{"code":"eyJ6aXAiOiJERUYiLCJ0dHlwIjoiYXV0aGVudGljYXRpb25fdG9rZW4iLCJ2ZXIiOiIyLjAuMyIsImtpZCI6Im5hc2YtYXV0aGVudGljYXRpb24tdG9rZW4tZW5jcnlwdGlvbi1wcm9kIiwiY3R5IjoiSldUIiwiZW5jIjoiQTEyOEdDTSIsImFsZyI6ImRpciJ9..i0PDnFljj3GmLpiK.glDKIMJL9-jod9t36SQ_j0EgO2idHdDrSXsk83KjymN_SXnxb9jKqWo32uhNp0qZlPtXB_AOWidIh_LKsbRDrCCfNg8_Xi2D489ynCN4sgDs3o8uhGK7tZfuXZSVnMhx7fGD2A3nJpEw7qMWg992AbRbl-bTZ9IUpJzjLzErY2eo9hhJbKKDdBhyJpXTLLiQ1ZlMEk9ddnOjWH-rEDm50kA0IxUjRW4wxm2zWyCWxhdL8i2ZOA99GW398ao_Y1TYrATKG8YbDCbytB1I3E-ZIWvet0jNmAoP-7bUXD4isy7Y0P1rDLofIpgGfojhwix4ypNhwovDDvHUF_vXvTYcMRhw6aCFUfuIcKzJIcZhGBAdOPBGTV9ow3PfE_-x6XT0RTCm3RoxdnrT-NYNJ_q7i6QNrkFAoUNerQlIMqeAF7GrpCC8jdp7BgAb5uDia2-NtUk2V89QBUNWnujRhZ5_YywmiWKquRjISHqy6O7fuLGpklWeGiVXMBeC8M_LvSoXFoVi7Z7g61W24xNNHeLO96sSUPpIo0wbvK4lEGr-5mPA4Y05SXOiOa4AEyOO5iv5vrsfJlM2wIfkoL6wRLlXECSCvsvDEga2ekraOAAzCrewbJtUHyH_6uKMYGmRbWw0oyC6ydoL_8Ar9RyZtkTH-YuD6NFb6jiu87fh67sQ0LHl8wF-ak40qIgigsLOeOJhKY8segpcTvH-NJ9M6sGduWIb1VMwM3-_fMBMRRF8OQ36SpUVXLPfInOkyrcA6qd502WhhJDBTcWwumikZv1HwVd1paVTTI06klh0eYSE-ajidRpUxYQj7us_LbDSvbep91CwaD-2q-ULHlwPN5o6KgLN4Z37FlkYs4Sr2Zx9AkQtsCQLuhW9JDTfRTg_nqn4tWzZoVflTc_drcj6t6OnD47XK02ZKKi50nwCydktiCwYa1gyY1_26gedognguH82TmUe6X1g_T36hmG6bKUjzJy3lcebo0Pgl2DNKTJ-o5s_vF8GZALLnDWIhm_Ik_ZQMFQlz3WsLVY7vO3kejhKpf7vgIVurueZVyQ3xSeRaJvKuJKKEv_GKADo4kHRzTIzvyGYsz1vvgXIussAM7Z-NO77HbEx4RFKyioxImBaW_iy9yoms1vl1SsQ30VAssHuZj3Rev-jyEO2I3e33jJ2bQ0-4QDMbUjEPhV4qVw7ws583-KiWSXrCZM1oxpNWMh1EFCDxt4U_UWAxNMh9mvSQjR96aqp8sEBMTalI3w18orfaICSeDym3CNfpBhduksEc4bSUB3JeXOgyMaDNXdRbTOzKdQPGibVLW_Wd5Mc2sGYv8TmZ6AbRDEuwwwrlpzXeveCVewVymYq-JX3guWO3aKLCdRT4fFmEEECL2Y0JMrboPLXON5oRS68PhlrVnTqXn33g0xnzx4ja72OXZGZF8Yxw7u55E00PJUsSTZvLwJ0F81nqqelH1uunbS0UduLQGBqeSHoBpslFCvafy53vggm-lY5W1uOrLcOrrximG8IAxW5ih3KkIP-QTag4ZIVLIvucFhShjpinaF_rZ493zsI8XNC7u4WRnphrX11daNmvM3zIcyqh8vieh7ciKQtBJxbAsLpA2KZF010mBA9dYM8Po1w9Iy6k2Q2f-G2OGDEtcN5c8-8zFkpwmN-koGrV1R8.gnyeCDmUZt-NYvo_BDWAEA"}
+
+REQUEST 4
+POST https://private.nordea.se/api/dbf/ca/token-service-v3/oauth/token
+Accept: application/json
+Content-Type: application/x-www-form-urlencoded
+X-Aggregator: Tink Testing
+
+RESPONSE 4
+200
+X-Backside-Transport: ***
+nnCoection: ***
+Transfer-Encoding: chunked
+Date: Fri, 14 May 2021 09:32:17 GMT
+X-Application-Context: ***
+Content-Type: application/json
+X-Global-Transaction-ID: 19aea263609e43a12fcecde1
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+X-Frame-Options: DENY
+X-XSS-Protection: 1; mode=block
+Pragma: no-cache
+Strict-Transport-Security: max-age=157680000; includeSubDomains
+
+{"access_token":"**HASHED:uh**","expires_in":180,"token_type":"**HASHED:cQ**","id_token":"**HASHED:6s**","refresh_token":"**HASHED:Ju**","scope":"ndf agreement openid offline_access","uh":"**HASHED:2v**"}
+
+REQUEST 5
+GET https://private.nordea.se/api/dbf/se/customerinfo-v3/customers/self/info
+Accept: application/json
+Authorization: **HASHED:cQ** **HASHED:uh**
+Accept-Language: en-SE
+X-Aggregator: Tink Testing
+
+RESPONSE 5
+200
+X-Backside-Transport: ***
+nnCoection: ***
+Transfer-Encoding: chunked
+Date: Fri, 14 May 2021 09:32:17 GMT
+Content-Type: application/json
+X-Nordea-App: ***
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Content-Type-Options: nosniff
+X-Frame-Options: DENY
+X-XSS-Protection: 1; mode=block
+Referrer-Policy: ***
+x-request-id: 1.29627
+X-Global-Transaction-ID: 19aea263609e43a12fceceb1
+Strict-Transport-Security: max-age=157680000; includeSubDomains
+
+{"customer_id":"**HASHED:g9**","segment":"household","loyalty_group":"everyday_banking","loyalty_group_in_raw":"","person_id":"**HASHED:g9**","branch_id":"2050003075","birth_date":"2001-05-03","preferred_name":{"family_name":"Nordeasson","given_name":"Michael"},"address":{"street_line":"TestStreet 26 B LGH 1201","city":"VÄSTERÅS","postal_code":"12345","country_code":"SE"},"emails":[{"value":"testmail@dummy.com","tags":["home"]}],"phone_numbers":[{"value":"709212345","country_code":"46","tags":["mobile"]}]}
+
+REQUEST 6
+GET https://private.nordea.se/api/dbf/ca/accounts-v3/accounts/
+Content-Type: application/json
+Accept: application/json
+Authorization: **HASHED:cQ** **HASHED:uh**
+Accept-Language: en-SE
+X-Aggregator: Tink Testing
+
+RESPONSE 6
+200
+X-Backside-Transport: ***
+nnCoection: ***
+Transfer-Encoding: chunked
+X-Nordea-App: ***
+Content-Type: application/json
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Content-Type-Options: nosniff
+X-Frame-Options: DENY
+X-XSS-Protection: 1; mode=block
+Referrer-Policy: ***
+Date: Fri, 14 May 2021 09:32:17 GMT
+X-Global-Transaction-ID: eaf52b95609e43a177249a51
+Strict-Transport-Security: max-age=157680000; includeSubDomains
+
+{"result":[{"account_id":"NAID-SE-SEK-0105012345","display_account_number":"010501-12345","iban":"SE5230000000000105012345","bic":"NDEASESS","country_code":"SE","product_code":"SE4001","product_name":"PERSONKONTO","nickname":"PERSONKONTO","product_type":"Transaktionskonton","category":"transaction","account_status":"open","booked_balance":0.83,"credit_limit":0.00,"available_balance":0.83,"currency":"SEK","roles":[{"name":"Nordeasson,Michael","role":"owner","current_user":true}],"permissions":{"can_view":true,"can_view_transactions":true,"can_pay_from_account":true,"can_transfer_from_account":true,"can_transfer_to_account":true,"can_deposit_to_account":true,"can_pay_international_from_account":null,"can_pay_eligible":true,"require_physically_present_all_eye_signing":null,"can_pay_pgbg_from_account":true,"require_4eye_signing":null},"transaction_list_search_criteria":{"can_use_start_date":true,"min_start_date":"2020-02-14","can_use_end_date":true,"can_use_lowest_amount":true,"can_use_highest_amount":true,"can_use_free_text":true,"sort_by_list":["transaction_date_desc"]},"source_system":"accounts_se_11digit","data_retrieved_from":"from_source_system"},{"account_id":"NAID-SE-SEK-30752171234","display_account_number":"3075 21 71234","iban":"SE2230000000030752171234","bic":"NDEASESS","country_code":"SE","product_code":"SE1145","product_name":"FÖRMÅNSKONTO","nickname":"FÖRMÅNSKONTO","product_type":"Sparkonton","category":"savings","account_status":"open","booked_balance":12869.00,"credit_limit":0.00,"available_balance":12869.00,"currency":"SEK","roles":[{"name":"Nordeasson,Michael","role":"owner","current_user":true}],"permissions":{"can_view":true,"can_view_transactions":true,"can_pay_from_account":true,"can_transfer_from_account":true,"can_transfer_to_account":true,"can_deposit_to_account":true,"can_pay_international_from_account":null,"can_pay_eligible":true,"require_physically_present_all_eye_signing":null,"can_pay_pgbg_from_account":false,"require_4eye_signing":null},"transaction_list_search_criteria":{"can_use_start_date":true,"min_start_date":"2020-02-14","can_use_end_date":true,"can_use_lowest_amount":true,"can_use_highest_amount":true,"can_use_free_text":true,"sort_by_list":["transaction_date_desc"]},"source_system":"accounts_se_11digit","data_retrieved_from":"from_source_system"}],"sub_system_errors":[]}
+
+REQUEST 7
+GET https://private.nordea.se/api/dbf/ca/cards-v4/cards/
+Accept: application/json
+Authorization: **HASHED:cQ** **HASHED:uh**
+Accept-Language: en-SE
+X-Aggregator: Tink Testing
+
+RESPONSE 7
+200
+X-Backside-Transport: ***
+nnCoection: ***
+Transfer-Encoding: chunked
+Date: Fri, 14 May 2021 09:32:18 GMT
+Content-Type: application/json
+X-Application-Context: ***
+X-Content-Type-Options: nosniff,nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Frame-Options: DENY
+x-request-id: 0.902562
+X-Global-Transaction-ID: 19aea263609e43a12fced121
+Strict-Transport-Security: max-age=157680000; includeSubDomains
+
+{"cards": [{"card_id": "7nLjDJnOZljLool3LZ9kObDkL1ZyVLX6QYOZQ3Lk3mLaZM0OW1234", "card_category": "credit", "card_status": "active", "card_expiration": {"date": "2021-09-30", "formatted": "09/21"}, "cardholder_name": "Michael Nordeasson", "cardholder_type": "principal", "principal_cardholder_name": "Michael Nordeasson", "product_code": "SE260", "card_loyalty_group": null, "country_code": "SE", "currency": "SEK", "nickname": null, "pan_id": null, "atm_account_number": null, "credit": {"masked_credit_card_number": "5209 **** **** 1234", "credit_limit": null, "credit_booked_balance": null, "credit_available_balance": 3754.54, "prev_min_instalment_amount": null, "instalment_min_percent": null, "instalment_free_months": [], "interest": null, "invoice": null }, "debit": null, "parallel_cards": null, "usage_limits": null, "permissions": {"transactions": true, "transfer_from_credit": false, "view_pin": true, "allowed_to_enroll_mobile_payments": null, "allowed_to_block": true, "allowed_to_activate": true, "allowed_to_close": true, "allowed_to_update_usage_limits": true }, "notifications": null, "metadata": null }, {"card_id": "6jEqmBDEZM0OW59LJZM0LWxb3EZQGENm46LZ2oaORYEpZvlj123", "card_category": "debit", "card_status": "active", "card_expiration": {"date": "2023-02-28", "formatted": "02/23"}, "cardholder_name": "Michael Nordeasson", "cardholder_type": "principal", "principal_cardholder_name": "Michael Nordeasson", "product_code": "SE003", "card_loyalty_group": null, "country_code": "SE", "currency": "SEK", "nickname": "Nordea Debit", "pan_id": null, "atm_account_number": null, "credit": null, "debit": {"masked_debit_card_number": "4539 **** **** 8466", "debit_account_balance": 0.83, "debit_account_number": "105030480", "debit_account_name": null, "debit_account_key": null }, "parallel_cards": null, "usage_limits": null, "permissions": {"transactions": true, "transfer_from_credit": false, "view_pin": true, "allowed_to_enroll_mobile_payments": null, "allowed_to_block": true, "allowed_to_activate": true, "allowed_to_close": true, "allowed_to_update_usage_limits": true }, "notifications": null, "metadata": null }, {"card_id": "6jEqmBDEZljLoRv8xZdo8m4gKOZ1rEPGaVLZKb78nDEVZvljLoB8x", "card_category": "debit", "card_status": "active", "card_expiration": {"date": "2024-05-31", "formatted": "05/24"}, "cardholder_name": "Michael Nordeasson", "cardholder_type": "principal", "principal_cardholder_name": "Michael Nordeasson", "product_code": "SE004", "card_loyalty_group": null, "country_code": "SE", "currency": "SEK", "nickname": null, "pan_id": null, "atm_account_number": null, "credit": null, "debit": {"masked_debit_card_number": "4539 **** **** 7040", "debit_account_balance": 0.83, "debit_account_number": "105030480", "debit_account_name": null, "debit_account_key": null }, "parallel_cards": null, "usage_limits": null, "permissions": {"transactions": true, "transfer_from_credit": false, "view_pin": true, "allowed_to_enroll_mobile_payments": null, "allowed_to_block": true, "allowed_to_activate": true, "allowed_to_close": true, "allowed_to_update_usage_limits": true }, "notifications": null, "metadata": null } ] }
+
+REQUEST 7a
+GET https://private.nordea.se/api/dbf/ca/cards-v4/cards/7nLjDJnOZljLool3LZ9kObDkL1ZyVLX6QYOZQ3Lk3mLaZM0OW1234/transactions?page=1&page_size=30
+Accept: application/json
+Authorization: **HASHED:cQ** **HASHED:uh**
+Accept-Language: en-SE
+X-Aggregator: Tink Testing
+
+RESPONSE 7a
+200
+X-Backside-Transport: ***
+nnCoection: ***
+Transfer-Encoding: chunked
+Date: Tue, 20 Apr 2021 21:40:40 GMT
+Content-Type: application/json
+X-Application-Context: ***
+X-Content-Type-Options: nosniff,nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Frame-Options: DENY
+x-request-id: 0.0497729
+X-Global-Transaction-ID: eaf52b95607f4a5809d6f948
+Strict-Transport-Security: max-age=157680000; includeSubDomains
+
+{"size":25,"page":1,"page_size":30,"transactions":[{"transaction_id":"201671803","transaction_date":"2020-11-25","transaction_type":null,"amount":-159.00,"currency":"SEK","exchange_rate":0.000000,"original_amount":null,"original_currency":null,"title":"SNIPH","booked":true,"booking_date":null,"merchant_city":"","merchant_country":"","mcc":"7372","ecological_footprint":null,"invoiced_date":"2020-12-06","invoice_status":"invoiced"},{"transaction_id":"922938072","transaction_date":"2020-11-23","transaction_type":null,"amount":-289.00,"currency":"SEK","exchange_rate":0.000000,"original_amount":null,"original_currency":null,"title":"Foodora AB","booked":true,"booking_date":null,"merchant_city":"","merchant_country":"","mcc":"5499","ecological_footprint":null,"invoiced_date":"2020-12-06","invoice_status":"invoiced"},{"transaction_id":"368362263","transaction_date":"2020-11-11","transaction_type":null,"amount":-348.00,"currency":"SEK","exchange_rate":0.000000,"original_amount":null,"original_currency":null,"title":"UBR* PENDING.UBER.COM","booked":true,"booking_date":null,"merchant_city":"","merchant_country":"","mcc":"4121","ecological_footprint":null,"invoiced_date":"2020-12-06","invoice_status":"invoiced"},{"transaction_id":"1917051901","transaction_date":"2020-11-06","transaction_type":null,"amount":-429.00,"currency":"SEK","exchange_rate":0.000000,"original_amount":null,"original_currency":null,"title":"BAGERI PASSION","booked":true,"booking_date":null,"merchant_city":"","merchant_country":"","mcc":"5462","ecological_footprint":null,"invoiced_date":"2020-12-06","invoice_status":"invoiced"},{"transaction_id":"-435949804","transaction_date":"2020-11-05","transaction_type":null,"amount":-149.39,"currency":"SEK","exchange_rate":0.000000,"original_amount":null,"original_currency":null,"title":"RÖRLIG RÄNTA","booked":true,"booking_date":null,"merchant_city":"","merchant_country":"","mcc":"0000","ecological_footprint":null,"invoiced_date":"2020-11-05","invoice_status":"invoiced"},{"transaction_id":"-522768006","transaction_date":"2020-11-02","transaction_type":null,"amount":-180.00,"currency":"SEK","exchange_rate":0.000000,"original_amount":null,"original_currency":null,"title":"iZ *Bonor   Blad","booked":true,"booking_date":null,"merchant_city":"","merchant_country":"","mcc":"5499","ecological_footprint":null,"invoiced_date":"2020-11-05","invoice_status":"invoiced"},{"transaction_id":"-1362150528","transaction_date":"2020-10-30","transaction_type":null,"amount":1080.00,"currency":"SEK","exchange_rate":0.000000,"original_amount":null,"original_currency":null,"title":"INBETALNING","booked":true,"booking_date":null,"merchant_city":"","merchant_country":"","mcc":"0000","ecological_footprint":null,"invoiced_date":"2020-11-05","invoice_status":"invoiced"},{"transaction_id":"-686785128","transaction_date":"2020-10-27","transaction_type":null,"amount":-159.00,"currency":"SEK","exchange_rate":0.000000,"original_amount":null,"original_currency":null,"title":"SNIPH","booked":true,"booking_date":null,"merchant_city":"","merchant_country":"","mcc":"7372","ecological_footprint":null,"invoiced_date":"2020-11-05","invoice_status":"invoiced"},{"transaction_id":"-703199143","transaction_date":"2020-10-21","transaction_type":null,"amount":499.90,"currency":"SEK","exchange_rate":0.000000,"original_amount":null,"original_currency":null,"title":"KJELL & CO 86","booked":true,"booking_date":null,"merchant_city":"","merchant_country":"","mcc":"5311","ecological_footprint":null,"invoiced_date":"2020-11-05","invoice_status":"invoiced"},{"transaction_id":"1333500102","transaction_date":"2020-10-20","transaction_type":null,"amount":-499.90,"currency":"SEK","exchange_rate":0.000000,"original_amount":null,"original_currency":null,"title":"KJELL&CO 81","booked":true,"booking_date":null,"merchant_city":"","merchant_country":"","mcc":"5311","ecological_footprint":null,"invoiced_date":"2020-11-05","invoice_status":"invoiced"},{"transaction_id":"1627280168","transaction_date":"2020-10-10","transaction_type":null,"amount":-1050.00,"currency":"SEK","exchange_rate":0.000000,"original_amount":null,"original_currency":null,"title":"BISTRO BOHEME S","booked":true,"booking_date":null,"merchant_city":"","merchant_country":"","mcc":"5812","ecological_footprint":null,"invoiced_date":"2020-11-05","invoice_status":"invoiced"},{"transaction_id":"126697037","transaction_date":"2020-10-10","transaction_type":null,"amount":-1200.00,"currency":"SEK","exchange_rate":0.000000,"original_amount":null,"original_currency":null,"title":"HAYMARKET BY SC","booked":true,"booking_date":null,"merchant_city":"","merchant_country":"","mcc":"5812","ecological_footprint":null,"invoiced_date":"2020-11-05","invoice_status":"invoiced"},{"transaction_id":"-1324377006","transaction_date":"2020-10-05","transaction_type":null,"amount":-120.89,"currency":"SEK","exchange_rate":0.000000,"original_amount":null,"original_currency":null,"title":"RÖRLIG RÄNTA","booked":true,"booking_date":null,"merchant_city":"","merchant_country":"","mcc":"0000","ecological_footprint":null,"invoiced_date":"2020-10-05","invoice_status":"invoiced"},{"transaction_id":"2024995625","transaction_date":"2020-09-30","transaction_type":null,"amount":510.00,"currency":"SEK","exchange_rate":0.000000,"original_amount":null,"original_currency":null,"title":"INBETALNING","booked":true,"booking_date":null,"merchant_city":"","merchant_country":"","mcc":"0000","ecological_footprint":null,"invoiced_date":"2020-10-05","invoice_status":"invoiced"},{"transaction_id":"-1594606364","transaction_date":"2020-09-24","transaction_type":null,"amount":-159.00,"currency":"SEK","exchange_rate":0.000000,"original_amount":null,"original_currency":null,"title":"SNIPH","booked":true,"booking_date":null,"merchant_city":"","merchant_country":"","mcc":"7372","ecological_footprint":null,"invoiced_date":"2020-10-05","invoice_status":"invoiced"},{"transaction_id":"1649401627","transaction_date":"2020-09-21","transaction_type":null,"amount":-1200.00,"currency":"SEK","exchange_rate":0.000000,"original_amount":null,"original_currency":null,"title":"CIAO CIAO QUATTRO","booked":true,"booking_date":null,"merchant_city":"","merchant_country":"","mcc":"5812","ecological_footprint":null,"invoiced_date":"2020-10-05","invoice_status":"invoiced"},{"transaction_id":"605090821","transaction_date":"2020-09-05","transaction_type":null,"amount":-139.36,"currency":"SEK","exchange_rate":0.000000,"original_amount":null,"original_currency":null,"title":"RÖRLIG RÄNTA","booked":true,"booking_date":null,"merchant_city":"","merchant_country":"","mcc":"0000","ecological_footprint":null,"invoiced_date":"2020-09-06","invoice_status":"invoiced"},{"transaction_id":"120773703","transaction_date":"2020-09-04","transaction_type":null,"amount":-319.00,"currency":"SEK","exchange_rate":0.000000,"original_amount":null,"original_currency":null,"title":"BAGERI PASSION","booked":true,"booking_date":null,"merchant_city":"","merchant_country":"","mcc":"5462","ecological_footprint":null,"invoiced_date":"2020-10-05","invoice_status":"invoiced"},{"transaction_id":"-321109872","transaction_date":"2020-08-31","transaction_type":null,"amount":2296.70,"currency":"SEK","exchange_rate":0.000000,"original_amount":null,"original_currency":null,"title":"INBETALNING","booked":true,"booking_date":null,"merchant_city":"","merchant_country":"","mcc":"0000","ecological_footprint":null,"invoiced_date":"2020-09-06","invoice_status":"invoiced"},{"transaction_id":"1957700355","transaction_date":"2020-08-28","transaction_type":null,"amount":-1499.00,"currency":"SEK","exchange_rate":0.000000,"original_amount":null,"original_currency":null,"title":"DIN SKO 1057","booked":true,"booking_date":null,"merchant_city":"","merchant_country":"","mcc":"5661","ecological_footprint":null,"invoiced_date":"2020-09-06","invoice_status":"invoiced"},{"transaction_id":"1377638889","transaction_date":"2020-08-06","transaction_type":null,"amount":-1554.00,"currency":"SEK","exchange_rate":0.000000,"original_amount":null,"original_currency":null,"title":"RESTAURANG LJUN","booked":true,"booking_date":null,"merchant_city":"","merchant_country":"","mcc":"5812","ecological_footprint":null,"invoiced_date":"2020-09-06","invoice_status":"invoiced"},{"transaction_id":"-283366172","transaction_date":"2020-08-05","transaction_type":null,"amount":-142.95,"currency":"SEK","exchange_rate":0.000000,"original_amount":null,"original_currency":null,"title":"RÖRLIG RÄNTA","booked":true,"booking_date":null,"merchant_city":"","merchant_country":"","mcc":"0000","ecological_footprint":null,"invoiced_date":"2020-08-05","invoice_status":"invoiced"},{"transaction_id":"-1209566865","transaction_date":"2020-07-31","transaction_type":null,"amount":950.00,"currency":"SEK","exchange_rate":0.000000,"original_amount":null,"original_currency":null,"title":"INBETALNING","booked":true,"booking_date":null,"merchant_city":"","merchant_country":"","mcc":"0000","ecological_footprint":null,"invoiced_date":"2020-08-05","invoice_status":"invoiced"},{"transaction_id":"1605714443","transaction_date":"2020-07-24","transaction_type":null,"amount":-930.00,"currency":"SEK","exchange_rate":0.000000,"original_amount":null,"original_currency":null,"title":"112 - HJULSTA","booked":true,"booking_date":null,"merchant_city":"","merchant_country":"","mcc":"4111","ecological_footprint":null,"invoiced_date":"2020-08-05","invoice_status":"invoiced"},{"transaction_id":"2125776613","transaction_date":"2020-07-14","transaction_type":null,"amount":-126.00,"currency":"SEK","exchange_rate":0.000000,"original_amount":null,"original_currency":null,"title":"MAX MALL OF SCANDINAVI","booked":true,"booking_date":null,"merchant_city":"","merchant_country":"","mcc":"5814","ecological_footprint":null,"invoiced_date":"2020-08-05","invoice_status":"invoiced"}],"billing_period":null}
+
+REQUEST 8
+GET https://private.nordea.se/api/dbf/ca/loans-v1/loans/
+Authorization: **HASHED:cQ** **HASHED:uh**
+Accept-Language: en-SE
+X-Aggregator: Tink Testing
+
+RESPONSE 8
+200
+X-Backside-Transport: ***
+nnCoection: ***
+Transfer-Encoding: chunked
+Date: Fri, 14 May 2021 09:32:18 GMT
+Content-Type: application/json
+X-Nordea-App: ***
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Content-Type-Options: nosniff
+X-Frame-Options: DENY
+X-XSS-Protection: 1; mode=block
+Referrer-Policy: ***
+x-request-id: 0.373304
+X-Global-Transaction-ID: eaf52b95609e43a2ef9e6b5f
+Strict-Transport-Security: max-age=157680000; includeSubDomains
+
+{"loans":[{"loan_id":"12345182402","loan_formatted_id":"1234 51 82402","product_code":"SE2019","currency":"SEK","group":"other","repayment_status":"in_progress","interest":{"interest_change_dates_history":[]},"amount":{"granted":50000.00,"paid":2365.00,"balance":47635.00},"owners":[]}]}
+
+REQUEST 9
+GET https://private.nordea.se/api/dbf/ca/loans-v1/loans/12345182402
+Authorization: **HASHED:cQ** **HASHED:uh**
+Accept-Language: en-SE
+X-Aggregator: Tink Testing
+
+RESPONSE 9
+200
+X-Backside-Transport: ***
+nnCoection: ***
+Transfer-Encoding: chunked
+Date: Fri, 14 May 2021 10:50:30 GMT
+Content-Type: application/json
+X-Nordea-App: ***
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Content-Type-Options: nosniff
+X-Frame-Options: DENY
+X-XSS-Protection: 1; mode=block
+Referrer-Policy: ***
+x-request-id: 0.736139
+X-Global-Transaction-ID: 2760e24c609e55f5beb62e7f
+Strict-Transport-Security: max-age=157680000; includeSubDomains
+
+{"loan_id":"12345182402","loan_formatted_id":"1234 51 82402","product_code":"SE2019","currency":"SEK","group":"mortgage","repayment_status":"in_progress","interest":{"rate":6.90,"reference_rate_type":"other","period_start_date":"2020-08-24","effective_rate":7.12,"interest_change_dates_history":[]},"amount":{"granted":50000.00,"paid":2365.00,"balance":47635.00},"following_payment":{"instalment":310.00,"interest":270.00,"fees":0.00,"total":580.00,"date":"2021-05-27"},"repayment_schedule":{"instalment_free_months":[],"period_between_instalments":1,"number_of_instalments":84,"loan_account_number":"1234 51 82402","debit_account_number":"710325-9466","repayment_day_of_month":27},"owners":[{"name":"ANETA NORDEASSON","shared_rate_percentage":100}]}
+
+REQUEST 10
+GET https://private.nordea.se/api/dbf/ca/savings-v1/savings/custodies
+Accept: application/json
+Authorization: **HASHED:cQ** **HASHED:uh**
+Accept-Language: en-SE
+X-Aggregator: Tink Testing
+
+RESPONSE 10
+200
+X-Backside-Transport: ***
+nnCoection: ***
+Transfer-Encoding: chunked
+Date: Fri, 14 May 2021 09:32:18 GMT
+X-Application-Context: ***
+Content-Type: application/json
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Frame-Options: DENY
+X-Global-Transaction-ID: eb55ecf6609e43a2ab075a98
+Strict-Transport-Security: max-age=157680000; includeSubDomains
+
+{"totals_free_assets":{"todays_change_valid":true,"profit_loss_percentage":10.93,"market_value_in_local_currency":3250.4,"profit_loss":320.14,"todays_change":-6.29,"todays_change_percentage":-0.19,"invested_market_value":3250.4,"profit_loss_valid":true},"read_only_access":false,"totals_pension":{"todays_change_valid":false,"profit_loss_percentage":74.44,"market_value_in_local_currency":1192279.4,"profit_loss":508800.38,"todays_change":0.0,"todays_change_percentage":0.0,"invested_market_value":1192279.4,"profit_loss_valid":true},"accounts":[{"has_additional_info":false,"account_number":"18957077596","cash_amount":6950.34,"owner_id":"**HASHED:y/**","details_available":true,"profit_loss":320.14,"wrapper":true,"type":"CUSTODY","buying_power":6950.34,"has_reports":false,"profit_loss_percentage":10.93,"profit_loss_applicable":true,"has_fund_allocation_plan":false,"currency":"SEK","id":"PBI:018957077596","holdings":[{"show_profit_loss":false,"market_value":6950.34,"quantity":6950.34,"custody_key":"PBI:018957077596","name":"SEK","instrument":{"switch_allowed":false,"details_available":false,"main_sector_code":"GICS0","instrument_type":"CASH","flag_code":"","issuer":"-","price_precision":2,"use_native_trading_flow":false,"instrument_name":"SEK","sector_allocation":[{"code":"GICS0","value":100.0}],"currency":"SEK","id":"IMC-SEK-SEK-SEK","sell_allowed":false,"buy_allowed":false,"region_allocation":[],"isin":"SEK"},"currency":"SEK","id":"PBI:018957077596+I-585745.1SEK-null-null","fx_rate":1.0,"tags":[]},{"show_profit_loss":true,"market_value":3250.4,"quantity":11.9241,"custody_key":"PBI:018957077596","profit_loss":320.14,"instrument":{"fund_type":"Multi-Asset","details_available":true,"price_time_iso":"2021-04-18T22:00:00Z","price_time":1618783200000,"main_sector_code":"GICS35","instrument_type":"FUND","flag_code":"SE","issuer":"Nordea Funds Ltd","price":272.5906,"sector_allocation":[{"code":"GICS35","value":14.77},{"code":"GICS25","value":14.16},{"code":"GICS10","value":13.57},{"code":"GICS40","value":13.01},{"code":"GICS20","value":12.61},{"code":"GICS45","value":11.18},{"code":"GICS30","value":10.3},{"code":"GICS15","value":5.39},{"code":"GICS50","value":5.01}],"currency":"SEK","id":"IMC-SE0001114976-FONDASE-SEK","sell_allowed":true,"todays_change_pct":-0.19,"buy_allowed":true,"management_fee":1.55,"morning_star_rating":4,"switch_allowed":true,"document_types":["Prospectus","KIID"],"todays_change":-0.5275,"price_precision":4,"use_native_trading_flow":true,"dividend_paying":false,"instrument_name":"Nordea Stratega 50","esg_rating":"A","risk":4,"returns":{"five_years":42.46,"three_years":22.78,"year_to_date":8.12,"one_day":-0.19,"one_year":14.76},"fund_category":"Global","region_allocation":[{"code":"USA","value":40.0},{"code":"EUROPE","value":25.0},{"code":"HOME_BIAS","value":15.0},{"code":"FAR_EAST_EM","value":15.0},{"code":"JAPAN","value":5.0}],"isin":"SE0001114976"},"tags":[],"purchase_value":2930.26,"profit_loss_percentage":10.93,"name":"Nordea Stratega 50","currency":"SEK","id":"PBI:018957077596+IMC-SE0001114976-FONDASE-SEK","avg_purchase_price":245.7427,"fx_rate":1.0}],"profit_loss_valid":true,"market_value":10200.74,"todays_change_valid":true,"owner_name":"","todays_change":-6.29,"classification":"FREE","todays_change_percentage":-0.19,"tags":[],"custody_tags":["EXCHANGE_TRADING","FUND_TRADING"],"market_value_in_local_currrency":10200.74,"todays_changes_applicable":true,"name":"Framtidskapital"},{"has_additional_info":false,"account_number":"15078324364","cash_amount":0,"owner_id":"**HASHED:y/**","details_available":true,"profit_loss":488496.33,"wrapper":false,"type":"CUSTODY","has_reports":false,"profit_loss_percentage":73.65,"profit_loss_applicable":true,"has_fund_allocation_plan":false,"currency":"SEK","id":"NLP:15078324364","holdings":[{"show_profit_loss":true,"market_value":1151771.92,"quantity":0.0,"custody_key":"NLP:15078324364","profit_loss":488496.33,"instrument":{"switch_allowed":false,"fund_type":"Not classified","details_available":true,"document_types":[],"main_sector_code":"GICS0","instrument_type":"FUND","flag_code":"SE","price_precision":2,"market":"NLPSE","use_native_trading_flow":false,"instrument_name":"Nordea Pensionsportfölj","sector_allocation":[{"code":"GICS0","value":100.0}],"currency":"SEK","risk":0,"returns":{"five_years":0.0,"three_years":0.0,"year_to_date":0.0,"one_day":0.0,"one_year":0.0},"fund_category":"Not classified","id":"IMC-NLPSE0000021-NLPSE-SEK","sell_allowed":false,"buy_allowed":false,"region_allocation":[],"management_fee":0.0,"isin":"NLPSE0000021"},"tags":[],"purchase_value":663275.59,"profit_loss_percentage":73.65,"name":"Nordea Pensionsportfölj","currency":"SEK","id":"NLP:15078324364+IMC-NLPSE0000021-NLPSE-SEK","avg_purchase_price":663275.59,"fx_rate":1.0}],"profit_loss_valid":true,"market_value":1151771.92,"todays_change_valid":false,"owner_name":"","todays_change":0.0,"classification":"PENSION","todays_change_percentage":0.0,"tags":[],"custody_tags":[],"market_value_in_local_currrency":1151771.92,"todays_changes_applicable":true,"name":"Avtalspension KAP-KL fond 2012"},{"has_additional_info":false,"account_number":"15078324372","cash_amount":0,"owner_id":"**HASHED:y/**","details_available":true,"profit_loss":20304.05,"wrapper":false,"type":"CUSTODY","has_reports":false,"profit_loss_percentage":100.5,"profit_loss_applicable":true,"has_fund_allocation_plan":false,"currency":"SEK","id":"NLP:15078324372","holdings":[{"show_profit_loss":true,"market_value":40507.48,"quantity":0.0,"custody_key":"NLP:15078324372","profit_loss":20304.05,"instrument":{"switch_allowed":false,"fund_type":"Not classified","details_available":true,"document_types":[],"main_sector_code":"GICS0","instrument_type":"FUND","flag_code":"SE","price_precision":2,"market":"NLPSE","use_native_trading_flow":false,"instrument_name":"Nordea Pensionsportfölj","sector_allocation":[{"code":"GICS0","value":100.0}],"currency":"SEK","risk":0,"returns":{"five_years":0.0,"three_years":0.0,"year_to_date":0.0,"one_day":0.0,"one_year":0.0},"fund_category":"Not classified","id":"IMC-NLPSE0000021-NLPSE-SEK","sell_allowed":false,"buy_allowed":false,"region_allocation":[],"management_fee":0.0,"isin":"NLPSE0000021"},"tags":[],"purchase_value":20203.43,"profit_loss_percentage":100.5,"name":"Nordea Pensionsportfölj","currency":"SEK","id":"NLP:15078324372+IMC-NLPSE0000021-NLPSE-SEK","avg_purchase_price":20203.43,"fx_rate":1.0}],"profit_loss_valid":true,"market_value":40507.48,"todays_change_valid":false,"owner_name":"","todays_change":0.0,"classification":"PENSION","todays_change_percentage":0.0,"tags":[],"custody_tags":[],"market_value_in_local_currrency":40507.48,"todays_changes_applicable":true,"name":"Avtalspension KAP-KL fond 2012"}],"totals":{"todays_change_valid":false,"profit_loss_percentage":74.17,"market_value_in_local_currency":1195529.8,"profit_loss":509120.52,"todays_change":-6.29,"todays_change_percentage":-0.19,"invested_market_value":1195529.8,"profit_loss_valid":true},"legacy_errors":[]}
+
+REQUEST 11
+GET https://private.nordea.se/api/dbf/ca/payments-v2/payments/
+Accept: application/json
+Content-Type: application/json
+Authorization: **HASHED:cQ** **HASHED:uh**
+Accept-Language: en-SE
+X-Aggregator: Tink Testing
+
+RESPONSE 11
+200
+X-Backside-Transport: ***
+nnCoection: ***
+Transfer-Encoding: chunked
+X-Nordea-App: ***
+Content-Type: application/json
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Content-Type-Options: nosniff
+X-Frame-Options: DENY
+X-XSS-Protection: 1; mode=block
+Referrer-Policy: ***
+Date: Fri, 14 May 2021 09:32:19 GMT
+X-Global-Transaction-ID: 19aea263609e43a3230782f3
+Strict-Transport-Security: max-age=157680000; includeSubDomains
+
+{"results":[{"id":"1341137324775","from":"0105030480","from_account_number_type":"LBAN-SE","from_currency":"SEK","to":"9366006","to_account_number_type":"PG","recipient_name":"Tele2 - mobil","reference":"","amount":569.0,"status":"confirmed","type":"plusgiro","due":"2021-05-28","currency":"SEK","permissions":{"delete":true,"copy":false,"modify":{"from":true,"to":true,"amount":true,"due":true,"message":true,"recurring_count":true,"recurring_interval":true,"recurring_repeats":true,"recurring_lastday":true,"type":true}},"credit_notes":[]}],"errors":[]}
+
+REQUEST 12
+GET https://private.nordea.se/api/dbf/ca/accounts-v3/accounts/NAID-SE-SEK-30752171234/transactions?product_code=SE1145&start_date=1992-01-10&end_date=1992-04-10
+Accept: application/json
+Authorization: **HASHED:cQ** **HASHED:uh**
+Accept-Language: en-SE
+X-Aggregator: Tink Testing
+
+RESPONSE 12
+200
+X-Backside-Transport: ***
+nnCoection: ***
+Transfer-Encoding: chunked
+X-Nordea-App: ***
+Content-Type: application/json
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Content-Type-Options: nosniff
+X-Frame-Options: DENY
+X-XSS-Protection: 1; mode=block
+Referrer-Policy: ***
+Date: Fri, 14 May 2021 09:32:19 GMT
+X-Global-Transaction-ID: 19aea263609e43a3230785b3
+Strict-Transport-Security: max-age=157680000; includeSubDomains
+
+{"result": [{"transaction_id": "B002021-05-142021-05-14-11.20.38.747172", "has_details": true, "booked": true, "amount": -12869.00, "currency": "SEK", "booking_date": "2021-05-14", "interest_date": "2021-05-14", "title": "Överföring 3075 21 72484", "balance_after": 0.83, "transaction_type": {"transaction_code": "SE00850", "transaction_code_text": "Transfer"}, "correction": false }, {"transaction_id": "B002021-05-142021-05-11-16.02.03.987356", "has_details": true, "booked": true, "amount": 12869.58, "currency": "SEK", "booking_date": "2021-05-14", "interest_date": "2021-05-14", "title": "Lön", "balance_after": 12869.83, "transaction_type": {"transaction_code": "SE00350", "transaction_code_text": "Salary"}, "correction": false }, {"transaction_id": "B002021-05-122021-05-12-20.05.10.215020", "has_details": true, "booked": true, "amount": -500.00, "currency": "SEK", "booking_date": "2021-05-12", "interest_date": "2021-05-12", "title": "Swish betalning Ella Nordea", "balance_after": 0.25, "transaction_type": {"transaction_code": "SE00896", "transaction_code_text": "Mobile pay outgoing"}, "correction": false }, {"transaction_id": "B002021-05-122021-05-12-20.03.39.844575", "has_details": true, "booked": true, "amount": 200.00, "currency": "SEK", "booking_date": "2021-05-12", "interest_date": "2021-05-12", "title": "Swish inbetalning Ella Nordea", "balance_after": 500.25, "transaction_type": {"transaction_code": "SE00486", "transaction_code_text": "Mobile pay incoming"}, "correction": false }, {"transaction_id": "B002021-05-122021-05-12-17.18.50.941175", "has_details": true, "booked": true, "amount": 300.00, "currency": "SEK", "booking_date": "2021-05-12", "interest_date": "2021-05-12", "title": "Swish inbetalning Nordeasson,NEDI", "balance_after": 300.25, "transaction_type": {"transaction_code": "SE00486", "transaction_code_text": "Mobile pay incoming"}, "correction": false }, {"transaction_id": "B002021-05-102021-05-10-06.44.04.835394", "has_details": true, "booked": true, "amount": -170.82, "currency": "SEK", "booking_date": "2021-05-10", "interest_date": "2021-05-10", "title": "Kortköp 210506 INGO VESTERAS  OSTER", "balance_after": 0.25, "transaction_type": {"transaction_code": "SE00802", "transaction_code_text": "Card purchase reserv prel"}, "correction": false } ], "total_size":null,"continuation_key":null,"country":"SE","sub_system_errors":[]}
+
+REQUEST 13
+GET https://private.nordea.se/api/dbf/ca/accounts-v3/accounts/NAID-SE-SEK-0105012345/transactions?product_code=SE4001&start_date=1991-10-09&end_date=1992-01-09
+Accept: application/json
+Authorization: **HASHED:cQ** **HASHED:uh**
+Accept-Language: en-SE
+X-Aggregator: Tink Testing
+
+RESPONSE 13
+200
+X-Backside-Transport: ***
+nnCoection: ***
+Transfer-Encoding: chunked
+X-Nordea-App: ***
+Content-Type: application/json
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Content-Type-Options: nosniff
+X-Frame-Options: DENY
+X-XSS-Protection: 1; mode=block
+Referrer-Policy: ***
+Date: Fri, 14 May 2021 09:32:19 GMT
+X-Global-Transaction-ID: 19aea263609e43a3230785b3
+Strict-Transport-Security: max-age=157680000; includeSubDomains
+
+{"result": [{"transaction_id": "B002021-05-142021-05-14-11.20.38.747172", "has_details": true, "booked": true, "amount": -12869.00, "currency": "SEK", "booking_date": "2021-05-14", "interest_date": "2021-05-14", "title": "Överföring 3075 21 72484", "balance_after": 0.83, "transaction_type": {"transaction_code": "SE00850", "transaction_code_text": "Transfer"}, "correction": false }, {"transaction_id": "B002021-05-142021-05-11-16.02.03.987356", "has_details": true, "booked": true, "amount": 12869.58, "currency": "SEK", "booking_date": "2021-05-14", "interest_date": "2021-05-14", "title": "Lön", "balance_after": 12869.83, "transaction_type": {"transaction_code": "SE00350", "transaction_code_text": "Salary"}, "correction": false }, {"transaction_id": "B002021-05-122021-05-12-20.05.10.215020", "has_details": true, "booked": true, "amount": -500.00, "currency": "SEK", "booking_date": "2021-05-12", "interest_date": "2021-05-12", "title": "Swish betalning Ella Nordea", "balance_after": 0.25, "transaction_type": {"transaction_code": "SE00896", "transaction_code_text": "Mobile pay outgoing"}, "correction": false }, {"transaction_id": "B002021-05-122021-05-12-20.03.39.844575", "has_details": true, "booked": true, "amount": 200.00, "currency": "SEK", "booking_date": "2021-05-12", "interest_date": "2021-05-12", "title": "Swish inbetalning Ella Nordea", "balance_after": 500.25, "transaction_type": {"transaction_code": "SE00486", "transaction_code_text": "Mobile pay incoming"}, "correction": false }, {"transaction_id": "B002021-05-122021-05-12-17.18.50.941175", "has_details": true, "booked": true, "amount": 300.00, "currency": "SEK", "booking_date": "2021-05-12", "interest_date": "2021-05-12", "title": "Swish inbetalning Nordeasson,NEDI", "balance_after": 300.25, "transaction_type": {"transaction_code": "SE00486", "transaction_code_text": "Mobile pay incoming"}, "correction": false }, {"transaction_id": "B002021-05-102021-05-10-06.44.04.835394", "has_details": true, "booked": true, "amount": -170.82, "currency": "SEK", "booking_date": "2021-05-10", "interest_date": "2021-05-10", "title": "Kortköp 210506 INGO VESTERAS  OSTER", "balance_after": 0.25, "transaction_type": {"transaction_code": "SE00802", "transaction_code_text": "Card purchase reserv prel"}, "correction": false } ], "total_size":null,"continuation_key":null,"country":"SE","sub_system_errors":[]}
+
+REQUEST 14
+GET https://private.nordea.se/api/dbf/ca/accounts-v3/accounts/NAID-SE-SEK-0105012345/transactions?product_code=SE4001&start_date=1992-01-10&end_date=1992-04-10
+Accept: application/json
+Authorization: **HASHED:cQ** **HASHED:uh**
+Accept-Language: en-SE
+X-Aggregator: Tink Testing
+
+RESPONSE 14
+200
+X-Backside-Transport: ***
+nnCoection: ***
+Transfer-Encoding: chunked
+X-Nordea-App: ***
+Content-Type: application/json
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Content-Type-Options: nosniff
+X-Frame-Options: DENY
+X-XSS-Protection: 1; mode=block
+Referrer-Policy: ***
+Date: Fri, 14 May 2021 09:32:19 GMT
+X-Global-Transaction-ID: 19aea263609e43a3230785b3
+Strict-Transport-Security: max-age=157680000; includeSubDomains
+
+{"result": [{"transaction_id": "B002021-05-142021-05-14-11.20.38.747172", "has_details": true, "booked": true, "amount": -12869.00, "currency": "SEK", "booking_date": "2021-05-14", "interest_date": "2021-05-14", "title": "Överföring 3075 21 72484", "balance_after": 0.83, "transaction_type": {"transaction_code": "SE00850", "transaction_code_text": "Transfer"}, "correction": false }, {"transaction_id": "B002021-05-142021-05-11-16.02.03.987356", "has_details": true, "booked": true, "amount": 12869.58, "currency": "SEK", "booking_date": "2021-05-14", "interest_date": "2021-05-14", "title": "Lön", "balance_after": 12869.83, "transaction_type": {"transaction_code": "SE00350", "transaction_code_text": "Salary"}, "correction": false }, {"transaction_id": "B002021-05-122021-05-12-20.05.10.215020", "has_details": true, "booked": true, "amount": -500.00, "currency": "SEK", "booking_date": "2021-05-12", "interest_date": "2021-05-12", "title": "Swish betalning Ella Nordea", "balance_after": 0.25, "transaction_type": {"transaction_code": "SE00896", "transaction_code_text": "Mobile pay outgoing"}, "correction": false }, {"transaction_id": "B002021-05-122021-05-12-20.03.39.844575", "has_details": true, "booked": true, "amount": 200.00, "currency": "SEK", "booking_date": "2021-05-12", "interest_date": "2021-05-12", "title": "Swish inbetalning Ella Nordea", "balance_after": 500.25, "transaction_type": {"transaction_code": "SE00486", "transaction_code_text": "Mobile pay incoming"}, "correction": false }, {"transaction_id": "B002021-05-122021-05-12-17.18.50.941175", "has_details": true, "booked": true, "amount": 300.00, "currency": "SEK", "booking_date": "2021-05-12", "interest_date": "2021-05-12", "title": "Swish inbetalning Nordeasson,NEDI", "balance_after": 300.25, "transaction_type": {"transaction_code": "SE00486", "transaction_code_text": "Mobile pay incoming"}, "correction": false }, {"transaction_id": "B002021-05-102021-05-10-06.44.04.835394", "has_details": true, "booked": true, "amount": -170.82, "currency": "SEK", "booking_date": "2021-05-10", "interest_date": "2021-05-10", "title": "Kortköp 210506 INGO VESTERAS  OSTER", "balance_after": 0.25, "transaction_type": {"transaction_code": "SE00802", "transaction_code_text": "Card purchase reserv prel"}, "correction": false } ], "total_size":null,"continuation_key":null,"country":"SE","sub_system_errors":[]}
+
+REQUEST 15
+GET https://private.nordea.se/api/dbf/ca/accounts-v3/accounts/NAID-SE-SEK-0105012345/transactions?product_code=SE4001&start_date=1991-07-08&end_date=1991-10-08
+Accept: application/json
+Authorization: **HASHED:cQ** **HASHED:uh**
+Accept-Language: en-SE
+X-Aggregator: Tink Testing
+
+RESPONSE 15
+200
+X-Backside-Transport: ***
+nnCoection: ***
+Transfer-Encoding: chunked
+X-Nordea-App: ***
+Content-Type: application/json
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Content-Type-Options: nosniff
+X-Frame-Options: DENY
+X-XSS-Protection: 1; mode=block
+Referrer-Policy: ***
+Date: Fri, 14 May 2021 09:32:19 GMT
+X-Global-Transaction-ID: 19aea263609e43a3230785b3
+Strict-Transport-Security: max-age=157680000; includeSubDomains
+
+{"result": [{"transaction_id": "B002021-05-142021-05-14-11.20.38.747172", "has_details": true, "booked": true, "amount": -12869.00, "currency": "SEK", "booking_date": "2021-05-14", "interest_date": "2021-05-14", "title": "Överföring 3075 21 72484", "balance_after": 0.83, "transaction_type": {"transaction_code": "SE00850", "transaction_code_text": "Transfer"}, "correction": false }, {"transaction_id": "B002021-05-142021-05-11-16.02.03.987356", "has_details": true, "booked": true, "amount": 12869.58, "currency": "SEK", "booking_date": "2021-05-14", "interest_date": "2021-05-14", "title": "Lön", "balance_after": 12869.83, "transaction_type": {"transaction_code": "SE00350", "transaction_code_text": "Salary"}, "correction": false }, {"transaction_id": "B002021-05-122021-05-12-20.05.10.215020", "has_details": true, "booked": true, "amount": -500.00, "currency": "SEK", "booking_date": "2021-05-12", "interest_date": "2021-05-12", "title": "Swish betalning Ella Nordea", "balance_after": 0.25, "transaction_type": {"transaction_code": "SE00896", "transaction_code_text": "Mobile pay outgoing"}, "correction": false }, {"transaction_id": "B002021-05-122021-05-12-20.03.39.844575", "has_details": true, "booked": true, "amount": 200.00, "currency": "SEK", "booking_date": "2021-05-12", "interest_date": "2021-05-12", "title": "Swish inbetalning Ella Nordea", "balance_after": 500.25, "transaction_type": {"transaction_code": "SE00486", "transaction_code_text": "Mobile pay incoming"}, "correction": false }, {"transaction_id": "B002021-05-122021-05-12-17.18.50.941175", "has_details": true, "booked": true, "amount": 300.00, "currency": "SEK", "booking_date": "2021-05-12", "interest_date": "2021-05-12", "title": "Swish inbetalning Nordeasson,NEDI", "balance_after": 300.25, "transaction_type": {"transaction_code": "SE00486", "transaction_code_text": "Mobile pay incoming"}, "correction": false }, {"transaction_id": "B002021-05-102021-05-10-06.44.04.835394", "has_details": true, "booked": true, "amount": -170.82, "currency": "SEK", "booking_date": "2021-05-10", "interest_date": "2021-05-10", "title": "Kortköp 210506 INGO VESTERAS  OSTER", "balance_after": 0.25, "transaction_type": {"transaction_code": "SE00802", "transaction_code_text": "Card purchase reserv prel"}, "correction": false } ], "total_size":null,"continuation_key":null,"country":"SE","sub_system_errors":[]}
+
+REQUEST 16
+GET https://private.nordea.se/api/dbf/ca/accounts-v3/accounts/NAID-SE-SEK-0105012345/transactions?product_code=SE4001&start_date=1991-04-07&end_date=1991-07-07
+Accept: application/json
+Authorization: **HASHED:cQ** **HASHED:uh**
+Accept-Language: en-SE
+X-Aggregator: Tink Testing
+
+RESPONSE 16
+200
+X-Backside-Transport: ***
+nnCoection: ***
+Transfer-Encoding: chunked
+X-Nordea-App: ***
+Content-Type: application/json
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Content-Type-Options: nosniff
+X-Frame-Options: DENY
+X-XSS-Protection: 1; mode=block
+Referrer-Policy: ***
+Date: Fri, 14 May 2021 09:32:19 GMT
+X-Global-Transaction-ID: 19aea263609e43a3230785b3
+Strict-Transport-Security: max-age=157680000; includeSubDomains
+
+{"result": [{"transaction_id": "B002021-05-142021-05-14-11.20.38.747172", "has_details": true, "booked": true, "amount": -12869.00, "currency": "SEK", "booking_date": "2021-05-14", "interest_date": "2021-05-14", "title": "Överföring 3075 21 72484", "balance_after": 0.83, "transaction_type": {"transaction_code": "SE00850", "transaction_code_text": "Transfer"}, "correction": false }, {"transaction_id": "B002021-05-142021-05-11-16.02.03.987356", "has_details": true, "booked": true, "amount": 12869.58, "currency": "SEK", "booking_date": "2021-05-14", "interest_date": "2021-05-14", "title": "Lön", "balance_after": 12869.83, "transaction_type": {"transaction_code": "SE00350", "transaction_code_text": "Salary"}, "correction": false }, {"transaction_id": "B002021-05-122021-05-12-20.05.10.215020", "has_details": true, "booked": true, "amount": -500.00, "currency": "SEK", "booking_date": "2021-05-12", "interest_date": "2021-05-12", "title": "Swish betalning Ella Nordea", "balance_after": 0.25, "transaction_type": {"transaction_code": "SE00896", "transaction_code_text": "Mobile pay outgoing"}, "correction": false }, {"transaction_id": "B002021-05-122021-05-12-20.03.39.844575", "has_details": true, "booked": true, "amount": 200.00, "currency": "SEK", "booking_date": "2021-05-12", "interest_date": "2021-05-12", "title": "Swish inbetalning Ella Nordea", "balance_after": 500.25, "transaction_type": {"transaction_code": "SE00486", "transaction_code_text": "Mobile pay incoming"}, "correction": false }, {"transaction_id": "B002021-05-122021-05-12-17.18.50.941175", "has_details": true, "booked": true, "amount": 300.00, "currency": "SEK", "booking_date": "2021-05-12", "interest_date": "2021-05-12", "title": "Swish inbetalning Nordeasson,NEDI", "balance_after": 300.25, "transaction_type": {"transaction_code": "SE00486", "transaction_code_text": "Mobile pay incoming"}, "correction": false }, {"transaction_id": "B002021-05-102021-05-10-06.44.04.835394", "has_details": true, "booked": true, "amount": -170.82, "currency": "SEK", "booking_date": "2021-05-10", "interest_date": "2021-05-10", "title": "Kortköp 210506 INGO VESTERAS  OSTER", "balance_after": 0.25, "transaction_type": {"transaction_code": "SE00802", "transaction_code_text": "Card purchase reserv prel"}, "correction": false } ], "total_size":null,"continuation_key":null,"country":"SE","sub_system_errors":[]}
+
+REQUEST 17
+GET https://private.nordea.se/api/dbf/ca/accounts-v3/accounts/NAID-SE-SEK-30752171234/transactions?product_code=SE1145&start_date=1991-10-09&end_date=1992-01-09
+Accept: application/json
+Authorization: **HASHED:cQ** **HASHED:uh**
+Accept-Language: en-SE
+X-Aggregator: Tink Testing
+
+RESPONSE 17
+200
+X-Backside-Transport: ***
+nnCoection: ***
+Transfer-Encoding: chunked
+X-Nordea-App: ***
+Content-Type: application/json
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Content-Type-Options: nosniff
+X-Frame-Options: DENY
+X-XSS-Protection: 1; mode=block
+Referrer-Policy: ***
+Date: Fri, 14 May 2021 09:32:19 GMT
+X-Global-Transaction-ID: 19aea263609e43a3230785b3
+Strict-Transport-Security: max-age=157680000; includeSubDomains
+
+{"result": [{"transaction_id": "B002021-05-142021-05-14-11.20.38.747172", "has_details": true, "booked": true, "amount": -12869.00, "currency": "SEK", "booking_date": "2021-05-14", "interest_date": "2021-05-14", "title": "Överföring 3075 21 72484", "balance_after": 0.83, "transaction_type": {"transaction_code": "SE00850", "transaction_code_text": "Transfer"}, "correction": false }, {"transaction_id": "B002021-05-142021-05-11-16.02.03.987356", "has_details": true, "booked": true, "amount": 12869.58, "currency": "SEK", "booking_date": "2021-05-14", "interest_date": "2021-05-14", "title": "Lön", "balance_after": 12869.83, "transaction_type": {"transaction_code": "SE00350", "transaction_code_text": "Salary"}, "correction": false }, {"transaction_id": "B002021-05-122021-05-12-20.05.10.215020", "has_details": true, "booked": true, "amount": -500.00, "currency": "SEK", "booking_date": "2021-05-12", "interest_date": "2021-05-12", "title": "Swish betalning Ella Nordea", "balance_after": 0.25, "transaction_type": {"transaction_code": "SE00896", "transaction_code_text": "Mobile pay outgoing"}, "correction": false }, {"transaction_id": "B002021-05-122021-05-12-20.03.39.844575", "has_details": true, "booked": true, "amount": 200.00, "currency": "SEK", "booking_date": "2021-05-12", "interest_date": "2021-05-12", "title": "Swish inbetalning Ella Nordea", "balance_after": 500.25, "transaction_type": {"transaction_code": "SE00486", "transaction_code_text": "Mobile pay incoming"}, "correction": false }, {"transaction_id": "B002021-05-122021-05-12-17.18.50.941175", "has_details": true, "booked": true, "amount": 300.00, "currency": "SEK", "booking_date": "2021-05-12", "interest_date": "2021-05-12", "title": "Swish inbetalning Nordeasson,NEDI", "balance_after": 300.25, "transaction_type": {"transaction_code": "SE00486", "transaction_code_text": "Mobile pay incoming"}, "correction": false }, {"transaction_id": "B002021-05-102021-05-10-06.44.04.835394", "has_details": true, "booked": true, "amount": -170.82, "currency": "SEK", "booking_date": "2021-05-10", "interest_date": "2021-05-10", "title": "Kortköp 210506 INGO VESTERAS  OSTER", "balance_after": 0.25, "transaction_type": {"transaction_code": "SE00802", "transaction_code_text": "Card purchase reserv prel"}, "correction": false } ], "total_size":null,"continuation_key":null,"country":"SE","sub_system_errors":[]}
+
+REQUEST 18
+GET https://private.nordea.se/api/dbf/ca/accounts-v3/accounts/NAID-SE-SEK-30752171234/transactions?product_code=SE1145&start_date=1991-07-08&end_date=1991-10-08
+Accept: application/json
+Authorization: **HASHED:cQ** **HASHED:uh**
+Accept-Language: en-SE
+X-Aggregator: Tink Testing
+
+RESPONSE 18
+200
+X-Backside-Transport: ***
+nnCoection: ***
+Transfer-Encoding: chunked
+X-Nordea-App: ***
+Content-Type: application/json
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Content-Type-Options: nosniff
+X-Frame-Options: DENY
+X-XSS-Protection: 1; mode=block
+Referrer-Policy: ***
+Date: Fri, 14 May 2021 09:32:19 GMT
+X-Global-Transaction-ID: 19aea263609e43a3230785b3
+Strict-Transport-Security: max-age=157680000; includeSubDomains
+
+{"result": [{"transaction_id": "B002021-05-142021-05-14-11.20.38.747172", "has_details": true, "booked": true, "amount": -12869.00, "currency": "SEK", "booking_date": "2021-05-14", "interest_date": "2021-05-14", "title": "Överföring 3075 21 72484", "balance_after": 0.83, "transaction_type": {"transaction_code": "SE00850", "transaction_code_text": "Transfer"}, "correction": false }, {"transaction_id": "B002021-05-142021-05-11-16.02.03.987356", "has_details": true, "booked": true, "amount": 12869.58, "currency": "SEK", "booking_date": "2021-05-14", "interest_date": "2021-05-14", "title": "Lön", "balance_after": 12869.83, "transaction_type": {"transaction_code": "SE00350", "transaction_code_text": "Salary"}, "correction": false }, {"transaction_id": "B002021-05-122021-05-12-20.05.10.215020", "has_details": true, "booked": true, "amount": -500.00, "currency": "SEK", "booking_date": "2021-05-12", "interest_date": "2021-05-12", "title": "Swish betalning Ella Nordea", "balance_after": 0.25, "transaction_type": {"transaction_code": "SE00896", "transaction_code_text": "Mobile pay outgoing"}, "correction": false }, {"transaction_id": "B002021-05-122021-05-12-20.03.39.844575", "has_details": true, "booked": true, "amount": 200.00, "currency": "SEK", "booking_date": "2021-05-12", "interest_date": "2021-05-12", "title": "Swish inbetalning Ella Nordea", "balance_after": 500.25, "transaction_type": {"transaction_code": "SE00486", "transaction_code_text": "Mobile pay incoming"}, "correction": false }, {"transaction_id": "B002021-05-122021-05-12-17.18.50.941175", "has_details": true, "booked": true, "amount": 300.00, "currency": "SEK", "booking_date": "2021-05-12", "interest_date": "2021-05-12", "title": "Swish inbetalning Nordeasson,NEDI", "balance_after": 300.25, "transaction_type": {"transaction_code": "SE00486", "transaction_code_text": "Mobile pay incoming"}, "correction": false }, {"transaction_id": "B002021-05-102021-05-10-06.44.04.835394", "has_details": true, "booked": true, "amount": -170.82, "currency": "SEK", "booking_date": "2021-05-10", "interest_date": "2021-05-10", "title": "Kortköp 210506 INGO VESTERAS  OSTER", "balance_after": 0.25, "transaction_type": {"transaction_code": "SE00802", "transaction_code_text": "Card purchase reserv prel"}, "correction": false } ], "total_size":null,"continuation_key":null,"country":"SE","sub_system_errors":[]}
+
+REQUEST 19
+GET https://private.nordea.se/api/dbf/ca/beneficiary-v1/beneficiaries
+Content-Type: application/json
+Accept: application/json
+Authorization: **HASHED:cQ** **HASHED:uh**
+Accept-Language: en-SE
+X-Aggregator: Tink Testing
+
+RESPONSE 19
+200
+X-Backside-Transport: ***
+nnCoection: ***
+Transfer-Encoding: chunked
+Date: Fri, 14 May 2021 09:32:21 GMT
+Content-Type: application/json
+X-Application-Context: ***
+X-Content-Type-Options: nosniff,nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Frame-Options: DENY
+x-request-id: 1.48993
+X-Global-Transaction-ID: eaf52b95609e43a5ef9ecfcf
+Strict-Transport-Security: max-age=157680000; includeSubDomains
+
+{"beneficiaries":[{"beneficiary_id":"dc52c8fe-f101-4224-8e49-54fa422aaaef","payment_type":"plusgiro","name":"Bubbelroom","account_number":"47520044","account_number_type":"PG"},{"beneficiary_id":"b83737c8-2ba1-4262-a04e-682ef65cf4a4","payment_type":"bankgiro","name":"Böter","account_number":"5200878","account_number_type":"BG"},{"beneficiary_id":"0a41da75-465e-4bfc-95be-282ff6e3ab2c","payment_type":"bankgiro","name":"Bötet","account_number":"50516905","account_number_type":"BG"},{"beneficiary_id":"623ef09b-353a-43c2-b642-ad6c89847da1","payment_type":"bankgiro","name":"Klarna","account_number":"41585027","account_number_type":"BG"},{"beneficiary_id":"060e43a6-0ff0-46be-ac3f-d098b60a3763","payment_type":"lban","name":"Mona Kabria","account_number":"9702288540","account_number_type":"NDA-SE","bank_code":"NB","bank_name":"Nordea"},{"beneficiary_id":"16084c19-2c4d-4ea8-b5a9-f0293dcce8ed","payment_type":"lban","name":"Nedi Nordeasson","account_number":"7701016441","account_number_type":"NDA-SE","bank_code":"NB","bank_name":"Nordea"},{"beneficiary_id":"b011ec79-e293-4a3e-962b-df3438995fb4","payment_type":"plusgiro","name":"Nettbuss","account_number":"41585027","account_number_type":"PG"}]}
+
+
