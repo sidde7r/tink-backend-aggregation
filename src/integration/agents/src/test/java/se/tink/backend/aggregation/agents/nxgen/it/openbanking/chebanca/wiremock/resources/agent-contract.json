@@ -43,17 +43,8 @@
             "transferDestinations": null,
             "details": null,
             "closed": false,
-            "holderName": "71596484",
-            "accountHolder": {
-                "accountId": null,
-                "type": "PERSONAL",
-                "identities": [
-                    {
-                        "name": "71596484",
-                        "role": "HOLDER"
-                    }
-                ]
-            },
+            "holderName": null,
+            "accountHolder": null,
             "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
             "financialInstitutionId": null,
             "balances": [],

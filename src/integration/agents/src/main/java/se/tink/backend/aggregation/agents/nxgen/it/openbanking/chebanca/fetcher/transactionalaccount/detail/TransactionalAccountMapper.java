@@ -32,7 +32,6 @@ public class TransactionalAccountMapper {
                 .withInferredAccountFlags()
                 .withBalance(buildBalanceModule(balances, accountEntity.getCurrency()))
                 .withId(id)
-                .addHolderName(accountEntity.getName())
                 .setApiIdentifier(accountEntity.getAccountId())
                 .build();
     }

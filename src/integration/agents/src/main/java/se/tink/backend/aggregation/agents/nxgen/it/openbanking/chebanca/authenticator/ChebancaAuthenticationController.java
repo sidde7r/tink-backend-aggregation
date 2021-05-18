@@ -1,8 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.authenticator;
 
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
-import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.authenticator.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
@@ -30,8 +28,7 @@ public class ChebancaAuthenticationController extends ThirdPartyAppAuthenticatio
     }
 
     @Override
-    public void authenticate(Credentials credentials)
-            throws AuthenticationException, AuthorizationException {
+    public void authenticate(Credentials credentials) {
         super.authenticate(credentials);
         consentManager.processConsent();
     }
