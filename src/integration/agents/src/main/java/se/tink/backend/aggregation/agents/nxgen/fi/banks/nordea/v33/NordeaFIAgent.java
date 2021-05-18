@@ -29,6 +29,7 @@ import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33.fetcher.inve
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33.fetcher.loan.NordeaLoanFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33.fetcher.transactionalaccount.NordeaTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33.fetcher.transactionalaccount.NordeaTransactionalAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33.filters.NordeaFIRetryFilter;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33.session.NordeaFISessionHandler;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
@@ -42,6 +43,8 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
+import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.ServiceUnavailableBankServiceErrorFilter;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 @AgentCapabilities({
@@ -68,6 +71,7 @@ public final class NordeaFIAgent extends NextGenerationAgent
     public NordeaFIAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
+        configureHttpClient(client);
         apiClient = new NordeaFIApiClient(client, sessionStorage);
 
         NordeaInvestmentFetcher investmentFetcher =
@@ -85,12 +89,21 @@ public final class NordeaFIAgent extends NextGenerationAgent
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
     }
 
+    private void configureHttpClient(TinkHttpClient client) {
+        client.setTimeout(NordeaFIConstants.HttpClient.TIMEOUT_MS);
+        client.addFilter(new ServiceUnavailableBankServiceErrorFilter());
+        client.addFilter(
+                new NordeaFIRetryFilter(
+                        NordeaFIConstants.HttpClient.MAX_RETRIES,
+                        NordeaFIConstants.HttpClient.RETRY_SLEEP_MS));
+    }
+
     @Override
     protected Authenticator constructAuthenticator() {
         NordeaCodesAuthenticator codesAuthenticator =
                 new NordeaCodesAuthenticator(
                         apiClient, sessionStorage, credentials.getField(Field.Key.USERNAME));
-        return new ThirdPartyAppAuthenticationController<String>(
+        return new ThirdPartyAppAuthenticationController<>(
                 codesAuthenticator, supplementalInformationHelper);
     }
 

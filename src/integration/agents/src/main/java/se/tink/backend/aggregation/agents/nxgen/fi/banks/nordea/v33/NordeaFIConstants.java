@@ -150,6 +150,14 @@ public class NordeaFIConstants {
         public static final String INVALID_TOKEN = "invalid_token";
         // refresh token has expired
         public static final String INVALID_GRANT = "invalid_grant";
+
+        public static final String SERVICE_UNAVAILABLE = "service_unavailable";
+    }
+
+    public static class HttpClient {
+        public static final int MAX_RETRIES = 5;
+        public static final int RETRY_SLEEP_MS = 3000;
+        public static final int TIMEOUT_MS = 45000;
     }
 
     public static class LogTags {
