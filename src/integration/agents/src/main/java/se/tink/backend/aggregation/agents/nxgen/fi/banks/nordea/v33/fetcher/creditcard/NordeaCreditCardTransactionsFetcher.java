@@ -28,8 +28,7 @@ public class NordeaCreditCardTransactionsFetcher
         try {
             return apiClient.fetchCardTransactions(page, accountId);
         } catch (HttpResponseException e) {
-            log.error(NordeaFIConstants.LogTags.CREDIT_TRANSACTIONS_ERROR.toString() + ": ", e);
-
+            log.error(NordeaFIConstants.LogTags.CREDIT_TRANSACTIONS_ERROR.toString(), e);
             return PaginatorResponseImpl.createEmpty(false);
         }
     }

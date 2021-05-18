@@ -6,6 +6,8 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import java.util.Date;
 import java.util.List;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33.NordeaFIConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -14,6 +16,7 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
+@Slf4j
 @JsonObject
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class AccountEntity {
@@ -46,7 +49,7 @@ public class AccountEntity {
         return TransactionalAccount.builder(
                         getAccountType(), iban, ExactCurrencyAmount.of(availableBalance, currency))
                 .setHolderName(getHolderName())
-                .setName(nickname)
+                .setName(StringUtils.isNotBlank(nickname) ? nickname : productName)
                 .setExactBalance(ExactCurrencyAmount.of(availableBalance, currency))
                 .addIdentifier(new IbanIdentifier(iban))
                 .setAccountNumber(displayAccountNumber)
@@ -57,7 +60,12 @@ public class AccountEntity {
     private AccountTypes getAccountType() {
         return NordeaFIConstants.ACCOUNT_TYPE_MAPPER
                 .translate(category)
-                .orElse(AccountTypes.CHECKING);
+                .orElseGet(this::logUnknownAccountAndGetDefaultValue);
+    }
+
+    private AccountTypes logUnknownAccountAndGetDefaultValue() {
+        log.info("{}: {}", NordeaFIConstants.LogTags.NORDEA_FI_ACCOUNT_TYPE, category);
+        return AccountTypes.CHECKING;
     }
 
     private HolderName getHolderName() {

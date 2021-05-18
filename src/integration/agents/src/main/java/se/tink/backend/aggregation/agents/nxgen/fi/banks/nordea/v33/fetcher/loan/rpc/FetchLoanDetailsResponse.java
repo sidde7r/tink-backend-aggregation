@@ -19,6 +19,7 @@ import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33.fetcher.loan
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
+import se.tink.backend.aggregation.nxgen.core.account.loan.util.InterestRateConverter;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.loan.LoanModule;
 import se.tink.libraries.account.identifiers.FinnishIdentifier;
@@ -27,6 +28,10 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 @JsonObject
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class FetchLoanDetailsResponse {
+
+    // In banks' response, interest rate is percentage value with four decimal places
+    private static final int SCALE = 6;
+
     private String currency;
     private String group;
     private InterestEntity interest;
@@ -63,7 +68,7 @@ public class FetchLoanDetailsResponse {
         return LoanModule.builder()
                 .withType(getLoanType())
                 .withBalance(getBalance())
-                .withInterestRate(interest.getRate())
+                .withInterestRate((InterestRateConverter.toDecimalValue(interest.getRate(), SCALE)))
                 .setAmortized(getPaid())
                 .setInitialBalance(getInitialBalance())
                 .setApplicants(getApplicants())
