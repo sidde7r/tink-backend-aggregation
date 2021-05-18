@@ -1,35 +1,26 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.nationwide;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.nationwide.fetcher;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verifyZeroInteractions;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import java.util.Collections;
 import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
-import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.PartyDataStorage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.ScaExpirationValidator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountOwnershipType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.PartyV31Entity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.PartyFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.fetcher.PartyV31Fetcher;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.AccountTypeMapper;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.nationwide.fetcher.NationwidePartyFetcher;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
-public class NationwidePartyDataFetcherTest {
+public class NationwidePartyFetcherTest {
 
     private NationwidePartyFetcher nationwideFetcher;
-    private AccountTypeMapper accountTypeMapper;
-    private PartyFetcher baseFetcher;
     private ScaExpirationValidator scaValidator;
     private PartyDataStorage storage;
     private UkOpenBankingAisConfig config;
@@ -40,8 +31,6 @@ public class NationwidePartyDataFetcherTest {
     @Before
     public void setUp() {
         config = mock(UkOpenBankingAisConfig.class);
-        accountTypeMapper = mock(AccountTypeMapper.class);
-        baseFetcher = mock(PartyV31Fetcher.class);
         scaValidator = mock(ScaExpirationValidator.class);
         storage = mock(PartyDataStorage.class);
 
@@ -62,43 +51,8 @@ public class NationwidePartyDataFetcherTest {
     }
 
     @Test
-    public void shouldNotFetchDataForCreditCards() {
-        // given
-        given(accountTypeMapper.getAccountType(any())).willReturn(AccountTypes.CREDIT_CARD);
-        given(accountTypeMapper.getAccountOwnershipType(any()))
-                .willReturn(AccountOwnershipType.PERSONAL);
-
-        // when
-        List<PartyV31Entity> result =
-                nationwideFetcher.fetchAccountParties(mock(AccountEntity.class));
-
-        // then
-        assertThat(result).isEmpty();
-        verifyZeroInteractions(baseFetcher);
-    }
-
-    @Test
-    public void shouldNotFetchDataForBusinessAccounts() {
-        // given
-        given(accountTypeMapper.getAccountType(any())).willReturn(AccountTypes.CHECKING);
-        given(accountTypeMapper.getAccountOwnershipType(any()))
-                .willReturn(AccountOwnershipType.BUSINESS);
-
-        // when
-        List<PartyV31Entity> result =
-                nationwideFetcher.fetchAccountParties(mock(AccountEntity.class));
-
-        // then
-        assertThat(result).isEmpty();
-        verifyZeroInteractions(baseFetcher);
-    }
-
-    @Test
     public void restoreIdentitiesFromPersistentStorageIfScaExpired() {
         // given
-        given(accountTypeMapper.getAccountType(any())).willReturn(AccountTypes.CHECKING);
-        given(accountTypeMapper.getAccountOwnershipType(any()))
-                .willReturn(AccountOwnershipType.PERSONAL);
         given(config.isAccountPartiesEndpointEnabled()).willReturn(true);
         given(scaValidator.isScaExpired()).willReturn(true);
         given(storage.restoreParties()).willReturn(parties);
@@ -116,9 +70,6 @@ public class NationwidePartyDataFetcherTest {
     public void shouldNotFetchNeitherRestoreIfScaExpiredAndNothingStored() {
         // given
         given(config.isAccountPartiesEndpointEnabled()).willReturn(true);
-        given(accountTypeMapper.getAccountType(any())).willReturn(AccountTypes.CHECKING);
-        given(accountTypeMapper.getAccountOwnershipType(any()))
-                .willReturn(AccountOwnershipType.PERSONAL);
         given(scaValidator.isScaExpired()).willReturn(true);
         given(storage.restoreParties()).willReturn(Collections.emptyList());
 

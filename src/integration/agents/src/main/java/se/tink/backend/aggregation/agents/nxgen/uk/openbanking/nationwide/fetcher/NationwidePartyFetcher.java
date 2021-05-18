@@ -19,7 +19,7 @@ public class NationwidePartyFetcher extends PartyV31Fetcher {
     private final UkOpenBankingAisConfig config;
     private final PartyDataStorage storage;
     private final ScaExpirationValidator scaValidator;
-    private static final long LIMIT_IN_MINUTES = 5;
+    private static final long LIMIT_IN_MINUTES = 30;
 
     public NationwidePartyFetcher(
             UkOpenBankingApiClient apiClient,
