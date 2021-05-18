@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.workers.commands;
 
 import com.google.common.collect.Lists;
-import com.sun.jersey.api.client.UniformInterfaceException;
 import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
@@ -95,13 +94,9 @@ public class SendPsd2PaymentClassificationToUpdateServiceAgentWorkerCommand
 
         try {
             controllerWrapper.upsertRegulatoryClassification(request);
-        } catch (UniformInterfaceException e) {
-            log.error(
-                    "Request for PSD2 Payment Account Classification update failed, response: "
-                            + (e.getResponse().hasEntity()
-                                    ? e.getResponse().getEntity(String.class)
-                                    : ""));
-            throw e;
+        } catch (RuntimeException e) {
+            log.warn(
+                    "Request for PSD2 Payment Account Classification update failed, response: ", e);
         }
     }
 
