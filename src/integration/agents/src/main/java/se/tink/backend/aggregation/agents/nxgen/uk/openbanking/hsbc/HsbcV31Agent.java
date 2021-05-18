@@ -22,7 +22,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.module.UkOpenBankingFlowModule;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.module.UkOpenBankingLocalKeySignerModuleForDecoupledMode;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.UkOpenBankingAisConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.UkOpenBankingV31Ais;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.authenticator.UkOpenBankingAisAuthenticationController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.authenticator.consent.ConsentStatusValidator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticationValidator;
@@ -38,8 +37,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.validator.UkOpenBankingPaymentRequestValidator;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.hsbc.pis.signature.HsbcSignatureCreator;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
@@ -54,8 +51,6 @@ public final class HsbcV31Agent extends UkOpenBankingBaseAgent {
 
     private static final UkOpenBankingAisConfig aisConfig;
     private static final UkOpenBankingPisConfiguration pisConfig;
-    private final LocalDateTimeSource localDateTimeSource;
-    private final RandomValueGenerator randomValueGenerator;
 
     static {
         aisConfig =
@@ -84,13 +79,11 @@ public final class HsbcV31Agent extends UkOpenBankingBaseAgent {
                         new HsbcSignatureCreator(flowFacade.getJwtSinger()),
                         flowFacade.getJwtSinger(),
                         componentProvider.getRandomValueGenerator()));
-        this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
-        this.randomValueGenerator = componentProvider.getRandomValueGenerator();
     }
 
     @Override
     protected UkOpenBankingAis makeAis() {
-        return new UkOpenBankingV31Ais(aisConfig, persistentStorage, localDateTimeSource);
+        return new HsbcV31Ais(aisConfig, persistentStorage, localDateTimeSource, apiClient);
     }
 
     @Override

@@ -1,7 +1,8 @@
-package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.nationwide.fetcher;
+package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.hsbc.fetcher;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.PartyDataStorage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.ScaExpirationValidator;
@@ -13,26 +14,26 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 @Slf4j
-public class NationwidePartyFetcher extends PartyV31Fetcher {
+public class HsbcPartyFetcher extends PartyV31Fetcher {
 
     private final UkOpenBankingApiClient apiClient;
     private final UkOpenBankingAisConfig config;
     private final PartyDataStorage storage;
     private final ScaExpirationValidator scaValidator;
-    private static final long LIMIT_IN_MINUTES = 30;
+    private static final long LIMIT_IN_MINUTES = 60;
 
-    public NationwidePartyFetcher(
+    public HsbcPartyFetcher(
             UkOpenBankingApiClient apiClient,
             UkOpenBankingAisConfig config,
-            PersistentStorage storage) {
+            PersistentStorage persistentStorage) {
         super(apiClient, config);
         this.apiClient = apiClient;
         this.config = config;
-        this.storage = new PartyDataStorage(storage);
-        this.scaValidator = new ScaExpirationValidator(storage, LIMIT_IN_MINUTES);
+        this.storage = new PartyDataStorage(persistentStorage);
+        this.scaValidator = new ScaExpirationValidator(persistentStorage, LIMIT_IN_MINUTES);
     }
 
-    public NationwidePartyFetcher(
+    public HsbcPartyFetcher(
             UkOpenBankingApiClient apiClient,
             UkOpenBankingAisConfig config,
             PartyDataStorage storage,
@@ -46,16 +47,17 @@ public class NationwidePartyFetcher extends PartyV31Fetcher {
 
     @Override
     public List<PartyV31Entity> fetchAccountParties(AccountEntity account) {
-        if (config.isAccountPartiesEndpointEnabled()) {
+        if (config.isAccountPartyEndpointEnabled()) {
             if (scaValidator.isScaExpired()) {
                 log.info(
-                        "[FETCH ACCOUNT PARTIES] 5 minutes passed since last SCA. Restoring account parties from persistent storage.");
+                        "[FETCH ACCOUNT PARTY] 5 minutes passed since last SCA. "
+                                + "Restoring account party from persistent storage.");
                 return storage.restoreParties();
             }
 
-            List<PartyV31Entity> parties = apiClient.fetchV31Parties(account.getAccountId());
-            storage.storeParties(parties);
-            return parties;
+            Optional<PartyV31Entity> party = apiClient.fetchV31Party(account.getAccountId());
+            party.ifPresent(data -> storage.storeParties(Collections.singletonList(data)));
+            return party.map(Collections::singletonList).orElse(Collections.emptyList());
         }
 
         return Collections.emptyList();
