@@ -259,9 +259,7 @@ public class UkOpenBankingApiDefinitions {
 
         @JsonCreator
         private static PartyType fromString(String key) {
-            return (key != null)
-                    ? PartyType.valueOf(CaseFormat.UPPER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, key))
-                    : null;
+            return (key != null) ? PartyType.valueOf(key.toUpperCase()) : null;
         }
     }
 
