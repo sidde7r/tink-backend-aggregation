@@ -91,7 +91,7 @@ public class PortfolioDetailsResponse {
     }
 
     public List<PortfolioContentEntity> getPortfolioContents() {
-        return portfolioContents;
+        return Optional.ofNullable(portfolioContents).orElse(Collections.emptyList());
     }
 
     public PortfolioRepositionEntity getPaginationData() {
