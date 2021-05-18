@@ -34,8 +34,12 @@ public class SdcConstants {
         PIN_BLOCKED(
                 "Your PIN code is blocked. You can create a new PIN in the netbank or contact your bank.",
                 false),
-        PIN_4_CHARACTERS(
-                "{\n  \"pin\" : \"The string must contain exactly 4 characters\"\n}", false);
+        PIN_4_CHARACTERS_EN(
+                "{\r\n  \"pin\" : \"The string must contain exactly 4 characters\"\r\n}", false),
+        PIN_4_CHARACTERS_DK(
+                "{\r\n  \"pin\" : \"Værdien skal indeholde præcis 4 karakterer\"\r\n}", false),
+        OTP_4_CHARACTERS_DK(
+                "{\r\n  \"otp\" : \"Værdien skal indeholde præcis 4 karakterer\"\r\n}", false);
 
         private final String message;
         private final boolean blocked;
