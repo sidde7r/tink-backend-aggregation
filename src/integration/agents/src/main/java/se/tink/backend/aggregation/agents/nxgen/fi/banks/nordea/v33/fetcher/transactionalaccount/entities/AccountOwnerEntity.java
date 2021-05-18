@@ -1,18 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33.fetcher.transactionalaccount.entities;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 
 @JsonObject
 public class AccountOwnerEntity {
-    @JsonProperty("name")
     private String name;
-
-    @JsonProperty private String role;
+    private String role;
 
     public boolean isOwner() {
-        return role.equalsIgnoreCase("owner");
+        return "owner".equalsIgnoreCase(role);
     }
 
     public HolderName getHolderName() {

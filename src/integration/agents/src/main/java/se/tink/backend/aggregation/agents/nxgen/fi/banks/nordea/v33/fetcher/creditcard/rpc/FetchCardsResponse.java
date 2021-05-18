@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33.fetcher.creditcard.rpc;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -12,7 +11,7 @@ import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccou
 
 @JsonObject
 public class FetchCardsResponse {
-    @JsonProperty private List<CardsEntity> cards;
+    private List<CardsEntity> cards;
 
     public List<CreditCardAccount> toTinkCards() {
         return cards.stream()

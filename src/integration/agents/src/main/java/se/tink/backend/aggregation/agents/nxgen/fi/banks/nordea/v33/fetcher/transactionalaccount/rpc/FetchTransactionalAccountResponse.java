@@ -25,7 +25,7 @@ public class FetchTransactionalAccountResponse {
                                         .equals(Optional.of(AccountTypes.CHECKING)))
                 .filter(
                         entity ->
-                                entity.permissions
+                                entity.getPermissions()
                                         .isCanPayFromAccount()) // filter ISK accounts marked as
                 // "savings"
                 .map(AccountEntity::toTinkAccount)

@@ -1,46 +1,28 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33.fetcher.creditcard.entities;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import lombok.Getter;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
+@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class CardsEntity {
-    @JsonProperty("card_id")
     private String cardId;
-
-    @JsonProperty("card_category")
-    private String cardCategory;
-
-    @JsonProperty("card_status")
+    @Getter private String cardCategory;
     private String cardStatus;
-
-    @JsonProperty("cardholder_name")
     private String cardholderName;
-
-    @JsonProperty("cardholder_type")
     private String cardholderType;
-
-    @JsonProperty("principal_cardholder_name")
     private String principalCardholderName;
-
-    @JsonProperty("product_code")
     private String productCode;
-
-    @JsonProperty("country_code")
     private String countryCode;
-
     private String currency;
-
-    @JsonProperty("pan_id")
     private String panId;
-
-    @JsonProperty("atm_account_number")
-    private String atm_account_number;
-
-    @JsonProperty private CreditEntity credit;
+    private String atmAccountNumber;
+    private CreditEntity credit;
 
     public CreditCardAccount toTinkCard() {
 
@@ -52,9 +34,5 @@ public class CardsEntity {
                 .setHolderName(new HolderName(cardholderName))
                 .setBankIdentifier(cardId)
                 .build();
-    }
-
-    public String getCardCategory() {
-        return cardCategory;
     }
 }

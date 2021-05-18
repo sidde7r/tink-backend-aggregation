@@ -13,8 +13,6 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.i18n.LocalizableKey;
 
 public class NordeaFIConstants {
-    public static final String CURRENCY = "EUR";
-
     public static final ImmutableMap<String, String> DEFAULT_FORM_PARAMS =
             ImmutableMap.<String, String>builder()
                     .put(FormParams.AUTH_METHOD, "mta")

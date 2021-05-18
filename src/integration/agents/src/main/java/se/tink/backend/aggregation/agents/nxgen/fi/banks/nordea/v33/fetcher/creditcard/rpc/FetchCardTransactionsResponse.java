@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33.fetcher.creditcard.rpc;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -13,8 +12,8 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
 @JsonObject
 public class FetchCardTransactionsResponse implements PaginatorResponse {
-    @JsonProperty private List<CardTransactionEntity> transactions;
-    @JsonProperty private int size;
+    private List<CardTransactionEntity> transactions;
+    private int size;
 
     @Override
     public Collection<? extends Transaction> getTinkTransactions() {

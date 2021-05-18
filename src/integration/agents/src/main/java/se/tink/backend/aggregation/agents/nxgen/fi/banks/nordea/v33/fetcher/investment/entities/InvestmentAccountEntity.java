@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33.fetcher.investment.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -12,34 +14,32 @@ import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccou
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
+@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class InvestmentAccountEntity {
-    @JsonProperty("account_number")
     private String accountNumber;
 
     @JsonProperty("has_additional_info")
     private boolean hasMoreInfo;
 
-    @JsonProperty("profit_loss")
     private double profitLoss;
-
-    @JsonProperty("profit_loss_valid")
     private boolean profitLossValid;
 
     @JsonProperty("cash_amount")
     private double balance;
 
-    @JsonProperty private String name;
-    @JsonProperty private String id;
-    @JsonProperty private String classification;
+    private String name;
+    private String id;
+    private String classification;
+    private String currency;
 
     @JsonProperty("market_value")
     private double value;
 
-    @JsonProperty private List<HoldingEntity> holdings;
+    private List<HoldingEntity> holdings;
 
     public InvestmentAccount toTinkInvestmentAccount() {
         return InvestmentAccount.builder(id)
-                .setCashBalance(ExactCurrencyAmount.of(balance, NordeaFIConstants.CURRENCY))
+                .setCashBalance(ExactCurrencyAmount.of(balance, currency))
                 .setBankIdentifier(id)
                 .setAccountNumber(accountNumber)
                 .setName(name)
@@ -79,9 +79,6 @@ public class InvestmentAccountEntity {
     }
 
     public boolean hasHoldings() {
-        if (holdings != null && !holdings.isEmpty()) {
-            return true;
-        }
-        return false;
+        return holdings != null && !holdings.isEmpty();
     }
 }

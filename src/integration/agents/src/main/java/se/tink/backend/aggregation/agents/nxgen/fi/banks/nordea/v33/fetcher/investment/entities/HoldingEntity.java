@@ -1,24 +1,19 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33.fetcher.investment.entities;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
+@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class HoldingEntity {
-    @JsonProperty("market_value")
     private double marketValue;
-
-    @JsonProperty("profit_loss")
     private double profitLoss;
-
-    @JsonProperty private String id;
-    @JsonProperty private double quantity;
-
-    @JsonProperty("avg_purchase_price")
+    private String id;
+    private double quantity;
     private double avgPurchasePrice;
-
-    @JsonProperty private InstrumentEntity instrument;
+    private InstrumentEntity instrument;
 
     public Instrument toTinkInstrument() {
         Instrument tinkInstrument = instrument.toTinkInstrument();
@@ -31,6 +26,6 @@ public class HoldingEntity {
     }
 
     public boolean isInstrument() {
-        return !instrument.getRawType().equalsIgnoreCase("CASH");
+        return !"CASH".equalsIgnoreCase(instrument.getRawType());
     }
 }

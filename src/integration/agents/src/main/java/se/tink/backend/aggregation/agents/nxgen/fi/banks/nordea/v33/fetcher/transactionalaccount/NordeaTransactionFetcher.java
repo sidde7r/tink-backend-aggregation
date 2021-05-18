@@ -1,28 +1,23 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33.fetcher.transactionalaccount;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.httpclient.HttpStatus;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33.NordeaFIApiClient;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
+@Slf4j
+@RequiredArgsConstructor
 public class NordeaTransactionFetcher
         implements TransactionKeyPaginator<TransactionalAccount, String> {
-    private static final Logger LOG = LoggerFactory.getLogger(NordeaTransactionFetcher.class);
+
     private static final long TRANSACTION_FETCHER_BACKOFF = 2500;
     private static final int MAX_RETRY_ATTEMPTS = 2;
     private static final int FETCH_TRANSACTIONS_LIMIT = 30;
     private final NordeaFIApiClient apiClient;
-    private final SessionStorage sessionStorage;
-
-    public NordeaTransactionFetcher(NordeaFIApiClient apiClient, SessionStorage sessionStorage) {
-        this.apiClient = apiClient;
-        this.sessionStorage = sessionStorage;
-    }
 
     @Override
     public TransactionKeyPaginatorResponse<String> getTransactionsFor(
@@ -47,10 +42,10 @@ public class NordeaTransactionFetcher
                 || hre.getResponse().getStatus() == HttpStatus.SC_GATEWAY_TIMEOUT) {
             if (attempt <= MAX_RETRY_ATTEMPTS) {
                 backoffAWhile();
-                LOG.debug(
-                        String.format(
-                                "Retry [%d] fetch transactions account[%s] after backoff ",
-                                attempt, account.getAccountNumber()),
+                log.debug(
+                        "Retry [{}] fetch transactions account[{}] after backoff ",
+                        attempt,
+                        account.getAccountNumber(),
                         hre);
 
                 return fetchTransactions(account, key, ++attempt);
@@ -65,7 +60,7 @@ public class NordeaTransactionFetcher
             Thread.sleep(TRANSACTION_FETCHER_BACKOFF);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            LOG.debug("Woke up early", e);
+            log.debug("Woke up early", e);
         }
     }
 }
