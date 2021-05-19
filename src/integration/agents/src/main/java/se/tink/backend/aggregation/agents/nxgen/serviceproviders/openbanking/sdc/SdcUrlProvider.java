@@ -11,9 +11,9 @@ public class SdcUrlProvider {
 
     private static final String AUTHORIZATION = "/Account/Login";
     private static final String TOKEN = "/Token";
-    private static final String ACCOUNTS = "/v1/accounts";
-    private static final String BALANCES = "/v1/accounts/{account-id}/balances";
-    private static final String TRANSACTIONS = "/v1/accounts/{account-id}/transactions";
+    private static final String ACCOUNTS = "/v2/accounts";
+    private static final String BALANCES = "/v2/accounts/{account-id}/balances";
+    private static final String TRANSACTIONS = "/v2/accounts/{account-id}/transactions";
 
     private URL authorizationUrl;
     private URL tokenUrl;
