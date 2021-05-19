@@ -3,7 +3,9 @@ package se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
 
+import com.google.common.base.Strings;
 import com.google.inject.Inject;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
@@ -38,6 +40,7 @@ import se.tink.backend.aggregation.nxgen.http.header.SignatureHeaderGenerator;
 
 @AgentDependencyModules(modules = QSealcSignerModuleRSASHA256.class)
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS})
+@Slf4j
 public final class ChebancaAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
 
@@ -52,7 +55,7 @@ public final class ChebancaAgent extends NextGenerationAgent
         agentConfiguration =
                 getAgentConfigurationController()
                         .getAgentConfiguration(ChebancaConfiguration.class);
-
+        temporaryLogs();
         boolean isUserAvailable = request.getUserAvailability().isUserAvailableForInteraction();
         ChebancaRequestBuilder chebancaRequestBuilder =
                 createChebancaRequestBuilder(
@@ -71,6 +74,30 @@ public final class ChebancaAgent extends NextGenerationAgent
         this.transactionalAccountRefreshController =
                 getTransactionalAccountRefreshController(
                         agentComponentProvider.getLocalDateTimeSource());
+    }
+
+    private void temporaryLogs() {
+        ChebancaConfiguration chebancaConfig =
+                agentConfiguration.getProviderSpecificConfiguration();
+        log.info("redirectUrl: " + agentConfiguration.getRedirectUrl());
+        log.info(
+                "manual app id is null: "
+                        + Strings.isNullOrEmpty(chebancaConfig.getManualRefreshApplicationId()));
+        log.info(
+                "auto app id is null: "
+                        + Strings.isNullOrEmpty(chebancaConfig.getAutoRefreshApplicationId()));
+        log.info(
+                "manual client id is null: "
+                        + Strings.isNullOrEmpty(chebancaConfig.getManualRefreshClientId()));
+        log.info(
+                "auto client id is null: "
+                        + Strings.isNullOrEmpty(chebancaConfig.getAutoRefreshClientId()));
+        log.info(
+                "manual client secret is null: "
+                        + Strings.isNullOrEmpty(chebancaConfig.getManualRefreshClientSecret()));
+        log.info(
+                "auto client secret is null: "
+                        + Strings.isNullOrEmpty(chebancaConfig.getAutoRefreshClientSecret()));
     }
 
     private ChebancaRequestBuilder createChebancaRequestBuilder(
