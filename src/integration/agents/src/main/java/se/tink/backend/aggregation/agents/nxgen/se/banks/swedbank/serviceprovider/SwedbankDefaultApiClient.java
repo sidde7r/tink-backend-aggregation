@@ -549,6 +549,11 @@ public class SwedbankDefaultApiClient {
         bankProfileHandler.addBankProfile(bankProfile);
         // profile is already activated
         bankProfileHandler.setActiveBankProfile(bankProfile);
+
+        // temporary log to track youthProfile
+        if (profileEntity.isYouthProfile()) {
+            log.info("This profile is youthProfile");
+        }
     }
 
     public BankProfileHandler getBankProfileHandler() {
