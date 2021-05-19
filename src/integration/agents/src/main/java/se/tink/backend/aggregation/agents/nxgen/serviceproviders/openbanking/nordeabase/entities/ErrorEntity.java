@@ -35,6 +35,12 @@ public class ErrorEntity {
     }
 
     @JsonIgnore
+    public boolean isRefreshTokenInvalid() {
+        return ListUtils.emptyIfNull(failures).stream()
+                .anyMatch(FailuresEntity::isRefreshTokenInvalid);
+    }
+
+    @JsonIgnore
     public void parseAndThrowPis(Throwable cause) throws PaymentException {
         if ("ExternalError".equals(type)) {
             if (failures.isEmpty()) {

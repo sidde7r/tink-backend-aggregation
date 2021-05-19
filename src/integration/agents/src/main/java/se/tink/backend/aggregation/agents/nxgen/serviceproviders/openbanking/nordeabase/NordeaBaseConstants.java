@@ -193,6 +193,7 @@ public final class NordeaBaseConstants {
                 "Invalid Configuration: %s cannot be null";
         public static final String EMPTY_CONFIGURATION =
                 "Invalid Configuration: %s cannot be empty";
+        public static final String TOKEN_INVALID = "Token is invalid";
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
