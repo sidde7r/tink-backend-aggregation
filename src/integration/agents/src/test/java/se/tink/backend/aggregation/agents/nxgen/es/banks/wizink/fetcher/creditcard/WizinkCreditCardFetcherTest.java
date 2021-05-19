@@ -12,6 +12,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.WizinkApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.WizinkStorage;
@@ -24,19 +25,26 @@ public class WizinkCreditCardFetcherTest {
     private static final String TEST_DATA_PATH =
             "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/es/banks/wizink/resources/fetcher/creditcard";
 
-    private final String FIRST_CARD =
-            "{\"cardNumber\":\"MTAxMDEwMTAxMDEw\",\"accountNumber\":\"MjAyMDIwMjAyMDIw\"}";
-    private final String SECOND_CARD =
-            "{\"cardNumber\":\"OTA5MDkwOTA5MDkw\",\"accountNumber\":\"NzA3MDcwNzA3MDcw\"}";
+    private static final String FIRST_CARD =
+            "{\"cardNumber\":\"DUMMY_CARD_1\",\"accountNumber\":\"DUMMY_ACCOUNT_1\"}";
+    private static final String SECOND_CARD =
+            "{\"cardNumber\":\"DUMMY_CARD_2\",\"accountNumber\":\"DUMMY_ACCOUNT_2\"}";
+    private static final String THIRD_CARD =
+            "{\"cardNumber\":\"DUMMY_CARD_3\",\"accountNumber\":\"DUMMY_ACCOUNT_3\"}";
 
-    private WizinkApiClient wizinkApiClient;
+    private static WizinkApiClient wizinkApiClient;
+    private static WizinkStorage wizinkStorage;
     private WizinkCreditCardFetcher wizinkCreditCardFetcher;
-    private WizinkStorage wizinkStorage;
+
+    @BeforeClass
+    public static void setupOnce() {
+        wizinkApiClient = mock(WizinkApiClient.class);
+        wizinkStorage = mock(WizinkStorage.class);
+        prepareTestData();
+    }
 
     @Before
     public void setup() {
-        wizinkApiClient = mock(WizinkApiClient.class);
-        wizinkStorage = mock(WizinkStorage.class);
         wizinkCreditCardFetcher = new WizinkCreditCardFetcher(wizinkApiClient, wizinkStorage);
     }
 
@@ -54,21 +62,15 @@ public class WizinkCreditCardFetcherTest {
 
     @Test
     public void shouldFetchAllCreditCards() {
-        // given
-        prepareTestData();
-
         // when
         Collection<CreditCardAccount> creditCardAccounts = wizinkCreditCardFetcher.fetchAccounts();
 
         // then
-        assertThat(creditCardAccounts).hasSize(2);
+        assertThat(creditCardAccounts).hasSize(3);
     }
 
     @Test
     public void shouldFetchAndMapAllCreditCards() {
-        // given
-        prepareTestData();
-
         // when
         Collection<CreditCardAccount> creditCardAccounts = wizinkCreditCardFetcher.fetchAccounts();
 
@@ -76,6 +78,22 @@ public class WizinkCreditCardFetcherTest {
         Iterator<CreditCardAccount> iterator = creditCardAccounts.iterator();
         assertFirstCreditCardAccount(iterator.next());
         assertSecondCreditCardAccount(iterator.next());
+    }
+
+    @Test
+    public void shouldFetchAndMapCreditCardWithoutAvailableBalanceAndCreditLine() {
+        // when
+        Collection<CreditCardAccount> creditCardAccounts = wizinkCreditCardFetcher.fetchAccounts();
+
+        // then
+        assertCreditCardAccountWithoutAvailableBalanceAndCreditLine(
+                creditCardAccounts.stream()
+                        .filter(
+                                account ->
+                                        "Mastercard porque TU vuelves de Cepsa **** **** **** 2244"
+                                                .equals(account.getCardModule().getCardAlias()))
+                        .findFirst()
+                        .orElse(null));
     }
 
     private void assertFirstCreditCardAccount(CreditCardAccount account) {
@@ -95,12 +113,25 @@ public class WizinkCreditCardFetcherTest {
         assertThat(account.getExactBalance().getExactValue())
                 .isEqualByComparingTo(new BigDecimal("2200.00"));
         assertThat(account.getExactAvailableCredit().getExactValue())
-                .isEqualByComparingTo(new BigDecimal("2200.00"));
+                .isEqualByComparingTo(new BigDecimal("1700.00"));
         assertThat(account.getAccountNumber()).isEqualTo("**** **** **** 2244");
         assertThat(account.getName()).isEqualTo("WiZink Classic **** **** **** 2244");
     }
 
-    private void prepareTestData() {
+    private void assertCreditCardAccountWithoutAvailableBalanceAndCreditLine(
+            CreditCardAccount account) {
+        assertThat(account).isNotNull();
+        assertThat(account.getExactBalance().getCurrencyCode()).isEqualTo("EUR");
+        assertThat(account.getExactBalance().getExactValue())
+                .isEqualByComparingTo(new BigDecimal("380.50"));
+        assertThat(account.getExactAvailableCredit().getExactValue())
+                .isEqualByComparingTo(new BigDecimal("396.00"));
+        assertThat(account.getAccountNumber()).isEqualTo("**** **** **** 2244");
+        assertThat(account.getName())
+                .isEqualTo("Mastercard porque TU vuelves de Cepsa **** **** **** 2244");
+    }
+
+    private static void prepareTestData() {
         when(wizinkStorage.getCreditCardList()).thenReturn(mockDataFromLoginResponse());
         when(wizinkStorage.getXTokenUser())
                 .thenReturn("20F59394856FDF03ADFCF8D053EF49AE460D41961241889BB8A107FDE036E820");
@@ -115,12 +146,21 @@ public class WizinkCreditCardFetcherTest {
                         SerializationUtils.deserializeFromString(
                                 Paths.get(TEST_DATA_PATH, "card_detail_response_2.json").toFile(),
                                 CardDetailResponse.class));
+        when(wizinkApiClient.fetchCreditCardDetails(wizinkStorage.getCreditCardList().get(2)))
+                .thenReturn(
+                        SerializationUtils.deserializeFromString(
+                                Paths.get(
+                                                TEST_DATA_PATH,
+                                                "card_detail_response_3_without_available_balance.json")
+                                        .toFile(),
+                                CardDetailResponse.class));
     }
 
-    private List<CardEntity> mockDataFromLoginResponse() {
+    private static List<CardEntity> mockDataFromLoginResponse() {
         List<CardEntity> cards = new ArrayList<>();
         cards.add(SerializationUtils.deserializeFromString(FIRST_CARD, CardEntity.class));
         cards.add(SerializationUtils.deserializeFromString(SECOND_CARD, CardEntity.class));
+        cards.add(SerializationUtils.deserializeFromString(THIRD_CARD, CardEntity.class));
         return cards;
     }
 }
