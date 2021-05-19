@@ -159,7 +159,7 @@ public class LaBanquePostalePaymentExecutorTest {
         Assertions.assertThat(result.getSupplementaryData().getSuccessfulReportUrl())
                 .isEqualTo(SOME_URL);
         Assertions.assertThat(result.getSupplementaryData().getUnsuccessfulReportUrl())
-                .isEqualTo(SOME_URL);
+                .isEqualTo(SOME_URL + "&error=authentication_error");
         Assertions.assertThat(
                         result.getSupplementaryData().getAcceptedAuthenticationApproach().get(0))
                 .isEqualTo("REDIRECT");

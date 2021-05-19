@@ -72,7 +72,7 @@ X-Aggregator: Tink Testing
             "REDIRECT"
         ],
         "successfulReportUrl": "https://api.tink.com/api/v1/credentials/third-party/callback?state=00000000-0000-4000-0000-000000000000",
-        "unsuccessfulReportUrl": "https://api.tink.com/api/v1/credentials/third-party/callback?state=00000000-0000-4000-0000-000000000000"
+        "unsuccessfulReportUrl": "https://api.tink.com/api/v1/credentials/third-party/callback?state=00000000-0000-4000-0000-000000000000&error=authentication_error"
     }
 }
 
@@ -194,7 +194,7 @@ Content-Type: application/json
             ],
             "appliedAuthenticationApproach": "REDIRECT",
             "successfulReportUrl": "https%3A%2F%2Fapi.tink.com%2Fapi%2Fv1%2Fcredentials%2Fthird-party%2Fcallback%3Fstate%3D10f966e6-70bf-4d48-805a-dc9593c1feed",
-            "unsuccessfulReportUrl": "https%3A%2F%2Fapi.tink.com%2Fapi%2Fv1%2Fcredentials%2Fthird-party%2Fcallback%3Fstate%3D10f966e6-70bf-4d48-805a-dc9593c1feed"
+            "unsuccessfulReportUrl": "https%3A%2F%2Fapi.tink.com%2Fapi%2Fv1%2Fcredentials%2Fthird-party%2Fcallback%3Fstate%3D10f966e6-70bf-4d48-805a-dc9593c1feed&error=authentication_error"
         }
     }
 }

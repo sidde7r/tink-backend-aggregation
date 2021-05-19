@@ -19,7 +19,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fro
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.entities.CreditorEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.entities.InitiatingPartyEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.entities.PaymentIdEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.entities.SupplementaryDataEntity;
 import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -48,7 +47,7 @@ public class CreatePaymentRequest {
 
     private String chargeBearer;
 
-    private SupplementaryDataEntity supplementaryData;
+    private LaBanquePostaleSupplementaryDataEntity supplementaryData;
 
     private CreatePaymentRequest(Builder builder) {
         paymentInformationId = RandomUtils.generateRandomAlphanumericString(35);
@@ -77,7 +76,7 @@ public class CreatePaymentRequest {
                                 builder.remittanceInformation,
                                 beneficiary));
         chargeBearer = LaBanquePostaleConstants.CHANGE_BEARER;
-        supplementaryData = new SupplementaryDataEntity(builder.redirectUrl);
+        supplementaryData = new LaBanquePostaleSupplementaryDataEntity(builder.redirectUrl);
     }
 
     public static class Builder {
