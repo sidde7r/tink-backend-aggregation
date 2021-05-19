@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.eidasidentity;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 import java.util.Optional;
@@ -44,7 +45,7 @@ public class CertificateIdProviderTest {
         // when
         String result =
                 certificateIdentityService.getCertId(
-                        APP_ID, CLUSTER_ID, PROVIDER_NAME, ukMarketCode);
+                        APP_ID, CLUSTER_ID, PROVIDER_NAME, ukMarketCode, true);
 
         // then
         assertThat(result).isEqualTo("UKOB");
@@ -63,7 +64,7 @@ public class CertificateIdProviderTest {
         // when
         String result =
                 certificateIdentityService.getCertId(
-                        APP_ID, CLUSTER_ID, PROVIDER_NAME, MARKET_CODE);
+                        APP_ID, CLUSTER_ID, PROVIDER_NAME, MARKET_CODE, true);
 
         // then
         assertThat(result).isEqualTo("OLD_EIDAS");
@@ -82,7 +83,7 @@ public class CertificateIdProviderTest {
         // when
         String result =
                 certificateIdentityService.getCertId(
-                        APP_ID, CLUSTER_ID, PROVIDER_NAME, MARKET_CODE);
+                        APP_ID, CLUSTER_ID, PROVIDER_NAME, MARKET_CODE, true);
 
         // then
         assertThat(result).isEqualTo("DEFAULT");
@@ -99,7 +100,7 @@ public class CertificateIdProviderTest {
         // when
         String result =
                 certificateIdentityService.getCertId(
-                        APP_ID, CLUSTER_ID, PROVIDER_NAME, MARKET_CODE);
+                        APP_ID, CLUSTER_ID, PROVIDER_NAME, MARKET_CODE, true);
 
         // then
         assertThat(result).isEqualTo("DEFAULT");
@@ -116,9 +117,21 @@ public class CertificateIdProviderTest {
         // when
         String result =
                 certificateIdentityService.getCertId(
-                        APP_ID, CLUSTER_ID, PROVIDER_NAME, MARKET_CODE);
+                        APP_ID, CLUSTER_ID, PROVIDER_NAME, MARKET_CODE, true);
 
         // then
         assertThat(result).isEqualTo("DEFAULT");
+    }
+
+    @Test
+    public void shouldReturnDEFAULTCertIdWhenProviderIsNotOpenBanking() {
+        // when
+        String result =
+                certificateIdentityService.getCertId(
+                        APP_ID, CLUSTER_ID, PROVIDER_NAME, MARKET_CODE, false);
+
+        // then
+        assertThat(result).isEqualTo("DEFAULT");
+        verifyZeroInteractions(tppSecretsServiceClient);
     }
 }

@@ -23,7 +23,8 @@ public class CreateCertIdWorkerCommand extends AgentWorkerCommand {
                             context.getAppId(),
                             context.getClusterId(),
                             provider.getName(),
-                            provider.getMarket()));
+                            provider.getMarket(),
+                            provider.isOpenBanking()));
         } catch (Exception e) {
             log.warn("Could not fetch certId", e);
             context.setCertId("DEFAULT");
