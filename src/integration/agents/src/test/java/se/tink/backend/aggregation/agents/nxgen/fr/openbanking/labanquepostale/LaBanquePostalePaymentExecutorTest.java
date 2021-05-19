@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.manual;
+package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale;
 
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.ArgumentMatchers.any;
@@ -22,11 +22,8 @@ import org.junit.Test;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
-import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.LaBanquePostaleConstants;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.LaBanquePostaleConstants.CreditorAgentConstants;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.LaBanquePostaleConstants.PaymentTypeInformation;
-import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.LaBanquePostalePaymentApiClient;
-import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.LaBanquePostalePaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.authenticator.rpc.ConfirmPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.authenticator.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.entities.CreditorAgentEntity;
@@ -168,7 +165,7 @@ public class LaBanquePostalePaymentExecutorTest {
         Assertions.assertThat(result.getPaymentTypeInformation().getCategoryPurpose())
                 .isEqualTo(PaymentTypeInformation.CATEGORY_PURPOSE);
         Assertions.assertThat(result.getPaymentTypeInformation().getLocalInstrument())
-                .isEqualTo(PaymentTypeInformation.SEPA_INSTANT_CREDIT_TRANSFER);
+                .isEqualTo(PaymentTypeInformation.SEPA_STANDARD_CREDIT_TRANSFER);
         Assertions.assertThat(result.getPaymentTypeInformation().getServiceLevel())
                 .isEqualTo(PaymentType.SEPA.toString().toUpperCase());
     }
@@ -187,7 +184,7 @@ public class LaBanquePostalePaymentExecutorTest {
                         new Payment.Builder()
                                 .withCreditor(new Creditor(cred))
                                 .withDebtor(new Debtor(deb))
-                                .withExactCurrencyAmount(ExactCurrencyAmount.inEUR(1))
+                                .withExactCurrencyAmount(ExactCurrencyAmount.inEUR(2))
                                 .withCurrency("EUR")
                                 .withRemittanceInformation(remittanceInformation)
                                 .withUniqueId(UUID.randomUUID().toString())
@@ -212,7 +209,7 @@ public class LaBanquePostalePaymentExecutorTest {
         Assertions.assertThat(paymentResponse.getPayment().getCurrency()).isEqualTo("EUR");
         Assertions.assertThat(
                         paymentResponse.getPayment().getExactCurrencyAmount().getDoubleValue())
-                .isEqualTo(1.0);
+                .isEqualTo(2.0);
         Assertions.assertThat(paymentResponse.getPayment().getCreditor().getAccountNumber())
                 .isEqualTo("FR383390733324Z58PF2RSRNB11");
         Assertions.assertThat(
