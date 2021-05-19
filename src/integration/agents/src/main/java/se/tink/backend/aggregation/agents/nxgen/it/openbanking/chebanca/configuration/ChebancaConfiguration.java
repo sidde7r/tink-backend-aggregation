@@ -27,8 +27,8 @@ public class ChebancaConfiguration implements ClientConfiguration {
 
     @Secret
     @JsonProperty
-    @JsonSchemaTitle("Client Id")
-    @JsonSchemaDescription("Client Id of application for background refresh")
+    @JsonSchemaTitle("Client Key of application for manual refresh")
+    @JsonSchemaDescription("Client Key of application for manual refresh")
     @JsonSchemaExamples("555d5513cb123456789050b90f06a18b21234567890a9cce977c5513734d3f41")
     private String manualRefreshClientId;
 
@@ -50,8 +50,8 @@ public class ChebancaConfiguration implements ClientConfiguration {
 
     @Secret
     @JsonProperty
-    @JsonSchemaTitle("Client Id")
-    @JsonSchemaDescription("Client Id of application for background refresh")
+    @JsonSchemaTitle("Client Key of application for auto refresh")
+    @JsonSchemaDescription("Client Key of application for auto refresh")
     @JsonSchemaExamples("555d5513cb123456789050b90f06a18b21234567890a9cce977c5513734d3f41")
     private String autoRefreshClientId;
 
