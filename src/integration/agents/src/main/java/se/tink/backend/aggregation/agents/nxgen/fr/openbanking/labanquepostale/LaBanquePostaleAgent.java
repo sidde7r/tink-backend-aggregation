@@ -152,7 +152,6 @@ public final class LaBanquePostaleAgent
                 new LaBanquePostalePaymentExecutor(
                         paymentApiClient,
                         agentConfiguration.getRedirectUrl(),
-                        sessionStorage,
                         strongAuthenticationState,
                         supplementalInformationHelper);
         return Optional.of(new PaymentController(paymentExecutor, paymentExecutor));
