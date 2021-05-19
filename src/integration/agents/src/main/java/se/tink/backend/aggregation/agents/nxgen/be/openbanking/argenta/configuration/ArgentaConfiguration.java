@@ -11,7 +11,6 @@ public class ArgentaConfiguration implements ClientConfiguration {
     @Secret private String clientId;
     @Secret private String keyId;
     @Secret private String clientSigningCertificate;
-    @Secret private String psuIpAddress;
     @SensitiveSecret private String apiKey;
 
     public String getClientId() {
@@ -24,10 +23,6 @@ public class ArgentaConfiguration implements ClientConfiguration {
 
     public String getClientSigningCertificate() {
         return clientSigningCertificate;
-    }
-
-    public String getPsuIpAddress() {
-        return psuIpAddress;
     }
 
     public String getKeyId() {
