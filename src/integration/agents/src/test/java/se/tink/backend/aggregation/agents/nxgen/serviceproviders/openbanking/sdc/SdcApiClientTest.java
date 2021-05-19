@@ -54,9 +54,9 @@ public class SdcApiClientTest {
             readJsonFromFile("token_expired_error_response.json");
 
     private static final String TOKEN_URL = "/Token";
-    private static final String ACCOUNTS_URL = "/v1/accounts";
-    private static final String BALANCES_URL = "/v1/accounts/.*/balances.*";
-    private static final String TRANSACTIONS_URL = "/v1/accounts/.*/transactions.*";
+    private static final String ACCOUNTS_URL = "/v2/accounts";
+    private static final String BALANCES_URL = "/v2/accounts/.*/balances.*";
+    private static final String TRANSACTIONS_URL = "/v2/accounts/.*/transactions.*";
 
     @Rule public WireMockRule wireMock = new WireMockRule(wireMockConfig().dynamicPort());
 
