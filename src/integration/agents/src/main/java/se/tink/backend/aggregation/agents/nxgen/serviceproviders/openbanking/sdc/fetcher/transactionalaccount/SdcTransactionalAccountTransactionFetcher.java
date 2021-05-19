@@ -6,7 +6,6 @@ import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbank
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sdc.SdcConstants.StorageKeys.TIMESTAMP;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.Date;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,9 +31,9 @@ public class SdcTransactionalAccountTransactionFetcher
         if (!persistentStorage.getOptional(TIMESTAMP).isPresent()
                 || LocalDateTime.now()
                         .isAfter(
-                                parseStorageValueToLocalDateTime(persistentStorage.get(TIMESTAMP))
+                                LocalDateTime.parse(persistentStorage.get(TIMESTAMP))
                                         .plusHours(24))) {
-            persistentStorage.put(TIMESTAMP, LocalDateTime.now(), false);
+            persistentStorage.put(TIMESTAMP, LocalDateTime.now().toString(), false);
             persistentStorage.put(BOOKING_STATUS, BOTH, false);
         }
 
@@ -49,7 +48,7 @@ public class SdcTransactionalAccountTransactionFetcher
             log.error(
                     "Unable to fetch both pending and booked transactions. Re-trying only booked.",
                     e);
-            persistentStorage.put(TIMESTAMP, LocalDateTime.now(), false);
+            persistentStorage.put(TIMESTAMP, LocalDateTime.now().toString(), false);
             persistentStorage.put(BOOKING_STATUS, BOOKED, false);
             return apiClient.getTransactionsFor(
                     account.getApiIdentifier(),
@@ -58,20 +57,5 @@ public class SdcTransactionalAccountTransactionFetcher
                     providerMarket,
                     persistentStorage.get(BOOKING_STATUS));
         }
-    }
-
-    private LocalDateTime parseStorageValueToLocalDateTime(String storedTime) {
-        int[] intArray =
-                Arrays.stream(storedTime.replaceAll("[\\[\\]]", "").split(","))
-                        .mapToInt(Integer::parseInt)
-                        .toArray();
-        return LocalDateTime.of(
-                intArray[0],
-                intArray[1],
-                intArray[2],
-                intArray[3],
-                intArray[4],
-                intArray[5],
-                intArray[6]);
     }
 }
