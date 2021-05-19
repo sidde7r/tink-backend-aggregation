@@ -49,8 +49,6 @@ public class PaymentRequestResource {
     public PaymentRequestResource(CreatePaymentRequest paymentRequest) {
         this.paymentInformationId = paymentRequest.getPaymentInformationId();
         this.creationDateTime = paymentRequest.getCreationDateTime();
-        this.requestedExecutionDate =
-                DateUtil.plusOneDayDate(paymentRequest.getRequestedExecutionDate());
         this.numberOfTransactions = paymentRequest.getNumberOfTransactions();
         this.paymentTypeInformation = paymentRequest.getPaymentTypeInformation();
         this.debtorAccount = paymentRequest.getDebtorAccount();
@@ -61,6 +59,7 @@ public class PaymentRequestResource {
         this.chargeBearer = paymentRequest.getChargeBearer();
         this.supplementaryData = paymentRequest.getSupplementaryData();
         this.initiatingParty = paymentRequest.getInitiatingParty();
+        this.requestedExecutionDate = DateUtil.getExecutionDate(paymentRequest);
     }
 
     public GetPaymentResponse toPaymentResponse() {
