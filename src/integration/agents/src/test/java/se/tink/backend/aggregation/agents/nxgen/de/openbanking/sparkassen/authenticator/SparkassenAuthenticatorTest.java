@@ -276,6 +276,35 @@ public class SparkassenAuthenticatorTest {
     }
 
     @Test
+    @Parameters(value = {"kopytko", "0", "-10", "500"})
+    public void shouldThrowSupplementalExceptionWhenUserSelectsMethodWrongly(String selectedValue) {
+
+        // given
+        whenCreateConsentReturn(CONSENT_RESPONSE_OK);
+        whenInitializeAuthorizationReturn(INIT_AUTH_RESPONSE_OK_TWO_METHODS);
+        whenSupplementalInformationControllerReturn(INIT_AUTH_RESPONSE_OK_TWO_METHODS);
+
+        Map<String, String> supplementalInformation = new HashMap<>();
+        supplementalInformation.put("selectAuthMethodField", selectedValue);
+        when(supplementalInformationController.askSupplementalInformationSync(any()))
+                .thenReturn(supplementalInformation);
+
+        // when
+        Throwable throwable = catchThrowable(() -> authenticator.authenticate(credentials));
+
+        // then
+        assertThat(storage.getConsentId()).isEqualTo(TEST_CONSENT_ID);
+        assertThat(throwable)
+                .isInstanceOf(SupplementalInfoException.class)
+                .hasMessage("Could not map user input to list of available options.");
+        verifyCreateConsentCalled();
+        verifyInitializeAuthorizationCalled();
+        verifyAskSupplementalInformationCalled(1);
+        verifyNoMoreInteractions(apiClient);
+        verifyNoMoreInteractions(supplementalInformationController);
+    }
+
+    @Test
     public void shouldThrowHttpResponseExceptionWhenSelectAuthorizationMethodCallFails() {
 
         // given

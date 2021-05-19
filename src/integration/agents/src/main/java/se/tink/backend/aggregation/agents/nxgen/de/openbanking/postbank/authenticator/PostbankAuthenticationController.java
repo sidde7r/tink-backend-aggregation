@@ -14,6 +14,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Field;
@@ -22,6 +23,7 @@ import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.exceptions.ThirdPartyAppException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
+import se.tink.backend.aggregation.agents.exceptions.errors.SupplementalInfoError;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.PostbankConstants;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.PostbankConstants.PollStatus;
@@ -139,10 +141,15 @@ public class PostbankAuthenticationController implements TypedAuthenticator {
                                 catalog,
                                 null,
                                 GermanFields.SelectOptions.prepareSelectOptions(scaMethods)));
-        int index =
-                Integer.parseInt(supplementalInformation.get(CommonFields.Selection.getFieldKey()))
-                        - 1;
-        return scaMethods.get(index);
+        String selectedValue = supplementalInformation.get(CommonFields.Selection.getFieldKey());
+        if (StringUtils.isNumeric(selectedValue)) {
+            int index = Integer.parseInt(selectedValue) - 1;
+            if (index >= 0 && index < scaMethods.size()) {
+                return scaMethods.get(index);
+            }
+        }
+        throw SupplementalInfoError.NO_VALID_CODE.exception(
+                "Could not map user input to list of available options.");
     }
 
     private void finishWithAcceptingPush(AuthorisationResponse previousResponse, String username) {
@@ -216,9 +223,16 @@ public class PostbankAuthenticationController implements TypedAuthenticator {
         }
         fields.add(tanBuilder.build());
 
-        return supplementalInformationController
-                .askSupplementalInformationSync(fields.toArray(new Field[0]))
-                .get(fields.get(fields.size() - 1).getName());
+        String otp =
+                supplementalInformationController
+                        .askSupplementalInformationSync(fields.toArray(new Field[0]))
+                        .get(fields.get(fields.size() - 1).getName());
+        if (otp == null) {
+            throw SupplementalInfoError.NO_VALID_CODE.exception(
+                    "Supplemental info did not come with otp code!");
+        } else {
+            return otp;
+        }
     }
 
     private Optional<String> extractStartcode(AuthorisationResponse authResponse) {

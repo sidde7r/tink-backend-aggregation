@@ -18,6 +18,7 @@ import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
+import se.tink.backend.aggregation.agents.exceptions.errors.SupplementalInfoError;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaConstants.CredentialKeys;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaConstants.StorageKeys;
@@ -174,13 +175,19 @@ public class FiduciaAuthenticator implements MultiFactorAuthenticator, AutoAuthe
                         catalog,
                         null,
                         GermanFields.SelectOptions.prepareSelectOptions(onlySupportedScaMethods));
-        String index =
+        String selectedValue =
                 supplementalInformationHelper
                         .askSupplementalInformation(scaMethodField)
                         .get(scaMethodField.getName());
 
-        int selectedIndex = Integer.parseInt(index) - 1;
-        return onlySupportedScaMethods.get(selectedIndex);
+        if (StringUtils.isNumeric(selectedValue)) {
+            int index = Integer.parseInt(selectedValue) - 1;
+            if (index >= 0 && index < onlySupportedScaMethods.size()) {
+                return onlySupportedScaMethods.get(index);
+            }
+        }
+        throw SupplementalInfoError.NO_VALID_CODE.exception(
+                "Could not map user input to list of available options.");
     }
 
     private ScaStatusResponse authorizeWithOtp(ScaResponse scaResponse) {
@@ -217,6 +224,10 @@ public class FiduciaAuthenticator implements MultiFactorAuthenticator, AutoAuthe
                 supplementalInformationHelper
                         .askSupplementalInformation(fields.toArray(new Field[0]))
                         .get(fields.get(fields.size() - 1).getName());
+        if (otpCode == null) {
+            throw SupplementalInfoError.NO_VALID_CODE.exception(
+                    "Supplemental info did not come with otp code!");
+        }
 
         String authoriseTransactionHref = scaResponse.getLinks().getAuthoriseTransaction();
         ScaStatusResponse scaStatusResponse =
