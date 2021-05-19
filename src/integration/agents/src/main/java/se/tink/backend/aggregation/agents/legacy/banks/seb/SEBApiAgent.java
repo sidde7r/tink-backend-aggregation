@@ -329,6 +329,8 @@ public final class SEBApiAgent extends AbstractAgent
     private final TransferMessageFormatter transferMessageFormatter;
     private final SebBaseApiClient sebBaseApiClient;
     private final Function<ApacheHttpClient4Config, TinkApacheHttpClient4> strategy;
+    private long retrySleepMilliseconds = 500;
+    private int maxNumRetries = 5;
 
     // cache
     private Map<AccountEntity, Account> accountEntityAccountMap = null;
@@ -1037,25 +1039,48 @@ public final class SEBApiAgent extends AbstractAgent
     }
 
     private List<AccountEntity> listAccounts(String id) {
-        ClientResponse response = queryAccounts(id);
-        try {
-            final Optional<SebResponse> sebResponse = getValidSebResponse(response);
-
-            if (!sebResponse.isPresent()) {
-                return Collections.emptyList();
-            }
-            return sebResponse.get().getAccountEntities();
-        } finally {
-            if (response != null) {
-                response.close();
-            }
+        SebResponse sebResponse = queryAccountsWithRetry(id);
+        if (!sebResponse.isValid()) {
+            return Collections.emptyList();
         }
+        return sebResponse.getAccountEntities();
     }
 
     private ClientResponse queryAccounts(final String id) {
         SebRequest payload = new SebRequest();
         payload.request.getServiceInput().add(new ServiceInput("KUND_ID", id));
         return postAsJSON(ACCOUNTS_URL, payload, ClientResponse.class);
+    }
+
+    private SebResponse queryAccountsWithRetry(final String id) {
+        SebRequest payload = new SebRequest();
+        payload.request.getServiceInput().add(new ServiceInput("KUND_ID", id));
+        return postRequestAndValidateResponse(ACCOUNTS_URL, payload);
+    }
+
+    private SebResponse postRequestAndValidateResponse(String url, SebRequest payload) {
+        SebResponse sebResponse = postAsJSON(url, payload, SebResponse.class);
+        if (shouldRetry(sebResponse)) {
+            sebResponse = retryPostRequest(sebResponse, url, payload);
+        }
+        return sebResponse;
+    }
+
+    private SebResponse retryPostRequest(SebResponse sebResponse, String url, SebRequest payload) {
+        long maxSleepMilliseconds;
+        for (int retryCount = 0;
+                shouldRetry(sebResponse) && (retryCount <= maxNumRetries);
+                retryCount++) {
+            maxSleepMilliseconds = (retryCount + 1) * retrySleepMilliseconds;
+            log.warn("Received no source account(s), retrying [{}/{}]", retryCount, maxNumRetries);
+            Uninterruptibles.sleepUninterruptibly(maxSleepMilliseconds, TimeUnit.MILLISECONDS);
+            sebResponse = postAsJSON(url, payload, SebResponse.class);
+        }
+        return sebResponse;
+    }
+
+    private boolean shouldRetry(SebResponse sebResponse) {
+        return !sebResponse.isValid() && sebResponse.getGatewayReturnCode() == 9214;
     }
 
     private Optional<SebResponse> getValidSebResponse(final ClientResponse response) {
