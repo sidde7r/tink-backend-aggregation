@@ -31,7 +31,6 @@ public class SEBWireMockTest {
                         .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
                         .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
                         .withConfigurationFile(configuration)
-                        .addRefreshableItems()
                         .build();
 
         final AgentContractEntity expected =
