@@ -229,7 +229,7 @@ Date: Wed, 16 Sep 2020 11:04:19 GMT
 X-Global-Transaction-ID: c2da75b45f61f133104185c3
 strict-transport-security: max-age=31536000; includeSubDomains
 
-{"result":[{"account_id":"NAID-SE-SEK-33333333333","main_account_number":null,"display_account_number":"3333 33 33333","source_account_number":null,"iban":"SE1730000000033333333333","bic":"NDEASESS","registration_number":null,"country_code":"SE","product_code":"SE1150","product_name":"SPARKONTO FÖRETAG","nickname":"SPARKONTO FÖRETAG","product_type":"Sparkonton","category":"savings","account_status":"open","booked_balance":46868.50,"credit_limit":0.00,"available_balance":46868.50,"equivalent_balance":null,"currency":"SEK","equivalent_currency":null,"remaining_free_withdrawals":null,"latest_transaction_date":null,"statement_format":null,"maturity_due_date":null,"covered_by_deposit_guarantee":null,"roles":[{"name":"LA LA","role":"owner","current_user":true}],"permissions":{"can_view":true,"can_view_transactions":true,"can_pay_from_account":false,"can_transfer_from_account":true,"can_transfer_to_account":true,"can_deposit_to_account":true,"can_pay_pgbg_from_account":false,"require_4eye_signing":null,"require_physically_present_all_eye_signing":null},"interest_info":null,"flexi_deposit":null,"transaction_list_search_criteria":{"can_use_start_date":true,"min_start_date":"2019-06-16","can_use_end_date":true,"can_use_lowest_amount":true,"can_use_highest_amount":true,"can_use_free_text":true,"sort_by_list":["transaction_date_desc"]},"commission_rate":null,"deposit_limit_current_year":null,"source_system":"accounts_se_11digit","data_retrieved_from":"from_source_system"},{"account_id":"NAID-SE-SEK-4444444","main_account_number":null,"display_account_number":"44 44 44-4","source_account_number":null,"iban":"SE6195000099603404444444","bic":"NDEASESS","registration_number":null,"country_code":"SE","product_code":"SE0512","product_name":"PLUSGIROKONTO FTG","nickname":"PLUSGIROKONTO FTG","product_type":"Transaktionskonton","category":"transaction","account_status":"open","booked_balance":908386.30,"credit_limit":0.00,"available_balance":908386.30,"equivalent_balance":null,"currency":"SEK","equivalent_currency":null,"remaining_free_withdrawals":null,"latest_transaction_date":null,"statement_format":null,"maturity_due_date":null,"covered_by_deposit_guarantee":null,"roles":[{"name":"LA LA","role":"owner","current_user":true}],"permissions":{"can_view":true,"can_view_transactions":true,"can_pay_from_account":true,"can_transfer_from_account":true,"can_transfer_to_account":true,"can_deposit_to_account":true,"can_pay_pgbg_from_account":false,"require_4eye_signing":null,"require_physically_present_all_eye_signing":null},"interest_info":null,"flexi_deposit":null,"transaction_list_search_criteria":{"can_use_start_date":true,"min_start_date":"2019-06-16","can_use_end_date":true,"can_use_lowest_amount":true,"can_use_highest_amount":true,"can_use_free_text":true,"sort_by_list":["transaction_date_desc"]},"commission_rate":null,"deposit_limit_current_year":null,"source_system":"accounts_se_8digit","data_retrieved_from":"from_source_system"}],"sub_system_errors":[]}
+{"result":[{"account_id":"NAID-SE-SEK-12345678901","display_account_number":"1234 56 78901","iban":"SE6930000000012345678901","bic":"NDEASESS","country_code":"SE","product_code":"SE1150","product_name":"SPARKONTO FÖRETAG","nickname":"SPARKONTO FÖRETAG","product_type":"Sparkonton","category":"savings","account_status":"open","booked_balance":1425789.40,"credit_limit":0.00,"available_balance":1425789.40,"currency":"SEK","roles":[{"name":"NAME AB","role":"owner","current_user":true}],"permissions":{"can_view":true,"can_view_transactions":true,"can_pay_from_account":false,"can_transfer_from_account":true,"can_transfer_to_account":true,"can_deposit_to_account":true,"can_pay_international_from_account":null,"can_pay_eligible":false,"require_physically_present_all_eye_signing":null,"can_pay_pgbg_from_account":false,"require_4eye_signing":null},"transaction_list_search_criteria":{"can_use_start_date":true,"min_start_date":"2020-02-18","can_use_end_date":true,"can_use_lowest_amount":true,"can_use_highest_amount":true,"can_use_free_text":true,"sort_by_list":["transaction_date_desc"]},"source_system":"accounts_se_11digit","data_retrieved_from":"from_source_system"},{"account_id":"NAID-SE-SEK-33333333333","main_account_number":null,"display_account_number":"3333 33 33333","source_account_number":null,"iban":"SE1730000000033333333333","bic":"NDEASESS","registration_number":null,"country_code":"SE","product_code":"SE1150","product_name":"SPARKONTO FÖRETAG","nickname":"SPARKONTO FÖRETAG","product_type":"Sparkonton","category":"savings","account_status":"open","booked_balance":46868.50,"credit_limit":0.00,"available_balance":46868.50,"equivalent_balance":null,"currency":"SEK","equivalent_currency":null,"remaining_free_withdrawals":null,"latest_transaction_date":null,"statement_format":null,"maturity_due_date":null,"covered_by_deposit_guarantee":null,"roles":[{"name":"LA LA","role":"owner","current_user":true}],"permissions":{"can_view":true,"can_view_transactions":true,"can_pay_from_account":false,"can_transfer_from_account":true,"can_transfer_to_account":true,"can_deposit_to_account":true,"can_pay_pgbg_from_account":false,"require_4eye_signing":null,"require_physically_present_all_eye_signing":null},"interest_info":null,"flexi_deposit":null,"transaction_list_search_criteria":{"can_use_start_date":true,"min_start_date":"2019-06-16","can_use_end_date":true,"can_use_lowest_amount":true,"can_use_highest_amount":true,"can_use_free_text":true,"sort_by_list":["transaction_date_desc"]},"commission_rate":null,"deposit_limit_current_year":null,"source_system":"accounts_se_11digit","data_retrieved_from":"from_source_system"},{"account_id":"NAID-SE-SEK-4444444","main_account_number":null,"display_account_number":"44 44 44-4","source_account_number":null,"iban":"SE6195000099603404444444","bic":"NDEASESS","registration_number":null,"country_code":"SE","product_code":"SE0512","product_name":"PLUSGIROKONTO FTG","nickname":"PLUSGIROKONTO FTG","product_type":"Transaktionskonton","category":"transaction","account_status":"open","booked_balance":908386.30,"credit_limit":0.00,"available_balance":908386.30,"equivalent_balance":null,"currency":"SEK","equivalent_currency":null,"remaining_free_withdrawals":null,"latest_transaction_date":null,"statement_format":null,"maturity_due_date":null,"covered_by_deposit_guarantee":null,"roles":[{"name":"LA LA","role":"owner","current_user":true}],"permissions":{"can_view":true,"can_view_transactions":true,"can_pay_from_account":true,"can_transfer_from_account":true,"can_transfer_to_account":true,"can_deposit_to_account":true,"can_pay_pgbg_from_account":false,"require_4eye_signing":null,"require_physically_present_all_eye_signing":null},"interest_info":null,"flexi_deposit":null,"transaction_list_search_criteria":{"can_use_start_date":true,"min_start_date":"2019-06-16","can_use_end_date":true,"can_use_lowest_amount":true,"can_use_highest_amount":true,"can_use_free_text":true,"sort_by_list":["transaction_date_desc"]},"commission_rate":null,"deposit_limit_current_year":null,"source_system":"accounts_se_8digit","data_retrieved_from":"from_source_system"}],"sub_system_errors":[]}
 
 REQUEST 7
 GET https://corporate.nordea.se/api/dbf/ca/accounts-v3/accounts/NAID-SE-SEK-33333333333/transactions?start_date=1992-01-10&end_date=1992-04-10
@@ -510,3 +510,139 @@ X-Global-Transaction-ID: c53680ad5f61f1350ea1c201
 strict-transport-security: max-age=31536000; includeSubDomains
 
 {"result":[],"total_size":null,"continuation_key":null,"sub_system_errors":[]}
+
+REQUEST 12S
+GET https://corporate.nordea.se/api/dbf/ca/accounts-v3/accounts/NAID-SE-SEK-12345678901/transactions?start_date=2021-02-18&end_date=2021-05-18
+Accept: application/json
+Accept-Language: en-SE
+Referer: https://corporate.nordea.se/inapp?app_channel=NDCM_SE_IOS&consent_insight=true&consent_marketing=true
+X-Aggregator: Tink Testing
+x-Request-Id: 12
+
+RESPONSE 12S
+200
+X-Backside-Transport: ***
+nnCoection: ***
+Transfer-Encoding: chunked
+X-Nordea-App: ***
+Content-Type: application/json
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Content-Type-Options: nosniff
+X-Frame-Options: DENY
+X-XSS-Protection: 1; mode=block
+Referrer-Policy: ***
+Date: Tue, 18 May 2021 19:58:36 GMT
+X-Global-Transaction-ID: 855c86fd60a41c6c092a84df
+Strict-Transport-Security: max-age=157680000; includeSubDomains
+
+{"result":[{"transaction_id":"B092021-05-182021-05-18-12.18.41.170575","has_details":true,"booked":true,"amount":46.70,"currency":"SEK","booking_date":"2021-05-18","interest_date":"2021-05-18","title":"FRÅN PLUSGIROKONTO F 703534-8","balance_after":1425789.40,"from_account_number":"7035348","from_account_name":"","message":"FRÅN PLUSGIROKONTO F","transaction_type":{"transaction_code":"SE00450","transaction_code_text":"Transfer"},"correction":false},{"transaction_id":"B092021-05-182021-05-18-12.18.09.325163","has_details":true,"booked":true,"amount":77500.00,"currency":"SEK","booking_date":"2021-05-18","interest_date":"2021-05-18","title":"FRÅN PLUSGIROKONTO F 703534-8","balance_after":1425742.70,"from_account_number":"7035348","from_account_name":"","message":"FRÅN PLUSGIROKONTO F","transaction_type":{"transaction_code":"SE00450","transaction_code_text":"Transfer"},"correction":false},{"transaction_id":"B092021-05-162021-05-16-21.57.38.999680","has_details":true,"booked":true,"amount":-20000.00,"currency":"SEK","booking_date":"2021-05-16","interest_date":"2021-05-16","title":"FRÅN SPARKONTO FÖRET 703534-8","balance_after":1348242.70,"to_account_number":"7035348","to_account_name":"","to_account_country":"","message":"FRÅN SPARKONTO FÖRET","own_reference":"","transaction_type":{"transaction_code":"SE00850","transaction_code_text":"Transfer"},"correction":false},{"transaction_id":"B092021-05-122021-05-12-08.15.39.409241","has_details":true,"booked":true,"amount":-500.00,"currency":"SEK","booking_date":"2021-05-12","interest_date":"2021-05-12","title":"FRÅN SPARKONTO FÖRET 703534-8","balance_after":1368242.70,"to_account_number":"7035348","to_account_name":"","to_account_country":"","message":"FRÅN SPARKONTO FÖRET","own_reference":"","transaction_type":{"transaction_code":"SE00850","transaction_code_text":"Transfer"},"correction":false},{"transaction_id":"B092021-05-122021-05-11-23.20.09.837273","has_details":true,"booked":true,"amount":-1200.00,"currency":"SEK","booking_date":"2021-05-12","interest_date":"2021-05-11","title":"FRÅN SPARKONTO FÖRET 703534-8","balance_after":1368742.70,"to_account_number":"7035348","to_account_name":"","to_account_country":"","message":"FRÅN SPARKONTO FÖRET","own_reference":"","transaction_type":{"transaction_code":"SE00850","transaction_code_text":"Transfer"},"correction":false}],"total_size":null,"continuation_key":null,"country":"SE","sub_system_errors":[]}
+
+REQUEST 13S
+GET https://corporate.nordea.se/api/dbf/ca/accounts-v3/accounts/NAID-SE-SEK-12345678901/transactions?start_date=1992-01-10&end_date=1992-04-10
+Accept: application/json
+Accept-Language: en-SE
+Referer: https://corporate.nordea.se/inapp?app_channel=NDCM_SE_IOS&consent_insight=true&consent_marketing=true
+X-Aggregator: Tink Testing
+
+RESPONSE 13S
+200
+X-Backside-Transport: ***
+nnCoection: ***
+Transfer-Encoding: chunked
+X-Nordea-App: ***
+Content-Type: application/json
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Content-Type-Options: nosniff
+X-Frame-Options: DENY
+X-XSS-Protection: 1; mode=block
+Referrer-Policy: ***
+Date: Tue, 18 May 2021 19:58:36 GMT
+X-Global-Transaction-ID: 855c86fd60a41c6c092a84df
+Strict-Transport-Security: max-age=157680000; includeSubDomains
+
+{"result":[{"transaction_id":"B092021-05-182021-05-18-12.18.41.170575","has_details":true,"booked":true,"amount":46.70,"currency":"SEK","booking_date":"2021-05-18","interest_date":"2021-05-18","title":"FRÅN PLUSGIROKONTO F 703534-8","balance_after":1425789.40,"from_account_number":"7035348","from_account_name":"","message":"FRÅN PLUSGIROKONTO F","transaction_type":{"transaction_code":"SE00450","transaction_code_text":"Transfer"},"correction":false},{"transaction_id":"B092021-05-182021-05-18-12.18.09.325163","has_details":true,"booked":true,"amount":77500.00,"currency":"SEK","booking_date":"2021-05-18","interest_date":"2021-05-18","title":"FRÅN PLUSGIROKONTO F 703534-8","balance_after":1425742.70,"from_account_number":"7035348","from_account_name":"","message":"FRÅN PLUSGIROKONTO F","transaction_type":{"transaction_code":"SE00450","transaction_code_text":"Transfer"},"correction":false},{"transaction_id":"B092021-05-162021-05-16-21.57.38.999680","has_details":true,"booked":true,"amount":-20000.00,"currency":"SEK","booking_date":"2021-05-16","interest_date":"2021-05-16","title":"FRÅN SPARKONTO FÖRET 703534-8","balance_after":1348242.70,"to_account_number":"7035348","to_account_name":"","to_account_country":"","message":"FRÅN SPARKONTO FÖRET","own_reference":"","transaction_type":{"transaction_code":"SE00850","transaction_code_text":"Transfer"},"correction":false},{"transaction_id":"B092021-05-122021-05-12-08.15.39.409241","has_details":true,"booked":true,"amount":-500.00,"currency":"SEK","booking_date":"2021-05-12","interest_date":"2021-05-12","title":"FRÅN SPARKONTO FÖRET 703534-8","balance_after":1368242.70,"to_account_number":"7035348","to_account_name":"","to_account_country":"","message":"FRÅN SPARKONTO FÖRET","own_reference":"","transaction_type":{"transaction_code":"SE00850","transaction_code_text":"Transfer"},"correction":false},{"transaction_id":"B092021-05-122021-05-11-23.20.09.837273","has_details":true,"booked":true,"amount":-1200.00,"currency":"SEK","booking_date":"2021-05-12","interest_date":"2021-05-11","title":"FRÅN SPARKONTO FÖRET 703534-8","balance_after":1368742.70,"to_account_number":"7035348","to_account_name":"","to_account_country":"","message":"FRÅN SPARKONTO FÖRET","own_reference":"","transaction_type":{"transaction_code":"SE00850","transaction_code_text":"Transfer"},"correction":false}],"total_size":null,"continuation_key":null,"country":"SE","sub_system_errors":[]}
+
+REQUEST 14S
+GET https://corporate.nordea.se/api/dbf/ca/accounts-v3/accounts/NAID-SE-SEK-12345678901/transactions?start_date=1991-10-09&end_date=1992-01-09
+Accept: application/json
+Accept-Language: en-SE
+Referer: https://corporate.nordea.se/inapp?app_channel=NDCM_SE_IOS&consent_insight=true&consent_marketing=true
+X-Aggregator: Tink Testing
+
+RESPONSE 14S
+200
+X-Backside-Transport: ***
+nnCoection: ***
+Transfer-Encoding: chunked
+X-Nordea-App: ***
+Content-Type: application/json
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Content-Type-Options: nosniff
+X-Frame-Options: DENY
+X-XSS-Protection: 1; mode=block
+Referrer-Policy: ***
+Date: Tue, 18 May 2021 19:58:36 GMT
+X-Global-Transaction-ID: 855c86fd60a41c6c092a84df
+Strict-Transport-Security: max-age=157680000; includeSubDomains
+
+{"result":[{"transaction_id":"B092021-05-182021-05-18-12.18.41.170575","has_details":true,"booked":true,"amount":46.70,"currency":"SEK","booking_date":"2021-05-18","interest_date":"2021-05-18","title":"FRÅN PLUSGIROKONTO F 703534-8","balance_after":1425789.40,"from_account_number":"7035348","from_account_name":"","message":"FRÅN PLUSGIROKONTO F","transaction_type":{"transaction_code":"SE00450","transaction_code_text":"Transfer"},"correction":false},{"transaction_id":"B092021-05-182021-05-18-12.18.09.325163","has_details":true,"booked":true,"amount":77500.00,"currency":"SEK","booking_date":"2021-05-18","interest_date":"2021-05-18","title":"FRÅN PLUSGIROKONTO F 703534-8","balance_after":1425742.70,"from_account_number":"7035348","from_account_name":"","message":"FRÅN PLUSGIROKONTO F","transaction_type":{"transaction_code":"SE00450","transaction_code_text":"Transfer"},"correction":false},{"transaction_id":"B092021-05-162021-05-16-21.57.38.999680","has_details":true,"booked":true,"amount":-20000.00,"currency":"SEK","booking_date":"2021-05-16","interest_date":"2021-05-16","title":"FRÅN SPARKONTO FÖRET 703534-8","balance_after":1348242.70,"to_account_number":"7035348","to_account_name":"","to_account_country":"","message":"FRÅN SPARKONTO FÖRET","own_reference":"","transaction_type":{"transaction_code":"SE00850","transaction_code_text":"Transfer"},"correction":false},{"transaction_id":"B092021-05-122021-05-12-08.15.39.409241","has_details":true,"booked":true,"amount":-500.00,"currency":"SEK","booking_date":"2021-05-12","interest_date":"2021-05-12","title":"FRÅN SPARKONTO FÖRET 703534-8","balance_after":1368242.70,"to_account_number":"7035348","to_account_name":"","to_account_country":"","message":"FRÅN SPARKONTO FÖRET","own_reference":"","transaction_type":{"transaction_code":"SE00850","transaction_code_text":"Transfer"},"correction":false},{"transaction_id":"B092021-05-122021-05-11-23.20.09.837273","has_details":true,"booked":true,"amount":-1200.00,"currency":"SEK","booking_date":"2021-05-12","interest_date":"2021-05-11","title":"FRÅN SPARKONTO FÖRET 703534-8","balance_after":1368742.70,"to_account_number":"7035348","to_account_name":"","to_account_country":"","message":"FRÅN SPARKONTO FÖRET","own_reference":"","transaction_type":{"transaction_code":"SE00850","transaction_code_text":"Transfer"},"correction":false}],"total_size":null,"continuation_key":null,"country":"SE","sub_system_errors":[]}
+
+REQUEST 15S
+GET https://corporate.nordea.se/api/dbf/ca/accounts-v3/accounts/NAID-SE-SEK-12345678901/transactions?start_date=1991-07-08&end_date=1991-10-08
+Accept: application/json
+Accept-Language: en-SE
+Referer: https://corporate.nordea.se/inapp?app_channel=NDCM_SE_IOS&consent_insight=true&consent_marketing=true
+X-Aggregator: Tink Testing
+
+RESPONSE 15S
+200
+X-Backside-Transport: ***
+nnCoection: ***
+Transfer-Encoding: chunked
+X-Nordea-App: ***
+Content-Type: application/json
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Content-Type-Options: nosniff
+X-Frame-Options: DENY
+X-XSS-Protection: 1; mode=block
+Referrer-Policy: ***
+Date: Tue, 18 May 2021 19:58:36 GMT
+X-Global-Transaction-ID: 855c86fd60a41c6c092a84df
+Strict-Transport-Security: max-age=157680000; includeSubDomains
+
+{"result":[{"transaction_id":"B092021-05-182021-05-18-12.18.41.170575","has_details":true,"booked":true,"amount":46.70,"currency":"SEK","booking_date":"2021-05-18","interest_date":"2021-05-18","title":"FRÅN PLUSGIROKONTO F 703534-8","balance_after":1425789.40,"from_account_number":"7035348","from_account_name":"","message":"FRÅN PLUSGIROKONTO F","transaction_type":{"transaction_code":"SE00450","transaction_code_text":"Transfer"},"correction":false},{"transaction_id":"B092021-05-182021-05-18-12.18.09.325163","has_details":true,"booked":true,"amount":77500.00,"currency":"SEK","booking_date":"2021-05-18","interest_date":"2021-05-18","title":"FRÅN PLUSGIROKONTO F 703534-8","balance_after":1425742.70,"from_account_number":"7035348","from_account_name":"","message":"FRÅN PLUSGIROKONTO F","transaction_type":{"transaction_code":"SE00450","transaction_code_text":"Transfer"},"correction":false},{"transaction_id":"B092021-05-162021-05-16-21.57.38.999680","has_details":true,"booked":true,"amount":-20000.00,"currency":"SEK","booking_date":"2021-05-16","interest_date":"2021-05-16","title":"FRÅN SPARKONTO FÖRET 703534-8","balance_after":1348242.70,"to_account_number":"7035348","to_account_name":"","to_account_country":"","message":"FRÅN SPARKONTO FÖRET","own_reference":"","transaction_type":{"transaction_code":"SE00850","transaction_code_text":"Transfer"},"correction":false},{"transaction_id":"B092021-05-122021-05-12-08.15.39.409241","has_details":true,"booked":true,"amount":-500.00,"currency":"SEK","booking_date":"2021-05-12","interest_date":"2021-05-12","title":"FRÅN SPARKONTO FÖRET 703534-8","balance_after":1368242.70,"to_account_number":"7035348","to_account_name":"","to_account_country":"","message":"FRÅN SPARKONTO FÖRET","own_reference":"","transaction_type":{"transaction_code":"SE00850","transaction_code_text":"Transfer"},"correction":false},{"transaction_id":"B092021-05-122021-05-11-23.20.09.837273","has_details":true,"booked":true,"amount":-1200.00,"currency":"SEK","booking_date":"2021-05-12","interest_date":"2021-05-11","title":"FRÅN SPARKONTO FÖRET 703534-8","balance_after":1368742.70,"to_account_number":"7035348","to_account_name":"","to_account_country":"","message":"FRÅN SPARKONTO FÖRET","own_reference":"","transaction_type":{"transaction_code":"SE00850","transaction_code_text":"Transfer"},"correction":false}],"total_size":null,"continuation_key":null,"country":"SE","sub_system_errors":[]}
+
+REQUEST 16S
+GET https://corporate.nordea.se/api/dbf/ca/accounts-v3/accounts/NAID-SE-SEK-12345678901/transactions?start_date=1991-04-07&end_date=1991-07-07
+Accept: application/json
+Accept-Language: en-SE
+Referer: https://corporate.nordea.se/inapp?app_channel=NDCM_SE_IOS&consent_insight=true&consent_marketing=true
+X-Aggregator: Tink Testing
+
+RESPONSE 16S
+200
+X-Backside-Transport: ***
+nnCoection: ***
+Transfer-Encoding: chunked
+X-Nordea-App: ***
+Content-Type: application/json
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Content-Type-Options: nosniff
+X-Frame-Options: DENY
+X-XSS-Protection: 1; mode=block
+Referrer-Policy: ***
+Date: Tue, 18 May 2021 19:58:36 GMT
+X-Global-Transaction-ID: 855c86fd60a41c6c092a84df
+Strict-Transport-Security: max-age=157680000; includeSubDomains
+
+{"result":[{"transaction_id":"B092021-05-182021-05-18-12.18.41.170575","has_details":true,"booked":true,"amount":46.70,"currency":"SEK","booking_date":"2021-05-18","interest_date":"2021-05-18","title":"FRÅN PLUSGIROKONTO F 703534-8","balance_after":1425789.40,"from_account_number":"7035348","from_account_name":"","message":"FRÅN PLUSGIROKONTO F","transaction_type":{"transaction_code":"SE00450","transaction_code_text":"Transfer"},"correction":false},{"transaction_id":"B092021-05-182021-05-18-12.18.09.325163","has_details":true,"booked":true,"amount":77500.00,"currency":"SEK","booking_date":"2021-05-18","interest_date":"2021-05-18","title":"FRÅN PLUSGIROKONTO F 703534-8","balance_after":1425742.70,"from_account_number":"7035348","from_account_name":"","message":"FRÅN PLUSGIROKONTO F","transaction_type":{"transaction_code":"SE00450","transaction_code_text":"Transfer"},"correction":false},{"transaction_id":"B092021-05-162021-05-16-21.57.38.999680","has_details":true,"booked":true,"amount":-20000.00,"currency":"SEK","booking_date":"2021-05-16","interest_date":"2021-05-16","title":"FRÅN SPARKONTO FÖRET 703534-8","balance_after":1348242.70,"to_account_number":"7035348","to_account_name":"","to_account_country":"","message":"FRÅN SPARKONTO FÖRET","own_reference":"","transaction_type":{"transaction_code":"SE00850","transaction_code_text":"Transfer"},"correction":false},{"transaction_id":"B092021-05-122021-05-12-08.15.39.409241","has_details":true,"booked":true,"amount":-500.00,"currency":"SEK","booking_date":"2021-05-12","interest_date":"2021-05-12","title":"FRÅN SPARKONTO FÖRET 703534-8","balance_after":1368242.70,"to_account_number":"7035348","to_account_name":"","to_account_country":"","message":"FRÅN SPARKONTO FÖRET","own_reference":"","transaction_type":{"transaction_code":"SE00850","transaction_code_text":"Transfer"},"correction":false},{"transaction_id":"B092021-05-122021-05-11-23.20.09.837273","has_details":true,"booked":true,"amount":-1200.00,"currency":"SEK","booking_date":"2021-05-12","interest_date":"2021-05-11","title":"FRÅN SPARKONTO FÖRET 703534-8","balance_after":1368742.70,"to_account_number":"7035348","to_account_name":"","to_account_country":"","message":"FRÅN SPARKONTO FÖRET","own_reference":"","transaction_type":{"transaction_code":"SE00850","transaction_code_text":"Transfer"},"correction":false}],"total_size":null,"continuation_key":null,"country":"SE","sub_system_errors":[]}
