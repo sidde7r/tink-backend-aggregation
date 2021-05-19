@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.SwedbankSEApiC
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.investment.rpc.PensionPortfoliosResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.investment.rpc.PortfolioHoldingsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankBaseConstants;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankBaseConstants.MenuItemKey;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.fetchers.transactional.SwedbankDefaultTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.BankProfile;
@@ -126,12 +127,22 @@ public class SwedbankSETransactionalAccountFetcher
     // this is because we want savings accounts to be fetched by transactional fetcher to get any
     // transactions
     private List<String> getInvestmentAccountNumbers() {
+        PortfolioHoldingsResponse portfolioHoldings;
+        PensionPortfoliosResponse pensionPortfolios;
         if (investmentAccountNumbers == null) {
-            PortfolioHoldingsResponse portfolioHoldings = apiClient.portfolioHoldings();
-            PensionPortfoliosResponse pensionPortfolios = apiClient.getPensionPortfolios();
             investmentAccountNumbers = new ArrayList<>();
-            investmentAccountNumbers.addAll(portfolioHoldings.getInvestmentAccountNumbers());
-            investmentAccountNumbers.addAll(pensionPortfolios.getPensionAccountNumbers());
+            // sometimes we don't have PortfolioHoldings menuItem, for example if it is
+            // youthProfile
+            if (apiClient.getBankProfileHandler().isAuthorizedForAction(MenuItemKey.PORTFOLIOS)) {
+                portfolioHoldings = apiClient.portfolioHoldings();
+                investmentAccountNumbers.addAll(portfolioHoldings.getInvestmentAccountNumbers());
+            }
+            if (apiClient
+                    .getBankProfileHandler()
+                    .isAuthorizedForAction(MenuItemKey.PENSION_PORTFOLIOS)) {
+                pensionPortfolios = apiClient.getPensionPortfolios();
+                investmentAccountNumbers.addAll(pensionPortfolios.getPensionAccountNumbers());
+            }
         }
 
         return investmentAccountNumbers;
