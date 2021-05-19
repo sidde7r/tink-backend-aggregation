@@ -121,7 +121,7 @@ public final class LaBanquePostaleAgent
                 new OAuth2AuthenticationController(
                         persistentStorage,
                         supplementalInformationHelper,
-                        new LaBanquePostaleAuthenticator(apiClient, sessionStorage),
+                        new LaBanquePostaleAuthenticator(apiClient),
                         credentials,
                         strongAuthenticationState);
 
