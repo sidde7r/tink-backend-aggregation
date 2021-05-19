@@ -63,7 +63,8 @@ public class RevolutEEAModule extends AbstractModule {
 
     private EidasIdentity createEidasIdentity(
             CompositeAgentContext context, Class<? extends Agent> agentClass) {
-        return new EidasIdentity(context.getClusterId(), context.getAppId(), agentClass);
+        return new EidasIdentity(
+                context.getClusterId(), context.getAppId(), context.getCertId(), agentClass);
     }
 
     private EidasJwsSigner createEidasJwsSigner(

@@ -52,7 +52,10 @@ public class DanskeOpenBankingModule extends AbstractModule {
     @Provides
     public EidasIdentity eidasIdentity(CompositeAgentContext context) {
         return new EidasIdentity(
-                context.getClusterId(), context.getAppId(), DanskeJwtSignerProvider.class);
+                context.getClusterId(),
+                context.getAppId(),
+                context.getCertId(),
+                DanskeJwtSignerProvider.class);
     }
 
     private TlsConfigurationSetter createEidasProxyTlsConfigurationSetter(

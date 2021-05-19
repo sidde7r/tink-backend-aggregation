@@ -25,10 +25,14 @@ public class CertificateIdProviderImpl implements CertificateIdProvider {
 
     @Override
     public String getCertId(
-            String appId, String clusterId, String providerName, String marketCode) {
+            String appId,
+            String clusterId,
+            String providerName,
+            String marketCode,
+            boolean isOpenBanking) {
         if (Stream.of("UK", "GB").anyMatch(market -> market.equalsIgnoreCase(marketCode))) {
             return AvailableCertIds.UKOB.getValue();
-        } else if (isUnderTinkLicence(appId, clusterId, providerName)) {
+        } else if (isOpenBanking && isUnderTinkLicence(appId, clusterId, providerName)) {
             AvailableCertIds certId =
                     eidasMigrationToggle.getEnabledCertId(marketCode, providerName);
             return certId.getValue();
