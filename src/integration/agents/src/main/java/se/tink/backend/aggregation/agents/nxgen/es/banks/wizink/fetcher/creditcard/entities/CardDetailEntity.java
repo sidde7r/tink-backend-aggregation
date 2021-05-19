@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.fetcher.creditc
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.math.BigDecimal;
+import java.util.Optional;
 import lombok.Data;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.WizinkConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.wizink.fetcher.creditcard.util.WizinkCardUtil;
@@ -27,6 +28,8 @@ public class CardDetailEntity {
     private String accountNumber;
     private BigDecimal availableBalance;
     private BigDecimal currentBalance;
+    private BigDecimal usedBalance;
+    private BigDecimal creditLine;
     private String virtualIban;
     private String nameInCard;
     private String cardLogo;
@@ -34,7 +37,6 @@ public class CardDetailEntity {
     @JsonIgnore
     public CreditCardAccount toTinkAccount(String xTokenUser) {
         String maskedCardNumber = WizinkCardUtil.getMaskedCardNumber(cardNumber, xTokenUser);
-
         return CreditCardAccount.nxBuilder()
                 .withCardDetails(createCardDetails(maskedCardNumber))
                 .withoutFlags()
@@ -45,6 +47,25 @@ public class CardDetailEntity {
                 .build();
     }
 
+    private CreditCardModule createCardDetails(String decodedMaskedCardNumber) {
+        final ExactCurrencyAmount balance = ExactCurrencyAmount.of(getBalance(), "EUR");
+        final ExactCurrencyAmount availableCredit = ExactCurrencyAmount.of(getCreditLine(), "EUR");
+        return CreditCardModule.builder()
+                .withCardNumber(decodedMaskedCardNumber)
+                .withBalance(balance)
+                .withAvailableCredit(availableCredit)
+                .withCardAlias(prepareAccountName(decodedMaskedCardNumber))
+                .build();
+    }
+
+    private BigDecimal getBalance() {
+        return Optional.ofNullable(availableBalance).orElse(currentBalance);
+    }
+
+    private BigDecimal getCreditLine() {
+        return Optional.ofNullable(creditLine).orElse(currentBalance.add(usedBalance));
+    }
+
     private IdModule createIdModule(String decodedMaskedCardNumber) {
         return IdModule.builder()
                 .withUniqueIdentifier(decodedMaskedCardNumber)
@@ -53,16 +74,6 @@ public class CardDetailEntity {
                 .addIdentifier(
                         AccountIdentifier.create(
                                 AccountIdentifierType.PAYMENT_CARD_NUMBER, decodedMaskedCardNumber))
-                .build();
-    }
-
-    private CreditCardModule createCardDetails(String decodedMaskedCardNumber) {
-        final ExactCurrencyAmount balance = ExactCurrencyAmount.of(availableBalance, "EUR");
-        return CreditCardModule.builder()
-                .withCardNumber(decodedMaskedCardNumber)
-                .withBalance(balance)
-                .withAvailableCredit(balance)
-                .withCardAlias(prepareAccountName(decodedMaskedCardNumber))
                 .build();
     }
 

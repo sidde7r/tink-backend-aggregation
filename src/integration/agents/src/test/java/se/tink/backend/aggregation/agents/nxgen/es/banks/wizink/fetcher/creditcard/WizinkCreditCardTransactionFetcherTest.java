@@ -82,6 +82,6 @@ public class WizinkCreditCardTransactionFetcherTest {
         assertThat(transaction).isNotNull();
         assertThat(transaction.getDescription()).isEqualTo("MOVEMENT 2");
         assertThat(transaction.getDate().toString()).isEqualTo("Tue Mar 24 11:00:00 UTC 2020");
-        assertThat(transaction.getAmount()).isEqualTo(ExactCurrencyAmount.of(6, "EUR"));
+        assertThat(transaction.getAmount()).isEqualTo(ExactCurrencyAmount.of(6.5, "EUR"));
     }
 }
