@@ -73,7 +73,7 @@
             "expireMM": "01",
             "createDate": "20200103",
             "cardType": "Mastercard Business Debit",
-            "cardStatus": "A",
+            "cardStatus": "N",
             "cardLogo": "MC",
             "cardId": "Panid=9999993333332222//",
             "cardGroup": "O",
