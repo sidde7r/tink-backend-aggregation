@@ -472,8 +472,8 @@ public class SwedbankDefaultApiClient {
             log.warn(
                     "User not authorized to perform request with key: [{}], name: [{}], authorization: [{}]",
                     menuItemKey,
-                    menuItem.getName(),
-                    menuItem.getAuthorization());
+                    menuItem == null ? "" : menuItem.getName(),
+                    menuItem == null ? "" : menuItem.getAuthorization());
             throw new IllegalStateException();
         }
 
@@ -549,6 +549,11 @@ public class SwedbankDefaultApiClient {
         bankProfileHandler.addBankProfile(bankProfile);
         // profile is already activated
         bankProfileHandler.setActiveBankProfile(bankProfile);
+
+        // temporary log to track youthProfile
+        if (profileEntity.isYouthProfile()) {
+            log.info("This profile is youthProfile");
+        }
     }
 
     public BankProfileHandler getBankProfileHandler() {
