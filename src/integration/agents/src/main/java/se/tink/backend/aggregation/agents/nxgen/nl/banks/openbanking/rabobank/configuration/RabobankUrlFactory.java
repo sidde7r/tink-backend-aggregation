@@ -3,15 +3,17 @@ package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.c
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public final class RabobankUrlFactory {
+    private final URL authUrl;
     private final URL baseUrl;
     private boolean consumeLatest = true;
 
-    RabobankUrlFactory(final URL baseUrl) {
+    RabobankUrlFactory(final URL authUrl, final URL baseUrl) {
+        this.authUrl = authUrl;
         this.baseUrl = baseUrl;
     }
 
     public URL getOauth2Url() {
-        return baseUrl.concatWithSeparator("oauth2");
+        return authUrl.concatWithSeparator("oauth2");
     }
 
     public URL getAuthorizeUrl() {
@@ -20,6 +22,10 @@ public final class RabobankUrlFactory {
 
     public URL getOauth2TokenUrl() {
         return getOauth2Url().concatWithSeparator("token");
+    }
+
+    public URL getConsentUrl() {
+        return baseUrl.concatWithSeparator("oauth2");
     }
 
     public URL getPaymentsUrl() {
@@ -38,7 +44,7 @@ public final class RabobankUrlFactory {
     }
 
     public URL buildConsentUrl(final String consentId) {
-        return getOauth2Url().concatWithSeparator("consents").concatWithSeparator(consentId);
+        return getConsentUrl().concatWithSeparator("consents").concatWithSeparator(consentId);
     }
 
     public URL getAisAccountsUrl() {

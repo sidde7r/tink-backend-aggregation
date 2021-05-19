@@ -58,7 +58,10 @@ public final class RabobankConfiguration implements ClientConfiguration {
     @JsonIgnore
     public RabobankUrlFactory getUrls() {
         if (urlFactory == null) {
-            urlFactory = new RabobankUrlFactory(new URL(RabobankConstants.BASE_URL));
+            urlFactory =
+                    new RabobankUrlFactory(
+                            new URL(RabobankConstants.AUTH_URL),
+                            new URL(RabobankConstants.BASE_URL));
         }
         return urlFactory;
     }
