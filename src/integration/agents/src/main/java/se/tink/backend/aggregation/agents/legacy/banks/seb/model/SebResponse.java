@@ -66,4 +66,8 @@ public class SebResponse {
                 || Objects.isNull(d.getVodb())
                 || Objects.isNull(d.getVodb().getAccountEntities()));
     }
+
+    public int getGatewayReturnCode() {
+        return d.getResultInfo().gatewayReturnCode;
+    }
 }

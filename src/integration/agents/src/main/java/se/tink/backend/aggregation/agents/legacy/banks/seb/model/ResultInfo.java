@@ -9,4 +9,7 @@ public class ResultInfo {
 
     @JsonProperty("Message")
     public List<ResultInfoMessage> Messages;
+
+    @JsonProperty("GatewayReturnCode")
+    public int gatewayReturnCode;
 }
