@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.PostbankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenticator.rpc.AuthorisationResponse;
@@ -60,8 +61,11 @@ public class PostbankAuthenticator implements AutoAuthenticator {
         credentials.setSessionExpiryDate(consentDetailsResponse.getValidUntil());
     }
 
-    public void storeConsentDetails() {
+    public void validateAndStoreConsentDetails() {
         ConsentDetailsResponse consentDetailsResponse = apiClient.getConsentDetails();
+        if (!consentDetailsResponse.isValid()) {
+            throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception();
+        }
         credentials.setSessionExpiryDate(consentDetailsResponse.getValidUntil());
     }
 }

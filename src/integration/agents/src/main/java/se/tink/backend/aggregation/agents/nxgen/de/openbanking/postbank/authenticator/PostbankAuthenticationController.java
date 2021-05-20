@@ -84,7 +84,7 @@ public class PostbankAuthenticationController implements TypedAuthenticator {
         }
 
         authenticateUsingChosenScaMethod(username, initValues, chosenScaMethod);
-        authenticator.storeConsentDetails();
+        authenticator.validateAndStoreConsentDetails();
     }
 
     private void authenticateUsingChosenScaMethod(
