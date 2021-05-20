@@ -153,7 +153,7 @@ public class NordeaFIConstants {
     }
 
     public static class HttpClient {
-        public static final int MAX_RETRIES = 5;
+        public static final int MAX_RETRIES = 10;
         public static final int RETRY_SLEEP_MS = 3000;
         public static final int TIMEOUT_MS = 45000;
     }
