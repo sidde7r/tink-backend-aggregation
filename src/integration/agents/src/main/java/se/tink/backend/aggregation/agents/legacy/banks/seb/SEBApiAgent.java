@@ -777,7 +777,7 @@ public final class SEBApiAgent extends AbstractAgent
     }
 
     private void checkPossibleFaultyParsing(HoldingEntity holding, Instrument instrument) {
-        if (instrument.getAverageAcquisitionPrice() != null && !(instrument.getQuantity() == 0)) {
+        if (instrument.getAverageAcquisitionPrice() != null && instrument.getQuantity() != 0) {
             Double estimatedAverageAcquisitionPrice =
                     instrument.getMarketValue() / instrument.getQuantity();
             if (Math.abs(estimatedAverageAcquisitionPrice - instrument.getAverageAcquisitionPrice())
