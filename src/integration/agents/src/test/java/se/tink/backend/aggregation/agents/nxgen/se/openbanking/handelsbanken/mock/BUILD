@@ -4,9 +4,7 @@ junit_test(
     name = "manual",
     srcs = glob(["*.java"]),
     data = [
-        "//:agent_test_data",
-        "//data:agents",
-        "//etc:development",
+        "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/openbanking/handelsbanken/mock/resources",
     ],
     tags = [
         "external",

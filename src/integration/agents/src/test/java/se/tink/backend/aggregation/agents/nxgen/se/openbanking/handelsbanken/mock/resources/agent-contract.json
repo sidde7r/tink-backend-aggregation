@@ -1,0 +1,1278 @@
+{
+  "accounts" : [ {
+    "accountNumber" : "6602-297355511",
+    "accountExclusion" : "NONE",
+    "exactBalance" : {
+      "currencyCode" : "SEK",
+      "exactValue" : 12841.72,
+      "scale" : 2,
+      "unscaledValue" : 1284172,
+      "doubleValue" : 12841.72
+    },
+    "currencyCode" : "SEK",
+    "bankId" : "297355511",
+    "excluded" : false,
+    "favored" : false,
+    "name" : "Allkonto",
+    "ownership" : 1.0,
+    "type" : "CHECKING",
+    "userModifiedExcluded" : false,
+    "userModifiedName" : false,
+    "userModifiedType" : false,
+    "identifiers" : "[\"se://6602297355511\",\"iban://SE8060000000000297355511\"]",
+    "closed" : false,
+    "holderName" : "Firstname Lastname",
+    "accountHolder" : {
+      "accountId" : null,
+      "type" : "PERSONAL",
+      "identities" : [ {
+        "name" : "Firstname Lastname",
+        "role" : "HOLDER"
+      } ]
+    },
+    "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
+    "balances" : [ ],
+    "availableCredit" : 0.0,
+    "balance" : 12841.72
+  }, {
+    "accountNumber" : "5226********6196",
+    "accountExclusion" : "NONE",
+    "exactAvailableCredit" : {
+      "currencyCode" : "SEK",
+      "exactValue" : 93794.83,
+      "scale" : 2,
+      "unscaledValue" : 9379483,
+      "doubleValue" : 93794.83
+    },
+    "exactBalance" : {
+      "currencyCode" : "SEK",
+      "exactValue" : 0,
+      "scale" : 0,
+      "unscaledValue" : 0,
+      "doubleValue" : 0.0
+    },
+    "currencyCode" : "SEK",
+    "bankId" : "52266196",
+    "excluded" : false,
+    "favored" : false,
+    "name" : "Allkort Mastercard",
+    "ownership" : 1.0,
+    "type" : "CREDIT_CARD",
+    "userModifiedExcluded" : false,
+    "userModifiedName" : false,
+    "userModifiedType" : false,
+    "identifiers" : "[\"masked-pan://5226********6196\"]",
+    "closed" : false,
+    "holderName" : "Firstname Lastname",
+    "accountHolder" : {
+      "accountId" : null,
+      "type" : "PERSONAL",
+      "identities" : [ {
+        "name" : "Firstname Lastname",
+        "role" : "HOLDER"
+      } ]
+    },
+    "flags" : "[]",
+    "balances" : [ ],
+    "availableCredit" : 93794.83,
+    "balance" : 0.0
+  }, {
+    "accountNumber" : "6602-123456789",
+    "accountExclusion" : "NONE",
+    "exactBalance" : {
+      "currencyCode" : "SEK",
+      "exactValue" : 3000.35,
+      "scale" : 2,
+      "unscaledValue" : 300035,
+      "doubleValue" : 3000.35
+    },
+    "currencyCode" : "SEK",
+    "bankId" : "123456789",
+    "excluded" : false,
+    "favored" : false,
+    "name" : "Allkonto",
+    "ownership" : 1.0,
+    "type" : "CHECKING",
+    "userModifiedExcluded" : false,
+    "userModifiedName" : false,
+    "userModifiedType" : false,
+    "identifiers" : "[\"se://6602123456789\"]",
+    "closed" : false,
+    "holderName" : "Firstname Lastname",
+    "accountHolder" : {
+      "accountId" : null,
+      "type" : "PERSONAL",
+      "identities" : [ {
+        "name" : "Firstname Lastname",
+        "role" : "HOLDER"
+      } ]
+    },
+    "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
+    "balances" : [ ],
+    "availableCredit" : 0.0,
+    "balance" : 3000.35
+  }, {
+    "accountNumber" : "6602-264165942",
+    "accountExclusion" : "NONE",
+    "exactBalance" : {
+      "currencyCode" : "SEK",
+      "exactValue" : 3000.64,
+      "scale" : 2,
+      "unscaledValue" : 300064,
+      "doubleValue" : 3000.64
+    },
+    "currencyCode" : "SEK",
+    "bankId" : "264165942",
+    "excluded" : false,
+    "favored" : false,
+    "name" : "Privatkonto",
+    "ownership" : 1.0,
+    "type" : "CHECKING",
+    "userModifiedExcluded" : false,
+    "userModifiedName" : false,
+    "userModifiedType" : false,
+    "identifiers" : "[\"iban://SE4560000000000264165942\",\"se://6602264165942\"]",
+    "closed" : false,
+    "holderName" : "Firstname Lastname",
+    "accountHolder" : {
+      "accountId" : null,
+      "type" : "PERSONAL",
+      "identities" : [ {
+        "name" : "Firstname Lastname",
+        "role" : "HOLDER"
+      } ]
+    },
+    "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
+    "balances" : [ ],
+    "availableCredit" : 0.0,
+    "balance" : 3000.64
+  } ],
+  "transactions" : [ {
+    "amount" : -86.0,
+    "date" : 1580122800000,
+    "description" : "Konditori Amarant To",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-01-28",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBITED",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -85.0,
+    "date" : 1580122800000,
+    "description" : "ELEVEN.SE",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-01-28",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBITED",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -9.0,
+    "date" : 1580036400000,
+    "description" : "Easypark",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-01-27",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBITED",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -365.0,
+    "date" : 1580036400000,
+    "description" : "IKEA VESTERAS",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-01-27",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBITED",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -20.0,
+    "date" : 1580036400000,
+    "description" : "IKEA VESTERAS",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-01-27",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBITED",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -138.0,
+    "date" : 1580036400000,
+    "description" : "IKEA VESTERAS",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-01-27",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBITED",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -522.46,
+    "date" : 1580036400000,
+    "description" : "APOTEK HJARTAT ICA M",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-01-27",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBITED",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -216.15,
+    "date" : 1580036400000,
+    "description" : "MAXI ICA STORMARKNAD",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-01-28",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBITED",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -272.93,
+    "date" : 1579950000000,
+    "description" : "ICA SUPERMARKET SLAG",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-01-27",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBITED",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -299.0,
+    "date" : 1579863600000,
+    "description" : "SYSTEMBOLAGET TORSH#",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-01-27",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBITED",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -320.0,
+    "date" : 1579777200000,
+    "description" : "APOTEK HJARTAT ICA M",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-01-24",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBITED",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -365.4,
+    "date" : 1579777200000,
+    "description" : "MAXI ICA STORMARKNAD",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-01-27",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBITED",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -86.0,
+    "date" : 1579690800000,
+    "description" : "Konditori Amarant VE",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-01-23",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBITED",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -365.0,
+    "date" : 1580036400000,
+    "description" : "IKEA VESTERAS",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-01-27",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBITED",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -20.0,
+    "date" : 1580036400000,
+    "description" : "IKEA VESTERAS",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-01-27",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBITED",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -138.0,
+    "date" : 1580036400000,
+    "description" : "IKEA VESTERAS",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-01-27",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBITED",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -522.46,
+    "date" : 1580036400000,
+    "description" : "APOTEK HJARTAT ICA M",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-01-27",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBITED",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -216.15,
+    "date" : 1580036400000,
+    "description" : "MAXI ICA STORMARKNAD",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-01-28",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBITED",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -272.93,
+    "date" : 1579950000000,
+    "description" : "ICA SUPERMARKET SLAG",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-01-27",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBITED",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -299.0,
+    "date" : 1579863600000,
+    "description" : "SYSTEMBOLAGET TORSH#",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-01-27",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBITED",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -320.0,
+    "date" : 1579777200000,
+    "description" : "APOTEK HJARTAT ICA M",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-01-24",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBITED",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -365.4,
+    "date" : 1579777200000,
+    "description" : "MAXI ICA STORMARKNAD",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-01-27",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBITED",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -86.0,
+    "date" : 1579690800000,
+    "description" : "Konditori Amarant VE",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-01-23",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBITED",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -86.0,
+    "date" : 1580122800000,
+    "description" : "Konditori Amarant To",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-01-28",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBITED",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -85.0,
+    "date" : 1580122800000,
+    "description" : "ELEVEN.SE",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-01-28",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBITED",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -9.0,
+    "date" : 1580036400000,
+    "description" : "Easypark",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-01-27",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBITED",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -365.0,
+    "date" : 1580036400000,
+    "description" : "IKEA VESTERAS",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-01-27",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBITED",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -20.0,
+    "date" : 1580036400000,
+    "description" : "IKEA VESTERAS",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-01-27",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBITED",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -138.0,
+    "date" : 1580036400000,
+    "description" : "IKEA VESTERAS",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-01-27",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBITED",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -522.46,
+    "date" : 1580036400000,
+    "description" : "APOTEK HJARTAT ICA M",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-01-27",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBITED",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -216.15,
+    "date" : 1580036400000,
+    "description" : "MAXI ICA STORMARKNAD",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-01-28",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBITED",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -272.93,
+    "date" : 1579950000000,
+    "description" : "ICA SUPERMARKET SLAG",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-01-27",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBITED",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -299.0,
+    "date" : 1579863600000,
+    "description" : "SYSTEMBOLAGET TORSH#",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-01-27",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBITED",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -320.0,
+    "date" : 1579777200000,
+    "description" : "APOTEK HJARTAT ICA M",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-01-24",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBITED",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -365.4,
+    "date" : 1579777200000,
+    "description" : "MAXI ICA STORMARKNAD",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-01-27",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBITED",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -86.0,
+    "date" : 1579690800000,
+    "description" : "Konditori Amarant VE",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-01-23",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBITED",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -86.0,
+    "date" : 1580122800000,
+    "description" : "Konditori Amarant To",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-01-28",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBITED",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -85.0,
+    "date" : 1580122800000,
+    "description" : "ELEVEN.SE",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-01-28",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBITED",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -9.0,
+    "date" : 1580036400000,
+    "description" : "Easypark",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-01-27",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBITED",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -365.0,
+    "date" : 1580036400000,
+    "description" : "IKEA VESTERAS",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-01-27",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBITED",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -20.0,
+    "date" : 1580036400000,
+    "description" : "IKEA VESTERAS",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-01-27",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBITED",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -138.0,
+    "date" : 1580036400000,
+    "description" : "IKEA VESTERAS",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-01-27",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBITED",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -522.46,
+    "date" : 1580036400000,
+    "description" : "APOTEK HJARTAT ICA M",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-01-27",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBITED",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -216.15,
+    "date" : 1580036400000,
+    "description" : "MAXI ICA STORMARKNAD",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-01-28",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBITED",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -272.93,
+    "date" : 1579950000000,
+    "description" : "ICA SUPERMARKET SLAG",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-01-27",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBITED",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -299.0,
+    "date" : 1579863600000,
+    "description" : "SYSTEMBOLAGET TORSH#",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-01-27",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBITED",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -320.0,
+    "date" : 1579777200000,
+    "description" : "APOTEK HJARTAT ICA M",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-01-24",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBITED",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -365.4,
+    "date" : 1579777200000,
+    "description" : "MAXI ICA STORMARKNAD",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-01-27",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBITED",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -86.0,
+    "date" : 1579690800000,
+    "description" : "Konditori Amarant VE",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2020-01-23",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBITED",
+    "providerMarket" : "SE"
+  } ]
+}
