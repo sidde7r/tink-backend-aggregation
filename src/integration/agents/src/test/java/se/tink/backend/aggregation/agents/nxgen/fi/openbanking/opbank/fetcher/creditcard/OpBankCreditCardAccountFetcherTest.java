@@ -82,7 +82,7 @@ public class OpBankCreditCardAccountFetcherTest {;
                 transactionsPage1.getTinkTransactions().stream()
                         .findAny()
                         .orElseThrow(IllegalArgumentException::new);
-        assertThat(transaction1.getExactAmount().getExactValue()).isEqualByComparingTo("3.50");
+        assertThat(transaction1.getExactAmount().getExactValue()).isEqualByComparingTo("-3.50");
         assertThat(transaction1.getDescription()).isEqualTo("testDescription");
         assertThat(transaction1.getDate()).isEqualToIgnoringHours("2020-11-09");
         // and when
