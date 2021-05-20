@@ -1080,7 +1080,9 @@ public final class SEBApiAgent extends AbstractAgent
     }
 
     private boolean shouldRetry(SebResponse sebResponse) {
-        return !sebResponse.isValid() && sebResponse.getGatewayReturnCode() == 9214;
+        return sebResponse.isValid()
+                && sebResponse.getAccountEntities().isEmpty()
+                && sebResponse.getGatewayReturnCode() == 9214;
     }
 
     private Optional<SebResponse> getValidSebResponse(final ClientResponse response) {
