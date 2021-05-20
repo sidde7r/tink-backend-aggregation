@@ -11,6 +11,7 @@ import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.map.CaseInsensitiveMap;
+import org.assertj.core.util.VisibleForTesting;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
@@ -18,6 +19,7 @@ import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.LaBanquePostaleConstants.CreditorAgentConstants;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.LaBanquePostaleConstants.MinimumValues;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.authenticator.LaBanquePostalePaymentSigner;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.authenticator.rpc.ConfirmPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.authenticator.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.entities.CreditorAgentEntity;
@@ -43,7 +45,6 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Payment;
@@ -67,19 +68,18 @@ public class LaBanquePostalePaymentExecutor implements PaymentExecutor, Fetchabl
 
     private final LaBanquePostalePaymentApiClient apiClient;
     private final String redirectUrl;
-    private final SessionStorage sessionStorage;
     private final StrongAuthenticationState strongAuthenticationState;
     private final SupplementalInformationHelper supplementalInformationHelper;
+    private final LaBanquePostalePaymentSigner laBanquePostalePaymentSigner =
+            new LaBanquePostalePaymentSigner();
 
     public LaBanquePostalePaymentExecutor(
             LaBanquePostalePaymentApiClient apiClient,
             String redirectUrl,
-            SessionStorage sessionStorage,
             StrongAuthenticationState strongAuthenticationState,
             SupplementalInformationHelper supplementalInformationHelper) {
         this.apiClient = apiClient;
         this.redirectUrl = redirectUrl;
-        this.sessionStorage = sessionStorage;
         this.strongAuthenticationState = strongAuthenticationState;
         this.supplementalInformationHelper = supplementalInformationHelper;
     }
@@ -99,7 +99,7 @@ public class LaBanquePostalePaymentExecutor implements PaymentExecutor, Fetchabl
         CreatePaymentResponse paymentResponse = apiClient.createPayment(createPaymentRequest);
 
         String authorizationUrl = paymentResponse.getLinks().getAuthorizationUrl();
-        sessionStorage.put(PAYMENT_AUTHORIZATION_URL, authorizationUrl);
+        laBanquePostalePaymentSigner.setPaymentAuthorizationUrl(authorizationUrl);
 
         String paymentId = apiClient.findPaymentId(authorizationUrl);
         return new PaymentResponse(
@@ -122,17 +122,12 @@ public class LaBanquePostalePaymentExecutor implements PaymentExecutor, Fetchabl
         switch (paymentMultiStepRequest.getStep()) {
             case AuthenticationStepConstants.STEP_INIT:
                 String authorizationUrl =
-                        Optional.ofNullable(sessionStorage.get(PAYMENT_AUTHORIZATION_URL))
-                                .orElseThrow(
-                                        () ->
-                                                new PaymentAuthenticationException(
-                                                        "Payment authentication failed. There is no authorization url!",
-                                                        new PaymentRejectedException()));
+                        laBanquePostalePaymentSigner.getPaymentAuthorizationUrlOrThrow();
+
                 Map<String, String> queryParametersMap =
                         new CaseInsensitiveMap<>(openThirdPartyApp(new URL(authorizationUrl)));
-                String psuAuthenticationFactor =
-                        queryParametersMap.get(PSU_AUTHORIZATION_FACTOR_KEY);
-                sessionStorage.put(PSU_AUTHORIZATION_FACTOR, psuAuthenticationFactor);
+                laBanquePostalePaymentSigner.setPsuAuthenticationFactorOrThrow(queryParametersMap);
+
                 nextStep = CONFIRM_PAYMENT;
                 break;
             case CONFIRM_PAYMENT:
@@ -199,7 +194,8 @@ public class LaBanquePostalePaymentExecutor implements PaymentExecutor, Fetchabl
     private PaymentStatus confirmAndVerifyStatus(String paymentId) throws PaymentException {
 
         ConfirmPaymentResponse confirmPaymentResponse =
-                apiClient.confirmPayment(paymentId, sessionStorage.get(PSU_AUTHORIZATION_FACTOR));
+                apiClient.confirmPayment(
+                        paymentId, laBanquePostalePaymentSigner.getPsuAuthenticationFactor());
 
         BerlinGroupPaymentStatus berlinPaymentStatus =
                 confirmPaymentResponse.getPaymentRequest().getPaymentStatus();
@@ -234,6 +230,11 @@ public class LaBanquePostalePaymentExecutor implements PaymentExecutor, Fetchabl
                 () ->
                         new PaymentAuthorizationException(
                                 "SCA time-out.", ThirdPartyAppError.TIMED_OUT.exception()));
+    }
+
+    @VisibleForTesting
+    LaBanquePostalePaymentSigner getLaBanquePostalePaymentSigner() {
+        return this.laBanquePostalePaymentSigner;
     }
 
     @Override

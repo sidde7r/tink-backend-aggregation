@@ -121,7 +121,7 @@ public final class LaBanquePostaleAgent
                 new OAuth2AuthenticationController(
                         persistentStorage,
                         supplementalInformationHelper,
-                        new LaBanquePostaleAuthenticator(apiClient, sessionStorage),
+                        new LaBanquePostaleAuthenticator(apiClient),
                         credentials,
                         strongAuthenticationState);
 
@@ -152,7 +152,6 @@ public final class LaBanquePostaleAgent
                 new LaBanquePostalePaymentExecutor(
                         paymentApiClient,
                         agentConfiguration.getRedirectUrl(),
-                        sessionStorage,
                         strongAuthenticationState,
                         supplementalInformationHelper);
         return Optional.of(new PaymentController(paymentExecutor, paymentExecutor));
