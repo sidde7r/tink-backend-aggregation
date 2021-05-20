@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.fetcher.transactionalaccount.entities;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.time.LocalDate;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.SebConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebCommonConstants;
@@ -8,14 +7,12 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction.Builder;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.nxgen.core.transaction.TransactionDates;
-import se.tink.backend.aggregation.utils.json.deserializers.LocalDateDeserializer;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.chrono.AvailableDateInformation;
 
 @JsonObject
 public class PendingEntity {
 
-    @JsonDeserialize(using = LocalDateDeserializer.class)
     private LocalDate valueDate;
 
     private String descriptiveText;

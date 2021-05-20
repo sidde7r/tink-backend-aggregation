@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.acco
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
@@ -11,7 +10,6 @@ import lombok.Getter;
 import org.apache.commons.collections4.ListUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.backend.aggregation.utils.json.deserializers.LocalDateDeserializer;
 
 @Getter
 @JsonObject
@@ -23,11 +21,9 @@ public class TransactionsBodyEntity {
     private boolean noMoreTransactions;
 
     @JsonProperty("FromDate")
-    @JsonDeserialize(using = LocalDateDeserializer.class)
     private LocalDate fromDate;
 
     @JsonProperty("ToDate")
-    @JsonDeserialize(using = LocalDateDeserializer.class)
     private LocalDate toDate;
 
     @JsonIgnore

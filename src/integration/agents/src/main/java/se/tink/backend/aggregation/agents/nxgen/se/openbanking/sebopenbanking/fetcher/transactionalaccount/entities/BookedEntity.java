@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.f
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.time.LocalDate;
 import java.util.Objects;
 import se.tink.backend.aggregation.agents.models.TransactionExternalSystemIdType;
@@ -12,17 +11,14 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction.Builder;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.nxgen.core.transaction.TransactionDates;
-import se.tink.backend.aggregation.utils.json.deserializers.LocalDateDeserializer;
 import se.tink.libraries.chrono.AvailableDateInformation;
 
 @JsonObject
 public class BookedEntity {
     private String transactionId;
 
-    @JsonDeserialize(using = LocalDateDeserializer.class)
     private LocalDate valueDate;
 
-    @JsonDeserialize(using = LocalDateDeserializer.class)
     private LocalDate bookingDate;
 
     private String entryReference;

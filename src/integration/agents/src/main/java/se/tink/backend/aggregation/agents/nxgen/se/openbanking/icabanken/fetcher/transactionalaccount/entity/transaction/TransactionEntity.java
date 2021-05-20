@@ -1,7 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.fetcher.transactionalaccount.entity.transaction;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import java.time.LocalDate;
 import java.util.List;
 import se.tink.backend.aggregation.agents.models.TransactionExternalSystemIdType;
@@ -14,13 +12,8 @@ import se.tink.libraries.chrono.AvailableDateInformation;
 
 @JsonObject
 public class TransactionEntity {
-
-    @JsonDeserialize(using = LocalDateDeserializer.class)
     private LocalDate bookingDate;
-
-    @JsonDeserialize(using = LocalDateDeserializer.class)
     private LocalDate valueDate;
-
     private String entryReference;
     private TransactionAmountEntity transactionAmount;
     private List<ExchangeRateEntity> exchangeRate;
