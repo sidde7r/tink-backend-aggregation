@@ -12,14 +12,16 @@ import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockr
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
+import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.enums.MarketCode;
 import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 public class HandelsbankenSEAgentWireMockTest {
+
     @Test
-    public void test() throws Exception {
+    public void testRefresh() throws Exception {
         // given
         final String wireMockFilePath =
                 "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/banks/handelsbanken/mock/resources/handelsbanken_mock_log.aap";
@@ -27,8 +29,14 @@ public class HandelsbankenSEAgentWireMockTest {
                 "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/banks/handelsbanken/mock/resources/handelsbanken_contract.json";
 
         final AgentWireMockRefreshTest agentWireMockRefreshTest =
-                AgentWireMockRefreshTest.builder(
-                                MarketCode.SE, "handelsbanken-bankid", wireMockFilePath)
+                AgentWireMockRefreshTest.nxBuilder()
+                        .withMarketCode(MarketCode.SE)
+                        .withProviderName("handelsbanken-bankid")
+                        .withWireMockFilePath(wireMockFilePath)
+                        .withoutConfigFile()
+                        .testFullAuthentication()
+                        .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
+                        .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
                         .build();
 
         final AgentContractEntity expected =
