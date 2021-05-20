@@ -105,12 +105,14 @@ public class TransactionEntity {
 
     /**
      * Transactions have various other movementStatus like 'CANCELLED', 'MATCHED' and these
-     * transactions are not shown/retrieved in RE agent.
+     * transactions are not shown/retrieved in RE agent. We filer only "OTHER" which is "normal"
+     * transaction and "OPEN" which is pending transaction
      *
      * @return if the transaction needs to be included in response or not
      */
     @JsonIgnore
     public boolean isValidTransaction() {
-        return StringUtils.equalsIgnoreCase(movementStatus, "OTHER");
+        return StringUtils.equalsIgnoreCase(movementStatus, "OTHER")
+                || StringUtils.equalsIgnoreCase(movementStatus, "OPEN");
     }
 }
