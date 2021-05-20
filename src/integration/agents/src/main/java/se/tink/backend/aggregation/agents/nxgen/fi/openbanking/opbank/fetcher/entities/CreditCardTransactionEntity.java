@@ -19,7 +19,7 @@ public class CreditCardTransactionEntity {
     public CreditCardTransaction toTinkTransaction() {
         try {
             return CreditCardTransaction.builder()
-                    .setAmount(ExactCurrencyAmount.of(amount, currency))
+                    .setAmount(ExactCurrencyAmount.of(amount, currency).negate())
                     .setDescription(description)
                     .setDate(ThreadSafeDateFormat.FORMATTER_DAILY.parse(postingDate))
                     .build();

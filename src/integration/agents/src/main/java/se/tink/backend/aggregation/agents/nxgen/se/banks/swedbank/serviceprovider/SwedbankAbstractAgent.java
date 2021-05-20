@@ -93,11 +93,11 @@ public abstract class SwedbankAbstractAgent extends NextGenerationAgent
     protected TypedAuthenticator[] constructAuthenticators() {
         return new TypedAuthenticator[] {
             new SwedbankTokenGeneratorAuthenticationController(
-                    apiClient, sessionStorage, supplementalInformationHelper),
+                    apiClient, supplementalInformationHelper),
             new BankIdAuthenticationController<>(
                     supplementalInformationController,
                     new SwedbankDefaultBankIdAuthenticator(
-                            apiClient, sessionStorage, credentials.getField(Key.CORPORATE_ID)),
+                            apiClient, credentials.getField(Key.CORPORATE_ID)),
                     persistentStorage,
                     request)
         };
@@ -176,8 +176,7 @@ public abstract class SwedbankAbstractAgent extends NextGenerationAgent
     private TransferDestinationRefreshController constructTransferDestinationRefreshController() {
         return new TransferDestinationRefreshController(
                 metricRefreshController,
-                new SwedbankDefaultTransferDestinationFetcher(
-                        apiClient, sessionStorage, swedbankStorage));
+                new SwedbankDefaultTransferDestinationFetcher(apiClient, swedbankStorage));
     }
 
     @Override
