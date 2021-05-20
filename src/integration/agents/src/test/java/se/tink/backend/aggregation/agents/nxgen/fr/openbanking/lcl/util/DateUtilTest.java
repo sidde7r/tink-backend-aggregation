@@ -32,7 +32,6 @@ public class DateUtilTest {
         AccountEntity gb = new AccountEntity("GB29NWBK60161331926819");
         when(beneficiary.getCreditorAccount()).thenReturn(gb);
         when(paymentRequest.getCreationDateTime()).thenReturn("2016-12-30T00:00:00.000+01:00");
-        assertThat(DateUtil.getExecutionDate(paymentRequest))
-                .isEqualTo("2016-12-30T00:00:00.000+01:00");
+        assertThat(DateUtil.getExecutionDate(paymentRequest)).isEqualTo("2016-12-30T00:00:00.000Z");
     }
 }
