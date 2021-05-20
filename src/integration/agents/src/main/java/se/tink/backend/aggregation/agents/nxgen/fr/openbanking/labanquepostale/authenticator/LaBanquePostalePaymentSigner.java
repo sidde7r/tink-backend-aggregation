@@ -34,8 +34,7 @@ public class LaBanquePostalePaymentSigner {
         // Related to @SupplementaryDataEntity
         if (!callback.containsKey(PSU_AUTHORIZATION_FACTOR_KEY)
                 || callback.getOrDefault("error", "").equalsIgnoreCase("authentication_error")) {
-            throw new PaymentAuthorizationException(
-                    "The Authorization failed on the bank side by the user");
+            throw new PaymentAuthorizationException("The Authorization failed during SCA");
         }
         this.psuAuthenticationFactor = callback.get(PSU_AUTHORIZATION_FACTOR_KEY);
     }
