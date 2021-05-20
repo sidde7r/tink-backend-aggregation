@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen;
 
 import java.util.Optional;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.exceptions.agent.AgentError;
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
@@ -9,6 +10,7 @@ import se.tink.backend.aggregation.agents.utils.berlingroup.error.ErrorResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.error.TppMessage;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
+@Slf4j
 public class SparkassenErrorHandler {
 
     private static final String FORMAT_ERROR = "FORMAT_ERROR";
@@ -37,9 +39,17 @@ public class SparkassenErrorHandler {
                     .text("PSU-ID zu lang.")
                     .build();
 
+    private static final TppMessage NO_SCA_METHOD =
+            TppMessage.builder()
+                    .category(TppMessage.ERROR)
+                    .code("SCA_INVALID")
+                    .text("No active/ usable scaMethods defined for PSU.")
+                    .build();
+
     enum ErrorSource {
         AUTHORISATION_USERNAME_PASSWORD,
-        AUTHORISATION_OTP
+        AUTHORISATION_OTP,
+        AUTHORISATION_SELECT_METHOD
     }
 
     static void handleError(HttpResponseException httpResponseException, ErrorSource errorSource) {
@@ -55,6 +65,9 @@ public class SparkassenErrorHandler {
                     break;
                 case AUTHORISATION_USERNAME_PASSWORD:
                     error = handleUsernamePasswordErrors(errorResponse);
+                    break;
+                case AUTHORISATION_SELECT_METHOD:
+                    error = handleSelectMethodErrors(errorResponse);
                     break;
                 default:
                     return;
@@ -93,6 +106,19 @@ public class SparkassenErrorHandler {
         if (ErrorResponse.psuMessageContainsPredicate(PsuErrorMessages.PLEASE_CHANGE_PIN)
                 .test(errorResponse)) {
             return LoginError.PASSWORD_CHANGE_REQUIRED;
+        }
+        if (ErrorResponse.anyTppMessageMatchesPredicate(NO_SCA_METHOD).test(errorResponse)) {
+            return LoginError.NO_AVAILABLE_SCA_METHODS;
+        }
+        return null;
+    }
+
+    private static AgentError handleSelectMethodErrors(ErrorResponse errorResponse) {
+        if (ErrorResponse.anyTppMessageMatchesPredicate(NO_SCA_METHOD).test(errorResponse)) {
+            // NZG-486 This in theory shouldn't happen, but it does. Extra log line to gather such
+            // cases and ask bank about it
+            log.info("Sparkassen error - no usable SCA - during sca method selection occurred!");
+            return LoginError.NO_AVAILABLE_SCA_METHODS;
         }
         return null;
     }
