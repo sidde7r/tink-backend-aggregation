@@ -34,6 +34,25 @@
         "balance" : -24999.66
     } ],
     "transactions" : [ {
+        "amount" : -100.0,
+        "date" : 1618480800000,
+        "description" : "Merchant 1",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : true,
+        "timestamp" : 0,
+        "type" : "CREDIT_CARD",
+        "upcoming" : false,
+        "externalSystemIds" : {
+            "PROVIDER_GIVEN_TRANSACTION_ID" : "111111111"
+        },
+        "transactionDates" : [ ],
+        "proprietaryFinancialInstitutionType" : "Authorization",
+        "merchantName" : "Merchant 1",
+        "merchantCategoryCode" : "9402",
+        "providerMarket" : "SE"
+    },{
         "amount" : -20.0,
         "date" : 1618394400000,
         "description" : "Merchant 3",
