@@ -27,7 +27,7 @@ spec:
     {{- if .Values.Environment }}
     {{- if eq .Values.Environment "production" }}
     - alert: TransferFailedOutcomeThresholdIsPassedForSwedenTier2Banks
-      expr: sum by (className, outcome) (increase(tink_agent_transfer_total{market="SE", className!~".*(nordea|seb|swedbank|handelsbanken|lansforsakringar).*", outcome="failed"}[30m])) >= 10
+      expr: sum by (className, outcome) (increase(tink_agent_transfer_total{market="SE", className!~".*(nordea|seb|swedbank|handelsbanken|Lansforsakringar).*", outcome="failed"}[30m])) >= 10
       labels:
         severity: urgent
         who: payments-connectivity
@@ -48,7 +48,7 @@ spec:
         summary: Threshold exceed for ( <{ $labels.className }> ) for transfers with outcome ( <{ $labels.outcome }> ).
 
     - alert: TransferUnavailableOutcomeThresholdIsPassedForSwedenTier2Banks
-      expr: sum by (className, outcome) (increase(tink_agent_transfer_total{market="SE", className!~".*(nordea|seb|swedbank|handelsbanken|lansforsakringar).*", outcome=~"unavailable"}[15m])) >= 15
+      expr: sum by (className, outcome) (increase(tink_agent_transfer_total{market="SE", className!~".*(nordea|seb|swedbank|handelsbanken|Lansforsakringar).*", outcome=~"unavailable"}[15m])) >= 15
       labels:
         severity: urgent
         who: payments-connectivity
