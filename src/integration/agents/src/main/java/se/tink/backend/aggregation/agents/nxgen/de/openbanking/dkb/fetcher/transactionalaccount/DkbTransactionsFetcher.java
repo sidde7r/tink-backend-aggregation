@@ -34,7 +34,7 @@ public class DkbTransactionsFetcher implements TransactionFetcher<TransactionalA
             startDate = LocalDate.ofEpochDay(0);
             storage.markFirstFetchAsDone();
         } else {
-            startDate = LocalDate.now().minusDays(90);
+            startDate = LocalDate.now().minusDays(89);
         }
         return startDate;
     }
