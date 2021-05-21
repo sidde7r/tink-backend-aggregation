@@ -39,7 +39,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.BalancesResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.GetTransactionsResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.utls.CbiGlobeUtils;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
@@ -238,7 +238,7 @@ public class CbiGlobeApiClient {
                 : Urls.CARD_BALANCES;
     }
 
-    public GetTransactionsResponse getTransactions(
+    public TransactionsResponse getTransactions(
             String apiIdentifier,
             LocalDate fromDate,
             LocalDate toDate,
@@ -265,13 +265,12 @@ public class CbiGlobeApiClient {
 
         temporaryStorage.putIfAbsent(apiIdentifier, totalPages);
 
-        GetTransactionsResponse getTransactionsResponse =
-                response.getBody(GetTransactionsResponse.class);
+        TransactionsResponse transactionsResponse = response.getBody(TransactionsResponse.class);
 
         if (Objects.nonNull(totalPages) && Integer.parseInt(totalPages) > page) {
-            getTransactionsResponse.setPageRemaining(true);
+            transactionsResponse.setPageRemaining(true);
         }
-        return getTransactionsResponse;
+        return transactionsResponse;
     }
 
     private URL getTransactionsUrl() {

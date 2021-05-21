@@ -7,7 +7,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.configuration.CbiGlobeProviderConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.configuration.InstrumentType;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.GetTransactionsResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
@@ -35,7 +35,7 @@ public class BpmApiClient extends CbiGlobeApiClient {
     }
 
     @Override
-    public GetTransactionsResponse getTransactions(
+    public TransactionsResponse getTransactions(
             String apiIdentifier,
             LocalDate fromDate,
             LocalDate toDate,
@@ -50,6 +50,6 @@ public class BpmApiClient extends CbiGlobeApiClient {
                                 .queryParam(QueryKeys.DATE_TO, toDate.toString())
                                 .queryParam(QueryKeys.OFFSET, String.valueOf(page)))
                 .queryParam(QueryKeys.LIMIT, TRANSACTION_LIMIT)
-                .get(GetTransactionsResponse.class);
+                .get(TransactionsResponse.class);
     }
 }
