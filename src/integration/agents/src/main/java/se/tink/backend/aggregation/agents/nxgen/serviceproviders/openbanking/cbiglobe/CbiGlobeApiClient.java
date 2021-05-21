@@ -38,7 +38,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.AccountsResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.GetBalancesResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.BalancesResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.GetTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.utls.CbiGlobeUtils;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
@@ -220,14 +220,14 @@ public class CbiGlobeApiClient {
         return accountsResponse;
     }
 
-    public GetBalancesResponse getBalances(String resourceId) {
+    public BalancesResponse getBalances(String resourceId) {
         return makeRequest(
                 addPsuIpAddressHeaderIfNeeded(
                         createRequestWithConsent(
                                 getBalancesUrl()
                                         .parameterNoEncoding(IdTags.ACCOUNT_ID, resourceId))),
                 HttpMethod.GET,
-                GetBalancesResponse.class,
+                BalancesResponse.class,
                 RequestContext.BALANCES_GET,
                 null);
     }

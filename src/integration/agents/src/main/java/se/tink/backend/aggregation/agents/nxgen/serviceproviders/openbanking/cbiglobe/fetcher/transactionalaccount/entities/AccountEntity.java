@@ -7,7 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.ErrorMessages;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.GetBalancesResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.BalancesResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.builder.BalanceBuilderStep;
@@ -41,31 +41,32 @@ public class AccountEntity {
         return resourceId;
     }
 
-    public Optional<TransactionalAccount> toTinkAccount(GetBalancesResponse getBalancesResponse) {
+    public Optional<TransactionalAccount> toTinkAccount(BalancesResponse balancesResponse) {
         return TransactionalAccount.nxBuilder()
                 .withTypeAndFlagsFrom(
                         CbiGlobeConstants.ACCOUNT_TYPE_MAPPER,
                         Optional.ofNullable(cashAccountType).orElse("CASH"),
                         TransactionalAccountType.CHECKING)
-                .withBalance(getBalanceModule(getBalancesResponse))
+                .withBalance(getBalanceModule(balancesResponse))
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(iban)
                                 .withAccountNumber(getAccountNumber())
                                 .withAccountName(getName())
                                 .addIdentifier(
-                                        AccountIdentifier.create(AccountIdentifierType.IBAN, iban))
+                                        AccountIdentifier.create(
+                                                AccountIdentifierType.IBAN, iban, name))
                                 .build())
                 .setApiIdentifier(resourceId)
                 .build();
     }
 
-    private BalanceModule getBalanceModule(GetBalancesResponse getBalancesResponse) {
+    private BalanceModule getBalanceModule(BalancesResponse balancesResponse) {
         BalanceBuilderStep balanceBuilderStep =
                 BalanceModule.builder()
-                        .withBalance(getBookedBalance(getBalancesResponse.getBalances()));
+                        .withBalance(getBookedBalance(balancesResponse.getBalances()));
         Optional<ExactCurrencyAmount> availableBalance =
-                getAvailableBalance(getBalancesResponse.getBalances());
+                getAvailableBalance(balancesResponse.getBalances());
         availableBalance.ifPresent(balanceBuilderStep::setAvailableBalance);
         return balanceBuilderStep.build();
     }
