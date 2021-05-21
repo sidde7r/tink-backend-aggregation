@@ -22,6 +22,7 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
+import lombok.SneakyThrows;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.libraries.account.AccountIdentifier;
@@ -342,12 +343,9 @@ public class Transfer implements UuidIdentifiable, Serializable, Cloneable {
     }
 
     @Override
+    @SneakyThrows
     public Transfer clone() {
-        try {
-            return (Transfer) super.clone();
-        } catch (CloneNotSupportedException e) {
-            return null;
-        }
+        return (Transfer) super.clone();
     }
 
     @JsonIgnore
