@@ -26,6 +26,7 @@ import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.PostbankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenticator.entities.ScaMethod;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenticator.rpc.AuthorisationResponse;
@@ -192,6 +193,30 @@ public class PostbankAuthenticationControllerTest {
 
         // then
         assertThat(credentials.getSessionExpiryDate()).isEqualTo(date);
+    }
+
+    @Test
+    public void when_user_rejects_consent_then_cancelled_is_thrown() {
+        // given
+        Date date = toDate("2030-01-01");
+        TinkHttpClient tinkHttpClient = mockHttpClient(CONSENT_DETAILS_EXPIRED);
+        Credentials credentials = createCredentials(null);
+
+        PostbankAuthenticator postbankAuthenticator =
+                createPostbankAuthenticator(tinkHttpClient, new PersistentStorage(), credentials);
+
+        PostbankAuthenticationController postbankAuthenticationController =
+                createAutoAuthenticationController(postbankAuthenticator);
+
+        // when
+
+        Throwable thrown =
+                catchThrowable(() -> postbankAuthenticationController.authenticate(credentials));
+
+        // then
+        assertThat(thrown)
+                .isInstanceOf(LoginException.class)
+                .hasMessage(LoginError.CREDENTIALS_VERIFICATION_ERROR.exception().getMessage());
     }
 
     @Test

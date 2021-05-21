@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.exceptions.agent.AgentError;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
+import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.fetcher.transactionalaccount.rpc.transactions.ErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.fetcher.transactionalaccount.rpc.transactions.ErrorTppMessage;
@@ -28,6 +29,9 @@ public class DeutscheKnownErrorsFilter extends Filter {
                     .put(
                             "The system has encountered a Technical/Server Error. Hence cannot process the request at this time. Please try again after sometime.",
                             BankServiceError.BANK_SIDE_FAILURE)
+                    .put(
+                            "PSU needs to login to Online Banking and allow PSD2 requests using the Master Switch option.",
+                            AuthorizationError.UNAUTHORIZED)
                     .build();
 
     @Override

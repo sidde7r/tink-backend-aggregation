@@ -122,8 +122,16 @@ public class SparkassenApiClient implements PaymentApiClient {
     }
 
     public AuthorizationResponse selectAuthorizationMethod(String url, String methodId) {
-        return createRequest(new URL(url))
-                .put(AuthorizationResponse.class, new SelectAuthenticationMethodRequest(methodId));
+        try {
+            return createRequest(new URL(url))
+                    .put(
+                            AuthorizationResponse.class,
+                            new SelectAuthenticationMethodRequest(methodId));
+        } catch (HttpResponseException e) {
+            SparkassenErrorHandler.handleError(
+                    e, SparkassenErrorHandler.ErrorSource.AUTHORISATION_SELECT_METHOD);
+            throw e;
+        }
     }
 
     public AuthorizationResponse getAuthorizationStatus(String url) {
