@@ -574,7 +574,10 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         if (StringUtils.isNumeric(cleaned)
                 && cleaned.length() >= 15
                 && cleaned.length() <= 16
-                && LuhnCheck.isLastCharCorrectLuhnMod10Check(cleaned)) {
+                && LuhnCheck.isLastCharCorrectLuhnMod10Check(cleaned)
+                // Swedbank accounts with clearing number range 8000-8999 cause a lot of false
+                // positives. Neither visa/mc/amex starts with 8, therefore this trade-off is fine.
+                && !startsWithSwedbankClearingNumber(cleaned)) {
 
             String agent = request.getProvider().getClassName();
             getMetricRegistry()
@@ -586,6 +589,19 @@ public class AgentWorkerContext extends AgentContext implements Managed {
                     agent,
                     request.getCredentials().getId());
         }
+    }
+
+    /**
+     * Helper method used to filter out Swedbank account numbers from the suspicious number series
+     * metric.
+     */
+    private boolean startsWithSwedbankClearingNumber(String numberSeries) {
+        if (!StringUtils.isNumeric(numberSeries) || numberSeries.length() < 4) {
+            return false;
+        }
+
+        int clearingNumber = Integer.parseInt(numberSeries.substring(0, 4));
+        return clearingNumber >= 8000 && clearingNumber <= 8999;
     }
 
     @Override
