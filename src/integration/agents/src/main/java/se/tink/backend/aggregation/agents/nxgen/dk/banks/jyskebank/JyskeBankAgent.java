@@ -51,6 +51,7 @@ public class JyskeBankAgent extends NextGenerationAgent
     private final InvestmentRefreshController investmentRefreshController;
     private final JyskeIdentityDataFetcher identityDataFetcher;
     private final RandomValueGenerator randomValueGenerator;
+    private final JyskeBankPersistentStorage jyskePersistentStorage;
 
     @Inject
     public JyskeBankAgent(AgentComponentProvider componentProvider) {
@@ -62,22 +63,17 @@ public class JyskeBankAgent extends NextGenerationAgent
                 constructTransactionalAccountRefreshController();
         this.investmentRefreshController = constructInvestmentRefreshController();
         this.statusUpdater = componentProvider.getContext();
-        this.identityDataFetcher =
-                new JyskeIdentityDataFetcher(
-                        apiClient, new JyskeBankPersistentStorage(persistentStorage));
+        this.jyskePersistentStorage = new JyskeBankPersistentStorage(persistentStorage);
+        this.identityDataFetcher = new JyskeIdentityDataFetcher(apiClient, jyskePersistentStorage);
     }
 
     @Override
     protected SessionHandler constructSessionHandler() {
-        return new JyskeBankSessionHandler(
-                apiClient, new JyskeBankPersistentStorage(persistentStorage), sessionStorage);
+        return new JyskeBankSessionHandler(apiClient, jyskePersistentStorage, sessionStorage);
     }
 
     @Override
     protected Authenticator constructAuthenticator() {
-        final JyskeBankPersistentStorage jyskePersistentStorage =
-                new JyskeBankPersistentStorage(persistentStorage);
-
         final JyskeBankNemidAuthenticator jyskeBankAuthenticator =
                 new JyskeBankNemidAuthenticator(
                         apiClient, jyskePersistentStorage, randomValueGenerator, sessionStorage);
