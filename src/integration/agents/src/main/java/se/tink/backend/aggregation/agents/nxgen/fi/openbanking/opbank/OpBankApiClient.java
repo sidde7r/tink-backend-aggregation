@@ -10,7 +10,6 @@ import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceExce
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.OpBankConstants.Filters;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.OpBankConstants.HeaderKeys;
-import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.OpBankConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.OpBankConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.OpBankConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.authenticator.rpc.AuthorizationRequest;
@@ -37,6 +36,7 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.libraries.credentials.service.UserAvailability;
 
 public class OpBankApiClient {
 
@@ -46,13 +46,15 @@ public class OpBankApiClient {
     private final String redirectUrl;
     private final QsealcSigner qsealcSigner;
     private final String financialId;
+    private final UserAvailability userAvailability;
 
     @SneakyThrows
     public OpBankApiClient(
             TinkHttpClient client,
             PersistentStorage persistentStorage,
             AgentConfiguration<OpBankConfiguration> agentConfiguration,
-            QsealcSigner qsealcSigner) {
+            QsealcSigner qsealcSigner,
+            UserAvailability userAvailability) {
         this.client = client;
         this.client.addFilter(new ServiceUnavailableBankServiceErrorFilter());
         this.client.addFilter(
@@ -63,6 +65,7 @@ public class OpBankApiClient {
         this.redirectUrl = agentConfiguration.getRedirectUrl();
         this.financialId =
                 CertificateUtils.getOrganizationIdentifier(agentConfiguration.getQsealc());
+        this.userAvailability = userAvailability;
     }
 
     public TokenResponse fetchNewToken() {
@@ -103,7 +106,11 @@ public class OpBankApiClient {
                 client.request(Urls.ACCOUNTS_AUTHORIZATION)
                         .type(MediaType.APPLICATION_JSON_TYPE)
                         .accept(MediaType.APPLICATION_JSON_TYPE)
-                        .body(AuthorizationRequest.expiresInDays(90))
+                        .body(
+                                AuthorizationRequest.builder()
+                                        .daysOfTransactions(730)
+                                        .daysToExpire(90)
+                                        .build())
                         .header(HeaderKeys.X_API_KEY, configuration.getApiKey())
                         .header(HeaderKeys.X_FAPI_FINANCIAL_ID, financialId)
                         .header(HeaderKeys.AUTHORIZATION, "Bearer " + bearerToken)
@@ -148,20 +155,29 @@ public class OpBankApiClient {
     }
 
     private RequestBuilder baseAuthenticatedRequest(URL url) {
-        return client.request(url)
-                .accept(MediaType.APPLICATION_JSON_TYPE)
-                .header(HeaderKeys.X_API_KEY, configuration.getApiKey())
-                .header(HeaderKeys.X_FAPI_FINANCIAL_ID, financialId)
-                .header(HeaderKeys.X_CUSTOMER_USER_AGENT, financialId)
-                .header(HeaderKeys.X_FAPI_CUSTOMER_IP_ADDRESS, HeaderValues.CUSTOMER_IP_ADRESS)
-                .header(HeaderKeys.X_FAPI_INTERACTION_ID, UUID.randomUUID().toString())
-                .addBearerToken(
-                        persistentStorage
-                                .get(StorageKeys.OAUTH_TOKEN, OAuth2Token.class)
-                                .orElseThrow(
-                                        () ->
-                                                new IllegalStateException(
-                                                        SessionError.SESSION_EXPIRED.exception())));
+        RequestBuilder requestBuilder =
+                client.request(url)
+                        .accept(MediaType.APPLICATION_JSON_TYPE)
+                        .header(HeaderKeys.X_API_KEY, configuration.getApiKey())
+                        .header(HeaderKeys.X_FAPI_FINANCIAL_ID, financialId)
+                        .header(HeaderKeys.X_CUSTOMER_USER_AGENT, financialId)
+                        .header(HeaderKeys.X_FAPI_INTERACTION_ID, UUID.randomUUID().toString())
+                        .addBearerToken(
+                                persistentStorage
+                                        .get(StorageKeys.OAUTH_TOKEN, OAuth2Token.class)
+                                        .orElseThrow(
+                                                () ->
+                                                        new IllegalStateException(
+                                                                SessionError.SESSION_EXPIRED
+                                                                        .exception())));
+        if (userAvailability.isUserPresent()) {
+            requestBuilder =
+                    requestBuilder.header(
+                            HeaderKeys.X_FAPI_CUSTOMER_IP_ADDRESS,
+                            userAvailability.getOriginatingUserIp());
+        }
+
+        return requestBuilder;
     }
 
     private BankServiceException mapServiceException(HttpResponseException exception) {
