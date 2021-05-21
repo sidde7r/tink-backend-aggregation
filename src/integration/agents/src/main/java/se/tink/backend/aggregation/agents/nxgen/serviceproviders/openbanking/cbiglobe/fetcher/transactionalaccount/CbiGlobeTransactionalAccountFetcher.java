@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.StorageKeys;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.GetAccountsResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.utls.CbiGlobeUtils;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
@@ -35,13 +35,13 @@ public class CbiGlobeTransactionalAccountFetcher
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
-        GetAccountsResponse getAccountsResponse =
+        AccountsResponse accountsResponse =
                 SerializationUtils.deserializeFromString(
-                        persistentStorage.get(StorageKeys.ACCOUNTS), GetAccountsResponse.class);
-        if (getAccountsResponse == null) {
+                        persistentStorage.get(StorageKeys.ACCOUNTS), AccountsResponse.class);
+        if (accountsResponse == null) {
             return Collections.emptyList();
         }
-        return getAccountsResponse.getAccounts().stream()
+        return accountsResponse.getAccounts().stream()
                 .map(
                         acc ->
                                 acc.toTinkAccount(

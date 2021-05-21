@@ -42,7 +42,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.TppErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.UpdateConsentPsuCredentialsRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.UpdateConsentRequest;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.GetAccountsResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
 @Slf4j
@@ -67,9 +67,9 @@ public class ConsentManager {
     }
 
     public ConsentResponse createTransactionsConsent(String state) {
-        GetAccountsResponse getAccountsResponse = userState.getAccountsResponseFromStorage();
+        AccountsResponse accountsResponse = userState.getAccountsResponseFromStorage();
         ConsentRequest consentRequestBalancesTransactions =
-                createConsentRequestBalancesTransactions(getAccountsResponse);
+                createConsentRequestBalancesTransactions(accountsResponse);
 
         return create(state, ConsentType.BALANCE_TRANSACTION, consentRequestBalancesTransactions);
     }
@@ -83,10 +83,9 @@ public class ConsentManager {
                 LocalDate.now().plusDays(FormValues.CONSENT_VALID_PERIOD_DAYS).toString());
     }
 
-    ConsentRequest createConsentRequestBalancesTransactions(
-            GetAccountsResponse getAccountsResponse) {
+    ConsentRequest createConsentRequestBalancesTransactions(AccountsResponse accountsResponse) {
         List<AccountDetailsEntity> accountDetailsEntities =
-                getAccountsResponse.getAccounts().stream()
+                accountsResponse.getAccounts().stream()
                         .map(acc -> new AccountDetailsEntity(acc.getResourceId(), acc.getIban()))
                         .collect(Collectors.toList());
 
@@ -246,7 +245,7 @@ public class ConsentManager {
     }
 
     public void storeConsentValidUntilDateInCredentials() throws SessionException {
-        Date expiryDate = null;
+        Date expiryDate;
         try {
             expiryDate =
                     FORMATTER_DAILY.parse(

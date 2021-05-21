@@ -37,7 +37,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.entities.AccountEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.GetAccountsResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.GetBalancesResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.GetTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.utls.CbiGlobeUtils;
@@ -207,19 +207,17 @@ public class CbiGlobeApiClient {
                 body);
     }
 
-    public GetAccountsResponse getAccounts() {
-        GetAccountsResponse getAccountsResponse =
+    public AccountsResponse getAccounts() {
+        AccountsResponse accountsResponse =
                 makeRequest(
                         createAccountsRequestWithConsent(),
                         HttpMethod.GET,
-                        GetAccountsResponse.class,
+                        AccountsResponse.class,
                         RequestContext.ACCOUNTS_GET,
                         null);
-        getAccountsResponse.getAccounts().removeIf(AccountEntity::isEmptyAccountObject);
-        log.info(
-                "Number of received checking accounts {}",
-                getAccountsResponse.getAccounts().size());
-        return getAccountsResponse;
+        accountsResponse.getAccounts().removeIf(AccountEntity::isEmptyAccountObject);
+        log.info("Number of received checking accounts {}", accountsResponse.getAccounts().size());
+        return accountsResponse;
     }
 
     public GetBalancesResponse getBalances(String resourceId) {

@@ -13,7 +13,7 @@ import java.util.Collection;
 import javax.ws.rs.core.MultivaluedMap;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.QueryKeys;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.GetAccountsResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.GetTransactionsResponse;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -58,7 +58,7 @@ public class CbiGlobeApiClientTest {
         CbiGlobeApiClient cbiGlobeApiClient = createCbiGlobeApiClient(tinkHttpClient);
 
         // when
-        GetAccountsResponse accountsResponse = cbiGlobeApiClient.getAccounts();
+        AccountsResponse accountsResponse = cbiGlobeApiClient.getAccounts();
 
         // then
         assertThat(accountsResponse.getAccounts()).isEmpty();
@@ -77,10 +77,10 @@ public class CbiGlobeApiClientTest {
     }
 
     private void mockNullAccountResponses(RequestBuilder requestBuilder) {
-        when(requestBuilder.get(GetAccountsResponse.class))
+        when(requestBuilder.get(AccountsResponse.class))
                 .thenReturn(
                         SerializationUtils.deserializeFromString(
                                 Paths.get(TEST_DATA_PATH, "accounts_response.json").toFile(),
-                                GetAccountsResponse.class));
+                                AccountsResponse.class));
     }
 }

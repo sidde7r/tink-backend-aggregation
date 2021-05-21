@@ -9,7 +9,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 @NoArgsConstructor
 @AllArgsConstructor
-public class GetAccountsResponse {
+public class AccountsResponse {
 
     private List<AccountEntity> accounts;
 
