@@ -1,0 +1,111 @@
+{
+    "data": {
+        "classifications": [
+            "misc"
+        ],
+        "totals": {
+            "total": null,
+            "pension": null,
+            "misc": {
+                "marketValue": {
+                    "amount": 100.60,
+                    "currencyCode": "DKK"
+                },
+                "returnSinceBought": {
+                    "amount": -5.40,
+                    "currencyCode": "DKK"
+                },
+                "returnThisYear": {
+                    "amount": 16.20,
+                    "currencyCode": "DKK"
+                },
+                "returnSinceBoughtPercentage": -5.0000000000,
+                "returnThisYearPercentage": 18.7500000000
+            },
+            "powerOfAttorney": null
+        },
+        "listings": {
+            "securities": {
+                "total": null,
+                "pension": null,
+                "misc": [
+                    {
+                        "id": "6049123",
+                        "name": "Matas A/S",
+                        "amount": 1.00,
+                        "marketValue": {
+                            "amount": 102.60,
+                            "currencyCode": "DKK"
+                        },
+                        "returnSinceBought": {
+                            "amount": -5.40,
+                            "currencyCode": "DKK"
+                        },
+                        "returnThisYear": {
+                            "amount": 16.20,
+                            "currencyCode": "DKK"
+                        },
+                        "returnSinceBoughtPercentage": -5.0000000000,
+                        "returnThisYearPercentage": 18.7500000000,
+                        "quote": {
+                            "amount": 102.6000000,
+                            "currencyCode": "DKK"
+                        },
+                        "quoteTimestamp": 1620812546000,
+                        "deltaQuotePoint": 0.7000000,
+                        "deltaQuotePercent": 0.69,
+                        "type": "share",
+                        "hasTrades": false
+                    }
+                ],
+                "powerOfAttorney": null
+            },
+            "custodyAccounts": {
+                "total": null,
+                "pension": null,
+                "misc": [
+                    {
+                        "accountNumber": {
+                            "regNo": "5012",
+                            "accountNo": "87123",
+                            "shadowAccountId": null,
+                            "publicId": "i4FizcKGE4xIl-gq_2-NaQmf358o5l92-oZLKzYUgp_rd6zHJ_Ql_zFxiNaa1cqJ5leX4ldlLAIAJQeBJElOSyyl8h9QY1B5RU9fpfeIteQ="
+                        },
+                        "value": {
+                            "amount": 102.60,
+                            "currencyCode": "DKK"
+                        },
+                        "returnSinceBoughtPercentage": -5.0000000000,
+                        "returnThisYearPercentage": 18.7500000000,
+                        "name": "Åbent Depot",
+                        "ownerName": "FIRSTNAME LASTNAME",
+                        "owner": true,
+                        "returnSinceBought": {
+                            "amount": -5.40,
+                            "currencyCode": "DKK"
+                        },
+                        "returnThisYear": {
+                            "amount": 16.20,
+                            "currencyCode": "DKK"
+                        },
+                        "powerOfAttorney": false,
+                        "classification": null,
+                        "requestTime": null,
+                        "tradesAllowed": false,
+                        "securities": [],
+                        "type": null
+                    }
+                ],
+                "powerOfAttorney": null
+            },
+            "poolAccounts": {
+                "total": null,
+                "pension": null,
+                "misc": [],
+                "powerOfAttorney": null
+            },
+            "favorites": []
+        }
+    },
+    "message": null
+}
