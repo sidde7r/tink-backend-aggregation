@@ -15,6 +15,9 @@ import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccou
 public class JyskeBankInvestmentFetcher implements AccountFetcher<InvestmentAccount> {
     private final JyskeBankApiClient apiClient;
 
+    // The investment account parsing is insufficient due to lack of ambassador data.
+    // Agent is currently logging investment response data.
+    // See https://tinkab.atlassian.net/browse/ITE-2727
     @Override
     public Collection<InvestmentAccount> fetchAccounts() {
         final InvestmentEntity investments = apiClient.fetchInvestments().getInvestmentEntity();
