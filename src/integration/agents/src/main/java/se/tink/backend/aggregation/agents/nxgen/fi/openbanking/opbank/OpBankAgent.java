@@ -39,6 +39,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
+import se.tink.libraries.credentials.service.UserAvailability;
 
 @AgentDependencyModules(modules = QSealcSignerModuleRSASHA256.class)
 @AgentCapabilities({CHECKING_ACCOUNTS, CREDIT_CARDS, SAVINGS_ACCOUNTS})
@@ -56,10 +57,16 @@ public final class OpBankAgent extends NextGenerationAgent
     public OpBankAgent(AgentComponentProvider componentProvider, QsealcSigner qsealcSigner) {
         super(componentProvider);
         this.agentComponentProvider = componentProvider;
+        UserAvailability userAvailability =
+                componentProvider.getCredentialsRequest().getUserAvailability();
 
         apiClient =
                 new OpBankApiClient(
-                        client, persistentStorage, getAgentConfiguration(), qsealcSigner);
+                        client,
+                        persistentStorage,
+                        getAgentConfiguration(),
+                        qsealcSigner,
+                        userAvailability);
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
         creditCardRefreshController = constructCreditCardRefreshController();
     }
