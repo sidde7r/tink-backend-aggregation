@@ -41,7 +41,8 @@ public final class IccreaAgent extends CbiGlobeAgent {
                             userState,
                             getAgentConfiguration().getProviderSpecificConfiguration(),
                             supplementalInformationController,
-                            catalog);
+                            catalog,
+                            localDateTimeSource);
         }
 
         return authenticator;

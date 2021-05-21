@@ -43,7 +43,8 @@ public final class PostePayAgent extends CbiGlobeAgent {
                             apiClient,
                             strongAuthenticationState,
                             userState,
-                            getAgentConfiguration().getProviderSpecificConfiguration());
+                            getAgentConfiguration().getProviderSpecificConfiguration(),
+                            localDateTimeSource);
         }
         return authenticator;
     }

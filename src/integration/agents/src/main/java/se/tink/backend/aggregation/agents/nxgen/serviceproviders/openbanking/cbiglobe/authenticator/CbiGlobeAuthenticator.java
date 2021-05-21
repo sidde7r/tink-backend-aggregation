@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.AllPsd2;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.GetTokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.configuration.CbiGlobeConfiguration;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.StatelessProgressiveAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
@@ -31,11 +32,12 @@ public class CbiGlobeAuthenticator extends StatelessProgressiveAuthenticator {
             CbiGlobeApiClient apiClient,
             StrongAuthenticationState strongAuthenticationState,
             CbiUserState userState,
-            CbiGlobeConfiguration configuration) {
+            CbiGlobeConfiguration configuration,
+            LocalDateTimeSource localDateTimeSource) {
         this.apiClient = apiClient;
         this.strongAuthenticationState = strongAuthenticationState;
         this.userState = userState;
-        this.consentManager = new ConsentManager(apiClient, userState);
+        this.consentManager = new ConsentManager(apiClient, userState, localDateTimeSource);
         this.configuration = configuration;
     }
 

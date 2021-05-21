@@ -25,6 +25,7 @@ import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentProgressiveGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.StatelessProgressiveAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
@@ -50,6 +51,7 @@ public abstract class CbiGlobeAgent extends SubsequentProgressiveGenerationAgent
     protected StatelessProgressiveAuthenticator authenticator;
     protected CbiUserState userState;
     private CbiGlobeProviderConfiguration providerConfiguration;
+    protected LocalDateTimeSource localDateTimeSource;
     protected final String psuIpAddress;
 
     public CbiGlobeAgent(AgentComponentProvider agentComponentProvider) {
@@ -62,6 +64,7 @@ public abstract class CbiGlobeAgent extends SubsequentProgressiveGenerationAgent
         apiClient = getApiClient(request.getUserAvailability().isUserPresent());
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
         userState = new CbiUserState(persistentStorage, credentials);
+        localDateTimeSource = agentComponentProvider.getLocalDateTimeSource();
         authenticator = getAuthenticator();
         client.setTimeout(HttpClientParams.CLIENT_TIMEOUT);
         applyFilters(client);
@@ -119,7 +122,8 @@ public abstract class CbiGlobeAgent extends SubsequentProgressiveGenerationAgent
                             apiClient,
                             strongAuthenticationState,
                             userState,
-                            getAgentConfiguration().getProviderSpecificConfiguration());
+                            getAgentConfiguration().getProviderSpecificConfiguration(),
+                            localDateTimeSource);
         }
 
         return authenticator;

@@ -43,7 +43,8 @@ public final class BancoPostaAgent extends CbiGlobeAgent {
                             apiClient,
                             strongAuthenticationState,
                             userState,
-                            getAgentConfiguration().getProviderSpecificConfiguration());
+                            getAgentConfiguration().getProviderSpecificConfiguration(),
+                            localDateTimeSource);
         }
 
         return authenticator;
