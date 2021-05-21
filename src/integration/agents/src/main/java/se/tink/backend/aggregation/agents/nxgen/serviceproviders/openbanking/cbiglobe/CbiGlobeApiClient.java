@@ -37,9 +37,9 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.entities.AccountEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.GetAccountsResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.GetBalancesResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.GetTransactionsResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.AccountsResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.BalancesResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.utls.CbiGlobeUtils;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
@@ -207,29 +207,27 @@ public class CbiGlobeApiClient {
                 body);
     }
 
-    public GetAccountsResponse getAccounts() {
-        GetAccountsResponse getAccountsResponse =
+    public AccountsResponse getAccounts() {
+        AccountsResponse accountsResponse =
                 makeRequest(
                         createAccountsRequestWithConsent(),
                         HttpMethod.GET,
-                        GetAccountsResponse.class,
+                        AccountsResponse.class,
                         RequestContext.ACCOUNTS_GET,
                         null);
-        getAccountsResponse.getAccounts().removeIf(AccountEntity::isEmptyAccountObject);
-        log.info(
-                "Number of received checking accounts {}",
-                getAccountsResponse.getAccounts().size());
-        return getAccountsResponse;
+        accountsResponse.getAccounts().removeIf(AccountEntity::isEmptyAccountObject);
+        log.info("Number of received checking accounts {}", accountsResponse.getAccounts().size());
+        return accountsResponse;
     }
 
-    public GetBalancesResponse getBalances(String resourceId) {
+    public BalancesResponse getBalances(String resourceId) {
         return makeRequest(
                 addPsuIpAddressHeaderIfNeeded(
                         createRequestWithConsent(
                                 getBalancesUrl()
                                         .parameterNoEncoding(IdTags.ACCOUNT_ID, resourceId))),
                 HttpMethod.GET,
-                GetBalancesResponse.class,
+                BalancesResponse.class,
                 RequestContext.BALANCES_GET,
                 null);
     }
@@ -240,7 +238,7 @@ public class CbiGlobeApiClient {
                 : Urls.CARD_BALANCES;
     }
 
-    public GetTransactionsResponse getTransactions(
+    public TransactionsResponse getTransactions(
             String apiIdentifier,
             LocalDate fromDate,
             LocalDate toDate,
@@ -267,13 +265,12 @@ public class CbiGlobeApiClient {
 
         temporaryStorage.putIfAbsent(apiIdentifier, totalPages);
 
-        GetTransactionsResponse getTransactionsResponse =
-                response.getBody(GetTransactionsResponse.class);
+        TransactionsResponse transactionsResponse = response.getBody(TransactionsResponse.class);
 
         if (Objects.nonNull(totalPages) && Integer.parseInt(totalPages) > page) {
-            getTransactionsResponse.setPageRemaining(true);
+            transactionsResponse.setPageRemaining(true);
         }
-        return getTransactionsResponse;
+        return transactionsResponse;
     }
 
     private URL getTransactionsUrl() {

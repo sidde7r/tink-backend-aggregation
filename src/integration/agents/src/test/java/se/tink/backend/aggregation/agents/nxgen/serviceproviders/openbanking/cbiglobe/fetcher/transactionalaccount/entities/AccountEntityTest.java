@@ -9,7 +9,7 @@ import java.util.Optional;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.GetBalancesResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.BalancesResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.account.enums.AccountFlag;
 import se.tink.libraries.amount.ExactCurrencyAmount;
@@ -26,11 +26,11 @@ public class AccountEntityTest {
     @Test
     public void shouldMapBalancesForAllPossibleBalances() {
         // given
-        GetBalancesResponse getBalancesResponse = givenAllPossibleBalances();
+        BalancesResponse balancesResponse = givenAllPossibleBalances();
         // when
         TransactionalAccount transactionalAccount =
                 accountEntity
-                        .toTinkAccount(getBalancesResponse)
+                        .toTinkAccount(balancesResponse)
                         .orElseThrow(IllegalArgumentException::new);
         // then
         assertThat(transactionalAccount.getExactBalance())
@@ -43,14 +43,14 @@ public class AccountEntityTest {
     public void shouldMapBookedBalanceByPriority() {
         // given
         List<BalanceEntity> balances = new ArrayList<>();
-        GetBalancesResponse getBalancesResponse = new GetBalancesResponse(balances);
+        BalancesResponse balancesResponse = new BalancesResponse(balances);
 
         // when
         balances.add(givenInterimAvailableBalance());
         // then
         assertThat(
                         accountEntity
-                                .toTinkAccount(getBalancesResponse)
+                                .toTinkAccount(balancesResponse)
                                 .orElseThrow(IllegalArgumentException::new)
                                 .getExactBalance())
                 .isEqualByComparingTo(ExactCurrencyAmount.inEUR(4.00));
@@ -60,7 +60,7 @@ public class AccountEntityTest {
         // then
         assertThat(
                         accountEntity
-                                .toTinkAccount(getBalancesResponse)
+                                .toTinkAccount(balancesResponse)
                                 .orElseThrow(IllegalArgumentException::new)
                                 .getExactBalance())
                 .isEqualByComparingTo(ExactCurrencyAmount.inEUR(3.00));
@@ -70,7 +70,7 @@ public class AccountEntityTest {
         // then
         assertThat(
                         accountEntity
-                                .toTinkAccount(getBalancesResponse)
+                                .toTinkAccount(balancesResponse)
                                 .orElseThrow(IllegalArgumentException::new)
                                 .getExactBalance())
                 .isEqualByComparingTo(ExactCurrencyAmount.inEUR(2.50));
@@ -80,7 +80,7 @@ public class AccountEntityTest {
         // then
         assertThat(
                         accountEntity
-                                .toTinkAccount(getBalancesResponse)
+                                .toTinkAccount(balancesResponse)
                                 .orElseThrow(IllegalArgumentException::new)
                                 .getExactBalance())
                 .isEqualByComparingTo(ExactCurrencyAmount.inEUR(2.00));
@@ -90,7 +90,7 @@ public class AccountEntityTest {
         // then
         assertThat(
                         accountEntity
-                                .toTinkAccount(getBalancesResponse)
+                                .toTinkAccount(balancesResponse)
                                 .orElseThrow(IllegalArgumentException::new)
                                 .getExactBalance())
                 .isEqualByComparingTo(ExactCurrencyAmount.inEUR(1.00));
@@ -103,14 +103,14 @@ public class AccountEntityTest {
         // this should not matter for available balance,
         // but it is required to have at least 1 of booked balances available or mapping won't work
         balances.add(givenClosingBookedBalance());
-        GetBalancesResponse getBalancesResponse = new GetBalancesResponse(balances);
+        BalancesResponse balancesResponse = new BalancesResponse(balances);
 
         // when
         balances.add(givenForwardAvailableBalance());
         // then
         assertThat(
                         accountEntity
-                                .toTinkAccount(getBalancesResponse)
+                                .toTinkAccount(balancesResponse)
                                 .orElseThrow(IllegalArgumentException::new)
                                 .getExactAvailableBalance())
                 .isEqualByComparingTo(ExactCurrencyAmount.inEUR(5.00));
@@ -120,7 +120,7 @@ public class AccountEntityTest {
         // then
         assertThat(
                         accountEntity
-                                .toTinkAccount(getBalancesResponse)
+                                .toTinkAccount(balancesResponse)
                                 .orElseThrow(IllegalArgumentException::new)
                                 .getExactAvailableBalance())
                 .isEqualByComparingTo(ExactCurrencyAmount.inEUR(3.00));
@@ -130,7 +130,7 @@ public class AccountEntityTest {
         // then
         assertThat(
                         accountEntity
-                                .toTinkAccount(getBalancesResponse)
+                                .toTinkAccount(balancesResponse)
                                 .orElseThrow(IllegalArgumentException::new)
                                 .getExactAvailableBalance())
                 .isEqualByComparingTo(ExactCurrencyAmount.inEUR(4.00));
@@ -143,11 +143,11 @@ public class AccountEntityTest {
         // this should not matter for available balance,
         // but it is required to have at least 1 of booked balances available or mapping won't work
         balances.add(givenClosingBookedBalance());
-        GetBalancesResponse getBalancesResponse = new GetBalancesResponse(balances);
+        BalancesResponse balancesResponse = new BalancesResponse(balances);
 
         // when
         Optional<TransactionalAccount> transactionalAccount =
-                accountEntity.toTinkAccount(getBalancesResponse);
+                accountEntity.toTinkAccount(balancesResponse);
 
         // then
         assertThat(transactionalAccount).isPresent();
@@ -157,24 +157,24 @@ public class AccountEntityTest {
     @Test
     public void shouldThrowExceptionIfBookedBalanceNotPresent() {
         // given
-        GetBalancesResponse getBalancesResponse = new GetBalancesResponse(new ArrayList<>());
+        BalancesResponse balancesResponse = new BalancesResponse(new ArrayList<>());
 
         // when
 
         // then
-        assertThatCode(() -> accountEntity.toTinkAccount(getBalancesResponse))
+        assertThatCode(() -> accountEntity.toTinkAccount(balancesResponse))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("Balance cannot be found.");
     }
 
-    private GetBalancesResponse givenAllPossibleBalances() {
+    private BalancesResponse givenAllPossibleBalances() {
         List<BalanceEntity> balances = new ArrayList<>();
         balances.add(givenOpeningBookedBalance());
         balances.add(givenClosingBookedBalance());
         balances.add(givenExpectedBalance());
         balances.add(givenInterimAvailableBalance());
         balances.add(givenForwardAvailableBalance());
-        return new GetBalancesResponse(balances);
+        return new BalancesResponse(balances);
     }
 
     private BalanceEntity givenOpeningBookedBalance() {
@@ -212,12 +212,12 @@ public class AccountEntityTest {
         // given
         List<BalanceEntity> balances = new ArrayList<>();
         balances.add(givenClosingBookedBalance());
-        GetBalancesResponse getBalancesResponse = new GetBalancesResponse(balances);
+        BalancesResponse balancesResponse = new BalancesResponse(balances);
         AccountEntity accountEntityWithNullType = genAccountEntity(null);
 
         // when
         Optional<TransactionalAccount> transactionalAccount =
-                accountEntityWithNullType.toTinkAccount(getBalancesResponse);
+                accountEntityWithNullType.toTinkAccount(balancesResponse);
         // then
         assertThat(transactionalAccount.isPresent()).isTrue();
         assertThat(transactionalAccount.get().getAccountFlags())
@@ -231,12 +231,12 @@ public class AccountEntityTest {
         // given
         List<BalanceEntity> balances = new ArrayList<>();
         balances.add(givenClosingBookedBalance());
-        GetBalancesResponse getBalancesResponse = new GetBalancesResponse(balances);
+        BalancesResponse balancesResponse = new BalancesResponse(balances);
         AccountEntity savingAccountEntity = genAccountEntity("SVGS");
 
         // when
         Optional<TransactionalAccount> transactionalAccount =
-                savingAccountEntity.toTinkAccount(getBalancesResponse);
+                savingAccountEntity.toTinkAccount(balancesResponse);
         // then
         assertThat(transactionalAccount.isPresent()).isTrue();
         assertThat(transactionalAccount.get().getAccountFlags())
@@ -250,12 +250,12 @@ public class AccountEntityTest {
         // given
         List<BalanceEntity> balances = new ArrayList<>();
         balances.add(givenClosingBookedBalance());
-        GetBalancesResponse getBalancesResponse = new GetBalancesResponse(balances);
+        BalancesResponse balancesResponse = new BalancesResponse(balances);
         AccountEntity checkingAccountEntity = genAccountEntity("CASH");
 
         // when
         Optional<TransactionalAccount> transactionalAccount =
-                checkingAccountEntity.toTinkAccount(getBalancesResponse);
+                checkingAccountEntity.toTinkAccount(balancesResponse);
         // then
         assertThat(transactionalAccount.isPresent()).isTrue();
         assertThat(transactionalAccount.get().getAccountFlags())

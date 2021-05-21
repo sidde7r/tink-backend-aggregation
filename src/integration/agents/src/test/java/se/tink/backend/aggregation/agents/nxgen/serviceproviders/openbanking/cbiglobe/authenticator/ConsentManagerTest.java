@@ -38,7 +38,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.TppErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.UpdateConsentPsuCredentialsRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.entities.AccountEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.GetAccountsResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
@@ -98,12 +98,12 @@ public class ConsentManagerTest {
     @Test
     public void transactionsConsentValidPeriodShouldBe89Days() {
         // given
-        GetAccountsResponse getAccountsResponse =
-                new GetAccountsResponse(Collections.singletonList(new AccountEntity("123")));
+        AccountsResponse accountsResponse =
+                new AccountsResponse(Collections.singletonList(new AccountEntity("123")));
 
         // when
         ConsentRequest consentRequest =
-                consentManager.createConsentRequestBalancesTransactions(getAccountsResponse);
+                consentManager.createConsentRequestBalancesTransactions(accountsResponse);
 
         // then
         LocalDate localDate = LocalDate.parse(consentRequest.getValidUntil());
@@ -116,8 +116,7 @@ public class ConsentManagerTest {
         ConsentResponse consentResponse = new ConsentResponse(null, CONSENT_ID, null);
         when(userState.getAccountsResponseFromStorage())
                 .thenReturn(
-                        new GetAccountsResponse(
-                                Collections.singletonList(new AccountEntity("123"))));
+                        new AccountsResponse(Collections.singletonList(new AccountEntity("123"))));
         when(apiClient.createConsent(eq(STATE), eq(ConsentType.BALANCE_TRANSACTION), any()))
                 .thenReturn(consentResponse);
 
@@ -138,7 +137,7 @@ public class ConsentManagerTest {
         boolean isAccepted = consentManager.verifyIfConsentIsAccepted();
 
         // then
-        assertThat(isAccepted).isEqualTo(true);
+        assertThat(isAccepted).isTrue();
     }
 
     @Test

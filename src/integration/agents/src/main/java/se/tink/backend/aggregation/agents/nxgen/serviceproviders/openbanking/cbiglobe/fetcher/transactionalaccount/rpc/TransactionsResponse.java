@@ -13,7 +13,7 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 @JsonObject
 @AllArgsConstructor
 @NoArgsConstructor
-public class GetTransactionsResponse implements PaginatorResponse {
+public class TransactionsResponse implements PaginatorResponse {
     private TransactionsEntity transactions;
     private boolean pageRemaining;
 

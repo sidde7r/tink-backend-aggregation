@@ -13,7 +13,7 @@ import org.junit.Test;
 import org.mockito.Mockito;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.GetAccountsResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepResponse;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -44,11 +44,11 @@ public class AccountFetchingStepTest {
     public void executeShouldReturnAuthenticationSuccededIfNoAccountsFetched() {
         // given
         AuthenticationRequest request = new AuthenticationRequest(Mockito.mock(Credentials.class));
-        when(requestBuilder.get(GetAccountsResponse.class))
+        when(requestBuilder.get(AccountsResponse.class))
                 .thenReturn(
                         SerializationUtils.deserializeFromString(
                                 Paths.get(TEST_DATA_PATH, "accounts_response.json").toFile(),
-                                GetAccountsResponse.class));
+                                AccountsResponse.class));
 
         // when
         AuthenticationStepResponse response = accountStep.execute(request);
@@ -62,12 +62,12 @@ public class AccountFetchingStepTest {
     public void executeShouldReturnEmptyOptionIfAccountsAvailable() {
         // given
         AuthenticationRequest request = new AuthenticationRequest(Mockito.mock(Credentials.class));
-        when(requestBuilder.get(GetAccountsResponse.class))
+        when(requestBuilder.get(AccountsResponse.class))
                 .thenReturn(
                         SerializationUtils.deserializeFromString(
                                 Paths.get(TEST_DATA_PATH, "accounts_response_not_empty.json")
                                         .toFile(),
-                                GetAccountsResponse.class));
+                                AccountsResponse.class));
 
         // when
         AuthenticationStepResponse response = accountStep.execute(request);
