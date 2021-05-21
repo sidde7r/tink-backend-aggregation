@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.uuid.UUIDUtils;
@@ -55,12 +56,9 @@ public class Transaction implements Comparable<Transaction>, Cloneable {
     }
 
     @Override
+    @SneakyThrows
     public Transaction clone() {
-        try {
-            return (Transaction) super.clone();
-        } catch (CloneNotSupportedException e) {
-            return null;
-        }
+        return (Transaction) super.clone();
     }
 
     @Override
