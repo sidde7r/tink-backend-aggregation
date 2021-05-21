@@ -85,17 +85,13 @@ public class AgentWorkerOperation implements Runnable {
     private void internalRun() {
         try {
             context.start();
-        } catch (Exception e) {
-            throw new RuntimeException("Could not start the agent worker context.", e);
-        }
-        try {
-            executeAllCommands();
-        } finally {
             try {
+                executeAllCommands();
+            } finally {
                 context.stop();
-            } catch (Exception e) {
-                throw new RuntimeException("Could not throw the agent worker context.", e);
             }
+        } catch (Exception ex) {
+            throw new DropwizardManagedContextException(ex);
         }
     }
 
