@@ -59,7 +59,6 @@ import se.tink.backend.aggregation.nxgen.http.filter.filters.AccessExceededFilte
 import se.tink.backend.aggregation.nxgen.http.filter.filters.BadGatewayFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.ServiceUnavailableBankServiceErrorFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.TimeoutFilter;
-import se.tink.backend.aggregation.nxgen.http.filter.filters.randomretry.RateLimitRetryFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.BadGatewayRetryFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.TimeoutRetryFilter;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
@@ -105,10 +104,6 @@ public class NordeaBaseApiClient implements TokenInterface {
                         NordeaBaseConstants.Filters.NUMBER_OF_RETRIES,
                         NordeaBaseConstants.Filters.MS_TO_WAIT));
         this.client.addFilter(new AccessExceededFilter());
-        this.client.addFilter(
-                new RateLimitRetryFilter(
-                        NordeaBaseConstants.Filters.NUMBER_OF_RETRIES,
-                        NordeaBaseConstants.Filters.MS_TO_WAIT));
     }
 
     public NordeaBaseConfiguration getConfiguration() {
