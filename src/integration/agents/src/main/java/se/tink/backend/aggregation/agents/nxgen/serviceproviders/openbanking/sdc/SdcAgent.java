@@ -107,7 +107,8 @@ public class SdcAgent extends NextGenerationAgent
                 new SdcTransactionalAccountFetcher(apiClient);
 
         final SdcTransactionalAccountTransactionFetcher transactionFetcher =
-                new SdcTransactionalAccountTransactionFetcher(apiClient, providerMarket);
+                new SdcTransactionalAccountTransactionFetcher(
+                        apiClient, providerMarket, persistentStorage);
 
         /*
            We are overriding the default date range (by default it is 3 months but we use 1 month)
