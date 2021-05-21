@@ -2,14 +2,17 @@ package se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank;
 
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.IDENTITY_DATA;
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.INVESTMENTS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
 
 import com.google.inject.Inject;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
+import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
+import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
@@ -17,9 +20,11 @@ import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.JyskeConstant
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.JyskeConstants.HttpClient;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.authenticator.JyskeBankNemidAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.fetcher.identity.JyskeIdentityDataFetcher;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.fetcher.investment.JyskeBankInvestmentFetcher;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.fetcher.transactionalaccount.JyskeBankAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.filters.JyskeBankRetryFilter;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.filters.JyskeBankUnavailableFilter;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.session.JyskeBankSessionHandler;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
@@ -27,22 +32,26 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticato
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.NemIdIFrameController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.NemIdIFrameControllerInitializer;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 
-@AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, IDENTITY_DATA})
+@AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, INVESTMENTS, IDENTITY_DATA})
 public class JyskeBankAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor,
+                RefreshInvestmentAccountsExecutor,
                 RefreshIdentityDataExecutor {
     private final JyskeBankApiClient apiClient;
     private final StatusUpdater statusUpdater;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
+    private final InvestmentRefreshController investmentRefreshController;
     private final JyskeIdentityDataFetcher identityDataFetcher;
     private final RandomValueGenerator randomValueGenerator;
+    private final JyskeBankPersistentStorage jyskePersistentStorage;
 
     @Inject
     public JyskeBankAgent(AgentComponentProvider componentProvider) {
@@ -52,22 +61,19 @@ public class JyskeBankAgent extends NextGenerationAgent
         this.apiClient = new JyskeBankApiClient(client, sessionStorage, randomValueGenerator);
         this.transactionalAccountRefreshController =
                 constructTransactionalAccountRefreshController();
+        this.investmentRefreshController = constructInvestmentRefreshController();
         this.statusUpdater = componentProvider.getContext();
-        this.identityDataFetcher =
-                new JyskeIdentityDataFetcher(
-                        apiClient, new JyskeBankPersistentStorage(persistentStorage));
+        this.jyskePersistentStorage = new JyskeBankPersistentStorage(persistentStorage);
+        this.identityDataFetcher = new JyskeIdentityDataFetcher(apiClient, jyskePersistentStorage);
     }
 
     @Override
     protected SessionHandler constructSessionHandler() {
-        return SessionHandler.alwaysFail();
+        return new JyskeBankSessionHandler(apiClient, jyskePersistentStorage, sessionStorage);
     }
 
     @Override
     protected Authenticator constructAuthenticator() {
-        final JyskeBankPersistentStorage jyskePersistentStorage =
-                new JyskeBankPersistentStorage(persistentStorage);
-
         final JyskeBankNemidAuthenticator jyskeBankAuthenticator =
                 new JyskeBankNemidAuthenticator(
                         apiClient, jyskePersistentStorage, randomValueGenerator, sessionStorage);
@@ -104,6 +110,14 @@ public class JyskeBankAgent extends NextGenerationAgent
                         new TransactionPagePaginationController<>(fetcher, Fetcher.START_PAGE)));
     }
 
+    private InvestmentRefreshController constructInvestmentRefreshController() {
+        final JyskeBankInvestmentFetcher investmentFetcher =
+                new JyskeBankInvestmentFetcher(apiClient);
+
+        return new InvestmentRefreshController(
+                metricRefreshController, updateController, investmentFetcher);
+    }
+
     @Override
     public FetchAccountsResponse fetchCheckingAccounts() {
         return transactionalAccountRefreshController.fetchCheckingAccounts();
@@ -122,6 +136,16 @@ public class JyskeBankAgent extends NextGenerationAgent
     @Override
     public FetchTransactionsResponse fetchSavingsTransactions() {
         return transactionalAccountRefreshController.fetchSavingsTransactions();
+    }
+
+    @Override
+    public FetchInvestmentAccountsResponse fetchInvestmentAccounts() {
+        return investmentRefreshController.fetchInvestmentAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchInvestmentTransactions() {
+        return investmentRefreshController.fetchInvestmentTransactions();
     }
 
     @Override

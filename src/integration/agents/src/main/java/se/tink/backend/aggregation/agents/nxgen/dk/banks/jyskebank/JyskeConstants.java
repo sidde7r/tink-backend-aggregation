@@ -18,6 +18,7 @@ public class JyskeConstants {
         public static final String AUTH_CHALLENGE = AUTH_HOST + "/challenge/v1/ropc/";
         public static final String FETCH_ACCOUNTS = HOST + "/rel/micro/accounts";
         public static final String FETCH_TRANSACTIONS = HOST + "/rel/micro/transactions/booked";
+        public static final String FETCH_INVESTMENTS = HOST + "/rel/investment/accounts/overview";
         public static final String FETCH_IDENTITY = HOST + "/rel/general/userprofiles/name";
         public static final String VALIDATE_VERSION = HOST + "/rel/unauth/version/validate/51";
         public static final String SERVER_STATUS = HOST + "/rel/unauth/server/status";
@@ -60,6 +61,8 @@ public class JyskeConstants {
         public static final String ENROLLMENT_CHALLENGE = "enrollment_challenge";
         public static final String PUBLIC_ID = "publicid";
         public static final String PAGE = "page";
+        public static final String CLASSIFICATIONS = "classifications";
+        public static final String LISTINGS = "listings";
     }
 
     public static class QueryValues {
@@ -69,6 +72,8 @@ public class JyskeConstants {
         public static final String REDIRECT_URI = "drb://drb.jyskebank.dk/dcr-callback.html";
         public static final String RESPONSE_MODE = "web_message";
         public static final String UI_LOCALES = "da";
+        public static final String CLASSIFICATIONS = "misc";
+        public static final String LISTINGS = "securities,custodyAccounts,poolAccounts,favorites";
     }
 
     public static class Storage {
@@ -148,5 +153,8 @@ public class JyskeConstants {
     }
 
     public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
-            TypeMapper.<AccountTypes>builder().put(AccountTypes.CHECKING, "7248").build();
+            TypeMapper.<AccountTypes>builder()
+                    .put(AccountTypes.CHECKING, "7248")
+                    .put(AccountTypes.SAVINGS, "5051")
+                    .build();
 }

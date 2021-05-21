@@ -5,6 +5,7 @@ junit_test(
     srcs = glob(["**/*.java"]),
     data = [
         "//:agent_test_data",
+        "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/dk/banks/jyskebank/resources",
     ],
     tags = [
         "external",
@@ -17,6 +18,7 @@ junit_test(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions/agent",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions/bankservice",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/core/account",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/client",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/filter/filterable/request",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/filter/filters/iface",
@@ -27,6 +29,7 @@ junit_test(
         "//src/libraries/agent-storage",
         "//src/libraries/serialization",
         "//third_party:com_sun_jersey_jersey_core",
+        "//third_party:lombok_libs",
         "//third_party:org_assertj_assertj_core",
         "//third_party:org_mockito_mockito_core",
         "//third_party:pl_pragmatists_junitparams",
