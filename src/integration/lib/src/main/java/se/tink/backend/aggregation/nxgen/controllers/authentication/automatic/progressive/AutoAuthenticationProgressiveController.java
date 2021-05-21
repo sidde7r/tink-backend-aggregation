@@ -24,7 +24,7 @@ public class AutoAuthenticationProgressiveController implements ProgressiveAuthe
     private final CredentialsRequestType credentialsRequestType;
     private final boolean requestIsUpdate;
     private final boolean requestIsCreate;
-    private final boolean requestIsManual;
+    private final boolean isUserAvailableForInteraction;
     private final boolean requestIsForceAuthenticate;
     private final SystemUpdater systemUpdater;
     private final ProgressiveTypedAuthenticator manualAuthenticator;
@@ -40,7 +40,8 @@ public class AutoAuthenticationProgressiveController implements ProgressiveAuthe
         this.credentialsRequestType = request.getType();
         this.requestIsUpdate = request.isUpdate();
         this.requestIsCreate = request.isCreate();
-        this.requestIsManual = request.isManual();
+        this.isUserAvailableForInteraction =
+                request.getUserAvailability().isUserAvailableForInteraction();
         this.requestIsForceAuthenticate = request.shouldManualAuthBeForced();
 
         this.systemUpdater = Preconditions.checkNotNull(systemUpdater);
@@ -84,7 +85,7 @@ public class AutoAuthenticationProgressiveController implements ProgressiveAuthe
 
     private Iterable<AuthenticationStep> manualProgressive(final Credentials credentials)
             throws AuthenticationException, AuthorizationException {
-        if (!requestIsManual) {
+        if (!isUserAvailableForInteraction) {
             throw SessionError.SESSION_EXPIRED.exception();
         }
 
@@ -102,7 +103,7 @@ public class AutoAuthenticationProgressiveController implements ProgressiveAuthe
             return Collections.singletonList(
                     request -> AuthenticationStepResponse.executeNextStep());
         } catch (SessionException autoException) {
-            if (!requestIsManual) {
+            if (!isUserAvailableForInteraction) {
                 credentials.setType(manualAuthenticator.getType());
 
                 throw autoException;
