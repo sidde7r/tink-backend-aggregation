@@ -1,0 +1,37 @@
+
+REQUEST 1
+POST https://api-ma.triodos.com/xs2a-bg/nl/v1/consents
+
+RESPONSE 1
+201
+Content-Type: application/json
+
+{"consentStatus":"received","consentId":"**HASHED:4d**","authorisationId":"**HASHED:19**","access":{"accounts":[{"iban":"***ibans***"}],"balances":[{"iban":"***ibans***"}],"transactions":[{"iban":"***ibans***"}]},"recurringIndicator":true,"validUntil":"2021-07-18","frequencyPerDay":4,"lastActionDate":"2021-04-19","_links":{"scaOAuth":"https://api.triodos.com/auth/nl/.well-known/openid-configuration","scaRedirect":"https://api.triodos.com/auth/nl/v1/auth?response_type=code&scope=openid+offline_access+AIS%3A**HASHED:4d**&client_id=**HASHED:Ch**&redirect_uri=https%3A%2F%2Fapi.tink.com%2Fapi%2Fv1%2Fcredentials%2Fthird-party%2Fcallback","scaStatus":"/nl/v1/consents/**HASHED:4d**/authorisations/**HASHED:19**","self":"/nl/v1/consents/**HASHED:4d**","confirmation":"/nl/v1/consents/**HASHED:4d**/authorisations/**HASHED:19**","status":"/nl/v1/consents/**HASHED:4d**/status"}}
+
+REQUEST 2
+POST https://api-ma.triodos.com/auth/nl/v1/token
+
+RESPONSE 2
+200
+Content-Type: application/json
+
+{"access_token":"**HASHED:Mr**","refresh_token":"**HASHED:Ez**","scope":"openid offline_access AIS:**HASHED:4d**","id_token":"eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJTZVRCalVNSEFQczd2aXRHYWQzVGxVMUVZVGhiMTloUVhlZnVWMzl4N1AwPSIsImF1ZCI6Il**HASHED:It**kiLCJhdXRoX3RpbWUiOiIxNjE4ODMxNzkxIiwiaXNzIjoiaHR0cHM6XC9cL2FwaS50cmlvZG9zLmNvbVwvYXV0aFwvbmwiLCJjbmYiOnsieDV0I1MyNTYiOiJDMUUwNTc4MTdCRkNEQUZBMzQ3NTNENzc0RjNEMTgxMjZFQTlDQzBEMzU5N0NBNDlBRTM2QkNGRTg4RUFERTY4In0sImV4cCI6MTYxODgzMjM5MiwiaWF0Ijo**HASHED:mz**.Bpq6L35I3WXIq4Dsaeh5XN5hv9dc01NCDQK4Hx1HVRw","token_type":"bearer","expires_in":600}
+
+REQUEST 3
+PUT https://api-ma.triodos.com/xs2a-bg/nl/v1/consents/**HASHED:4d**/authorisations/**HASHED:19**
+
+RESPONSE 3
+200
+Content-Type: application/json
+
+{"scaStatus":"finalised","authorisationId":"authId","_links":{"scaStatus":"/nl/v1/consents/**HASHED:4d**/authorisations/**HASHED:19**","confirmation":"/nl/v1/consents/**HASHED:4d**/authorisations/**HASHED:19**"}}
+
+REQUEST 4
+GET https://api-ma.triodos.com/xs2a-bg/nl/v1/accounts
+
+RESPONSE 4
+200
+Content-Type: application/json
+
+{"accounts":[{"iban":"***ibans***","currency":"EUR","resourceId":"c56fb304-1102-441a-91fa-aa7ce54c2bae","cashAccountType":"CACC","name":"R. Loef","status":"enabled","_links":{"account":"/nl/v1/accounts/c56fb304-1102-441a-91fa-aa7ce54c2bae","transactions":"/nl/v1/accounts/c56fb304-1102-441a-91fa-aa7ce54c2bae/transactions","balances":"/nl/v1/accounts/c56fb304-1102-441a-91fa-aa7ce54c2bae/balances"}}]}
+

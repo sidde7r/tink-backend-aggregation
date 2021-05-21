@@ -11,9 +11,11 @@ import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.triodos.TriodosConstants.CredentialKeys;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.triodos.TriodosConstants.HeaderValues;
+import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.triodos.TriodosConstants.PathParameterKeys;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.triodos.TriodosConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.triodos.TriodosConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.triodos.authenticator.rpc.ConsentResponse;
+import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.triodos.authenticator.rpc.ConsentStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.triodos.configuration.TriodosConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants;
@@ -183,6 +185,16 @@ public final class TriodosApiClient extends BerlinGroupApiClient<TriodosConfigur
                 TriodosConstants.HeaderKeys.AUTHORIZATION_ID, consentResponse.getAuthorisationId());
 
         return consentResponse.getConsentId();
+    }
+
+    public ConsentStatusResponse getConsentStatus(final String consentId) {
+        final URL url =
+                new URL(Urls.CONSENT_STATUS).parameter(PathParameterKeys.CONSENT_ID, consentId);
+
+        return client.request(url)
+                .header(HeaderKeys.CONSENT_ID, consentId)
+                .header(HeaderKeys.X_REQUEST_ID, Psd2Headers.getRequestId())
+                .get(ConsentStatusResponse.class);
     }
 
     private void authorizeConsent() {

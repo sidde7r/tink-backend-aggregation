@@ -21,10 +21,16 @@ public final class TriodosConstants {
         public static final String AIS_BASE = "/xs2a-bg";
         public static final String ACCOUNTS = AIS_BASE + "/nl/v1/accounts";
         public static final String AUTH = "/auth/nl/v1/auth";
+        public static final String CONSENT_STATUS = BASE_URL + CONSENT + "/{consent-id}/status";
+    }
+
+    public static class PathParameterKeys {
+        public static final String CONSENT_ID = "consent-id";
     }
 
     public static class StorageKeys {
         public static final String AUTHORIZATION_ID = "authorizationId";
+        public static final String CONSENT_STATUS = "consentStatus";
     }
 
     public static class QueryKeys {
