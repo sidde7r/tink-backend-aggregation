@@ -105,7 +105,7 @@ public class QsealcSignerHttpClientTest {
                 QsealcSignerImpl.build(
                         configuration,
                         QsealcAlg.EIDAS_JWT_RSA_SHA256,
-                        new EidasIdentity("", "", "",""));
+                        new EidasIdentity("", "", "", ""));
         String result = signer.getJWSToken("".getBytes());
         Assert.assertEquals("signature", result);
     }

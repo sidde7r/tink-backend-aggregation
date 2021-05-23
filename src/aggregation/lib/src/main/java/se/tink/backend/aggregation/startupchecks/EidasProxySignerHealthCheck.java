@@ -15,6 +15,7 @@ import se.tink.backend.libraries.healthcheckhandler.NotHealthyException;
 public class EidasProxySignerHealthCheck implements HealthCheck {
 
     private static final Logger logger = LoggerFactory.getLogger(EidasProxySignerHealthCheck.class);
+    private static final String HEALTHCHECK_DEFAULT_VALUE = "healthcheck";
 
     private final EidasProxyConfiguration eidasProxyConfiguration;
 
@@ -37,8 +38,11 @@ public class EidasProxySignerHealthCheck implements HealthCheck {
                     QsealcSignerImpl.build(
                             eidasProxyConfiguration.toInternalConfig(),
                             QsealcAlg.EIDAS_JWT_RSA_SHA256,
-                            new EidasIdentity("healthcheck", "healthcheck", "healthcheck","healthcheck"));
-            signer.getSignatureBase64(Base64.getEncoder().encode("healthcheck".getBytes()));
+                            new EidasIdentity(
+                                    HEALTHCHECK_DEFAULT_VALUE, HEALTHCHECK_DEFAULT_VALUE,
+                                    HEALTHCHECK_DEFAULT_VALUE, HEALTHCHECK_DEFAULT_VALUE));
+            signer.getSignatureBase64(
+                    Base64.getEncoder().encode(HEALTHCHECK_DEFAULT_VALUE.getBytes()));
         } catch (Exception e) {
             if (!firstCheckPassed) {
                 throw new NotHealthyException("EidasProxySignerHealthCheck failed", e);

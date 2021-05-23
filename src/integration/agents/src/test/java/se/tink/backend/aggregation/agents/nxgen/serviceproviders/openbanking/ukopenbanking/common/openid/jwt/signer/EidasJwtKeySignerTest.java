@@ -28,7 +28,10 @@ public class EidasJwtKeySignerTest {
                                         "https://eidas-proxy.staging.aggregation.tink.network")
                                 .toInternalConfig(),
                         new EidasIdentity(
-                                "oxford-staging", "5f98e87106384b2981c0354a33b51590", "DEFAULT",""));
+                                "oxford-staging",
+                                "5f98e87106384b2981c0354a33b51590",
+                                "DEFAULT",
+                                ""));
 
         RSASSAVerifier verifier =
                 new RSASSAVerifier(
