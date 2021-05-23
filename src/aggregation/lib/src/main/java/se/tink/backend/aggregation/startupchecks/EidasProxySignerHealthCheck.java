@@ -37,7 +37,7 @@ public class EidasProxySignerHealthCheck implements HealthCheck {
                     QsealcSignerImpl.build(
                             eidasProxyConfiguration.toInternalConfig(),
                             QsealcAlg.EIDAS_JWT_RSA_SHA256,
-                            new EidasIdentity("healthcheck", "healthcheck", "healthcheck"));
+                            new EidasIdentity("healthcheck", "healthcheck", "healthcheck","healthcheck"));
             signer.getSignatureBase64(Base64.getEncoder().encode("healthcheck".getBytes()));
         } catch (Exception e) {
             if (!firstCheckPassed) {
