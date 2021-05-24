@@ -75,7 +75,7 @@ public class FabricApiClient {
     }
 
     private RequestBuilder prepareRequestWithPsuIpAddress(RequestBuilder requestBuilder) {
-        return userIpInformation.isManualRequest()
+        return userIpInformation.isUserPresent()
                 ? requestBuilder.header(HeaderKeys.PSU_IP_ADDRESS, userIpInformation.getUserIp())
                 : requestBuilder;
     }
