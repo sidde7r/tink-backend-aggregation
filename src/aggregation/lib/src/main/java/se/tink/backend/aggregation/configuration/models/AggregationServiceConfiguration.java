@@ -176,13 +176,17 @@ public class AggregationServiceConfiguration extends Configuration {
 
     public UnleashConfiguration getUnleashConfiguration() {
         if (unleashConfig != null) {
-            log.info("[Unleash] The configuration was fetched successfully.");
+            log.info(
+                    "[Unleash] The configuration was fetched successfully. Setting: [fetchToggleIntervals: `{} sec`, applicationName: `{}`]",
+                    unleashConfig.getFetchFeatureToggleIntervals(),
+                    unleashConfig.getApplicationName());
             return unleashConfig;
         }
         log.error("[Unleash] Something went wrong. Default configuration has been initialised.");
         return new UnleashConfiguration()
                 .setApiUrl("http://unleash-api.unleash.svc.cluster.local:4242/api/")
-                .setApplicationName("aggregation-service");
+                .setApplicationName("aggregation-service")
+                .setFetchFeatureToggleIntervals(60);
     }
 
     public void setUnleashConfig(UnleashConfiguration unleashConfig) {
