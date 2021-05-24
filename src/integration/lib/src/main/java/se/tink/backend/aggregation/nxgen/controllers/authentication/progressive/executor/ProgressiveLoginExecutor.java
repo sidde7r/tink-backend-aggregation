@@ -51,7 +51,7 @@ public final class ProgressiveLoginExecutor {
             final SteppableAuthenticationResponse stepResponse,
             final CredentialsRequest credentialsRequest)
             throws Exception {
-        if (!credentialsRequest.isManual()) {
+        if (!credentialsRequest.getUserAvailability().isUserAvailableForInteraction()) {
             throw SessionError.SESSION_EXPIRED.exception();
         }
         SupplementInformationRequester payload = stepResponse.getSupplementInformationRequester();
