@@ -51,7 +51,7 @@ public class IngMultifactorAuthenticator extends StatelessProgressiveAuthenticat
                         persistentStorage,
                         randomValueGenerator,
                         scaStepMapper,
-                        isManualAuthentication(credentialsRequest)),
+                        credentialsRequest.getUserAvailability().isUserAvailableForInteraction()),
                 new OtpStep(
                         apiClient,
                         sessionStorage,
@@ -62,9 +62,5 @@ public class IngMultifactorAuthenticator extends StatelessProgressiveAuthenticat
                         sessionStorage,
                         persistentStorage,
                         supplementalInformationHelper));
-    }
-
-    private boolean isManualAuthentication(CredentialsRequest request) {
-        return request.getUserAvailability().isUserAvailableForInteraction();
     }
 }

@@ -73,7 +73,7 @@ public abstract class Xs2aDevelopersTransactionalAgent extends NextGenerationAge
                 componentProvider.getTinkHttpClient(),
                 persistentStorage,
                 configuration,
-                request.isManual(),
+                request.getUserAvailability().isUserPresent(),
                 userIp,
                 componentProvider.getRandomValueGenerator());
     }

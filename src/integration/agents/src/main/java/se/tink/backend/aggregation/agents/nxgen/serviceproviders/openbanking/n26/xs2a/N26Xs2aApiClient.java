@@ -16,7 +16,7 @@ public class N26Xs2aApiClient extends Xs2aDevelopersForAgentPlatformApiClient {
             TinkHttpClient client,
             PersistentStorage persistentStorage,
             Xs2aDevelopersProviderConfiguration configuration,
-            boolean isManual,
+            boolean userPresent,
             String userIp,
             RandomValueGenerator randomValueGenerator,
             Xs2aAuthenticationDataAccessor xs2aAuthenticationDataAccessor) {
@@ -24,7 +24,7 @@ public class N26Xs2aApiClient extends Xs2aDevelopersForAgentPlatformApiClient {
                 client,
                 persistentStorage,
                 configuration,
-                isManual,
+                userPresent,
                 userIp,
                 randomValueGenerator,
                 xs2aAuthenticationDataAccessor);

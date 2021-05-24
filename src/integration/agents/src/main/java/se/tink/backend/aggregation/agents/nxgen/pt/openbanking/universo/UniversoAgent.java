@@ -70,7 +70,7 @@ public class UniversoAgent extends Xs2aDevelopersTransactionalAgent {
                 componentProvider.getTinkHttpClient(),
                 persistentStorage,
                 configuration,
-                request.isManual(),
+                request.getUserAvailability().isUserPresent(),
                 userIp,
                 componentProvider.getRandomValueGenerator());
     }
