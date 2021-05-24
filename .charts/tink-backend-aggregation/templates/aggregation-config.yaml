@@ -167,3 +167,4 @@ data:
     unleashConfig:
       apiUrl: http://unleash-api.unleash.svc.cluster.local:4242/api/
       applicationName: aggregation-service
+      fetchFeatureToggleIntervals: 60
