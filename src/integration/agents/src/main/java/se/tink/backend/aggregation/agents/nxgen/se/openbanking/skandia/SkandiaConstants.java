@@ -2,8 +2,10 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia;
 
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.PersistentStorageKeys;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccountTypeMapper;
+import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.libraries.payment.enums.PaymentStatus;
 
 public final class SkandiaConstants {
     public static final String PROVIDER_MARKET = "SE";
@@ -14,6 +16,22 @@ public final class SkandiaConstants {
                     .put(TransactionalAccountType.SAVINGS, "Sparkonto")
                     .build();
 
+    public static final TypeMapper<PaymentStatus> PAYMENT_STATUS_MAPPER =
+            TypeMapper.<PaymentStatus>builder()
+                    .put(PaymentStatus.PENDING, "PDNG", "RCVD")
+                    .put(
+                            PaymentStatus.SIGNED,
+                            "ACSC",
+                            "ACSP",
+                            "ACTC",
+                            "ACCC",
+                            "ACCP",
+                            "ACWC",
+                            "ACWP")
+                    .put(PaymentStatus.REJECTED, "RJCT")
+                    .put(PaymentStatus.CANCELLED, "CANC")
+                    .build();
+
     private SkandiaConstants() {
         throw new AssertionError();
     }
@@ -22,6 +40,23 @@ public final class SkandiaConstants {
         public static final String INVALID_CONFIGURATION =
                 "Invalid Configuration: %s cannot be empty or null";
         public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
+        public static final String MISSING_CREDENTIALS = "Client Credentials missing.";
+        public static final String UNSUPPORTED_PAYMENT_TYPE = "Payment type is not supported.";
+        public static final String MISSING_TOKEN = "Failed to retrieve access token.";
+        public static final String SERVICE_BLOCKED = "Service_blocked";
+        public static final String EXPIRED_AUTHORIZATION_CODE =
+                "Authorization code is invalid or expired.";
+        public static final String INVALID_INFO_STRUCTURED =
+                "Invalid remittance information structured";
+        public static final String INVALID_INFO_UNSTRUCTURED =
+                "Invalid remittance information unstructured";
+        public static final String REMITTANCE_INFO_NOT_SET_FOR_GIROS =
+                "Only one of remittance information unstructured or structured can be set";
+        public static final String INVALID_CREDITOR_ACCOUNT = "Invalid creditor account";
+        public static final String INVALID_REQUESTED_EXECUTION_DATE =
+                "Invalid requested execution date";
+        public static final String NOT_ENOUGH_FUNDS =
+                "Not enough funds on account to make payments";
     }
 
     public static class ErrorCodes {
@@ -36,6 +71,11 @@ public final class SkandiaConstants {
         public static final URL GET_ACCOUNTS = new URL(BASE_URL + ApiServices.GET_ACCOUNTS);
         public static final URL GET_TRANSACTIONS = new URL(BASE_URL + ApiServices.GET_TRANSACTIONS);
         public static final URL GET_BALANCES = new URL(BASE_URL + ApiServices.GET_BALANCES);
+        public static final URL CREATE_PAYMENT = new URL(BASE_URL + ApiServices.CREATE_PAYMENT);
+        public static final URL GET_PAYMENT = new URL(BASE_URL + ApiServices.GET_PAYMENT);
+        public static final URL GET_PAYMENT_STATUS =
+                new URL(BASE_URL + ApiServices.GET_PAYMENT_STATUS);
+        public static final URL DELETE_PAYMENT = new URL(BASE_URL + ApiServices.DELETE_PAYMENT);
     }
 
     public static class ApiServices {
@@ -44,6 +84,11 @@ public final class SkandiaConstants {
         public static final String GET_ACCOUNTS = "/v1/accounts";
         public static final String GET_TRANSACTIONS = "/v1/accounts/{accountId}/transactions";
         public static final String GET_BALANCES = "/v1/accounts/{accountId}/balances";
+        public static final String CREATE_PAYMENT = "/pis/v2/payments/{paymentProduct}";
+        public static final String GET_PAYMENT = "/pis/v2/payments/{paymentProduct}/{paymentId}";
+        public static final String GET_PAYMENT_STATUS =
+                "/pis/v2/payments/paymentProduct/{paymentId}/status";
+        public static final String DELETE_PAYMENT = "/pis/v2/payments/{paymentProduct}/{paymentId}";
     }
 
     public static class StorageKeys {
@@ -65,7 +110,7 @@ public final class SkandiaConstants {
         public static final String PENDING = "pending";
         public static final String BOOKED = "booked";
         public static final String CODE = "code";
-        public static final String SCOPE = "psd2.aisp";
+        public static final String SCOPE = "psd2.aisp%20psd2.pisp";
     }
 
     public static class FormKeys {
@@ -86,9 +131,22 @@ public final class SkandiaConstants {
         public static final String X_REQUEST_ID = "X-Request-ID";
         public static final String X_CLIENT_CERTIFICATE = "X-Client-Certificate";
         public static final String CLIENT_ID = "Client-Id";
+        public static final String PSU_IP_ADDRESS = "PSU-IP-Address";
     }
 
     public static class IdTags {
         public static final String ACCOUNT_ID = "accountId";
+        public static final String PAYMENT_TYPE = "paymentProduct";
+        public static final String PAYMENT_ID = "paymentId";
+    }
+
+    public class PaymentTypes {
+        public static final String DOMESTIC_CREDIT_TRANSFERS = "domestic-credit-transfer";
+        public static final String DOMESTIC_GIROS = "domestic-giros";
+        public static final String CROSS_BORDER_CREDIT_TRANSFERS = "cross-border-credit-transfers";
+        public static final String DOMESTIC_CREDIT_TRANSFERS_RESPONSE = "DOMESTIC_CREDIT_TRANSFERS";
+        public static final String DOMESTIC_GIROS_RESPONSE = "DOMESTIC_GIROS";
+        public static final String CROSS_BORDER_CREDIT_TRANSFERS_RESPONSE =
+                "CROSS_BORDER_CREDIT_TRANSFERS";
     }
 }

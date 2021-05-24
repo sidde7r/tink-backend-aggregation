@@ -10,18 +10,18 @@ import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConf
 import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.enums.MarketCode;
 
-public class HandelsbankenObMockServerAgentTest {
+public class HandelsbankenAgentWiremockTest {
 
     private static final String MOCKED_SSN = "190000000000";
 
     private static final String CONFIGURATION_PATH =
-            "data/agents/openbanking/handelsbanken/configuration.yml";
+            "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/openbanking/handelsbanken/mock/resources/configuration.yml";
 
     private static final String WIREMOCK_SERVER_FILEPATH =
-            "data/agents/openbanking/handelsbanken/HB_OB_wireMock.aap";
+            "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/openbanking/handelsbanken/mock/resources/HB_OB_wireMock.aap";
 
     private static final String CONTRACT_FILE_PATH =
-            "data/agents/openbanking/handelsbanken/agent-contract.json";
+            "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/openbanking/handelsbanken/mock/resources/agent-contract.json";
 
     @Test
     public void testRefresh() throws Exception {
@@ -35,8 +35,10 @@ public class HandelsbankenObMockServerAgentTest {
                         .withWireMockFilePath(WIREMOCK_SERVER_FILEPATH)
                         .withConfigFile(configuration)
                         .testFullAuthentication()
-                        .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
-                        .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
+                        .addRefreshableItems(RefreshableItem.CHECKING_ACCOUNTS)
+                        .addRefreshableItems(RefreshableItem.CHECKING_TRANSACTIONS)
+                        .addRefreshableItems(RefreshableItem.CREDITCARD_ACCOUNTS)
+                        .addRefreshableItems(RefreshableItem.CREDITCARD_TRANSACTIONS)
                         .addCredentialField(Field.Key.USERNAME.getFieldKey(), MOCKED_SSN)
                         .build();
 

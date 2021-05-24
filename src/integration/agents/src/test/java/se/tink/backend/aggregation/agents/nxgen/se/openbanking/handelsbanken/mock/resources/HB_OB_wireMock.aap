@@ -1,0 +1,742 @@
+
+REQUEST 1
+POST https://api.handelsbanken.com/bb/gls5/oauth2/token/1.0
+Accept: application/json
+Content-Type: application/x-www-form-urlencoded
+X-Aggregator: Tink Testing
+
+grant_type=client_credentials&scope=AIS&client_id=2910773e-1985-4d5f-84da-2dec74fca29c&psu_id_type=1
+
+RESPONSE 1
+200
+Date: Fri, 23 Apr 2021 05:59:00 GMT
+Date: Fri, 23 Apr 2021 05:59:00 GMT
+X-Powered-By: Servlet/3.0
+Cache-Control: no-store
+Expires: 0
+Pragma: no-cache
+Content-Type: application/json;charset=utf-8
+Content-Language: en-US
+Strict-Transport-Security: max-age=31536000
+Content-Length: 112
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"access_token":"000000000000000000000000YWY4LWEyMDItM2JlYjVlM2U2Mjc2","expires_in":86400,"token_type":"Bearer"}
+
+REQUEST 2
+POST https://api.handelsbanken.com/openbanking/psd2/v1/consents
+X-IBM-Client-Id: 2910773e-1985-4d5f-84da-2dec74fca29c
+PSU-IP-Address: 0.0.0.0
+Accept: application/json
+Content-Type: application/json
+X-Aggregator: Tink Testing
+
+{"access":"ALL_ACCOUNTS"}
+
+RESPONSE 2
+201
+Date: Fri, 23 Apr 2021 05:59:00 GMT
+Date: Fri, 23 Apr 2021 05:59:01 GMT
+Content-Type: application/json
+Cache-Control: private,no-cache,no-store,no-transform,proxy-revalidate
+Pragma: no-cache
+Expires: 0
+Content-Language: en-US
+Content-Length: 487
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"consentId":"92f9eec1-7b45-4400-a764-eceb5353087b","consentStatus":"RECEIVED","scaMethods":[{"_links":{"authorization":[{"href":"https://api.handelsbanken.com/bb/gls5/decoupled/mbid/initAuthorization/1.0","name":"decpld_mbid_1.0","type":"application/json"}]},"scaMethodType":"DECOUPLED"},{"_links":{"authorization":[{"href":"https://secure.handelsbanken.com/bb/gls5/oauth2/authorize/1.0","name":"authorize_1.0","type":"application/x-www-form-urlencoded"}]},"scaMethodType":"REDIRECT"}]}
+
+REQUEST 3
+POST https://api.handelsbanken.com/bb/gls5/decoupled/mbid/initAuthorization/1.0
+Accept: application/json
+Content-Type: application/json
+X-Aggregator: Tink Testing
+
+{"scope":"AIS:92f9eec1-7b45-4400-a764-eceb5353087b","psu_id":"190000000000","psu_client_ip":"0.0.0.0","psu_id_type":"1","client_id":"2910773e-1985-4d5f-84da-2dec74fca29c"}
+
+RESPONSE 3
+200
+Date: Fri, 23 Apr 2021 05:59:01 GMT
+Date: Fri, 23 Apr 2021 05:59:01 GMT
+X-Powered-By: Servlet/3.0
+Cache-Control: no-cache, no-store
+Expires: 0
+Pragma: no-cache
+X-Frame-Options: SAMEORIGIN
+X-XSS-Protection: 1; mode=block
+X-Content-Type-Options: nosniff
+Content-Type: application/json;charset=utf-8
+Content-Language: sv
+Strict-Transport-Security: max-age=31536000
+Content-Length: 402
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"auto_start_token":"ac803282-8149-4eeb-8927-08e2fe4f8969","sleep_time":2000,"_links":{"token":{"href":"https://api.handelsbanken.com/bb/gls5/decoupled/mbid/token/1.0?sessionId=4b39f543-ce52-4856-b1d7-9d438ff612a0","hints":{"allow":["POST"]}},"cancel":{"href":"https://api.handelsbanken.com/bb/gls5/decoupled/mbid/cancel/1.0?sessionId=4b39f543-ce52-4856-b1d7-9d438ff612a0","hints":{"allow":["POST"]}}}}
+
+REQUEST 11
+POST https://api.handelsbanken.com/bb/gls5/decoupled/mbid/token/1.0?sessionId=4b39f543-ce52-4856-b1d7-9d438ff612a0
+Accept: application/json
+Content-Type: application/json
+X-Aggregator: Tink Testing
+
+RESPONSE 11
+200
+Date: Fri, 23 Apr 2021 05:59:20 GMT
+Date: Fri, 23 Apr 2021 05:59:20 GMT
+X-Powered-By: Servlet/3.0
+Cache-Control: no-cache, no-store
+Expires: 0
+Pragma: no-cache
+X-Frame-Options: SAMEORIGIN
+X-XSS-Protection: 1; mode=block
+X-Content-Type-Options: nosniff
+Content-Type: application/json;charset=utf-8
+Content-Language: sv
+Strict-Transport-Security: max-age=31536000
+Content-Length: 203
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"result":"COMPLETE","access_token":"TOKEN_TOKEN_TOKEN_TOKEN_TOKEN_TOKEN_TOKEN_TOKEN_1234","expires_in":86400,"refresh_token":"REFRESH_TOKEN_REFRESH_TOKEN_REFRESH_TOKEN_REFRESH_TO","token_type":"bearer"}
+
+REQUEST 12
+GET https://api.handelsbanken.com/openbanking/psd2/v2/accounts
+X-IBM-Client-Id: 2910773e-1985-4d5f-84da-2dec74fca29c
+PSU-IP-Address: 0.0.0.0
+Accept: application/json
+Content-Type: application/json
+X-Aggregator: Tink Testing
+
+RESPONSE 12
+200
+Date: Fri, 23 Apr 2021 05:59:20 GMT
+Date: Fri, 23 Apr 2021 05:59:21 GMT
+Content-Type: application/json
+Cache-Control: private,no-cache,no-store,no-transform,proxy-revalidate
+Pragma: no-cache
+Expires: 0
+Content-Language: en-US
+Content-Length: 2150
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"accounts":[{"_links":{"transactions":{"href":"https://api.handelsbanken.com/openbanking/psd2/v2/accounts/1adc44a7-71f1-4601-99a5-b5a135529c91/transactions"}},"accountId":"1adc44a7-71f1-4601-99a5-b5a135529c91","accountType":"Allkonto","balances":[{"amount":{"content":3000.35,"currency":"SEK"},"balanceType":"AVAILABLE_AMOUNT"},{"amount":{"content":3000.35,"currency":"SEK"},"balanceType":"CURRENT"}],"bban":"123456789","bic":"HANDSESS","clearingNumber":"6602","currency":"SEK","iban":"SE6060000000000123456789","ownerName":"FirstName LastName"},{"_links":{"transactions":{"href":"https://api.handelsbanken.com/openbanking/psd2/v2/accounts/d8d046e7-9bef-4b02-a8ad-816eb09f3968/transactions"}},"accountId":"d8d046e7-9bef-4b02-a8ad-816eb09f3968","accountType":"Privatkonto","balances":[{"amount":{"content":3000.64,"currency":"SEK"},"balanceType":"AVAILABLE_AMOUNT"},{"amount":{"content":3000.64,"currency":"SEK"},"balanceType":"CURRENT"}],"bban":"264165942","bic":"HANDSESS","clearingNumber":"6602","currency":"SEK","iban":"SE4560000000000264165942","ownerName":"FirstName LastName"},{"_links":{"transactions":{"href":"https://api.handelsbanken.com/openbanking/psd2/v2/accounts/ed43b1ac-2ca4-4b3b-9986-d275011d3ad5/transactions"}},"accountId":"ed43b1ac-2ca4-4b3b-9986-d275011d3ad5","accountType":"Allkortskonto","balances":[{"amount":{"content":93794.83,"currency":"SEK"},"balanceType":"AVAILABLE_AMOUNT"},{"amount":{"content":101378.09,"currency":"SEK"},"balanceType":"CURRENT"}],"bban":"291382908","bic":"HANDSESS","clearingNumber":"6602","currency":"SEK","iban":"SE9260000000000291382908","ownerName":"FirstName LastName"},{"_links":{"transactions":{"href":"https://api.handelsbanken.com/openbanking/psd2/v2/accounts/5c6e14f4-bb90-4347-a905-4b74cd9297c6/transactions"}},"accountId":"5c6e14f4-bb90-4347-a905-4b74cd9297c6","accountType":"Allkonto","balances":[{"amount":{"content":12841.72,"currency":"SEK"},"balanceType":"AVAILABLE_AMOUNT"},{"amount":{"content":2841.72,"currency":"SEK"},"balanceType":"CURRENT"}],"bban":"297355511","bic":"HANDSESS","clearingNumber":"6602","currency":"SEK","iban":"SE8060000000000297355511","ownerName":"FirstName LastName"}]}
+
+REQUEST 13
+GET https://api.handelsbanken.com/openbanking/psd2/v2/accounts/1adc44a7-71f1-4601-99a5-b5a135529c91?withBalance=true
+X-IBM-Client-Id: 2910773e-1985-4d5f-84da-2dec74fca29c
+PSU-IP-Address: 0.0.0.0
+Accept: application/json
+Content-Type: application/json
+X-Aggregator: Tink Testing
+
+RESPONSE 13
+200
+Date: Fri, 23 Apr 2021 05:59:21 GMT
+Date: Fri, 23 Apr 2021 05:59:21 GMT
+Content-Type: application/json
+Cache-Control: private,no-cache,no-store,no-transform,proxy-revalidate
+Pragma: no-cache
+Expires: 0
+Content-Language: en-US
+Content-Length: 530
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"_links":{"transactions":{"href":"https://api.handelsbanken.com/openbanking/psd2/v2/accounts/1adc44a7-71f1-4601-99a5-b5a135529c91/transactions"}},"accountId":"1adc44a7-71f1-4601-99a5-b5a135529c91","accountType":"Allkonto","balances":[{"amount":{"content":3000.35,"currency":"SEK"},"balanceType":"AVAILABLE_AMOUNT"},{"amount":{"content":3000.35,"currency":"SEK"},"balanceType":"CURRENT"}],"bban":"123456789","bic":"HANDSESS","clearingNumber":"6602","currency":"SEK","iban":"SE6060000000000123456789","ownerName":"FirstName LastName"}
+
+REQUEST 14
+GET https://api.handelsbanken.com/openbanking/psd2/v2/accounts/d8d046e7-9bef-4b02-a8ad-816eb09f3968?withBalance=true
+X-IBM-Client-Id: 2910773e-1985-4d5f-84da-2dec74fca29c
+PSU-IP-Address: 0.0.0.0
+Accept: application/json
+Content-Type: application/json
+X-Aggregator: Tink Testing
+
+RESPONSE 14
+200
+Date: Fri, 23 Apr 2021 05:59:21 GMT
+Date: Fri, 23 Apr 2021 05:59:22 GMT
+Content-Type: application/json
+Cache-Control: private,no-cache,no-store,no-transform,proxy-revalidate
+Pragma: no-cache
+Expires: 0
+Content-Language: en-US
+Content-Length: 533
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"_links":{"transactions":{"href":"https://api.handelsbanken.com/openbanking/psd2/v2/accounts/d8d046e7-9bef-4b02-a8ad-816eb09f3968/transactions"}},"accountId":"d8d046e7-9bef-4b02-a8ad-816eb09f3968","accountType":"Privatkonto","balances":[{"amount":{"content":3000.64,"currency":"SEK"},"balanceType":"AVAILABLE_AMOUNT"},{"amount":{"content":3000.64,"currency":"SEK"},"balanceType":"CURRENT"}],"bban":"264165942","bic":"HANDSESS","clearingNumber":"6602","currency":"SEK","iban":"SE4560000000000264165942","ownerName":"FirstName LastName"}
+
+REQUEST 15
+GET https://api.handelsbanken.com/openbanking/psd2/v2/accounts/ed43b1ac-2ca4-4b3b-9986-d275011d3ad5?withBalance=true
+X-IBM-Client-Id: 2910773e-1985-4d5f-84da-2dec74fca29c
+PSU-IP-Address: 0.0.0.0
+Accept: application/json
+Content-Type: application/json
+X-Aggregator: Tink Testing
+
+RESPONSE 15
+200
+Date: Fri, 23 Apr 2021 05:59:22 GMT
+Date: Fri, 23 Apr 2021 05:59:22 GMT
+Content-Type: application/json
+Cache-Control: private,no-cache,no-store,no-transform,proxy-revalidate
+Pragma: no-cache
+Expires: 0
+Content-Language: en-US
+Content-Length: 538
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"_links":{"transactions":{"href":"https://api.handelsbanken.com/openbanking/psd2/v2/accounts/ed43b1ac-2ca4-4b3b-9986-d275011d3ad5/transactions"}},"accountId":"ed43b1ac-2ca4-4b3b-9986-d275011d3ad5","accountType":"Allkortskonto","balances":[{"amount":{"content":93794.83,"currency":"SEK"},"balanceType":"AVAILABLE_AMOUNT"},{"amount":{"content":101378.09,"currency":"SEK"},"balanceType":"CURRENT"}],"bban":"291382908","bic":"HANDSESS","clearingNumber":"6602","currency":"SEK","iban":"SE9260000000000291382908","ownerName":"FirstName LastName"}
+
+REQUEST 16
+GET https://api.handelsbanken.com/openbanking/psd2/v2/accounts/5c6e14f4-bb90-4347-a905-4b74cd9297c6?withBalance=true
+X-IBM-Client-Id: 2910773e-1985-4d5f-84da-2dec74fca29c
+PSU-IP-Address: 0.0.0.0
+Accept: application/json
+Content-Type: application/json
+X-Aggregator: Tink Testing
+
+RESPONSE 16
+200
+Date: Fri, 23 Apr 2021 05:59:22 GMT
+Date: Fri, 23 Apr 2021 05:59:23 GMT
+Content-Type: application/json
+Cache-Control: private,no-cache,no-store,no-transform,proxy-revalidate
+Pragma: no-cache
+Expires: 0
+Content-Language: en-US
+Content-Length: 531
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"_links":{"transactions":{"href":"https://api.handelsbanken.com/openbanking/psd2/v2/accounts/5c6e14f4-bb90-4347-a905-4b74cd9297c6/transactions"}},"accountId":"5c6e14f4-bb90-4347-a905-4b74cd9297c6","accountType":"Allkonto","balances":[{"amount":{"content":12841.72,"currency":"SEK"},"balanceType":"AVAILABLE_AMOUNT"},{"amount":{"content":2841.72,"currency":"SEK"},"balanceType":"CURRENT"}],"bban":"297355511","bic":"HANDSESS","clearingNumber":"6602","currency":"SEK","iban":"SE8060000000000297355511","ownerName":"FirstName LastName"}
+
+REQUEST 17
+GET https://api.handelsbanken.com/openbanking/psd2/v1/card-accounts
+X-IBM-Client-Id: 2910773e-1985-4d5f-84da-2dec74fca29c
+PSU-IP-Address: 0.0.0.0
+Accept: application/json
+Content-Type: application/json
+X-Aggregator: Tink Testing
+
+RESPONSE 17
+200
+Date: Fri, 23 Apr 2021 05:59:23 GMT
+Date: Fri, 23 Apr 2021 05:59:23 GMT
+Content-Type: application/json
+Cache-Control: private,no-cache,no-store,no-transform,proxy-revalidate
+Pragma: no-cache
+Expires: 0
+Content-Language: en-US
+Content-Length: 439
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"cardAccounts":[{"_links":{"transactions":{"href":"https://api.handelsbanken.com/openbanking/psd2/v1/card-accounts/b9cdf505-6cfb-4a26-9c54-47b8dfe2d5ac/transactions"}},"accountId":"b9cdf505-6cfb-4a26-9c54-47b8dfe2d5ac","balances":[{"balanceAmount":{"amount":93794.83,"currency":"SEK"},"balanceType":"AVAILABLE_AMOUNT"}],"cards":[{"maskedPan":"5226********6196","name":"FirstName LastName"}],"currency":"SEK","product":"Allkort Mastercard"}]}
+
+#first
+REQUEST 42T
+GET https://api.handelsbanken.com/openbanking/psd2/v1/card-accounts/b9cdf505-6cfb-4a26-9c54-47b8dfe2d5ac/transactions?dateFrom=1992-01-12&dateTo=1992-04-10
+X-IBM-Client-Id: 2910773e-1985-4d5f-84da-2dec74fca29c
+PSU-IP-Address: 0.0.0.0
+Accept: application/json
+Content-Type: application/json
+X-Aggregator: Tink Testing
+
+RESPONSE 42T
+200
+Date: Fri, 23 Apr 2021 05:59:37 GMT
+Date: Fri, 23 Apr 2021 05:59:37 GMT
+Content-Type: application/json
+Cache-Control: private,no-cache,no-store,no-transform,proxy-revalidate
+Pragma: no-cache
+Expires: 0
+Content-Language: en-US
+Content-Length: 3073
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"transactions":[{"bookingDate":"2020-01-28","card":{"maskedPan":"5226********6196"},"creditDebit":"DEBITED","status":"BOOKED","transactionAmount":{"amount":86,"currency":"SEK"},"transactionDate":"2020-01-27","transactionDetails":"Konditori Amarant To"},{"bookingDate":"2020-01-28","card":{"maskedPan":"5226********6196"},"creditDebit":"DEBITED","status":"BOOKED","transactionAmount":{"amount":85,"currency":"SEK"},"transactionDate":"2020-01-27","transactionDetails":"ELEVEN.SE"},{"bookingDate":"2020-01-27","card":{"maskedPan":"5226********6196"},"creditDebit":"DEBITED","status":"BOOKED","transactionAmount":{"amount":9,"currency":"SEK"},"transactionDate":"2020-01-26","transactionDetails":"Easypark"},{"bookingDate":"2020-01-27","card":{"maskedPan":"5226********6196"},"creditDebit":"DEBITED","status":"BOOKED","transactionAmount":{"amount":365,"currency":"SEK"},"transactionDate":"2020-01-26","transactionDetails":"IKEA VESTERAS"},{"bookingDate":"2020-01-27","card":{"maskedPan":"5226********6196"},"creditDebit":"DEBITED","status":"BOOKED","transactionAmount":{"amount":20,"currency":"SEK"},"transactionDate":"2020-01-26","transactionDetails":"IKEA VESTERAS"},{"bookingDate":"2020-01-27","card":{"maskedPan":"5226********6196"},"creditDebit":"DEBITED","status":"BOOKED","transactionAmount":{"amount":138,"currency":"SEK"},"transactionDate":"2020-01-26","transactionDetails":"IKEA VESTERAS"},{"bookingDate":"2020-01-27","card":{"maskedPan":"5226********6196"},"creditDebit":"DEBITED","status":"BOOKED","transactionAmount":{"amount":522.46,"currency":"SEK"},"transactionDate":"2020-01-26","transactionDetails":"APOTEK HJARTAT ICA M"},{"bookingDate":"2020-01-28","card":{"maskedPan":"5226********6196"},"creditDebit":"DEBITED","status":"BOOKED","transactionAmount":{"amount":216.15,"currency":"SEK"},"transactionDate":"2020-01-26","transactionDetails":"MAXI ICA STORMARKNAD"},{"bookingDate":"2020-01-27","card":{"maskedPan":"5226********6196"},"creditDebit":"DEBITED","status":"BOOKED","transactionAmount":{"amount":272.93,"currency":"SEK"},"transactionDate":"2020-01-25","transactionDetails":"ICA SUPERMARKET SLAG"},{"bookingDate":"2020-01-27","card":{"maskedPan":"5226********6196"},"creditDebit":"DEBITED","status":"BOOKED","transactionAmount":{"amount":299,"currency":"SEK"},"transactionDate":"2020-01-24","transactionDetails":"SYSTEMBOLAGET TORSH#"},{"bookingDate":"2020-01-24","card":{"maskedPan":"5226********6196"},"creditDebit":"DEBITED","status":"BOOKED","transactionAmount":{"amount":320,"currency":"SEK"},"transactionDate":"2020-01-23","transactionDetails":"APOTEK HJARTAT ICA M"},{"bookingDate":"2020-01-27","card":{"maskedPan":"5226********6196"},"creditDebit":"DEBITED","status":"BOOKED","transactionAmount":{"amount":365.4,"currency":"SEK"},"transactionDate":"2020-01-23","transactionDetails":"MAXI ICA STORMARKNAD"},{"bookingDate":"2020-01-23","card":{"maskedPan":"5226********6196"},"creditDebit":"DEBITED","status":"BOOKED","transactionAmount":{"amount":86,"currency":"SEK"},"transactionDate":"2020-01-22","transactionDetails":"Konditori Amarant VE"}]}
+
+REQUEST 43T
+GET https://api.handelsbanken.com/openbanking/psd2/v1/card-accounts/b9cdf505-6cfb-4a26-9c54-47b8dfe2d5ac/transactions?dateFrom=1991-10-14&dateTo=1992-01-11
+X-IBM-Client-Id: 2910773e-1985-4d5f-84da-2dec74fca29c
+PSU-IP-Address: 0.0.0.0
+Accept: application/json
+Content-Type: application/json
+X-Aggregator: Tink Testing
+
+RESPONSE 43T
+200
+Date: Fri, 23 Apr 2021 05:59:37 GMT
+Date: Fri, 23 Apr 2021 05:59:37 GMT
+Content-Type: application/json
+Cache-Control: private,no-cache,no-store,no-transform,proxy-revalidate
+Pragma: no-cache
+Expires: 0
+Content-Language: en-US
+Content-Length: 3073
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"transactions":[]}
+
+REQUEST 44T
+GET https://api.handelsbanken.com/openbanking/psd2/v1/card-accounts/b9cdf505-6cfb-4a26-9c54-47b8dfe2d5ac/transactions?dateFrom=1991-07-16&dateTo=1991-10-13
+X-IBM-Client-Id: 2910773e-1985-4d5f-84da-2dec74fca29c
+PSU-IP-Address: 0.0.0.0
+Accept: application/json
+Content-Type: application/json
+X-Aggregator: Tink Testing
+
+RESPONSE 44T
+200
+Date: Fri, 23 Apr 2021 05:59:37 GMT
+Date: Fri, 23 Apr 2021 05:59:37 GMT
+Content-Type: application/json
+Cache-Control: private,no-cache,no-store,no-transform,proxy-revalidate
+Pragma: no-cache
+Expires: 0
+Content-Language: en-US
+Content-Length: 3073
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"transactions":[]}
+
+REQUEST 45T
+GET https://api.handelsbanken.com/openbanking/psd2/v1/card-accounts/b9cdf505-6cfb-4a26-9c54-47b8dfe2d5ac/transactions?dateFrom=1991-04-17&dateTo=1991-07-15
+X-IBM-Client-Id: 2910773e-1985-4d5f-84da-2dec74fca29c
+PSU-IP-Address: 0.0.0.0
+Accept: application/json
+Content-Type: application/json
+X-Aggregator: Tink Testing
+
+RESPONSE 45T
+200
+Date: Fri, 23 Apr 2021 05:59:37 GMT
+Date: Fri, 23 Apr 2021 05:59:37 GMT
+Content-Type: application/json
+Cache-Control: private,no-cache,no-store,no-transform,proxy-revalidate
+Pragma: no-cache
+Expires: 0
+Content-Language: en-US
+Content-Length: 3073
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"transactions":[]}
+
+REQUEST 46T
+GET https://api.handelsbanken.com/openbanking/psd2/v1/card-accounts/b9cdf505-6cfb-4a26-9c54-47b8dfe2d5ac/transactions?dateFrom=1991-01-17&dateTo=1991-04-16
+X-IBM-Client-Id: 2910773e-1985-4d5f-84da-2dec74fca29c
+PSU-IP-Address: 0.0.0.0
+Accept: application/json
+Content-Type: application/json
+X-Aggregator: Tink Testing
+
+RESPONSE 46T
+200
+Date: Fri, 23 Apr 2021 05:59:37 GMT
+Date: Fri, 23 Apr 2021 05:59:37 GMT
+Content-Type: application/json
+Cache-Control: private,no-cache,no-store,no-transform,proxy-revalidate
+Pragma: no-cache
+Expires: 0
+Content-Language: en-US
+Content-Length: 3073
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"transactions":[]}
+
+REQUEST 47T
+GET https://api.handelsbanken.com/openbanking/psd2/v1/card-accounts/b9cdf505-6cfb-4a26-9c54-47b8dfe2d5ac/transactions?dateFrom=1991-01-10&dateTo=1991-01-16
+X-IBM-Client-Id: 2910773e-1985-4d5f-84da-2dec74fca29c
+PSU-IP-Address: 0.0.0.0
+Accept: application/json
+Content-Type: application/json
+X-Aggregator: Tink Testing
+
+RESPONSE 47T
+200
+Date: Fri, 23 Apr 2021 05:59:37 GMT
+Date: Fri, 23 Apr 2021 05:59:37 GMT
+Content-Type: application/json
+Cache-Control: private,no-cache,no-store,no-transform,proxy-revalidate
+Pragma: no-cache
+Expires: 0
+Content-Language: en-US
+Content-Length: 3073
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"transactions":[]}
+
+#second
+REQUEST 48T
+GET https://api.handelsbanken.com/openbanking/psd2/v2/accounts/1adc44a7-71f1-4601-99a5-b5a135529c91/transactions?dateFrom=1992-01-12&dateTo=1992-04-10
+X-IBM-Client-Id: 2910773e-1985-4d5f-84da-2dec74fca29c
+PSU-IP-Address: 0.0.0.0
+Accept: application/json
+Content-Type: application/json
+X-Aggregator: Tink Testing
+
+RESPONSE 48T
+200
+Date: Fri, 23 Apr 2021 05:59:37 GMT
+Date: Fri, 23 Apr 2021 05:59:37 GMT
+Content-Type: application/json
+Cache-Control: private,no-cache,no-store,no-transform,proxy-revalidate
+Pragma: no-cache
+Expires: 0
+Content-Language: en-US
+Content-Length: 3073
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"transactions":[{"bookingDate":"2020-01-28","card":{"maskedPan":"5226********6196"},"creditDebit":"DEBITED","status":"BOOKED","transactionAmount":{"amount":86,"currency":"SEK"},"transactionDate":"2020-01-27","transactionDetails":"Konditori Amarant To"},{"bookingDate":"2020-01-28","card":{"maskedPan":"5226********6196"},"creditDebit":"DEBITED","status":"BOOKED","transactionAmount":{"amount":85,"currency":"SEK"},"transactionDate":"2020-01-27","transactionDetails":"ELEVEN.SE"},{"bookingDate":"2020-01-27","card":{"maskedPan":"5226********6196"},"creditDebit":"DEBITED","status":"BOOKED","transactionAmount":{"amount":9,"currency":"SEK"},"transactionDate":"2020-01-26","transactionDetails":"Easypark"},{"bookingDate":"2020-01-27","card":{"maskedPan":"5226********6196"},"creditDebit":"DEBITED","status":"BOOKED","transactionAmount":{"amount":365,"currency":"SEK"},"transactionDate":"2020-01-26","transactionDetails":"IKEA VESTERAS"},{"bookingDate":"2020-01-27","card":{"maskedPan":"5226********6196"},"creditDebit":"DEBITED","status":"BOOKED","transactionAmount":{"amount":20,"currency":"SEK"},"transactionDate":"2020-01-26","transactionDetails":"IKEA VESTERAS"},{"bookingDate":"2020-01-27","card":{"maskedPan":"5226********6196"},"creditDebit":"DEBITED","status":"BOOKED","transactionAmount":{"amount":138,"currency":"SEK"},"transactionDate":"2020-01-26","transactionDetails":"IKEA VESTERAS"},{"bookingDate":"2020-01-27","card":{"maskedPan":"5226********6196"},"creditDebit":"DEBITED","status":"BOOKED","transactionAmount":{"amount":522.46,"currency":"SEK"},"transactionDate":"2020-01-26","transactionDetails":"APOTEK HJARTAT ICA M"},{"bookingDate":"2020-01-28","card":{"maskedPan":"5226********6196"},"creditDebit":"DEBITED","status":"BOOKED","transactionAmount":{"amount":216.15,"currency":"SEK"},"transactionDate":"2020-01-26","transactionDetails":"MAXI ICA STORMARKNAD"},{"bookingDate":"2020-01-27","card":{"maskedPan":"5226********6196"},"creditDebit":"DEBITED","status":"BOOKED","transactionAmount":{"amount":272.93,"currency":"SEK"},"transactionDate":"2020-01-25","transactionDetails":"ICA SUPERMARKET SLAG"},{"bookingDate":"2020-01-27","card":{"maskedPan":"5226********6196"},"creditDebit":"DEBITED","status":"BOOKED","transactionAmount":{"amount":299,"currency":"SEK"},"transactionDate":"2020-01-24","transactionDetails":"SYSTEMBOLAGET TORSH#"},{"bookingDate":"2020-01-24","card":{"maskedPan":"5226********6196"},"creditDebit":"DEBITED","status":"BOOKED","transactionAmount":{"amount":320,"currency":"SEK"},"transactionDate":"2020-01-23","transactionDetails":"APOTEK HJARTAT ICA M"},{"bookingDate":"2020-01-27","card":{"maskedPan":"5226********6196"},"creditDebit":"DEBITED","status":"BOOKED","transactionAmount":{"amount":365.4,"currency":"SEK"},"transactionDate":"2020-01-23","transactionDetails":"MAXI ICA STORMARKNAD"},{"bookingDate":"2020-01-23","card":{"maskedPan":"5226********6196"},"creditDebit":"DEBITED","status":"BOOKED","transactionAmount":{"amount":86,"currency":"SEK"},"transactionDate":"2020-01-22","transactionDetails":"Konditori Amarant VE"}]}
+
+REQUEST 49T
+GET https://api.handelsbanken.com/openbanking/psd2/v2/accounts/1adc44a7-71f1-4601-99a5-b5a135529c91/transactions?dateFrom=1991-10-14&dateTo=1992-01-11
+X-IBM-Client-Id: 2910773e-1985-4d5f-84da-2dec74fca29c
+PSU-IP-Address: 0.0.0.0
+Accept: application/json
+Content-Type: application/json
+X-Aggregator: Tink Testing
+
+RESPONSE 49T
+200
+Date: Fri, 23 Apr 2021 05:59:37 GMT
+Date: Fri, 23 Apr 2021 05:59:37 GMT
+Content-Type: application/json
+Cache-Control: private,no-cache,no-store,no-transform,proxy-revalidate
+Pragma: no-cache
+Expires: 0
+Content-Language: en-US
+Content-Length: 3073
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"transactions":[]}
+
+REQUEST 50T
+GET https://api.handelsbanken.com/openbanking/psd2/v2/accounts/1adc44a7-71f1-4601-99a5-b5a135529c91/transactions?dateFrom=1991-07-16&dateTo=1991-10-13
+X-IBM-Client-Id: 2910773e-1985-4d5f-84da-2dec74fca29c
+PSU-IP-Address: 0.0.0.0
+Accept: application/json
+Content-Type: application/json
+X-Aggregator: Tink Testing
+
+RESPONSE 50T
+200
+Date: Fri, 23 Apr 2021 05:59:37 GMT
+Date: Fri, 23 Apr 2021 05:59:37 GMT
+Content-Type: application/json
+Cache-Control: private,no-cache,no-store,no-transform,proxy-revalidate
+Pragma: no-cache
+Expires: 0
+Content-Language: en-US
+Content-Length: 3073
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"transactions":[]}
+
+REQUEST 51T
+GET https://api.handelsbanken.com/openbanking/psd2/v2/accounts/1adc44a7-71f1-4601-99a5-b5a135529c91/transactions?dateFrom=1991-04-17&dateTo=1991-07-15
+X-IBM-Client-Id: 2910773e-1985-4d5f-84da-2dec74fca29c
+PSU-IP-Address: 0.0.0.0
+Accept: application/json
+Content-Type: application/json
+X-Aggregator: Tink Testing
+
+RESPONSE 51T
+200
+Date: Fri, 23 Apr 2021 05:59:37 GMT
+Date: Fri, 23 Apr 2021 05:59:37 GMT
+Content-Type: application/json
+Cache-Control: private,no-cache,no-store,no-transform,proxy-revalidate
+Pragma: no-cache
+Expires: 0
+Content-Language: en-US
+Content-Length: 3073
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"transactions":[]}
+
+REQUEST 52T
+GET https://api.handelsbanken.com/openbanking/psd2/v2/accounts/1adc44a7-71f1-4601-99a5-b5a135529c91/transactions?dateFrom=1991-01-17&dateTo=1991-04-16
+X-IBM-Client-Id: 2910773e-1985-4d5f-84da-2dec74fca29c
+PSU-IP-Address: 0.0.0.0
+Accept: application/json
+Content-Type: application/json
+X-Aggregator: Tink Testing
+
+RESPONSE 52T
+200
+Date: Fri, 23 Apr 2021 05:59:37 GMT
+Date: Fri, 23 Apr 2021 05:59:37 GMT
+Content-Type: application/json
+Cache-Control: private,no-cache,no-store,no-transform,proxy-revalidate
+Pragma: no-cache
+Expires: 0
+Content-Language: en-US
+Content-Length: 3073
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"transactions":[]}
+
+REQUEST 53T
+GET https://api.handelsbanken.com/openbanking/psd2/v2/accounts/1adc44a7-71f1-4601-99a5-b5a135529c91/transactions?dateFrom=1991-01-10&dateTo=1991-01-16
+X-IBM-Client-Id: 2910773e-1985-4d5f-84da-2dec74fca29c
+PSU-IP-Address: 0.0.0.0
+Accept: application/json
+Content-Type: application/json
+X-Aggregator: Tink Testing
+
+RESPONSE 53T
+200
+Date: Fri, 23 Apr 2021 05:59:37 GMT
+Date: Fri, 23 Apr 2021 05:59:37 GMT
+Content-Type: application/json
+Cache-Control: private,no-cache,no-store,no-transform,proxy-revalidate
+Pragma: no-cache
+Expires: 0
+Content-Language: en-US
+Content-Length: 3073
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"transactions":[]}
+
+#third
+REQUEST 54T
+GET https://api.handelsbanken.com/openbanking/psd2/v2/accounts/d8d046e7-9bef-4b02-a8ad-816eb09f3968/transactions?dateFrom=1992-01-12&dateTo=1992-04-10
+X-IBM-Client-Id: 2910773e-1985-4d5f-84da-2dec74fca29c
+PSU-IP-Address: 0.0.0.0
+Accept: application/json
+Content-Type: application/json
+X-Aggregator: Tink Testing
+
+RESPONSE 54T
+200
+Date: Fri, 23 Apr 2021 05:59:37 GMT
+Date: Fri, 23 Apr 2021 05:59:37 GMT
+Content-Type: application/json
+Cache-Control: private,no-cache,no-store,no-transform,proxy-revalidate
+Pragma: no-cache
+Expires: 0
+Content-Language: en-US
+Content-Length: 3073
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"transactions":[{"bookingDate":"2020-01-28","card":{"maskedPan":"5226********6196"},"creditDebit":"DEBITED","status":"BOOKED","transactionAmount":{"amount":86,"currency":"SEK"},"transactionDate":"2020-01-27","transactionDetails":"Konditori Amarant To"},{"bookingDate":"2020-01-28","card":{"maskedPan":"5226********6196"},"creditDebit":"DEBITED","status":"BOOKED","transactionAmount":{"amount":85,"currency":"SEK"},"transactionDate":"2020-01-27","transactionDetails":"ELEVEN.SE"},{"bookingDate":"2020-01-27","card":{"maskedPan":"5226********6196"},"creditDebit":"DEBITED","status":"BOOKED","transactionAmount":{"amount":9,"currency":"SEK"},"transactionDate":"2020-01-26","transactionDetails":"Easypark"},{"bookingDate":"2020-01-27","card":{"maskedPan":"5226********6196"},"creditDebit":"DEBITED","status":"BOOKED","transactionAmount":{"amount":365,"currency":"SEK"},"transactionDate":"2020-01-26","transactionDetails":"IKEA VESTERAS"},{"bookingDate":"2020-01-27","card":{"maskedPan":"5226********6196"},"creditDebit":"DEBITED","status":"BOOKED","transactionAmount":{"amount":20,"currency":"SEK"},"transactionDate":"2020-01-26","transactionDetails":"IKEA VESTERAS"},{"bookingDate":"2020-01-27","card":{"maskedPan":"5226********6196"},"creditDebit":"DEBITED","status":"BOOKED","transactionAmount":{"amount":138,"currency":"SEK"},"transactionDate":"2020-01-26","transactionDetails":"IKEA VESTERAS"},{"bookingDate":"2020-01-27","card":{"maskedPan":"5226********6196"},"creditDebit":"DEBITED","status":"BOOKED","transactionAmount":{"amount":522.46,"currency":"SEK"},"transactionDate":"2020-01-26","transactionDetails":"APOTEK HJARTAT ICA M"},{"bookingDate":"2020-01-28","card":{"maskedPan":"5226********6196"},"creditDebit":"DEBITED","status":"BOOKED","transactionAmount":{"amount":216.15,"currency":"SEK"},"transactionDate":"2020-01-26","transactionDetails":"MAXI ICA STORMARKNAD"},{"bookingDate":"2020-01-27","card":{"maskedPan":"5226********6196"},"creditDebit":"DEBITED","status":"BOOKED","transactionAmount":{"amount":272.93,"currency":"SEK"},"transactionDate":"2020-01-25","transactionDetails":"ICA SUPERMARKET SLAG"},{"bookingDate":"2020-01-27","card":{"maskedPan":"5226********6196"},"creditDebit":"DEBITED","status":"BOOKED","transactionAmount":{"amount":299,"currency":"SEK"},"transactionDate":"2020-01-24","transactionDetails":"SYSTEMBOLAGET TORSH#"},{"bookingDate":"2020-01-24","card":{"maskedPan":"5226********6196"},"creditDebit":"DEBITED","status":"BOOKED","transactionAmount":{"amount":320,"currency":"SEK"},"transactionDate":"2020-01-23","transactionDetails":"APOTEK HJARTAT ICA M"},{"bookingDate":"2020-01-27","card":{"maskedPan":"5226********6196"},"creditDebit":"DEBITED","status":"BOOKED","transactionAmount":{"amount":365.4,"currency":"SEK"},"transactionDate":"2020-01-23","transactionDetails":"MAXI ICA STORMARKNAD"},{"bookingDate":"2020-01-23","card":{"maskedPan":"5226********6196"},"creditDebit":"DEBITED","status":"BOOKED","transactionAmount":{"amount":86,"currency":"SEK"},"transactionDate":"2020-01-22","transactionDetails":"Konditori Amarant VE"}]}
+
+REQUEST 55T
+GET https://api.handelsbanken.com/openbanking/psd2/v2/accounts/d8d046e7-9bef-4b02-a8ad-816eb09f3968/transactions?dateFrom=1991-10-14&dateTo=1992-01-11
+X-IBM-Client-Id: 2910773e-1985-4d5f-84da-2dec74fca29c
+PSU-IP-Address: 0.0.0.0
+Accept: application/json
+Content-Type: application/json
+X-Aggregator: Tink Testing
+
+RESPONSE 55T
+200
+Date: Fri, 23 Apr 2021 05:59:37 GMT
+Date: Fri, 23 Apr 2021 05:59:37 GMT
+Content-Type: application/json
+Cache-Control: private,no-cache,no-store,no-transform,proxy-revalidate
+Pragma: no-cache
+Expires: 0
+Content-Language: en-US
+Content-Length: 3073
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"transactions":[]}
+
+REQUEST 56T
+GET https://api.handelsbanken.com/openbanking/psd2/v2/accounts/d8d046e7-9bef-4b02-a8ad-816eb09f3968/transactions?dateFrom=1991-07-16&dateTo=1991-10-13
+X-IBM-Client-Id: 2910773e-1985-4d5f-84da-2dec74fca29c
+PSU-IP-Address: 0.0.0.0
+Accept: application/json
+Content-Type: application/json
+X-Aggregator: Tink Testing
+
+RESPONSE 56T
+200
+Date: Fri, 23 Apr 2021 05:59:37 GMT
+Date: Fri, 23 Apr 2021 05:59:37 GMT
+Content-Type: application/json
+Cache-Control: private,no-cache,no-store,no-transform,proxy-revalidate
+Pragma: no-cache
+Expires: 0
+Content-Language: en-US
+Content-Length: 3073
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"transactions":[]}
+
+REQUEST 57T
+GET https://api.handelsbanken.com/openbanking/psd2/v2/accounts/d8d046e7-9bef-4b02-a8ad-816eb09f3968/transactions?dateFrom=1991-04-17&dateTo=1991-07-15
+X-IBM-Client-Id: 2910773e-1985-4d5f-84da-2dec74fca29c
+PSU-IP-Address: 0.0.0.0
+Accept: application/json
+Content-Type: application/json
+X-Aggregator: Tink Testing
+
+RESPONSE 57T
+200
+Date: Fri, 23 Apr 2021 05:59:37 GMT
+Date: Fri, 23 Apr 2021 05:59:37 GMT
+Content-Type: application/json
+Cache-Control: private,no-cache,no-store,no-transform,proxy-revalidate
+Pragma: no-cache
+Expires: 0
+Content-Language: en-US
+Content-Length: 3073
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"transactions":[]}
+
+REQUEST 58T
+GET https://api.handelsbanken.com/openbanking/psd2/v2/accounts/d8d046e7-9bef-4b02-a8ad-816eb09f3968/transactions?dateFrom=1991-01-17&dateTo=1991-04-16
+X-IBM-Client-Id: 2910773e-1985-4d5f-84da-2dec74fca29c
+PSU-IP-Address: 0.0.0.0
+Accept: application/json
+Content-Type: application/json
+X-Aggregator: Tink Testing
+
+RESPONSE 58T
+200
+Date: Fri, 23 Apr 2021 05:59:37 GMT
+Date: Fri, 23 Apr 2021 05:59:37 GMT
+Content-Type: application/json
+Cache-Control: private,no-cache,no-store,no-transform,proxy-revalidate
+Pragma: no-cache
+Expires: 0
+Content-Language: en-US
+Content-Length: 3073
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"transactions":[]}
+
+REQUEST 59T
+GET https://api.handelsbanken.com/openbanking/psd2/v2/accounts/d8d046e7-9bef-4b02-a8ad-816eb09f3968/transactions?dateFrom=1991-01-10&dateTo=1991-01-16
+X-IBM-Client-Id: 2910773e-1985-4d5f-84da-2dec74fca29c
+PSU-IP-Address: 0.0.0.0
+Accept: application/json
+Content-Type: application/json
+X-Aggregator: Tink Testing
+
+RESPONSE 59T
+200
+Date: Fri, 23 Apr 2021 05:59:37 GMT
+Date: Fri, 23 Apr 2021 05:59:37 GMT
+Content-Type: application/json
+Cache-Control: private,no-cache,no-store,no-transform,proxy-revalidate
+Pragma: no-cache
+Expires: 0
+Content-Language: en-US
+Content-Length: 3073
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"transactions":[]}
+
+#fourth
+REQUEST 60T
+GET https://api.handelsbanken.com/openbanking/psd2/v2/accounts/5c6e14f4-bb90-4347-a905-4b74cd9297c6/transactions?dateFrom=1992-01-12&dateTo=1992-04-10
+X-IBM-Client-Id: 2910773e-1985-4d5f-84da-2dec74fca29c
+PSU-IP-Address: 0.0.0.0
+Accept: application/json
+Content-Type: application/json
+X-Aggregator: Tink Testing
+
+RESPONSE 60T
+200
+Date: Fri, 23 Apr 2021 05:59:37 GMT
+Date: Fri, 23 Apr 2021 05:59:37 GMT
+Content-Type: application/json
+Cache-Control: private,no-cache,no-store,no-transform,proxy-revalidate
+Pragma: no-cache
+Expires: 0
+Content-Language: en-US
+Content-Length: 3073
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"transactions":[{"bookingDate":"2020-01-27","card":{"maskedPan":"5226********6196"},"creditDebit":"DEBITED","status":"BOOKED","transactionAmount":{"amount":365,"currency":"SEK"},"transactionDate":"2020-01-26","transactionDetails":"IKEA VESTERAS"},{"bookingDate":"2020-01-27","card":{"maskedPan":"5226********6196"},"creditDebit":"DEBITED","status":"BOOKED","transactionAmount":{"amount":20,"currency":"SEK"},"transactionDate":"2020-01-26","transactionDetails":"IKEA VESTERAS"},{"bookingDate":"2020-01-27","card":{"maskedPan":"5226********6196"},"creditDebit":"DEBITED","status":"BOOKED","transactionAmount":{"amount":138,"currency":"SEK"},"transactionDate":"2020-01-26","transactionDetails":"IKEA VESTERAS"},{"bookingDate":"2020-01-27","card":{"maskedPan":"5226********6196"},"creditDebit":"DEBITED","status":"BOOKED","transactionAmount":{"amount":522.46,"currency":"SEK"},"transactionDate":"2020-01-26","transactionDetails":"APOTEK HJARTAT ICA M"},{"bookingDate":"2020-01-28","card":{"maskedPan":"5226********6196"},"creditDebit":"DEBITED","status":"BOOKED","transactionAmount":{"amount":216.15,"currency":"SEK"},"transactionDate":"2020-01-26","transactionDetails":"MAXI ICA STORMARKNAD"},{"bookingDate":"2020-01-27","card":{"maskedPan":"5226********6196"},"creditDebit":"DEBITED","status":"BOOKED","transactionAmount":{"amount":272.93,"currency":"SEK"},"transactionDate":"2020-01-25","transactionDetails":"ICA SUPERMARKET SLAG"},{"bookingDate":"2020-01-27","card":{"maskedPan":"5226********6196"},"creditDebit":"DEBITED","status":"BOOKED","transactionAmount":{"amount":299,"currency":"SEK"},"transactionDate":"2020-01-24","transactionDetails":"SYSTEMBOLAGET TORSH#"},{"bookingDate":"2020-01-24","card":{"maskedPan":"5226********6196"},"creditDebit":"DEBITED","status":"BOOKED","transactionAmount":{"amount":320,"currency":"SEK"},"transactionDate":"2020-01-23","transactionDetails":"APOTEK HJARTAT ICA M"},{"bookingDate":"2020-01-27","card":{"maskedPan":"5226********6196"},"creditDebit":"DEBITED","status":"BOOKED","transactionAmount":{"amount":365.4,"currency":"SEK"},"transactionDate":"2020-01-23","transactionDetails":"MAXI ICA STORMARKNAD"},{"bookingDate":"2020-01-23","card":{"maskedPan":"5226********6196"},"creditDebit":"DEBITED","status":"BOOKED","transactionAmount":{"amount":86,"currency":"SEK"},"transactionDate":"2020-01-22","transactionDetails":"Konditori Amarant VE"}]}
+
+REQUEST 61T
+GET https://api.handelsbanken.com/openbanking/psd2/v2/accounts/5c6e14f4-bb90-4347-a905-4b74cd9297c6/transactions?dateFrom=1991-10-14&dateTo=1992-01-11
+X-IBM-Client-Id: 2910773e-1985-4d5f-84da-2dec74fca29c
+PSU-IP-Address: 0.0.0.0
+Accept: application/json
+Content-Type: application/json
+X-Aggregator: Tink Testing
+
+RESPONSE 61T
+200
+Date: Fri, 23 Apr 2021 05:59:37 GMT
+Date: Fri, 23 Apr 2021 05:59:37 GMT
+Content-Type: application/json
+Cache-Control: private,no-cache,no-store,no-transform,proxy-revalidate
+Pragma: no-cache
+Expires: 0
+Content-Language: en-US
+Content-Length: 3073
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"transactions":[]}
+
+REQUEST 62T
+GET https://api.handelsbanken.com/openbanking/psd2/v2/accounts/5c6e14f4-bb90-4347-a905-4b74cd9297c6/transactions?dateFrom=1991-07-16&dateTo=1991-10-13
+X-IBM-Client-Id: 2910773e-1985-4d5f-84da-2dec74fca29c
+PSU-IP-Address: 0.0.0.0
+Accept: application/json
+Content-Type: application/json
+X-Aggregator: Tink Testing
+
+RESPONSE 62T
+200
+Date: Fri, 23 Apr 2021 05:59:37 GMT
+Date: Fri, 23 Apr 2021 05:59:37 GMT
+Content-Type: application/json
+Cache-Control: private,no-cache,no-store,no-transform,proxy-revalidate
+Pragma: no-cache
+Expires: 0
+Content-Language: en-US
+Content-Length: 3073
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"transactions":[]}
+
+REQUEST 63T
+GET https://api.handelsbanken.com/openbanking/psd2/v2/accounts/5c6e14f4-bb90-4347-a905-4b74cd9297c6/transactions?dateFrom=1991-04-17&dateTo=1991-07-15
+X-IBM-Client-Id: 2910773e-1985-4d5f-84da-2dec74fca29c
+PSU-IP-Address: 0.0.0.0
+Accept: application/json
+Content-Type: application/json
+X-Aggregator: Tink Testing
+
+RESPONSE 63T
+200
+Date: Fri, 23 Apr 2021 05:59:37 GMT
+Date: Fri, 23 Apr 2021 05:59:37 GMT
+Content-Type: application/json
+Cache-Control: private,no-cache,no-store,no-transform,proxy-revalidate
+Pragma: no-cache
+Expires: 0
+Content-Language: en-US
+Content-Length: 3073
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"transactions":[]}
+
+REQUEST 64T
+GET https://api.handelsbanken.com/openbanking/psd2/v2/accounts/5c6e14f4-bb90-4347-a905-4b74cd9297c6/transactions?dateFrom=1991-01-17&dateTo=1991-04-16
+X-IBM-Client-Id: 2910773e-1985-4d5f-84da-2dec74fca29c
+PSU-IP-Address: 0.0.0.0
+Accept: application/json
+Content-Type: application/json
+X-Aggregator: Tink Testing
+
+RESPONSE 64T
+200
+Date: Fri, 23 Apr 2021 05:59:37 GMT
+Date: Fri, 23 Apr 2021 05:59:37 GMT
+Content-Type: application/json
+Cache-Control: private,no-cache,no-store,no-transform,proxy-revalidate
+Pragma: no-cache
+Expires: 0
+Content-Language: en-US
+Content-Length: 3073
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"transactions":[]}

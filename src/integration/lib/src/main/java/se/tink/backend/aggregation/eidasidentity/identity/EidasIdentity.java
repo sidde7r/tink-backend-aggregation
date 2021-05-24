@@ -7,22 +7,6 @@ public class EidasIdentity {
 
     private final String requester;
 
-    private static final String DEFAULT_CERT_ID = "DEFAULT";
-
-    public EidasIdentity(String clusterId, String appId, Class<?> requester) {
-        this.clusterId = clusterId;
-        this.appId = appId;
-        this.certId = DEFAULT_CERT_ID;
-        this.requester = requester.getCanonicalName();
-    }
-
-    public EidasIdentity(String clusterId, String appId, String requester) {
-        this.clusterId = clusterId;
-        this.appId = appId;
-        this.certId = DEFAULT_CERT_ID;
-        this.requester = requester;
-    }
-
     public EidasIdentity(String clusterId, String appId, String certId, Class<?> requester) {
         this.clusterId = clusterId;
         this.appId = appId;

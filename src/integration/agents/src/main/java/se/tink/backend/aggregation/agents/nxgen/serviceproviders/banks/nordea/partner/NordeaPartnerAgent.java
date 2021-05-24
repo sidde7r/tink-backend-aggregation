@@ -98,7 +98,10 @@ public abstract class NordeaPartnerAgent extends NextGenerationAgent
         if (context.isTestContext()) {
             // use eidas proxy when running agent test
             return new EidasIdentity(
-                    "oxford-preprod", "c859501868b742b6bebd7a3f7911cd85", NordeaPartnerAgent.class);
+                    "oxford-preprod",
+                    "c859501868b742b6bebd7a3f7911cd85",
+                    "DEFAULT",
+                    NordeaPartnerAgent.class);
         }
         return super.getEidasIdentity();
     }

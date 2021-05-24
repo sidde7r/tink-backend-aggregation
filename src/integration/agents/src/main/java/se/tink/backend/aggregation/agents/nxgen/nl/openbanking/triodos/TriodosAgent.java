@@ -6,6 +6,7 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 import com.google.inject.Inject;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModules;
+import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.triodos.authenticator.ConsentStatusFetcher;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.triodos.authenticator.TriodosAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.triodos.configuration.TriodosConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupAgent;
@@ -20,6 +21,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 public final class TriodosAgent extends BerlinGroupAgent<TriodosApiClient, TriodosConfiguration> {
 
     private final QsealcSigner qsealcSigner;
+    private final ConsentStatusFetcher consentStatusFetcher;
 
     @Inject
     public TriodosAgent(AgentComponentProvider componentProvider, QsealcSigner qsealcSigner) {
@@ -28,6 +30,7 @@ public final class TriodosAgent extends BerlinGroupAgent<TriodosApiClient, Triod
         this.qsealcSigner = qsealcSigner;
         this.apiClient = createApiClient();
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
+        this.consentStatusFetcher = createConsentStatusFetcher();
     }
 
     @Override
@@ -49,7 +52,7 @@ public final class TriodosAgent extends BerlinGroupAgent<TriodosApiClient, Triod
                 systemUpdater,
                 persistentStorage,
                 supplementalInformationHelper,
-                new TriodosAuthenticator(apiClient, persistentStorage),
+                new TriodosAuthenticator(apiClient, persistentStorage, consentStatusFetcher),
                 credentials,
                 strongAuthenticationState);
     }
@@ -57,5 +60,9 @@ public final class TriodosAgent extends BerlinGroupAgent<TriodosApiClient, Triod
     @Override
     protected Class<TriodosConfiguration> getConfigurationClassDescription() {
         return TriodosConfiguration.class;
+    }
+
+    protected ConsentStatusFetcher createConsentStatusFetcher() {
+        return new ConsentStatusFetcher(persistentStorage, apiClient);
     }
 }

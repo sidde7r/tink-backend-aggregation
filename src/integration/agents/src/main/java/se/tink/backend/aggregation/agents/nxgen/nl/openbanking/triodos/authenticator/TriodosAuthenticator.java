@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.openbanking.triodos.authenticator;
 
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
+import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.triodos.TriodosApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.BerlinGroupAuthenticator;
@@ -11,12 +12,16 @@ public class TriodosAuthenticator extends BerlinGroupAuthenticator {
 
     private final TriodosApiClient apiClient;
     private final PersistentStorage persistentStorage;
+    private final ConsentStatusFetcher consentStatusFetcher;
 
     public TriodosAuthenticator(
-            final TriodosApiClient apiClient, PersistentStorage persistentStorage) {
+            final TriodosApiClient apiClient,
+            PersistentStorage persistentStorage,
+            ConsentStatusFetcher consentStatusFetcher) {
         super(apiClient);
         this.apiClient = apiClient;
         this.persistentStorage = persistentStorage;
+        this.consentStatusFetcher = consentStatusFetcher;
     }
 
     @Override
@@ -29,6 +34,10 @@ public class TriodosAuthenticator extends BerlinGroupAuthenticator {
 
     @Override
     public OAuth2Token refreshAccessToken(String refreshToken) throws BankServiceException {
+        if (!consentStatusFetcher.isConsentValid()) {
+            throw SessionError.SESSION_EXPIRED.exception();
+        }
+
         final OAuth2Token token = apiClient.refreshToken(refreshToken);
         persistentStorage.put(StorageKeys.OAUTH_TOKEN, token);
 

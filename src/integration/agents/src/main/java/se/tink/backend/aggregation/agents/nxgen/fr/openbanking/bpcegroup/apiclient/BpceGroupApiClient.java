@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import javax.ws.rs.core.MediaType;
 import lombok.RequiredArgsConstructor;
 import org.apache.http.HttpStatus;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.authenticator.rpc.RefreshRequest;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.authenticator.rpc.TokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.authenticator.rpc.TokenResponse;
@@ -23,6 +24,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fro
 import se.tink.backend.aggregation.api.Psd2Headers;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.request.HttpMethod;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
@@ -85,13 +87,19 @@ public class BpceGroupApiClient implements FrAispApiClient {
         final RefreshRequest refreshRequest =
                 new RefreshRequest(bpceGroupConfiguration.getClientId(), refreshToken);
 
-        final HttpResponse response =
-                httpClient
-                        .request(createUrl(TOKEN_PATH))
-                        .body(refreshRequest, MediaType.APPLICATION_FORM_URLENCODED)
-                        .post(HttpResponse.class);
-
-        return response.getBody(TokenResponse.class);
+        try {
+            final HttpResponse response =
+                    httpClient
+                            .request(createUrl(TOKEN_PATH))
+                            .body(refreshRequest, MediaType.APPLICATION_FORM_URLENCODED)
+                            .post(HttpResponse.class);
+            return response.getBody(TokenResponse.class);
+        } catch (HttpClientException ex) {
+            if (ex.getMessage().contains("failed to respond")) {
+                throw BankServiceError.BANK_SIDE_FAILURE.exception();
+            }
+            throw ex;
+        }
     }
 
     public void recordCustomerConsent(List<String> accountIds) {

@@ -69,6 +69,7 @@ public class QsealcSignerImpl implements QsealcSigner {
             post.setHeader(TINK_QSEALC_CLUSTERID, eidasIdentity.getClusterId());
             post.setHeader(TINK_REQUESTER, eidasIdentity.getRequester());
             post.setEntity(new ByteArrayEntity(Base64.getEncoder().encode(signingData)));
+            log.info("Sign data with EidasIdentity setting: {}", eidasIdentity);
             long start = System.nanoTime();
             try (CloseableHttpResponse response = qsealcSignerHttpClient.execute(post)) {
                 long total = System.nanoTime() - start;

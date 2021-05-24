@@ -12,8 +12,8 @@ public class AxaTransactionsFetcher
     public AxaTransactionsFetcher(
             Xs2aDevelopersApiClient apiClient,
             LocalDateTimeSource localDateTimeSource,
-            boolean isManual) {
-        super(apiClient, localDateTimeSource, isManual);
+            boolean userPresent) {
+        super(apiClient, localDateTimeSource, userPresent);
     }
 
     @Override

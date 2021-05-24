@@ -54,7 +54,7 @@ public class DanskeJwtSignerProviderTest {
                         mock(GeneratedValueProvider.class),
                         mock(UnleashClientProvider.class));
         EidasIdentity eidasIdentity =
-                new EidasIdentity("cluster_id", APP_ID, DanskebankEUConfiguration.class);
+                new EidasIdentity("cluster_id", APP_ID, "DEFAULT", DanskebankEUConfiguration.class);
         when(agentComponentProvider.getContext()).thenReturn(context);
         when(context.getAppId()).thenReturn(APP_ID);
         when(agentsServiceConfiguration.getEidasProxy()).thenReturn(eidasProxyConfiguration);
