@@ -10,7 +10,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/com/fasterxml/jackson/core/jackson-annotations/2.10.3/jackson-annotations-2.10.3.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/com/fasterxml/jackson/core/jackson-annotations/2.10.3/jackson-annotations-2.10.3.jar",
-                    "https://jcenter.bintray.com/com/fasterxml/jackson/core/jackson-annotations/2.10.3/jackson-annotations-2.10.3.jar",
                     "https://maven.google.com/com/fasterxml/jackson/core/jackson-annotations/2.10.3/jackson-annotations-2.10.3.jar"
                 ],
                 "sha256": "49dfdc4cfa46d165ecfed630ba164b6641d59d5fe1aa698a19c13f966d3f13cf",
@@ -23,7 +22,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/com/fasterxml/jackson/core/jackson-annotations/2.10.3/jackson-annotations-2.10.3-sources.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/com/fasterxml/jackson/core/jackson-annotations/2.10.3/jackson-annotations-2.10.3-sources.jar",
-                    "https://jcenter.bintray.com/com/fasterxml/jackson/core/jackson-annotations/2.10.3/jackson-annotations-2.10.3-sources.jar",
                     "https://maven.google.com/com/fasterxml/jackson/core/jackson-annotations/2.10.3/jackson-annotations-2.10.3-sources.jar"
                 ],
                 "sha256": "6310be2ded72eed441291587ed4513c93566b5057b67d05d04cb6d1db4c726b2",
@@ -36,7 +34,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/com/fasterxml/jackson/core/jackson-core/2.9.9/jackson-core-2.9.9.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/com/fasterxml/jackson/core/jackson-core/2.9.9/jackson-core-2.9.9.jar",
-                    "https://jcenter.bintray.com/com/fasterxml/jackson/core/jackson-core/2.9.9/jackson-core-2.9.9.jar",
                     "https://maven.google.com/com/fasterxml/jackson/core/jackson-core/2.9.9/jackson-core-2.9.9.jar"
                 ],
                 "sha256": "3083079be6088db2ed0a0c6ff92204e0aa48fa1de9db5b59c468f35acf882c2c",
@@ -49,7 +46,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/com/fasterxml/jackson/core/jackson-core/2.9.9/jackson-core-2.9.9-sources.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/com/fasterxml/jackson/core/jackson-core/2.9.9/jackson-core-2.9.9-sources.jar",
-                    "https://jcenter.bintray.com/com/fasterxml/jackson/core/jackson-core/2.9.9/jackson-core-2.9.9-sources.jar",
                     "https://maven.google.com/com/fasterxml/jackson/core/jackson-core/2.9.9/jackson-core-2.9.9-sources.jar"
                 ],
                 "sha256": "cfc968701a863296c8d44b36526588c850ac0dfd8dff7610b024336068caac0e",
@@ -68,7 +64,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/com/fasterxml/jackson/core/jackson-databind/2.9.9/jackson-databind-2.9.9.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/com/fasterxml/jackson/core/jackson-databind/2.9.9/jackson-databind-2.9.9.jar",
-                    "https://jcenter.bintray.com/com/fasterxml/jackson/core/jackson-databind/2.9.9/jackson-databind-2.9.9.jar",
                     "https://maven.google.com/com/fasterxml/jackson/core/jackson-databind/2.9.9/jackson-databind-2.9.9.jar"
                 ],
                 "sha256": "5cbbf429d9e32e3881f0a1438a1f666912219327e9e68b5dcaef6d8e5c5f6b28",
@@ -87,7 +82,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/com/fasterxml/jackson/core/jackson-databind/2.9.9/jackson-databind-2.9.9-sources.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/com/fasterxml/jackson/core/jackson-databind/2.9.9/jackson-databind-2.9.9-sources.jar",
-                    "https://jcenter.bintray.com/com/fasterxml/jackson/core/jackson-databind/2.9.9/jackson-databind-2.9.9-sources.jar",
                     "https://maven.google.com/com/fasterxml/jackson/core/jackson-databind/2.9.9/jackson-databind-2.9.9-sources.jar"
                 ],
                 "sha256": "d78ee97c1041f83c3a1706e0f01abfa91c890fcf2c622c1ef602187c76768985",
@@ -106,7 +100,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/com/github/docker-java/docker-java-api/3.2.5/docker-java-api-3.2.5.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/com/github/docker-java/docker-java-api/3.2.5/docker-java-api-3.2.5.jar",
-                    "https://jcenter.bintray.com/com/github/docker-java/docker-java-api/3.2.5/docker-java-api-3.2.5.jar",
                     "https://maven.google.com/com/github/docker-java/docker-java-api/3.2.5/docker-java-api-3.2.5.jar"
                 ],
                 "sha256": "791c5d92523216c084dbf7570428f5d37f51797c981a469fa82330259597c752",
@@ -125,7 +118,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/com/github/docker-java/docker-java-api/3.2.5/docker-java-api-3.2.5-sources.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/com/github/docker-java/docker-java-api/3.2.5/docker-java-api-3.2.5-sources.jar",
-                    "https://jcenter.bintray.com/com/github/docker-java/docker-java-api/3.2.5/docker-java-api-3.2.5-sources.jar",
                     "https://maven.google.com/com/github/docker-java/docker-java-api/3.2.5/docker-java-api-3.2.5-sources.jar"
                 ],
                 "sha256": "2019fd46622d44eedaa53cf9385fbdeb37637f0f1ccc2650c41c8ee8219d7f0e",
@@ -146,7 +138,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/com/github/docker-java/docker-java-transport-zerodep/3.2.5/docker-java-transport-zerodep-3.2.5.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/com/github/docker-java/docker-java-transport-zerodep/3.2.5/docker-java-transport-zerodep-3.2.5.jar",
-                    "https://jcenter.bintray.com/com/github/docker-java/docker-java-transport-zerodep/3.2.5/docker-java-transport-zerodep-3.2.5.jar",
                     "https://maven.google.com/com/github/docker-java/docker-java-transport-zerodep/3.2.5/docker-java-transport-zerodep-3.2.5.jar"
                 ],
                 "sha256": "3b070f8cc325f898f19fe42004452e75ec7f25ff4c21b6624818452d8e5ff6f6",
@@ -167,7 +158,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/com/github/docker-java/docker-java-transport-zerodep/3.2.5/docker-java-transport-zerodep-3.2.5-sources.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/com/github/docker-java/docker-java-transport-zerodep/3.2.5/docker-java-transport-zerodep-3.2.5-sources.jar",
-                    "https://jcenter.bintray.com/com/github/docker-java/docker-java-transport-zerodep/3.2.5/docker-java-transport-zerodep-3.2.5-sources.jar",
                     "https://maven.google.com/com/github/docker-java/docker-java-transport-zerodep/3.2.5/docker-java-transport-zerodep-3.2.5-sources.jar"
                 ],
                 "sha256": "83f809e1491048f221d8b0cbe56a2f73ef330e21668da7dbe39d0301399a5e4e",
@@ -180,7 +170,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/com/github/docker-java/docker-java-transport/3.2.5/docker-java-transport-3.2.5.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/com/github/docker-java/docker-java-transport/3.2.5/docker-java-transport-3.2.5.jar",
-                    "https://jcenter.bintray.com/com/github/docker-java/docker-java-transport/3.2.5/docker-java-transport-3.2.5.jar",
                     "https://maven.google.com/com/github/docker-java/docker-java-transport/3.2.5/docker-java-transport-3.2.5.jar"
                 ],
                 "sha256": "400dd45cf16fbc2457ad23673706c55809b83fbb53fcbf5a0891f3c5a8a344ef",
@@ -193,7 +182,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/com/github/docker-java/docker-java-transport/3.2.5/docker-java-transport-3.2.5-sources.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/com/github/docker-java/docker-java-transport/3.2.5/docker-java-transport-3.2.5-sources.jar",
-                    "https://jcenter.bintray.com/com/github/docker-java/docker-java-transport/3.2.5/docker-java-transport-3.2.5-sources.jar",
                     "https://maven.google.com/com/github/docker-java/docker-java-transport/3.2.5/docker-java-transport-3.2.5-sources.jar"
                 ],
                 "sha256": "b3aedbc4c9446d5a889e4c2e316f529a29fc2e60261e8631c41892ca557d6001",
@@ -206,7 +194,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/com/google/code/findbugs/jsr305/1.3.9/jsr305-1.3.9.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/com/google/code/findbugs/jsr305/1.3.9/jsr305-1.3.9.jar",
-                    "https://jcenter.bintray.com/com/google/code/findbugs/jsr305/1.3.9/jsr305-1.3.9.jar",
                     "https://maven.google.com/com/google/code/findbugs/jsr305/1.3.9/jsr305-1.3.9.jar"
                 ],
                 "sha256": "905721a0eea90a81534abb7ee6ef4ea2e5e645fa1def0a5cd88402df1b46c9ed",
@@ -219,7 +206,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/com/google/errorprone/error_prone_annotations/2.0.18/error_prone_annotations-2.0.18.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/com/google/errorprone/error_prone_annotations/2.0.18/error_prone_annotations-2.0.18.jar",
-                    "https://jcenter.bintray.com/com/google/errorprone/error_prone_annotations/2.0.18/error_prone_annotations-2.0.18.jar",
                     "https://maven.google.com/com/google/errorprone/error_prone_annotations/2.0.18/error_prone_annotations-2.0.18.jar"
                 ],
                 "sha256": "cb4cfad870bf563a07199f3ebea5763f0dec440fcda0b318640b1feaa788656b",
@@ -232,7 +218,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/com/google/errorprone/error_prone_annotations/2.0.18/error_prone_annotations-2.0.18-sources.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/com/google/errorprone/error_prone_annotations/2.0.18/error_prone_annotations-2.0.18-sources.jar",
-                    "https://jcenter.bintray.com/com/google/errorprone/error_prone_annotations/2.0.18/error_prone_annotations-2.0.18-sources.jar",
                     "https://maven.google.com/com/google/errorprone/error_prone_annotations/2.0.18/error_prone_annotations-2.0.18-sources.jar"
                 ],
                 "sha256": "dbe7b49dd0584704d5c306b4ac7273556353ea3c0c6c3e50adeeca8df47047be",
@@ -255,7 +240,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/com/google/guava/guava/23.1-jre/guava-23.1-jre.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/com/google/guava/guava/23.1-jre/guava-23.1-jre.jar",
-                    "https://jcenter.bintray.com/com/google/guava/guava/23.1-jre/guava-23.1-jre.jar",
                     "https://maven.google.com/com/google/guava/guava/23.1-jre/guava-23.1-jre.jar"
                 ],
                 "sha256": "08aaaa2e67346e3a3e1508e7c6b12af77024403d0d6d87a78d8a7bcf3971f381",
@@ -278,7 +262,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/com/google/guava/guava/23.1-jre/guava-23.1-jre-sources.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/com/google/guava/guava/23.1-jre/guava-23.1-jre-sources.jar",
-                    "https://jcenter.bintray.com/com/google/guava/guava/23.1-jre/guava-23.1-jre-sources.jar",
                     "https://maven.google.com/com/google/guava/guava/23.1-jre/guava-23.1-jre-sources.jar"
                 ],
                 "sha256": "b3b8d8871723ce070c73cc22d3e261bdcd76bba30a731ab7875fafe660fba562",
@@ -291,7 +274,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/com/google/j2objc/j2objc-annotations/1.1/j2objc-annotations-1.1.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/com/google/j2objc/j2objc-annotations/1.1/j2objc-annotations-1.1.jar",
-                    "https://jcenter.bintray.com/com/google/j2objc/j2objc-annotations/1.1/j2objc-annotations-1.1.jar",
                     "https://maven.google.com/com/google/j2objc/j2objc-annotations/1.1/j2objc-annotations-1.1.jar"
                 ],
                 "sha256": "2994a7eb78f2710bd3d3bfb639b2c94e219cedac0d4d084d516e78c16dddecf6",
@@ -304,7 +286,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/com/google/j2objc/j2objc-annotations/1.1/j2objc-annotations-1.1-sources.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/com/google/j2objc/j2objc-annotations/1.1/j2objc-annotations-1.1-sources.jar",
-                    "https://jcenter.bintray.com/com/google/j2objc/j2objc-annotations/1.1/j2objc-annotations-1.1-sources.jar",
                     "https://maven.google.com/com/google/j2objc/j2objc-annotations/1.1/j2objc-annotations-1.1-sources.jar"
                 ],
                 "sha256": "2cd9022a77151d0b574887635cdfcdf3b78155b602abc89d7f8e62aba55cfb4f",
@@ -317,7 +298,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/commons-codec/commons-codec/1.11/commons-codec-1.11.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/commons-codec/commons-codec/1.11/commons-codec-1.11.jar",
-                    "https://jcenter.bintray.com/commons-codec/commons-codec/1.11/commons-codec-1.11.jar",
                     "https://maven.google.com/commons-codec/commons-codec/1.11/commons-codec-1.11.jar"
                 ],
                 "sha256": "e599d5318e97aa48f42136a2927e6dfa4e8881dff0e6c8e3109ddbbff51d7b7d",
@@ -330,7 +310,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/commons-codec/commons-codec/1.11/commons-codec-1.11-sources.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/commons-codec/commons-codec/1.11/commons-codec-1.11-sources.jar",
-                    "https://jcenter.bintray.com/commons-codec/commons-codec/1.11/commons-codec-1.11-sources.jar",
                     "https://maven.google.com/commons-codec/commons-codec/1.11/commons-codec-1.11-sources.jar"
                 ],
                 "sha256": "901cb5d1f7c2877017c95d3c5efd5a497738d0162ef72cdf58e9cb13f50b2e9c",
@@ -343,7 +322,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/commons-io/commons-io/2.5/commons-io-2.5.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/commons-io/commons-io/2.5/commons-io-2.5.jar",
-                    "https://jcenter.bintray.com/commons-io/commons-io/2.5/commons-io-2.5.jar",
                     "https://maven.google.com/commons-io/commons-io/2.5/commons-io-2.5.jar"
                 ],
                 "sha256": "a10418348d234968600ccb1d988efcbbd08716e1d96936ccc1880e7d22513474",
@@ -356,7 +334,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/commons-io/commons-io/2.5/commons-io-2.5-sources.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/commons-io/commons-io/2.5/commons-io-2.5-sources.jar",
-                    "https://jcenter.bintray.com/commons-io/commons-io/2.5/commons-io-2.5-sources.jar",
                     "https://maven.google.com/commons-io/commons-io/2.5/commons-io-2.5-sources.jar"
                 ],
                 "sha256": "3b69b518d9a844732e35509b79e499fca63a960ee4301b1c96dc32e87f3f60a1",
@@ -369,7 +346,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/commons-logging/commons-logging/1.2/commons-logging-1.2.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/commons-logging/commons-logging/1.2/commons-logging-1.2.jar",
-                    "https://jcenter.bintray.com/commons-logging/commons-logging/1.2/commons-logging-1.2.jar",
                     "https://maven.google.com/commons-logging/commons-logging/1.2/commons-logging-1.2.jar"
                 ],
                 "sha256": "daddea1ea0be0f56978ab3006b8ac92834afeefbd9b7e4e6316fca57df0fa636",
@@ -382,7 +358,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/commons-logging/commons-logging/1.2/commons-logging-1.2-sources.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/commons-logging/commons-logging/1.2/commons-logging-1.2-sources.jar",
-                    "https://jcenter.bintray.com/commons-logging/commons-logging/1.2/commons-logging-1.2-sources.jar",
                     "https://maven.google.com/commons-logging/commons-logging/1.2/commons-logging-1.2-sources.jar"
                 ],
                 "sha256": "44347acfe5860461728e9cb33251e97345be36f8a0dfd5c5130c172559455f41",
@@ -399,7 +374,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/junit/junit/4.12/junit-4.12.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/junit/junit/4.12/junit-4.12.jar",
-                    "https://jcenter.bintray.com/junit/junit/4.12/junit-4.12.jar",
                     "https://maven.google.com/junit/junit/4.12/junit-4.12.jar"
                 ],
                 "sha256": "59721f0805e223d84b90677887d9ff567dc534d7c502ca903c0c2b17f05c116a",
@@ -416,7 +390,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/junit/junit/4.12/junit-4.12-sources.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/junit/junit/4.12/junit-4.12-sources.jar",
-                    "https://jcenter.bintray.com/junit/junit/4.12/junit-4.12-sources.jar",
                     "https://maven.google.com/junit/junit/4.12/junit-4.12-sources.jar"
                 ],
                 "sha256": "9f43fea92033ad82bcad2ae44cec5c82abc9d6ee4b095cab921d11ead98bf2ff",
@@ -429,7 +402,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/net/java/dev/jna/jna/5.5.0/jna-5.5.0.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/net/java/dev/jna/jna/5.5.0/jna-5.5.0.jar",
-                    "https://jcenter.bintray.com/net/java/dev/jna/jna/5.5.0/jna-5.5.0.jar",
                     "https://maven.google.com/net/java/dev/jna/jna/5.5.0/jna-5.5.0.jar"
                 ],
                 "sha256": "b308faebfe4ed409de8410e0a632d164b2126b035f6eacff968d3908cafb4d9e",
@@ -442,7 +414,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/net/java/dev/jna/jna/5.5.0/jna-5.5.0-sources.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/net/java/dev/jna/jna/5.5.0/jna-5.5.0-sources.jar",
-                    "https://jcenter.bintray.com/net/java/dev/jna/jna/5.5.0/jna-5.5.0-sources.jar",
                     "https://maven.google.com/net/java/dev/jna/jna/5.5.0/jna-5.5.0-sources.jar"
                 ],
                 "sha256": "7bd9566b341aa508bc824485e7bbd45222b9f1422d266cf53543600f043a14fe",
@@ -455,7 +426,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/org/apache/commons/commons-compress/1.20/commons-compress-1.20.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/org/apache/commons/commons-compress/1.20/commons-compress-1.20.jar",
-                    "https://jcenter.bintray.com/org/apache/commons/commons-compress/1.20/commons-compress-1.20.jar",
                     "https://maven.google.com/org/apache/commons/commons-compress/1.20/commons-compress-1.20.jar"
                 ],
                 "sha256": "0aeb625c948c697ea7b205156e112363b59ed5e2551212cd4e460bdb72c7c06e",
@@ -468,7 +438,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/org/apache/commons/commons-compress/1.20/commons-compress-1.20-sources.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/org/apache/commons/commons-compress/1.20/commons-compress-1.20-sources.jar",
-                    "https://jcenter.bintray.com/org/apache/commons/commons-compress/1.20/commons-compress-1.20-sources.jar",
                     "https://maven.google.com/org/apache/commons/commons-compress/1.20/commons-compress-1.20-sources.jar"
                 ],
                 "sha256": "0eb5d7f270c2fccdab31daa5f7091b038ad0099b29885040604d66e07fd46a18",
@@ -489,7 +458,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/org/apache/httpcomponents/httpclient/4.5.10/httpclient-4.5.10.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/org/apache/httpcomponents/httpclient/4.5.10/httpclient-4.5.10.jar",
-                    "https://jcenter.bintray.com/org/apache/httpcomponents/httpclient/4.5.10/httpclient-4.5.10.jar",
                     "https://maven.google.com/org/apache/httpcomponents/httpclient/4.5.10/httpclient-4.5.10.jar"
                 ],
                 "sha256": "38b9f16f504928e4db736a433b9cd10968d9ec8d6f5d0e61a64889a689172134",
@@ -510,7 +478,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/org/apache/httpcomponents/httpclient/4.5.10/httpclient-4.5.10-sources.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/org/apache/httpcomponents/httpclient/4.5.10/httpclient-4.5.10-sources.jar",
-                    "https://jcenter.bintray.com/org/apache/httpcomponents/httpclient/4.5.10/httpclient-4.5.10-sources.jar",
                     "https://maven.google.com/org/apache/httpcomponents/httpclient/4.5.10/httpclient-4.5.10-sources.jar"
                 ],
                 "sha256": "47bf60b49b072039a509c7fa22bb70272de5e30acb83a1a40195f4d60399076e",
@@ -523,7 +490,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/org/apache/httpcomponents/httpcore/4.4.12/httpcore-4.4.12.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/org/apache/httpcomponents/httpcore/4.4.12/httpcore-4.4.12.jar",
-                    "https://jcenter.bintray.com/org/apache/httpcomponents/httpcore/4.4.12/httpcore-4.4.12.jar",
                     "https://maven.google.com/org/apache/httpcomponents/httpcore/4.4.12/httpcore-4.4.12.jar"
                 ],
                 "sha256": "ab765334beabf0ea024484a5e90a7c40e8160b145f22d199e11e27f68d57da08",
@@ -536,7 +502,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/org/apache/httpcomponents/httpcore/4.4.12/httpcore-4.4.12-sources.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/org/apache/httpcomponents/httpcore/4.4.12/httpcore-4.4.12-sources.jar",
-                    "https://jcenter.bintray.com/org/apache/httpcomponents/httpcore/4.4.12/httpcore-4.4.12-sources.jar",
                     "https://maven.google.com/org/apache/httpcomponents/httpcore/4.4.12/httpcore-4.4.12-sources.jar"
                 ],
                 "sha256": "ab98d107e2c5e5d9a6c2ed32bb5b4cca4d27a6b2bf4d52ec44be7f87a2d12627",
@@ -549,7 +514,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/org/assertj/assertj-core/2.2.0/assertj-core-2.2.0.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/org/assertj/assertj-core/2.2.0/assertj-core-2.2.0.jar",
-                    "https://jcenter.bintray.com/org/assertj/assertj-core/2.2.0/assertj-core-2.2.0.jar",
                     "https://maven.google.com/org/assertj/assertj-core/2.2.0/assertj-core-2.2.0.jar"
                 ],
                 "sha256": "47916d9543cd45824015a8d9dd923a832e9a327ad7fc3a5c0e0c13badd558d09",
@@ -562,7 +526,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/org/assertj/assertj-core/2.2.0/assertj-core-2.2.0-sources.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/org/assertj/assertj-core/2.2.0/assertj-core-2.2.0-sources.jar",
-                    "https://jcenter.bintray.com/org/assertj/assertj-core/2.2.0/assertj-core-2.2.0-sources.jar",
                     "https://maven.google.com/org/assertj/assertj-core/2.2.0/assertj-core-2.2.0-sources.jar"
                 ],
                 "sha256": "1325a8034278cf49fa2a96c692ffcbb71508440d598bfbc0ea32757220b39407",
@@ -575,7 +538,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/org/codehaus/mojo/animal-sniffer-annotations/1.14/animal-sniffer-annotations-1.14.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/org/codehaus/mojo/animal-sniffer-annotations/1.14/animal-sniffer-annotations-1.14.jar",
-                    "https://jcenter.bintray.com/org/codehaus/mojo/animal-sniffer-annotations/1.14/animal-sniffer-annotations-1.14.jar",
                     "https://maven.google.com/org/codehaus/mojo/animal-sniffer-annotations/1.14/animal-sniffer-annotations-1.14.jar"
                 ],
                 "sha256": "2068320bd6bad744c3673ab048f67e30bef8f518996fa380033556600669905d",
@@ -588,7 +550,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/org/codehaus/mojo/animal-sniffer-annotations/1.14/animal-sniffer-annotations-1.14-sources.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/org/codehaus/mojo/animal-sniffer-annotations/1.14/animal-sniffer-annotations-1.14-sources.jar",
-                    "https://jcenter.bintray.com/org/codehaus/mojo/animal-sniffer-annotations/1.14/animal-sniffer-annotations-1.14-sources.jar",
                     "https://maven.google.com/org/codehaus/mojo/animal-sniffer-annotations/1.14/animal-sniffer-annotations-1.14-sources.jar"
                 ],
                 "sha256": "d821ae1f706db2c1b9c88d4b7b0746b01039dac63762745ef3fe5579967dd16b",
@@ -601,7 +562,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar",
-                    "https://jcenter.bintray.com/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar",
                     "https://maven.google.com/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar"
                 ],
                 "sha256": "66fdef91e9739348df7a096aa384a5685f4e875584cce89386a7a47251c4d8e9",
@@ -614,7 +574,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3-sources.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3-sources.jar",
-                    "https://jcenter.bintray.com/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3-sources.jar",
                     "https://maven.google.com/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3-sources.jar"
                 ],
                 "sha256": "e223d2d8fbafd66057a8848cc94222d63c3cedd652cc48eddc0ab5c39c0f84df",
@@ -631,7 +590,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/org/hamcrest/hamcrest-library/1.3/hamcrest-library-1.3.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/org/hamcrest/hamcrest-library/1.3/hamcrest-library-1.3.jar",
-                    "https://jcenter.bintray.com/org/hamcrest/hamcrest-library/1.3/hamcrest-library-1.3.jar",
                     "https://maven.google.com/org/hamcrest/hamcrest-library/1.3/hamcrest-library-1.3.jar"
                 ],
                 "sha256": "711d64522f9ec410983bd310934296da134be4254a125080a0416ec178dfad1c",
@@ -648,7 +606,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/org/hamcrest/hamcrest-library/1.3/hamcrest-library-1.3-sources.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/org/hamcrest/hamcrest-library/1.3/hamcrest-library-1.3-sources.jar",
-                    "https://jcenter.bintray.com/org/hamcrest/hamcrest-library/1.3/hamcrest-library-1.3-sources.jar",
                     "https://maven.google.com/org/hamcrest/hamcrest-library/1.3/hamcrest-library-1.3-sources.jar"
                 ],
                 "sha256": "1c0ff84455f539eb3c29a8c430de1f6f6f1ba4b9ab39ca19b195f33203cd539c",
@@ -664,7 +621,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/org/rnorth/duct-tape/duct-tape/1.0.8/duct-tape-1.0.8.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/org/rnorth/duct-tape/duct-tape/1.0.8/duct-tape-1.0.8.jar",
-                    "https://jcenter.bintray.com/org/rnorth/duct-tape/duct-tape/1.0.8/duct-tape-1.0.8.jar",
                     "https://maven.google.com/org/rnorth/duct-tape/duct-tape/1.0.8/duct-tape-1.0.8.jar"
                 ],
                 "sha256": "31cef12ddec979d1f86d7cf708c41a17da523d05c685fd6642e9d0b2addb7240",
@@ -680,7 +636,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/org/rnorth/duct-tape/duct-tape/1.0.8/duct-tape-1.0.8-sources.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/org/rnorth/duct-tape/duct-tape/1.0.8/duct-tape-1.0.8-sources.jar",
-                    "https://jcenter.bintray.com/org/rnorth/duct-tape/duct-tape/1.0.8/duct-tape-1.0.8-sources.jar",
                     "https://maven.google.com/org/rnorth/duct-tape/duct-tape/1.0.8/duct-tape-1.0.8-sources.jar"
                 ],
                 "sha256": "b385fd2c2b435c313b3f02988d351503230c9631bfb432261cbd8ce9765d2a26",
@@ -697,7 +652,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/org/rnorth/visible-assertions/visible-assertions/2.1.2/visible-assertions-2.1.2.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/org/rnorth/visible-assertions/visible-assertions/2.1.2/visible-assertions-2.1.2.jar",
-                    "https://jcenter.bintray.com/org/rnorth/visible-assertions/visible-assertions/2.1.2/visible-assertions-2.1.2.jar",
                     "https://maven.google.com/org/rnorth/visible-assertions/visible-assertions/2.1.2/visible-assertions-2.1.2.jar"
                 ],
                 "sha256": "4504ae968b237cdcdcb68ff5b07aa63abe4992f907a77c3d6120aa9b9041401c",
@@ -714,7 +668,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/org/rnorth/visible-assertions/visible-assertions/2.1.2/visible-assertions-2.1.2-sources.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/org/rnorth/visible-assertions/visible-assertions/2.1.2/visible-assertions-2.1.2-sources.jar",
-                    "https://jcenter.bintray.com/org/rnorth/visible-assertions/visible-assertions/2.1.2/visible-assertions-2.1.2-sources.jar",
                     "https://maven.google.com/org/rnorth/visible-assertions/visible-assertions/2.1.2/visible-assertions-2.1.2-sources.jar"
                 ],
                 "sha256": "b6dc190fdf53bbeb6be7012487a35a0cfc623ad56163a611d1c8ad04709aba22",
@@ -727,7 +680,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/org/slf4j/slf4j-api/1.7.30/slf4j-api-1.7.30.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/org/slf4j/slf4j-api/1.7.30/slf4j-api-1.7.30.jar",
-                    "https://jcenter.bintray.com/org/slf4j/slf4j-api/1.7.30/slf4j-api-1.7.30.jar",
                     "https://maven.google.com/org/slf4j/slf4j-api/1.7.30/slf4j-api-1.7.30.jar"
                 ],
                 "sha256": "cdba07964d1bb40a0761485c6b1e8c2f8fd9eb1d19c53928ac0d7f9510105c57",
@@ -740,7 +692,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/org/slf4j/slf4j-api/1.7.30/slf4j-api-1.7.30-sources.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/org/slf4j/slf4j-api/1.7.30/slf4j-api-1.7.30-sources.jar",
-                    "https://jcenter.bintray.com/org/slf4j/slf4j-api/1.7.30/slf4j-api-1.7.30-sources.jar",
                     "https://maven.google.com/org/slf4j/slf4j-api/1.7.30/slf4j-api-1.7.30-sources.jar"
                 ],
                 "sha256": "9ee459644577590fed7ea94afae781fa3cc9311d4553faee8a3219ffbd7cc386",
@@ -763,7 +714,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/org/springframework/boot/spring-boot-test/2.1.3.RELEASE/spring-boot-test-2.1.3.RELEASE.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/org/springframework/boot/spring-boot-test/2.1.3.RELEASE/spring-boot-test-2.1.3.RELEASE.jar",
-                    "https://jcenter.bintray.com/org/springframework/boot/spring-boot-test/2.1.3.RELEASE/spring-boot-test-2.1.3.RELEASE.jar",
                     "https://maven.google.com/org/springframework/boot/spring-boot-test/2.1.3.RELEASE/spring-boot-test-2.1.3.RELEASE.jar"
                 ],
                 "sha256": "ed3c1cb85839bdeec03083af8d594e20c4f0e60a09704c10677825f34987acdb",
@@ -786,7 +736,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/org/springframework/boot/spring-boot-test/2.1.3.RELEASE/spring-boot-test-2.1.3.RELEASE-sources.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/org/springframework/boot/spring-boot-test/2.1.3.RELEASE/spring-boot-test-2.1.3.RELEASE-sources.jar",
-                    "https://jcenter.bintray.com/org/springframework/boot/spring-boot-test/2.1.3.RELEASE/spring-boot-test-2.1.3.RELEASE-sources.jar",
                     "https://maven.google.com/org/springframework/boot/spring-boot-test/2.1.3.RELEASE/spring-boot-test-2.1.3.RELEASE-sources.jar"
                 ],
                 "sha256": "1f2452c8edd441be5b356f05bff87ed06c5431b98e3c22cc0f7f504cb493128a",
@@ -809,7 +758,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/org/springframework/boot/spring-boot/2.1.3.RELEASE/spring-boot-2.1.3.RELEASE.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/org/springframework/boot/spring-boot/2.1.3.RELEASE/spring-boot-2.1.3.RELEASE.jar",
-                    "https://jcenter.bintray.com/org/springframework/boot/spring-boot/2.1.3.RELEASE/spring-boot-2.1.3.RELEASE.jar",
                     "https://maven.google.com/org/springframework/boot/spring-boot/2.1.3.RELEASE/spring-boot-2.1.3.RELEASE.jar"
                 ],
                 "sha256": "b94730a5420b92201b48b044b2368fc75ace3d9095cf243350d3b396f1b125a8",
@@ -832,7 +780,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/org/springframework/boot/spring-boot/2.1.3.RELEASE/spring-boot-2.1.3.RELEASE-sources.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/org/springframework/boot/spring-boot/2.1.3.RELEASE/spring-boot-2.1.3.RELEASE-sources.jar",
-                    "https://jcenter.bintray.com/org/springframework/boot/spring-boot/2.1.3.RELEASE/spring-boot-2.1.3.RELEASE-sources.jar",
                     "https://maven.google.com/org/springframework/boot/spring-boot/2.1.3.RELEASE/spring-boot-2.1.3.RELEASE-sources.jar"
                 ],
                 "sha256": "0d0e54c3cdeddc1b3cd2be205ccba2cd73061def02d3f4f0d0191f38c7be64dd",
@@ -852,7 +799,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/org/springframework/spring-aop/5.1.5.RELEASE/spring-aop-5.1.5.RELEASE.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/org/springframework/spring-aop/5.1.5.RELEASE/spring-aop-5.1.5.RELEASE.jar",
-                    "https://jcenter.bintray.com/org/springframework/spring-aop/5.1.5.RELEASE/spring-aop-5.1.5.RELEASE.jar",
                     "https://maven.google.com/org/springframework/spring-aop/5.1.5.RELEASE/spring-aop-5.1.5.RELEASE.jar"
                 ],
                 "sha256": "3a65f53ff7b61f68a29ee672a3f683f046602e766f5a10eabab7c0dc2a827757",
@@ -872,7 +818,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/org/springframework/spring-aop/5.1.5.RELEASE/spring-aop-5.1.5.RELEASE-sources.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/org/springframework/spring-aop/5.1.5.RELEASE/spring-aop-5.1.5.RELEASE-sources.jar",
-                    "https://jcenter.bintray.com/org/springframework/spring-aop/5.1.5.RELEASE/spring-aop-5.1.5.RELEASE-sources.jar",
                     "https://maven.google.com/org/springframework/spring-aop/5.1.5.RELEASE/spring-aop-5.1.5.RELEASE-sources.jar"
                 ],
                 "sha256": "14d8dca62e5fbd5202a76f98cbdc9f33b950d174e72ac98b6df7f655ef6bc9e4",
@@ -890,7 +835,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/org/springframework/spring-beans/5.1.5.RELEASE/spring-beans-5.1.5.RELEASE.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/org/springframework/spring-beans/5.1.5.RELEASE/spring-beans-5.1.5.RELEASE.jar",
-                    "https://jcenter.bintray.com/org/springframework/spring-beans/5.1.5.RELEASE/spring-beans-5.1.5.RELEASE.jar",
                     "https://maven.google.com/org/springframework/spring-beans/5.1.5.RELEASE/spring-beans-5.1.5.RELEASE.jar"
                 ],
                 "sha256": "7f759c26bfc4697346de39993df48b2dac49f502d5d4e5d69f19054edc4376f5",
@@ -908,7 +852,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/org/springframework/spring-beans/5.1.5.RELEASE/spring-beans-5.1.5.RELEASE-sources.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/org/springframework/spring-beans/5.1.5.RELEASE/spring-beans-5.1.5.RELEASE-sources.jar",
-                    "https://jcenter.bintray.com/org/springframework/spring-beans/5.1.5.RELEASE/spring-beans-5.1.5.RELEASE-sources.jar",
                     "https://maven.google.com/org/springframework/spring-beans/5.1.5.RELEASE/spring-beans-5.1.5.RELEASE-sources.jar"
                 ],
                 "sha256": "d85f341b1d878fb4f34211bdc3dd66cf5de54ebf0a553eea04ac3dbcefcd66ca",
@@ -932,7 +875,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/org/springframework/spring-context/5.1.5.RELEASE/spring-context-5.1.5.RELEASE.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/org/springframework/spring-context/5.1.5.RELEASE/spring-context-5.1.5.RELEASE.jar",
-                    "https://jcenter.bintray.com/org/springframework/spring-context/5.1.5.RELEASE/spring-context-5.1.5.RELEASE.jar",
                     "https://maven.google.com/org/springframework/spring-context/5.1.5.RELEASE/spring-context-5.1.5.RELEASE.jar"
                 ],
                 "sha256": "6140252422a01d85dbd75fd2d6e8d4a7856f7c6ba6be4c5b59ff5f4b800d498b",
@@ -956,7 +898,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/org/springframework/spring-context/5.1.5.RELEASE/spring-context-5.1.5.RELEASE-sources.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/org/springframework/spring-context/5.1.5.RELEASE/spring-context-5.1.5.RELEASE-sources.jar",
-                    "https://jcenter.bintray.com/org/springframework/spring-context/5.1.5.RELEASE/spring-context-5.1.5.RELEASE-sources.jar",
                     "https://maven.google.com/org/springframework/spring-context/5.1.5.RELEASE/spring-context-5.1.5.RELEASE-sources.jar"
                 ],
                 "sha256": "1d94266215f362424c22013624a20f6891a6eb78e98a6f68d8afd267933a25ee",
@@ -973,7 +914,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/org/springframework/spring-core/5.1.5.RELEASE/spring-core-5.1.5.RELEASE.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/org/springframework/spring-core/5.1.5.RELEASE/spring-core-5.1.5.RELEASE.jar",
-                    "https://jcenter.bintray.com/org/springframework/spring-core/5.1.5.RELEASE/spring-core-5.1.5.RELEASE.jar",
                     "https://maven.google.com/org/springframework/spring-core/5.1.5.RELEASE/spring-core-5.1.5.RELEASE.jar"
                 ],
                 "sha256": "f771b605019eb9d2cf8f60c25c050233e39487ff54d74c93d687ea8de8b7285a",
@@ -990,7 +930,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/org/springframework/spring-core/5.1.5.RELEASE/spring-core-5.1.5.RELEASE-sources.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/org/springframework/spring-core/5.1.5.RELEASE/spring-core-5.1.5.RELEASE-sources.jar",
-                    "https://jcenter.bintray.com/org/springframework/spring-core/5.1.5.RELEASE/spring-core-5.1.5.RELEASE-sources.jar",
                     "https://maven.google.com/org/springframework/spring-core/5.1.5.RELEASE/spring-core-5.1.5.RELEASE-sources.jar"
                 ],
                 "sha256": "b7e53176f1dbb4e5122c647e7f0775b888be65d7bd967a8f079ecebc8689d35d",
@@ -1008,7 +947,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/org/springframework/spring-expression/5.1.5.RELEASE/spring-expression-5.1.5.RELEASE.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/org/springframework/spring-expression/5.1.5.RELEASE/spring-expression-5.1.5.RELEASE.jar",
-                    "https://jcenter.bintray.com/org/springframework/spring-expression/5.1.5.RELEASE/spring-expression-5.1.5.RELEASE.jar",
                     "https://maven.google.com/org/springframework/spring-expression/5.1.5.RELEASE/spring-expression-5.1.5.RELEASE.jar"
                 ],
                 "sha256": "c3c25bf89de3e277926abb0f32655ff5e365e1d1eed8c8602e05b07126bba1cf",
@@ -1026,7 +964,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/org/springframework/spring-expression/5.1.5.RELEASE/spring-expression-5.1.5.RELEASE-sources.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/org/springframework/spring-expression/5.1.5.RELEASE/spring-expression-5.1.5.RELEASE-sources.jar",
-                    "https://jcenter.bintray.com/org/springframework/spring-expression/5.1.5.RELEASE/spring-expression-5.1.5.RELEASE-sources.jar",
                     "https://maven.google.com/org/springframework/spring-expression/5.1.5.RELEASE/spring-expression-5.1.5.RELEASE-sources.jar"
                 ],
                 "sha256": "ee0d12bce9f3e5bf5de79245db718c7aad4ec74087935ba1e11f8037d7187a92",
@@ -1039,7 +976,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/org/springframework/spring-jcl/5.1.5.RELEASE/spring-jcl-5.1.5.RELEASE.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/org/springframework/spring-jcl/5.1.5.RELEASE/spring-jcl-5.1.5.RELEASE.jar",
-                    "https://jcenter.bintray.com/org/springframework/spring-jcl/5.1.5.RELEASE/spring-jcl-5.1.5.RELEASE.jar",
                     "https://maven.google.com/org/springframework/spring-jcl/5.1.5.RELEASE/spring-jcl-5.1.5.RELEASE.jar"
                 ],
                 "sha256": "194423c7c485e40706d74c01a36b1f0aad436f0b55958f06ac95bcbac65bf4e6",
@@ -1052,7 +988,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/org/springframework/spring-jcl/5.1.5.RELEASE/spring-jcl-5.1.5.RELEASE-sources.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/org/springframework/spring-jcl/5.1.5.RELEASE/spring-jcl-5.1.5.RELEASE-sources.jar",
-                    "https://jcenter.bintray.com/org/springframework/spring-jcl/5.1.5.RELEASE/spring-jcl-5.1.5.RELEASE-sources.jar",
                     "https://maven.google.com/org/springframework/spring-jcl/5.1.5.RELEASE/spring-jcl-5.1.5.RELEASE-sources.jar"
                 ],
                 "sha256": "7279dc8e2dab344996afb6884351e94de76c2720bae27a79a609ad80d2b8c9c3",
@@ -1070,7 +1005,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/org/springframework/spring-test/5.1.5.RELEASE/spring-test-5.1.5.RELEASE.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/org/springframework/spring-test/5.1.5.RELEASE/spring-test-5.1.5.RELEASE.jar",
-                    "https://jcenter.bintray.com/org/springframework/spring-test/5.1.5.RELEASE/spring-test-5.1.5.RELEASE.jar",
                     "https://maven.google.com/org/springframework/spring-test/5.1.5.RELEASE/spring-test-5.1.5.RELEASE.jar"
                 ],
                 "sha256": "f3629e1e657e5b395fef09af986b77f738d83d6beefbb8be4d70f31f5affda51",
@@ -1088,7 +1022,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/org/springframework/spring-test/5.1.5.RELEASE/spring-test-5.1.5.RELEASE-sources.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/org/springframework/spring-test/5.1.5.RELEASE/spring-test-5.1.5.RELEASE-sources.jar",
-                    "https://jcenter.bintray.com/org/springframework/spring-test/5.1.5.RELEASE/spring-test-5.1.5.RELEASE-sources.jar",
                     "https://maven.google.com/org/springframework/spring-test/5.1.5.RELEASE/spring-test-5.1.5.RELEASE-sources.jar"
                 ],
                 "sha256": "457ae5419abdfaa2c3cb381fdd2ced554221eb3d84e019c4df3383bda281da1e",
@@ -1108,7 +1041,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/org/springframework/spring-web/5.1.5.RELEASE/spring-web-5.1.5.RELEASE.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/org/springframework/spring-web/5.1.5.RELEASE/spring-web-5.1.5.RELEASE.jar",
-                    "https://jcenter.bintray.com/org/springframework/spring-web/5.1.5.RELEASE/spring-web-5.1.5.RELEASE.jar",
                     "https://maven.google.com/org/springframework/spring-web/5.1.5.RELEASE/spring-web-5.1.5.RELEASE.jar"
                 ],
                 "sha256": "0a7a9111a6aae028dc7ceefa3cfee76c01e70f8e61cd2289a0271b16975f76f7",
@@ -1128,7 +1060,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/org/springframework/spring-web/5.1.5.RELEASE/spring-web-5.1.5.RELEASE-sources.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/org/springframework/spring-web/5.1.5.RELEASE/spring-web-5.1.5.RELEASE-sources.jar",
-                    "https://jcenter.bintray.com/org/springframework/spring-web/5.1.5.RELEASE/spring-web-5.1.5.RELEASE-sources.jar",
                     "https://maven.google.com/org/springframework/spring-web/5.1.5.RELEASE/spring-web-5.1.5.RELEASE-sources.jar"
                 ],
                 "sha256": "0b912b06245fed315c146ebc2e49820f70a4dbed439ea0eed711b7f6173c6bcb",
@@ -1156,7 +1087,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/org/springframework/spring-webmvc/5.1.5.RELEASE/spring-webmvc-5.1.5.RELEASE.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/org/springframework/spring-webmvc/5.1.5.RELEASE/spring-webmvc-5.1.5.RELEASE.jar",
-                    "https://jcenter.bintray.com/org/springframework/spring-webmvc/5.1.5.RELEASE/spring-webmvc-5.1.5.RELEASE.jar",
                     "https://maven.google.com/org/springframework/spring-webmvc/5.1.5.RELEASE/spring-webmvc-5.1.5.RELEASE.jar"
                 ],
                 "sha256": "7953dc786a5ee32a267cdf8e9be08b94f7cb52bf88dd9752e29ba17943884eb7",
@@ -1184,7 +1114,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/org/springframework/spring-webmvc/5.1.5.RELEASE/spring-webmvc-5.1.5.RELEASE-sources.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/org/springframework/spring-webmvc/5.1.5.RELEASE/spring-webmvc-5.1.5.RELEASE-sources.jar",
-                    "https://jcenter.bintray.com/org/springframework/spring-webmvc/5.1.5.RELEASE/spring-webmvc-5.1.5.RELEASE-sources.jar",
                     "https://maven.google.com/org/springframework/spring-webmvc/5.1.5.RELEASE/spring-webmvc-5.1.5.RELEASE-sources.jar"
                 ],
                 "sha256": "7fd51560c3be63e21ca5c06e229e7235131b1bd2191e7e7f4e56ef9de72fcac0",
@@ -1217,7 +1146,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/org/testcontainers/testcontainers/1.15.0-rc2/testcontainers-1.15.0-rc2.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/org/testcontainers/testcontainers/1.15.0-rc2/testcontainers-1.15.0-rc2.jar",
-                    "https://jcenter.bintray.com/org/testcontainers/testcontainers/1.15.0-rc2/testcontainers-1.15.0-rc2.jar",
                     "https://maven.google.com/org/testcontainers/testcontainers/1.15.0-rc2/testcontainers-1.15.0-rc2.jar"
                 ],
                 "sha256": "6af76409aa7a03924f57784050b2b6d4eec5ab3118bec44bf148bc567890fd48",
@@ -1250,7 +1178,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/org/testcontainers/testcontainers/1.15.0-rc2/testcontainers-1.15.0-rc2-sources.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/org/testcontainers/testcontainers/1.15.0-rc2/testcontainers-1.15.0-rc2-sources.jar",
-                    "https://jcenter.bintray.com/org/testcontainers/testcontainers/1.15.0-rc2/testcontainers-1.15.0-rc2-sources.jar",
                     "https://maven.google.com/org/testcontainers/testcontainers/1.15.0-rc2/testcontainers-1.15.0-rc2-sources.jar"
                 ],
                 "sha256": "350155e4175241b8617639b6a230f99879820579b618306ddc67a01e30aadceb",

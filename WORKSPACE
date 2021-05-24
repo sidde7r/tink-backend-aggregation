@@ -400,7 +400,6 @@ jar_jar_repositories()
 # Order matters: the first one listed is the default repo to fetch from
 MAVEN_REPOS = [
     "https://repo1.maven.org/maven2",
-    "https://jcenter.bintray.com",
     "https://maven.google.com",
 ]
 

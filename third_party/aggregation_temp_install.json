@@ -186,7 +186,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/cglib/cglib/2.2/cglib-2.2.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/cglib/cglib/2.2/cglib-2.2.jar",
-                    "https://jcenter.bintray.com/cglib/cglib/2.2/cglib-2.2.jar",
                     "https://maven.google.com/cglib/cglib/2.2/cglib-2.2.jar"
                 ],
                 "sha256": "602c787ef273aad0cc94832c3d074bef359cf3ea0d54736774ac4a56d5f465d6",
@@ -375,7 +374,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/cglib/cglib/2.2/cglib-2.2-sources.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/cglib/cglib/2.2/cglib-2.2-sources.jar",
-                    "https://jcenter.bintray.com/cglib/cglib/2.2/cglib-2.2-sources.jar",
                     "https://maven.google.com/cglib/cglib/2.2/cglib-2.2-sources.jar"
                 ],
                 "sha256": "c7bc88da5362ef44f3f13bf206f3f3fd618b48603d28deece51ff4c1ba42a2f7",
@@ -568,7 +566,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-code-generator/1.11.381/aws-java-sdk-code-generator-1.11.381.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-code-generator/1.11.381/aws-java-sdk-code-generator-1.11.381.jar",
-                    "https://jcenter.bintray.com/com/amazonaws/aws-java-sdk-code-generator/1.11.381/aws-java-sdk-code-generator-1.11.381.jar",
                     "https://maven.google.com/com/amazonaws/aws-java-sdk-code-generator/1.11.381/aws-java-sdk-code-generator-1.11.381.jar"
                 ],
                 "sha256": "83eaa368e52a0644cc1eb2b4ca83d5731eda92c11e6a884a1cb1e777eae278ef",
@@ -761,7 +758,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-code-generator/1.11.381/aws-java-sdk-code-generator-1.11.381-sources.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-code-generator/1.11.381/aws-java-sdk-code-generator-1.11.381-sources.jar",
-                    "https://jcenter.bintray.com/com/amazonaws/aws-java-sdk-code-generator/1.11.381/aws-java-sdk-code-generator-1.11.381-sources.jar",
                     "https://maven.google.com/com/amazonaws/aws-java-sdk-code-generator/1.11.381/aws-java-sdk-code-generator-1.11.381-sources.jar"
                 ],
                 "sha256": "8a539c9e78ce6fcea0c631c35b0dc6b23a782fef7f57818e342da11b0dfc6450",
@@ -954,7 +950,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-kms/1.11.381/aws-java-sdk-kms-1.11.381.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-kms/1.11.381/aws-java-sdk-kms-1.11.381.jar",
-                    "https://jcenter.bintray.com/com/amazonaws/aws-java-sdk-kms/1.11.381/aws-java-sdk-kms-1.11.381.jar",
                     "https://maven.google.com/com/amazonaws/aws-java-sdk-kms/1.11.381/aws-java-sdk-kms-1.11.381.jar"
                 ],
                 "sha256": "3278869f6f6735b557341110763026f617d7874df5b5c1844dccc11ace443a90",
@@ -1147,7 +1142,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-kms/1.11.381/aws-java-sdk-kms-1.11.381-sources.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-kms/1.11.381/aws-java-sdk-kms-1.11.381-sources.jar",
-                    "https://jcenter.bintray.com/com/amazonaws/aws-java-sdk-kms/1.11.381/aws-java-sdk-kms-1.11.381-sources.jar",
                     "https://maven.google.com/com/amazonaws/aws-java-sdk-kms/1.11.381/aws-java-sdk-kms-1.11.381-sources.jar"
                 ],
                 "sha256": "a632b8a54e5caa8390467c408db48392136729db1a0b5bfe81d539f37c80b09a",
@@ -1342,7 +1336,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-s3/1.11.381/aws-java-sdk-s3-1.11.381.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-s3/1.11.381/aws-java-sdk-s3-1.11.381.jar",
-                    "https://jcenter.bintray.com/com/amazonaws/aws-java-sdk-s3/1.11.381/aws-java-sdk-s3-1.11.381.jar",
                     "https://maven.google.com/com/amazonaws/aws-java-sdk-s3/1.11.381/aws-java-sdk-s3-1.11.381.jar"
                 ],
                 "sha256": "d82576dc5526e4a1ec4eb1dc18610965cac8c94276fc89dd8f4369bad007b95a",
@@ -1537,7 +1530,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-s3/1.11.381/aws-java-sdk-s3-1.11.381-sources.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-s3/1.11.381/aws-java-sdk-s3-1.11.381-sources.jar",
-                    "https://jcenter.bintray.com/com/amazonaws/aws-java-sdk-s3/1.11.381/aws-java-sdk-s3-1.11.381-sources.jar",
                     "https://maven.google.com/com/amazonaws/aws-java-sdk-s3/1.11.381/aws-java-sdk-s3-1.11.381-sources.jar"
                 ],
                 "sha256": "9f08acacdf98a704f1c8127eaeb86883e75ccc0dafcf9727dfd84c8fbfa1b249",
@@ -1730,7 +1722,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-sqs/1.11.381/aws-java-sdk-sqs-1.11.381.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-sqs/1.11.381/aws-java-sdk-sqs-1.11.381.jar",
-                    "https://jcenter.bintray.com/com/amazonaws/aws-java-sdk-sqs/1.11.381/aws-java-sdk-sqs-1.11.381.jar",
                     "https://maven.google.com/com/amazonaws/aws-java-sdk-sqs/1.11.381/aws-java-sdk-sqs-1.11.381.jar"
                 ],
                 "sha256": "0be2f8b3e07ddfb15fc13d26471ef9f707c20f4da5abd1ff0cb4c39b3b6cc652",
@@ -1923,7 +1914,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-sqs/1.11.381/aws-java-sdk-sqs-1.11.381-sources.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-sqs/1.11.381/aws-java-sdk-sqs-1.11.381-sources.jar",
-                    "https://jcenter.bintray.com/com/amazonaws/aws-java-sdk-sqs/1.11.381/aws-java-sdk-sqs-1.11.381-sources.jar",
                     "https://maven.google.com/com/amazonaws/aws-java-sdk-sqs/1.11.381/aws-java-sdk-sqs-1.11.381-sources.jar"
                 ],
                 "sha256": "cd88ca7760156cf8fc7957cc806e15d26b986d6da82f23c637ccae6e9eef6d96",
@@ -2112,7 +2102,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/com/amazonaws/jmespath-java/1.11.381/jmespath-java-1.11.381.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/com/amazonaws/jmespath-java/1.11.381/jmespath-java-1.11.381.jar",
-                    "https://jcenter.bintray.com/com/amazonaws/jmespath-java/1.11.381/jmespath-java-1.11.381.jar",
                     "https://maven.google.com/com/amazonaws/jmespath-java/1.11.381/jmespath-java-1.11.381.jar"
                 ],
                 "sha256": "9ed05cfe25527ec52db532da72476d42a884c531296ac5552cf870240cc7cdf4",
@@ -2301,7 +2290,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/com/amazonaws/jmespath-java/1.11.381/jmespath-java-1.11.381-sources.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/com/amazonaws/jmespath-java/1.11.381/jmespath-java-1.11.381-sources.jar",
-                    "https://jcenter.bintray.com/com/amazonaws/jmespath-java/1.11.381/jmespath-java-1.11.381-sources.jar",
                     "https://maven.google.com/com/amazonaws/jmespath-java/1.11.381/jmespath-java-1.11.381-sources.jar"
                 ],
                 "sha256": "c3b8fa5dbafd9f8233c7c41300e78dd0863d4233140cd07f5023daf07b59d6fc",
@@ -2490,7 +2478,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/com/auth0/java-jwt/3.3.0/java-jwt-3.3.0.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/com/auth0/java-jwt/3.3.0/java-jwt-3.3.0.jar",
-                    "https://jcenter.bintray.com/com/auth0/java-jwt/3.3.0/java-jwt-3.3.0.jar",
                     "https://maven.google.com/com/auth0/java-jwt/3.3.0/java-jwt-3.3.0.jar"
                 ],
                 "sha256": "2d5ca565a25c288e9b47961f62e97c75aff284e808646869b157c3b132d63d2c",
@@ -2679,7 +2666,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/com/auth0/java-jwt/3.3.0/java-jwt-3.3.0-sources.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/com/auth0/java-jwt/3.3.0/java-jwt-3.3.0-sources.jar",
-                    "https://jcenter.bintray.com/com/auth0/java-jwt/3.3.0/java-jwt-3.3.0-sources.jar",
                     "https://maven.google.com/com/auth0/java-jwt/3.3.0/java-jwt-3.3.0-sources.jar"
                 ],
                 "sha256": "d53c54a212271d11f43cbe3fd63dbf68d2426c8d3911f68c9bdf1123c76b71c8",
@@ -2872,7 +2858,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/com/google/crypto/tink/tink/1.2.2/tink-1.2.2.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/com/google/crypto/tink/tink/1.2.2/tink-1.2.2.jar",
-                    "https://jcenter.bintray.com/com/google/crypto/tink/tink/1.2.2/tink-1.2.2.jar",
                     "https://maven.google.com/com/google/crypto/tink/tink/1.2.2/tink-1.2.2.jar"
                 ],
                 "sha256": "168164e9f0ff06cb63f9b3a228e641cf5bfae2e6fefa5dfc5a485d92fdc95183",
@@ -3065,7 +3050,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/com/google/crypto/tink/tink/1.2.2/tink-1.2.2-sources.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/com/google/crypto/tink/tink/1.2.2/tink-1.2.2-sources.jar",
-                    "https://jcenter.bintray.com/com/google/crypto/tink/tink/1.2.2/tink-1.2.2-sources.jar",
                     "https://maven.google.com/com/google/crypto/tink/tink/1.2.2/tink-1.2.2-sources.jar"
                 ],
                 "sha256": "68e5a7f991ca73be1ab73fa0ae920eaea554350de777aea75c7ad6e65b2f7ab4",
@@ -3254,7 +3238,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/com/google/errorprone/javac-shaded/9%2B181-r4173-1/javac-shaded-9%2B181-r4173-1.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/com/google/errorprone/javac-shaded/9%2B181-r4173-1/javac-shaded-9%2B181-r4173-1.jar",
-                    "https://jcenter.bintray.com/com/google/errorprone/javac-shaded/9%2B181-r4173-1/javac-shaded-9%2B181-r4173-1.jar",
                     "https://maven.google.com/com/google/errorprone/javac-shaded/9%2B181-r4173-1/javac-shaded-9%2B181-r4173-1.jar"
                 ],
                 "sha256": "ae6f663a36bac1855076072afd650cdc0076b08f8129fbff504e73e74095a021",
@@ -3443,7 +3426,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/com/google/errorprone/javac-shaded/9%2B181-r4173-1/javac-shaded-9%2B181-r4173-1-sources.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/com/google/errorprone/javac-shaded/9%2B181-r4173-1/javac-shaded-9%2B181-r4173-1-sources.jar",
-                    "https://jcenter.bintray.com/com/google/errorprone/javac-shaded/9%2B181-r4173-1/javac-shaded-9%2B181-r4173-1-sources.jar",
                     "https://maven.google.com/com/google/errorprone/javac-shaded/9%2B181-r4173-1/javac-shaded-9%2B181-r4173-1-sources.jar"
                 ],
                 "sha256": "b6487292a495b2c44f6975b797f8eb80290609a995c792519ee116c71fc1663b",
@@ -3636,7 +3618,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/com/google/googlejavaformat/google-java-format/1.7/google-java-format-1.7.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/com/google/googlejavaformat/google-java-format/1.7/google-java-format-1.7.jar",
-                    "https://jcenter.bintray.com/com/google/googlejavaformat/google-java-format/1.7/google-java-format-1.7.jar",
                     "https://maven.google.com/com/google/googlejavaformat/google-java-format/1.7/google-java-format-1.7.jar"
                 ],
                 "sha256": "0e13edfb91fc373075790beb1dc1f36e0b7ddd11865696f928ef63e328781cc2",
@@ -3829,7 +3810,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/com/google/googlejavaformat/google-java-format/1.7/google-java-format-1.7-sources.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/com/google/googlejavaformat/google-java-format/1.7/google-java-format-1.7-sources.jar",
-                    "https://jcenter.bintray.com/com/google/googlejavaformat/google-java-format/1.7/google-java-format-1.7-sources.jar",
                     "https://maven.google.com/com/google/googlejavaformat/google-java-format/1.7/google-java-format-1.7-sources.jar"
                 ],
                 "sha256": "0fb5effea4543385214529252359d24b0bad368ef5c72fb854f7f260ef55c4f9",
@@ -4018,7 +3998,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/com/nimbusds/nimbus-jose-jwt/8.20.1/nimbus-jose-jwt-8.20.1.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/com/nimbusds/nimbus-jose-jwt/8.20.1/nimbus-jose-jwt-8.20.1.jar",
-                    "https://jcenter.bintray.com/com/nimbusds/nimbus-jose-jwt/8.20.1/nimbus-jose-jwt-8.20.1.jar",
                     "https://maven.google.com/com/nimbusds/nimbus-jose-jwt/8.20.1/nimbus-jose-jwt-8.20.1.jar"
                 ],
                 "sha256": "39cb949a854e83c045195f8ad2a0c62f8eb7862353d53aee784dabcd305b3a74",
@@ -4207,7 +4186,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/com/nimbusds/nimbus-jose-jwt/8.20.1/nimbus-jose-jwt-8.20.1-sources.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/com/nimbusds/nimbus-jose-jwt/8.20.1/nimbus-jose-jwt-8.20.1-sources.jar",
-                    "https://jcenter.bintray.com/com/nimbusds/nimbus-jose-jwt/8.20.1/nimbus-jose-jwt-8.20.1-sources.jar",
                     "https://maven.google.com/com/nimbusds/nimbus-jose-jwt/8.20.1/nimbus-jose-jwt-8.20.1-sources.jar"
                 ],
                 "sha256": "a4e25f88229b05f51da6374a457143892904d4f6ce8a9ba71ff9e5e7fe834595",
@@ -4396,7 +4374,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/com/oracle/substratevm/svm/19.0.0/svm-19.0.0.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/com/oracle/substratevm/svm/19.0.0/svm-19.0.0.jar",
-                    "https://jcenter.bintray.com/com/oracle/substratevm/svm/19.0.0/svm-19.0.0.jar",
                     "https://maven.google.com/com/oracle/substratevm/svm/19.0.0/svm-19.0.0.jar"
                 ],
                 "sha256": "1db262985b10ecb3002cdf91694f5f5fd8c99d48a0e8401d1852c743bbeab1b7",
@@ -4585,7 +4562,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/com/oracle/substratevm/svm/19.0.0/svm-19.0.0-sources.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/com/oracle/substratevm/svm/19.0.0/svm-19.0.0-sources.jar",
-                    "https://jcenter.bintray.com/com/oracle/substratevm/svm/19.0.0/svm-19.0.0-sources.jar",
                     "https://maven.google.com/com/oracle/substratevm/svm/19.0.0/svm-19.0.0-sources.jar"
                 ],
                 "sha256": "4181e64dca337518fe4342152dfcc124ce45069664873ee60d600ee8e3e8dc4a",
@@ -4774,7 +4750,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/io/grpc/grpc-api/1.29.0/grpc-api-1.29.0.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/io/grpc/grpc-api/1.29.0/grpc-api-1.29.0.jar",
-                    "https://jcenter.bintray.com/io/grpc/grpc-api/1.29.0/grpc-api-1.29.0.jar",
                     "https://maven.google.com/io/grpc/grpc-api/1.29.0/grpc-api-1.29.0.jar"
                 ],
                 "sha256": "4837824acdd8d576d7d31a862e7391c38a1824cd2224daa68999377fdff9ae3f",
@@ -4963,7 +4938,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/io/grpc/grpc-api/1.29.0/grpc-api-1.29.0-sources.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/io/grpc/grpc-api/1.29.0/grpc-api-1.29.0-sources.jar",
-                    "https://jcenter.bintray.com/io/grpc/grpc-api/1.29.0/grpc-api-1.29.0-sources.jar",
                     "https://maven.google.com/io/grpc/grpc-api/1.29.0/grpc-api-1.29.0-sources.jar"
                 ],
                 "sha256": "f9265d8b37d4b35fa6184be21a5b5975246198ab730beaf4efec459cade14f5b",
@@ -5156,7 +5130,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/io/grpc/grpc-auth/1.29.0/grpc-auth-1.29.0.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/io/grpc/grpc-auth/1.29.0/grpc-auth-1.29.0.jar",
-                    "https://jcenter.bintray.com/io/grpc/grpc-auth/1.29.0/grpc-auth-1.29.0.jar",
                     "https://maven.google.com/io/grpc/grpc-auth/1.29.0/grpc-auth-1.29.0.jar"
                 ],
                 "sha256": "c0bd4ad63b905823061919f8bdd7371f45dc680ffa208d212fdc228515b01770",
@@ -5349,7 +5322,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/io/grpc/grpc-auth/1.29.0/grpc-auth-1.29.0-sources.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/io/grpc/grpc-auth/1.29.0/grpc-auth-1.29.0-sources.jar",
-                    "https://jcenter.bintray.com/io/grpc/grpc-auth/1.29.0/grpc-auth-1.29.0-sources.jar",
                     "https://maven.google.com/io/grpc/grpc-auth/1.29.0/grpc-auth-1.29.0-sources.jar"
                 ],
                 "sha256": "cd1973ab21260c5e873513be189c486fb5d4fc0a161f6b0bfd9a604aac32d38e",
@@ -5542,7 +5514,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/io/grpc/grpc-core/1.29.0/grpc-core-1.29.0.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/io/grpc/grpc-core/1.29.0/grpc-core-1.29.0.jar",
-                    "https://jcenter.bintray.com/io/grpc/grpc-core/1.29.0/grpc-core-1.29.0.jar",
                     "https://maven.google.com/io/grpc/grpc-core/1.29.0/grpc-core-1.29.0.jar"
                 ],
                 "sha256": "d45e3ba310cf6a5d8170bcc500507977505614583c341d03c7d91658e49cf028",
@@ -5735,7 +5706,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/io/grpc/grpc-core/1.29.0/grpc-core-1.29.0-sources.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/io/grpc/grpc-core/1.29.0/grpc-core-1.29.0-sources.jar",
-                    "https://jcenter.bintray.com/io/grpc/grpc-core/1.29.0/grpc-core-1.29.0-sources.jar",
                     "https://maven.google.com/io/grpc/grpc-core/1.29.0/grpc-core-1.29.0-sources.jar"
                 ],
                 "sha256": "c96e39670a2bc73e572f4af090bd9ff55528b07220363d75761beb999efbd7f8",
@@ -5928,7 +5898,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/io/grpc/grpc-netty/1.29.0/grpc-netty-1.29.0.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/io/grpc/grpc-netty/1.29.0/grpc-netty-1.29.0.jar",
-                    "https://jcenter.bintray.com/io/grpc/grpc-netty/1.29.0/grpc-netty-1.29.0.jar",
                     "https://maven.google.com/io/grpc/grpc-netty/1.29.0/grpc-netty-1.29.0.jar"
                 ],
                 "sha256": "e959abda6b0cde0104a4a9398f867f15eefbad81ba64a2174eca1616767f9063",
@@ -6121,7 +6090,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/io/grpc/grpc-netty/1.29.0/grpc-netty-1.29.0-sources.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/io/grpc/grpc-netty/1.29.0/grpc-netty-1.29.0-sources.jar",
-                    "https://jcenter.bintray.com/io/grpc/grpc-netty/1.29.0/grpc-netty-1.29.0-sources.jar",
                     "https://maven.google.com/io/grpc/grpc-netty/1.29.0/grpc-netty-1.29.0-sources.jar"
                 ],
                 "sha256": "4309d556bc9457a17225b65a826873ba846c42fdace3b40f0905f9040fc2aa53",
@@ -6314,7 +6282,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/io/grpc/grpc-protobuf-lite/1.29.0/grpc-protobuf-lite-1.29.0.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/io/grpc/grpc-protobuf-lite/1.29.0/grpc-protobuf-lite-1.29.0.jar",
-                    "https://jcenter.bintray.com/io/grpc/grpc-protobuf-lite/1.29.0/grpc-protobuf-lite-1.29.0.jar",
                     "https://maven.google.com/io/grpc/grpc-protobuf-lite/1.29.0/grpc-protobuf-lite-1.29.0.jar"
                 ],
                 "sha256": "ae4bbcd9bf7ad4856660807d8cba7ef4ff428f0b615bf663ba308d9a76bcab3c",
@@ -6507,7 +6474,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/io/grpc/grpc-protobuf-lite/1.29.0/grpc-protobuf-lite-1.29.0-sources.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/io/grpc/grpc-protobuf-lite/1.29.0/grpc-protobuf-lite-1.29.0-sources.jar",
-                    "https://jcenter.bintray.com/io/grpc/grpc-protobuf-lite/1.29.0/grpc-protobuf-lite-1.29.0-sources.jar",
                     "https://maven.google.com/io/grpc/grpc-protobuf-lite/1.29.0/grpc-protobuf-lite-1.29.0-sources.jar"
                 ],
                 "sha256": "d5cf99972b626478b0b9b6bf767e590c910e399a8dcd47c98aa7f9d67f0ea772",
@@ -6700,7 +6666,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/io/grpc/grpc-protobuf-nano/1.21.1/grpc-protobuf-nano-1.21.1.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/io/grpc/grpc-protobuf-nano/1.21.1/grpc-protobuf-nano-1.21.1.jar",
-                    "https://jcenter.bintray.com/io/grpc/grpc-protobuf-nano/1.21.1/grpc-protobuf-nano-1.21.1.jar",
                     "https://maven.google.com/io/grpc/grpc-protobuf-nano/1.21.1/grpc-protobuf-nano-1.21.1.jar"
                 ],
                 "sha256": "382ced635da516db0c26db23daeb50c4db5fa37acd0b6469ed4755a641baa022",
@@ -6893,7 +6858,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/io/grpc/grpc-protobuf-nano/1.21.1/grpc-protobuf-nano-1.21.1-sources.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/io/grpc/grpc-protobuf-nano/1.21.1/grpc-protobuf-nano-1.21.1-sources.jar",
-                    "https://jcenter.bintray.com/io/grpc/grpc-protobuf-nano/1.21.1/grpc-protobuf-nano-1.21.1-sources.jar",
                     "https://maven.google.com/io/grpc/grpc-protobuf-nano/1.21.1/grpc-protobuf-nano-1.21.1-sources.jar"
                 ],
                 "sha256": "25d40ba794ce28ca3b6d784248940eeaa9fb902245d2a6990e286b2eab5e63b6",
@@ -7088,7 +7052,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/io/grpc/grpc-protobuf/1.29.0/grpc-protobuf-1.29.0.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/io/grpc/grpc-protobuf/1.29.0/grpc-protobuf-1.29.0.jar",
-                    "https://jcenter.bintray.com/io/grpc/grpc-protobuf/1.29.0/grpc-protobuf-1.29.0.jar",
                     "https://maven.google.com/io/grpc/grpc-protobuf/1.29.0/grpc-protobuf-1.29.0.jar"
                 ],
                 "sha256": "ee8cef64c7e10dd373aabd3a4b2ec4878e6d5b3ba43cbf55f3876ddaa79266ea",
@@ -7283,7 +7246,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/io/grpc/grpc-protobuf/1.29.0/grpc-protobuf-1.29.0-sources.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/io/grpc/grpc-protobuf/1.29.0/grpc-protobuf-1.29.0-sources.jar",
-                    "https://jcenter.bintray.com/io/grpc/grpc-protobuf/1.29.0/grpc-protobuf-1.29.0-sources.jar",
                     "https://maven.google.com/io/grpc/grpc-protobuf/1.29.0/grpc-protobuf-1.29.0-sources.jar"
                 ],
                 "sha256": "0c1f5e07b28f0deb5d85d87738be0b545407d613affdb0031d6f0839d1eb2ff2",
@@ -7482,7 +7444,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/io/grpc/grpc-services/1.29.0/grpc-services-1.29.0.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/io/grpc/grpc-services/1.29.0/grpc-services-1.29.0.jar",
-                    "https://jcenter.bintray.com/io/grpc/grpc-services/1.29.0/grpc-services-1.29.0.jar",
                     "https://maven.google.com/io/grpc/grpc-services/1.29.0/grpc-services-1.29.0.jar"
                 ],
                 "sha256": "6bea2f0ec35d3071a12fccc640ca7450f1cd2ce66574456e8deec21f79464681",
@@ -7681,7 +7642,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/io/grpc/grpc-services/1.29.0/grpc-services-1.29.0-sources.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/io/grpc/grpc-services/1.29.0/grpc-services-1.29.0-sources.jar",
-                    "https://jcenter.bintray.com/io/grpc/grpc-services/1.29.0/grpc-services-1.29.0-sources.jar",
                     "https://maven.google.com/io/grpc/grpc-services/1.29.0/grpc-services-1.29.0-sources.jar"
                 ],
                 "sha256": "8b7836bd82a8ca2c5de629256628f1a498a53d1e38f02614c0f74b6cca0434fe",
@@ -7874,7 +7834,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/io/grpc/grpc-stub/1.29.0/grpc-stub-1.29.0.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/io/grpc/grpc-stub/1.29.0/grpc-stub-1.29.0.jar",
-                    "https://jcenter.bintray.com/io/grpc/grpc-stub/1.29.0/grpc-stub-1.29.0.jar",
                     "https://maven.google.com/io/grpc/grpc-stub/1.29.0/grpc-stub-1.29.0.jar"
                 ],
                 "sha256": "65b01e451013d6c9f2de1392abf47190a397cbbd7f5a45e3cc9df509671a0cf8",
@@ -8067,7 +8026,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/io/grpc/grpc-stub/1.29.0/grpc-stub-1.29.0-sources.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/io/grpc/grpc-stub/1.29.0/grpc-stub-1.29.0-sources.jar",
-                    "https://jcenter.bintray.com/io/grpc/grpc-stub/1.29.0/grpc-stub-1.29.0-sources.jar",
                     "https://maven.google.com/io/grpc/grpc-stub/1.29.0/grpc-stub-1.29.0-sources.jar"
                 ],
                 "sha256": "fdb6c4eaa76481c6166901bc2cd324c8027538fae6b36572b331bc629914e2cd",
@@ -8262,7 +8220,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/io/grpc/grpc-testing-proto/1.24.0/grpc-testing-proto-1.24.0.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/io/grpc/grpc-testing-proto/1.24.0/grpc-testing-proto-1.24.0.jar",
-                    "https://jcenter.bintray.com/io/grpc/grpc-testing-proto/1.24.0/grpc-testing-proto-1.24.0.jar",
                     "https://maven.google.com/io/grpc/grpc-testing-proto/1.24.0/grpc-testing-proto-1.24.0.jar"
                 ],
                 "sha256": "fd4000ba44123678a15d5a32264c5ceb9007d8b58113360d9c769508718a7390",
@@ -8457,7 +8414,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/io/grpc/grpc-testing-proto/1.24.0/grpc-testing-proto-1.24.0-sources.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/io/grpc/grpc-testing-proto/1.24.0/grpc-testing-proto-1.24.0-sources.jar",
-                    "https://jcenter.bintray.com/io/grpc/grpc-testing-proto/1.24.0/grpc-testing-proto-1.24.0-sources.jar",
                     "https://maven.google.com/io/grpc/grpc-testing-proto/1.24.0/grpc-testing-proto-1.24.0-sources.jar"
                 ],
                 "sha256": "369f415bd20b79087001f327a04fe35af3bbda4ce8a481bf9f09fd9e5827b544",
@@ -8653,7 +8609,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/io/grpc/grpc-testing/1.29.0/grpc-testing-1.29.0.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/io/grpc/grpc-testing/1.29.0/grpc-testing-1.29.0.jar",
-                    "https://jcenter.bintray.com/io/grpc/grpc-testing/1.29.0/grpc-testing-1.29.0.jar",
                     "https://maven.google.com/io/grpc/grpc-testing/1.29.0/grpc-testing-1.29.0.jar"
                 ],
                 "sha256": "63449d55902efd7d73dccd84f7c7e77c9c727d5c6e798ed98ca19d36f07d38a5",
@@ -8849,7 +8804,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/io/grpc/grpc-testing/1.29.0/grpc-testing-1.29.0-sources.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/io/grpc/grpc-testing/1.29.0/grpc-testing-1.29.0-sources.jar",
-                    "https://jcenter.bintray.com/io/grpc/grpc-testing/1.29.0/grpc-testing-1.29.0-sources.jar",
                     "https://maven.google.com/io/grpc/grpc-testing/1.29.0/grpc-testing-1.29.0-sources.jar"
                 ],
                 "sha256": "3e0e3733d501fd8984f1e0f4a5a13cca6da43549529253c351e3fd123e90a1ba",
@@ -9038,7 +8992,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/io/opencensus/opencensus-contrib-grpc-metrics/0.21.0/opencensus-contrib-grpc-metrics-0.21.0.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/io/opencensus/opencensus-contrib-grpc-metrics/0.21.0/opencensus-contrib-grpc-metrics-0.21.0.jar",
-                    "https://jcenter.bintray.com/io/opencensus/opencensus-contrib-grpc-metrics/0.21.0/opencensus-contrib-grpc-metrics-0.21.0.jar",
                     "https://maven.google.com/io/opencensus/opencensus-contrib-grpc-metrics/0.21.0/opencensus-contrib-grpc-metrics-0.21.0.jar"
                 ],
                 "sha256": "29fc79401082301542cab89d7054d2f0825f184492654c950020553ef4ff0ef8",
@@ -9227,7 +9180,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/io/opencensus/opencensus-contrib-grpc-metrics/0.21.0/opencensus-contrib-grpc-metrics-0.21.0-sources.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/io/opencensus/opencensus-contrib-grpc-metrics/0.21.0/opencensus-contrib-grpc-metrics-0.21.0-sources.jar",
-                    "https://jcenter.bintray.com/io/opencensus/opencensus-contrib-grpc-metrics/0.21.0/opencensus-contrib-grpc-metrics-0.21.0-sources.jar",
                     "https://maven.google.com/io/opencensus/opencensus-contrib-grpc-metrics/0.21.0/opencensus-contrib-grpc-metrics-0.21.0-sources.jar"
                 ],
                 "sha256": "6536dcddc505c73c53d8e031f12276dfd345b093a59c1943d050bf55dba4730f",
@@ -9416,7 +9368,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/net/sourceforge/lept4j/lept4j/1.10.0/lept4j-1.10.0.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/net/sourceforge/lept4j/lept4j/1.10.0/lept4j-1.10.0.jar",
-                    "https://jcenter.bintray.com/net/sourceforge/lept4j/lept4j/1.10.0/lept4j-1.10.0.jar",
                     "https://maven.google.com/net/sourceforge/lept4j/lept4j/1.10.0/lept4j-1.10.0.jar"
                 ],
                 "sha256": "a4bc3e1d6c9fbcb4bde577673ea5e13de1b8d300c087d58ac745ad400e64a364",
@@ -9605,7 +9556,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/net/sourceforge/lept4j/lept4j/1.10.0/lept4j-1.10.0-sources.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/net/sourceforge/lept4j/lept4j/1.10.0/lept4j-1.10.0-sources.jar",
-                    "https://jcenter.bintray.com/net/sourceforge/lept4j/lept4j/1.10.0/lept4j-1.10.0-sources.jar",
                     "https://maven.google.com/net/sourceforge/lept4j/lept4j/1.10.0/lept4j-1.10.0-sources.jar"
                 ],
                 "sha256": "210d77384591f0b873dfcb6eaaf5398d83c8f8103e17984af03f7de3040290e6",
@@ -9798,7 +9748,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/net/sourceforge/tess4j/tess4j/4.0.2/tess4j-4.0.2.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/net/sourceforge/tess4j/tess4j/4.0.2/tess4j-4.0.2.jar",
-                    "https://jcenter.bintray.com/net/sourceforge/tess4j/tess4j/4.0.2/tess4j-4.0.2.jar",
                     "https://maven.google.com/net/sourceforge/tess4j/tess4j/4.0.2/tess4j-4.0.2.jar"
                 ],
                 "sha256": "de5f80d8933b86197683ef59e93b584320c52f3192d2dc5524aefb7123edc76f",
@@ -9991,7 +9940,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/net/sourceforge/tess4j/tess4j/4.0.2/tess4j-4.0.2-sources.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/net/sourceforge/tess4j/tess4j/4.0.2/tess4j-4.0.2-sources.jar",
-                    "https://jcenter.bintray.com/net/sourceforge/tess4j/tess4j/4.0.2/tess4j-4.0.2-sources.jar",
                     "https://maven.google.com/net/sourceforge/tess4j/tess4j/4.0.2/tess4j-4.0.2-sources.jar"
                 ],
                 "sha256": "73066c34df98713cc09af001646e8563923d190693fc16d0917c8cda75610d71",
@@ -10184,7 +10132,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/org/apache/curator/curator-client/4.3.0/curator-client-4.3.0.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/org/apache/curator/curator-client/4.3.0/curator-client-4.3.0.jar",
-                    "https://jcenter.bintray.com/org/apache/curator/curator-client/4.3.0/curator-client-4.3.0.jar",
                     "https://maven.google.com/org/apache/curator/curator-client/4.3.0/curator-client-4.3.0.jar"
                 ],
                 "sha256": "23fadee923b01e07db71eda9cae78585d537b353fb188d256139581ff5cf089c",
@@ -10377,7 +10324,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/org/apache/curator/curator-client/4.3.0/curator-client-4.3.0-sources.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/org/apache/curator/curator-client/4.3.0/curator-client-4.3.0-sources.jar",
-                    "https://jcenter.bintray.com/org/apache/curator/curator-client/4.3.0/curator-client-4.3.0-sources.jar",
                     "https://maven.google.com/org/apache/curator/curator-client/4.3.0/curator-client-4.3.0-sources.jar"
                 ],
                 "sha256": "42bd0151bc00a9b1287cdaec37796736189e2b2b71b727221680b9c0dbc14dac",
@@ -10571,7 +10517,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/org/apache/curator/curator-framework/4.3.0/curator-framework-4.3.0.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/org/apache/curator/curator-framework/4.3.0/curator-framework-4.3.0.jar",
-                    "https://jcenter.bintray.com/org/apache/curator/curator-framework/4.3.0/curator-framework-4.3.0.jar",
                     "https://maven.google.com/org/apache/curator/curator-framework/4.3.0/curator-framework-4.3.0.jar"
                 ],
                 "sha256": "c492761a928daef8297ac3397bf099ddef4eb9e13317d081d379134dc2d1d44d",
@@ -10765,7 +10710,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/org/apache/curator/curator-framework/4.3.0/curator-framework-4.3.0-sources.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/org/apache/curator/curator-framework/4.3.0/curator-framework-4.3.0-sources.jar",
-                    "https://jcenter.bintray.com/org/apache/curator/curator-framework/4.3.0/curator-framework-4.3.0-sources.jar",
                     "https://maven.google.com/org/apache/curator/curator-framework/4.3.0/curator-framework-4.3.0-sources.jar"
                 ],
                 "sha256": "8061de48b7974a353907a9269e1c063eae2b7eddef68a83f8172e84b86a967e7",
@@ -10960,7 +10904,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/org/apache/curator/curator-recipes/4.3.0/curator-recipes-4.3.0.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/org/apache/curator/curator-recipes/4.3.0/curator-recipes-4.3.0.jar",
-                    "https://jcenter.bintray.com/org/apache/curator/curator-recipes/4.3.0/curator-recipes-4.3.0.jar",
                     "https://maven.google.com/org/apache/curator/curator-recipes/4.3.0/curator-recipes-4.3.0.jar"
                 ],
                 "sha256": "7b9ab910a98e2e5f33edfb3595afb188ec92252bf0bd13211e22fcf619bdd772",
@@ -11155,7 +11098,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/org/apache/curator/curator-recipes/4.3.0/curator-recipes-4.3.0-sources.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/org/apache/curator/curator-recipes/4.3.0/curator-recipes-4.3.0-sources.jar",
-                    "https://jcenter.bintray.com/org/apache/curator/curator-recipes/4.3.0/curator-recipes-4.3.0-sources.jar",
                     "https://maven.google.com/org/apache/curator/curator-recipes/4.3.0/curator-recipes-4.3.0-sources.jar"
                 ],
                 "sha256": "ec808c4730c6e4c48f20214422a609917e57aa511ab1d9b8349714afea219b0d",
@@ -11348,7 +11290,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/org/apache/curator/curator-x-discovery/4.0.0/curator-x-discovery-4.0.0.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/org/apache/curator/curator-x-discovery/4.0.0/curator-x-discovery-4.0.0.jar",
-                    "https://jcenter.bintray.com/org/apache/curator/curator-x-discovery/4.0.0/curator-x-discovery-4.0.0.jar",
                     "https://maven.google.com/org/apache/curator/curator-x-discovery/4.0.0/curator-x-discovery-4.0.0.jar"
                 ],
                 "sha256": "31439a5abb319aeb7fa971d9a2b0b16f0a2d653096d025a257b6597dbd23f9e7",
@@ -11541,7 +11482,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/org/apache/curator/curator-x-discovery/4.0.0/curator-x-discovery-4.0.0-sources.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/org/apache/curator/curator-x-discovery/4.0.0/curator-x-discovery-4.0.0-sources.jar",
-                    "https://jcenter.bintray.com/org/apache/curator/curator-x-discovery/4.0.0/curator-x-discovery-4.0.0-sources.jar",
                     "https://maven.google.com/org/apache/curator/curator-x-discovery/4.0.0/curator-x-discovery-4.0.0-sources.jar"
                 ],
                 "sha256": "4d8b660b55e4f363e97c13bbd37818c8213608061ca3084978cd36b112ad9e25",
@@ -11730,7 +11670,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/org/apache/zookeeper/zookeeper/3.5.3-beta/zookeeper-3.5.3-beta.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/org/apache/zookeeper/zookeeper/3.5.3-beta/zookeeper-3.5.3-beta.jar",
-                    "https://jcenter.bintray.com/org/apache/zookeeper/zookeeper/3.5.3-beta/zookeeper-3.5.3-beta.jar",
                     "https://maven.google.com/org/apache/zookeeper/zookeeper/3.5.3-beta/zookeeper-3.5.3-beta.jar"
                 ],
                 "sha256": "5f33520b3468c18a251b3ed6e122cf07d480b3139370f6392d69546a25c9ef56",
@@ -11919,7 +11858,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/org/apache/zookeeper/zookeeper/3.5.3-beta/zookeeper-3.5.3-beta-sources.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/org/apache/zookeeper/zookeeper/3.5.3-beta/zookeeper-3.5.3-beta-sources.jar",
-                    "https://jcenter.bintray.com/org/apache/zookeeper/zookeeper/3.5.3-beta/zookeeper-3.5.3-beta-sources.jar",
                     "https://maven.google.com/org/apache/zookeeper/zookeeper/3.5.3-beta/zookeeper-3.5.3-beta-sources.jar"
                 ],
                 "sha256": "7ffa054ae7466c20328d2744a23b7649d0fe94f1d9d256a7fb6df3e17903280d",
@@ -12108,7 +12046,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/org/eclipse/jetty/toolchain/setuid/jetty-setuid-java/1.0.2/jetty-setuid-java-1.0.2.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/org/eclipse/jetty/toolchain/setuid/jetty-setuid-java/1.0.2/jetty-setuid-java-1.0.2.jar",
-                    "https://jcenter.bintray.com/org/eclipse/jetty/toolchain/setuid/jetty-setuid-java/1.0.2/jetty-setuid-java-1.0.2.jar",
                     "https://maven.google.com/org/eclipse/jetty/toolchain/setuid/jetty-setuid-java/1.0.2/jetty-setuid-java-1.0.2.jar"
                 ],
                 "sha256": "d58981d8e55a20267300a16958a40b85eb329bf3ed1100b093fb5db8f4da15c5",
@@ -12297,7 +12234,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/org/eclipse/jetty/toolchain/setuid/jetty-setuid-java/1.0.2/jetty-setuid-java-1.0.2-sources.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/org/eclipse/jetty/toolchain/setuid/jetty-setuid-java/1.0.2/jetty-setuid-java-1.0.2-sources.jar",
-                    "https://jcenter.bintray.com/org/eclipse/jetty/toolchain/setuid/jetty-setuid-java/1.0.2/jetty-setuid-java-1.0.2-sources.jar",
                     "https://maven.google.com/org/eclipse/jetty/toolchain/setuid/jetty-setuid-java/1.0.2/jetty-setuid-java-1.0.2-sources.jar"
                 ],
                 "sha256": "1806159cfe1a3c9ce0d54c7cfce1e3edd3228b1c9acdd33fb98886b75ab8b31f",
@@ -12490,7 +12426,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/org/hibernate/hibernate-entitymanager/3.5.4-Final/hibernate-entitymanager-3.5.4-Final.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/org/hibernate/hibernate-entitymanager/3.5.4-Final/hibernate-entitymanager-3.5.4-Final.jar",
-                    "https://jcenter.bintray.com/org/hibernate/hibernate-entitymanager/3.5.4-Final/hibernate-entitymanager-3.5.4-Final.jar",
                     "https://maven.google.com/org/hibernate/hibernate-entitymanager/3.5.4-Final/hibernate-entitymanager-3.5.4-Final.jar"
                 ],
                 "sha256": "3ee868796fe833406f991b100f35c6e2c20e2bd166f7b93de56d8d6a077dc39d",
@@ -12683,7 +12618,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/org/hibernate/hibernate-entitymanager/3.5.4-Final/hibernate-entitymanager-3.5.4-Final-sources.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/org/hibernate/hibernate-entitymanager/3.5.4-Final/hibernate-entitymanager-3.5.4-Final-sources.jar",
-                    "https://jcenter.bintray.com/org/hibernate/hibernate-entitymanager/3.5.4-Final/hibernate-entitymanager-3.5.4-Final-sources.jar",
                     "https://maven.google.com/org/hibernate/hibernate-entitymanager/3.5.4-Final/hibernate-entitymanager-3.5.4-Final-sources.jar"
                 ],
                 "sha256": "d55eec335f2b15c69a63559ce038d7790ee665a3311008815a5c1be5ae1ee931",
@@ -12872,7 +12806,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/org/slf4j/slf4j-simple/1.7.27/slf4j-simple-1.7.27.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/org/slf4j/slf4j-simple/1.7.27/slf4j-simple-1.7.27.jar",
-                    "https://jcenter.bintray.com/org/slf4j/slf4j-simple/1.7.27/slf4j-simple-1.7.27.jar",
                     "https://maven.google.com/org/slf4j/slf4j-simple/1.7.27/slf4j-simple-1.7.27.jar"
                 ],
                 "sha256": "3a2eea8e3a188ba93bef1435362165f7544f52e97377628184b9007857b18d1b",
@@ -13061,7 +12994,6 @@
                 "file": "v1/https/repo1.maven.org/maven2/org/slf4j/slf4j-simple/1.7.27/slf4j-simple-1.7.27-sources.jar",
                 "mirror_urls": [
                     "https://repo1.maven.org/maven2/org/slf4j/slf4j-simple/1.7.27/slf4j-simple-1.7.27-sources.jar",
-                    "https://jcenter.bintray.com/org/slf4j/slf4j-simple/1.7.27/slf4j-simple-1.7.27-sources.jar",
                     "https://maven.google.com/org/slf4j/slf4j-simple/1.7.27/slf4j-simple-1.7.27-sources.jar"
                 ],
                 "sha256": "cc4e699b71866807ed0a62f91d1a10e1c70cb3e15140dd655fcb2b5a16083c2d",
