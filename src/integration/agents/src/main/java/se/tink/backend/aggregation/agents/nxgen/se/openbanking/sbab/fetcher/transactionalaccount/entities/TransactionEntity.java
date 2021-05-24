@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.fetcher.tra
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -14,20 +13,14 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction.Builder;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.nxgen.core.transaction.TransactionDates;
-import se.tink.backend.aggregation.utils.json.deserializers.LocalDateDeserializer;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.chrono.AvailableDateInformation;
 
 @JsonObject
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class TransactionEntity {
-
-    @JsonDeserialize(using = LocalDateDeserializer.class)
     private LocalDate accountingDate;
-
-    @JsonDeserialize(using = LocalDateDeserializer.class)
     private LocalDate valueDate;
-
     private Boolean recurringTransfer;
     private String transferId;
     private BigDecimal amount;

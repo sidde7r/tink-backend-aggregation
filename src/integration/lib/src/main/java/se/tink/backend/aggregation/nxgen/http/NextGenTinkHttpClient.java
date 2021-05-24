@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.nxgen.http;
 
 import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
 import com.google.api.client.repackaged.com.google.common.base.Strings;
 import com.google.common.base.Preconditions;
@@ -277,6 +278,7 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
                         .orElseGet(() -> new PrintStream(System.out));
 
         registerJacksonModule(new VavrModule());
+        registerJacksonModule(new JavaTimeModule());
         responseStatusHandler =
                 new DefaultResponseStatusHandler(
                         this.provider != null ? this.provider.getName() : null);
