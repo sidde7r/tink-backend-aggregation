@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.ArgentaConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.ArgentaConstants.HeaderKeys;
@@ -36,6 +37,7 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.dat
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
@@ -151,11 +153,18 @@ public class ArgentaApiClient {
     }
 
     public AccountResponse getAccounts() {
-        return createRequestInSession(Urls.ACCOUNTS)
-                .header(HeaderKeys.DATE, getFormattedDate())
-                .removeAggregatorHeader()
-                .queryParam(QueryKeys.WITH_BALANCE, String.valueOf(true))
-                .get(AccountResponse.class);
+        try {
+            return createRequestInSession(Urls.ACCOUNTS)
+                    .header(HeaderKeys.DATE, getFormattedDate())
+                    .removeAggregatorHeader()
+                    .queryParam(QueryKeys.WITH_BALANCE, String.valueOf(true))
+                    .get(AccountResponse.class);
+        } catch (HttpResponseException ex) {
+            if (ex.getMessage().contains("ACCESS_EXCEEDED")) {
+                throw BankServiceError.ACCESS_EXCEEDED.exception();
+            }
+            throw ex;
+        }
     }
 
     public TransactionsResponse getTransactions(URL url) {
