@@ -55,7 +55,7 @@ public class LoginStep extends AbstractAuthenticationStep {
     private final PersistentStorage persistentStorage;
     private final RandomValueGenerator randomValueGenerator;
     private final Map<Integer, String> scaTypeToStepId;
-    private final boolean isManualRequest;
+    private final boolean isUserAvailableForInteraction;
 
     public LoginStep(
             IngApiClient apiClient,
@@ -63,13 +63,13 @@ public class LoginStep extends AbstractAuthenticationStep {
             PersistentStorage persistentStorage,
             RandomValueGenerator randomValueGenerator,
             Map<Integer, String> scaTypeToStepId,
-            boolean isManualRequest) {
+            boolean isUserAvailableForInteraction) {
         this.apiClient = apiClient;
         this.sessionStorage = sessionStorage;
         this.persistentStorage = persistentStorage;
         this.randomValueGenerator = randomValueGenerator;
         this.scaTypeToStepId = scaTypeToStepId;
-        this.isManualRequest = isManualRequest;
+        this.isUserAvailableForInteraction = isUserAvailableForInteraction;
     }
 
     @Override
@@ -134,7 +134,7 @@ public class LoginStep extends AbstractAuthenticationStep {
 
     private AuthenticationStepResponse handleSca(Integer scaMethod)
             throws SessionException, LoginException {
-        if (!isManualRequest) {
+        if (!isUserAvailableForInteraction) {
             LOGGER.warn("Got SCA on non-manual refresh");
             throw SessionError.SESSION_EXPIRED.exception();
         }
