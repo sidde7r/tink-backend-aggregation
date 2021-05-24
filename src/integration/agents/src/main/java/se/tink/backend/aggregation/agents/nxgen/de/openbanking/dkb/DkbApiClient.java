@@ -52,7 +52,7 @@ public final class DkbApiClient {
     }
 
     private void addPsuIpAddressHeaderIfManualRefresh(RequestBuilder requestBuilder) {
-        if (dkbUserIpInformation.isManualRequest()) {
+        if (dkbUserIpInformation.isUserPresent()) {
             log.info("Request is attended -- adding PSU header");
             requestBuilder.header(HeaderKeys.PSU_IP_ADDRESS, dkbUserIpInformation.getUserIp());
         } else {

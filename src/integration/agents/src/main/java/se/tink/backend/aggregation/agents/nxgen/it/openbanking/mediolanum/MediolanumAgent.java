@@ -51,7 +51,10 @@ public final class MediolanumAgent extends NextGenerationAgent
         MediolanumConfiguration providerSpecificConfiguration =
                 agentConfiguration.getProviderSpecificConfiguration();
         providerSpecificConfiguration.setRedirectUrl(agentConfiguration.getRedirectUrl());
-        providerSpecificConfiguration.setUserIp(request.isManual() ? userIp : null);
+        providerSpecificConfiguration.setUserIp(
+                request.getUserAvailability().isUserPresent()
+                        ? request.getUserAvailability().getOriginatingUserIp()
+                        : null);
         return providerSpecificConfiguration;
     }
 
@@ -107,7 +110,7 @@ public final class MediolanumAgent extends NextGenerationAgent
                         apiClient,
                         new TransactionMapper(),
                         componentProvider.getLocalDateTimeSource(),
-                        request.isManual());
+                        request.getUserAvailability().isUserPresent());
         return new TransactionalAccountRefreshController(
                 metricRefreshController, updateController, accountFetcher, transactionFetcher);
     }
