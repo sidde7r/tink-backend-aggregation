@@ -138,8 +138,8 @@ public final class N26Agent extends AgentPlatformAgent
                 client,
                 persistentStorage,
                 getN26AgentConfiguration(),
-                request.isManual(),
-                userIp,
+                request.getUserAvailability().isUserPresent(),
+                request.getUserAvailability().getOriginatingUserIp(),
                 componentProvider.getRandomValueGenerator(),
                 xs2aAuthenticationDataAccessor);
     }
@@ -156,7 +156,7 @@ public final class N26Agent extends AgentPlatformAgent
                         new N26DevelopersTransactionDateFromFetcher<TransactionalAccount>(
                                 xs2aApiClient,
                                 componentProvider.getLocalDateTimeSource(),
-                                request.isManual()));
+                                request.getUserAvailability().isUserPresent()));
 
         return new TransactionalAccountRefreshController(
                 metricRefreshController, updateController, accountFetcher, transactionFetcher);

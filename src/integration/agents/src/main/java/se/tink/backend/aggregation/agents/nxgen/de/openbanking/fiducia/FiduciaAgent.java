@@ -91,7 +91,9 @@ public final class FiduciaAgent extends NextGenerationAgent
                 qsealcSerialNumberInHex,
                 qsealcIssuerDN,
                 getAgentConfiguration().getRedirectUrl(),
-                request.isManual() ? userIp : null);
+                request.getUserAvailability().isUserPresent()
+                        ? request.getUserAvailability().getOriginatingUserIp()
+                        : null);
     }
 
     private AgentConfiguration<FiduciaConfiguration> getAgentConfiguration() {

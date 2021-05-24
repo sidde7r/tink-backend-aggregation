@@ -54,12 +54,12 @@ public abstract class CbiGlobeAgent extends SubsequentProgressiveGenerationAgent
 
     public CbiGlobeAgent(AgentComponentProvider agentComponentProvider) {
         super(agentComponentProvider);
-        psuIpAddress = userIp;
+        psuIpAddress = request.getUserAvailability().getOriginatingUserIp();
         providerConfiguration =
                 PayloadParser.parse(
                         request.getProvider().getPayload(), CbiGlobeProviderConfiguration.class);
         temporaryStorage = new TemporaryStorage();
-        apiClient = getApiClient(request.isManual());
+        apiClient = getApiClient(request.getUserAvailability().isUserPresent());
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
         userState = new CbiUserState(persistentStorage, credentials);
         authenticator = getAuthenticator();

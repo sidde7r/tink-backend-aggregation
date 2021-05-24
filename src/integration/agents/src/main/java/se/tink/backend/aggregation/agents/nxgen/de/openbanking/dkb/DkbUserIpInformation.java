@@ -7,6 +7,6 @@ import lombok.RequiredArgsConstructor;
 @Getter
 public class DkbUserIpInformation {
 
-    private final boolean manualRequest;
+    private final boolean userPresent;
     private final String userIp;
 }

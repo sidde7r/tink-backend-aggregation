@@ -35,15 +35,15 @@ public class FinecoBankCreditCardAccountFetcher
 
     private final FinecoBankApiClient apiClient;
     private final FinecoStorage storage;
-    private final boolean isManual;
+    private final boolean userPresent;
 
     private final Map<String, Integer> transactionsRequestsCounterPerApiIdentifier;
 
     public FinecoBankCreditCardAccountFetcher(
-            FinecoBankApiClient apiClient, FinecoStorage storage, boolean isManual) {
+            FinecoBankApiClient apiClient, FinecoStorage storage, boolean userPresent) {
         this.apiClient = apiClient;
         this.storage = storage;
-        this.isManual = isManual;
+        this.userPresent = userPresent;
 
         this.transactionsRequestsCounterPerApiIdentifier = new HashMap<>();
     }
@@ -129,7 +129,7 @@ public class FinecoBankCreditCardAccountFetcher
 
         int requestsCount =
                 transactionsRequestsCounterPerApiIdentifier.getOrDefault(apiIdentifier, 0);
-        if (isManual) {
+        if (userPresent) {
             return requestsCount == MAX_MONTHS_ALLOWED_TO_FETCH;
         }
         return requestsCount == MAX_MONTHS_BG_REFRESH;

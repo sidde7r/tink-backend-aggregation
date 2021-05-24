@@ -65,7 +65,9 @@ public abstract class FabricAgent extends NextGenerationAgent
     }
 
     private FabricUserIpInformation getUserIpInformation() {
-        return new FabricUserIpInformation(request.isManual(), userIp);
+        return new FabricUserIpInformation(
+                request.getUserAvailability().isUserPresent(),
+                request.getUserAvailability().getOriginatingUserIp());
     }
 
     @Override

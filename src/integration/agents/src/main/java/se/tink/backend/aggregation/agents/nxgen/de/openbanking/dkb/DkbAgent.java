@@ -58,7 +58,11 @@ public final class DkbAgent extends NextGenerationAgent
 
         Map<Class<?>, Object> beans = new HashMap<>();
         beans.put(DkbConfiguration.class, dkbConfiguration);
-        beans.put(DkbUserIpInformation.class, new DkbUserIpInformation(request.isManual(), userIp));
+        beans.put(
+                DkbUserIpInformation.class,
+                new DkbUserIpInformation(
+                        request.getUserAvailability().isUserPresent(),
+                        request.getUserAvailability().getOriginatingUserIp()));
         beans.put(Catalog.class, catalog);
         beans.put(Credentials.class, credentials);
         beans.put(SupplementalInformationHelper.class, supplementalInformationHelper);

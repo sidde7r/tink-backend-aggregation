@@ -100,7 +100,9 @@ public final class FinecoBankAgent extends NextGenerationAgent
                         getAgentConfigurationController()
                                 .getAgentConfiguration(FinecoBankConfiguration.class)
                                 .getRedirectUrl(),
-                        request.isManual() ? userIp : null);
+                        request.getUserAvailability().isUserPresent()
+                                ? request.getUserAvailability().getOriginatingUserIp()
+                                : null);
 
         return new FinecoBankApiClient(
                 new FinecoUrlProvider(),
@@ -127,7 +129,7 @@ public final class FinecoBankAgent extends NextGenerationAgent
     private CreditCardRefreshController constructCardRefreshController() {
         final FinecoBankCreditCardAccountFetcher accountFetcher =
                 new FinecoBankCreditCardAccountFetcher(
-                        apiClient, finecoStorage, request.isManual());
+                        apiClient, finecoStorage, request.getUserAvailability().isUserPresent());
 
         return new CreditCardRefreshController(
                 metricRefreshController,

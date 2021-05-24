@@ -358,7 +358,7 @@ public class RedsysApiClient {
     }
 
     private boolean isAutoRefresh() {
-        return !request.isManual();
+        return !request.getUserAvailability().isUserPresent();
     }
 
     private boolean hasDoneInitialFetch(String accountId) {
