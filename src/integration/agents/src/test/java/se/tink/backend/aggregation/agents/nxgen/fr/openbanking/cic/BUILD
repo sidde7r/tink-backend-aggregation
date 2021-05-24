@@ -31,5 +31,6 @@ junit_test(
         "//third_party:com_github_tomakehurst_wiremock",
         "//third_party:org_mockito_mockito_core",
         "@tink_backend//src/libraries/account_identifier",
+        "@tink_backend//src/libraries/payments_common/src/java/se/tink/libraries/payments/common/model:payments_common_model",
     ],
 )
