@@ -10,6 +10,7 @@ public class ProcessAccountsRequest implements SafelyLoggable {
     private String credentialsId;
     private String userId;
     private String operationId;
+    private String correlationId;
 
     public String getCredentialsId() {
         return credentialsId;
@@ -51,6 +52,7 @@ public class ProcessAccountsRequest implements SafelyLoggable {
                 .add("credentialsId", credentialsId)
                 .add("userId", userId)
                 .add("operationId", operationId)
+                .add("correlationId", correlationId)
                 .toString();
     }
 
@@ -60,5 +62,13 @@ public class ProcessAccountsRequest implements SafelyLoggable {
 
     public void setRequestedAccountIds(List<String> requestedAccountIds) {
         this.requestedAccountIds = requestedAccountIds;
+    }
+
+    public String getCorrelationId() {
+        return correlationId;
+    }
+
+    public void setCorrelationId(String correlationId) {
+        this.correlationId = correlationId;
     }
 }

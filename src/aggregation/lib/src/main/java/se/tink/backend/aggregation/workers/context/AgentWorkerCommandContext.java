@@ -207,6 +207,7 @@ public class AgentWorkerCommandContext extends AgentWorkerContext {
         processAccountsRequest.setUserId(request.getUser().getId());
         processAccountsRequest.setOperationId(request.getOperationId());
         processAccountsRequest.setRequestedAccountIds(getRequestedAccounts());
+        processAccountsRequest.setCorrelationId(correlationId);
 
         controllerWrapper.processAccounts(processAccountsRequest);
     }
