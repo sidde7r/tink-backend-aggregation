@@ -35,7 +35,7 @@ public class SainsburyBusinessAgent extends UkOpenBankingBaseAgent {
     static {
         aisConfig =
                 UkOpenBankingAisConfiguration.builder()
-                        .withAllowedAccountOwnershipType(AccountOwnershipType.BUSINESS)
+                        .withAllowedAccountOwnershipTypes(AccountOwnershipType.BUSINESS)
                         .withOrganisationId(SainsburyConstants.ORGANISATION_ID)
                         .withWellKnownURL(SainsburyConstants.WELL_KNOWN_URL)
                         .withApiBaseURL(SainsburyConstants.AIS_API_URL)

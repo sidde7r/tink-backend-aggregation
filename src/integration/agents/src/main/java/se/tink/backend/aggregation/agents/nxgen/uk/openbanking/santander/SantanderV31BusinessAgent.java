@@ -40,7 +40,7 @@ public class SantanderV31BusinessAgent extends UkOpenBankingBaseAgent {
                         .withApiBaseURL(SantanderConstants.AIS_API_URL)
                         .withWellKnownURL(SantanderConstants.WELL_KNOWN_URL)
                         .withPartyEndpoints(PartyEndpoint.PARTY)
-                        .withAllowedAccountOwnershipType(AccountOwnershipType.BUSINESS)
+                        .withAllowedAccountOwnershipTypes(AccountOwnershipType.BUSINESS)
                         .build();
     }
 

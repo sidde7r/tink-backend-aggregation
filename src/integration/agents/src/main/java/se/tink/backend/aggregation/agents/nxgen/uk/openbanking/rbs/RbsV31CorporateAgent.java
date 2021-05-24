@@ -46,7 +46,7 @@ public class RbsV31CorporateAgent extends UkOpenBankingBaseAgent {
                         .withOrganisationId(RbsConstants.ORGANISATION_ID)
                         .withApiBaseURL(RbsConstants.AIS_API_URL)
                         .withWellKnownURL(RbsConstants.CORPORATE_WELL_KNOWN_URL)
-                        .withAllowedAccountOwnershipType(AccountOwnershipType.BUSINESS)
+                        .withAllowedAccountOwnershipTypes(AccountOwnershipType.BUSINESS)
                         .build();
     }
 

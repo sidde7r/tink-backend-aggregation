@@ -51,6 +51,8 @@ public class AccountTypeMapper {
     }
 
     public boolean supportsAccountOwnershipType(AccountEntity accountEntity) {
-        return aisConfig.getAllowedAccountOwnershipType() == getAccountOwnershipType(accountEntity);
+        return aisConfig
+                .getAllowedAccountOwnershipTypes()
+                .contains(getAccountOwnershipType(accountEntity));
     }
 }

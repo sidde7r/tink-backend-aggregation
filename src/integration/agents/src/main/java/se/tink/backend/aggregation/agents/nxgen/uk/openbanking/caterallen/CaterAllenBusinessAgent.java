@@ -36,7 +36,7 @@ public class CaterAllenBusinessAgent extends UkOpenBankingBaseAgent {
     static {
         aisConfig =
                 UkOpenBankingAisConfiguration.builder()
-                        .withAllowedAccountOwnershipType(AccountOwnershipType.BUSINESS)
+                        .withAllowedAccountOwnershipTypes(AccountOwnershipType.BUSINESS)
                         .withOrganisationId(CaterAllenConstants.ORGANISATION_ID)
                         .withWellKnownURL(CaterAllenConstants.WELL_KNOWN_URL)
                         .withApiBaseURL(CaterAllenConstants.AIS_API_URL)

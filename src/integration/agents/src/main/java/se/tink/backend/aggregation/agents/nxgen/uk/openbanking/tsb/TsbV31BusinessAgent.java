@@ -41,7 +41,7 @@ public final class TsbV31BusinessAgent extends UkOpenBankingBaseAgent {
                         .withOrganisationId(TsbConstants.ORGANISATION_ID)
                         .withApiBaseURL(TsbConstants.AIS_API_URL)
                         .withWellKnownURL(TsbConstants.WELL_KNOWN_URL)
-                        .withAllowedAccountOwnershipType(AccountOwnershipType.BUSINESS)
+                        .withAllowedAccountOwnershipTypes(AccountOwnershipType.BUSINESS)
                         .build();
     }
 

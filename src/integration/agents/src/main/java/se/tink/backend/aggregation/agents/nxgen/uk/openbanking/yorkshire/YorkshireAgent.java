@@ -35,7 +35,8 @@ public class YorkshireAgent extends UkOpenBankingBaseAgent {
     static {
         aisConfig =
                 UkOpenBankingAisConfiguration.builder()
-                        .withAllowedAccountOwnershipType(AccountOwnershipType.PERSONAL)
+                        .withAllowedAccountOwnershipTypes(
+                                AccountOwnershipType.PERSONAL, AccountOwnershipType.BUSINESS)
                         .withOrganisationId(YorkshireConstants.ORGANISATION_ID)
                         .withWellKnownURL(YorkshireConstants.WELL_KNOWN_URL)
                         .withApiBaseURL(YorkshireConstants.AIS_API_URL)

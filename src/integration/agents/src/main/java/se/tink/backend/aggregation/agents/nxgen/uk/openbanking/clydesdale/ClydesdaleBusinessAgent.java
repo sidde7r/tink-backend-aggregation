@@ -42,7 +42,7 @@ public class ClydesdaleBusinessAgent extends UkOpenBankingBaseAgent {
                         .withWellKnownURL(ClydesdaleConstants.WELL_KNOWN_URL)
                         .withApiBaseURL(ClydesdaleConstants.AIS_API_URL)
                         .withPartyEndpoints(PartyEndpoint.PARTY, PartyEndpoint.ACCOUNT_ID_PARTY)
-                        .withAllowedAccountOwnershipType(AccountOwnershipType.BUSINESS)
+                        .withAllowedAccountOwnershipTypes(AccountOwnershipType.BUSINESS)
                         .build();
     }
 

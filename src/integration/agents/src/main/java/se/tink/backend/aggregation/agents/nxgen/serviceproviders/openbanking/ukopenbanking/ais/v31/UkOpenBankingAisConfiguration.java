@@ -2,7 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Sets;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingV31Constants;
@@ -19,14 +21,14 @@ public class UkOpenBankingAisConfiguration implements UkOpenBankingAisConfig {
     private final URL apiBaseURL;
     private final URL wellKnownURL;
     private final Set<PartyEndpoint> partyEndpoints;
-    private final AccountOwnershipType allowedAccountOwnershipType;
+    private final Set<AccountOwnershipType> allowedAccountOwnershipTypes;
     private final String organisationId;
 
     protected UkOpenBankingAisConfiguration(Builder builder) {
         this.apiBaseURL = builder.apiBaseURL;
         this.wellKnownURL = builder.wellKnownURL;
         this.partyEndpoints = builder.partyEndpoints;
-        this.allowedAccountOwnershipType = builder.allowedAccountOwnershipType;
+        this.allowedAccountOwnershipTypes = builder.allowedAccountOwnershipTypes;
         this.organisationId = builder.organisationId;
     }
 
@@ -137,8 +139,8 @@ public class UkOpenBankingAisConfiguration implements UkOpenBankingAisConfig {
     }
 
     @Override
-    public AccountOwnershipType getAllowedAccountOwnershipType() {
-        return allowedAccountOwnershipType;
+    public Set<AccountOwnershipType> getAllowedAccountOwnershipTypes() {
+        return allowedAccountOwnershipTypes;
     }
 
     public static Builder builder() {
@@ -154,7 +156,8 @@ public class UkOpenBankingAisConfiguration implements UkOpenBankingAisConfig {
         private final Set<PartyEndpoint> partyEndpoints = new HashSet<>();
         private URL apiBaseURL;
         private URL wellKnownURL;
-        private AccountOwnershipType allowedAccountOwnershipType = AccountOwnershipType.PERSONAL;
+        private Set<AccountOwnershipType> allowedAccountOwnershipTypes =
+                Collections.singleton(AccountOwnershipType.PERSONAL);
         private String organisationId;
 
         private Builder() {}
@@ -176,9 +179,9 @@ public class UkOpenBankingAisConfiguration implements UkOpenBankingAisConfig {
             return this;
         }
 
-        public Builder withAllowedAccountOwnershipType(
-                final AccountOwnershipType allowedAccountOwnershipType) {
-            this.allowedAccountOwnershipType = allowedAccountOwnershipType;
+        public Builder withAllowedAccountOwnershipTypes(
+                final AccountOwnershipType... allowedAccountOwnershipTypes) {
+            this.allowedAccountOwnershipTypes = Sets.newHashSet(allowedAccountOwnershipTypes);
             return this;
         }
 
@@ -190,7 +193,7 @@ public class UkOpenBankingAisConfiguration implements UkOpenBankingAisConfig {
         public UkOpenBankingAisConfiguration build() {
             Preconditions.checkNotNull(apiBaseURL);
             Preconditions.checkNotNull(organisationId);
-            Preconditions.checkNotNull(allowedAccountOwnershipType);
+            Preconditions.checkNotNull(allowedAccountOwnershipTypes);
             Preconditions.checkNotNull(wellKnownURL);
             return new UkOpenBankingAisConfiguration(this);
         }

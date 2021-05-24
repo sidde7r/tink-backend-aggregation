@@ -48,7 +48,7 @@ public final class RbsV31Agent extends UkOpenBankingBaseAgent {
     static {
         aisConfig =
                 UkOpenBankingAisConfiguration.builder()
-                        .withAllowedAccountOwnershipType(AccountOwnershipType.PERSONAL)
+                        .withAllowedAccountOwnershipTypes(AccountOwnershipType.PERSONAL)
                         .withOrganisationId(RbsConstants.ORGANISATION_ID)
                         .withApiBaseURL(RbsConstants.AIS_API_URL)
                         .withWellKnownURL(RbsConstants.PERSONAL_WELL_KNOWN_URL)

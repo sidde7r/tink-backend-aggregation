@@ -46,7 +46,7 @@ public final class NatWestV31CorporateAgent extends UkOpenBankingBaseAgent {
                         .withOrganisationId(NatWestConstants.ORGANISATION_ID)
                         .withApiBaseURL(NatWestConstants.AIS_API_URL)
                         .withWellKnownURL(NatWestConstants.CORPORATE_WELL_KNOWN_URL)
-                        .withAllowedAccountOwnershipType(AccountOwnershipType.BUSINESS)
+                        .withAllowedAccountOwnershipTypes(AccountOwnershipType.BUSINESS)
                         .build();
     }
 

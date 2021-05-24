@@ -44,7 +44,8 @@ public final class TsbV31Agent extends UkOpenBankingBaseAgent {
     static {
         aisConfig =
                 UkOpenBankingAisConfiguration.builder()
-                        .withAllowedAccountOwnershipType(AccountOwnershipType.PERSONAL)
+                        .withAllowedAccountOwnershipTypes(
+                                AccountOwnershipType.PERSONAL, AccountOwnershipType.BUSINESS)
                         .withOrganisationId(TsbConstants.ORGANISATION_ID)
                         .withApiBaseURL(TsbConstants.AIS_API_URL)
                         .withWellKnownURL(TsbConstants.WELL_KNOWN_URL)

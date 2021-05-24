@@ -40,7 +40,7 @@ public final class BankOfScotlandCommercialV31Agent extends UkOpenBankingBaseAge
                         .withApiBaseURL(BankOfScotlandConstants.AIS_API_URL)
                         .withWellKnownURL(BankOfScotlandConstants.WELL_KNOWN_URL_COMMERCIAL)
                         .withOrganisationId(BankOfScotlandConstants.ORGANIZATION_ID)
-                        .withAllowedAccountOwnershipType(AccountOwnershipType.BUSINESS)
+                        .withAllowedAccountOwnershipTypes(AccountOwnershipType.BUSINESS)
                         .build();
     }
 

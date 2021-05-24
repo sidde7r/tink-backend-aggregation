@@ -44,7 +44,7 @@ public final class HalifaxV31Agent extends UkOpenBankingBaseAgent {
     static {
         aisConfig =
                 UkOpenBankingAisConfiguration.builder()
-                        .withAllowedAccountOwnershipType(AccountOwnershipType.PERSONAL)
+                        .withAllowedAccountOwnershipTypes(AccountOwnershipType.PERSONAL)
                         .withOrganisationId(HalifaxConstants.ORGANISATION_ID)
                         .withApiBaseURL(HalifaxConstants.AIS_API_URL)
                         .withWellKnownURL(HalifaxConstants.WELL_KNOWN_URL)

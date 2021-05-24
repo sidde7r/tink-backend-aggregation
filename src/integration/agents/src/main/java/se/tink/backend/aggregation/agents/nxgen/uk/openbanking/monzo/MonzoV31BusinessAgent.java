@@ -43,7 +43,7 @@ public final class MonzoV31BusinessAgent extends UkOpenBankingBaseAgent {
                         .withApiBaseURL(MonzoConstants.AIS_API_URL)
                         .withWellKnownURL(MonzoConstants.WELL_KNOWN_URL)
                         .withPartyEndpoints(PartyEndpoint.PARTY)
-                        .withAllowedAccountOwnershipType(AccountOwnershipType.BUSINESS)
+                        .withAllowedAccountOwnershipTypes(AccountOwnershipType.BUSINESS)
                         .build();
     }
 

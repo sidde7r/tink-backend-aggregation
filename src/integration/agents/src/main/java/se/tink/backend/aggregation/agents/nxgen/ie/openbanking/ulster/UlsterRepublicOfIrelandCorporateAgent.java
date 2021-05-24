@@ -25,7 +25,7 @@ public class UlsterRepublicOfIrelandCorporateAgent extends UkOpenBankingBaseAgen
     static {
         aisConfig =
                 UkOpenBankingAisConfiguration.builder()
-                        .withAllowedAccountOwnershipType(AccountOwnershipType.BUSINESS)
+                        .withAllowedAccountOwnershipTypes(AccountOwnershipType.BUSINESS)
                         .withOrganisationId(Constants.ORG_ID)
                         .withApiBaseURL(Constants.AIS_API_URL)
                         .withWellKnownURL(Constants.CORPORATE_WELL_KNOWN_URL)

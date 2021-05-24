@@ -62,7 +62,7 @@ public final class FirstDirectV31Agent extends UkOpenBankingBaseAgent {
     static {
         aisConfig =
                 UkOpenBankingAisConfiguration.builder()
-                        .withAllowedAccountOwnershipType(AccountOwnershipType.PERSONAL)
+                        .withAllowedAccountOwnershipTypes(AccountOwnershipType.PERSONAL)
                         .withOrganisationId(FirstDirectConstants.ORGANISATION_ID)
                         .withApiBaseURL(FirstDirectConstants.AIS_API_URL)
                         .withWellKnownURL(FirstDirectConstants.WELL_KNOWN_URL)

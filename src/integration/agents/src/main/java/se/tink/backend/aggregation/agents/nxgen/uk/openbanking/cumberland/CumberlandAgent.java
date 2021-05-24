@@ -38,7 +38,8 @@ public class CumberlandAgent extends UkOpenBankingBaseAgent {
     static {
         aisConfig =
                 UkOpenBankingAisConfiguration.builder()
-                        .withAllowedAccountOwnershipType(AccountOwnershipType.PERSONAL)
+                        .withAllowedAccountOwnershipTypes(
+                                AccountOwnershipType.PERSONAL, AccountOwnershipType.BUSINESS)
                         .withOrganisationId(CumberlandConstants.ORGANISATION_ID)
                         .withWellKnownURL(CumberlandConstants.WELL_KNOWN_URL)
                         .withApiBaseURL(CumberlandConstants.AIS_API_URL)

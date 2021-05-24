@@ -2,6 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.da
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableSet;
+import java.util.Collections;
+import java.util.Set;
 import javax.annotation.Nonnull;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingV31Constants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.authenticator.rpc.AccountPermissionResponse;
@@ -79,8 +81,8 @@ public class DanskebankAisConfiguration implements UkOpenBankingAisConfig {
     }
 
     @Override
-    public AccountOwnershipType getAllowedAccountOwnershipType() {
-        return AccountOwnershipType.PERSONAL;
+    public Set<AccountOwnershipType> getAllowedAccountOwnershipTypes() {
+        return Collections.singleton(AccountOwnershipType.PERSONAL);
     }
 
     @Override

@@ -36,7 +36,8 @@ public final class CashplusAgent extends UkOpenBankingBaseAgent {
     static {
         aisConfig =
                 UkOpenBankingAisConfiguration.builder()
-                        .withAllowedAccountOwnershipType(AccountOwnershipType.PERSONAL)
+                        .withAllowedAccountOwnershipTypes(
+                                AccountOwnershipType.PERSONAL, AccountOwnershipType.BUSINESS)
                         .withApiBaseURL(CashplusConstants.AIS_API_URL)
                         .withWellKnownURL(CashplusConstants.WELL_KNOWN_URL)
                         .withOrganisationId(CashplusConstants.ORGANISATION_ID)
