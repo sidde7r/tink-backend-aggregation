@@ -17,6 +17,7 @@ import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentCancelledException;
@@ -282,9 +283,14 @@ public class SocieteGeneralePaymentExecutor implements PaymentExecutor {
         return ThirdPartyAppAuthenticationPayload.of(authorizeUrl);
     }
 
-    private void waitForSupplementalInformation() {
-        this.supplementalInformationHelper.waitForSupplementalInformation(
-                strongAuthenticationState.getSupplementalKey(), 9L, TimeUnit.MINUTES);
+    private void waitForSupplementalInformation() throws PaymentAuthorizationException {
+        this.supplementalInformationHelper
+                .waitForSupplementalInformation(
+                        strongAuthenticationState.getSupplementalKey(), 9L, TimeUnit.MINUTES)
+                .orElseThrow(
+                        () ->
+                                new PaymentAuthorizationException(
+                                        "SCA time-out.", ThirdPartyAppError.TIMED_OUT.exception()));
     }
 
     private URL createRedirectUrl() {

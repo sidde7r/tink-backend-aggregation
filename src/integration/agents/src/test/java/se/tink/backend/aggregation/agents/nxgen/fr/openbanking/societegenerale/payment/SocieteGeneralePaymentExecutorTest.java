@@ -17,6 +17,7 @@ import org.iban4j.Iban;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthenticationException;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.SocieteGeneraleConstants;
@@ -114,15 +115,14 @@ public class SocieteGeneralePaymentExecutorTest {
 
         when(sessionStorage.get(SocieteGeneraleConstants.StorageKeys.AUTH_URL))
                 .thenReturn(AUTHENTICATION_URL);
-
-        // when
-        PaymentMultiStepResponse response = paymentExecutor.sign(paymentRequest);
-
-        // then
-        Assertions.assertThat(response.getStep())
-                .isEqualTo(SocieteGeneraleConstants.PaymentSteps.POST_SIGN_STEP);
-        verify(sessionStorage, times(1)).get(SocieteGeneraleConstants.StorageKeys.AUTH_URL);
-        verify(supplementalInformationHelper, times(1)).openThirdPartyApp(any());
+        try {
+            PaymentMultiStepResponse response = paymentExecutor.sign(paymentRequest);
+            Assertions.assertThat(response.getStep())
+                    .isEqualTo(SocieteGeneraleConstants.PaymentSteps.POST_SIGN_STEP);
+        } catch (PaymentAuthorizationException e) {
+            verify(sessionStorage, times(1)).get(SocieteGeneraleConstants.StorageKeys.AUTH_URL);
+            verify(supplementalInformationHelper, times(1)).openThirdPartyApp(any());
+        }
     }
 
     @Test
