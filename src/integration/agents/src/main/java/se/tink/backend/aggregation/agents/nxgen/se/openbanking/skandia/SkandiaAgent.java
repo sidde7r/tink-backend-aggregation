@@ -58,7 +58,7 @@ public final class SkandiaAgent extends NextGenerationAgent
     }
 
     private SkandiaUserIpInformation getUserIpInformation() {
-        return new SkandiaUserIpInformation(request.isManual(), userIp);
+        return new SkandiaUserIpInformation(request.getUserAvailability().isUserPresent(), userIp);
     }
 
     @Override
