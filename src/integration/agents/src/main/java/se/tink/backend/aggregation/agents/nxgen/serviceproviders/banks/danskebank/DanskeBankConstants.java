@@ -1,8 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank;
 
 import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableList;
 import java.text.MessageFormat;
 import java.time.ZoneId;
+import java.util.List;
 import java.util.TimeZone;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -178,10 +180,8 @@ public class DanskeBankConstants {
     }
 
     public static class Card {
-        // This status means probably that a card is active, but some users have only a card with
-        // status N or G
-        public static final String ACTIVE_STATUS = "a";
-        public static final String ACTIVE_BLOCK_STATUS = "active";
+        public static final List<String> VALID_CARD_STATUSES = ImmutableList.of("A", "G", "N");
+        public static final String BLOCK_STATUS_ACTIVE = "active";
     }
 
     public static class SecuritySystem {

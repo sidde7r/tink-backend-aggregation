@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.mapper;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -95,11 +94,9 @@ public class AccountEntityMapper {
     }
 
     private CardEntity getCardEntity(AccountEntity accountEntity, List<CardEntity> cardEntities) {
-        // Wiski delete logs after getting more data
         List<CardEntity> cardsOfAccount =
                 cardEntities.stream()
                         .filter(cardEntity -> accountNumbersAreEqual(accountEntity, cardEntity))
-                        .peek(this::logInactiveCardsOrWithUnknownStatus)
                         .collect(Collectors.toList());
 
         if (cardsOfAccount.isEmpty()) {
@@ -109,49 +106,27 @@ public class AccountEntityMapper {
             return new CardEntity();
         }
 
+        // Our model allows us to provide only one card number per CreditCardAccount, hence we are
+        // picking the first card that is not blocked and has a known valid card status. If we
+        // cannot find this card, pick the first one that is not blocked or just a first card
+        // otherwise.
         return cardsOfAccount.stream()
                 .filter(this::isCardNotBlocked)
-                .filter(this::isCardActive)
+                .filter(this::isCardStatusValid)
                 .findFirst()
-                .orElseGet(() -> logAndGetFirstCard(cardsOfAccount));
-    }
-
-    private void logInactiveCardsOrWithUnknownStatus(CardEntity cardEntity) {
-        if (!DanskeBankConstants.Card.ACTIVE_BLOCK_STATUS.equalsIgnoreCase(
-                        cardEntity.getBlockStatus())
-                && !"b".equalsIgnoreCase(cardEntity.getCardStatus())) {
-            log.info(
-                    "Found inactive card with blockStatus:[{}] and cardStatus:[{}]",
-                    cardEntity.getBlockStatus(),
-                    cardEntity.getCardStatus());
-        }
-        if (!Arrays.asList("A", "B", "G", "N", "U").contains(cardEntity.getCardStatus())) {
-            log.info("Found unknown cardStatus: [{}]", cardEntity.getCardStatus());
-        }
+                .orElseGet(() -> getFirstCard(cardsOfAccount));
     }
 
     private boolean isCardNotBlocked(CardEntity cardEntity) {
-        return DanskeBankConstants.Card.ACTIVE_BLOCK_STATUS.equalsIgnoreCase(
+        return DanskeBankConstants.Card.BLOCK_STATUS_ACTIVE.equalsIgnoreCase(
                 cardEntity.getBlockStatus());
     }
 
-    private boolean isCardActive(CardEntity cardEntity) {
-        return DanskeBankConstants.Card.ACTIVE_STATUS.equalsIgnoreCase(cardEntity.getCardStatus());
+    private boolean isCardStatusValid(CardEntity cardEntity) {
+        return DanskeBankConstants.Card.VALID_CARD_STATUSES.contains(cardEntity.getCardStatus());
     }
 
-    private CardEntity logAndGetFirstCard(List<CardEntity> cardsOfAccount) {
-        log.info(
-                "Credit card account has [{}] cards. Cards statuses: [{}]",
-                cardsOfAccount.size(),
-                cardsOfAccount.stream()
-                        .map(
-                                cardEntity ->
-                                        "\nblockStatus: "
-                                                + cardEntity.getBlockStatus()
-                                                + ", cardStatus: "
-                                                + cardEntity.getCardStatus())
-                        .collect(Collectors.toList()));
-
+    private CardEntity getFirstCard(List<CardEntity> cardsOfAccount) {
         return cardsOfAccount.stream()
                 .filter(this::isCardNotBlocked)
                 .findFirst()
