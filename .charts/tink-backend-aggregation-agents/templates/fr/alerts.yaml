@@ -170,8 +170,8 @@ spec:
       expr: |
         # Failed logins (due to bank site errors) over 90%
         count(sum_over_time(tink_agent_login_total{action="login",outcome="unavailable", market="FR"}[12h])) BY (className,provider)
-        # All login attempts the last 6 hours
-          / count(sum_over_time(tink_agent_login_total{action="login", market="FR"}[6h])) BY (className,provider) > 0.90
+        # All login attempts the last 12 hours
+          / count(sum_over_time(tink_agent_login_total{action="login", market="FR"}[12h])) BY (className,provider) > 0.90
         # At least this many attempts.
         and count(sum_over_time(tink_agent_login_total{action="login", market="FR", provider_type!="test"}[12h])) by (className,provider) > 2
       for: 15m
