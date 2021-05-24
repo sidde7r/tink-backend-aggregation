@@ -470,8 +470,6 @@ agentsServiceConfiguration:
       tink:
         clientId: dummyClientId
         clientSecret: dummyClientSecret
-        eidasOrgNmr: SE-FINA-44059
-        eidasQwac: Tink
         keyId: dummyKeyId
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
     12c894ee1767458989c41eca597dcba2:
