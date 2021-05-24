@@ -15,11 +15,11 @@ public class Xs2aDevelopersForAgentPlatformApiClient extends Xs2aDevelopersApiCl
             TinkHttpClient client,
             PersistentStorage persistentStorage,
             Xs2aDevelopersProviderConfiguration configuration,
-            boolean isManual,
+            boolean userPresent,
             String userIp,
             RandomValueGenerator randomValueGenerator,
             Xs2aAuthenticationDataAccessor xs2aAuthenticationDataAccessor) {
-        super(client, persistentStorage, configuration, isManual, userIp, randomValueGenerator);
+        super(client, persistentStorage, configuration, userPresent, userIp, randomValueGenerator);
         this.authenticationDataAccessor = xs2aAuthenticationDataAccessor;
     }
 

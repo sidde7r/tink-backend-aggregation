@@ -57,7 +57,7 @@ public class Xs2aDevelopersApiClient {
     protected final TinkHttpClient client;
     protected final PersistentStorage persistentStorage;
     protected final Xs2aDevelopersProviderConfiguration configuration;
-    protected final boolean isManual;
+    protected final boolean userPresent;
     protected final String userIp;
     protected final RandomValueGenerator randomValueGenerator;
 
@@ -65,13 +65,13 @@ public class Xs2aDevelopersApiClient {
             TinkHttpClient client,
             PersistentStorage persistentStorage,
             Xs2aDevelopersProviderConfiguration configuration,
-            boolean isManual,
+            boolean userPresent,
             String userIp,
             RandomValueGenerator randomValueGenerator) {
         this.client = client;
         this.persistentStorage = persistentStorage;
         this.configuration = configuration;
-        this.isManual = isManual;
+        this.userPresent = userPresent;
         this.userIp = userIp;
         this.randomValueGenerator = randomValueGenerator;
     }
@@ -98,7 +98,9 @@ public class Xs2aDevelopersApiClient {
                         .header(HeaderKeys.CONSENT_ID, getConsentIdFromStorage())
                         .header(HeaderKeys.X_REQUEST_ID, randomValueGenerator.getUUID());
 
-        return isManual ? requestBuilder.header(HeaderKeys.PSU_IP_ADDRESS, userIp) : requestBuilder;
+        return userPresent
+                ? requestBuilder.header(HeaderKeys.PSU_IP_ADDRESS, userIp)
+                : requestBuilder;
     }
 
     String getConsentIdFromStorage() {

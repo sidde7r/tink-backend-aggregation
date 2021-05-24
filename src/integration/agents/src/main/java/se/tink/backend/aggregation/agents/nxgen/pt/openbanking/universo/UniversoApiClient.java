@@ -27,10 +27,10 @@ public class UniversoApiClient extends Xs2aDevelopersApiClient {
             TinkHttpClient client,
             PersistentStorage persistentStorage,
             Xs2aDevelopersProviderConfiguration configuration,
-            boolean isManual,
+            boolean userPresent,
             String userIp,
             RandomValueGenerator randomValueGenerator) {
-        super(client, persistentStorage, configuration, isManual, userIp, randomValueGenerator);
+        super(client, persistentStorage, configuration, userPresent, userIp, randomValueGenerator);
     }
 
     @Override
