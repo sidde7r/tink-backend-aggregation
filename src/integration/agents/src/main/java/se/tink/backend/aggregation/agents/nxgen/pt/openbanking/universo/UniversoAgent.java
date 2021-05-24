@@ -87,7 +87,7 @@ public class UniversoAgent extends Xs2aDevelopersTransactionalAgent {
                         new UniversoTransactionDateFromFetcher(
                                 apiClient,
                                 agentComponentProvider.getLocalDateTimeSource(),
-                                request.isManual()));
+                                request.getUserAvailability().isUserPresent()));
 
         return new TransactionalAccountRefreshController(
                 metricRefreshController, updateController, accountFetcher, transactionFetcher);
