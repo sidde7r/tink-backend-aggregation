@@ -19,6 +19,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationControllerImpl;
 import se.tink.libraries.credentials.service.CredentialsRequest;
+import se.tink.libraries.credentials.service.UserAvailability;
 
 public class ProgressiveLoginExecutorTest {
 
@@ -41,7 +42,10 @@ public class ProgressiveLoginExecutorTest {
     private void initCredentialsRequest() {
         credentialsRequest = Mockito.mock(CredentialsRequest.class);
         Mockito.when(credentialsRequest.getCredentials()).thenReturn(credentials);
-        Mockito.when(credentialsRequest.isManual()).thenReturn(true);
+        UserAvailability ua = new UserAvailability();
+        ua.setUserAvailableForInteraction(true);
+        ua.setUserPresent(true);
+        Mockito.when(credentialsRequest.getUserAvailability()).thenReturn(ua);
     }
 
     @Test
