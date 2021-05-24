@@ -45,7 +45,7 @@ public final class AccountV31Fetcher<T extends Account> implements AccountFetche
                                         new StringBuilder()
                                                 .append("type: ")
                                                 .append(accountEntity.getRawAccountType())
-                                                .append("and subtype: ")
+                                                .append(" and subtype: ")
                                                 .append(accountEntity.getRawAccountSubType())
                                                 .toString())
                         .collect(Collectors.toList()));
