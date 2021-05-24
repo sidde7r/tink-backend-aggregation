@@ -87,9 +87,11 @@ public class FinecoBankApiClientTest {
     @Test
     @Parameters(method = "parametersForPaymentApiCall")
     public void shouldCreateProperPaymentInitRequest(
-            boolean isManual, FinecoBankPaymentService service, FinecoBankPaymentProduct product) {
+            boolean userPresent,
+            FinecoBankPaymentService service,
+            FinecoBankPaymentProduct product) {
         // given
-        when(mockHeaderValues.getUserIp()).thenReturn(isManual ? TEST_USER_IP : null);
+        when(mockHeaderValues.getUserIp()).thenReturn(userPresent ? TEST_USER_IP : null);
         String url = "/" + service.getValue() + "/" + product.getValue();
         WireMock.stubFor(
                 WireMock.post(urlEqualTo(url)).willReturn(fileAsResponse(FILE_PAYMENT_INIT_OK)));
@@ -99,7 +101,7 @@ public class FinecoBankApiClientTest {
 
         // then
         RequestPatternBuilder requestPatternBuilder =
-                commonRequestPattern(RequestMethod.POST, isManual, url);
+                commonRequestPattern(RequestMethod.POST, userPresent, url);
         requestPatternBuilder.withHeader(
                 "TPP-Redirect-URI", equalTo(TEST_REDIRECT_URL + "?state=" + TEST_STATE));
         requestPatternBuilder.withRequestBody(equalToJson(readJson(FILE_PAYMENT_INIT_REQ)));
@@ -115,9 +117,11 @@ public class FinecoBankApiClientTest {
     @Test
     @Parameters(method = "parametersForPaymentApiCall")
     public void shouldGetPaymentSuccessfully(
-            boolean isManual, FinecoBankPaymentService service, FinecoBankPaymentProduct product) {
+            boolean userPresent,
+            FinecoBankPaymentService service,
+            FinecoBankPaymentProduct product) {
         // given
-        when(mockHeaderValues.getUserIp()).thenReturn(isManual ? TEST_USER_IP : null);
+        when(mockHeaderValues.getUserIp()).thenReturn(userPresent ? TEST_USER_IP : null);
         String url = "/" + service.getValue() + "/" + product.getValue() + "/" + TEST_PAYMENT_ID;
         WireMock.stubFor(
                 WireMock.get(urlEqualTo(url)).willReturn(fileAsResponse(FILE_GET_PAYMENT_RESP)));
@@ -126,7 +130,7 @@ public class FinecoBankApiClientTest {
                 apiClient.getPayment(service, product, TEST_PAYMENT_ID);
 
         // then
-        verify(1, commonRequestPattern(RequestMethod.GET, isManual, url));
+        verify(1, commonRequestPattern(RequestMethod.GET, userPresent, url));
 
         assertThat(getPaymentResponse.getTransactionStatus()).isEqualTo("ACSC");
         assertThat(getPaymentResponse.getInstructedAmount().toTinkAmount())
@@ -143,9 +147,11 @@ public class FinecoBankApiClientTest {
     @Test
     @Parameters(method = "parametersForPaymentApiCall")
     public void shouldGetPaymentStatusSuccessfully(
-            boolean isManual, FinecoBankPaymentService service, FinecoBankPaymentProduct product) {
+            boolean userPresent,
+            FinecoBankPaymentService service,
+            FinecoBankPaymentProduct product) {
         // given
-        when(mockHeaderValues.getUserIp()).thenReturn(isManual ? TEST_USER_IP : null);
+        when(mockHeaderValues.getUserIp()).thenReturn(userPresent ? TEST_USER_IP : null);
         String url =
                 "/"
                         + service.getValue()
@@ -162,7 +168,7 @@ public class FinecoBankApiClientTest {
                 apiClient.getPaymentStatus(service, product, TEST_PAYMENT_ID);
 
         // then
-        verify(1, commonRequestPattern(RequestMethod.GET, isManual, url));
+        verify(1, commonRequestPattern(RequestMethod.GET, userPresent, url));
 
         assertThat(paymentStatus.getTransactionStatus()).isEqualTo("RCVD");
     }
@@ -170,9 +176,11 @@ public class FinecoBankApiClientTest {
     @Test
     @Parameters(method = "parametersForPaymentApiCall")
     public void shouldGetPaymentAuthsSuccessfully(
-            boolean isManual, FinecoBankPaymentService service, FinecoBankPaymentProduct product) {
+            boolean userPresent,
+            FinecoBankPaymentService service,
+            FinecoBankPaymentProduct product) {
         // given
-        when(mockHeaderValues.getUserIp()).thenReturn(isManual ? TEST_USER_IP : null);
+        when(mockHeaderValues.getUserIp()).thenReturn(userPresent ? TEST_USER_IP : null);
         String url =
                 "/"
                         + service.getValue()
@@ -189,7 +197,7 @@ public class FinecoBankApiClientTest {
                 apiClient.getPaymentAuths(service, product, TEST_PAYMENT_ID);
 
         // then
-        verify(1, commonRequestPattern(RequestMethod.GET, isManual, url));
+        verify(1, commonRequestPattern(RequestMethod.GET, userPresent, url));
 
         assertThat(paymentAuths.getAuthorisationIds()).hasSize(1);
         assertThat(paymentAuths.getAuthorisationIds().get(0))
@@ -199,9 +207,11 @@ public class FinecoBankApiClientTest {
     @Test
     @Parameters(method = "parametersForPaymentApiCall")
     public void shouldGetPaymentAuthStatusSuccessfully(
-            boolean isManual, FinecoBankPaymentService service, FinecoBankPaymentProduct product) {
+            boolean userPresent,
+            FinecoBankPaymentService service,
+            FinecoBankPaymentProduct product) {
         // given
-        when(mockHeaderValues.getUserIp()).thenReturn(isManual ? TEST_USER_IP : null);
+        when(mockHeaderValues.getUserIp()).thenReturn(userPresent ? TEST_USER_IP : null);
         String url =
                 "/"
                         + service.getValue()
@@ -219,17 +229,17 @@ public class FinecoBankApiClientTest {
                 apiClient.getPaymentAuthStatus(service, product, TEST_PAYMENT_ID, TEST_AUTH_ID);
 
         // then
-        verify(1, commonRequestPattern(RequestMethod.GET, isManual, url));
+        verify(1, commonRequestPattern(RequestMethod.GET, userPresent, url));
         assertThat(paymentAuthStatus.getScaStatus()).isEqualTo("received");
     }
 
     private RequestPatternBuilder commonRequestPattern(
-            RequestMethod requestMethod, boolean isManual, String url) {
+            RequestMethod requestMethod, boolean userPresent, String url) {
         RequestPatternBuilder requestPatternBuilder =
                 new RequestPatternBuilder(requestMethod, urlEqualTo(url))
                         .withHeader("X-Request-ID", equalTo(TEST_REQ_ID))
                         .withHeader("content-type", equalTo("application/json"));
-        if (isManual) {
+        if (userPresent) {
             requestPatternBuilder.withHeader("PSU-IP-Address", equalTo(TEST_USER_IP));
         } else {
             requestPatternBuilder.withoutHeader("PSU-IP-Address");
