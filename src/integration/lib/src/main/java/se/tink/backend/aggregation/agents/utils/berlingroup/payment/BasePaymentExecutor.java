@@ -4,7 +4,7 @@ import static java.util.Objects.nonNull;
 
 import java.util.Collections;
 import java.util.Optional;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
@@ -12,9 +12,11 @@ import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizatio
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentCancelledException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
+import se.tink.backend.aggregation.agents.utils.berlingroup.common.LinksEntity;
+import se.tink.backend.aggregation.agents.utils.berlingroup.payment.PaymentConstants.ErrorMessages;
+import se.tink.backend.aggregation.agents.utils.berlingroup.payment.PaymentConstants.StorageValues;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.entities.AmountEntity;
-import se.tink.backend.aggregation.agents.utils.berlingroup.payment.enums.PaymentAuthenticationMode;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.rpc.CreateRecurringPaymentRequest;
@@ -31,20 +33,21 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepRes
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.transfer.enums.RemittanceInformationType;
 import se.tink.libraries.transfer.rpc.PaymentServiceType;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Slf4j
 public class BasePaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
 
     private final PaymentApiClient apiClient;
     private final PaymentAuthenticator authenticator;
     private final Credentials credentials;
-    private final PaymentAuthenticationMode paymentAuthenticationMode;
+    private final SessionStorage sessionStorage;
 
     @Override
     public PaymentResponse create(PaymentRequest paymentRequest) throws PaymentException {
@@ -61,10 +64,7 @@ public class BasePaymentExecutor implements PaymentExecutor, FetchablePaymentExe
         CreatePaymentResponse createPaymentResponse =
                 apiClient.createPayment(createPaymentRequest, paymentRequest);
 
-        // for EMBEDDED authenticator is required. For REDIRECT no need of Authenticator
-        if (paymentAuthenticationMode.equals(PaymentAuthenticationMode.EMBEDDED)) {
-            authenticator.authenticatePayment(credentials, createPaymentResponse);
-        }
+        sessionStorage.put(StorageValues.SCA_LINKS, createPaymentResponse.getLinks());
 
         return createPaymentResponse.toTinkPayment(paymentRequest.getPayment());
     }
@@ -72,6 +72,14 @@ public class BasePaymentExecutor implements PaymentExecutor, FetchablePaymentExe
     @Override
     public PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentMultiStepRequest)
             throws PaymentException, AuthenticationException {
+
+        LinksEntity scaLinks =
+                sessionStorage
+                        .get(StorageValues.SCA_LINKS, LinksEntity.class)
+                        .orElseThrow(
+                                () -> new IllegalStateException(ErrorMessages.MISSING_SCA_URL));
+
+        authenticator.authenticatePayment(credentials, scaLinks);
 
         Payment payment = paymentMultiStepRequest.getPayment();
 
@@ -173,7 +181,7 @@ public class BasePaymentExecutor implements PaymentExecutor, FetchablePaymentExe
         return Optional.ofNullable(remittanceInformation.getValue()).orElse("");
     }
 
-    private AccountEntity getAccountEntity(String accountNumber) {
+    public AccountEntity getAccountEntity(String accountNumber) {
         return new AccountEntity(accountNumber);
     }
 }

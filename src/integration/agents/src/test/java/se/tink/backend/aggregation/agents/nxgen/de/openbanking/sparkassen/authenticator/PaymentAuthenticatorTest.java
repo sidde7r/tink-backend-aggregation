@@ -10,10 +10,10 @@ import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen
 import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.AuthenticatorTestData.SELECT_AUTH_METHOD_OK;
 import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.AuthenticatorTestData.USERNAME;
 import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.payment.PaymentTestHelper.PAYMENT_AUTHORIZATION_RESPONSE_WITH_MULTIPLE_SCA_METHOD;
-import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.payment.PaymentTestHelper.PAYMENT_CREATE_RESPONSE;
 import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.payment.PaymentTestHelper.PAYMENT_SCA_AUTHENTICATION_FAILED_STATUS_RESPONSE;
 import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.payment.PaymentTestHelper.PAYMENT_SCA_AUTHENTICATION_STATUS_RESPONSE;
 import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.payment.PaymentTestHelper.PAYMENT_SCA_METHOD_SELECTION_RESPONSE;
+import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.payment.PaymentTestHelper.SCA_LINKS;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -73,7 +73,7 @@ public class PaymentAuthenticatorTest {
         paymentTestHelper.whenSupplementalInformationControllerReturn(SELECT_AUTH_METHOD_OK);
 
         // when
-        authenticator.authenticatePayment(credentials, PAYMENT_CREATE_RESPONSE);
+        authenticator.authenticatePayment(credentials, SCA_LINKS);
 
         // then
         paymentTestHelper.verifyInitializePaymentAuthorizationCalled();
@@ -97,10 +97,7 @@ public class PaymentAuthenticatorTest {
 
         // when
         Throwable throwable =
-                catchThrowable(
-                        () ->
-                                authenticator.authenticatePayment(
-                                        credentials, PAYMENT_CREATE_RESPONSE));
+                catchThrowable(() -> authenticator.authenticatePayment(credentials, SCA_LINKS));
 
         // then
         assertThat(throwable).isInstanceOf(LoginException.class);

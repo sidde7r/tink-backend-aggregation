@@ -23,7 +23,6 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.fetche
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.filter.RequestNotProcessedFilter;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.BasePaymentExecutor;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.PaymentAuthenticator;
-import se.tink.backend.aggregation.agents.utils.berlingroup.payment.enums.PaymentAuthenticationMode;
 import se.tink.backend.aggregation.agents.utils.transfer.InferredTransferDestinations;
 import se.tink.backend.aggregation.client.provider_configuration.rpc.PisCapability;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
@@ -155,10 +154,7 @@ public class SparkassenAgent extends NextGenerationAgent
                         catalog);
         BasePaymentExecutor paymentExecutor =
                 new BasePaymentExecutor(
-                        apiClient,
-                        sparkassenPaymentAuthenticator,
-                        credentials,
-                        PaymentAuthenticationMode.EMBEDDED);
+                        apiClient, sparkassenPaymentAuthenticator, credentials, sessionStorage);
 
         return Optional.of(new PaymentController(paymentExecutor, paymentExecutor));
     }
