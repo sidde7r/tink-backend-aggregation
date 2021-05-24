@@ -89,19 +89,24 @@ public class OAuth2AuthenticationProgressiveController
                         .orElseThrow(SessionError.SESSION_EXPIRED::exception);
 
         if (oAuth2Token.hasAccessExpired()) {
+            logger.info("[oAUth2Token] has expied");
             if (!oAuth2Token.canRefresh()) {
+                logger.info("[oAUth2Token] cannot be refreshed");
                 throw SessionError.SESSION_EXPIRED.exception();
             }
 
             // Refresh token is not always present, if it's absent we fall back to the manual
             // authentication.
-            String refreshToken =
-                    oAuth2Token
-                            .getRefreshToken()
-                            .orElseThrow(SessionError.SESSION_EXPIRED::exception);
+            Optional<String> refreshToken = oAuth2Token.getRefreshToken();
 
-            OAuth2Token refreshedOAuth2Token = authenticator.refreshAccessToken(refreshToken);
+            if (!refreshToken.isPresent()) {
+                logger.info("[oAUth2Token] is not present");
+                throw SessionError.SESSION_EXPIRED.exception();
+            }
+
+            OAuth2Token refreshedOAuth2Token = authenticator.refreshAccessToken(refreshToken.get());
             if (!refreshedOAuth2Token.isValid()) {
+                logger.info("[oAUth2Token] is not valid after attempt to refresh it");
                 throw SessionError.SESSION_EXPIRED.exception();
             }
 
