@@ -90,20 +90,21 @@ public class NordeaBaseApiClient implements TokenInterface {
     }
 
     private void configureFilters() {
-        this.client.addFilter(new BankSideFailureFilter());
-        this.client.addFilter(new BankSideRetryFilter());
-        this.client.addFilter(new ServiceUnavailableBankServiceErrorFilter());
-        this.client.addFilter(new TimeoutFilter());
+
         this.client.addFilter(
                 new TimeoutRetryFilter(
                         NordeaBaseConstants.Filters.NUMBER_OF_RETRIES,
                         NordeaBaseConstants.Filters.MS_TO_WAIT));
-        this.client.addFilter(new BadGatewayFilter());
         this.client.addFilter(
                 new BadGatewayRetryFilter(
                         NordeaBaseConstants.Filters.NUMBER_OF_RETRIES,
                         NordeaBaseConstants.Filters.MS_TO_WAIT));
         this.client.addFilter(new AccessExceededFilter());
+        this.client.addFilter(new BankSideFailureFilter());
+        this.client.addFilter(new BankSideRetryFilter());
+        this.client.addFilter(new ServiceUnavailableBankServiceErrorFilter());
+        this.client.addFilter(new TimeoutFilter());
+        this.client.addFilter(new BadGatewayFilter());
     }
 
     public NordeaBaseConfiguration getConfiguration() {
