@@ -209,7 +209,7 @@ spec:
       expr: |
         # Failed refresh (due to bank site errors) over 90%
         (count(sum_over_time(tink_agent_refresh_total{label="refresh", outcome="unavailable", market="PT", provider_type!="test"}[12h])) by (className,provider)
-            / count(sum_over_time(tink_agent_refresh_total{market="PT", provider_type!="test"}[6h])) by (className,provider) > 0.90)
+            / count(sum_over_time(tink_agent_refresh_total{market="PT", provider_type!="test"}[12h])) by (className,provider) > 0.90)
       for: 15m
       interval: 1h
       labels:
