@@ -495,8 +495,12 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         account.setUserId(request.getCredentials().getUserId());
         account.setFinancialInstitutionId(request.getProvider().getFinancialInstitutionId());
 
-        measureSuspiciousNumberSeries("accountnumber", account.getAccountNumber());
-        measureSuspiciousNumberSeries("bankid", account.getBankId());
+        // Don't measure suspicious number series for test providers as some return mocked account
+        // numbers that get flagged as suspicious.
+        if (!request.getProvider().getType().isTestProvider()) {
+            measureSuspiciousNumberSeries("accountnumber", account.getAccountNumber());
+            measureSuspiciousNumberSeries("bankid", account.getBankId());
+        }
 
         // This is to handle legacy agents. Once all legacy agents are gone this can be removed.
         // The logic of adding currency code for next gen agents is done in Account.toSystemAccount
