@@ -17,6 +17,7 @@ import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthenticati
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentValidationException;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.LaBanquePostaleConstants.CreditorAgentConstants;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.LaBanquePostaleConstants.MinimumValues;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.authenticator.LaBanquePostalePaymentSigner;
@@ -180,14 +181,14 @@ public class LaBanquePostalePaymentExecutor implements PaymentExecutor, Fetchabl
     }
 
     private void validatePayment(PaymentRequest paymentRequest, AmountEntity amount)
-            throws PaymentRejectedException {
+            throws PaymentValidationException {
         if (paymentRequest.getPayment().getPaymentScheme()
                         != PaymentScheme.SEPA_INSTANT_CREDIT_TRANSFER
                 && amount.toTinkAmount()
                                 .getExactValue()
                                 .compareTo(new BigDecimal(MinimumValues.MINIMUM_AMOUNT_FOR_SEPA))
                         < 0) {
-            throw new PaymentRejectedException();
+            throw PaymentValidationException.invalidMinimumAmountLaBanquePostale();
         }
     }
 
