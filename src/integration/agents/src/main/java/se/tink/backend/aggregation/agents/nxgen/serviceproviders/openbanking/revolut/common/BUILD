@@ -6,6 +6,7 @@ java_library(
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/ais/base",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/ais/v31",
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/common/openid",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/pis",
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/lib",
@@ -16,6 +17,8 @@ java_library(
         "//third_party:org_slf4j_slf4j_api",
         "@aggregation//:com_google_guava_guava",
         "@aggregation//:io_vavr_vavr",
+        "@maven//:no_finn_unleash_unleash_client_java",
         "@tink_backend//src/libraries/account_identifier",
+        "@tink_backend//src/libraries/unleash",
     ],
 )

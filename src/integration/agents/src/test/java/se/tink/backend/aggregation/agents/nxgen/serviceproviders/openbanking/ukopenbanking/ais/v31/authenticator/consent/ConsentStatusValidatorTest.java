@@ -51,6 +51,12 @@ public class ConsentStatusValidatorTest {
     }
 
     @Test
+    public void shouldNotValidateWhenConsentIdMissing() {
+        // expected
+        assertThatCode(() -> validator.validate()).doesNotThrowAnyException();
+    }
+
+    @Test
     public void shouldThrowSessionExceptionWhenConsentStatusInvalid() {
         // given
         given(mockedConsent.isNotAuthorised()).willReturn(Boolean.TRUE);

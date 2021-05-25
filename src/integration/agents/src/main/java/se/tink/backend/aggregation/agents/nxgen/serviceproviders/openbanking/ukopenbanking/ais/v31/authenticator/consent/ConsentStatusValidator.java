@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.authenticator.consent;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingApiClient;
@@ -8,6 +9,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticatorConstants;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
+@Slf4j
 public class ConsentStatusValidator {
 
     private final UkOpenBankingApiClient apiClient;
@@ -21,6 +23,9 @@ public class ConsentStatusValidator {
     public void validate() {
         String consentId = restoreConsentId();
         if (StringUtils.isEmpty(consentId)) {
+            log.info(
+                    "[CONSENT STATUS VALIDATOR] ConsentId {} not available in storage. Skipping consent status validation.",
+                    consentId);
             return;
         }
 
@@ -55,6 +60,7 @@ public class ConsentStatusValidator {
     }
 
     private boolean isNotAuthorised(String consentId) {
+        log.info("[CONSENT STATUS VALIDATOR] Checking consent status for consentId {}", consentId);
         return apiClient.fetchConsent(consentId).getData().isNotAuthorised();
     }
 }
