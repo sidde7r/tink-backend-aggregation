@@ -9,6 +9,7 @@ import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbank
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.monzo.mock.MonzoAgentWiremockTestFixtures.createFarFutureDomesticPayment;
 
 import java.time.LocalDateTime;
+import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationCancelledByUserException;
 import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesJsonFileParser;
@@ -104,6 +105,7 @@ public class MonzoAgentWiremockTest {
                 .buildWithoutLogin(PaymentGBCommand.class);
     }
 
+    @Ignore
     @Test
     public void manualRefreshAll() throws Exception {
         // Given

@@ -109,7 +109,8 @@ public final class NewAgentTestContext extends AgentContext {
                 new UnleashClientFactory(
                         new UnleashConfiguration()
                                 .setApplicationName(UNLEASH_APPLICATION_NAME)
-                                .setApiUrl(UNLEASH_LOCAL_BASE_API_URL),
+                                .setApiUrl(UNLEASH_LOCAL_BASE_API_URL)
+                                .setLocal(true),
                         ServiceType.AGGREGATION);
         UnleashClient unleashClient = unleashClientFactory.create();
         unleashClient.start();
