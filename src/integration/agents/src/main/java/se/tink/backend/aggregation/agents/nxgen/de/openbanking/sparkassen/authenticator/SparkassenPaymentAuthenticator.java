@@ -6,8 +6,8 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.Sparka
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenStorage;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.rpc.AuthorizationResponse;
+import se.tink.backend.aggregation.agents.utils.berlingroup.common.LinksEntity;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.PaymentAuthenticator;
-import se.tink.backend.aggregation.agents.utils.berlingroup.payment.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.libraries.i18n.Catalog;
 
@@ -23,16 +23,12 @@ public class SparkassenPaymentAuthenticator extends SparkassenAuthenticator
         super(apiClient, supplementalInformationController, storage, credentials, catalog);
     }
 
-    public void authenticatePayment(
-            Credentials credentials, CreatePaymentResponse createPaymentResponse) {
+    public void authenticatePayment(Credentials credentials, LinksEntity scaLinks) {
         validateInput(credentials);
 
         AuthorizationResponse initAuthorizationResponse =
                 apiClient.initializeAuthorization(
-                        createPaymentResponse
-                                .getLinks()
-                                .getStartAuthorisationWithPsuAuthentication()
-                                .getHref(),
+                        scaLinks.getStartAuthorisationWithPsuAuthentication().getHref(),
                         credentials.getField(Field.Key.USERNAME),
                         credentials.getField(Field.Key.PASSWORD));
 

@@ -18,13 +18,17 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.Sparka
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.entities.ScaMethodEntity;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.rpc.AuthorizationResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.rpc.FinalizeAuthorizationResponse;
+import se.tink.backend.aggregation.agents.utils.berlingroup.common.LinksEntity;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AuthenticationType;
+import se.tink.backend.aggregation.agents.utils.berlingroup.payment.PaymentConstants.StorageValues;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.rpc.FetchPaymentStatusResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.backend.aggregation.nxgen.storage.Storage;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
@@ -62,6 +66,10 @@ public class PaymentTestHelper {
             SerializationUtils.deserializeFromString(
                     Paths.get(TEST_DATA_PATH, "payment_create_response.json").toFile(),
                     CreatePaymentResponse.class);
+
+    public static final LinksEntity SCA_LINKS =
+            SerializationUtils.deserializeFromString(
+                    Paths.get(TEST_DATA_PATH, "sca_links.json").toFile(), LinksEntity.class);
 
     public static final AuthorizationResponse
             PAYMENT_AUTHORIZATION_RESPONSE_WITH_MULTIPLE_SCA_METHOD =
@@ -154,6 +162,11 @@ public class PaymentTestHelper {
                 .thenReturn(finalizeAuthorizationResponse);
     }
 
+    public Storage prepareStorageWithScaLinks(SessionStorage sessionStorage) {
+        sessionStorage.put(StorageValues.SCA_LINKS, SCA_LINKS);
+        return sessionStorage;
+    }
+
     public void verifyInitializePaymentAuthorizationCalled() {
         verify(apiClient).initializeAuthorization(TEST_PAYMENT_AUTH_URL, USERNAME, PASSWORD);
     }
@@ -212,6 +225,10 @@ public class PaymentTestHelper {
     }
 
     public PaymentResponse createPaymentResponse() {
+        return new PaymentResponse(createSepaPayment().build());
+    }
+
+    public PaymentResponse createPaymentResponseWithScaLinks() {
         return new PaymentResponse(createSepaPayment().build());
     }
 
