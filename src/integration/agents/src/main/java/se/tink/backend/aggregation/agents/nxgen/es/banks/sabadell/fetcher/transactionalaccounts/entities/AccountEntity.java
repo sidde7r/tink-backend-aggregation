@@ -71,6 +71,7 @@ public class AccountEntity {
     private AccountTypes getTinkAccountType() {
         switch (description.toUpperCase()) {
             case SabadellConstants.AccountTypes.SALARY_ACCOUNT:
+            case SabadellConstants.AccountTypes.SALARY_PLUS_ACCOUNT:
             case SabadellConstants.AccountTypes.SALARY_PREMIUM_ACCOUNT:
             case SabadellConstants.AccountTypes.RELATIONSHIP_ACCOUNT:
             case SabadellConstants.AccountTypes.UNDERAGED_ACCOUNT:
