@@ -534,8 +534,8 @@ public class SwedbankBaseConstants {
     }
 
     public static class BankId {
-        public static final int MAX_ATTEMPTS = 90;
-        public static final int BANKID_SLEEP_INTERVAL = 2000;
+        public static final int MAX_ATTEMPTS = 30;
+        public static final int BANKID_SLEEP_INTERVAL = 3000;
     }
 
     // Temporary constants while Swedbank is having problems with their pagination
