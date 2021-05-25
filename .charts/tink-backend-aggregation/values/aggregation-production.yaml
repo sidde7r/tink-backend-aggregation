@@ -5,7 +5,7 @@ podMemoryLimit: "8Gi"
 heapSize: "4G"
 replicas: 15
 maxReplicas: 30
-targetAverageCpuValue: "1750m"
+targetAverageCpuValue: "0.75"
 initialDelaySeconds: "300"
 
 nodeZones:
