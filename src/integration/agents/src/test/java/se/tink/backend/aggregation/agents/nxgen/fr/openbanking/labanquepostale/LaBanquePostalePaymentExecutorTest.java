@@ -23,6 +23,7 @@ import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthenticati
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentValidationException;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.LaBanquePostaleConstants.CreditorAgentConstants;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.LaBanquePostaleConstants.PaymentTypeInformation;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.authenticator.rpc.ConfirmPaymentResponse;
@@ -227,6 +228,31 @@ public class LaBanquePostalePaymentExecutorTest {
         Assertions.assertThat(paymentResponse.getPayment().getDebtor()).isEqualTo(null);
 
         verify(apiClient).createPayment(any());
+    }
+
+    @Test
+    public void paymentValidationShouldThrowException() {
+        // given
+        IbanIdentifier cred = new IbanIdentifier("FR383390733324Z58PF2RSRNB11");
+        IbanIdentifier deb = new IbanIdentifier("FR385390733324Z58PF2RSRNB11");
+        PaymentRequest paymentRequest =
+                new PaymentRequest(
+                        new Payment.Builder()
+                                .withCreditor(new Creditor(cred))
+                                .withDebtor(new Debtor(deb))
+                                .withExactCurrencyAmount(ExactCurrencyAmount.inEUR(1))
+                                .withCurrency("EUR")
+                                .build());
+
+        // when
+        Throwable thrown = catchThrowable(() -> paymentExecutor.create(paymentRequest));
+
+        // then
+        Assertions.assertThat(thrown)
+                .isInstanceOf(PaymentValidationException.class)
+                .hasMessage(
+                        PaymentValidationException.invalidMinimumAmountLaBanquePostale()
+                                .getMessage());
     }
 
     @Test

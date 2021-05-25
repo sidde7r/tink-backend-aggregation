@@ -85,6 +85,9 @@ msgstr "La référence doit comporter {} caractères au max."
 msgid "Transfer amount can't be less than {}."
 msgstr "Le montant du virement doit être au moins de {}."
 
+msgid "Transfer amount can't be less than 1.5 EUR."
+msgstr "Le montant du virement doit être au moins de 1.5 EUR."
+
 msgid ""
 "Check if your authentication parameters are correct:\n"
 "1. ING ID from your bank card\n"
