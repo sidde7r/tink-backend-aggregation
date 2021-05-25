@@ -137,10 +137,10 @@ public class DkbSupplementalDataProviderTest {
         List<AuthMethod> givenSelectionList = asList(givenMethod1, givenMethod2);
 
         // when
-        String result = tested.selectAuthMethod(givenSelectionList);
+        SelectableMethod result = tested.selectAuthMethod(givenSelectionList);
 
         // then
-        assertThat(result).isEqualTo(TEST_VALUE_2);
+        assertThat(result.getIdentifier()).isEqualTo(TEST_VALUE_2);
     }
 
     private void assertTanField(Field field) {
