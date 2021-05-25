@@ -1,11 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.credem;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 
-@Ignore
 public class CredemAgentTest {
 
     private AgentIntegrationTest.Builder builder;
@@ -15,7 +13,7 @@ public class CredemAgentTest {
         builder =
                 new AgentIntegrationTest.Builder("it", "it-credem-oauth2")
                         .expectLoggedIn(false)
-                        .loadCredentialsBefore(false)
+                        .loadCredentialsBefore(true)
                         .saveCredentialsAfter(false)
                         .setFinancialInstitutionId("credem")
                         .setAppId("tink");

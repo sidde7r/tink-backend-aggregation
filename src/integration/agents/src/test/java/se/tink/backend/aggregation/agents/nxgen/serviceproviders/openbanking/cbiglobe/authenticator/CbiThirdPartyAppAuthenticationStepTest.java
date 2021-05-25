@@ -26,31 +26,23 @@ public class CbiThirdPartyAppAuthenticationStepTest {
 
     private CbiThirdPartyAppAuthenticationStep accountConsentStep;
     private CbiThirdPartyAppAuthenticationStep transactionsConsentStep;
-    private CbiThirdPartyAppRequestParamsProvider thirdPartyAppRequestParamsProvider;
     private ConsentManager consentManager;
     private CbiUserState userState;
     private StrongAuthenticationState strongAuthenticationState;
 
     @Before
     public void init() {
-        thirdPartyAppRequestParamsProvider =
-                Mockito.mock(CbiThirdPartyAppRequestParamsProvider.class);
         consentManager = Mockito.mock(ConsentManager.class);
         userState = Mockito.mock(CbiUserState.class);
         strongAuthenticationState = Mockito.mock(StrongAuthenticationState.class);
         accountConsentStep =
                 new CbiThirdPartyAppAuthenticationStep(
-                        thirdPartyAppRequestParamsProvider,
-                        ConsentType.ACCOUNT,
-                        consentManager,
-                        userState,
-                        strongAuthenticationState);
+                        userState, ConsentType.ACCOUNT, consentManager, strongAuthenticationState);
         transactionsConsentStep =
                 new CbiThirdPartyAppAuthenticationStep(
-                        thirdPartyAppRequestParamsProvider,
+                        userState,
                         ConsentType.BALANCE_TRANSACTION,
                         consentManager,
-                        userState,
                         strongAuthenticationState);
     }
 
@@ -61,6 +53,8 @@ public class CbiThirdPartyAppAuthenticationStepTest {
         AuthenticationRequest request =
                 new AuthenticationRequest(Mockito.mock(Credentials.class))
                         .withCallbackData(Collections.emptyMap());
+        when(userState.getScaUrl())
+                .thenReturn("https://api.credem.it/sca/pages/sca/home.xhtml?token=token");
 
         // when
         AuthenticationStepResponse result = accountConsentStep.execute(request);
@@ -68,7 +62,6 @@ public class CbiThirdPartyAppAuthenticationStepTest {
         // then
         assertThat(result.getSupplementInformationRequester().get().getSupplementalWaitRequest())
                 .isNotNull();
-        verify(thirdPartyAppRequestParamsProvider).getPayload();
         verify(strongAuthenticationState).getSupplementalKey();
     }
 
@@ -86,7 +79,6 @@ public class CbiThirdPartyAppAuthenticationStepTest {
         // then
         assertThat(result.getSupplementInformationRequester().get().getSupplementalWaitRequest())
                 .isNotNull();
-        verifyNoMoreInteractions(thirdPartyAppRequestParamsProvider);
         verify(strongAuthenticationState).getSupplementalKey();
     }
 
@@ -108,16 +100,14 @@ public class CbiThirdPartyAppAuthenticationStepTest {
         AuthenticationStepResponse result = accountConsentStep.execute(request);
 
         // then
-        verifyNoMoreInteractions(thirdPartyAppRequestParamsProvider);
         verifyNoMoreInteractions(strongAuthenticationState);
         verify(consentManager).verifyIfConsentIsAccepted();
         verifyNoMoreInteractions(userState);
     }
 
     @Test
-    public void
-            executeShouldReturnAuthenticationSucceededIfCodeValueAndResultCorrectIfConsentTypeBalances()
-                    throws AuthenticationException, AuthorizationException {
+    public void executeShouldReturnEmptyResponseIfCodeValueAndResultCorrectIfConsentTypeBalances()
+            throws AuthenticationException, AuthorizationException {
         // given
         AuthenticationRequest request =
                 new AuthenticationRequest(Mockito.mock(Credentials.class))
@@ -133,11 +123,10 @@ public class CbiThirdPartyAppAuthenticationStepTest {
         AuthenticationStepResponse result = transactionsConsentStep.execute(request);
 
         // then
-        verifyNoMoreInteractions(thirdPartyAppRequestParamsProvider);
         verifyNoMoreInteractions(strongAuthenticationState);
         verify(consentManager).verifyIfConsentIsAccepted();
-        verify(userState).finishManualAuthenticationStep();
-        assertThat(result.isAuthenticationFinished()).isTrue();
+
+        assertThat(result).isEqualTo(AuthenticationStepResponse.executeNextStep());
     }
 
     @Test

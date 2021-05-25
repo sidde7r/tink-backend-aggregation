@@ -9,10 +9,10 @@ import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConf
 import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.enums.MarketCode;
 
-public class CbiGlobeAgentWiremockTest {
+public class CbiGlobeAgentSupportingAllPsd2WiremockTest {
 
     private static final String AAP_PATH =
-            "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/cbiglobe/integration/resources/test-refresh.aap";
+            "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/cbiglobe/integration/resources/test-refresh-supporting-all-psd2.aap";
 
     private static String CONTRACT_FILE_PATH =
             "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/cbiglobe/integration/resources/agent-contract.json";

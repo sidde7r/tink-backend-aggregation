@@ -289,10 +289,7 @@ public class CbiGlobeApiClient {
     }
 
     public ConsentStatus getConsentStatus(String consentType) throws SessionException {
-        RequestBuilder requestBuilder =
-                createRequestInSession(
-                        Urls.CONSENTS_STATUS.parameter(
-                                IdTags.CONSENT_ID, getConsentIdFromStorage(consentType)));
+        RequestBuilder requestBuilder = createConsentStatusRequestBuilder(consentType);
 
         return makeRequest(
                         requestBuilder,
@@ -304,10 +301,7 @@ public class CbiGlobeApiClient {
     }
 
     public ConsentDetailsResponse getConsentDetails(String consentType) throws SessionException {
-        RequestBuilder requestBuilder =
-                createRequestInSession(
-                        Urls.CONSENTS_STATUS.parameter(
-                                IdTags.CONSENT_ID, getConsentIdFromStorage(consentType)));
+        RequestBuilder requestBuilder = createConsentStatusRequestBuilder(consentType);
 
         return makeRequest(
                 requestBuilder,
@@ -315,6 +309,15 @@ public class CbiGlobeApiClient {
                 ConsentDetailsResponse.class,
                 RequestContext.CONSENT_DETAILS,
                 null);
+    }
+
+    private RequestBuilder createConsentStatusRequestBuilder(String consentType) {
+        URL consentStatusUrl =
+                isAllPsd2Supported() ? Urls.ALL_PSD2_CONSENTS_STATUS : Urls.CONSENTS_STATUS;
+
+        return createRequestInSession(
+                consentStatusUrl.parameter(
+                        IdTags.CONSENT_ID, getConsentIdFromStorage(consentType)));
     }
 
     private String getConsentIdFromStorage(String consentType) throws SessionException {
@@ -479,5 +482,11 @@ public class CbiGlobeApiClient {
         return PaymentServiceType.PERIODIC == payment.getPaymentServiceType()
                 ? PathParameterValues.PAYMENT_SERVICE_PERIODIC_PAYMENTS
                 : PathParameterValues.PAYMENT_SERVICE_PAYMENTS;
+    }
+
+    private boolean isAllPsd2Supported() {
+        return persistentStorage
+                .get(StorageKeys.ALL_PSD2_SUPPORTED, Boolean.class)
+                .orElse(Boolean.FALSE);
     }
 }
