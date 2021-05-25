@@ -68,7 +68,7 @@ spec:
     # Unknown errors (due to RuntimeException) alerts
     #-------------------------------------------------------------------------------------------------------------------
     # Authentication alerts
-    - alert: AuthenticationUnknownErrorRateOver20%FI
+    - alert: AuthenticationUnknownErrorRateOver30%FI
       expr: |
         # Failed logins (due to unknown RuntimeException) over 30%
         (count(sum_over_time(tink_agent_login_total{action="login", outcome="failed", market="FI", provider_type!="test"}[30m])) by (className,provider)
@@ -208,7 +208,7 @@ spec:
       expr: |
         # Failed refresh (due to bank site errors) over 90%
         (count(sum_over_time(tink_agent_refresh_total{label="refresh", outcome="unavailable", market="FI", provider_type!="test"}[12h])) by (className,provider)
-            / count(sum_over_time(tink_agent_refresh_total{market="FI", provider_type!="test"}[6h])) by (className,provider) > 0.90)
+            / count(sum_over_time(tink_agent_refresh_total{market="FI", provider_type!="test"}[12h])) by (className,provider) > 0.90)
       for: 15m
       interval: 1h
       labels:
