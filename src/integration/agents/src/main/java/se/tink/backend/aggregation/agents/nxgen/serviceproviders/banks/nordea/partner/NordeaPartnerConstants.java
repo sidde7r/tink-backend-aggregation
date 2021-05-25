@@ -46,6 +46,7 @@ public class NordeaPartnerConstants {
     public static class HttpFilters {
         public static final int RETRY_SLEEP_MILLISECONDS = 1000;
         public static final int MAX_NUM_RETRIES = 3;
+        public static final int REFRESH_TIMEOUT_SECONDS = 600;
     }
 
     public static class Keystore {
