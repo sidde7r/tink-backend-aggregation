@@ -3,8 +3,8 @@ podCpuLimit: "2500m"
 podMemoryRequest: "8Gi"
 podMemoryLimit: "8Gi"
 heapSize: "4G"
-replicas: 15
-maxReplicas: 30
+replicas: 40
+maxReplicas: 60
 targetAverageCpuValue: "0.75"
 initialDelaySeconds: "300"
 
