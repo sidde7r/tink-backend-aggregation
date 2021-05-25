@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @AllArgsConstructor
 public class PaymentEntity {
     private String paymentInformationStatus;
+    private String statusReasonInformation;
     private PaymentTypeInformationEntity paymentTypeInformation;
     private AccountEntity debtorAccount;
     private BeneficiaryEntity beneficiary;
@@ -21,6 +22,10 @@ public class PaymentEntity {
 
     public String getPaymentStatus() {
         return paymentInformationStatus;
+    }
+
+    public String getStatusReasonInformation() {
+        return statusReasonInformation;
     }
 
     public AmountEntity getAmount() {

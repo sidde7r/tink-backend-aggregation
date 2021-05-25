@@ -61,7 +61,8 @@ public class FrOpenBankingPaymentExecutorTest {
                         "someUrl",
                         sessionStorage,
                         strongAuthenticationState,
-                        supplementalInformationHelper);
+                        supplementalInformationHelper,
+                        new FrOpenBankingStatusParser());
     }
 
     @Test
@@ -136,7 +137,8 @@ public class FrOpenBankingPaymentExecutorTest {
 
         when(apiClient.getPayment(any()))
                 .thenReturn(
-                        new GetPaymentResponse(new PaymentEntity("ACSC", null, null, null, null)));
+                        new GetPaymentResponse(
+                                new PaymentEntity("ACSC", null, null, null, null, null)));
 
         // when
         PaymentMultiStepResponse response = paymentExecutor.sign(paymentRequest);
@@ -160,7 +162,8 @@ public class FrOpenBankingPaymentExecutorTest {
 
         when(apiClient.getPayment(any()))
                 .thenReturn(
-                        new GetPaymentResponse(new PaymentEntity("ACTC", null, null, null, null)));
+                        new GetPaymentResponse(
+                                new PaymentEntity("ACTC", null, null, null, null, null)));
 
         // when
         Throwable thrown = catchThrowable(() -> paymentExecutor.sign(paymentRequest));
@@ -183,7 +186,8 @@ public class FrOpenBankingPaymentExecutorTest {
 
         when(apiClient.getPayment(any()))
                 .thenReturn(
-                        new GetPaymentResponse(new PaymentEntity("RJCT", null, null, null, null)));
+                        new GetPaymentResponse(
+                                new PaymentEntity("RJCT", null, null, null, null, null)));
 
         // when
         Throwable thrown = catchThrowable(() -> paymentExecutor.sign(paymentRequest));

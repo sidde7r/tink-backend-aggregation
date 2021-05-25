@@ -86,6 +86,7 @@ public final class BnpParibasBaseConstants {
         public static final String BALANCE_TYPE_OTHER = "OTHR";
         public static final String BALANCE_TYPE_CLOSING = "CLBD";
         public static final String BALANCE_TYPE_EXPECTED = "XPCD";
+        public static final String INSUFFICIENT_FUND_STATUS = "CUST";
     }
 
     public static final TransactionalAccountTypeMapper ACCOUNT_TYPE_MAPPER =

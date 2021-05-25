@@ -23,6 +23,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fro
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.entities.CreditorEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.rpc.CreatePaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.rpc.GetPaymentResponse;
 import se.tink.backend.aggregation.agents.utils.remittanceinformation.RemittanceInformationValidator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepConstants;
@@ -66,18 +67,21 @@ public class FrOpenBankingPaymentExecutor implements PaymentExecutor, FetchableP
     private final SessionStorage sessionStorage;
     private final StrongAuthenticationState strongAuthenticationState;
     private final SupplementalInformationHelper supplementalInformationHelper;
+    private final FrOpenBankingStatusParser frOpenBankingStatusParser;
 
     public FrOpenBankingPaymentExecutor(
             FrOpenBankingPaymentApiClient apiClient,
             String redirectUrl,
             SessionStorage sessionStorage,
             StrongAuthenticationState strongAuthenticationState,
-            SupplementalInformationHelper supplementalInformationHelper) {
+            SupplementalInformationHelper supplementalInformationHelper,
+            FrOpenBankingStatusParser frOpenBankingStatusParser) {
         this.apiClient = apiClient;
         this.redirectUrl = redirectUrl;
         this.sessionStorage = sessionStorage;
         this.strongAuthenticationState = strongAuthenticationState;
         this.supplementalInformationHelper = supplementalInformationHelper;
+        this.frOpenBankingStatusParser = frOpenBankingStatusParser;
     }
 
     @Override
@@ -191,38 +195,40 @@ public class FrOpenBankingPaymentExecutor implements PaymentExecutor, FetchableP
     }
 
     private PaymentStatus getAndVerifyStatus(String paymentId) throws PaymentException {
-        Retryer<PaymentStatus> paymentStatusRetryer = getPaymentStatusRetryer();
+        Retryer<GetPaymentResponse> paymentResponseRetryer = getPaymentResponseRetryer();
 
-        PaymentStatus paymentStatus;
+        GetPaymentResponse paymentResponse;
         log.info(
                 "Start to Get Payment Status every {} Seconds for a total of {} times.",
                 SLEEP_TIME,
                 RETRY_ATTEMPTS);
         try {
-            paymentStatus =
-                    paymentStatusRetryer.call(
-                            () -> apiClient.getPayment(paymentId).getPaymentStatus());
+            paymentResponse = paymentResponseRetryer.call(() -> apiClient.getPayment(paymentId));
 
         } catch (ExecutionException | RetryException e) {
             log.warn("Payment failed, couldn't fetch payment status");
             throw new PaymentRejectedException("Payment failed, couldn't fetch payment status");
         }
 
-        if (paymentStatus == PaymentStatus.PENDING) {
+        if (paymentResponse.getPaymentStatus() == PaymentStatus.PENDING) {
             throw new PaymentAuthenticationException(
                     "Payment authentication failed.", new PaymentRejectedException());
         }
 
-        if (paymentStatus != PaymentStatus.SIGNED) {
-            throw new PaymentRejectedException("Unexpected payment status: " + paymentStatus);
+        if (paymentResponse.getPaymentStatus() != PaymentStatus.SIGNED) {
+            throw frOpenBankingStatusParser.parseErrorResponse(paymentResponse);
         }
 
-        return paymentStatus;
+        return paymentResponse.getPaymentStatus();
     }
 
-    private Retryer<PaymentStatus> getPaymentStatusRetryer() {
-        return RetryerBuilder.<PaymentStatus>newBuilder()
-                .retryIfResult(status -> status == PaymentStatus.PENDING)
+    private Retryer<GetPaymentResponse> getPaymentResponseRetryer() {
+        return RetryerBuilder.<GetPaymentResponse>newBuilder()
+                .retryIfResult(
+                        paymentResponse ->
+                                paymentResponse == null
+                                        || paymentResponse.getPaymentStatus()
+                                                == PaymentStatus.PENDING)
                 .withWaitStrategy(WaitStrategies.fixedWait(SLEEP_TIME, TimeUnit.SECONDS))
                 .withStopStrategy(StopStrategies.stopAfterAttempt(RETRY_ATTEMPTS))
                 .build();
