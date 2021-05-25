@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import java.math.BigDecimal;
-import java.util.Objects;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.SebConstants;
@@ -102,12 +101,7 @@ public class AccountEntity {
 
     @JsonIgnore
     private ExactCurrencyAmount getBalance() {
-        if (Objects.isNull(creditAmount) || BigDecimal.ZERO.equals(creditAmount)) {
-            return ExactCurrencyAmount.of(balance, getCurrency());
-        } else {
-            // if there is a credit on this account
-            return ExactCurrencyAmount.of(balance.subtract(creditAmount), getCurrency());
-        }
+        return ExactCurrencyAmount.of(balance, getCurrency());
     }
 
     @JsonIgnore
