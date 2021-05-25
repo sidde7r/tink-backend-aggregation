@@ -558,24 +558,23 @@ public final class SEBApiAgent extends AbstractAgent
 
         List<InsuranceEntity> insurances = insuranceResponse.d.getVodb().getInsuranceEntities();
 
-        if (insurances.isEmpty()) {
-            return Collections.emptyMap();
+        if (!insurances.isEmpty()) {
+            insurances.forEach(
+                    insuranceEntity -> {
+                        Account account = insuranceEntity.toAccount();
+
+                        Portfolio portfolio = insuranceEntity.toPortfolio();
+
+                        List<Instrument> instruments =
+                                getInsuranceInstruments(insuranceEntity.getDetailUrl());
+                        portfolio.setInstruments(instruments);
+                        portfolio.setTotalProfit(
+                                instruments.stream().mapToDouble(Instrument::getProfit).sum());
+
+                        insuranceAccounts.put(
+                                account, AccountFeatures.createForPortfolios(portfolio));
+                    });
         }
-
-        insurances.forEach(
-                insuranceEntity -> {
-                    Account account = insuranceEntity.toAccount();
-
-                    Portfolio portfolio = insuranceEntity.toPortfolio();
-
-                    List<Instrument> instruments =
-                            getInsuranceInstruments(insuranceEntity.getDetailUrl());
-                    portfolio.setInstruments(instruments);
-                    portfolio.setTotalProfit(
-                            instruments.stream().mapToDouble(Instrument::getProfit).sum());
-
-                    insuranceAccounts.put(account, AccountFeatures.createForPortfolios(portfolio));
-                });
 
         List<InsuranceAccountEntity> insuranceAccountEntities =
                 insuranceResponse.d.getVodb().getInsuranceAccountEntities();
@@ -588,6 +587,9 @@ public final class SEBApiAgent extends AbstractAgent
                     tryFetchAndLogInsuranceAccountInstruments(
                             insuranceAccountEntity.getDetailUrl());
 
+                    if (portfolio.getInstruments() == null) {
+                        portfolio.setInstruments(Collections.emptyList());
+                    }
                     insuranceAccounts.put(account, AccountFeatures.createForPortfolios(portfolio));
                 });
 
