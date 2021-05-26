@@ -20,8 +20,6 @@ public final class FiduciaConstants {
 
     public static class StorageKeys {
         public static final String CONSENT_ID = "consent-id";
-        public static final String STATE = "state";
-        public static final String PSU_ID = "psu-id";
     }
 
     public static class HeaderKeys {

@@ -36,11 +36,12 @@ import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaConstants.CredentialKeys;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaConstants.StorageKeys;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.entities.ScaMethod;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.rpc.ScaResponse;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.rpc.ScaStatusResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AuthenticationType;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AuthorizationResponse;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AuthorizationStatusResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentDetailsResponse;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentResponse;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ScaMethodEntity;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.i18n.Catalog;
@@ -60,6 +61,7 @@ public class FiduciaAuthenticatorTest {
     private static final String OTP_CODE = "123456";
     private static final String STARTCODE = "555777999666";
     private static final String SCA_METHOD_ID_CHIP_TAN = "962";
+    private static final String AUTH_START_PATH = "/v1/consents/dummy_consent_id/authorisations";
     private static final String AUTH_PATH =
             "/v1/consents/dummy_consent_id/authorisations/dummy_authorization_id";
     private static final String CONSENT_VALID_UNTIL = "2021-03-17";
@@ -98,7 +100,11 @@ public class FiduciaAuthenticatorTest {
                 ImmutableMap.of(
                         CredentialKeys.PSU_ID, USERNAME, CredentialKeys.PASSWORD, PASSWORD));
 
-        when(apiClient.createConsent(USERNAME)).thenReturn(CONSENT_ID);
+        when(apiClient.createConsent(USERNAME))
+                .thenReturn(
+                        SerializationUtils.deserializeFromString(
+                                Paths.get(TEST_DATA_PATH, "consentCreated.json").toFile(),
+                                ConsentResponse.class));
 
         fieldCaptor = ArgumentCaptor.forClass(Field.class);
     }
@@ -124,24 +130,25 @@ public class FiduciaAuthenticatorTest {
             throws SupplementalInfoException {
         // given
         beforeFullAuth();
-        ScaResponse scaResponse =
+        AuthorizationResponse authorizationResponse =
                 SerializationUtils.deserializeFromString(
                         Paths.get(TEST_DATA_PATH, "scaResponseSelected.json").toFile(),
-                        ScaResponse.class);
-        when(apiClient.authorizeConsent(CONSENT_ID, PASSWORD)).thenReturn(scaResponse);
-        whenSupplementalInformationHelperReturn(scaResponse);
-        when(apiClient.authorizeWithOtpCode(AUTH_PATH, OTP_CODE))
+                        AuthorizationResponse.class);
+        when(apiClient.authorizeWithPassword(AUTH_START_PATH, PASSWORD))
+                .thenReturn(authorizationResponse);
+        whenSupplementalInformationHelperReturn(authorizationResponse);
+        when(apiClient.authorizeWithOtp(AUTH_PATH, OTP_CODE))
                 .thenReturn(
                         SerializationUtils.deserializeFromString(
                                 Paths.get(TEST_DATA_PATH, "scaFinalised.json").toFile(),
-                                ScaStatusResponse.class));
+                                AuthorizationStatusResponse.class));
         when(apiClient.getConsentDetails(CONSENT_ID))
                 .thenReturn(
                         SerializationUtils.deserializeFromString(
                                 Paths.get(TEST_DATA_PATH, "consentDetailsValidConsentResponse.json")
                                         .toFile(),
                                 ConsentDetailsResponse.class));
-        whenSupplementalInformationHelperReturn(scaResponse);
+        whenSupplementalInformationHelperReturn(authorizationResponse);
 
         // when
         authenticator.authenticate(credentials);
@@ -149,8 +156,8 @@ public class FiduciaAuthenticatorTest {
         // then
         verify(persistentStorage).put(StorageKeys.CONSENT_ID, CONSENT_ID);
         verify(apiClient).createConsent(USERNAME);
-        verify(apiClient).authorizeConsent(CONSENT_ID, PASSWORD);
-        verify(apiClient).authorizeWithOtpCode(AUTH_PATH, OTP_CODE);
+        verify(apiClient).authorizeWithPassword(AUTH_START_PATH, PASSWORD);
+        verify(apiClient).authorizeWithOtp(AUTH_PATH, OTP_CODE);
         verify(apiClient).getConsentDetails(CONSENT_ID);
         verifyNoMoreInteractions(apiClient);
 
@@ -168,25 +175,26 @@ public class FiduciaAuthenticatorTest {
             throws SupplementalInfoException {
         // given
         beforeFullAuth();
-        when(apiClient.authorizeConsent(CONSENT_ID, PASSWORD))
+        when(apiClient.authorizeWithPassword(AUTH_START_PATH, PASSWORD))
                 .thenReturn(
                         SerializationUtils.deserializeFromString(
                                 Paths.get(TEST_DATA_PATH, "scaResponseMultiple.json").toFile(),
-                                ScaResponse.class));
-        ScaResponse scaResponse =
+                                AuthorizationResponse.class));
+        AuthorizationResponse authorizationResponse =
                 SerializationUtils.deserializeFromString(
                         Paths.get(TEST_DATA_PATH, "scaResponseSelectedChipTan.json").toFile(),
-                        ScaResponse.class);
-        ScaMethod chosenMethod = mock(ScaMethod.class);
+                        AuthorizationResponse.class);
+        ScaMethodEntity chosenMethod = mock(ScaMethodEntity.class);
         when(chosenMethod.getAuthenticationType()).thenReturn("CHIP_OTP");
-        scaResponse.setChosenScaMethod(chosenMethod);
-        whenSupplementalInformationHelperReturn(scaResponse);
-        when(apiClient.selectAuthMethod(AUTH_PATH, SCA_METHOD_ID_CHIP_TAN)).thenReturn(scaResponse);
-        when(apiClient.authorizeWithOtpCode(AUTH_PATH, OTP_CODE))
+        authorizationResponse.setChosenScaMethod(chosenMethod);
+        whenSupplementalInformationHelperReturn(authorizationResponse);
+        when(apiClient.selectAuthMethod(AUTH_PATH, SCA_METHOD_ID_CHIP_TAN))
+                .thenReturn(authorizationResponse);
+        when(apiClient.authorizeWithOtp(AUTH_PATH, OTP_CODE))
                 .thenReturn(
                         SerializationUtils.deserializeFromString(
                                 Paths.get(TEST_DATA_PATH, "scaFinalised.json").toFile(),
-                                ScaStatusResponse.class));
+                                AuthorizationStatusResponse.class));
         when(apiClient.getConsentDetails(CONSENT_ID))
                 .thenReturn(
                         SerializationUtils.deserializeFromString(
@@ -200,8 +208,8 @@ public class FiduciaAuthenticatorTest {
         // then
         verify(persistentStorage).put(StorageKeys.CONSENT_ID, CONSENT_ID);
         verify(apiClient).createConsent(USERNAME);
-        verify(apiClient).authorizeConsent(CONSENT_ID, PASSWORD);
-        verify(apiClient).authorizeWithOtpCode(AUTH_PATH, OTP_CODE);
+        verify(apiClient).authorizeWithPassword(AUTH_START_PATH, PASSWORD);
+        verify(apiClient).authorizeWithOtp(AUTH_PATH, OTP_CODE);
         verify(apiClient).selectAuthMethod(AUTH_PATH, SCA_METHOD_ID_CHIP_TAN);
         verify(apiClient).getConsentDetails(CONSENT_ID);
         verifyNoMoreInteractions(apiClient);
@@ -285,7 +293,7 @@ public class FiduciaAuthenticatorTest {
         assertThat(credentials.getSessionExpiryDate()).isNull();
     }
 
-    private void whenSupplementalInformationHelperReturn(ScaResponse scaResponse) {
+    private void whenSupplementalInformationHelperReturn(AuthorizationResponse scaResponse) {
         Map<String, String> supplementalInformation = new HashMap<>();
         supplementalInformation.put(getFieldName(scaResponse), OTP_CODE);
         supplementalInformation.put("selectAuthMethodField", "2");
@@ -294,8 +302,8 @@ public class FiduciaAuthenticatorTest {
                 .thenReturn(supplementalInformation);
     }
 
-    private String getFieldName(ScaResponse scaResponse) {
-        ScaMethod chosenScaMethod = scaResponse.getChosenScaMethod();
+    private String getFieldName(AuthorizationResponse scaResponse) {
+        ScaMethodEntity chosenScaMethod = scaResponse.getChosenScaMethod();
         if (chosenScaMethod != null) {
             Optional<AuthenticationType> authenticationType =
                     AuthenticationType.fromString(chosenScaMethod.getAuthenticationType());

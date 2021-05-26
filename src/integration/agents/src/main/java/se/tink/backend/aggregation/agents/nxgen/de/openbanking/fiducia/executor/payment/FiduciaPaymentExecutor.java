@@ -23,11 +23,9 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.executor.
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.executor.payment.entities.PmtId;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.executor.payment.entities.PmtInf;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.executor.payment.entities.PmtTpInf;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.executor.payment.entities.PsuDataEntity;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.executor.payment.entities.RmtInf;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.executor.payment.entities.SchmeNm;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.executor.payment.entities.SvcLvl;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.executor.payment.rpc.AuthorizePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.executor.payment.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.executor.payment.rpc.PaymentDocument;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.utils.XmlConverter;
@@ -49,7 +47,6 @@ import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
-import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @RequiredArgsConstructor
 public class FiduciaPaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
@@ -125,11 +122,11 @@ public class FiduciaPaymentExecutor implements PaymentExecutor, FetchablePayment
     @Override
     public PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentMultiStepRequest) {
         Payment payment = paymentMultiStepRequest.getPayment();
-        String body =
-                SerializationUtils.serializeToString(
-                        new AuthorizePaymentRequest(new PsuDataEntity(password)));
-
-        apiClient.authorizePayment(payment.getUniqueId(), body, psuId);
+        //        String body =
+        //                SerializationUtils.serializeToString(
+        //                        new AuthorizePaymentRequest(new PsuDataEntity(password)));
+        //
+        //        apiClient.authorizePayment(payment.getUniqueId(), body, psuId);
         payment.setStatus(PaymentStatus.PAID);
 
         return new PaymentMultiStepResponse(payment, SigningStepConstants.STEP_FINALIZE, null);

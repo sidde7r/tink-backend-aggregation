@@ -1,13 +1,13 @@
-package se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.entities;
+package se.tink.backend.aggregation.agents.utils.berlingroup.consent;
 
 import lombok.Getter;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 @Getter
-public class ChallengeData {
+public class ChallengeDataEntity {
     private String image;
     private Integer otpMaxLength;
-    private String otpFormat;
+    private OtpFormat otpFormat;
     private String additionalInformation;
 }

@@ -1,11 +1,10 @@
-package se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.rpc;
+package se.tink.backend.aggregation.agents.utils.berlingroup.consent;
 
 import lombok.AllArgsConstructor;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 @AllArgsConstructor
-public class SelectScaMethodRequest {
-
+public class SelectAuthorizationMethodRequest {
     private String authenticationMethodId;
 }

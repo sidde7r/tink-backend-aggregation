@@ -1,23 +1,15 @@
-package se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.entities;
+package se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Optional;
-import lombok.Getter;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AuthenticationType;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ScaMethodEntity;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.GermanFields;
-import se.tink.backend.aggregation.annotations.JsonObject;
 
-@JsonObject
-@Getter
-public class ScaMethod implements GermanFields.SelectEligible {
-    private String name;
-    private String authenticationType;
-    private String authenticationMethodId;
+public class FiduciaIconUrlMapper implements GermanFields.ScaMethodEntityToIconMapper {
 
-    @JsonIgnore
-    public String getIconUrl() {
+    public String getIconUrl(ScaMethodEntity scaMethodEntity) {
         Optional<AuthenticationType> authenticationTypeMethod =
-                AuthenticationType.fromString(authenticationType);
+                AuthenticationType.fromString(scaMethodEntity.getAuthenticationType());
         return authenticationTypeMethod.map(this::getUrl).orElse(null);
     }
 

@@ -11,13 +11,6 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaCo
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaConstants.QueryParamsKeys;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaConstants.QueryParamsValues;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaConstants.StorageKeys;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.entities.OtpCodeBody;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.entities.PsuData;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.rpc.AuthorizeConsentRequest;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.rpc.ScaResponse;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.rpc.ScaStatusResponse;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.rpc.SelectScaMethodRequest;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.executor.payment.rpc.AuthorizePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.executor.payment.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.executor.payment.rpc.PaymentDocument;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.fetcher.transactionalaccount.rpc.GetAccountsResponse;
@@ -25,9 +18,15 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.fetcher.t
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.fetcher.transactionalaccount.rpc.GetTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.utils.ErrorChecker;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AccessEntity;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AuthorizationRequest;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AuthorizationResponse;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AuthorizationStatusResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentDetailsResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentRequest;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentResponse;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.FinalizeAuthorizationRequest;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.PsuDataEntity;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.SelectAuthorizationMethodRequest;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -42,14 +41,11 @@ public class FiduciaApiClient {
 
     private static final String CONSENTS_ENDPOINT = "/v1/consents";
     private static final String CONSENT_ENDPOINT = "/v1/consents/{consentId}";
-    private static final String CONSENT_AUTHORIZATIONS_ENDPOINT =
-            "/v1/consents/{consentId}/authorisations";
     private static final String ACCOUNTS_ENDPOINT = "/v1/accounts";
     private static final String BALANCES_ENDPOINT = "/v1/accounts/{accountId}/balances";
     private static final String TRANSACTIONS_ENDPOINT = "/v1/accounts/{accountId}/transactions";
+
     private static final String PAYMENTS_ENDPOINT = "/v1/payments/pain.001-sepa-credit-transfers";
-    private static final String PAYMENT_AUTHORIZATION_ENDPOINT =
-            "/v1/payments/pain.001-sepa-credit-transfers/{paymentId}/authorisations";
     private static final String PAYMENT_ENDPOINT =
             "/v1/payments/pain.001-sepa-credit-transfers/{paymentId}";
 
@@ -77,7 +73,7 @@ public class FiduciaApiClient {
                 .header(FiduciaConstants.HeaderKeys.PSU_IP_ADDRESS, userIp);
     }
 
-    public String createConsent(String username) {
+    public ConsentResponse createConsent(String username) {
         ConsentRequest createConsentRequest =
                 new ConsentRequest(
                         new AccessEntity("allAccounts"),
@@ -89,9 +85,8 @@ public class FiduciaApiClient {
         try {
             return createRequest(createUrl(CONSENTS_ENDPOINT))
                     .type(MediaType.APPLICATION_JSON_TYPE)
-                    .header(StorageKeys.PSU_ID, username)
-                    .post(ConsentResponse.class, createConsentRequest)
-                    .getConsentId();
+                    .header(HeaderKeys.PSU_ID, username)
+                    .post(ConsentResponse.class, createConsentRequest);
         } catch (HttpResponseException e) {
             throw ErrorChecker.errorChecker(e);
         }
@@ -102,39 +97,39 @@ public class FiduciaApiClient {
                 .get(ConsentDetailsResponse.class);
     }
 
-    public ScaResponse authorizeConsent(String consentId, String password) {
-        AuthorizeConsentRequest authorizeConsentRequest =
-                new AuthorizeConsentRequest(new PsuData(password));
+    public AuthorizationResponse authorizeWithPassword(String url, String password) {
+        AuthorizationRequest authorizationRequest =
+                new AuthorizationRequest(new PsuDataEntity(password));
 
         try {
-            return createRequest(
-                            createUrl(CONSENT_AUTHORIZATIONS_ENDPOINT)
-                                    .parameter(CONSENT_ID, consentId))
+            return createRequest(createUrl(url))
                     .type(MediaType.APPLICATION_JSON_TYPE)
-                    .post(ScaResponse.class, authorizeConsentRequest);
+                    .post(AuthorizationResponse.class, authorizationRequest);
         } catch (HttpResponseException e) {
             throw ErrorChecker.errorChecker(e);
         }
     }
 
-    public ScaResponse selectAuthMethod(String urlPath, String scaMethodId) {
-        SelectScaMethodRequest request = new SelectScaMethodRequest(scaMethodId);
+    public AuthorizationResponse selectAuthMethod(String url, String scaMethodId) {
+        SelectAuthorizationMethodRequest request =
+                new SelectAuthorizationMethodRequest(scaMethodId);
 
         try {
-            return createRequest(createUrl(urlPath))
+            return createRequest(createUrl(url))
                     .type(MediaType.APPLICATION_JSON_TYPE)
-                    .put(ScaResponse.class, request);
+                    .put(AuthorizationResponse.class, request);
         } catch (HttpResponseException e) {
             throw ErrorChecker.errorChecker(e);
         }
     }
 
-    public ScaStatusResponse authorizeWithOtpCode(String urlPath, String otpCode) {
-        OtpCodeBody otpCodeBody = new OtpCodeBody(otpCode);
+    public AuthorizationStatusResponse authorizeWithOtp(String url, String otp) {
+        FinalizeAuthorizationRequest finalizeAuthorizationRequest =
+                new FinalizeAuthorizationRequest(otp);
         try {
-            return createRequest(createUrl(urlPath))
+            return createRequest(createUrl(url))
                     .type(MediaType.APPLICATION_JSON_TYPE)
-                    .put(ScaStatusResponse.class, otpCodeBody);
+                    .put(AuthorizationStatusResponse.class, finalizeAuthorizationRequest);
         } catch (HttpResponseException e) {
             if (e.getResponse()
                     .getBody(String.class)
@@ -179,13 +174,6 @@ public class FiduciaApiClient {
                 .header(HeaderKeys.PSU_ID, psuId)
                 .type(MediaType.APPLICATION_XML_TYPE)
                 .post(CreatePaymentResponse.class, body);
-    }
-
-    public AuthorizePaymentResponse authorizePayment(String paymentId, String body, String psuId) {
-        return createRequest(
-                        createUrl(PAYMENT_AUTHORIZATION_ENDPOINT).parameter(PAYMENT_ID, paymentId))
-                .header(HeaderKeys.PSU_ID, psuId)
-                .post(AuthorizePaymentResponse.class, body);
     }
 
     public PaymentDocument getPayment(String paymentId) {
