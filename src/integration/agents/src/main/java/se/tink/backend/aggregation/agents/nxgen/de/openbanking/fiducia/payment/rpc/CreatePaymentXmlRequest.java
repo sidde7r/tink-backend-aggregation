@@ -1,9 +1,9 @@
-package se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.executor.payment.rpc;
+package se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.payment.rpc;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.executor.payment.entities.CstmrCdtTrfInitn;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.executor.payment.entities.PmtInf;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.payment.entities.CstmrCdtTrfInitn;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.payment.entities.PmtInf;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
@@ -14,13 +14,13 @@ import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
 
 @XmlRootElement(name = "Document")
-public class PaymentDocument {
+public class CreatePaymentXmlRequest {
     @XmlElement(name = "CstmrCdtTrfInitn")
     private CstmrCdtTrfInitn cstmrCdtTrfInitn;
 
-    public PaymentDocument() {}
+    public CreatePaymentXmlRequest() {}
 
-    public PaymentDocument(CstmrCdtTrfInitn cstmrCdtTrfInitn) {
+    public CreatePaymentXmlRequest(CstmrCdtTrfInitn cstmrCdtTrfInitn) {
         this.cstmrCdtTrfInitn = cstmrCdtTrfInitn;
     }
 

@@ -19,12 +19,14 @@ import se.tink.backend.aggregation.agents.exceptions.errors.SupplementalInfoErro
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaConstants.CredentialKeys;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaConstants.StorageKeys;
+import se.tink.backend.aggregation.agents.utils.berlingroup.common.LinksEntity;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AuthorizationResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AuthorizationStatusResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ChallengeDataEntity;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentDetailsResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ScaMethodEntity;
+import se.tink.backend.aggregation.agents.utils.berlingroup.payment.PaymentAuthenticator;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.CommonFields;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.GermanFields;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.TanBuilder;
@@ -36,7 +38,8 @@ import se.tink.libraries.i18n.Catalog;
 
 @AllArgsConstructor
 @Slf4j
-public class FiduciaAuthenticator implements MultiFactorAuthenticator, AutoAuthenticator {
+public class FiduciaAuthenticator
+        implements MultiFactorAuthenticator, AutoAuthenticator, PaymentAuthenticator {
 
     private static final Pattern STARTCODE_CHIP_PATTERN = Pattern.compile("Startcode\\s\\\"(\\d+)");
 
@@ -91,6 +94,16 @@ public class FiduciaAuthenticator implements MultiFactorAuthenticator, AutoAuthe
         authorize(authorizationResponse);
 
         verifyConsentValidity(consentResponse.getConsentId());
+    }
+
+    @Override
+    public void authenticatePayment(Credentials credentials, LinksEntity scaLinks) {
+        validateCredentials(credentials);
+        AuthorizationResponse authorizationResponse =
+                apiClient.authorizeWithPassword(
+                        scaLinks.getStartAuthorisationWithPsuAuthentication().getHref(),
+                        credentials.getField(CredentialKeys.PASSWORD));
+        authorize(authorizationResponse);
     }
 
     private void validateCredentials(Credentials credentials) {

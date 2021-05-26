@@ -12,10 +12,9 @@ import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModules;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaConstants.CredentialKeys;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.FiduciaAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.executor.payment.FiduciaPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.fetcher.transactionalaccount.FiduciaTransactionalAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.payment.FiduciaPaymentExecutor;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.eidassigner.module.QSealcSignerModuleRSASHA256;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
@@ -35,6 +34,7 @@ public final class FiduciaAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
 
     private final FiduciaApiClient apiClient;
+    private final FiduciaAuthenticator fiduciaAuthenticator;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
     @Inject
@@ -50,6 +50,13 @@ public final class FiduciaAgent extends NextGenerationAgent
                                 ? request.getUserAvailability().getOriginatingUserIp()
                                 : null,
                         serverUrl);
+        fiduciaAuthenticator =
+                new FiduciaAuthenticator(
+                        credentials,
+                        apiClient,
+                        persistentStorage,
+                        supplementalInformationHelper,
+                        catalog);
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
         client.addFilter(
                 new FiduciaSigningFilter(
@@ -109,9 +116,7 @@ public final class FiduciaAgent extends NextGenerationAgent
     public Optional<PaymentController> constructPaymentController() {
         final FiduciaPaymentExecutor fiduciaPaymentExecutor =
                 new FiduciaPaymentExecutor(
-                        apiClient,
-                        credentials.getField(CredentialKeys.PSU_ID),
-                        credentials.getField(CredentialKeys.PASSWORD));
+                        fiduciaAuthenticator, apiClient, credentials, sessionStorage);
 
         return Optional.of(new PaymentController(fiduciaPaymentExecutor, fiduciaPaymentExecutor));
     }

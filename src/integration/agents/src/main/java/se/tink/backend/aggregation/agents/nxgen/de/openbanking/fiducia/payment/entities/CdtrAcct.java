@@ -1,14 +1,14 @@
-package se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.executor.payment.entities;
+package se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.payment.entities;
 
 import javax.xml.bind.annotation.XmlElement;
 
-public class DbtrAcct {
+public class CdtrAcct {
     @XmlElement(name = "Id")
     private IbanId id;
 
-    public DbtrAcct() {}
+    public CdtrAcct() {}
 
-    public DbtrAcct(IbanId id) {
+    public CdtrAcct(IbanId id) {
         this.id = id;
     }
 

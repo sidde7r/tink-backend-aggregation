@@ -6,6 +6,7 @@ import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -58,10 +59,14 @@ public class FiduciaSigningFilter extends Filter {
     @Override
     public HttpResponse handle(HttpRequest httpRequest)
             throws HttpClientException, HttpResponseException {
-        String body = getBody(httpRequest);
+        MultivaluedMap<String, Object> requestHeaders = httpRequest.getHeaders();
+
+        String body =
+                MediaType.APPLICATION_XML_TYPE.equals(requestHeaders.getFirst("content-type"))
+                        ? httpRequest.getBody().toString()
+                        : getBody(httpRequest);
         String digest = createDigest(body);
 
-        MultivaluedMap<String, Object> requestHeaders = httpRequest.getHeaders();
         requestHeaders.add(HeaderKeys.TPP_SIGNATURE_CERTIFICATE, qsealcDerBase64);
         requestHeaders.add(HeaderKeys.DIGEST, digest);
         requestHeaders.add(HeaderKeys.SIGNATURE, generateSignatureHeader(requestHeaders));
@@ -106,7 +111,7 @@ public class FiduciaSigningFilter extends Filter {
     private String getSignedHeadersWithValues(MultivaluedMap<String, Object> headers) {
         return HEADERS_TO_SIGN.stream()
                 .filter(headers::containsKey)
-                .map(header -> header.toLowerCase() + ": " + headers.get(header).get(0))
+                .map(header -> header.toLowerCase() + ": " + headers.getFirst(header))
                 .collect(Collectors.joining("\n"));
     }
 }

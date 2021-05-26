@@ -48,7 +48,7 @@ public final class FiduciaConstants {
     public static class FormValues {
         public static final String VALID_UNTIL = "9999-12-31";
         public static final int FREQUENCY_PER_DAY = 4;
-        public static final String DATE_FORMAT = "dd MM yyyy";
+        public static final String DATE_FORMAT = "yyyy-MM-dd";
         public static final String OTHER_ID = "123";
         public static final String SCHEME_NAME = "PISP";
         public static final String PAYMENT_INITIATOR = "PaymentInitiator";

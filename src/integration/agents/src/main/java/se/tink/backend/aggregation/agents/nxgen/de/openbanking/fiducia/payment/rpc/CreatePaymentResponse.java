@@ -1,9 +1,9 @@
-package se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.executor.payment.rpc;
+package se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.payment.rpc;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaConstants;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.executor.payment.entities.LinksEntity;
+import se.tink.backend.aggregation.agents.utils.berlingroup.common.LinksEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.libraries.amount.ExactCurrencyAmount;
