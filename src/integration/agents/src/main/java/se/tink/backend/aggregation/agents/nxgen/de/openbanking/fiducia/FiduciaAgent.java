@@ -4,7 +4,6 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
 
 import com.google.inject.Inject;
-import java.security.cert.CertificateException;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
@@ -15,13 +14,8 @@ import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModules;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaConstants.CredentialKeys;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.FiduciaAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.FiduciaSignatureHeaderGenerator;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.detail.FiduciaHeaderValues;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.detail.FiduciaRequestBuilder;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.executor.payment.FiduciaPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.fetcher.transactionalaccount.FiduciaTransactionalAccountFetcher;
-import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
-import se.tink.backend.aggregation.configuration.agents.utils.CertificateUtils;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.eidassigner.module.QSealcSignerModuleRSASHA256;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
@@ -43,61 +37,25 @@ public final class FiduciaAgent extends NextGenerationAgent
     private final FiduciaApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
-    private String qsealcDerBase64;
-
     @Inject
     public FiduciaAgent(AgentComponentProvider componentProvider, QsealcSigner qsealcSigner) {
         super(componentProvider);
         String serverUrl = request.getProvider().getPayload();
 
-        FiduciaHeaderValues fiduciaHeaderValues = setupHeaderValues();
-        FiduciaRequestBuilder fiduciaRequestBuilder =
-                new FiduciaRequestBuilder(
+        this.apiClient =
+                new FiduciaApiClient(
                         client,
-                        sessionStorage,
-                        new FiduciaSignatureHeaderGenerator(qsealcSigner),
-                        fiduciaHeaderValues);
-
-        this.apiClient = new FiduciaApiClient(persistentStorage, serverUrl, fiduciaRequestBuilder);
+                        persistentStorage,
+                        request.getUserAvailability().isUserPresent()
+                                ? request.getUserAvailability().getOriginatingUserIp()
+                                : null,
+                        serverUrl);
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
-    }
-
-    private FiduciaHeaderValues setupHeaderValues() {
-        AgentConfiguration<FiduciaConfiguration> agentConfiguration =
-                getAgentConfigurationController().getAgentConfiguration(FiduciaConfiguration.class);
-
-        String tppOrganizationIdentifier;
-        String qsealcSerialNumberInHex;
-        String qsealcIssuerDN;
-        try {
-            tppOrganizationIdentifier =
-                    CertificateUtils.getOrganizationIdentifier(agentConfiguration.getQsealc());
-            qsealcDerBase64 =
-                    CertificateUtils.getDerEncodedCertFromBase64EncodedCertificate(
-                            agentConfiguration.getQsealc());
-            qsealcSerialNumberInHex =
-                    CertificateUtils.getSerialNumber(agentConfiguration.getQsealc(), 16);
-            qsealcIssuerDN =
-                    CertificateUtils.getCertificateIssuerDN(agentConfiguration.getQsealc());
-
-        } catch (CertificateException e) {
-            throw new IllegalStateException(
-                    "Failed to extract organizationId or Qsealc from agent configuration", e);
-        }
-
-        return new FiduciaHeaderValues(
-                tppOrganizationIdentifier,
-                qsealcDerBase64,
-                qsealcSerialNumberInHex,
-                qsealcIssuerDN,
-                getAgentConfiguration().getRedirectUrl(),
-                request.getUserAvailability().isUserPresent()
-                        ? request.getUserAvailability().getOriginatingUserIp()
-                        : null);
-    }
-
-    private AgentConfiguration<FiduciaConfiguration> getAgentConfiguration() {
-        return getAgentConfigurationController().getAgentConfiguration(FiduciaConfiguration.class);
+        client.addFilter(
+                new FiduciaSigningFilter(
+                        qsealcSigner,
+                        getAgentConfigurationController()
+                                .getAgentConfiguration(FiduciaConfiguration.class)));
     }
 
     @Override
@@ -107,7 +65,6 @@ public final class FiduciaAgent extends NextGenerationAgent
                         credentials,
                         apiClient,
                         persistentStorage,
-                        sessionStorage,
                         supplementalInformationHelper,
                         catalog);
 
@@ -153,7 +110,6 @@ public final class FiduciaAgent extends NextGenerationAgent
         final FiduciaPaymentExecutor fiduciaPaymentExecutor =
                 new FiduciaPaymentExecutor(
                         apiClient,
-                        qsealcDerBase64,
                         credentials.getField(CredentialKeys.PSU_ID),
                         credentials.getField(CredentialKeys.PASSWORD));
 

@@ -1,13 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.executor.payment;
 
-import java.security.interfaces.RSAPrivateKey;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
-import java.util.UUID;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaConstants.FormValues;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaConstants.SignatureValues;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.executor.payment.entities.Amt;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.executor.payment.entities.CdtTrfTxInf;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.executor.payment.entities.Cdtr;
@@ -32,7 +30,6 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.executor.
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.executor.payment.rpc.AuthorizePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.executor.payment.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.executor.payment.rpc.PaymentDocument;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.utils.SignatureUtils;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.utils.XmlConverter;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepResponse;
@@ -54,6 +51,7 @@ import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
+@RequiredArgsConstructor
 public class FiduciaPaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
 
     private static final Locale DEFAULT_LOCALE = Locale.getDefault();
@@ -62,20 +60,6 @@ public class FiduciaPaymentExecutor implements PaymentExecutor, FetchablePayment
     private final FiduciaApiClient apiClient;
     private final String psuId;
     private final String password;
-    private final String qsealcDerBase64;
-    private final RSAPrivateKey privateKey;
-
-    public FiduciaPaymentExecutor(
-            FiduciaApiClient apiClient, String qsealcDerBase64, String psuId, String password) {
-        this.apiClient = apiClient;
-        this.psuId = psuId;
-        this.password = password;
-        this.qsealcDerBase64 = qsealcDerBase64;
-
-        // TODO change made for secrets cleanup purposes (prev values were used by Vega for sbx)
-        // Entire payment executor has to be refactored to use QSealC signer
-        privateKey = null;
-    }
 
     @Override
     public PaymentResponse create(PaymentRequest paymentRequest) {
@@ -133,21 +117,7 @@ public class FiduciaPaymentExecutor implements PaymentExecutor, FetchablePayment
                 new PaymentDocument(new CstmrCdtTrfInitn(groupHeader, paymentInfo));
         String body = XmlConverter.convertToXml(document);
 
-        String digest = SignatureUtils.createDigest(body);
-        String date = SignatureUtils.getCurrentDateFormatted();
-        String reqId = String.valueOf(UUID.randomUUID());
-        String signature =
-                SignatureUtils.createSignature(
-                        privateKey,
-                        SignatureValues.HEADERS_WITH_PSU_ID,
-                        digest,
-                        reqId,
-                        date,
-                        psuId);
-
-        CreatePaymentResponse createPaymentResponse =
-                apiClient.createPayment(
-                        body, psuId, digest, qsealcDerBase64, signature, reqId, date);
+        CreatePaymentResponse createPaymentResponse = apiClient.createPayment(body, psuId);
 
         return createPaymentResponse.toTinkPayment(creditor, debtor, amount);
     }
@@ -159,28 +129,7 @@ public class FiduciaPaymentExecutor implements PaymentExecutor, FetchablePayment
                 SerializationUtils.serializeToString(
                         new AuthorizePaymentRequest(new PsuDataEntity(password)));
 
-        String digest = SignatureUtils.createDigest(body);
-        String date = SignatureUtils.getCurrentDateFormatted();
-        String reqId = String.valueOf(UUID.randomUUID());
-
-        String signature =
-                SignatureUtils.createSignature(
-                        privateKey,
-                        SignatureValues.HEADERS_WITH_PSU_ID,
-                        digest,
-                        reqId,
-                        date,
-                        psuId);
-
-        apiClient.authorizePayment(
-                payment.getUniqueId(),
-                body,
-                psuId,
-                digest,
-                qsealcDerBase64,
-                signature,
-                reqId,
-                date);
+        apiClient.authorizePayment(payment.getUniqueId(), body, psuId);
         payment.setStatus(PaymentStatus.PAID);
 
         return new PaymentMultiStepResponse(payment, SigningStepConstants.STEP_FINALIZE, null);
@@ -203,15 +152,8 @@ public class FiduciaPaymentExecutor implements PaymentExecutor, FetchablePayment
     public PaymentResponse fetch(PaymentRequest paymentRequest) {
         Payment payment = paymentRequest.getPayment();
         String paymentId = payment.getUniqueId();
-        String digest = SignatureUtils.createDigest(SignatureValues.EMPTY_BODY);
-        String date = SignatureUtils.getCurrentDateFormatted();
-        String reqId = String.valueOf(UUID.randomUUID());
-        String signature =
-                SignatureUtils.createSignature(
-                        privateKey, SignatureValues.HEADERS, digest, reqId, date, null);
 
-        PaymentDocument paymentDocument =
-                apiClient.getPayment(paymentId, digest, qsealcDerBase64, signature, reqId, date);
+        PaymentDocument paymentDocument = apiClient.getPayment(paymentId);
 
         return paymentDocument.toTinkPayment(paymentId, payment.getStatus());
     }

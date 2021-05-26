@@ -32,9 +32,7 @@ public final class FiduciaConstants {
         public static final String DIGEST = "digest";
         public static final String X_REQUEST_ID = "x-request-id";
         public static final String PSU_ID = "psu-id";
-        public static final String PSU_CORPORATE_ID = "psu-corporate-id";
         public static final String ACCEPT = "accept";
-        public static final String TPP_ID = "tpp-id";
         public static final String TPP_REDIRECT_URI = "tpp-redirect";
         public static final String PSU_IP_ADDRESS = "psu-ip-address";
     }
@@ -64,27 +62,6 @@ public final class FiduciaConstants {
         public static final String CHRG_BR = "SLEV";
         public static final String PAYMENT_INFORMATION_ID = "BIPI-123456789RI-123456789";
         public static final String PAYMENT_METHOD = "TRF";
-    }
-
-    public static class SignatureKeys {
-        public static final String KEY_ID = "keyId=\"";
-        public static final String ALGORITHM = ", algorithm=\"";
-        public static final String HEADERS = ", headers=\"";
-        public static final String SIGNATURE = ", signature=\"";
-        public static final String X_REQUEST_ID = "x-request-id";
-        public static final String DIGEST = "digest";
-        public static final String DATE = "date";
-        public static final String PSU_ID = "psu-id";
-        public static final String EMPTY = "";
-        public static final String SHA_256 = "SHA-256=";
-    }
-
-    public static class SignatureValues {
-        public static final String ALGORITHM = "SHA256withRSA";
-        public static final String HEADERS_WITH_PSU_ID =
-                "date digest x-request-id psu-id tpp-redirect-uri";
-        public static final String HEADERS = "x-request-id digest date";
-        public static final String EMPTY_BODY = "";
     }
 
     public static class CredentialKeys {

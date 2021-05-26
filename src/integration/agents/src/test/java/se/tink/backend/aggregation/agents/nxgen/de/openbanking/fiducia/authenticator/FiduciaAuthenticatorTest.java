@@ -43,7 +43,6 @@ import se.tink.backend.aggregation.agents.utils.berlingroup.consent.Authenticati
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentDetailsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.i18n.LocalizableKey;
 import se.tink.libraries.serialization.utils.SerializationUtils;
@@ -68,7 +67,6 @@ public class FiduciaAuthenticatorTest {
     private FiduciaAuthenticator authenticator;
     private FiduciaApiClient apiClient;
     private PersistentStorage persistentStorage;
-    private SessionStorage sessionStorage;
     private SupplementalInformationHelper supplementalInformationHelper;
 
     private Credentials credentials;
@@ -79,7 +77,6 @@ public class FiduciaAuthenticatorTest {
     public void setup() {
         apiClient = mock(FiduciaApiClient.class);
         persistentStorage = mock(PersistentStorage.class);
-        sessionStorage = mock(SessionStorage.class);
         supplementalInformationHelper = mock(SupplementalInformationHelper.class);
         Catalog catalog = mock(Catalog.class);
 
@@ -90,7 +87,6 @@ public class FiduciaAuthenticatorTest {
                         credentials,
                         apiClient,
                         persistentStorage,
-                        sessionStorage,
                         supplementalInformationHelper,
                         catalog);
 
@@ -102,7 +98,7 @@ public class FiduciaAuthenticatorTest {
                 ImmutableMap.of(
                         CredentialKeys.PSU_ID, USERNAME, CredentialKeys.PASSWORD, PASSWORD));
 
-        when(apiClient.createConsent()).thenReturn(CONSENT_ID);
+        when(apiClient.createConsent(USERNAME)).thenReturn(CONSENT_ID);
 
         fieldCaptor = ArgumentCaptor.forClass(Field.class);
     }
@@ -151,9 +147,8 @@ public class FiduciaAuthenticatorTest {
         authenticator.authenticate(credentials);
 
         // then
-        verify(sessionStorage).put(CredentialKeys.PSU_ID, USERNAME);
         verify(persistentStorage).put(StorageKeys.CONSENT_ID, CONSENT_ID);
-        verify(apiClient).createConsent();
+        verify(apiClient).createConsent(USERNAME);
         verify(apiClient).authorizeConsent(CONSENT_ID, PASSWORD);
         verify(apiClient).authorizeWithOtpCode(AUTH_PATH, OTP_CODE);
         verify(apiClient).getConsentDetails(CONSENT_ID);
@@ -203,9 +198,8 @@ public class FiduciaAuthenticatorTest {
         authenticator.authenticate(credentials);
 
         // then
-        verify(sessionStorage).put(CredentialKeys.PSU_ID, USERNAME);
         verify(persistentStorage).put(StorageKeys.CONSENT_ID, CONSENT_ID);
-        verify(apiClient).createConsent();
+        verify(apiClient).createConsent(USERNAME);
         verify(apiClient).authorizeConsent(CONSENT_ID, PASSWORD);
         verify(apiClient).authorizeWithOtpCode(AUTH_PATH, OTP_CODE);
         verify(apiClient).selectAuthMethod(AUTH_PATH, SCA_METHOD_ID_CHIP_TAN);

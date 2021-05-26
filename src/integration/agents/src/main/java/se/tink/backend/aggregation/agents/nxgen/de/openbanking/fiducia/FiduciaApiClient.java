@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia;
 
+import java.util.UUID;
 import javax.ws.rs.core.MediaType;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +17,6 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authentic
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.rpc.ScaResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.rpc.ScaStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.rpc.SelectScaMethodRequest;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.detail.FiduciaRequestBuilder;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.executor.payment.rpc.AuthorizePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.executor.payment.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.executor.payment.rpc.PaymentDocument;
@@ -30,10 +30,11 @@ import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentReque
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @AllArgsConstructor
 @Slf4j
@@ -52,21 +53,31 @@ public class FiduciaApiClient {
     private static final String PAYMENT_ENDPOINT =
             "/v1/payments/pain.001-sepa-credit-transfers/{paymentId}";
 
-    private static final String EMPTY_BODY = "";
-
     private static final String ACCOUNT_ID = "accountId";
     private static final String CONSENT_ID = "consentId";
     private static final String PAYMENT_ID = "paymentId";
 
+    private final TinkHttpClient client;
     private final PersistentStorage persistentStorage;
+    private final String userIp;
     private final String serverUrl;
-    private final FiduciaRequestBuilder fiduciaRequestBuilder;
 
     private URL createUrl(String path) {
         return new URL(serverUrl + "/bg13" + path);
     }
 
-    public String createConsent() {
+    public RequestBuilder createRequestInSession(URL url, String consentId) {
+        return createRequest(url).header(FiduciaConstants.HeaderKeys.CONSENT_ID, consentId);
+    }
+
+    public RequestBuilder createRequest(URL url) {
+        return client.request(url)
+                .header(FiduciaConstants.HeaderKeys.ACCEPT, MediaType.APPLICATION_JSON)
+                .header(FiduciaConstants.HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
+                .header(FiduciaConstants.HeaderKeys.PSU_IP_ADDRESS, userIp);
+    }
+
+    public String createConsent(String username) {
         ConsentRequest createConsentRequest =
                 new ConsentRequest(
                         new AccessEntity("allAccounts"),
@@ -76,11 +87,9 @@ public class FiduciaApiClient {
                         false);
 
         try {
-            return fiduciaRequestBuilder
-                    .createRequest(
-                            createUrl(CONSENTS_ENDPOINT),
-                            SerializationUtils.serializeToString(createConsentRequest))
+            return createRequest(createUrl(CONSENTS_ENDPOINT))
                     .type(MediaType.APPLICATION_JSON_TYPE)
+                    .header(StorageKeys.PSU_ID, username)
                     .post(ConsentResponse.class, createConsentRequest)
                     .getConsentId();
         } catch (HttpResponseException e) {
@@ -89,9 +98,7 @@ public class FiduciaApiClient {
     }
 
     public ConsentDetailsResponse getConsentDetails(String consentId) {
-        return fiduciaRequestBuilder
-                .createRequest(
-                        createUrl(CONSENT_ENDPOINT).parameter(CONSENT_ID, consentId), EMPTY_BODY)
+        return createRequest(createUrl(CONSENT_ENDPOINT).parameter(CONSENT_ID, consentId))
                 .get(ConsentDetailsResponse.class);
     }
 
@@ -100,11 +107,9 @@ public class FiduciaApiClient {
                 new AuthorizeConsentRequest(new PsuData(password));
 
         try {
-            return fiduciaRequestBuilder
-                    .createRequest(
+            return createRequest(
                             createUrl(CONSENT_AUTHORIZATIONS_ENDPOINT)
-                                    .parameter(CONSENT_ID, consentId),
-                            SerializationUtils.serializeToString(authorizeConsentRequest))
+                                    .parameter(CONSENT_ID, consentId))
                     .type(MediaType.APPLICATION_JSON_TYPE)
                     .post(ScaResponse.class, authorizeConsentRequest);
         } catch (HttpResponseException e) {
@@ -116,9 +121,7 @@ public class FiduciaApiClient {
         SelectScaMethodRequest request = new SelectScaMethodRequest(scaMethodId);
 
         try {
-            return fiduciaRequestBuilder
-                    .createRequest(
-                            createUrl(urlPath), SerializationUtils.serializeToString(request))
+            return createRequest(createUrl(urlPath))
                     .type(MediaType.APPLICATION_JSON_TYPE)
                     .put(ScaResponse.class, request);
         } catch (HttpResponseException e) {
@@ -129,9 +132,7 @@ public class FiduciaApiClient {
     public ScaStatusResponse authorizeWithOtpCode(String urlPath, String otpCode) {
         OtpCodeBody otpCodeBody = new OtpCodeBody(otpCode);
         try {
-            return fiduciaRequestBuilder
-                    .createRequest(
-                            createUrl(urlPath), SerializationUtils.serializeToString(otpCodeBody))
+            return createRequest(createUrl(urlPath))
                     .type(MediaType.APPLICATION_JSON_TYPE)
                     .put(ScaStatusResponse.class, otpCodeBody);
         } catch (HttpResponseException e) {
@@ -145,20 +146,15 @@ public class FiduciaApiClient {
     }
 
     public GetAccountsResponse getAccounts() {
-        return fiduciaRequestBuilder
-                .createRequestInSession(
-                        createUrl(ACCOUNTS_ENDPOINT),
-                        persistentStorage.get(StorageKeys.CONSENT_ID),
-                        EMPTY_BODY)
+        return createRequestInSession(
+                        createUrl(ACCOUNTS_ENDPOINT), persistentStorage.get(StorageKeys.CONSENT_ID))
                 .get(GetAccountsResponse.class);
     }
 
     public GetBalancesResponse getBalances(String accountId) {
-        return fiduciaRequestBuilder
-                .createRequestInSession(
+        return createRequestInSession(
                         createUrl(BALANCES_ENDPOINT).parameter(ACCOUNT_ID, accountId),
-                        persistentStorage.get(StorageKeys.CONSENT_ID),
-                        EMPTY_BODY)
+                        persistentStorage.get(StorageKeys.CONSENT_ID))
                 .get(GetBalancesResponse.class);
     }
 
@@ -166,8 +162,7 @@ public class FiduciaApiClient {
         URL url =
                 createUrl(TRANSACTIONS_ENDPOINT).parameter(ACCOUNT_ID, account.getApiIdentifier());
         String consentId = persistentStorage.get(StorageKeys.CONSENT_ID);
-        return fiduciaRequestBuilder
-                .createRequestInSession(url, consentId, EMPTY_BODY)
+        return createRequestInSession(url, consentId)
                 .queryParam(QueryParamsKeys.BOOKING_STATUS, QueryParamsValues.BOOKING_STATUS)
                 .queryParam(QueryParamsKeys.DATE_FROM, QueryParamsValues.DATE_FROM)
                 .get(GetTransactionsResponse.class);
@@ -175,63 +170,26 @@ public class FiduciaApiClient {
 
     public TransactionKeyPaginatorResponse<String> getTransactions(String continuationPath) {
         String consentId = persistentStorage.get(StorageKeys.CONSENT_ID);
-        return fiduciaRequestBuilder
-                .createRequestInSession(createUrl(continuationPath), consentId, EMPTY_BODY)
+        return createRequestInSession(createUrl(continuationPath), consentId)
                 .get(GetTransactionsResponse.class);
     }
 
-    public CreatePaymentResponse createPayment(
-            String body,
-            String psuId,
-            String digest,
-            String certificate,
-            String signature,
-            String reqId,
-            String date) {
-        return fiduciaRequestBuilder
-                .createPaymentRequest(
-                        createUrl(PAYMENTS_ENDPOINT), reqId, digest, signature, certificate, date)
+    public CreatePaymentResponse createPayment(String body, String psuId) {
+        return createRequest(createUrl(PAYMENTS_ENDPOINT))
                 .header(HeaderKeys.PSU_ID, psuId)
                 .type(MediaType.APPLICATION_XML_TYPE)
                 .post(CreatePaymentResponse.class, body);
     }
 
-    public AuthorizePaymentResponse authorizePayment(
-            String paymentId,
-            String body,
-            String psuId,
-            String digest,
-            String certificate,
-            String signature,
-            String reqId,
-            String date) {
-        return fiduciaRequestBuilder
-                .createPaymentRequest(
-                        createUrl(PAYMENT_AUTHORIZATION_ENDPOINT).parameter(PAYMENT_ID, paymentId),
-                        reqId,
-                        digest,
-                        signature,
-                        certificate,
-                        date)
+    public AuthorizePaymentResponse authorizePayment(String paymentId, String body, String psuId) {
+        return createRequest(
+                        createUrl(PAYMENT_AUTHORIZATION_ENDPOINT).parameter(PAYMENT_ID, paymentId))
                 .header(HeaderKeys.PSU_ID, psuId)
                 .post(AuthorizePaymentResponse.class, body);
     }
 
-    public PaymentDocument getPayment(
-            String paymentId,
-            String digest,
-            String certificate,
-            String signature,
-            String reqId,
-            String date) {
-        return fiduciaRequestBuilder
-                .createPaymentRequest(
-                        createUrl(PAYMENT_ENDPOINT).parameter(PAYMENT_ID, paymentId),
-                        reqId,
-                        digest,
-                        signature,
-                        certificate,
-                        date)
+    public PaymentDocument getPayment(String paymentId) {
+        return createRequest(createUrl(PAYMENT_ENDPOINT).parameter(PAYMENT_ID, paymentId))
                 .accept(MediaType.APPLICATION_XML)
                 .get(PaymentDocument.class);
     }

@@ -36,7 +36,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.au
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.i18n.Catalog;
 
 @AllArgsConstructor
@@ -55,7 +54,6 @@ public class FiduciaAuthenticator implements MultiFactorAuthenticator, AutoAuthe
     private final Credentials credentials;
     private final FiduciaApiClient apiClient;
     private final PersistentStorage persistentStorage;
-    private final SessionStorage sessionStorage;
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final Catalog catalog;
 
@@ -85,14 +83,13 @@ public class FiduciaAuthenticator implements MultiFactorAuthenticator, AutoAuthe
         String username = credentials.getField(CredentialKeys.PSU_ID);
         validateUsername(username);
         String password = credentials.getField(CredentialKeys.PASSWORD);
-        sessionStorage.put(StorageKeys.PSU_ID, username);
 
         String consentId;
         ScaResponse scaResponse;
 
         // NZG-297: Logging to observe success/failures depending on special characters
         try {
-            consentId = apiClient.createConsent();
+            consentId = apiClient.createConsent(username);
             scaResponse = apiClient.authorizeConsent(consentId, password);
         } catch (RuntimeException e) {
             log.info(
