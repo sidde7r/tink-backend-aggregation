@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.cajamar.fetcher.accoun
 
 import io.vavr.control.Try;
 import lombok.extern.slf4j.Slf4j;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.cajamar.CajamarApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.cajamar.CajamarConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.cajamar.CajamarConstants.Fetchers;
@@ -30,6 +31,9 @@ public class CajamarAccountTransactionFetcher
 
     private CajamarAccountTransactionsResponse fetchWithBackoffAndRetry(
             TransactionalAccount account, String key, int attempt) {
+        if (AccountTypes.SAVINGS == account.getType()) {
+            return CajamarAccountTransactionsResponse.createEmptyResponse();
+        }
         return Try.of(() -> apiClient.fetchAccountTransactions(account, key))
                 .recover(
                         HttpClientException.class,

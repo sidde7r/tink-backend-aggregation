@@ -42,7 +42,7 @@ public class CajamarAccountFetcherTest {
                 cajamarAccountFetcher.fetchAccounts();
 
         // then
-        Assert.assertEquals(1, transactionalAccounts.size());
+        Assert.assertEquals(2, transactionalAccounts.size());
     }
 
     @Test
