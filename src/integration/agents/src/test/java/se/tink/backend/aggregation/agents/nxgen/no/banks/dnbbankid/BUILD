@@ -4,7 +4,6 @@ junit_test(
     name = "dnb-bankid-agent",
     srcs = glob([
         "DnbAgentTest.java",
-        "DnbDualAgentTest.java",
     ]),
     data = [
         "//data:aggregation_test",
@@ -37,7 +36,6 @@ junit_test(
         ["**/*.java"],
         exclude = [
             "DnbAgentTest.java",
-            "DnbDualAgentTest.java",
         ],
     ),
     visibility = ["//visibility:public"],
