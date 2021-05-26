@@ -3932,15 +3932,7 @@ Cache-control: no-cache, no-store, max-age=0
 Vary: Accept-Encoding
 Connection: Keep-Alive
 
-{
-    "totalFees": "0,00",
-    "currency": "SEK",
-    "confirmedTransactions": [
-
-    ],
-    "totalSum": "0,00"
-}
-
+{"totalFees":"0,00","currency":"SEK","confirmedTransactions":[{"fromAccount":{"currencyCode":"SEK","amount":"153 907,52","name":"Sparkapitalkonto","accountNumber":"111 111 111-6","clearingNumber":"8000-2","fullyFormattedNumber":"8000-2,111 111 111-6"},"amountBaseCurrency":"18 000,00","transactions":[{"links":{"self":{"method":"GET","uri":"/v5/payment/3849ce9422a9ad6df1af4f865dd1fa2579f28a44"},"edit":{"method":"PUT","uri":"/v5/payment/transfer/3849ce9422a9ad6df1af4f865dd1fa2579f28a44"},"delete":{"method":"DELETE","uri":"/v5/payment/3849ce9422a9ad6df1af4f865dd1fa2579f28a44"}},"id":"3849ce9422a9ad6df1af4f865dd1fa2579f28a44","type":"TRANSFER","amount":"5 000,00","amountBaseCurrency":"5 000,00","currencyCode":"SEK","date":"2021-05-26","bookedDate":"","noteToSender":"","transfer":{"noteToRecipient":"","dateDependency":"DATE_DEPENDENT","periodicity":"MONTHLY","toAccount":{"name":"SBAB Sparkonto","accountNumber":"419 123-0","clearingNumber":"9252","fullyFormattedNumber":"9252 419 123-0"}},"selected":true},{"links":{"self":{"method":"GET","uri":"/v5/payment/5acb0c2342e29ced186cda9f588517ee0b26bb29"},"edit":{"method":"PUT","uri":"/v5/payment/transfer/5acb0c2342e29ced186cda9f588517ee0b26bb29"},"delete":{"method":"DELETE","uri":"/v5/payment/5acb0c2342e29ced186cda9f588517ee0b26bb29"}},"id":"5acb0c2342e29ced186cda9f588517ee0b26bb29","type":"TRANSFER","amount":"13 000,00","amountBaseCurrency":"13 000,00","currencyCode":"SEK","date":"2021-06-24","bookedDate":"","noteToSender":"","transfer":{"noteToRecipient":"","dateDependency":"DATE_DEPENDENT","periodicity":"MONTHLY","toAccount":{"amount":"15 971,70","name":"Vardag","accountNumber":"983 661 369-6","clearingNumber":"8327-9","fullyFormattedNumber":"8327-9,983 661 369-6"}},"selected":true}]},{"fromAccount":{"currencyCode":"SEK","amount":"15 971,70","name":"Vardag","accountNumber":"111 111 111-6","clearingNumber":"8000-2","fullyFormattedNumber":"8000-2,111 111 111-6"},"amountBaseCurrency":"419,00","transactions":[{"isCreatedByCurrentUser":true,"links":{"self":{"method":"GET","uri":"/v5/payment/2b5aaaa586c77b265c04b75cf44174bc1651fb8a"},"edit":{"method":"PUT","uri":"/v5/payment/payment/2b5aaaa586c77b265c04b75cf44174bc1651fb8a"},"delete":{"method":"DELETE","uri":"/v5/payment/2b5aaaa586c77b265c04b75cf44174bc1651fb8a"},"next":{"method":"GET","uri":"/v5/message/document/2b5aaaa586c77b265c04b75cf44174bc1651fb8a/view?referenceType=EINVOICE_REFERENCE"}},"id":"2b5aaaa586c77b265c04b75cf44174bc1651fb8a","type":"PAYMENT","amount":"419,00","amountBaseCurrency":"419,00","currencyCode":"SEK","date":"2021-05-31","bookedDate":"2021-05-10","noteToSender":"","payment":{"einvoiceReference":"202105060640119748","payee":{"name":"Ownit / Billogram","type":"BGACCOUNT","accountNumber":"5474-4776","notSavedRecipient":true},"reference":{"value":"3532816917339","type":"OCR"},"type":"EINVOICE","status":"CONFIRMED_AWAITING_DATE","dateDependency":"DATE_DEPENDENT","rejectionMessage":"","withdrawalDate":"2021-05-31","international":false},"selected":true}]}],"totalSum":"18 419,00"}
 
 REQUEST 300 MATCH LOGGED_IN
 GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/identification/touch
