@@ -18,7 +18,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import se.tink.integration.webdriver.WebDriverWrapper;
 
-public class BankIdWebDriverCommonUtilsTest {
+public class WebDriverCommonUtilsTest {
 
     /*
     Mocks
@@ -31,7 +31,7 @@ public class BankIdWebDriverCommonUtilsTest {
     /*
     Real
      */
-    private BankIdWebDriverCommonUtils driverCommonUtils;
+    private WebDriverCommonUtils driverCommonUtils;
 
     @Before
     public void setup() {
@@ -41,7 +41,7 @@ public class BankIdWebDriverCommonUtilsTest {
 
         mocksToVerifyInOrder = inOrder(driver, targetLocator);
 
-        driverCommonUtils = new BankIdWebDriverCommonUtils(driver);
+        driverCommonUtils = new WebDriverCommonUtils(driver);
     }
 
     @Test

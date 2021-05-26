@@ -9,10 +9,10 @@ import lombok.RequiredArgsConstructor;
 import org.openqa.selenium.WebElement;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class BankIdElementFilters {
+public class ElementFilters {
 
     @RequiredArgsConstructor
-    public static class ElementIsDisplayedFilter implements BankIdElementFilter {
+    public static class ElementIsDisplayedFilter implements ElementFilter {
 
         @Override
         public boolean matches(WebElement element) {
@@ -21,7 +21,7 @@ public class BankIdElementFilters {
     }
 
     @RequiredArgsConstructor
-    public static class ElementContainsTextFilter implements BankIdElementFilter {
+    public static class ElementContainsTextFilter implements ElementFilter {
 
         private final List<String> textsToContain;
 
@@ -39,7 +39,7 @@ public class BankIdElementFilters {
     }
 
     @RequiredArgsConstructor
-    public static class ElementHasExactTextFilter implements BankIdElementFilter {
+    public static class ElementHasExactTextFilter implements ElementFilter {
 
         private final String text;
 

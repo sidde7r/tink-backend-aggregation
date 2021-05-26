@@ -2,11 +2,11 @@ package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor
 
 import java.util.Set;
 import org.openqa.selenium.Cookie;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.BankIdElementLocator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.BankIdElementsSearcher;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.ElementLocator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.ElementsSearcher;
 import se.tink.integration.webdriver.WebDriverWrapper;
 
-public interface BankIdWebDriver extends BankIdElementsSearcher {
+public interface BankIdWebDriver extends ElementsSearcher {
 
     WebDriverWrapper getDriver();
 
@@ -20,9 +20,9 @@ public interface BankIdWebDriver extends BankIdElementsSearcher {
 
     Set<Cookie> getCookies();
 
-    void clickButton(BankIdElementLocator selector);
+    void clickButton(ElementLocator selector);
 
-    void setValueToElement(String value, BankIdElementLocator selector);
+    void setValueToElement(String value, ElementLocator selector);
 
     void sleepFor(int millis);
 }

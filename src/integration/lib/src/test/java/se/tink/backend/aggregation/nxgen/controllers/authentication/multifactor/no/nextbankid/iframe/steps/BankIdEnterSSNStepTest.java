@@ -12,9 +12,9 @@ import org.junit.Test;
 import org.mockito.InOrder;
 import org.openqa.selenium.WebElement;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.BankIdWebDriver;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.BankIdElementLocator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.BankIdElementsSearchQuery;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.BankIdElementsSearchResult;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.ElementLocator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.ElementsSearchQuery;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.ElementsSearchResult;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.screens.BankIdScreen;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.screens.BankIdScreensManager;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.screens.BankIdScreensQuery;
@@ -69,7 +69,7 @@ public class BankIdEnterSSNStepTest {
         mocksToVerifyInOrder
                 .verify(webDriver)
                 .searchForFirstMatchingLocator(
-                        BankIdElementsSearchQuery.builder()
+                        ElementsSearchQuery.builder()
                                 .searchFor(LOC_SSN_INPUT)
                                 .searchForSeconds(10)
                                 .build());
@@ -84,8 +84,8 @@ public class BankIdEnterSSNStepTest {
     }
 
     @SuppressWarnings("SameParameterValue")
-    private void mockElementExists(BankIdElementLocator selector, WebElement element) {
+    private void mockElementExists(ElementLocator selector, WebElement element) {
         when(webDriver.searchForFirstMatchingLocator(any()))
-                .thenReturn(BankIdElementsSearchResult.of(selector, element));
+                .thenReturn(ElementsSearchResult.of(selector, element));
     }
 }

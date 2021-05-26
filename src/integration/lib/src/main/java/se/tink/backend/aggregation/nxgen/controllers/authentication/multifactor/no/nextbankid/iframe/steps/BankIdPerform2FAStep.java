@@ -9,7 +9,7 @@ import com.google.inject.Inject;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.BankIdWebDriver;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.BankIdElementsSearchQuery;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.ElementsSearchQuery;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.BankId2FAMethod;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.screens.BankIdScreen;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.screens.BankIdScreensManager;
@@ -106,7 +106,7 @@ public class BankIdPerform2FAStep {
         boolean linkExists =
                 webDriver
                         .searchForFirstMatchingLocator(
-                                BankIdElementsSearchQuery.builder()
+                                ElementsSearchQuery.builder()
                                         .searchFor(LOC_CHANGE_2FA_METHOD_LINK)
                                         .searchForSeconds(2)
                                         .build())

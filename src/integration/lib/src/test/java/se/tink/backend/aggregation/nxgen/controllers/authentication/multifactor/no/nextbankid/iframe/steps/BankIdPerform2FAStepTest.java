@@ -24,7 +24,7 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InOrder;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.BankIdWebDriver;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.BankIdElementLocator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.ElementLocator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.screens.BankIdScreen;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.screens.BankIdScreensManager;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.screens.BankIdScreensQuery;
@@ -259,8 +259,8 @@ public class BankIdPerform2FAStepTest {
     }
 
     private void verifyClicksButtonWithLabel(String label) {
-        ArgumentCaptor<BankIdElementLocator> locatorArgumentCaptor =
-                ArgumentCaptor.forClass(BankIdElementLocator.class);
+        ArgumentCaptor<ElementLocator> locatorArgumentCaptor =
+                ArgumentCaptor.forClass(ElementLocator.class);
 
         mocksToVerifyInOrder.verify(webDriver).clickButton(locatorArgumentCaptor.capture());
 

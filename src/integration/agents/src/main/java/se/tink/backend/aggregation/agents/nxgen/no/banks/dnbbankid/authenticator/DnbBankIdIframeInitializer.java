@@ -16,9 +16,9 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdIframeFirstWindow;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdIframeInitializer;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.BankIdWebDriver;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.BankIdElementLocator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.BankIdElementsSearchQuery;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.BankIdElementsSearchResult;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.ElementLocator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.ElementsSearchQuery;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.ElementsSearchResult;
 import se.tink.backend.aggregation.utils.ExecutionTimer;
 
 @Slf4j
@@ -48,9 +48,7 @@ public class DnbBankIdIframeInitializer implements BankIdIframeInitializer {
     private void waitForSSNInput(BankIdWebDriver webDriver) {
         webDriver
                 .searchForFirstMatchingLocator(
-                        BankIdElementsSearchQuery.builder()
-                                .searchFor(HtmlLocators.LOC_SSN_INPUT)
-                                .build())
+                        ElementsSearchQuery.builder().searchFor(HtmlLocators.LOC_SSN_INPUT).build())
                 .getFirstFoundElement()
                 .orElseThrow(() -> new IllegalStateException("[DNB] SSN input field not found"));
     }
@@ -67,7 +65,7 @@ public class DnbBankIdIframeInitializer implements BankIdIframeInitializer {
                         () ->
                                 webDriver
                                         .searchForFirstMatchingLocator(
-                                                BankIdElementsSearchQuery.builder()
+                                                ElementsSearchQuery.builder()
                                                         .searchFor(
                                                                 HtmlLocators
                                                                         .LOC_CLOSE_COOKIES_POPUP_BUTTON)
@@ -94,9 +92,9 @@ public class DnbBankIdIframeInitializer implements BankIdIframeInitializer {
     }
 
     private void verifyNoErrors(BankIdWebDriver webDriver) {
-        BankIdElementsSearchResult searchResult =
+        ElementsSearchResult searchResult =
                 webDriver.searchForFirstMatchingLocator(
-                        BankIdElementsSearchQuery.builder()
+                        ElementsSearchQuery.builder()
                                 .searchFor(
                                         BankIdConstants.HtmlLocators.LOC_IFRAME,
                                         HtmlLocators.LOC_ERROR_MESSAGE)
@@ -105,7 +103,7 @@ public class DnbBankIdIframeInitializer implements BankIdIframeInitializer {
             throw BankIdNOError.INITIALIZATION_ERROR.exception();
         }
 
-        BankIdElementLocator locatorFound = searchResult.getLocatorFound();
+        ElementLocator locatorFound = searchResult.getLocatorFound();
         if (locatorFound == BankIdConstants.HtmlLocators.LOC_IFRAME) {
             log.info("[DNB] BankID iframe initialized successfully");
             return;
@@ -115,7 +113,7 @@ public class DnbBankIdIframeInitializer implements BankIdIframeInitializer {
         }
     }
 
-    private void throwErrorMessage(BankIdElementsSearchResult searchResult) {
+    private void throwErrorMessage(ElementsSearchResult searchResult) {
         String errorMessage =
                 searchResult
                         .getFirstFoundElement()

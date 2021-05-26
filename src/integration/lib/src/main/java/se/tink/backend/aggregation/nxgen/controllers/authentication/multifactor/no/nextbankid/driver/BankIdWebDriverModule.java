@@ -8,8 +8,8 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import org.openqa.selenium.JavascriptExecutor;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.proxy.ProxyManager;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.BankIdElementsSearcher;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.BankIdElementsSearcherImpl;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.ElementsSearcher;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.ElementsSearcherImpl;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.utils.Sleeper;
 import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
 import se.tink.integration.webdriver.ChromeDriverConfig;
@@ -60,6 +60,6 @@ public class BankIdWebDriverModule extends AbstractModule {
         bind(JavascriptExecutor.class).toInstance(javascriptExecutor);
 
         bind(BankIdWebDriver.class).to(BankIdWebDriverImpl.class);
-        bind(BankIdElementsSearcher.class).to(BankIdElementsSearcherImpl.class);
+        bind(ElementsSearcher.class).to(ElementsSearcherImpl.class);
     }
 }

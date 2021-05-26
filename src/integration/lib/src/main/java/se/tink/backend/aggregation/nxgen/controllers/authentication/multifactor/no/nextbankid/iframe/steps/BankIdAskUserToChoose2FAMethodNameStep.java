@@ -11,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.BankIdWebDriver;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.BankIdElementsSearchQuery;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.ElementsSearchQuery;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.screens.BankIdScreen;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.screens.BankIdScreensManager;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.screens.BankIdScreensQuery;
@@ -53,7 +53,7 @@ public class BankIdAskUserToChoose2FAMethodNameStep {
         List<String> buttonLabels =
                 webDriver
                         .searchForFirstMatchingLocator(
-                                BankIdElementsSearchQuery.builder()
+                                ElementsSearchQuery.builder()
                                         .searchFor(LOC_CHOOSE_2FA_METHOD_OPTION_BUTTON_LABEL)
                                         .searchForSeconds(10)
                                         .build())

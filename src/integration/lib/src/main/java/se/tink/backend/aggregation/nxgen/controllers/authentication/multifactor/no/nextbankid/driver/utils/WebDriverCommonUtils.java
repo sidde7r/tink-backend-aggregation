@@ -12,7 +12,7 @@ import se.tink.integration.webdriver.WebDriverWrapper;
 
 @Slf4j
 @RequiredArgsConstructor(onConstructor = @__({@Inject}))
-public class BankIdWebDriverCommonUtils {
+public class WebDriverCommonUtils {
 
     private final WebDriverWrapper driver;
 

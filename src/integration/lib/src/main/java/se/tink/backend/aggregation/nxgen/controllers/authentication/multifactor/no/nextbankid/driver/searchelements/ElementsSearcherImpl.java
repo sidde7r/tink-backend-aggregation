@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements;
 
-import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.BankIdWebDriverConstants.EMPTY_BY;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.WebDriverConstants.EMPTY_BY;
 
 import com.google.inject.Inject;
 import java.util.Collections;
@@ -15,26 +15,24 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebElement;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.utils.BankIdWebDriverCommonUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.utils.Sleeper;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.utils.WebDriverCommonUtils;
 import se.tink.integration.webdriver.WebDriverWrapper;
 
 @Slf4j
 @RequiredArgsConstructor(onConstructor = @__({@Inject}))
-public class BankIdElementsSearcherImpl implements BankIdElementsSearcher {
+public class ElementsSearcherImpl implements ElementsSearcher {
 
     private final WebDriverWrapper driver;
     private final JavascriptExecutor javascriptExecutor;
-    private final BankIdWebDriverCommonUtils driverCommonUtils;
+    private final WebDriverCommonUtils driverCommonUtils;
     private final Sleeper sleeper;
 
     @Override
-    public BankIdElementsSearchResult searchForFirstMatchingLocator(
-            BankIdElementsSearchQuery query) {
+    public ElementsSearchResult searchForFirstMatchingLocator(ElementsSearchQuery query) {
 
         // always search at least once
-        BankIdElementsSearchResult firstSearchResult =
-                searchForFirstMatchingLocator(query.getLocators());
+        ElementsSearchResult firstSearchResult = searchForFirstMatchingLocator(query.getLocators());
         if (firstSearchResult.isNotEmpty() || query.isSearchOnlyOnce()) {
             return firstSearchResult;
         }
@@ -42,8 +40,7 @@ public class BankIdElementsSearcherImpl implements BankIdElementsSearcher {
         int secondsSlept = 0;
         while (secondsSlept++ < query.getSearchForSeconds()) {
 
-            BankIdElementsSearchResult searchResult =
-                    searchForFirstMatchingLocator(query.getLocators());
+            ElementsSearchResult searchResult = searchForFirstMatchingLocator(query.getLocators());
             if (searchResult.isNotEmpty()) {
                 return searchResult;
             }
@@ -51,24 +48,23 @@ public class BankIdElementsSearcherImpl implements BankIdElementsSearcher {
             sleeper.sleepFor(1_000);
         }
 
-        return BankIdElementsSearchResult.empty();
+        return ElementsSearchResult.empty();
     }
 
-    private BankIdElementsSearchResult searchForFirstMatchingLocator(
-            List<BankIdElementLocator> locators) {
-        for (BankIdElementLocator locator : locators) {
+    private ElementsSearchResult searchForFirstMatchingLocator(List<ElementLocator> locators) {
+        for (ElementLocator locator : locators) {
 
-            BankIdElementsSearchResult searchResult = searchForLocator(locator);
+            ElementsSearchResult searchResult = searchForLocator(locator);
             if (searchResult.isNotEmpty()) {
                 return searchResult;
             }
         }
-        return BankIdElementsSearchResult.empty();
+        return ElementsSearchResult.empty();
     }
 
-    private BankIdElementsSearchResult searchForLocator(BankIdElementLocator locator) {
+    private ElementsSearchResult searchForLocator(ElementLocator locator) {
         if (!trySwitchWindowForLocator(locator)) {
-            return BankIdElementsSearchResult.empty();
+            return ElementsSearchResult.empty();
         }
 
         List<WebElement> foundElements =
@@ -77,12 +73,12 @@ public class BankIdElementsSearcherImpl implements BankIdElementsSearcher {
                         .orElse(Collections.emptyList());
 
         if (foundElements.isEmpty()) {
-            return BankIdElementsSearchResult.empty();
+            return ElementsSearchResult.empty();
         }
-        return BankIdElementsSearchResult.of(locator, foundElements);
+        return ElementsSearchResult.of(locator, foundElements);
     }
 
-    private boolean trySwitchWindowForLocator(BankIdElementLocator locator) {
+    private boolean trySwitchWindowForLocator(ElementLocator locator) {
         By iframeSelector = locator.getIframeSelector();
 
         if (iframeSelector == EMPTY_BY) {
@@ -95,7 +91,7 @@ public class BankIdElementsSearcherImpl implements BankIdElementsSearcher {
     }
 
     private Optional<? extends SearchContext> tryFindSearchContextForLocator(
-            BankIdElementLocator locator) {
+            ElementLocator locator) {
         By shadowHost = locator.getShadowDOMHostSelector();
 
         if (shadowHost == EMPTY_BY) {
@@ -111,16 +107,14 @@ public class BankIdElementsSearcherImpl implements BankIdElementsSearcher {
                 javascriptExecutor.executeScript("return arguments[0].shadowRoot", shadowHost);
     }
 
-    private List<WebElement> tryFindElements(
-            SearchContext searchContext, BankIdElementLocator locator) {
+    private List<WebElement> tryFindElements(SearchContext searchContext, ElementLocator locator) {
 
         return searchContext.findElements(locator.getElementSelector()).stream()
                 .filter(element -> doesElementMatchAdditionalFilters(element, locator))
                 .collect(Collectors.toList());
     }
 
-    private boolean doesElementMatchAdditionalFilters(
-            WebElement element, BankIdElementLocator locator) {
+    private boolean doesElementMatchAdditionalFilters(WebElement element, ElementLocator locator) {
         try {
             return locator.matchesAdditionalFilters(element);
 

@@ -22,12 +22,12 @@ import org.mockito.InOrder;
 import org.openqa.selenium.Cookie;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.BankIdElementLocator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.BankIdElementsSearchQuery;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.BankIdElementsSearchResult;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.BankIdElementsSearcher;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.utils.BankIdWebDriverCommonUtils;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.ElementLocator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.ElementsSearchQuery;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.ElementsSearchResult;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.ElementsSearcher;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.utils.Sleeper;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.utils.WebDriverCommonUtils;
 import se.tink.integration.webdriver.WebDriverWrapper;
 
 @RunWith(JUnitParamsRunner.class)
@@ -38,8 +38,8 @@ public class BankIdWebDriverTest {
      */
     private WebDriverWrapper driver;
     private WebDriver.Options driverOptions;
-    private BankIdWebDriverCommonUtils driverCommonUtils;
-    private BankIdElementsSearcher elementsSearcher;
+    private WebDriverCommonUtils driverCommonUtils;
+    private ElementsSearcher elementsSearcher;
 
     private InOrder mocksToVerifyInOrder;
 
@@ -54,8 +54,8 @@ public class BankIdWebDriverTest {
         driverOptions = mock(WebDriver.Options.class);
         when(driver.manage()).thenReturn(driverOptions);
 
-        driverCommonUtils = mock(BankIdWebDriverCommonUtils.class);
-        elementsSearcher = mock(BankIdElementsSearcher.class);
+        driverCommonUtils = mock(WebDriverCommonUtils.class);
+        elementsSearcher = mock(ElementsSearcher.class);
         Sleeper sleeper = mock(Sleeper.class);
 
         mocksToVerifyInOrder =
@@ -164,13 +164,13 @@ public class BankIdWebDriverTest {
     @Test
     public void should_click_first_button_when_it_can_be_found() {
         // given
-        BankIdElementLocator buttonLocator = mock(BankIdElementLocator.class);
+        ElementLocator buttonLocator = mock(ElementLocator.class);
         WebElement buttonElement1 = mock(WebElement.class);
         WebElement buttonElement2 = mock(WebElement.class);
 
         when(elementsSearcher.searchForFirstMatchingLocator(any()))
                 .thenReturn(
-                        BankIdElementsSearchResult.of(
+                        ElementsSearchResult.of(
                                 buttonLocator, asList(buttonElement1, buttonElement2)));
 
         // when
@@ -183,7 +183,7 @@ public class BankIdWebDriverTest {
         mocksToVerifyInOrder
                 .verify(elementsSearcher)
                 .searchForFirstMatchingLocator(
-                        BankIdElementsSearchQuery.builder()
+                        ElementsSearchQuery.builder()
                                 .searchFor(buttonLocator)
                                 .searchForSeconds(10)
                                 .build());
@@ -193,10 +193,10 @@ public class BankIdWebDriverTest {
     @Test
     public void should_throw_illegal_state_exception_when_button_to_click_cannot_be_found() {
         // given
-        BankIdElementLocator buttonLocator = mock(BankIdElementLocator.class);
+        ElementLocator buttonLocator = mock(ElementLocator.class);
 
         when(elementsSearcher.searchForFirstMatchingLocator(any()))
-                .thenReturn(BankIdElementsSearchResult.empty());
+                .thenReturn(ElementsSearchResult.empty());
 
         // when
         Throwable throwable = catchThrowable(() -> bankIdDriver.clickButton(buttonLocator));
@@ -209,7 +209,7 @@ public class BankIdWebDriverTest {
         mocksToVerifyInOrder
                 .verify(elementsSearcher)
                 .searchForFirstMatchingLocator(
-                        BankIdElementsSearchQuery.builder()
+                        ElementsSearchQuery.builder()
                                 .searchFor(buttonLocator)
                                 .searchForSeconds(10)
                                 .build());
@@ -220,13 +220,12 @@ public class BankIdWebDriverTest {
     @Parameters(value = {"value1", "value2"})
     public void should_set_value_to_first_found_element(String valueToSet) {
         // given
-        BankIdElementLocator elementLocator = mock(BankIdElementLocator.class);
+        ElementLocator elementLocator = mock(ElementLocator.class);
         WebElement element1 = mock(WebElement.class);
         WebElement element2 = mock(WebElement.class);
 
         when(elementsSearcher.searchForFirstMatchingLocator(any()))
-                .thenReturn(
-                        BankIdElementsSearchResult.of(elementLocator, asList(element1, element2)));
+                .thenReturn(ElementsSearchResult.of(elementLocator, asList(element1, element2)));
 
         // when
         bankIdDriver.setValueToElement(valueToSet, elementLocator);
@@ -238,7 +237,7 @@ public class BankIdWebDriverTest {
         mocksToVerifyInOrder
                 .verify(elementsSearcher)
                 .searchForFirstMatchingLocator(
-                        BankIdElementsSearchQuery.builder()
+                        ElementsSearchQuery.builder()
                                 .searchFor(elementLocator)
                                 .searchForSeconds(10)
                                 .build());
@@ -249,10 +248,10 @@ public class BankIdWebDriverTest {
     public void
             should_throw_illegal_state_exception_when_element_to_set_value_to_cannot_be_found() {
         // given
-        BankIdElementLocator elementLocator = mock(BankIdElementLocator.class);
+        ElementLocator elementLocator = mock(ElementLocator.class);
 
         when(elementsSearcher.searchForFirstMatchingLocator(any()))
-                .thenReturn(BankIdElementsSearchResult.empty());
+                .thenReturn(ElementsSearchResult.empty());
 
         // when
         Throwable throwable =
@@ -266,7 +265,7 @@ public class BankIdWebDriverTest {
         mocksToVerifyInOrder
                 .verify(elementsSearcher)
                 .searchForFirstMatchingLocator(
-                        BankIdElementsSearchQuery.builder()
+                        ElementsSearchQuery.builder()
                                 .searchFor(elementLocator)
                                 .searchForSeconds(10)
                                 .build());
@@ -276,14 +275,13 @@ public class BankIdWebDriverTest {
     @Test
     public void should_delegate_searching_for_elements_to_elements_searcher() {
         // given
-        BankIdElementsSearchResult expectedSearchResult = mock(BankIdElementsSearchResult.class);
+        ElementsSearchResult expectedSearchResult = mock(ElementsSearchResult.class);
         when(elementsSearcher.searchForFirstMatchingLocator(any()))
                 .thenReturn(expectedSearchResult);
 
         // when
-        BankIdElementsSearchQuery searchQuery = mock(BankIdElementsSearchQuery.class);
-        BankIdElementsSearchResult searchResult =
-                bankIdDriver.searchForFirstMatchingLocator(searchQuery);
+        ElementsSearchQuery searchQuery = mock(ElementsSearchQuery.class);
+        ElementsSearchResult searchResult = bankIdDriver.searchForFirstMatchingLocator(searchQuery);
 
         // then
         assertThat(searchResult).isEqualTo(expectedSearchResult);

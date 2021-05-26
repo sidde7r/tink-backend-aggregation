@@ -12,12 +12,12 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 
 @Data
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public class BankIdElementsSearchQuery {
+public class ElementsSearchQuery {
 
-    private final List<BankIdElementLocator> locators;
+    private final List<ElementLocator> locators;
     /**
      * If this value is 0, there will be only one search performed. If this value is > 0, number of
-     * searches depends on how many searches per second are run by {@link BankIdElementsSearcher}.
+     * searches depends on how many searches per second are run by {@link ElementsSearcher}.
      */
     private final Integer searchForSeconds;
 
@@ -29,17 +29,17 @@ public class BankIdElementsSearchQuery {
 
     public static class ElementsSearchQueryBuilder {
 
-        private final List<BankIdElementLocator> elements = new ArrayList<>();
+        private final List<ElementLocator> elements = new ArrayList<>();
         private Integer searchForSeconds =
                 BankIdConstants.DEFAULT_WAIT_FOR_ELEMENT_TIMEOUT_IN_SECONDS;
         private boolean searchOnlyOnce;
 
-        public ElementsSearchQueryBuilder searchFor(BankIdElementLocator... locators) {
+        public ElementsSearchQueryBuilder searchFor(ElementLocator... locators) {
             this.elements.addAll(asList(locators));
             return this;
         }
 
-        public ElementsSearchQueryBuilder searchFor(Collection<BankIdElementLocator> locators) {
+        public ElementsSearchQueryBuilder searchFor(Collection<ElementLocator> locators) {
             this.elements.addAll(locators);
             return this;
         }
@@ -54,8 +54,8 @@ public class BankIdElementsSearchQuery {
             return this;
         }
 
-        public BankIdElementsSearchQuery build() {
-            return new BankIdElementsSearchQuery(elements, searchForSeconds, searchOnlyOnce);
+        public ElementsSearchQuery build() {
+            return new ElementsSearchQuery(elements, searchForSeconds, searchOnlyOnce);
         }
     }
 }

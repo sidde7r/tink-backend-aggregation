@@ -9,7 +9,7 @@ import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.WebElement;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class BankIdWebDriverConstants {
+public class WebDriverConstants {
 
     public static final By EMPTY_BY =
             new By() {

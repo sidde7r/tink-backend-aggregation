@@ -8,7 +8,7 @@ import com.google.inject.Inject;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.BankIdWebDriver;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.BankIdElementsSearchQuery;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.ElementsSearchQuery;
 
 @Slf4j
 @RequiredArgsConstructor(onConstructor = @__({@Inject}))
@@ -27,7 +27,7 @@ public class BankIdEnterPasswordStep {
         boolean inputFound =
                 webDriver
                         .searchForFirstMatchingLocator(
-                                BankIdElementsSearchQuery.builder()
+                                ElementsSearchQuery.builder()
                                         .searchFor(LOC_PRIVATE_PASSWORD_INPUT)
                                         .searchForSeconds(10)
                                         .build())

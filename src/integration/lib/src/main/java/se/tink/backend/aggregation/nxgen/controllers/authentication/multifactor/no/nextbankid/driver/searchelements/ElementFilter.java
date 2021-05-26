@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor
 
 import org.openqa.selenium.WebElement;
 
-public interface BankIdElementFilter {
+public interface ElementFilter {
 
     boolean matches(WebElement element);
 }

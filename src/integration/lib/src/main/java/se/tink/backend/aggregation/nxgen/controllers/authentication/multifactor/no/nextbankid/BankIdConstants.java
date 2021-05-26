@@ -17,7 +17,7 @@ import static se.tink.backend.aggregation.nxgen.controllers.authentication.multi
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants.HtmlSelectors.BY_SUBMIT_BUTTON;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants.HtmlSelectors.BY_THIRD_PARTY_APP_SPINNER;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants.HtmlSelectors.BY_TITLE_OF_SCREEN_WITH_FORM_TO_SEND;
-import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.BankIdWebDriverConstants.EMPTY_BY;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.WebDriverConstants.EMPTY_BY;
 
 import java.util.function.Function;
 import java.util.regex.Pattern;
@@ -26,7 +26,7 @@ import lombok.NoArgsConstructor;
 import org.openqa.selenium.By;
 import org.openqa.selenium.By.ByCssSelector;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.NorwegianFields.BankIdOneTimeCodeField;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.BankIdElementLocator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.ElementLocator;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class BankIdConstants {
@@ -100,58 +100,58 @@ public class BankIdConstants {
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class HtmlLocators {
 
-        public static final BankIdElementLocator LOC_IFRAME =
-                BankIdElementLocator.builder().element(BY_IFRAME).build();
-        public static final BankIdElementLocator LOC_SUBMIT_BUTTON =
+        public static final ElementLocator LOC_IFRAME =
+                ElementLocator.builder().element(BY_IFRAME).build();
+        public static final ElementLocator LOC_SUBMIT_BUTTON =
                 inIframeLocator().element(BY_SUBMIT_BUTTON).mustBeDisplayed().build();
 
         /*
         enter social number screen
         */
-        public static final BankIdElementLocator LOC_ENTER_SSN_SCREEN =
+        public static final ElementLocator LOC_ENTER_SSN_SCREEN =
                 inIframeLocator().element(BY_SSN_INPUT).build();
-        public static final BankIdElementLocator LOC_SSN_INPUT =
+        public static final ElementLocator LOC_SSN_INPUT =
                 inIframeLocator().element(BY_SSN_INPUT).mustBeDisplayed().build();
 
         /*
         mobile BankID screen
         */
-        public static final BankIdElementLocator LOC_MOBILE_BANK_ID_SEND_REQUEST_SCREEN =
+        public static final ElementLocator LOC_MOBILE_BANK_ID_SEND_REQUEST_SCREEN =
                 inIframeLocator()
                         .element(BY_TITLE_OF_SCREEN_WITH_FORM_TO_SEND)
                         .mustContainOneOfTexts("BankID på mobil", "BankID on mobile")
                         .build();
 
-        public static final BankIdElementLocator LOC_MOBILE_BANK_ID_ENTER_MOBILE_NUMBER_SCREEN =
+        public static final ElementLocator LOC_MOBILE_BANK_ID_ENTER_MOBILE_NUMBER_SCREEN =
                 inIframeLocator().element(BY_MOBILE_NUMBER_INPUT).build();
 
-        public static final BankIdElementLocator LOC_MOBILE_BANK_ID_REFERENCE_WORDS_SCREEN =
+        public static final ElementLocator LOC_MOBILE_BANK_ID_REFERENCE_WORDS_SCREEN =
                 inIframeLocator().element(BY_MOBILE_BANK_ID_SPINNER).build();
-        public static final BankIdElementLocator LOC_REFERENCE_WORDS =
+        public static final ElementLocator LOC_REFERENCE_WORDS =
                 inIframeLocator().element(BY_REFERENCE_WORDS).mustBeDisplayed().build();
 
         /*
         one-time code screen
         */
-        public static final BankIdElementLocator LOC_ONE_TIME_CODE_METHOD_SCREEN =
+        public static final ElementLocator LOC_ONE_TIME_CODE_METHOD_SCREEN =
                 inIframeLocator().element(BY_ONE_TIME_CODE_INPUT).build();
-        public static final BankIdElementLocator LOC_ONE_TIME_CODE_INPUT =
+        public static final ElementLocator LOC_ONE_TIME_CODE_INPUT =
                 inIframeLocator().element(BY_ONE_TIME_CODE_INPUT).mustBeDisplayed().build();
 
         /*
         third party app screen
         */
-        public static final BankIdElementLocator LOC_THIRD_PARTY_APP_METHOD_SCREEN =
+        public static final ElementLocator LOC_THIRD_PARTY_APP_METHOD_SCREEN =
                 inIframeLocator().element(BY_THIRD_PARTY_APP_SPINNER).build();
 
         /*
         choose 2FA screen
          */
-        public static final BankIdElementLocator LOC_CHOOSE_2FA_METHOD_SCREEN =
+        public static final ElementLocator LOC_CHOOSE_2FA_METHOD_SCREEN =
                 inIframeLocator().element(BY_CHOOSE_2FA_METHOD_OPTIONS_LIST).build();
-        public static final BankIdElementLocator LOC_CHOOSE_2FA_METHOD_OPTION_BUTTON_LABEL =
+        public static final ElementLocator LOC_CHOOSE_2FA_METHOD_OPTION_BUTTON_LABEL =
                 inIframeLocator().element(BY_CHOOSE_2FA_METHOD_OPTION_BUTTON_LABEL).build();
-        public static final Function<String, BankIdElementLocator>
+        public static final Function<String, ElementLocator>
                 LOC_CHOOSE_2FA_METHOD_OPTION_BUTTON_WITH_LABEL =
                         label ->
                                 inIframeLocator()
@@ -162,44 +162,42 @@ public class BankIdConstants {
         /*
         error screens
         */
-        public static final BankIdElementLocator LOC_BANK_ID_ERROR_WITH_HEADING_SCREEN =
+        public static final ElementLocator LOC_BANK_ID_ERROR_WITH_HEADING_SCREEN =
                 inIframeLocator()
                         .element(BY_ERROR_SCREEN_WITH_HEADING)
                         .mustContainOneOfTexts(
                                 "Det har oppstått en feil.", "An error has occurred.")
                         .build();
-        public static final BankIdElementLocator LOC_BANK_ID_ERROR_WITH_HEADING_TEXT =
+        public static final ElementLocator LOC_BANK_ID_ERROR_WITH_HEADING_TEXT =
                 inIframeLocator().element(BY_ERROR_SCREEN_WITH_HEADING_TEXT).build();
 
-        public static final BankIdElementLocator LOC_BANK_ID_ERROR_NO_HEADING_SCREEN =
+        public static final ElementLocator LOC_BANK_ID_ERROR_NO_HEADING_SCREEN =
                 inIframeLocator()
                         .element(BY_ERROR_SCREEN_WITH_NO_HEADING)
                         .mustContainOneOfTexts(
                                 "Det har oppstått en feil.", "An error has occurred.")
                         .build();
-        public static final BankIdElementLocator LOC_BANK_ID_ERROR_NO_HEADING_TEXT =
+        public static final ElementLocator LOC_BANK_ID_ERROR_NO_HEADING_TEXT =
                 LOC_BANK_ID_ERROR_NO_HEADING_SCREEN;
 
         /*
         enter password screen
         */
-        public static final BankIdElementLocator LOC_PRIVATE_PASSWORD_SCREEN =
+        public static final ElementLocator LOC_PRIVATE_PASSWORD_SCREEN =
                 inIframeLocator().element(BY_PASSWORD_INPUT).build();
-        public static final BankIdElementLocator LOC_PRIVATE_PASSWORD_INPUT =
+        public static final ElementLocator LOC_PRIVATE_PASSWORD_INPUT =
                 inIframeLocator().element(BY_PASSWORD_INPUT).mustBeDisplayed().build();
-        public static final BankIdElementLocator LOC_PRIVATE_PASSWORD_ERROR_BUBBLE =
+        public static final ElementLocator LOC_PRIVATE_PASSWORD_ERROR_BUBBLE =
                 inIframeLocator().element(BY_PASSWORD_ERROR_BUBBLE).build();
 
         /*
         common 2FA elements
          */
-        public static final BankIdElementLocator LOC_CHANGE_2FA_METHOD_LINK =
+        public static final ElementLocator LOC_CHANGE_2FA_METHOD_LINK =
                 inIframeLocator().element(BY_BUTTON_LINK).mustBeDisplayed().build();
 
-        private static BankIdElementLocator.Builder inIframeLocator() {
-            return BankIdElementLocator.builder()
-                    .iframe(BY_IFRAME)
-                    .shadowHost(getIframeShadowHost());
+        private static ElementLocator.Builder inIframeLocator() {
+            return ElementLocator.builder().iframe(BY_IFRAME).shadowHost(getIframeShadowHost());
         }
 
         /*

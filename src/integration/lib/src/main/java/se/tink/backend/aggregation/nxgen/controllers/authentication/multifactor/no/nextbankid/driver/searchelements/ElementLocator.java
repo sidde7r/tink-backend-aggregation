@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements;
 
-import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.BankIdWebDriverConstants.EMPTY_BY;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.WebDriverConstants.EMPTY_BY;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,14 +19,14 @@ import org.openqa.selenium.WebElement;
 @Getter
 @ToString
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public class BankIdElementLocator {
+public class ElementLocator {
 
-    public static final BankIdElementLocator EMPTY_LOCATOR = BankIdElementLocator.builder().build();
+    public static final ElementLocator EMPTY_LOCATOR = ElementLocator.builder().build();
 
     private final By iframeSelector;
     private final By shadowDOMHostSelector;
     private final By elementSelector;
-    private final List<BankIdElementFilter> additionalFilters;
+    private final List<ElementFilter> additionalFilters;
 
     public static Builder builder() {
         return new Builder();
@@ -42,7 +42,7 @@ public class BankIdElementLocator {
         private By shadowHostSelector = EMPTY_BY;
         private By elementSelector = EMPTY_BY;
 
-        private final List<BankIdElementFilter> additionalFilters = new ArrayList<>();
+        private final List<ElementFilter> additionalFilters = new ArrayList<>();
 
         public Builder iframe(By iframeSelector) {
             this.iframeSelector = iframeSelector;
@@ -64,22 +64,22 @@ public class BankIdElementLocator {
         }
 
         public Builder mustBeDisplayed() {
-            this.additionalFilters.add(new BankIdElementFilters.ElementIsDisplayedFilter());
+            this.additionalFilters.add(new ElementFilters.ElementIsDisplayedFilter());
             return this;
         }
 
         public Builder mustContainOneOfTexts(String... texts) {
-            this.additionalFilters.add(BankIdElementFilters.ElementContainsTextFilter.of(texts));
+            this.additionalFilters.add(ElementFilters.ElementContainsTextFilter.of(texts));
             return this;
         }
 
         public Builder mustHaveExactText(String text) {
-            this.additionalFilters.add(BankIdElementFilters.ElementHasExactTextFilter.of(text));
+            this.additionalFilters.add(ElementFilters.ElementHasExactTextFilter.of(text));
             return this;
         }
 
-        public BankIdElementLocator build() {
-            return new BankIdElementLocator(
+        public ElementLocator build() {
+            return new ElementLocator(
                     iframeSelector, shadowHostSelector, elementSelector, additionalFilters);
         }
     }

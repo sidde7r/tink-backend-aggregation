@@ -4,7 +4,7 @@ import java.util.regex.Pattern;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.openqa.selenium.By;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.BankIdElementLocator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.ElementLocator;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -15,20 +15,18 @@ public final class DnbConstants {
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class HtmlLocators {
-        public static final BankIdElementLocator LOC_SSN_INPUT =
-                BankIdElementLocator.builder()
-                        .element(new By.ByCssSelector("input[id='uid']"))
-                        .build();
-        public static final BankIdElementLocator LOC_CLOSE_COOKIES_POPUP_BUTTON =
-                BankIdElementLocator.builder()
+        public static final ElementLocator LOC_SSN_INPUT =
+                ElementLocator.builder().element(new By.ByCssSelector("input[id='uid']")).build();
+        public static final ElementLocator LOC_CLOSE_COOKIES_POPUP_BUTTON =
+                ElementLocator.builder()
                         .element(new By.ByCssSelector("button.consent-close"))
                         .build();
-        public static final BankIdElementLocator LOC_SUBMIT_BUTTON =
-                BankIdElementLocator.builder()
+        public static final ElementLocator LOC_SUBMIT_BUTTON =
+                ElementLocator.builder()
                         .element(new By.ByCssSelector("input[type='submit']"))
                         .build();
-        public static final BankIdElementLocator LOC_ERROR_MESSAGE =
-                BankIdElementLocator.builder().element(new By.ByCssSelector("*.errorMsg")).build();
+        public static final ElementLocator LOC_ERROR_MESSAGE =
+                ElementLocator.builder().element(new By.ByCssSelector("*.errorMsg")).build();
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)

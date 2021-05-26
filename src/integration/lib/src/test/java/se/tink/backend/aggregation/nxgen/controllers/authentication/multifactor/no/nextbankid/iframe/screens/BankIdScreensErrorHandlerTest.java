@@ -27,9 +27,9 @@ import org.openqa.selenium.WebElement;
 import se.tink.backend.aggregation.agents.exceptions.bankidno.BankIdNOError;
 import se.tink.backend.aggregation.agents.exceptions.bankidno.BankIdNOErrorCode;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.BankIdWebDriver;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.BankIdElementLocator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.BankIdElementsSearchQuery;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.BankIdElementsSearchResult;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.ElementLocator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.ElementsSearchQuery;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.ElementsSearchResult;
 
 @RunWith(JUnitParamsRunner.class)
 public class BankIdScreensErrorHandlerTest {
@@ -93,10 +93,10 @@ public class BankIdScreensErrorHandlerTest {
     @Test
     @Parameters(method = "allErrorScreensWithErrorTextLocators")
     public void should_throw_unknown_bank_id_exception_when_error_screen_text_cannot_be_found(
-            BankIdScreen errorScreen, BankIdElementLocator errorTextLocator) {
+            BankIdScreen errorScreen, ElementLocator errorTextLocator) {
         // given
         when(webDriver.searchForFirstMatchingLocator(any()))
-                .thenReturn(BankIdElementsSearchResult.empty());
+                .thenReturn(ElementsSearchResult.empty());
 
         // when
         Throwable throwable =
@@ -111,7 +111,7 @@ public class BankIdScreensErrorHandlerTest {
 
         verify(webDriver)
                 .searchForFirstMatchingLocator(
-                        BankIdElementsSearchQuery.builder()
+                        ElementsSearchQuery.builder()
                                 .searchFor(errorTextLocator)
                                 .searchForSeconds(10)
                                 .build());
@@ -129,11 +129,11 @@ public class BankIdScreensErrorHandlerTest {
     @Parameters(method = "allErrorScreensWithErrorTextLocators")
     public void
             should_throw_unknown_bank_id_exception_when_no_known_error_code_is_found_in_screen_text(
-                    BankIdScreen errorScreen, BankIdElementLocator errorTextLocator) {
+                    BankIdScreen errorScreen, ElementLocator errorTextLocator) {
         // given
         WebElement errorTextElement = mockWebElementWithText("!@$%#^$#&");
         when(webDriver.searchForFirstMatchingLocator(any()))
-                .thenReturn(BankIdElementsSearchResult.of(errorTextLocator, errorTextElement));
+                .thenReturn(ElementsSearchResult.of(errorTextLocator, errorTextElement));
 
         // when
         Throwable throwable =
@@ -148,7 +148,7 @@ public class BankIdScreensErrorHandlerTest {
 
         verify(webDriver)
                 .searchForFirstMatchingLocator(
-                        BankIdElementsSearchQuery.builder()
+                        ElementsSearchQuery.builder()
                                 .searchFor(errorTextLocator)
                                 .searchForSeconds(10)
                                 .build());
@@ -161,12 +161,12 @@ public class BankIdScreensErrorHandlerTest {
             String errorScreenText, BankIdNOErrorCode expectedErrorCode) {
         // given
         BankIdScreen exampleErrorScreen = BankIdScreen.BANK_ID_ERROR_WITH_HEADING_SCREEN;
-        BankIdElementLocator errorTextLocator =
+        ElementLocator errorTextLocator =
                 BankIdScreen.ALL_ERROR_SCREENS_WITH_ERROR_TEXT_LOCATORS.get(exampleErrorScreen);
 
         WebElement errorTextElement = mockWebElementWithText(errorScreenText);
         when(webDriver.searchForFirstMatchingLocator(any()))
-                .thenReturn(BankIdElementsSearchResult.of(errorTextLocator, errorTextElement));
+                .thenReturn(ElementsSearchResult.of(errorTextLocator, errorTextElement));
 
         // when
         Throwable throwable =
@@ -181,7 +181,7 @@ public class BankIdScreensErrorHandlerTest {
 
         verify(webDriver)
                 .searchForFirstMatchingLocator(
-                        BankIdElementsSearchQuery.builder()
+                        ElementsSearchQuery.builder()
                                 .searchFor(errorTextLocator)
                                 .searchForSeconds(10)
                                 .build());

@@ -21,29 +21,29 @@ import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.utils.BankIdWebDriverCommonUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.utils.Sleeper;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.utils.WebDriverCommonUtils;
 import se.tink.integration.webdriver.ChromeDriverInitializer;
 import se.tink.integration.webdriver.WebDriverWrapper;
 
 /**
- * The goal of this test class is to check that {@link BankIdElementsSearcher} will sleep for the
- * correct number of seconds while trying to find required elements.
+ * The goal of this test class is to check that {@link ElementsSearcher} will sleep for the correct
+ * number of seconds while trying to find required elements.
  */
 @RunWith(JUnitParamsRunner.class)
-public class BankIdElementsSearcherSleepingTest {
+public class ElementsSearcherSleepingTest {
 
     private static WebDriverWrapper driver;
     private static JavascriptExecutor jsExecutor;
 
     private SleeperWithSleepsCounter sleeper;
-    private BankIdElementsSearcher elementsSearcher;
+    private ElementsSearcher elementsSearcher;
 
     @BeforeClass
     public static void setupDriver() {
         WebDriverWrapper webDriver = ChromeDriverInitializer.constructChromeDriver();
         driver = spy(webDriver);
-        jsExecutor = (JavascriptExecutor) webDriver;
+        jsExecutor = webDriver;
     }
 
     @AfterClass
@@ -54,10 +54,8 @@ public class BankIdElementsSearcherSleepingTest {
     @Before
     public void setupTest() {
         sleeper = spy(new SleeperWithSleepsCounter());
-        BankIdWebDriverCommonUtils driverCommonUtils = new BankIdWebDriverCommonUtils(driver);
-        elementsSearcher =
-                new BankIdElementsSearcherImpl(
-                        driver, (JavascriptExecutor) driver, driverCommonUtils, sleeper);
+        WebDriverCommonUtils driverCommonUtils = new WebDriverCommonUtils(driver);
+        elementsSearcher = new ElementsSearcherImpl(driver, driver, driverCommonUtils, sleeper);
 
         driver.get(EXAMPLE_HTML_PAGE_URL);
     }
@@ -66,15 +64,15 @@ public class BankIdElementsSearcherSleepingTest {
     @Parameters(value = {"10", "15", "25"})
     public void should_wait_for_n_seconds_and_return_empty_result(int waitForSeconds) {
         // given
-        BankIdElementLocator notExistingLocator =
-                BankIdElementLocator.builder()
+        ElementLocator notExistingLocator =
+                ElementLocator.builder()
                         .element(new By.ByCssSelector(".notExistingClass1234"))
                         .build();
 
         // when
-        BankIdElementsSearchResult searchResult =
+        ElementsSearchResult searchResult =
                 elementsSearcher.searchForFirstMatchingLocator(
-                        BankIdElementsSearchQuery.builder()
+                        ElementsSearchQuery.builder()
                                 .searchFor(notExistingLocator)
                                 .searchForSeconds(waitForSeconds)
                                 .build());
@@ -87,15 +85,15 @@ public class BankIdElementsSearcherSleepingTest {
     @Test
     public void should_not_sleep_when_there_is_search_only_once_flag_set() {
         // given
-        BankIdElementLocator notExistingLocator =
-                BankIdElementLocator.builder()
+        ElementLocator notExistingLocator =
+                ElementLocator.builder()
                         .element(new By.ByCssSelector(".notExistingClass1234567"))
                         .build();
 
         // when
-        BankIdElementsSearchResult searchResult =
+        ElementsSearchResult searchResult =
                 elementsSearcher.searchForFirstMatchingLocator(
-                        BankIdElementsSearchQuery.builder()
+                        ElementsSearchQuery.builder()
                                 .searchFor(notExistingLocator)
                                 .searchForSeconds(10)
                                 .searchOnlyOnce()
@@ -120,14 +118,14 @@ public class BankIdElementsSearcherSleepingTest {
                 });
 
         // when
-        BankIdElementLocator elementLocator =
-                BankIdElementLocator.builder()
+        ElementLocator elementLocator =
+                ElementLocator.builder()
                         .element(new By.ByCssSelector("#" + PARENT_OTHER_ELEMENT))
                         .mustBeDisplayed()
                         .build();
-        BankIdElementsSearchResult searchResult =
+        ElementsSearchResult searchResult =
                 elementsSearcher.searchForFirstMatchingLocator(
-                        BankIdElementsSearchQuery.builder()
+                        ElementsSearchQuery.builder()
                                 .searchFor(elementLocator)
                                 .searchForSeconds(20)
                                 .build());

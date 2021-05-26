@@ -7,9 +7,9 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.BankIdWebDriver;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.BankIdElementLocator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.BankIdElementsSearchQuery;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.BankIdElementsSearchResult;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.ElementLocator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.ElementsSearchQuery;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.ElementsSearchResult;
 
 @RequiredArgsConstructor(onConstructor = @__({@Inject}))
 public class BankIdScreensManager {
@@ -35,7 +35,7 @@ public class BankIdScreensManager {
 
     public Optional<BankIdScreen> tryWaitForAnyScreenFromQuery(BankIdScreensQuery screensQuery) {
 
-        List<BankIdElementLocator> screensLocators =
+        List<ElementLocator> screensLocators =
                 screensQuery.getScreensToWaitFor().stream()
                         .map(BankIdScreen::getLocatorToDetectScreen)
                         .collect(Collectors.toList());
@@ -44,9 +44,9 @@ public class BankIdScreensManager {
             screensLocators = addErrorScreenLocators(screensLocators);
         }
 
-        BankIdElementsSearchResult searchResult =
+        ElementsSearchResult searchResult =
                 driver.searchForFirstMatchingLocator(
-                        BankIdElementsSearchQuery.builder()
+                        ElementsSearchQuery.builder()
                                 .searchFor(screensLocators)
                                 .searchForSeconds(screensQuery.getWaitForSeconds())
                                 .build());
@@ -66,8 +66,8 @@ public class BankIdScreensManager {
         return Optional.of(screenFound);
     }
 
-    private List<BankIdElementLocator> addErrorScreenLocators(List<BankIdElementLocator> locators) {
-        List<BankIdElementLocator> resultList = new ArrayList<>(locators);
+    private List<ElementLocator> addErrorScreenLocators(List<ElementLocator> locators) {
+        List<ElementLocator> resultList = new ArrayList<>(locators);
 
         BankIdScreen.getAllErrorScreens().stream()
                 .map(BankIdScreen::getLocatorToDetectScreen)
@@ -79,14 +79,14 @@ public class BankIdScreensManager {
 
     private Optional<BankIdScreen> tryDetectCurrentScreen() {
 
-        List<BankIdElementLocator> screensLocators =
+        List<ElementLocator> screensLocators =
                 BankIdScreen.getAllScreens().stream()
                         .map(BankIdScreen::getLocatorToDetectScreen)
                         .collect(Collectors.toList());
 
-        BankIdElementsSearchResult searchResult =
+        ElementsSearchResult searchResult =
                 driver.searchForFirstMatchingLocator(
-                        BankIdElementsSearchQuery.builder()
+                        ElementsSearchQuery.builder()
                                 .searchFor(screensLocators)
                                 .searchOnlyOnce()
                                 .build());

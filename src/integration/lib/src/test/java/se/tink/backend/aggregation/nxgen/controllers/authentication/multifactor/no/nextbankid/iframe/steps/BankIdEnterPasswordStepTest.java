@@ -12,9 +12,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.BankIdWebDriver;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.BankIdElementLocator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.BankIdElementsSearchQuery;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.BankIdElementsSearchResult;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.ElementLocator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.ElementsSearchQuery;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.ElementsSearchResult;
 
 public class BankIdEnterPasswordStepTest {
 
@@ -49,7 +49,7 @@ public class BankIdEnterPasswordStepTest {
         // then
         verify(webDriver)
                 .searchForFirstMatchingLocator(
-                        BankIdElementsSearchQuery.builder()
+                        ElementsSearchQuery.builder()
                                 .searchFor(LOC_PRIVATE_PASSWORD_INPUT)
                                 .searchForSeconds(10)
                                 .build());
@@ -61,8 +61,8 @@ public class BankIdEnterPasswordStepTest {
     }
 
     @SuppressWarnings("SameParameterValue")
-    private void mockElementExists(BankIdElementLocator locator, WebElement element) {
+    private void mockElementExists(ElementLocator locator, WebElement element) {
         when(webDriver.searchForFirstMatchingLocator(any()))
-                .thenReturn(BankIdElementsSearchResult.of(locator, element));
+                .thenReturn(ElementsSearchResult.of(locator, element));
     }
 }

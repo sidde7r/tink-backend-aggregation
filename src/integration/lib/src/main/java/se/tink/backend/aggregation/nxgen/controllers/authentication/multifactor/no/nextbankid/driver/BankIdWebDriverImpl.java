@@ -11,12 +11,12 @@ import org.openqa.selenium.Cookie;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebElement;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.BankIdElementLocator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.BankIdElementsSearchQuery;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.BankIdElementsSearchResult;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.BankIdElementsSearcher;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.utils.BankIdWebDriverCommonUtils;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.ElementLocator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.ElementsSearchQuery;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.ElementsSearchResult;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.ElementsSearcher;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.utils.Sleeper;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.utils.WebDriverCommonUtils;
 import se.tink.integration.webdriver.WebDriverWrapper;
 
 @Slf4j
@@ -25,8 +25,8 @@ public class BankIdWebDriverImpl implements BankIdWebDriver {
 
     private final WebDriverWrapper driver;
     private final Sleeper sleeper;
-    private final BankIdWebDriverCommonUtils driverCommonUtils;
-    private final BankIdElementsSearcher elementsSearcher;
+    private final WebDriverCommonUtils driverCommonUtils;
+    private final ElementsSearcher elementsSearcher;
 
     @Override
     public WebDriverWrapper getDriver() {
@@ -68,7 +68,7 @@ public class BankIdWebDriverImpl implements BankIdWebDriver {
     }
 
     @Override
-    public void clickButton(BankIdElementLocator locator) {
+    public void clickButton(ElementLocator locator) {
         try {
             /*
             Sometimes there is no effect of clicking the button. The exact reason was not investigated but an effective
@@ -90,11 +90,11 @@ public class BankIdWebDriverImpl implements BankIdWebDriver {
         }
     }
 
-    private void clickButtonInternal(BankIdElementLocator locator) {
+    private void clickButtonInternal(ElementLocator locator) {
         WebElement buttonElement =
                 elementsSearcher
                         .searchForFirstMatchingLocator(
-                                BankIdElementsSearchQuery.builder()
+                                ElementsSearchQuery.builder()
                                         .searchFor(locator)
                                         .searchForSeconds(10)
                                         .build())
@@ -108,11 +108,11 @@ public class BankIdWebDriverImpl implements BankIdWebDriver {
     }
 
     @Override
-    public void setValueToElement(String value, BankIdElementLocator locator) {
+    public void setValueToElement(String value, ElementLocator locator) {
         WebElement element =
                 elementsSearcher
                         .searchForFirstMatchingLocator(
-                                BankIdElementsSearchQuery.builder()
+                                ElementsSearchQuery.builder()
                                         .searchFor(locator)
                                         .searchForSeconds(10)
                                         .build())
@@ -131,8 +131,7 @@ public class BankIdWebDriverImpl implements BankIdWebDriver {
     }
 
     @Override
-    public BankIdElementsSearchResult searchForFirstMatchingLocator(
-            BankIdElementsSearchQuery query) {
+    public ElementsSearchResult searchForFirstMatchingLocator(ElementsSearchQuery query) {
         return elementsSearcher.searchForFirstMatchingLocator(query);
     }
 }

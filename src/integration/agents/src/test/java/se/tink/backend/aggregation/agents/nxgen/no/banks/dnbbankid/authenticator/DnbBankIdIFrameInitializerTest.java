@@ -39,7 +39,7 @@ import se.tink.backend.aggregation.agents.exceptions.agent.AgentException;
 import se.tink.backend.aggregation.agents.exceptions.bankidno.BankIdNOError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdIframeFirstWindow;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.BankIdWebDriver;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.BankIdElementsSearchQuery;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.ElementsSearchQuery;
 
 @RunWith(JUnitParamsRunner.class)
 public class DnbBankIdIFrameInitializerTest {
@@ -236,14 +236,14 @@ public class DnbBankIdIFrameInitializerTest {
         mocksToVerifyInOrder
                 .verify(driver)
                 .searchForFirstMatchingLocator(
-                        BankIdElementsSearchQuery.builder().searchFor(LOC_SSN_INPUT).build());
+                        ElementsSearchQuery.builder().searchFor(LOC_SSN_INPUT).build());
     }
 
     private void verifyWaitsForCookiesButton() {
         mocksToVerifyInOrder
                 .verify(driver)
                 .searchForFirstMatchingLocator(
-                        BankIdElementsSearchQuery.builder()
+                        ElementsSearchQuery.builder()
                                 .searchFor(LOC_CLOSE_COOKIES_POPUP_BUTTON)
                                 .searchForSeconds(10)
                                 .build());
@@ -253,7 +253,7 @@ public class DnbBankIdIFrameInitializerTest {
         mocksToVerifyInOrder
                 .verify(driver)
                 .searchForFirstMatchingLocator(
-                        BankIdElementsSearchQuery.builder()
+                        ElementsSearchQuery.builder()
                                 .searchFor(LOC_IFRAME, LOC_ERROR_MESSAGE)
                                 .build());
     }
