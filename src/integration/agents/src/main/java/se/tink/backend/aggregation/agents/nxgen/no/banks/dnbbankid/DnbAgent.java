@@ -4,24 +4,27 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CREDIT_CARDS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
 
+import com.google.inject.Inject;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
-import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
+import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModules;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.dnbbankid.accounts.checkingaccount.DnbAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.dnbbankid.accounts.checkingaccount.DnbTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.dnbbankid.accounts.creditcardaccount.DnbCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.dnbbankid.accounts.creditcardaccount.DnbCreditTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.dnbbankid.authenticator.DnbAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.dnbbankid.authenticator.DnbBankIdIframeInitializer;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.dnbbankid.filters.DnbRedirectFilter;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.dnbbankid.filters.DnbRetryFilter;
-import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.bankid.BankIdAuthenticationControllerNO;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdIframeAuthenticationControllerProvider;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdIframeAuthenticationControllerProviderModule;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.TransactionPaginationHelper;
@@ -29,15 +32,17 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.TimeoutRetryFilter;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, CREDIT_CARDS})
+@AgentDependencyModules(modules = BankIdIframeAuthenticationControllerProviderModule.class)
 public final class DnbAgent extends NextGenerationAgent
         implements RefreshCreditCardAccountsExecutor,
                 RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor {
+
+    private final BankIdIframeAuthenticationControllerProvider authenticationControllerProvider;
+
     private final DnbApiClient apiClient;
-    private final DnbAuthenticator authenticator;
     private final DnbAccountFetcher accountFetcher;
     private final DnbTransactionFetcher transactionFetcher;
     private final DnbCreditCardFetcher creditCardFetcher;
@@ -46,12 +51,16 @@ public final class DnbAgent extends NextGenerationAgent
     private final CreditCardRefreshController creditCardRefreshController;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
+    @Inject
     public DnbAgent(
-            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair);
+            AgentComponentProvider componentProvider,
+            BankIdIframeAuthenticationControllerProvider authenticationControllerProvider) {
+        super(componentProvider);
+
+        this.authenticationControllerProvider = authenticationControllerProvider;
+
         configureHttpClient(client);
         this.apiClient = new DnbApiClient(client);
-        this.authenticator = new DnbAuthenticator(apiClient);
         this.accountFetcher = new DnbAccountFetcher(apiClient);
         this.transactionFetcher = new DnbTransactionFetcher(apiClient);
         this.creditCardFetcher = new DnbCreditCardFetcher(apiClient);
@@ -77,8 +86,14 @@ public final class DnbAgent extends NextGenerationAgent
 
     @Override
     protected Authenticator constructAuthenticator() {
-        return new BankIdAuthenticationControllerNO(
-                supplementalInformationController, authenticator, catalog);
+        DnbBankIdIframeInitializer iframeInitializer = new DnbBankIdIframeInitializer(credentials);
+        DnbAuthenticator dnbAuthenticator = new DnbAuthenticator(apiClient);
+        return authenticationControllerProvider.createAuthController(
+                catalog,
+                context,
+                supplementalInformationController,
+                iframeInitializer,
+                dnbAuthenticator);
     }
 
     @Override
