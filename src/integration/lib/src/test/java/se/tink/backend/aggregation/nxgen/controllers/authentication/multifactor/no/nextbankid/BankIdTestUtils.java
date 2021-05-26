@@ -44,6 +44,7 @@ public class BankIdTestUtils {
     public static WebElement mockWebElementWithText(String text) {
         WebElement element = mock(WebElement.class);
         when(element.getText()).thenReturn(text);
+        when(element.getAttribute("textContent")).thenReturn(text);
         return element;
     }
 

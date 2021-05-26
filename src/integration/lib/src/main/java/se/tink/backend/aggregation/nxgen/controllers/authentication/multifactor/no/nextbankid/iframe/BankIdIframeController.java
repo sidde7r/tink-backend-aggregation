@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.bankidno.BankIdNOError;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdIframeFirstWindow;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.steps.BankIdEnterPasswordStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.steps.BankIdEnterSSNStep;
@@ -23,19 +24,21 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 @RequiredArgsConstructor(access = AccessLevel.PACKAGE, onConstructor = @__({@Inject}))
 public class BankIdIframeController {
 
+    private final BankIdAuthenticationState authenticationState;
+
     private final BankIdEnterSSNStep enterSSNStep;
     private final BankIdPerform2FAStep perform2FAStep;
     private final BankIdEnterPasswordStep enterPrivatePasswordStep;
     private final BankIdVerifyAuthenticationStep verifyAuthenticationStep;
 
-    public void authenticateWithCredentials(
-            Credentials credentials, BankIdIframeFirstWindow firstWindow) {
-
+    public void authenticateWithCredentials(Credentials credentials) {
         String ssn = credentials.getField(Field.Key.USERNAME);
         validateSSN(ssn);
 
         String password = credentials.getField(Field.Key.BANKID_PASSWORD);
         validatePassword(password);
+
+        BankIdIframeFirstWindow firstWindow = authenticationState.getFirstIframeWindow();
 
         log.info(
                 "{} Starting iframe authentication with window: {}",

@@ -9,6 +9,7 @@ import com.google.common.collect.ImmutableMap;
 import java.util.Optional;
 import org.junit.Ignore;
 import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdIframeAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdIframeAuthenticationControllerProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdIframeAuthenticator;
@@ -50,11 +51,14 @@ public class BankIdIframeAuthenticationControllerProviderMock
         when(proxyManager.waitForProxyResponse(anyInt()))
                 .thenReturn(Optional.of(responseFromProxy));
 
+        BankIdAuthenticationState authenticationState = mock(BankIdAuthenticationState.class);
+
         BankIdIframeController iframeController = mock(BankIdIframeController.class);
 
         return new BankIdIframeAuthenticationController(
                 bankIdWebDriver,
                 proxyManager,
+                authenticationState,
                 iframeInitializer,
                 iframeAuthenticator,
                 iframeController);

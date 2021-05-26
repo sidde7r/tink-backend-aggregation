@@ -25,11 +25,22 @@ public class BankIdIframeAuthenticationControllerProviderImpl
         BankIdWebDriver webDriver = webDriverModuleComponents.getWebDriver();
         ProxyManager proxyManager = webDriverModuleComponents.getProxyManager();
 
+        BankIdAuthenticationState authenticationState = new BankIdAuthenticationState();
+
         BankIdIframeController iframeController =
                 BankIdIframeModule.initializeIframeController(
-                        catalog, statusUpdater, supplementalInformationController, webDriver);
+                        catalog,
+                        statusUpdater,
+                        supplementalInformationController,
+                        webDriver,
+                        authenticationState);
 
         return new BankIdIframeAuthenticationController(
-                webDriver, proxyManager, iframeInitializer, iframeAuthenticator, iframeController);
+                webDriver,
+                proxyManager,
+                authenticationState,
+                iframeInitializer,
+                iframeAuthenticator,
+                iframeController);
     }
 }

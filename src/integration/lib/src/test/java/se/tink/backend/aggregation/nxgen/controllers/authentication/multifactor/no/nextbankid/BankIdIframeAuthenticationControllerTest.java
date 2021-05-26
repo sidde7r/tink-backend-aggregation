@@ -26,6 +26,7 @@ public class BankIdIframeAuthenticationControllerTest {
      */
     private BankIdWebDriver webDriver;
     private ProxyManager proxyManager;
+    private BankIdAuthenticationState authenticationState;
     private BankIdIframeInitializer iframeInitializer;
     private BankIdIframeAuthenticator iframeAuthenticator;
     private BankIdIframeController iframeController;
@@ -42,6 +43,7 @@ public class BankIdIframeAuthenticationControllerTest {
     public void setup() {
         webDriver = mock(BankIdWebDriver.class);
         proxyManager = mock(ProxyManager.class);
+        authenticationState = mock(BankIdAuthenticationState.class);
         iframeInitializer = mock(BankIdIframeInitializer.class);
         iframeAuthenticator = mock(BankIdIframeAuthenticator.class);
         iframeController = mock(BankIdIframeController.class);
@@ -51,6 +53,7 @@ public class BankIdIframeAuthenticationControllerTest {
                 inOrder(
                         webDriver,
                         proxyManager,
+                        authenticationState,
                         iframeInitializer,
                         iframeAuthenticator,
                         iframeController);
@@ -59,6 +62,7 @@ public class BankIdIframeAuthenticationControllerTest {
                 new BankIdIframeAuthenticationController(
                         webDriver,
                         proxyManager,
+                        authenticationState,
                         iframeInitializer,
                         iframeAuthenticator,
                         iframeController);
@@ -83,7 +87,8 @@ public class BankIdIframeAuthenticationControllerTest {
         // then
         verifyStartsListeningForResponseFromUrl("part.of.some.url");
         verifyIframeInitialization();
-        verifyAuthenticationWithIframeController(firstWindow);
+        verifySavesFirstIframeWindow(firstWindow);
+        verifyAuthenticationWithIframeController();
         verifyWaitsForResponseFromUrl(10);
         verifyHandlesIframeAuthResult(
                 BankIdIframeAuthenticationResult.builder()
@@ -101,6 +106,10 @@ public class BankIdIframeAuthenticationControllerTest {
         return BankIdIframeFirstWindow.values();
     }
 
+    private void verifySavesFirstIframeWindow(BankIdIframeFirstWindow firstWindow) {
+        mocksToVerifyInOrder.verify(authenticationState).setFirstIframeWindow(firstWindow);
+    }
+
     private void verifyIframeInitialization() {
         mocksToVerifyInOrder.verify(iframeInitializer).initializeIframe(webDriver);
     }
@@ -110,10 +119,8 @@ public class BankIdIframeAuthenticationControllerTest {
         mocksToVerifyInOrder.verify(proxyManager).setUrlSubstringToListenFor(url);
     }
 
-    private void verifyAuthenticationWithIframeController(BankIdIframeFirstWindow firstWindow) {
-        mocksToVerifyInOrder
-                .verify(iframeController)
-                .authenticateWithCredentials(credentials, firstWindow);
+    private void verifyAuthenticationWithIframeController() {
+        mocksToVerifyInOrder.verify(iframeController).authenticateWithCredentials(credentials);
     }
 
     @SuppressWarnings("SameParameterValue")

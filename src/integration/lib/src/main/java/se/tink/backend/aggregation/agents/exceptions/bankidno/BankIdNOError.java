@@ -17,6 +17,7 @@ public enum BankIdNOError implements AgentError {
     THIRD_PARTY_APP_TIMEOUT(new LocalizableKey("BankID authentication app timeout.")),
     THIRD_PARTY_APP_REJECTED(
             new LocalizableKey("User rejected authentication in BankID authentication app.")),
+    INVALID_ONE_TIME_CODE(new LocalizableKey("Invalid one-time code.")),
     INVALID_BANK_ID_PASSWORD_FORMAT(new LocalizableKey("Invalid BankID password format.")),
     INVALID_BANK_ID_PASSWORD(new LocalizableKey("The BankID password is invalid."));
 

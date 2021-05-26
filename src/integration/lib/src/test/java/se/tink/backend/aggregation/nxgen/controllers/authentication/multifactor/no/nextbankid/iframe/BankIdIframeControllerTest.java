@@ -5,6 +5,8 @@ import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdIframeFirstWindow.AUTHENTICATE_WITH_DEFAULT_2FA_METHOD;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdIframeFirstWindow.ENTER_SSN;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdTestUtils.verifyThatFromUsersPerspectiveThrowableIsTheSameAsGivenAgentException;
 
 import java.util.ArrayList;
@@ -19,7 +21,7 @@ import org.mockito.InOrder;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.bankidno.BankIdNOError;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdIframeFirstWindow;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.steps.BankIdEnterPasswordStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.steps.BankIdEnterSSNStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.steps.BankIdPerform2FAStep;
@@ -40,6 +42,7 @@ public class BankIdIframeControllerTest {
     /*
     Mocks
      */
+    private BankIdAuthenticationState authenticationState;
     private BankIdEnterSSNStep enterSSNStep;
     private BankIdPerform2FAStep perform2FAStep;
     private BankIdEnterPasswordStep enterPrivatePasswordStep;
@@ -55,6 +58,7 @@ public class BankIdIframeControllerTest {
 
     @Before
     public void setup() {
+        authenticationState = mock(BankIdAuthenticationState.class);
         enterSSNStep = mock(BankIdEnterSSNStep.class);
         perform2FAStep = mock(BankIdPerform2FAStep.class);
         enterPrivatePasswordStep = mock(BankIdEnterPasswordStep.class);
@@ -71,6 +75,7 @@ public class BankIdIframeControllerTest {
 
         iframeController =
                 new BankIdIframeController(
+                        authenticationState,
                         enterSSNStep,
                         perform2FAStep,
                         enterPrivatePasswordStep,
@@ -84,10 +89,10 @@ public class BankIdIframeControllerTest {
         // given
         when(credentials.getField(Field.Key.USERNAME)).thenReturn(ssn);
         when(credentials.getField(Field.Key.BANKID_PASSWORD)).thenReturn(password);
+        when(authenticationState.getFirstIframeWindow()).thenReturn(ENTER_SSN);
 
         // when
-        iframeController.authenticateWithCredentials(
-                credentials, BankIdIframeFirstWindow.ENTER_SSN);
+        iframeController.authenticateWithCredentials(credentials);
 
         // then
         mocksToVerifyInOrder.verify(credentials).getField(Field.Key.USERNAME);
@@ -112,10 +117,11 @@ public class BankIdIframeControllerTest {
         // given
         when(credentials.getField(Field.Key.USERNAME)).thenReturn(ssn);
         when(credentials.getField(Field.Key.BANKID_PASSWORD)).thenReturn(password);
+        when(authenticationState.getFirstIframeWindow())
+                .thenReturn(AUTHENTICATE_WITH_DEFAULT_2FA_METHOD);
 
         // when
-        iframeController.authenticateWithCredentials(
-                credentials, BankIdIframeFirstWindow.AUTHENTICATE_WITH_DEFAULT_2FA_METHOD);
+        iframeController.authenticateWithCredentials(credentials);
 
         // then
         mocksToVerifyInOrder.verify(credentials).getField(Field.Key.USERNAME);
@@ -133,15 +139,12 @@ public class BankIdIframeControllerTest {
         // given
         when(credentials.getField(Field.Key.USERNAME)).thenReturn(invalidSsn);
         when(credentials.getField(Field.Key.BANKID_PASSWORD)).thenReturn(validPassword);
+        when(authenticationState.getFirstIframeWindow())
+                .thenReturn(AUTHENTICATE_WITH_DEFAULT_2FA_METHOD);
 
         // when
         Throwable throwable =
-                catchThrowable(
-                        () ->
-                                iframeController.authenticateWithCredentials(
-                                        credentials,
-                                        BankIdIframeFirstWindow
-                                                .AUTHENTICATE_WITH_DEFAULT_2FA_METHOD));
+                catchThrowable(() -> iframeController.authenticateWithCredentials(credentials));
 
         // then
         verifyThatFromUsersPerspectiveThrowableIsTheSameAsGivenAgentException(
@@ -162,15 +165,12 @@ public class BankIdIframeControllerTest {
         // given
         when(credentials.getField(Field.Key.USERNAME)).thenReturn(validSsn);
         when(credentials.getField(Field.Key.BANKID_PASSWORD)).thenReturn(invalidPassword);
+        when(authenticationState.getFirstIframeWindow())
+                .thenReturn(AUTHENTICATE_WITH_DEFAULT_2FA_METHOD);
 
         // when
         Throwable throwable =
-                catchThrowable(
-                        () ->
-                                iframeController.authenticateWithCredentials(
-                                        credentials,
-                                        BankIdIframeFirstWindow
-                                                .AUTHENTICATE_WITH_DEFAULT_2FA_METHOD));
+                catchThrowable(() -> iframeController.authenticateWithCredentials(credentials));
 
         // then
         verifyThatFromUsersPerspectiveThrowableIsTheSameAsGivenAgentException(
