@@ -26,13 +26,12 @@ public class NorwegianSigningFilter extends Filter {
 
     private final SignatureHeaderGenerator signatureHeaderGenerator;
 
-    public NorwegianSigningFilter(
-            String qsealcSerialNumberInHex, String qsealcIssuerDN, QsealcSigner qsealcSigner) {
+    public NorwegianSigningFilter(String qsealcThumbprint, QsealcSigner qsealcSigner) {
         this.signatureHeaderGenerator =
                 new SignatureHeaderGenerator(
                         NorwegianConstants.SIGNATURE_FORMAT,
                         NorwegianConstants.SIGNABLE_HEADERS,
-                        prepareSignatureHeaderKeyId(qsealcSerialNumberInHex, qsealcIssuerDN),
+                        qsealcThumbprint,
                         qsealcSigner);
     }
 
@@ -43,11 +42,6 @@ public class NorwegianSigningFilter extends Filter {
         addDigestHeader(httpRequest);
         sign(httpRequest);
         return nextFilter(httpRequest);
-    }
-
-    private String prepareSignatureHeaderKeyId(
-            String qsealcSerialNumberInHex, String qsealcIssuerDN) {
-        return String.format("SN=%s,CA=%s", qsealcSerialNumberInHex, qsealcIssuerDN);
     }
 
     private void addHostHeader(HttpRequest httpRequest) {
