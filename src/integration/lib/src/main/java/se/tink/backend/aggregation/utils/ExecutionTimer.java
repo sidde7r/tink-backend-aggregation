@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.no.banks.dnbbankid.utils;
+package se.tink.backend.aggregation.utils;
 
 import java.util.concurrent.Callable;
 import lombok.SneakyThrows;

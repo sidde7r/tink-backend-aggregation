@@ -12,7 +12,6 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.bankidno.BankIdNOError;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.dnbbankid.DnbConstants;
-import se.tink.backend.aggregation.agents.nxgen.no.banks.dnbbankid.utils.ExecutionTimer;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdIframeFirstWindow;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdIframeInitializer;
@@ -20,6 +19,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.BankIdElementLocator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.BankIdElementsSearchQuery;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.BankIdElementsSearchResult;
+import se.tink.backend.aggregation.utils.ExecutionTimer;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -58,7 +58,7 @@ public class DnbBankIdIframeInitializer implements BankIdIframeInitializer {
     private void tryClosingCookiesWindow(BankIdWebDriver webDriver) {
         /*
         Sometimes popup with cookies can appear after many seconds - that's why we should wait for quite a long time
-        here. We should monitor how ofter it happens and if it's frequent we might need to make changes in BankID
+        here. We should monitor how often it happens and if it's frequent we might need to make changes in BankID
         controller so it will be ready for cookies window at any time.
          */
         ExecutionTimer timer = new ExecutionTimer();
