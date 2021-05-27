@@ -59,6 +59,8 @@ java_library(
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/de/openbanking/ahoisandbox",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/de/openbanking/comdirect",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/de/openbanking/commerzbank",
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/de/openbanking/consorsfinanz",
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/de/openbanking/degussabank",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/de/openbanking/deutschebank",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/de/openbanking/dkb",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/de/openbanking/fidor",
