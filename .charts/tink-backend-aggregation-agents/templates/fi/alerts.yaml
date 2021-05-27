@@ -17,7 +17,7 @@ spec:
             / count(sum_over_time(tink_agent_login_total{action="login", market="FI", provider_type!="test"}[30m])) by (className,provider) < 0.2)
         # At least this many attempts.
             and count(sum_over_time(tink_agent_login_total{action="login", market="FI", provider_type!="test"}[30m])) by (className,provider) > 3
-      for: 5m
+      for: 15m
       labels:
         severity: urgent
         priority: P1
@@ -34,8 +34,7 @@ spec:
         # Failed logins over 90%
         (count(sum_over_time(tink_agent_login_total{action="login", outcome="completed", market="FI", provider_type!="test"}[12h])) by (className,provider)
             / count(sum_over_time(tink_agent_login_total{action="login", market="FI", provider_type!="test"}[12h])) by (className,provider) < 0.1)
-      for: 5m
-      interval: 1h
+      for: 15m
       labels:
         severity: urgent
         priority: P1
@@ -53,7 +52,7 @@ spec:
         # Failed refreshes over 20%
         (count(sum_over_time(tink_agent_refresh_total{label="refresh", outcome="completed", market="FI", provider_type!="test"}[30m])) by (className,provider,type)
             / count(sum_over_time(tink_agent_refresh_total{market="FI", provider_type!="test"}[30m])) by (className,provider,type) < 0.2)
-      for: 5m
+      for: 15m
       labels:
         severity: urgent
         who: integration-minions
@@ -75,7 +74,7 @@ spec:
             / count(sum_over_time(tink_agent_login_total{action="login", market="FI", provider_type!="test"}[30m])) by (className,provider) > 0.3)
         # At least this many attempts.
              and count(sum_over_time(tink_agent_login_total{action="login", market="FI", provider_type!="test"}[30m])) by (className,provider) > 1
-      for: 5m
+      for: 15m
       labels:
         severity: urgent
         priority: P2
@@ -94,7 +93,7 @@ spec:
             / count(sum_over_time(tink_agent_login_total{action="login", market="FI", provider_type!="test"}[6h])) by (className,provider) > 0.2)
         # At least this many attempts.
              and count(sum_over_time(tink_agent_login_total{action="login", market="FI", provider_type!="test"}[6h])) by (className,provider) > 1
-      for: 5m
+      for: 15m
       labels:
         severity: urgent
         priority: P2
@@ -112,7 +111,7 @@ spec:
         # Failed refreshes (due to unknown RuntimeException) over 10%
         (count(sum_over_time(tink_agent_refresh_total{label="refresh", outcome="failed", market="FI", provider_type!="test"}[30m])) by (className,provider,type)
             / count(sum_over_time(tink_agent_refresh_total{market="FI", provider_type!="test"}[30m])) by (className,provider,type) > 0.1
-      for: 5m
+      for: 15m
       labels:
         severity: urgent
         who: integration-minions
@@ -135,7 +134,7 @@ spec:
           / count(sum_over_time(tink_agent_login_total{action="login-manual", market="FI"}[4h])) BY (className,provider) > 0.90
         # At least this many attempts.
            and count(sum_over_time(tink_agent_login_total{action="login-manual", market="FI", provider_type!="test"}[4h])) by (className,provider) > 10
-      for: 5m
+      for: 15m
       labels:
         severity: urgent
         priority: P2
@@ -154,7 +153,7 @@ spec:
           / count(sum_over_time(tink_agent_login_total{action=~"login-auto|login-cron", market="FI"}[4h])) BY (className,provider) > 0.90
         # At least this many attempts.
            and count(sum_over_time(tink_agent_login_total{action=~"login-auto|login-cron", market="FI", provider_type!="test"}[4h])) by (className,provider) > 10
-      for: 5m
+      for: 15m
       labels:
         severity: urgent
         priority: P2
@@ -175,7 +174,6 @@ spec:
         # At least this many attempts.
         and count(sum_over_time(tink_agent_login_total{action="login", market="FI", provider_type!="test"}[12h])) by (className,provider) > 2
       for: 15m
-      interval: 1h
       labels:
         severity: urgent
         priority: P2
@@ -194,7 +192,7 @@ spec:
             / count(sum_over_time(tink_agent_refresh_total{market="FI", provider_type!="test"}[4h])) by (className,provider,type) > 0.90)
         # At least this many attempts.
            and count(sum_over_time(tink_agent_login_total{action="refresh", market="FI", provider_type!="test"}[4h])) by (className,provider) > 10
-      for: 5m
+      for: 15m
       labels:
         severity: urgent
         who: integration-minions
@@ -210,7 +208,6 @@ spec:
         (count(sum_over_time(tink_agent_refresh_total{label="refresh", outcome="unavailable", market="FI", provider_type!="test"}[12h])) by (className,provider)
             / count(sum_over_time(tink_agent_refresh_total{market="FI", provider_type!="test"}[12h])) by (className,provider) > 0.90)
       for: 15m
-      interval: 1h
       labels:
         severity: urgent
         who: integration-minions
@@ -233,7 +230,7 @@ spec:
           / count(sum_over_time(tink_agent_login_total{action="login", market="FI"}[2h])) BY (className,provider) > 0.9
         # At least this many attempts.
            and count(sum_over_time(tink_agent_login_total{action="login", market="FI", provider_type!="test"}[2h])) by (className,provider) > 10
-      for: 5m
+      for: 15m
       labels:
         severity: urgent
         priority: P2
@@ -253,7 +250,6 @@ spec:
         # At least this many attempts.
           and count(sum_over_time(tink_agent_login_total{action="login", market="FI", provider_type!="test"}[12h])) by (className,provider) > 2
       for: 15m
-      interval: 1h
       labels:
         severity: urgent
         priority: P2

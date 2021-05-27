@@ -35,7 +35,6 @@ spec:
         (count(sum_over_time(tink_agent_login_total{action="login", outcome="completed", market="FR", provider_type!="test"}[12h])) by (className,provider)
             / count(sum_over_time(tink_agent_login_total{action="login", market="FR", provider_type!="test"}[12h])) by (className,provider) < 0.1)
       for: 15m
-      interval: 1h
       labels:
         severity: urgent
         priority: P1
@@ -175,7 +174,6 @@ spec:
         # At least this many attempts.
         and count(sum_over_time(tink_agent_login_total{action="login", market="FR", provider_type!="test"}[12h])) by (className,provider) > 2
       for: 15m
-      interval: 1h
       labels:
         severity: urgent
         priority: P2
@@ -210,7 +208,6 @@ spec:
         (count(sum_over_time(tink_agent_refresh_total{label="refresh", outcome="unavailable", market="FR", provider_type!="test"}[12h])) by (className,provider)
             / count(sum_over_time(tink_agent_refresh_total{market="FR", provider_type!="test"}[12h])) by (className,provider) > 0.90)
       for: 15m
-      interval: 1h
       labels:
         severity: urgent
         who: integration-minions
@@ -248,12 +245,11 @@ spec:
       expr: |
         # Failed logins (due to third party app timeout) over 90%
         count(sum_over_time(tink_agent_login_total{action="login",outcome="cancelled_due_to_third_party_app_timeout", market="FR"}[12h])) BY (className,provider)
-        # All login attempts the last 6 hours
+        # All login attempts the last 12 hours
           / count(sum_over_time(tink_agent_login_total{action="login", market="FR"}[12h])) BY (className,provider) > 0.90
         # At least this many attempts.
           and count(sum_over_time(tink_agent_login_total{action="login", market="FR", provider_type!="test"}[12h])) by (className,provider) > 2
-      for: 15m
-      interval: 1h
+      for: 15min
       labels:
         severity: urgent
         priority: P2
