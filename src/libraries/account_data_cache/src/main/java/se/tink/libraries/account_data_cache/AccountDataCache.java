@@ -12,18 +12,17 @@ import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.models.AccountFeatures;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
 
+@Slf4j
 public class AccountDataCache {
     private final Map<String, AccountData> accountDataByBankAccountId;
     private final List<Pair<Predicate<Account>, FilterReason>> accountFilters;
-    private static final Logger LOGGER = LoggerFactory.getLogger(AccountDataCache.class);
 
     public AccountDataCache() {
         this.accountDataByBankAccountId = new HashMap<>();
@@ -60,13 +59,13 @@ public class AccountDataCache {
                         .map(Entry::getKey)
                         .findFirst();
         if (oldBankId.isPresent()) {
-            LOGGER.info("Updating bankId for cached account {}", tinkAccountId);
+            log.info("[ACCOUNT CACHE] Updating bankId for cached account {}", tinkAccountId);
             AccountData accountData = accountDataByBankAccountId.get(oldBankId.get());
             accountData.getAccount().setBankId(newBankId);
             accountDataByBankAccountId.put(newBankId, accountData);
             accountDataByBankAccountId.remove(oldBankId.get());
         } else {
-            LOGGER.info("Updating bankId for non-cached account {}", tinkAccountId);
+            log.info("[ACCOUNT CACHE] Updating bankId for non-cached account {}", tinkAccountId);
         }
     }
 
@@ -103,8 +102,6 @@ public class AccountDataCache {
     // It is therefore extremely important that general access of AccountData is done through this
     // filtered method.
     private Stream<AccountData> getFilteredAccountDataStream() {
-        LOGGER.info(
-                "getFilteredAccountDataStream: cache size {}", accountDataByBankAccountId.size());
         return accountDataByBankAccountId.values().stream()
                 .filter(
                         accountData ->
@@ -146,12 +143,14 @@ public class AccountDataCache {
                                         }
                                     });
                             if (!filterReasons.isEmpty()) {
-                                LOGGER.info("Non empty filterReasons: {}", filterReasons);
+                                log.info(
+                                        "[ACCOUNT CACHE] Non empty filterReasons: {}",
+                                        filterReasons);
                                 filteredOutAccountData.add(Pair.of(accountData, filterReasons));
                             }
                         });
-        LOGGER.info(
-                "getFilteredOutAccountDataWithFilterReason - size {}, filters size {}, filterReasons {}",
+        log.info(
+                "[ACCOUNT CACHE] Retrieving account with filter reason - size {}, filters size {}, filterReasons {}",
                 filteredOutAccountData.size(),
                 accountFilters.size(),
                 accountFilters.stream().map(Pair::getRight).collect(Collectors.toList()));
@@ -194,6 +193,9 @@ public class AccountDataCache {
     }
 
     public List<Account> getProcessedAccounts() {
+        log.info(
+                "[ACCOUNT CACHE] Retrieving {} accounts from cache",
+                accountDataByBankAccountId.size());
         return getProcessedAccountDataStream()
                 .map(AccountData::getAccount)
                 .collect(Collectors.toList());
