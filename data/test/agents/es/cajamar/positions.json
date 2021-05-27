@@ -45,5 +45,13 @@
             "investmentFundDate": "2008-11-05",
             "totalBalance": 28.00
         }
-    ]
+    ],
+    "savingInvestment": [{
+        "associatedAccount": "1",
+        "policyAccount": "2",
+        "depositId": "3",
+        "description": "Cafar",
+        "amount": 274.00,
+        "product": "PDSE"
+    }]
 }

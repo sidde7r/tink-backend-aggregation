@@ -5,6 +5,7 @@ import io.vavr.CheckedPredicate;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import lombok.Setter;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.cajamar.CajamarConstants.Fetchers;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.cajamar.entities.PaginationEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.cajamar.fetcher.account.entities.AccountTransactionEntity;
@@ -13,6 +14,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
+@Setter
 @JsonObject
 public class CajamarAccountTransactionsResponse implements TransactionKeyPaginatorResponse<String> {
 
@@ -22,6 +24,14 @@ public class CajamarAccountTransactionsResponse implements TransactionKeyPaginat
     public static CheckedPredicate<CajamarAccountTransactionsResponse> shouldRetryFetching(
             int attempt) {
         return response -> attempt <= Fetchers.MAX_TRY_ATTEMPTS;
+    }
+
+    @JsonIgnore
+    public static CajamarAccountTransactionsResponse createEmptyResponse() {
+        CajamarAccountTransactionsResponse response = new CajamarAccountTransactionsResponse();
+        response.setAccountTransactionsPagination(
+                AccountTransactionsPaginationEntity.createEmptyAccountTransactionsEntity());
+        return response;
     }
 
     @JsonIgnore
@@ -35,8 +45,7 @@ public class CajamarAccountTransactionsResponse implements TransactionKeyPaginat
 
     @Override
     public Collection<? extends Transaction> getTinkTransactions() {
-        return accountTransactionsPagination
-                .getTransactions()
+        return accountTransactionsPagination.getTransactions().stream()
                 .map(AccountTransactionEntity::toTinkTransaction)
                 .collect(Collectors.toList());
     }

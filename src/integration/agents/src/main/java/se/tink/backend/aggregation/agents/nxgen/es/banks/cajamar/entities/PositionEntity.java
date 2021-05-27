@@ -26,4 +26,12 @@ public class PositionEntity {
     public List<FinancialMarketAccountEntity> getFinancialMarketAccounts() {
         return financialMarketAccounts;
     }
+
+    public List<SavingInvestmentEntity> getSavingInvestment() {
+        return savingInvestment;
+    }
+
+    public String getCurrency() {
+        return currency;
+    }
 }

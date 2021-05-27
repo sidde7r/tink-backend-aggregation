@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.cajamar.CajamarConstants.Proxy;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.cajamar.CajamarConstants.TimeoutFilter;
@@ -44,6 +45,7 @@ import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.TimeoutRetryF
 @AgentCapabilities({CHECKING_ACCOUNTS, CREDIT_CARDS, INVESTMENTS, IDENTITY_DATA})
 public class CajamarAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor,
+                RefreshSavingsAccountsExecutor,
                 RefreshCreditCardAccountsExecutor,
                 RefreshInvestmentAccountsExecutor,
                 RefreshIdentityDataExecutor {
@@ -74,6 +76,16 @@ public class CajamarAgent extends NextGenerationAgent
     @Override
     public FetchTransactionsResponse fetchCheckingTransactions() {
         return transactionalAccountRefreshController.fetchCheckingTransactions();
+    }
+
+    @Override
+    public FetchAccountsResponse fetchSavingsAccounts() {
+        return transactionalAccountRefreshController.fetchSavingsAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchSavingsTransactions() {
+        return transactionalAccountRefreshController.fetchSavingsTransactions();
     }
 
     @Override

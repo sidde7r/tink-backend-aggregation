@@ -1,6 +1,6 @@
 {
   "accounts" : [ {
-    "accountNumber" : "ES50 0000 0000 0000 0000 0000",
+    "accountNumber" : "ES52 3004 9896 1418 6876 7214",
     "accountExclusion" : "NONE",
     "exactAvailableCredit" : {
       "currencyCode" : "EUR",
@@ -42,7 +42,59 @@
     "availableCredit" : 2000.0,
     "balance" : 0.0
   }, {
-    "accountNumber" : "ES50 0000 0000 0000 0000 0000",
+    "accountNumber" : "3058/0000/00/0000000000",
+    "accountExclusion" : "NONE",
+    "exactBalance" : {
+      "currencyCode" : "EUR",
+      "scale" : 1,
+      "unscaledValue" : 632,
+      "exactValue" : 63.2,
+      "doubleValue" : 63.2
+    },
+    "currencyCode" : "EUR",
+    "bankId" : "3",
+    "excluded" : false,
+    "favored" : false,
+    "name" : "Money money money",
+    "ownership" : 1.0,
+    "type" : "INVESTMENT",
+    "userModifiedExcluded" : false,
+    "userModifiedName" : false,
+    "userModifiedType" : false,
+    "identifiers" : "[\"other://3058/0000/00/0000000000?name=Money+money+money\"]",
+    "closed" : false,
+    "flags" : "[]",
+    "balances" : [ ],
+    "availableCredit" : 0.0,
+    "balance" : 63.2
+  }, {
+    "accountNumber" : "12345",
+    "accountExclusion" : "NONE",
+    "exactBalance" : {
+      "currencyCode" : "EUR",
+      "scale" : 2,
+      "unscaledValue" : 274500,
+      "exactValue" : 2745.0,
+      "doubleValue" : 2745.0
+    },
+    "currencyCode" : "EUR",
+    "bankId" : "12345",
+    "excluded" : false,
+    "favored" : false,
+    "name" : "Savings",
+    "ownership" : 1.0,
+    "type" : "SAVINGS",
+    "userModifiedExcluded" : false,
+    "userModifiedName" : false,
+    "userModifiedType" : false,
+    "identifiers" : "[\"other://09876?name=Savings\"]",
+    "closed" : false,
+    "flags" : "[]",
+    "balances" : [ ],
+    "availableCredit" : 0.0,
+    "balance" : 2745.0
+  }, {
+    "accountNumber" : "ES52 3004 9896 1418 6876 7214",
     "accountExclusion" : "NONE",
     "exactBalance" : {
       "currencyCode" : "EUR",
@@ -52,7 +104,7 @@
       "doubleValue" : 65.76
     },
     "currencyCode" : "EUR",
-    "bankId" : "ES5000000000000000000000",
+    "bankId" : "ES5230049896141868767214",
     "excluded" : false,
     "favored" : false,
     "name" : "Cuenta de Alejandro",
@@ -61,7 +113,7 @@
     "userModifiedExcluded" : false,
     "userModifiedName" : false,
     "userModifiedType" : false,
-    "identifiers" : "[]",
+    "identifiers" : "[\"iban://ES5230049896141868767214?name=Cuenta+de+Alejandro\"]",
     "closed" : false,
     "holderName" : "Alejandro Roberto",
     "accountHolder" : {
