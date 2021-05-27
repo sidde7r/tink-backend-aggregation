@@ -32,7 +32,7 @@ import se.tink.backend.aggregation.agents.utils.supplementalfields.GermanFields;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.TanBuilder;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.authenticator.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
-import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.i18n.Catalog;
 
@@ -53,7 +53,7 @@ public class FiduciaAuthenticator
     private final Credentials credentials;
     private final FiduciaApiClient apiClient;
     private final PersistentStorage persistentStorage;
-    private final SupplementalInformationHelper supplementalInformationHelper;
+    private final SupplementalInformationController supplementalInformationController;
     private final Catalog catalog;
 
     @Override
@@ -173,8 +173,8 @@ public class FiduciaAuthenticator
                         GermanFields.SelectOptions.prepareSelectOptions(
                                 onlySupportedScaMethods, new FiduciaIconUrlMapper()));
         String selectedValue =
-                supplementalInformationHelper
-                        .askSupplementalInformation(scaMethodField)
+                supplementalInformationController
+                        .askSupplementalInformationSync(scaMethodField)
                         .get(scaMethodField.getName());
 
         if (StringUtils.isNumeric(selectedValue)) {
@@ -188,56 +188,58 @@ public class FiduciaAuthenticator
     }
 
     private void authorizeWithOtp(AuthorizationResponse authorizationResponse) {
-
-        List<Field> fields = new LinkedList<>();
-        Optional<String> startcode = extractStartcode(authorizationResponse);
-
         ScaMethodEntity chosenScaMethod = authorizationResponse.getChosenScaMethod();
-
-        if (!startcode.isPresent() && isUnsupportedMethod(chosenScaMethod)) {
+        if (isUnsupportedMethod(chosenScaMethod)) {
             throwNoSupportedMethodFound();
         }
-        startcode.ifPresent(x -> fields.add(GermanFields.Startcode.build(catalog, x)));
 
-        ChallengeDataEntity challengeData = authorizationResponse.getChallengeData();
-        String authenticationType =
-                chosenScaMethod != null ? chosenScaMethod.getAuthenticationType() : null;
-
-        TanBuilder tanBuilder =
-                GermanFields.Tan.builder(catalog)
-                        .authenticationType(authenticationType)
-                        .otpMinLength(6)
-                        .otpMaxLength(6);
-        if (chosenScaMethod != null) {
-            tanBuilder.authenticationMethodName(chosenScaMethod.getName());
-        }
-        if (challengeData != null) {
-            tanBuilder.otpFormat(challengeData.getOtpFormat());
-        }
-        fields.add(tanBuilder.build());
-
-        log.info("[Fiducia 2FA] User for authenticationType {} started 2FA", authenticationType);
-
-        String otp =
-                supplementalInformationHelper
-                        .askSupplementalInformation(fields.toArray(new Field[0]))
-                        .get(fields.get(fields.size() - 1).getName());
-        if (otp == null) {
-            throw SupplementalInfoError.NO_VALID_CODE.exception(
-                    "Supplemental info did not come with otp code!");
-        }
+        log.info(
+                "[Fiducia 2FA] User for authenticationType {} started 2FA",
+                chosenScaMethod.getAuthenticationType());
 
         AuthorizationStatusResponse scaStatusResponse =
                 apiClient.authorizeWithOtp(
-                        authorizationResponse.getLinks().getAuthoriseTransaction().getHref(), otp);
-
+                        authorizationResponse.getLinks().getAuthoriseTransaction().getHref(),
+                        collectOtp(authorizationResponse));
         if (!FINALISED.equalsIgnoreCase(scaStatusResponse.getScaStatus())) {
             throw LoginError.DEFAULT_MESSAGE.exception("Invalid sca status");
         }
 
         log.info(
                 "[Fiducia 2FA] User for authenticationType {} successfully passed 2FA",
-                authenticationType);
+                chosenScaMethod.getAuthenticationType());
+    }
+
+    private String collectOtp(AuthorizationResponse authorizationResponse) {
+        ScaMethodEntity chosenScaMethod = authorizationResponse.getChosenScaMethod();
+        List<Field> fields = new LinkedList<>();
+        extractStartcode(authorizationResponse)
+                .ifPresent(x -> fields.add(GermanFields.Startcode.build(catalog, x)));
+        String authenticationType = chosenScaMethod.getAuthenticationType();
+
+        TanBuilder tanBuilder =
+                GermanFields.Tan.builder(catalog)
+                        .authenticationType(authenticationType)
+                        .otpMinLength(6)
+                        .otpMaxLength(6)
+                        .authenticationMethodName(chosenScaMethod.getName());
+
+        ChallengeDataEntity challengeData = authorizationResponse.getChallengeData();
+        if (challengeData != null) {
+            tanBuilder.otpFormat(challengeData.getOtpFormat());
+        }
+        fields.add(tanBuilder.build());
+
+        String otp =
+                supplementalInformationController
+                        .askSupplementalInformationSync(fields.toArray(new Field[0]))
+                        .get(fields.get(fields.size() - 1).getName());
+
+        if (otp == null) {
+            throw SupplementalInfoError.NO_VALID_CODE.exception(
+                    "Supplemental info did not come with otp code!");
+        }
+        return otp;
     }
 
     private Optional<String> extractStartcode(AuthorizationResponse authorizationResponse) {

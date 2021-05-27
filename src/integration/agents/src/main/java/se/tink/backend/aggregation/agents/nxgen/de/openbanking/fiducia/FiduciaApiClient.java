@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia;
 
-import java.util.UUID;
 import javax.ws.rs.core.MediaType;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,6 +31,7 @@ import se.tink.backend.aggregation.agents.utils.berlingroup.payment.enums.Paymen
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.enums.PaymentService;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.rpc.FetchPaymentStatusResponse;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -62,6 +62,7 @@ public class FiduciaApiClient {
     private final PersistentStorage persistentStorage;
     private final String userIp;
     private final String serverUrl;
+    private final RandomValueGenerator randomValueGenerator;
 
     private URL createUrl(String path) {
         return new URL(serverUrl + "/bg13" + path);
@@ -74,14 +75,14 @@ public class FiduciaApiClient {
     public RequestBuilder createRequest(URL url) {
         return client.request(url)
                 .header(FiduciaConstants.HeaderKeys.ACCEPT, MediaType.APPLICATION_JSON)
-                .header(FiduciaConstants.HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
+                .header(FiduciaConstants.HeaderKeys.X_REQUEST_ID, randomValueGenerator.getUUID())
                 .header(FiduciaConstants.HeaderKeys.PSU_IP_ADDRESS, userIp);
     }
 
     public ConsentResponse createConsent(String username) {
         ConsentRequest createConsentRequest =
                 new ConsentRequest(
-                        new AccessEntity("allAccounts"),
+                        new AccessEntity(AccessEntity.ALL_ACCOUNTS),
                         true,
                         FormValues.VALID_UNTIL,
                         FormValues.FREQUENCY_PER_DAY,

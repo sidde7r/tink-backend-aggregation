@@ -16,7 +16,7 @@ public class PmtInf {
     private String reqdExctnDt;
 
     @XmlElement(name = "ChrgBr")
-    private String chrgBr;
+    private String chrgBr = "SLEV";
 
     @XmlElement(name = "PmtInfId")
     private String pmtInfId;
@@ -28,10 +28,10 @@ public class PmtInf {
     private Dbtr dbtr;
 
     @XmlElement(name = "NbOfTxs")
-    private String nbOfTxs;
+    private int nbOfTxs = 1;
 
     @XmlElement(name = "PmtMtd")
-    private String pmtMtd;
+    private String pmtMtd = "TRF";
 
     public PmtInf() {}
 
@@ -40,22 +40,16 @@ public class PmtInf {
             PmtTpInf pmtTpInf,
             DbtrAcct dbtrAcct,
             String reqdExctnDt,
-            String chrgBr,
             String pmtInfId,
             String ctrlSum,
-            Dbtr dbtr,
-            String nbOfTxs,
-            String pmtMtd) {
+            Dbtr dbtr) {
         this.cdtTrfTxInf = cdtTrfTxInf;
         this.pmtTpInf = pmtTpInf;
         this.dbtrAcct = dbtrAcct;
         this.reqdExctnDt = reqdExctnDt;
-        this.chrgBr = chrgBr;
         this.pmtInfId = pmtInfId;
         this.ctrlSum = ctrlSum;
         this.dbtr = dbtr;
-        this.nbOfTxs = nbOfTxs;
-        this.pmtMtd = pmtMtd;
     }
 
     public DbtrAcct getDbtrAcct() {

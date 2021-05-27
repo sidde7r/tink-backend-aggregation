@@ -57,9 +57,8 @@ public final class FiduciaConstants {
         public static final String PAYMENT_ID = "RI-123456789";
         public static final String RMT_INF = "Ref Number Merchant-123456";
         public static final String PAYMENT_TYPE = "SEPA";
-        public static final String CHRG_BR = "SLEV";
+
         public static final String PAYMENT_INFORMATION_ID = "BIPI-123456789RI-123456789";
-        public static final String PAYMENT_METHOD = "TRF";
     }
 
     public static class CredentialKeys {

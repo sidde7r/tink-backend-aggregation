@@ -49,13 +49,14 @@ public final class FiduciaAgent extends NextGenerationAgent
                         request.getUserAvailability().isUserPresent()
                                 ? request.getUserAvailability().getOriginatingUserIp()
                                 : null,
-                        serverUrl);
+                        serverUrl,
+                        componentProvider.getRandomValueGenerator());
         fiduciaAuthenticator =
                 new FiduciaAuthenticator(
                         credentials,
                         apiClient,
                         persistentStorage,
-                        supplementalInformationHelper,
+                        supplementalInformationController,
                         catalog);
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
         client.addFilter(
@@ -67,14 +68,6 @@ public final class FiduciaAgent extends NextGenerationAgent
 
     @Override
     protected Authenticator constructAuthenticator() {
-        FiduciaAuthenticator fiduciaAuthenticator =
-                new FiduciaAuthenticator(
-                        credentials,
-                        apiClient,
-                        persistentStorage,
-                        supplementalInformationHelper,
-                        catalog);
-
         return new AutoAuthenticationController(
                 request, context, fiduciaAuthenticator, fiduciaAuthenticator);
     }

@@ -182,12 +182,9 @@ public class FiduciaPaymentExecutor implements PaymentExecutor, FetchablePayment
                         debtor == null ? null : new DbtrAcct(new IbanId(debtor.getAccountNumber())),
                         payment.getExecutionDate()
                                 .format(DateTimeFormatter.ofPattern(FormValues.DATE_FORMAT)),
-                        FormValues.CHRG_BR,
                         FormValues.PAYMENT_INFORMATION_ID,
                         String.valueOf(amount.getDoubleValue()),
-                        new Dbtr("NOTPROVIDED"),
-                        FormValues.NUMBER_OF_TRANSACTIONS,
-                        FormValues.PAYMENT_METHOD);
+                        new Dbtr("NOTPROVIDED"));
 
         return new CreatePaymentXmlRequest(new CstmrCdtTrfInitn(groupHeader, paymentInfo));
     }

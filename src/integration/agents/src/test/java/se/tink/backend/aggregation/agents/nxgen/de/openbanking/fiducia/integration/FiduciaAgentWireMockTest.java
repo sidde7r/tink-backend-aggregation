@@ -43,7 +43,6 @@ public class FiduciaAgentWireMockTest {
                         .addCredentialField("psu-id", "dummy_psu_id")
                         .addCredentialField("password", "dummy_password")
                         .withConfigurationFile(configuration)
-                        .addCallbackData("tanField", "dummy_otp_code")
                         .addCallbackData(chosenMethod, "dummy_otp_code")
                         .addCallbackData("selectAuthMethodField", "2")
                         .withAgentModule(new FiduciaWireMockTestModule())

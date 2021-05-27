@@ -42,7 +42,7 @@ import se.tink.backend.aggregation.agents.utils.berlingroup.consent.Authorizatio
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentDetailsResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ScaMethodEntity;
-import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.i18n.LocalizableKey;
@@ -69,7 +69,7 @@ public class FiduciaAuthenticatorTest {
     private FiduciaAuthenticator authenticator;
     private FiduciaApiClient apiClient;
     private PersistentStorage persistentStorage;
-    private SupplementalInformationHelper supplementalInformationHelper;
+    private SupplementalInformationController supplementalInformationController;
 
     private Credentials credentials;
 
@@ -79,7 +79,7 @@ public class FiduciaAuthenticatorTest {
     public void setup() {
         apiClient = mock(FiduciaApiClient.class);
         persistentStorage = mock(PersistentStorage.class);
-        supplementalInformationHelper = mock(SupplementalInformationHelper.class);
+        supplementalInformationController = mock(SupplementalInformationController.class);
         Catalog catalog = mock(Catalog.class);
 
         credentials = new Credentials();
@@ -89,7 +89,7 @@ public class FiduciaAuthenticatorTest {
                         credentials,
                         apiClient,
                         persistentStorage,
-                        supplementalInformationHelper,
+                        supplementalInformationController,
                         catalog);
 
         when(catalog.getString(any(LocalizableKey.class))).thenReturn("");
@@ -136,7 +136,7 @@ public class FiduciaAuthenticatorTest {
                         AuthorizationResponse.class);
         when(apiClient.authorizeWithPassword(AUTH_START_PATH, PASSWORD))
                 .thenReturn(authorizationResponse);
-        whenSupplementalInformationHelperReturn(authorizationResponse);
+        whenSupplementalInformationControllerReturn(authorizationResponse);
         when(apiClient.authorizeWithOtp(AUTH_PATH, OTP_CODE))
                 .thenReturn(
                         SerializationUtils.deserializeFromString(
@@ -148,7 +148,7 @@ public class FiduciaAuthenticatorTest {
                                 Paths.get(TEST_DATA_PATH, "consentDetailsValidConsentResponse.json")
                                         .toFile(),
                                 ConsentDetailsResponse.class));
-        whenSupplementalInformationHelperReturn(authorizationResponse);
+        whenSupplementalInformationControllerReturn(authorizationResponse);
 
         // when
         authenticator.authenticate(credentials);
@@ -162,7 +162,8 @@ public class FiduciaAuthenticatorTest {
         verifyNoMoreInteractions(apiClient);
 
         // and verify supplement interactions
-        verify(supplementalInformationHelper).askSupplementalInformation(fieldCaptor.capture());
+        verify(supplementalInformationController)
+                .askSupplementalInformationSync(fieldCaptor.capture());
         List<Field> allValues = fieldCaptor.getAllValues();
         assertThat(allValues).hasSize(1);
         assertThat(allValues.get(0).getName()).isEqualTo("pushTan");
@@ -187,7 +188,7 @@ public class FiduciaAuthenticatorTest {
         ScaMethodEntity chosenMethod = mock(ScaMethodEntity.class);
         when(chosenMethod.getAuthenticationType()).thenReturn("CHIP_OTP");
         authorizationResponse.setChosenScaMethod(chosenMethod);
-        whenSupplementalInformationHelperReturn(authorizationResponse);
+        whenSupplementalInformationControllerReturn(authorizationResponse);
         when(apiClient.selectAuthMethod(AUTH_PATH, SCA_METHOD_ID_CHIP_TAN))
                 .thenReturn(authorizationResponse);
         when(apiClient.authorizeWithOtp(AUTH_PATH, OTP_CODE))
@@ -215,8 +216,8 @@ public class FiduciaAuthenticatorTest {
         verifyNoMoreInteractions(apiClient);
 
         // and verify supplement interactions
-        verify(supplementalInformationHelper, times(2))
-                .askSupplementalInformation(fieldCaptor.capture());
+        verify(supplementalInformationController, times(2))
+                .askSupplementalInformationSync(fieldCaptor.capture());
         List<Field> allValues = fieldCaptor.getAllValues();
         assertThat(allValues).hasSize(3);
         assertThat(allValues.get(0).getName()).isEqualTo("selectAuthMethodField");
@@ -293,12 +294,12 @@ public class FiduciaAuthenticatorTest {
         assertThat(credentials.getSessionExpiryDate()).isNull();
     }
 
-    private void whenSupplementalInformationHelperReturn(AuthorizationResponse scaResponse) {
+    private void whenSupplementalInformationControllerReturn(AuthorizationResponse scaResponse) {
         Map<String, String> supplementalInformation = new HashMap<>();
         supplementalInformation.put(getFieldName(scaResponse), OTP_CODE);
         supplementalInformation.put("selectAuthMethodField", "2");
 
-        when(supplementalInformationHelper.askSupplementalInformation(any()))
+        when(supplementalInformationController.askSupplementalInformationSync(any()))
                 .thenReturn(supplementalInformation);
     }
 
