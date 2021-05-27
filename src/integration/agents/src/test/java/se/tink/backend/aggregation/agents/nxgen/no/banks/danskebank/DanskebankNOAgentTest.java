@@ -35,7 +35,7 @@ public class DanskebankNOAgentTest {
                 .addCredentialField(Field.Key.BANKID_PASSWORD, manager.get(Arg.BANKID_PASSWORD))
                 .loadCredentialsBefore(false)
                 .saveCredentialsAfter(true)
-                .expectLoggedIn(true)
+                .expectLoggedIn(false)
                 .build()
                 .testRefresh();
     }
