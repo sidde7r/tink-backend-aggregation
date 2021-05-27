@@ -5,13 +5,17 @@ import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.exceptions.payment.InsufficientFundsException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
+import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesJsonFileParser;
+import se.tink.backend.aggregation.agents.framework.assertions.entities.AgentContractEntity;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.AgentWireMockPaymentTest;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.command.PaymentCommand;
+import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockrefresh.AgentWireMockRefreshTest;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationReader;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.ExactCurrencyAmount;
+import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.enums.MarketCode;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
@@ -100,5 +104,35 @@ public class SwedbankOBAgentWiremockTest {
                 .withExactCurrencyAmount(ExactCurrencyAmount.inSEK(1))
                 .withRemittanceInformation(remittanceInformation)
                 .build();
+    }
+
+    @Test
+    public void testRefresh() throws Exception {
+
+        // given
+        final String wireMockServerFilePath = RESOURCES_PATH + "/swedbank_ob_wiremock.aap";
+        final String contractFilePath = RESOURCES_PATH + "/agent-contract.json";
+        final AgentsServiceConfiguration configuration =
+                AgentsServiceConfigurationReader.read(CONFIGURATION_PATH);
+
+        final AgentWireMockRefreshTest agentWireMockRefreshTest =
+                AgentWireMockRefreshTest.nxBuilder()
+                        .withMarketCode(MarketCode.SE)
+                        .withProviderName("se-swedbank-ob")
+                        .withWireMockFilePath(wireMockServerFilePath)
+                        .withConfigFile(configuration)
+                        .testFullAuthentication()
+                        .addRefreshableItems(RefreshableItem.CHECKING_ACCOUNTS)
+                        .build();
+
+        final AgentContractEntity expected =
+                new AgentContractEntitiesJsonFileParser()
+                        .parseContractOnBasisOfFile(contractFilePath);
+
+        // when
+        agentWireMockRefreshTest.executeRefresh();
+
+        // then
+        agentWireMockRefreshTest.assertExpectedData(expected);
     }
 }

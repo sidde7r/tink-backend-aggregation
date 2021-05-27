@@ -1,0 +1,30 @@
+{
+    "accounts" : [ {
+        "accountNumber" : "8150-5,923 123 573-4",
+        "accountExclusion" : "NONE",
+        "exactBalance" : {
+            "currencyCode" : "SEK",
+            "unscaledValue" : 567560,
+            "exactValue" : 5675.6,
+            "scale" : 2,
+            "doubleValue" : 5675.6
+        },
+        "currencyCode" : "SEK",
+        "bankId" : "815059231235734",
+        "excluded" : false,
+        "favored" : false,
+        "name" : "Firstname Secondname Surname",
+        "ownership" : 1.0,
+        "type" : "CHECKING",
+        "userModifiedExcluded" : false,
+        "userModifiedName" : false,
+        "userModifiedType" : false,
+        "identifiers" : "[]",
+        "closed" : false,
+        "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
+        "balances" : [ ],
+        "availableCredit" : 0.0,
+        "balance" : 5675.6
+    } ],
+    "transactions" : [ ]
+}

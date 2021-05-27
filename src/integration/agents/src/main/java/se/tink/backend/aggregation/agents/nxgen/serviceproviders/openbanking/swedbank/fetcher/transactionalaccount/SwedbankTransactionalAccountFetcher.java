@@ -20,6 +20,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swe
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.fetcher.transactionalaccount.rpc.StatementResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.rpc.GenericResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.TransactionPaginationHelper;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
@@ -35,17 +36,20 @@ public class SwedbankTransactionalAccountFetcher implements AccountFetcher<Trans
     private final PersistentStorage persistentStorage;
     private final SessionStorage sessionStorage;
     private final TransactionPaginationHelper transactionPaginationHelper;
+    private final AgentComponentProvider componentProvider;
     private FetchAccountResponse fetchAccountResponse;
 
     public SwedbankTransactionalAccountFetcher(
             SwedbankApiClient apiClient,
             PersistentStorage persistentStorage,
             SessionStorage sessionStorage,
-            TransactionPaginationHelper transactionPaginationHelper) {
+            TransactionPaginationHelper transactionPaginationHelper,
+            AgentComponentProvider componentProvider) {
         this.apiClient = apiClient;
         this.persistentStorage = persistentStorage;
         this.sessionStorage = sessionStorage;
         this.transactionPaginationHelper = transactionPaginationHelper;
+        this.componentProvider = componentProvider;
     }
 
     @Override
@@ -154,8 +158,18 @@ public class SwedbankTransactionalAccountFetcher implements AccountFetcher<Trans
 
     private void postAccountStatement(Account account) {
         Optional<Date> certainDate = transactionPaginationHelper.getTransactionDateLimit(account);
-        final LocalDate fromDate = LocalDate.now().minusMonths(TimeValues.MONTHS_TO_FETCH_MAX);
-        final LocalDate toDate = LocalDate.now().minusDays(TimeValues.ONLINE_STATEMENT_MAX_DAYS);
+        final LocalDate fromDate =
+                componentProvider
+                        .getLocalDateTimeSource()
+                        .now()
+                        .minusMonths(TimeValues.MONTHS_TO_FETCH_MAX)
+                        .toLocalDate();
+        final LocalDate toDate =
+                componentProvider
+                        .getLocalDateTimeSource()
+                        .now()
+                        .minusDays(TimeValues.ONLINE_STATEMENT_MAX_DAYS)
+                        .toLocalDate();
 
         // No need to fetch transactions if the account was refreshed within the last 90 days
         if (certainDate.isPresent()

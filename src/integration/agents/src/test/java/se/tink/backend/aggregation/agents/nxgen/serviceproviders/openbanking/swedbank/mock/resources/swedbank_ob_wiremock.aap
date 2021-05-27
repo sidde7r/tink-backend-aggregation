@@ -1,0 +1,281 @@
+
+REQUEST 1
+POST https://psd2.api.swedbank.com/psd2/v3/authorize-decoupled?bic=SWEDSESS
+Accept: application/json
+Content-Type: application/json
+X-Aggregator: Tink Testing
+
+{"authenticationMethodId":"MOBILE_ID","clientID":"dummyClientId","psuData":{"bankID":"08999"},"redirectUri":"https://127.0.0.1:7357/api/v1/thirdparty/callback","scope":"PSD2 PSD2account_balances PSD2account_transactions PSD2account_transactions_over90"}
+
+RESPONSE 1
+200
+Content-Type: application/json;charset=utf-8
+Server: Layer7-API-Gateway
+Content-Length: 483
+
+{
+
+    "authorizeId" : "e5a6ab85-031a-45aa-a998-19176ff89eb9",
+
+    "chosenScaMethod" : {
+
+    		"authenticationType" : "Mobile BankID",
+
+    		"authenticationMethodId" : "MOBILE_ID"
+
+    },
+
+    "challengeData": { "autoStartToken": "f72c647f-72f5-4350-9a1b-111c20b8c7c8" },
+
+    "psuMessage" : "Loging via Tink_org",
+
+    "_links": {
+
+         "scaStatus": {
+
+         	    "href": "/psd2/v3/authorize-decoupled/authorize/e5a6ab85-031a-45aa-a998-19176ff89eb9"
+
+         }
+
+    }
+
+}
+
+REQUEST 2
+GET https://psd2.api.swedbank.com/psd2/v3/authorize-decoupled/authorize/e5a6ab85-031a-45aa-a998-19176ff89eb9?bic=SWEDSESS&client_id=dummyClientId
+Accept: application/json
+X-Aggregator: Tink Testing
+
+RESPONSE 2 SET AUTH
+200
+Content-Type: application/json;charset=utf-8
+Server: Layer7-API-Gateway
+Content-Length: 29
+
+{
+
+	"scaStatus": "started"
+
+}
+
+REQUEST 5 MATCH AUTH
+GET https://psd2.api.swedbank.com/psd2/v3/authorize-decoupled/authorize/e5a6ab85-031a-45aa-a998-19176ff89eb9?bic=SWEDSESS&client_id=dummyClientId
+Accept: application/json
+X-Aggregator: Tink Testing
+
+RESPONSE 5 SET TOKEN
+200
+Content-Type: application/json;charset=utf-8
+Server: Layer7-API-Gateway
+Content-Length: 96
+
+{
+
+  "scaStatus": "finalised",
+
+  "authorizationCode": "beb9d151-970a-458d-95de-990fb2dd041b"
+
+}
+
+REQUEST 6 MATCH TOKEN
+POST https://psd2.api.swedbank.com/psd2/token?bic=SWEDSESS&code=beb9d151-970a-458d-95de-990fb2dd041b&grant_type=authorization_code&client_secret=dummyClientSecret&redirect_uri=https://127.0.0.1:7357/api/v1/thirdparty/callback&client_id=dummyClientId
+Accept: application/json
+Content-Type: application/x-www-form-urlencoded
+X-Aggregator: Tink Testing
+
+RESPONSE 6
+200
+Pragma: no-cache
+Cache-Control: no-store
+Content-Type: application/json;charset=utf-8
+Server: Layer7-API-Gateway
+Content-Length: 282
+
+{
+
+  "access_token":"accessToken",
+
+  "token_type":"tokenType",
+
+  "expires_in":2000,
+
+  "refresh_token":"refreshToken",
+
+  "scope":"PSD2 PSD2account_balances PSD2account_transactions PSD2account_transactions_over90 PSD2account_list"
+
+}
+
+REQUEST 7
+POST https://psd2.api.swedbank.com/v3/consents?bic=SWEDSESS&app-id=dummyClientId
+Accept: application/json
+PSU-IP-Address: 127.0.0.1
+PSU-User-Agent: Tink
+TPP-Redirect-URI: https://127.0.0.1:7357/api/v1/thirdparty/callback
+Content-Type: application/json
+X-Aggregator: Tink Testing
+
+{"recurringIndicator":false,"validUntil":"1992-07-09","frequencyPerDay":4,"combinedServiceIndicator":false,"access":{"availableAccounts":"allAccounts"}}
+
+RESPONSE 7
+201
+Content-Type: application/json;charset=utf-8
+Server: Layer7-API-Gateway
+Content-Length: 49
+
+{"consentId":"consentId","consentStatus":"valid"}
+
+REQUEST 8
+GET https://psd2.api.swedbank.com/v3/consents/consentId/status?bic=SWEDSESS
+Accept: application/json
+PSU-IP-Address: 127.0.0.1
+PSU-User-Agent: Tink
+X-Aggregator: Tink Testing
+
+RESPONSE 8
+200
+Content-Type: application/json;charset=utf-8
+Server: Layer7-API-Gateway
+Content-Length: 25
+
+{"consentStatus":"valid"}
+
+REQUEST 9
+GET https://psd2.api.swedbank.com/v3/accounts?bic=SWEDSESS&app-id=dummyClientId
+Accept: application/json
+PSU-IP-Address: 127.0.0.1
+PSU-User-Agent: Tink
+X-Aggregator: Tink Testing
+
+RESPONSE 9
+200
+Content-Type: application/json;charset=utf-8
+Server: Layer7-API-Gateway
+Content-Length: 435
+
+{"accounts":[{"resourceId":"bf6265426add55b6bed3d4f694bcad02","iban":"SE1230000815059436018123","bban":"8150-5,923 123 573-4","currency":"SEK","product":"Privatkonto","cashAccountType":"CACC","name":"Firstname Secondname Surname","bankId":"08999"}]}
+
+REQUEST 10
+POST https://psd2.api.swedbank.com/v3/consents?bic=SWEDSESS&app-id=dummyClientId
+Accept: application/json
+PSU-IP-Address: 127.0.0.1
+PSU-User-Agent: Tink
+Content-Type: application/json
+TPP-Redirect-URI: https://127.0.0.1:7357/api/v1/thirdparty/callback
+TPP-Nok-Redirect-URI: https://127.0.0.1:7357/api/v1/thirdparty/callback
+X-Aggregator: Tink Testing
+
+{"recurringIndicator":true,"validUntil":"1992-07-09","frequencyPerDay":4,"combinedServiceIndicator":false,"access":{"accounts":[{"iban":"SE1230000815059436018123"}],"transactions":[{"iban":"SE1230000815059436018123"}],"balances":[{"iban":"SE1230000815059436018123"}],"transactionsOver90Days":[{"iban":"SE1230000815059436018123"}]}}
+
+RESPONSE 10
+201
+Content-Type: application/json;charset=utf-8
+Server: Layer7-API-Gateway
+Content-Length: 53
+
+{"consentId":"**HASHED:u7**","consentStatus":"valid"}
+
+REQUEST 12
+GET https://psd2.api.swedbank.com/v3/accounts/bf6265426add55b6bed3d4f694bcad02/balances?bic=SWEDSESS
+Accept: application/json
+PSU-IP-Address: 127.0.0.1
+PSU-User-Agent: Tink
+X-Aggregator: Tink Testing
+
+RESPONSE 12
+200
+Content-Type: application/json;charset=utf-8
+Server: Layer7-API-Gateway
+Content-Length: 232
+
+{"account":{"iban":"SE1230000815059436018123"},"balances":[{"balanceType":"interimAvailable","balanceAmount":{"currency":"SEK","amount":"5675.60"}},{"balanceType":"authorised","balanceAmount":{"currency":"SEK","amount":"5675.60"}}]}
+
+REQUEST 13
+GET https://psd2.api.swedbank.com/v3/accounts/41ef8ad8a4d9428f7ab6c500b11c6333/balances?bic=SWEDSESS
+Accept: application/json
+PSU-IP-Address: 127.0.0.1
+PSU-User-Agent: Tink
+X-Aggregator: Tink Testing
+
+RESPONSE 13
+200
+Content-Type: application/json;charset=utf-8
+Server: Layer7-API-Gateway
+Content-Length: 226
+
+{"account":{"iban":"SE1230000815059436018123"},"balances":[{"balanceType":"interimAvailable","balanceAmount":{"currency":"SEK","amount":"0.00"}},{"balanceType":"authorised","balanceAmount":{"currency":"SEK","amount":"0.00"}}]}
+
+REQUEST 14
+POST https://psd2.api.swedbank.com/v3/accounts/bf6265426add55b6bed3d4f694bcad02/transactions?bic=SWEDSESS&dateFrom=1990-03-10&dateTo=1992-01-12&bookingStatus=both
+Accept: application/json
+PSU-IP-Address: 127.0.0.1
+PSU-User-Agent: Tink
+X-Aggregator: Tink Testing
+
+RESPONSE 14
+210
+Content-Type: application/json;charset=utf-8
+Server: Layer7-API-Gateway
+Content-Length: 342
+
+{"account":{"iban":"SE1230000815059436018123"},"transactions":{}}
+
+REQUEST 15
+POST https://psd2.api.swedbank.com/v3/accounts/41ef8ad8a4d9428f7ab6c500b11c6333/transactions?bic=SWEDSESS&dateFrom=1990-03-10&dateTo=1992-01-12&bookingStatus=both
+Accept: application/json
+PSU-IP-Address: 127.0.0.1
+PSU-User-Agent: Tink
+X-Aggregator: Tink Testing
+
+RESPONSE 15
+210
+Content-Type: application/json;charset=utf-8
+Server: Layer7-API-Gateway
+Content-Length: 342
+
+{"account":{"iban":"SE1230000815059436018123"},"transactions":{}}
+
+
+REQUEST 16
+POST https://psd2.api.swedbank.com/v3/accounts/bf6265426add55b6bed3d4f694bcad02/transactions?bic=SWEDSESS&dateFrom=1992-01-12&dateTo=1992-04-10&bookingStatus=both
+Accept: application/json
+PSU-IP-Address: 127.0.0.1
+PSU-User-Agent: Tink
+X-Aggregator: Tink Testing
+
+RESPONSE 16
+210
+Content-Type: application/json;charset=utf-8
+Server: Layer7-API-Gateway
+Content-Length: 342
+
+{"_links":{"status":{"href":"**HASHED:Io**"},"download":{"href":"**HASHED:T/**"}},"statementId":"**HASHED:n4**","statementStatus":"**HASHED:Sj**"}
+
+REQUEST 17
+GET https://psd2.api.swedbank.com/v3/accounts/bf6265426add55b6bed3d4f694bcad02/transactions?bic=SWEDSESS&dateFrom=1992-01-12&dateTo=1992-04-10&bookingStatus=both
+Accept: application/json
+PSU-IP-Address: 127.0.0.1
+PSU-User-Agent: Tink
+X-Aggregator: Tink Testing
+
+RESPONSE 17
+210
+Content-Type: application/json;charset=utf-8
+Server: Layer7-API-Gateway
+Content-Length: 342
+
+{"_links":{"status":{"href":"**HASHED:Io**"},"download":{"href":"**HASHED:T/**"}},"statementId":"**HASHED:n4**","statementStatus":"**HASHED:Sj**"}
+
+REQUEST 19
+GET https://psd2.api.swedbank.com/**?bic=SWEDSESS
+Accept: application/json
+PSU-IP-Address: 127.0.0.1
+PSU-User-Agent: Tink
+X-Aggregator: Tink Testing
+
+RESPONSE 19
+200
+Content-Type: application/json;charset=utf-8
+Server: Layer7-API-Gateway
+Content-Length: 25
+
+{"consentStatus":"valid"}
