@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.danskebank.authenticator;
 
 import com.google.common.base.Strings;
+import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -13,7 +14,6 @@ import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.danskebank.DanskeBankNOApiClient;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.danskebank.DanskeBankNOConstants;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankJavascriptStringFormatter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password.rpc.BindDeviceRequest;
@@ -35,8 +35,6 @@ public class DanskeBankNOManualAuthenticator implements TypedAuthenticator {
 
     private final DanskeBankNOApiClient apiClient;
     private final PersistentStorage persistentStorage;
-    private final String deviceId;
-    private final DanskeBankConfiguration configuration;
     private final WebDriverHelper webDriverHelper;
     private final SupplementalInformationController supplementalInformationController;
     private final Catalog catalog;
@@ -51,14 +49,12 @@ public class DanskeBankNOManualAuthenticator implements TypedAuthenticator {
     @Override
     public void authenticate(Credentials credentials)
             throws AuthenticationException, AuthorizationException {
+
         String username = credentials.getField(Field.Key.USERNAME);
         String serviceCode = credentials.getField(Field.Key.PASSWORD);
         String bankIdPassword = credentials.getField(Field.Key.BANKID_PASSWORD);
-        if (Strings.isNullOrEmpty(username)
-                || Strings.isNullOrEmpty(serviceCode)
-                || Strings.isNullOrEmpty(bankIdPassword)) {
-            throw LoginError.INCORRECT_CREDENTIALS.exception();
-        }
+
+        verifyNotEmptyCredentials(username, serviceCode, bankIdPassword);
 
         String logonPackage = authInitializer.authenticateWithServiceCode(username, serviceCode);
         authInitializer.sendLogonPackage(logonPackage);
@@ -68,11 +64,18 @@ public class DanskeBankNOManualAuthenticator implements TypedAuthenticator {
         finalizeDeviceBinding(stepUpToken);
     }
 
+    private void verifyNotEmptyCredentials(String... credentials) {
+        boolean credentialsInvalid = Stream.of(credentials).anyMatch(Strings::isNullOrEmpty);
+        if (credentialsInvalid) {
+            throw LoginError.INCORRECT_CREDENTIALS.exception();
+        }
+    }
+
     private void initBindDevice() {
         // Bind device the first time in order to initialize a device binding using bankId.
         // We expect a 401 response.
         try {
-            this.apiClient.bindDevice(
+            apiClient.bindDevice(
                     null, BindDeviceRequest.create(DanskeBankConstants.Session.FRIENDLY_NAME));
         } catch (HttpResponseException e) {
             HttpResponse response = e.getResponse();
@@ -83,15 +86,11 @@ public class DanskeBankNOManualAuthenticator implements TypedAuthenticator {
     }
 
     private String getStepupDynamicJs() {
-        HttpResponse challengeResponse = this.apiClient.collectDynamicChallengeJavascript();
+        HttpResponse challengeResponse = apiClient.collectDynamicChallengeJavascript();
 
         // Create Javascript that will return device information
-        String deviceInfoJavascript =
-                DanskeBankConstants.Javascript.getDeviceInfo(
-                        this.deviceId,
-                        this.configuration.getMarketCode(),
-                        this.configuration.getAppName(),
-                        this.configuration.getAppVersion());
+        String deviceInfoJavascript = authInitializer.getDeviceInfoJavascript();
+
         return deviceInfoJavascript + challengeResponse.getBody(String.class);
     }
 
@@ -99,7 +98,7 @@ public class DanskeBankNOManualAuthenticator implements TypedAuthenticator {
         BindDeviceResponse bindDeviceResponse;
         try {
             bindDeviceResponse =
-                    this.apiClient.bindDevice(
+                    apiClient.bindDevice(
                             stepUpToken,
                             BindDeviceRequest.create(DanskeBankConstants.Session.FRIENDLY_NAME));
         } catch (HttpResponseException hre) {
@@ -110,7 +109,7 @@ public class DanskeBankNOManualAuthenticator implements TypedAuthenticator {
             throw hre;
         }
 
-        String stepupDynamicJs = this.getStepupDynamicJs();
+        String stepupDynamicJs = getStepupDynamicJs();
 
         WebDriver driver = null;
         try {
@@ -129,10 +128,10 @@ public class DanskeBankNOManualAuthenticator implements TypedAuthenticator {
                                     driver, By.tagName("body"), "decryptedDeviceSecret")
                             .orElseThrow(LoginError.CREDENTIALS_VERIFICATION_ERROR::exception);
 
-            this.persistentStorage.put(
+            persistentStorage.put(
                     DanskeBankConstants.Persist.DEVICE_SERIAL_NUMBER,
                     bindDeviceResponse.getDeviceSerialNumber());
-            this.persistentStorage.put(
+            persistentStorage.put(
                     DanskeBankConstants.Persist.DEVICE_SECRET,
                     decryptedDeviceSecret.replace("\"", ""));
         } finally {
@@ -145,8 +144,7 @@ public class DanskeBankNOManualAuthenticator implements TypedAuthenticator {
     private String authenticateWithBankId(String username, String bankIdPassword)
             throws AuthenticationException {
         HttpResponse dynamicJsResponse =
-                this.apiClient.getNoBankIdDynamicJs(
-                        DanskeBankConstants.SecuritySystem.SERVICE_CODE_NS);
+                apiClient.getNoBankIdDynamicJs(DanskeBankConstants.SecuritySystem.SERVICE_CODE_NS);
         String dynamicJs = dynamicJsResponse.getBody(String.class);
 
         WebDriver driver = null;

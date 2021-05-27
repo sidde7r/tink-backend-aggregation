@@ -57,8 +57,6 @@ public final class DanskeBankNOAgent extends DanskeBankAgent {
                 new DanskeBankNOManualAuthenticator(
                         (DanskeBankNOApiClient) apiClient,
                         persistentStorage,
-                        deviceId,
-                        configuration,
                         new WebDriverHelper(),
                         supplementalInformationController,
                         catalog,
@@ -68,8 +66,6 @@ public final class DanskeBankNOAgent extends DanskeBankAgent {
                         (DanskeBankNOApiClient) apiClient,
                         persistentStorage,
                         credentials,
-                        deviceId,
-                        configuration,
                         new WebDriverHelper(),
                         authInitializer);
         return new AutoAuthenticationController(

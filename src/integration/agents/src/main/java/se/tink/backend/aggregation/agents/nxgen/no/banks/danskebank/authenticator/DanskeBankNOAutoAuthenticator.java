@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.no.banks.danskebank.authenticat
 
 import com.google.common.base.Strings;
 import java.util.Base64;
+import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -20,7 +21,6 @@ import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceExce
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.danskebank.DanskeBankNOApiClient;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.danskebank.DanskeBankNOConstants;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankDeserializer;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankJavascriptStringFormatter;
@@ -43,8 +43,6 @@ public class DanskeBankNOAutoAuthenticator implements AutoAuthenticator {
     private final DanskeBankNOApiClient apiClient;
     private final PersistentStorage persistentStorage;
     private final Credentials credentials;
-    private final String deviceId;
-    private final DanskeBankConfiguration configuration;
     private final WebDriverHelper webDriverHelper;
 
     private final DanskeBankNOAuthInitializer authInitializer;
@@ -56,13 +54,9 @@ public class DanskeBankNOAutoAuthenticator implements AutoAuthenticator {
         String username = credentials.getField(Field.Key.USERNAME);
         String serviceCode = credentials.getField(Field.Key.PASSWORD);
         String deviceSerialNumber =
-                this.persistentStorage.get(DanskeBankConstants.Persist.DEVICE_SERIAL_NUMBER);
+                persistentStorage.get(DanskeBankConstants.Persist.DEVICE_SERIAL_NUMBER);
 
-        if (Strings.isNullOrEmpty(username)
-                || Strings.isNullOrEmpty(serviceCode)
-                || Strings.isNullOrEmpty(deviceSerialNumber)) {
-            throw SessionError.SESSION_EXPIRED.exception();
-        }
+        verifyHasAllSessionValues(username, serviceCode, deviceSerialNumber);
 
         try {
             String logonPackage =
@@ -76,10 +70,17 @@ public class DanskeBankNOAutoAuthenticator implements AutoAuthenticator {
         authenticateWithOtpChallenge(username, deviceSerialNumber, otpChallenge);
     }
 
+    private void verifyHasAllSessionValues(String... sessionValues) {
+        boolean credentialsInvalid = Stream.of(sessionValues).anyMatch(Strings::isNullOrEmpty);
+        if (credentialsInvalid) {
+            throw SessionError.SESSION_EXPIRED.exception();
+        }
+    }
+
     private String getPinnedDeviceOtpChallenge(String deviceSerialNumber) throws SessionException {
         CheckDeviceResponse checkDeviceResponse;
         try {
-            checkDeviceResponse = this.apiClient.checkDevice(deviceSerialNumber, null);
+            checkDeviceResponse = apiClient.checkDevice(deviceSerialNumber, null);
         } catch (HttpResponseException e) {
             HttpResponse response = e.getResponse();
             if (response.getStatus() != 401) {
@@ -108,7 +109,7 @@ public class DanskeBankNOAutoAuthenticator implements AutoAuthenticator {
     private void authenticateWithOtpChallenge(
             String username, String deviceSerialNumber, String otpChallenge)
             throws SessionException {
-        String checkChallengeWithDeviceInfo = this.getStepupDynamicJs();
+        String checkChallengeWithDeviceInfo = getStepupDynamicJs();
 
         // Execute Js to build step up token
         WebDriver driver = null;
@@ -177,7 +178,7 @@ public class DanskeBankNOAutoAuthenticator implements AutoAuthenticator {
             try {
                 // Make final check to confirm with step up token
                 CheckDeviceResponse checkDeviceResponse =
-                        this.apiClient.checkDevice(deviceSerialNumber, trustedStepUpToken);
+                        apiClient.checkDevice(deviceSerialNumber, trustedStepUpToken);
 
                 if (checkDeviceResponse.getError() != null) {
                     throw SessionError.SESSION_EXPIRED.exception();
@@ -197,7 +198,7 @@ public class DanskeBankNOAutoAuthenticator implements AutoAuthenticator {
         try {
             generateResponseJson.put(
                     DanskeBankNOConstants.JsonKeys.DEV_SECRET,
-                    this.persistentStorage.get(DanskeBankConstants.Persist.DEVICE_SECRET));
+                    persistentStorage.get(DanskeBankConstants.Persist.DEVICE_SECRET));
             generateResponseJson.put(DanskeBankNOConstants.JsonKeys.CHALLENGE, challenge);
         } catch (JSONException e) {
             throw new IllegalStateException(e);
@@ -213,7 +214,7 @@ public class DanskeBankNOAutoAuthenticator implements AutoAuthenticator {
                     DanskeBankNOConstants.JsonKeys.RESPONSE_DATA, responseData);
             validateStepUpTrustedDeviceJson.put(
                     DanskeBankNOConstants.JsonKeys.DEV_SERIAL_NUMBER,
-                    this.persistentStorage.get(DanskeBankConstants.Persist.DEVICE_SERIAL_NUMBER));
+                    persistentStorage.get(DanskeBankConstants.Persist.DEVICE_SERIAL_NUMBER));
         } catch (JSONException e) {
             throw new IllegalStateException(e);
         }
@@ -222,15 +223,11 @@ public class DanskeBankNOAutoAuthenticator implements AutoAuthenticator {
     }
 
     private String getStepupDynamicJs() {
-        HttpResponse challengeResponse = this.apiClient.collectDynamicChallengeJavascript();
+        HttpResponse challengeResponse = apiClient.collectDynamicChallengeJavascript();
 
         // Create Javascript that will return device information
-        String deviceInfoJavascript =
-                DanskeBankConstants.Javascript.getDeviceInfo(
-                        this.deviceId,
-                        this.configuration.getMarketCode(),
-                        this.configuration.getAppName(),
-                        this.configuration.getAppVersion());
+        String deviceInfoJavascript = authInitializer.getDeviceInfoJavascript();
+
         return deviceInfoJavascript + challengeResponse.getBody(String.class);
     }
 }

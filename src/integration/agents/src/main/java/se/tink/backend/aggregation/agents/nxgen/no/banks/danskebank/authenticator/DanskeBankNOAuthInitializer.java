@@ -34,8 +34,8 @@ public class DanskeBankNOAuthInitializer {
     String authenticateWithServiceCode(String username, String serviceCode)
             throws AuthenticationException {
         HttpResponse getResponse =
-                this.apiClient.collectDynamicLogonJavascript(
-                        this.configuration.getSecuritySystem(), this.configuration.getBrand());
+                apiClient.collectDynamicLogonJavascript(
+                        configuration.getSecuritySystem(), configuration.getBrand());
 
         // Add the authorization header from the response
         final String persistentAuth =
@@ -45,16 +45,11 @@ public class DanskeBankNOAuthInitializer {
         // Store tokens in sensitive payload, so it will be masked from logs
         credentials.setSensitivePayload(
                 DanskeBankConstants.DanskeRequestHeaders.AUTHORIZATION, persistentAuth);
-        this.apiClient.addPersistentHeader(
+        apiClient.addPersistentHeader(
                 DanskeBankConstants.DanskeRequestHeaders.AUTHORIZATION, persistentAuth);
 
         // Create Javascript that will return device information
-        String deviceInfoJavascript =
-                DanskeBankConstants.Javascript.getDeviceInfo(
-                        this.deviceId,
-                        this.configuration.getMarketCode(),
-                        this.configuration.getAppName(),
-                        this.configuration.getAppVersion());
+        String deviceInfoJavascript = getDeviceInfoJavascript();
 
         // Add device information Javascript to dynamic logon Javascript
         String dynamicLogonJavascript = deviceInfoJavascript + getResponse.getBody(String.class);
@@ -80,6 +75,15 @@ public class DanskeBankNOAuthInitializer {
         }
     }
 
+    // Create Javascript that will return device information
+    String getDeviceInfoJavascript() {
+        return DanskeBankConstants.Javascript.getDeviceInfo(
+                deviceId,
+                configuration.getMarketCode(),
+                configuration.getAppName(),
+                configuration.getAppVersion());
+    }
+
     void sendLogonPackage(String logonPackage)
             throws AuthenticationException, AuthorizationException {
         if (logonPackage == null) {
@@ -87,7 +91,7 @@ public class DanskeBankNOAuthInitializer {
         }
 
         try {
-            this.apiClient.finalizeAuthentication(
+            apiClient.finalizeAuthentication(
                     FinalizeAuthenticationRequest.createForServiceCode(logonPackage));
         } catch (HttpResponseException hre) {
             DanskeBankPasswordErrorHandler.throwError(hre);
