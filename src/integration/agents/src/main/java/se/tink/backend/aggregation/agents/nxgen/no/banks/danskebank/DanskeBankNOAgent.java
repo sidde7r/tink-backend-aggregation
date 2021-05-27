@@ -49,7 +49,6 @@ public final class DanskeBankNOAgent extends DanskeBankAgent {
         DanskeBankNOAuthInitializer authInitializer =
                 new DanskeBankNOAuthInitializer(
                         (DanskeBankNOApiClient) apiClient,
-                        credentials,
                         deviceId,
                         configuration,
                         new WebDriverHelper());

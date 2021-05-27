@@ -60,7 +60,7 @@ public class DanskeBankNOAutoAuthenticator implements AutoAuthenticator {
 
         try {
             String logonPackage =
-                    authInitializer.authenticateWithServiceCode(username, serviceCode);
+                    authInitializer.initializeSessionAndGetLogonPackage(username, serviceCode);
             authInitializer.sendLogonPackage(logonPackage);
         } catch (AuthenticationException | AuthorizationException e) {
             throw SessionError.SESSION_EXPIRED.exception(e);
@@ -226,7 +226,7 @@ public class DanskeBankNOAutoAuthenticator implements AutoAuthenticator {
         HttpResponse challengeResponse = apiClient.collectDynamicChallengeJavascript();
 
         // Create Javascript that will return device information
-        String deviceInfoJavascript = authInitializer.getDeviceInfoJavascript();
+        String deviceInfoJavascript = authInitializer.getJsReturningDeviceInfo();
 
         return deviceInfoJavascript + challengeResponse.getBody(String.class);
     }

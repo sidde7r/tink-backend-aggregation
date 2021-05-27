@@ -56,7 +56,8 @@ public class DanskeBankNOManualAuthenticator implements TypedAuthenticator {
 
         verifyNotEmptyCredentials(username, serviceCode, bankIdPassword);
 
-        String logonPackage = authInitializer.authenticateWithServiceCode(username, serviceCode);
+        String logonPackage =
+                authInitializer.initializeSessionAndGetLogonPackage(username, serviceCode);
         authInitializer.sendLogonPackage(logonPackage);
 
         initBindDevice();
@@ -89,7 +90,7 @@ public class DanskeBankNOManualAuthenticator implements TypedAuthenticator {
         HttpResponse challengeResponse = apiClient.collectDynamicChallengeJavascript();
 
         // Create Javascript that will return device information
-        String deviceInfoJavascript = authInitializer.getDeviceInfoJavascript();
+        String deviceInfoJavascript = authInitializer.getJsReturningDeviceInfo();
 
         return deviceInfoJavascript + challengeResponse.getBody(String.class);
     }

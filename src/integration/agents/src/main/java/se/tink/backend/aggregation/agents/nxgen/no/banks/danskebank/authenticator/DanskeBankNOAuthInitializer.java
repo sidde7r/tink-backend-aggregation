@@ -6,7 +6,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
-import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
@@ -26,37 +25,28 @@ import se.tink.integration.webdriver.WebDriverHelper;
 public class DanskeBankNOAuthInitializer {
 
     private final DanskeBankNOApiClient apiClient;
-    private final Credentials credentials;
     private final String deviceId;
     private final DanskeBankConfiguration configuration;
     private final WebDriverHelper webDriverHelper;
 
-    String authenticateWithServiceCode(String username, String serviceCode)
+    String initializeSessionAndGetLogonPackage(String username, String serviceCode)
             throws AuthenticationException {
 
-        HttpResponse getResponse =
-                apiClient.collectDynamicLogonJavascript(
-                        configuration.getSecuritySystem(), configuration.getBrand());
-        // Add the authorization header from the response
-        apiClient.saveAuthorizationHeader(getResponse);
+        // Fetch universal JS that handles logging in process
+        String dynamicLoginJavascript = fetchDynamicLoginJavascriptAndSaveSessionHeader();
 
-        // Create Javascript that will return device information
-        String deviceInfoJavascript = getDeviceInfoJavascript();
+        // Prepare JS that will start login process for our user
+        String userLoginJavascript =
+                prepareDynamicLoginJavascriptForUser(dynamicLoginJavascript, username, serviceCode);
 
-        // Add device information Javascript to dynamic logon Javascript
-        String dynamicLogonJavascript = deviceInfoJavascript + getResponse.getBody(String.class);
-
-        // Execute javascript to get encrypted logon package and finalize package
+        // Execute javascript to get encrypted logon package
         WebDriver driver = null;
         try {
             driver =
                     ChromeDriverInitializer.constructChromeDriver(
                             DanskeBankConstants.Javascript.USER_AGENT);
-            JavascriptExecutor js = (JavascriptExecutor) driver;
-
-            js.executeScript(
-                    DanskeBankJavascriptStringFormatter.createLoginJavascript(
-                            dynamicLogonJavascript, username, serviceCode));
+            JavascriptExecutor jsExecutor = (JavascriptExecutor) driver;
+            jsExecutor.executeScript(userLoginJavascript);
 
             return waitForLogonPackage(driver)
                     .orElseThrow(LoginError.CREDENTIALS_VERIFICATION_ERROR::exception);
@@ -67,27 +57,32 @@ public class DanskeBankNOAuthInitializer {
         }
     }
 
-    // Create Javascript that will return device information
-    String getDeviceInfoJavascript() {
+    private String fetchDynamicLoginJavascriptAndSaveSessionHeader() {
+        HttpResponse response =
+                apiClient.collectDynamicLogonJavascript(
+                        configuration.getSecuritySystem(), configuration.getBrand());
+
+        // Add the authorization header from the response
+        apiClient.saveAuthorizationHeader(response);
+
+        return response.getBody(String.class);
+    }
+
+    private String prepareDynamicLoginJavascriptForUser(
+            String dynamicLoginJavascript, String username, String serviceCode) {
+
+        String dynamicLogonJavascriptForUser = getJsReturningDeviceInfo() + dynamicLoginJavascript;
+
+        return DanskeBankJavascriptStringFormatter.createLoginJavascript(
+                dynamicLogonJavascriptForUser, username, serviceCode);
+    }
+
+    String getJsReturningDeviceInfo() {
         return DanskeBankConstants.Javascript.getDeviceInfo(
                 deviceId,
                 configuration.getMarketCode(),
                 configuration.getAppName(),
                 configuration.getAppVersion());
-    }
-
-    void sendLogonPackage(String logonPackage)
-            throws AuthenticationException, AuthorizationException {
-        if (logonPackage == null) {
-            throw new IllegalStateException("Finalize Package was null, aborting login");
-        }
-
-        try {
-            apiClient.finalizeAuthentication(
-                    FinalizeAuthenticationRequest.createForServiceCode(logonPackage));
-        } catch (HttpResponseException hre) {
-            DanskeBankPasswordErrorHandler.throwError(hre);
-        }
     }
 
     Optional<String> waitForLogonPackage(WebDriver driver) {
@@ -107,5 +102,19 @@ public class DanskeBankNOAuthInitializer {
     private void waitAfterSubmitingForm(WebDriver driver) {
         webDriverHelper.sleep(2000);
         log.info("Before switching to default content: {}", driver.getPageSource());
+    }
+
+    void sendLogonPackage(String logonPackage)
+            throws AuthenticationException, AuthorizationException {
+        if (logonPackage == null) {
+            throw new IllegalStateException("Finalize Package was null, aborting login");
+        }
+
+        try {
+            apiClient.finalizeAuthentication(
+                    FinalizeAuthenticationRequest.createForServiceCode(logonPackage));
+        } catch (HttpResponseException hre) {
+            DanskeBankPasswordErrorHandler.throwError(hre);
+        }
     }
 }
