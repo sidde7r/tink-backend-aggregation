@@ -6,11 +6,9 @@ import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppStatus;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.libraries.i18n.LocalizableKey;
 
 public class NordeaFIConstants {
     public static final ImmutableMap<String, String> DEFAULT_FORM_PARAMS =
@@ -34,22 +32,6 @@ public class NordeaFIConstants {
                     .put(Portfolio.Type.ISK, "ISK")
                     .put(Portfolio.Type.PENSION, "ISP", "NLPV2")
                     .build();
-
-    public static final ImmutableMap<ThirdPartyAppStatus, LocalizableKey>
-            AUTHENTICATION_ERROR_MESSAGE =
-                    ImmutableMap.<ThirdPartyAppStatus, LocalizableKey>builder()
-                            .put(
-                                    ThirdPartyAppStatus.CANCELLED,
-                                    new LocalizableKey(
-                                            "Authentication cancelled by the Codes app. Please try again."))
-                            .put(
-                                    ThirdPartyAppStatus.TIMED_OUT,
-                                    new LocalizableKey("Authentication timed out."))
-                            .put(
-                                    ThirdPartyAppStatus.ALREADY_IN_PROGRESS,
-                                    new LocalizableKey(
-                                            "Another client is already trying to sign in. \nPlease close the Codes app and try again."))
-                            .build();
 
     public static final TypeMapper<ThirdPartyAppStatus> AUTHENTICATION_RESPONSE =
             TypeMapper.<ThirdPartyAppStatus>builder()
@@ -165,53 +147,5 @@ public class NordeaFIConstants {
                 LogTag.from("NORDEA_FI_AUTHENTICATION_ERROR");
         public static final LogTag NORDEA_FI_ACCOUNT_TYPE =
                 LogTag.from("NORDEA_FI_UNKNOWN_ACCOUNT_TYPE");
-    }
-
-    public static class NordeaCodesPayload {
-        private static final LocalizableKey DOWNLOAD_TITLE =
-                new LocalizableKey("Download Nordea Codes");
-        private static final LocalizableKey DOWNLOAD_MESSAGE =
-                new LocalizableKey(
-                        "You need to download the Nordea Codes app in order to continue.");
-        private static final LocalizableKey UPGRADE_TITLE =
-                new LocalizableKey("Upgrade Nordea Codes");
-        private static final LocalizableKey UPGRADE_MESSAGE =
-                new LocalizableKey(
-                        "You need to upgrade the Nordea Codes app in order to continue.");
-        private static final String CODES_APP_STORE_URL =
-                "https://itunes.apple" + ".com/se/app/nordea-codes/id995971128";
-        private static final String CODES_APP_SCHEME = "nordeamta://";
-        private static final String CODES_RETURN_LINK = "confirm?returnUrl=tink://";
-        private static final String CODES_ANDROID_PACKAGE_NAME = "com.nordea.mobiletoken";
-        private static final int CODES_REQUIRED_ANDROID_VERSION = 1050200; // 1.5.2.0
-
-        public static ThirdPartyAppAuthenticationPayload build() {
-            ThirdPartyAppAuthenticationPayload payload = new ThirdPartyAppAuthenticationPayload();
-
-            // Generic things about download and upgrade
-            payload.setDownloadTitle(DOWNLOAD_TITLE.get());
-            payload.setDownloadMessage(DOWNLOAD_MESSAGE.get());
-
-            payload.setUpgradeTitle(UPGRADE_TITLE.get());
-            payload.setUpgradeMessage(UPGRADE_MESSAGE.get());
-
-            // iOS details
-            ThirdPartyAppAuthenticationPayload.Ios iosPayload =
-                    new ThirdPartyAppAuthenticationPayload.Ios();
-            iosPayload.setAppScheme(CODES_APP_SCHEME);
-            iosPayload.setDeepLinkUrl(CODES_APP_SCHEME + CODES_RETURN_LINK);
-            iosPayload.setAppStoreUrl(CODES_APP_STORE_URL);
-            payload.setIos(iosPayload);
-
-            // Android details
-            ThirdPartyAppAuthenticationPayload.Android androidPayload =
-                    new ThirdPartyAppAuthenticationPayload.Android();
-            androidPayload.setPackageName(CODES_ANDROID_PACKAGE_NAME);
-            androidPayload.setRequiredVersion(CODES_REQUIRED_ANDROID_VERSION);
-            androidPayload.setIntent(CODES_APP_SCHEME + CODES_RETURN_LINK);
-            payload.setAndroid(androidPayload);
-
-            return payload;
-        }
     }
 }

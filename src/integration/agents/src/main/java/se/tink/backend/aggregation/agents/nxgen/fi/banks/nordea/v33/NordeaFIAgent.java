@@ -8,7 +8,6 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
 
 import com.google.inject.Inject;
-import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
@@ -21,7 +20,7 @@ import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
-import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33.authenticator.NordeaCodesAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33.authenticator.NordeaFIAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33.fetcher.creditcard.NordeaCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33.fetcher.creditcard.NordeaCreditCardTransactionsFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33.fetcher.identitydata.NordeaFIIdentityDataFetcher;
@@ -34,7 +33,6 @@ import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33.session.Nord
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.loan.LoanRefreshController;
@@ -44,6 +42,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.BankServiceInternalErrorFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.ServiceUnavailableBankServiceErrorFilter;
 
 @AgentCapabilities({
@@ -90,6 +89,7 @@ public final class NordeaFIAgent extends NextGenerationAgent
     private void configureHttpClient(TinkHttpClient client) {
         client.setTimeout(NordeaFIConstants.HttpClient.TIMEOUT_MS);
         client.addFilter(new ServiceUnavailableBankServiceErrorFilter());
+        client.addFilter(new BankServiceInternalErrorFilter());
         client.addFilter(
                 new NordeaFIRetryFilter(
                         NordeaFIConstants.HttpClient.MAX_RETRIES,
@@ -98,11 +98,8 @@ public final class NordeaFIAgent extends NextGenerationAgent
 
     @Override
     protected Authenticator constructAuthenticator() {
-        NordeaCodesAuthenticator codesAuthenticator =
-                new NordeaCodesAuthenticator(
-                        apiClient, sessionStorage, credentials.getField(Field.Key.USERNAME));
-        return new ThirdPartyAppAuthenticationController<>(
-                codesAuthenticator, supplementalInformationHelper);
+        return new NordeaFIAuthenticator(
+                apiClient, sessionStorage, supplementalInformationController, catalog, credentials);
     }
 
     @Override
