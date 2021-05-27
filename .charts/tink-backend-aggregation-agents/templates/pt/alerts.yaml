@@ -35,7 +35,6 @@ spec:
         (count(sum_over_time(tink_agent_login_total{action="login", outcome="completed", market="PT", provider_type!="test"}[12h])) by (className,provider)
             / count(sum_over_time(tink_agent_login_total{action="login", market="PT", provider_type!="test"}[12h])) by (className,provider) < 0.1)
       for: 15m
-      interval: 1h
       labels:
         severity: urgent
         priority: P1
@@ -176,7 +175,6 @@ spec:
         # At least this many attempts.
          and count(sum_over_time(tink_agent_login_total{action="login", market="PT", provider_type!="test"}[12h])) by (className,provider) > 1
       for: 15m
-      interval: 1h
       labels:
         severity: urgent
         priority: P2
@@ -211,7 +209,6 @@ spec:
         (count(sum_over_time(tink_agent_refresh_total{label="refresh", outcome="unavailable", market="PT", provider_type!="test"}[12h])) by (className,provider)
             / count(sum_over_time(tink_agent_refresh_total{market="PT", provider_type!="test"}[12h])) by (className,provider) > 0.90)
       for: 15m
-      interval: 1h
       labels:
         severity: urgent
         who: integration-minions
@@ -254,7 +251,6 @@ spec:
         # At least this many attempts.
         and count(sum_over_time(tink_agent_login_total{action="login", market="PT", provider_type!="test"}[12h])) by (className,provider) > 2
       for: 15m
-      interval: 1h
       labels:
         severity: urgent
         priority: P2
