@@ -11,10 +11,10 @@
         },
         "exactBalance" : {
             "currencyCode" : "SEK",
-            "doubleValue" : -66867.82,
-            "exactValue" : -66867.82,
+            "doubleValue" : 33132.18,
+            "exactValue" : 33132.18,
             "scale" : 2,
-            "unscaledValue" : -6686782
+            "unscaledValue" : 3313218
         },
         "currencyCode" : "SEK",
         "creditLimit" : {
@@ -47,7 +47,7 @@
         "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
         "balances" : [ ],
         "availableCredit" : 132989.18,
-        "balance" : -66867.82
+        "balance" : 33132.18
     } ],
     "transactions" : [ {
         "amount" : 1703.0,
