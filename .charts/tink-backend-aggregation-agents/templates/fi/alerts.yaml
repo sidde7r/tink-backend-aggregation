@@ -67,13 +67,13 @@ spec:
     # Unknown errors (due to RuntimeException) alerts
     #-------------------------------------------------------------------------------------------------------------------
     # Authentication alerts
-    - alert: AuthenticationUnknownErrorRateOver30%FI
+    - alert: AuthenticationUnknownErrorRateOver20%FI
       expr: |
-        # Failed logins (due to unknown RuntimeException) over 30%
+        # Failed logins (due to unknown RuntimeException) over 20%
         (count(sum_over_time(tink_agent_login_total{action="login", outcome="failed", market="FI", provider_type!="test"}[30m])) by (className,provider)
-            / count(sum_over_time(tink_agent_login_total{action="login", market="FI", provider_type!="test"}[30m])) by (className,provider) > 0.3)
+            / count(sum_over_time(tink_agent_login_total{action="login", market="FI", provider_type!="test"}[30m])) by (className,provider) > 0.2)
         # At least this many attempts.
-             and count(sum_over_time(tink_agent_login_total{action="login", market="FI", provider_type!="test"}[30m])) by (className,provider) > 1
+             and count(sum_over_time(tink_agent_login_total{action="login", market="FI", provider_type!="test"}[30m])) by (className,provider) > 5
       for: 15m
       labels:
         severity: urgent
@@ -82,17 +82,17 @@ spec:
       annotations:
         description: {{ .Values.kibanaLink }}
           {{ .Values.grafanaLink }}
-        summary: Authentication failures due to unknown RuntimeExceptions is over 30% (<{ $value }>) for <{ $labels.className }> ( <{ $labels.provider }>
+        summary: Authentication failures due to unknown RuntimeExceptions is over 20% (<{ $value }>) for <{ $labels.className }> ( <{ $labels.provider }>
           the last hour.
         tags: {{ .Values.tags }}
 
     - alert: LongTermAuthenticationUnknownErrorRateOver20%FI
       expr: |
-        # Failed logins (due to unknown RuntimeException) over 10%
+        # Failed logins (due to unknown RuntimeException) over 20%
         (count(sum_over_time(tink_agent_login_total{action="login", outcome="failed", market="FI", provider_type!="test"}[6h])) by (className,provider)
             / count(sum_over_time(tink_agent_login_total{action="login", market="FI", provider_type!="test"}[6h])) by (className,provider) > 0.2)
         # At least this many attempts.
-             and count(sum_over_time(tink_agent_login_total{action="login", market="FI", provider_type!="test"}[6h])) by (className,provider) > 1
+             and count(sum_over_time(tink_agent_login_total{action="login", market="FI", provider_type!="test"}[6h])) by (className,provider) > 5
       for: 15m
       labels:
         severity: urgent
@@ -248,7 +248,7 @@ spec:
         # All login attempts the last 6 hours
           / count(sum_over_time(tink_agent_login_total{action="login", market="FI"}[12h])) BY (className,provider) > 0.90
         # At least this many attempts.
-          and count(sum_over_time(tink_agent_login_total{action="login", market="FI", provider_type!="test"}[12h])) by (className,provider) > 2
+          and count(sum_over_time(tink_agent_login_total{action="login", market="FI", provider_type!="test"}[12h])) by (className,provider) > 5
       for: 15m
       labels:
         severity: urgent
