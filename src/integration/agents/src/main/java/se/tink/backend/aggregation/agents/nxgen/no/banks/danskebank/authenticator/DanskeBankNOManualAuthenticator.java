@@ -26,7 +26,6 @@ import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformati
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.integration.webdriver.ChromeDriverInitializer;
 import se.tink.integration.webdriver.WebDriverHelper;
 import se.tink.libraries.i18n.Catalog;
 
@@ -54,18 +53,22 @@ public class DanskeBankNOManualAuthenticator implements TypedAuthenticator {
         String serviceCode = credentials.getField(Field.Key.PASSWORD);
         String bankIdPassword = credentials.getField(Field.Key.BANKID_PASSWORD);
 
-        verifyNotEmptyCredentials(username, serviceCode, bankIdPassword);
+        verifyCorrectCredentials(username, serviceCode, bankIdPassword);
 
-        String logonPackage =
-                authInitializer.initializeSessionAndGetLogonPackage(username, serviceCode);
-        authInitializer.sendLogonPackage(logonPackage);
+        DanskeBankNOAuthUtils.executeWithWebDriver(
+                driver -> {
+                    String logonPackage =
+                            authInitializer.initializeSessionAndGetLogonPackage(
+                                    username, serviceCode, driver);
+                    authInitializer.sendLogonPackage(logonPackage);
 
-        initBindDevice();
-        String stepUpToken = authenticateWithBankId(username, bankIdPassword);
-        finalizeDeviceBinding(stepUpToken);
+                    initBindDevice();
+                    String stepUpToken = authenticateWithBankId(username, bankIdPassword, driver);
+                    finalizeDeviceBinding(stepUpToken, driver);
+                });
     }
 
-    private void verifyNotEmptyCredentials(String... credentials) {
+    private void verifyCorrectCredentials(String... credentials) {
         boolean credentialsInvalid = Stream.of(credentials).anyMatch(Strings::isNullOrEmpty);
         if (credentialsInvalid) {
             throw LoginError.INCORRECT_CREDENTIALS.exception();
@@ -95,7 +98,8 @@ public class DanskeBankNOManualAuthenticator implements TypedAuthenticator {
         return deviceInfoJavascript + challengeResponse.getBody(String.class);
     }
 
-    private void finalizeDeviceBinding(String stepUpToken) throws AuthenticationException {
+    private void finalizeDeviceBinding(String stepUpToken, WebDriver driver)
+            throws AuthenticationException {
         BindDeviceResponse bindDeviceResponse;
         try {
             bindDeviceResponse =
@@ -112,77 +116,55 @@ public class DanskeBankNOManualAuthenticator implements TypedAuthenticator {
 
         String stepupDynamicJs = getStepupDynamicJs();
 
-        WebDriver driver = null;
-        try {
-            driver =
-                    ChromeDriverInitializer.constructChromeDriver(
-                            DanskeBankConstants.Javascript.USER_AGENT);
-            JavascriptExecutor js = (JavascriptExecutor) driver;
+        JavascriptExecutor js = (JavascriptExecutor) driver;
 
-            js.executeScript(
-                    DanskeBankJavascriptStringFormatter.createCollectDeviceSecretJavascript(
-                            stepupDynamicJs, bindDeviceResponse.getSharedSecret()));
+        js.executeScript(
+                DanskeBankJavascriptStringFormatter.createCollectDeviceSecretJavascript(
+                        stepupDynamicJs, bindDeviceResponse.getSharedSecret()));
 
-            String decryptedDeviceSecret =
-                    webDriverHelper
-                            .waitForElementWithAttribute(
-                                    driver, By.tagName("body"), "decryptedDeviceSecret")
-                            .orElseThrow(LoginError.CREDENTIALS_VERIFICATION_ERROR::exception);
+        String decryptedDeviceSecret =
+                webDriverHelper
+                        .waitForElementWithAttribute(
+                                driver, By.tagName("body"), "decryptedDeviceSecret")
+                        .orElseThrow(LoginError.CREDENTIALS_VERIFICATION_ERROR::exception);
 
-            persistentStorage.put(
-                    DanskeBankConstants.Persist.DEVICE_SERIAL_NUMBER,
-                    bindDeviceResponse.getDeviceSerialNumber());
-            persistentStorage.put(
-                    DanskeBankConstants.Persist.DEVICE_SECRET,
-                    decryptedDeviceSecret.replace("\"", ""));
-        } finally {
-            if (driver != null) {
-                driver.quit();
-            }
-        }
+        persistentStorage.put(
+                DanskeBankConstants.Persist.DEVICE_SERIAL_NUMBER,
+                bindDeviceResponse.getDeviceSerialNumber());
+        persistentStorage.put(
+                DanskeBankConstants.Persist.DEVICE_SECRET, decryptedDeviceSecret.replace("\"", ""));
     }
 
-    private String authenticateWithBankId(String username, String bankIdPassword)
+    private String authenticateWithBankId(String username, String bankIdPassword, WebDriver driver)
             throws AuthenticationException {
         HttpResponse dynamicJsResponse =
                 apiClient.getNoBankIdDynamicJs(DanskeBankConstants.SecuritySystem.SERVICE_CODE_NS);
         String dynamicJs = dynamicJsResponse.getBody(String.class);
 
-        WebDriver driver = null;
-        try {
-            driver =
-                    ChromeDriverInitializer.constructChromeDriver(
-                            DanskeBankConstants.Javascript.USER_AGENT);
+        String epochInSeconds = Long.toString(System.currentTimeMillis() / 1000);
+        driver.get(DanskeBankNOConstants.NEMID_HTML_BOX_URL + epochInSeconds);
 
-            String epochInSeconds = Long.toString(System.currentTimeMillis() / 1000);
-            driver.get(DanskeBankNOConstants.NEMID_HTML_BOX_URL + epochInSeconds);
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        String formattedJs =
+                DanskeBankJavascriptStringFormatter.createNOBankIdJavascript(dynamicJs);
+        js.executeScript(formattedJs);
 
-            JavascriptExecutor js = (JavascriptExecutor) driver;
-            String formattedJs =
-                    DanskeBankJavascriptStringFormatter.createNOBankIdJavascript(dynamicJs);
-            js.executeScript(formattedJs);
+        IframeInitializer iframeInitializer =
+                new BankIdIframeInitializer(username, driver, webDriverHelper);
 
-            IframeInitializer iframeInitializer =
-                    new BankIdIframeInitializer(username, driver, webDriverHelper);
+        BankIdIframeSSAuthenticationController bankIdIframeSSAuthenticationController =
+                new BankIdIframeSSAuthenticationController(
+                        webDriverHelper,
+                        driver,
+                        iframeInitializer,
+                        supplementalInformationController,
+                        catalog);
+        bankIdIframeSSAuthenticationController.doLogin(bankIdPassword);
 
-            BankIdIframeSSAuthenticationController bankIdIframeSSAuthenticationController =
-                    new BankIdIframeSSAuthenticationController(
-                            webDriverHelper,
-                            driver,
-                            iframeInitializer,
-                            supplementalInformationController,
-                            catalog);
-            bankIdIframeSSAuthenticationController.doLogin(bankIdPassword);
-
-            // Page reload (destroy the iframe).
-            // Read the `logonPackage` string which is used as `stepUpToken`.
-            return authInitializer
-                    .waitForLogonPackage(driver)
-                    .orElseThrow(LoginError.CREDENTIALS_VERIFICATION_ERROR::exception);
-        } finally {
-            if (driver != null) {
-                driver.quit();
-            }
-        }
+        // Page reload (destroy the iframe).
+        // Read the `logonPackage` string which is used as `stepUpToken`.
+        return authInitializer
+                .waitForLogonPackage(driver)
+                .orElseThrow(LoginError.CREDENTIALS_VERIFICATION_ERROR::exception);
     }
 }

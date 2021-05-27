@@ -17,7 +17,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeban
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.rpc.FinalizeAuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
-import se.tink.integration.webdriver.ChromeDriverInitializer;
 import se.tink.integration.webdriver.WebDriverHelper;
 
 @Slf4j
@@ -29,8 +28,8 @@ public class DanskeBankNOAuthInitializer {
     private final DanskeBankConfiguration configuration;
     private final WebDriverHelper webDriverHelper;
 
-    String initializeSessionAndGetLogonPackage(String username, String serviceCode)
-            throws AuthenticationException {
+    String initializeSessionAndGetLogonPackage(
+            String username, String serviceCode, WebDriver driver) throws AuthenticationException {
 
         // Fetch universal JS that handles logging in process
         String dynamicLoginJavascript = fetchDynamicLoginJavascriptAndSaveSessionHeader();
@@ -40,21 +39,10 @@ public class DanskeBankNOAuthInitializer {
                 prepareDynamicLoginJavascriptForUser(dynamicLoginJavascript, username, serviceCode);
 
         // Execute javascript to get encrypted logon package
-        WebDriver driver = null;
-        try {
-            driver =
-                    ChromeDriverInitializer.constructChromeDriver(
-                            DanskeBankConstants.Javascript.USER_AGENT);
-            JavascriptExecutor jsExecutor = (JavascriptExecutor) driver;
-            jsExecutor.executeScript(userLoginJavascript);
+        ((JavascriptExecutor) driver).executeScript(userLoginJavascript);
 
-            return waitForLogonPackage(driver)
-                    .orElseThrow(LoginError.CREDENTIALS_VERIFICATION_ERROR::exception);
-        } finally {
-            if (driver != null) {
-                driver.quit();
-            }
-        }
+        return waitForLogonPackage(driver)
+                .orElseThrow(LoginError.CREDENTIALS_VERIFICATION_ERROR::exception);
     }
 
     private String fetchDynamicLoginJavascriptAndSaveSessionHeader() {

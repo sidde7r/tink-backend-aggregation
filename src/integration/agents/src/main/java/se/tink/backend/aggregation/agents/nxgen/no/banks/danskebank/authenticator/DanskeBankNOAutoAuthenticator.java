@@ -13,7 +13,6 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
-import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
@@ -31,7 +30,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.au
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.integration.webdriver.ChromeDriverInitializer;
 import se.tink.integration.webdriver.WebDriverHelper;
 
 @Slf4j
@@ -58,16 +56,17 @@ public class DanskeBankNOAutoAuthenticator implements AutoAuthenticator {
 
         verifyHasAllSessionValues(username, serviceCode, deviceSerialNumber);
 
-        try {
-            String logonPackage =
-                    authInitializer.initializeSessionAndGetLogonPackage(username, serviceCode);
-            authInitializer.sendLogonPackage(logonPackage);
-        } catch (AuthenticationException | AuthorizationException e) {
-            throw SessionError.SESSION_EXPIRED.exception(e);
-        }
+        DanskeBankNOAuthUtils.executeWithWebDriver(
+                driver -> {
+                    String logonPackage =
+                            authInitializer.initializeSessionAndGetLogonPackage(
+                                    username, serviceCode, driver);
+                    authInitializer.sendLogonPackage(logonPackage);
 
-        String otpChallenge = getPinnedDeviceOtpChallenge(deviceSerialNumber);
-        authenticateWithOtpChallenge(username, deviceSerialNumber, otpChallenge);
+                    String otpChallenge = getPinnedDeviceOtpChallenge(deviceSerialNumber);
+                    authenticateWithOtpChallenge(
+                            username, deviceSerialNumber, otpChallenge, driver);
+                });
     }
 
     private void verifyHasAllSessionValues(String... sessionValues) {
@@ -107,89 +106,78 @@ public class DanskeBankNOAutoAuthenticator implements AutoAuthenticator {
     }
 
     private void authenticateWithOtpChallenge(
-            String username, String deviceSerialNumber, String otpChallenge)
+            String username, String deviceSerialNumber, String otpChallenge, WebDriver driver)
             throws SessionException {
         String checkChallengeWithDeviceInfo = getStepupDynamicJs();
 
         // Execute Js to build step up token
-        WebDriver driver = null;
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+
+        // Initiate with username and OtpChallenge
+        js.executeScript(
+                DanskeBankJavascriptStringFormatter.createInitStepUpTrustedDeviceJavascript(
+                        checkChallengeWithDeviceInfo, username, otpChallenge));
+
+        // Extract key card entity to get challenge for next Js execution
+        String challengeInfo =
+                webDriverHelper
+                        .waitForElementWithAttribute(
+                                driver, By.tagName("body"), "trustedChallengeInfo")
+                        .orElseThrow(SessionError.SESSION_EXPIRED::exception);
+
+        KeyCardEntity keyCardEntity =
+                DanskeBankDeserializer.convertStringToObject(challengeInfo, KeyCardEntity.class);
+
+        // Generate a JSON-object with device secret and challenge and encode it with base64
+        String generateResponseInput =
+                BASE64_ENCODER.encodeToString(
+                        getGenerateResponseJson(keyCardEntity.getChallenge()).getBytes());
+
+        // Inject the base64-string as input to generate response string
+        js.executeScript(
+                DanskeBankJavascriptStringFormatter.createGenerateResponseJavascript(
+                        checkChallengeWithDeviceInfo,
+                        username,
+                        otpChallenge,
+                        generateResponseInput));
+
+        String responseData =
+                webDriverHelper
+                        .waitForElementWithAttribute(
+                                driver, By.tagName("body"), "trustedChallengeResponse")
+                        .orElseThrow(SessionError.SESSION_EXPIRED::exception);
+
+        // Generate a JSON with response and device serial number and encode with base64
+        String validateStepUpTrustedDeviceInput =
+                BASE64_ENCODER.encodeToString(
+                        getValidateStepUpTrustedDeviceJson(responseData.replace("\"", ""))
+                                .getBytes());
+
+        // Execute a final Js to get the step up token
+        js.executeScript(
+                DanskeBankJavascriptStringFormatter.createValidateStepUpTrustedDeviceJavascript(
+                        checkChallengeWithDeviceInfo,
+                        username,
+                        otpChallenge,
+                        generateResponseInput,
+                        validateStepUpTrustedDeviceInput));
+
+        String trustedStepUpToken =
+                webDriverHelper
+                        .waitForElementWithAttribute(
+                                driver, By.tagName("body"), "trustedStepUpToken")
+                        .orElseThrow(SessionError.SESSION_EXPIRED::exception);
+
         try {
-            driver =
-                    ChromeDriverInitializer.constructChromeDriver(
-                            (DanskeBankConstants.Javascript.USER_AGENT));
-            JavascriptExecutor js = (JavascriptExecutor) driver;
+            // Make final check to confirm with step up token
+            CheckDeviceResponse checkDeviceResponse =
+                    apiClient.checkDevice(deviceSerialNumber, trustedStepUpToken);
 
-            // Initiate with username and OtpChallenge
-            js.executeScript(
-                    DanskeBankJavascriptStringFormatter.createInitStepUpTrustedDeviceJavascript(
-                            checkChallengeWithDeviceInfo, username, otpChallenge));
-
-            // Extract key card entity to get challenge for next Js execution
-            String challengeInfo =
-                    webDriverHelper
-                            .waitForElementWithAttribute(
-                                    driver, By.tagName("body"), "trustedChallengeInfo")
-                            .orElseThrow(SessionError.SESSION_EXPIRED::exception);
-
-            KeyCardEntity keyCardEntity =
-                    DanskeBankDeserializer.convertStringToObject(
-                            challengeInfo, KeyCardEntity.class);
-
-            // Generate a JSON-object with device secret and challenge and encode it with base64
-            String generateResponseInput =
-                    BASE64_ENCODER.encodeToString(
-                            getGenerateResponseJson(keyCardEntity.getChallenge()).getBytes());
-
-            // Inject the base64-string as input to generate response string
-            js.executeScript(
-                    DanskeBankJavascriptStringFormatter.createGenerateResponseJavascript(
-                            checkChallengeWithDeviceInfo,
-                            username,
-                            otpChallenge,
-                            generateResponseInput));
-
-            String responseData =
-                    webDriverHelper
-                            .waitForElementWithAttribute(
-                                    driver, By.tagName("body"), "trustedChallengeResponse")
-                            .orElseThrow(SessionError.SESSION_EXPIRED::exception);
-
-            // Generate a JSON with response and device serial number and encode with base64
-            String validateStepUpTrustedDeviceInput =
-                    BASE64_ENCODER.encodeToString(
-                            getValidateStepUpTrustedDeviceJson(responseData.replace("\"", ""))
-                                    .getBytes());
-
-            // Execute a final Js to get the step up token
-            js.executeScript(
-                    DanskeBankJavascriptStringFormatter.createValidateStepUpTrustedDeviceJavascript(
-                            checkChallengeWithDeviceInfo,
-                            username,
-                            otpChallenge,
-                            generateResponseInput,
-                            validateStepUpTrustedDeviceInput));
-
-            String trustedStepUpToken =
-                    webDriverHelper
-                            .waitForElementWithAttribute(
-                                    driver, By.tagName("body"), "trustedStepUpToken")
-                            .orElseThrow(SessionError.SESSION_EXPIRED::exception);
-
-            try {
-                // Make final check to confirm with step up token
-                CheckDeviceResponse checkDeviceResponse =
-                        apiClient.checkDevice(deviceSerialNumber, trustedStepUpToken);
-
-                if (checkDeviceResponse.getError() != null) {
-                    throw SessionError.SESSION_EXPIRED.exception();
-                }
-            } catch (HttpResponseException e) {
-                throw SessionError.SESSION_EXPIRED.exception(e);
+            if (checkDeviceResponse.getError() != null) {
+                throw SessionError.SESSION_EXPIRED.exception();
             }
-        } finally {
-            if (driver != null) {
-                driver.quit();
-            }
+        } catch (HttpResponseException e) {
+            throw SessionError.SESSION_EXPIRED.exception(e);
         }
     }
 
