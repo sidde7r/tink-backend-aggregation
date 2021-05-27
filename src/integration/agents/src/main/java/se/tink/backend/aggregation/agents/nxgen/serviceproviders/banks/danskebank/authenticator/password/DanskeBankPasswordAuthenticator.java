@@ -41,22 +41,14 @@ public class DanskeBankPasswordAuthenticator implements PasswordAuthenticator {
     @Override
     public void authenticate(String username, String password)
             throws AuthenticationException, AuthorizationException {
+
         // Get the dynamic logon javascript
         HttpResponse getResponse =
                 this.apiClient.collectDynamicLogonJavascript(
                         DanskeBankConstants.SecuritySystem.SERVICE_CODE_SC,
                         this.configuration.getBrand());
-
         // Add the authorization header from the response
-        final String persistentAuth =
-                getResponse
-                        .getHeaders()
-                        .getFirst(DanskeBankConstants.DanskeRequestHeaders.PERSISTENT_AUTH);
-        // Store tokens in sensitive payload, so it will be masked from logs
-        credentials.setSensitivePayload(
-                DanskeBankConstants.DanskeRequestHeaders.AUTHORIZATION, persistentAuth);
-        this.apiClient.addPersistentHeader(
-                DanskeBankConstants.DanskeRequestHeaders.AUTHORIZATION, persistentAuth);
+        apiClient.saveAuthorizationHeader(getResponse);
 
         // Add method to return device information string
         this.dynamicLogonJavascript =

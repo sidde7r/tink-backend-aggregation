@@ -70,18 +70,8 @@ public class DanskeBankBankIdAuthenticator implements BankIdAuthenticator<String
         HttpResponse getResponse =
                 apiClient.collectDynamicLogonJavascript(
                         configuration.getSecuritySystem(), configuration.getBrand());
-
         // Add the authorization header from the response
-        final String persistentAuth =
-                getResponse
-                        .getHeaders()
-                        .getFirst(DanskeBankConstants.DanskeRequestHeaders.PERSISTENT_AUTH);
-        // Store tokens in sensitive payload, so it will be masked from logs
-        credentials.setSensitivePayload(
-                DanskeBankConstants.DanskeRequestHeaders.AUTHORIZATION, persistentAuth);
-
-        apiClient.addPersistentHeader(
-                DanskeBankConstants.DanskeRequestHeaders.AUTHORIZATION, persistentAuth);
+        apiClient.saveAuthorizationHeader(getResponse);
 
         // Add method to return device information string
         dynamicBankIdJavascript =
