@@ -17,7 +17,6 @@ public class NordeaNoAuthenticator extends NordeaBaseAuthenticator {
         return apiClient.getAuthorizeUrl(
                 new AuthorizeRequestBuilder()
                         .withCountry(NordeaNoConstants.QueryValues.COUNTRY)
-                        .withState(state)
-                        .withSkipAccountSelection(true));
+                        .withState(state));
     }
 }

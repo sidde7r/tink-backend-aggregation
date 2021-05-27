@@ -15,9 +15,6 @@ public class NordeaFiAuthenticator extends NordeaBaseAuthenticator {
     @Override
     public URL buildAuthorizeUrl(String state) {
         return apiClient.getAuthorizeUrl(
-                new AuthorizeRequestBuilder()
-                        .withCountry(COUNTRY)
-                        .withState(state)
-                        .withSkipAccountSelection(false));
+                new AuthorizeRequestBuilder().withCountry(COUNTRY).withState(state));
     }
 }
