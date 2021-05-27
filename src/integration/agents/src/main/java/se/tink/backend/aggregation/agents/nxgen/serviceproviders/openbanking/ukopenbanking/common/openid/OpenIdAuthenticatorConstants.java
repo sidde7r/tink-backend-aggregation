@@ -33,8 +33,11 @@ public abstract class OpenIdAuthenticatorConstants {
         READ_OFFERS("ReadOffers"),
         READ_SCHEDULED_PAYMENTS_DETAIL("ReadScheduledPaymentsDetail"),
         READ_STATEMENTS_DETAIL("ReadStatementsDetail"),
+        READ_STATEMENTS_BASIC("ReadStatementsBasic"),
         READ_PARTY("ReadParty"),
-        READ_PARTY_PSU("ReadPartyPSU");
+        READ_PARTY_PSU("ReadPartyPSU"),
+        READ_ACCOUNTS_BASIC("ReadAccountsBasic"),
+        READ_TRANSACTIONS_BASIC("ReadTransactionsBasic");
 
         private final String permissionValue;
 
