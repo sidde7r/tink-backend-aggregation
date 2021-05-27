@@ -334,7 +334,10 @@ public class JyskeBankNemidAuthenticator
                     new JweRequest(signedJWT.serialize(), JwtValues.LOGIN_TYPE);
 
             return createJWE(JWEAlgorithm.RSA_OAEP_256, EncryptionMethod.A128CBC_HS256, jweRequest);
-        } catch (JOSEException e) {
+        } catch (JOSEException | IllegalStateException e) {
+            if (e.getMessage().contains("Could not deserialize object")) {
+                throw SessionError.SESSION_EXPIRED.exception();
+            }
             throw new IllegalStateException("Couldn't sign JWT object", e);
         }
     }
