@@ -57,6 +57,7 @@ public class BankIdIframeAuthenticationController
 
     private final BankIdWebDriver webDriver;
     private final ProxyManager proxyManager;
+    private final BankIdAuthenticationState authenticationState;
     private final BankIdIframeInitializer iframeInitializer;
     private final BankIdIframeAuthenticator iframeAuthenticator;
     private final BankIdIframeController iframeController;
@@ -74,7 +75,9 @@ public class BankIdIframeAuthenticationController
 
             BankIdIframeFirstWindow firstIframeWindow =
                     iframeInitializer.initializeIframe(webDriver);
-            iframeController.authenticateWithCredentials(credentials, firstIframeWindow);
+            authenticationState.setFirstIframeWindow(firstIframeWindow);
+
+            iframeController.authenticateWithCredentials(credentials);
 
             ResponseFromProxy authFinishUrlProxyResponse = waitForAuthFinishUrlResponse();
 

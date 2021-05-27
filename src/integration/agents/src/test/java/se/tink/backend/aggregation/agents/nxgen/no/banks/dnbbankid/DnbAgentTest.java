@@ -12,7 +12,7 @@ public class DnbAgentTest {
 
     private enum Arg implements ArgumentManagerEnum {
         USERNAME,
-        MOBILENUMBER;
+        PASSWORD;
 
         @Override
         public boolean isOptional() {
@@ -31,7 +31,7 @@ public class DnbAgentTest {
     public void testLogin() throws Exception {
         new AgentIntegrationTest.Builder("no", "no-dnb-bankid")
                 .addCredentialField(Field.Key.USERNAME, manager.get(Arg.USERNAME))
-                .addCredentialField(Field.Key.MOBILENUMBER, manager.get(Arg.MOBILENUMBER))
+                .addCredentialField(Field.Key.BANKID_PASSWORD, manager.get(Arg.PASSWORD))
                 .loadCredentialsBefore(false)
                 .saveCredentialsAfter(true)
                 .expectLoggedIn(false)

@@ -29,6 +29,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.authentic
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.configuration.ArgentaConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.fetcher.transactionalaccount.rpc.AccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.fetcher.transactionalaccount.rpc.TransactionsResponse;
+import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.utils.CertificateValues;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.utils.SignatureHeaderProvider;
 import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 import se.tink.backend.aggregation.api.Psd2Headers;
@@ -53,6 +54,7 @@ public class ArgentaApiClient {
     private final SignatureHeaderProvider signatureHeaderProvider;
     private final LocalDateTimeSource localDateTimeSource;
     private final String userIp;
+    private final CertificateValues certificateValues;
 
     public ArgentaApiClient(
             TinkHttpClient client,
@@ -61,7 +63,8 @@ public class ArgentaApiClient {
             SessionStorage sessionStorage,
             SignatureHeaderProvider signatureHeaderProvider,
             LocalDateTimeSource localDateTimeSource,
-            String originatingUserIp) {
+            String originatingUserIp,
+            CertificateValues certificateValues) {
         this.localDateTimeSource = localDateTimeSource;
         Preconditions.checkNotNull(agentConfiguration);
 
@@ -73,6 +76,7 @@ public class ArgentaApiClient {
         this.sessionStorage = sessionStorage;
         this.signatureHeaderProvider = signatureHeaderProvider;
         this.userIp = originatingUserIp;
+        this.certificateValues = certificateValues;
     }
 
     private RequestBuilder createRequest(URL url) {
@@ -89,7 +93,7 @@ public class ArgentaApiClient {
                 .type(MediaType.APPLICATION_JSON)
                 .headers(headers)
                 .header(HeaderKeys.API_KEY, configuration.getApiKey())
-                .header(HeaderKeys.CERTIFICATE, configuration.getClientSigningCertificate())
+                .header(HeaderKeys.CERTIFICATE, certificateValues.getClientSigningCertificate())
                 .header(HeaderKeys.PSU_ID_ADDRESS, userIp)
                 .header(
                         HeaderKeys.SIGNATURE,

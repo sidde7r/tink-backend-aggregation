@@ -16,6 +16,8 @@ import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.bankidno.BankIdNOError;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.NorwegianFields;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdAuthenticationState;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdIframeFirstWindow;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.BankIdWebDriver;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.screens.BankIdScreen;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.screens.BankIdScreensManager;
@@ -29,6 +31,7 @@ public class BankIdAuthWithOneTimeCodeStep {
 
     private final BankIdWebDriver webDriver;
     private final BankIdScreensManager screensManager;
+    private final BankIdAuthenticationState authenticationState;
 
     private final Catalog catalog;
     private final SupplementalInformationController supplementalInformationController;
@@ -93,10 +96,14 @@ public class BankIdAuthWithOneTimeCodeStep {
             return;
         }
 
-        // when we're moved back to enter SSN screen it's either invalid SSN or invalid one-time
-        // code
         if (bankIdScreen == ENTER_SSN_SCREEN) {
-            throw BankIdNOError.INVALID_SSN_OR_ONE_TIME_CODE.exception();
+            if (authenticationState.getFirstIframeWindow() == BankIdIframeFirstWindow.ENTER_SSN) {
+                // when 1st iframe screen was about entering SSN and we're back on it it's either
+                // invalid SSN or invalid one-time code
+                throw BankIdNOError.INVALID_SSN_OR_ONE_TIME_CODE.exception();
+            }
+            // otherwise it must be invalid OTP
+            throw BankIdNOError.INVALID_ONE_TIME_CODE.exception();
         }
     }
 }

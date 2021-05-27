@@ -13,6 +13,7 @@ java_library(
         "//third_party:io_netty_netty_all",
         "//third_party:lombok_libs",
         "//third_party:org_apache_commons_commons_lang3",
+        "//third_party:org_apache_httpcomponents_httpclient",
         "//third_party:org_slf4j_slf4j_api",
         "//third_party/browserup_proxy_core",
         "@aggregation//:com_google_guava_guava",

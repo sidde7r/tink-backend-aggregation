@@ -4,7 +4,6 @@ junit_test(
     name = "dnb-bankid-agent",
     srcs = glob([
         "DnbAgentTest.java",
-        "DnbDualAgentTest.java",
     ]),
     data = [
         "//data:aggregation_test",
@@ -37,20 +36,26 @@ junit_test(
         ["**/*.java"],
         exclude = [
             "DnbAgentTest.java",
-            "DnbDualAgentTest.java",
         ],
     ),
     visibility = ["//visibility:public"],
     deps = [
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/no/banks/dnbbankid",
+        "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions/agent",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions/bankservice",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/authentication/multifactor/no/nextbankid",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/filter/filters/iface",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/request",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/response",
+        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/nxgen/controllers/authentication/multifactor/no/nextbankid",
         "//third_party:com_sun_jersey_jersey_core",
+        "//third_party:lombok_libs",
+        "//third_party:org_apache_httpcomponents_httpclient",
         "//third_party:org_assertj_assertj_core",
         "//third_party:org_mockito_mockito_core",
         "//third_party:pl_pragmatists_junitparams",
+        "@selenium//:org_seleniumhq_selenium_selenium_api",
     ],
 )
