@@ -32,21 +32,18 @@ public class NordeaFIApiClient {
     private final TinkHttpClient httpClient;
     private final SessionStorage sessionStorage;
 
-    public AuthenticateResponse initCodesAuthentication() throws HttpResponseException {
+    public AuthenticateResponse initCodesAuthentication(String username)
+            throws HttpResponseException {
         Form formBuilder = new Form(NordeaFIConstants.DEFAULT_FORM_PARAMS);
-        formBuilder.put(
-                NordeaFIConstants.FormParams.USERNAME,
-                sessionStorage.get(NordeaFIConstants.SessionStorage.USERNAME));
+        formBuilder.put(NordeaFIConstants.FormParams.USERNAME, username);
 
         return sendAuthenticateRequest(formBuilder);
     }
 
-    public AuthenticateResponse pollCodesAuthentication(String reference)
+    public AuthenticateResponse getCodesAuthentication(String username, String reference)
             throws HttpResponseException {
         Form formBuilder = new Form(NordeaFIConstants.DEFAULT_FORM_PARAMS);
-        formBuilder.put(
-                NordeaFIConstants.FormParams.USERNAME,
-                sessionStorage.get(NordeaFIConstants.SessionStorage.USERNAME));
+        formBuilder.put(NordeaFIConstants.FormParams.USERNAME, username);
         formBuilder.put(NordeaFIConstants.FormParams.CODE, reference);
 
         return sendAuthenticateRequest(formBuilder);
