@@ -81,6 +81,7 @@ public final class N26Agent extends AgentPlatformAgent
                 constructTransactionalAccountRefreshController(
                         componentProvider, oAuth2TokenAccessor);
         this.supplementalInformationHelper = componentProvider.getSupplementalInformationHelper();
+        client.setResponseStatusHandler(new N26BankSiteErrorHandler());
     }
 
     @Override
