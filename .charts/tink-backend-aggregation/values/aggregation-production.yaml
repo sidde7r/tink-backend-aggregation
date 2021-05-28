@@ -424,6 +424,8 @@ clients:
     aggregatorIdentifier: "Minna Tjanster"
   se-rocker-production:
     aggregatorIdentifier: "Rocker"
+  se-sebxunquo-production:
+    aggregatorIdentifier: "SEBx UNQUO"
   se-skandiabanken:
     aggregatorIdentifier: "Skandiabanken"
   se-sparbanken-syd-production:
@@ -434,6 +436,10 @@ clients:
     aggregatorIdentifier: "Sparbanken Syd"
   uk-oaknorth-testing:
     aggregatorIdentifier: "Oaknorth"
+  uk-snoop-production:
+    aggregatorIdentifier: "Snoop"
+  uk-snoop-testing:
+    aggregatorIdentifier: "Snoop"
   zimpler-production:
     aggregatorIdentifier: "Zimpler"
   zimpler-test:
