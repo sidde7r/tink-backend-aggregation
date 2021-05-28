@@ -66,6 +66,7 @@ public class PaymentRequestResource {
         PaymentEntity paymentEntity =
                 new PaymentEntity(
                         this.paymentInformationStatus,
+                        "",
                         this.paymentTypeInformation,
                         this.debtorAccount,
                         this.beneficiary,
