@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33;
 
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
-import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CREDIT_CARDS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.IDENTITY_DATA;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.INVESTMENTS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.LOANS;
@@ -14,7 +13,6 @@ import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
-import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
@@ -45,19 +43,11 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.BankServiceInternalErrorFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.ServiceUnavailableBankServiceErrorFilter;
 
-@AgentCapabilities({
-    CHECKING_ACCOUNTS,
-    SAVINGS_ACCOUNTS,
-    CREDIT_CARDS,
-    INVESTMENTS,
-    IDENTITY_DATA,
-    LOANS
-})
+@AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, INVESTMENTS, IDENTITY_DATA, LOANS})
 public final class NordeaFIAgent extends NextGenerationAgent
         implements RefreshIdentityDataExecutor,
                 RefreshInvestmentAccountsExecutor,
                 RefreshLoanAccountsExecutor,
-                RefreshCreditCardAccountsExecutor,
                 RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor {
     private final NordeaFIApiClient apiClient;
@@ -135,12 +125,10 @@ public final class NordeaFIAgent extends NextGenerationAgent
                                 new NordeaTransactionFetcher(apiClient))));
     }
 
-    @Override
     public FetchAccountsResponse fetchCreditCardAccounts() {
         return creditCardRefreshController.fetchCreditCardAccounts();
     }
 
-    @Override
     public FetchTransactionsResponse fetchCreditCardTransactions() {
         return creditCardRefreshController.fetchCreditCardTransactions();
     }

@@ -4,6 +4,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.agent.Agent;
 import se.tink.backend.aggregation.agents.contexts.CompositeAgentContext;
 import se.tink.backend.aggregation.agents.module.agentclass.AgentClass;
@@ -11,6 +12,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.configuration.UkOpenBankingClientConfigurationAdapter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.jwt.kid.EidasKeyIdProvider;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.jwt.kid.KeyIdProvider;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.jwt.kid.SimpleKeyIdProvider;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.jwt.signer.EidasJwsSigner;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.jwt.signer.EidasProxyJwtSigner;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.tls.EidasProxyTlsConfigurationSetter;
@@ -74,11 +76,27 @@ public class RevolutEEAModule extends AbstractModule {
     }
 
     private KeyIdProvider createKidProvider(CompositeAgentContext context) {
+        return getKidFromConfiguration(context)
+                .map(this::createSimpleKeyIdProvider)
+                .orElseGet(() -> createEidasKeyIdProvider(context));
+    }
+
+    private Optional<String> getKidFromConfiguration(CompositeAgentContext context) {
+        return Optional.ofNullable(getAgentConfiguration(context))
+                .map(AgentConfiguration::getProviderSpecificConfiguration)
+                .map(RevolutEEAClientConfiguration::getSigningCertKid);
+    }
+
+    private KeyIdProvider createSimpleKeyIdProvider(String keyId) {
+        return new SimpleKeyIdProvider(keyId);
+    }
+
+    private KeyIdProvider createEidasKeyIdProvider(CompositeAgentContext context) {
         return new EidasKeyIdProvider(context.getAgentConfigurationController().getQsealc());
     }
 
-    private AgentConfiguration<? extends UkOpenBankingClientConfigurationAdapter>
-            getAgentConfiguration(CompositeAgentContext context) {
+    private AgentConfiguration<RevolutEEAClientConfiguration> getAgentConfiguration(
+            CompositeAgentContext context) {
         return context.getAgentConfigurationController().getAgentConfiguration(CONFIGURATION_CLASS);
     }
 }
