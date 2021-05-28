@@ -11,12 +11,12 @@ spec:
     ### All login success rates - Temporary Errors - RE ###
     #######################################################
 
-    - alert: AllLoginSuccessRatesBelow95AndGreater90WithTemporaryErrorsAndAttemptLimitES_RE
+    - alert: AllLoginSuccessRatesBelow90AndGreater80WithTemporaryErrorsAndAttemptLimitES_RE
       expr: |
           sum(sum_over_time(tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }}  , market="ES"}[60m])) by (provider)
-            / sum(sum_over_time(tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"}[60m])) by (provider) < 0.95
+            / sum(sum_over_time(tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"}[60m])) by (provider) < 0.9
           and sum(sum_over_time(tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="ES"}[60m])) by (provider)
-            / sum(sum_over_time(tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"}[60m])) by (provider) >= 0.9
+            / sum(sum_over_time(tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"}[60m])) by (provider) >= 0.8
       for: 15m
       labels:
         severity: ping
@@ -25,16 +25,16 @@ spec:
       annotations:
         description: {{ .Values.kibanaLink }}
              {{ .Values.grafanaLink }}
-        summary: Login success rate for RE agents and all authentication types with temporary errors is between 95 - 90% with the value ( <{ $value }> ) for the last the last 60 minutes
+        summary: Login success rate for RE agents and all authentication types with temporary errors is between 90 - 80% with the value ( <{ $value }> ) for the last the last 60 minutes
             for <{ $labels.className }> ( <{ $labels.provider }> ) and it was below for last 75 minutes.
         tags: {{ .Values.tags }}
 
-    - alert: AllLoginSuccessRatesBelow90AndGreater80WithTemporaryErrorsAndAttemptLimitES_RE
+    - alert: AllLoginSuccessRatesBelow80AndGreater70WithTemporaryErrorsAndAttemptLimitES_RE
       expr: |
           sum(sum_over_time(tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="ES"}[60m])) by (provider)
-            / sum(sum_over_time(tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"}[60m])) by (provider) < 0.9
+            / sum(sum_over_time(tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"}[60m])) by (provider) < 0.8
           and sum(sum_over_time(tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="ES"}[60m])) by (provider)
-            / sum(sum_over_time(tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"}[60m])) by (provider) >= 0.8
+            / sum(sum_over_time(tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"}[60m])) by (provider) >= 0.7
       for: 15m
       labels:
         severity: urgent
@@ -43,14 +43,14 @@ spec:
       annotations:
         description: {{ .Values.kibanaLink }}
              {{ .Values.grafanaLink }}
-        summary: Login success rate for RE agents and for all authentication types with temporary errors is between 90 - 80% with the value ( <{ $value }> ) for the last the last 60 minutes
+        summary: Login success rate for RE agents and for all authentication types with temporary errors is between 80 - 70% with the value ( <{ $value }> ) for the last the last 60 minutes
           for <{ $labels.className }> ( <{ $labels.provider }> ) and it was below for last 75 minutes.
         tags: {{ .Values.tags }}
 
-    - alert: AllLoginSuccessRatesBelow80AndGreater60WithTemporaryErrorsAndAttemptLimitES_RE
+    - alert: AllLoginSuccessRatesBelow70AndGreater60WithTemporaryErrorsAndAttemptLimitES_RE
       expr: |
           sum(sum_over_time(tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="ES"}[60m])) by (provider)
-            / sum(sum_over_time(tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"}[60m])) by (provider) < 0.8
+            / sum(sum_over_time(tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"}[60m])) by (provider) < 0.7
           and sum(sum_over_time(tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="ES"}[60m])) by (provider)
             / sum(sum_over_time(tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"}[60m])) by (provider) >= 0.6
       for: 5m
@@ -61,7 +61,7 @@ spec:
       annotations:
         description: {{ .Values.kibanaLink }}
              {{ .Values.grafanaLink }}
-        summary: Login success rate for RE agents and for all authentication types with temporary errors is between 80 - 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+        summary: Login success rate for RE agents and for all authentication types with temporary errors is between 70 - 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
              the last 60 minutes.
         tags: {{ .Values.tags }}
 
@@ -85,24 +85,6 @@ spec:
     ### Split login success rates - Temporary Errors - RE ###
     #########################################################
 
-    - alert: SplitLoginSuccessRatesBelow95AndGreater90WithTemporaryErrorsAndAttemptLimitES_RE
-      expr: |
-          sum(sum_over_time(tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="ES"}[60m])) by (provider, action)
-            / sum(sum_over_time(tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"}[60m])) by (provider, action) < 0.95
-          and sum(sum_over_time(tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="ES"}[60m])) by (provider, action)
-            / sum(sum_over_time(tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"}[60m])) by (provider, action) >= 0.9
-      for: 15m
-      labels:
-        severity: ping
-        priority: P4
-        who: integration-fluffy
-      annotations:
-        description: {{ .Values.kibanaLink }}
-             {{ .Values.grafanaLink }}
-        summary: Login success rate for RE agents and for one of login type with temporary errors is between 95 - 90% with the value ( <{ $value }> ) for the last the last 60 minutes
-          for <{ $labels.className }> ( <{ $labels.provider }> ) and it was below for last 75 minutes.
-        tags: {{ .Values.tags }}
-
     - alert: SplitLoginSuccessRatesBelow90AndGreater80WithTemporaryErrorsAndAttemptLimitES_RE
       expr: |
           sum(sum_over_time(tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="ES"}[60m])) by (provider, action)
@@ -111,20 +93,38 @@ spec:
             / sum(sum_over_time(tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"}[60m])) by (provider, action) >= 0.8
       for: 15m
       labels:
+        severity: ping
+        priority: P4
+        who: integration-fluffy
+      annotations:
+        description: {{ .Values.kibanaLink }}
+             {{ .Values.grafanaLink }}
+        summary: Login success rate for RE agents and for one of login type with temporary errors is between 90 - 80% with the value ( <{ $value }> ) for the last the last 60 minutes
+          for <{ $labels.className }> ( <{ $labels.provider }> ) and it was below for last 75 minutes.
+        tags: {{ .Values.tags }}
+
+    - alert: SplitLoginSuccessRatesBelow80AndGreater70WithTemporaryErrorsAndAttemptLimitES_RE
+      expr: |
+          sum(sum_over_time(tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="ES"}[60m])) by (provider, action)
+            / sum(sum_over_time(tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"}[60m])) by (provider, action) < 0.8
+          and sum(sum_over_time(tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="ES"}[60m])) by (provider, action)
+            / sum(sum_over_time(tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"}[60m])) by (provider, action) >= 0.7
+      for: 15m
+      labels:
         severity: urgent
         priority: P3
         who: integration-fluffy
       annotations:
         description: {{ .Values.kibanaLink }}
              {{ .Values.grafanaLink }}
-        summary: Login success rate for RE agents and for one of login type with temporary errors is between 90 - 80% with the value ( <{ $value }> ) for the last the last 60 minutes
+        summary: Login success rate for RE agents and for one of login type with temporary errors is between 80 - 70% with the value ( <{ $value }> ) for the last the last 60 minutes
               for <{ $labels.className }> ( <{ $labels.provider }> ) and it was below for last 75 minutes.
         tags: {{ .Values.tags }}
 
-    - alert: SplitLoginSuccessRatesBelow80AndGreater60WithTemporaryErrorsAndAttemptLimitES_RE
+    - alert: SplitLoginSuccessRatesBelow70AndGreater60WithTemporaryErrorsAndAttemptLimitES_RE
       expr: |
           sum(sum_over_time(tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="ES"}[60m])) by (provider, action)
-            / sum(sum_over_time(tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"}[60m])) by (provider, action) < 0.8
+            / sum(sum_over_time(tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"}[60m])) by (provider, action) < 0.7
           and sum(sum_over_time(tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="ES"}[60m])) by (provider, action)
             / sum(sum_over_time(tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"}[60m])) by (provider, action) >= 0.6
       for: 5m
@@ -135,7 +135,7 @@ spec:
       annotations:
         description: {{ .Values.kibanaLink }}
              {{ .Values.grafanaLink }}
-        summary: Login success rate for RE agents and for one of login type with temporary errors is between 80 - 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+        summary: Login success rate for RE agents and for one of login type with temporary errors is between 70 - 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
              the last 60 minutes.
         tags: {{ .Values.tags }}
 
@@ -159,12 +159,12 @@ spec:
     ### All login success rates - Bank Errors - RE ###
     ##################################################
 
-    - alert: AllLoginSuccessRatesBelow95AndGreater90WithBankErrorsAndAttemptLimitES_RE
+    - alert: AllLoginSuccessRatesBelow90AndGreater80WithBankErrorsAndAttemptLimitES_RE
       expr: |
           (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="ES"}))
-                          / (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"})) < 0.95
+                          / (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"})) < 0.9
                  and (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="ES"}))
-                          / (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"})) >= 0.9
+                          / (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"})) >= 0.8
                 and sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"}) > 3
       for: {{ .Values.p4WaitTimeBeforeFiringAlert }}
       labels:
@@ -174,16 +174,16 @@ spec:
       annotations:
         description: {{ .Values.kibanaLink }}
              {{ .Values.grafanaLink }}
-        summary: Login success rate for RE agents and all Bank types with Bank errors is between 95 - 90% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+        summary: Login success rate for RE agents and all Bank types with Bank errors is between 90 - 80% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
              the last {{ .Values.p4WaitTimeBeforeFiringAlert }}.
         tags: {{ .Values.tags }}
 
-    - alert: AllLoginSuccessRatesBelow90AndGreater80WithBankErrorsAndAttemptLimitES_RE
+    - alert: AllLoginSuccessRatesBelow80AndGreater70WithBankErrorsAndAttemptLimitES_RE
       expr: |
           (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="ES"}))
-                      / (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"})) < 0.9
+                      / (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"})) < 0.8
                  and (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="ES"}))
-                      / (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"})) >= 0.8
+                      / (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"})) >= 0.7
           and sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"}) > 3
       for: {{ .Values.p3WaitTimeBeforeFiringAlert }}
       labels:
@@ -193,14 +193,14 @@ spec:
       annotations:
         description: {{ .Values.kibanaLink }}
              {{ .Values.grafanaLink }}
-        summary: Login success rate for RE agents and for all Bank types with Bank errors is between 90 - 80% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+        summary: Login success rate for RE agents and for all Bank types with Bank errors is between 80 - 70% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
              the last {{ .Values.p3WaitTimeBeforeFiringAlert }}.
         tags: {{ .Values.tags }}
 
-    - alert: AllLoginSuccessRatesBelow80AndGreater60WithBankErrorsAndAttemptLimitES_RE
+    - alert: AllLoginSuccessRatesBelow70AndGreater60WithBankErrorsAndAttemptLimitES_RE
       expr: |
           (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="ES"}))
-                      / (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"})) < 0.8
+                      / (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"})) < 0.7
            and (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="ES"}))
                       / (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"})) >= 0.6
           and sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"}) > 3
@@ -212,7 +212,7 @@ spec:
       annotations:
         description: {{ .Values.kibanaLink }}
              {{ .Values.grafanaLink }}
-        summary: Login success rate for RE agents and for all Bank types with Bank errors is between 80 - 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+        summary: Login success rate for RE agents and for all Bank types with Bank errors is between 70 - 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
              the last {{ .Values.p2WaitTimeBeforeFiringAlert }}.
         tags: {{ .Values.tags }}
 
@@ -237,12 +237,12 @@ spec:
     ### Split login success rates - Bank Errors - RE ###
     ####################################################
 
-    - alert: SplitLoginSuccessRatesBelow90AndGreater95WithBankErrorsAndAttemptLimitES_RE
+    - alert: SplitLoginSuccessRatesBelow90AndGreater80WithBankErrorsAndAttemptLimitES_RE
       expr: |
           (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="ES"}))
-                / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"})) < 0.95
+                / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"})) < 0.9
            and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="ES"}))
-                / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"})) >= 0.9
+                / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"})) >= 0.8
           and sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"}) > 3
       for: {{ .Values.p4WaitTimeBeforeFiringAlert }}
       labels:
@@ -252,16 +252,16 @@ spec:
       annotations:
         description: {{ .Values.kibanaLink }}
              {{ .Values.grafanaLink }}
-        summary: Login success rate for RE agents and for one of login type with Bank errors is between 95 - 90% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+        summary: Login success rate for RE agents and for one of login type with Bank errors is between 90 - 80% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
              the last {{ .Values.p4WaitTimeBeforeFiringAlert }}.
         tags: {{ .Values.tags }}
 
-    - alert: SplitLoginSuccessRatesBelow90AndGreater80WithBankErrorsAndAttemptLimitES_RE
+    - alert: SplitLoginSuccessRatesBelow80AndGreater70WithBankErrorsAndAttemptLimitES_RE
       expr: |
           (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="ES"}))
-                 / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"})) < 0.9
+                 / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"})) < 0.8
            and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="ES"}))
-                 / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"})) >= 0.8
+                 / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"})) >= 0.7
           and sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"}) > 3
       for: {{ .Values.p3WaitTimeBeforeFiringAlert }}
       labels:
@@ -271,14 +271,14 @@ spec:
       annotations:
         description: {{ .Values.kibanaLink }}
              {{ .Values.grafanaLink }}
-        summary: Login success rate for RE agents and for one of login type with Bank errors is between 90 - 80% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+        summary: Login success rate for RE agents and for one of login type with Bank errors is between 80 - 70% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
              the last {{ .Values.p3WaitTimeBeforeFiringAlert }}.
         tags: {{ .Values.tags }}
 
-    - alert: SplitLoginSuccessRatesBelow80AndGreater60WithBankErrorsAndAttemptLimitES_RE
+    - alert: SplitLoginSuccessRatesBelow70AndGreater60WithBankErrorsAndAttemptLimitES_RE
       expr: |
           (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="ES"}))
-                 / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"})) < 0.8
+                 / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"})) < 0.7
            and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="ES"}))
                  / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"})) >= 0.6
           and sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"}) > 3
@@ -290,7 +290,7 @@ spec:
       annotations:
         description: {{ .Values.kibanaLink }}
              {{ .Values.grafanaLink }}
-        summary: Login success rate for RE agents and for one of login type with Bank errors is between 80 - 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+        summary: Login success rate for RE agents and for one of login type with Bank errors is between 70 - 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
              the last {{ .Values.p2WaitTimeBeforeFiringAlert }}.
         tags: {{ .Values.tags }}
 
