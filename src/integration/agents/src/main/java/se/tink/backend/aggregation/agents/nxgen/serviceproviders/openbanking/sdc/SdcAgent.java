@@ -71,7 +71,8 @@ public class SdcAgent extends NextGenerationAgent
                 new SdcAuthenticationController(
                         supplementalInformationHelper,
                         new SdcAuthenticator(apiClient, persistentStorage),
-                        strongAuthenticationState);
+                        strongAuthenticationState,
+                        credentials);
 
         return new AutoAuthenticationController(
                 request,
