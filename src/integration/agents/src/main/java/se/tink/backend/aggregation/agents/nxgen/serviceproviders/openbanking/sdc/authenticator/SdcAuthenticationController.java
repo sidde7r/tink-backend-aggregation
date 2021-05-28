@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sd
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalUnit;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -34,8 +33,7 @@ public class SdcAuthenticationController
         implements AutoAuthenticator, ThirdPartyAppAuthenticator<String> {
 
     private static final long WAIT_FOR_MINUTES = 9L;
-    public static final int DEFAULT_TOKEN_LIFETIME = 90;
-    public static final TemporalUnit DEFAULT_TOKEN_LIFETIME_UNIT = ChronoUnit.DAYS;
+    private static final int DEFAULT_TOKEN_DAYS_TO_EXPIRE = 90;
 
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final SdcAuthenticator authenticator;
@@ -75,7 +73,7 @@ public class SdcAuthenticationController
         authenticator.putTokenInPersistentStorage(accessToken);
         credentials.setSessionExpiryDate(
                 OpenBankingTokenExpirationDateHelper.getExpirationDateFrom(
-                        accessToken, DEFAULT_TOKEN_LIFETIME, DEFAULT_TOKEN_LIFETIME_UNIT));
+                        accessToken, DEFAULT_TOKEN_DAYS_TO_EXPIRE, ChronoUnit.DAYS));
 
         return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.DONE);
     }
