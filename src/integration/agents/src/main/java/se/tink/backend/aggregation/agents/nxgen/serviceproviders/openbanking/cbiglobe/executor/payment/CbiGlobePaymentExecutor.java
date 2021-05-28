@@ -53,6 +53,7 @@ import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.transfer.enums.RemittanceInformationType;
+import se.tink.libraries.transfer.rpc.ExecutionRule;
 import se.tink.libraries.transfer.rpc.PaymentServiceType;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
@@ -129,13 +130,22 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
                 .endDate(payment.getEndDate() != null ? payment.getEndDate().toString() : null)
                 .executionRule(
                         payment.getExecutionRule() != null
-                                ? payment.getExecutionRule().toString()
+                                ? mapExecutionRule(payment.getExecutionRule())
                                 : null)
                 .dayOfExecution(
                         nonNull(payment.getDayOfExecution())
                                 ? String.valueOf(payment.getDayOfExecution())
                                 : null)
                 .build();
+    }
+
+    private String mapExecutionRule(ExecutionRule rule) {
+        // Bank API has a typo, we need to have a typo as well.
+        if (rule == ExecutionRule.PRECEDING) {
+            return "preceeding";
+        } else {
+            return rule.toString();
+        }
     }
 
     private RemittanceInformation getRemittanceInformation(Payment payment) {

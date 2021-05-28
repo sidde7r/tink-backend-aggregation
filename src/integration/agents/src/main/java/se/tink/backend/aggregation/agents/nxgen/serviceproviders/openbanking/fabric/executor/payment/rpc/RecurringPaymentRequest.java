@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.transfer.enums.RemittanceInformationType;
+import se.tink.libraries.transfer.rpc.ExecutionRule;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 @JsonObject
@@ -58,9 +59,19 @@ public class RecurringPaymentRequest extends FabricPaymentRequest {
             createRecurringPaymentRequest.endDate(payment.getEndDate().toString());
         }
         if (Optional.ofNullable(payment.getExecutionRule()).isPresent()) {
-            createRecurringPaymentRequest.executionRule(payment.getExecutionRule().toString());
+            createRecurringPaymentRequest.executionRule(
+                    mapExecutionRule(payment.getExecutionRule()));
         }
 
         return createRecurringPaymentRequest.build();
+    }
+
+    private static String mapExecutionRule(ExecutionRule rule) {
+        // Bank API has a typo, we need to have a typo as well.
+        if (rule == ExecutionRule.PRECEDING) {
+            return "preceeding";
+        } else {
+            return rule.toString();
+        }
     }
 }
