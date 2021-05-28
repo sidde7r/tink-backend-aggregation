@@ -13,7 +13,7 @@ public class CredemAgentTest {
         builder =
                 new AgentIntegrationTest.Builder("it", "it-credem-oauth2")
                         .expectLoggedIn(false)
-                        .loadCredentialsBefore(true)
+                        .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
                         .setFinancialInstitutionId("credem")
                         .setAppId("tink");

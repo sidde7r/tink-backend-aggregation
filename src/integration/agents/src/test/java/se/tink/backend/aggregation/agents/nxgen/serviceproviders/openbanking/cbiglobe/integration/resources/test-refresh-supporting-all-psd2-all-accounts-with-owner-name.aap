@@ -13,7 +13,7 @@ Pragma: no-cache
 Cache-Control: no-store
 Content-Type: application/json;charset=utf-8
 
-{"access_token":"dummyToken", "token_type":"Bearer", "expires_in":0, "scope":"production"}
+{"access_token":"dummyToken", "token_type":"Bearer", "expires_in":100, "scope":"production"}
 
 REQUEST 2
 POST https://cbiglobeopenbankingapigateway.nexi.it/platform/enabler/psd2orchestrator/ais/3.0.0/consents
@@ -24,7 +24,7 @@ aspsp-product-code: PR
 tpp-redirect-uri: https://127.0.0.1:7357/api/v1/thirdparty/callback?state=00000000-0000-4000-0000-000000000000&code=acc&result=success
 tpp-nok-redirect-uri: https://127.0.0.1:7357/api/v1/thirdparty/callback?state=00000000-0000-4000-0000-000000000000&code=acc&result=failure
 
-{"access":{"allPsd2":"allAccounts"},"combinedServiceIndicator":"true","frequencyPerDay":"4","recurringIndicator":"true"}
+{"access":{"allPsd2":"allAccountsWithOwnerName"},"combinedServiceIndicator":"true","frequencyPerDay":"4","recurringIndicator":"true"}
 
 RESPONSE 2
 201
@@ -44,7 +44,7 @@ RESPONSE 3
 200
 Content-Type: application/json
 
-{"access":{"allPsd2":"allAccounts"},"recurringIndicator":"true","validUntil":"2021-08-18T23:59:59Z","frequencyPerDay":"4","lastActionDate":"2021-05-21","consentStatus":"valid","scaStatus":"VERIFIED"}
+{"access":{"allPsd2":"allAccountsWithOwnerName"},"recurringIndicator":"true","validUntil":"2021-08-18T23:59:59Z","frequencyPerDay":"4","lastActionDate":"2021-05-21","consentStatus":"valid","scaStatus":"VERIFIED"}
 
 REQUEST 4
 GET https://cbiglobeopenbankingapigateway.nexi.it/platform/enabler/psd2orchestrator/ais/3.0.0/accounts
@@ -58,7 +58,7 @@ RESPONSE 4
 200
 Content-Type: application/json
 
-{"accounts":[{"iban":"dummyIban","bban":"dummyBban","currency":"EUR","resourceId":"dummyAccountId","name":"dummyName","product":"dummyProduct","bic":"dummyBic","usage":"PRIV","_links":{"account":{"href":"/accounts/dummyResourceId"},"balances":{"href":"/accounts/dummyResourceId/balances"},"transactions":{"href":"/accounts/dummyResourceId/transactions"}}}]}
+{"accounts":[{"ownerName":"Philip Cole, Marriana Gustav", "iban":"dummyIban","bban":"dummyBban","currency":"EUR","resourceId":"dummyAccountId","name":"dummyName","product":"dummyProduct","bic":"dummyBic","usage":"PRIV","_links":{"account":{"href":"/accounts/dummyResourceId"},"balances":{"href":"/accounts/dummyResourceId/balances"},"transactions":{"href":"/accounts/dummyResourceId/transactions"}}}]}
 
 REQUEST 5
 GET https://cbiglobeopenbankingapigateway.nexi.it/platform/enabler/psd2orchestrator/ais/2.3.2/accounts/dummyAccountId/balances

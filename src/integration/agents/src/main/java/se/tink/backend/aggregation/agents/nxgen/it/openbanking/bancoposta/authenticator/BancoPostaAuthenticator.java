@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.CbiThirdPartyFinishAuthenticationStep;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.CbiUserState;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.entities.ConsentType;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.AllPsd2;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.configuration.CbiGlobeConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
@@ -34,7 +35,17 @@ public class BancoPostaAuthenticator extends CbiGlobeAuthenticator {
     protected void buildManualAuthenticationSteps() {
         manualAuthenticationSteps.add(
                 new CreateAllPsd2ConsentScaAuthenticationStep(
-                        consentManager, strongAuthenticationState, userState));
+                        consentManager,
+                        strongAuthenticationState,
+                        userState,
+                        AllPsd2.ALL_ACCOUNTS_WITH_OWNER_NAME));
+
+        manualAuthenticationSteps.add(
+                new CreateAllPsd2ConsentScaAuthenticationStep(
+                        consentManager,
+                        strongAuthenticationState,
+                        userState,
+                        AllPsd2.ALL_ACCOUNTS));
 
         manualAuthenticationSteps.add(
                 new CreateAccountsConsentScaAuthenticationStep(
