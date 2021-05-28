@@ -34,7 +34,9 @@
                 ]
             },
             "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
-            "balances": [],
+            "balances": [
+
+            ],
             "availableCredit": 0.0,
             "balance": 108.82
         }
@@ -44,55 +46,97 @@
             "amount": -2.45,
             "date": 1614250800000,
             "description": "Kosten gebruik betaalrekening inclusief 1 betaalpas",
-            "internalPayload": {},
+            "internalPayload": {
+
+            },
             "originalAmount": 0.0,
             "payload": {
+                "MESSAGE": "Kosten gebruik betaalrekening inclusief 1 betaalpas",
                 "TRANSFER_ACCOUNT_EXTERNAL": "",
-                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "",
-                "MESSAGE": "Kosten gebruik betaalrekening inclusief 1 betaalpas"
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": ""
             },
             "pending": false,
             "timestamp": 0,
             "type": "DEFAULT",
             "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
+            "externalSystemIds": {
+
+            },
+            "transactionDates": [
+
+            ]
         },
         {
             "amount": -2.45,
             "date": 1616670000000,
             "description": "Kosten gebruik betaalrekening inclusief 1 betaalpas",
-            "internalPayload": {},
+            "internalPayload": {
+
+            },
             "originalAmount": 0.0,
             "payload": {
+                "MESSAGE": "Kosten gebruik betaalrekening inclusief 1 betaalpas",
                 "TRANSFER_ACCOUNT_EXTERNAL": "",
-                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "",
-                "MESSAGE": "Kosten gebruik betaalrekening inclusief 1 betaalpas"
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": ""
             },
             "pending": false,
             "timestamp": 0,
             "type": "DEFAULT",
             "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
+            "externalSystemIds": {
+
+            },
+            "transactionDates": [
+
+            ]
         },
         {
             "amount": -2.45,
             "date": 1619344800000,
             "description": "Kosten gebruik betaalrekening inclusief 1 betaalpas",
-            "internalPayload": {},
+            "internalPayload": {
+
+            },
             "originalAmount": 0.0,
             "payload": {
+                "MESSAGE": "Kosten gebruik betaalrekening inclusief 1 betaalpas",
                 "TRANSFER_ACCOUNT_EXTERNAL": "",
-                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "",
-                "MESSAGE": "Kosten gebruik betaalrekening inclusief 1 betaalpas"
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": ""
             },
             "pending": false,
             "timestamp": 0,
             "type": "DEFAULT",
             "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
+            "externalSystemIds": {
+
+            },
+            "transactionDates": [
+
+            ]
+        },
+        {
+            "amount": -2.45,
+            "date": 1614250800000,
+            "description": "Kosten gebruik betaalrekening inclusief 1 betaalpas",
+            "internalPayload": {
+
+            },
+            "originalAmount": 0.0,
+            "payload": {
+                "MESSAGE": "Kosten gebruik betaalrekening inclusief 1 betaalpas",
+                "TRANSFER_ACCOUNT_EXTERNAL": "",
+                "TRANSFER_ACCOUNT_NAME_EXTERNAL": ""
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {
+
+            },
+            "transactionDates": [
+
+            ]
         }
     ]
 }
