@@ -27,8 +27,8 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponen
 })
 @AgentPisCapability(
         capabilities = {
-            PisCapability.PIS_SEPA_INSTANT_CREDIT_TRANSFER,
-            PisCapability.PIS_SEPA_CREDIT_TRANSFER
+            PisCapability.SEPA_INSTANT_CREDIT_TRANSFER,
+            PisCapability.SEPA_CREDIT_TRANSFER
         })
 public final class CicAgent extends CmcicAgent {
 
