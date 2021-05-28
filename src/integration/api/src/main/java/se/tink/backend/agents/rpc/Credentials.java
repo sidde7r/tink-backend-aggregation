@@ -181,6 +181,10 @@ public class Credentials implements Cloneable {
         return sessionExpiryDate;
     }
 
+    public boolean isSessionExpired() {
+        return sessionExpiryDate != null && new Date().after(sessionExpiryDate);
+    }
+
     public String getSensitivePayloadSerialized() {
         return sensitivePayloadSerialized;
     }

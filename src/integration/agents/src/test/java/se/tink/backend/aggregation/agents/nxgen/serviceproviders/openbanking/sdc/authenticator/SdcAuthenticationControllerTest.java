@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Optional;
 import org.junit.Before;
 import org.junit.Test;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
@@ -26,15 +27,17 @@ public class SdcAuthenticationControllerTest {
     private SdcAuthenticationController controller;
     private SupplementalInformationHelper supplementalInformationHelper;
     private StrongAuthenticationState state;
+    private Credentials credentials;
 
     @Before
     public void init() {
         supplementalInformationHelper = mock(SupplementalInformationHelper.class);
         SdcAuthenticator authenticator = mock(SdcAuthenticator.class);
         state = mock(StrongAuthenticationState.class);
+        credentials = mock(Credentials.class);
         controller =
                 new SdcAuthenticationController(
-                        supplementalInformationHelper, authenticator, state);
+                        supplementalInformationHelper, authenticator, state, credentials);
     }
 
     @Test

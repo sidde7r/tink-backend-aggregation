@@ -2,21 +2,26 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sd
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalUnit;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
+import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.authenticator.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppStatus;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.OpenBankingTokenExpirationDateHelper;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
@@ -29,10 +34,13 @@ public class SdcAuthenticationController
         implements AutoAuthenticator, ThirdPartyAppAuthenticator<String> {
 
     private static final long WAIT_FOR_MINUTES = 9L;
+    public static final int DEFAULT_TOKEN_LIFETIME = 90;
+    public static final TemporalUnit DEFAULT_TOKEN_LIFETIME_UNIT = ChronoUnit.DAYS;
 
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final SdcAuthenticator authenticator;
     private final StrongAuthenticationState strongAuthenticationState;
+    private final Credentials credentials;
 
     public ThirdPartyAppResponse<String> init() {
         return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.WAITING);
@@ -40,6 +48,10 @@ public class SdcAuthenticationController
 
     @Override
     public void autoAuthenticate() throws SessionException, BankServiceException {
+        if (credentials.isSessionExpired()) {
+            authenticator.removeTokenFromPersistentStorage();
+            throw SessionError.SESSION_EXPIRED.exception();
+        }
         authenticator.refreshAccessToken();
     }
 
@@ -60,7 +72,10 @@ public class SdcAuthenticationController
         Preconditions.checkNotNull(code);
 
         OAuth2Token accessToken = authenticator.exchangeAuthorizationCode(code);
-        authenticator.useAccessToken(accessToken);
+        authenticator.putTokenInPersistentStorage(accessToken);
+        credentials.setSessionExpiryDate(
+                OpenBankingTokenExpirationDateHelper.getExpirationDateFrom(
+                        accessToken, DEFAULT_TOKEN_LIFETIME, DEFAULT_TOKEN_LIFETIME_UNIT));
 
         return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.DONE);
     }
