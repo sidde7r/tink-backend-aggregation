@@ -48,7 +48,6 @@ import se.tink.backend.aggregation.nxgen.http.filter.filters.ServiceUnavailableB
 @AgentCapabilities({
     CHECKING_ACCOUNTS,
     SAVINGS_ACCOUNTS,
-    CREDIT_CARDS,
     INVESTMENTS,
     IDENTITY_DATA,
     LOANS
@@ -57,7 +56,6 @@ public final class NordeaFIAgent extends NextGenerationAgent
         implements RefreshIdentityDataExecutor,
                 RefreshInvestmentAccountsExecutor,
                 RefreshLoanAccountsExecutor,
-                RefreshCreditCardAccountsExecutor,
                 RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor {
     private final NordeaFIApiClient apiClient;
@@ -135,12 +133,10 @@ public final class NordeaFIAgent extends NextGenerationAgent
                                 new NordeaTransactionFetcher(apiClient))));
     }
 
-    @Override
     public FetchAccountsResponse fetchCreditCardAccounts() {
         return creditCardRefreshController.fetchCreditCardAccounts();
     }
 
-    @Override
     public FetchTransactionsResponse fetchCreditCardTransactions() {
         return creditCardRefreshController.fetchCreditCardTransactions();
     }
