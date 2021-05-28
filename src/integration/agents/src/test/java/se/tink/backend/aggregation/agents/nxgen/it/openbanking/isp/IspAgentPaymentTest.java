@@ -61,7 +61,7 @@ public class IspAgentPaymentTest {
         recurringPayment.withFrequency(Frequency.MONTHLY);
         recurringPayment.withStartDate(LocalDate.now().plusDays(2));
         recurringPayment.withEndDate(LocalDate.now().plusMonths(3));
-        recurringPayment.withExecutionRule(ExecutionRule.PRECEEDING);
+        recurringPayment.withExecutionRule(ExecutionRule.PRECEDING);
 
         return recurringPayment;
     }

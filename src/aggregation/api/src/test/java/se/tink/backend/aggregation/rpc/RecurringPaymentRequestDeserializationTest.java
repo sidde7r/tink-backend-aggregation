@@ -171,7 +171,7 @@ public class RecurringPaymentRequestDeserializationTest {
                 + "    \"value\": \"wow so recurring\"\n"
                 + "  },\n"
                 + "  \"frequency\": \"MONTHLY\",\n"
-                + "  \"executionRule\": \"PRECEEDING\",\n"
+                + "  \"executionRule\": \"PRECEDING\",\n"
                 + "  \"dayOfExecution\": 10,\n"
                 + "  \"startDate\": \"2021-03-10\",\n"
                 + "  \"forceAuthenticate\": false\n"
