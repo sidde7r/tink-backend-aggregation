@@ -58,7 +58,7 @@ spec:
         summary: Threshold exceed for ( <{ $labels.className }> ) for transfers with outcome ( <{ $labels.outcome }> ).
 
     - alert: TransferUnavailableOutcomeThresholdIsPassedForSwedenTier1Banks
-      expr: sum by (className, outcome) (increase(tink_agent_transfer_total{market="SE", className=~".*(nordea|seb|swedbank|handelsbanken).*", outcome=~"unavailable"}[15m])) >= 15
+      expr: sum by (className, outcome) (increase(tink_agent_transfer_total{market="SE", className=~".*(nordea|seb|handelsbanken).*", outcome=~"unavailable"}[15m])) >= 15
       labels:
         severity: urgent
         who: payments-connectivity
@@ -66,6 +66,29 @@ spec:
       annotations:
         description: This can indicate that the bank is having issues or that their api has changed. Check overall trend for this provider to assess the impact. https://grafana.global-production.tink.network/d/XvmDe8YMz/payments-overview-dashboard?orgId=1
         summary: Threshold exceed for ( <{ $labels.className }> ) for transfers with outcome ( <{ $labels.outcome }> ).
+
+    - alert: TransferUnavailableOutcomeThresholdIsPassedForSwedbankWithHighTraffic
+      expr: (sum by (className) (increase(tink_agent_transfer_total{market="SE", className="nxgen.se.banks.swedbank.fallback.SwedbankFallbackAgent", outcome="unavailable"}[1h]))
+        / sum by (className) (increase(tink_agent_transfer_total{market="SE", className="nxgen.se.banks.swedbank.fallback.SwedbankFallbackAgent"}[1h]))) > 0.015 and sum by (className) (increase(tink_agent_transfer_total{market="SE", className="nxgen.se.banks.swedbank.fallback.SwedbankFallbackAgent"}[1h])) > 1000
+      labels:
+        severity: urgent
+        who: payments-connectivity
+        priority: P3
+      annotations:
+        description: This can indicate that the bank is having issues or that their api has changed. Check overall trend for this provider to assess the impact. https://grafana.global-production.tink.network/d/XvmDe8YMz/payments-overview-dashboard?orgId=1
+        summary: Threshold exceed for ( <{ $labels.className }> ) for transfers with outcome ( <{ $labels.outcome }> ).
+
+    - alert: TransferUnavailableOutcomeThresholdIsPassedForSwedbankWithLowTraffic
+      expr: sum by (className, outcome) (increase(tink_agent_transfer_total{market="SE", className="nxgen.se.banks.swedbank.fallback.SwedbankFallbackAgent", outcome=~"unavailable"}[15m])) >= 15
+        and sum by (className) (increase(tink_agent_transfer_total{market="SE", className="nxgen.se.banks.swedbank.fallback.SwedbankFallbackAgent"}[1h])) <= 1000
+      labels:
+        severity: urgent
+        who: payments-connectivity
+        priority: P3
+      annotations:
+        description: This can indicate that the bank is having issues or that their api has changed. Check overall trend for this provider to assess the impact. https://grafana.global-production.tink.network/d/XvmDe8YMz/payments-overview-dashboard?orgId=1
+        summary: Threshold exceed for ( <{ $labels.className }> ) for transfers with outcome ( <{ $labels.outcome }> ).
+
 
     - alert: TransferFailedOutcomeThresholdIsPassedForLansforsakringar
       expr: sum(increase(tink_agent_transfer_total{market="SE", className="banks.LansforsakringarAgent", outcome="failed"}[6h])) / sum(increase(tink_agent_transfer_total{market="SE", className="banks.LansforsakringarAgent"}[6h])) > 0.5
