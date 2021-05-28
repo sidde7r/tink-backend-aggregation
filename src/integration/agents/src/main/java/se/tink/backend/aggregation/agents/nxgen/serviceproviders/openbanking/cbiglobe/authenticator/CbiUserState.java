@@ -30,8 +30,23 @@ public class CbiUserState {
                         () -> new IllegalStateException(SessionError.SESSION_EXPIRED.exception()));
     }
 
-    void startManualAuthenticationStep(String consentId) {
+    public void saveScaUrl(String scaUrl) {
+        persistentStorage.put(StorageKeys.SCA_URL, scaUrl);
+    }
+
+    public String getScaUrl() {
+        return persistentStorage.get(StorageKeys.SCA_URL);
+    }
+
+    public boolean isAllPsd2Supported() {
+        return persistentStorage
+                .get(StorageKeys.ALL_PSD2_SUPPORTED, Boolean.class)
+                .orElse(Boolean.FALSE);
+    }
+
+    void startManualAuthenticationStep(String consentId, boolean allPsd2Supported) {
         persistentStorage.put(StorageKeys.CONSENT_ID, consentId);
+        persistentStorage.put(StorageKeys.ALL_PSD2_SUPPORTED, allPsd2Supported);
         persistentStorage.put(CBI_MANUAL_AUTHENTICATION_IN_PROGRESS, true);
     }
 

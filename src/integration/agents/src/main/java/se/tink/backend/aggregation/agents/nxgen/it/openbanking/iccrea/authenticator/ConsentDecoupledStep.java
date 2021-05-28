@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.iccrea.authenticator;
 
 import com.google.common.base.Strings;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
@@ -13,11 +13,12 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 
-@AllArgsConstructor
-public class AccountConsentDecoupledStep implements AuthenticationStep {
+@RequiredArgsConstructor
+public class ConsentDecoupledStep implements AuthenticationStep {
+
+    private final ConsentProcessor consentProcessor;
     private final ConsentManager consentManager;
     private final StrongAuthenticationState strongAuthenticationState;
-    private final ConsentProcessor consentProcessor;
 
     @Override
     public AuthenticationStepResponse execute(AuthenticationRequest request)
@@ -28,11 +29,11 @@ public class AccountConsentDecoupledStep implements AuthenticationStep {
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
 
-        ConsentScaResponse consentScaResponse =
+        consentProcessor.processConsent(
+                username,
+                password,
                 (ConsentScaResponse)
-                        consentManager.createAccountConsent(strongAuthenticationState.getState());
-
-        consentProcessor.processConsent(username, password, consentScaResponse);
+                        consentManager.createAllPsd2Consent(strongAuthenticationState.getState()));
         return AuthenticationStepResponse.executeNextStep();
     }
 }

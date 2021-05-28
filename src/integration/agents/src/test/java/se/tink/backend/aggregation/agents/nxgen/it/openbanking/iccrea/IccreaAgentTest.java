@@ -29,7 +29,7 @@ public class IccreaAgentTest {
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
-                        .setFinancialInstitutionId("iccrea")
+                        .setFinancialInstitutionId("978ca6c0c5594e5b843fea9509496d0d")
                         .setAppId("tink")
                         .addCredentialField(
                                 Field.Key.USERNAME,

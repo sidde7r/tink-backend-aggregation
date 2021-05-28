@@ -1,11 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.creditagricole;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 
-@Ignore
 public class CreditAgricoleAgentTest {
 
     private AgentIntegrationTest.Builder builder;

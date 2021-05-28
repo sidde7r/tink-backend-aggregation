@@ -5,6 +5,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.AccountFetchingStep;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.CbiGlobeAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.CbiThirdPartyAppAuthenticationStep;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.CbiThirdPartyFinishAuthenticationStep;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.CbiUserState;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.entities.ConsentType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.configuration.CbiGlobeConfiguration;
@@ -30,18 +31,18 @@ public class BancoPostaAuthenticator extends CbiGlobeAuthenticator {
         return manualAuthenticationSteps;
     }
 
-    private void buildManualAuthenticationSteps() {
+    protected void buildManualAuthenticationSteps() {
+        manualAuthenticationSteps.add(
+                new CreateAllPsd2ConsentScaAuthenticationStep(
+                        consentManager, strongAuthenticationState, userState));
+
         manualAuthenticationSteps.add(
                 new CreateAccountsConsentScaAuthenticationStep(
                         consentManager, strongAuthenticationState, userState));
 
         manualAuthenticationSteps.add(
                 new CbiThirdPartyAppAuthenticationStep(
-                        new BancoPostaConsentRequestParamsProvider(this, consentManager),
-                        ConsentType.ACCOUNT,
-                        consentManager,
-                        userState,
-                        strongAuthenticationState));
+                        userState, ConsentType.ACCOUNT, consentManager, strongAuthenticationState));
 
         manualAuthenticationSteps.add(new AccountFetchingStep(apiClient, userState));
 
@@ -51,10 +52,12 @@ public class BancoPostaAuthenticator extends CbiGlobeAuthenticator {
 
         manualAuthenticationSteps.add(
                 new CbiThirdPartyAppAuthenticationStep(
-                        new BancoPostaConsentRequestParamsProvider(this, consentManager),
+                        userState,
                         ConsentType.BALANCE_TRANSACTION,
                         consentManager,
-                        userState,
                         strongAuthenticationState));
+
+        manualAuthenticationSteps.add(
+                new CbiThirdPartyFinishAuthenticationStep(consentManager, userState));
     }
 }
