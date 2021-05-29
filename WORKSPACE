@@ -663,6 +663,7 @@ maven_deps(
         "io.netty:netty-transport": IO_NETTY_VERSION,
         "javax.validation:validation-api": "2.0.1.Final",
         "org.apache.httpcomponents:httpcore": "4.4.13",
+        "org.quartz-scheduler:quartz": "2.3.2",
         "org.springframework:spring-aop": "4.3.9.RELEASE",
         "org.springframework:spring-beans": "4.3.9.RELEASE",
         "org.springframework:spring-context": "4.3.9.RELEASE",
