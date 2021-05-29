@@ -643,7 +643,7 @@ http_archive(
 )
 
 load("@rules_jvm_external//:defs.bzl", "maven_install")
-load("@tink_backend//third_party/maven:deps.bzl", "maven_deps")
+load("//third_party/maven:deps.bzl", "maven_deps")
 
 maven_deps(
     "//third_party/maven:maven_install.json",
