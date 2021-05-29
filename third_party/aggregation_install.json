@@ -7373,7 +7373,7 @@
                 "dependencies": [],
                 "directDependencies": [],
                 "exclusions": [
-                    "org.slf4j:slf4j-log4j12"
+                    "*:*"
                 ],
                 "file": "v1/https/repo1.maven.org/maven2/log4j/log4j/1.2.17/log4j-1.2.17.jar",
                 "mirror_urls": [
@@ -7388,7 +7388,7 @@
                 "dependencies": [],
                 "directDependencies": [],
                 "exclusions": [
-                    "org.slf4j:slf4j-log4j12"
+                    "*:*"
                 ],
                 "file": "v1/https/repo1.maven.org/maven2/log4j/log4j/1.2.17/log4j-1.2.17-sources.jar",
                 "mirror_urls": [
