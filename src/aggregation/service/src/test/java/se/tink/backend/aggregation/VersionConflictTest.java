@@ -27,7 +27,6 @@ public final class VersionConflictTest {
                     "annotations",
                     "commons-codec",
                     "reflections",
-                    "commons-logging",
                     "stax2-api",
                     "jetty-server",
                     "asm",
