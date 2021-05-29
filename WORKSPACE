@@ -649,27 +649,6 @@ maven_deps(
     "//third_party/maven:maven_install.json",
     IO_NETTY_VERSION,
     IO_NETTY_BORINGSSL_VERSION,
-    artifact_versions = {
-        "com.fasterxml.jackson.core:jackson-annotations": "2.9.10",
-        "com.fasterxml.jackson.core:jackson-core": "2.9.10",
-        "com.fasterxml.jackson.core:jackson-databind": "2.9.10.8",
-        "com.thoughtworks.xstream:xstream": "1.4.7",
-        "io.netty:netty-buffer": IO_NETTY_VERSION,
-        "io.netty:netty-codec-http": IO_NETTY_VERSION,
-        "io.netty:netty-codec-http2": IO_NETTY_VERSION,
-        "io.netty:netty-common": IO_NETTY_VERSION,
-        "io.netty:netty-handler": IO_NETTY_VERSION,
-        "io.netty:netty-resolver": IO_NETTY_VERSION,
-        "io.netty:netty-transport": IO_NETTY_VERSION,
-        "javax.validation:validation-api": "2.0.1.Final",
-        "org.apache.httpcomponents:httpcore": "4.4.13",
-        "org.quartz-scheduler:quartz": "2.3.2",
-        "org.springframework:spring-aop": "4.3.9.RELEASE",
-        "org.springframework:spring-beans": "4.3.9.RELEASE",
-        "org.springframework:spring-context": "4.3.9.RELEASE",
-        "org.springframework:spring-core": "4.3.9.RELEASE",
-        "org.springframework:spring-expression": "4.3.9.RELEASE",
-    },
 )
 
 load("@maven//:defs.bzl", "pinned_maven_install")
