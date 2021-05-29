@@ -653,6 +653,7 @@ maven_deps(
         "com.fasterxml.jackson.core:jackson-annotations": "2.9.10",
         "com.fasterxml.jackson.core:jackson-core": "2.9.10",
         "com.fasterxml.jackson.core:jackson-databind": "2.9.10.1",
+        "com.thoughtworks.xstream:xstream": "1.4.7",
         "io.netty:netty-buffer": IO_NETTY_VERSION,
         "io.netty:netty-codec-http": IO_NETTY_VERSION,
         "io.netty:netty-codec-http2": IO_NETTY_VERSION,
