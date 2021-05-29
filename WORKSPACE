@@ -1107,6 +1107,9 @@ maven_install(
         "xmlpull:xmlpull",
         "xpp3:xpp3_min",
     ],
+    override_targets = {
+        "commons-logging:commons-logging": "@aggregation//:commons_logging_commons_logging",
+    },
     fetch_sources = True,
     maven_install_json = "//third_party/maven:maven_install.json",
     repositories = [
