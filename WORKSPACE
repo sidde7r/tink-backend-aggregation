@@ -652,7 +652,7 @@ maven_deps(
     artifact_versions = {
         "com.fasterxml.jackson.core:jackson-annotations": "2.9.10",
         "com.fasterxml.jackson.core:jackson-core": "2.9.10",
-        "com.fasterxml.jackson.core:jackson-databind": "2.9.10.1",
+        "com.fasterxml.jackson.core:jackson-databind": "2.9.10.8",
         "com.thoughtworks.xstream:xstream": "1.4.7",
         "io.netty:netty-buffer": IO_NETTY_VERSION,
         "io.netty:netty-codec-http": IO_NETTY_VERSION,
@@ -754,7 +754,7 @@ maven_install(
         "com.codeborne:phantomjsdriver:1.2.1",
         "com.fasterxml.jackson.core:jackson-annotations:2.9.10",
         "com.fasterxml.jackson.core:jackson-core:2.9.10",
-        "com.fasterxml.jackson.core:jackson-databind:2.9.10.1",
+        "com.fasterxml.jackson.core:jackson-databind:2.9.10.8",
         "com.fasterxml.jackson.dataformat:jackson-dataformat-cbor:2.9.9",
         "com.fasterxml.jackson.dataformat:jackson-dataformat-smile:2.9.9",
         "com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.9.9",
@@ -1229,7 +1229,7 @@ SPRING_BOOT_VERSION = "2.1.3.RELEASE"
 maven_install(
     name = "system_tests",
     artifacts = [
-        "com.fasterxml.jackson.core:jackson-databind:2.9.10.1",
+        "com.fasterxml.jackson.core:jackson-databind:2.9.10.8",
         "com.google.guava:guava:23.1-jre",
         "commons-io:commons-io:2.5",
         "org.apache.httpcomponents:httpclient:4.5.10",
