@@ -142,6 +142,9 @@ public final class SwedbankConstants {
 
     public static class BICProduction {
         public static final String SWEDEN = "SWEDSESS";
+        public static final String ESTONIA = "HABAEE2X";
+        public static final String LITHUANIA = "HABALT22";
+        public static final String LATVIA = "HABALV22";
     }
 
     public static class AuthStatus {

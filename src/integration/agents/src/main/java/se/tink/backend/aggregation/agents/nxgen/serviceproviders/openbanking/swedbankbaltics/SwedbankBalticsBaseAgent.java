@@ -9,12 +9,14 @@ import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.BICProduction;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.configuration.SwedbankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.fetcher.transactionalaccount.SwedbankTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.fetcher.transactionalaccount.SwedbankTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.fetcher.transferdestinations.SwedbankTransferDestinationFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.filter.SwedbankConsentLimitFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.filter.SwedbankMethodNotAllowedFilter;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbankbaltics.authenticator.SwedbankBalticsAuthenticator;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
@@ -28,90 +30,94 @@ import se.tink.backend.aggregation.nxgen.http.filter.filters.BankServiceInternal
 import se.tink.backend.aggregation.nxgen.http.filter.filters.ServiceUnavailableBankServiceErrorFilter;
 
 public class SwedbankBalticsBaseAgent extends SubsequentProgressiveGenerationAgent
-    implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor, RefreshTransferDestinationExecutor {
+        implements RefreshCheckingAccountsExecutor,
+                RefreshSavingsAccountsExecutor,
+                RefreshTransferDestinationExecutor {
 
-  private final SwedbankApiClient apiClient;
-  private final TransactionalAccountRefreshController transactionalAccountRefreshController;
-  private final TransferDestinationRefreshController transferDestinationRefreshController;
-  private final SwedbankTransactionalAccountFetcher transactionalAccountFetcher;
+    private final SwedbankApiClient apiClient;
+    private final TransactionalAccountRefreshController transactionalAccountRefreshController;
+    private final TransferDestinationRefreshController transferDestinationRefreshController;
+    private final SwedbankTransactionalAccountFetcher transactionalAccountFetcher;
 
-  protected SwedbankBalticsBaseAgent(AgentComponentProvider componentProvider, QsealcSigner qsealcSigner) {
-    super(componentProvider);
-    client.addFilter(new SwedbankConsentLimitFilter());
-    client.addFilter(new SwedbankMethodNotAllowedFilter());
-    client.addFilter(new BankServiceInternalErrorFilter());
-    client.addFilter(new ServiceUnavailableBankServiceErrorFilter());
-    apiClient =
-        new SwedbankApiClient(
-            client,
-            persistentStorage,
-            getAgentConfiguration(),
-            qsealcSigner,
-            componentProvider.getCredentialsRequest());
+    protected SwedbankBalticsBaseAgent(
+            AgentComponentProvider componentProvider, QsealcSigner qsealcSigner) {
+        super(componentProvider);
+        client.addFilter(new SwedbankConsentLimitFilter());
+        client.addFilter(new SwedbankMethodNotAllowedFilter());
+        client.addFilter(new BankServiceInternalErrorFilter());
+        client.addFilter(new ServiceUnavailableBankServiceErrorFilter());
+        apiClient =
+                new SwedbankApiClient(
+                        client,
+                        persistentStorage,
+                        getAgentConfiguration(),
+                        qsealcSigner,
+                        componentProvider.getCredentialsRequest(),
+                        BICProduction.ESTONIA);
 
-    transactionalAccountFetcher =
-        new SwedbankTransactionalAccountFetcher(
-            apiClient, persistentStorage, sessionStorage, transactionPaginationHelper);
-    transactionalAccountRefreshController = getTransactionalAccountRefreshController();
-    transferDestinationRefreshController = constructTransferDestinationController();
-  }
+        transactionalAccountFetcher =
+                new SwedbankTransactionalAccountFetcher(
+                        apiClient, persistentStorage, sessionStorage, transactionPaginationHelper);
+        transactionalAccountRefreshController = getTransactionalAccountRefreshController();
+        transferDestinationRefreshController = constructTransferDestinationController();
+    }
 
-  @Override
-  protected SessionHandler constructSessionHandler() {
-    return SessionHandler.alwaysFail();
-  }
+    @Override
+    protected SessionHandler constructSessionHandler() {
+        return SessionHandler.alwaysFail();
+    }
 
-  @Override
-  public StatelessProgressiveAuthenticator getAuthenticator() {
-    return new SwedbankBalticsAuthenticator();
-  }
+    @Override
+    public StatelessProgressiveAuthenticator getAuthenticator() {
+        return new SwedbankBalticsAuthenticator(apiClient);
+    }
 
-  @Override
-  public void setConfiguration(final AgentsServiceConfiguration agentsServiceConfiguration) {
-    super.setConfiguration(agentsServiceConfiguration);
-    client.setEidasProxy(agentsServiceConfiguration.getEidasProxy());
-  }
+    @Override
+    public void setConfiguration(final AgentsServiceConfiguration agentsServiceConfiguration) {
+        super.setConfiguration(agentsServiceConfiguration);
+        client.setEidasProxy(agentsServiceConfiguration.getEidasProxy());
+    }
 
-  private AgentConfiguration<SwedbankConfiguration> getAgentConfiguration() {
-    return getAgentConfigurationController().getAgentConfiguration(SwedbankConfiguration.class);
-  }
+    private AgentConfiguration<SwedbankConfiguration> getAgentConfiguration() {
+        return getAgentConfigurationController().getAgentConfiguration(SwedbankConfiguration.class);
+    }
 
-  @Override
-  public FetchAccountsResponse fetchCheckingAccounts() {
-    return transactionalAccountRefreshController.fetchCheckingAccounts();
-  }
+    @Override
+    public FetchAccountsResponse fetchCheckingAccounts() {
+        return transactionalAccountRefreshController.fetchCheckingAccounts();
+    }
 
-  @Override
-  public FetchTransactionsResponse fetchCheckingTransactions() {
-    return transactionalAccountRefreshController.fetchCheckingTransactions();
-  }
+    @Override
+    public FetchTransactionsResponse fetchCheckingTransactions() {
+        return transactionalAccountRefreshController.fetchCheckingTransactions();
+    }
 
-  @Override
-  public FetchAccountsResponse fetchSavingsAccounts() {
-    return transactionalAccountRefreshController.fetchSavingsAccounts();
-  }
+    @Override
+    public FetchAccountsResponse fetchSavingsAccounts() {
+        return transactionalAccountRefreshController.fetchSavingsAccounts();
+    }
 
-  @Override
-  public FetchTransactionsResponse fetchSavingsTransactions() {
-    return transactionalAccountRefreshController.fetchSavingsTransactions();
-  }
+    @Override
+    public FetchTransactionsResponse fetchSavingsTransactions() {
+        return transactionalAccountRefreshController.fetchSavingsTransactions();
+    }
 
-  @Override
-  public FetchTransferDestinationsResponse fetchTransferDestinations(List<Account> accounts) {
-    return transferDestinationRefreshController.fetchTransferDestinations(accounts);
-  }
+    @Override
+    public FetchTransferDestinationsResponse fetchTransferDestinations(List<Account> accounts) {
+        return transferDestinationRefreshController.fetchTransferDestinations(accounts);
+    }
 
-  private TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
-    return new TransactionalAccountRefreshController(
-        metricRefreshController,
-        updateController,
-        transactionalAccountFetcher,
-        new SwedbankTransactionFetcher(
-            apiClient, sessionStorage, request.getProvider().getMarket()));
-  }
+    private TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
+        return new TransactionalAccountRefreshController(
+                metricRefreshController,
+                updateController,
+                transactionalAccountFetcher,
+                new SwedbankTransactionFetcher(
+                        apiClient, sessionStorage, request.getProvider().getMarket()));
+    }
 
-  private TransferDestinationRefreshController constructTransferDestinationController() {
-    return new TransferDestinationRefreshController(
-        metricRefreshController, new SwedbankTransferDestinationFetcher());
-  }
+    private TransferDestinationRefreshController constructTransferDestinationController() {
+        return new TransferDestinationRefreshController(
+                metricRefreshController, new SwedbankTransferDestinationFetcher());
+    }
 }

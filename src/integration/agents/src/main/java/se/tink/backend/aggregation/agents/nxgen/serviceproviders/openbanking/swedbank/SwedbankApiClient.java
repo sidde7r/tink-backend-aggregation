@@ -69,6 +69,7 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.signableoperation.enums.InternalStatus;
@@ -83,19 +84,25 @@ public final class SwedbankApiClient implements SwedbankOpenBankingPaymentApiCli
     private final String redirectUrl;
     private final String signingKeyId;
     private final AgentComponentProvider componentProvider;
+    private final CredentialsRequest credentialsRequest;
+    private final String bic;
 
     public SwedbankApiClient(
             TinkHttpClient client,
             PersistentStorage persistentStorage,
             AgentConfiguration<SwedbankConfiguration> agentConfiguration,
             QsealcSigner qsealcSigner,
-            AgentComponentProvider componentProvider) {
+            AgentComponentProvider componentProvider,
+            CredentialsRequest credentialsRequest,
+            String bic) {
         this.client = client;
         this.persistentStorage = persistentStorage;
         this.qsealcSigner = qsealcSigner;
         this.configuration = agentConfiguration.getProviderSpecificConfiguration();
         this.redirectUrl = agentConfiguration.getRedirectUrl();
         this.componentProvider = componentProvider;
+        this.credentialsRequest = credentialsRequest;
+        this.bic = bic;
 
         try {
             this.signingCertificate =
@@ -132,8 +139,7 @@ public final class SwedbankApiClient implements SwedbankOpenBankingPaymentApiCli
                 .header(SwedbankConstants.HeaderKeys.X_REQUEST_ID, Psd2Headers.getRequestId())
                 .header(HttpHeaders.DATE, getFormattedDate(new Date()))
                 .accept(MediaType.APPLICATION_JSON)
-                .queryParam(
-                        SwedbankConstants.QueryKeys.BIC, SwedbankConstants.BICProduction.SWEDEN);
+                .queryParam(SwedbankConstants.QueryKeys.BIC, bic);
     }
 
     private RequestBuilder createRequestInSession(URL url, boolean withConsent) {
@@ -458,8 +464,7 @@ public final class SwedbankApiClient implements SwedbankOpenBankingPaymentApiCli
                             Urls.INITIATE_PAYMENT.parameter(
                                     UrlParameters.PAYMENT_TYPE, swedbankPaymentType.toString()))
                     .addBearerToken(getTokenFromSession())
-                    .queryParam(
-                            SwedbankConstants.QueryKeys.BIC, SwedbankConstants.BICProduction.SWEDEN)
+                    .queryParam(SwedbankConstants.QueryKeys.BIC, bic)
                     .header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.PSU_IP_ADDRESS)
                     .header(HeaderKeys.PSU_USER_AGENT, HeaderValues.PSU_USER_AGENT)
                     .header(HeaderKeys.X_REQUEST_ID, requestId)
