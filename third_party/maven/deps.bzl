@@ -1,12 +1,9 @@
 load("@rules_jvm_external//:defs.bzl", "maven_install")
 load("@rules_jvm_external//:specs.bzl", "maven")
 
-def maven_deps(maven_install_json, io_netty_version, io_netty_boringssl_version, artifact_versions = {}):
+def maven_deps(maven_install_json, io_netty_version, io_netty_boringssl_version):
     # All dependencies must be pinned.
     # Regenerate the pinning by running "bazel run @unpinned_maven//:pin"
-    #
-    # artifact_versions : Dictionary mapping an artifactId+groupId to a replacing version.
-    # Example: {"javax.validation:validation-api": "2.0.1.Final"}
 
     artifacts = [
         "jakarta.xml.bind:jakarta.xml.bind-api:2.3.3",
@@ -167,7 +164,7 @@ def maven_deps(maven_install_json, io_netty_version, io_netty_boringssl_version,
         "io.netty:netty-handler:4.1.50.Final",
         "io.netty:netty-resolver-dns:4.1.50.Final",
         "io.netty:netty-resolver:4.1.50.Final",
-        "io.netty:netty-tcnative-boringssl-static:%s" % io_netty_boringssl_version,
+        "io.netty:netty-tcnative-boringssl-static:2.0.30.Final",
         "io.netty:netty-transport:4.1.50.Final",
         "io.opencensus:opencensus-api:0.21.0",
         "io.opencensus:opencensus-contrib-grpc-metrics:0.21.0",
@@ -375,15 +372,6 @@ def maven_deps(maven_install_json, io_netty_version, io_netty_boringssl_version,
         "software.amazon.awssdk:sdk-core:2.5.54",
         "software.amazon.awssdk:utils:2.5.54",
     ]
-
-    # If specified, override the default artifact versions
-    for groupid_artifactid, version in artifact_versions.items():
-        # O(n*m); could be optimized...
-        artifact_strings = [a for a in artifacts if type(a) == type("str") and a.rsplit(":", 1)[0] == groupid_artifactid]
-        [artifact_string] = artifact_strings
-        artifacts.remove(artifact_string)
-        replacing_artifact_string = "{}:{}".format(groupid_artifactid, version)
-        artifacts.append(replacing_artifact_string)
 
     maven_install(
         name = "maven",
