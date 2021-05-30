@@ -1077,6 +1077,7 @@ maven_install(
         "com.nimbusds:nimbus-jose-jwt:8.20.1",
         "com.nimbusds:srp6a:2.0.2",
         "com.opsgenie.integration:sdk-shaded:jar:2.8.2",
+        "com.oracle.substratevm:svm:19.0.0",
         "com.squareup.okhttp3:okhttp:4.9.0",
         "com.squareup.okio:okio:2.8.0",
         "com.sun.activation:jakarta.activation:1.2.2",
@@ -1283,7 +1284,6 @@ maven_install(
     artifacts = [
         "com.google.errorprone:javac-shaded:9+181-r4173-1",
         "com.google.googlejavaformat:google-java-format:1.7",
-        "com.oracle.substratevm:svm:19.0.0",
         "io.grpc:grpc-api:%s" % GRPC_JAVA_VERSION,
         "io.grpc:grpc-auth:%s" % GRPC_JAVA_VERSION,
         "io.grpc:grpc-core:%s" % GRPC_JAVA_VERSION,
