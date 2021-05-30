@@ -1290,8 +1290,6 @@ aggregation_pin()
 maven_install(
     name = "aggregation_temp",
     artifacts = [
-        "com.google.errorprone:javac-shaded:9+181-r4173-1",
-        "com.google.googlejavaformat:google-java-format:1.7",
         "io.grpc:grpc-api:%s" % GRPC_JAVA_VERSION,
         "io.grpc:grpc-auth:%s" % GRPC_JAVA_VERSION,
         "io.grpc:grpc-core:%s" % GRPC_JAVA_VERSION,
@@ -1495,6 +1493,21 @@ maven_install(
 load("@aggregation_temp//:defs.bzl", aggregation_temp_pin = "pinned_maven_install")
 
 aggregation_temp_pin()
+
+maven_install(
+    name = "java_formatter",
+    artifacts = [
+        "com.google.errorprone:javac-shaded:9+181-r4173-1",
+        "com.google.googlejavaformat:google-java-format:1.7",
+    ],
+    fetch_sources = True,
+    maven_install_json = "//third_party:java_formatter_install.json",
+    repositories = MAVEN_REPOS,
+)
+
+load("@java_formatter//:defs.bzl", java_formatter_pin = "pinned_maven_install")
+
+java_formatter_pin()
 
 # Use via //third_party/jetty_server9
 maven_install(
