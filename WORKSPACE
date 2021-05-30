@@ -340,7 +340,7 @@ IO_NETTY_BORINGSSL_VERSION = "2.0.30.Final"
 
 GRPC_JAVA_NANO_VERSION = "1.21.1"
 
-ECLIPSE_JETTY_VERSION = "9.0.7.v20131107"
+ECLIPSE_JETTY_VERSION = "9.1.0.M0"
 
 ALT_ECLIPSE_JETTY_VERSION = "9.2.13.v20150730"
 
@@ -1178,6 +1178,7 @@ maven_install(
         "org.codehaus.plexus:plexus-utils:3.0.17",
         "org.codehaus.woodstox:stax2-api:4.1",
         "org.eclipse.jetty.orbit:javax.servlet:3.0.0.v201112011016",
+        "org.eclipse.jetty.toolchain.setuid:jetty-setuid-java:1.0.2",
         "org.eclipse.jetty:jetty-continuation:%s" % ECLIPSE_JETTY_VERSION,
         "org.eclipse.jetty:jetty-http:%s" % ECLIPSE_JETTY_VERSION,
         "org.eclipse.jetty:jetty-io:%s" % ECLIPSE_JETTY_VERSION,
