@@ -342,8 +342,6 @@ GRPC_JAVA_NANO_VERSION = "1.21.1"
 
 ECLIPSE_JETTY_VERSION = "9.1.0.M0"
 
-ALT_ECLIPSE_JETTY_VERSION = "9.2.13.v20150730"
-
 # rules_proto will not be builtin in to Bazel in v1.0 and later
 # prepare us for that, and use the out-ot-repo version
 http_archive(
