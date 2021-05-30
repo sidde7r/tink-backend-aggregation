@@ -1321,7 +1321,7 @@ java_library(
     name = "com_nimbusds_nimbus_jose_jwt",
     visibility = ["//visibility:public"],
     exports = [
-        "@aggregation_temp//:com_nimbusds_nimbus_jose_jwt",
+        "@aggregation//:com_nimbusds_nimbus_jose_jwt",
     ],
     runtime_deps = [
         "@aggregation//:com_github_stephenc_jcip_jcip_annotations",
@@ -1338,7 +1338,7 @@ java_library(
     name = "com_auth0_java_jwt",
     visibility = ["//visibility:public"],
     exports = [
-        "@aggregation_temp//:com_auth0_java_jwt",
+        "@aggregation//:com_auth0_java_jwt",
     ],
 )
 
@@ -1348,8 +1348,8 @@ java_library(
     exports = [
         "@aggregation//:com_github_jai_imageio_jai_imageio_core",
         "@aggregation//:net_java_dev_jna_jna",
-        "@aggregation_temp//:net_sourceforge_lept4j_lept4j",
-        "@aggregation_temp//:net_sourceforge_tess4j_tess4j",
+        "@aggregation//:net_sourceforge_lept4j_lept4j",
+        "@aggregation//:net_sourceforge_tess4j_tess4j",
     ],
 )
 
@@ -1542,24 +1542,6 @@ java_library(
         "@aggregation//:io_netty_netty_handler",
         "@aggregation//:io_netty_netty_transport",
         "@aggregation//:org_mockito_mockito_core",
-    ],
-)
-
-java_library(
-    name = "io_netty_netty_common",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@aggregation//:io_netty_netty_common",
-    ],
-    runtime_deps = [
-        "@aggregation//:commons_logging_commons_logging",
-        "@aggregation//:io_netty_netty_dev_tools",
-        "@aggregation//:log4j_log4j",
-        "@aggregation//:org_apache_logging_log4j_log4j_api",
-        "@aggregation//:org_apache_logging_log4j_log4j_core",
-        "@aggregation//:org_mockito_mockito_core",
-        "@aggregation//:org_slf4j_slf4j_api",
-        "@aggregation_temp//:com_oracle_substratevm_svm",
     ],
 )
 
