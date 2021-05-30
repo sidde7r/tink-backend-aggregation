@@ -1265,13 +1265,7 @@ aggregation_pin()
 maven_install(
     name = "aggregation_temp",
     artifacts = [
-        "com.amazonaws:aws-java-sdk-code-generator:1.11.381",
-        "com.amazonaws:aws-java-sdk-kms:1.11.381",
-        "com.amazonaws:aws-java-sdk-s3:1.11.381",
-        "com.amazonaws:aws-java-sdk-sqs:1.11.381",
-        "com.amazonaws:jmespath-java:1.11.381",
         "com.auth0:java-jwt:3.3.0",
-        "com.google.crypto.tink:tink:1.2.2",
         "com.google.errorprone:javac-shaded:9+181-r4173-1",
         "com.google.googlejavaformat:google-java-format:1.7",
         "com.nimbusds:nimbus-jose-jwt:8.20.1",
