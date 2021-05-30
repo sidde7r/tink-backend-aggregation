@@ -1012,6 +1012,7 @@ maven_install(
         "com.amazonaws:aws-java-sdk-s3:1.11.381",
         "com.amazonaws:aws-java-sdk-sqs:1.11.381",
         "com.amazonaws:jmespath-java:1.11.381",
+        "com.auth0:java-jwt:3.3.0",
         "com.codahale.metrics:metrics-annotation:3.0.2",
         "com.codahale.metrics:metrics-core:3.0.2",
         "com.codahale.metrics:metrics-healthchecks:3.0.2",
@@ -1280,7 +1281,6 @@ aggregation_pin()
 maven_install(
     name = "aggregation_temp",
     artifacts = [
-        "com.auth0:java-jwt:3.3.0",
         "com.google.errorprone:javac-shaded:9+181-r4173-1",
         "com.google.googlejavaformat:google-java-format:1.7",
         "com.oracle.substratevm:svm:19.0.0",

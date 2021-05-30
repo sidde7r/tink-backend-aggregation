@@ -1338,7 +1338,7 @@ java_library(
     name = "com_auth0_java_jwt",
     visibility = ["//visibility:public"],
     exports = [
-        "@aggregation_temp//:com_auth0_java_jwt",
+        "@aggregation//:com_auth0_java_jwt",
     ],
 )
 
