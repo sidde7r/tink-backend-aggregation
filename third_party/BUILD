@@ -60,13 +60,13 @@ java_library(
     name = "com_amazonaws_aws_java_sdk_s3",
     visibility = ["//visibility:public"],
     exports = [
-        "@aggregation_temp//:com_amazonaws_aws_java_sdk_s3",
+        "@aggregation//:com_amazonaws_aws_java_sdk_s3",
     ],
     runtime_deps = [
         "//third_party/aws_java_sdk_core",
-        "@aggregation_temp//:com_amazonaws_aws_java_sdk_code_generator",
-        "@aggregation_temp//:com_amazonaws_aws_java_sdk_kms",
-        "@aggregation_temp//:com_amazonaws_jmespath_java",
+        "@aggregation//:com_amazonaws_aws_java_sdk_code_generator",
+        "@aggregation//:com_amazonaws_aws_java_sdk_kms",
+        "@aggregation//:com_amazonaws_jmespath_java",
     ],
 )
 
@@ -1012,9 +1012,9 @@ java_import(
     ],
     visibility = ["//visibility:public"],
     exports = [
-        "@aggregation_temp//:com_amazonaws_aws_java_sdk_code_generator",
-        "@aggregation_temp//:com_amazonaws_aws_java_sdk_sqs",
-        "@aggregation_temp//:com_amazonaws_jmespath_java",
+        "@aggregation//:com_amazonaws_aws_java_sdk_code_generator",
+        "@aggregation//:com_amazonaws_aws_java_sdk_sqs",
+        "@aggregation//:com_amazonaws_jmespath_java",
         "@tink_httpclient_4_5_5",
         "@tink_httpcore_4_4_9",
     ],
@@ -1331,7 +1331,6 @@ java_library(
         "@aggregation//:org_bitbucket_b_c_jose4j",
         "@aggregation//:org_bouncycastle_bcpkix_jdk15on",
         "@aggregation//:org_bouncycastle_bcprov_jdk15on",
-        "@aggregation_temp//:com_google_crypto_tink_tink",
     ],
 )
 
