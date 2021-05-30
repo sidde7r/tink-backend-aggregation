@@ -13,6 +13,8 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.ibercaja.fetcher.transa
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.TimeoutFilter;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.TimeoutRetryFilter;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -27,6 +29,8 @@ public class IberCajaApiClient {
             TinkHttpClient httpClient, IberCajaSessionStorage iberCajaSessionStorage) {
         this.httpClient = httpClient;
         this.iberCajaSessionStorage = iberCajaSessionStorage;
+        this.httpClient.addFilter(new TimeoutRetryFilter(3, 1000, HttpClientException.class));
+        this.httpClient.addFilter(new TimeoutFilter());
     }
 
     public SessionResponse initializeSession(SessionRequest sessionRequest) throws LoginException {
