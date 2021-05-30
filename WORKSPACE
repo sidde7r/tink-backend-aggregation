@@ -382,7 +382,7 @@ load("@com_google_protobuf//:protobuf_deps.bzl", "protobuf_deps")
 
 protobuf_deps()
 
-OPENCENSUS_VERSION = "0.21.0"
+OPENCENSUS_VERSION = "0.19.2"
 
 # Dependency shading
 # https://softwareengineering.stackexchange.com/questions/297276/what-is-a-shaded-java-dependency
@@ -915,6 +915,8 @@ maven_install(
         "commons-io:commons-io:2.6": "@aggregation//:commons_io_commons_io",
         "commons-lang:commons-lang": "@aggregation//:commons_lang_commons_lang",
         "commons-logging:commons-logging": "@aggregation//:commons_logging_commons_logging",
+        "io.opencensus:opencensus-api": "@aggregation//:io_opencensus_opencensus_api",
+        "io.opencensus:opencensus-contrib-grpc-metrics": "@aggregation//:io_opencensus_opencensus_contrib_grpc_metrics",
         "org.apache.curator:curator-client": "@aggregation//:org_apache_curator_curator_client",
         "org.apache.curator:curator-framework": "@aggregation//:org_apache_curator_curator_framework",
         "org.apache.curator:curator-recipes": "@aggregation//:org_apache_curator_curator_recipes",
@@ -1133,6 +1135,7 @@ maven_install(
         "io.netty:netty-transport:%s" % IO_NETTY_VERSION,
         "io.netty:netty:3.10.6.Final",
         "io.opencensus:opencensus-api:%s" % OPENCENSUS_VERSION,
+        "io.opencensus:opencensus-contrib-grpc-metrics:%s" % OPENCENSUS_VERSION,
         "io.perfmark:perfmark-api:0.17.0",
         "io.prometheus:simpleclient:0.5.0",
         "io.prometheus:simpleclient_common:0.5.0",
@@ -1300,7 +1303,6 @@ maven_install(
         "io.grpc:grpc-stub:%s" % GRPC_JAVA_VERSION,
         "io.grpc:grpc-testing-proto:1.24.0",
         "io.grpc:grpc-testing:%s" % GRPC_JAVA_VERSION,
-        "io.opencensus:opencensus-contrib-grpc-metrics:%s" % OPENCENSUS_VERSION,
         "org.eclipse.jetty:jetty-webapp:%s" % ALT_ECLIPSE_JETTY_VERSION,
         "org.eclipse.jetty:jetty-xml:%s" % ALT_ECLIPSE_JETTY_VERSION,
         "org.slf4j:slf4j-simple:1.7.27",
