@@ -948,6 +948,10 @@ load("@tink_backend_for_agents_framework//src/libraries/cryptography:deps.bzl", 
 
 cryptography_lib_deps("@tink_backend_for_agents_framework//src/libraries/cryptography:cryptography_lib_install.json")
 
+load("@cryptography_lib//:defs.bzl", cryptography_lib_pin = "pinned_maven_install")
+
+cryptography_lib_pin()
+
 # This aims become the singular place for specifying the full collection of direct and transitive
 # dependencies of the aggregation service monolith jar. All aggregation code -- including agent code
 # -- shall ideally depend on artifacts provided by this maven_install and nothing else.
