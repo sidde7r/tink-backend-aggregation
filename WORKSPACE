@@ -1303,11 +1303,6 @@ maven_install(
         "io.grpc:grpc-stub:%s" % GRPC_JAVA_VERSION,
         "io.grpc:grpc-testing-proto:1.24.0",
         "io.grpc:grpc-testing:%s" % GRPC_JAVA_VERSION,
-        "org.eclipse.jetty:jetty-webapp:%s" % ALT_ECLIPSE_JETTY_VERSION,
-        "org.eclipse.jetty:jetty-xml:%s" % ALT_ECLIPSE_JETTY_VERSION,
-        "org.slf4j:slf4j-simple:1.7.27",
-        "cglib:cglib:2.2",
-        "org.hibernate:hibernate-entitymanager:3.5.4-Final",
     ],
     # Exclude ALL transitive dependencies of the artifacts above for now
     excluded_artifacts = [
