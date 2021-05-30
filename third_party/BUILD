@@ -520,6 +520,7 @@ java_library(
         "@aggregation//:org_eclipse_jetty_jetty_servlets",
         "@aggregation//:org_eclipse_jetty_jetty_util",
         "@aggregation//:org_eclipse_jetty_orbit_javax_servlet",
+        "@aggregation//:org_eclipse_jetty_toolchain_setuid_jetty_setuid_java",
         "@aggregation//:org_glassfish_web_javax_el",
         "@aggregation//:org_hibernate_hibernate_validator",
         "@aggregation//:org_jboss_logging_jboss_logging",
@@ -527,7 +528,6 @@ java_library(
         "@aggregation//:org_slf4j_jul_to_slf4j",
         "@aggregation//:org_slf4j_slf4j_api",
         "@aggregation//:org_yaml_snakeyaml",
-        "@aggregation_temp//:org_eclipse_jetty_toolchain_setuid_jetty_setuid_java",
     ],
 )
 
@@ -639,6 +639,7 @@ java_library(
         "@aggregation//:org_eclipse_jetty_jetty_servlets",
         "@aggregation//:org_eclipse_jetty_jetty_util",
         "@aggregation//:org_eclipse_jetty_orbit_javax_servlet",
+        "@aggregation//:org_eclipse_jetty_toolchain_setuid_jetty_setuid_java",
         "@aggregation//:org_glassfish_web_javax_el",
         "@aggregation//:org_hibernate_hibernate_validator",
         "@aggregation//:org_jboss_logging_jboss_logging",
@@ -646,7 +647,6 @@ java_library(
         "@aggregation//:org_slf4j_jul_to_slf4j",
         "@aggregation//:org_slf4j_slf4j_api",
         "@aggregation//:org_yaml_snakeyaml",
-        "@aggregation_temp//:org_eclipse_jetty_toolchain_setuid_jetty_setuid_java",
     ],
 )
 
@@ -924,7 +924,7 @@ java_library(
     name = "org_apache_curator_curator_client",
     visibility = ["//visibility:public"],
     exports = [
-        "@aggregation_temp//:org_apache_curator_curator_client",
+        "@aggregation//:org_apache_curator_curator_client",
     ],
     runtime_deps = [
         ":io_netty_netty_all",
@@ -940,16 +940,16 @@ java_library(
     name = "org_apache_curator_curator_framework",
     visibility = ["//visibility:public"],
     exports = [
-        "@aggregation_temp//:org_apache_curator_curator_framework",
+        "@aggregation//:org_apache_curator_curator_framework",
     ],
     runtime_deps = [
         ":io_netty_netty_all",
         "@aggregation//:com_google_guava_guava",
         "@aggregation//:jline_jline",
         "@aggregation//:log4j_log4j",
+        "@aggregation//:org_apache_curator_curator_client",
         "@aggregation//:org_apache_zookeeper_zookeeper",
         "@aggregation//:org_slf4j_slf4j_api",
-        "@aggregation_temp//:org_apache_curator_curator_client",
     ],
 )
 
@@ -957,17 +957,17 @@ java_library(
     name = "org_apache_curator_curator_recipes",
     visibility = ["//visibility:public"],
     exports = [
-        "@aggregation_temp//:org_apache_curator_curator_recipes",
+        "@aggregation//:org_apache_curator_curator_recipes",
     ],
     runtime_deps = [
         ":io_netty_netty_all",
         "@aggregation//:com_google_guava_guava",
         "@aggregation//:jline_jline",
         "@aggregation//:log4j_log4j",
+        "@aggregation//:org_apache_curator_curator_client",
+        "@aggregation//:org_apache_curator_curator_framework",
         "@aggregation//:org_apache_zookeeper_zookeeper",
         "@aggregation//:org_slf4j_slf4j_api",
-        "@aggregation_temp//:org_apache_curator_curator_client",
-        "@aggregation_temp//:org_apache_curator_curator_framework",
     ],
 )
 
@@ -975,19 +975,19 @@ java_library(
     name = "org_apache_curator_curator_x_discovery",
     visibility = ["//visibility:public"],
     exports = [
-        "@aggregation_temp//:org_apache_curator_curator_x_discovery",
+        "@aggregation//:org_apache_curator_curator_x_discovery",
     ],
     runtime_deps = [
         ":io_netty_netty_all",
         "@aggregation//:com_google_guava_guava",
         "@aggregation//:jline_jline",
         "@aggregation//:log4j_log4j",
+        "@aggregation//:org_apache_curator_curator_client",
+        "@aggregation//:org_apache_curator_curator_framework",
+        "@aggregation//:org_apache_curator_curator_recipes",
         "@aggregation//:org_apache_zookeeper_zookeeper",
         "@aggregation//:org_codehaus_jackson_jackson_mapper_asl",
         "@aggregation//:org_slf4j_slf4j_api",
-        "@aggregation_temp//:org_apache_curator_curator_client",
-        "@aggregation_temp//:org_apache_curator_curator_framework",
-        "@aggregation_temp//:org_apache_curator_curator_recipes",
     ],
 )
 
