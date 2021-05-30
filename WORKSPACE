@@ -1294,7 +1294,6 @@ maven_install(
         "org.apache.curator:curator-recipes:4.3.0",
         "org.apache.curator:curator-x-discovery:4.0.0",
         "org.apache.zookeeper:zookeeper:3.5.3-beta",
-        "org.eclipse.jetty.toolchain.setuid:jetty-setuid-java:1.0.2",
         "org.eclipse.jetty:jetty-webapp:%s" % ALT_ECLIPSE_JETTY_VERSION,
         "org.eclipse.jetty:jetty-xml:%s" % ALT_ECLIPSE_JETTY_VERSION,
         "org.slf4j:slf4j-simple:1.7.27",
