@@ -1546,24 +1546,6 @@ java_library(
 )
 
 java_library(
-    name = "io_netty_netty_common",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@aggregation//:io_netty_netty_common",
-    ],
-    runtime_deps = [
-        "@aggregation//:commons_logging_commons_logging",
-        "@aggregation//:io_netty_netty_dev_tools",
-        "@aggregation//:log4j_log4j",
-        "@aggregation//:org_apache_logging_log4j_log4j_api",
-        "@aggregation//:org_apache_logging_log4j_log4j_core",
-        "@aggregation//:org_mockito_mockito_core",
-        "@aggregation//:org_slf4j_slf4j_api",
-        "@aggregation_temp//:com_oracle_substratevm_svm",
-    ],
-)
-
-java_library(
     name = "io_netty_netty_handler",
     visibility = ["//visibility:public"],
     exports = [
