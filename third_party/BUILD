@@ -1348,8 +1348,8 @@ java_library(
     exports = [
         "@aggregation//:com_github_jai_imageio_jai_imageio_core",
         "@aggregation//:net_java_dev_jna_jna",
-        "@aggregation_temp//:net_sourceforge_lept4j_lept4j",
-        "@aggregation_temp//:net_sourceforge_tess4j_tess4j",
+        "@aggregation//:net_sourceforge_lept4j_lept4j",
+        "@aggregation//:net_sourceforge_tess4j_tess4j",
     ],
 )
 
