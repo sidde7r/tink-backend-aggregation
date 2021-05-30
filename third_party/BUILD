@@ -710,8 +710,8 @@ java_library(
     name = "io_grpc_grpc_core",
     visibility = ["//visibility:public"],
     exports = [
-        "@aggregation_temp//:io_grpc_grpc_api",
-        "@aggregation_temp//:io_grpc_grpc_core",
+        "@grpc_libraries//:io_grpc_grpc_api",
+        "@grpc_libraries//:io_grpc_grpc_core",
     ],
     runtime_deps = [
         "@aggregation//:io_perfmark_perfmark_api",
@@ -727,10 +727,10 @@ java_library(
         "@aggregation//:com_google_guava_guava",
         "@aggregation//:io_opencensus_opencensus_api",
         "@aggregation//:io_opencensus_opencensus_contrib_grpc_metrics",
-        "@aggregation_temp//:io_grpc_grpc_api",
-        "@aggregation_temp//:io_grpc_grpc_core",
-        "@aggregation_temp//:io_grpc_grpc_protobuf_lite",
-        "@aggregation_temp//:io_grpc_grpc_protobuf_nano",
+        "@grpc_libraries//:io_grpc_grpc_api",
+        "@grpc_libraries//:io_grpc_grpc_core",
+        "@grpc_libraries//:io_grpc_grpc_protobuf_lite",
+        "@grpc_libraries//:io_grpc_grpc_protobuf_nano",
     ],
 )
 
@@ -1400,15 +1400,15 @@ java_library(
         "@aggregation//:io_netty_netty_transport",
         "@aggregation//:io_opencensus_opencensus_api",
         "@aggregation//:io_opencensus_opencensus_contrib_grpc_metrics",
-        "@aggregation_temp//:io_grpc_grpc_api",
-        "@aggregation_temp//:io_grpc_grpc_auth",
-        "@aggregation_temp//:io_grpc_grpc_core",
-        "@aggregation_temp//:io_grpc_grpc_netty",
-        "@aggregation_temp//:io_grpc_grpc_protobuf",
-        "@aggregation_temp//:io_grpc_grpc_protobuf_lite",
-        "@aggregation_temp//:io_grpc_grpc_protobuf_nano",
-        "@aggregation_temp//:io_grpc_grpc_stub",
-        "@aggregation_temp//:io_grpc_grpc_testing",
+        "@grpc_libraries//:io_grpc_grpc_api",
+        "@grpc_libraries//:io_grpc_grpc_auth",
+        "@grpc_libraries//:io_grpc_grpc_core",
+        "@grpc_libraries//:io_grpc_grpc_netty",
+        "@grpc_libraries//:io_grpc_grpc_protobuf",
+        "@grpc_libraries//:io_grpc_grpc_protobuf_lite",
+        "@grpc_libraries//:io_grpc_grpc_protobuf_nano",
+        "@grpc_libraries//:io_grpc_grpc_stub",
+        "@grpc_libraries//:io_grpc_grpc_testing",
     ],
 )
 
@@ -1473,11 +1473,11 @@ java_library(
     name = "io_grpc_grpc_testing_proto",
     visibility = ["//visibility:public"],
     exports = [
-        "@aggregation_temp//:io_grpc_grpc_testing_proto",
+        "@grpc_libraries//:io_grpc_grpc_testing_proto",
     ],
     runtime_deps = [
-        "@aggregation_temp//:io_grpc_grpc_protobuf",
-        "@aggregation_temp//:io_grpc_grpc_stub",
+        "@grpc_libraries//:io_grpc_grpc_protobuf",
+        "@grpc_libraries//:io_grpc_grpc_stub",
     ],
 )
 
@@ -1485,12 +1485,12 @@ java_library(
     name = "io_grpc_grpc_netty",
     visibility = ["//visibility:public"],
     exports = [
-        "@aggregation_temp//:io_grpc_grpc_netty",
+        "@grpc_libraries//:io_grpc_grpc_netty",
     ],
     runtime_deps = [
         "@aggregation//:io_netty_netty_codec_http2",
         "@aggregation//:io_netty_netty_handler_proxy",
-        "@aggregation_temp//:io_grpc_grpc_core",
+        "@grpc_libraries//:io_grpc_grpc_core",
     ],
 )
 
@@ -1506,10 +1506,10 @@ java_library(
     name = "io_grpc_grpc_stub",
     visibility = ["//visibility:public"],
     exports = [
-        "@aggregation_temp//:io_grpc_grpc_stub",
+        "@grpc_libraries//:io_grpc_grpc_stub",
     ],
     runtime_deps = [
-        "@aggregation_temp//:io_grpc_grpc_api",
+        "@grpc_libraries//:io_grpc_grpc_api",
     ],
 )
 
@@ -1517,12 +1517,12 @@ java_library(
     name = "io_grpc_grpc_testing",
     visibility = ["//visibility:public"],
     exports = [
-        "@aggregation_temp//:io_grpc_grpc_testing",
+        "@grpc_libraries//:io_grpc_grpc_testing",
     ],
     runtime_deps = [
         "@aggregation//:junit_junit",
-        "@aggregation_temp//:io_grpc_grpc_core",
-        "@aggregation_temp//:io_grpc_grpc_stub",
+        "@grpc_libraries//:io_grpc_grpc_core",
+        "@grpc_libraries//:io_grpc_grpc_stub",
     ],
 )
 

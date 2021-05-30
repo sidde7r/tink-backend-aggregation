@@ -1286,9 +1286,9 @@ load("@aggregation//:defs.bzl", aggregation_pin = "pinned_maven_install")
 
 aggregation_pin()
 
-# To be moved into the aggregation maven_install eventually
+# To be moved into the aggregation maven_install eventually, or shaded
 maven_install(
-    name = "aggregation_temp",
+    name = "grpc_libraries",
     artifacts = [
         "io.grpc:grpc-api:%s" % GRPC_JAVA_VERSION,
         "io.grpc:grpc-auth:%s" % GRPC_JAVA_VERSION,
@@ -1485,14 +1485,14 @@ maven_install(
         "xml-apis:xml-apis",
     ],
     fetch_sources = True,
-    maven_install_json = "//third_party:aggregation_temp_install.json",
+    maven_install_json = "//third_party:grpc_libraries_install.json",
     repositories = MAVEN_REPOS,
     version_conflict_policy = "pinned",
 )
 
-load("@aggregation_temp//:defs.bzl", aggregation_temp_pin = "pinned_maven_install")
+load("@grpc_libraries//:defs.bzl", grpc_libraries_pin = "pinned_maven_install")
 
-aggregation_temp_pin()
+grpc_libraries_pin()
 
 maven_install(
     name = "java_formatter",
