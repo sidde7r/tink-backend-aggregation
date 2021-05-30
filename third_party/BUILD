@@ -1321,7 +1321,7 @@ java_library(
     name = "com_nimbusds_nimbus_jose_jwt",
     visibility = ["//visibility:public"],
     exports = [
-        "@aggregation_temp//:com_nimbusds_nimbus_jose_jwt",
+        "@aggregation//:com_nimbusds_nimbus_jose_jwt",
     ],
     runtime_deps = [
         "@aggregation//:com_github_stephenc_jcip_jcip_annotations",
