@@ -1028,7 +1028,7 @@ maven_install(
         "com.fasterxml.uuid:java-uuid-generator:3.1.5",
         "com.fasterxml:classmate:1.0.0",
         "com.flipkart.zjsonpatch:zjsonpatch:0.2.1",
-        "com.github.docker-java:docker-java-api:3.2.0",
+        "com.github.docker-java:docker-java-api:3.2.5",
         "com.github.jai-imageio:jai-imageio-core:1.4.0",
         "com.github.javafaker:javafaker:1.0.2",
         "com.github.luben:zstd-jni:1.4.0-1",
@@ -1216,20 +1216,21 @@ maven_install(
         "org.slf4j:jul-to-slf4j:1.7.6",
         "org.slf4j:slf4j-api:1.7.30",
         "org.slf4j:slf4j-simple:1.7.5",
-        "org.springframework.boot:spring-boot-test:1.5.3.RELEASE",
+        "org.springframework.boot:spring-boot-test:2.1.3.RELEASE",
         "org.springframework.data:spring-data-jpa:1.11.1.RELEASE",
         "org.springframework.security:spring-security-core:4.2.3.RELEASE",
-        "org.springframework:spring-aop:4.3.9.RELEASE",
-        "org.springframework:spring-beans:4.3.9.RELEASE",
-        "org.springframework:spring-context:4.3.9.RELEASE",
-        "org.springframework:spring-core:4.3.9.RELEASE",
-        "org.springframework:spring-expression:4.3.9.RELEASE",
+        "org.springframework:spring-aop:5.1.5.RELEASE",
+        "org.springframework:spring-beans:5.1.5.RELEASE",
+        "org.springframework:spring-context:5.1.5.RELEASE",
+        "org.springframework:spring-core:5.1.5.RELEASE",
+        "org.springframework:spring-expression:5.1.5.RELEASE",
         "org.springframework:spring-jdbc:4.3.9.RELEASE",
         "org.springframework:spring-orm:4.3.9.RELEASE",
-        "org.springframework:spring-test:4.3.9.RELEASE",
+        "org.springframework:spring-test:5.1.5.RELEASE",
         "org.springframework:spring-tx:4.3.9.RELEASE",
-        "org.springframework:spring-web:4.3.9.RELEASE",
-        "org.testcontainers:testcontainers:1.14.3",
+        "org.springframework:spring-web:5.1.5.RELEASE",
+        "org.springframework:spring-webmvc:5.1.5.RELEASE",
+        "org.testcontainers:testcontainers:1.15.0-rc2",
         "org.w3c.css:sac:1.3",
         "org.xerial.snappy:snappy-java:1.0.5-M2",
         "org.xmlunit:xmlunit-core:2.1.1",
@@ -1486,39 +1487,6 @@ maven_install(
 load("@aggregation_temp//:defs.bzl", aggregation_temp_pin = "pinned_maven_install")
 
 aggregation_temp_pin()
-
-SPRING_FRAMEWORK_VERSION = "5.1.5.RELEASE"
-
-SPRING_BOOT_VERSION = "2.1.3.RELEASE"
-
-maven_install(
-    name = "system_tests",
-    artifacts = [
-        "com.fasterxml.jackson.core:jackson-databind:2.10.5.1",
-        "com.google.guava:guava:23.1-jre",
-        "commons-io:commons-io:2.5",
-        "org.apache.httpcomponents:httpclient:4.5.10",
-        "org.assertj:assertj-core:2.2.0",
-        "org.hamcrest:hamcrest-core:1.3",
-        "org.hamcrest:hamcrest-library:1.3",
-        "org.springframework.boot:spring-boot-test:%s" % SPRING_BOOT_VERSION,
-        "org.springframework:spring-aop:%s" % SPRING_FRAMEWORK_VERSION,
-        "org.springframework:spring-beans:%s" % SPRING_FRAMEWORK_VERSION,
-        "org.springframework:spring-context:%s" % SPRING_FRAMEWORK_VERSION,
-        "org.springframework:spring-expression:%s" % SPRING_FRAMEWORK_VERSION,
-        "org.springframework:spring-test:%s" % SPRING_FRAMEWORK_VERSION,
-        "org.springframework:spring-web:%s" % SPRING_FRAMEWORK_VERSION,
-        "org.springframework:spring-webmvc:%s" % SPRING_FRAMEWORK_VERSION,
-        "org.testcontainers:testcontainers:1.15.0-rc2",
-    ],
-    fetch_sources = True,
-    maven_install_json = "//third_party/system_tests:system_tests_install.json",
-    repositories = MAVEN_REPOS,
-)
-
-load("@system_tests//:defs.bzl", system_tests_pin = "pinned_maven_install")
-
-system_tests_pin()
 
 # Use via //third_party/jetty_server9
 maven_install(
