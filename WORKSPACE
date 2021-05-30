@@ -1243,6 +1243,7 @@ maven_install(
     ],
     excluded_artifacts = [
         "org.slf4j:slf4j-log4j12",  # log4j-over-slf4j and slf4j-log4j12 cannot coexist on the classpath
+        "javassist:javassist",      # Already covered by the newer org.javassist:javassist
     ],
     fetch_sources = True,
     generate_compat_repositories = False,  # Tempting, but provided that we depend on tink-backend, let's be explicit in our naming of deps
