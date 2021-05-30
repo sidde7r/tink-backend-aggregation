@@ -520,6 +520,7 @@ java_library(
         "@aggregation//:org_eclipse_jetty_jetty_servlets",
         "@aggregation//:org_eclipse_jetty_jetty_util",
         "@aggregation//:org_eclipse_jetty_orbit_javax_servlet",
+        "@aggregation//:org_eclipse_jetty_toolchain_setuid_jetty_setuid_java",
         "@aggregation//:org_glassfish_web_javax_el",
         "@aggregation//:org_hibernate_hibernate_validator",
         "@aggregation//:org_jboss_logging_jboss_logging",
@@ -527,7 +528,6 @@ java_library(
         "@aggregation//:org_slf4j_jul_to_slf4j",
         "@aggregation//:org_slf4j_slf4j_api",
         "@aggregation//:org_yaml_snakeyaml",
-        "@aggregation_temp//:org_eclipse_jetty_toolchain_setuid_jetty_setuid_java",
     ],
 )
 
@@ -639,6 +639,7 @@ java_library(
         "@aggregation//:org_eclipse_jetty_jetty_servlets",
         "@aggregation//:org_eclipse_jetty_jetty_util",
         "@aggregation//:org_eclipse_jetty_orbit_javax_servlet",
+        "@aggregation//:org_eclipse_jetty_toolchain_setuid_jetty_setuid_java",
         "@aggregation//:org_glassfish_web_javax_el",
         "@aggregation//:org_hibernate_hibernate_validator",
         "@aggregation//:org_jboss_logging_jboss_logging",
@@ -646,7 +647,6 @@ java_library(
         "@aggregation//:org_slf4j_jul_to_slf4j",
         "@aggregation//:org_slf4j_slf4j_api",
         "@aggregation//:org_yaml_snakeyaml",
-        "@aggregation_temp//:org_eclipse_jetty_toolchain_setuid_jetty_setuid_java",
     ],
 )
 
