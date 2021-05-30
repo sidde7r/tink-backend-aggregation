@@ -1331,7 +1331,6 @@ java_library(
         "@aggregation//:org_bitbucket_b_c_jose4j",
         "@aggregation//:org_bouncycastle_bcpkix_jdk15on",
         "@aggregation//:org_bouncycastle_bcprov_jdk15on",
-        "@aggregation_temp//:com_google_crypto_tink_tink",
     ],
 )
 
