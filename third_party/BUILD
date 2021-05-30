@@ -726,11 +726,11 @@ java_library(
         "@aggregation//:com_google_code_findbugs_jsr305",
         "@aggregation//:com_google_guava_guava",
         "@aggregation//:io_opencensus_opencensus_api",
+        "@aggregation//:io_opencensus_opencensus_contrib_grpc_metrics",
         "@aggregation_temp//:io_grpc_grpc_api",
         "@aggregation_temp//:io_grpc_grpc_core",
         "@aggregation_temp//:io_grpc_grpc_protobuf_lite",
         "@aggregation_temp//:io_grpc_grpc_protobuf_nano",
-        "@aggregation_temp//:io_opencensus_opencensus_contrib_grpc_metrics",
     ],
 )
 
@@ -1399,6 +1399,7 @@ java_library(
         "@aggregation//:io_netty_netty_resolver_dns",
         "@aggregation//:io_netty_netty_transport",
         "@aggregation//:io_opencensus_opencensus_api",
+        "@aggregation//:io_opencensus_opencensus_contrib_grpc_metrics",
         "@aggregation_temp//:io_grpc_grpc_api",
         "@aggregation_temp//:io_grpc_grpc_auth",
         "@aggregation_temp//:io_grpc_grpc_core",
@@ -1408,7 +1409,6 @@ java_library(
         "@aggregation_temp//:io_grpc_grpc_protobuf_nano",
         "@aggregation_temp//:io_grpc_grpc_stub",
         "@aggregation_temp//:io_grpc_grpc_testing",
-        "@aggregation_temp//:io_opencensus_opencensus_contrib_grpc_metrics",
     ],
 )
 
