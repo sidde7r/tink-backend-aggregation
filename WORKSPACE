@@ -1121,7 +1121,6 @@ maven_install(
         "io.netty:netty-resolver:%s" % IO_NETTY_VERSION,
         "io.netty:netty-tcnative-boringssl-static:%s" % IO_NETTY_BORINGSSL_VERSION,
         "io.netty:netty-transport:%s" % IO_NETTY_VERSION,
-        "io.netty:netty:3.10.6.Final",
         "io.opencensus:opencensus-api:%s" % OPENCENSUS_VERSION,
         "io.opencensus:opencensus-contrib-grpc-metrics:%s" % OPENCENSUS_VERSION,
         "io.perfmark:perfmark-api:0.17.0",
