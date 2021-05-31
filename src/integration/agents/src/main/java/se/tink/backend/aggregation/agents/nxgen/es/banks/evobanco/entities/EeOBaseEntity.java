@@ -23,9 +23,6 @@ public abstract class EeOBaseEntity {
     }
 
     public Optional<ErrorsEntity> getErrors() {
-        if (errors != null) {
-            return Optional.of(errors);
-        }
-        return Optional.empty();
+        return Optional.ofNullable(errors);
     }
 }

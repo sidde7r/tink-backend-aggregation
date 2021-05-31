@@ -101,9 +101,7 @@ public class EvoBancoApiClient {
 
         setNextCodSecIpHeader(response);
 
-        EELoginResponse eeLoginResponse = response.getBody(EELoginResponse.class);
-
-        return eeLoginResponse;
+        return response.getBody(EELoginResponse.class);
     }
 
     public boolean isAlive(KeepAliveRequest keepAliveRequest) {
@@ -213,7 +211,7 @@ public class EvoBancoApiClient {
                 .post(EvoBancoIdentityDataResponse.class);
     }
 
-    private Map<String, Object> getEEHeaders() {
+    public Map<String, Object> getEEHeaders() {
         Map<String, Object> headers = new HashMap<>();
         headers.put(EvoBancoConstants.HeaderKeys.COD_SEC_USER, "");
         headers.put(EvoBancoConstants.HeaderKeys.COD_SEC_TRANS, "");
