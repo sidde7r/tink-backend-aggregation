@@ -192,7 +192,7 @@ public class SkandiaBankenConstants {
         public static final String INVESTMENT_NUMBER_NOT_FOUND =
                 "Investment account number was not found";
         public static final String NOT_CUSTOMER =
-                "för att använda tjänsten behöver du bli kund hos oss.";
+                "för att använda vår app behöver du ha ett bankkonto";
     }
 
     public static class PaymentStatus {
