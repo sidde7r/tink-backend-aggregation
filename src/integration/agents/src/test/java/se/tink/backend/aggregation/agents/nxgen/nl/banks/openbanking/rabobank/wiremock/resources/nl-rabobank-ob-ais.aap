@@ -18,7 +18,7 @@ RESPONSE 2
 200
 Content-Type: application/json
 
-{"accounts":[{"resourceId":"i29S1Hewp3XwRsiuT1BWzo5n2NGDkSSB2A4VKrtXPFiGWhqkCSejsfYZ6dksNG0b","iban":"NL71RABO0346234166","currency":"EUR","status":"enabled","ownerName":"H.A. Akin","_links":{"balances":{"href":"/accounts/i29S1Hewp3XwRsiuT1BWzo5n2NGDkSSB2A4VKrtXPFiGWhqkCSejsfYZ6dksNG0b/balances"},"transactions":{"href":"/accounts/i29S1Hewp3XwRsiuT1BWzo5n2NGDkSSB2A4VKrtXPFiGWhqkCSejsfYZ6dksNG0b/transactions"}}}]}
+{"accounts":[{"resourceId":"asdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdf","iban":"NL68RABO0123456789","currency":"EUR","status":"enabled","ownerName":"Firstname Lastname","_links":{"transactions":{"href":"/accounts/asdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdf/transactions"}}},{"resourceId":"i29S1Hewp3XwRsiuT1BWzo5n2NGDkSSB2A4VKrtXPFiGWhqkCSejsfYZ6dksNG0b","iban":"NL71RABO0346234166","currency":"EUR","status":"enabled","ownerName":"H.A. Akin","_links":{"balances":{"href":"/accounts/i29S1Hewp3XwRsiuT1BWzo5n2NGDkSSB2A4VKrtXPFiGWhqkCSejsfYZ6dksNG0b/balances"},"transactions":{"href":"/accounts/i29S1Hewp3XwRsiuT1BWzo5n2NGDkSSB2A4VKrtXPFiGWhqkCSejsfYZ6dksNG0b/transactions"}}}]}
 
 REQUEST 3
 GET https://somehost/openapi/payments/account-information/ais/accounts/i29S1Hewp3XwRsiuT1BWzo5n2NGDkSSB2A4VKrtXPFiGWhqkCSejsfYZ6dksNG0b/balances

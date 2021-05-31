@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankApiClient;
+import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.fetcher.rpc.AccountsItem;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.fetcher.rpc.TransactionalAccountsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -22,6 +23,7 @@ public class TransactionalAccountFetcher implements AccountFetcher<Transactional
         return Optional.ofNullable(apiClient.fetchAccounts())
                 .map(TransactionalAccountsResponse::getAccounts).orElseGet(Collections::emptyList)
                 .stream()
+                .filter(AccountsItem::hasBalancesConsent)
                 .map(acc -> acc.toCheckingAccount(apiClient.getBalance(acc.getResourceId())))
                 .filter(Optional::isPresent)
                 .map(Optional::get)

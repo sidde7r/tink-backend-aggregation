@@ -47,6 +47,19 @@ public class AccountsItem {
         return iban;
     }
 
+    /**
+     * According to documentation balances link is only present if user has granted balances
+     * consent. We can't parse the account if we can't fetch balances.
+     */
+    public boolean hasBalancesConsent() {
+        if (!links.hasBalancesLink()) {
+            log.info("Balance consent not granted for account, will be ignored");
+            return false;
+        }
+
+        return true;
+    }
+
     @JsonIgnore
     public Optional<TransactionalAccount> toCheckingAccount(final BalanceResponse balanceResponse) {
         return TransactionalAccount.nxBuilder()

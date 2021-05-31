@@ -11,6 +11,7 @@ public class Links {
 
     private String next;
     private LinkEntity nextLink;
+    private LinkEntity balances;
 
     // Change this setter to JsonProperty for nextLink as soon as Abnamro has migrated to v.4
     @JsonSetter("next")
@@ -24,5 +25,9 @@ public class Links {
 
     public String getNextKey() {
         return Optional.ofNullable(nextLink).map(LinkEntity::getHref).orElse(next);
+    }
+
+    public boolean hasBalancesLink() {
+        return this.balances != null;
     }
 }
