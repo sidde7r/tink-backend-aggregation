@@ -50,6 +50,7 @@ public class RabobankConstants {
         public static final String RESOURCE_ID = "resource_id";
         public static final String CONSENT_ID = "consentId";
         public static final String TOKEN_EXPIRY_DATE = "tokenExpiryDate";
+        public static final String HAS_TRANSACTIONS_CONSENT = "hasTransactionsConsent";
     }
 
     public static class Signature {
