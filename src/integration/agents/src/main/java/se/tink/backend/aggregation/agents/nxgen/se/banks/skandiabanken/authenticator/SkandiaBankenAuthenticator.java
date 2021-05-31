@@ -10,7 +10,6 @@ import se.tink.backend.aggregation.agents.bankid.status.BankIdStatus;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
-import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants;
@@ -63,7 +62,7 @@ public class SkandiaBankenAuthenticator implements BankIdAuthenticator<String> {
             }
         }
         if (redirectUrl.equalsIgnoreCase("/otpchooser/")) {
-            throw AuthorizationError.ACCOUNT_BLOCKED.exception();
+            throw LoginError.NOT_SUPPORTED.exception();
         }
 
         if (!Strings.isNullOrEmpty(redirectUrl)) {
