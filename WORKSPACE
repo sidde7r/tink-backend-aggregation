@@ -730,7 +730,6 @@ maven_install(
         "javax.inject:javax.inject:1",
         "javax.validation:validation-api:2.0.1.Final",
         "javax.xml.bind:jaxb-api:2.3.1",
-        "log4j:log4j:1.2.14",
         "net.sourceforge.argparse4j:argparse4j:0.4.3",
         "no.finn.unleash:unleash-client-java:4.1.0",
         "org.apache.commons:commons-lang3:3.4",
@@ -770,10 +769,11 @@ maven_install(
         ),
     ],
     excluded_artifacts = [
-        # This is a dependency by org.apache.zookeeper:zookeeper, and is colliding
+        # These are dependencies by org.apache.zookeeper:zookeeper, and are colliding
         # with log4j-over-slf4j. Excluding it here instead of only from zookeeper
         # as there's little to no reason to ever include it.
         "org.slf4j:slf4j-log4j12",
+        "log4j:log4j",
 
         # Exclude ALL artifacts that are currently managed with maven_jar
         # This is neccesary to make sure that we're not transiently depending
@@ -1276,6 +1276,7 @@ maven_install(
         "org.slf4j:slf4j-log4j12",  # log4j-over-slf4j and slf4j-log4j12 cannot coexist on the classpath
         "javassist:javassist",      # Already covered by the newer org.javassist:javassist
         "com.lowagie:itext",        # Cannot add this one for some reason, but it doesn't seem to be needed anyway
+        "log4j:log4j",              # Superseded by Log4J2 (org.apache.logging.log4j:log4j-core)
     ],
     fetch_sources = True,
     generate_compat_repositories = False,  # Tempting, but provided that we depend on tink-backend, let's be explicit in our naming of deps
