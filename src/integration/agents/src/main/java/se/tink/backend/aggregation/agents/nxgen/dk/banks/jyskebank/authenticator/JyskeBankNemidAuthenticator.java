@@ -155,11 +155,14 @@ public class JyskeBankNemidAuthenticator
     private void checkCredentials(Credentials credentials) {
         final String username = credentials.getField(Field.Key.USERNAME);
         final String password = credentials.getField(Field.Key.PASSWORD);
-        if (Strings.isNullOrEmpty(username) || Strings.isNullOrEmpty(password)) {
+        final String pin = credentials.getField(Field.Key.ACCESS_PIN);
+        if (Strings.isNullOrEmpty(username)
+                || Strings.isNullOrEmpty(password)
+                || Strings.isNullOrEmpty(pin)) {
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
         jyskePersistentStorage.setUserId(username);
-        jyskePersistentStorage.setPincode(password);
+        jyskePersistentStorage.setPincode(pin);
     }
 
     private String getAccessTokenFromUrl(String redirect) {
