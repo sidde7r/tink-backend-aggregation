@@ -667,7 +667,7 @@ maven_install(
         "com.sun.jersey:jersey-servlet:1.18.1",
         "com.sun.xml.bind:jaxb-impl:2.2.3-1",
         "com.uber.nullaway:nullaway:0.7.6",
-        "commons-beanutils:commons-beanutils:1.7.0",
+        "commons-beanutils:commons-beanutils:1.9.4",
         "commons-cli:commons-cli:1.4",
         "commons-codec:commons-codec:1.6",
         "commons-collections:commons-collections:3.2.2",
