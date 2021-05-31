@@ -440,6 +440,8 @@ clients:
     aggregatorIdentifier: "Snoop"
   uk-snoop-testing:
     aggregatorIdentifier: "Snoop"
+  uk-snoop-development:
+    aggregatorIdentifier: "Snoop"
   zimpler-production:
     aggregatorIdentifier: "Zimpler"
   zimpler-test:
