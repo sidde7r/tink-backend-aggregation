@@ -175,8 +175,8 @@ public class JerseyResourceRegistrar {
         resources.forEach(jersey::register);
         System.out.println(
                 String.format(
-                        "EP-264: filterFactories, requestFilters, responseFilters: %d, %d, %d",
-                        filterFactories.size(), requestFilters.size(), responseFilters.size()));
+                        "EP-264: filterFactories, requestFilters, responseFilters: %s, %s, %s",
+                        filterFactories, requestFilters, responseFilters));
         filterFactories.forEach(jersey.getResourceConfig().getResourceFilterFactories()::add);
         requestFilters.forEach(jersey.getResourceConfig().getContainerRequestFilters()::add);
         responseFilters.forEach(jersey.getResourceConfig().getContainerResponseFilters()::add);
