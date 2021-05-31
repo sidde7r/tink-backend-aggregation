@@ -342,8 +342,6 @@ GRPC_JAVA_NANO_VERSION = "1.21.1"
 
 ECLIPSE_JETTY_VERSION = "9.1.0.M0"
 
-ALT_ECLIPSE_JETTY_VERSION = "9.2.13.v20150730"
-
 # rules_proto will not be builtin in to Bazel in v1.0 and later
 # prepare us for that, and use the out-ot-repo version
 http_archive(
@@ -732,7 +730,6 @@ maven_install(
         "javax.inject:javax.inject:1",
         "javax.validation:validation-api:2.0.1.Final",
         "javax.xml.bind:jaxb-api:2.3.1",
-        "log4j:log4j:1.2.14",
         "net.sourceforge.argparse4j:argparse4j:0.4.3",
         "no.finn.unleash:unleash-client-java:4.1.0",
         "org.apache.commons:commons-lang3:3.4",
@@ -772,10 +769,11 @@ maven_install(
         ),
     ],
     excluded_artifacts = [
-        # This is a dependency by org.apache.zookeeper:zookeeper, and is colliding
+        # These are dependencies by org.apache.zookeeper:zookeeper, and are colliding
         # with log4j-over-slf4j. Excluding it here instead of only from zookeeper
         # as there's little to no reason to ever include it.
         "org.slf4j:slf4j-log4j12",
+        "log4j:log4j",
 
         # Exclude ALL artifacts that are currently managed with maven_jar
         # This is neccesary to make sure that we're not transiently depending
@@ -923,9 +921,13 @@ maven_install(
         "org.apache.curator:curator-x-discovery": "@aggregation//:org_apache_curator_curator_x_discovery",
         "org.apache.zookeeper:zookeeper": "@aggregation//:org_apache_zookeeper_zookeeper",
         "org.eclipse.jetty:jetty-continuation": "@aggregation//:org_eclipse_jetty_jetty_continuation",
+        "org.eclipse.jetty:jetty-http": "@aggregation//:org_eclipse_jetty_jetty_http",
+        "org.eclipse.jetty:jetty-io": "@aggregation//:org_eclipse_jetty_jetty_io",
         "org.eclipse.jetty:jetty-security": "@aggregation//:org_eclipse_jetty_jetty_security",
+        "org.eclipse.jetty:jetty-server": "@aggregation//:org_eclipse_jetty_jetty_server",
         "org.eclipse.jetty:jetty-servlet": "@aggregation//:org_eclipse_jetty_jetty_servlet",
         "org.eclipse.jetty:jetty-servlets": "@aggregation//:org_eclipse_jetty_jetty_servlets",
+        "org.eclipse.jetty:jetty-util": "@aggregation//:org_eclipse_jetty_jetty_util",
         "org.slf4j:log4j-over-slf4j": "@aggregation//:org_slf4j_log4j_over_slf4j",
     },
     fetch_sources = True,
@@ -1274,6 +1276,7 @@ maven_install(
         "org.slf4j:slf4j-log4j12",  # log4j-over-slf4j and slf4j-log4j12 cannot coexist on the classpath
         "javassist:javassist",      # Already covered by the newer org.javassist:javassist
         "com.lowagie:itext",        # Cannot add this one for some reason, but it doesn't seem to be needed anyway
+        "log4j:log4j",              # Superseded by Log4J2 (org.apache.logging.log4j:log4j-core)
     ],
     fetch_sources = True,
     generate_compat_repositories = False,  # Tempting, but provided that we depend on tink-backend, let's be explicit in our naming of deps
