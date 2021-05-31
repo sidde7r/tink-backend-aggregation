@@ -76,7 +76,6 @@ public final class LclAgent extends SubsequentProgressiveGenerationAgent
 
     private static final ZoneId ZONE_ID = ZoneId.of("CET");
     public static final String BASE_URL = "https://psd.lcl.fr";
-    public static final String CLIENT_ID = "PSDSE-FINA-44059_1";
 
     private final LclApiClient lclApiClient;
     private final LclPaymentApiClient paymentApiClient;
@@ -106,7 +105,8 @@ public final class LclAgent extends SubsequentProgressiveGenerationAgent
                         this.client,
                         lclHeaderValueProvider,
                         this.sessionStorage,
-                        this.tokenApiClient);
+                        this.tokenApiClient,
+                        agentConfiguration);
 
         this.dataConverter = new LclDataConverter();
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();

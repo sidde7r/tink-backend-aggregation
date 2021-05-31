@@ -8,6 +8,7 @@ import lombok.SneakyThrows;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.LclAgent;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.apiclient.LclHeaderValueProvider;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.apiclient.LclTokenApiClient;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.configuration.LclConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.payment.rpc.ConfirmPaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.payment.rpc.GetPaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.payment.rpc.PaymentRequestResource;
@@ -17,6 +18,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fro
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.rpc.GetPaymentResponse;
 import se.tink.backend.aggregation.api.Psd2Headers;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2TokenBase;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -45,6 +47,7 @@ public class LclPaymentApiClient implements FrOpenBankingPaymentApiClient {
     private final LclHeaderValueProvider headerValueProvider;
     private final SessionStorage sessionStorage;
     private final LclTokenApiClient tokenApiClient;
+    private final AgentConfiguration<LclConfiguration> configuration;
 
     @Override
     public void fetchToken() {
@@ -100,7 +103,9 @@ public class LclPaymentApiClient implements FrOpenBankingPaymentApiClient {
 
         sessionStorage.put(
                 PAYMENT_AUTHORIZATION_URL,
-                url.queryParam("client_id", LclAgent.CLIENT_ID)
+                url.queryParam(
+                                "client_id",
+                                configuration.getProviderSpecificConfiguration().getClientId())
                         .queryParam("redirect_uri", sessionStorage.get(REDIRECT_URL_LOCAL_KEY))
                         .toString());
         return sessionStorage.get(PAYMENT_ID_LOCAL_KEY);
