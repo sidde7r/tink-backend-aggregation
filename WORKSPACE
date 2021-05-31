@@ -729,7 +729,7 @@ maven_install(
         "org.apache.logging.log4j:log4j-api:2.11.1",
         "org.apache.logging.log4j:log4j-core:2.11.1",
         "org.apache.thrift:libthrift:0.12.0",
-        "org.apache.zookeeper:zookeeper:3.5.3-beta",
+        "org.apache.zookeeper:zookeeper:3.5.4-beta",
         "org.bouncycastle:bcpkix-jdk15on:1.68",
         "org.bouncycastle:bcprov-jdk15on:1.68",
         "org.eclipse.jetty.orbit:javax.servlet:3.0.0.v201112011016",
