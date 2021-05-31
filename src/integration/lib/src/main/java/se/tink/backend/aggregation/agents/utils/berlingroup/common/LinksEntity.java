@@ -11,6 +11,7 @@ public class LinksEntity {
     private Href startAuthorisationWithPsuAuthentication;
     private Href scaOAuth;
     private Href scaRedirect;
+    private Href scaStatus;
     private Href self;
     private Href status;
     private Href authoriseTransaction;

@@ -8,8 +8,9 @@ import lombok.RequiredArgsConstructor;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankverlag.BankverlagConstants.ErrorMessages;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankverlag.authenticator.entities.ChallengeDataEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankverlag.authenticator.entities.ScaMethodEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankverlag.authenticator.BankverlagIconUrlMapper;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ChallengeDataEntity;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ScaMethodEntity;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.CommonFields;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.GermanFields;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.TanBuilder;
@@ -22,8 +23,7 @@ public class FieldBuilder {
     private static final Pattern STARTCODE_CHIP_PATTERN = Pattern.compile("Startcode\\s(\\d+)");
     private static final String CHIP_TYPE = "CHIP_OTP";
     private static final LocalizableParametrizedKey INSTRUCTIONS =
-            new LocalizableParametrizedKey(
-                    "Please open the S-pushTAN app on device \"{0}\" and confirm login. Then click the \"Submit\" button");
+            new LocalizableParametrizedKey("Confirm by entering the generated TAN for \"{0}\".");
 
     private final Catalog catalog;
 
@@ -55,9 +55,12 @@ public class FieldBuilder {
         throw LoginError.NOT_SUPPORTED.exception(ErrorMessages.STARTCODE_NOT_FOUND);
     }
 
-    public Field getChooseScaMethodField(List<ScaMethodEntity> scaMethods) {
+    public Field getChooseScaMethodField(List<ScaMethodEntity> scaMethods, String aspspId) {
         return CommonFields.Selection.build(
-                catalog, null, GermanFields.SelectOptions.prepareSelectOptions(scaMethods));
+                catalog,
+                null,
+                GermanFields.SelectOptions.prepareSelectOptions(
+                        scaMethods, new BankverlagIconUrlMapper(aspspId)));
     }
 
     public Field getInstructionsField(ScaMethodEntity scaMethod) {

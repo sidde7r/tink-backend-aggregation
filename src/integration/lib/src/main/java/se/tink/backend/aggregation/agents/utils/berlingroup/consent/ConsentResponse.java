@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class ConsentResponse {
 
-    @Setter private String consentStatus;
+    @Getter @Setter private String consentStatus;
 
     @Getter @Setter private String consentId;
 

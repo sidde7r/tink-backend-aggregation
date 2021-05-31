@@ -24,12 +24,12 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ban
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankverlag.BankverlagConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankverlag.BankverlagStorage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankverlag.authenticator.detail.FieldBuilder;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankverlag.authenticator.entities.ChallengeDataEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankverlag.authenticator.entities.ScaMethodEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankverlag.authenticator.rpc.AuthorizationResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankverlag.authenticator.rpc.FinalizeAuthorizationResponse;
+import se.tink.backend.aggregation.agents.utils.berlingroup.authenticator.rpc.FinalizeAuthorizationResponse;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AuthorizationResponse;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ChallengeDataEntity;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentDetailsResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentResponse;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ScaMethodEntity;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.authenticator.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
@@ -54,18 +54,21 @@ public class BankverlagAuthenticator implements MultiFactorAuthenticator, AutoAu
     private final BankverlagStorage storage;
     private final Credentials credentials;
     private final FieldBuilder fieldBuilder;
+    private final String aspspId;
 
     public BankverlagAuthenticator(
             BankverlagApiClient apiClient,
             SupplementalInformationController supplementalInformationController,
             BankverlagStorage storage,
             Credentials credentials,
-            Catalog catalog) {
+            Catalog catalog,
+            String aspspId) {
         this.apiClient = apiClient;
         this.supplementalInformationController = supplementalInformationController;
         this.storage = storage;
         this.credentials = credentials;
         this.fieldBuilder = new FieldBuilder(Preconditions.checkNotNull(catalog));
+        this.aspspId = aspspId;
     }
 
     @Override
@@ -187,7 +190,7 @@ public class BankverlagAuthenticator implements MultiFactorAuthenticator, AutoAu
         if (scaMethods.size() == 1) {
             return scaMethods.get(0);
         }
-        Field scaMethodField = fieldBuilder.getChooseScaMethodField(scaMethods);
+        Field scaMethodField = fieldBuilder.getChooseScaMethodField(scaMethods, aspspId);
         Map<String, String> supplementalInformation =
                 supplementalInformationController.askSupplementalInformationSync(scaMethodField);
         String selectedValue = supplementalInformation.get(scaMethodField.getName());

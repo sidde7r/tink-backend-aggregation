@@ -13,7 +13,6 @@ import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankverlag.authenticator.BankverlagAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankverlag.fetcher.BankverlagAccountsFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankverlag.fetcher.BankverlagTransactionsFetcher;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankverlag.filter.RequestNotProcessedFilter;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
@@ -56,7 +55,6 @@ public abstract class BankverlagBaseAgent extends NextGenerationAgent
         client.setEidasProxy(configuration.getEidasProxy());
         client.addFilter(new BankServiceDownExceptionFilter());
         client.addFilter(new AccessExceededFilter());
-        client.addFilter(new RequestNotProcessedFilter());
     }
 
     protected BankverlagApiClient constructApiClient() {
@@ -79,7 +77,8 @@ public abstract class BankverlagBaseAgent extends NextGenerationAgent
                         supplementalInformationController,
                         bankverlagStorage,
                         credentials,
-                        catalog);
+                        catalog,
+                        aspspId);
 
         return new AutoAuthenticationController(
                 request, context, bankverlagAuthenticator, bankverlagAuthenticator);

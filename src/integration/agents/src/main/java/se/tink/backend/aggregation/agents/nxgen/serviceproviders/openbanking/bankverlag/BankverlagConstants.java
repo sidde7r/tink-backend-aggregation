@@ -13,10 +13,6 @@ public final class BankverlagConstants {
 
     public static class ErrorMessages {
         public static final String MISSING_SCA_METHOD_DETAILS = "Sca method details missing";
-        public static final String COULD_NOT_PARSE_TRANSACTIONS =
-                "Could not parse transactions description";
-        public static final String COULD_NOT_INITIALIZE_JAXBCONTEXT =
-                "Could not initialize JAXBContext";
         public static final String STARTCODE_NOT_FOUND = "Startcode for Chip tan not found";
         public static final String NO_SUPPORTED_METHOD_FOUND = "No supported method found";
     }
@@ -24,12 +20,6 @@ public final class BankverlagConstants {
     public static class PsuErrorMessages {
         public static final String REQUEST_PROCESSING_ERROR =
                 "Die Anfrage konnte nicht verarbeitet werden.";
-        static final String TEMPORARILY_BLOCKED_ACCOUNT =
-                "Ihr Zugang ist vorläufig gesperrt - Bitte PIN-Sperre aufheben";
-        static final String BLOCKED_ACCOUNT =
-                "Ihr Zugang ist gesperrt - Bitte informieren Sie Ihren Berater";
-        static final String NO_ACTIVE_TAN_MEDIUM = "Kein aktives TAN-Medium gefunden.";
-        static final String PLEASE_CHANGE_PIN = "Bitte führen Sie eine PIN-Änderung durch.";
     }
 
     public static class Urls {
@@ -60,7 +50,6 @@ public final class BankverlagConstants {
     static class HeaderKeys {
         static final String X_REQUEST_ID = "X-Request-ID";
         static final String CONSENT_ID = "Consent-ID";
-        static final String TPP_REDIRECT_PREFERRED = "TPP-Redirect-Preferred";
         static final String PSU_ID = "PSU-ID";
         static final String PSU_IP_ADDRESS = "PSU-IP-Address";
         static final String API_KEY = "X-bvpsd2-test-apikey";

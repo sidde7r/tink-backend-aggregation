@@ -3,10 +3,10 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ba
 import java.util.List;
 import java.util.Optional;
 import org.apache.commons.lang3.ObjectUtils;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankverlag.fetcher.entities.AccountEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankverlag.fetcher.rpc.FetchBalancesResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.BalanceEntity;
 import se.tink.backend.aggregation.agents.utils.berlingroup.BalanceMapper;
+import se.tink.backend.aggregation.agents.utils.berlingroup.fetcher.entities.AccountEntity;
+import se.tink.backend.aggregation.agents.utils.berlingroup.fetcher.rpc.FetchBalancesResponse;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.builder.BalanceBuilderStep;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
