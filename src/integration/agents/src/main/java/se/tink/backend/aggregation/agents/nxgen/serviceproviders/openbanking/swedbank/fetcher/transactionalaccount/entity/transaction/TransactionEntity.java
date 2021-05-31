@@ -1,6 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.fetcher.transactionalaccount.entity.transaction;
 
+import com.google.common.base.Strings;
 import java.time.LocalDate;
+import java.util.Optional;
+import org.apache.commons.lang.StringUtils;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.Transactions;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.fetcher.transactionalaccount.entity.common.TransactionAmountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.TransactionDates;
@@ -24,5 +28,17 @@ public class TransactionEntity {
         }
 
         return builder.build();
+    }
+
+    protected String getDescription() {
+        if (StringUtils.isNumeric(remittanceInformationUnstructured)
+                && Transactions.SALARY_PATTERN
+                        .matcher(Strings.nullToEmpty(remittanceInformationStructured).toLowerCase())
+                        .matches()) {
+            return remittanceInformationStructured;
+        }
+
+        return Optional.ofNullable(remittanceInformationUnstructured)
+                .orElse(remittanceInformationStructured);
     }
 }

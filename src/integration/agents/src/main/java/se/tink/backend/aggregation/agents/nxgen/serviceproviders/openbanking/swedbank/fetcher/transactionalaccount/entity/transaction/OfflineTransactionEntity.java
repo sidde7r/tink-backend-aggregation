@@ -30,9 +30,7 @@ public class OfflineTransactionEntity extends TransactionEntity {
                 Transaction.builder()
                         .setAmount(transactionAmount.toTinkAmount())
                         .setDate(Optional.ofNullable(transactionDate).orElse(valueDate))
-                        .setDescription(
-                                Optional.ofNullable(remittanceInformationUnstructured)
-                                        .orElse(remittanceInformationStructured))
+                        .setDescription(getDescription())
                         .setPending(false)
                         .setTransactionDates(getTinkTransactionDates(valueDate, bookingDate))
                         .setProviderMarket(providerMarket);
