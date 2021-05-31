@@ -93,13 +93,11 @@ public final class DanskeBankSEAgent extends DanskeBankAgent
                                 (DanskeBankSEApiClient) apiClient,
                                 deviceId,
                                 configuration,
-                                credentials,
                                 sessionStorage),
                         persistentStorage,
                         request),
                 new PasswordAuthenticationController(
-                        new DanskeBankPasswordAuthenticator(
-                                apiClient, deviceId, configuration, credentials)));
+                        new DanskeBankPasswordAuthenticator(apiClient, deviceId, configuration)));
     }
 
     @Override

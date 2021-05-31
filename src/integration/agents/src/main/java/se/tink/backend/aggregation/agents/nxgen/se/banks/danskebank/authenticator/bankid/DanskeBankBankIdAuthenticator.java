@@ -1,13 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.authenticator.bankid;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Objects;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
-import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.bankid.status.BankIdStatus;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
@@ -35,25 +33,22 @@ import se.tink.libraries.social.security.SocialSecurityNumber;
 
 @Slf4j
 public class DanskeBankBankIdAuthenticator implements BankIdAuthenticator<String> {
-    private static final ObjectMapper mapper = new ObjectMapper();
+
     private final DanskeBankSEApiClient apiClient;
     private final String deviceId;
     private final DanskeBankSEConfiguration configuration;
     private String dynamicBankIdJavascript;
     private String finalizePackage;
-    private final Credentials credentials;
     private final SessionStorage sessionStorage;
 
     public DanskeBankBankIdAuthenticator(
             DanskeBankSEApiClient apiClient,
             String deviceId,
             DanskeBankConfiguration configuration,
-            Credentials credentials,
             SessionStorage sessionStorage) {
         this.apiClient = apiClient;
         this.deviceId = deviceId;
         this.configuration = (DanskeBankSEConfiguration) configuration;
-        this.credentials = credentials;
         this.sessionStorage = sessionStorage;
     }
 
