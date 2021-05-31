@@ -1,15 +1,15 @@
 kind: RuleGroup
 apiVersion: monitoring.tink.se/v1
 metadata:
-  name: alerts-payments-fr
+  name: alerts-payments-gb
   namespace: agents
 spec:
   rules:
 
-    - alert: TransferSuccessRateLowForFrance
+    - alert: TransferSuccessRateLowForGreatBritain
       expr: |
         # Successful/Cancelled transfer outcomes below 50%
-        (sum by(className) (increase(tink_agent_transfer_total{ market="FR", provider_type!="test", outcome=~"completed|cancelled"}[30m]))
+        (sum by(className) (increase(tink_agent_transfer_total{ market="GB", provider_type!="test", outcome=~"completed|cancelled"}[30m]))
           / sum by(className) (increase(tink_agent_transfer_total{provider_type!="test"}[30m]))) < 0.5
         # # At least this many attempts
         and sum by(className) (increase(tink_agent_transfer_total{provider_type!="test"}[30m])) > 5
