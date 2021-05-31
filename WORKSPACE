@@ -133,7 +133,7 @@ go_repository(
     name = "org_golang_x_text",
     importpath = "golang.org/x/text",
     sum = "h1:g61tztE5qeGQ89tm6NTjjM9VPIm088od1l6aSorWRWg=",
-    version = "v0.3.0",
+    version = "v0.3.3",
 )
 
 go_repository(
