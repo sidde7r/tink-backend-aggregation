@@ -9,14 +9,6 @@ java_library(
 )
 
 java_library(
-    name = "c3p0_c3p0",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@aggregation//:c3p0_c3p0",
-    ],
-)
-
-java_library(
     name = "ch_qos_logback_logback_classic",
     visibility = ["//visibility:public"],
     exports = [
