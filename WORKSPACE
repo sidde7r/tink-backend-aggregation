@@ -1245,7 +1245,7 @@ maven_install(
         "org.xerial.snappy:snappy-java:1.0.5-M2",
         "org.xmlunit:xmlunit-core:2.1.1",
         "org.xmlunit:xmlunit-legacy:2.1.1",
-        "org.yaml:snakeyaml:1.23",
+        "org.yaml:snakeyaml:1.26",
         "pl.pragmatists:JUnitParams:1.0.5",
         "software.amazon.ion:ion-java:1.0.2",
         "xerces:xercesImpl:2.12.0",
