@@ -74,6 +74,9 @@ public class AccountsItem {
                                 .addIdentifier(new IbanIdentifier(iban))
                                 .build())
                 .setApiIdentifier(resourceId)
+                .putInTemporaryStorage(
+                        RabobankConstants.StorageKey.HAS_TRANSACTIONS_CONSENT,
+                        links.hasTransactionsLink())
                 .addParties(getParties())
                 .build();
     }
