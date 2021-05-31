@@ -1396,6 +1396,7 @@ load("@selenium//:defs.bzl", pin_selenium = "pinned_maven_install")
 
 pin_selenium()
 
+# Don't include artifacts from this one directly. Instead, include the shaded "//third_party/browserup_proxy_core"
 maven_install(
     name = "browserup_proxy_core",
     artifacts = [
