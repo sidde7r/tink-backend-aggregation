@@ -19,8 +19,8 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponen
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, TRANSFERS})
 @AgentPisCapability(
         capabilities = {
-            PisCapability.PIS_SEPA_CREDIT_TRANSFER,
-            PisCapability.PIS_SEPA_INSTANT_CREDIT_TRANSFER,
+            PisCapability.SEPA_CREDIT_TRANSFER,
+            PisCapability.SEPA_INSTANT_CREDIT_TRANSFER,
             PisCapability.PIS_FUTURE_DATE
         })
 public final class MillenniumBcpAgent extends SibsProgressiveBaseAgent {
