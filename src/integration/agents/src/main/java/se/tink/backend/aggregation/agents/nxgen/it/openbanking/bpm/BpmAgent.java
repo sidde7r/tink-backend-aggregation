@@ -13,7 +13,7 @@ import se.tink.backend.aggregation.client.provider_configuration.rpc.PisCapabili
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, TRANSFERS})
-@AgentPisCapability(capabilities = {PisCapability.PIS_SEPA_CREDIT_TRANSFER})
+@AgentPisCapability(capabilities = {PisCapability.SEPA_CREDIT_TRANSFER})
 public final class BpmAgent extends CbiGlobeAgent {
 
     @Inject

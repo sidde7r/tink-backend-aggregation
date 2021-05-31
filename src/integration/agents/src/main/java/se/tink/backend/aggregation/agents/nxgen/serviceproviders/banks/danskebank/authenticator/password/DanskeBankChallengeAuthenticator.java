@@ -431,21 +431,13 @@ public class DanskeBankChallengeAuthenticator
 
     private void logonStepOne(String username, String password)
             throws AuthenticationException, AuthorizationException {
+
         // Get the dynamic logon javascript
         HttpResponse getResponse =
                 this.apiClient.collectDynamicLogonJavascript(
                         this.configuration.getSecuritySystem(), this.configuration.getBrand());
-
         // Add the authorization header from the response
-        final String persistentAuth =
-                getResponse
-                        .getHeaders()
-                        .getFirst(DanskeBankConstants.DanskeRequestHeaders.PERSISTENT_AUTH);
-        // Store tokens in sensitive payload, so it will be masked from logs
-        credentials.setSensitivePayload(
-                DanskeBankConstants.DanskeRequestHeaders.AUTHORIZATION, persistentAuth);
-        this.apiClient.addPersistentHeader(
-                DanskeBankConstants.DanskeRequestHeaders.AUTHORIZATION, persistentAuth);
+        apiClient.saveAuthorizationHeader(getResponse);
 
         // Create Javascript that will return device information
         String deviceInfoJavascript =
