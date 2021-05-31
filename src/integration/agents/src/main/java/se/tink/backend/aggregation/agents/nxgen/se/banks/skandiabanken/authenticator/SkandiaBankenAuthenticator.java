@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants.Authentication;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants.Endpoints;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.authenticator.rpc.BankIdResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.authenticator.rpc.CreateSessionRequest;
@@ -53,7 +54,7 @@ public class SkandiaBankenAuthenticator implements BankIdAuthenticator<String> {
         final BankIdResponse bankIdResponse = apiClient.collectBankId(reference);
         final String redirectUrl = bankIdResponse.getRedirectUrl();
 
-        if (redirectUrl.equalsIgnoreCase("/message/")) {
+        if (redirectUrl.equalsIgnoreCase(Endpoints.MESSAGE)) {
             String message = apiClient.fetchMessage();
             if (isNotCustomerMessage(message)) {
                 throw LoginError.NOT_CUSTOMER.exception();
@@ -61,7 +62,7 @@ public class SkandiaBankenAuthenticator implements BankIdAuthenticator<String> {
                 throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception();
             }
         }
-        if (redirectUrl.equalsIgnoreCase("/otpchooser/")) {
+        if (redirectUrl.equalsIgnoreCase(Endpoints.OTP_CHOOSER)) {
             throw LoginError.NOT_SUPPORTED.exception();
         }
 
