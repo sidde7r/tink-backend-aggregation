@@ -287,6 +287,12 @@ public class JyskeBankNemidAuthenticator
         final String clientId = jyskePersistentStorage.getClientId();
         final String clientSecret = jyskePersistentStorage.getClientSecret();
 
+        if (Strings.isNullOrEmpty(kid)
+                || Strings.isNullOrEmpty(clientId)
+                || Strings.isNullOrEmpty(clientSecret)) {
+            throw SessionError.SESSION_EXPIRED.exception();
+        }
+
         final ChallengeResponse challengeResponse = apiClient.fetchChallengeCode(kid);
         final String challenge = challengeResponse.getChallenge();
 
