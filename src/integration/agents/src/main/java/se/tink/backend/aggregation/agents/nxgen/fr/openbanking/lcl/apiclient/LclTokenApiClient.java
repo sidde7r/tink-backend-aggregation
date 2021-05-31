@@ -27,13 +27,15 @@ public class LclTokenApiClient {
 
     private final TinkHttpClient httpClient;
     private final LclHeaderValueProvider headerValueProvider;
-    private final AgentConfiguration<LclConfiguration> lclConfiguration;
+    private final AgentConfiguration<LclConfiguration> configuration;
 
     @SneakyThrows
     public TokenResponseDto retrieveAccessToken(String code) {
         final RetrieveTokenRequest request =
                 new RetrieveTokenRequest(
-                        LclAgent.CLIENT_ID, lclConfiguration.getRedirectUrl(), code);
+                        configuration.getProviderSpecificConfiguration().getClientId(),
+                        configuration.getRedirectUrl(),
+                        code);
 
         return sendTokenRequestAndGetResponse(request);
     }
@@ -42,7 +44,9 @@ public class LclTokenApiClient {
     public Optional<TokenResponseDto> refreshAccessToken(String refreshToken) {
         try {
             final RefreshTokenRequest request =
-                    new RefreshTokenRequest(LclAgent.CLIENT_ID, refreshToken);
+                    new RefreshTokenRequest(
+                            configuration.getProviderSpecificConfiguration().getClientId(),
+                            refreshToken);
             final TokenResponseDto response = sendTokenRequestAndGetResponse(request);
 
             return Optional.ofNullable(response);
@@ -56,7 +60,9 @@ public class LclTokenApiClient {
 
     @SneakyThrows
     public TokenResponseDto getPispToken() {
-        PispTokenRequest request = new PispTokenRequest(LclAgent.CLIENT_ID);
+        PispTokenRequest request =
+                new PispTokenRequest(
+                        configuration.getProviderSpecificConfiguration().getClientId());
 
         return httpClient
                 .request(TOKEN_PATH)

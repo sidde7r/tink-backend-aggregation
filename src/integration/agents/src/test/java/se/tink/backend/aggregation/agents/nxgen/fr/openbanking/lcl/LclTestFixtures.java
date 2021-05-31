@@ -103,6 +103,7 @@ public class LclTestFixtures {
         final LclConfiguration configurationMock = mock(LclConfiguration.class);
 
         when(configurationMock.getQsealcKeyId()).thenReturn(QSEALC_KEY_ID);
+        when(configurationMock.getClientId()).thenReturn(CLIENT_ID);
 
         final AgentConfiguration<LclConfiguration> agentConfigurationMock =
                 mock(AgentConfiguration.class);
