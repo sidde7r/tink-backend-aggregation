@@ -9,10 +9,10 @@ spec:
     - alert: TransferSuccessRateLowForFrance
       expr: |
         # Successful/Cancelled transfer outcomes below 50%
-        (sum by(className) (increase(tink_agent_transfer_total{ market="FR", provider_type!="test", outcome=~"completed|cancelled"}[1h]))
-          / sum by(className) (increase(tink_agent_transfer_total{provider_type!="test"}[1h]))) < 0.5
+        (sum by(className) (increase(tink_agent_transfer_total{ market="FR", provider_type!="test", outcome=~"completed|cancelled"}[30m]))
+          / sum by(className) (increase(tink_agent_transfer_total{provider_type!="test"}[30m]))) < 0.5
         # # At least this many attempts
-        and sum by(className) (increase(tink_agent_transfer_total{provider_type!="test"}[1h])) > 5
+        and sum by(className) (increase(tink_agent_transfer_total{provider_type!="test"}[30m])) > 5
       for: 5m
       labels:
         severity: urgent
@@ -21,5 +21,5 @@ spec:
       annotations:
         description: {{ .Values.kibanaLink }}
           {{ .Values.grafanaLink }}
-        summary: Transfer completion rate is below 50% actual % is <{ $value }> for <{ $labels.className }> the last 1h. More than 5 attempts.
+        summary: Transfer completion rate is below 50% actual % is <{ $value }> for <{ $labels.className }> the last 30m. More than 5 attempts.
         tags: <{ $labels.className }> , *#payments*
