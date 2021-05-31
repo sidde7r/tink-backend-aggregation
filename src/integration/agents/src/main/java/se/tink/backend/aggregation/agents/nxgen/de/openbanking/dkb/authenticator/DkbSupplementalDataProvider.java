@@ -85,7 +85,7 @@ public class DkbSupplementalDataProvider {
                 .findFirst();
     }
 
-    String selectAuthMethod(List<? extends SelectableMethod> methods)
+    SelectableMethod selectAuthMethod(List<? extends SelectableMethod> methods)
             throws SupplementalInfoException {
         if (methods.size() > 1) {
             Field field =
@@ -95,17 +95,17 @@ public class DkbSupplementalDataProvider {
                             GermanFields.SelectOptions.prepareSelectOptions(methods));
             Map<String, String> supplementalInformation =
                     supplementalInformationHelper.askSupplementalInformation(field);
-            return getSelectedAuthMethodId(supplementalInformation.get(field.getName()), methods);
+            return getSelectedAuthMethod(supplementalInformation.get(field.getName()), methods);
         }
-        return methods.get(0).getIdentifier();
+        return methods.get(0);
     }
 
-    private String getSelectedAuthMethodId(
+    private SelectableMethod getSelectedAuthMethod(
             String selectedValue, List<? extends SelectableMethod> methods) {
         if (StringUtils.isNumeric(selectedValue)) {
             int index = Integer.parseInt(selectedValue) - 1;
             if (index >= 0 && index < methods.size()) {
-                return methods.get(index).getIdentifier();
+                return methods.get(index);
             }
         }
         throw SupplementalInfoError.NO_VALID_CODE.exception(

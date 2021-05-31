@@ -196,7 +196,7 @@ public class DkbAuthenticatorTest {
         SupplementalInformationHelper supplementalInformationHelper =
                 mock(SupplementalInformationHelper.class);
         when(supplementalInformationHelper.askSupplementalInformation(any(Field.class)))
-                .thenReturn(Collections.singletonMap("tanField", "code"));
+                .thenReturn(Collections.singletonMap("pushTan", "code"));
         return supplementalInformationHelper;
     }
 
