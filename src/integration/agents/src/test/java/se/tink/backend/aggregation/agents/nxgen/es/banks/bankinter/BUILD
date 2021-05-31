@@ -31,7 +31,10 @@ junit_test(
         "//src/integration/models",
         "//src/libraries/date",
         "//src/libraries/serialization",
+        "//third_party:org_assertj_assertj_core",
         "//third_party:org_mockito_mockito_core",
         "@aggregation//:com_google_guava_guava",
+        "@selenium//:org_seleniumhq_selenium_selenium_api",
+        "@selenium//:org_seleniumhq_selenium_selenium_support",
     ],
 )
