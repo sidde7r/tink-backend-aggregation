@@ -64,6 +64,8 @@ public class SkandiaBankenConstants {
                 new URL(BASE + Endpoints.FETCH_APPROVED_PAYMENTS);
         public static final URL LOGOUT = new URL(BASE + Endpoints.LOGOUT);
         public static final URL LOGIN_MESSAGE = new URL(LOGIN_BASE).concat(Endpoints.MESSAGE);
+        public static final URL LOGIN_OTP_CHOOSER =
+                new URL(LOGIN_BASE).concat(Endpoints.OTP_CHOOSER);
     }
 
     public static class Endpoints {

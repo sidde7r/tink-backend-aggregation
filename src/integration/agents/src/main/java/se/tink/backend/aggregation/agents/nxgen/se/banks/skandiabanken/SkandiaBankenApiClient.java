@@ -301,4 +301,8 @@ public class SkandiaBankenApiClient {
     public String fetchMessage() {
         return httpClient.request(Urls.LOGIN_MESSAGE).get(String.class);
     }
+
+    public String fetchOtpChooser() {
+        return httpClient.request(Urls.LOGIN_OTP_CHOOSER).get(String.class);
+    }
 }

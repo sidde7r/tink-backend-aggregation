@@ -63,6 +63,7 @@ public class SkandiaBankenAuthenticator implements BankIdAuthenticator<String> {
             }
         }
         if (redirectUrl.equalsIgnoreCase(Endpoints.OTP_CHOOSER)) {
+            apiClient.fetchOtpChooser();
             throw LoginError.NOT_SUPPORTED.exception();
         }
 
