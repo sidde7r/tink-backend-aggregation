@@ -265,16 +265,12 @@ public abstract class Account {
         account.setCapabilities(this.capabilities);
         account.setSourceInfo(this.sourceInfo);
 
-        if (parties.size() > 0 || java.util.Objects.nonNull(holderType)) {
-            AccountHolder accountHolder = new AccountHolder();
-            accountHolder.setType(
-                    Optional.ofNullable(holderType)
-                            .orElse(inferHolderType(provider))
-                            .toSystemType());
-            accountHolder.setIdentities(
-                    parties.stream().map(this::toSystemHolder).collect(Collectors.toList()));
-            account.setAccountHolder(accountHolder);
-        }
+        AccountHolder accountHolder = new AccountHolder();
+        accountHolder.setType(
+                Optional.ofNullable(holderType).orElse(inferHolderType(provider)).toSystemType());
+        accountHolder.setIdentities(
+                parties.stream().map(this::toSystemHolder).collect(Collectors.toList()));
+        account.setAccountHolder(accountHolder);
 
         account.setBalances(
                 balances != null
