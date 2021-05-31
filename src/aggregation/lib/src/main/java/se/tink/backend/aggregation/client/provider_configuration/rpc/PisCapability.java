@@ -1,10 +1,6 @@
 package se.tink.backend.aggregation.client.provider_configuration.rpc;
 
 public enum PisCapability {
-    @Deprecated
-    PIS_SEPA_CREDIT_TRANSFER, // Deprecated in favour of SEPA_CREDIT_TRANSFER
-    @Deprecated
-    PIS_SEPA_INSTANT_CREDIT_TRANSFER, // Deprecated in favour of SEPA_INSTANT_CREDIT_TRANSFER
     PIS_SE_BG,
     PIS_SE_PG,
     PIS_UK_FASTER_PAYMENT,

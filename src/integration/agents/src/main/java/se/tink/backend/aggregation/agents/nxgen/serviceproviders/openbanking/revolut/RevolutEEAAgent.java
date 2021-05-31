@@ -21,7 +21,7 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponen
         modules = UkOpenBankingLocalKeySignerModuleForDecoupledMode.class)
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, TRANSFERS, LIST_BENEFICIARIES})
 @AgentPisCapability(
-        capabilities = PisCapability.PIS_SEPA_CREDIT_TRANSFER,
+        capabilities = PisCapability.SEPA_CREDIT_TRANSFER,
         markets = {"FR", "IT", "ES", "DE", "PT"})
 public final class RevolutEEAAgent extends RevolutBaseAgent {
 
