@@ -1119,20 +1119,20 @@ maven_install(
         "io.github.classgraph:classgraph:4.8.78",
         "io.github.resilience4j:resilience4j-all:1.6.1",
         "io.grpc:grpc-context:%s" % GRPC_JAVA_VERSION,
-        "io.netty:netty-buffer:%s" % IO_NETTY_VERSION,
-        "io.netty:netty-codec-dns:%s" % IO_NETTY_VERSION,
-        "io.netty:netty-codec-http2:%s" % IO_NETTY_VERSION,
-        "io.netty:netty-codec-http:%s" % IO_NETTY_VERSION,
-        "io.netty:netty-codec-socks:%s" % IO_NETTY_VERSION,
-        "io.netty:netty-codec:%s" % IO_NETTY_VERSION,
-        "io.netty:netty-common:%s" % IO_NETTY_VERSION,
-        "io.netty:netty-dev-tools:%s" % IO_NETTY_VERSION,
-        "io.netty:netty-handler-proxy:%s" % IO_NETTY_VERSION,
-        "io.netty:netty-handler:%s" % IO_NETTY_VERSION,
-        "io.netty:netty-resolver-dns:%s" % IO_NETTY_VERSION,
-        "io.netty:netty-resolver:%s" % IO_NETTY_VERSION,
+        "io.netty:netty-buffer:4.1.50.Final", # Should be equal to IO_NETTY_VERSION
+        "io.netty:netty-codec-dns:4.1.50.Final", # Should be equal to IO_NETTY_VERSION
+        "io.netty:netty-codec-http2:4.1.50.Final", # Should be equal to IO_NETTY_VERSION
+        "io.netty:netty-codec-http:4.1.50.Final", # Should be equal to IO_NETTY_VERSION
+        "io.netty:netty-codec-socks:4.1.50.Final", # Should be equal to IO_NETTY_VERSION
+        "io.netty:netty-codec:4.1.50.Final", # Should be equal to IO_NETTY_VERSION
+        "io.netty:netty-common:4.1.50.Final", # Should be equal to IO_NETTY_VERSION
+        "io.netty:netty-dev-tools:4.1.50.Final", # Should be equal to IO_NETTY_VERSION
+        "io.netty:netty-handler-proxy:4.1.50.Final", # Should be equal to IO_NETTY_VERSION
+        "io.netty:netty-handler:4.1.50.Final", # Should be equal to IO_NETTY_VERSION
+        "io.netty:netty-resolver-dns:4.1.50.Final", # Should be equal to IO_NETTY_VERSION
+        "io.netty:netty-resolver:4.1.50.Final", # Should be equal to IO_NETTY_VERSION
         "io.netty:netty-tcnative-boringssl-static:%s" % IO_NETTY_BORINGSSL_VERSION,
-        "io.netty:netty-transport:%s" % IO_NETTY_VERSION,
+        "io.netty:netty-transport:4.1.50.Final", # Should be equal to IO_NETTY_VERSION
         "io.opencensus:opencensus-api:%s" % OPENCENSUS_VERSION,
         "io.opencensus:opencensus-contrib-grpc-metrics:%s" % OPENCENSUS_VERSION,
         "io.perfmark:perfmark-api:0.17.0",
@@ -1190,8 +1190,8 @@ maven_install(
         "org.apache.mahout.commons:commons-cli:2.0-mahout",
         "org.apache.pdfbox:fontbox:2.0.9",
         "org.apache.pdfbox:pdfbox:2.0.9",
-        "org.apache.zookeeper:zookeeper:3.5.9",
         "org.apache.zookeeper:zookeeper-jute:3.5.9",
+        "org.apache.zookeeper:zookeeper:3.5.9",
         "org.aspectj:aspectjrt:1.8.10",
         "org.assertj:assertj-core:3.8.0",
         "org.bitbucket.b_c:jose4j:0.6.5",
