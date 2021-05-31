@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sw
 import com.google.common.collect.ImmutableList;
 import java.time.ZoneId;
 import java.util.List;
+import java.util.regex.Pattern;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccountTypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -231,6 +232,10 @@ public final class SwedbankConstants {
     public static final class ReferenceType {
         public static final String OCR = "OCR";
         public static final String MSG = "MSG";
+    }
+
+    public static final class Transactions {
+        public static final Pattern SALARY_PATTERN = Pattern.compile(".*(l[oö]n|salary).*");
     }
 
     public enum HeadersToSign {
