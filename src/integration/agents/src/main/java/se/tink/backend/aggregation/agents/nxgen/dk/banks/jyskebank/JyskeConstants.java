@@ -1,8 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank;
 
-import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
-import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 
 public class JyskeConstants {
 
@@ -151,10 +149,4 @@ public class JyskeConstants {
     public static class Fetcher {
         public static final int START_PAGE = 0;
     }
-
-    public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
-            TypeMapper.<AccountTypes>builder()
-                    .put(AccountTypes.CHECKING, "7248")
-                    .put(AccountTypes.SAVINGS, "5051")
-                    .build();
 }
