@@ -159,64 +159,10 @@ spec:
     ### All login success rates - Bank Errors - RE ###
     ##################################################
 
-    - alert: AllLoginSuccessRatesBelow90AndGreater80WithBankErrorsAndAttemptLimitES_RE
-      expr: |
-          count(count_over_time(tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }}  , market="ES"}[60m])) by (provider)
-            / count(count_over_time(tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"}[60m])) by (provider) < 0.9
-          and count(count_over_time(tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="ES"}[60m])) by (provider)
-            / count(count_over_time(tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"}[60m])) by (provider) >= 0.8
-      for: 15m
-      labels:
-        severity: ping
-        priority: P4
-        who: integration-fluffy
-      annotations:
-        description: {{ .Values.kibanaLink }}
-             {{ .Values.grafanaLink }}
-        summary: Login success rate for RE agents and all Bank types with Bank errors is between 90 - 80% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
-             the last 75 minutes.
-        tags: {{ .Values.tags }}
-
-    - alert: AllLoginSuccessRatesBelow80AndGreater70WithBankErrorsAndAttemptLimitES_RE
-      expr: |
-          count(count_over_time(tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }}  , market="ES"}[60m])) by (provider)
-            / count(count_over_time(tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"}[60m])) by (provider) < 0.8
-          and count(count_over_time(tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="ES"}[60m])) by (provider)
-            / count(count_over_time(tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"}[60m])) by (provider) >= 0.7
-      for: 15m
-      labels:
-        severity: urgent
-        priority: P3
-        who: integration-fluffy
-      annotations:
-        description: {{ .Values.kibanaLink }}
-             {{ .Values.grafanaLink }}
-        summary: Login success rate for RE agents and for all Bank types with Bank errors is between 80 - 70% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
-             the last 75 minutes.
-        tags: {{ .Values.tags }}
-
-    - alert: AllLoginSuccessRatesBelow70AndGreater60WithBankErrorsAndAttemptLimitES_RE
-      expr: |
-        count(count_over_time(tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }}  , market="ES"}[60m])) by (provider)
-          / count(count_over_time(tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"}[60m])) by (provider) < 0.7
-        and count(count_over_time(tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="ES"}[60m])) by (provider)
-          / count(count_over_time(tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"}[60m])) by (provider) >= 0.6
-      for: 5m
-      labels:
-        severity: urgent
-        priority: P2
-        who: integration-fluffy
-      annotations:
-        description: {{ .Values.kibanaLink }}
-             {{ .Values.grafanaLink }}
-        summary: Login success rate for RE agents and for all Bank types with Bank errors is between 70 - 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
-             the last 60 minutes.
-        tags: {{ .Values.tags }}
-
-    - alert: AllLoginSuccessRatesBelow60WithBankErrorsAndAttemptLimitES_RE
+    - alert: AllLoginSuccessRatesBelow50WithBankErrorsAndAttemptLimitES_RE
       expr: |
         count(count_over_time(tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="ES"}[60m])) by (provider)
-          / count(count_over_time(tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"}[60m])) by (provider) < 0.60
+          / count(count_over_time(tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"}[60m])) by (provider) < 0.5
       for: 5m
       labels:
         severity: urgent
@@ -233,64 +179,10 @@ spec:
     ### Split login success rates - Bank Errors - RE ###
     ####################################################
 
-    - alert: SplitLoginSuccessRatesBelow90AndGreater80WithBankErrorsAndAttemptLimitES_RE
+    - alert: SplitLoginSuccessRatesBelow50WithBankErrorsAndAttemptLimitES_RE
       expr: |
         count(count_over_time(tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="ES"}[60m])) by (provider, action)
-          / count(count_over_time(tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"}[60m])) by (provider, action) < 0.9
-        and count(count_over_time(tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="ES"}[60m])) by (provider, action)
-          / count(count_over_time(tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"}[60m])) by (provider, action) >= 0.8
-      for: 15m
-      labels:
-        severity: ping
-        priority: P4
-        who: integration-fluffy
-      annotations:
-        description: {{ .Values.kibanaLink }}
-             {{ .Values.grafanaLink }}
-        summary: Login success rate for RE agents and for one of login type with Bank errors is between 90 - 80% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
-             the last 75 minutes.
-        tags: {{ .Values.tags }}
-
-    - alert: SplitLoginSuccessRatesBelow80AndGreater70WithBankErrorsAndAttemptLimitES_RE
-      expr: |
-        count(count_over_time(tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="ES"}[60m])) by (provider, action)
-          / count(count_over_time(tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"}[60m])) by (provider, action) < 0.8
-        and count(count_over_time(tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="ES"}[60m])) by (provider, action)
-          / count(count_over_time(tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"}[60m])) by (provider, action) >= 0.7
-      for: 15m
-      labels:
-        severity: urgent
-        priority: P3
-        who: integration-fluffy
-      annotations:
-        description: {{ .Values.kibanaLink }}
-             {{ .Values.grafanaLink }}
-        summary: Login success rate for RE agents and for one of login type with Bank errors is between 80 - 70% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
-             the last 75 minutes.
-        tags: {{ .Values.tags }}
-
-    - alert: SplitLoginSuccessRatesBelow70AndGreater60WithBankErrorsAndAttemptLimitES_RE
-      expr: |
-        count(count_over_time(tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="ES"}[60m])) by (provider, action)
-          / count(count_over_time(tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"}[60m])) by (provider, action) < 0.7
-        and count(count_over_time(tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="ES"}[60m])) by (provider, action)
-          / count(count_over_time(tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"}[60m])) by (provider, action) >= 0.6
-      for: 5m
-      labels:
-        severity: urgent
-        priority: P2
-        who: integration-fluffy
-      annotations:
-        description: {{ .Values.kibanaLink }}
-             {{ .Values.grafanaLink }}
-        summary: Login success rate for RE agents and for one of login type with Bank errors is between 70 - 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
-             the last 60 minutes.
-        tags: {{ .Values.tags }}
-
-    - alert: SplitLoginSuccessRatesBelow60WithBankErrorsAndAttemptLimitES_RE
-      expr: |
-        count(count_over_time(tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="ES"}[60m])) by (provider, action)
-          / count(count_over_time(tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"}[60m])) by (provider, action) < 0.6
+          / count(count_over_time(tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"}[60m])) by (provider, action) < 0.5
       for: 5m
       labels:
         severity: urgent
@@ -299,7 +191,7 @@ spec:
       annotations:
         description: {{ .Values.kibanaLink }}
              {{ .Values.grafanaLink }}
-        summary: Login success rate for RE agents and for one of login type with Bank errors is below 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+        summary: Login success rate for RE agents and for one of login type with Bank errors is below 50% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
              the last 60 minutes.
         tags: {{ .Values.tags }}
 
@@ -490,42 +382,6 @@ spec:
     ########################################
     ### BankServerErrors - Agent Refresh ###
     ########################################
-#
-#    - alert: AgentRefreshesBelow75Greater65DueToBankServerErrorWithRateLimitES
-#      expr: |
-#        count(count_over_time(tink_agent_refresh_total{ provider_type!="test", {{ .Values.bankErrorsRefresh }}, market="ES"}[60m])) by (className,type)
-#          / count(count_over_time(tink_agent_refresh_total{ provider_type!="test", market="ES"}[60m])) by (className,type) < 0.75
-#        and count(count_over_time(tink_agent_refresh_total{ provider_type!="test", {{ .Values.bankErrorsRefresh }}, market="ES"}[60m])) by (className,type)
-#          / count(count_over_time(tink_agent_refresh_total{ provider_type!="test", market="ES"}[60m])) by (className,type) >= 0.65
-#      for: 15m
-#      labels:
-#        severity: ping
-#        priority: P4
-#        who: integration-fluffy
-#      annotations:
-#        description: {{ .Values.kibanaClassLink }}
-#             {{ .Values.grafanaLink }}
-#        summary: Refresh unavailable rate is between 75 - 65% because of bank issues ( <{ $value }> ) for <{ $labels.className }>
-#                      the last 75 minutes for <{ $labels.type }>
-#        tags: {{ .Values.tags }}
-#
-#    - alert: AgentRefreshesBelow65Greater55DueToBankServerErrorWithRateLimitES
-#      expr: |
-#        count(count_over_time(tink_agent_refresh_total{ provider_type!="test", {{ .Values.bankErrorsRefresh }}, market="ES"}[60m])) by (className,type)
-#          / count(count_over_time(tink_agent_refresh_total{ provider_type!="test", market="ES"}[60m])) by (className,type) < 0.65
-#        and count(count_over_time(tink_agent_refresh_total{ provider_type!="test", {{ .Values.bankErrorsRefresh }}, market="ES"}[60m])) by (className,type)
-#          / count(count_over_time(tink_agent_refresh_total{ provider_type!="test", market="ES"}[60m])) by (className,type) >= 0.55
-#      for: 5m
-#      labels:
-#        severity: urgent
-#        priority: P2
-#        who: integration-fluffy
-#      annotations:
-#        description: {{ .Values.kibanaClassLink }}
-#             {{ .Values.grafanaLink }}
-#        summary: Refresh unavailable rate is between 65 - 55% because of bank issues ( <{ $value }> ) for <{ $labels.className }>
-#                    the last 60 minutes for <{ $labels.type }>
-#        tags: {{ .Values.tags }}
 
     - alert: AgentRefreshesBelow50DueToBankServerErrorWithRateLimitES
       expr: |
