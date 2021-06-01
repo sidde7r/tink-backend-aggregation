@@ -75,6 +75,13 @@ public class SparebankAuthenticator {
         storage.clearSessionData();
     }
 
+    void handleSuccessfulManualAuth() {
+        log.info(
+                "[SpareBank] Manual authentication finished - fetching accounts and cards for future auto refreshes");
+        apiClient.fetchAccounts();
+        apiClient.fetchCards();
+    }
+
     private boolean isSessionDataPresent() {
         if (!storage.getPsuId().isPresent()) {
             log.info("Session expired - missing PSU id");

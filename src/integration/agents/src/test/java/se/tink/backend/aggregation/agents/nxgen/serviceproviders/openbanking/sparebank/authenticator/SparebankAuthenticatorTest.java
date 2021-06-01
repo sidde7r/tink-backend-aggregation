@@ -363,6 +363,17 @@ public class SparebankAuthenticatorTest {
         verifyDoesntUpdateSessionExpiryDate();
     }
 
+    @Test
+    public void should_fetch_accounts_and_cards_on_successful_manual_auth() {
+        // when
+        authenticator.handleSuccessfulManualAuth();
+
+        // then
+        verify(apiClient).fetchAccounts();
+        verify(apiClient).fetchCards();
+        verifyNoMoreInteractions(apiClient);
+    }
+
     @SuppressWarnings("SameParameterValue")
     private void mockStorageSessionData(
             @Nullable String psuId,

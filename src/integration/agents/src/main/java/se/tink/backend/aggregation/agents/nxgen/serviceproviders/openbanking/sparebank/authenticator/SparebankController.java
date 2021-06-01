@@ -53,7 +53,7 @@ public class SparebankController implements AutoAuthenticator, ThirdPartyAppAuth
     @Override
     public ThirdPartyAppResponse<String> collect(String reference) {
         Optional<Map<String, String>> maybeSupplementalInformation =
-                this.supplementalInformationHelper.waitForSupplementalInformation(
+                supplementalInformationHelper.waitForSupplementalInformation(
                         strongAuthenticationState.getSupplementalKey(),
                         ThirdPartyAppConstants.WAIT_FOR_MINUTES,
                         TimeUnit.MINUTES);
@@ -64,6 +64,7 @@ public class SparebankController implements AutoAuthenticator, ThirdPartyAppAuth
                 authenticator.storeSessionData(
                         supplementalInformation.get(FIELD_PSU_ID),
                         supplementalInformation.get(FIELD_TPP_SESSION_ID));
+                authenticator.handleSuccessfulManualAuth();
                 credentials.setSessionExpiryDate(
                         LocalDate.now().plusDays(CONSENT_VALIDITY_IN_DAYS));
                 return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.DONE);
