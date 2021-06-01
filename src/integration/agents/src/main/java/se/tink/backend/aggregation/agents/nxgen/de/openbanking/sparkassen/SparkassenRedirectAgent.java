@@ -37,7 +37,12 @@ public class SparkassenRedirectAgent extends SparkassenAgent {
                                 ? request.getUserAvailability().getOriginatingUserIp()
                                 : null);
         return new SparkassenApiClient(
-                client, headerValues, sparkassenStorage, randomValueGenerator, localDateTimeSource);
+                client,
+                headerValues,
+                sparkassenStorage,
+                randomValueGenerator,
+                localDateTimeSource,
+                null);
     }
 
     @Override

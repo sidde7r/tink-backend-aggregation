@@ -73,7 +73,7 @@ public class PaymentAuthenticatorTest {
         paymentTestHelper.whenSupplementalInformationControllerReturn(SELECT_AUTH_METHOD_OK);
 
         // when
-        authenticator.authenticatePayment(credentials, SCA_LINKS);
+        authenticator.authenticatePayment(SCA_LINKS);
 
         // then
         paymentTestHelper.verifyInitializePaymentAuthorizationCalled();
@@ -96,8 +96,7 @@ public class PaymentAuthenticatorTest {
         paymentTestHelper.whenSupplementalInformationControllerReturn(SELECT_AUTH_METHOD_OK);
 
         // when
-        Throwable throwable =
-                catchThrowable(() -> authenticator.authenticatePayment(credentials, SCA_LINKS));
+        Throwable throwable = catchThrowable(() -> authenticator.authenticatePayment(SCA_LINKS));
 
         // then
         assertThat(throwable).isInstanceOf(LoginException.class);

@@ -13,18 +13,17 @@ public class GrpHdr {
     private InitgPty initgPty;
 
     @XmlElement(name = "NbOfTxs")
-    private String nbOfTxs;
+    private int nbOfTxs = 1;
 
     @XmlElement(name = "MsgId")
     private String msgId;
 
     public GrpHdr() {}
 
-    public GrpHdr(String creDtTm, String ctrlSum, InitgPty initgPty, String nbOfTxs, String msgId) {
+    public GrpHdr(String creDtTm, String ctrlSum, InitgPty initgPty, String msgId) {
         this.creDtTm = creDtTm;
         this.ctrlSum = ctrlSum;
         this.initgPty = initgPty;
-        this.nbOfTxs = nbOfTxs;
         this.msgId = msgId;
     }
 }

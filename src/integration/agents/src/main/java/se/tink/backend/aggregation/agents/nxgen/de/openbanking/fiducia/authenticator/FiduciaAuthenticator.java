@@ -97,7 +97,7 @@ public class FiduciaAuthenticator
     }
 
     @Override
-    public void authenticatePayment(Credentials credentials, LinksEntity scaLinks) {
+    public void authenticatePayment(LinksEntity scaLinks) {
         validateCredentials(credentials);
         AuthorizationResponse authorizationResponse =
                 apiClient.authorizeWithPassword(

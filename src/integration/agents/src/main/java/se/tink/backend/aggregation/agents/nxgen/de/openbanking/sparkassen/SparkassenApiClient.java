@@ -27,6 +27,7 @@ import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentDetai
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.PaymentApiClient;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.PaymentConstants;
+import se.tink.backend.aggregation.agents.utils.berlingroup.payment.PaymentMapper;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.enums.PaymentProduct;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.enums.PaymentService;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.rpc.CreatePaymentRequest;
@@ -41,6 +42,7 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.libraries.transfer.rpc.PaymentServiceType;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -51,6 +53,7 @@ public class SparkassenApiClient implements PaymentApiClient {
     private final SparkassenStorage storage;
     private final RandomValueGenerator randomValueGenerator;
     private final LocalDateTimeSource localDateTimeSource;
+    private final PaymentMapper<CreatePaymentRequest> paymentRequestMapper;
 
     private RequestBuilder createRequest(URL url) {
         if (url.get().contains("{" + PathVariables.BANK_CODE + "}")) {
@@ -193,8 +196,14 @@ public class SparkassenApiClient implements PaymentApiClient {
                 .post(TokenResponse.class, tokenEntity);
     }
 
-    public CreatePaymentResponse createPayment(
-            CreatePaymentRequest request, PaymentRequest paymentRequest) {
+    public CreatePaymentResponse createPayment(PaymentRequest paymentRequest) {
+        CreatePaymentRequest createPaymentRequest =
+                PaymentServiceType.PERIODIC.equals(
+                                paymentRequest.getPayment().getPaymentServiceType())
+                        ? paymentRequestMapper.getRecurringPaymentRequest(
+                                paymentRequest.getPayment())
+                        : paymentRequestMapper.getPaymentRequest(paymentRequest.getPayment());
+
         return createRequest(
                         SparkassenConstants.Urls.PAYMENT_INITIATION
                                 .parameter(
@@ -209,7 +218,7 @@ public class SparkassenApiClient implements PaymentApiClient {
                                                 paymentRequest.getPayment().getPaymentScheme())))
                 .header(PaymentConstants.HeaderKeys.TPP_REJECTION_NOFUNDS_PREFERRED, true)
                 .header(SparkassenConstants.HeaderKeys.TPP_REDIRECT_PREFERRED, false)
-                .post(CreatePaymentResponse.class, request);
+                .post(CreatePaymentResponse.class, createPaymentRequest);
     }
 
     public FetchPaymentStatusResponse fetchPaymentStatus(PaymentRequest paymentRequest) {

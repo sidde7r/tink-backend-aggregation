@@ -42,7 +42,7 @@ public class FiduciaAgentPaymentTest {
         creditorDebtorManager.before();
 
         builder =
-                new AgentIntegrationTest.Builder("de", "de-vrbank-raiba-muc-sued-ob")
+                new AgentIntegrationTest.Builder("de", "de-vrbank-bayreuth-hof-ob")
                         .addCredentialField(
                                 FiduciaConstants.CredentialKeys.PSU_ID,
                                 psuIdManager.get(ArgumentManager.PsuIdArgumentEnum.PSU_ID))

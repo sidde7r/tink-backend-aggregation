@@ -52,7 +52,7 @@ public class SparkassenAuthenticator implements MultiFactorAuthenticator, AutoAu
     protected final SparkassenApiClient apiClient;
     private final SupplementalInformationController supplementalInformationController;
     private final SparkassenStorage storage;
-    private final Credentials credentials;
+    protected final Credentials credentials;
     private final FieldBuilder fieldBuilder;
 
     public SparkassenAuthenticator(
