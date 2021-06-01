@@ -1,7 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.creditcard;
 
+import static io.vavr.API.$;
+import static io.vavr.API.Case;
+import static io.vavr.API.Match;
+import static io.vavr.API.run;
+
+import io.vavr.control.Try;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.function.Consumer;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.EvoBancoApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.EvoBancoConstants.CardState;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.EvoBancoConstants.Storage;
@@ -13,6 +21,8 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginator;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
 public class EvoBancoCreditCardFetcher
         implements AccountFetcher<CreditCardAccount>, TransactionPagePaginator<CreditCardAccount> {
@@ -50,11 +60,32 @@ public class EvoBancoCreditCardFetcher
             return PaginatorResponseImpl.createEmpty(false);
         }
 
-        CardTransactionsResponse cardTransactionsResponse =
-                bankClient.fetchCardTransactions(account.getApiIdentifier(), page);
+        Try<CardTransactionsResponse> response =
+                Try.of(() -> bankClient.fetchCardTransactions(account.getApiIdentifier(), page))
+                        .onFailure(HttpResponseException.class, handleHttpResponseExceptions())
+                        .onSuccess(
+                                cardTransactionsResponse ->
+                                        cardTransactionsResponse.handleReturnCode());
 
-        cardTransactionsResponse.handleReturnCode();
+        return response.get();
+    }
 
-        return cardTransactionsResponse;
+    private Consumer<HttpResponseException> handleHttpResponseExceptions() {
+        return e -> {
+            final HttpResponse res = e.getResponse();
+
+            Match(res.getStatus())
+                    .of(
+                            Case($(500), run(() -> handleBankSideError(e))),
+                            Case(
+                                    $(),
+                                    () -> {
+                                        throw e;
+                                    }));
+        };
+    }
+
+    private void handleBankSideError(HttpResponseException e) {
+        throw BankServiceError.BANK_SIDE_FAILURE.exception(e);
     }
 }

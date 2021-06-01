@@ -23,18 +23,15 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.form.Form;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
-import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
-public final class BankinterApiClient {
+public class BankinterApiClient {
 
     private final TinkHttpClient client;
-    private final PersistentStorage persistentStorage;
 
-    public BankinterApiClient(TinkHttpClient client, PersistentStorage persistentStorage) {
+    public BankinterApiClient(TinkHttpClient client) {
         this.client = client;
         client.setUserAgent(HeaderValues.USER_AGENT);
-        this.persistentStorage = persistentStorage;
     }
 
     public boolean keepAlive() {

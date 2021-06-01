@@ -1,8 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.creditcard.rpc;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.EvoBancoConstants;
@@ -20,17 +20,22 @@ public class CardTransactionsResponse implements PaginatorResponse, EERpcRespons
     private EeOConsultationMovementsTarjetabeEntity eeOConsultationMovementsTarjetabe;
 
     @Override
-    public Collection<Transaction> getTinkTransactions() {
+    public List<? extends Transaction> getTinkTransactions() {
         if (eeOConsultationMovementsTarjetabe
                 .getReturnCode()
                 .equals(EvoBancoConstants.ReturnCodes.UNSUCCESSFUL_RETURN_CODE)) {
             return Collections.emptyList();
         }
 
-        return eeOConsultationMovementsTarjetabe.getAnswer().getListMovementsCard().stream()
-                .filter(ListMovementsCardEntity::isCreditTransaction)
-                .map(ListMovementsCardEntity::toTinkTransaction)
-                .collect(Collectors.toList());
+        return eeOConsultationMovementsTarjetabe
+                .getAnswer()
+                .map(
+                        answer ->
+                                answer.getListMovementsCard().stream()
+                                        .filter(ListMovementsCardEntity::isCreditTransaction)
+                                        .map(ListMovementsCardEntity::toTinkTransaction)
+                                        .collect(Collectors.toList()))
+                .orElseGet(Collections::emptyList);
     }
 
     @Override
@@ -41,7 +46,11 @@ public class CardTransactionsResponse implements PaginatorResponse, EERpcRespons
             return Optional.of(false);
         }
 
-        return Optional.of(eeOConsultationMovementsTarjetabe.getAnswer().getMoreData());
+        return Optional.of(
+                eeOConsultationMovementsTarjetabe
+                        .getAnswer()
+                        .map(answer -> answer.getMoreData())
+                        .orElse(false));
     }
 
     @Override
