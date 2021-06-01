@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.openbanking.nordea.mock;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesJsonFileParser;
 import se.tink.backend.aggregation.agents.framework.assertions.entities.AgentContractEntity;
@@ -11,8 +10,6 @@ import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConf
 import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.enums.MarketCode;
 
-// Currently broken test
-@Ignore
 public class NordeaFiWireMockTest {
 
     @Test

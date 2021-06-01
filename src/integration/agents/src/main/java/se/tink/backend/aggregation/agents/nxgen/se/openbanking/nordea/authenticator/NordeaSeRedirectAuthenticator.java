@@ -18,7 +18,6 @@ public class NordeaSeRedirectAuthenticator extends NordeaBaseAuthenticator {
                 new AuthorizeRequestBuilder()
                         .withCountry(BodyValues.COUNTRY)
                         .withState(state)
-                        .withSkipAccountSelection(true)
                         .withAuthenticationMethod(BodyValues.AUTHENTICATION_METHOD));
     }
 }

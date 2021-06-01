@@ -130,7 +130,7 @@ public final class NordeaBaseConstants {
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class BodyValues {
-        public static final String ALL_ACCOUNTS = "ALL";
+        public static final String ALL_WITH_CARDS = "ALL_WITH_CARDS";
         public static final boolean SKIP_ACCOUNT_SELECTION = true;
         public static final int DURATION_MINUTES = 129600;
         public static final int FETCH_NUMBER_OF_MONTHS = 12;
