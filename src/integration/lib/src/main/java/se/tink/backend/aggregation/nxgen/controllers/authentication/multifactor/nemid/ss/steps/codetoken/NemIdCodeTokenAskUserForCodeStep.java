@@ -56,7 +56,7 @@ class NemIdCodeTokenAskUserForCodeStep {
     }
 
     private void verifySerialNumber(String serialNumber) {
-        if (valueDoesNotMatchPattern(serialNumber, VALID_SERIAL_NUMBER_REGEX)) {
+        if (!matchesPattern(serialNumber, VALID_SERIAL_NUMBER_REGEX)) {
             throw new IllegalStateException(
                     String.format("Invalid NemId code token serial number: \"%s\"", serialNumber));
         }
@@ -76,14 +76,14 @@ class NemIdCodeTokenAskUserForCodeStep {
     }
 
     private void verifyCode(String code) {
-        if (valueDoesNotMatchPattern(code, VALID_CODE_REGEX)) {
+        if (!matchesPattern(code, VALID_CODE_REGEX)) {
             String errorMessage =
                     NemIdConstants.NEM_ID_PREFIX + "Invalid code token code format:" + code;
             throw NemIdError.INVALID_CODE_TOKEN_CODE.exception(errorMessage);
         }
     }
 
-    private boolean valueDoesNotMatchPattern(String value, Pattern pattern) {
-        return !pattern.matcher(value).matches();
+    private boolean matchesPattern(String value, Pattern pattern) {
+        return value != null && pattern.matcher(value).matches();
     }
 }
