@@ -63,7 +63,9 @@ public class SkandiaBankenConstants {
         public static final URL FETCH_APPROVED_PAYMENTS =
                 new URL(BASE + Endpoints.FETCH_APPROVED_PAYMENTS);
         public static final URL LOGOUT = new URL(BASE + Endpoints.LOGOUT);
-        public static final URL LOGIN_MESSAGE = new URL(LOGIN_BASE).concat("/message/");
+        public static final URL LOGIN_MESSAGE = new URL(LOGIN_BASE).concat(Endpoints.MESSAGE);
+        public static final URL LOGIN_OTP_CHOOSER =
+                new URL(LOGIN_BASE).concat(Endpoints.OTP_CHOOSER);
     }
 
     public static class Endpoints {
@@ -92,6 +94,8 @@ public class SkandiaBankenConstants {
         public static final String FETCH_IDENTITY = "/Customers/V2/Customer";
         public static final String FETCH_APPROVED_PAYMENTS = "/Banking/V2/Payments/Approved";
         public static final String LOGOUT = "/mobile/v1/oauth2/token/revoke";
+        public static final String MESSAGE = "/message/";
+        public static final String OTP_CHOOSER = "/otpchooser/";
     }
 
     public static class IdTags {
@@ -192,7 +196,7 @@ public class SkandiaBankenConstants {
         public static final String INVESTMENT_NUMBER_NOT_FOUND =
                 "Investment account number was not found";
         public static final String NOT_CUSTOMER =
-                "för att använda tjänsten behöver du bli kund hos oss.";
+                "för att använda vår app behöver du ha ett bankkonto";
     }
 
     public static class PaymentStatus {
