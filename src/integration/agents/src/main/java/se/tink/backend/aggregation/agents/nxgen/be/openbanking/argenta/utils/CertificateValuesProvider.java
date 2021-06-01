@@ -7,17 +7,23 @@ import java.security.cert.X509Certificate;
 import java.util.List;
 import javax.security.auth.x500.X500Principal;
 import lombok.SneakyThrows;
+import org.apache.commons.lang3.StringUtils;
+import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.ArgentaCertificateException;
 import se.tink.backend.aggregation.configuration.agents.utils.CertificateUtils;
 
 public class CertificateValuesProvider {
     private static final int RADIX = 16;
+    public static final String NULL_OR_EMPTY_CERTIFICATES =
+            "Must provide base64-encoded certificates";
+    public static final String INVALID_CERTIFICATES =
+            "Must provide valid base64-encoded certificates";
 
     private CertificateValuesProvider() {}
 
     @SneakyThrows
     public static CertificateValues extractCertificateValues(String base64EncodedCertificates) {
         Preconditions.checkArgument(
-                base64EncodedCertificates != null, "Must provide base64-encoded certificates");
+                StringUtils.isNotEmpty(base64EncodedCertificates), NULL_OR_EMPTY_CERTIFICATES);
 
         List<X509Certificate> certs =
                 CertificateUtils.getX509CertificatesFromBase64EncodedCert(
@@ -28,8 +34,7 @@ public class CertificateValuesProvider {
                 .map(CertificateValuesProvider::createCertificateValues)
                 .orElseThrow(
                         () -> {
-                            throw new RuntimeException("error");
-                            // todo throw new CertificateException("error");
+                            throw new ArgentaCertificateException(INVALID_CERTIFICATES);
                         });
     }
 
