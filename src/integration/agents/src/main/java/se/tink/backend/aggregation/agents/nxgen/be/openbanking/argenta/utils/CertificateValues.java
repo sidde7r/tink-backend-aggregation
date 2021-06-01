@@ -1,12 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.utils;
 
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 
 @Builder
-@Data
+@Getter
 public class CertificateValues {
-    private String serialNumber;
-    private String certificateAuthority;
-    private String clientSigningCertificate;
+    private final String serialNumber;
+    private final String certificateAuthority;
+    private final String clientSigningCertificate;
 }
