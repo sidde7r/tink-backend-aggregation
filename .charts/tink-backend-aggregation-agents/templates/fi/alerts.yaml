@@ -39,7 +39,7 @@ spec:
         priority: P1
         who: integration-minions
       annotations:
-        description: {{ .Values.kibanaLink }}
+        description: {{ .Values.kibanaLink12h }}
           {{ .Values.grafanaLink }}
         summary: Authentication failures is over 90% (<{ $value }>) for the last 12h
         tags: {{ .Values.tags }}
@@ -95,7 +95,7 @@ spec:
         priority: P2
         who: integration-minions
       annotations:
-        description: {{ .Values.kibanaLink }}
+        description: {{ .Values.kibanaLink12h }}
           {{ .Values.grafanaLink }}
         summary: Authentication failures due to unknown RuntimeExceptions is over 10% (<{ $value }>) for the last 12h
         tags: {{ .Values.tags }}
@@ -135,7 +135,7 @@ spec:
         priority: P2
         who: integration-minions
       annotations:
-        description: {{ .Values.kibanaLink }}
+        description: {{ .Values.kibanaLink4h }}
           {{ .Values.grafanaLink }}
         summary: Manual authentication failures due to bank site errors is over 90% (<{ $value }>) for the last 4h
         tags: {{ .Values.tags }}
@@ -154,7 +154,7 @@ spec:
         priority: P2
         who: integration-minions
       annotations:
-        description: {{ .Values.kibanaLink }}
+        description: {{ .Values.kibanaLink4h }}
           {{ .Values.grafanaLink }}
         summary: Auto authentication failures due to bank site errors is over 90% (<{ $value }>) for the last 4h
         tags: {{ .Values.tags }}
@@ -174,7 +174,7 @@ spec:
         priority: P2
         who: integration-minions
       annotations:
-        description: {{ .Values.kibanaLink }}
+        description: {{ .Values.kibanaLink12h }}
           {{ .Values.grafanaLink }}
         summary: Authentication failures due to bank site errors is over 90% (<{ $value }>) for the last 12h
         tags: {{ .Values.tags }}
@@ -192,7 +192,7 @@ spec:
         severity: urgent
         who: integration-minions
       annotations:
-        description: {{ .Values.kibanaLink }}
+        description: {{ .Values.kibanaLink4h }}
           {{ .Values.grafanaLink }}
         summary: Refresh failures due to bank site errors is over 90% (<{ $value }>) for the last 4h
         tags: {{ .Values.tags }}
@@ -207,7 +207,7 @@ spec:
         severity: urgent
         who: integration-minions
       annotations:
-        description: {{ .Values.kibanaLink }}
+        description: {{ .Values.kibanaLink12h }}
           {{ .Values.grafanaLink }}
         summary: Refresh failures due to bank site errors is over 90% (<{ $value }>) for the last 12h
         tags: {{ .Values.tags }}
@@ -231,7 +231,7 @@ spec:
         priority: P2
         who: integration-minions
       annotations:
-        description: {{ .Values.kibanaLink }}
+        description: {{ .Values.kibanaLink4h }}
           {{ .Values.grafanaLink }}
         summary: Authentication failures due to user cancelletion is over 75% (<{ $value }>) for the last 2h
         tags: {{ .Values.tags }}
@@ -250,7 +250,7 @@ spec:
         priority: P2
         who: integration-minions
       annotations:
-        description: {{ .Values.kibanaLink }}
+        description: {{ .Values.kibanaLink12h }}
           {{ .Values.grafanaLink }}
         summary: Authentication failures due to user cancelletion is over 95% (<{ $value }>) for the last 12h. Please check if a redirect url is correct.
         tags: {{ .Values.tags }}
