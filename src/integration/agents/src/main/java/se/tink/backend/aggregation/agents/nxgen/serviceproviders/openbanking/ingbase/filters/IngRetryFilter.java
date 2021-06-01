@@ -16,6 +16,13 @@ public class IngRetryFilter extends AbstractRandomRetryFilter {
 
     @Override
     protected boolean shouldRetry(HttpResponse response) {
-        return ErrorMessages.ERROR_CODES.contains(response.getStatus());
+        return isSignatureVerifyFailed(response)
+                || ErrorMessages.ERROR_CODES.contains(response.getStatus());
+    }
+
+    private boolean isSignatureVerifyFailed(HttpResponse response) {
+        return response.getStatus() == 401
+                && response.getBody(String.class)
+                        .contains("Signature could not be successfully verified");
     }
 }

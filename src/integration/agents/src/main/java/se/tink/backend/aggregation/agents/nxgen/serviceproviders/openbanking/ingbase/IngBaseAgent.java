@@ -20,6 +20,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ing
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.fetcher.IngBaseTransactionsFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.fetcher.rpc.BaseFetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.filters.IngBaseGatewayTimeoutFilter;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.filters.IngBaseSignatureInvalidFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.filters.IngRetryFilter;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
@@ -86,6 +87,7 @@ public abstract class IngBaseAgent extends NextGenerationAgent
                 new TimeoutRetryFilter(
                         IngBaseConstants.HttpClient.MAX_ATTEMPTS,
                         IngBaseConstants.HttpClient.RETRY_SLEEP_MILLISECONDS));
+        client.addFilter(new IngBaseSignatureInvalidFilter());
         client.addFilter(new TimeoutFilter());
         client.addFilter(new BankServiceInternalErrorFilter());
         client.addFilter(new IngBaseGatewayTimeoutFilter());
