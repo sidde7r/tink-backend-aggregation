@@ -1,7 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.danskebank.authenticator;
 
-import static se.tink.backend.aggregation.agents.nxgen.no.banks.danskebank.DanskeBankNOConstants.AUTHENTICATION_FINISH_URL;
-
 import com.google.common.base.Strings;
 import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
@@ -9,8 +7,10 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
+import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.danskebank.DanskeBankNOApiClient;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.danskebank.DanskeBankNOConstants;
@@ -18,62 +18,54 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeban
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankJavascriptStringFormatter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password.rpc.BindDeviceRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password.rpc.BindDeviceResponse;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdIframeAuthenticationResult;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdIframeAuthenticator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdIframeFirstWindow;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdIframeInitializer;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.BankIdWebDriver;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.screenscraping.bankidiframe.BankIdIframeSSAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.screenscraping.bankidiframe.initializer.BankIdIframeInitializer;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.screenscraping.bankidiframe.initializer.IframeInitializer;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.integration.webdriver.WebDriverHelper;
+import se.tink.libraries.i18n.Catalog;
 
 @RequiredArgsConstructor
-public class DanskeBankNOManualAuthenticator
-        implements BankIdIframeInitializer, BankIdIframeAuthenticator {
+public class DanskeBankNOManualAuthenticator implements TypedAuthenticator {
 
     private final DanskeBankNOApiClient apiClient;
     private final PersistentStorage persistentStorage;
     private final WebDriverHelper webDriverHelper;
-    private final Credentials credentials;
+    private final SupplementalInformationController supplementalInformationController;
+    private final Catalog catalog;
 
     private final DanskeBankNOAuthInitializer authInitializer;
 
     @Override
-    public BankIdIframeFirstWindow initializeIframe(BankIdWebDriver webDriver) {
+    public CredentialsTypes getType() {
+        return CredentialsTypes.PASSWORD;
+    }
+
+    @Override
+    public void authenticate(Credentials credentials)
+            throws AuthenticationException, AuthorizationException {
+
         String username = credentials.getField(Field.Key.USERNAME);
         String serviceCode = credentials.getField(Field.Key.PASSWORD);
         String bankIdPassword = credentials.getField(Field.Key.BANKID_PASSWORD);
+
         verifyCorrectCredentials(username, serviceCode, bankIdPassword);
 
-        WebDriver driver = webDriver.getDriver();
+        DanskeBankNOAuthUtils.executeWithWebDriver(
+                driver -> {
+                    String logonPackage =
+                            authInitializer.initializeSessionAndGetLogonPackage(
+                                    username, serviceCode, driver);
+                    authInitializer.sendLogonPackage(logonPackage);
 
-        String logonPackage =
-                authInitializer.initializeSessionAndGetLogonPackage(username, serviceCode, driver);
-        authInitializer.sendLogonPackage(logonPackage);
-
-        initBindDevice();
-        openBankIdIFrame(driver);
-
-        return BankIdIframeFirstWindow.ENTER_SSN;
-    }
-
-    @Override
-    public String getSubstringOfUrlIndicatingAuthenticationFinish() {
-        return AUTHENTICATION_FINISH_URL;
-    }
-
-    @Override
-    public void handleBankIdAuthenticationResult(
-            BankIdIframeAuthenticationResult authenticationResult) {
-        // Page reload (destroy the iframe).
-        // Read the `logonPackage` string which is used as `stepUpToken`.
-        String stepUpToken =
-                authInitializer
-                        .waitForLogonPackage(authenticationResult.getWebDriver().getDriver())
-                        .orElseThrow(LoginError.CREDENTIALS_VERIFICATION_ERROR::exception);
-
-        finalizeDeviceBinding(stepUpToken, authenticationResult.getWebDriver().getDriver());
+                    initBindDevice();
+                    String stepUpToken = authenticateWithBankId(username, bankIdPassword, driver);
+                    finalizeDeviceBinding(stepUpToken, driver);
+                });
     }
 
     private void verifyCorrectCredentials(String... credentials) {
@@ -95,20 +87,6 @@ public class DanskeBankNOManualAuthenticator
                 throw new IllegalStateException(e);
             }
         }
-    }
-
-    private void openBankIdIFrame(WebDriver driver) {
-        HttpResponse dynamicJsResponse =
-                apiClient.getNoBankIdDynamicJs(DanskeBankConstants.SecuritySystem.SERVICE_CODE_NS);
-        String dynamicJs = dynamicJsResponse.getBody(String.class);
-
-        String epochInSeconds = Long.toString(System.currentTimeMillis() / 1000);
-        driver.get(DanskeBankNOConstants.NEMID_HTML_BOX_URL + epochInSeconds);
-
-        JavascriptExecutor js = (JavascriptExecutor) driver;
-        String formattedJs =
-                DanskeBankJavascriptStringFormatter.createNOBankIdJavascript(dynamicJs);
-        js.executeScript(formattedJs);
     }
 
     private String getStepupDynamicJs() {
@@ -155,5 +133,38 @@ public class DanskeBankNOManualAuthenticator
                 bindDeviceResponse.getDeviceSerialNumber());
         persistentStorage.put(
                 DanskeBankConstants.Persist.DEVICE_SECRET, decryptedDeviceSecret.replace("\"", ""));
+    }
+
+    private String authenticateWithBankId(String username, String bankIdPassword, WebDriver driver)
+            throws AuthenticationException {
+        HttpResponse dynamicJsResponse =
+                apiClient.getNoBankIdDynamicJs(DanskeBankConstants.SecuritySystem.SERVICE_CODE_NS);
+        String dynamicJs = dynamicJsResponse.getBody(String.class);
+
+        String epochInSeconds = Long.toString(System.currentTimeMillis() / 1000);
+        driver.get(DanskeBankNOConstants.NEMID_HTML_BOX_URL + epochInSeconds);
+
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        String formattedJs =
+                DanskeBankJavascriptStringFormatter.createNOBankIdJavascript(dynamicJs);
+        js.executeScript(formattedJs);
+
+        IframeInitializer iframeInitializer =
+                new BankIdIframeInitializer(username, driver, webDriverHelper);
+
+        BankIdIframeSSAuthenticationController bankIdIframeSSAuthenticationController =
+                new BankIdIframeSSAuthenticationController(
+                        webDriverHelper,
+                        driver,
+                        iframeInitializer,
+                        supplementalInformationController,
+                        catalog);
+        bankIdIframeSSAuthenticationController.doLogin(bankIdPassword);
+
+        // Page reload (destroy the iframe).
+        // Read the `logonPackage` string which is used as `stepUpToken`.
+        return authInitializer
+                .waitForLogonPackage(driver)
+                .orElseThrow(LoginError.CREDENTIALS_VERIFICATION_ERROR::exception);
     }
 }
