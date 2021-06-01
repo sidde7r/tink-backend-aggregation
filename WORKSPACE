@@ -1199,7 +1199,7 @@ maven_install(
         "org.apache.logging.log4j:log4j-core:2.11.1",
         "org.apache.mahout.commons:commons-cli:2.0-mahout",
         "org.apache.pdfbox:fontbox:2.0.9",
-        "org.apache.pdfbox:pdfbox:2.0.9",
+        "org.apache.pdfbox:pdfbox:2.0.23",
         "org.apache.zookeeper:zookeeper-jute:3.5.9",
         "org.apache.zookeeper:zookeeper:3.5.9",
         "org.aspectj:aspectjrt:1.8.10",
