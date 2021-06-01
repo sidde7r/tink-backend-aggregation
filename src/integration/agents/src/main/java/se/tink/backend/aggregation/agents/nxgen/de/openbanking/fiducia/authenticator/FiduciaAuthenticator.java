@@ -13,35 +13,33 @@ import org.apache.commons.lang.StringUtils;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Field;
-import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
-import se.tink.backend.aggregation.agents.exceptions.LoginException;
-import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SupplementalInfoError;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaConstants.CredentialKeys;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaConstants.StorageKeys;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.entities.ChallengeData;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.entities.ScaMethod;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.rpc.ScaResponse;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.rpc.ScaStatusResponse;
+import se.tink.backend.aggregation.agents.utils.berlingroup.common.LinksEntity;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AuthorizationResponse;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AuthorizationStatusResponse;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ChallengeDataEntity;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentDetailsResponse;
-import se.tink.backend.aggregation.agents.utils.berlingroup.consent.OtpFormat;
-import se.tink.backend.aggregation.agents.utils.charsetguesser.CharsetGuesser;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentResponse;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ScaMethodEntity;
+import se.tink.backend.aggregation.agents.utils.berlingroup.payment.PaymentAuthenticator;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.CommonFields;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.GermanFields;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.TanBuilder;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.authenticator.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
-import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.i18n.Catalog;
 
 @AllArgsConstructor
 @Slf4j
-public class FiduciaAuthenticator implements MultiFactorAuthenticator, AutoAuthenticator {
+public class FiduciaAuthenticator
+        implements MultiFactorAuthenticator, AutoAuthenticator, PaymentAuthenticator {
 
     private static final Pattern STARTCODE_CHIP_PATTERN = Pattern.compile("Startcode\\s\\\"(\\d+)");
 
@@ -55,8 +53,7 @@ public class FiduciaAuthenticator implements MultiFactorAuthenticator, AutoAuthe
     private final Credentials credentials;
     private final FiduciaApiClient apiClient;
     private final PersistentStorage persistentStorage;
-    private final SessionStorage sessionStorage;
-    private final SupplementalInformationHelper supplementalInformationHelper;
+    private final SupplementalInformationController supplementalInformationController;
     private final Catalog catalog;
 
     @Override
@@ -65,89 +62,86 @@ public class FiduciaAuthenticator implements MultiFactorAuthenticator, AutoAuthe
     }
 
     @Override
-    public void autoAuthenticate() throws SessionException, LoginException, AuthorizationException {
+    public void autoAuthenticate() {
         String consentId =
                 persistentStorage
                         .get(StorageKeys.CONSENT_ID, String.class)
                         .orElseThrow(SessionError.SESSION_EXPIRED::exception);
+        verifyConsentValidity(consentId);
+    }
 
+    private void verifyConsentValidity(String consentId) {
         ConsentDetailsResponse consentDetailsResponse = apiClient.getConsentDetails(consentId);
-
         if (!consentDetailsResponse.isValid()) {
             throw SessionError.SESSION_EXPIRED.exception();
         }
-
         credentials.setSessionExpiryDate(consentDetailsResponse.getValidUntil());
     }
 
     @Override
     public void authenticate(Credentials credentials) {
-        String username = credentials.getField(CredentialKeys.PSU_ID);
-        validateUsername(username);
-        String password = credentials.getField(CredentialKeys.PASSWORD);
-        sessionStorage.put(StorageKeys.PSU_ID, username);
+        validateCredentials(credentials);
 
-        String consentId;
-        ScaResponse scaResponse;
+        ConsentResponse consentResponse =
+                createAndSaveConsent(credentials.getField(CredentialKeys.PSU_ID));
+        AuthorizationResponse authorizationResponse =
+                apiClient.authorizeWithPassword(
+                        consentResponse
+                                .getLinks()
+                                .getStartAuthorisationWithPsuAuthentication()
+                                .getHref(),
+                        credentials.getField(CredentialKeys.PASSWORD));
+        authorize(authorizationResponse);
 
-        // NZG-297: Logging to observe success/failures depending on special characters
-        try {
-            consentId = apiClient.createConsent();
-            scaResponse = apiClient.authorizeConsent(consentId, password);
-        } catch (RuntimeException e) {
-            log.info(
-                    "FAILED_LOGIN username charset: [{}]  password charset: [{}]",
-                    CharsetGuesser.getCharset(username),
-                    CharsetGuesser.getCharset(password));
-            throw e;
-        }
-        log.info(
-                "SUCCESS_LOGIN username charset: [{}]  password charset: [{}]",
-                CharsetGuesser.getCharset(username),
-                CharsetGuesser.getCharset(password));
-
-        ScaStatusResponse scaStatusResponse = authorizeWithSca(scaResponse);
-
-        if (!FINALISED.equalsIgnoreCase(scaStatusResponse.getScaStatus())) {
-            throw LoginError.DEFAULT_MESSAGE.exception("Invalid sca status");
-        }
-
-        ConsentDetailsResponse detailsResponse = apiClient.getConsentDetails(consentId);
-
-        if (!detailsResponse.isValid()) {
-            throw LoginError.DEFAULT_MESSAGE.exception("Invalid consent status");
-        }
-
-        persistentStorage.put(StorageKeys.CONSENT_ID, consentId);
-        credentials.setSessionExpiryDate(detailsResponse.getValidUntil());
+        verifyConsentValidity(consentResponse.getConsentId());
     }
 
-    private void validateUsername(String username) {
+    @Override
+    public void authenticatePayment(Credentials credentials, LinksEntity scaLinks) {
+        validateCredentials(credentials);
+        AuthorizationResponse authorizationResponse =
+                apiClient.authorizeWithPassword(
+                        scaLinks.getStartAuthorisationWithPsuAuthentication().getHref(),
+                        credentials.getField(CredentialKeys.PASSWORD));
+        authorize(authorizationResponse);
+    }
 
+    private void validateCredentials(Credentials credentials) {
+        String username = credentials.getField(CredentialKeys.PSU_ID);
+        String password = credentials.getField(CredentialKeys.PASSWORD);
         if (StringUtils.isBlank(username)
                 || username.length() > PSU_ID_MAX_ALLOWED_LENGTH
-                || !username.equals(username.trim())) {
+                || !username.equals(username.trim())
+                || StringUtils.isBlank(password)) {
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
     }
 
-    private ScaStatusResponse authorizeWithSca(ScaResponse scaResponse) {
-        switch (scaResponse.getScaStatus()) {
+    private ConsentResponse createAndSaveConsent(String username) {
+        ConsentResponse consentResponse = apiClient.createConsent(username);
+        persistentStorage.put(StorageKeys.CONSENT_ID, consentResponse.getConsentId());
+        return consentResponse;
+    }
+
+    private void authorize(AuthorizationResponse authorizationResponse) {
+        switch (authorizationResponse.getScaStatus()) {
             case PSU_AUTHENTICATED:
-                return selectMethod(scaResponse);
+                authorizeWithOtp(selectMethod(authorizationResponse));
+                break;
             case STARTED:
-                return authorizeWithOtp(scaResponse);
+                authorizeWithOtp(authorizationResponse);
+                break;
             default:
                 throw LoginError.DEFAULT_MESSAGE.exception(
                         "Unexpected scaStatus during authorization ["
-                                + scaResponse.getScaStatus()
+                                + authorizationResponse.getScaStatus()
                                 + "]");
         }
     }
 
-    private ScaStatusResponse selectMethod(ScaResponse scaResponse) {
-        List<ScaMethod> onlySupportedScaMethods =
-                scaResponse.getScaMethods().stream()
+    private AuthorizationResponse selectMethod(AuthorizationResponse authorizationResponse) {
+        List<ScaMethodEntity> onlySupportedScaMethods =
+                authorizationResponse.getScaMethods().stream()
                         .filter(x -> !isUnsupportedMethod(x))
                         .collect(Collectors.toList());
 
@@ -155,17 +149,19 @@ public class FiduciaAuthenticator implements MultiFactorAuthenticator, AutoAuthe
             throwNoSupportedMethodFound();
         }
 
-        ScaMethod selectedMethod = askUserForSelection(onlySupportedScaMethods);
-        ScaResponse scaSelectionResponse =
+        ScaMethodEntity selectedMethod = askUserForSelection(onlySupportedScaMethods);
+        AuthorizationResponse authorizationResponseAfterMethodSelection =
                 apiClient.selectAuthMethod(
-                        scaResponse.getLinks().getSelectAuthenticationMethod(),
+                        authorizationResponse.getLinks().getSelectAuthenticationMethod().getHref(),
                         selectedMethod.getAuthenticationMethodId());
 
-        scaSelectionResponse.setChosenScaMethod(selectedMethod);
-        return authorizeWithOtp(scaSelectionResponse);
+        // Fiducia does not include the selected method in response of previous request
+        // set it here to keep processing consistent
+        authorizationResponseAfterMethodSelection.setChosenScaMethod(selectedMethod);
+        return authorizationResponseAfterMethodSelection;
     }
 
-    private ScaMethod askUserForSelection(List<ScaMethod> onlySupportedScaMethods) {
+    private ScaMethodEntity askUserForSelection(List<ScaMethodEntity> onlySupportedScaMethods) {
         if (onlySupportedScaMethods.size() == 1) {
             return onlySupportedScaMethods.get(0);
         }
@@ -174,10 +170,11 @@ public class FiduciaAuthenticator implements MultiFactorAuthenticator, AutoAuthe
                 CommonFields.Selection.build(
                         catalog,
                         null,
-                        GermanFields.SelectOptions.prepareSelectOptions(onlySupportedScaMethods));
+                        GermanFields.SelectOptions.prepareSelectOptions(
+                                onlySupportedScaMethods, new FiduciaIconUrlMapper()));
         String selectedValue =
-                supplementalInformationHelper
-                        .askSupplementalInformation(scaMethodField)
+                supplementalInformationController
+                        .askSupplementalInformationSync(scaMethodField)
                         .get(scaMethodField.getName());
 
         if (StringUtils.isNumeric(selectedValue)) {
@@ -190,57 +187,64 @@ public class FiduciaAuthenticator implements MultiFactorAuthenticator, AutoAuthe
                 "Could not map user input to list of available options.");
     }
 
-    private ScaStatusResponse authorizeWithOtp(ScaResponse scaResponse) {
-        List<Field> fields = new LinkedList<>();
-        Optional<String> startcode = extractStartcode(scaResponse);
-
-        ScaMethod chosenScaMethod = scaResponse.getChosenScaMethod();
-
-        if (!startcode.isPresent() && isUnsupportedMethod(chosenScaMethod)) {
+    private void authorizeWithOtp(AuthorizationResponse authorizationResponse) {
+        ScaMethodEntity chosenScaMethod = authorizationResponse.getChosenScaMethod();
+        if (isUnsupportedMethod(chosenScaMethod)) {
             throwNoSupportedMethodFound();
         }
-        startcode.ifPresent(x -> fields.add(GermanFields.Startcode.build(catalog, x)));
 
-        ChallengeData challengeData = scaResponse.getChallengeData();
-        String authenticationType =
-                chosenScaMethod != null ? chosenScaMethod.getAuthenticationType() : null;
+        log.info(
+                "[Fiducia 2FA] User for authenticationType {} started 2FA",
+                chosenScaMethod.getAuthenticationType());
+
+        AuthorizationStatusResponse scaStatusResponse =
+                apiClient.authorizeWithOtp(
+                        authorizationResponse.getLinks().getAuthoriseTransaction().getHref(),
+                        collectOtp(authorizationResponse));
+        if (!FINALISED.equalsIgnoreCase(scaStatusResponse.getScaStatus())) {
+            throw LoginError.DEFAULT_MESSAGE.exception("Invalid sca status");
+        }
+
+        log.info(
+                "[Fiducia 2FA] User for authenticationType {} successfully passed 2FA",
+                chosenScaMethod.getAuthenticationType());
+    }
+
+    private String collectOtp(AuthorizationResponse authorizationResponse) {
+        ScaMethodEntity chosenScaMethod = authorizationResponse.getChosenScaMethod();
+        List<Field> fields = new LinkedList<>();
+        extractStartcode(authorizationResponse)
+                .ifPresent(x -> fields.add(GermanFields.Startcode.build(catalog, x)));
+        String authenticationType = chosenScaMethod.getAuthenticationType();
 
         TanBuilder tanBuilder =
                 GermanFields.Tan.builder(catalog)
                         .authenticationType(authenticationType)
                         .otpMinLength(6)
-                        .otpMaxLength(6);
-        if (chosenScaMethod != null) {
-            tanBuilder.authenticationMethodName(chosenScaMethod.getName());
-        }
+                        .otpMaxLength(6)
+                        .authenticationMethodName(chosenScaMethod.getName());
+
+        ChallengeDataEntity challengeData = authorizationResponse.getChallengeData();
         if (challengeData != null) {
-            tanBuilder.otpFormat(OtpFormat.fromString(challengeData.getOtpFormat()).orElse(null));
+            tanBuilder.otpFormat(challengeData.getOtpFormat());
         }
         fields.add(tanBuilder.build());
 
-        log.info("[Fiducia 2FA] User for authenticationType {} started 2FA", authenticationType);
-
-        String otpCode =
-                supplementalInformationHelper
-                        .askSupplementalInformation(fields.toArray(new Field[0]))
+        String otp =
+                supplementalInformationController
+                        .askSupplementalInformationSync(fields.toArray(new Field[0]))
                         .get(fields.get(fields.size() - 1).getName());
-        if (otpCode == null) {
+
+        if (otp == null) {
             throw SupplementalInfoError.NO_VALID_CODE.exception(
                     "Supplemental info did not come with otp code!");
         }
-
-        String authoriseTransactionHref = scaResponse.getLinks().getAuthoriseTransaction();
-        ScaStatusResponse scaStatusResponse =
-                apiClient.authorizeWithOtpCode(authoriseTransactionHref, otpCode);
-        log.info(
-                "[Fiducia 2FA] User for authenticationType {} successfully passed 2FA",
-                authenticationType);
-        return scaStatusResponse;
+        return otp;
     }
 
-    private Optional<String> extractStartcode(ScaResponse scaResponse) {
-        return Optional.ofNullable(scaResponse.getChallengeData())
-                .map(ChallengeData::getAdditionalInformation)
+    private Optional<String> extractStartcode(AuthorizationResponse authorizationResponse) {
+        return Optional.ofNullable(authorizationResponse.getChallengeData())
+                .map(ChallengeDataEntity::getAdditionalInformation)
                 .map(this::extractStartCodeFromChallengeString);
     }
 
@@ -249,9 +253,9 @@ public class FiduciaAuthenticator implements MultiFactorAuthenticator, AutoAuthe
         return matcher.find() ? matcher.group(1) : null;
     }
 
-    private boolean isUnsupportedMethod(ScaMethod scaMethod) {
+    private boolean isUnsupportedMethod(ScaMethodEntity scaMethod) {
         return Optional.ofNullable(scaMethod)
-                .map(ScaMethod::getAuthenticationMethodId)
+                .map(ScaMethodEntity::getAuthenticationMethodId)
                 .filter(UNSUPPORTED_AUTH_METHOD_IDS::contains)
                 .isPresent();
     }

@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.agents.rpc.SelectOption;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ScaMethodEntity;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.i18n.LocalizableKey;
 
@@ -49,6 +50,20 @@ public class GermanFields {
                             })
                     .collect(Collectors.toList());
         }
+
+        public static List<SelectOption> prepareSelectOptions(
+                List<ScaMethodEntity> methods, ScaMethodEntityToIconMapper methodToIconMapper) {
+            return IntStream.range(0, methods.size())
+                    .mapToObj(
+                            index -> {
+                                ScaMethodEntity scaMethodEntity = methods.get(index);
+                                return new SelectOption(
+                                        scaMethodEntity.getName(),
+                                        String.valueOf(index + 1),
+                                        methodToIconMapper.getIconUrl(scaMethodEntity));
+                            })
+                    .collect(Collectors.toList());
+        }
     }
 
     public interface SelectEligible {
@@ -57,5 +72,9 @@ public class GermanFields {
         String getAuthenticationType();
 
         String getIconUrl();
+    }
+
+    public interface ScaMethodEntityToIconMapper {
+        String getIconUrl(ScaMethodEntity scaMethodEntity);
     }
 }

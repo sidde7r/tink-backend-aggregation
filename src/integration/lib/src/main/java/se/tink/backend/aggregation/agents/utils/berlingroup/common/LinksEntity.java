@@ -13,4 +13,6 @@ public class LinksEntity {
     private Href scaRedirect;
     private Href self;
     private Href status;
+    private Href authoriseTransaction;
+    private Href selectAuthenticationMethod;
 }

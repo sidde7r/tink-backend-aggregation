@@ -4,6 +4,7 @@ POST https://www.raiba-muc-sued.de/services_xs2a/bg13/v1/consents
 accept: application/json
 Content-Type: application/json
 psu-id: dummy_psu_id
+x-request-id: 00000000-0000-4000-0000-000000000000
 
 {"access":{"allPsd2":"allAccounts"},"recurringIndicator":true,"validUntil":"9999-12-31","frequencyPerDay":4,"combinedServiceIndicator":false}
 
@@ -19,7 +20,7 @@ REQUEST 2
 POST https://www.raiba-muc-sued.de/services_xs2a/bg13/v1/consents/dummy_consent_id/authorisations
 accept: application/json
 Content-Type: application/json
-psu-id: dummy_psu_id
+x-request-id: 00000000-0000-4000-0000-000000000000
 
 {"psuData":{"password":"dummy_password"}}
 
@@ -34,7 +35,7 @@ REQUEST 3
 PUT https://www.raiba-muc-sued.de/services_xs2a/bg13/v1/consents/dummy_consent_id/authorisations/dummy_authorization_id
 accept: application/json
 Content-Type: application/json
-psu-id: dummy_psu_id
+x-request-id: 00000000-0000-4000-0000-000000000000
 
 {"authenticationMethodId":"962"}
 
@@ -49,7 +50,7 @@ REQUEST 4
 PUT https://www.raiba-muc-sued.de/services_xs2a/bg13/v1/consents/dummy_consent_id/authorisations/dummy_authorization_id
 accept: application/json
 Content-Type: application/json
-psu-id: dummy_psu_id
+x-request-id: 00000000-0000-4000-0000-000000000000
 
 {"scaAuthenticationData":"dummy_otp_code"}
 
@@ -62,7 +63,7 @@ Content-Type: application/json;charset=utf-8
 REQUEST 5
 GET https://www.raiba-muc-sued.de/services_xs2a/bg13/v1/consents/dummy_consent_id
 accept: application/json
-psu-id: dummy_psu_id
+x-request-id: 00000000-0000-4000-0000-000000000000
 
 RESPONSE 5
 200
@@ -73,8 +74,8 @@ Content-Type: application/json;charset=utf-8
 REQUEST 6
 GET https://www.raiba-muc-sued.de/services_xs2a/bg13/v1/accounts
 accept: application/json
-psu-id: dummy_psu_id
 consent-id: dummy_consent_id
+x-request-id: 00000000-0000-4000-0000-000000000000
 
 RESPONSE 6
 200
@@ -85,8 +86,8 @@ Content-Type: application/json;charset=utf-8
 REQUEST 7
 GET https://www.raiba-muc-sued.de/services_xs2a/bg13/v1/accounts/dummy_resource_id/balances
 accept: application/json
-psu-id: dummy_psu_id
 consent-id: dummy_consent_id
+x-request-id: 00000000-0000-4000-0000-000000000000
 
 RESPONSE 7
 200
@@ -97,8 +98,8 @@ Content-Type: application/json;charset=utf-8
 REQUEST 8
 GET https://www.raiba-muc-sued.de/services_xs2a/bg13/v1/accounts/dummy_resource_id/transactions?bookingStatus=booked&dateFrom=1970-01-01
 accept: application/json
-psu-id: dummy_psu_id
 consent-id: dummy_consent_id
+x-request-id: 00000000-0000-4000-0000-000000000000
 
 RESPONSE 8
 200
@@ -109,8 +110,8 @@ Content-Type: application/json;charset=utf-8
 REQUEST 9
 GET https://www.raiba-muc-sued.de/services_xs2a/bg13/v1/accounts/dummy_resource_id/transactions?scrollRef=0_%3D2%23%3D20200420%23%3D16312000%23%3D0%23%3D0%23%3D0&bookingStatus=booked
 accept: application/json
-psu-id: dummy_psu_id
 consent-id: dummy_consent_id
+x-request-id: 00000000-0000-4000-0000-000000000000
 
 RESPONSE 9
 200

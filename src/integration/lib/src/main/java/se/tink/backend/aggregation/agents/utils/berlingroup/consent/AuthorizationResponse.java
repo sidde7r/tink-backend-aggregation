@@ -1,24 +1,21 @@
 package se.tink.backend.aggregation.agents.utils.berlingroup.consent;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
-import se.tink.backend.aggregation.agents.utils.berlingroup.BerlingroupConstants.StatusValues;
 import se.tink.backend.aggregation.agents.utils.berlingroup.common.LinksEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class ConsentResponse {
-
-    @Setter private String consentStatus;
-
-    @Getter @Setter private String consentId;
-
+@Getter
+public class AuthorizationResponse {
     @JsonProperty("_links")
-    @Getter
     private LinksEntity links;
 
-    public boolean isNotAuthorized() {
-        return StatusValues.RECEIVED.equalsIgnoreCase(consentStatus);
-    }
+    private String scaStatus;
+    private String authorisationId;
+    private List<ScaMethodEntity> scaMethods;
+    @Setter private ScaMethodEntity chosenScaMethod;
+    private ChallengeDataEntity challengeData;
 }
