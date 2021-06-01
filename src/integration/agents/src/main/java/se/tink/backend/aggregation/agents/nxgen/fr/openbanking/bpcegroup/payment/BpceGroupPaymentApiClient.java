@@ -1,10 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.payment;
 
+import com.google.common.base.Strings;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URIBuilder;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.authenticator.rpc.TokenResponse;
@@ -26,6 +28,7 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 @AllArgsConstructor
+@Slf4j
 public class BpceGroupPaymentApiClient implements FrOpenBankingPaymentApiClient {
 
     private static final String TOKEN = "pis_token";
@@ -77,7 +80,7 @@ public class BpceGroupPaymentApiClient implements FrOpenBankingPaymentApiClient 
                 client.request(createUrl(BASE_PATH, CREATE_PAYMENT))
                         .body(request, MediaType.APPLICATION_JSON);
 
-        return sendRequestAndGetResponse(
+        return sendRequestPrintingCorrelationId(
                 requestBuilder, HttpMethod.POST, CreatePaymentResponse.class);
     }
 
@@ -106,7 +109,8 @@ public class BpceGroupPaymentApiClient implements FrOpenBankingPaymentApiClient 
         final RequestBuilder requestBuilder =
                 client.request(createUrl(BASE_PATH, GET_PAYMENT).parameter("paymentId", paymentId));
 
-        return sendRequestAndGetResponse(requestBuilder, HttpMethod.GET, GetPaymentResponse.class);
+        return sendRequestPrintingCorrelationId(
+                requestBuilder, HttpMethod.GET, GetPaymentResponse.class);
     }
 
     private URL createUrl(String path) {
@@ -117,9 +121,16 @@ public class BpceGroupPaymentApiClient implements FrOpenBankingPaymentApiClient 
         return new URL(configuration.getServerUrl() + base + path);
     }
 
-    private <T> T sendRequestAndGetResponse(
+    private <T> T sendRequestPrintingCorrelationId(
             RequestBuilder requestBuilder, HttpMethod httpMethod, Class<T> clazz) {
-        return addHeadersToRequest(requestBuilder, httpMethod).method(httpMethod, clazz);
+        HttpResponse clientResponse =
+                addHeadersToRequest(requestBuilder, httpMethod)
+                        .method(httpMethod, HttpResponse.class);
+        String xCorrelationId = clientResponse.getHeaders().getFirst("X-CorrelationID");
+        if (!Strings.isNullOrEmpty(xCorrelationId)) {
+            log.info(String.format("X-CorrelationID: %s", xCorrelationId));
+        }
+        return clientResponse.getBody(clazz);
     }
 
     private RequestBuilder addHeadersToRequest(
