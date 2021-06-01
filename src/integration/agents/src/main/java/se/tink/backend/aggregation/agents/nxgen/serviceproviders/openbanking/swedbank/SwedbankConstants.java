@@ -44,6 +44,7 @@ public final class SwedbankConstants {
         public static final URL GET_PAYMENT_STATUS = new URL(BASE + Endpoints.GET_PAYMENT_STATUS);
         public static final URL INITIATE_PAYMENT_AUTH =
                 new URL(BASE + Endpoints.INITIATE_PAYMENT_AUTH);
+        public static final URL DELETE_PAYMENT = new URL(BASE + Endpoints.DELETE_PAYMENT);
     }
 
     public static class Endpoints {
@@ -61,6 +62,7 @@ public final class SwedbankConstants {
                 "/v3/payments/{paymentType}/{paymentId}/status";
         public static final String INITIATE_PAYMENT_AUTH =
                 "/v3/payments/{paymentType}/{paymentId}/authorisations";
+        public static final String DELETE_PAYMENT = "/v3/payments/{paymentType}/{paymentId}";
     }
 
     public static class UrlParameters {
