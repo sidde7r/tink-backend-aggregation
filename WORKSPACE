@@ -848,6 +848,8 @@ maven_install(
         "xmlpull:xmlpull",
         "xpp3:xpp3_min",
     ],
+    fetch_sources = True,
+    maven_install_json = "//third_party/maven:maven_install.json",
     override_targets = {
         "aopalliance:aopalliance": "@aggregation//:aopalliance_aopalliance",
         "ch.qos.logback:logback-classic": "@aggregation//:ch_qos_logback_logback_classic",
@@ -939,8 +941,6 @@ maven_install(
         "org.eclipse.jetty:jetty-util": "@aggregation//:org_eclipse_jetty_jetty_util",
         "org.slf4j:log4j-over-slf4j": "@aggregation//:org_slf4j_log4j_over_slf4j",
     },
-    fetch_sources = True,
-    maven_install_json = "//third_party/maven:maven_install.json",
     repositories = [
         "https://maven.google.com",
         "https://repo1.maven.org/maven2",
@@ -1275,9 +1275,9 @@ maven_install(
     ],
     excluded_artifacts = [
         "org.slf4j:slf4j-log4j12",  # log4j-over-slf4j and slf4j-log4j12 cannot coexist on the classpath
-        "javassist:javassist",      # Already covered by the newer org.javassist:javassist
-        "com.lowagie:itext",        # Cannot add this one for some reason, but it doesn't seem to be needed anyway
-        "log4j:log4j",              # Superseded by Log4J2 (org.apache.logging.log4j:log4j-core)
+        "javassist:javassist",  # Already covered by the newer org.javassist:javassist
+        "com.lowagie:itext",  # Cannot add this one for some reason, but it doesn't seem to be needed anyway
+        "log4j:log4j",  # Superseded by Log4J2 (org.apache.logging.log4j:log4j-core)
     ],
     fetch_sources = True,
     generate_compat_repositories = False,  # Tempting, but provided that we depend on tink-backend, let's be explicit in our naming of deps
