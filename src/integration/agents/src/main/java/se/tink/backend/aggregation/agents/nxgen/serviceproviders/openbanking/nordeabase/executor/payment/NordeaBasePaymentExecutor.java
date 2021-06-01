@@ -6,8 +6,10 @@ import io.vavr.control.Try;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
+import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
@@ -17,8 +19,14 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nor
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.executor.payment.entities.CreditorEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.executor.payment.entities.DebtorEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.executor.payment.enums.NordeaPaymentStatus;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.executor.payment.rpc.CancelPaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.executor.payment.rpc.ConfirmPaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.executor.payment.rpc.ConfirmPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.executor.payment.rpc.CreatePaymentRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.executor.payment.rpc.GetPaymentResponse;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.constants.ThirdPartyAppConstants;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.FetchablePaymentExecutor;
@@ -31,7 +39,10 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.controllers.signing.Signer;
 import se.tink.backend.aggregation.nxgen.controllers.signing.SigningStepConstants;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Payment;
@@ -39,9 +50,20 @@ import se.tink.libraries.payment.rpc.Payment;
 public abstract class NordeaBasePaymentExecutor
         implements PaymentExecutor, FetchablePaymentExecutor {
     private NordeaBaseApiClient apiClient;
+    private SupplementalInformationHelper supplementalInformationHelper;
+    private StrongAuthenticationState strongAuthenticationState;
 
     public NordeaBasePaymentExecutor(NordeaBaseApiClient apiClient) {
         this.apiClient = apiClient;
+    }
+
+    public NordeaBasePaymentExecutor(
+            NordeaBaseApiClient apiClient,
+            SupplementalInformationHelper supplementalInformationHelper,
+            StrongAuthenticationState strongAuthenticationState) {
+        this.apiClient = apiClient;
+        this.supplementalInformationHelper = supplementalInformationHelper;
+        this.strongAuthenticationState = strongAuthenticationState;
     }
 
     @Override
@@ -60,6 +82,8 @@ public abstract class NordeaBasePaymentExecutor
                         .withCreditor(creditorEntity)
                         .withCurrency(paymentRequest.getPayment().getCurrency())
                         .withDebtor(debtorEntity)
+                        .withExecutionDate(
+                                paymentRequest.getPayment().getExecutionDate().toString())
                         .build();
 
         return apiClient
@@ -82,10 +106,25 @@ public abstract class NordeaBasePaymentExecutor
         String nextStep;
         switch (paymentMultiStepRequest.getStep()) {
             case SigningStepConstants.STEP_INIT:
+                List<String> paymentIds = new ArrayList<>();
+                paymentIds.add(paymentMultiStepRequest.getPayment().getUniqueId());
+                ConfirmPaymentRequest confirmPaymentRequest =
+                        ConfirmPaymentRequest.builder().paymentIds(paymentIds).build();
+
                 ConfirmPaymentResponse confirmPaymentsResponse =
                         apiClient.confirmPayment(
-                                paymentMultiStepRequest.getPayment().getUniqueId(),
-                                getPaymentType(paymentMultiStepRequest));
+                                confirmPaymentRequest, getPaymentType(paymentMultiStepRequest));
+
+                String href = confirmPaymentsResponse.getLinks().get(0).getHref();
+
+                this.supplementalInformationHelper.openThirdPartyApp(
+                        ThirdPartyAppAuthenticationPayload.of(URL.of(href)));
+
+                supplementalInformationHelper.waitForSupplementalInformation(
+                        strongAuthenticationState.getSupplementalKey(),
+                        ThirdPartyAppConstants.WAIT_FOR_MINUTES,
+                        TimeUnit.MINUTES);
+
                 paymentStatus =
                         NordeaPaymentStatus.mapToTinkPaymentStatus(
                                 NordeaPaymentStatus.fromString(
@@ -147,9 +186,29 @@ public abstract class NordeaBasePaymentExecutor
     }
 
     @Override
-    public PaymentResponse cancel(PaymentRequest paymentRequest) {
-        throw new NotImplementedException(
-                "cancel not yet implemented for " + this.getClass().getName());
+    public PaymentResponse cancel(PaymentRequest paymentRequest) throws PaymentException {
+        Payment payment = paymentRequest.getPayment();
+        PaymentType paymentType = payment.getType();
+        String paymentId = payment.getUniqueId();
+        apiClient.getPayment(paymentId, paymentType);
+        CancelPaymentResponse cancelPaymentResponse =
+                apiClient.deletePayment(paymentId, paymentType);
+
+        if ((cancelPaymentResponse.getResponse().isEmpty())
+                && cancelPaymentResponse.getResponse().get(0).equals(paymentId)) {
+            try {
+                GetPaymentResponse paymentResponse = apiClient.getPayment(paymentId, paymentType);
+                return paymentResponse.toTinkPaymentResponse(paymentType);
+            } catch (HttpResponseException hre) {
+                if (hre.getResponse().getStatus() == HttpStatus.SC_NOT_FOUND) {
+                    return cancelPaymentResponse.toTinkCancellablePaymentResponseWithStatus(
+                            NordeaPaymentStatus.CANCELLED, payment);
+                }
+            }
+        }
+
+        return cancelPaymentResponse.toTinkCancellablePaymentResponseWithStatus(
+                NordeaPaymentStatus.UNKNOWN, payment);
     }
 
     @Override

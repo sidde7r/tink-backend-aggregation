@@ -17,6 +17,7 @@ public enum NordeaPaymentStatus {
     USER_APPROVAL_FAILED("UserApprovalFailed"),
     USER_APPROVAL_TIMEOUT("UserApprovalTimeout"),
     USER_APPROVAL_CANCELLED("UserApprovalCancelled"),
+    CANCELLED("Cancelled"),
     UNKNOWN("Unknown");
 
     private static EnumMap<NordeaPaymentStatus, PaymentStatus> nordeaPaymentStatusToTinkMapper =
@@ -33,6 +34,7 @@ public enum NordeaPaymentStatus {
         nordeaPaymentStatusToTinkMapper.put(
                 USER_APPROVAL_TIMEOUT, PaymentStatus.USER_APPROVAL_FAILED);
         nordeaPaymentStatusToTinkMapper.put(USER_APPROVAL_CANCELLED, PaymentStatus.CANCELLED);
+        nordeaPaymentStatusToTinkMapper.put(CANCELLED, PaymentStatus.CANCELLED);
         nordeaPaymentStatusToTinkMapper.put(ON_HOLD, PaymentStatus.PENDING);
         nordeaPaymentStatusToTinkMapper.put(UNKNOWN, PaymentStatus.UNDEFINED);
     }

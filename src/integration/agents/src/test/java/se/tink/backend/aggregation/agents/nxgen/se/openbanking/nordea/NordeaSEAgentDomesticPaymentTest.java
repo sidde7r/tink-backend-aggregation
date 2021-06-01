@@ -1,30 +1,25 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea;
 
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import org.iban4j.CountryCode;
-import org.iban4j.Iban;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
-import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager.ArgumentManagerEnum;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager.LoadBeforeSaveAfterArgumentEnum;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager.SsnArgumentEnum;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
+import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
+import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 // DISCLAIMER! Actual money being transferred, run under own responsibility
 public class NordeaSEAgentDomesticPaymentTest {
@@ -39,27 +34,34 @@ public class NordeaSEAgentDomesticPaymentTest {
 
     @Before
     public void setup() {
-        loadBeforeSaveAfterManager.before();
+        /*        loadBeforeSaveAfterManager.before();
         creditorDebtorManager.before();
-        ssnManager.before();
+        ssnManager.before();*/
         builder =
-                new AgentIntegrationTest.Builder("SE", "se-nordea-ob")
-                        .addCredentialField(Field.Key.USERNAME, ssnManager.get(SsnArgumentEnum.SSN))
-                        .expectLoggedIn(false)
+                new AgentIntegrationTest.Builder("se", "se-nordea-ob")
+                        .loadCredentialsBefore(false)
+                        .saveCredentialsAfter(false)
+                        .setFinancialInstitutionId("nordea")
                         .setAppId("tink")
-                        .loadCredentialsBefore(
-                                Boolean.parseBoolean(
-                                        loadBeforeSaveAfterManager.get(
-                                                LoadBeforeSaveAfterArgumentEnum.LOAD_BEFORE)))
-                        .saveCredentialsAfter(
-                                Boolean.parseBoolean(
-                                        loadBeforeSaveAfterManager.get(
-                                                LoadBeforeSaveAfterArgumentEnum.SAVE_AFTER)));
+                        .setClusterId("oxford-preprod")
+                        .expectLoggedIn(false);
     }
 
     @Test
     public void testPayments() throws Exception {
-        builder.build().testGenericPayment(createRealDomesticPayment());
+        builder.build().testGenericPayment(createListMockedDomesticPayment(1));
+    }
+
+    @Test
+    public void testCancelPayments() throws Exception {
+        builder.build().testCancelPayment(createCancellablePayment());
+    }
+
+    private Payment createCancellablePayment() {
+        return new Payment.Builder()
+                .withUniqueId("4ba82f91-93a1-4878-8d41-18eeb123c8a0")
+                .withType(PaymentType.DOMESTIC)
+                .build();
     }
 
     @AfterClass
@@ -77,7 +79,7 @@ public class NordeaSEAgentDomesticPaymentTest {
         Debtor debtor = new Debtor(debtorAccountIdentifier);
 
         ExactCurrencyAmount amount = ExactCurrencyAmount.inSEK(1);
-        LocalDate executionDate = LocalDate.now();
+        LocalDate executionDate = LocalDate.now().plusDays(7);
         String currency = "SEK";
 
         return Arrays.asList(
@@ -94,17 +96,16 @@ public class NordeaSEAgentDomesticPaymentTest {
         List<Payment> listOfMockedPayments = new ArrayList<>();
 
         for (int i = 0; i < numberOfMockedPayments; ++i) {
-            Creditor creditor = mock(Creditor.class);
-            doReturn(AccountIdentifierType.IBAN).when(creditor).getAccountIdentifierType();
-            doReturn(Iban.random(CountryCode.SE).toString()).when(creditor).getAccountNumber();
+            Creditor creditor = new Creditor(new SwedishIdentifier("90255481251"), "Ash");
 
-            Debtor debtor = mock(Debtor.class);
-            doReturn(AccountIdentifierType.SE).when(debtor).getAccountIdentifierType();
-            doReturn("41351300039").when(debtor).getAccountNumber();
+            Debtor debtor = new Debtor(new SwedishIdentifier("33820004238"));
 
             ExactCurrencyAmount amount = ExactCurrencyAmount.inSEK(1);
-            LocalDate executionDate = LocalDate.now();
+            LocalDate executionDate = LocalDate.now().plusDays(2);
             String currency = "SEK";
+
+            RemittanceInformation remittanceInformation = new RemittanceInformation();
+            remittanceInformation.setValue("Message");
 
             listOfMockedPayments.add(
                     new Payment.Builder()
@@ -113,6 +114,7 @@ public class NordeaSEAgentDomesticPaymentTest {
                             .withExactCurrencyAmount(amount)
                             .withExecutionDate(executionDate)
                             .withCurrency(currency)
+                            .withRemittanceInformation(remittanceInformation)
                             .build());
         }
 

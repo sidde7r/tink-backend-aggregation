@@ -17,6 +17,9 @@ public class CreatePaymentRequest {
 
     private String urgency;
 
+    @JsonProperty("requested_execution_date")
+    private String executionDate;
+
     private CreatePaymentRequest(Builder builder) {
         this.amount = builder.amount;
         this.creditor = builder.creditor;
@@ -24,9 +27,12 @@ public class CreatePaymentRequest {
         this.debtor = builder.debtor;
         this.externalId = builder.externalId;
         this.urgency = builder.urgency;
+        this.executionDate = builder.executionDate;
     }
 
     public static class Builder {
+
+        private String executionDate;
         private double amount;
         private CreditorEntity creditor;
         private String currency;
@@ -56,6 +62,11 @@ public class CreatePaymentRequest {
 
         public Builder withExternalId(String externalId) {
             this.externalId = externalId;
+            return this;
+        }
+
+        public Builder withExecutionDate(String executionDate) {
+            this.executionDate = executionDate;
             return this;
         }
 

@@ -3,10 +3,12 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.executor.
 import java.util.Collection;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.executor.payment.NordeaBasePaymentExecutor;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.signing.Signer;
 import se.tink.backend.aggregation.nxgen.controllers.signing.multifactor.bankid.BankIdSigningController;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.core.account.GenericTypeMapper;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.libraries.account.enums.AccountIdentifierType;
@@ -40,6 +42,15 @@ public class NordeaSePaymentExecutorSelector extends NordeaBasePaymentExecutor {
             NordeaBaseApiClient apiClient,
             SupplementalInformationController supplementalInformationController) {
         super(apiClient);
+        this.supplementalInformationController = supplementalInformationController;
+    }
+
+    public NordeaSePaymentExecutorSelector(
+            NordeaBaseApiClient apiClient,
+            SupplementalInformationController supplementalInformationController,
+            SupplementalInformationHelper supplementalInformationHelper,
+            StrongAuthenticationState strongAuthenticationState) {
+        super(apiClient, supplementalInformationHelper, strongAuthenticationState);
         this.supplementalInformationController = supplementalInformationController;
     }
 
