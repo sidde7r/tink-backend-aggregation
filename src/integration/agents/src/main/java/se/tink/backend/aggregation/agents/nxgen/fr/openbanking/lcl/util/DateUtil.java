@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.util;
 
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.entities.AccountEntity;
@@ -23,6 +24,7 @@ public class DateUtil {
             return DateUtil.plusOneDayDate(paymentRequest.getRequestedExecutionDate());
         } else {
             return ZonedDateTime.parse(paymentRequest.getCreationDateTime())
+                    .withZoneSameInstant(ZoneId.of("GMT"))
                     .format(SAME_DAY_FORMATTER);
         }
     }
