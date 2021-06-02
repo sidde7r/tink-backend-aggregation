@@ -3,7 +3,9 @@ package se.tink.backend.aggregation.agents.banks.sbab.entities;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.math.BigDecimal;
+import se.tink.backend.aggregation.annotations.JsonObject;
 
+@JsonObject
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class LoanTermsEntity {
 
@@ -12,13 +14,11 @@ public class LoanTermsEntity {
 
     // Note: this seems to be the same value as 'amorteringPerManad', with the only difference that
     // it is a double.
-    @JsonProperty("amorteringsbelopp")
-    private double amortizationValue;
+    private double amortizationAmount;
 
     @JsonProperty("amorteringsfritt")
     private boolean freeFromAmortization;
 
-    @JsonProperty("amorteringstyp")
     private String amortizationType;
 
     // Example: MONTHS_1
@@ -26,8 +26,7 @@ public class LoanTermsEntity {
     private String notificationPeriod;
 
     // Example: MONTHS_3
-    @JsonProperty("rantebindningstid")
-    private String interestRateBoundPeriod;
+    private String fixedInterestPeriodMonths;
 
     @JsonProperty("rantejusteringsdag")
     private long interestRateAdjustmentDate;
@@ -35,7 +34,6 @@ public class LoanTermsEntity {
     @JsonProperty("ranterabatt")
     private double interestRateDiscount;
 
-    @JsonProperty("rantesats")
     private double interestRate;
 
     @JsonProperty("villkorsandringsdag")
@@ -50,11 +48,11 @@ public class LoanTermsEntity {
     }
 
     public double getAmortizationValue() {
-        return amortizationValue;
+        return amortizationAmount;
     }
 
     public void setAmortizationValue(double amortizationValue) {
-        this.amortizationValue = amortizationValue;
+        this.amortizationAmount = amortizationValue;
     }
 
     public boolean isFreeFromAmortization() {
@@ -82,11 +80,11 @@ public class LoanTermsEntity {
     }
 
     public String getInterestRateBoundPeriod() {
-        return interestRateBoundPeriod;
+        return fixedInterestPeriodMonths;
     }
 
     public void setInterestRateBoundPeriod(String interestRateBoundPeriod) {
-        this.interestRateBoundPeriod = interestRateBoundPeriod;
+        this.fixedInterestPeriodMonths = interestRateBoundPeriod;
     }
 
     public long getInterestRateAdjustmentDate() {

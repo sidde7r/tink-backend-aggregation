@@ -1,17 +1,14 @@
 package se.tink.backend.aggregation.agents.banks.sbab.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Strings;
-import java.lang.invoke.MethodHandles;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.AccountHolder;
 import se.tink.backend.agents.rpc.AccountHolderType;
@@ -30,31 +27,31 @@ import se.tink.libraries.strings.StringUtils;
 @JsonObject
 @Getter
 @Setter
+@Slf4j
 public class AccountEntity implements GeneralAccountEntity {
-    @JsonIgnore
-    private static final Logger logger =
-            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-
-    @JsonProperty("produktnamn")
+    @JsonProperty("accountType")
     private String productName;
 
-    @JsonProperty("produkttyp")
+    @JsonProperty("description")
     private String productType;
 
-    @JsonProperty("kundvaltNamn")
+    @JsonProperty("name")
     private String accountaName;
 
-    @JsonProperty("kontonummer")
+    @JsonProperty("number")
     private String accountNumber;
 
-    @JsonProperty("saldo")
+    @JsonProperty("balance")
     private String balance;
 
-    @JsonProperty("disponibeltBelopp")
+    @JsonProperty("availableForWithdrawal")
     private String availableBalance;
 
-    @JsonProperty("kontohavare")
     private List<AccountHolderEntity> accountHolders;
+
+    private String mandateType;
+
+    private TransfersEntity transfers;
 
     public Optional<Account> toTinkAccount() {
 
@@ -72,7 +69,7 @@ public class AccountEntity implements GeneralAccountEntity {
             String cleanBalance = balance.replaceAll("[^\\d.,]", "");
             account.setBalance(StringUtils.parseAmount(cleanBalance));
         } else {
-            logger.error("An account cannot have a null balance");
+            log.error("An account cannot have a null balance");
             return Optional.empty();
         }
 
@@ -102,7 +99,7 @@ public class AccountEntity implements GeneralAccountEntity {
         accountHolder.setType(AccountHolderType.PERSONAL);
         accountHolder.setIdentities(
                 CollectionUtils.emptyIfNull(accountHolders).stream()
-                        .map(AccountHolderEntity::toHolderIdentity)
+                        .map(holder -> holder.toHolderIdentity(getHolderRole()))
                         .collect(Collectors.toList()));
         return accountHolder;
     }
@@ -112,6 +109,19 @@ public class AccountEntity implements GeneralAccountEntity {
                 .filter(holderIdentity -> HolderRole.HOLDER.equals(holderIdentity.getRole()))
                 .findFirst()
                 .map(HolderIdentity::getName);
+    }
+
+    private HolderRole getHolderRole() {
+        if ("OWNER".equalsIgnoreCase(mandateType)) {
+            return HolderRole.HOLDER;
+        }
+
+        log.warn("Unknown holder role type {}", mandateType);
+        return HolderRole.OTHER;
+    }
+
+    public TransfersEntity getTransfers() {
+        return transfers;
     }
 
     @Override
