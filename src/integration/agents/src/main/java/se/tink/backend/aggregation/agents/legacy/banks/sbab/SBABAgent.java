@@ -7,7 +7,7 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 
 import com.google.common.base.Objects;
 import com.google.common.util.concurrent.Uninterruptibles;
-import com.sun.jersey.api.client.Client;
+import com.google.inject.Inject;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -15,7 +15,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field.Key;
@@ -23,48 +22,30 @@ import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
-import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
-import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
-import se.tink.backend.aggregation.agents.TransferExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.bankid.status.BankIdStatus;
 import se.tink.backend.aggregation.agents.banks.sbab.SBABConstants.BankId;
 import se.tink.backend.aggregation.agents.banks.sbab.client.AuthenticationClient;
 import se.tink.backend.aggregation.agents.banks.sbab.client.IdentityDataClient;
-import se.tink.backend.aggregation.agents.banks.sbab.client.TransferClient;
 import se.tink.backend.aggregation.agents.banks.sbab.client.UserDataClient;
-import se.tink.backend.aggregation.agents.banks.sbab.configuration.SBABConfiguration;
 import se.tink.backend.aggregation.agents.banks.sbab.entities.AccountEntity;
-import se.tink.backend.aggregation.agents.banks.sbab.entities.SavedRecipientEntity;
-import se.tink.backend.aggregation.agents.banks.sbab.exception.UnsupportedTransferException;
-import se.tink.backend.aggregation.agents.banks.sbab.executor.SBABTransferExecutor;
 import se.tink.backend.aggregation.agents.banks.sbab.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.banks.sbab.rpc.InitBankIdResponse;
 import se.tink.backend.aggregation.agents.banks.sbab.rpc.TransactionsResponse;
-import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
-import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
-import se.tink.backend.aggregation.agents.general.TransferDestinationPatternBuilder;
 import se.tink.backend.aggregation.agents.models.AccountFeatures;
 import se.tink.backend.aggregation.agents.models.Loan;
 import se.tink.backend.aggregation.agents.models.Transaction;
-import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
-import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
-import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.constants.CommonHeaders;
-import se.tink.backend.aggregation.nxgen.http.filter.factory.ClientFilterFactory;
-import se.tink.libraries.account.enums.AccountIdentifierType;
-import se.tink.libraries.credentials.service.CredentialsRequest;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.libraries.i18n.Catalog;
-import se.tink.libraries.serialization.TypeReferences;
-import se.tink.libraries.serialization.utils.SerializationUtils;
-import se.tink.libraries.transfer.rpc.Transfer;
 
 @AgentCapabilities({SAVINGS_ACCOUNTS, LOANS, MORTGAGE_AGGREGATION, IDENTITY_DATA})
 public class SBABAgent extends AbstractAgent
@@ -77,23 +58,18 @@ public class SBABAgent extends AbstractAgent
 
     private final AuthenticationClient authenticationClient;
     private final UserDataClient userDataClient;
-    private final TransferClient transferClient;
     private final IdentityDataClient identityDataClient;
 
-    private final Client client;
-    private final Client clientWithoutSSL;
-
-    private final SBABTransferExecutor transferExecutor;
+    private final TinkHttpClient client;
 
     // cache
     private AccountsResponse accountsResponse = null;
 
-    public SBABAgent(
-            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context);
+    @Inject
+    public SBABAgent(AgentComponentProvider agentComponentProvider) {
+        super(agentComponentProvider.getCredentialsRequest(), agentComponentProvider.getContext());
         this.catalog = context.getCatalog();
         credentials = request.getCredentials();
-
         client = agentComponentProvider.getTinkHttpClient();
         // client.setDebugProxy("http://127.0.0.1:8888");
 
@@ -147,7 +123,7 @@ public class SBABAgent extends AbstractAgent
 
             switch (bankIdStatus) {
                 case DONE:
-                    fetchAndSetBearerToken();
+                    fetchAndSetCsrfToken();
                     return bankIdStatus;
                 case CANCELLED:
                     throw BankIdError.CANCELLED.exception();
@@ -170,36 +146,25 @@ public class SBABAgent extends AbstractAgent
     }
 
     /**
-     * Some requests need Bearer authentication. This method makes sure that the clients which need
-     * it have it.
+     * Some requests need Csrf authentication. This method makes sure that the clients which need it
+     * have it.
      */
-    private void fetchAndSetBearerToken() throws AuthorizationException {
-        String token = authenticationClient.getBearerToken();
-        userDataClient.setBearerToken(token);
-        transferClient.setBearerToken(token);
+    private void fetchAndSetCsrfToken() throws AuthorizationException {
+        String token = authenticationClient.getCsrfToken();
+        userDataClient.setCsrfToken(token);
         // store token in the sensitive payload so that it will be masked
         credentials.setSensitivePayload(Key.ACCESS_TOKEN, token);
     }
 
     private List<Transaction> fetchTransactions(Account account) throws Exception {
         String accountNumber = account.getAccountNumber();
-        TransactionsResponse upcomingTransactions =
-                userDataClient.fetchUpcomingTransactions(accountNumber);
-
         TransactionsResponse completedTransaction =
                 userDataClient.fetchCompletedTransactions(accountNumber);
 
-        return Stream.concat(
-                        upcomingTransactions.stream()
-                                .map(transactionEntity -> transactionEntity.toTinkTransaction(true))
-                                .filter(Optional::isPresent)
-                                .map(Optional::get),
-                        completedTransaction.stream()
-                                .map(
-                                        transactionEntity ->
-                                                transactionEntity.toTinkTransaction(false))
-                                .filter(Optional::isPresent)
-                                .map(Optional::get))
+        return completedTransaction.stream()
+                .map(transactionEntity -> transactionEntity.toTinkTransaction(false))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .collect(Collectors.toList());
     }
 

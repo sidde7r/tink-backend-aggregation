@@ -1,9 +1,11 @@
 package se.tink.backend.aggregation.agents.banks.sbab.model.response;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.banks.sbab.entities.TransactionEntity;
 
+@Ignore
 public class TransactionEntityTest {
 
     @Test

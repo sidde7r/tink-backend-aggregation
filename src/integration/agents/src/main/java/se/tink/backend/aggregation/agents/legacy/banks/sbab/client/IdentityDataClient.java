@@ -1,11 +1,12 @@
 package se.tink.backend.aggregation.agents.banks.sbab.client;
 
 import com.sun.jersey.api.client.Client;
-import java.util.NoSuchElementException;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
+import com.sun.jersey.api.client.ClientResponse;
+import org.apache.http.HttpStatus;
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.agents.rpc.Field.Key;
+import se.tink.backend.aggregation.agents.banks.sbab.SBABConstants.ErrorText;
+import se.tink.backend.aggregation.agents.banks.sbab.SBABConstants.Url;
+import se.tink.backend.aggregation.agents.banks.sbab.entities.Payload;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.identitydata.IdentityDataFetcher;
 import se.tink.libraries.identitydata.IdentityData;
 import se.tink.libraries.identitydata.countries.SeIdentityData;
@@ -18,14 +19,19 @@ public class IdentityDataClient extends SBABClient implements IdentityDataFetche
 
     @Override
     public IdentityData fetchIdentityData() {
-        Document overview = getJsoupDocument(OVERVIEW_URL);
+        ClientResponse response =
+                createJsonRequestWithCsrf(Url.IDENTITY_URL).get(ClientResponse.class);
 
-        Element loggedInAs = overview.getElementById("loggedInAs");
-
-        if (loggedInAs == null) {
-            throw new NoSuchElementException("Could not find name. HTML changed?");
+        if (response.getStatus() != HttpStatus.SC_OK) {
+            throw new IllegalStateException(
+                    ErrorText.HTTP_ERROR
+                            + response.getStatus()
+                            + ErrorText.HTTP_MESSAGE
+                            + response.getEntity(String.class));
         }
-
-        return SeIdentityData.of(loggedInAs.text().trim(), credentials.getField(Key.USERNAME));
+        Payload identity = response.getEntity(Payload.class);
+        return SeIdentityData.of(
+                identity.getPersonalDetails().GetUserName(),
+                identity.getPersonalDetails().GetSSN());
     }
 }

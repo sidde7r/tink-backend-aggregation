@@ -22,7 +22,7 @@ public class LoanEntityTest {
         loanEntity.setLoanTerms(loanTerms);
         loanEntity.setAmount(BigDecimal.valueOf(200000.0));
         loanEntity.setLoanNumber(BigInteger.valueOf(12345));
-
+        loanEntity.setLoanType("MORTGAGE_LOAN");
         Optional<Loan> loan = loanEntity.toTinkLoan();
         assertTrue(loan.isPresent());
         assertNull(loan.get().getNextDayOfTermsChange());
@@ -40,7 +40,7 @@ public class LoanEntityTest {
         loanEntity.setLoanTerms(new LoanTermsEntity());
         loanEntity.setAmount(BigDecimal.valueOf(877500.0));
         loanEntity.setLoanNumber(BigInteger.valueOf(12345));
-
+        loanEntity.setLoanType("MORTGAGE_LOAN");
         assertEquals(-877500, loanEntity.toTinkAccount().get().getBalance(), 0);
         assertEquals(-877500, loanEntity.toTinkLoan().get().getBalance(), 0);
     }
@@ -52,7 +52,7 @@ public class LoanEntityTest {
         loanEntity.setLoanTerms(loanTerms);
         loanEntity.setAmount(BigDecimal.valueOf(877500.0));
         loanEntity.setLoanNumber(BigInteger.valueOf(12345));
-
+        loanEntity.setLoanType("MORTGAGE_LOAN");
         loanTerms.setInterestRateBoundPeriod("MONTHS_3");
         assertEquals(3, loanEntity.toTinkLoan().get().getNumMonthsBound(), 0);
 
@@ -70,7 +70,7 @@ public class LoanEntityTest {
         loanEntity.setLoanTerms(loanTerms);
         loanEntity.setAmount(BigDecimal.valueOf(877500.0));
         loanEntity.setLoanNumber(BigInteger.valueOf(12345));
-
+        loanEntity.setLoanType("MORTGAGE_LOAN");
         loanTerms.setAmortizationValue(500.0);
         assertEquals(loanEntity.toTinkLoan().get().getMonthlyAmortization(), 500.0, 0);
 
@@ -83,7 +83,7 @@ public class LoanEntityTest {
         LoanEntity loanEntity = new LoanEntity();
         loanEntity.setAmount(BigDecimal.valueOf(877500.0));
         loanEntity.setLoanNumber(BigInteger.valueOf(12345));
-
+        loanEntity.setLoanType("MORTGAGE_LOAN");
         assertFalse(loanEntity.toTinkLoan().isPresent());
     }
 
@@ -92,7 +92,7 @@ public class LoanEntityTest {
         LoanEntity loanEntity = new LoanEntity();
         loanEntity.setAmount(BigDecimal.valueOf(877500.0));
         loanEntity.setLoanTerms(new LoanTermsEntity());
-
+        loanEntity.setLoanType("MORTGAGE_LOAN");
         assertFalse(loanEntity.toTinkLoan().isPresent());
     }
 

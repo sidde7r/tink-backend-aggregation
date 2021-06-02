@@ -1,24 +1,21 @@
 package se.tink.backend.aggregation.agents.banks.sbab.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Objects;
 import com.google.common.base.Strings;
-import java.lang.invoke.MethodHandles;
 import java.util.Optional;
 import java.util.stream.Stream;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.models.TransactionTypes;
+import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.date.DateUtils;
 
+@Slf4j
 @JsonIgnoreProperties(ignoreUnknown = true)
+@JsonObject
 public class TransactionEntity {
-    @JsonIgnore
-    private static final Logger logger =
-            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     @JsonProperty("transferId")
     private String id;
@@ -27,6 +24,8 @@ public class TransactionEntity {
     private String accountNumberTo;
     private String amount;
     private String transactionDate;
+    private String releaseDate;
+    private String postingDate;
     private String transferType;
 
     @JsonProperty("narrativeFrom")
@@ -62,10 +61,10 @@ public class TransactionEntity {
                             .findFirst()
                             .orElse("N/A"));
 
-            if (!Strings.isNullOrEmpty(transactionDate) && !transactionDate.trim().isEmpty()) {
-                transaction.setDate(DateUtils.parseDate(transactionDate));
+            if (!Strings.isNullOrEmpty(releaseDate) && !releaseDate.trim().isEmpty()) {
+                transaction.setDate(DateUtils.parseDate(releaseDate));
             } else {
-                logger.error("A transaction cannot have a null date");
+                log.error("A transaction cannot have a null date");
                 return Optional.empty();
             }
 
@@ -75,10 +74,10 @@ public class TransactionEntity {
                 transaction.setAmount(amount);
 
                 if (Objects.equal(amount, 0)) {
-                    logger.warn("Transaction amount (" + amount + ") was parsed to 0.");
+                    log.warn("Transaction amount (" + amount + ") was parsed to 0.");
                 }
             } else {
-                logger.error("A transaction cannot have a null amount");
+                log.error("A transaction cannot have a null amount");
                 return Optional.empty();
             }
 
@@ -89,7 +88,7 @@ public class TransactionEntity {
             return Optional.of(transaction);
 
         } catch (Exception e) {
-            logger.error("Could not create transaction", e);
+            log.error("Could not create transaction", e);
             return Optional.empty();
         }
     }
