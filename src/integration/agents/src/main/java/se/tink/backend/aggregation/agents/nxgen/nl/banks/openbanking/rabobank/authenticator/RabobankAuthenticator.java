@@ -68,7 +68,13 @@ public class RabobankAuthenticator implements OAuth2Authenticator {
                         .put(QueryParams.STATE, state)
                         .build();
 
-        return configuration.getUrls().getAuthorizeUrl().concat("?" + params.serialize());
+        URL authorizeUrl =
+                configuration.getUrls().getAuthorizeUrl().concat("?" + params.serialize());
+
+        // Workaround due to app2app redirect currently not working on iOS. Instead of redirecting
+        // user to the authorize endpoint we call the endpoint and redirect the user to the URL
+        // we get in the location header of the response.
+        return apiClient.getLoginUrl(authorizeUrl);
     }
 
     @Override

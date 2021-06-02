@@ -118,6 +118,7 @@ public final class RabobankAgent
     }
 
     private void configureHttpClient(TinkHttpClient client) {
+        client.setFollowRedirects(false);
         client.addFilter(
                 new RateLimitRetryFilter(
                         RabobankConstants.HttpClient.MAX_RETRIES,
