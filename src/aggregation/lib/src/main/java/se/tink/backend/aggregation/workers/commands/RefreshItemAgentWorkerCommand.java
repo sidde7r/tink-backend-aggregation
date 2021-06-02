@@ -13,8 +13,7 @@ import static se.tink.backend.aggregation.agents.exceptions.errors.SessionError.
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.DeprecatedRefreshExecutor;
 import se.tink.backend.aggregation.agents.RefreshBeneficiariesExecutor;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
@@ -49,8 +48,8 @@ import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.metrics.core.MetricId;
 import src.libraries.connectivity_errors.ConnectivityErrorFactory;
 
+@Slf4j
 public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements MetricsCommand {
-    private static final Logger log = LoggerFactory.getLogger(RefreshItemAgentWorkerCommand.class);
 
     private static final String METRIC_NAME = "agent_refresh";
     private static final String METRIC_ACTION = "refresh";
@@ -153,20 +152,22 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
 
     private boolean isNotAllowedToRefresh() {
         try {
-            log.info(
-                    "[Restrict] Restrictions for credentialsId: {} are: {}",
-                    context.getRequest().getCredentials().getId(),
-                    dataFetchingRestrictions);
+            if (dataFetchingRestrictions.size() > 0) {
+                log.info(
+                        "[REFRESH ITEM COMMAND] Restrictions for credentialsId: {} are: {}",
+                        context.getRequest().getCredentials().getId(),
+                        dataFetchingRestrictions);
+            }
             if (isNotAllowedToRefreshItem()) {
                 log.info(
-                        "Item: {} is restricted from refresh - restrictions: {}, credentialsId: {}",
+                        "[REFRESH ITEM COMMAND] {} is restricted from refresh - restrictions: {}, credentialsId: {}",
                         item,
                         dataFetchingRestrictions,
                         context.getRequest().getCredentials().getId());
                 return true;
             }
         } catch (RuntimeException e) {
-            log.warn("[Restrict] Failed: ", e);
+            log.warn("[REFRESH ITEM COMMAND] Restricting item failed: ", e);
         }
         return false;
     }
@@ -204,7 +205,9 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
         AdditionalInfo errorInfo = ADDITIONAL_INFO_ERROR_MAPPER.get(e.getError());
         RefreshEvent refreshEvent = getRefreshEvent(errorInfo);
         refreshEventProducer.sendEventForRefreshWithErrorInBankSide(refreshEvent);
-        log.warn("BankServiceException is received and credentials status set TEMPORARY_ERROR.", e);
+        log.warn(
+                "[REFRESH ITEM COMMAND] Due to received bank error credentials status set TEMPORARY_ERROR.",
+                e);
     }
 
     private void handleFailedRefreshDueToSessionError(MetricAction action, SessionException e) {
@@ -217,7 +220,9 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
         AdditionalInfo errorInfo = ADDITIONAL_INFO_SESSION_ERROR_MAPPER.get(e.getError());
         RefreshEvent refreshEvent = getRefreshEvent(errorInfo);
         refreshEventProducer.sendEventForRefreshWithErrorInBankSide(refreshEvent);
-        log.warn("SessionException is received and credentials status set TEMPORARY_ERROR.", e);
+        log.warn(
+                "[REFRESH ITEM COMMAND] Due to session error credentials status set TEMPORARY_ERROR.",
+                e);
     }
 
     private void handleFailedRefreshDueToTinkException(
@@ -296,7 +301,7 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
             try {
                 context.sendIdentityToIdentityAggregatorService();
             } catch (Exception e) {
-                log.warn("Couldn't send Identity");
+                log.warn("[REFRESH ITEM COMMAND] Couldn't send Identity");
                 throw e;
             }
         }

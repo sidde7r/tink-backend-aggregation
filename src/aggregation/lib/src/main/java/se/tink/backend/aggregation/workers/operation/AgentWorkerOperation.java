@@ -96,14 +96,19 @@ public class AgentWorkerOperation implements Runnable {
     }
 
     private void executeAllCommands() {
-        log.info("Starting with command execution for operation '{}'", operationMetricName);
+        log.info(
+                "[AGENT WORKER OPERATION] Starting with command execution for operation '{}'",
+                operationMetricName);
 
         AgentWorkerCommandResult commandResult = null;
         Stack<AgentWorkerCommand> executedCommands = new Stack<>();
 
         for (AgentWorkerCommand command : commands) {
             try {
-                log.info("Executing command '{}' for operation '{}'", command, operationMetricName);
+                log.info(
+                        "[AGENT WORKER OPERATION] Executing command '{}' for operation '{}'",
+                        command,
+                        operationMetricName);
 
                 List<Context> contexts =
                         startCommandTimerContexts(
@@ -115,7 +120,7 @@ public class AgentWorkerOperation implements Runnable {
 
                 if (commandResult == AgentWorkerCommandResult.ABORT) {
                     log.info(
-                            "Got ABORT from command '{}' for operation '{}'",
+                            "[AGENT WORKER OPERATION] Got ABORT from command '{}' for operation '{}'",
                             command,
                             operationMetricName);
                     break;
@@ -123,7 +128,7 @@ public class AgentWorkerOperation implements Runnable {
 
                 if (commandResult == AgentWorkerCommandResult.REJECT) {
                     log.info(
-                            "Got REJECT from command '{}' for operation '{}'",
+                            "[AGENT WORKER OPERATION] Got REJECT from command '{}' for operation '{}'",
                             command,
                             operationMetricName);
                     break;
@@ -131,7 +136,7 @@ public class AgentWorkerOperation implements Runnable {
 
                 if (Thread.interrupted()) {
                     log.info(
-                            "Thread was interrupted when executing '{}' for operation '{}'. Aborting.",
+                            "[AGENT WORKER OPERATION] Thread was interrupted when executing '{}' for operation '{}'. Aborting.",
                             command,
                             operationMetricName);
                     break;
@@ -139,7 +144,7 @@ public class AgentWorkerOperation implements Runnable {
 
             } catch (Exception e) {
                 log.error(
-                        "Caught exception while executing command '{}' for operation '{}'",
+                        "[AGENT WORKER OPERATION] Caught exception while executing command '{}' for operation '{}'",
                         command,
                         operationMetricName,
                         e);
@@ -160,15 +165,21 @@ public class AgentWorkerOperation implements Runnable {
         // Handle the status of the last executed command.
 
         if (commandResult == AgentWorkerCommandResult.CONTINUE) {
-            log.info("Done with command execution for operation '{}'", operationMetricName);
+            log.info(
+                    "[AGENT WORKER OPERATION] Done with command execution for operation '{}'",
+                    operationMetricName);
         }
 
         if (commandResult == AgentWorkerCommandResult.ABORT) {
-            log.info("Aborted command execution for operation '{}'", operationMetricName);
+            log.info(
+                    "[AGENT WORKER OPERATION] Aborted command execution for operation '{}'",
+                    operationMetricName);
         }
 
         if (commandResult == AgentWorkerCommandResult.REJECT) {
-            log.info("Rejected command execution for operation '{}'", operationMetricName);
+            log.info(
+                    "[AGENT WORKER OPERATION] Rejected command execution for operation '{}'",
+                    operationMetricName);
             // At the time of writing this comment, it can only occur if we fail to acquire lock
             ConnectivityError error =
                     ConnectivityErrorFactory.tinkSideError(
@@ -180,8 +191,10 @@ public class AgentWorkerOperation implements Runnable {
         while (!executedCommands.isEmpty()) {
             AgentWorkerCommand command = executedCommands.pop();
             try {
-                log.info(
-                        "Finalizing command '{}' for operation '{}'", command, operationMetricName);
+                log.debug(
+                        "[AGENT WORKER OPERATION] Starting post processing of command '{}' for operation '{}'",
+                        command,
+                        operationMetricName);
 
                 List<Context> contexts =
                         startCommandTimerContexts(
@@ -193,14 +206,16 @@ public class AgentWorkerOperation implements Runnable {
 
             } catch (Exception e) {
                 log.error(
-                        "Caught exception while finalizing command '{}' for operation '{}'",
+                        "[AGENT WORKER OPERATION] Caught exception while finalizing command '{}' for operation '{}'",
                         command,
                         operationMetricName,
                         e);
             }
         }
 
-        log.info("Done with command finalization for operation '{}'", operationMetricName);
+        log.info(
+                "[AGENT WORKER OPERATION] Done with command finalization for operation '{}'",
+                operationMetricName);
     }
 
     private void stopCommandContexts(List<Context> contexts) {

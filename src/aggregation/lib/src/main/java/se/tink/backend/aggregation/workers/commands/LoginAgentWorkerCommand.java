@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.workers.commands;
 
 import com.google.common.collect.ImmutableMap;
-import java.lang.invoke.MethodHandles;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
@@ -12,9 +11,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.curator.framework.recipes.locks.InterProcessSemaphoreMutex;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Provider;
@@ -52,17 +50,11 @@ import se.tink.libraries.metrics.types.timers.Timer.Context;
 import se.tink.libraries.user.rpc.User;
 import src.libraries.connectivity_errors.ConnectivityErrorFactory;
 
+@Slf4j
 public class LoginAgentWorkerCommand extends AgentWorkerCommand implements MetricsCommand {
-    private static final Logger logger =
-            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private static final String LOCK_FORMAT_BANKID_REFRESH =
             "/locks/aggregation/%s/bankid"; // % (userId)
-    private static final String CREDENTIAL_STATUS_PAYLOAD_LOG =
-            "Credentials contain - status payload: {}";
-    private static final String CREDENTIAL_SUPPLEMENTAL_INFO_LOG =
-            "Credentials contain - supplemental Information: {}";
-    private static final String CREDENTIAL_STATUS_LOG = "Credentials contain - status: {}";
 
     static class MetricName {
         static final String METRIC = "agent_login";
@@ -152,9 +144,7 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
     @Override
     protected AgentWorkerCommandResult doExecute() throws Exception {
 
-        logger.info(CREDENTIAL_SUPPLEMENTAL_INFO_LOG, credentials.getSupplementalInformation());
-        logger.info(CREDENTIAL_STATUS_PAYLOAD_LOG, credentials.getStatusPayload());
-        logger.info(CREDENTIAL_STATUS_LOG, credentials.getStatus());
+        CredentialsStatusInfoUtlis.logCredentialsInfo(credentials);
 
         agent = context.getAgent();
         metrics.start(AgentWorkerOperationMetricType.EXECUTE_COMMAND);
@@ -197,17 +187,11 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
         } finally {
             metrics.stop();
 
-            logger.info(CREDENTIAL_SUPPLEMENTAL_INFO_LOG, credentials.getSupplementalInformation());
-            logger.info(CREDENTIAL_STATUS_PAYLOAD_LOG, credentials.getStatusPayload());
-            logger.info(CREDENTIAL_STATUS_LOG, credentials.getStatus());
+            CredentialsStatusInfoUtlis.logCredentialsInfo(credentials);
         }
 
-        logger.info(
-                "Credentials contain - status: {}, credentialsId: {}",
-                credentials.getStatus(),
-                credentials.getId());
-        logger.info(
-                "AgentWorkerCommandResult: {}, credentialsId: {}",
+        log.info(
+                "[LOG IN] AgentWorkerCommandResult: {}, credentialsId: {}",
                 Optional.ofNullable(result).map(Enum::toString).orElse(null),
                 credentials.getId());
         return result;
@@ -220,9 +204,9 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
                 !Objects.equals(
                         sessionExpiryDate.orElse(null), initialCredentialsSessionExpiryDate);
 
-        logger.info(
+        log.info(
                 String.format(
-                        "LoginAgentWorkerCommand, session expiry details: exists=%b, hasChanged=%b",
+                        "[LOG IN] LoginAgentWorkerCommand, session expiry details: exists=%b, hasChanged=%b",
                         sessionExpiryDate.isPresent(), hasChanged));
         Histogram histogram =
                 histogram(
@@ -251,7 +235,7 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
 
     private Optional<Boolean> isLoggedIn() throws Exception {
         if (!(agent instanceof PersistentLogin)) {
-            logger.info("agent is not instanceof PersistentLogin");
+            log.info("[LOG IN] agent is not instanceof PersistentLogin");
             return Optional.of(Boolean.FALSE);
         }
 
@@ -274,17 +258,17 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
             if (persistentAgent.isLoggedIn()) {
                 timeAgentIsLoggedIn = System.nanoTime() - beforeIsLoggedIn;
                 action.completed();
-                logger.info("We're already logged in. Moving along.");
+                log.info("[LOG IN] Already logged in.");
                 emitLoginResultEvent(LoginResult.ALREADY_LOGGED_IN);
                 result = Boolean.TRUE;
             } else {
                 timeAgentIsLoggedIn = System.nanoTime() - beforeIsLoggedIn;
                 action.completed();
-                logger.info("We're not logged in. Clear Session and Login in again.");
+                log.info("[LOG IN] Not logged in. Clearing session and trying to log in again");
                 persistentAgent.clearLoginSession();
             }
         } catch (BankServiceException e) {
-            logger.info("Bank service exception: {}", e.getMessage(), e);
+            log.info("[LOG IN] Failed with error: {}", e.getMessage(), e);
             action.unavailable();
             ConnectivityError error = ConnectivityErrorFactory.fromLegacy(e);
             statusUpdater.updateStatusWithError(CredentialsStatus.TEMPORARY_ERROR, null, error);
@@ -304,13 +288,13 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
                     TimeUnit.SECONDS.convert(timeAgentIsLoggedIn, TimeUnit.NANOSECONDS);
             long timeLoadingSessionSeconds =
                     TimeUnit.SECONDS.convert(timeLoadingSession, TimeUnit.NANOSECONDS);
-            logger.info(
-                    "Time loading session: {} s, time agent isLoggedIn: {} s",
+            log.info(
+                    "[LOG IN] Loaded session in {} s, Login command completed in {} s",
                     timeLoadingSessionSeconds,
                     timeAgentIsLoggedInSeconds);
         }
-        logger.info(
-                "LoginAgentWorkerCommand - isLoggedIn: {}, credentialsId: {}",
+        log.info(
+                "[LOG IN] User is logged in {} with credentialsId: {}",
                 result,
                 credentials.getId());
         return Optional.ofNullable(result);
@@ -334,7 +318,7 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
                                     ConnectivityErrorDetails.TinkSideErrors
                                             .TINK_INTERNAL_SERVER_ERROR);
                     statusUpdater.updateStatusWithError(CredentialsStatus.UNCHANGED, null, error);
-                    logger.warn("Login failed due not able to acquire lock");
+                    log.warn("[LOG IN] Login failed due not able to acquire lock");
                     action.failed();
                     return false;
                 }
@@ -399,10 +383,7 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
         // If we did not successfully execute in case when credentials has been just created,
         // there's no point in doing anything here.
 
-        logger.info(CREDENTIAL_SUPPLEMENTAL_INFO_LOG, credentials.getSupplementalInformation());
-        logger.info(CREDENTIAL_STATUS_PAYLOAD_LOG, credentials.getStatusPayload());
-        logger.info(CREDENTIAL_STATUS_LOG, credentials.getStatus());
-
+        CredentialsStatusInfoUtlis.logCredentialsInfo(credentials);
         if (agent == null || initialCredentialStatus == CredentialsStatus.CREATED) {
             return;
         }
@@ -425,7 +406,7 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
         }
     }
 
-    private void persistLoginSession(PersistentLogin agent) throws Exception {
+    private void persistLoginSession(PersistentLogin agent) {
         MetricAction action =
                 metrics.buildAction(metricForAction(MetricName.PERSIST_LOGIN_SESSION));
 
