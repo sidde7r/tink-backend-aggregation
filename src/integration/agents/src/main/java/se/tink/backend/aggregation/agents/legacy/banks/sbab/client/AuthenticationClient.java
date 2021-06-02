@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.banks.sbab.client;
 
 import com.google.common.collect.ImmutableMap;
 import com.sun.jersey.api.client.Client;
+import java.util.Date;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.nodes.Document;
@@ -38,7 +39,7 @@ public class AuthenticationClient extends SBABClient {
                 .queryParam(QueryParamKeys.DEP, QueryParamValues.DEP)
                 .queryParam(QueryParamKeys.AUTH_MECH, QueryParamValues.AUTH_MECH)
                 .queryParam(QueryParamKeys.AUTH_DEVICE, QueryParamValues.AUTH_DEVICE)
-                .queryParam(QueryParamKeys.REV, QueryParamValues.REV)
+                .queryParam(QueryParamKeys.REV, String.valueOf(new Date().getTime()))
                 .get(InitBankIdResponse.class);
     }
 
