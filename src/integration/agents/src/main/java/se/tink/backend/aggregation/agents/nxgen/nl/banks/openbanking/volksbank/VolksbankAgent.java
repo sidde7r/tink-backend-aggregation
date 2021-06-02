@@ -79,7 +79,11 @@ public final class VolksbankAgent
                                 this.transactionPaginationHelper,
                                 new TransactionDatePaginationController.Builder<>(
                                                 new VolksbankTransactionFetcher(
-                                                        volksbankApiClient, persistentStorage))
+                                                        volksbankApiClient,
+                                                        persistentStorage,
+                                                        componentProvider.getLocalDateTimeSource()))
+                                        .setLocalDateTimeSource(
+                                                componentProvider.getLocalDateTimeSource())
                                         .build()));
 
         VolksbankAuthenticator authenticator =
