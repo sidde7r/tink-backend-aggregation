@@ -14,7 +14,7 @@ REQUEST 2
 POST https://open.nordea.com/personal/v5/authorize
 Content-Type: application/json
 
-{"country":"NO","scope":["ACCOUNTS_BALANCES","ACCOUNTS_BASIC","ACCOUNTS_DETAILS","ACCOUNTS_TRANSACTIONS","CARDS_INFORMATION","CARDS_TRANSACTIONS"],"state":"00000000-0000-4000-0000-000000000000","duration":129600,"authentication_method":null,"redirect_uri":"https://127.0.0.1:7357/api/v1/thirdparty/callback","max_tx_history":12,"account_list":["ALL"],"skip_account_selection":true}
+{"country":"NO","scope":["ACCOUNTS_BALANCES","ACCOUNTS_BASIC","ACCOUNTS_DETAILS","ACCOUNTS_TRANSACTIONS","CARDS_INFORMATION","CARDS_TRANSACTIONS"],"state":"00000000-0000-4000-0000-000000000000","duration":129600,"authentication_method":null,"redirect_uri":"https://127.0.0.1:7357/api/v1/thirdparty/callback","max_tx_history":12,"account_list":["ALL_WITH_CARDS"],"skip_account_selection":true}
 
 RESPONSE 2
 500
@@ -26,7 +26,7 @@ REQUEST 3
 POST https://open.nordea.com/personal/v5/authorize
 Content-Type: application/json
 
-{"country":"NO","scope":["ACCOUNTS_BALANCES","ACCOUNTS_BASIC","ACCOUNTS_DETAILS","ACCOUNTS_TRANSACTIONS","CARDS_INFORMATION","CARDS_TRANSACTIONS"],"state":"00000000-0000-4000-0000-000000000000","duration":129600,"authentication_method":null,"redirect_uri":"https://127.0.0.1:7357/api/v1/thirdparty/callback","max_tx_history":12,"account_list":["ALL"],"skip_account_selection":true}
+{"country":"NO","scope":["ACCOUNTS_BALANCES","ACCOUNTS_BASIC","ACCOUNTS_DETAILS","ACCOUNTS_TRANSACTIONS","CARDS_INFORMATION","CARDS_TRANSACTIONS"],"state":"00000000-0000-4000-0000-000000000000","duration":129600,"authentication_method":null,"redirect_uri":"https://127.0.0.1:7357/api/v1/thirdparty/callback","max_tx_history":12,"account_list":["ALL_WITH_CARDS"],"skip_account_selection":true}
 
 RESPONSE 3
 500
@@ -38,7 +38,7 @@ REQUEST 4
 POST https://open.nordea.com/personal/v5/authorize
 Content-Type: application/json
 
-{"country":"NO","scope":["ACCOUNTS_BALANCES","ACCOUNTS_BASIC","ACCOUNTS_DETAILS","ACCOUNTS_TRANSACTIONS","CARDS_INFORMATION","CARDS_TRANSACTIONS"],"state":"00000000-0000-4000-0000-000000000000","duration":129600,"authentication_method":null,"redirect_uri":"https://127.0.0.1:7357/api/v1/thirdparty/callback","max_tx_history":12,"account_list":["ALL"],"skip_account_selection":true}
+{"country":"NO","scope":["ACCOUNTS_BALANCES","ACCOUNTS_BASIC","ACCOUNTS_DETAILS","ACCOUNTS_TRANSACTIONS","CARDS_INFORMATION","CARDS_TRANSACTIONS"],"state":"00000000-0000-4000-0000-000000000000","duration":129600,"authentication_method":null,"redirect_uri":"https://127.0.0.1:7357/api/v1/thirdparty/callback","max_tx_history":12,"account_list":["ALL_WITH_CARDS"],"skip_account_selection":true}
 
 RESPONSE 4
 500
