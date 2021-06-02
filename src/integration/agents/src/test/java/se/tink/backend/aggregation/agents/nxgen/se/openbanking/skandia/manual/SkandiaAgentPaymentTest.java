@@ -3,8 +3,8 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.manual;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import org.junit.Ignore;
 import org.junit.Test;
+import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager.SsnArgumentEnum;
@@ -18,7 +18,6 @@ import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.transfer.enums.RemittanceInformationType;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
-@Ignore
 public class SkandiaAgentPaymentTest {
 
     private final ArgumentManager<SsnArgumentEnum> manager =
@@ -33,8 +32,7 @@ public class SkandiaAgentPaymentTest {
 
         AgentIntegrationTest.Builder builder =
                 new AgentIntegrationTest.Builder("SE", "se-skandiabanken-ob")
-                        //                        .addCredentialField(Field.Key.USERNAME,
-                        // manager.get(SsnArgumentEnum.SSN))
+                        .addCredentialField(Field.Key.USERNAME, manager.get(SsnArgumentEnum.SSN))
                         .expectLoggedIn(false)
                         .setFinancialInstitutionId("skandiabanken")
                         .setAppId("tink")
@@ -48,11 +46,11 @@ public class SkandiaAgentPaymentTest {
 
         List<Payment> list = new ArrayList<>();
 
-        LocalDate executionDate = LocalDate.now().plusDays(7);
+        LocalDate executionDate = LocalDate.now();
         String currency = "SEK";
         RemittanceInformation remittanceInformation = new RemittanceInformation();
-        remittanceInformation.setType(RemittanceInformationType.OCR);
-        remittanceInformation.setValue("test payment");
+        remittanceInformation.setType(RemittanceInformationType.UNSTRUCTURED);
+        remittanceInformation.setValue("test");
 
         list.add(
                 new Payment.Builder()

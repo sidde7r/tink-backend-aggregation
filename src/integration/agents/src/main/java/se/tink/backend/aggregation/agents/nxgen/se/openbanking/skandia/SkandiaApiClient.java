@@ -6,11 +6,12 @@ import java.util.UUID;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.SkandiaConstants.BodyValues;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.SkandiaConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.SkandiaConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.SkandiaConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.SkandiaConstants.IdTags;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.SkandiaConstants.PaymentTypes;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.SkandiaConstants.PaymentProduct;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.SkandiaConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.SkandiaConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.SkandiaConstants.StorageKeys;
@@ -23,6 +24,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.configura
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.executor.payment.rpc.DomesticPaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.executor.payment.rpc.DomesticPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.executor.payment.rpc.GetDomesticPaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.executor.payment.rpc.SignPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.fetcher.transactionalaccount.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.fetcher.transactionalaccount.rpc.GetBalancesResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.fetcher.transactionalaccount.rpc.GetTransactionsResponse;
@@ -35,6 +37,7 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.date.ThreadSafeDateFormat;
+import se.tink.libraries.payment.rpc.Payment;
 
 public final class SkandiaApiClient {
 
@@ -94,6 +97,15 @@ public final class SkandiaApiClient {
                 .queryParam(QueryKeys.REDIRECT_URI, getRedirectUrl())
                 .queryParamRaw(QueryKeys.SCOPE, QueryValues.SCOPE)
                 .queryParam(QueryKeys.STATE, state)
+                .queryParam(QueryKeys.RESPONSE_TYPE, QueryValues.CODE)
+                .getUrl();
+    }
+
+    public URL getScaRedirectUrl(String scaRedirect) {
+        return client.request(new URL(scaRedirect))
+                .queryParam(QueryKeys.CLIENT_ID, configuration.getClientId())
+                .queryParam(QueryKeys.REDIRECT_URI, getRedirectUrl())
+                .queryParamRaw(QueryKeys.SCOPE, QueryValues.SCOPE)
                 .queryParam(QueryKeys.RESPONSE_TYPE, QueryValues.CODE)
                 .getUrl();
     }
@@ -169,7 +181,7 @@ public final class SkandiaApiClient {
         return createRequestInSession(
                         SkandiaConstants.Urls.CREATE_PAYMENT.parameter(
                                 SkandiaConstants.IdTags.PAYMENT_TYPE,
-                                PaymentTypes.DOMESTIC_CREDIT_TRANSFERS))
+                                PaymentProduct.DOMESTIC_CREDIT_TRANSFERS.getProduct()))
                 .post(DomesticPaymentResponse.class, domesticPaymentRequest);
     }
 
@@ -178,8 +190,21 @@ public final class SkandiaApiClient {
                         SkandiaConstants.Urls.GET_PAYMENT
                                 .parameter(
                                         SkandiaConstants.IdTags.PAYMENT_TYPE,
-                                        PaymentTypes.DOMESTIC_CREDIT_TRANSFERS)
+                                        PaymentProduct.DOMESTIC_CREDIT_TRANSFERS.getProduct())
                                 .parameter(SkandiaConstants.IdTags.PAYMENT_ID, paymentId))
                 .get(GetDomesticPaymentResponse.class);
+    }
+
+    public SignPaymentResponse signPayment(Payment payment) {
+
+        return createRequestInSession(
+                        Urls.POST_SIGN_PAYMENT
+                                .parameter(
+                                        SkandiaConstants.IdTags.PAYMENT_TYPE,
+                                        PaymentProduct.from(payment).getProduct())
+                                .parameter(
+                                        SkandiaConstants.IdTags.PAYMENT_ID, payment.getUniqueId()))
+                .header(HeaderKeys.TPP_REDIRECT_URI, getRedirectUrl())
+                .post(SignPaymentResponse.class, BodyValues.EMPTY_BODY);
     }
 }

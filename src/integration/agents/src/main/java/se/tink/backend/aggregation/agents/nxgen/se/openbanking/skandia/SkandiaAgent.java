@@ -63,7 +63,9 @@ public final class SkandiaAgent extends NextGenerationAgent
 
     @Override
     public Optional<PaymentController> constructPaymentController() {
-        SkandiaPaymentExecutor skandiaPaymentExecutor = new SkandiaPaymentExecutor(apiClient);
+        SkandiaPaymentExecutor skandiaPaymentExecutor =
+                new SkandiaPaymentExecutor(
+                        apiClient, supplementalInformationHelper, strongAuthenticationState);
 
         return Optional.of(new PaymentController(skandiaPaymentExecutor, skandiaPaymentExecutor));
     }
