@@ -12,6 +12,8 @@ set -x
 # Testcontainers needs to find this executable in the PATH that Bazel looks at (e.g. /bin/)
 ln -s /usr/local/bin/google-cloud-sdk/bin/docker-credential-gcloud /bin/docker-credential-gcloud
 
+docker pull gcr.io/tink-containers/ryuk:0.2.3
+
 ./bazel-wrapper test \
     --workspace_status_command $(pwd)/stamp.sh \
     --disk_cache=/cache/v4-disk \
