@@ -49,7 +49,7 @@ public final class ArgentaAgent extends NextGenerationAgent
                 getAgentConfigurationController().getAgentConfiguration(ArgentaConfiguration.class);
 
         final CertificateValues certificateValues =
-                CertificateValuesProvider.getCertificateValues(agentConfiguration.getQsealc());
+                CertificateValuesProvider.extractCertificateValues(agentConfiguration.getQsealc());
 
         SignatureHeaderProvider signatureHeaderProvider =
                 new SignatureHeaderProvider(qsealcSigner, certificateValues);
