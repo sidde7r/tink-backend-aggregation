@@ -3,8 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.fetcher.tran
 import java.util.Optional;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.JyskeConstants;
-import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.JyskeConstants.Log;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.JyskeConstants.Storage;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
@@ -51,15 +49,9 @@ public class AccountsEntity {
     }
 
     private TransactionalAccountType getTinkAccountType() {
-        return TransactionalAccountType.from(
-                        JyskeConstants.ACCOUNT_TYPE_MAPPER
-                                .translate(accountNumber.getRegNo())
-                                .get())
-                .orElse(logUnknownType());
-    }
-
-    private TransactionalAccountType logUnknownType() {
-        log.info("tag={} Unknown type: {}", Log.UNKOWN_ACCOUNT_TYPE, accountNumber.getRegNo());
+        if ("opsparingskonto".equalsIgnoreCase(name)) {
+            return TransactionalAccountType.SAVINGS;
+        }
         return TransactionalAccountType.CHECKING;
     }
 
