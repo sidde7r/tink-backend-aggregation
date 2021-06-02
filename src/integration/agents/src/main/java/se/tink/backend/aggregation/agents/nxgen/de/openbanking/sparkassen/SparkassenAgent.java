@@ -88,7 +88,12 @@ public class SparkassenAgent extends NextGenerationAgent
                                 ? request.getUserAvailability().getOriginatingUserIp()
                                 : null);
         return new SparkassenApiClient(
-                client, headerValues, sparkassenStorage, randomValueGenerator, localDateTimeSource);
+                client,
+                headerValues,
+                sparkassenStorage,
+                randomValueGenerator,
+                localDateTimeSource,
+                new SparkassenPaymentMapper());
     }
 
     @Override
@@ -153,8 +158,7 @@ public class SparkassenAgent extends NextGenerationAgent
                         credentials,
                         catalog);
         BasePaymentExecutor paymentExecutor =
-                new BasePaymentExecutor(
-                        apiClient, sparkassenPaymentAuthenticator, credentials, sessionStorage);
+                new BasePaymentExecutor(apiClient, sparkassenPaymentAuthenticator, sessionStorage);
 
         return Optional.of(new PaymentController(paymentExecutor, paymentExecutor));
     }

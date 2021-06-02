@@ -75,9 +75,7 @@ public class SparkassenPaymentExecutorTest {
         paymentTestHelper = new PaymentTestHelper(supplementalInformationController, apiClient);
         sessionStorage = new SessionStorage();
         paymentTestHelper.prepareStorageWithScaLinks(sessionStorage);
-        paymentExecutor =
-                new BasePaymentExecutor(
-                        apiClient, paymentAuthenticator, credentials, sessionStorage);
+        paymentExecutor = new BasePaymentExecutor(apiClient, paymentAuthenticator, sessionStorage);
     }
 
     @Test
@@ -111,8 +109,7 @@ public class SparkassenPaymentExecutorTest {
         paymentTestHelper.whenSupplementalInformationControllerReturn(SELECT_AUTH_METHOD_OK);
         PaymentMultiStepRequest paymentMultiStepRequest =
                 PaymentMultiStepRequest.of(paymentTestHelper.createPaymentResponseWithScaLinks());
-        paymentTestHelper.whenFetchPaymentStatusReturn(
-                paymentMultiStepRequest, PAYMENT_STATUS_SIGNED_RESPONSE);
+        paymentTestHelper.whenFetchPaymentStatusReturn(PAYMENT_STATUS_SIGNED_RESPONSE);
 
         // when
         paymentExecutor.sign(paymentMultiStepRequest);
@@ -141,8 +138,7 @@ public class SparkassenPaymentExecutorTest {
         PaymentMultiStepRequest paymentMultiStepRequest =
                 PaymentMultiStepRequest.of(paymentTestHelper.createPaymentResponseWithScaLinks());
 
-        paymentTestHelper.whenFetchPaymentStatusReturn(
-                paymentMultiStepRequest, PAYMENT_STATUS_SIGNED_RESPONSE);
+        paymentTestHelper.whenFetchPaymentStatusReturn(PAYMENT_STATUS_SIGNED_RESPONSE);
 
         // when
         paymentExecutor.sign(paymentMultiStepRequest);
@@ -163,8 +159,7 @@ public class SparkassenPaymentExecutorTest {
         paymentTestHelper.whenSupplementalInformationControllerReturn(SELECT_AUTH_METHOD_OK);
         PaymentMultiStepRequest paymentMultiStepRequest =
                 PaymentMultiStepRequest.of(paymentTestHelper.createPaymentResponseWithScaLinks());
-        paymentTestHelper.whenFetchPaymentStatusReturn(
-                paymentMultiStepRequest, PAYMENT_STATUS_SIGNED_RESPONSE);
+        paymentTestHelper.whenFetchPaymentStatusReturn(PAYMENT_STATUS_SIGNED_RESPONSE);
 
         // when
         paymentExecutor.sign(paymentMultiStepRequest);
@@ -182,8 +177,7 @@ public class SparkassenPaymentExecutorTest {
         paymentTestHelper.whenCreatePaymentAuthorizationReturn(PAYMENT_SCA_EXEMPTION_RESPONSE);
         paymentTestHelper.whenSupplementalInformationControllerReturn(SELECT_AUTH_METHOD_OK);
         PaymentRequest paymentRequest = paymentTestHelper.createPaymentRequest();
-        paymentTestHelper.whenFetchPaymentStatusReturn(
-                paymentRequest, PAYMENT_STATUS_REJECTED_RESPONSE);
+        paymentTestHelper.whenFetchPaymentStatusReturn(PAYMENT_STATUS_REJECTED_RESPONSE);
 
         // when
         Throwable throwable =
@@ -205,8 +199,7 @@ public class SparkassenPaymentExecutorTest {
         paymentTestHelper.whenCreatePaymentAuthorizationReturn(PAYMENT_SCA_EXEMPTION_RESPONSE);
         paymentTestHelper.whenSupplementalInformationControllerReturn(SELECT_AUTH_METHOD_OK);
         PaymentRequest paymentRequest = paymentTestHelper.createPaymentRequest();
-        paymentTestHelper.whenFetchPaymentStatusReturn(
-                paymentRequest, PAYMENT_STATUS_CANCELED_RESPONSE);
+        paymentTestHelper.whenFetchPaymentStatusReturn(PAYMENT_STATUS_CANCELED_RESPONSE);
 
         // when
         Throwable throwable =

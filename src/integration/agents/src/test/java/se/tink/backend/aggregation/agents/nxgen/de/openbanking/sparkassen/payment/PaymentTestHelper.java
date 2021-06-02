@@ -21,7 +21,6 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authen
 import se.tink.backend.aggregation.agents.utils.berlingroup.common.LinksEntity;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AuthenticationType;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.PaymentConstants.StorageValues;
-import se.tink.backend.aggregation.agents.utils.berlingroup.payment.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.rpc.FetchPaymentStatusResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
@@ -134,12 +133,11 @@ public class PaymentTestHelper {
 
     // when helpers
     public void whenCreatePaymentReturn(PaymentRequest paymentRequest) {
-        when(apiClient.createPayment(any(CreatePaymentRequest.class), eq(paymentRequest)))
-                .thenReturn(PAYMENT_CREATE_RESPONSE);
+        when(apiClient.createPayment(eq(paymentRequest))).thenReturn(PAYMENT_CREATE_RESPONSE);
     }
 
     public void whenFetchPaymentStatusReturn(
-            PaymentRequest paymentRequest, FetchPaymentStatusResponse fetchPaymentStatusResponse) {
+            FetchPaymentStatusResponse fetchPaymentStatusResponse) {
         when(apiClient.fetchPaymentStatus(any(PaymentRequest.class)))
                 .thenReturn(fetchPaymentStatusResponse);
     }
@@ -181,7 +179,7 @@ public class PaymentTestHelper {
     }
 
     public void verifyCreatePaymentCalled() {
-        verify(apiClient).createPayment(any(CreatePaymentRequest.class), any(PaymentRequest.class));
+        verify(apiClient).createPayment(any(PaymentRequest.class));
     }
 
     public void verifyFetchPaymentStatusCalled() {

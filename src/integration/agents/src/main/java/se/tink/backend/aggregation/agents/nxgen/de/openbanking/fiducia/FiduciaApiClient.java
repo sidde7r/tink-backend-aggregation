@@ -13,9 +13,7 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaCo
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.fetcher.transactionalaccount.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.fetcher.transactionalaccount.rpc.GetBalancesResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.fetcher.transactionalaccount.rpc.GetTransactionsResponse;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.payment.rpc.CreatePaymentXmlRequest;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.utils.ErrorChecker;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.utils.XmlConverter;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AccessEntity;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AuthorizationRequest;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AuthorizationResponse;
@@ -26,13 +24,7 @@ import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentRespo
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.FinalizeAuthorizationRequest;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.PsuDataEntity;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.SelectAuthorizationMethodRequest;
-import se.tink.backend.aggregation.agents.utils.berlingroup.payment.PaymentConstants.PathVariables;
-import se.tink.backend.aggregation.agents.utils.berlingroup.payment.enums.PaymentProduct;
-import se.tink.backend.aggregation.agents.utils.berlingroup.payment.enums.PaymentService;
-import se.tink.backend.aggregation.agents.utils.berlingroup.payment.rpc.CreatePaymentResponse;
-import se.tink.backend.aggregation.agents.utils.berlingroup.payment.rpc.FetchPaymentStatusResponse;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
-import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -51,10 +43,6 @@ public class FiduciaApiClient {
     private static final String BALANCES_ENDPOINT = "/v1/accounts/{accountId}/balances";
     private static final String TRANSACTIONS_ENDPOINT = "/v1/accounts/{accountId}/transactions";
 
-    private static final String PAYMENT_INITIATION = "/v1/{payment-service}/{payment-product}";
-    private static final String FETCH_PAYMENT_STATUS =
-            "/v1/{payment-service}/{payment-product}/{paymentId}/status";
-
     private static final String ACCOUNT_ID = "accountId";
     private static final String CONSENT_ID = "consentId";
 
@@ -64,7 +52,7 @@ public class FiduciaApiClient {
     private final String serverUrl;
     private final RandomValueGenerator randomValueGenerator;
 
-    private URL createUrl(String path) {
+    protected URL createUrl(String path) {
         return new URL(serverUrl + "/bg13" + path);
     }
 
@@ -173,48 +161,5 @@ public class FiduciaApiClient {
         String consentId = persistentStorage.get(StorageKeys.CONSENT_ID);
         return createRequestInSession(createUrl(continuationPath), consentId)
                 .get(GetTransactionsResponse.class);
-    }
-
-    public CreatePaymentResponse createPayment(
-            CreatePaymentXmlRequest request, String username, PaymentRequest paymentRequest) {
-        return createRequest(
-                        createUrl(PAYMENT_INITIATION)
-                                .parameter(
-                                        PathVariables.PAYMENT_SERVICE,
-                                        PaymentService.getPaymentService(
-                                                paymentRequest
-                                                        .getPayment()
-                                                        .getPaymentServiceType()))
-                                .parameter(
-                                        PathVariables.PAYMENT_PRODUCT,
-                                        "pain.001-"
-                                                + PaymentProduct.getPaymentProduct(
-                                                        paymentRequest
-                                                                .getPayment()
-                                                                .getPaymentScheme())))
-                .header(HeaderKeys.PSU_ID, username)
-                .type(MediaType.APPLICATION_XML_TYPE)
-                .post(CreatePaymentResponse.class, XmlConverter.convertToXml(request));
-    }
-
-    public FetchPaymentStatusResponse fetchPaymentStatus(PaymentRequest paymentRequest) {
-        String paymentId = paymentRequest.getPayment().getUniqueId();
-        return createRequest(
-                        createUrl(FETCH_PAYMENT_STATUS)
-                                .parameter(
-                                        PathVariables.PAYMENT_SERVICE,
-                                        PaymentService.getPaymentService(
-                                                paymentRequest
-                                                        .getPayment()
-                                                        .getPaymentServiceType()))
-                                .parameter(
-                                        PathVariables.PAYMENT_PRODUCT,
-                                        "pain.001-"
-                                                + PaymentProduct.getPaymentProduct(
-                                                        paymentRequest
-                                                                .getPayment()
-                                                                .getPaymentScheme()))
-                                .parameter(PathVariables.PAYMENT_ID, paymentId))
-                .get(FetchPaymentStatusResponse.class);
     }
 }

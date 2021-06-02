@@ -14,7 +14,8 @@ import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModules;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.FiduciaAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.fetcher.transactionalaccount.FiduciaTransactionalAccountFetcher;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.payment.FiduciaPaymentExecutor;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.payment.FiduciaPaymentMapper;
+import se.tink.backend.aggregation.agents.utils.berlingroup.payment.BasePaymentExecutor;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.eidassigner.module.QSealcSignerModuleRSASHA256;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
@@ -34,6 +35,7 @@ public final class FiduciaAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
 
     private final FiduciaApiClient apiClient;
+    private final FiduciaPaymentApiClient paymentApiClient;
     private final FiduciaAuthenticator fiduciaAuthenticator;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
@@ -51,6 +53,17 @@ public final class FiduciaAgent extends NextGenerationAgent
                                 : null,
                         serverUrl,
                         componentProvider.getRandomValueGenerator());
+        this.paymentApiClient =
+                new FiduciaPaymentApiClient(
+                        client,
+                        persistentStorage,
+                        request.getUserAvailability().isUserPresent()
+                                ? request.getUserAvailability().getOriginatingUserIp()
+                                : null,
+                        serverUrl,
+                        componentProvider.getRandomValueGenerator(),
+                        credentials,
+                        new FiduciaPaymentMapper(componentProvider.getRandomValueGenerator()));
         fiduciaAuthenticator =
                 new FiduciaAuthenticator(
                         credentials,
@@ -107,11 +120,10 @@ public final class FiduciaAgent extends NextGenerationAgent
 
     @Override
     public Optional<PaymentController> constructPaymentController() {
-        final FiduciaPaymentExecutor fiduciaPaymentExecutor =
-                new FiduciaPaymentExecutor(
-                        fiduciaAuthenticator, apiClient, credentials, sessionStorage);
+        final BasePaymentExecutor paymentExecutor =
+                new BasePaymentExecutor(paymentApiClient, fiduciaAuthenticator, sessionStorage);
 
-        return Optional.of(new PaymentController(fiduciaPaymentExecutor, fiduciaPaymentExecutor));
+        return Optional.of(new PaymentController(paymentExecutor, paymentExecutor));
     }
 
     @Override

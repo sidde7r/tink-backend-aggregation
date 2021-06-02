@@ -4,11 +4,5 @@ import javax.xml.bind.annotation.XmlElement;
 
 public class SvcLvl {
     @XmlElement(name = "Cd")
-    private String cd;
-
-    public SvcLvl() {}
-
-    public SvcLvl(String cd) {
-        this.cd = cd;
-    }
+    private String cd = "SEPA";
 }

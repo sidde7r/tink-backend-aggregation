@@ -25,7 +25,7 @@ public class PmtInf {
     private String ctrlSum;
 
     @XmlElement(name = "Dbtr")
-    private Dbtr dbtr;
+    private Dbtr dbtr = new Dbtr("NOT_PROVIDED");
 
     @XmlElement(name = "NbOfTxs")
     private int nbOfTxs = 1;
@@ -37,26 +37,14 @@ public class PmtInf {
 
     public PmtInf(
             CdtTrfTxInf cdtTrfTxInf,
-            PmtTpInf pmtTpInf,
             DbtrAcct dbtrAcct,
             String reqdExctnDt,
             String pmtInfId,
-            String ctrlSum,
-            Dbtr dbtr) {
+            String ctrlSum) {
         this.cdtTrfTxInf = cdtTrfTxInf;
-        this.pmtTpInf = pmtTpInf;
         this.dbtrAcct = dbtrAcct;
         this.reqdExctnDt = reqdExctnDt;
         this.pmtInfId = pmtInfId;
         this.ctrlSum = ctrlSum;
-        this.dbtr = dbtr;
-    }
-
-    public DbtrAcct getDbtrAcct() {
-        return dbtrAcct;
-    }
-
-    public CdtTrfTxInf getCdtTrfTxInf() {
-        return cdtTrfTxInf;
     }
 }

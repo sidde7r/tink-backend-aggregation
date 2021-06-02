@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.utils.berlingroup.payment;
 
 import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
-import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.Href;
 import se.tink.backend.aggregation.agents.utils.berlingroup.common.LinksEntity;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
@@ -17,7 +16,7 @@ public class RedirectPaymentAuthenticator implements PaymentAuthenticator {
     private static final long WAIT_FOR_MINUTES = 9L;
 
     @Override
-    public void authenticatePayment(Credentials credentials, LinksEntity scaLinks) {
+    public void authenticatePayment(LinksEntity scaLinks) {
 
         Href redirectUrl = scaLinks.getScaRedirect();
         supplementalInformationController.openThirdPartyAppAsync(

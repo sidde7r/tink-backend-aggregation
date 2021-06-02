@@ -1,12 +1,8 @@
 package se.tink.backend.aggregation.agents.utils.berlingroup.payment;
 
-import static java.util.Objects.nonNull;
-
 import java.util.Collections;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentCancelledException;
@@ -15,12 +11,7 @@ import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedExce
 import se.tink.backend.aggregation.agents.utils.berlingroup.common.LinksEntity;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.PaymentConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.PaymentConstants.StorageValues;
-import se.tink.backend.aggregation.agents.utils.berlingroup.payment.entities.AccountEntity;
-import se.tink.backend.aggregation.agents.utils.berlingroup.payment.entities.AmountEntity;
-import se.tink.backend.aggregation.agents.utils.berlingroup.payment.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.rpc.CreatePaymentResponse;
-import se.tink.backend.aggregation.agents.utils.berlingroup.payment.rpc.CreateRecurringPaymentRequest;
-import se.tink.backend.aggregation.agents.utils.remittanceinformation.RemittanceInformationValidator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepResponse;
@@ -36,9 +27,6 @@ import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.rpc.Payment;
-import se.tink.libraries.transfer.enums.RemittanceInformationType;
-import se.tink.libraries.transfer.rpc.PaymentServiceType;
-import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -46,23 +34,11 @@ public class BasePaymentExecutor implements PaymentExecutor, FetchablePaymentExe
 
     private final PaymentApiClient apiClient;
     private final PaymentAuthenticator authenticator;
-    private final Credentials credentials;
     private final SessionStorage sessionStorage;
 
     @Override
     public PaymentResponse create(PaymentRequest paymentRequest) throws PaymentException {
-
-        CreatePaymentRequest createPaymentRequest;
-
-        if (PaymentServiceType.PERIODIC.equals(
-                paymentRequest.getPayment().getPaymentServiceType())) {
-            createPaymentRequest = getCreateRecurringPaymentRequest(paymentRequest.getPayment());
-        } else {
-            createPaymentRequest = getCreatePaymentRequest(paymentRequest.getPayment());
-        }
-
-        CreatePaymentResponse createPaymentResponse =
-                apiClient.createPayment(createPaymentRequest, paymentRequest);
+        CreatePaymentResponse createPaymentResponse = apiClient.createPayment(paymentRequest);
 
         sessionStorage.put(StorageValues.SCA_LINKS, createPaymentResponse.getLinks());
 
@@ -79,10 +55,9 @@ public class BasePaymentExecutor implements PaymentExecutor, FetchablePaymentExe
                         .orElseThrow(
                                 () -> new IllegalStateException(ErrorMessages.MISSING_SCA_URL));
 
-        authenticator.authenticatePayment(credentials, scaLinks);
+        authenticator.authenticatePayment(scaLinks);
 
         Payment payment = paymentMultiStepRequest.getPayment();
-
         PaymentResponse paymentResponse = fetch(paymentMultiStepRequest);
         PaymentStatus paymentStatus = paymentResponse.getPayment().getStatus();
         log.info("Payment id={} sign status={}", payment.getId(), paymentStatus);
@@ -129,59 +104,5 @@ public class BasePaymentExecutor implements PaymentExecutor, FetchablePaymentExe
     public PaymentListResponse fetchMultiple(PaymentListRequest paymentListRequest) {
         throw new NotImplementedException(
                 "fetchMultiple not yet implemented for " + this.getClass().getName());
-    }
-
-    private CreatePaymentRequest getCreatePaymentRequest(Payment payment) {
-
-        return CreatePaymentRequest.builder()
-                .creditorAccount(getAccountEntity(payment.getCreditor().getAccountNumber()))
-                .debtorAccount(getAccountEntity(payment.getDebtor().getAccountNumber()))
-                .instructedAmount(getAmountEntity(payment))
-                .creditorName(payment.getCreditor().getName())
-                .remittanceInformationUnstructured(getUnstructuredRemittance(payment))
-                .requestedExecutionDate(payment.getExecutionDate())
-                .build();
-    }
-
-    private CreatePaymentRequest getCreateRecurringPaymentRequest(Payment payment) {
-
-        return CreateRecurringPaymentRequest.builder()
-                .creditorAccount(getAccountEntity(payment.getCreditor().getAccountNumber()))
-                .debtorAccount(getAccountEntity(payment.getDebtor().getAccountNumber()))
-                .instructedAmount(getAmountEntity(payment))
-                .creditorName(payment.getCreditor().getName())
-                .remittanceInformationUnstructured(getUnstructuredRemittance(payment))
-                .frequency(payment.getFrequency().toString())
-                .startDate(payment.getStartDate())
-                // optional attributes
-                .endDate(payment.getEndDate())
-                .executionRule(
-                        payment.getExecutionRule() != null
-                                ? payment.getExecutionRule().toString()
-                                : null)
-                .dayOfExecution(
-                        nonNull(payment.getDayOfExecution())
-                                ? String.valueOf(payment.getDayOfExecution())
-                                : null)
-                .build();
-    }
-
-    private AmountEntity getAmountEntity(Payment payment) {
-        return new AmountEntity(
-                String.valueOf(payment.getExactCurrencyAmount().getDoubleValue()),
-                payment.getExactCurrencyAmount().getCurrencyCode());
-    }
-
-    private String getUnstructuredRemittance(Payment payment) {
-        RemittanceInformation remittanceInformation = payment.getRemittanceInformation();
-
-        RemittanceInformationValidator.validateSupportedRemittanceInformationTypesOrThrow(
-                remittanceInformation, null, RemittanceInformationType.UNSTRUCTURED);
-
-        return Optional.ofNullable(remittanceInformation.getValue()).orElse("");
-    }
-
-    public AccountEntity getAccountEntity(String accountNumber) {
-        return new AccountEntity(accountNumber);
     }
 }

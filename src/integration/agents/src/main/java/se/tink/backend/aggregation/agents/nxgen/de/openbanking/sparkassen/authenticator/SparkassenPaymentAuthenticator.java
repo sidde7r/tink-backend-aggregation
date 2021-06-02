@@ -23,7 +23,7 @@ public class SparkassenPaymentAuthenticator extends SparkassenAuthenticator
         super(apiClient, supplementalInformationController, storage, credentials, catalog);
     }
 
-    public void authenticatePayment(Credentials credentials, LinksEntity scaLinks) {
+    public void authenticatePayment(LinksEntity scaLinks) {
         validateInput(credentials);
 
         AuthorizationResponse initAuthorizationResponse =

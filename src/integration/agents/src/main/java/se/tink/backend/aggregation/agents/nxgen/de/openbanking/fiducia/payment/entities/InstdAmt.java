@@ -1,14 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.payment.entities;
 
 import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlValue;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class InstdAmt {
     @XmlAttribute(name = "Ccy")
     private String ccy;
 
-    @XmlElement private String content;
+    @XmlValue private String content;
 
     public InstdAmt() {}
 
