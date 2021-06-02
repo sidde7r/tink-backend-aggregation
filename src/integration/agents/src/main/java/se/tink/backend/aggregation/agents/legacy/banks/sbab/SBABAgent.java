@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.banks.sbab;
 
-import static se.tink.backend.aggregation.agents.banks.sbab.SBABConstants.INTEGRATION_NAME;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.IDENTITY_DATA;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.LOANS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.MORTGAGE_AGGREGATION;
@@ -69,11 +68,9 @@ import se.tink.libraries.transfer.rpc.Transfer;
 
 @AgentCapabilities({SAVINGS_ACCOUNTS, LOANS, MORTGAGE_AGGREGATION, IDENTITY_DATA})
 public class SBABAgent extends AbstractAgent
-        implements RefreshTransferDestinationExecutor,
-                RefreshSavingsAccountsExecutor,
+        implements RefreshSavingsAccountsExecutor,
                 RefreshLoanAccountsExecutor,
-                RefreshIdentityDataExecutor,
-                TransferExecutor {
+                RefreshIdentityDataExecutor {
 
     private final Credentials credentials;
     private final Catalog catalog;
@@ -97,55 +94,18 @@ public class SBABAgent extends AbstractAgent
         this.catalog = context.getCatalog();
         credentials = request.getCredentials();
 
-        //        DefaultApacheHttpClient4Config config = new DefaultApacheHttpClient4Config();
-        //        config.getProperties().put(
-        //                ApacheHttpClient4Config.PROPERTY_PROXY_URI,
-        //                "http://127.0.0.1:8888"
-        //        );
-        //       client = clientFactory.createProxyClient(context.getLogOutputStream(), config);
-        client = clientFactory.createClientWithRedirectHandler(context.getLogOutputStream());
-
-        HashMap<String, String> payload =
-                request.getProvider() == null
-                        ? null
-                        : SerializationUtils.deserializeFromString(
-                                request.getProvider().getPayload(),
-                                TypeReferences.MAP_OF_STRING_STRING);
-
-        if (payload != null
-                && Objects.equal(
-                        payload.get(SBABConstants.IS_MORTGAGE_SWITCH_PROVIDER_TEST),
-                        SBABConstants.TRUE)) {
-            clientWithoutSSL = clientFactory.createCookieClientWithoutSSL();
-        } else {
-            clientWithoutSSL = null;
-        }
+        client = agentComponentProvider.getTinkHttpClient();
+        // client.setDebugProxy("http://127.0.0.1:8888");
 
         authenticationClient =
-                new AuthenticationClient(client, credentials, CommonHeaders.DEFAULT_USER_AGENT);
-        userDataClient = new UserDataClient(client, credentials, CommonHeaders.DEFAULT_USER_AGENT);
+                new AuthenticationClient(
+                        client.getInternalClient(), credentials, CommonHeaders.DEFAULT_USER_AGENT);
+        userDataClient =
+                new UserDataClient(
+                        client.getInternalClient(), credentials, CommonHeaders.DEFAULT_USER_AGENT);
         identityDataClient =
-                new IdentityDataClient(client, credentials, CommonHeaders.DEFAULT_USER_AGENT);
-        transferClient =
-                new TransferClient(client, credentials, catalog, CommonHeaders.DEFAULT_USER_AGENT);
-
-        this.transferExecutor =
-                new SBABTransferExecutor(
-                        transferClient, catalog, supplementalInformationController);
-    }
-
-    @Override
-    public void setConfiguration(AgentsServiceConfiguration configuration) {
-        super.setConfiguration(configuration);
-
-        getAgentConfigurationController()
-                .getAgentConfigurationFromK8sAsOptional(INTEGRATION_NAME, SBABConfiguration.class)
-                .ifPresent(
-                        cfg -> {
-                            authenticationClient.setConfiguration(cfg);
-                            transferClient.setConfiguration(cfg);
-                            userDataClient.setConfiguration(cfg);
-                        });
+                new IdentityDataClient(
+                        client.getInternalClient(), credentials, CommonHeaders.DEFAULT_USER_AGENT);
     }
 
     @Override
@@ -172,17 +132,6 @@ public class SBABAgent extends AbstractAgent
             return accountsResponse;
         } catch (Exception e) {
             throw new IllegalStateException(e);
-        }
-    }
-
-    @Override
-    public void execute(Transfer transfer) throws Exception, TransferExecutionException {
-        switch (transfer.getType()) {
-            case BANK_TRANSFER:
-                transferExecutor.executeBankTransfer(transfer);
-                break;
-            default:
-                throw new UnsupportedTransferException(transfer.getType());
         }
     }
 
@@ -264,15 +213,6 @@ public class SBABAgent extends AbstractAgent
     }
 
     @Override
-    public void attachHttpFilters(ClientFilterFactory filterFactory) {
-        filterFactory.addClientFilter(client);
-
-        if (clientWithoutSSL != null) {
-            filterFactory.addClientFilter(clientWithoutSSL);
-        }
-    }
-
-    @Override
     public void logout() throws Exception {}
 
     ///// Refresh Executor Refactor /////
@@ -314,26 +254,6 @@ public class SBABAgent extends AbstractAgent
             }
             return new se.tink.backend.aggregation.agents.FetchTransactionsResponse(
                     transactionsMap);
-        } catch (Exception e) {
-            throw new IllegalStateException(e);
-        }
-    }
-
-    @Override
-    public FetchTransferDestinationsResponse fetchTransferDestinations(List<Account> accounts) {
-        try {
-            List<AccountEntity> accountEntities = getAccounts();
-            List<SavedRecipientEntity> recipientEntities = transferClient.getSavedRecipients();
-
-            Map<Account, List<TransferDestinationPattern>> transferPatterns =
-                    new TransferDestinationPatternBuilder()
-                            .setSourceAccounts(accountEntities)
-                            .setDestinationAccounts(recipientEntities)
-                            .setTinkAccounts(accounts)
-                            .addMultiMatchPattern(
-                                    AccountIdentifierType.SE, TransferDestinationPattern.ALL)
-                            .build();
-            return new FetchTransferDestinationsResponse(transferPatterns);
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }
