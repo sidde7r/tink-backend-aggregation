@@ -4,7 +4,6 @@ import java.util.Optional;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.StarlingApiClient;
-import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.configuration.entity.ClientConfigurationEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.BankTransferExecutor;
@@ -19,7 +18,6 @@ public class StarlingTransferExecutor implements BankTransferExecutor {
     public static final String INDIVIDUAL = "INDIVIDUAL";
 
     private final StarlingApiClient apiClient;
-    private final ClientConfigurationEntity pisConfiguration;
     private final String redirectUrl;
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final Credentials credentials;
@@ -27,13 +25,11 @@ public class StarlingTransferExecutor implements BankTransferExecutor {
 
     public StarlingTransferExecutor(
             StarlingApiClient apiClient,
-            ClientConfigurationEntity pisConfiguration,
             String redirectUrl,
             Credentials credentials,
             StrongAuthenticationState strongAuthenticationState,
             SupplementalInformationHelper supplementalInformationHelper) {
         this.apiClient = apiClient;
-        this.pisConfiguration = pisConfiguration;
         this.redirectUrl = redirectUrl;
         this.credentials = credentials;
         this.strongAuthenticationState = strongAuthenticationState;
