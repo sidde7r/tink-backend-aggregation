@@ -71,7 +71,6 @@ public class SBABAgent extends AbstractAgent
         this.catalog = context.getCatalog();
         credentials = request.getCredentials();
         client = agentComponentProvider.getTinkHttpClient();
-        // client.setDebugProxy("http://127.0.0.1:8888");
 
         authenticationClient =
                 new AuthenticationClient(
