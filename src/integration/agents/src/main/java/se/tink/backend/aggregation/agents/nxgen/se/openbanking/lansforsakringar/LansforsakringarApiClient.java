@@ -396,4 +396,11 @@ public class LansforsakringarApiClient {
         storageHelper.storeAccountNumbers(accountNumbersResponse);
         return Optional.of(accountNumbersResponse);
     }
+
+    public DomesticPaymentResponse deletePayment(String paymentId) {
+
+        return createRequestInSession(
+                        new URL(Urls.DELETE_PAYMENT).parameter(IdTags.PAYMENT_ID, paymentId))
+                .delete(DomesticPaymentResponse.class);
+    }
 }

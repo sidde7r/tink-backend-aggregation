@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
@@ -24,22 +25,29 @@ public class LansforsakringarAgentPaymentTest {
             new ArgumentManager<>(SsnArgumentEnum.values());
     private final ArgumentManager<ToAccountFromAccountArgumentEnum> toFromManager =
             new ArgumentManager<>(ToAccountFromAccountArgumentEnum.values());
+    private AgentIntegrationTest.Builder builder;
+    @Before
+    public void setup() {
+        manager.before();
+        toFromManager.before();
+         builder =
+            new AgentIntegrationTest.Builder("SE", "se-lansforsakringar-ob")
+                .addCredentialField(Field.Key.USERNAME, manager.get(SsnArgumentEnum.SSN))
+                .expectLoggedIn(false)
+                .setFinancialInstitutionId("lansforsakringar")
+                .setAppId("tink")
+                .loadCredentialsBefore(false)
+                .saveCredentialsAfter(false);
+    }
 
     @Test
     public void testPayments() throws Exception {
-        manager.before();
-        toFromManager.before();
-
-        AgentIntegrationTest.Builder builder =
-                new AgentIntegrationTest.Builder("SE", "se-lansforsakringar-ob")
-                        .addCredentialField(Field.Key.USERNAME, manager.get(SsnArgumentEnum.SSN))
-                        .expectLoggedIn(false)
-                        .setFinancialInstitutionId("lansforsakringar")
-                        .setAppId("tink")
-                        .loadCredentialsBefore(false)
-                        .saveCredentialsAfter(false);
-
         builder.build().testGenericPayment(createListMockedDomesticPayment());
+    }
+
+    @Test
+    public void testCancelPayments() throws Exception {
+        builder.build().testCancelPayment("FO7GGMcPGmuH6xdQFovC0AeOHDn9sQuhXtNi732NIaSFOtrFyv1zHQ5m6OWJPiq7");
     }
 
     private List<Payment> createListMockedDomesticPayment() {
