@@ -335,8 +335,10 @@ public class LansforsakringarPaymentExecutor implements PaymentExecutor, Fetchab
 
     @Override
     public PaymentResponse cancel(PaymentRequest paymentRequest) {
-        throw new NotImplementedException(
-                "cancel not yet implemented for " + this.getClass().getName());
+        String paymentId = paymentRequest.getPayment().getUniqueId();
+        apiClient.getDomesticPayment(paymentId);
+        apiClient.deletePayment(paymentId);
+        return apiClient.getDomesticPayment(paymentId).toTinkPayment(paymentId);
     }
 
     @Override
