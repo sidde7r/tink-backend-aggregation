@@ -70,10 +70,9 @@ public class AuthenticationClient extends SBABClient {
     public static Optional<String> parseCsrfToken(String scripts) {
         String[] first = scripts.split("window.csrfToken = \"");
         String token = first[1].split("\"")[0];
-        if (token != "") {
-            return Optional.of(token);
+        if (token.isEmpty()) {
+            return Optional.empty();
         }
-
-        return Optional.empty();
+        return Optional.of(token);
     }
 }

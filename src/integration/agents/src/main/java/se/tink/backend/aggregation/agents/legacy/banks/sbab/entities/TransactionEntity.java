@@ -23,7 +23,6 @@ public class TransactionEntity {
     private String accountNumberFrom;
     private String accountNumberTo;
     private String amount;
-    private String transactionDate;
     private String releaseDate;
     private String postingDate;
     private String transferType;
@@ -39,10 +38,6 @@ public class TransactionEntity {
 
     public void setAmount(String amount) {
         this.amount = amount;
-    }
-
-    public void setTransactionDate(String transactionDate) {
-        this.transactionDate = transactionDate;
     }
 
     public void setDescriptionFrom(String descriptionFrom) {

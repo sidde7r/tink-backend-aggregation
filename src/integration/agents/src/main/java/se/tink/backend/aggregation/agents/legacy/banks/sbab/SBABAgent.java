@@ -45,7 +45,6 @@ import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.constants.CommonHeaders;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
-import se.tink.libraries.i18n.Catalog;
 
 @AgentCapabilities({SAVINGS_ACCOUNTS, LOANS, MORTGAGE_AGGREGATION, IDENTITY_DATA})
 public class SBABAgent extends AbstractAgent
@@ -54,7 +53,6 @@ public class SBABAgent extends AbstractAgent
                 RefreshIdentityDataExecutor {
 
     private final Credentials credentials;
-    private final Catalog catalog;
 
     private final AuthenticationClient authenticationClient;
     private final UserDataClient userDataClient;
@@ -68,7 +66,6 @@ public class SBABAgent extends AbstractAgent
     @Inject
     public SBABAgent(AgentComponentProvider agentComponentProvider) {
         super(agentComponentProvider.getCredentialsRequest(), agentComponentProvider.getContext());
-        this.catalog = context.getCatalog();
         credentials = request.getCredentials();
         client = agentComponentProvider.getTinkHttpClient();
 

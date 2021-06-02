@@ -31,7 +31,7 @@ public class IdentityDataClient extends SBABClient implements IdentityDataFetche
         }
         Payload identity = response.getEntity(Payload.class);
         return SeIdentityData.of(
-                identity.getPersonalDetails().GetUserName(),
-                identity.getPersonalDetails().GetSSN());
+                identity.getPersonalDetails().getUserName(),
+                identity.getPersonalDetails().getSsn());
     }
 }

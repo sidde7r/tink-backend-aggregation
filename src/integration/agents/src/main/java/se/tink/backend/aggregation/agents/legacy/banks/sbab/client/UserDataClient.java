@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.banks.sbab.client;
 import com.google.api.client.util.Maps;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -156,7 +155,7 @@ public class UserDataClient extends SBABClient {
                             + ErrorText.HTTP_MESSAGE
                             + response.getEntity(String.class));
         }
-        ArrayList<CollateralsEntity> collaterals =
+        List<CollateralsEntity> collaterals =
                 response.getEntity(Payload.class)
                         .getData()
                         .getUser()
@@ -166,7 +165,7 @@ public class UserDataClient extends SBABClient {
         LoanResponse loanResponse = new LoanResponse();
 
         for (CollateralsEntity col : collaterals) {
-            ArrayList<LoanEntity> mortgages = col.getMortgages();
+            List<LoanEntity> mortgages = col.getMortgages();
             for (LoanEntity loan : mortgages) {
                 loanResponse.add(loan);
             }
