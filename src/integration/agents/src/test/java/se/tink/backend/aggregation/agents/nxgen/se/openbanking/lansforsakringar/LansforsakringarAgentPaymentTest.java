@@ -26,18 +26,19 @@ public class LansforsakringarAgentPaymentTest {
     private final ArgumentManager<ToAccountFromAccountArgumentEnum> toFromManager =
             new ArgumentManager<>(ToAccountFromAccountArgumentEnum.values());
     private AgentIntegrationTest.Builder builder;
+
     @Before
     public void setup() {
         manager.before();
         toFromManager.before();
-         builder =
-            new AgentIntegrationTest.Builder("SE", "se-lansforsakringar-ob")
-                .addCredentialField(Field.Key.USERNAME, manager.get(SsnArgumentEnum.SSN))
-                .expectLoggedIn(false)
-                .setFinancialInstitutionId("lansforsakringar")
-                .setAppId("tink")
-                .loadCredentialsBefore(false)
-                .saveCredentialsAfter(false);
+        builder =
+                new AgentIntegrationTest.Builder("SE", "se-lansforsakringar-ob")
+                        .addCredentialField(Field.Key.USERNAME, manager.get(SsnArgumentEnum.SSN))
+                        .expectLoggedIn(false)
+                        .setFinancialInstitutionId("lansforsakringar")
+                        .setAppId("tink")
+                        .loadCredentialsBefore(false)
+                        .saveCredentialsAfter(false);
     }
 
     @Test
@@ -47,7 +48,13 @@ public class LansforsakringarAgentPaymentTest {
 
     @Test
     public void testCancelPayments() throws Exception {
-        builder.build().testCancelPayment("FO7GGMcPGmuH6xdQFovC0AeOHDn9sQuhXtNi732NIaSFOtrFyv1zHQ5m6OWJPiq7");
+        builder.build().testCancelPayment(createCancellablePayment());
+    }
+
+    private Payment createCancellablePayment() {
+        return new Payment.Builder()
+                .withUniqueId("k0d3XnYXfmwLWUtZ8gmkwJgfkxQPc-5N9iTCOt_dMxu2kJEtQJ21Bgof1Edq5zhQ")
+                .build();
     }
 
     private List<Payment> createListMockedDomesticPayment() {

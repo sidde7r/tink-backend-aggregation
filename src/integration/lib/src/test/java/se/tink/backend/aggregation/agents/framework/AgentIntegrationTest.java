@@ -771,6 +771,52 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         context.printCollectedData();
     }
 
+    protected void cancelGenericPaymentBankTransfer(Agent agent, Payment payment) throws Exception {
+        if (agent instanceof PaymentControllerable) {
+            PaymentController paymentController =
+                    ((PaymentControllerable) agent)
+                            .getPaymentController()
+                            .orElseThrow(
+                                    () ->
+                                            new IllegalStateException(
+                                                    "Agent doesn't implement constructPaymentController method."));
+
+            PaymentResponse paymentResponse = paymentController.cancel(new PaymentRequest(payment));
+            Assert.assertTrue(
+                    paymentResponse.getPayment().getStatus().equals(PaymentStatus.CANCELLED));
+        }
+    }
+
+    public void testCancelPayment(Payment payment) throws Exception {
+        initiateCredentials();
+        RefreshInformationRequest credentialsRequest = createRefreshInformationRequest();
+        readConfigurationFile();
+        Agent agent = createAgent(credentialsRequest);
+
+        try {
+            login(agent, credentialsRequest);
+
+            if (agent instanceof PaymentControllerable) {
+                cancelGenericPaymentBankTransfer(agent, payment);
+            } else {
+                throw new NotImplementedException(
+                        String.format("%s", agent.getAgentClass().getSimpleName()));
+            }
+            if (configuration.getTestConfiguration().isDebugOutputEnabled()) {
+                printMaskedDebugLog(agent);
+            }
+            Assert.assertTrue("Expected to be logged in.", !expectLoggedIn || keepAlive(agent));
+
+            if (doLogout) {
+                logout(agent);
+            }
+        } finally {
+            saveCredentials(agent);
+        }
+
+        context.printCollectedData();
+    }
+
     public void testTinkLinkPayment(Payment payment) throws Exception {
         initiateCredentials();
         RefreshInformationRequest credentialsRequest = createRefreshInformationRequest();
