@@ -63,10 +63,11 @@ RESPONSE 2
 201
 Content-Type: application/json
 
-{"appliedAuthenticationApproach":"REDIRECT","_links":{"consentApproval":{"href":"https:\/\/clients.boursorama.com\/finalisation-virement\/606db85d725c3"}}}
+{"appliedAuthenticationApproach":"REDIRECT","_links":{"consentApproval":{"href":"https:\/\/clients.boursorama.com\/feature-redirect?featureId=customer.accounts_cashtransfer_prebuilt_transfer_form&params%5BresourceId%5D=60ae87f0e2fba"}}}
+
 
 REQUEST 3
-GET https://api-dsp2.boursorama.com/services/api/v1.7/_public_/dsp2/payment-requests/606db85d725c3
+GET https://api-dsp2.boursorama.com/services/api/v1.7/_public_/dsp2/payment-requests/60ae87f0e2fba
 Accept: application/json
 Content-Type: application/json
 X-Aggregator: Tink Testing
@@ -118,13 +119,13 @@ Content-Type: application/json
             "appliedAuthenticationApproach": "REDIRECT"
         },
         "paymentInformationStatus": "PDNG",
-        "resourceId": "606db85d725c3",
+        "resourceId": "60ae87f0e2fba",
         "booking": false,
         "fundsAvailability": true
     },
     "_links": {
         "request": {
-            "href": "\/services\/api\/v1.7\/_public_\/dsp2\/payment-requests\/606db85d725c3"
+            "href": "\/services\/api\/v1.7\/_public_\/dsp2\/payment-requests\/60ae87f0e2fba"
         }
     }
 }
