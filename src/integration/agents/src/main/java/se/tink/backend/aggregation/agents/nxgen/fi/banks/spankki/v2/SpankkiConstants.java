@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.v2;
 
+import java.util.Optional;
+import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccountTypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
@@ -108,7 +110,6 @@ public class SpankkiConstants {
     public static class Request {
         public static final String CLIENT_INFO_APP_NAME = "SBank2.0_Prod";
         public static final String CLIENT_INFO_APP_VERSION = "2.9.0.4";
-        public static final String CLIENT_INFO_LANG = "sv";
     }
 
     public static class Headers {
@@ -162,5 +163,11 @@ public class SpankkiConstants {
                 LogTag.from("#spankki_creditcard_transactions");
         public static final LogTag LOAN = LogTag.from("#spankki_loans");
         public static final LogTag LOAN_DETAILS = LogTag.from("#spankki_loan_details");
+    }
+
+    public static String getLanguageCode(String userLocale) {
+        String userLanguageCode = Optional.ofNullable(StringUtils.left(userLocale, 2)).orElse("fi");
+
+        return "sv".equalsIgnoreCase(userLanguageCode) ? "sv" : "fi";
     }
 }

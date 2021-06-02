@@ -14,8 +14,8 @@ public class SpankkiHeader {
     @JsonProperty private String deviceId;
     @JsonProperty private final ClientInfoEntity clientInfo;
 
-    public SpankkiHeader() {
-        this.clientInfo = new ClientInfoEntity();
+    public SpankkiHeader(String lang) {
+        this.clientInfo = new ClientInfoEntity(lang);
     }
 
     @JsonIgnore

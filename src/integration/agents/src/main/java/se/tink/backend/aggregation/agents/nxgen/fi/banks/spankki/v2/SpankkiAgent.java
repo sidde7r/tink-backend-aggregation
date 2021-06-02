@@ -73,7 +73,8 @@ public final class SpankkiAgent extends NextGenerationAgent
     public SpankkiAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
-        apiClient = new SpankkiApiClient(client, persistentStorage, sessionStorage);
+        String lang = SpankkiConstants.getLanguageCode(request.getUser().getLocale());
+        apiClient = new SpankkiApiClient(client, persistentStorage, sessionStorage, lang);
 
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
 
