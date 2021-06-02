@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import javax.ws.rs.HttpMethod;
 import javax.ws.rs.core.MediaType;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.httpclient.HttpStatus;
@@ -19,6 +20,8 @@ import se.tink.backend.aggregation.agents.nxgen.es.openbanking.abanca.AbancaCons
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.abanca.authenticator.rpc.TokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.abanca.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.abanca.configuration.AbancaConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.es.openbanking.abanca.executor.payment.rpc.SepaPaymentRequest;
+import se.tink.backend.aggregation.agents.nxgen.es.openbanking.abanca.executor.payment.rpc.SepaPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.abanca.fetcher.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.abanca.fetcher.transactionalaccount.rpc.BalanceResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.abanca.fetcher.transactionalaccount.rpc.TransactionsResponse;
@@ -97,27 +100,47 @@ public class AbancaApiClient {
         try {
             return request.get(response);
         } catch (HttpResponseException e) {
-            if (e.getResponse().getStatus() == HttpStatus.SC_FORBIDDEN
-                    && e.getResponse().hasBody()) {
-                ErrorsEntity challengeError =
-                        e.getResponse()
-                                .getBody(ErrorResponse.class)
-                                .getChallengeError()
-                                .orElseThrow(() -> e);
-
-                if (isUserNotAvailableForInteraction()) {
-                    log.warn("SCA request in non-manual refresh, this will time out");
-                }
-                String challengeSolution = requestChallengeSolution(challengeError.getDetails());
-
-                return request.header(
-                                HeaderKeys.CHALLENGE_ID,
-                                challengeError.getDetails().getChallengeId())
-                        .header(HeaderKeys.CHALLENGE_RESPONSE, challengeSolution)
-                        .get(response);
-            }
-            throw e;
+            return retryRequestWithScaAuthentication(request, response, e);
         }
+    }
+
+    private <T> T postWithChallenge(RequestBuilder request, Class<T> response) {
+        try {
+            return request.post(response);
+        } catch (HttpResponseException e) {
+            return retryRequestWithScaAuthentication(request, response, e);
+        }
+    }
+
+    private <T> T retryRequestWithScaAuthentication(
+            RequestBuilder request, Class<T> response, HttpResponseException e) {
+        if (e.getResponse().getStatus() == HttpStatus.SC_FORBIDDEN && e.getResponse().hasBody()) {
+            ErrorsEntity challengeError =
+                    e.getResponse()
+                            .getBody(ErrorResponse.class)
+                            .getChallengeError()
+                            .orElseThrow(() -> e);
+
+            if (isUserNotAvailableForInteraction()) {
+                log.warn("SCA request in non-manual refresh, this will time out");
+            }
+            String challengeSolution = requestChallengeSolution(challengeError.getDetails());
+            RequestBuilder builder =
+                    request.header(
+                                    HeaderKeys.CHALLENGE_ID,
+                                    challengeError.getDetails().getChallengeId())
+                            .header(HeaderKeys.CHALLENGE_RESPONSE, challengeSolution);
+
+            String httpMethod = e.getRequest().getMethod().name();
+
+            if (HttpMethod.POST.equals(httpMethod)) {
+                return builder.post(response);
+            }
+            if (HttpMethod.GET.equals(httpMethod)) {
+                return builder.get(response);
+            }
+        }
+        throw e;
     }
 
     private boolean isUserNotAvailableForInteraction() {
@@ -152,8 +175,16 @@ public class AbancaApiClient {
     }
 
     public AccountsResponse fetchAccounts() {
-        return getWithChallenge(
-                createRequestInSession(AbancaConstants.Urls.ACCOUNTS), AccountsResponse.class);
+        AccountsResponse response =
+                getWithChallenge(
+                        createRequestInSession(AbancaConstants.Urls.ACCOUNTS),
+                        AccountsResponse.class);
+        addAccountsToSessionStorage(response);
+        return response;
+    }
+
+    private void addAccountsToSessionStorage(AccountsResponse response) {
+        sessionStorage.put("ACCOUNTS", response);
     }
 
     public BalanceResponse fetchBalance(String accountId) {
@@ -162,6 +193,13 @@ public class AbancaApiClient {
                         Urls.BALANCE.parameter(
                                 AbancaConstants.UrlParameters.ACCOUNT_ID, accountId)),
                 BalanceResponse.class);
+    }
+
+    public SepaPaymentResponse createPayment(String accountId, SepaPaymentRequest request) {
+        return postWithChallenge(
+                createRequestInSession(Urls.PAYMENT.parameter(UrlParameters.ACCOUNT_ID, accountId))
+                        .body(request),
+                SepaPaymentResponse.class);
     }
 
     public TransactionKeyPaginatorResponse<String> fetchTransactions(
