@@ -16,8 +16,10 @@ service InternalCertificateService {
 
 service ExternalCertificateService {
     rpc GetUploadKey (PublicKeyRequest) returns (PublicKeyResponse) {}
+    rpc GenerateCsrAndEncryptPrivateKey (GenerateCsrAndEncryptPrivateKeyRequest) returns (GenerateCsrAndEncryptPrivateKeyResponse) {}
     rpc ConvertEncryptedPrivateKey (ConvertEncryptedPrivateKeyRequest) returns (ConvertEncryptedPrivateKeyResponse) {}
     rpc DeleteAesKey (DeleteAesKeyRequest) returns (google.protobuf.Empty){}
+    rpc InvalidateCachedCertificate (InvalidateCachedCertificateRequest) returns (google.protobuf.Empty){}
     rpc Ping(PingMessage) returns (PingMessage) {}
 }
 
@@ -53,7 +55,7 @@ message EncryptedTppSecret {
 
 message InvalidateCachedSecretsRequest {
     string appId = 1;
-    string financialInstitutionId = 2;
+    reserved 2;
     string clusterId = 3;
     string certId = 4;
     string providerId = 5;
@@ -101,10 +103,29 @@ message QsealcCertificateRequest {
     string clusterId = 3;
 }
 
+message InvalidateCachedCertificateRequest{
+    string appId = 1;
+    string certId = 2;
+    CertType certType = 3;
+    string clusterId = 4;
+}
+
 message PublicKeyRequest {}
 
 message PublicKeyResponse {
     string publicKey = 1;
+}
+
+message GenerateCsrAndEncryptPrivateKeyRequest {
+    string appId = 1;
+    CertType certType = 2;
+    string certId = 3;
+}
+
+message GenerateCsrAndEncryptPrivateKeyResponse {
+    string csr = 1;
+    string encryptedPrivateKey = 2;
+    string csrSignature = 3;
 }
 
 message SignWithEncryptedQsealcRequest {
@@ -138,10 +159,11 @@ message PingMessage {
 
 message GetEnrollmentInformationRequest {
     string providerId = 1;
+    string clusterId = 2;
 }
 
 message GetEnrollmentInformationResponse {
-    string providerId = 1;
+    repeated string providerIds = 1;
     string guide = 2;
     bool isDynamicEnrollmentPossible = 3;
     google.protobuf.Struct enrollmentInputsSchema = 4;
@@ -161,4 +183,5 @@ message EnrollmentResponse {
     map<string, string> secrets = 1;
     map<string, string> encryptedSecrets = 2;
     repeated string providerIds = 3;
+    string publicKey = 4;
 }
