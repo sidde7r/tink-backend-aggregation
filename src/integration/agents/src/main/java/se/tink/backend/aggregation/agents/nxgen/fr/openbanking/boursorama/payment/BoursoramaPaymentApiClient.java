@@ -1,7 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.payment;
 
+import java.net.URISyntaxException;
+import java.util.List;
 import javax.ws.rs.core.MediaType;
 import lombok.AllArgsConstructor;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.utils.URIBuilder;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.BoursoramaConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.configuration.BoursoramaConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.FrOpenBankingPaymentApiClient;
@@ -32,7 +36,22 @@ public class BoursoramaPaymentApiClient implements FrOpenBankingPaymentApiClient
 
     @Override
     public String findPaymentId(String authorizationUrl) {
-        return authorizationUrl.substring(authorizationUrl.lastIndexOf("/") + 1);
+        final List<NameValuePair> queryParams;
+        try {
+            queryParams = new URIBuilder(authorizationUrl).getQueryParams();
+        } catch (URISyntaxException e) {
+            throw new IllegalArgumentException("Cannot parse URL: " + authorizationUrl, e);
+        }
+
+        return queryParams.stream()
+                .filter(param -> param.getName().equalsIgnoreCase("params[resourceId]"))
+                .map(NameValuePair::getValue)
+                .findFirst()
+                .orElseThrow(
+                        () ->
+                                new IllegalArgumentException(
+                                        "Cannot find params[resourceId] in URL: "
+                                                + authorizationUrl));
     }
 
     @Override
