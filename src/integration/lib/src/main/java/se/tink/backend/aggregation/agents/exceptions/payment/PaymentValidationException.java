@@ -6,8 +6,6 @@ public class PaymentValidationException extends PaymentException {
     public static final String DEFAULT_MESSAGE = "Payment validation failed.";
     private static final String INVALID_MINIMUM_AMOUNT =
             "The transfer amount, less than 1 SEK is not supported.";
-    private static final String INVALID_MINIMUM_AMOUNT_LA_BANQUE_POSTALE =
-            "Transfer amount can't be less than 1.5 EUR.";
 
     private String path;
 
@@ -53,10 +51,5 @@ public class PaymentValidationException extends PaymentException {
     public static PaymentValidationException invalidMinimumAmount() {
         return new PaymentValidationException(
                 INVALID_MINIMUM_AMOUNT, InternalStatus.INVALID_MINIMUM_AMOUNT);
-    }
-
-    public static PaymentValidationException invalidMinimumAmountLaBanquePostale() {
-        return new PaymentValidationException(
-                INVALID_MINIMUM_AMOUNT_LA_BANQUE_POSTALE, InternalStatus.INVALID_MINIMUM_AMOUNT);
     }
 }

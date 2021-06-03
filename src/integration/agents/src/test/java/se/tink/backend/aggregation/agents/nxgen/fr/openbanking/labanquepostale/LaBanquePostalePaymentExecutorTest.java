@@ -250,9 +250,7 @@ public class LaBanquePostalePaymentExecutorTest {
         // then
         Assertions.assertThat(thrown)
                 .isInstanceOf(PaymentValidationException.class)
-                .hasMessage(
-                        PaymentValidationException.invalidMinimumAmountLaBanquePostale()
-                                .getMessage());
+                .hasMessage("Transfer amount can't be less than 1.5 EUR.");
     }
 
     @Test
