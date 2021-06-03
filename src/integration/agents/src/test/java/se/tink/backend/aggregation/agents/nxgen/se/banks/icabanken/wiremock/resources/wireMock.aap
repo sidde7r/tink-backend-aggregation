@@ -3,13 +3,6 @@ REQUEST 1
 POST https://appserver.icabanken.se/api/authentication/mobilebankid/create
 Content-Type: application/json
 Accept: application/json
-ApiKey: 7E5540EE-9903-4272-8401-6AD9ACA455AD
-ApiVersion: 12
-ClientOS: iOS
-ClientOSVersion: 13.3.1
-ClientAppVersion: 1.65.1
-ClientHardware: iPhone
-User-Agent: ICA%20Banken/1.65.1.5 CFNetwork/1121.2.2 Darwin/19.3.0
 userInstallationId: 00000000-0000-4000-0000-000000000000
 
 {"PersonalIdentityNumber":"199909091234"}
@@ -37,13 +30,6 @@ Connection: close
 REQUEST 2 MATCH AUTH_1
 GET https://appserver.icabanken.se/api/authentication/mobilebankid/collect/00000000-0000-4000-0000-eeeeeeeeeeee
 Accept: application/json
-ApiKey: 7E5540EE-9903-4272-8401-6AD9ACA455AD
-ApiVersion: 12
-ClientOS: iOS
-ClientOSVersion: 13.3.1
-ClientAppVersion: 1.65.1
-ClientHardware: iPhone
-User-Agent: ICA%20Banken/1.65.1.5 CFNetwork/1121.2.2 Darwin/19.3.0
 userInstallationId: 00000000-0000-4000-0000-000000000000
 
 RESPONSE 2 SET AUTH_2
@@ -58,13 +44,6 @@ Connection: close
 REQUEST 3 MATCH AUTH_2
 GET https://appserver.icabanken.se/api/authentication/mobilebankid/collect/00000000-0000-4000-0000-eeeeeeeeeeee
 Accept: application/json
-ApiKey: 7E5540EE-9903-4272-8401-6AD9ACA455AD
-ApiVersion: 12
-ClientOS: iOS
-ClientOSVersion: 13.3.1
-ClientAppVersion: 1.65.1
-ClientHardware: iPhone
-User-Agent: ICA%20Banken/1.65.1.5 CFNetwork/1121.2.2 Darwin/19.3.0
 userInstallationId: 00000000-0000-4000-0000-000000000000
 
 RESPONSE 3
@@ -77,13 +56,6 @@ REQUEST 4
 POST https://appserver.icabanken.se/api/authentication/mobilebankid/auth
 Content-Type: application/json
 Accept: application/json
-ApiKey: 7E5540EE-9903-4272-8401-6AD9ACA455AD
-ApiVersion: 12
-ClientOS: iOS
-ClientOSVersion: 13.3.1
-ClientAppVersion: 1.65.1
-ClientHardware: iPhone
-User-Agent: ICA%20Banken/1.65.1.5 CFNetwork/1121.2.2 Darwin/19.3.0
 userInstallationId: 00000000-0000-4000-0000-000000000000
 
 {"orderRef":"00000000-0000-4000-0000-eeeeeeeeeeee"}
@@ -97,13 +69,6 @@ Content-Type: application/json; charset=utf-8
 REQUEST 5
 GET https://appserver.icabanken.se/api/customer
 Accept: application/json
-ApiKey: 7E5540EE-9903-4272-8401-6AD9ACA455AD
-ApiVersion: 12
-ClientOS: iOS
-ClientOSVersion: 13.3.1
-ClientAppVersion: 1.65.1
-ClientHardware: iPhone
-User-Agent: ICA%20Banken/1.65.1.5 CFNetwork/1121.2.2 Darwin/19.3.0
 userInstallationId: 00000000-0000-4000-0000-000000000000
 
 RESPONSE 5
@@ -166,13 +131,6 @@ Content-Type: application/json; charset=utf-8
 
 REQUEST 6
 GET https://appserver.icabanken.se/api/authorization/evaluatedpolicies
-ApiKey: 7E5540EE-9903-4272-8401-6AD9ACA455AD
-ApiVersion: 12
-ClientOS: iOS
-ClientOSVersion: 13.3.1
-ClientAppVersion: 1.65.1
-ClientHardware: iPhone
-User-Agent: ICA%20Banken/1.65.1.5 CFNetwork/1121.2.2 Darwin/19.3.0
 userInstallationId: 00000000-0000-4000-0000-000000000000
 
 RESPONSE 6
@@ -370,13 +328,6 @@ Content-Type: application/json; charset=utf-8
 REQUEST 7
 GET https://appserver.icabanken.se/api/accounts
 Accept: application/json
-ApiKey: 7E5540EE-9903-4272-8401-6AD9ACA455AD
-ApiVersion: 12
-ClientOS: iOS
-ClientOSVersion: 13.3.1
-ClientAppVersion: 1.65.1
-ClientHardware: iPhone
-User-Agent: ICA%20Banken/1.65.1.5 CFNetwork/1121.2.2 Darwin/19.3.0
 userInstallationId: 00000000-0000-4000-0000-000000000000
 
 RESPONSE 7
@@ -405,13 +356,6 @@ Content-Length: 837
 REQUEST 9
 GET https://appserver.icabanken.se/api/events/future
 Accept: application/json
-ApiKey: 7E5540EE-9903-4272-8401-6AD9ACA455AD
-ApiVersion: 12
-ClientOS: iOS
-ClientOSVersion: 13.3.1
-ClientAppVersion: 1.65.1
-ClientHardware: iPhone
-User-Agent: ICA%20Banken/1.65.1.5 CFNetwork/1121.2.2 Darwin/19.3.0
 userInstallationId: 00000000-0000-4000-0000-000000000000
 
 RESPONSE 9
@@ -426,13 +370,6 @@ Connection: close
 REQUEST 10
 GET https://appserver.icabanken.se/api/accounts/0000200580/transactions
 Accept: application/json
-ApiKey: 7E5540EE-9903-4272-8401-6AD9ACA455AD
-ApiVersion: 12
-ClientOS: iOS
-ClientOSVersion: 13.3.1
-ClientAppVersion: 1.65.1
-ClientHardware: iPhone
-User-Agent: ICA%20Banken/1.65.1.5 CFNetwork/1121.2.2 Darwin/19.3.0
 userInstallationId: 00000000-0000-4000-0000-000000000000
 
 RESPONSE 10
@@ -447,13 +384,6 @@ Connection: close
 REQUEST 11
 GET https://appserver.icabanken.se/api/accounts/0000200580/reservedTransactions
 Accept: application/json
-ApiKey: 7E5540EE-9903-4272-8401-6AD9ACA455AD
-ApiVersion: 12
-ClientOS: iOS
-ClientOSVersion: 13.3.1
-ClientAppVersion: 1.65.1
-ClientHardware: iPhone
-User-Agent: ICA%20Banken/1.65.1.5 CFNetwork/1121.2.2 Darwin/19.3.0
 userInstallationId: 00000000-0000-4000-0000-000000000000
 
 RESPONSE 11
@@ -468,13 +398,6 @@ Connection: close
 REQUEST 12
 GET https://appserver.icabanken.se/api/accounts/0000200580/transactions?toDate=2020-05-01&toDate=2020-06-01
 Accept: application/json
-ApiKey: 7E5540EE-9903-4272-8401-6AD9ACA455AD
-ApiVersion: 12
-ClientOS: iOS
-ClientOSVersion: 13.3.1
-ClientAppVersion: 1.65.1
-ClientHardware: iPhone
-User-Agent: ICA%20Banken/1.65.1.5 CFNetwork/1121.2.2 Darwin/19.3.0
 userInstallationId: 00000000-0000-4000-0000-000000000000
 
 RESPONSE 12
@@ -489,13 +412,6 @@ Connection: close
 REQUEST 13
 GET https://appserver.icabanken.se/api/accounts/0000100575/transactions
 Accept: application/json
-ApiKey: 7E5540EE-9903-4272-8401-6AD9ACA455AD
-ApiVersion: 12
-ClientOS: iOS
-ClientOSVersion: 13.3.1
-ClientAppVersion: 1.65.1
-ClientHardware: iPhone
-User-Agent: ICA%20Banken/1.65.1.5 CFNetwork/1121.2.2 Darwin/19.3.0
 userInstallationId: 00000000-0000-4000-0000-000000000000
 
 RESPONSE 13
@@ -510,13 +426,6 @@ Connection: close
 REQUEST 14
 GET https://appserver.icabanken.se/api/accounts/0000100575/reservedTransactions
 Accept: application/json
-ApiKey: 7E5540EE-9903-4272-8401-6AD9ACA455AD
-ApiVersion: 12
-ClientOS: iOS
-ClientOSVersion: 13.3.1
-ClientAppVersion: 1.65.1
-ClientHardware: iPhone
-User-Agent: ICA%20Banken/1.65.1.5 CFNetwork/1121.2.2 Darwin/19.3.0
 userInstallationId: 00000000-0000-4000-0000-000000000000
 
 RESPONSE 14
@@ -531,13 +440,6 @@ Connection: close
 REQUEST 15
 GET https://appserver.icabanken.se/api/accounts/0000100575/transactions?fromDate=2020-04-30&toDate=2020-05-31
 Accept: application/json
-ApiKey: 7E5540EE-9903-4272-8401-6AD9ACA455AD
-ApiVersion: 12
-ClientOS: iOS
-ClientOSVersion: 13.3.1
-ClientAppVersion: 1.65.1
-ClientHardware: iPhone
-User-Agent: ICA%20Banken/1.65.1.5 CFNetwork/1121.2.2 Darwin/19.3.0
 userInstallationId: 00000000-0000-4000-0000-000000000000
 
 RESPONSE 15
@@ -552,13 +454,6 @@ Connection: close
 REQUEST 16
 GET https://appserver.icabanken.se/api/accounts/0000300576/transactions
 Accept: application/json
-ApiKey: 7E5540EE-9903-4272-8401-6AD9ACA455AD
-ApiVersion: 12
-ClientOS: iOS
-ClientOSVersion: 13.3.1
-ClientAppVersion: 1.65.1
-ClientHardware: iPhone
-User-Agent: ICA%20Banken/1.65.1.5 CFNetwork/1121.2.2 Darwin/19.3.0
 userInstallationId: 00000000-0000-4000-0000-000000000000
 
 RESPONSE 16
@@ -573,13 +468,6 @@ Connection: close
 REQUEST 17
 GET https://appserver.icabanken.se/api/accounts/0000300576/reservedTransactions
 Accept: application/json
-ApiKey: 7E5540EE-9903-4272-8401-6AD9ACA455AD
-ApiVersion: 12
-ClientOS: iOS
-ClientOSVersion: 13.3.1
-ClientAppVersion: 1.65.1
-ClientHardware: iPhone
-User-Agent: ICA%20Banken/1.65.1.5 CFNetwork/1121.2.2 Darwin/19.3.0
 userInstallationId: 00000000-0000-4000-0000-000000000000
 
 RESPONSE 17
@@ -594,13 +482,6 @@ Connection: close
 REQUEST 18
 GET https://appserver.icabanken.se/api/accounts/0000300576/transactions?fromDate=2020-04-30&toDate=2020-05-31
 Accept: application/json
-ApiKey: 7E5540EE-9903-4272-8401-6AD9ACA455AD
-ApiVersion: 12
-ClientOS: iOS
-ClientOSVersion: 13.3.1
-ClientAppVersion: 1.65.1
-ClientHardware: iPhone
-User-Agent: ICA%20Banken/1.65.1.5 CFNetwork/1121.2.2 Darwin/19.3.0
 userInstallationId: 00000000-0000-4000-0000-000000000000
 
 RESPONSE 18
@@ -615,13 +496,6 @@ Connection: close
 REQUEST 19
 GET https://appserver.icabanken.se/api/accounts/0000300576/transactions?fromDate=2020-03-29&toDate=2020-04-29
 Accept: application/json
-ApiKey: 7E5540EE-9903-4272-8401-6AD9ACA455AD
-ApiVersion: 12
-ClientOS: iOS
-ClientOSVersion: 13.3.1
-ClientAppVersion: 1.65.1
-ClientHardware: iPhone
-User-Agent: ICA%20Banken/1.65.1.5 CFNetwork/1121.2.2 Darwin/19.3.0
 userInstallationId: 00000000-0000-4000-0000-000000000000
 
 RESPONSE 19
@@ -636,13 +510,6 @@ Connection: close
 REQUEST 20
 GET https://appserver.icabanken.se/api/egiro/invoices
 Accept: application/json
-ApiKey: 7E5540EE-9903-4272-8401-6AD9ACA455AD
-ApiVersion: 12
-ClientOS: iOS
-ClientOSVersion: 13.3.1
-ClientAppVersion: 1.65.1
-ClientHardware: iPhone
-User-Agent: ICA%20Banken/1.65.1.5 CFNetwork/1121.2.2 Darwin/19.3.0
 userInstallationId: 00000000-0000-4000-0000-000000000000
 
 RESPONSE 20
@@ -657,13 +524,6 @@ Connection: close
 REQUEST 21
 GET https://appserver.icabanken.se/api/recipients
 Accept: application/json
-ApiKey: 7E5540EE-9903-4272-8401-6AD9ACA455AD
-ApiVersion: 12
-ClientOS: iOS
-ClientOSVersion: 13.3.1
-ClientAppVersion: 1.65.1
-ClientHardware: iPhone
-User-Agent: ICA%20Banken/1.65.1.5 CFNetwork/1121.2.2 Darwin/19.3.0
 userInstallationId: 00000000-0000-4000-0000-000000000000
 
 RESPONSE 21
@@ -677,13 +537,6 @@ Connection: close
 
 REQUEST 22
 GET https://appserver.icabanken.se/api/session/heartbeat
-ApiKey: 7E5540EE-9903-4272-8401-6AD9ACA455AD
-ApiVersion: 12
-ClientOS: iOS
-ClientOSVersion: 13.3.1
-ClientAppVersion: 1.65.1
-ClientHardware: iPhone
-User-Agent: ICA%20Banken/1.65.1.5 CFNetwork/1121.2.2 Darwin/19.3.0
 userInstallationId: 00000000-0000-4000-0000-000000000000
 
 RESPONSE 22
