@@ -36,6 +36,7 @@ public enum InternalStatus {
     USER_UNAUTHORIZED,
     PAYMENT_SIGNATURE_FAILED,
     INVALID_CLAIM_ERROR,
+    FRAUDULENT_PAYMENT,
 
     // Account specific
     INVALID_SOURCE_ACCOUNT,
