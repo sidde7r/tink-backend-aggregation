@@ -57,6 +57,15 @@ public class SwedbankAgentPaymentTest {
     }
 
     @Test
+    public void testCancelBankTransfer() throws Exception {
+        builder.build().testCancelPayment(createCancellablePayment());
+    }
+
+    private Payment createCancellablePayment() {
+        return new Payment.Builder().withUniqueId("227617f4-b982-4ae7-aace-59245d522f56").build();
+    }
+
+    @Test
     public void testPayments() throws Exception {
         RemittanceInformation remittanceInformation = new RemittanceInformation();
         remittanceInformation.setType(RemittanceInformationType.OCR);
@@ -92,7 +101,7 @@ public class SwedbankAgentPaymentTest {
                             .withDebtor(new Debtor(sourceAccountIdentifier))
                             .withExactCurrencyAmount(ExactCurrencyAmount.inSEK(1))
                             .withCurrency("SEK")
-                            .withExecutionDate(LocalDate.now().plusDays(4))
+                            .withExecutionDate(LocalDate.now().plusDays(7))
                             .withRemittanceInformation(remittanceInformation)
                             .build());
         }
