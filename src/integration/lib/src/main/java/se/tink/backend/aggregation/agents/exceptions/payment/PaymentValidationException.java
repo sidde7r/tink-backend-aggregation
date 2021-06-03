@@ -37,6 +37,10 @@ public class PaymentValidationException extends PaymentException {
         super(message, internalStatus);
     }
 
+    public PaymentValidationException(InternalStatus internalStatus) {
+        super(DEFAULT_MESSAGE, internalStatus);
+    }
+
     public String getPath() {
         return path;
     }
