@@ -427,6 +427,13 @@ public class AgentWorkerContext extends AgentContext implements Managed {
                                 .label("manual", request.isManual()))
                 .inc();
 
+        if (!request.getUserAvailability().isUserAvailableForInteraction()) {
+            logger.error(
+                    "Supplemental Information requested when user is not available for interaction. SesionHandler and/or AuthenticationController needs to be fixed.");
+            throw new IllegalStateException(
+                    "Cannot start SCA when user is not available for interaction!");
+        }
+
         // Execute any event-listeners; this tells the signable operation to update status
         for (AgentEventListener eventListener : eventListeners) {
             eventListener.onUpdateCredentialsStatus();
