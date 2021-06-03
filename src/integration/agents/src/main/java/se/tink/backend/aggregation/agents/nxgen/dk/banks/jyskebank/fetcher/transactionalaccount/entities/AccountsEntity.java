@@ -19,7 +19,7 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 @Slf4j
 public class AccountsEntity {
     private AccountNumberEntity accountNumber;
-    private String name;
+    private String name = "";
     private String ownerName;
     private boolean isOverdraft;
     private BalanceEntity balance;
@@ -49,7 +49,7 @@ public class AccountsEntity {
     }
 
     private TransactionalAccountType getTinkAccountType() {
-        if ("opsparingskonto".equalsIgnoreCase(name)) {
+        if (name.toLowerCase().contains("opsparingskonto")) {
             return TransactionalAccountType.SAVINGS;
         }
         return TransactionalAccountType.CHECKING;
