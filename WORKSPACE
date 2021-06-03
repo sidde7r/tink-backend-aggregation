@@ -1249,7 +1249,7 @@ maven_install(
         "org.slf4j:slf4j-api:1.7.30",
         "org.slf4j:slf4j-simple:1.7.5",
         "org.springframework.boot:spring-boot-test:2.1.3.RELEASE",
-        "org.springframework.data:spring-data-jpa:1.11.1.RELEASE",
+        "org.springframework.data:spring-data-jpa:1.11.22.RELEASE",
         "org.springframework.security:spring-security-core:4.2.13.RELEASE",
         "org.springframework:spring-aop:5.1.5.RELEASE",
         "org.springframework:spring-beans:5.1.5.RELEASE",
