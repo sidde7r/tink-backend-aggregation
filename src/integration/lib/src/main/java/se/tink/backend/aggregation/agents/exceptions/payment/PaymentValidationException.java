@@ -51,10 +51,12 @@ public class PaymentValidationException extends PaymentException {
     }
 
     public static PaymentValidationException invalidMinimumAmount() {
-        return new PaymentValidationException(INVALID_MINIMUM_AMOUNT);
+        return new PaymentValidationException(
+                INVALID_MINIMUM_AMOUNT, InternalStatus.INVALID_MINIMUM_AMOUNT);
     }
 
     public static PaymentValidationException invalidMinimumAmountLaBanquePostale() {
-        return new PaymentValidationException(INVALID_MINIMUM_AMOUNT_LA_BANQUE_POSTALE);
+        return new PaymentValidationException(
+                INVALID_MINIMUM_AMOUNT_LA_BANQUE_POSTALE, InternalStatus.INVALID_MINIMUM_AMOUNT);
     }
 }
