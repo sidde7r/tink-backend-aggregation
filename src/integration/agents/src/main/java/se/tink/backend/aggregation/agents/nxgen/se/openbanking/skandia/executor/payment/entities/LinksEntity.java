@@ -1,8 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.executor.payment.entities;
 
+import lombok.Getter;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
+@Getter
 public class LinksEntity {
 
     private LinkDetailsEntity scaRedirect;

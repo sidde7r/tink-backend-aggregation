@@ -1,11 +1,16 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.PersistentStorageKeys;
+import se.tink.backend.aggregation.nxgen.core.account.GenericTypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccountTypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.payment.enums.PaymentStatus;
+import se.tink.libraries.payment.rpc.Payment;
 
 public final class SkandiaConstants {
     public static final String PROVIDER_MARKET = "SE";
@@ -76,6 +81,8 @@ public final class SkandiaConstants {
         public static final URL GET_PAYMENT_STATUS =
                 new URL(BASE_URL + ApiServices.GET_PAYMENT_STATUS);
         public static final URL DELETE_PAYMENT = new URL(BASE_URL + ApiServices.DELETE_PAYMENT);
+        public static final URL POST_SIGN_PAYMENT =
+                new URL(BASE_URL + ApiServices.POST_SIGN_PAYMENT);
     }
 
     public static class ApiServices {
@@ -89,6 +96,8 @@ public final class SkandiaConstants {
         public static final String GET_PAYMENT_STATUS =
                 "/pis/v2/payments/paymentProduct/{paymentId}/status";
         public static final String DELETE_PAYMENT = "/pis/v2/payments/{paymentProduct}/{paymentId}";
+        public static final String POST_SIGN_PAYMENT =
+                "/pis/v2/payments/{paymentProduct}/{paymentId}/authorisations";
     }
 
     public static class StorageKeys {
@@ -132,6 +141,7 @@ public final class SkandiaConstants {
         public static final String X_CLIENT_CERTIFICATE = "X-Client-Certificate";
         public static final String CLIENT_ID = "Client-Id";
         public static final String PSU_IP_ADDRESS = "PSU-IP-Address";
+        public static final String TPP_REDIRECT_URI = "TPP-Redirect-URI";
     }
 
     public static class IdTags {
@@ -140,13 +150,47 @@ public final class SkandiaConstants {
         public static final String PAYMENT_ID = "paymentId";
     }
 
+    @Getter
+    @RequiredArgsConstructor
+    public enum PaymentProduct {
+        DOMESTIC_CREDIT_TRANSFERS("domestic-credit-transfer", ReferenceType.PDTX),
+        DOMESTIC_GIROS("domestic-giros", ReferenceType.SCOR),
+        CROSS_BORDER_CREDIT_TRANSFERS("cross-border-credit-transfers", ReferenceType.SCOR);
+
+        private final String product;
+        private final ReferenceType referenceType;
+
+        private static final GenericTypeMapper<PaymentProduct, AccountIdentifierType> MAPPER =
+                GenericTypeMapper.<PaymentProduct, AccountIdentifierType>genericBuilder()
+                        .put(PaymentProduct.DOMESTIC_CREDIT_TRANSFERS, AccountIdentifierType.SE)
+                        .put(
+                                PaymentProduct.DOMESTIC_GIROS,
+                                AccountIdentifierType.SE_BG,
+                                AccountIdentifierType.SE_PG)
+                        .build();
+
+        public static PaymentProduct from(Payment payment) {
+            return MAPPER.translate(payment.getCreditor().getAccountIdentifierType())
+                    .orElseThrow(
+                            () ->
+                                    new IllegalStateException(
+                                            ErrorMessages.UNSUPPORTED_PAYMENT_TYPE));
+        }
+    }
+
     public class PaymentTypes {
-        public static final String DOMESTIC_CREDIT_TRANSFERS = "domestic-credit-transfer";
-        public static final String DOMESTIC_GIROS = "domestic-giros";
-        public static final String CROSS_BORDER_CREDIT_TRANSFERS = "cross-border-credit-transfers";
         public static final String DOMESTIC_CREDIT_TRANSFERS_RESPONSE = "DOMESTIC_CREDIT_TRANSFERS";
         public static final String DOMESTIC_GIROS_RESPONSE = "DOMESTIC_GIROS";
         public static final String CROSS_BORDER_CREDIT_TRANSFERS_RESPONSE =
                 "CROSS_BORDER_CREDIT_TRANSFERS";
+    }
+
+    public enum ReferenceType {
+        SCOR,
+        PDTX
+    }
+
+    public class BodyValues {
+        public static final String EMPTY_BODY = "{}";
     }
 }
