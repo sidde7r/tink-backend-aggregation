@@ -20,6 +20,11 @@ public class DebtorValidationException extends PaymentValidationException {
         super(message, internalStatus);
     }
 
+    public static DebtorValidationException invalidAccount() {
+        return new DebtorValidationException(
+                DEFAULT_MESSAGE, InternalStatus.INVALID_SOURCE_ACCOUNT);
+    }
+
     public static DebtorValidationException invalidIbanFormat(String path, Throwable cause) {
         return new DebtorValidationException(IBAN_NOT_VALID, path, cause);
     }
