@@ -5,9 +5,9 @@
             "accountExclusion": "NONE",
             "exactBalance": {
                 "currencyCode": "EUR",
+                "unscaledValue": 78866,
                 "doubleValue": 788.66,
                 "exactValue": 788.66,
-                "unscaledValue": 78866,
                 "scale": 2
             },
             "currencyCode": "EUR",
@@ -34,7 +34,9 @@
                 ]
             },
             "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
-            "balances": [],
+            "balances": [
+
+            ],
             "availableCredit": 0.0,
             "balance": 788.66
         }
@@ -42,9 +44,11 @@
     "transactions": [
         {
             "amount": -150.0,
-            "date": 1612177200000,
+            "date": 694263600000,
             "description": "Spaarrekeningkinderen",
-            "internalPayload": {},
+            "internalPayload": {
+
+            },
             "originalAmount": 0.0,
             "payload": {
                 "TRANSFER_ACCOUNT_EXTERNAL": "NL52ASNB0934972362",
@@ -55,14 +59,20 @@
             "timestamp": 0,
             "type": "DEFAULT",
             "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
+            "externalSystemIds": {
+
+            },
+            "transactionDates": [
+
+            ]
         },
         {
             "amount": -48.0,
-            "date": 1612177200000,
+            "date": 694263600000,
             "description": "CoopvanWijlen>HEUSDENG1.02.202111U16KV005H683V3MCC:5411ContactlozebetalingNLNEDERLAND",
-            "internalPayload": {},
+            "internalPayload": {
+
+            },
             "originalAmount": 0.0,
             "payload": {
                 "TRANSFER_ACCOUNT_EXTERNAL": "",
@@ -73,44 +83,12 @@
             "timestamp": 0,
             "type": "DEFAULT",
             "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -150.0,
-            "date": 1612177200000,
-            "description": "Spaarrekeningkinderen",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {
-                "TRANSFER_ACCOUNT_EXTERNAL": "NL52ASNB0934972362",
-                "MESSAGE": "Spaargeldkinderen",
-                "TRANSFER_ACCOUNT_NAME_EXTERNAL": "Spaarrekeningkinderen"
+            "externalSystemIds": {
+
             },
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -48.0,
-            "date": 1612177200000,
-            "description": "CoopvanWijlen>HEUSDENG1.02.202111U16KV005H683V3MCC:5411ContactlozebetalingNLNEDERLAND",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {
-                "TRANSFER_ACCOUNT_EXTERNAL": "",
-                "MESSAGE": "CoopvanWijlen>HEUSDENG1.02.202111U16KV005H683V3MCC:5411ContactlozebetalingNLNEDERLAND",
-                "TRANSFER_ACCOUNT_NAME_EXTERNAL": ""
-            },
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
+            "transactionDates": [
+
+            ]
         }
     ]
 }
