@@ -25,6 +25,7 @@ public class DemoBankIdAuthenticator implements BankIdAuthenticator<String>, Pas
             LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private static final Random RANDOM = new SecureRandom();
+    private static final int EXPIRES_IN_SECONDS = 20 * 60; // 20min
 
     private final Credentials credentials;
     private final boolean successfulAuthentication;
@@ -70,7 +71,11 @@ public class DemoBankIdAuthenticator implements BankIdAuthenticator<String>, Pas
 
     @Override
     public Optional<OAuth2Token> getAccessToken() {
-        return Optional.empty();
+        // Returning an access token here will make the wrapping, generic,
+        // BankIdAuthenticationController set the expiration time of the refresh token as the
+        // sessionExpiry of the credentials. This can then be used to keep the session alive in the
+        // SessionHandler.
+        return Optional.of(OAuth2Token.createBearer("FAKE", null, EXPIRES_IN_SECONDS));
     }
 
     @Override

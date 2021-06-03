@@ -141,13 +141,18 @@ public final class NorwegianApiClient {
                         authenticationFormElement.attr(ElementAttributes.ACTION),
                         ElementUtils.parseFormParameters(authenticationFormElement))
                 .post(HttpResponse.class);
+
+        if (!isLoggedIn()) {
+            throw LoginError.INCORRECT_CREDENTIALS.exception();
+        }
+    }
+
+    public boolean isLoggedIn() {
         // Try to access transaction page and verify that we aren't redirected
         LoginStatusResponse loggedInResponse =
                 createRequest(Urls.LOGIN_STATUS_URL).get(LoginStatusResponse.class);
 
-        if (!loggedInResponse.isAuthenticated()) {
-            throw LoginError.INCORRECT_CREDENTIALS.exception();
-        }
+        return loggedInResponse.isAuthenticated();
     }
 
     private RequestBuilder createFormRequest(String url, MultivaluedMap<String, String> form) {

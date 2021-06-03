@@ -18,6 +18,7 @@ public class DemoBankIdAuthenticator implements BankIdAuthenticator<String> {
         UNKNOWN
     }
 
+    private static final int EXPIRES_IN_SECONDS = 20 * 60; // 20min
     private static final String demoUserName = "18001212";
     private static final int TOTAL_ATTEMPTS = 5;
 
@@ -72,7 +73,11 @@ public class DemoBankIdAuthenticator implements BankIdAuthenticator<String> {
 
     @Override
     public Optional<OAuth2Token> getAccessToken() {
-        return Optional.empty();
+        // Returning an access token here will make the wrapping, generic,
+        // BankIdAuthenticationController set the expiration time of the refresh token as the
+        // sessionExpiry of the credentials. This can then be used to keep the session alive in the
+        // SessionHandler.
+        return Optional.of(OAuth2Token.createBearer("FAKE", null, EXPIRES_IN_SECONDS));
     }
 
     @Override
