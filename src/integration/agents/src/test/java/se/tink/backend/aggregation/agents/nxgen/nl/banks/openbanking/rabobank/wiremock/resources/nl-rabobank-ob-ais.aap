@@ -1,3 +1,11 @@
+REQUEST 0
+GET https://somehost/openapi/oauth2/authorize?response_type=code&redirect_uri=https://127.0.0.1:7357/api/v1/thirdparty/callback&client_id=dummyClientId&scope=ais.balances.read%20ais.transactions.read-90days%20ais.transactions.read-history&state=00000000-0000-4000-0000-000000000000
+
+RESPONSE 0
+302
+Location: https://bankieren.rabobank.nl/consent/jump-to/start
+
+{ "httpCode":"302", "httpMessage":"Found", "moreInformation":"null" }
 
 REQUEST 1
 POST https://somehost/openapi/oauth2/token

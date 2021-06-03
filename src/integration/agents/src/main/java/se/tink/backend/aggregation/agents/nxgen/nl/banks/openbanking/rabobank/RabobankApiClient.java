@@ -40,6 +40,7 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.form.Form;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
@@ -72,6 +73,23 @@ public final class RabobankApiClient {
         this.userIpInformation = userIpInformation;
 
         this.qsealcPem = qsealcPem;
+    }
+
+    public URL getLoginUrl(URL authorizeUrl) {
+        try {
+            HttpResponse httpResponse = client.request(authorizeUrl).get(HttpResponse.class);
+
+            if (httpResponse.getStatus() != HttpStatus.SC_MOVED_TEMPORARILY) {
+                logger.warn("Did not get a redirect response, returning original authorizeUrl");
+                return authorizeUrl;
+            }
+
+            return URL.of(httpResponse.getLocation().toString());
+
+        } catch (HttpResponseException e) {
+            logger.warn("Exception when getting loginUrl, returning original authorizeUrl", e);
+            return authorizeUrl;
+        }
     }
 
     public TokenResponse exchangeAuthorizationCode(final Form request) {
