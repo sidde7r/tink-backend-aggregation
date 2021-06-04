@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.fecther.creditcard;
 
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -29,12 +30,11 @@ public class LclCreditCardFetcher
         implements AccountFetcher<CreditCardAccount>, TransactionPagePaginator<CreditCardAccount> {
 
     private final LclApiClient lclApiClient;
-    private final LclDataConverter lclDataConverter;
 
     @Override
     public Collection<CreditCardAccount> fetchAccounts() {
         return lclApiClient.getAccountsResponse().getAccounts().stream()
-                .filter(acc -> isCreditCard(acc))
+                .filter(this::isCreditCard)
                 .map(this::convertToTinkCreditCard)
                 .collect(Collectors.toList());
     }
@@ -104,14 +104,14 @@ public class LclCreditCardFetcher
                 .setDescription(
                         StringUtils.join(
                                 transaction.getRemittanceInformation().getUnstructured(), ';'))
-                .setDate(transaction.getBookingDate())
+                .setDate(getDate(transaction))
                 .setPending(transaction.getStatus() != TransactionStatus.BOOK)
                 .setRawDetails(transaction.getEntryReference())
                 .build();
     }
 
     private ExactCurrencyAmount getTransactionAmount(TransactionResourceDto transaction) {
-        return lclDataConverter.convertAmountDtoToExactCurrencyAmount(
+        return LclDataConverter.convertAmountDtoToExactCurrencyAmount(
                 transaction.getTransactionAmount());
     }
 
@@ -125,5 +125,12 @@ public class LclCreditCardFetcher
             TransactionsResponseDto transactionsResponseDto) {
         return transactionsResponseDto.getLinks() != null
                 && transactionsResponseDto.getLinks().getNext() != null;
+    }
+
+    private LocalDate getDate(TransactionResourceDto transaction) {
+        if (TransactionStatus.BOOK.equals(transaction.getStatus())) {
+            return transaction.getBookingDate();
+        }
+        return transaction.getExpectingBookingDate();
     }
 }

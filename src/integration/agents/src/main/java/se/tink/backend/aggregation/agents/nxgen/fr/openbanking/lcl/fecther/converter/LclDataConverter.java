@@ -6,7 +6,7 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class LclDataConverter {
 
-    public ExactCurrencyAmount convertAmountDtoToExactCurrencyAmount(AmountDto amountDto) {
+    public static ExactCurrencyAmount convertAmountDtoToExactCurrencyAmount(AmountDto amountDto) {
         return new ExactCurrencyAmount(
                 new BigDecimal(amountDto.getAmount()), amountDto.getCurrency());
     }

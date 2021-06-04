@@ -27,13 +27,17 @@ public class LclWireMockTest {
                 AgentsServiceConfigurationReader.read(CONFIGURATION_PATH);
 
         final AgentWireMockRefreshTest agentWireMockRefreshTest =
-                AgentWireMockRefreshTest.builder(MarketCode.FR, "fr-lcl-ob", wireMockFilePath)
-                        .withConfigurationFile(configuration)
-                        .addCallbackData("code", "DUMMY_AUTH_CODE")
-                        .withAgentModule(new LclWireMockTestModule())
-                        .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
+                AgentWireMockRefreshTest.nxBuilder()
+                        .withMarketCode(MarketCode.FR)
+                        .withProviderName("fr-lcl-ob")
+                        .withWireMockFilePath(wireMockFilePath)
+                        .withConfigFile(configuration)
+                        .testFullAuthentication()
+                        .withRefreshableItems(RefreshableItem.REFRESHABLE_ITEMS_ALL)
                         .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
-                        .withHttpDebugTrace()
+                        .withAgentTestModule(new LclWireMockTestModule())
+                        .addCallbackData("code", "DUMMY_AUTH_CODE")
+                        .enableHttpDebugTrace()
                         .build();
 
         final AgentContractEntity expected =
