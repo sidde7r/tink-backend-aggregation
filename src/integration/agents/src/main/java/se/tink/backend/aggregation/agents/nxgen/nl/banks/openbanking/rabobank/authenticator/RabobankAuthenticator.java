@@ -1,11 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.authenticator;
 
+import com.google.common.base.Strings;
+import java.util.Map;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
+import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.QueryParams;
@@ -17,6 +21,8 @@ import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.ut
 import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.CallbackParams;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.form.Form;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
@@ -114,6 +120,20 @@ public class RabobankAuthenticator implements OAuth2Authenticator {
                         refreshedTokenExpireDate);
             }
             throw SessionError.SESSION_EXPIRED.exception(exception);
+        }
+    }
+
+    @Override
+    public void handleSpecificCallbackDataError(Map<String, String> callbackData)
+            throws AuthenticationException {
+        String errorType = callbackData.getOrDefault(CallbackParams.ERROR, "");
+
+        // From docs: If the user cancels before authorizing your application, then the response
+        // from the Rabobank OAuth 2.0 server to your application's URL contains an error message
+        // 'access_denied'.
+        if (!Strings.isNullOrEmpty(errorType)
+                && OAuth2Constants.ErrorType.ACCESS_DENIED.getValue().equalsIgnoreCase(errorType)) {
+            throw ThirdPartyAppError.CANCELLED.exception();
         }
     }
 
