@@ -2,9 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.fetcher.accou
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -42,7 +42,7 @@ public class RuralviaTransactionalAccountFetcherTest {
     @Test
     public void fetchAccountShouldFetch() {
         // given
-        when(apiClient.getGlobalPositionHtml()).thenReturn(htmlGlobalPosition);
+        given(apiClient.getGlobalPositionHtml()).willReturn(htmlGlobalPosition);
 
         // when
         Collection<TransactionalAccount> fetchedAccounts = accountFetcher.fetchAccounts();
@@ -63,21 +63,22 @@ public class RuralviaTransactionalAccountFetcherTest {
     public void getTransactionsForShouldFetch() throws IOException, ParseException {
         // given
 
-        when(apiClient.getGlobalPositionHtml()).thenReturn(htmlGlobalPosition);
-        when(apiClient.navigateAccountTransactionFirstRequest(any(), any()))
-                .thenReturn(
+        given(apiClient.getGlobalPositionHtml()).willReturn(htmlGlobalPosition);
+        given(apiClient.navigateAccountTransactionFirstRequest(any(), any()))
+                .willReturn(
                         new String(
                                 Files.readAllBytes(
                                         Paths.get(
                                                 TEST_DATA_PATH, "accountsLastTransactions.html"))));
-        when(apiClient.navigateAccountTransactionsBetweenDates(any(), any()))
-                .thenReturn(
+        given(apiClient.navigateAccountTransactionsBetweenDates(any(), any()))
+                .willReturn(
                         new String(
                                 Files.readAllBytes(
                                         Paths.get(
                                                 TEST_DATA_PATH,
                                                 "accountsTransactionsForLast3Months.html"))));
-        when(apiClient.createBodyFormRequest(any(), any())).thenReturn(mock(RequestBuilder.class));
+        given(apiClient.createBodyFormRequest(any(), any())).willReturn(mock(RequestBuilder.class));
+
         accountFetcher.fetchAccounts();
 
         // when
@@ -94,7 +95,7 @@ public class RuralviaTransactionalAccountFetcherTest {
     @Test
     public void getTransactionsForShouldReturnEmptyWhenNotFoundAccount() throws ParseException {
         // given
-        when(apiClient.getGlobalPositionHtml()).thenReturn("");
+        given(apiClient.getGlobalPositionHtml()).willReturn("");
         accountFetcher.fetchAccounts();
 
         // when
