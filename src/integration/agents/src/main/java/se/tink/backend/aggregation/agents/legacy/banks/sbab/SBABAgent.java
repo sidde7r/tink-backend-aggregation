@@ -22,6 +22,7 @@ import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
+import se.tink.backend.aggregation.agents.PersistentLogin;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
@@ -44,21 +45,27 @@ import se.tink.backend.aggregation.agents.models.Loan;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.constants.CommonHeaders;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.controllers.session.CredentialsPersistence;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 @AgentCapabilities({SAVINGS_ACCOUNTS, LOANS, MORTGAGE_AGGREGATION, IDENTITY_DATA})
 public class SBABAgent extends AbstractAgent
         implements RefreshSavingsAccountsExecutor,
                 RefreshLoanAccountsExecutor,
-                RefreshIdentityDataExecutor {
+                RefreshIdentityDataExecutor,
+                PersistentLogin {
 
     private final Credentials credentials;
 
     private final AuthenticationClient authenticationClient;
     private final UserDataClient userDataClient;
     private final IdentityDataClient identityDataClient;
-
+    private final PersistentStorage persistentStorage;
+    private final CredentialsPersistence credentialsPersistence;
     private final TinkHttpClient client;
+    private static final String STORAGE_CSRF_TOKEN = "csrfToken";
 
     // cache
     private AccountsResponse accountsResponse = null;
@@ -69,6 +76,11 @@ public class SBABAgent extends AbstractAgent
         credentials = request.getCredentials();
         client = agentComponentProvider.getTinkHttpClient();
 
+        this.persistentStorage = new PersistentStorage();
+        this.credentialsPersistence =
+                new CredentialsPersistence(
+                        persistentStorage, new SessionStorage(), this.credentials, client);
+        this.credentialsPersistence.load();
         authenticationClient =
                 new AuthenticationClient(
                         client.getInternalClient(), credentials, CommonHeaders.DEFAULT_USER_AGENT);
@@ -85,13 +97,33 @@ public class SBABAgent extends AbstractAgent
 
         switch (credentials.getType()) {
             case MOBILE_BANKID:
-                return Objects.equal(loginWithMobileBankId(), BankIdStatus.DONE);
+                if (!isAuthenticated()) {
+                    boolean equal = Objects.equal(loginWithMobileBankId(), BankIdStatus.DONE);
+                    if (equal) {
+                        credentialsPersistence.store();
+                    }
+                    return equal;
+                } else {
+                    userDataClient.setCsrfToken(persistentStorage.get(STORAGE_CSRF_TOKEN));
+                    return true;
+                }
+
             default:
                 throw new IllegalStateException(
                         String.format(
                                 "#login-refactoring - SBAB - Unsupported credential: %s",
                                 credentials.getType()));
         }
+    }
+
+    private boolean isAuthenticated() {
+        try {
+            getAccounts();
+        } catch (IllegalStateException ex) {
+            persistentStorage.clear();
+            return false;
+        }
+        return true;
     }
 
     private AccountsResponse getAccounts() {
@@ -150,6 +182,7 @@ public class SBABAgent extends AbstractAgent
         userDataClient.setCsrfToken(token);
         // store token in the sensitive payload so that it will be masked
         credentials.setSensitivePayload(Key.ACCESS_TOKEN, token);
+        persistentStorage.put(STORAGE_CSRF_TOKEN, token);
     }
 
     private List<Transaction> fetchTransactions(Account account) throws Exception {
@@ -223,6 +256,32 @@ public class SBABAgent extends AbstractAgent
     @Override
     public FetchIdentityDataResponse fetchIdentityData() {
         return new FetchIdentityDataResponse(identityDataClient.fetchIdentityData());
+    }
+
+    @Override
+    public boolean isLoggedIn() throws Exception {
+        return isAuthenticated();
+    }
+
+    @Override
+    public boolean keepAlive() throws Exception {
+        return isAuthenticated();
+    }
+
+    @Override
+    public void persistLoginSession() {
+        credentialsPersistence.store();
+    }
+
+    @Override
+    public void loadLoginSession() {
+        this.credentialsPersistence.load();
+        userDataClient.setCsrfToken(persistentStorage.get(STORAGE_CSRF_TOKEN));
+    }
+
+    @Override
+    public void clearLoginSession() {
+        // NOP
     }
 
     /////////////////////////////////////
