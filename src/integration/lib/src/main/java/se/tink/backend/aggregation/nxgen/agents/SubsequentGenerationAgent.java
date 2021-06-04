@@ -120,7 +120,11 @@ public abstract class SubsequentGenerationAgent<Auth> extends SuperAbstractAgent
 
     protected EidasIdentity getEidasIdentity() {
         return new EidasIdentity(
-                context.getClusterId(), context.getAppId(), context.getCertId(), getAgentClass());
+                context.getClusterId(),
+                context.getAppId(),
+                context.getCertId(),
+                context.getProviderId(),
+                getAgentClass());
     }
 
     @Override

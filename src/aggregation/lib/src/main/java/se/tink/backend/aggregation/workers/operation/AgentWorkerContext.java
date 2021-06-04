@@ -161,6 +161,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         setClusterId(clusterId);
         setAggregatorInfo(aggregatorInfo);
         setAppId(appId);
+        setProviderId(request.getProvider().getName());
 
         if (request.getUser() != null) {
             String locale = request.getUser().getProfile().getLocale();

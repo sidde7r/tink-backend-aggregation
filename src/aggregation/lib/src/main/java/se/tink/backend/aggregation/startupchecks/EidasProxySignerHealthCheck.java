@@ -39,8 +39,11 @@ public class EidasProxySignerHealthCheck implements HealthCheck {
                             eidasProxyConfiguration.toInternalConfig(),
                             QsealcAlg.EIDAS_JWT_RSA_SHA256,
                             new EidasIdentity(
-                                    HEALTHCHECK_DEFAULT_VALUE, HEALTHCHECK_DEFAULT_VALUE,
-                                    HEALTHCHECK_DEFAULT_VALUE, HEALTHCHECK_DEFAULT_VALUE));
+                                    HEALTHCHECK_DEFAULT_VALUE,
+                                    HEALTHCHECK_DEFAULT_VALUE,
+                                    HEALTHCHECK_DEFAULT_VALUE,
+                                    HEALTHCHECK_DEFAULT_VALUE,
+                                    HEALTHCHECK_DEFAULT_VALUE));
             signer.getSignatureBase64(
                     Base64.getEncoder().encode(HEALTHCHECK_DEFAULT_VALUE.getBytes()));
         } catch (Exception e) {

@@ -55,6 +55,7 @@ public class DanskeOpenBankingModule extends AbstractModule {
                 context.getClusterId(),
                 context.getAppId(),
                 context.getCertId(),
+                context.getProviderId(),
                 DanskeJwtSignerProvider.class);
     }
 

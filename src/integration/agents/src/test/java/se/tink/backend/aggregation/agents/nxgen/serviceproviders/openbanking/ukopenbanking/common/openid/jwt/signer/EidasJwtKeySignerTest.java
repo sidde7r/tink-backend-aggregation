@@ -31,6 +31,7 @@ public class EidasJwtKeySignerTest {
                                 "oxford-staging",
                                 "5f98e87106384b2981c0354a33b51590",
                                 "DEFAULT",
+                                "",
                                 ""));
 
         RSASSAVerifier verifier =

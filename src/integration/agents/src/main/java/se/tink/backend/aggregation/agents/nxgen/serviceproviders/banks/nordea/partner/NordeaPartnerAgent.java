@@ -102,6 +102,7 @@ public abstract class NordeaPartnerAgent extends NextGenerationAgent
                     "oxford-preprod",
                     "c859501868b742b6bebd7a3f7911cd85",
                     "DEFAULT",
+                    context.getProviderId(),
                     NordeaPartnerAgent.class);
         }
         return super.getEidasIdentity();

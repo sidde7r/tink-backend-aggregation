@@ -4,20 +4,25 @@ public class EidasIdentity {
     private final String clusterId;
     private final String appId;
     private final String certId;
+    private final String providerId;
 
     private final String requester;
 
-    public EidasIdentity(String clusterId, String appId, String certId, Class<?> requester) {
+    public EidasIdentity(
+            String clusterId, String appId, String certId, String providerId, Class<?> requester) {
         this.clusterId = clusterId;
         this.appId = appId;
         this.certId = certId;
+        this.providerId = providerId;
         this.requester = requester.getCanonicalName();
     }
 
-    public EidasIdentity(String clusterId, String appId, String certId, String requester) {
+    public EidasIdentity(
+            String clusterId, String appId, String certId, String providerId, String requester) {
         this.clusterId = clusterId;
         this.appId = appId;
         this.certId = certId;
+        this.providerId = providerId;
         this.requester = requester;
     }
 
@@ -37,10 +42,14 @@ public class EidasIdentity {
         return certId;
     }
 
+    public String getProviderId() {
+        return providerId;
+    }
+
     @Override
     public String toString() {
         return String.format(
-                "{clusterId='%s', appId='%s', certId='%s', requester='%s'}",
-                clusterId, appId, certId, requester);
+                "{clusterId='%s', appId='%s', certId='%s', providerId='%s', requester='%s'}",
+                clusterId, appId, certId, providerId, requester);
     }
 }
