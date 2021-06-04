@@ -49,7 +49,7 @@ public class AccountsEntity {
     }
 
     private TransactionalAccountType getTinkAccountType() {
-        if (name.toLowerCase().contains("opsparingskonto")) {
+        if (name.toLowerCase().contains("opsparing")) {
             return TransactionalAccountType.SAVINGS;
         }
         return TransactionalAccountType.CHECKING;
