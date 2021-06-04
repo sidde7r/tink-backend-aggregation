@@ -21,6 +21,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.invest
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.rpc.GlobalPositionResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.transactionalaccount.rpc.TransactionsPaginationRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.transactionalaccount.rpc.TransactionsResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.filter.EvoBancoTokenInvalidFilter;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
@@ -36,6 +37,7 @@ public class EvoBancoApiClient {
     public EvoBancoApiClient(TinkHttpClient client, SessionStorage sessionStorage) {
         this.client = client;
         this.sessionStorage = sessionStorage;
+        client.addFilter(new EvoBancoTokenInvalidFilter());
     }
 
     public LinkingLoginResponse1 link1(LinkingLoginRequest linkingLoginRequest) {

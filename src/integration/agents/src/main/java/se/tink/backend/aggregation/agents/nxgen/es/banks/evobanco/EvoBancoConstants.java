@@ -67,6 +67,7 @@ public class EvoBancoConstants {
     public static class ErrorCodes {
         private ErrorCodes() {}
 
+        public static final String INVALID_TOKEN = "KO";
         public static final String NO_TRANSACTIONS_FOUND = "00350";
         public static final String AUTHENTICATION_ERROR = "1500";
     }
