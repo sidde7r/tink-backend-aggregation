@@ -16,6 +16,13 @@ public class OAuth2Constants {
     public enum ErrorType {
         UNKNOWN("unknown"),
         ACCESS_DENIED("access_denied"),
+        INVALID_REQUEST("invalid_request"),
+        UNAUTHORIZED_CLIENT("unauthorized_client"),
+        UNSUPPORTED_RESPONSE_TYPE("unsupported_response_type"),
+        INVALID_SCOPE("invalid_scope"),
+        SERVER_ERROR("server_error"),
+        TEMPORARILY_UNAVAILABLE("temporarily_unavailable"),
+        // Not part of OAuth2 spec, but used by some banks:
         LOGIN_REQUIRED("login_required"),
         CANCELED_BY_USER("action_canceled_by_user");
 
