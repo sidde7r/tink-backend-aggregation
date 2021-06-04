@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.contexts.SystemUpdater;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -80,6 +81,14 @@ public class OAuth2AuthenticationFlow {
         } else if (ErrorType.CANCELED_BY_USER.equals(errorType)) {
             log.info("[OAuth2] cancelled by user");
             throw ThirdPartyAppError.CANCELLED.exception();
+        } else if (ErrorType.SERVER_ERROR.equals(errorType)
+                || ErrorType.TEMPORARILY_UNAVAILABLE.equals(errorType)) {
+            log.info(
+                    "[OAuth2] {}: error_description: {}",
+                    errorType.getValue(),
+                    errorDescription.orElse(""));
+            throw BankServiceError.BANK_SIDE_FAILURE.exception(
+                    errorDescription.orElse("no error description"));
         }
 
         throw new IllegalStateException(
