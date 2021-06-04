@@ -22,6 +22,7 @@ java_library(
         "//src/integration/signableoperation/src/main/java/se/tink/libraries/signableoperation/enums",
         "//src/integration/transfer:enums",
         "//src/integration/transfer:rpc",
+        "//src/libraries/credentials-persistence",
         "//src/libraries/date",
         "//src/libraries/i18n",
         "//src/libraries/serialization",
