@@ -27,4 +27,8 @@ public class RecurringPayment extends Transfer {
         destination.setName(creditorName);
         setDestination(destination);
     }
+
+    public ExecutionRule getExecutionRule() {
+        return executionRule == ExecutionRule.UNSPECIFIED ? null : executionRule;
+    }
 }
