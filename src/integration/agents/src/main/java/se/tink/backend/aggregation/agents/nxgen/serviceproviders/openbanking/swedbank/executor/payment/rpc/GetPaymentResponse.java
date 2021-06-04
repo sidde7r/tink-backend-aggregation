@@ -40,4 +40,17 @@ public class GetPaymentResponse {
 
         return new PaymentResponse(tinkPayment);
     }
+
+    @JsonIgnore
+    public PaymentResponse toTinkCancellablePaymentResponse(
+            Payment payment, String transactionStatus) {
+        return new PaymentResponse(
+                new Payment.Builder()
+                        .withUniqueId(payment.getUniqueId())
+                        .withType(payment.getType())
+                        .withStatus(
+                                SwedbankPaymentStatus.fromString(transactionStatus)
+                                        .getTinkPaymentStatus())
+                        .build());
+    }
 }

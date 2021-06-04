@@ -13,5 +13,5 @@ public interface PaymentExecutor {
     CreateBeneficiaryMultiStepResponse createBeneficiary(
             CreateBeneficiaryMultiStepRequest createBeneficiaryMultiStepRequest);
 
-    PaymentResponse cancel(PaymentRequest paymentRequest);
+    PaymentResponse cancel(PaymentRequest paymentRequest) throws PaymentException;
 }

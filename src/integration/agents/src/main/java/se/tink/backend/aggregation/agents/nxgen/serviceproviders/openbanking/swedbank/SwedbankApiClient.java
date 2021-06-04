@@ -504,6 +504,20 @@ public final class SwedbankApiClient implements SwedbankOpenBankingPaymentApiCli
     }
 
     @Override
+    public PaymentStatusResponse deletePayment(String paymentProduct, String paymentId) {
+        try {
+            return getPaymentRequestBuilder(
+                            Urls.DELETE_PAYMENT
+                                    .parameter(UrlParameters.PAYMENT_TYPE, paymentProduct)
+                                    .parameter(UrlParameters.PAYMENT_ID, paymentId))
+                    .delete(PaymentStatusResponse.class);
+        } catch (HttpResponseException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @Override
     public PaymentAuthorisationResponse initiatePaymentAuthorisation(
             String paymentId,
             SwedbankPaymentType swedbankPaymentType,

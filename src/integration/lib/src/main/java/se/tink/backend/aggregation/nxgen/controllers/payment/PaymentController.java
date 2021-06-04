@@ -79,7 +79,7 @@ public class PaymentController {
         return paymentExecutor.createBeneficiary(createBeneficiaryMultiStepRequest);
     }
 
-    public PaymentResponse cancel(PaymentRequest paymentRequest) {
+    public PaymentResponse cancel(PaymentRequest paymentRequest) throws PaymentException {
         return paymentExecutor.cancel(paymentRequest);
     }
 

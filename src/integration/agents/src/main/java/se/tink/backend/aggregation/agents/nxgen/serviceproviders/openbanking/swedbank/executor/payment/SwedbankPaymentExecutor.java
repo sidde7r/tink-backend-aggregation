@@ -17,6 +17,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swe
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.executor.payment.enums.SwedbankPaymentType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.executor.payment.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.executor.payment.rpc.CreatePaymentRequest.CreatePaymentRequestBuilder;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.executor.payment.rpc.GetPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.executor.payment.rpc.PaymentStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.executor.payment.util.SwedbankDateUtil;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.executor.payment.util.SwedbankRemittanceInformationUtil;
@@ -166,9 +167,19 @@ public class SwedbankPaymentExecutor implements PaymentExecutor, FetchablePaymen
     }
 
     @Override
-    public PaymentResponse cancel(PaymentRequest paymentRequest) {
-        throw new NotImplementedException(
-                "cancel not yet implemented for " + this.getClass().getName());
+    public PaymentResponse cancel(PaymentRequest paymentRequest) throws PaymentException {
+        String paymentId = paymentRequest.getPayment().getUniqueId();
+        apiClient.getPaymentStatus(paymentId, SwedbankPaymentType.SE_DOMESTIC_CREDIT_TRANSFERS);
+        apiClient.deletePayment(
+                SwedbankPaymentType.SE_DOMESTIC_CREDIT_TRANSFERS.toString(), paymentId);
+        GetPaymentResponse payment =
+                apiClient.getPayment(paymentId, SwedbankPaymentType.SE_DOMESTIC_CREDIT_TRANSFERS);
+        return payment.toTinkCancellablePaymentResponse(
+                paymentRequest.getPayment(),
+                apiClient
+                        .getPaymentStatus(
+                                paymentId, SwedbankPaymentType.SE_DOMESTIC_CREDIT_TRANSFERS)
+                        .getTransactionStatus());
     }
 
     @Override
