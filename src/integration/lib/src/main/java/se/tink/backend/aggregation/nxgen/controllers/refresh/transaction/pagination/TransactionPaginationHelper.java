@@ -1,32 +1,33 @@
 package se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.time.LocalDate;
+import java.time.ZoneOffset;
+import java.util.*;
+import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
-import se.tink.libraries.credentials.service.CredentialsRequest;
+import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.credentials.service.*;
 import se.tink.libraries.date.DateUtils;
 
+@RequiredArgsConstructor
 @Slf4j
 public class TransactionPaginationHelper {
     private static final int SAFETY_THRESHOLD_NUMBER_OF_DAYS = 10;
     private static final int SAFETY_THRESHOLD_NUMBER_OF_OVERLAPS = 10;
 
-    private final CredentialsRequest request;
+    private final RefreshScope refreshScope;
 
-    public TransactionPaginationHelper(CredentialsRequest request) {
-        this.request = request;
+    @Deprecated
+    public TransactionPaginationHelper(HasRefreshScope hasRefreshScope) {
+        this(hasRefreshScope.getRefreshScope());
     }
 
     public boolean isContentWithRefresh(
             Account account, List<AggregationTransaction> transactions) {
         if (transactions.size() == 0) {
-            return false;
-        }
-
-        if (request.getAccounts() == null) {
             return false;
         }
 
@@ -80,18 +81,46 @@ public class TransactionPaginationHelper {
         return false;
     }
 
-    /** Returns the certain date for this account (that is from when we know we have all data) */
+    /**
+     * Returns the lower limit (inclusive) date for this account. It can be specified by refresh
+     * scope on all transaction or specifically on account transactions
+     */
     public Optional<Date> getContentWithRefreshDate(final Account account) {
-        if (request.getAccounts() == null) {
+        if (refreshScope == null || refreshScope.getTransactions() == null) {
             return Optional.empty();
         }
 
-        return request.getAccounts().stream()
-                .filter(
-                        a ->
-                                account.isUniqueIdentifierEqual(a.getBankId())
-                                        && a.getCertainDate() != null)
-                .map(se.tink.backend.agents.rpc.Account::getCertainDate)
-                .findFirst();
+        Optional<Date> defaultLimit =
+                Optional.ofNullable(refreshScope.getTransactions().getTransactionBookedDateGte())
+                        .map(TransactionPaginationHelper::localDateToDate);
+        if (refreshScope.getTransactions().getAccounts() == null) {
+            return defaultLimit;
+        }
+
+        Set<AccountIdentifier> accountIdentifiers = new HashSet<>(account.getIdentifiers());
+        Optional<AccountTransactionRefreshScope> accountRefreshScope =
+                refreshScope.getTransactions().getAccounts().stream()
+                        .filter(
+                                it -> {
+                                    Set<AccountIdentifier> refreshScopeAccountIdentifiers =
+                                            it.getAccountIdentifiers().stream()
+                                                    .map(AccountIdentifier::createOrThrow)
+                                                    .collect(Collectors.toSet());
+                                    return refreshScopeAccountIdentifiers.removeAll(
+                                            accountIdentifiers);
+                                })
+                        .findAny();
+
+        if (accountRefreshScope.isPresent()
+                && accountRefreshScope.get().getTransactionBookedDateGte() != null) {
+            return Optional.of(
+                    localDateToDate(accountRefreshScope.get().getTransactionBookedDateGte()));
+        }
+
+        return defaultLimit;
+    }
+
+    private static Date localDateToDate(LocalDate localDate) {
+        return Date.from(localDate.atStartOfDay().toInstant(ZoneOffset.UTC));
     }
 }

@@ -79,6 +79,7 @@ public class TransferRequest extends CredentialsRequest {
         this.skipRefresh = skipRefresh;
     }
 
+    @Override
     public RefreshScope getRefreshScope() {
         return refreshScope;
     }

@@ -25,7 +25,7 @@ import se.tink.libraries.uuid.UUIDUtils;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Getter
 @Setter
-public abstract class CredentialsRequest {
+public abstract class CredentialsRequest implements HasRefreshScope {
     // OperationId will be null when originating from CredentialsService...
     // Will be set when coming from new Authentication & Aggregation Engine
     private String operationId;
@@ -155,5 +155,10 @@ public abstract class CredentialsRequest {
 
     public boolean shouldManualAuthBeForced() {
         return forceAuthenticate;
+    }
+
+    @Override
+    public RefreshScope getRefreshScope() {
+        throw new IllegalStateException("No refresh scope provided for the implementation");
     }
 }

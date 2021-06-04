@@ -149,6 +149,7 @@ public class RefreshInformationRequest extends CredentialsRequest {
         this.requestedAccountIds = requestedAccountIds;
     }
 
+    @Override
     public RefreshScope getRefreshScope() {
         return refreshScope;
     }
