@@ -28,8 +28,4 @@ public abstract class FakedCredentialsRequest extends CredentialsRequest {
     public FakedCredentials getCredentials() {
         return (FakedCredentials) super.getCredentials();
     }
-
-    public void setCredentials(FakedCredentials credentials) {
-        super.setCredentials(credentials);
-    }
 }
