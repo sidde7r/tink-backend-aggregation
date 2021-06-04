@@ -128,7 +128,7 @@ public abstract class SebBaseAgent extends NextGenerationAgent
 
     @Override
     public FetchTransactionsResponse fetchSavingsTransactions() {
-        return transactionalAccountRefreshController.fetchCheckingTransactions();
+        return transactionalAccountRefreshController.fetchSavingsTransactions();
     }
 
     @Override
