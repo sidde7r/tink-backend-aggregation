@@ -70,20 +70,20 @@ spec:
           the last {{ .Values.p4WaitTimeBeforeFiringAlert }} minutes.
         tags: {{ .Values.tags }}
 
-    - alert: login_success_rate_below_50_de
+    - alert: manual_login_success_rate_below_50_de
       expr: |
-        (sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.temporaryErrorsAuth }}, market="DE", provider_type!="test"}[60m])) by (action,className)
-            / sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, market="DE", provider_type!="test"}[60m])) by (action,className) < 0.50)
+        (sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, {{ .Values.temporaryErrorsAuth }}, market="DE", provider_type!="test"}[60m])) by (className)
+            / sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, market="DE", provider_type!="test"}[60m])) by (className) < 0.50)
         # At least this many attempts.
-        and sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, market="DE", provider_type!="test"}[60m])) by (action,className) > 5
+        and sum(increase(tink_agent_login_total{ {{ .Values.manualLoginActions }}, market="DE", provider_type!="test"}[60m])) by (className) > 5
       for: {{ .Values.p3WaitTimeBeforeFiringAlert }}
       labels:
         severity: urgent
         priority: P3
         who: integration-nazguls
       annotations:
-        description: {{ .Values.kibanaClassLink }}
-          {{ .Values.grafanaLink }}
+        description: kibana Link {{ .Values.kibanaClassLink }}
+          Grafana Link {{ .Values.grafanaLink }}
         summary: Login success rate is below 50% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
           the last {{ .Values.p3WaitTimeBeforeFiringAlert }} minutes.
         tags: {{ .Values.tags }}
