@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovide
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.LinkEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.TouchResponse;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
 public class SwedbankDefaultSessionHandler implements SessionHandler {
     private static final Logger log = LoggerFactory.getLogger(SwedbankDefaultSessionHandler.class);
@@ -38,7 +39,7 @@ public class SwedbankDefaultSessionHandler implements SessionHandler {
                 completeAuthentication();
                 return;
             }
-        } catch (Exception ex) {
+        } catch (HttpResponseException ex) {
             throw SessionError.SESSION_EXPIRED.exception();
         }
 
