@@ -13,7 +13,6 @@ import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
-import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.authenticator.AutoAuthenticator;
@@ -22,9 +21,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppStatus;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.constants.ThirdPartyAppConstants;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.CallbackParams;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.ErrorType;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.PersistentStorageKeys;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.OpenBankingTokenExpirationDateHelper;
@@ -35,7 +32,6 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.i18n.LocalizableKey;
-import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class OAuth2AuthenticationController
         implements AutoAuthenticator, ThirdPartyAppAuthenticator<String> {
@@ -168,7 +164,7 @@ public class OAuth2AuthenticationController
 
         authenticator.handleSpecificCallbackDataError(callbackData);
 
-        handleErrors(callbackData);
+        OAuth2AuthenticationFlow.handleErrors(callbackData);
 
         String code = callbackData.getOrDefault(CallbackParams.CODE, null);
         if (Strings.isNullOrEmpty(code)) {
@@ -202,41 +198,6 @@ public class OAuth2AuthenticationController
     @Override
     public Optional<LocalizableKey> getUserErrorMessageFor(ThirdPartyAppStatus status) {
         return Optional.empty();
-    }
-
-    private Optional<String> getCallbackElement(Map<String, String> callbackData, String key) {
-        String value = callbackData.getOrDefault(key, null);
-        if (com.google.common.base.Strings.isNullOrEmpty(value)) {
-            return Optional.empty();
-        }
-
-        return Optional.of(value);
-    }
-
-    private void handleErrors(Map<String, String> callbackData) throws AuthenticationException {
-        Optional<String> error = getCallbackElement(callbackData, CallbackParams.ERROR);
-        Optional<String> errorDescription =
-                getCallbackElement(callbackData, CallbackParams.ERROR_DESCRIPTION);
-
-        if (!error.isPresent()) {
-            logger.info("OAuth2 callback success.");
-            return;
-        }
-
-        ErrorType errorType = ErrorType.getErrorType(error.get());
-        if (OAuth2Constants.ErrorType.ACCESS_DENIED.equals(errorType)
-                || ErrorType.LOGIN_REQUIRED.equals(errorType)) {
-            logger.info(
-                    "OAuth2 {} callback: {}",
-                    errorType.getValue(),
-                    SerializationUtils.serializeToString(callbackData));
-            throw LoginError.INCORRECT_CREDENTIALS.exception();
-        } else if (ErrorType.CANCELED_BY_USER.equals(errorType)) {
-            throw ThirdPartyAppError.CANCELLED.exception();
-        }
-
-        throw new IllegalStateException(
-                String.format("Unknown error: %s:%s.", errorType, errorDescription.orElse("")));
     }
 
     private OAuth2Token refreshToken(OAuth2Token oAuth2Token) throws SessionException {
