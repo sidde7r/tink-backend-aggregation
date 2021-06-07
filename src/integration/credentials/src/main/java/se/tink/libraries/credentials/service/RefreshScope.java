@@ -20,5 +20,5 @@ import se.tink.backend.agents.rpc.FinancialService.FinancialServiceSegment;
 @NoArgsConstructor
 public class RefreshScope {
     private Set<FinancialServiceSegment> financialServiceSegmentsIn;
-    private TransactionRefreshScope transactions;
+    private TransactionsRefreshScope transactions;
 }

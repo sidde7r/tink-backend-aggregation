@@ -9,7 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @EqualsAndHashCode
-public class TransactionRefreshScope {
+public class TransactionsRefreshScope {
     /**
      * It is a transaction booked date limit applied for all accounts not specified in
      * accountsTransactionDate.
@@ -17,5 +17,5 @@ public class TransactionRefreshScope {
     private LocalDate transactionBookedDateGte;
 
     /** It is a set of account transaction refresh scope objects. */
-    private Set<AccountTransactionRefreshScope> accounts;
+    private Set<AccountTransactionsRefreshScope> accounts;
 }

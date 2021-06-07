@@ -9,7 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @EqualsAndHashCode
-public class AccountTransactionRefreshScope {
+public class AccountTransactionsRefreshScope {
     /** A set of identifiers of an account. */
     private Set<String> accountIdentifiers;
 
