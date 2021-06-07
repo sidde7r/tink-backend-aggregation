@@ -48,6 +48,12 @@ public class AccountsEntity {
                 .build();
     }
 
+    public boolean isTransactionalAccount() {
+        return !name.toLowerCase().contains("credit")
+                && !name.toLowerCase().contains("lån")
+                && !name.toLowerCase().contains("pension");
+    }
+
     private TransactionalAccountType getTinkAccountType() {
         if (name.toLowerCase().contains("opsparing")) {
             return TransactionalAccountType.SAVINGS;

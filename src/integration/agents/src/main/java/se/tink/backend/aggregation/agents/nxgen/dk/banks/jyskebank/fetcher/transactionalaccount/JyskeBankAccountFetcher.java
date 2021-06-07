@@ -26,6 +26,7 @@ public class JyskeBankAccountFetcher
         final AccountResponse accountResponse = apiClient.fetchAccounts();
 
         return accountResponse.stream()
+                .filter(AccountsEntity::isTransactionalAccount)
                 .map(AccountsEntity::toTinkAccount)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
