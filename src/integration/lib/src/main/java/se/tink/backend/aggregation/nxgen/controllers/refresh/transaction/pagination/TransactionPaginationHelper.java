@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination;
 
 import com.google.common.annotations.VisibleForTesting;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
 import java.util.*;
@@ -11,7 +12,6 @@ import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.credentials.service.*;
-import se.tink.libraries.date.DateUtils;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -71,10 +71,12 @@ public class TransactionPaginationHelper {
                 }
             }
 
-            int overlappingTransactionDays =
+            long overlappingTransactionDays =
                     Math.abs(
-                            DateUtils.getNumberOfDaysBetween(
-                                    t.getDate(), transactionDateLimit.get()));
+                            Duration.between(
+                                            t.getDate().toInstant(),
+                                            transactionDateLimit.get().toInstant())
+                                    .toDays());
 
             if (transactionsBeforeCertainDate >= SAFETY_THRESHOLD_NUMBER_OF_OVERLAPS
                     && overlappingTransactionDays >= SAFETY_THRESHOLD_NUMBER_OF_DAYS) {
