@@ -4,9 +4,11 @@ import com.google.common.base.Strings;
 import java.util.Optional;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
+import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.IdKeys;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.Parameters;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.StorageKeys;
@@ -29,29 +31,23 @@ import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestB
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
+@RequiredArgsConstructor
 public class DeutscheBankApiClient {
 
     protected final TinkHttpClient client;
     protected final PersistentStorage persistentStorage;
+    protected final DeutscheHeaderValues headerValues;
     protected final DeutscheMarketConfiguration marketConfiguration;
-    private final DeutscheHeaderValues headerValues;
-
-    public DeutscheBankApiClient(
-            TinkHttpClient client,
-            PersistentStorage persistentStorage,
-            DeutscheHeaderValues headerValues,
-            DeutscheMarketConfiguration marketConfiguration) {
-        this.client = client;
-        this.persistentStorage = persistentStorage;
-        this.headerValues = headerValues;
-        this.marketConfiguration = marketConfiguration;
-    }
 
     protected RequestBuilder createRequest(URL url) {
         return client.request(url)
                 .accept(MediaType.APPLICATION_JSON)
                 .type(MediaType.APPLICATION_JSON)
                 .header(HeaderKeys.PSU_IP_ADDRESS, headerValues.getUserIp());
+    }
+
+    protected URL enrichURLWithService(URL url) {
+        return url.parameter(Parameters.SERVICE_KEY, Parameters.AIS);
     }
 
     protected RequestBuilder createRequestInSession(URL url) {
@@ -72,7 +68,9 @@ public class DeutscheBankApiClient {
             ConsentRequest consentRequest, String state, String psuId) {
         URL redirectWithState =
                 new URL(headerValues.getRedirectUrl()).queryParam(QueryKeys.STATE, state);
-        return createRequest(new URL(marketConfiguration.getBaseUrl().concat(Urls.CONSENT)))
+        return createRequest(
+                        enrichURLWithService(
+                                new URL(marketConfiguration.getBaseUrl().concat(Urls.CONSENT))))
                 .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
                 .header(HeaderKeys.PSU_ID_TYPE, marketConfiguration.getPsuIdType())
                 .header(HeaderKeys.PSU_ID, psuId)
@@ -86,8 +84,9 @@ public class DeutscheBankApiClient {
                 Optional.ofNullable(persistentStorage.get(StorageKeys.CONSENT_ID))
                         .orElseThrow(SessionError.SESSION_EXPIRED::exception);
         return createRequest(
-                        new URL(marketConfiguration.getBaseUrl() + Urls.CONSENT_DETAILS)
-                                .parameter(IdKeys.CONSENT_ID, consentId))
+                        enrichURLWithService(
+                                new URL(marketConfiguration.getBaseUrl() + Urls.CONSENT_DETAILS)
+                                        .parameter(IdKeys.CONSENT_ID, consentId)))
                 .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
                 .get(ConsentDetailsResponse.class);
     }
@@ -97,8 +96,9 @@ public class DeutscheBankApiClient {
                 Optional.ofNullable(persistentStorage.get(StorageKeys.CONSENT_ID))
                         .orElseThrow(SessionError.SESSION_EXPIRED::exception);
         return createRequest(
-                        new URL(marketConfiguration.getBaseUrl() + Urls.CONSENTS_STATUS)
-                                .parameter(IdKeys.CONSENT_ID, consentId))
+                        enrichURLWithService(
+                                new URL(marketConfiguration.getBaseUrl() + Urls.CONSENTS_STATUS)
+                                        .parameter(IdKeys.CONSENT_ID, consentId)))
                 .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
                 .get(ConsentStatusResponse.class);
     }
@@ -111,19 +111,21 @@ public class DeutscheBankApiClient {
 
     public FetchAccountsResponse fetchAccounts() {
         return createRequestInSession(
-                        new URL(marketConfiguration.getBaseUrl().concat(Urls.ACCOUNTS)))
+                        enrichURLWithService(
+                                new URL(marketConfiguration.getBaseUrl().concat(Urls.ACCOUNTS))))
                 .get(FetchAccountsResponse.class);
     }
 
     public FetchBalancesResponse fetchBalances(AccountEntity accountEntity) {
         return createRequestInSession(
-                        new URL(
-                                marketConfiguration
-                                        .getBaseUrl()
-                                        .concat(
-                                                String.format(
-                                                        Urls.BALANCES,
-                                                        accountEntity.getResourceId()))))
+                        enrichURLWithService(
+                                new URL(
+                                        marketConfiguration
+                                                .getBaseUrl()
+                                                .concat(
+                                                        String.format(
+                                                                Urls.BALANCES,
+                                                                accountEntity.getResourceId())))))
                 .get(FetchBalancesResponse.class);
     }
 
@@ -137,7 +139,7 @@ public class DeutscheBankApiClient {
                             .concat(String.format(Urls.TRANSACTIONS, account.getApiIdentifier()));
         }
 
-        return createRequestInSession(new URL(key))
+        return createRequestInSession(enrichURLWithService(new URL(key)))
                 .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BOOKING_STATUS)
                 .queryParam(QueryKeys.DELTA_LIST, QueryValues.DELTA_LIST)
                 .get(TransactionsKeyPaginatorBaseResponse.class);

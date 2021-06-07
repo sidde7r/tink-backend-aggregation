@@ -36,7 +36,9 @@ public class PostbankApiClient extends DeutscheBankApiClient {
     public ConsentResponse getConsents(String psuId) {
         ConsentRequest consentRequest = new ConsentRequest(new GlobalConsentAccessEntity());
         try {
-            return createRequest(new URL(marketConfiguration.getBaseUrl() + Urls.CONSENT))
+            return createRequest(
+                            enrichURLWithService(
+                                    new URL(marketConfiguration.getBaseUrl() + Urls.CONSENT)))
                     .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
                     .header(HeaderKeys.PSU_ID_TYPE, marketConfiguration.getPsuIdType())
                     .header(HeaderKeys.PSU_ID, psuId)

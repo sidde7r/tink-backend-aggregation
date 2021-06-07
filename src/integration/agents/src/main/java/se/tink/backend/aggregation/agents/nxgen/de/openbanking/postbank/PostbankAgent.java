@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenti
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenticator.PostbankAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.Parameters;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheHeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.configuration.DeutscheMarketConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
@@ -18,7 +19,9 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.Au
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS})
 public final class PostbankAgent extends DeutscheBankAgent {
     private static final DeutscheMarketConfiguration POSTBANK_CONFIGURATION =
-            new DeutscheMarketConfiguration("https://xs2a.db.com/ais/DE/Postbank", "DE_ONLB_POBA");
+            new DeutscheMarketConfiguration(
+                    "https://xs2a.db.com/{" + Parameters.SERVICE_KEY + "}/DE/Postbank",
+                    "DE_ONLB_POBA");
 
     @Inject
     public PostbankAgent(AgentComponentProvider componentProvider) {
