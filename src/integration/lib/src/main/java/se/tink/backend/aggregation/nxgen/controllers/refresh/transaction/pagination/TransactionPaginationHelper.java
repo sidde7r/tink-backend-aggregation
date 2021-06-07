@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination;
 
+import com.google.common.annotations.VisibleForTesting;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
 import java.util.*;
@@ -15,8 +16,8 @@ import se.tink.libraries.date.DateUtils;
 @RequiredArgsConstructor
 @Slf4j
 public class TransactionPaginationHelper {
-    private static final int SAFETY_THRESHOLD_NUMBER_OF_DAYS = 10;
-    private static final int SAFETY_THRESHOLD_NUMBER_OF_OVERLAPS = 10;
+    @VisibleForTesting static final int SAFETY_THRESHOLD_NUMBER_OF_DAYS = 10;
+    @VisibleForTesting static final int SAFETY_THRESHOLD_NUMBER_OF_OVERLAPS = 10;
 
     private final RefreshScope refreshScope;
 
@@ -49,6 +50,7 @@ public class TransactionPaginationHelper {
 
                 if (t.getDate().before(certainDate.get())) {
                     lastTransaction = t;
+                    transactionsBeforeCertainDate++;
                 }
                 continue;
 
