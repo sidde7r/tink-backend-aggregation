@@ -107,7 +107,6 @@ public final class SocieteGeneraleConstants {
     public static class FormValues {
         public static final String PAYMENT_INITIATION_DEFAULT_NAME = "Payment Initiator";
         public static final int NUMBER_OF_TRANSACTIONS = 1;
-        public static final String PAYMENT_CREDITOR_DEFAULT_NAME = "Payment Receiver";
         // Charge bearer for any transaction, ny default need to use
         // SLEV: Charges are to be applied following the rules agreed in the service level and/or
         // scheme.

@@ -61,7 +61,6 @@ public class LaBanquePostalePaymentExecutor implements PaymentExecutor, Fetchabl
     public static final String CONFIRM_PAYMENT = "confirm_payment";
     public static final String PSU_AUTHORIZATION_FACTOR = "psu_authorization_factor";
     public static final String PSU_AUTHORIZATION_FACTOR_KEY = "psuAuthenticationFactor";
-    private static final String CREDITOR_NAME = "Payment Creditor";
     private static final String STATE = "state";
     private static final ZoneId DEFAULT_ZONE_ID = ZoneId.of("CET");
     PaymentType paymentType = PaymentType.SEPA;
@@ -170,7 +169,7 @@ public class LaBanquePostalePaymentExecutor implements PaymentExecutor, Fetchabl
                 .withAmount(amount)
                 .withCreditorAgentEntity(creditorAgent)
                 .withCreditorAccount(creditor)
-                .withCreditorName(new CreditorEntity(CREDITOR_NAME))
+                .withCreditorName(new CreditorEntity(payment.getCreditor().getName()))
                 .withExecutionDate(executionDate)
                 .withCreationDateTime(LocalDateTime.now((DEFAULT_ZONE_ID)))
                 .withRedirectUrl(

@@ -344,7 +344,7 @@ public class CmcicPaymentExecutor implements PaymentExecutor, FetchablePaymentEx
         Payment payment = paymentRequest.getPayment();
 
         PartyIdentificationEntity initiatingParty =
-                new PartyIdentificationEntity(FormValues.CREDITOR_NAME, null, null, null);
+                new PartyIdentificationEntity(FormValues.PAYMENT_INITIATOR, null, null, null);
 
         PaymentTypeInformationEntity paymentTypeInformation =
                 new PaymentTypeInformationEntity(
@@ -478,7 +478,7 @@ public class CmcicPaymentExecutor implements PaymentExecutor, FetchablePaymentEx
 
     private String getPresetOrDefaultCreditorName(PaymentRequest paymentRequest) {
         String creditorName = paymentRequest.getPayment().getCreditor().getName();
-        return Strings.isNullOrEmpty(creditorName) ? FormValues.BENEFICIARY_NAME : creditorName;
+        return Strings.isNullOrEmpty(creditorName) ? FormValues.CREDITOR_NAME : creditorName;
     }
 
     private void handelAuthFactorError() throws PaymentAuthenticationException {

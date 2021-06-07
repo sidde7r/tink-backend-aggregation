@@ -54,7 +54,6 @@ public class FrOpenBankingPaymentExecutor implements PaymentExecutor, FetchableP
 
     static final String PAYMENT_POST_SIGN_STATE = "payment_post_sign_state";
     static final String PAYMENT_AUTHORIZATION_URL = "payment_authorization_url";
-    private static final String CREDITOR_NAME = "Payment Creditor";
     private static final String STATE = "state";
     private static final ZoneId DEFAULT_ZONE_ID = ZoneId.of("CET");
 
@@ -114,7 +113,7 @@ public class FrOpenBankingPaymentExecutor implements PaymentExecutor, FetchableP
                         .withPaymentType(paymentType)
                         .withAmount(amount)
                         .withCreditorAccount(creditor)
-                        .withCreditorName(new CreditorEntity(CREDITOR_NAME))
+                        .withCreditorName(new CreditorEntity(payment.getCreditor().getName()))
                         .withDebtorAccount(debtor)
                         .withExecutionDate(executionDate)
                         .withCreationDateTime(LocalDateTime.now(DEFAULT_ZONE_ID))

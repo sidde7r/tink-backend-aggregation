@@ -27,9 +27,7 @@ public class BeneficiaryEntity {
     public static BeneficiaryEntity of(PaymentRequest paymentRequest) {
         Payment payment = paymentRequest.getPayment();
         return BeneficiaryEntity.builder()
-                .creditor(
-                        new PartyIdentificationEntity(
-                                SocieteGeneraleConstants.FormValues.PAYMENT_CREDITOR_DEFAULT_NAME))
+                .creditor(new PartyIdentificationEntity(payment.getCreditor().getName()))
                 .creditorAccount(
                         new CreditorAccountEntity(payment.getCreditor().getAccountNumber()))
                 .creditorAgent(
