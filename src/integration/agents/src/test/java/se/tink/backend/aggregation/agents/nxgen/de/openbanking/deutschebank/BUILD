@@ -4,6 +4,7 @@ junit_test(
     name = "deutschebank",
     srcs = glob([
         "DeutscheBankDEAgentTest.java",
+        "DeutscheBankDEAgentPaymentTest.java",
     ]),
     data = ["//:agent_test_data"],
     tags = [
@@ -13,8 +14,14 @@ junit_test(
     visibility = ["//visibility:public"],
     deps = [
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/deutschebank",
+        "//src/integration/amount",
         "//src/integration/lib",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
+        "//src/integration/payment:rpc",
+        "//src/integration/transfer:enums",
+        "//src/integration/transfer:rpc",
+        "@tink_backend//src/libraries/account_identifier",
+        "@tink_backend//src/libraries/payments_common/src/java/se/tink/libraries/payments/common/model:payments_common_model",
     ],
 )
 
@@ -24,6 +31,7 @@ junit_test(
         ["**/*.java"],
         exclude = [
             "DeutscheBankDEAgentTest.java",
+            "DeutscheBankDEAgentPaymentTest.java",
         ],
     ),
     data = [

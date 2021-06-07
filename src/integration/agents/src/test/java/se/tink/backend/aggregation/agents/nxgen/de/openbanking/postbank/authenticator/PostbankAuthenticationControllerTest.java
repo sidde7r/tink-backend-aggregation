@@ -32,6 +32,7 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenti
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenticator.rpc.AuthorisationResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenticator.rpc.UpdateAuthorisationRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.Parameters;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheHeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.rpc.ConsentDetailsResponse;
@@ -292,7 +293,8 @@ public class PostbankAuthenticationControllerTest {
         DeutscheHeaderValues deutscheHeaderValues =
                 new DeutscheHeaderValues("redirectUrl", "userIp");
         DeutscheMarketConfiguration deutscheMarketConfiguration =
-                new DeutscheMarketConfiguration("baseUrl", "psuIdType");
+                new DeutscheMarketConfiguration(
+                        "baseUrl/{" + Parameters.SERVICE_KEY + "}", "psuIdType");
         PostbankApiClient postbankApiClient =
                 new PostbankApiClient(
                         tinkHttpClient,

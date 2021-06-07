@@ -19,6 +19,7 @@ import se.tink.backend.aggregation.agents.exceptions.ThirdPartyAppException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.Parameters;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheHeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.DeutscheBankAuthenticator;
@@ -239,7 +240,8 @@ public class DeutscheBankAuthenticatorTest {
 
     private void createBankAuthenticator(TinkHttpClient tinkHttpClient) {
         DeutscheMarketConfiguration deutscheMarketConfiguration =
-                new DeutscheMarketConfiguration("baseUrl", "psuIdType");
+                new DeutscheMarketConfiguration(
+                        "baseUrl/{" + Parameters.SERVICE_KEY + "}", "psuIdType");
         deutscheBankApiClient =
                 new DeutscheBankApiClient(
                         tinkHttpClient,
