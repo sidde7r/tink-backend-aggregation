@@ -19,6 +19,7 @@ import se.tink.backend.aggregation.agents.TransferExecutorNxgen;
 import se.tink.backend.aggregation.agents.TypedPaymentControllerable;
 import se.tink.backend.aggregation.agents.agent.Agent;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.payment.CreditorValidationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.DateValidationException;
@@ -235,8 +236,13 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
                     UUIDUtils.toTinkUUID(transfer.getId()),
                     e.getMessage());
 
+            InternalStatus internalStatus =
+                    e.getError() == BankServiceError.ACCESS_EXCEEDED
+                            ? InternalStatus.RATE_LIMIT_EXCEEDED
+                            : InternalStatus.BANK_SERVICE_UNAVAILABLE;
+
             signableOperation.setStatus(SignableOperationStatuses.FAILED);
-            signableOperation.setInternalStatus(InternalStatus.BANK_SERVICE_UNAVAILABLE.toString());
+            signableOperation.setInternalStatus(internalStatus.toString());
             signableOperation.setStatusMessage(catalog.getString(e.getUserMessage()));
             context.updateSignableOperation(signableOperation);
 

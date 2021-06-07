@@ -4,6 +4,7 @@ public enum InternalStatus {
     DUPLICATE_PAYMENT,
     EXISTING_UNSIGNED_TRANSFERS,
     TRANSFER_LIMIT_REACHED,
+    RATE_LIMIT_EXCEEDED,
 
     // Payment Data
     INVALID_DUE_DATE,
