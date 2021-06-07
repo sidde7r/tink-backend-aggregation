@@ -21,6 +21,7 @@ public class ConsentStatusValidator {
     }
 
     public void validate() {
+        log.info("[CONSENT STATUS VALIDATOR] Entering consent validator");
         String consentId = restoreConsentId();
         if (StringUtils.isEmpty(consentId)) {
             log.info(
