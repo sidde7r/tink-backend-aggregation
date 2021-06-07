@@ -42,6 +42,7 @@ public class FiduciaAgentPaymentTest {
         creditorDebtorManager.before();
 
         builder =
+                // new AgentIntegrationTest.Builder("de", "de-vrbank-raiba-muc-sued-ob")
                 new AgentIntegrationTest.Builder("de", "de-vrbank-bayreuth-hof-ob")
                         .addCredentialField(
                                 FiduciaConstants.CredentialKeys.PSU_ID,
@@ -70,7 +71,7 @@ public class FiduciaAgentPaymentTest {
     public void testSepaPayments() throws Exception {
         builder.build()
                 .testTinkLinkPayment(
-                        createSepaPayment().withExecutionDate(LocalDate.now().plusDays(1)).build());
+                        createSepaPayment().withExecutionDate(LocalDate.now()).build());
     }
 
     @Test
@@ -141,7 +142,7 @@ public class FiduciaAgentPaymentTest {
                         creditorDebtorManager.get(FiduciaAgentPaymentTest.Arg.DEBTOR_ACCOUNT));
         Debtor debtor = new Debtor(debtorAccountIdentifier);
 
-        ExactCurrencyAmount amount = ExactCurrencyAmount.inEUR(1);
+        ExactCurrencyAmount amount = ExactCurrencyAmount.inEUR(0.99);
         String currency = "EUR";
 
         return new Payment.Builder()

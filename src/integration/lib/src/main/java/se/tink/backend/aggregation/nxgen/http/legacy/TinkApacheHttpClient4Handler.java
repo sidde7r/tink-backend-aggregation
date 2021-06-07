@@ -68,6 +68,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import javax.ws.rs.core.MultivaluedMap;
+import org.apache.http.ConnectionClosedException;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
@@ -168,7 +169,8 @@ public final class TinkApacheHttpClient4Handler extends TerminatingClientHandler
             return r.hasEntity();
         } catch (ClientHandlerException e) {
             Throwable t = e.getCause();
-            if (t != null && t instanceof EOFException) {
+            if (t != null
+                    && (t instanceof EOFException || t instanceof ConnectionClosedException)) {
                 return false;
             }
 

@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia;
 
 import javax.ws.rs.core.MediaType;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaConstants.ErrorMessageKeys;
@@ -33,7 +33,7 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Slf4j
 public class FiduciaApiClient {
 
@@ -52,7 +52,7 @@ public class FiduciaApiClient {
     private final String serverUrl;
     private final RandomValueGenerator randomValueGenerator;
 
-    protected URL createUrl(String path) {
+    public URL createUrl(String path) {
         return new URL(serverUrl + "/bg13" + path);
     }
 

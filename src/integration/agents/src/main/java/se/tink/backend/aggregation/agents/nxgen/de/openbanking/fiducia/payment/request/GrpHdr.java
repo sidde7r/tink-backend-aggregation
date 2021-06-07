@@ -1,22 +1,22 @@
-package se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.payment.entities;
+package se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.payment.request;
 
 import javax.xml.bind.annotation.XmlElement;
 
 public class GrpHdr {
+    @XmlElement(name = "MsgId")
+    private String msgId;
+
     @XmlElement(name = "CreDtTm")
     private String creDtTm;
+
+    @XmlElement(name = "NbOfTxs")
+    private int nbOfTxs = 1;
 
     @XmlElement(name = "CtrlSum")
     private String ctrlSum;
 
     @XmlElement(name = "InitgPty")
     private InitgPty initgPty;
-
-    @XmlElement(name = "NbOfTxs")
-    private int nbOfTxs = 1;
-
-    @XmlElement(name = "MsgId")
-    private String msgId;
 
     public GrpHdr() {}
 

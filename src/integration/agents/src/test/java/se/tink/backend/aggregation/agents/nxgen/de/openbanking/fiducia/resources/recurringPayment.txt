@@ -1,0 +1,77 @@
+--1234testBoundary4321
+Content-Disposition: form-data;name="xml_sct"
+Content-type: application/xml
+
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Document xsi:schemaLocation="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03 schema.xsd" xmlns="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <CstmrCdtTrfInitn>
+        <GrpHdr>
+            <MsgId>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</MsgId>
+            <CreDtTm>1992-04-10T00:00:00</CreDtTm>
+            <NbOfTxs>1</NbOfTxs>
+            <CtrlSum>0.99</CtrlSum>
+            <InitgPty>
+                <Id>
+                    <OrgId>
+                        <Othr>
+                            <Id>123</Id>
+                            <SchmeNm>
+                                <Prtry>PISP</Prtry>
+                            </SchmeNm>
+                        </Othr>
+                    </OrgId>
+                </Id>
+            </InitgPty>
+        </GrpHdr>
+        <PmtInf>
+            <PmtInfId>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</PmtInfId>
+            <PmtMtd>TRF</PmtMtd>
+            <NbOfTxs>1</NbOfTxs>
+            <CtrlSum>0.99</CtrlSum>
+            <ReqdExctnDt>1992-04-11</ReqdExctnDt>
+            <Dbtr>
+                <Nm>NOT_PROVIDED</Nm>
+            </Dbtr>
+            <DbtrAcct>
+                <Id>
+                    <IBAN>DE53500105177116438385</IBAN>
+                </Id>
+            </DbtrAcct>
+            <DbtrAgt>
+                <FinInstnId>
+                    <Othr>
+                        <Id>NOTPROVIDED</Id>
+                    </Othr>
+                </FinInstnId>
+            </DbtrAgt>
+            <ChrgBr>SLEV</ChrgBr>
+            <CdtTrfTxInf>
+                <PmtId>
+                    <EndToEndId>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</EndToEndId>
+                </PmtId>
+                <Amt>
+                    <InstdAmt Ccy="EUR">0.99</InstdAmt>
+                </Amt>
+                <Cdtr>
+                    <Nm>Creditor Name</Nm>
+                </Cdtr>
+                <CdtrAcct>
+                    <Id>
+                        <IBAN>DE43500105171537295773</IBAN>
+                    </Id>
+                </CdtrAcct>
+                <RmtInf>
+                    <Ustrd>Super awesome test remittance information 123</Ustrd>
+                </RmtInf>
+            </CdtTrfTxInf>
+        </PmtInf>
+    </CstmrCdtTrfInitn>
+</Document>
+
+--1234testBoundary4321
+Content-Disposition: form-data;name="json_standingorderType"
+Content-type: application/json
+
+{"startDate":"1992-04-11","endDate":"1992-04-19","frequency":"Weekly","executionRule":"following"}
+
+--1234testBoundary4321--

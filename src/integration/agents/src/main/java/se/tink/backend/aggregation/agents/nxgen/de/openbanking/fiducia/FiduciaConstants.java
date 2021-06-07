@@ -1,22 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia;
 
-import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.libraries.i18n.LocalizableKey;
-import se.tink.libraries.payment.enums.PaymentStatus;
 
 public final class FiduciaConstants {
-
-    public static final TypeMapper<PaymentStatus> PAYMENT_STATUS_MAPPER =
-            TypeMapper.<PaymentStatus>builder()
-                    .put(PaymentStatus.PENDING, "PNDG", "RCVD")
-                    .put(PaymentStatus.CANCELLED, "CANC")
-                    .put(PaymentStatus.REJECTED, "RJCT")
-                    .put(PaymentStatus.SIGNED, "ACCP")
-                    .build();
-
-    private FiduciaConstants() {
-        throw new AssertionError();
-    }
 
     public static class StorageKeys {
         public static final String CONSENT_ID = "consent-id";
@@ -24,7 +10,6 @@ public final class FiduciaConstants {
 
     public static class HeaderKeys {
         public static final String CONSENT_ID = "consent-id";
-        public static final String DATE = "date";
         public static final String TPP_SIGNATURE_CERTIFICATE = "tpp-signature-certificate";
         public static final String SIGNATURE = "signature";
         public static final String DIGEST = "digest";
@@ -51,13 +36,10 @@ public final class FiduciaConstants {
         public static final String DATE_FORMAT = "yyyy-MM-dd";
         public static final String OTHER_ID = "123";
         public static final String SCHEME_NAME = "PISP";
-        public static final String PAYMENT_INITIATOR = "PaymentInitiator";
     }
 
     public static class CredentialKeys {
-        public static final String IBAN = "iban";
         public static final String PSU_ID = "psu-id";
-        public static final String PASSWORD = "password";
     }
 
     public static class ErrorMessageKeys {

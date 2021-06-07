@@ -1,37 +1,38 @@
-package se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.payment.entities;
+package se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.payment.request;
 
 import javax.xml.bind.annotation.XmlElement;
 
 public class PmtInf {
-    @XmlElement(name = "CdtTrfTxInf")
-    private CdtTrfTxInf cdtTrfTxInf;
-
-    @XmlElement(name = "PmtTpInf")
-    private PmtTpInf pmtTpInf;
-
-    @XmlElement(name = "DbtrAcct")
-    private DbtrAcct dbtrAcct;
-
-    @XmlElement(name = "ReqdExctnDt")
-    private String reqdExctnDt;
-
-    @XmlElement(name = "ChrgBr")
-    private String chrgBr = "SLEV";
 
     @XmlElement(name = "PmtInfId")
     private String pmtInfId;
 
-    @XmlElement(name = "CtrlSum")
-    private String ctrlSum;
-
-    @XmlElement(name = "Dbtr")
-    private Dbtr dbtr = new Dbtr("NOT_PROVIDED");
+    @XmlElement(name = "PmtMtd")
+    private String pmtMtd = "TRF";
 
     @XmlElement(name = "NbOfTxs")
     private int nbOfTxs = 1;
 
-    @XmlElement(name = "PmtMtd")
-    private String pmtMtd = "TRF";
+    @XmlElement(name = "CtrlSum")
+    private String ctrlSum;
+
+    @XmlElement(name = "ReqdExctnDt")
+    private String reqdExctnDt;
+
+    @XmlElement(name = "Dbtr")
+    private Dbtr dbtr = new Dbtr("NOT_PROVIDED");
+
+    @XmlElement(name = "DbtrAcct")
+    private DbtrAcct dbtrAcct;
+
+    @XmlElement(name = "DbtrAgt")
+    private DbtrAgt dbtrAgt = new DbtrAgt(new FinInstnId(new Othr("NOTPROVIDED", null)));
+
+    @XmlElement(name = "ChrgBr")
+    private String chrgBr = "SLEV";
+
+    @XmlElement(name = "CdtTrfTxInf")
+    private CdtTrfTxInf cdtTrfTxInf;
 
     public PmtInf() {}
 

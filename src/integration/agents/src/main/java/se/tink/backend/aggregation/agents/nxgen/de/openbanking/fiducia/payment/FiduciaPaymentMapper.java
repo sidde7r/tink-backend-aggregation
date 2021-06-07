@@ -1,41 +1,48 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.payment;
 
-import java.time.LocalDateTime;
+import static java.util.Objects.nonNull;
+
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.ObjectUtils;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaConstants;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.payment.entities.Amt;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.payment.entities.CdtTrfTxInf;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.payment.entities.Cdtr;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.payment.entities.CdtrAcct;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.payment.entities.CstmrCdtTrfInitn;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.payment.entities.DbtrAcct;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.payment.entities.GrpHdr;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.payment.entities.IbanId;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.payment.entities.Id;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.payment.entities.InitgPty;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.payment.entities.InstdAmt;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.payment.entities.OrgId;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.payment.entities.Othr;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.payment.entities.PmtId;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.payment.entities.PmtInf;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.payment.entities.RmtInf;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.payment.entities.SchmeNm;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.payment.rpc.CreatePaymentXmlRequest;
-import se.tink.backend.aggregation.agents.utils.berlingroup.payment.PaymentMapper;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.payment.request.Amt;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.payment.request.CdtTrfTxInf;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.payment.request.Cdtr;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.payment.request.CdtrAcct;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.payment.request.CreatePaymentXmlRequest;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.payment.request.CstmrCdtTrfInitn;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.payment.request.DbtrAcct;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.payment.request.GrpHdr;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.payment.request.IbanId;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.payment.request.Id;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.payment.request.InitgPty;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.payment.request.InstdAmt;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.payment.request.OrgId;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.payment.request.Othr;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.payment.request.PmtId;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.payment.request.PmtInf;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.payment.request.RmtInf;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.payment.request.SchmeNm;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.utils.XmlConverter;
+import se.tink.backend.aggregation.agents.utils.berlingroup.payment.rpc.CreateRecurringPaymentRequest;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @RequiredArgsConstructor
-public class FiduciaPaymentMapper implements PaymentMapper<CreatePaymentXmlRequest> {
+public class FiduciaPaymentMapper {
 
+    public static final String NEW_LINE = "\r\n";
     private final RandomValueGenerator randomValueGenerator;
+    private final LocalDateTimeSource localDateTimeSource;
 
-    @Override
-    public CreatePaymentXmlRequest getPaymentRequest(Payment payment) {
+    public String getPaymentRequest(Payment payment) {
         Creditor creditor = payment.getCreditor();
         Debtor debtor = payment.getDebtor();
         ExactCurrencyAmount amount = payment.getExactCurrencyAmount();
@@ -48,11 +55,9 @@ public class FiduciaPaymentMapper implements PaymentMapper<CreatePaymentXmlReque
 
         GrpHdr groupHeader =
                 new GrpHdr(
-                        LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME),
+                        localDateTimeSource.now().format(DateTimeFormatter.ISO_DATE_TIME),
                         String.valueOf(amount.getDoubleValue()),
-                        new InitgPty(
-                                new Id(new OrgId(other)),
-                                FiduciaConstants.FormValues.PAYMENT_INITIATOR),
+                        new InitgPty(new Id(new OrgId(other))),
                         uuid);
 
         CdtTrfTxInf trfInf =
@@ -66,22 +71,63 @@ public class FiduciaPaymentMapper implements PaymentMapper<CreatePaymentXmlReque
                                         String.valueOf(amount.getDoubleValue()))),
                         new RmtInf(payment.getRemittanceInformation().getValue()));
 
+        LocalDate executionDate =
+                ObjectUtils.firstNonNull(
+                        payment.getExecutionDate(),
+                        payment.getStartDate(),
+                        localDateTimeSource.now().toLocalDate());
+
         PmtInf paymentInfo =
                 new PmtInf(
                         trfInf,
                         debtor == null ? null : new DbtrAcct(new IbanId(debtor.getAccountNumber())),
-                        payment.getExecutionDate()
-                                .format(
-                                        DateTimeFormatter.ofPattern(
-                                                FiduciaConstants.FormValues.DATE_FORMAT)),
+                        executionDate.format(
+                                DateTimeFormatter.ofPattern(
+                                        FiduciaConstants.FormValues.DATE_FORMAT)),
                         uuid,
                         String.valueOf(amount.getDoubleValue()));
 
-        return new CreatePaymentXmlRequest(new CstmrCdtTrfInitn(groupHeader, paymentInfo));
+        return XmlConverter.convertToXml(
+                new CreatePaymentXmlRequest(new CstmrCdtTrfInitn(groupHeader, paymentInfo)));
     }
 
-    @Override
-    public CreatePaymentXmlRequest getRecurringPaymentRequest(Payment payment) {
-        return getPaymentRequest(payment);
+    public String getRecurringPaymentRequest(Payment payment, String boundary) {
+        // This request is a multipart http message, consisting of xml part that is the same as
+        // regular one-off payment, and a json part that supplies all fields unique for recurring
+        // payments
+
+        String xmlPart = getPaymentRequest(payment);
+        String jsonPart = buildRecurringJsonPart(payment);
+
+        StringBuilder builder = new StringBuilder();
+        builder.append("--").append(boundary).append(NEW_LINE);
+        builder.append("Content-Disposition: form-data;name=\"xml_sct\"").append(NEW_LINE);
+        builder.append("Content-type: application/xml").append(NEW_LINE).append(NEW_LINE);
+        builder.append(xmlPart).append(NEW_LINE);
+        builder.append("--").append(boundary).append(NEW_LINE);
+        builder.append("Content-Disposition: form-data;name=\"json_standingorderType\"")
+                .append(NEW_LINE);
+        builder.append("Content-type: application/json").append(NEW_LINE).append(NEW_LINE);
+        builder.append(jsonPart).append("\r\n\r\n");
+        builder.append("--").append(boundary).append("--");
+
+        return builder.toString();
+    }
+
+    private String buildRecurringJsonPart(Payment payment) {
+        return SerializationUtils.serializeToString(
+                CreateRecurringPaymentRequest.builder()
+                        .frequency(payment.getFrequency().toString())
+                        .startDate(payment.getStartDate())
+                        .endDate(payment.getEndDate())
+                        .executionRule(
+                                payment.getExecutionRule() != null
+                                        ? payment.getExecutionRule().toString()
+                                        : null)
+                        .dayOfExecution(
+                                nonNull(payment.getDayOfExecution())
+                                        ? String.valueOf(payment.getDayOfExecution())
+                                        : null)
+                        .build());
     }
 }

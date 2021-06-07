@@ -4,7 +4,7 @@ import java.io.StringWriter;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.payment.rpc.CreatePaymentXmlRequest;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.payment.request.CreatePaymentXmlRequest;
 
 public final class XmlConverter {
 
@@ -19,6 +19,9 @@ public final class XmlConverter {
             JAXBContext jaxbContext = JAXBContext.newInstance(CreatePaymentXmlRequest.class);
             Marshaller marshaller = jaxbContext.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+            marshaller.setProperty(
+                    Marshaller.JAXB_SCHEMA_LOCATION,
+                    "urn:iso:std:iso:20022:tech:xsd:pain.001.001.03 schema.xsd");
 
             StringWriter sw = new StringWriter();
             marshaller.marshal(document, sw);

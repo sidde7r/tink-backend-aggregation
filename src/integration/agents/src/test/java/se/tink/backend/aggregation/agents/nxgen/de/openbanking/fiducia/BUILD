@@ -17,6 +17,9 @@ junit_test(
         "//src/integration/lib",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/berlingroup",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/response",
+        "//src/integration/payment:rpc",
+        "//src/integration/transfer:enums",
+        "//src/integration/transfer:rpc",
         "//src/libraries/agent-storage",
         "//src/libraries/serialization",
         "//third_party:org_apache_commons_commons_lang",
@@ -26,5 +29,6 @@ junit_test(
         "//third_party:pl_pragmatists_junitparams",
         "@aggregation//:com_google_guava_guava",
         "@tink_backend//src/libraries/account_identifier",
+        "@tink_backend//src/libraries/payments_common/src/java/se/tink/libraries/payments/common/model:payments_common_model",
     ],
 )
