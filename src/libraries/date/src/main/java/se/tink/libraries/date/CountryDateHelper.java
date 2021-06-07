@@ -5,9 +5,6 @@ import de.jollyday.Holiday;
 import de.jollyday.HolidayCalendar;
 import de.jollyday.HolidayManager;
 import java.time.Clock;
-import java.time.Duration;
-import java.time.LocalTime;
-import java.time.ZonedDateTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -125,19 +122,6 @@ public class CountryDateHelper {
         return getNow();
     }
 
-    public Date getNextBusinessDay() {
-        Date date = inclusiveEndTime(getNow());
-
-        return getNextBusinessDay(date);
-    }
-
-    public Date getNextBusinessDay(Date date) {
-        Calendar calendar = getCalendar(date);
-        calendar.add(Calendar.DAY_OF_MONTH, 1);
-
-        return getCurrentOrNextBusinessDay(calendar).getTime();
-    }
-
     /** Returns today's date with flattened time (12.00). */
     public Date getToday() {
         return flattenTime(getNow());
@@ -148,24 +132,11 @@ public class CountryDateHelper {
         return inclusiveStartTime(getNow());
     }
 
-    public void setInclusiveEndTime(Calendar calendar) {
-        calendar.set(Calendar.HOUR_OF_DAY, 23);
-        calendar.set(Calendar.MINUTE, 59);
-        calendar.set(Calendar.SECOND, 59);
-        calendar.set(Calendar.MILLISECOND, 999);
-    }
-
     private void setInclusiveStartTime(Calendar calendar) {
         calendar.set(Calendar.HOUR_OF_DAY, 0);
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
         calendar.set(Calendar.MILLISECOND, 0);
-    }
-
-    public Date inclusiveEndTime(Date date) {
-        Calendar calendar = getCalendar(date);
-        setInclusiveEndTime(calendar);
-        return calendar.getTime();
     }
 
     public Date inclusiveStartTime(Date date) {
@@ -285,38 +256,6 @@ public class CountryDateHelper {
         return providedDate == null
                 ? getBestPossibleTransferDate(cutOffHours, cutOffMinutes)
                 : providedDate;
-    }
-
-    /**
-     * If zoneDateTime falls between cutOff and cutOff - cutOffWindow (in seconds)
-     *
-     * @param zoneDateTime dateTime to check
-     * @param cutOffHours the hour of the cutoff
-     * @param cutOffMinutes the minute of the cutoff
-     * @param cutOffWindow if between cutoff and cutoff - cutOffWindow (in seconds) return true
-     * @return true if falls in between cutOff window
-     */
-    public boolean calculateIfWithinCutOffTime(
-            ZonedDateTime zoneDateTime, int cutOffHours, int cutOffMinutes, int cutOffWindow) {
-
-        Duration duration =
-                Duration.between(
-                        zoneDateTime,
-                        ZonedDateTime.of(
-                                java.time.LocalDate.now(timezone.toZoneId()),
-                                LocalTime.of(cutOffHours, cutOffMinutes),
-                                timezone.toZoneId()));
-        return duration.getSeconds() < cutOffWindow && !duration.isNegative();
-    }
-
-    /**
-     * If localDate falls today
-     *
-     * @param localDate date to check
-     * @return true if it is today
-     */
-    public boolean checkIfToday(java.time.LocalDate localDate) {
-        return java.time.LocalDate.now(timezone.toZoneId()).isEqual(localDate);
     }
 
     private ImmutableSet<String> getCountryHolidays(String countryCode) {
