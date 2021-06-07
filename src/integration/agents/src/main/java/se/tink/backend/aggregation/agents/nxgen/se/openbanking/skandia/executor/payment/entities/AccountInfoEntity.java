@@ -1,22 +1,20 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.executor.payment.entities;
 
 import java.util.List;
-import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.SkandiaConstants.PaymentTypes;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
-@NoArgsConstructor
-@AllArgsConstructor
 @EqualsAndHashCode
+@RequiredArgsConstructor
 @JsonObject
 @Getter
 public class AccountInfoEntity {
 
-    private String bban;
-    private List<String> allowedTransactionTypes;
+    private final String bban;
+    private final List<String> allowedTransactionTypes;
 
     public boolean isDomesticTransferAllowed() {
         return allowedTransactionTypes.stream()

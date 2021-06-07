@@ -62,6 +62,7 @@ public final class SkandiaConstants {
                 "Invalid requested execution date";
         public static final String NOT_ENOUGH_FUNDS =
                 "Not enough funds on account to make payments";
+        public static final String SCA_REDIRECT_MISSING = "SCA Redirect missing";
     }
 
     public static class ErrorCodes {
@@ -154,7 +155,7 @@ public final class SkandiaConstants {
     @RequiredArgsConstructor
     public enum PaymentProduct {
         DOMESTIC_CREDIT_TRANSFERS("domestic-credit-transfer", ReferenceType.PDTX),
-        DOMESTIC_GIROS("domestic-giros", ReferenceType.SCOR),
+        DOMESTIC_GIROS("giro-domestic-credit-transfer", ReferenceType.SCOR),
         CROSS_BORDER_CREDIT_TRANSFERS("cross-border-credit-transfers", ReferenceType.SCOR);
 
         private final String product;
@@ -192,5 +193,11 @@ public final class SkandiaConstants {
 
     public class BodyValues {
         public static final String EMPTY_BODY = "{}";
+    }
+
+    public class AccountIdentifier {
+
+        public static final String BANK_GIRO_TYPE = "BANKGIRO";
+        public static final String PLUS_GIRO_TYPE = "PLUSGIRO";
     }
 }

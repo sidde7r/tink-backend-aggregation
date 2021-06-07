@@ -21,9 +21,10 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.authentic
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.authenticator.rpc.TokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.configuration.SkandiaConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.executor.payment.rpc.CreatePaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.executor.payment.rpc.DomesticGirosPaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.executor.payment.rpc.DomesticPaymentRequest;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.executor.payment.rpc.DomesticPaymentResponse;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.executor.payment.rpc.GetDomesticPaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.executor.payment.rpc.GetPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.executor.payment.rpc.SignPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.fetcher.transactionalaccount.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.fetcher.transactionalaccount.rpc.GetBalancesResponse;
@@ -66,6 +67,10 @@ public final class SkandiaApiClient {
                 .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
     }
 
+    private URL getRedirectUrlWithState(String state) {
+        return URL.of(getRedirectUrl()).queryParam(QueryKeys.STATE, state);
+    }
+
     protected void setConfiguration(
             AgentConfiguration<SkandiaConfiguration> agentConfiguration,
             EidasProxyConfiguration eidasProxyConfiguration) {
@@ -97,15 +102,6 @@ public final class SkandiaApiClient {
                 .queryParam(QueryKeys.REDIRECT_URI, getRedirectUrl())
                 .queryParamRaw(QueryKeys.SCOPE, QueryValues.SCOPE)
                 .queryParam(QueryKeys.STATE, state)
-                .queryParam(QueryKeys.RESPONSE_TYPE, QueryValues.CODE)
-                .getUrl();
-    }
-
-    public URL getScaRedirectUrl(String scaRedirect) {
-        return client.request(new URL(scaRedirect))
-                .queryParam(QueryKeys.CLIENT_ID, configuration.getClientId())
-                .queryParam(QueryKeys.REDIRECT_URI, getRedirectUrl())
-                .queryParamRaw(QueryKeys.SCOPE, QueryValues.SCOPE)
                 .queryParam(QueryKeys.RESPONSE_TYPE, QueryValues.CODE)
                 .getUrl();
     }
@@ -176,26 +172,35 @@ public final class SkandiaApiClient {
                 .get(GetTransactionsResponse.class);
     }
 
-    public DomesticPaymentResponse createDomesticPayment(
+    public CreatePaymentResponse createDomesticPayment(
             DomesticPaymentRequest domesticPaymentRequest) {
         return createRequestInSession(
                         SkandiaConstants.Urls.CREATE_PAYMENT.parameter(
                                 SkandiaConstants.IdTags.PAYMENT_TYPE,
                                 PaymentProduct.DOMESTIC_CREDIT_TRANSFERS.getProduct()))
-                .post(DomesticPaymentResponse.class, domesticPaymentRequest);
+                .post(CreatePaymentResponse.class, domesticPaymentRequest);
     }
 
-    public GetDomesticPaymentResponse getDomesticPayment(String paymentId) {
+    public CreatePaymentResponse createDomesticGirosPayment(DomesticGirosPaymentRequest request) {
+        return createRequestInSession(
+                        SkandiaConstants.Urls.CREATE_PAYMENT.parameter(
+                                SkandiaConstants.IdTags.PAYMENT_TYPE,
+                                PaymentProduct.DOMESTIC_GIROS.getProduct()))
+                .post(CreatePaymentResponse.class, request);
+    }
+
+    public GetPaymentResponse getPayment(Payment payment) {
         return createRequestInSession(
                         SkandiaConstants.Urls.GET_PAYMENT
                                 .parameter(
                                         SkandiaConstants.IdTags.PAYMENT_TYPE,
-                                        PaymentProduct.DOMESTIC_CREDIT_TRANSFERS.getProduct())
-                                .parameter(SkandiaConstants.IdTags.PAYMENT_ID, paymentId))
-                .get(GetDomesticPaymentResponse.class);
+                                        PaymentProduct.from(payment).getProduct())
+                                .parameter(
+                                        SkandiaConstants.IdTags.PAYMENT_ID, payment.getUniqueId()))
+                .get(GetPaymentResponse.class);
     }
 
-    public SignPaymentResponse signPayment(Payment payment) {
+    public SignPaymentResponse signPayment(Payment payment, String state) {
 
         return createRequestInSession(
                         Urls.POST_SIGN_PAYMENT
@@ -204,7 +209,7 @@ public final class SkandiaApiClient {
                                         PaymentProduct.from(payment).getProduct())
                                 .parameter(
                                         SkandiaConstants.IdTags.PAYMENT_ID, payment.getUniqueId()))
-                .header(HeaderKeys.TPP_REDIRECT_URI, getRedirectUrl())
+                .header(HeaderKeys.TPP_REDIRECT_URI, getRedirectUrlWithState(state))
                 .post(SignPaymentResponse.class, BodyValues.EMPTY_BODY);
     }
 }

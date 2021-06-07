@@ -46,7 +46,7 @@ public class SkandiaAgentPaymentTest {
 
         List<Payment> list = new ArrayList<>();
 
-        LocalDate executionDate = LocalDate.now();
+        LocalDate executionDate = LocalDate.now().plusDays(4);
         String currency = "SEK";
         RemittanceInformation remittanceInformation = new RemittanceInformation();
         remittanceInformation.setType(RemittanceInformationType.UNSTRUCTURED);
