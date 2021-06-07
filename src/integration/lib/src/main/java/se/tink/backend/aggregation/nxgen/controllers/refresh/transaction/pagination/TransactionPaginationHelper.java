@@ -103,7 +103,7 @@ public class TransactionPaginationHelper {
         }
 
         Set<AccountIdentifier> accountIdentifiers = new HashSet<>(account.getIdentifiers());
-        Optional<AccountTransactionRefreshScope> accountRefreshScope =
+        Optional<AccountTransactionsRefreshScope> accountRefreshScope =
                 refreshScope.getTransactions().getAccounts().stream()
                         .filter(
                                 it -> {

@@ -17,9 +17,9 @@ import org.mockito.junit.MockitoJUnitRunner;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.credentials.service.AccountTransactionRefreshScope;
+import se.tink.libraries.credentials.service.AccountTransactionsRefreshScope;
 import se.tink.libraries.credentials.service.RefreshScope;
-import se.tink.libraries.credentials.service.TransactionRefreshScope;
+import se.tink.libraries.credentials.service.TransactionsRefreshScope;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TransactionPaginationHelperTest {
@@ -30,10 +30,10 @@ public class TransactionPaginationHelperTest {
     public void ensure_shouldFetchNextPage_returnsFalse_whenTransactionRefreshLimitIsReached() {
         // given
         RefreshScope refreshScope = new RefreshScope();
-        TransactionRefreshScope transactionRefreshScope = new TransactionRefreshScope();
+        TransactionsRefreshScope transactionsRefreshScope = new TransactionsRefreshScope();
         LocalDate expectedLocalDate = LocalDate.parse("2021-06-04");
-        transactionRefreshScope.setTransactionBookedDateGte(expectedLocalDate);
-        refreshScope.setTransactions(transactionRefreshScope);
+        transactionsRefreshScope.setTransactionBookedDateGte(expectedLocalDate);
+        refreshScope.setTransactions(transactionsRefreshScope);
         TransactionPaginationHelper helper = new TransactionPaginationHelper(refreshScope);
 
         List<AggregationTransaction> transactions = new ArrayList<>();
@@ -80,10 +80,10 @@ public class TransactionPaginationHelperTest {
             ensure_shouldFetchNextPage_returnsTrue_whenTransactionRefreshLimitIsReachedButNoSafetyThresholdNumberOfDaysEnsured() {
         // given
         RefreshScope refreshScope = new RefreshScope();
-        TransactionRefreshScope transactionRefreshScope = new TransactionRefreshScope();
+        TransactionsRefreshScope transactionsRefreshScope = new TransactionsRefreshScope();
         LocalDate expectedLocalDate = LocalDate.parse("2021-06-04");
-        transactionRefreshScope.setTransactionBookedDateGte(expectedLocalDate);
-        refreshScope.setTransactions(transactionRefreshScope);
+        transactionsRefreshScope.setTransactionBookedDateGte(expectedLocalDate);
+        refreshScope.setTransactions(transactionsRefreshScope);
         TransactionPaginationHelper helper = new TransactionPaginationHelper(refreshScope);
 
         List<AggregationTransaction> transactions = new ArrayList<>();
@@ -130,10 +130,10 @@ public class TransactionPaginationHelperTest {
             ensure_shouldFetchNextPage_returnsTrue_whenTransactionRefreshLimitIsReachedButNoSafetyThresholdNumberOfOverlapsEnsured() {
         // given
         RefreshScope refreshScope = new RefreshScope();
-        TransactionRefreshScope transactionRefreshScope = new TransactionRefreshScope();
+        TransactionsRefreshScope transactionsRefreshScope = new TransactionsRefreshScope();
         LocalDate expectedLocalDate = LocalDate.parse("2021-06-04");
-        transactionRefreshScope.setTransactionBookedDateGte(expectedLocalDate);
-        refreshScope.setTransactions(transactionRefreshScope);
+        transactionsRefreshScope.setTransactionBookedDateGte(expectedLocalDate);
+        refreshScope.setTransactions(transactionsRefreshScope);
         TransactionPaginationHelper helper = new TransactionPaginationHelper(refreshScope);
 
         List<AggregationTransaction> transactions = new ArrayList<>();
@@ -178,13 +178,13 @@ public class TransactionPaginationHelperTest {
 
     @Test
     public void
-            ensure_getTransactionDateLimit_returnsProperRefreshDate_whenIsDefinedOnTransactionScope() {
+            ensure_getTransactionDateLimit_returnsProperRefreshDate_whenIsDefinedOnTransactionsScope() {
         // given
         RefreshScope refreshScope = new RefreshScope();
-        TransactionRefreshScope transactionRefreshScope = new TransactionRefreshScope();
+        TransactionsRefreshScope transactionsRefreshScope = new TransactionsRefreshScope();
         LocalDate expectedLocalDate = LocalDate.parse("2021-06-04");
-        transactionRefreshScope.setTransactionBookedDateGte(expectedLocalDate);
-        refreshScope.setTransactions(transactionRefreshScope);
+        transactionsRefreshScope.setTransactionBookedDateGte(expectedLocalDate);
+        refreshScope.setTransactions(transactionsRefreshScope);
         TransactionPaginationHelper helper = new TransactionPaginationHelper(refreshScope);
 
         // when
@@ -198,19 +198,20 @@ public class TransactionPaginationHelperTest {
 
     @Test
     public void
-            ensure_getTransactionDateLimit_returnsProperRefreshDate_whenIsDefinedOnAccountTransactionScope() {
+            ensure_getTransactionDateLimit_returnsProperRefreshDate_whenIsDefinedOnAccountTransactionsScope() {
         // given
         RefreshScope refreshScope = new RefreshScope();
-        TransactionRefreshScope transactionRefreshScope = new TransactionRefreshScope();
-        refreshScope.setTransactions(transactionRefreshScope);
-        AccountTransactionRefreshScope accountTransactionRefreshScope =
-                new AccountTransactionRefreshScope();
+        TransactionsRefreshScope transactionsRefreshScope = new TransactionsRefreshScope();
+        refreshScope.setTransactions(transactionsRefreshScope);
+        AccountTransactionsRefreshScope accountTransactionsRefreshScope =
+                new AccountTransactionsRefreshScope();
         String accountIdentifier = "tink://720fb05a-c01b-47b7-baa1-5da02e165d1e";
-        accountTransactionRefreshScope.setAccountIdentifiers(
+        accountTransactionsRefreshScope.setAccountIdentifiers(
                 Collections.singleton(accountIdentifier));
         LocalDate expectedLocalDate = LocalDate.parse("2021-06-04");
-        accountTransactionRefreshScope.setTransactionBookedDateGte(expectedLocalDate);
-        transactionRefreshScope.setAccounts(Collections.singleton(accountTransactionRefreshScope));
+        accountTransactionsRefreshScope.setTransactionBookedDateGte(expectedLocalDate);
+        transactionsRefreshScope.setAccounts(
+                Collections.singleton(accountTransactionsRefreshScope));
         TransactionPaginationHelper helper = new TransactionPaginationHelper(refreshScope);
 
         when(account.getIdentifiers())
@@ -229,20 +230,21 @@ public class TransactionPaginationHelperTest {
 
     @Test
     public void
-            ensure_getTransactionDateLimit_returnsProperRefreshDate_whenIsDefinedOnBothTransactionAndAccountTransactionScope() {
+            ensure_getTransactionDateLimit_returnsProperRefreshDate_whenIsDefinedOnBothTransactionsAndAccountTransactionsScope() {
         // given
         RefreshScope refreshScope = new RefreshScope();
-        TransactionRefreshScope transactionRefreshScope = new TransactionRefreshScope();
-        transactionRefreshScope.setTransactionBookedDateGte(LocalDate.parse("2021-06-03"));
-        refreshScope.setTransactions(transactionRefreshScope);
-        AccountTransactionRefreshScope accountTransactionRefreshScope =
-                new AccountTransactionRefreshScope();
+        TransactionsRefreshScope transactionsRefreshScope = new TransactionsRefreshScope();
+        transactionsRefreshScope.setTransactionBookedDateGte(LocalDate.parse("2021-06-03"));
+        refreshScope.setTransactions(transactionsRefreshScope);
+        AccountTransactionsRefreshScope accountTransactionsRefreshScope =
+                new AccountTransactionsRefreshScope();
         String accountIdentifier = "tink://720fb05a-c01b-47b7-baa1-5da02e165d1e";
-        accountTransactionRefreshScope.setAccountIdentifiers(
+        accountTransactionsRefreshScope.setAccountIdentifiers(
                 Collections.singleton(accountIdentifier));
         LocalDate expectedLocalDate = LocalDate.parse("2021-06-04");
-        accountTransactionRefreshScope.setTransactionBookedDateGte(expectedLocalDate);
-        transactionRefreshScope.setAccounts(Collections.singleton(accountTransactionRefreshScope));
+        accountTransactionsRefreshScope.setTransactionBookedDateGte(expectedLocalDate);
+        transactionsRefreshScope.setAccounts(
+                Collections.singleton(accountTransactionsRefreshScope));
         TransactionPaginationHelper helper = new TransactionPaginationHelper(refreshScope);
 
         when(account.getIdentifiers())
@@ -273,7 +275,7 @@ public class TransactionPaginationHelperTest {
 
     @Test
     public void
-            ensure_getTransactionDateLimit_returnsEmptyRefreshDate_whenTransactionRefreshScopeIsNull() {
+            ensure_getTransactionDateLimit_returnsEmptyRefreshDate_whenTransactionsRefreshScopeIsNull() {
         // given
         RefreshScope refreshScope = new RefreshScope();
         TransactionPaginationHelper helper = new TransactionPaginationHelper(refreshScope);
