@@ -1,9 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.authenticator;
 
 import lombok.extern.slf4j.Slf4j;
-import se.tink.backend.aggregation.agents.exceptions.LoginException;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterConstants.LoginForm;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterConstants.ScaForm;
+import org.openqa.selenium.TimeoutException;
+import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.authenticator.page.AttemptsLimitExceededException;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 
@@ -21,18 +21,22 @@ public class BankinterAuthenticator implements PasswordAuthenticator {
     }
 
     @Override
-    public void authenticate(String username, String password) throws LoginException {
-        log.info("Submitting login form");
-        String loginUrl = authenticationClient.login(username, password);
-        authenticationClient.waitForErrorOrRedirect(LoginForm.SUBMIT_TIMEOUT_SECONDS, loginUrl);
-        if (authenticationClient.isScaNeeded()) {
-            log.info("Reached SCA form");
-            String scaPage = authenticationClient.submitSca(supplementalInformationHelper);
-            authenticationClient.waitForErrorOrRedirect(ScaForm.SUBMIT_TIMEOUT_SECONDS, scaPage);
-            log.info("SCA form has been submitted successfully");
+    public void authenticate(String username, String password) {
+        try {
+            log.info("Submitting login form");
+            authenticationClient.login(username, password);
+            if (authenticationClient.isScaNeeded()) {
+                log.info("Reached SCA form");
+                authenticationClient.submitSca(supplementalInformationHelper);
+                log.info("SCA form has been submitted successfully");
+            }
+            log.info("Login form has been submitted");
+            authenticationClient.finishProcess();
+            log.info("Authentication process has finished successfully");
+        } catch (TimeoutException e) {
+            throw ThirdPartyAppError.TIMED_OUT.exception(e);
+        } catch (AttemptsLimitExceededException e) {
+            throw ThirdPartyAppError.AUTHENTICATION_ERROR.exception(e);
         }
-        log.info("Login form has been submitted");
-        authenticationClient.finishProcess();
-        log.info("Authentication process has finished successfully");
     }
 }

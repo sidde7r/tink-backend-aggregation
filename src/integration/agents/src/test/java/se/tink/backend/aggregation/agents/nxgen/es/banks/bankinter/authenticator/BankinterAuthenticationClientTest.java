@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.authenticator;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -26,6 +26,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterApiC
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterConstants.LoginForm;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterConstants.Paths;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterConstants.ScaForm;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.authenticator.page.AttemptsLimitExceededException;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -45,7 +46,7 @@ public class BankinterAuthenticationClientTest {
     }
 
     @Test
-    public void shouldLoginUserProperly() {
+    public void shouldLoginUserProperlyWithoutErrors() throws AttemptsLimitExceededException {
         // given
         String loginPageUrl = "loginPageUrl";
         Navigation navigation = mock(Navigation.class);
@@ -55,17 +56,20 @@ public class BankinterAuthenticationClientTest {
                 .thenReturn(mock(WebElement.class));
         when(driver.findElement(By.id(LoginForm.PASSWORD_FIELD)))
                 .thenReturn(mock(WebElement.class));
+        WebElement errorPanel = mock(WebElement.class);
+        when(driver.findElement(By.id(LoginForm.ERROR_PANEL))).thenReturn(errorPanel);
+        when(errorPanel.isDisplayed()).thenReturn(true);
         when(driver.getCurrentUrl()).thenReturn(loginPageUrl);
 
         // when
-        String result = authenticationClient.login(USERNAME, PASSWORD);
+        authenticationClient.login(USERNAME, PASSWORD);
 
         // then
-        assertThat(result).isEqualTo(loginPageUrl);
+        verify(htmlLogger, times(0)).error(any());
     }
 
     @Test
-    public void shouldThrowNoSuchElementExceptionWhenElementDoesNotExistsOnLoginPage() {
+    public void shouldThrowAttemptsLimitExceededExceptionWhenElementDoesNotExistsOnLoginPage() {
         // given
         Navigation navigation = mock(Navigation.class);
         when(driver.navigate()).thenReturn(navigation);
@@ -75,42 +79,29 @@ public class BankinterAuthenticationClientTest {
         ThrowingCallable result = () -> authenticationClient.login(USERNAME, PASSWORD);
 
         // then
-        assertThatThrownBy(result).isInstanceOf(NoSuchElementException.class);
-        verify(htmlLogger, times(1)).error("Could not find an element `By.id: loginForm`");
+        assertThatThrownBy(result).isInstanceOf(AttemptsLimitExceededException.class);
+        verify(htmlLogger, times(3)).error("Could not find an element `By.id: loginForm`");
     }
 
     @Test
-    public void shouldSubmitScaFormProperly() {
+    public void shouldSubmitScaFormProperly() throws AttemptsLimitExceededException {
         // given
         String scaPageUrl = "scaPageUrl";
+        when(supplementalInformationHelper.waitForOtpInput()).thenReturn("code");
         when(driver.findElement(By.cssSelector(ScaForm.CODE_FIELD_SELECTOR)))
                 .thenReturn(mock(WebElement.class));
         when(driver.findElement(By.cssSelector(ScaForm.SUBMIT_BUTTON_SELECTOR)))
                 .thenReturn(mock(WebElement.class));
         when(driver.getCurrentUrl()).thenReturn(scaPageUrl);
+        WebElement errorPanel = mock(WebElement.class);
+        when(driver.findElement(By.id(LoginForm.ERROR_PANEL))).thenReturn(errorPanel);
+        when(errorPanel.isDisplayed()).thenReturn(true);
 
         // when
-        String result = authenticationClient.submitSca(supplementalInformationHelper);
+        authenticationClient.submitSca(supplementalInformationHelper);
 
         // then
-        assertThat(result).isEqualTo(scaPageUrl);
-    }
-
-    @Test
-    public void shouldThrowNoSuchElementExceptionWhenElementDoesNotExistsOnSCAPage() {
-        // given
-        when(driver.findElement(By.cssSelector(ScaForm.CODE_FIELD_SELECTOR)))
-                .thenThrow(NoSuchElementException.class);
-
-        // when
-        ThrowingCallable result =
-                () -> authenticationClient.submitSca(supplementalInformationHelper);
-
-        // then
-        assertThatThrownBy(result).isInstanceOf(NoSuchElementException.class);
-        verify(htmlLogger, times(1))
-                .error(
-                        "Could not find an element `By.cssSelector: input[name$=inputSignCodeOtp].claveseguridad`");
+        verify(htmlLogger, times(0)).error(any());
     }
 
     @Test
