@@ -27,7 +27,7 @@ public class TransactionPaginationHelperTest {
     @Mock private Account account;
 
     @Test
-    public void ensure_isContentWithRefresh_returnsTrue_whenTransactionRefreshLimitIsReached() {
+    public void ensure_shouldFetchNextPage_returnsFalse_whenTransactionRefreshLimitIsReached() {
         // given
         RefreshScope refreshScope = new RefreshScope();
         TransactionRefreshScope transactionRefreshScope = new TransactionRefreshScope();
@@ -69,15 +69,15 @@ public class TransactionPaginationHelperTest {
         transactions.add(transaction);
 
         // when
-        boolean contentWithRefresh = helper.isContentWithRefresh(account, transactions);
+        boolean contentWithRefresh = helper.shouldFetchNextPage(account, transactions);
 
         // then
-        assertTrue(contentWithRefresh);
+        assertFalse(contentWithRefresh);
     }
 
     @Test
     public void
-            ensure_isContentWithRefresh_returnsFalse_whenTransactionRefreshLimitIsReachedButNoSafetyThresholdNumberOfDaysEnsured() {
+            ensure_shouldFetchNextPage_returnsTrue_whenTransactionRefreshLimitIsReachedButNoSafetyThresholdNumberOfDaysEnsured() {
         // given
         RefreshScope refreshScope = new RefreshScope();
         TransactionRefreshScope transactionRefreshScope = new TransactionRefreshScope();
@@ -119,15 +119,15 @@ public class TransactionPaginationHelperTest {
         transactions.add(transaction);
 
         // when
-        boolean contentWithRefresh = helper.isContentWithRefresh(account, transactions);
+        boolean contentWithRefresh = helper.shouldFetchNextPage(account, transactions);
 
         // then
-        assertFalse(contentWithRefresh);
+        assertTrue(contentWithRefresh);
     }
 
     @Test
     public void
-            ensure_isContentWithRefresh_returnsFalse_whenTransactionRefreshLimitIsReachedButNoSafetyThresholdNumberOfOverlapsEnsured() {
+            ensure_shouldFetchNextPage_returnsTrue_whenTransactionRefreshLimitIsReachedButNoSafetyThresholdNumberOfOverlapsEnsured() {
         // given
         RefreshScope refreshScope = new RefreshScope();
         TransactionRefreshScope transactionRefreshScope = new TransactionRefreshScope();
@@ -170,10 +170,10 @@ public class TransactionPaginationHelperTest {
         transactions.add(transaction);
 
         // when
-        boolean contentWithRefresh = helper.isContentWithRefresh(account, transactions);
+        boolean contentWithRefresh = helper.shouldFetchNextPage(account, transactions);
 
         // then
-        assertFalse(contentWithRefresh);
+        assertTrue(contentWithRefresh);
     }
 
     @Test

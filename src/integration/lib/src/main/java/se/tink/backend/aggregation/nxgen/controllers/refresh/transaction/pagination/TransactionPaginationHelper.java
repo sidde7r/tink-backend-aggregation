@@ -26,16 +26,15 @@ public class TransactionPaginationHelper {
         this(hasRefreshScope.getRefreshScope());
     }
 
-    public boolean isContentWithRefresh(
-            Account account, List<AggregationTransaction> transactions) {
+    public boolean shouldFetchNextPage(Account account, List<AggregationTransaction> transactions) {
         if (transactions.size() == 0) {
-            return false;
+            return true;
         }
 
         final Optional<Date> transactionDateLimit = getTransactionDateLimit(account);
 
         if (!transactionDateLimit.isPresent()) {
-            return false;
+            return true;
         }
 
         // Reached certain date and check next SAFETY_THRESHOLD_NUMBER_OF_OVERLAPS transactions
@@ -80,11 +79,11 @@ public class TransactionPaginationHelper {
 
             if (transactionsBeforeCertainDate >= SAFETY_THRESHOLD_NUMBER_OF_OVERLAPS
                     && overlappingTransactionDays >= SAFETY_THRESHOLD_NUMBER_OF_DAYS) {
-                return true;
+                return false;
             }
         }
 
-        return false;
+        return true;
     }
 
     /**
