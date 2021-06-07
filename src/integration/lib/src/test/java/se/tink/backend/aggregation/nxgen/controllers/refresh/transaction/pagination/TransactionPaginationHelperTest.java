@@ -36,12 +36,6 @@ public class TransactionPaginationHelperTest {
         refreshScope.setTransactions(transactionRefreshScope);
         TransactionPaginationHelper helper = new TransactionPaginationHelper(refreshScope);
 
-        when(account.getIdentifiers())
-                .thenReturn(
-                        Collections.singletonList(
-                                AccountIdentifier.createOrThrow(
-                                        "tink://720fb05a-c01b-47b7-baa1-5da02e165d1e")));
-
         List<AggregationTransaction> transactions = new ArrayList<>();
 
         AggregationTransaction transaction = mock(AggregationTransaction.class);
@@ -91,12 +85,6 @@ public class TransactionPaginationHelperTest {
         transactionRefreshScope.setTransactionBookedDateGte(expectedLocalDate);
         refreshScope.setTransactions(transactionRefreshScope);
         TransactionPaginationHelper helper = new TransactionPaginationHelper(refreshScope);
-
-        when(account.getIdentifiers())
-                .thenReturn(
-                        Collections.singletonList(
-                                AccountIdentifier.createOrThrow(
-                                        "tink://720fb05a-c01b-47b7-baa1-5da02e165d1e")));
 
         List<AggregationTransaction> transactions = new ArrayList<>();
 
@@ -148,12 +136,6 @@ public class TransactionPaginationHelperTest {
         refreshScope.setTransactions(transactionRefreshScope);
         TransactionPaginationHelper helper = new TransactionPaginationHelper(refreshScope);
 
-        when(account.getIdentifiers())
-                .thenReturn(
-                        Collections.singletonList(
-                                AccountIdentifier.createOrThrow(
-                                        "tink://720fb05a-c01b-47b7-baa1-5da02e165d1e")));
-
         List<AggregationTransaction> transactions = new ArrayList<>();
 
         AggregationTransaction transaction = mock(AggregationTransaction.class);
@@ -196,7 +178,7 @@ public class TransactionPaginationHelperTest {
 
     @Test
     public void
-            ensure_getContentWithRefreshDate_returnsProperRefreshDate_whenIsDefinedOnTransactionScope() {
+            ensure_getTransactionDateLimit_returnsProperRefreshDate_whenIsDefinedOnTransactionScope() {
         // given
         RefreshScope refreshScope = new RefreshScope();
         TransactionRefreshScope transactionRefreshScope = new TransactionRefreshScope();
@@ -205,14 +187,8 @@ public class TransactionPaginationHelperTest {
         refreshScope.setTransactions(transactionRefreshScope);
         TransactionPaginationHelper helper = new TransactionPaginationHelper(refreshScope);
 
-        when(account.getIdentifiers())
-                .thenReturn(
-                        Collections.singletonList(
-                                AccountIdentifier.createOrThrow(
-                                        "tink://720fb05a-c01b-47b7-baa1-5da02e165d1e")));
-
         // when
-        Optional<Date> date = helper.getContentWithRefreshDate(account);
+        Optional<Date> date = helper.getTransactionDateLimit(account);
 
         // then
         assertTrue(date.isPresent());
@@ -222,7 +198,7 @@ public class TransactionPaginationHelperTest {
 
     @Test
     public void
-            ensure_getContentWithRefreshDate_returnsProperRefreshDate_whenIsDefinedOnAccountTransactionScope() {
+            ensure_getTransactionDateLimit_returnsProperRefreshDate_whenIsDefinedOnAccountTransactionScope() {
         // given
         RefreshScope refreshScope = new RefreshScope();
         TransactionRefreshScope transactionRefreshScope = new TransactionRefreshScope();
@@ -243,7 +219,7 @@ public class TransactionPaginationHelperTest {
                                 AccountIdentifier.createOrThrow(accountIdentifier)));
 
         // when
-        Optional<Date> date = helper.getContentWithRefreshDate(account);
+        Optional<Date> date = helper.getTransactionDateLimit(account);
 
         // then
         assertTrue(date.isPresent());
@@ -253,7 +229,7 @@ public class TransactionPaginationHelperTest {
 
     @Test
     public void
-            ensure_getContentWithRefreshDate_returnsProperRefreshDate_whenIsDefinedOnBothTransactionAndAccountTransactionScope() {
+            ensure_getTransactionDateLimit_returnsProperRefreshDate_whenIsDefinedOnBothTransactionAndAccountTransactionScope() {
         // given
         RefreshScope refreshScope = new RefreshScope();
         TransactionRefreshScope transactionRefreshScope = new TransactionRefreshScope();
@@ -275,7 +251,7 @@ public class TransactionPaginationHelperTest {
                                 AccountIdentifier.createOrThrow(accountIdentifier)));
 
         // when
-        Optional<Date> date = helper.getContentWithRefreshDate(account);
+        Optional<Date> date = helper.getTransactionDateLimit(account);
 
         // then
         assertTrue(date.isPresent());
@@ -284,18 +260,12 @@ public class TransactionPaginationHelperTest {
     }
 
     @Test
-    public void ensure_getContentWithRefreshDate_returnsEmptyRefreshDate_whenRefreshScopeIsNull() {
+    public void ensure_getTransactionDateLimit_returnsEmptyRefreshDate_whenRefreshScopeIsNull() {
         // given
         TransactionPaginationHelper helper = new TransactionPaginationHelper((RefreshScope) null);
 
-        String accountIdentifier = "tink://720fb05a-c01b-47b7-baa1-5da02e165d1e";
-        when(account.getIdentifiers())
-                .thenReturn(
-                        Collections.singletonList(
-                                AccountIdentifier.createOrThrow(accountIdentifier)));
-
         // when
-        Optional<Date> date = helper.getContentWithRefreshDate(account);
+        Optional<Date> date = helper.getTransactionDateLimit(account);
 
         // then
         assertFalse(date.isPresent());
@@ -303,19 +273,13 @@ public class TransactionPaginationHelperTest {
 
     @Test
     public void
-            ensure_getContentWithRefreshDate_returnsEmptyRefreshDate_whenTransactionRefreshScopeIsNull() {
+            ensure_getTransactionDateLimit_returnsEmptyRefreshDate_whenTransactionRefreshScopeIsNull() {
         // given
         RefreshScope refreshScope = new RefreshScope();
         TransactionPaginationHelper helper = new TransactionPaginationHelper(refreshScope);
 
-        String accountIdentifier = "tink://720fb05a-c01b-47b7-baa1-5da02e165d1e";
-        when(account.getIdentifiers())
-                .thenReturn(
-                        Collections.singletonList(
-                                AccountIdentifier.createOrThrow(accountIdentifier)));
-
         // when
-        Optional<Date> date = helper.getContentWithRefreshDate(account);
+        Optional<Date> date = helper.getTransactionDateLimit(account);
 
         // then
         assertFalse(date.isPresent());

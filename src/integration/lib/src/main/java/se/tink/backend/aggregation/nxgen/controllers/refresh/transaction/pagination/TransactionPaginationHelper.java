@@ -32,9 +32,9 @@ public class TransactionPaginationHelper {
             return false;
         }
 
-        final Optional<Date> certainDate = getContentWithRefreshDate(account);
+        final Optional<Date> transactionDateLimit = getTransactionDateLimit(account);
 
-        if (!certainDate.isPresent()) {
+        if (!transactionDateLimit.isPresent()) {
             return false;
         }
 
@@ -48,7 +48,7 @@ public class TransactionPaginationHelper {
 
             if (lastTransaction == null) {
 
-                if (t.getDate().before(certainDate.get())) {
+                if (t.getDate().before(transactionDateLimit.get())) {
                     lastTransaction = t;
                     transactionsBeforeCertainDate++;
                 }
@@ -58,7 +58,7 @@ public class TransactionPaginationHelper {
 
                 // Certain date reached, check transaction is before last one.
 
-                if (t.getDate().after(certainDate.get())) {
+                if (t.getDate().after(transactionDateLimit.get())) {
 
                     // If after, there is a gap in the paging. Start over again and
                     // find next transaction that is before certain date and do this again.
@@ -72,7 +72,9 @@ public class TransactionPaginationHelper {
             }
 
             int overlappingTransactionDays =
-                    Math.abs(DateUtils.getNumberOfDaysBetween(t.getDate(), certainDate.get()));
+                    Math.abs(
+                            DateUtils.getNumberOfDaysBetween(
+                                    t.getDate(), transactionDateLimit.get()));
 
             if (transactionsBeforeCertainDate >= SAFETY_THRESHOLD_NUMBER_OF_OVERLAPS
                     && overlappingTransactionDays >= SAFETY_THRESHOLD_NUMBER_OF_DAYS) {
@@ -87,7 +89,7 @@ public class TransactionPaginationHelper {
      * Returns the lower limit (inclusive) date for this account. It can be specified by refresh
      * scope on all transaction or specifically on account transactions
      */
-    public Optional<Date> getContentWithRefreshDate(final Account account) {
+    public Optional<Date> getTransactionDateLimit(Account account) {
         if (refreshScope == null || refreshScope.getTransactions() == null) {
             return Optional.empty();
         }

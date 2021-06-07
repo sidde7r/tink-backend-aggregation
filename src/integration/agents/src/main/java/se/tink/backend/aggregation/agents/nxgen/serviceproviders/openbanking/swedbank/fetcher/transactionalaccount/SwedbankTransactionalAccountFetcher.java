@@ -153,7 +153,7 @@ public class SwedbankTransactionalAccountFetcher implements AccountFetcher<Trans
     }
 
     private void postAccountStatement(Account account) {
-        Optional<Date> certainDate = transactionPaginationHelper.getContentWithRefreshDate(account);
+        Optional<Date> certainDate = transactionPaginationHelper.getTransactionDateLimit(account);
         final LocalDate fromDate = LocalDate.now().minusMonths(TimeValues.MONTHS_TO_FETCH_MAX);
         final LocalDate toDate = LocalDate.now().minusDays(TimeValues.ONLINE_STATEMENT_MAX_DAYS);
 
