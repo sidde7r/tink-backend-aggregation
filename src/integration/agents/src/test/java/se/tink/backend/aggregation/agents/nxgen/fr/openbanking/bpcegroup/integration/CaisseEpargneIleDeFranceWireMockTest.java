@@ -53,7 +53,7 @@ public class CaisseEpargneIleDeFranceWireMockTest {
                         new Creditor(
                                 AccountIdentifier.create(
                                         AccountIdentifierType.IBAN, "FR1420041010050500013M02606"),
-                                "Tink"))
+                                "Payment Creditor"))
                 .withDebtor(
                         new Debtor(
                                 AccountIdentifier.create(

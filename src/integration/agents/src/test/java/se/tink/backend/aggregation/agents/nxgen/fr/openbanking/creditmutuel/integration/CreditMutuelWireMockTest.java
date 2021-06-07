@@ -115,7 +115,7 @@ public class CreditMutuelWireMockTest {
                 AccountIdentifier.create(AccountIdentifierType.IBAN, "FR7610278022230002054000114");
 
         return new Payment.Builder()
-                .withCreditor(new Creditor(creditorAccountIdentifier))
+                .withCreditor(new Creditor(creditorAccountIdentifier, "Payment Receiver"))
                 .withDebtor(new Debtor(debtorAccountIdentifier))
                 .withExactCurrencyAmount(ExactCurrencyAmount.inEUR(1.0))
                 .withCurrency("EUR")

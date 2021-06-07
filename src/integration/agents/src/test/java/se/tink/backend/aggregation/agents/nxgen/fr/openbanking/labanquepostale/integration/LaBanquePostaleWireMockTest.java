@@ -111,7 +111,7 @@ public class LaBanquePostaleWireMockTest {
                 AccountIdentifier.create(AccountIdentifierType.IBAN, "FR1261401750597365134612940");
 
         return new Payment.Builder()
-                .withCreditor(new Creditor(creditorAccountIdentifier))
+                .withCreditor(new Creditor(creditorAccountIdentifier, "Payment Creditor"))
                 .withDebtor(new Debtor(debtorAccountIdentifier))
                 .withExactCurrencyAmount(ExactCurrencyAmount.inEUR(2.0))
                 .withCurrency("EUR")

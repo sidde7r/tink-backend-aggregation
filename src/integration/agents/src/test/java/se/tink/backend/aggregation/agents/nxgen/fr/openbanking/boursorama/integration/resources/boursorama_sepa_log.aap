@@ -32,7 +32,7 @@ X-Aggregator: Tink Testing
     },
     "beneficiary": {
         "creditor": {
-            "name": "Payment Creditor"
+            "name": "Creditor Name"
         },
         "creditorAccount": {
             "iban": "FR1420041010050500013M02606"
@@ -92,7 +92,7 @@ Content-Type: application/json
         },
         "beneficiary": {
             "creditor": {
-                "name": "Payment Creditor"
+                "name": "Creditor Name"
             },
             "creditorAccount": {
                 "iban": "FR1420041010050500013M02606"
