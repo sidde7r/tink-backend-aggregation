@@ -50,6 +50,7 @@ import se.tink.libraries.credentials.service.ManualAuthenticateRequest;
 import se.tink.libraries.credentials.service.UserAvailability;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.metrics.registry.MetricRegistry;
+import se.tink.libraries.unleash.UnleashClient;
 import se.tink.libraries.user.rpc.User;
 
 public class AgentInitialisor {
@@ -134,6 +135,7 @@ public class AgentInitialisor {
         doReturn(AggregatorInfo.getAggregatorForTesting()).when(context).getAggregatorInfo();
         doReturn(new ByteArrayOutputStream()).when(context).getLogOutputStream();
         doReturn(mock(Catalog.class)).when(context).getCatalog();
+        doReturn(mock(UnleashClient.class)).when(context).getUnleashClient();
 
         // Not easily mockable since we need the implementation of getAgentConfiguration ->
         // getAgentConfigurationDev (and the parameter for these methods comes from Agent)
