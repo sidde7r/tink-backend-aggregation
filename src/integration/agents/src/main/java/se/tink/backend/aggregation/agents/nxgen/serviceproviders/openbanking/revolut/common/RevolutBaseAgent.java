@@ -36,7 +36,9 @@ import se.tink.libraries.unleash.strategies.aggregation.providersidsandexcludeap
 public abstract class RevolutBaseAgent extends UkOpenBankingBaseAgent {
 
     private static final UkOpenBankingAisConfig aisConfig;
-    private final ConsentStatusValidator consentStatusValidator;
+    private final UnleashClient unleashClient;
+    private final String currentAppId;
+    private final String currentProviderName;
 
     static {
         aisConfig =
@@ -58,11 +60,10 @@ public abstract class RevolutBaseAgent extends UkOpenBankingBaseAgent {
                         RevolutConstants.PIS_API_URL, RevolutConstants.WELL_KNOWN_URL),
                 createPisRequestFilterUsingPs256MinimalSignature(
                         flowFacade.getJwtSinger(), componentProvider.getRandomValueGenerator()));
-        String currentProviderName = request.getCredentials().getProviderName();
-        String currentAppId = componentProvider.getContext().getAppId();
-        this.consentStatusValidator =
-                getConsentStatusValidation(
-                        componentProvider.getUnleashClient(), currentAppId, currentProviderName);
+
+        this.unleashClient = componentProvider.getUnleashClient();
+        this.currentProviderName = request.getCredentials().getProviderName();
+        this.currentAppId = componentProvider.getContext().getAppId();
     }
 
     @Override
@@ -110,7 +111,7 @@ public abstract class RevolutBaseAgent extends UkOpenBankingBaseAgent {
                 this.request.getCallbackUri(),
                 this.randomValueGenerator,
                 new OpenIdAuthenticationValidator(this.apiClient),
-                consentStatusValidator);
+                getConsentStatusValidation(unleashClient, currentAppId, currentProviderName));
     }
 
     private AutoAuthenticationController createAutoAuthController(
