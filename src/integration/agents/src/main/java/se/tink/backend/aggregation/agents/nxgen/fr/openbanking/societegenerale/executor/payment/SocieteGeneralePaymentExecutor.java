@@ -1,14 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.executor.payment;
 
-import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.SocieteGeneraleConstants.FormValues.DEFAULT_ZONE_ID;
 import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.SocieteGeneraleConstants.PaymentSteps.CONFIRM_PAYMENT_STEP;
 import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.SocieteGeneraleConstants.PaymentSteps.POST_SIGN_STEP;
 
 import com.google.api.client.repackaged.com.google.common.base.Preconditions;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -34,6 +29,7 @@ import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.e
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.executor.payment.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.executor.payment.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.executor.payment.rpc.GetPaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.utils.SocieteGeneraleDateUtil;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
@@ -195,7 +191,7 @@ public class SocieteGeneralePaymentExecutor implements PaymentExecutor {
 
         return new CreatePaymentRequest.Builder()
                 .withPaymentInformationId(UUID.randomUUID().toString())
-                .withCreationDateTime(getCreationDate())
+                .withCreationDateTime(SocieteGeneraleDateUtil.getCreationDate())
                 .withNumberOfTransactions(
                         SocieteGeneraleConstants.FormValues.NUMBER_OF_TRANSACTIONS)
                 .withInitiatingParty(
@@ -217,31 +213,10 @@ public class SocieteGeneralePaymentExecutor implements PaymentExecutor {
                 .withBeneficiary(beneficiary)
                 .withChargeBearer(SocieteGeneraleConstants.FormValues.CHARGE_BEARER_SLEV)
                 .withRequestedExecutionDate(
-                        calculateExecutionDate(
-                                Optional.ofNullable(payment.getExecutionDate())
-                                        .orElse(LocalDate.now(DEFAULT_ZONE_ID))))
+                        SocieteGeneraleDateUtil.getExecutionDate(payment.getExecutionDate()))
                 .withCreditTransferTransaction(creditTransferTransaction)
                 .withSupplementaryData(supplementaryData)
                 .build();
-    }
-
-    public String calculateExecutionDate(LocalDate localDate) {
-
-        if (dateHelper.checkIfToday(localDate)
-                && dateHelper.calculateIfWithinCutOffTime(
-                        ZonedDateTime.now(DEFAULT_ZONE_ID), 17, 30, 900)) {
-            // Due to bank cut-off time a transfer initiated (and validated by the customer) before
-            // 17h30 must be confirmed (with a POST / confirmation) before 17h30.
-            // Transfers b/w 17:15 & 17:30 will be moved to next day.
-            return ZonedDateTime.of(localDate.plusDays(1), LocalTime.of(1, 0, 0), DEFAULT_ZONE_ID)
-                    .format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
-        }
-
-        // excexutionDate should not be same as creationDate due to bank limitation,so adding 1
-        // minute will resolve this issue.
-        return ZonedDateTime.of(
-                        localDate, LocalTime.now(DEFAULT_ZONE_ID).plusMinutes(1), DEFAULT_ZONE_ID)
-                .format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
     }
 
     private GetPaymentResponse fetchPaymentStatus(String paymentId) {
@@ -273,9 +248,5 @@ public class SocieteGeneralePaymentExecutor implements PaymentExecutor {
                 .queryParam(
                         SocieteGeneraleConstants.QueryKeys.CODE,
                         SocieteGeneraleConstants.QueryValues.CODE);
-    }
-
-    private String getCreationDate() {
-        return ZonedDateTime.now(DEFAULT_ZONE_ID).format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
     }
 }
