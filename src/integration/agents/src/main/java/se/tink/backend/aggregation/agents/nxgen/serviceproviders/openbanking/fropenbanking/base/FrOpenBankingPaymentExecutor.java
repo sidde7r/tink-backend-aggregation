@@ -5,9 +5,6 @@ import com.github.rholder.retry.Retryer;
 import com.github.rholder.retry.RetryerBuilder;
 import com.github.rholder.retry.StopStrategies;
 import com.github.rholder.retry.WaitStrategies;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
@@ -24,6 +21,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fro
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.rpc.GetPaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.utils.FrOpenBankingDateUtil;
 import se.tink.backend.aggregation.agents.utils.remittanceinformation.RemittanceInformationValidator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepConstants;
@@ -55,7 +53,6 @@ public class FrOpenBankingPaymentExecutor implements PaymentExecutor, FetchableP
     static final String PAYMENT_POST_SIGN_STATE = "payment_post_sign_state";
     static final String PAYMENT_AUTHORIZATION_URL = "payment_authorization_url";
     private static final String STATE = "state";
-    private static final ZoneId DEFAULT_ZONE_ID = ZoneId.of("CET");
 
     private static final long WAIT_FOR_MINUTES = 9L;
     private static final long SLEEP_TIME = 10L;
@@ -99,10 +96,6 @@ public class FrOpenBankingPaymentExecutor implements PaymentExecutor, FetchableP
                                                 + accountIdentifier.isValid()));
         Payment payment = paymentRequest.getPayment();
 
-        LocalDate executionDate =
-                Optional.ofNullable(payment.getExecutionDate())
-                        .orElse(LocalDate.now((DEFAULT_ZONE_ID)));
-
         PaymentType paymentType = PaymentType.SEPA;
         RemittanceInformation remittanceInformation = payment.getRemittanceInformation();
         RemittanceInformationValidator.validateSupportedRemittanceInformationTypesOrThrow(
@@ -115,8 +108,9 @@ public class FrOpenBankingPaymentExecutor implements PaymentExecutor, FetchableP
                         .withCreditorAccount(creditor)
                         .withCreditorName(new CreditorEntity(payment.getCreditor().getName()))
                         .withDebtorAccount(debtor)
-                        .withExecutionDate(executionDate)
-                        .withCreationDateTime(LocalDateTime.now(DEFAULT_ZONE_ID))
+                        .withExecutionDate(
+                                FrOpenBankingDateUtil.getExecutionDate(payment.getExecutionDate()))
+                        .withCreationDateTime(FrOpenBankingDateUtil.getCreationDate())
                         .withRedirectUrl(
                                 new URL(redirectUrl)
                                         .queryParam(STATE, strongAuthenticationState.getState()))

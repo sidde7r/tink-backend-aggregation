@@ -5,7 +5,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Locale;
-import java.util.Optional;
 import java.util.TimeZone;
 import se.tink.libraries.date.CountryDateHelper;
 
@@ -23,8 +22,7 @@ public class FrOpenBankingDateUtil {
     }
 
     public static LocalDate getExecutionDate(LocalDate localDate) {
-        return Optional.ofNullable(localDate)
-                .orElse(dateHelper.getCurrentOrNextBusinessDay(dateHelper.getNowAsLocalDate()));
+        return dateHelper.getProvidedDateOrBestPossibleLocalDate(localDate, 23, 59);
     }
 
     public static LocalDateTime getCreationDate() {
