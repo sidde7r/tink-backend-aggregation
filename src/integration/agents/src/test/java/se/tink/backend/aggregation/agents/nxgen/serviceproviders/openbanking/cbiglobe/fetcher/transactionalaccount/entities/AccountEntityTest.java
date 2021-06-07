@@ -10,6 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.BalancesResponse;
+import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.account.enums.AccountFlag;
 import se.tink.libraries.amount.ExactCurrencyAmount;
@@ -263,7 +264,64 @@ public class AccountEntityTest {
         assertThat(transactionalAccount.get().getType()).isEqualTo(AccountTypes.CHECKING);
     }
 
-    public AccountEntity genAccountEntity(String cashAccountType) {
-        return new AccountEntity("123", "456", "asdf", "someName", cashAccountType);
+    @Test
+    public void toTinkAccountShouldMapOwnerNameToHolderNames() {
+        // given
+        List<BalanceEntity> balances = new ArrayList<>();
+        balances.add(givenClosingBookedBalance());
+        BalancesResponse balancesResponse = new BalancesResponse(balances);
+        AccountEntity checkingAccountEntity = genAccountEntity("CASH", "owner1, owner2");
+
+        // when
+        Optional<TransactionalAccount> transactionalAccount =
+                checkingAccountEntity.toTinkAccount(balancesResponse);
+        // then
+        assertThat(transactionalAccount.get().getHolderName()).isEqualTo(new HolderName("Owner1"));
+    }
+
+    @Test
+    public void shouldGetHolderNames() {
+        // given
+        AccountEntity accountEntity = genAccountEntity("CASH", " Name1 Surname1 , CompanyName");
+
+        // when
+        List<String> holderNames = accountEntity.getHolderNames();
+
+        // then
+        assertThat(holderNames.size()).isEqualTo(2);
+        assertThat(holderNames).contains("Name1 Surname1", "CompanyName");
+    }
+
+    @Test
+    public void shouldGetSingleHolderName() {
+        // given
+        AccountEntity accountEntity = genAccountEntity("CASH", " owner ");
+
+        // when
+        List<String> holderNames = accountEntity.getHolderNames();
+
+        // then
+        assertThat(holderNames.size()).isEqualTo(1);
+        assertThat(holderNames).contains("owner");
+    }
+
+    @Test
+    public void shouldGetEmptyHolderNames() {
+        // given
+        AccountEntity accountEntity = genAccountEntity("CASH");
+
+        // when
+        List<String> holderNames = accountEntity.getHolderNames();
+
+        // then
+        assertThat(holderNames.isEmpty()).isTrue();
+    }
+
+    private AccountEntity genAccountEntity(String cashAccountType) {
+        return genAccountEntity(cashAccountType, null);
+    }
+
+    private AccountEntity genAccountEntity(String cashAccountType, String ownerName) {
+        return new AccountEntity("123", "456", "asdf", "someName", cashAccountType, ownerName);
     }
 }

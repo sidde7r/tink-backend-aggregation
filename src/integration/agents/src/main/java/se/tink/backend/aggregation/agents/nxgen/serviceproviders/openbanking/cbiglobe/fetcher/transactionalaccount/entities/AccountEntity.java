@@ -1,10 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.entities;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.BalancesResponse;
@@ -12,6 +16,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.builder.BalanceBuilderStep;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.transactional.TransactionalBuildStep;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.AccountIdentifier;
@@ -28,6 +33,7 @@ public class AccountEntity {
     private String resourceId;
     private String name;
     private String cashAccountType;
+    private String ownerName;
 
     public AccountEntity(String iban) {
         this.iban = iban;
@@ -42,23 +48,25 @@ public class AccountEntity {
     }
 
     public Optional<TransactionalAccount> toTinkAccount(BalancesResponse balancesResponse) {
-        return TransactionalAccount.nxBuilder()
-                .withTypeAndFlagsFrom(
-                        CbiGlobeConstants.ACCOUNT_TYPE_MAPPER,
-                        Optional.ofNullable(cashAccountType).orElse("CASH"),
-                        TransactionalAccountType.CHECKING)
-                .withBalance(getBalanceModule(balancesResponse))
-                .withId(
-                        IdModule.builder()
-                                .withUniqueIdentifier(iban)
-                                .withAccountNumber(getAccountNumber())
-                                .withAccountName(getName())
-                                .addIdentifier(
-                                        AccountIdentifier.create(
-                                                AccountIdentifierType.IBAN, iban, name))
-                                .build())
-                .setApiIdentifier(resourceId)
-                .build();
+        TransactionalBuildStep transactionalBuildStep =
+                TransactionalAccount.nxBuilder()
+                        .withTypeAndFlagsFrom(
+                                CbiGlobeConstants.ACCOUNT_TYPE_MAPPER,
+                                Optional.ofNullable(cashAccountType).orElse("CASH"),
+                                TransactionalAccountType.CHECKING)
+                        .withBalance(getBalanceModule(balancesResponse))
+                        .withId(
+                                IdModule.builder()
+                                        .withUniqueIdentifier(iban)
+                                        .withAccountNumber(getAccountNumber())
+                                        .withAccountName(getName())
+                                        .addIdentifier(
+                                                AccountIdentifier.create(
+                                                        AccountIdentifierType.IBAN, iban, name))
+                                        .build())
+                        .setApiIdentifier(resourceId);
+        getHolderNames().forEach(transactionalBuildStep::addHolderName);
+        return transactionalBuildStep.build();
     }
 
     private BalanceModule getBalanceModule(BalancesResponse balancesResponse) {
@@ -102,5 +110,15 @@ public class AccountEntity {
 
     public boolean isEmptyAccountObject() {
         return iban == null || resourceId == null;
+    }
+
+    List<String> getHolderNames() {
+        if (ownerName == null) {
+            return Collections.emptyList();
+        }
+
+        return Arrays.stream(ownerName.split(","))
+                .map(StringUtils::trim)
+                .collect(Collectors.toList());
     }
 }

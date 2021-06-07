@@ -64,8 +64,8 @@ public class ConsentManager {
         this(apiClient, userState, SLEEP_TIME, RETRY_ATTEMPTS);
     }
 
-    public ConsentResponse createAllPsd2Consent(String state) {
-        ConsentRequest consentRequestAccount = createConsentRequestAllPsd2();
+    public ConsentResponse createAllPsd2Consent(String state, AllPsd2 allPsd2) {
+        ConsentRequest consentRequestAccount = createConsentRequestAllPsd2(allPsd2);
         return create(state, ConsentType.ACCOUNT, consentRequestAccount, true);
     }
 
@@ -83,9 +83,9 @@ public class ConsentManager {
                 state, ConsentType.BALANCE_TRANSACTION, consentRequestBalancesTransactions, false);
     }
 
-    ConsentRequest createConsentRequestAllPsd2() {
+    ConsentRequest createConsentRequestAllPsd2(AllPsd2 allPsd2) {
         return new ConsentRequest(
-                new AccessEntity(AllPsd2.ALL_ACCOUNTS),
+                new AccessEntity(allPsd2),
                 FormValues.TRUE,
                 FormValues.FREQUENCY_PER_DAY,
                 FormValues.TRUE,

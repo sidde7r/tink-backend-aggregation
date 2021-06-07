@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.iccrea.authenticator.rpc.ConsentScaResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.ConsentManager;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.AllPsd2;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepResponse;
@@ -33,7 +34,9 @@ public class ConsentDecoupledStep implements AuthenticationStep {
                 username,
                 password,
                 (ConsentScaResponse)
-                        consentManager.createAllPsd2Consent(strongAuthenticationState.getState()));
+                        consentManager.createAllPsd2Consent(
+                                strongAuthenticationState.getState(),
+                                AllPsd2.ALL_ACCOUNTS_WITH_OWNER_NAME));
         return AuthenticationStepResponse.executeNextStep();
     }
 }

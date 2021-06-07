@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.CbiUserState;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.ConsentManager;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.entities.ConsentType;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.AllPsd2;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
@@ -22,6 +23,7 @@ public class CreateAllPsd2ConsentScaAuthenticationStep implements Authentication
     private final ConsentManager consentManager;
     private final StrongAuthenticationState strongAuthenticationState;
     private final CbiUserState userState;
+    private final AllPsd2 allPsd2;
 
     @Override
     public AuthenticationStepResponse execute(AuthenticationRequest request)
@@ -30,7 +32,7 @@ public class CreateAllPsd2ConsentScaAuthenticationStep implements Authentication
             ConsentScaResponse consentScaResponse =
                     (ConsentScaResponse)
                             consentManager.createAllPsd2Consent(
-                                    strongAuthenticationState.getState());
+                                    strongAuthenticationState.getState(), allPsd2);
 
             userState.saveChosenAuthenticationMethod(
                     consentScaResponse.getScaMethod().getAuthenticationMethodId());
@@ -44,5 +46,10 @@ public class CreateAllPsd2ConsentScaAuthenticationStep implements Authentication
 
         return AuthenticationStepResponse.executeStepWithId(
                 CbiThirdPartyAppAuthenticationStep.getStepIdentifier(ConsentType.ACCOUNT));
+    }
+
+    @Override
+    public String getIdentifier() {
+        return String.format("%s_%s", AuthenticationStep.super.getIdentifier(), allPsd2);
     }
 }

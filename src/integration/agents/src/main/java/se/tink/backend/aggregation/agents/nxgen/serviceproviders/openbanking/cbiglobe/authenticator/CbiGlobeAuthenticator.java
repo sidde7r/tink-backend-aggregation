@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.entities.ConsentType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.entities.MessageCodes;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.AllPsd2;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.GetTokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.configuration.CbiGlobeConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
@@ -65,7 +66,17 @@ public class CbiGlobeAuthenticator extends StatelessProgressiveAuthenticator {
 
             manualAuthenticationSteps.add(
                     new AllPsd2ConsentAuthenticationStep(
-                            consentManager, strongAuthenticationState, userState));
+                            consentManager,
+                            strongAuthenticationState,
+                            userState,
+                            AllPsd2.ALL_ACCOUNTS_WITH_OWNER_NAME));
+
+            manualAuthenticationSteps.add(
+                    new AllPsd2ConsentAuthenticationStep(
+                            consentManager,
+                            strongAuthenticationState,
+                            userState,
+                            AllPsd2.ALL_ACCOUNTS));
 
             manualAuthenticationSteps.add(
                     new AccountsConsentAuthenticationStep(
