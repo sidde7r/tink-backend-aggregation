@@ -13,6 +13,7 @@ import java.util.UUID;
 import javax.ws.rs.core.MediaType;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.SparebankConstants.HEADERS_TO_SIGN;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.SparebankConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.SparebankConstants.HeaderValues;
@@ -27,11 +28,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.spa
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.fetcher.transactionalaccount.rpc.BalanceResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.fetcher.transactionalaccount.rpc.TransactionResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.filters.ConsentErrorsFilter;
-import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
-import se.tink.backend.aggregation.eidasidentity.identity.EidasIdentity;
-import se.tink.backend.aggregation.eidassigner.QsealcAlg;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
-import se.tink.backend.aggregation.eidassigner.QsealcSignerImpl;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
@@ -41,20 +38,17 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 public class SparebankApiClient {
 
     private final TinkHttpClient client;
-    private final EidasProxyConfiguration eidasProxyConfiguration;
-    private final EidasIdentity eidasIdentity;
+    private final QsealcSigner signer;
     private final SparebankApiConfiguration apiConfiguration;
     @Getter private final SparebankStorage storage;
 
     public SparebankApiClient(
             TinkHttpClient client,
-            EidasProxyConfiguration eidasProxyConfiguration,
-            EidasIdentity eidasIdentity,
+            QsealcSigner signer,
             SparebankApiConfiguration apiConfiguration,
             SparebankStorage storage) {
         this.client = client;
-        this.eidasProxyConfiguration = eidasProxyConfiguration;
-        this.eidasIdentity = eidasIdentity;
+        this.signer = signer;
         this.apiConfiguration = apiConfiguration;
         this.storage = storage;
 
@@ -120,12 +114,26 @@ public class SparebankApiClient {
         if (maybeCards.isPresent()) {
             return maybeCards.get();
         }
-        CardResponse cardResponse =
-                createRequest(new URL(apiConfiguration.getBaseUrl() + Urls.GET_CARDS))
-                        .header(HeaderKeys.X_ACCEPT_FIX, HeaderValues.X_ACCEPT_FIX_LONGER_NAMES)
-                        .get(CardResponse.class);
-        storage.storeCards(cardResponse);
-        return cardResponse;
+
+        try {
+            CardResponse cardResponse =
+                    createRequest(new URL(apiConfiguration.getBaseUrl() + Urls.GET_CARDS))
+                            .header(HeaderKeys.X_ACCEPT_FIX, HeaderValues.X_ACCEPT_FIX_LONGER_NAMES)
+                            .get(CardResponse.class);
+            storage.storeCards(cardResponse);
+            return cardResponse;
+
+        } catch (HttpResponseException e) {
+            if (bankDoesNotSupportCreditCards(e)) {
+                log.warn("[Sparebank][CC] Bank does not support CC endpoint");
+                return CardResponse.empty();
+            }
+            throw e;
+        }
+    }
+
+    private boolean bankDoesNotSupportCreditCards(HttpResponseException e) {
+        return HttpStatus.SC_NOT_FOUND == e.getResponse().getStatus();
     }
 
     public BalanceResponse fetchCardBalances(String resourceId) {
@@ -209,12 +217,6 @@ public class SparebankApiClient {
     }
 
     private String generateSignatureHeader(Map<String, Object> headers) {
-        QsealcSigner signer =
-                QsealcSignerImpl.build(
-                        eidasProxyConfiguration.toInternalConfig(),
-                        QsealcAlg.EIDAS_RSA_SHA256,
-                        eidasIdentity);
-
         StringBuilder signedWithHeaderKeys = new StringBuilder();
         StringBuilder signedWithHeaderKeyValues = new StringBuilder();
 

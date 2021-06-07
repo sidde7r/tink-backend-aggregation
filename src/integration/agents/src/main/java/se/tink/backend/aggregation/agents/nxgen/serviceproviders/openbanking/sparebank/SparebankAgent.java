@@ -27,6 +27,9 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.spa
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agents.utils.CertificateUtils;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
+import se.tink.backend.aggregation.eidassigner.QsealcAlg;
+import se.tink.backend.aggregation.eidassigner.QsealcSigner;
+import se.tink.backend.aggregation.eidassigner.QsealcSignerImpl;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.ActualLocalDateTimeSource;
@@ -58,15 +61,21 @@ public final class SparebankAgent extends NextGenerationAgent
         super(agentComponentProvider);
 
         storage = new SparebankStorage(persistentStorage);
-        apiClient =
-                new SparebankApiClient(
-                        client,
-                        agentsServiceConfiguration.getEidasProxy(),
-                        this.getEidasIdentity(),
-                        getApiConfiguration(),
-                        storage);
+        apiClient = prepareApiClient(agentsServiceConfiguration, storage);
+
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
         creditCardRefreshController = getCreditCardRefreshController();
+    }
+
+    private SparebankApiClient prepareApiClient(
+            AgentsServiceConfiguration agentsServiceConfiguration,
+            SparebankStorage sparebankStorage) {
+        QsealcSigner signer =
+                QsealcSignerImpl.build(
+                        agentsServiceConfiguration.getEidasProxy().toInternalConfig(),
+                        QsealcAlg.EIDAS_RSA_SHA256,
+                        getEidasIdentity());
+        return new SparebankApiClient(client, signer, getApiConfiguration(), sparebankStorage);
     }
 
     public AgentConfiguration<SparebankConfiguration> getAgentConfiguration() {
