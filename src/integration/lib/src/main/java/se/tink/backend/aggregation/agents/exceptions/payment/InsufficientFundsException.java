@@ -11,7 +11,11 @@ public class InsufficientFundsException extends DebtorValidationException {
     }
 
     public InsufficientFundsException(String message) {
-        super(message);
+        super(message, InternalStatus.INSUFFICIENT_FUNDS);
+    }
+
+    public InsufficientFundsException() {
+        super(DEFAULT_MESSAGE, InternalStatus.INSUFFICIENT_FUNDS);
     }
 
     public InsufficientFundsException(String message, InternalStatus internalStatus) {

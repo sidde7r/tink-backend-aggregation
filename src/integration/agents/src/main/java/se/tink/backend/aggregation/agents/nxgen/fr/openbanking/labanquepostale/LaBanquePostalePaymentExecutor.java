@@ -50,6 +50,7 @@ import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.payments.common.model.PaymentScheme;
+import se.tink.libraries.signableoperation.enums.InternalStatus;
 import se.tink.libraries.transfer.enums.RemittanceInformationType;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
@@ -188,7 +189,9 @@ public class LaBanquePostalePaymentExecutor implements PaymentExecutor, Fetchabl
                                 .getExactValue()
                                 .compareTo(new BigDecimal(MinimumValues.MINIMUM_AMOUNT_FOR_SEPA))
                         < 0) {
-            throw PaymentValidationException.invalidMinimumAmountLaBanquePostale();
+            throw new PaymentValidationException(
+                    "Transfer amount can't be less than 1.5 EUR.",
+                    InternalStatus.INVALID_MINIMUM_AMOUNT);
         }
     }
 

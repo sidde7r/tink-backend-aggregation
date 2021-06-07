@@ -43,8 +43,7 @@ public class DemobankPaymentAuthenticator {
         } catch (AuthenticationException | AuthorizationException e) {
             if (e.getError() instanceof ThirdPartyAppError
                     && ThirdPartyAppError.TIMED_OUT.equals(e.getError())) {
-                throw new PaymentAuthorizationTimeOutException(
-                        InternalStatus.PAYMENT_AUTHORIZATION_TIMEOUT);
+                throw new PaymentAuthorizationTimeOutException();
             }
 
             throw createFailedTransferException();

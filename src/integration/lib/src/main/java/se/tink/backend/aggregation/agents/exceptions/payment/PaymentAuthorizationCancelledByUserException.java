@@ -11,4 +11,8 @@ public class PaymentAuthorizationCancelledByUserException extends PaymentAuthori
             ErrorEntity errorEntity, InternalStatus internalStatus) {
         super(errorEntity, MESSAGE, internalStatus);
     }
+
+    public PaymentAuthorizationCancelledByUserException() {
+        super(MESSAGE, InternalStatus.PAYMENT_AUTHORIZATION_CANCELLED);
+    }
 }
