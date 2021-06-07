@@ -40,9 +40,9 @@ spec:
         priority: P1
         who: integration-minions
       annotations:
-        description: {{ .Values.kibanaLink }}
+        description: {{ .Values.kibanaLink12h }}
           {{ .Values.grafanaLink }}
-        summary: Authentication failures is over 90% (<{ $value }>) for <{ $labels.className }> (<{ $labels.provider }>) for the last 12h
+        summary: Authentication failures is over 90% (<{ $value }>) for the last 12h
         tags: {{ .Values.tags }}
 
     # Refresh alerts
@@ -58,7 +58,7 @@ spec:
       annotations:
         description: {{ .Values.kibanaLink }}
           {{ .Values.grafanaLink }}
-        summary: Refresh failures is over 20% (<{ $value }>) for <{ $labels.className }> (<{ $labels.provider }>) for the last 30 minutes for <{ $labels.type }>
+        summary: Refresh failures is over 20% (<{ $value }>) for the last 30m
         tags: {{ .Values.tags }}
 
     #-------------------------------------------------------------------------------------------------------------------
@@ -80,7 +80,7 @@ spec:
       annotations:
         description: {{ .Values.kibanaLink }}
           {{ .Values.grafanaLink }}
-        summary: Authentication failures due to unknown RuntimeExceptions is over 10% (<{ $value }>) for <{ $labels.className }> (<{ $labels.provider }>)
+        summary: Authentication failures due to unknown RuntimeExceptions is over 10% (<{ $value }>) for the last 30m
         tags: {{ .Values.tags }}
 
     - alert: LongTermAuthenticationUnknownErrorRateOver10%BE
@@ -96,7 +96,7 @@ spec:
         priority: P2
         who: integration-minions
       annotations:
-        description: {{ .Values.kibanaLink }}
+        description: {{ .Values.kibanaLink12h }}
           {{ .Values.grafanaLink }}
         summary: Authentication failures due to unknown RuntimeExceptions is over 10% (<{ $value }>) for <{ $labels.className }> (<{ $labels.provider }>) for the last 12 hours
         tags: {{ .Values.tags }}
@@ -114,7 +114,7 @@ spec:
       annotations:
         description: {{ .Values.kibanaLink }}
           {{ .Values.grafanaLink }}
-        summary: Refresh failures due to unknown RuntimeExceptions is over 10% (<{ $value }>) for <{ $labels.className }> (<{ $labels.provider }>) for the last 30 minutes
+        summary: Refresh failures due to unknown RuntimeExceptions is over 10% (<{ $value }>) for the last 30m
         tags: {{ .Values.tags }}
 
     #-------------------------------------------------------------------------------------------------------------------
@@ -135,9 +135,9 @@ spec:
         priority: P2
         who: integration-minions
       annotations:
-        description: {{ .Values.kibanaLink }}
+        description: {{ .Values.kibanaLink4h }}
           {{ .Values.grafanaLink }}
-        summary: Manual authentication failures due to bank site errors is over 90% (<{ $value }>) for <{ $labels.className }> (<{ $labels.provider }>)
+        summary: Manual authentication failures due to bank site errors is over 90% (<{ $value }>) for the last 4h
         tags: {{ .Values.tags }}
 
     - alert: AutoAuthenticationBankSiteErrorRateOver90%BE
@@ -154,9 +154,9 @@ spec:
         priority: P2
         who: integration-minions
       annotations:
-        description: {{ .Values.kibanaLink }}
+        description: {{ .Values.kibanaLink4h }}
           {{ .Values.grafanaLink }}
-        summary: Auto authentication failures due to bank site errors is over 90% (<{ $value }>) for <{ $labels.className }> (<{ $labels.provider }>)
+        summary: Auto authentication failures due to bank site errors is over 90% (<{ $value }>) for the last 4h
         tags: {{ .Values.tags }}
 
 
@@ -174,9 +174,9 @@ spec:
         priority: P2
         who: integration-minions
       annotations:
-        description: {{ .Values.kibanaLink }}
+        description: {{ .Values.kibanaLink12h }}
           {{ .Values.grafanaLink }}
-        summary: Authentication failures due to bank site errors is over 90% (<{ $value }>) for <{ $labels.className }> (<{ $labels.provider }>)
+        summary: Authentication failures due to bank site errors is over 90% (<{ $value }>) for the last 12h
         tags: {{ .Values.tags }}
 
     # Refresh alerts
@@ -192,9 +192,9 @@ spec:
         severity: urgent
         who: integration-minions
       annotations:
-        description: {{ .Values.kibanaLink }}
+        description: {{ .Values.kibanaLink4h }}
           {{ .Values.grafanaLink }}
-        summary: Refresh failures due to bank site errors is over 90% (<{ $value }>) for <{ $labels.className }> (<{ $labels.provider }>)
+        summary: Refresh failures due to bank site errors is over 90% (<{ $value }>) for the last 4h
         tags: {{ .Values.tags }}
 
     - alert: LongTermRefreshBankSiteErrorRateOver90%BE
@@ -207,9 +207,9 @@ spec:
         severity: urgent
         who: integration-minions
       annotations:
-        description: {{ .Values.kibanaLink }}
+        description: {{ .Values.kibanaLink12h }}
           {{ .Values.grafanaLink }}
-        summary: Refresh failures due to bank site errors is over 90% (<{ $value }>) for <{ $labels.className }> (<{ $labels.provider }>)
+        summary: Refresh failures due to bank site errors is over 90% (<{ $value }>) for the last 12h
         tags: {{ .Values.tags }}
 
 
@@ -217,12 +217,12 @@ spec:
     # Cancelled errors alerts
     #-------------------------------------------------------------------------------------------------------------------
     # Authentication alerts
-    - alert: AuthenticationUserCancellationRateOver75%BE
+    - alert: AuthenticationUserCancellationRateOver95%BE
       expr: |
-        # Failed logins (due to user cancellation) over 75%
+        # Failed logins (due to user cancellation) over 95%
         count(sum_over_time(tink_agent_login_total{action="login",outcome=~"cancelled|cancelled_due_to_third_party_app_timeout", market="BE"}[2h])) BY (className,provider)
         # All login attempts the last 3 hours
-          / count(sum_over_time(tink_agent_login_total{action="login", market="BE"}[2h])) BY (className,provider) > 0.75
+          / count(sum_over_time(tink_agent_login_total{action="login", market="BE"}[2h])) BY (className,provider) > 0.95
         # At least this many attempts.
            and count(sum_over_time(tink_agent_login_total{action="login", market="BE", provider_type!="test"}[2h])) by (className,provider) > 10
       for: 15m
@@ -231,17 +231,17 @@ spec:
         priority: P2
         who: integration-minions
       annotations:
-        description: {{ .Values.kibanaLink }}
+        description: {{ .Values.kibanaLink4h }}
           {{ .Values.grafanaLink }}
-        summary: Authentication failures due to user cancelletion is over 75% (<{ $value }>) for <{ $labels.className }> (<{ $labels.provider }>)
+        summary: Authentication failures due to user cancelletion is over 95% (<{ $value }>) for the last 2h
         tags: {{ .Values.tags }}
 
     - alert: LongTermAuthenticationUserCancellationDueToThirdPartyAppTimeoutRateOver90%BE
       expr: |
-        # Failed logins (due to third party app timeout) over 90%
+        # Failed logins (due to third party app timeout) over 95%
         count(sum_over_time(tink_agent_login_total{action="login",outcome="cancelled_due_to_third_party_app_timeout", market="BE"}[12h])) BY (className,provider)
         # All login attempts the last 12 hours
-          / count(sum_over_time(tink_agent_login_total{action="login", market="BE"}[12h])) BY (className,provider) > 0.90
+          / count(sum_over_time(tink_agent_login_total{action="login", market="BE"}[12h])) BY (className,provider) > 0.95
         # At least this many attempts.
           and count(sum_over_time(tink_agent_login_total{action="login", market="BE", provider_type!="test"}[12h])) by (className,provider) > 5
       for: 15m
@@ -250,7 +250,7 @@ spec:
         priority: P2
         who: integration-minions
       annotations:
-        description: {{ .Values.kibanaLink }}
+        description: {{ .Values.kibanaLink12h }}
           {{ .Values.grafanaLink }}
-        summary: Authentication failures due to user cancelletion is over 90% (<{ $value }>) for <{ $labels.className }> (<{ $labels.provider }>) for the last 12h. Please check if a redirect url is correct.
+        summary: Authentication failures due to user cancelletion is over 95% (<{ $value }>) for the last 12h. Please check if a redirect url is correct.
         tags: {{ .Values.tags }}
