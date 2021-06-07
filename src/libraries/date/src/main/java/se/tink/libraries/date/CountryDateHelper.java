@@ -28,6 +28,7 @@ public class CountryDateHelper {
     public static final String COUNTRY_CODE_BELGIUM = "BE";
     public static final String COUNTRY_CODE_GB = "GB";
     public static final String COUNTRY_CODE_PORTUGAL = "PT";
+    public static final String COUNTRY_CODE_FRANCE = "FR";
 
     public static final String LANGUAGE_CODE_SWEDISH = "sv";
     public static final String LANGUAGE_CODE_PORTUGAL = "pt";
@@ -333,6 +334,8 @@ public class CountryDateHelper {
             calendar = HolidayCalendar.UNITED_KINGDOM;
         } else if (countryCode.equals(COUNTRY_CODE_PORTUGAL)) {
             calendar = HolidayCalendar.PORTUGAL;
+        } else if (countryCode.equals(COUNTRY_CODE_FRANCE)) {
+            calendar = HolidayCalendar.FRANCE;
         }
 
         HolidayManager holidayManager = HolidayManager.getInstance(calendar);
