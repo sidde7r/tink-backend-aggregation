@@ -5,7 +5,10 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.JyskeConstants.Storage;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
+import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.creditcard.CreditCardModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
@@ -42,16 +45,31 @@ public class AccountsEntity {
                 .withType(getTinkAccountType())
                 .withInferredAccountFlags()
                 .withBalance(getBalanceModule())
-                .withId(getIdModule())
+                .withId(getTransactionalAccountIdModule())
                 .addHolderName(ownerName)
                 .putInTemporaryStorage(Storage.PUBLIC_ID, accountNumber.getPublicId())
                 .build();
     }
 
+    public CreditCardAccount toTinkCreditCardAccount() {
+        return CreditCardAccount.nxBuilder()
+                .withCardDetails(getCardDetails())
+                .withoutFlags()
+                .withId(getCreditCardIdModule())
+                .addHolderName(ownerName)
+                .canWithdrawCash(AccountCapabilities.Answer.From(transfersFromAllowed))
+                .putInTemporaryStorage(Storage.PUBLIC_ID, accountNumber.getPublicId())
+                .build();
+    }
+
     public boolean isTransactionalAccount() {
-        return !name.toLowerCase().contains("credit")
+        return !isCreditCardAccount()
                 && !name.toLowerCase().contains("lån")
                 && !name.toLowerCase().contains("pension");
+    }
+
+    public boolean isCreditCardAccount() {
+        return name.toLowerCase().contains("credit");
     }
 
     private TransactionalAccountType getTinkAccountType() {
@@ -63,22 +81,50 @@ public class AccountsEntity {
 
     private BalanceModule getBalanceModule() {
         return BalanceModule.builder()
-                .withBalance(ExactCurrencyAmount.of(balance.getAmount(), balance.getCurrencyCode()))
-                .setAvailableBalance(
-                        ExactCurrencyAmount.of(
-                                disposalAmount.getAmount(), disposalAmount.getCurrencyCode()))
+                .withBalance(getBalanceObject())
+                .setAvailableBalance(getAvailableCredit())
                 .build();
     }
 
-    private IdModule getIdModule() {
+    private IdModule getTransactionalAccountIdModule() {
         return IdModule.builder()
                 .withUniqueIdentifier(iban)
                 .withAccountNumber(accountNumber.getAccountNo())
                 .withAccountName(name)
-                .addIdentifier(
-                        AccountIdentifier.create(
-                                AccountIdentifierType.DK, accountNumber.getAccountNo(), name))
+                .addIdentifier(getDKAccountIdentifier())
                 .addIdentifier(new IbanIdentifier(iban))
                 .build();
+    }
+
+    private IdModule getCreditCardIdModule() {
+        return IdModule.builder()
+                .withUniqueIdentifier(accountNumber.getRegNo() + ":" + accountNumber.getAccountNo())
+                .withAccountNumber(accountNumber.getAccountNo())
+                .withAccountName(name)
+                .addIdentifier(getDKAccountIdentifier())
+                .addIdentifier(new IbanIdentifier(iban))
+                .build();
+    }
+
+    private AccountIdentifier getDKAccountIdentifier() {
+        return AccountIdentifier.create(
+                AccountIdentifierType.DK, accountNumber.getAccountNo(), name);
+    }
+
+    private CreditCardModule getCardDetails() {
+        return CreditCardModule.builder()
+                .withCardNumber(iban)
+                .withBalance(getBalanceObject())
+                .withAvailableCredit(getAvailableCredit())
+                .withCardAlias(name)
+                .build();
+    }
+
+    private ExactCurrencyAmount getAvailableCredit() {
+        return ExactCurrencyAmount.of(disposalAmount.getAmount(), disposalAmount.getCurrencyCode());
+    }
+
+    private ExactCurrencyAmount getBalanceObject() {
+        return ExactCurrencyAmount.of(balance.getAmount(), balance.getCurrencyCode());
     }
 }
