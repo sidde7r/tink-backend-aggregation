@@ -22,6 +22,8 @@ import se.tink.backend.aggregation.agents.agentplatform.authentication.storage.R
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.N26Constants.Url;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.authenticator.N26OAuth2AuthenticationConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.authenticator.steps.fetch_consent.N26ConsentAccessor;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.error.N26BankSiteErrorDiscoverer;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.error.N26BankSiteErrorHandler;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.executor.payment.N26OauthPaymentAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.executor.payment.N26Xs2aPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.fetcher.N26DevelopersTransactionDateFromFetcher;
@@ -81,7 +83,8 @@ public final class N26Agent extends AgentPlatformAgent
                 constructTransactionalAccountRefreshController(
                         componentProvider, oAuth2TokenAccessor);
         this.supplementalInformationHelper = componentProvider.getSupplementalInformationHelper();
-        client.setResponseStatusHandler(new N26BankSiteErrorHandler());
+        client.setResponseStatusHandler(
+                new N26BankSiteErrorHandler(new N26BankSiteErrorDiscoverer()));
     }
 
     @Override
