@@ -193,121 +193,45 @@ spec:
 
     #### Agent refresh ####
 
-    ########################################
-    ### BankServerErrors - Agent Refresh ###
-    ########################################
-
-    - alert: AgentRefreshesBelow50DueToBankServerErrorWithRateLimitES
-      expr: |
-        count(count_over_time(tink_agent_refresh_total{ provider_type!="test", {{ .Values.bankErrorsRefresh }}, market="ES"}[60m])) by (className,type)
-          / count(count_over_time(tink_agent_refresh_total{ provider_type!="test", market="ES"}[60m])) by (className,type) < 0.5
-      for: 5m
-      labels:
-        severity: urgent
-        priority: P1
-        who: integration-fluffy
-      annotations:
-        description: {{ .Values.kibanaClassLink }}
-             {{ .Values.grafanaLink }}
-        summary: Refresh unavailable rate is below 50% because of bank issues ( <{ $value }> ) for <{ $labels.className }>
-            the last 60 minutes for <{ $labels.type }>
-        tags: {{ .Values.tags }}
-
-    #########################################
-    ### AgentServerErrors - Agent Refresh ###
-    #########################################
-
-#    - alert: AgentRefreshesBelow75Greater65DueToAgentServerErrorWithRateLimitES
-#      expr: |
-#        count(count_over_time(tink_agent_refresh_total{ provider_type!="test", {{ .Values.agentErrorsRefresh }}, market="ES"}[60m])) by (className,type)
-#          / count(count_over_time(tink_agent_refresh_total{ provider_type!="test", market="ES"}[60m])) by (className,type) < 0.75
-#        and count(count_over_time(tink_agent_refresh_total{ provider_type!="test", {{ .Values.agentErrorsRefresh }}, market="ES"}[60m])) by (className,type)
-#          / count(count_over_time(tink_agent_refresh_total{ provider_type!="test", market="ES"}[60m])) by (className,type) >= 0.65
-#      for: 15m
-#      labels:
-#        severity: ping
-#        priority: P4
-#        who: integration-fluffy
-#      annotations:
-#        description: {{ .Values.kibanaClassLink }}
-#             {{ .Values.grafanaLink }}
-#        summary: Refresh unavailable rate is between 75 - 65% because of agent issues ( <{ $value }> ) for <{ $labels.className }>
-#            the last 75 minutes for <{ $labels.type }>
-#        tags:  {{ .Values.tags }}
-#
-#    - alert: AgentRefreshesBelow65Greater55DueToAgentServerErrorWithRateLimitES
-#      expr: |
-#        count(count_over_time(tink_agent_refresh_total{ provider_type!="test", {{ .Values.agentErrorsRefresh }}, market="ES"}[60m])) by (className,type)
-#          / count(count_over_time(tink_agent_refresh_total{ provider_type!="test", market="ES"}[60m])) by (className,type) < 0.65
-#        and count(count_over_time(tink_agent_refresh_total{ provider_type!="test", {{ .Values.agentErrorsRefresh }}, market="ES"}[60m])) by (className,type)
-#          / count(count_over_time(tink_agent_refresh_total{ provider_type!="test", market="ES"}[60m])) by (className,type) >= 0.55
-#      for: 5m
-#      labels:
-#        severity: urgent
-#        priority: P2
-#        who: integration-fluffy
-#      annotations:
-#        description: {{ .Values.kibanaClassLink }}
-#             {{ .Values.grafanaLink }}
-#        summary: Refresh unavailable rate is between 65 - 55% because of agent issues ( <{ $value }> ) for <{ $labels.className }>
-#            the last 60 minutes for <{ $labels.type }>
-#        tags: {{ .Values.tags }}
-
-    - alert: AgentRefreshesBelow50DueToAgentServerErrorWithRateLimitES
-      expr: |
-        count(count_over_time(tink_agent_refresh_total{ provider_type!="test", {{ .Values.agentErrorsRefresh }}, market="ES"}[60m])) by (className,type)
-          / count(count_over_time(tink_agent_refresh_total{ provider_type!="test", market="ES"}[60m])) by (className,type) < 0.5
-      for: 5m
-      labels:
-        severity: urgent
-        priority: P1
-        who: integration-fluffy
-      annotations:
-        description: {{ .Values.kibanaClassLink }}
-             {{ .Values.grafanaLink }}
-        summary: Refresh unavailable rate is below 50% because of agent issues ( <{ $value }> ) for <{ $labels.className }>
-            the last 60 minutes for <{ $labels.type }>
-        tags: {{ .Values.tags }}
-
     #################################
     ### AllErrors - Agent Refresh ###
     #################################
 
-#    - alert: AgentRefreshesBelow75Greater65DueToAllErrorWithRateLimitES
-#      expr: |
-#        count(count_over_time(tink_agent_refresh_total{ provider_type!="test", {{ .Values.allErrorsRefresh }}, market="ES"}[60m])) by (className,type)
-#          / count(count_over_time(tink_agent_refresh_total{ provider_type!="test", market="ES"}[60m])) by (className,type) < 0.75
-#        and count(count_over_time(tink_agent_refresh_total{ provider_type!="test", {{ .Values.allErrorsRefresh }}, market="ES"}[60m])) by (className,type)
-#          / count(count_over_time(tink_agent_refresh_total{ provider_type!="test", market="ES"}[60m])) by (className,type) >= 0.65
-#      for: 15m
-#      labels:
-#        severity: ping
-#        priority: P4
-#        who: integration-fluffy
-#      annotations:
-#        description: {{ .Values.kibanaClassLink }}
-#             {{ .Values.grafanaLink }}
-#        summary: Refresh unavailable rate is between 75 - 65% because of all issues ( <{ $value }> ) for <{ $labels.className }>
-#            the last 75 minutes for <{ $labels.type }>
-#        tags: {{ .Values.tags }}
-#
-#    - alert: AgentRefreshesBelow65Greater55DueToAllErrorWithRateLimitES
-#      expr: |
-#        count(count_over_time(tink_agent_refresh_total{ provider_type!="test", {{ .Values.allErrorsRefresh }}, market="ES"}[60m])) by (className,type)
-#          / count(count_over_time(tink_agent_refresh_total{ provider_type!="test", market="ES"}[60m])) by (className,type) < 0.65
-#        and count(count_over_time(tink_agent_refresh_total{ provider_type!="test", {{ .Values.allErrorsRefresh }}, market="ES"}[60m])) by (className,type)
-#          / count(count_over_time(tink_agent_refresh_total{ provider_type!="test", market="ES"}[60m])) by (className,type) >= 0.55
-#      for: 5m
-#      labels:
-#        severity: urgent
-#        priority: P2
-#        who: integration-fluffy
-#      annotations:
-#        description: {{ .Values.kibanaClassLink }}
-#             {{ .Values.grafanaLink }}
-#        summary: Refresh unavailable rate is between 65 - 55% because of all issues ( <{ $value }> ) for <{ $labels.className }>
-#              the last 60 minutes for <{ $labels.type }>
-#        tags: {{ .Values.tags }}
+    - alert: AgentRefreshesBelow70Greater60DueToAllErrorWithRateLimitES
+      expr: |
+        count(count_over_time(tink_agent_refresh_total{ provider_type!="test", {{ .Values.allErrorsRefresh }}, market="ES"}[60m])) by (className,type)
+          / count(count_over_time(tink_agent_refresh_total{ provider_type!="test", market="ES"}[60m])) by (className,type) < 0.7
+        and count(count_over_time(tink_agent_refresh_total{ provider_type!="test", {{ .Values.allErrorsRefresh }}, market="ES"}[60m])) by (className,type)
+          / count(count_over_time(tink_agent_refresh_total{ provider_type!="test", market="ES"}[60m])) by (className,type) >= 0.6
+      for: 15m
+      labels:
+        severity: ping
+        priority: P4
+        who: integration-fluffy
+      annotations:
+        description: {{ .Values.kibanaClassLink }}
+             {{ .Values.grafanaLink }}
+        summary: Refresh unavailable rate is between 70 - 60% because of all issues ( <{ $value }> ) for <{ $labels.className }>
+            the last 75 minutes for <{ $labels.type }>
+        tags: {{ .Values.tags }}
+
+    - alert: AgentRefreshesBelow60Greater50DueToAllErrorWithRateLimitES
+      expr: |
+        count(count_over_time(tink_agent_refresh_total{ provider_type!="test", {{ .Values.allErrorsRefresh }}, market="ES"}[60m])) by (className,type)
+          / count(count_over_time(tink_agent_refresh_total{ provider_type!="test", market="ES"}[60m])) by (className,type) < 0.6
+        and count(count_over_time(tink_agent_refresh_total{ provider_type!="test", {{ .Values.allErrorsRefresh }}, market="ES"}[60m])) by (className,type)
+          / count(count_over_time(tink_agent_refresh_total{ provider_type!="test", market="ES"}[60m])) by (className,type) >= 0.5
+      for: 5m
+      labels:
+        severity: urgent
+        priority: P2
+        who: integration-fluffy
+      annotations:
+        description: {{ .Values.kibanaClassLink }}
+             {{ .Values.grafanaLink }}
+        summary: Refresh unavailable rate is between 60 - 50% because of all issues ( <{ $value }> ) for <{ $labels.className }>
+              the last 60 minutes for <{ $labels.type }>
+        tags: {{ .Values.tags }}
 
     - alert: AgentRefreshesBelow50DueToAllErrorWithRateLimitES
       expr: |
@@ -329,41 +253,41 @@ spec:
     ### AllErrors - Partially Completed Refresh ###
     ###############################################
 
-#    - alert: AgentRefreshesBelow75Greater65DueToPartiallyCompletedErrorWithRateLimitES
-#      expr: |
-#        count(count_over_time(tink_agent_refresh_total{ provider_type!="test", {{ .Values.partiallyCompletedErrorRefresh }}, market="ES"}[60m])) by (className,type)
-#          / count(count_over_time(tink_agent_refresh_total{ provider_type!="test", market="ES"}[60m])) by (className,type) < 0.75
-#        and count(count_over_time(tink_agent_refresh_total{ provider_type!="test", {{ .Values.partiallyCompletedErrorRefresh }}, market="ES"}[60m])) by (className,type)
-#          / count(count_over_time(tink_agent_refresh_total{ provider_type!="test", market="ES"}[60m])) by (className,type) >= 0.65
-#      for: 15m
-#      labels:
-#        severity: ping
-#        priority: P4
-#        who: integration-fluffy
-#      annotations:
-#        description: {{ .Values.kibanaClassLink }}
-#             {{ .Values.grafanaLink }}
-#        summary: Refresh unavailable rate is between 75 - 65% because of all issues ( <{ $value }> ) for <{ $labels.className }>
-#               the last 75 minutes.
-#        tags: {{ .Values.tags }}
-#
-#    - alert: AgentRefreshesBelow65Greater55DueToPartiallyCompletedErrorWithRateLimitES
-#      expr: |
-#        count(count_over_time(tink_agent_refresh_total{ provider_type!="test", {{ .Values.partiallyCompletedErrorRefresh }}, market="ES"}[60m])) by (className,type)
-#          / count(count_over_time(tink_agent_refresh_total{ provider_type!="test", market="ES"}[60m])) by (className,type) < 0.65
-#        and count(count_over_time(tink_agent_refresh_total{ provider_type!="test", {{ .Values.partiallyCompletedErrorRefresh }}, market="ES"}[60m])) by (className,type)
-#          / count(count_over_time(tink_agent_refresh_total{ provider_type!="test", market="ES"}[60m])) by (className,type) >= 0.55
-#      for: 5m
-#      labels:
-#        severity: urgent
-#        priority: P2
-#        who: integration-fluffy
-#      annotations:
-#        description: {{ .Values.kibanaClassLink }}
-#             {{ .Values.grafanaLink }}
-#        summary: Refresh unavailable rate is between 65 - 55% because of all issues ( <{ $value }> ) for <{ $labels.className }>
-#               the last 60 minutes.
-#        tags: {{ .Values.tags }}
+    - alert: AgentRefreshesBelow70Greater60DueToPartiallyCompletedErrorWithRateLimitES
+      expr: |
+        count(count_over_time(tink_agent_refresh_total{ provider_type!="test", {{ .Values.partiallyCompletedErrorRefresh }}, market="ES"}[60m])) by (className,type)
+          / count(count_over_time(tink_agent_refresh_total{ provider_type!="test", market="ES"}[60m])) by (className,type) < 0.7
+        and count(count_over_time(tink_agent_refresh_total{ provider_type!="test", {{ .Values.partiallyCompletedErrorRefresh }}, market="ES"}[60m])) by (className,type)
+          / count(count_over_time(tink_agent_refresh_total{ provider_type!="test", market="ES"}[60m])) by (className,type) >= 0.6
+      for: 15m
+      labels:
+        severity: ping
+        priority: P4
+        who: integration-fluffy
+      annotations:
+        description: {{ .Values.kibanaClassLink }}
+             {{ .Values.grafanaLink }}
+        summary: Refresh unavailable rate is between 70 - 60% because of all issues ( <{ $value }> ) for <{ $labels.className }>
+               the last 75 minutes.
+        tags: {{ .Values.tags }}
+
+    - alert: AgentRefreshesBelow60Greater50DueToPartiallyCompletedErrorWithRateLimitES
+      expr: |
+        count(count_over_time(tink_agent_refresh_total{ provider_type!="test", {{ .Values.partiallyCompletedErrorRefresh }}, market="ES"}[60m])) by (className,type)
+          / count(count_over_time(tink_agent_refresh_total{ provider_type!="test", market="ES"}[60m])) by (className,type) < 0.6
+        and count(count_over_time(tink_agent_refresh_total{ provider_type!="test", {{ .Values.partiallyCompletedErrorRefresh }}, market="ES"}[60m])) by (className,type)
+          / count(count_over_time(tink_agent_refresh_total{ provider_type!="test", market="ES"}[60m])) by (className,type) >= 0.5
+      for: 5m
+      labels:
+        severity: urgent
+        priority: P2
+        who: integration-fluffy
+      annotations:
+        description: {{ .Values.kibanaClassLink }}
+             {{ .Values.grafanaLink }}
+        summary: Refresh unavailable rate is between 60 - 50% because of all issues ( <{ $value }> ) for <{ $labels.className }>
+               the last 60 minutes.
+        tags: {{ .Values.tags }}
 
     - alert: AgentRefreshesBelow50DueToPartiallyCompletedErrorWithRateLimitES
       expr: |
