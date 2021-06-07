@@ -15,7 +15,7 @@ public class CajamarConstants {
 
     public static final class LoginParameter {
         public static final String APP_NAME = "WEFFERENT";
-        public static final String APP_VERSION = "1.67.28";
+        public static final String APP_VERSION = "1.73.5";
         public static final String OS_NAME = "IOS";
         public static final String OS_VERSION = "14.4.1";
         public static final String DEVICE_ID = "1101031615543534457519899";
@@ -82,6 +82,10 @@ public class CajamarConstants {
         public static final long BACKOFF = 1000;
     }
 
+    public static final class ErrorCodes {
+        public static final String APP_PROBLEM = "SYS060";
+    }
+
     public static final class ErrorMessages {
         public static final String MAX_TRY_ATTEMPTS =
                 String.format("Reached max retry attempts of %d", Fetchers.MAX_TRY_ATTEMPTS);
@@ -120,6 +124,7 @@ public class CajamarConstants {
     public static class SessionKeys {
         public static final String PUSH_TOKEN = "PUSH_TOKEN";
         public static final String ACCOUNT_HOLDER_NAME = "HOLDER";
+        public static final String POSITIONS = "POSITIONS";
     }
 
     public static class Proxy {

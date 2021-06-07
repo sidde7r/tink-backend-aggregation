@@ -2,12 +2,16 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.cajamar.fetcher.identi
 
 import java.io.IOException;
 import java.util.Base64;
+import java.util.List;
+import java.util.function.Function;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.cajamar.CajamarApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.cajamar.CajamarConstants.SessionKeys;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.cajamar.CajamarConstants.SplitValues;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.cajamar.entities.AccountEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.cajamar.entities.PositionEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.cajamar.fetcher.identitydata.rpc.CajamarIdentityDataResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.identitydata.IdentityDataFetcher;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
@@ -29,19 +33,31 @@ public class CajamarIdentityDataFetcher implements IdentityDataFetcher {
     @Override
     public IdentityData fetchIdentityData() {
         String pdfData =
-                apiClient.fetchPositions().getAccounts().stream()
+                apiClient
+                        .getPositions()
+                        .map(PositionEntity::getAccounts)
+                        .map(fetchAccountIdentity())
+                        .orElse("");
+
+        EsIdentityDataBuilder builder = EsIdentityData.builder();
+        if (!pdfData.equals("")) {
+            builder = parseDocumentIdFromIdentityData(builder, pdfData);
+        }
+
+        return builder.setFullName(sessionStorage.get(SessionKeys.ACCOUNT_HOLDER_NAME))
+                .setDateOfBirth(null)
+                .build();
+    }
+
+    private Function<List<AccountEntity>, String> fetchAccountIdentity() {
+        return accountEntities ->
+                accountEntities.stream()
                         .findFirst()
                         .map(
                                 accountEntity ->
                                         apiClient.fetchIdentityData(accountEntity.getAccountId()))
                         .map(CajamarIdentityDataResponse::getPdf)
                         .get();
-        EsIdentityDataBuilder builder = EsIdentityData.builder();
-        builder = parseDocumentIdFromIdentityData(builder, pdfData);
-
-        return builder.setFullName(sessionStorage.get(SessionKeys.ACCOUNT_HOLDER_NAME))
-                .setDateOfBirth(null)
-                .build();
     }
 
     private EsIdentityDataBuilder parseDocumentIdFromIdentityData(

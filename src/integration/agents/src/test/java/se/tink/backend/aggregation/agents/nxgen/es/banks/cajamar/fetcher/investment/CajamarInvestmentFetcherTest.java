@@ -9,6 +9,7 @@ import io.vavr.jackson.datatype.VavrModule;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.Collection;
+import java.util.Optional;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,7 +33,7 @@ public class CajamarInvestmentFetcherTest {
         final PositionEntity position = loadSampleData("positions.json", PositionEntity.class);
         final InvestmentAccountResponse account =
                 loadSampleData("investment.json", InvestmentAccountResponse.class);
-        when(apiClient.fetchPositions()).thenReturn(position);
+        when(apiClient.getPositions()).thenReturn(Optional.ofNullable(position));
         when(apiClient.fetchInvestmentAccountDetails(any())).thenReturn(account);
 
         // when
@@ -48,7 +49,7 @@ public class CajamarInvestmentFetcherTest {
         // given
         final PositionEntity position =
                 loadSampleData("positions_without_cards.json", PositionEntity.class);
-        when(apiClient.fetchPositions()).thenReturn(position);
+        when(apiClient.getPositions()).thenReturn(Optional.ofNullable(position));
 
         // when
         final CajamarInvestmentFetcher cajamarFetcher = new CajamarInvestmentFetcher(apiClient);
