@@ -119,7 +119,7 @@ public final class SkandiaConstants {
         public static final String PENDING = "pending";
         public static final String BOOKED = "booked";
         public static final String CODE = "code";
-        public static final String SCOPE = "psd2.aisp%20psd2.pisp";
+        public static final String SCOPE = "psd2.aisp";
     }
 
     public static class FormKeys {
