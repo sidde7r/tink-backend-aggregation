@@ -61,33 +61,129 @@ public class SkandiaWiremockAgentTest {
         final AgentsServiceConfiguration configuration =
                 AgentsServiceConfigurationReader.read(CONFIGURATION_PATH);
 
+        final RemittanceInformation remittanceInformation = new RemittanceInformation();
+        remittanceInformation.setType(RemittanceInformationType.UNSTRUCTURED);
+        remittanceInformation.setValue("test");
+
+        final Creditor to =
+                new Creditor(
+                        AccountIdentifier.create(AccountIdentifierType.SE, "12345678900"), "Tink");
+        final Debtor from =
+                new Debtor(AccountIdentifier.create(AccountIdentifierType.SE, "12345654321"));
+
         final AgentWireMockPaymentTest agentWireMockPaymentTest =
                 AgentWireMockPaymentTest.builder(
                                 MarketCode.SE, "se-skandiabanken-ob", wireMockFilePath)
                         .withConfigurationFile(configuration)
                         .addCallbackData("code", "dummyCode")
-                        .withPayment(createMockedDomesticPayment())
+                        .withPayment(createMockedDomesticPayment(remittanceInformation, to, from))
                         .buildWithLogin(PaymentCommand.class);
 
         // when / then (execution and assertion currently done in the same step)
         agentWireMockPaymentTest.executePayment();
     }
 
-    private Payment createMockedDomesticPayment() {
+    @Test
+    public void testBankGiroDomesticCreditTransfersPaymentsWithMessage() throws Exception {
+        // given
+        final String wireMockFilePath =
+                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/openbanking/skandia/wiremock/resources/skandia_ob_bank_giro_domestic_payment_with_message.aap";
+
+        final AgentsServiceConfiguration configuration =
+                AgentsServiceConfigurationReader.read(CONFIGURATION_PATH);
+
+        final RemittanceInformation remittanceInformation = new RemittanceInformation();
+        remittanceInformation.setType(RemittanceInformationType.UNSTRUCTURED);
+        remittanceInformation.setValue("PeaceAndLove");
+
+        final Creditor to =
+                new Creditor(
+                        AccountIdentifier.create(AccountIdentifierType.SE_BG, "11111111"), "Tink");
+        final Debtor from =
+                new Debtor(AccountIdentifier.create(AccountIdentifierType.SE, "12345654321"));
+
+        final AgentWireMockPaymentTest agentWireMockPaymentTest =
+                AgentWireMockPaymentTest.builder(
+                                MarketCode.SE, "se-skandiabanken-ob", wireMockFilePath)
+                        .withConfigurationFile(configuration)
+                        .addCallbackData("code", "dummyCode")
+                        .withPayment(createMockedDomesticPayment(remittanceInformation, to, from))
+                        .buildWithLogin(PaymentCommand.class);
+
+        // when / then (execution and assertion currently done in the same step)
+        agentWireMockPaymentTest.executePayment();
+    }
+
+    @Test
+    public void testBankGiroDomesticCreditTransfersPayments() throws Exception {
+        // given
+        final String wireMockFilePath =
+                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/openbanking/skandia/wiremock/resources/skandia_ob_bank_giro_domestic_payment.aap";
+
+        final AgentsServiceConfiguration configuration =
+                AgentsServiceConfigurationReader.read(CONFIGURATION_PATH);
+
+        final RemittanceInformation remittanceInformation = new RemittanceInformation();
+        remittanceInformation.setType(RemittanceInformationType.OCR);
+        remittanceInformation.setValue("11111111111111111");
+
+        final Creditor to =
+                new Creditor(
+                        AccountIdentifier.create(AccountIdentifierType.SE_BG, "11111111"), "Tink");
+        final Debtor from =
+                new Debtor(AccountIdentifier.create(AccountIdentifierType.SE, "12345654321"));
+
+        final AgentWireMockPaymentTest agentWireMockPaymentTest =
+                AgentWireMockPaymentTest.builder(
+                                MarketCode.SE, "se-skandiabanken-ob", wireMockFilePath)
+                        .withConfigurationFile(configuration)
+                        .addCallbackData("code", "dummyCode")
+                        .withPayment(createMockedDomesticPayment(remittanceInformation, to, from))
+                        .buildWithLogin(PaymentCommand.class);
+
+        // when / then (execution and assertion currently done in the same step)
+        agentWireMockPaymentTest.executePayment();
+    }
+
+    @Test
+    public void testPlusGiroDomesticCreditTransfersPayments() throws Exception {
+        // given
+        final String wireMockFilePath =
+                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/openbanking/skandia/wiremock/resources/skandia_ob_plus_giro_domestic_payment.aap";
+
+        final AgentsServiceConfiguration configuration =
+                AgentsServiceConfigurationReader.read(CONFIGURATION_PATH);
+
+        final RemittanceInformation remittanceInformation = new RemittanceInformation();
+        remittanceInformation.setType(RemittanceInformationType.OCR);
+        remittanceInformation.setValue("11111111111111111");
+
+        final Creditor to =
+                new Creditor(
+                        AccountIdentifier.create(AccountIdentifierType.SE_PG, "11111111"), "Tink");
+        final Debtor from =
+                new Debtor(AccountIdentifier.create(AccountIdentifierType.SE, "12345654321"));
+
+        final AgentWireMockPaymentTest agentWireMockPaymentTest =
+                AgentWireMockPaymentTest.builder(
+                                MarketCode.SE, "se-skandiabanken-ob", wireMockFilePath)
+                        .withConfigurationFile(configuration)
+                        .addCallbackData("code", "dummyCode")
+                        .withPayment(createMockedDomesticPayment(remittanceInformation, to, from))
+                        .buildWithLogin(PaymentCommand.class);
+
+        // when / then (execution and assertion currently done in the same step)
+        agentWireMockPaymentTest.executePayment();
+    }
+
+    private Payment createMockedDomesticPayment(
+            RemittanceInformation remittanceInformation, Creditor to, Debtor from) {
         String currency = "SEK";
         ExactCurrencyAmount amount = ExactCurrencyAmount.of("1.00", currency);
-        RemittanceInformation remittanceInformation = new RemittanceInformation();
-        remittanceInformation.setType(RemittanceInformationType.UNSTRUCTURED);
-        remittanceInformation.setValue("test");
 
         return new Payment.Builder()
-                .withCreditor(
-                        new Creditor(
-                                AccountIdentifier.create(AccountIdentifierType.SE, "12345678900"),
-                                "Tink"))
-                .withDebtor(
-                        new Debtor(
-                                AccountIdentifier.create(AccountIdentifierType.SE, "12345654321")))
+                .withCreditor(to)
+                .withDebtor(from)
                 .withExactCurrencyAmount(amount)
                 .withCurrency(currency)
                 .withRemittanceInformation(remittanceInformation)
