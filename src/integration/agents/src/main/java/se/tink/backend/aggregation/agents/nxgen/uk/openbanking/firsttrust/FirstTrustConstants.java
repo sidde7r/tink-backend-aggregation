@@ -8,6 +8,8 @@ public class FirstTrustConstants {
             "https://apis.firsttrustbank.co.uk/api/open-banking/v3.1/aisp";
     public static final String PIS_API_URL =
             "https://apis.firsttrustbank.co.uk/api/open-banking/v3.1/pisp";
-    public static final String WELL_KNOWN_URL =
+    public static final String PERSONAL_WELL_KNOWN_URL =
             "https://openapi.firsttrustbank.co.uk/endpoints/v2/retail/.well-known/openid-configuration";
+    public static final String CORPORATE_WELL_KNOWN_URL =
+            "https://openapi.firsttrustbank.co.uk/endpoints/v2/corporate/.well-known/openid-configuration";
 }

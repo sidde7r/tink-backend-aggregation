@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.firsttrust;
 
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CREDIT_CARDS;
-import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.IDENTITY_DATA;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.TRANSFERS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.PisCapability.PIS_UK_FASTER_PAYMENT;
@@ -35,7 +34,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 @AgentDependencyModulesForProductionMode(modules = UkOpenBankingFlowModule.class)
 @AgentDependencyModulesForDecoupledMode(
         modules = UkOpenBankingLocalKeySignerModuleForDecoupledMode.class)
-@AgentCapabilities({CHECKING_ACCOUNTS, CREDIT_CARDS, SAVINGS_ACCOUNTS, IDENTITY_DATA, TRANSFERS})
+@AgentCapabilities({CHECKING_ACCOUNTS, CREDIT_CARDS, SAVINGS_ACCOUNTS, TRANSFERS})
 @AgentPisCapability(capabilities = PIS_UK_FASTER_PAYMENT, markets = "GB")
 public final class FirstTrustV31Agent extends UkOpenBankingBaseAgent {
 
@@ -48,7 +47,7 @@ public final class FirstTrustV31Agent extends UkOpenBankingBaseAgent {
                         .withAllowedAccountOwnershipTypes(AccountOwnershipType.PERSONAL)
                         .withOrganisationId(FirstTrustConstants.ORGANISATION_ID)
                         .withApiBaseURL(FirstTrustConstants.AIS_API_URL)
-                        .withWellKnownURL(FirstTrustConstants.WELL_KNOWN_URL)
+                        .withWellKnownURL(FirstTrustConstants.PERSONAL_WELL_KNOWN_URL)
                         .build();
     }
 
@@ -60,7 +59,8 @@ public final class FirstTrustV31Agent extends UkOpenBankingBaseAgent {
                 flowFacade,
                 aisConfig,
                 new FirstTrustPisConfig(
-                        FirstTrustConstants.PIS_API_URL, FirstTrustConstants.WELL_KNOWN_URL),
+                        FirstTrustConstants.PIS_API_URL,
+                        FirstTrustConstants.PERSONAL_WELL_KNOWN_URL),
                 createPisRequestFilterUsingPs256Base64Signature(
                         flowFacade.getJwtSinger(), componentProvider.getRandomValueGenerator()));
         this.localDateTimeSource = componentProvider.getLocalDateTimeSource();

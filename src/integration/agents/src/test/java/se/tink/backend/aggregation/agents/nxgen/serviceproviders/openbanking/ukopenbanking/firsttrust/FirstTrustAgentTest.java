@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.firsttrust;
 
 import java.time.LocalDate;
-import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
@@ -13,7 +12,6 @@ import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
 
-@Ignore
 public class FirstTrustAgentTest {
     private final String SOURCE_IDENTIFIER = "";
     private final String DESTINATION_IDENTIFIER = "";
@@ -24,7 +22,7 @@ public class FirstTrustAgentTest {
                 .loadCredentialsBefore(false)
                 .saveCredentialsAfter(true)
                 .expectLoggedIn(false)
-                .setFinancialInstitutionId("firsttrust")
+                .setFinancialInstitutionId("793c6ee3633a4d5d8e0f5bad26f3bb50")
                 .setAppId("tink")
                 .build()
                 .testRefresh();
@@ -37,7 +35,7 @@ public class FirstTrustAgentTest {
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
-                        .setFinancialInstitutionId("firsttrust")
+                        .setFinancialInstitutionId("793c6ee3633a4d5d8e0f5bad26f3bb50")
                         .setAppId("tink");
 
         builder.build().testGenericPaymentUKOB(createMockedDomesticPayment());
