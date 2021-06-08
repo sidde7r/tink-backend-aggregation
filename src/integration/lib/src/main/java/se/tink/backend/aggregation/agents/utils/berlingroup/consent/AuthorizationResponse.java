@@ -18,4 +18,5 @@ public class AuthorizationResponse {
     private List<ScaMethodEntity> scaMethods;
     @Setter private ScaMethodEntity chosenScaMethod;
     private ChallengeDataEntity challengeData;
+    private String psuMessage;
 }

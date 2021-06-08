@@ -20,11 +20,9 @@ import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SupplementalInfoError;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankverlag.BankverlagApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankverlag.BankverlagConstants.AuthMethods;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankverlag.BankverlagConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankverlag.BankverlagStorage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankverlag.authenticator.detail.FieldBuilder;
-import se.tink.backend.aggregation.agents.utils.berlingroup.authenticator.rpc.FinalizeAuthorizationResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AuthorizationResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ChallengeDataEntity;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentDetailsResponse;
@@ -173,12 +171,7 @@ public class BankverlagAuthenticator implements MultiFactorAuthenticator, AutoAu
     protected List<ScaMethodEntity> getSupportedScaMethods(
             AuthorizationResponse authResponseAfterLogin) {
         List<ScaMethodEntity> methods =
-                authResponseAfterLogin.getScaMethods().stream()
-                        .filter(
-                                scaMethod ->
-                                        !AuthMethods.UNSUPPORTED_AUTH_TYPES.contains(
-                                                scaMethod.getAuthenticationMethodId()))
-                        .collect(Collectors.toList());
+                authResponseAfterLogin.getScaMethods().stream().collect(Collectors.toList());
 
         if (methods.isEmpty()) {
             throw LoginError.NOT_SUPPORTED.exception(ErrorMessages.NO_SUPPORTED_METHOD_FOUND);
@@ -258,7 +251,7 @@ public class BankverlagAuthenticator implements MultiFactorAuthenticator, AutoAu
                 collectOtp(
                         authorizationResponse.getChosenScaMethod(),
                         authorizationResponse.getChallengeData());
-        FinalizeAuthorizationResponse finalizeAuthorizationResponse =
+        AuthorizationResponse finalizeAuthorizationResponse =
                 apiClient.finalizeAuthorization(
                         authorizationResponse.getLinks().getScaStatus().getHref(), otp);
         switch (finalizeAuthorizationResponse.getScaStatus()) {

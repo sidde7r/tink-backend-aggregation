@@ -2,6 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ba
 
 import java.util.List;
 import java.util.Optional;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.ObjectUtils;
 import se.tink.backend.aggregation.agents.utils.berlingroup.BalanceEntity;
 import se.tink.backend.aggregation.agents.utils.berlingroup.BalanceMapper;
@@ -15,6 +17,7 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.libraries.account.enums.AccountFlag;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class TransactionalAccountMapper {
 
     public static Optional<TransactionalAccount> toTinkAccountWithBalance(

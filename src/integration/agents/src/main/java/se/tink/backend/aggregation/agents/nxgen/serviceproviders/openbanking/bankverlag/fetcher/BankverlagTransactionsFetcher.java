@@ -5,6 +5,7 @@ import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.mapper.transaction.FinTsTransactionMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankverlag.BankverlagApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankverlag.BankverlagConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankverlag.BankverlagStorage;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -14,13 +15,16 @@ import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction
 public class BankverlagTransactionsFetcher implements TransactionFetcher<TransactionalAccount> {
     private final BankverlagApiClient apiClient;
     private final BankverlagStorage storage;
+    private String aspspId;
     // Reusing FinTsTransactionMapper as Bankverlag also provides transactions in Swift format
     // later move this mapper to common util
     FinTsTransactionMapper mapper = new FinTsTransactionMapper();
 
-    public BankverlagTransactionsFetcher(BankverlagApiClient apiClient, BankverlagStorage storage) {
+    public BankverlagTransactionsFetcher(
+            BankverlagApiClient apiClient, BankverlagStorage storage, String aspspId) {
         this.apiClient = apiClient;
         this.storage = storage;
+        this.aspspId = aspspId;
     }
 
     @Override
@@ -45,7 +49,13 @@ public class BankverlagTransactionsFetcher implements TransactionFetcher<Transac
     private LocalDate getFetchStartDate() {
         LocalDate startDate;
         if (storage.isFirstFetch()) {
-            startDate = LocalDate.ofEpochDay(0);
+            // currently Degussa Bank provide transactions only for less than 90 days.
+            // For transactions more than 90 days we need extra SCA.
+            if (BankverlagConstants.BankverlagAspspId.DEGUSSABANK.equalsIgnoreCase(aspspId)) {
+                startDate = LocalDate.now().minusDays(89);
+            } else {
+                startDate = LocalDate.ofEpochDay(0);
+            }
             storage.markFirstFetchAsDone();
         } else {
             startDate = LocalDate.now().minusDays(89);

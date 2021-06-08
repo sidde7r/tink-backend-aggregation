@@ -8,23 +8,21 @@ import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankverlag.BankverlagConstants.AspspId;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankverlag.BankverlagConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankverlag.BankverlagConstants.HeaderKeys;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankverlag.BankverlagConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankverlag.BankverlagConstants.PathVariables;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankverlag.BankverlagConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankverlag.BankverlagConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankverlag.BankverlagConstants.Urls;
-import se.tink.backend.aggregation.agents.utils.berlingroup.authenticator.rpc.FinalizeAuthorizationResponse;
-import se.tink.backend.aggregation.agents.utils.berlingroup.authenticator.rpc.InitAuthorizationRequest;
-import se.tink.backend.aggregation.agents.utils.berlingroup.authenticator.rpc.OauthEndpointsResponse;
-import se.tink.backend.aggregation.agents.utils.berlingroup.authenticator.rpc.SelectAuthenticationMethodRequest;
-import se.tink.backend.aggregation.agents.utils.berlingroup.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AccessEntity;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AuthorizationRequest;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AuthorizationResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentDetailsResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentRequest;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.FinalizeAuthorizationRequest;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.OauthEndpointsResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.PsuDataEntity;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.SelectAuthorizationMethodRequest;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.TokenResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.fetcher.rpc.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.fetcher.rpc.FetchBalancesResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.fetcher.rpc.FetchTransactionsResponse;
@@ -51,7 +49,6 @@ public class BankverlagApiClient {
 
         return client.request(url)
                 .type(MediaType.APPLICATION_JSON)
-                .header(HeaderKeys.API_KEY, HeaderValues.API_KEY_VALUE)
                 .header(HeaderKeys.X_REQUEST_ID, randomValueGenerator.getUUID().toString())
                 .header(HeaderKeys.PSU_IP_ADDRESS, headerValues.getUserIp());
     }
@@ -89,23 +86,23 @@ public class BankverlagApiClient {
                 .header(HeaderKeys.PSU_ID, username)
                 .post(
                         AuthorizationResponse.class,
-                        new InitAuthorizationRequest(new PsuDataEntity(password)));
+                        new AuthorizationRequest(new PsuDataEntity(password)));
     }
 
     public AuthorizationResponse selectAuthorizationMethod(String url, String methodId) {
 
         return createRequest(new URL(url))
-                .put(AuthorizationResponse.class, new SelectAuthenticationMethodRequest(methodId));
+                .put(AuthorizationResponse.class, new SelectAuthorizationMethodRequest(methodId));
     }
 
     public AuthorizationResponse getAuthorizationStatus(String url) {
         return createRequest(new URL(url)).get(AuthorizationResponse.class);
     }
 
-    public FinalizeAuthorizationResponse finalizeAuthorization(String url, String otp) {
+    public AuthorizationResponse finalizeAuthorization(String url, String otp) {
 
         return createRequest(new URL(url))
-                .put(FinalizeAuthorizationResponse.class, new FinalizeAuthorizationRequest(otp));
+                .put(AuthorizationResponse.class, new FinalizeAuthorizationRequest(otp));
     }
 
     public ConsentResponse getConsentStatus(String consentId) {

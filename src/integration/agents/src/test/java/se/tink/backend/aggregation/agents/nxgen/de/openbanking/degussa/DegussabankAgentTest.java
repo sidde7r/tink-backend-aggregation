@@ -27,6 +27,7 @@ public class DegussabankAgentTest {
                         .expectLoggedIn(false)
                         .saveCredentialsAfter(false)
                         .setAppId("tink")
+                        .dumpContentForContractFile()
                         .setFinancialInstitutionId("degussabank");
     }
 

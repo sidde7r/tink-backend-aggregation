@@ -1,15 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankverlag;
 
-import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
-import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
-import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.TRANSFERS;
-
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
-import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankverlag.authenticator.BankverlagAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankverlag.fetcher.BankverlagAccountsFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankverlag.fetcher.BankverlagTransactionsFetcher;
@@ -26,7 +21,6 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController
 import se.tink.backend.aggregation.nxgen.http.filter.filters.AccessExceededFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.BankServiceDownExceptionFilter;
 
-@AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, TRANSFERS})
 public abstract class BankverlagBaseAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
 
@@ -38,13 +32,12 @@ public abstract class BankverlagBaseAgent extends NextGenerationAgent
     protected LocalDateTimeSource localDateTimeSource;
     private String aspspId;
 
-    public BankverlagBaseAgent(AgentComponentProvider componentProvider, String aspspId) {
+    protected BankverlagBaseAgent(AgentComponentProvider componentProvider, String aspspId) {
         super(componentProvider);
         this.aspspId = aspspId;
         randomValueGenerator = componentProvider.getRandomValueGenerator();
         localDateTimeSource = componentProvider.getLocalDateTimeSource();
         bankverlagStorage = new BankverlagStorage(persistentStorage);
-
         apiClient = constructApiClient();
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
@@ -109,7 +102,7 @@ public abstract class BankverlagBaseAgent extends NextGenerationAgent
                 metricRefreshController,
                 updateController,
                 new BankverlagAccountsFetcher(apiClient, bankverlagStorage),
-                new BankverlagTransactionsFetcher(apiClient, bankverlagStorage));
+                new BankverlagTransactionsFetcher(apiClient, bankverlagStorage, aspspId));
     }
 
     @Override

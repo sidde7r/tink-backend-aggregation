@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.utils.berlingroup.authenticator.rpc;
+package se.tink.backend.aggregation.agents.utils.berlingroup.consent;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
