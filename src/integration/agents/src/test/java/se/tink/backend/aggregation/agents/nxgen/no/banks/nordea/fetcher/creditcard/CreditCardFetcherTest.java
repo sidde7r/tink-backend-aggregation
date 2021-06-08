@@ -30,7 +30,8 @@ public class CreditCardFetcherTest {
             SerializationUtils.deserializeFromString(
                     new File(CREDIT_CARD_DETAILS_FILE_PATH), CreditCardDetailsResponse.class);
 
-    private static final String MASKED_PAN = "3239";
+    private static final String MASKED_PAN = "5269 **** **** 3239";
+    private static final String BANKID = "3239";
 
     @Test
     public void shouldReturnProperlyMappedCreditCards() {
@@ -47,11 +48,11 @@ public class CreditCardFetcherTest {
 
         assertThat(creditCardAccounts).hasSize(1);
         CreditCardAccount card = creditCardAccounts.iterator().next();
-        assertThat(card.isUniqueIdentifierEqual(MASKED_PAN)).isTrue();
+        assertThat(card.isUniqueIdentifierEqual(BANKID)).isTrue();
         assertThat(card.getApiIdentifier()).isEqualTo("2218836201");
         assertThat(card.getIdentifiers()).hasSize(1);
         assertThat(card.getIdentifiers().get(0).getType())
-                .isEqualTo(AccountIdentifierType.PAYMENT_CARD_NUMBER);
+                .isEqualTo(AccountIdentifierType.MASKED_PAN);
         assertThat(card.getIdentifiers().get(0).getIdentifier()).isEqualTo(MASKED_PAN);
 
         assertThat(card.getName()).isEqualTo(MASKED_PAN);
