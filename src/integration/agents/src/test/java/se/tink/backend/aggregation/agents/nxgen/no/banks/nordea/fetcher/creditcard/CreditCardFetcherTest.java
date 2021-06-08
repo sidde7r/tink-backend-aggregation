@@ -30,7 +30,7 @@ public class CreditCardFetcherTest {
             SerializationUtils.deserializeFromString(
                     new File(CREDIT_CARD_DETAILS_FILE_PATH), CreditCardDetailsResponse.class);
 
-    private static final String MASKED_PAN = "5269 **** **** 3239";
+    private static final String MASKED_PAN = "3239";
 
     @Test
     public void shouldReturnProperlyMappedCreditCards() {
