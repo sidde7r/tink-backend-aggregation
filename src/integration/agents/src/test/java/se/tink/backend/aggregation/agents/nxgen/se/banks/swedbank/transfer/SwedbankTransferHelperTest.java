@@ -66,6 +66,20 @@ public class SwedbankTransferHelperTest {
     }
 
     @Test
+    public void verify_RejectedTransactionWithWrongDate_ThrowsWithSpecificMessage() {
+        thrown.expect(TransferExecutionException.class);
+        thrown.expectMessage("The payment date is too soon or not a business day");
+
+        ConfirmTransferResponse confirmTransferResponse =
+                SerializationUtils.deserializeFromString(
+                        SwedbankTransferConfirmationData.TRANSFER_REJECTED_DUE_TO_WRONG_DATE,
+                        ConfirmTransferResponse.class);
+
+        transferHelper.confirmSuccessfulTransferOrThrow(
+                confirmTransferResponse, SwedbankTransferConfirmationData.TRANSFER_ID);
+    }
+
+    @Test
     public void verify_RejectedTransactionWithUnknownCause_ThrowsWithGenericMessage() {
         thrown.expect(TransferExecutionException.class);
         thrown.expectMessage("Transfer rejected by the Bank");

@@ -497,6 +497,7 @@ public class SwedbankBaseConstants {
         public static final String DUPLICATION = "DUPLICATE";
         public static final String TRANSFER_ALREADY_EXISTS = "TRANSFER_ALREADY_EXISTS";
         public static final String PAYMENT_ALREADY_EXISTS = "PAYMENT_ALREADY_EXISTS";
+        public static final String WRONG_DATE = "DATE_PASSED";
     }
 
     public static class ErrorField {
