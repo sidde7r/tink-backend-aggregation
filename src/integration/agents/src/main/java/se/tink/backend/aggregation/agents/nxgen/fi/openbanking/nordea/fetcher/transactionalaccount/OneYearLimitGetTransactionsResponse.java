@@ -2,12 +2,16 @@ package se.tink.backend.aggregation.agents.nxgen.fi.openbanking.nordea.fetcher.t
 
 import com.google.common.collect.Iterables;
 import java.time.LocalDate;
+import java.time.chrono.ChronoLocalDate;
 import java.util.List;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.fetcher.transactionalaccount.rpc.GetTransactionsResponse;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 
 public class OneYearLimitGetTransactionsResponse
         extends GetTransactionsResponse<NordeaFiTransactionEntity> {
+
+    private LocalDateTimeSource localDateTimeSource;
 
     @Override
     public Optional<Boolean> canFetchMore() {
@@ -15,6 +19,12 @@ public class OneYearLimitGetTransactionsResponse
             return Optional.of(false);
         }
         return super.canFetchMore();
+    }
+
+    public OneYearLimitGetTransactionsResponse setLocalDateTimeSource(
+            LocalDateTimeSource localDateTimeSource) {
+        this.localDateTimeSource = localDateTimeSource;
+        return this;
     }
 
     private boolean containsTransactionOlderThanYear(List<NordeaFiTransactionEntity> transactions) {
@@ -25,6 +35,6 @@ public class OneYearLimitGetTransactionsResponse
     }
 
     private boolean isDateOlderThanOneYear(LocalDate dateToCheck) {
-        return dateToCheck.isBefore(LocalDate.now().minusYears(1));
+        return dateToCheck.isBefore(ChronoLocalDate.from(localDateTimeSource.now().minusYears(1)));
     }
 }

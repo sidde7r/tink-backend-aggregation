@@ -1,7 +1,7 @@
 load("//tools/bzl:junit.bzl", "junit_test")
 
 junit_test(
-    name = "authenticator",
+    name = "error",
     srcs = glob(["**/*.java"]),
     data = ["//:agent_test_data"],
     visibility = ["//visibility:public"],
@@ -15,5 +15,6 @@ junit_test(
         "//third_party:com_sun_jersey_jersey_core",
         "//third_party:org_assertj_assertj_core",
         "//third_party:org_mockito_mockito_core",
+        "//third_party:pl_pragmatists_junitparams",
     ],
 )

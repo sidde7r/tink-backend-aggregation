@@ -246,12 +246,14 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
 
         String baseTokenString =
                 Base64.getUrlEncoder()
+                                .withoutPadding()
                                 .encodeToString(
                                         tokenHeadJson != null
                                                 ? tokenHeadJson.getBytes()
                                                 : new byte[0])
                         + "."
                         + Base64.getUrlEncoder()
+                                .withoutPadding()
                                 .encodeToString(
                                         tokenBodyJson != null
                                                 ? tokenBodyJson.getBytes()

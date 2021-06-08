@@ -21,6 +21,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nor
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.eidassigner.module.QSealcSignerModuleRSASHA256;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
@@ -43,7 +44,9 @@ public final class NordeaFiAgent extends NordeaBaseAgent
         super(componentProvider);
         apiClient = new NordeaFiApiClient(client, persistentStorage, qsealcSigner);
         this.creditCardRefreshController = getCreditCardRefreshController();
-        transactionalAccountRefreshController = getTransactionalAccountRefreshController();
+        transactionalAccountRefreshController =
+                getTransactionalAccountRefreshController(
+                        componentProvider.getLocalDateTimeSource());
     }
 
     @Override
@@ -85,10 +88,14 @@ public final class NordeaFiAgent extends NordeaBaseAgent
         return creditCardRefreshController.fetchCreditCardTransactions();
     }
 
-    private TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
+    private TransactionalAccountRefreshController getTransactionalAccountRefreshController(
+            LocalDateTimeSource localDateTimeSource) {
         NordeaBaseTransactionalAccountFetcher<OneYearLimitGetTransactionsResponse> accountFetcher =
                 new NordeaFiTransactionalAccountFetcher<>(
-                        apiClient, OneYearLimitGetTransactionsResponse.class, providerMarket);
+                        apiClient,
+                        OneYearLimitGetTransactionsResponse.class,
+                        providerMarket,
+                        localDateTimeSource);
 
         return new TransactionalAccountRefreshController(
                 metricRefreshController,

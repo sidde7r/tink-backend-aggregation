@@ -2,6 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n2
 
 import agents_platform_agents_framework.lombok.NonNull;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.authenticator.steps.fetch_consent.N26FetchConsentStep;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.error.AuthenticationStepBankSiteErrorHandler;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.error.N26BankSiteErrorDiscoverer;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentAuthenticationProcessStepIdentifier;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.request.AgentRemoteInteractionAuthenticationRequest;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentAuthenticationResult;
@@ -29,7 +31,17 @@ public class N26RedirectFetchAuthenticationTokensStep
     @Override
     public AgentAuthenticationResult execute(
             AgentRemoteInteractionAuthenticationRequest authenticationProcessRequest) {
-        AgentAuthenticationResult executeResult = super.execute(authenticationProcessRequest);
+        AgentAuthenticationResult executeResult =
+                new AuthenticationStepBankSiteErrorHandler<
+                        AgentRemoteInteractionAuthenticationRequest>(
+                        new N26BankSiteErrorDiscoverer()) {
+                    protected AgentAuthenticationResult execute(
+                            AgentRemoteInteractionAuthenticationRequest
+                                    authenticationProcessRequest) {
+                        return N26RedirectFetchAuthenticationTokensStep.super.execute(
+                                authenticationProcessRequest);
+                    }
+                }.executeWithHandling(authenticationProcessRequest);
         if (executeResult instanceof AgentSucceededAuthenticationResult) {
             return new AgentProceedNextStepAuthenticationResult(
                     AgentAuthenticationProcessStepIdentifier.of(
