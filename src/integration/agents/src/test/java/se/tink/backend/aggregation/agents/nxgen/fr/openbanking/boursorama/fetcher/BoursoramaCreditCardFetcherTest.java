@@ -15,7 +15,7 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 public class BoursoramaCreditCardFetcherTest {
 
     private BoursoramaApiClient boursoramaApiClient;
-    private BoursoramaCreditCardFetcher objectUnderTest;
+    private BoursoramaAccountCreditCardFetcher objectUnderTest;
     private LocalDateTimeSource localDateTimeSource;
 
     @Before
@@ -23,7 +23,8 @@ public class BoursoramaCreditCardFetcherTest {
         boursoramaApiClient = mock(BoursoramaApiClient.class);
         localDateTimeSource = mock(LocalDateTimeSource.class);
 
-        objectUnderTest = new BoursoramaCreditCardFetcher(boursoramaApiClient, localDateTimeSource);
+        objectUnderTest =
+                new BoursoramaAccountCreditCardFetcher(boursoramaApiClient, localDateTimeSource);
     }
 
     @Test

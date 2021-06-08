@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama;
 
-import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.BoursoramaConstants.ZONE_ID;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CREDIT_CARDS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.IDENTITY_DATA;
@@ -9,7 +8,6 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.TRANSFERS;
 
 import com.google.inject.Inject;
-import java.time.Clock;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -33,8 +31,8 @@ import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.client
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.client.BoursoramaPostRequestSignFilter;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.client.BoursoramaSignatureHeaderGenerator;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.configuration.BoursoramaConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.fetcher.BoursoramaCreditCardFetcher;
-import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.fetcher.BoursoramaTransactionalAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.fetcher.BoursoramaAccountCreditCardFetcher;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.fetcher.BoursoramaAccountTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.fetcher.identity.BoursoramaIdentityFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.fetcher.transfer.BoursoramaTransferDestinationFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.payment.BoursoramaPaymentApiClient;
@@ -105,7 +103,9 @@ public final class BoursoramaAgent extends NextGenerationAgent
         this.authenticator =
                 new BoursoramaAuthenticator(
                         this.apiClient, this.sessionStorage, agentConfiguration);
-        this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
+        this.transactionalAccountRefreshController =
+                getTransactionalAccountRefreshController(
+                        componentProvider.getLocalDateTimeSource());
 
         this.transferDestinationRefreshController = constructTransferDestinationRefreshController();
 
@@ -147,22 +147,6 @@ public final class BoursoramaAgent extends NextGenerationAgent
         return agentConfiguration;
     }
 
-    private CreditCardRefreshController constructCreditCardRefreshController(
-            LocalDateTimeSource localDateTimeSource) {
-        BoursoramaCreditCardFetcher boursoramaCreditCardFetcher =
-                new BoursoramaCreditCardFetcher(apiClient, localDateTimeSource);
-
-        return new CreditCardRefreshController(
-                metricRefreshController,
-                updateController,
-                boursoramaCreditCardFetcher,
-                new TransactionFetcherController<>(
-                        transactionPaginationHelper,
-                        new TransactionDatePaginationController.Builder<>(
-                                        boursoramaCreditCardFetcher)
-                                .build()));
-    }
-
     private BoursoramaApiClient constructApiClient(
             QsealcSigner qsealcSigner, BoursoramaConfiguration agentConfiguration) {
 
@@ -180,9 +164,10 @@ public final class BoursoramaAgent extends NextGenerationAgent
         return new BoursoramaApiClient(client, agentConfiguration, sessionStorage);
     }
 
-    private TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
-        BoursoramaTransactionalAccountFetcher accountFetcher =
-                new BoursoramaTransactionalAccountFetcher(apiClient, Clock.system(ZONE_ID));
+    private TransactionalAccountRefreshController getTransactionalAccountRefreshController(
+            LocalDateTimeSource localDateTimeSource) {
+        BoursoramaAccountTransactionalAccountFetcher accountFetcher =
+                new BoursoramaAccountTransactionalAccountFetcher(apiClient, localDateTimeSource);
 
         return new TransactionalAccountRefreshController(
                 metricRefreshController,
@@ -190,7 +175,26 @@ public final class BoursoramaAgent extends NextGenerationAgent
                 accountFetcher,
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
-                        new TransactionDatePaginationController.Builder<>(accountFetcher).build()));
+                        new TransactionDatePaginationController.Builder<>(accountFetcher)
+                                .setLocalDateTimeSource(localDateTimeSource)
+                                .build()));
+    }
+
+    private CreditCardRefreshController constructCreditCardRefreshController(
+            LocalDateTimeSource localDateTimeSource) {
+        BoursoramaAccountCreditCardFetcher boursoramaCreditCardFetcher =
+                new BoursoramaAccountCreditCardFetcher(apiClient, localDateTimeSource);
+
+        return new CreditCardRefreshController(
+                metricRefreshController,
+                updateController,
+                boursoramaCreditCardFetcher,
+                new TransactionFetcherController<>(
+                        transactionPaginationHelper,
+                        new TransactionDatePaginationController.Builder<>(
+                                        boursoramaCreditCardFetcher)
+                                .setLocalDateTimeSource(localDateTimeSource)
+                                .build()));
     }
 
     private BoursoramaIdentityFetcher getIdentityFetcher() {
