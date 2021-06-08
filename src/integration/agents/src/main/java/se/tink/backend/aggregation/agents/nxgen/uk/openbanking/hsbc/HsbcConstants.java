@@ -20,4 +20,8 @@ final class HsbcConstants {
             "https://api.ob.hsbckinetic.co.uk/obie/open-banking/v3.1/aisp";
     public static final String KINETIC_WELL_KNOWN_URL =
             "https://api.ob.hsbckinetic.co.uk/.well-known/openid-configuration";
+    public static final String NET_AIS_API_URL =
+            "https://api.ob.hsbcnet.com/obie/open-banking/v3.1/aisp";
+    public static final String NET_WELL_KNOWN_URL =
+            "https://api.ob.hsbcnet.com/.well-known/openid-configuration";
 }
