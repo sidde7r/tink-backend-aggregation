@@ -11,7 +11,7 @@ public class TransactionPaginationHelperFactory {
 
     public TransactionPaginationHelper create(CredentialsRequest request) {
         if (configuration.isFeatureEnabled("transactionsRefreshScope")) {
-            return new TransactionPaginationHelper(request);
+            return new RefreshScopeTransactionPaginationHelper(request.getRefreshScope());
         }
         return new CertainDateTransactionPaginationHelper(request);
     }

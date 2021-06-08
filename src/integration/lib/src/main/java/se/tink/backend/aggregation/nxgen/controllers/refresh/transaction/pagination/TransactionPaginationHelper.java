@@ -2,25 +2,15 @@ package se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagina
 
 import com.google.common.annotations.VisibleForTesting;
 import java.time.Duration;
-import java.time.LocalDate;
-import java.time.ZoneOffset;
-import java.util.*;
-import java.util.stream.Collectors;
-import lombok.AccessLevel;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
-import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.credentials.service.*;
 
-@RequiredArgsConstructor(access = AccessLevel.PACKAGE)
-@Slf4j
-public class TransactionPaginationHelper {
+public abstract class TransactionPaginationHelper {
     @VisibleForTesting static final int SAFETY_THRESHOLD_NUMBER_OF_DAYS = 10;
     @VisibleForTesting static final int SAFETY_THRESHOLD_NUMBER_OF_OVERLAPS = 10;
-
-    final CredentialsRequest request;
 
     public boolean shouldFetchNextPage(Account account, List<AggregationTransaction> transactions) {
         if (transactions.size() == 0) {
@@ -82,47 +72,5 @@ public class TransactionPaginationHelper {
         return true;
     }
 
-    /**
-     * Returns the lower limit (inclusive) date for this account. It can be specified by refresh
-     * scope on all transaction or specifically on account transactions
-     */
-    public Optional<Date> getTransactionDateLimit(Account account) {
-        RefreshScope refreshScope = request.getRefreshScope();
-        if (refreshScope == null || refreshScope.getTransactions() == null) {
-            return Optional.empty();
-        }
-
-        Optional<Date> defaultLimit =
-                Optional.ofNullable(refreshScope.getTransactions().getTransactionBookedDateGte())
-                        .map(TransactionPaginationHelper::localDateToDate);
-        if (refreshScope.getTransactions().getAccounts() == null) {
-            return defaultLimit;
-        }
-
-        Set<AccountIdentifier> accountIdentifiers = new HashSet<>(account.getIdentifiers());
-        Optional<AccountTransactionsRefreshScope> accountRefreshScope =
-                refreshScope.getTransactions().getAccounts().stream()
-                        .filter(
-                                it -> {
-                                    Set<AccountIdentifier> refreshScopeAccountIdentifiers =
-                                            it.getAccountIdentifiers().stream()
-                                                    .map(AccountIdentifier::createOrThrow)
-                                                    .collect(Collectors.toSet());
-                                    return refreshScopeAccountIdentifiers.removeAll(
-                                            accountIdentifiers);
-                                })
-                        .findAny();
-
-        if (accountRefreshScope.isPresent()
-                && accountRefreshScope.get().getTransactionBookedDateGte() != null) {
-            return Optional.of(
-                    localDateToDate(accountRefreshScope.get().getTransactionBookedDateGte()));
-        }
-
-        return defaultLimit;
-    }
-
-    private static Date localDateToDate(LocalDate localDate) {
-        return Date.from(localDate.atStartOfDay().toInstant(ZoneOffset.UTC));
-    }
+    public abstract Optional<Date> getTransactionDateLimit(Account account);
 }
