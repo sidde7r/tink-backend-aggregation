@@ -76,4 +76,8 @@ public class RecurringPaymentRequest extends TransferRequest {
     public Transfer getTransfer() {
         return getRecurringPayment();
     }
+
+    public boolean isSkipRefresh() {
+        return true; // No need to refresh after PIS in case of Recurring Payments.
+    }
 }
