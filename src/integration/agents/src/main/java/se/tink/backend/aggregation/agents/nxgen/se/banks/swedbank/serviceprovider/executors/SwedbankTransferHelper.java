@@ -216,6 +216,11 @@ public class SwedbankTransferHelper {
                 throw transferCancelled(
                         TransferExecutionException.EndUserMessage.DUPLICATE_PAYMENT,
                         InternalStatus.DUPLICATE_PAYMENT);
+            case SwedbankBaseConstants.ErrorCode.WRONG_DATE:
+                throw transferCancelled(
+                        TransferExecutionException.EndUserMessage
+                                .INVALID_DUEDATE_TOO_SOON_OR_NOT_BUSINESSDAY,
+                        InternalStatus.INVALID_DUE_DATE);
             default:
                 log.warn(
                         "Unknown transfer rejection cause. Code: {}, message {}",
