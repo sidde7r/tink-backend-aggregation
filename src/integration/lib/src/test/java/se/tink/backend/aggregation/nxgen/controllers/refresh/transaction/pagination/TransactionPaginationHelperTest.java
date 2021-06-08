@@ -18,12 +18,14 @@ import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.credentials.service.AccountTransactionsRefreshScope;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.RefreshScope;
 import se.tink.libraries.credentials.service.TransactionsRefreshScope;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TransactionPaginationHelperTest {
 
+    @Mock private CredentialsRequest request;
     @Mock private Account account;
 
     @Test
@@ -34,7 +36,8 @@ public class TransactionPaginationHelperTest {
         LocalDate expectedLocalDate = LocalDate.parse("2021-06-04");
         transactionsRefreshScope.setTransactionBookedDateGte(expectedLocalDate);
         refreshScope.setTransactions(transactionsRefreshScope);
-        TransactionPaginationHelper helper = new TransactionPaginationHelper(refreshScope);
+        when(request.getRefreshScope()).thenReturn(refreshScope);
+        TransactionPaginationHelper helper = new TransactionPaginationHelper(request);
 
         List<AggregationTransaction> transactions = new ArrayList<>();
 
@@ -84,7 +87,8 @@ public class TransactionPaginationHelperTest {
         LocalDate expectedLocalDate = LocalDate.parse("2021-06-04");
         transactionsRefreshScope.setTransactionBookedDateGte(expectedLocalDate);
         refreshScope.setTransactions(transactionsRefreshScope);
-        TransactionPaginationHelper helper = new TransactionPaginationHelper(refreshScope);
+        when(request.getRefreshScope()).thenReturn(refreshScope);
+        TransactionPaginationHelper helper = new TransactionPaginationHelper(request);
 
         List<AggregationTransaction> transactions = new ArrayList<>();
 
@@ -134,7 +138,8 @@ public class TransactionPaginationHelperTest {
         LocalDate expectedLocalDate = LocalDate.parse("2021-06-04");
         transactionsRefreshScope.setTransactionBookedDateGte(expectedLocalDate);
         refreshScope.setTransactions(transactionsRefreshScope);
-        TransactionPaginationHelper helper = new TransactionPaginationHelper(refreshScope);
+        when(request.getRefreshScope()).thenReturn(refreshScope);
+        TransactionPaginationHelper helper = new TransactionPaginationHelper(request);
 
         List<AggregationTransaction> transactions = new ArrayList<>();
 
@@ -185,7 +190,8 @@ public class TransactionPaginationHelperTest {
         LocalDate expectedLocalDate = LocalDate.parse("2021-06-04");
         transactionsRefreshScope.setTransactionBookedDateGte(expectedLocalDate);
         refreshScope.setTransactions(transactionsRefreshScope);
-        TransactionPaginationHelper helper = new TransactionPaginationHelper(refreshScope);
+        when(request.getRefreshScope()).thenReturn(refreshScope);
+        TransactionPaginationHelper helper = new TransactionPaginationHelper(request);
 
         // when
         Optional<Date> date = helper.getTransactionDateLimit(account);
@@ -212,7 +218,8 @@ public class TransactionPaginationHelperTest {
         accountTransactionsRefreshScope.setTransactionBookedDateGte(expectedLocalDate);
         transactionsRefreshScope.setAccounts(
                 Collections.singleton(accountTransactionsRefreshScope));
-        TransactionPaginationHelper helper = new TransactionPaginationHelper(refreshScope);
+        when(request.getRefreshScope()).thenReturn(refreshScope);
+        TransactionPaginationHelper helper = new TransactionPaginationHelper(request);
 
         when(account.getIdentifiers())
                 .thenReturn(
@@ -245,7 +252,8 @@ public class TransactionPaginationHelperTest {
         accountTransactionsRefreshScope.setTransactionBookedDateGte(expectedLocalDate);
         transactionsRefreshScope.setAccounts(
                 Collections.singleton(accountTransactionsRefreshScope));
-        TransactionPaginationHelper helper = new TransactionPaginationHelper(refreshScope);
+        when(request.getRefreshScope()).thenReturn(refreshScope);
+        TransactionPaginationHelper helper = new TransactionPaginationHelper(request);
 
         when(account.getIdentifiers())
                 .thenReturn(
@@ -264,7 +272,8 @@ public class TransactionPaginationHelperTest {
     @Test
     public void ensure_getTransactionDateLimit_returnsEmptyRefreshDate_whenRefreshScopeIsNull() {
         // given
-        TransactionPaginationHelper helper = new TransactionPaginationHelper((RefreshScope) null);
+        when(request.getRefreshScope()).thenReturn(null);
+        TransactionPaginationHelper helper = new TransactionPaginationHelper(request);
 
         // when
         Optional<Date> date = helper.getTransactionDateLimit(account);
@@ -278,7 +287,8 @@ public class TransactionPaginationHelperTest {
             ensure_getTransactionDateLimit_returnsEmptyRefreshDate_whenTransactionsRefreshScopeIsNull() {
         // given
         RefreshScope refreshScope = new RefreshScope();
-        TransactionPaginationHelper helper = new TransactionPaginationHelper(refreshScope);
+        when(request.getRefreshScope()).thenReturn(refreshScope);
+        TransactionPaginationHelper helper = new TransactionPaginationHelper(request);
 
         // when
         Optional<Date> date = helper.getTransactionDateLimit(account);

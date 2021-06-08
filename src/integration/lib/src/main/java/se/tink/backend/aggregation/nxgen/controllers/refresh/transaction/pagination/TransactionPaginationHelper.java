@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.time.ZoneOffset;
 import java.util.*;
 import java.util.stream.Collectors;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
@@ -13,18 +14,13 @@ import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.credentials.service.*;
 
-@RequiredArgsConstructor
+@RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 @Slf4j
 public class TransactionPaginationHelper {
     @VisibleForTesting static final int SAFETY_THRESHOLD_NUMBER_OF_DAYS = 10;
     @VisibleForTesting static final int SAFETY_THRESHOLD_NUMBER_OF_OVERLAPS = 10;
 
-    private final RefreshScope refreshScope;
-
-    @Deprecated
-    public TransactionPaginationHelper(HasRefreshScope hasRefreshScope) {
-        this(hasRefreshScope.getRefreshScope());
-    }
+    final CredentialsRequest request;
 
     public boolean shouldFetchNextPage(Account account, List<AggregationTransaction> transactions) {
         if (transactions.size() == 0) {
@@ -91,6 +87,7 @@ public class TransactionPaginationHelper {
      * scope on all transaction or specifically on account transactions
      */
     public Optional<Date> getTransactionDateLimit(Account account) {
+        RefreshScope refreshScope = request.getRefreshScope();
         if (refreshScope == null || refreshScope.getTransactions() == null) {
             return Optional.empty();
         }
