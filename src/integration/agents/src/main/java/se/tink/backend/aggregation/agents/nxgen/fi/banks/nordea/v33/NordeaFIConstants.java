@@ -76,11 +76,11 @@ public class NordeaFIConstants {
 
     public static class ApiService {
         public static final String FETCH_TRANSACTIONS = "/transactions";
-        private static final String FETCH_CARDS = "/ca/cards-v2/cards/";
+        private static final String FETCH_CARDS = "/ca/cards-v4/cards/";
         private static final String FETCH_INVESTMENTS = "/ca/savings-v1/savings/custodies";
         private static final String FETCH_LOANS = "/ca/loans-v1/loans/";
         private static final String AUTHENTICATE = "/ca/authentication-mta-v1/security/oauth/token";
-        private static final String FETCH_ACCOUNTS = "/ca/accounts-v2/accounts/";
+        private static final String FETCH_ACCOUNTS = "/ca/accounts-v3/accounts/";
         private static final String FETCH_CUSTOMER_INFO = "/fi/customerinfo-v1/customers/info";
         private static final String LOGOUT = "/ca/token-revocation-v1/token/revoke";
     }
