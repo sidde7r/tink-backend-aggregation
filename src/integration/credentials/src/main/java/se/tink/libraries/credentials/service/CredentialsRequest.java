@@ -159,6 +159,6 @@ public abstract class CredentialsRequest implements HasRefreshScope {
 
     @Override
     public RefreshScope getRefreshScope() {
-        throw new IllegalStateException("No refresh scope provided for the implementation");
+        return null;
     }
 }
