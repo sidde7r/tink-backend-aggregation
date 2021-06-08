@@ -25,7 +25,7 @@ import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionE
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.loan.rpc.LoanDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.loan.rpc.LoanOverviewResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankBaseConstants.Retry;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankBaseConstants.TimeoutFilter;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankBaseConstants.RetryFilter;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.authenticator.rpc.CollectBankIdResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.authenticator.rpc.InitAuthenticationRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.authenticator.rpc.InitBankIdRequest;
@@ -52,6 +52,8 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovide
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.fetchers.creditcard.rpc.DetailedCardAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.fetchers.transferdestination.rpc.PaymentBaseinfoResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.filters.SwedbankBaseHttpFilter;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.filters.SwedbankHourRateLimitFilter;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.filters.SwedbankParallelRateLimitFilter;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.filters.SwedbankServiceUnavailableFilter;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.profile.SwedbankProfileSelector;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.BankEntity;
@@ -123,9 +125,14 @@ public class SwedbankDefaultApiClient {
                         SwedbankBaseConstants.generateAuthorization(configuration, username)));
         client.addFilter(
                 new TimeoutRetryFilter(
-                        TimeoutFilter.NUM_TIMEOUT_RETRIES,
-                        TimeoutFilter.TIMEOUT_RETRY_SLEEP_MILLISECONDS));
+                        RetryFilter.NUM_TIMEOUT_RETRIES,
+                        RetryFilter.TIMEOUT_RETRY_SLEEP_MILLISECONDS));
         client.addFilter(new SwedbankServiceUnavailableFilter());
+        client.addFilter(new SwedbankHourRateLimitFilter());
+        client.addFilter(
+                new SwedbankParallelRateLimitFilter(
+                        RetryFilter.NUM_TIMEOUT_RETRIES,
+                        RetryFilter.TIMEOUT_RETRY_SLEEP_MILLISECONDS));
     }
 
     protected <T> T makeGetRequest(URL url, Class<T> responseClass, boolean retry) {
