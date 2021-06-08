@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.executor.payment;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import se.tink.backend.aggregation.agents.exceptions.payment.CreditorValidationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.DateValidationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.InsufficientFundsException;
@@ -10,34 +10,33 @@ import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedExce
 import se.tink.backend.aggregation.agents.exceptions.payment.ReferenceValidationException;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException.EndUserMessage;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.SkandiaConstants.ErrorMessages;
-import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.libraries.signableoperation.enums.InternalStatus;
 
-@Getter
-@Setter
-@JsonObject
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class HttpResponseExceptionHandler {
 
-    public static void checkForErrors(String errorMessage) throws PaymentException {
+    public static PaymentException checkForErrors(HttpResponseException ex) {
+        String errorMessage = ex.getMessage();
 
         if (isInvalidInfoStructured(errorMessage)) {
-            throw new ReferenceValidationException(EndUserMessage.INVALID_OCR.getKey().get());
+            return new ReferenceValidationException(EndUserMessage.INVALID_OCR.getKey().get());
         } else if (isInvalidInfoUnstructured(errorMessage)) {
-            throw new ReferenceValidationException(EndUserMessage.INVALID_MESSAGE.getKey().get());
+            return new ReferenceValidationException(EndUserMessage.INVALID_MESSAGE.getKey().get());
         } else if (isRemittanceInfoSetForGirosPayment(errorMessage)) {
-            throw new ReferenceValidationException(EndUserMessage.INVALID_MESSAGE.getKey().get());
+            return new ReferenceValidationException(EndUserMessage.INVALID_MESSAGE.getKey().get());
         } else if (isServiceBlocked(errorMessage)) {
-            throw new PaymentRejectedException();
+            return new PaymentRejectedException();
         } else if (isInvalidCreditorAccount(errorMessage)) {
-            throw new CreditorValidationException(
+            return new CreditorValidationException(
                     EndUserMessage.INVALID_DESTINATION.getKey().get(),
                     InternalStatus.INVALID_DESTINATION_ACCOUNT);
         } else if (isInvalidRequestedExecutionDate(errorMessage)) {
-            throw new DateValidationException(DateValidationException.DEFAULT_MESSAGE);
+            return new DateValidationException(DateValidationException.DEFAULT_MESSAGE);
         } else if (isNotEnoughFundsToMakePayment(errorMessage)) {
-            throw new InsufficientFundsException(InsufficientFundsException.DEFAULT_MESSAGE);
+            return new InsufficientFundsException(InsufficientFundsException.DEFAULT_MESSAGE);
         } else {
-            throw new PaymentRejectedException(PaymentRejectedException.MESSAGE);
+            return new PaymentRejectedException(PaymentRejectedException.MESSAGE);
         }
     }
 

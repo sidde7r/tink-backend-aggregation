@@ -60,7 +60,7 @@ Accept: application/json
 Content-Type: application/json
 PSU-IP-Address: 127.0.0.1
 Authorization: Bearer dummyToken
-TPP-Redirect-URI: https://127.0.0.1:7357/api/v1/thirdparty/callback
+TPP-Redirect-URI: https://127.0.0.1:7357/api/v1/thirdparty/callback?state=00000000-0000-4000-0000-000000000000
 X-Aggregator: Tink Testing
 
 {}

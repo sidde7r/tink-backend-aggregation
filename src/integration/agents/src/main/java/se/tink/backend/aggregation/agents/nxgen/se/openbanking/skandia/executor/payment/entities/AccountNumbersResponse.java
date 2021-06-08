@@ -1,23 +1,26 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.executor.payment.entities;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import java.util.Optional;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import se.tink.backend.aggregation.agents.exceptions.payment.DebtorValidationException;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.SkandiaConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.SkandiaConstants.PaymentTypes;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.account.enums.AccountIdentifierType;
 
-@AllArgsConstructor
-@NoArgsConstructor
 @JsonObject
 @Getter
 public class AccountNumbersResponse {
 
-    private List<AccountInfoEntity> accounts;
+    private final List<AccountInfoEntity> accounts;
+
+    @JsonCreator
+    public AccountNumbersResponse(@JsonProperty("accounts") List<AccountInfoEntity> accounts) {
+        this.accounts = accounts;
+    }
 
     public Optional<AccountInfoEntity> findAccountInfoEntity(String accountNumber) {
         return accounts.stream().filter(a -> a.getBban().equals(accountNumber)).findFirst();

@@ -7,13 +7,13 @@ import se.tink.backend.aggregation.agents.exceptions.payment.PaymentCancelledExc
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.SkandiaApiClient;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.SkandiaConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.SkandiaConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.SkandiaConstants.PaymentProduct;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.executor.payment.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.executor.payment.entities.AmountEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.executor.payment.rpc.CreatePaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.executor.payment.rpc.DomesticGirosPaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.executor.payment.rpc.DomesticPaymentRequest;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.executor.payment.rpc.DomesticPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.executor.payment.rpc.SignPaymentResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.constants.ThirdPartyAppConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
@@ -35,8 +35,8 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.Storage;
 import se.tink.libraries.payment.enums.PaymentStatus;
-import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Payment;
+import se.tink.libraries.signableoperation.enums.InternalStatus;
 
 public class SkandiaPaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
 
@@ -66,7 +66,7 @@ public class SkandiaPaymentExecutor implements PaymentExecutor, FetchablePayment
             case DOMESTIC_CREDIT_TRANSFERS:
                 return createDomesticPayment(payment, debtor, amount);
             case DOMESTIC_GIROS:
-                // not supported
+                return createDomesticGirosPayment(payment, debtor, amount);
             default:
                 throw new IllegalStateException(ErrorMessages.UNSUPPORTED_PAYMENT_TYPE);
         }
@@ -77,37 +77,43 @@ public class SkandiaPaymentExecutor implements PaymentExecutor, FetchablePayment
 
         AccountEntity creditor = new AccountEntity(payment.getCreditor().getAccountNumber());
 
-        final DomesticPaymentRequest domesticPaymentRequest =
+        final DomesticPaymentRequest request =
                 new DomesticPaymentRequest(creditor, debtor, amount, payment);
 
-        DomesticPaymentResponse domesticPaymentResponse = new DomesticPaymentResponse();
+        try {
+
+            CreatePaymentResponse response = apiClient.createDomesticPayment(request);
+
+            return response.toTinkPayment(creditor, debtor, amount.toAmount());
+
+        } catch (HttpResponseException e) {
+            throw HttpResponseExceptionHandler.checkForErrors(e);
+        }
+    }
+
+    private PaymentResponse createDomesticGirosPayment(
+            Payment payment, AccountEntity debtor, AmountEntity amount) throws PaymentException {
+
+        DomesticGirosPaymentRequest request =
+                new DomesticGirosPaymentRequest(debtor, amount, payment);
 
         try {
-            domesticPaymentResponse = apiClient.createDomesticPayment(domesticPaymentRequest);
-        } catch (HttpResponseException ex) {
-            HttpResponseExceptionHandler.checkForErrors(ex.getMessage());
+
+            CreatePaymentResponse response = apiClient.createDomesticGirosPayment(request);
+
+            return response.toTinkPayment(request.getCreditorAccount(), debtor, amount.toAmount());
+
+        } catch (HttpResponseException e) {
+            throw HttpResponseExceptionHandler.checkForErrors(e);
         }
-
-        final PaymentStatus status =
-                SkandiaConstants.PAYMENT_STATUS_MAPPER
-                        .translate(domesticPaymentResponse.getTransactionStatus())
-                        .orElse(PaymentStatus.UNDEFINED);
-
-        return domesticPaymentResponse.toTinkPayment(creditor, debtor, amount.toAmount(), status);
     }
 
     @Override
     public PaymentResponse fetch(PaymentRequest paymentRequest) {
-        final String paymentId = paymentRequest.getPayment().getUniqueId();
-        final PaymentType type = paymentRequest.getPayment().getType();
 
-        switch (type) {
-            case DOMESTIC:
-                return apiClient.getDomesticPayment(paymentId).toTinkPayment(paymentId);
-            case SEPA:
-            default:
-                throw new IllegalStateException(ErrorMessages.UNSUPPORTED_PAYMENT_TYPE);
-        }
+        return apiClient
+                .getPayment(paymentRequest.getPayment())
+                .toTinkPayment(paymentRequest.getPayment());
     }
 
     @Override
@@ -117,11 +123,13 @@ public class SkandiaPaymentExecutor implements PaymentExecutor, FetchablePayment
         final Payment payment = paymentMultiStepRequest.getPayment();
 
         try {
-            final SignPaymentResponse signedPayment = apiClient.signPayment(payment);
+            final String state = strongAuthenticationState.getState();
+
+            final SignPaymentResponse signedPayment = apiClient.signPayment(payment, state);
 
             authenticatePIS(signedPayment);
         } catch (HttpResponseException e) {
-            HttpResponseExceptionHandler.checkForErrors(e.getMessage());
+            throw HttpResponseExceptionHandler.checkForErrors(e);
         }
 
         final PaymentResponse paymentResponse = fetchAndValidatePayment(paymentMultiStepRequest);
@@ -152,8 +160,16 @@ public class SkandiaPaymentExecutor implements PaymentExecutor, FetchablePayment
         return paymentResponse;
     }
 
-    private void authenticatePIS(SignPaymentResponse signedPayment) {
-        URL url = apiClient.getScaRedirectUrl(signedPayment.getScaRedirect());
+    private void authenticatePIS(SignPaymentResponse signedPayment) throws PaymentException {
+        URL url =
+                signedPayment
+                        .getScaRedirect()
+                        .orElseThrow(
+                                () ->
+                                        new PaymentException(
+                                                ErrorMessages.SCA_REDIRECT_MISSING,
+                                                InternalStatus
+                                                        .PAYMENT_REJECTED_BY_BANK_NO_DESCRIPTION));
 
         supplementalInformationHelper.openThirdPartyApp(ThirdPartyAppAuthenticationPayload.of(url));
 

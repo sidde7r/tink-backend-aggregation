@@ -61,7 +61,7 @@ public class ConsentStatusValidator {
     }
 
     private boolean isNotAuthorised(String consentId) {
-        log.info("[CONSENT STATUS VALIDATOR] Checking consent status for consentId {}", consentId);
+        log.info("[CONSENT STATUS VALIDATOR] Checking status for consentId {}", consentId);
         return apiClient.fetchConsent(consentId).getData().isNotAuthorised();
     }
 }

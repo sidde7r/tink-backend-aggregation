@@ -8,9 +8,7 @@ import java.text.ParseException;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -316,19 +314,5 @@ public class CountryDateHelperTest {
 
         Date transferDate = swedishHelper.getProvidedDateOrBestPossibleDate(anyDate, 00, 00);
         assertEquals(transferDate, anyDate);
-    }
-
-    @Test
-    public void calculateIfWithinCutOffTimeReturnsTrue() {
-        ZonedDateTime zonedDateTime =
-                ZonedDateTime.of(LocalDate.now(), LocalTime.of(17, 20), ZoneId.of("CET"));
-        assertTrue(frenchHelper.calculateIfWithinCutOffTime(zonedDateTime, 17, 30, 900));
-    }
-
-    @Test
-    public void calculateIfWithinCutOffTimeReturnsFalse() {
-        ZonedDateTime zonedDateTime =
-                ZonedDateTime.of(LocalDate.now(), LocalTime.of(17, 14), ZoneId.of("CET"));
-        assertFalse(frenchHelper.calculateIfWithinCutOffTime(zonedDateTime, 17, 30, 900));
     }
 }

@@ -8,10 +8,8 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 @EqualsAndHashCode
 @JsonObject
 public class AmountEntity {
-    private Double amount;
-    private String currency;
-
-    public AmountEntity() {}
+    private final Double amount;
+    private final String currency;
 
     public AmountEntity(ExactCurrencyAmount amount) {
         this.amount = amount.getDoubleValue();
