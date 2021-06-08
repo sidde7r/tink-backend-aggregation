@@ -106,7 +106,10 @@ public class AccountEntity implements GeneralAccountEntity {
 
     private Optional<String> getFirstHolder(List<HolderIdentity> holderIdentities) {
         return holderIdentities.stream()
-                .filter(holderIdentity -> HolderRole.HOLDER.equals(holderIdentity.getRole()))
+                .filter(
+                        holderIdentity ->
+                                HolderRole.HOLDER.equals(holderIdentity.getRole())
+                                        || holderIdentity.getRole().equals("MEDKONTOHAVARE"))
                 .findFirst()
                 .map(HolderIdentity::getName);
     }

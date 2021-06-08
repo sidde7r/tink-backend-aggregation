@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.agents.banks.sbab.SBABConstants.ErrorText;
 import se.tink.backend.aggregation.agents.banks.sbab.SBABConstants.OperationNames;
 import se.tink.backend.aggregation.agents.banks.sbab.SBABConstants.Query;
 import se.tink.backend.aggregation.agents.banks.sbab.SBABConstants.Url;
+import se.tink.backend.aggregation.agents.banks.sbab.entities.BlancosEntity;
 import se.tink.backend.aggregation.agents.banks.sbab.entities.CollateralsEntity;
 import se.tink.backend.aggregation.agents.banks.sbab.entities.LoanEntity;
 import se.tink.backend.aggregation.agents.banks.sbab.entities.Payload;
@@ -139,6 +140,66 @@ public class UserDataClient extends SBABClient {
 
     private Optional<LoanResponse> getLoanResponse() {
 
+        LoanResponse loanResponse = new LoanResponse();
+
+        getMortgageLoan(loanResponse);
+        getBlancoLoan(loanResponse);
+        return Optional.ofNullable(loanResponse);
+    }
+
+    private void getBlancoLoan(LoanResponse loanResponse) {
+        final ClientResponse response =
+                createJsonRequestWithCsrf(Url.GRAPGQL_URL)
+                        .post(
+                                ClientResponse.class,
+                                new QueryRequest(
+                                        OperationNames.BLANCO_LOAN_ACCOUNTS_QUERY,
+                                        new QueryVariables(new QueryFilter(null), null, null),
+                                        Query.BLANCO_LOAN_ACCOUNTS));
+
+        if (response.getStatus() != HttpStatus.SC_OK) {
+            throw new IllegalStateException(
+                    ErrorText.HTTP_ERROR
+                            + response.getStatus()
+                            + ErrorText.HTTP_MESSAGE
+                            + response.getEntity(String.class));
+        }
+        List<BlancosEntity> loans =
+                response.getEntity(Payload.class)
+                        .getData()
+                        .getUser()
+                        .getLoans()
+                        .getBlanco()
+                        .getList();
+        for (BlancosEntity blancos : loans) {
+            getBlancoLoanDetails(loanResponse, blancos);
+        }
+    }
+
+    private void getBlancoLoanDetails(LoanResponse loanResponse, BlancosEntity blanco) {
+        final ClientResponse response =
+                createJsonRequestWithCsrf(Url.GRAPGQL_URL)
+                        .post(
+                                ClientResponse.class,
+                                new QueryRequest(
+                                        OperationNames.LOAN_DETAILS_QUERY,
+                                        new QueryVariables(
+                                                new QueryFilter(null),
+                                                null,
+                                                blanco.getLoanNumber().toString()),
+                                        Query.LOAN_DETAILS));
+
+        if (response.getStatus() != HttpStatus.SC_OK) {
+            throw new IllegalStateException(
+                    ErrorText.HTTP_ERROR
+                            + response.getStatus()
+                            + ErrorText.HTTP_MESSAGE
+                            + response.getEntity(String.class));
+        }
+        loanResponse.add(response.getEntity(Payload.class).getData().getUser().getLoan());
+    }
+
+    private void getMortgageLoan(LoanResponse loanResponse) {
         final ClientResponse response =
                 createJsonRequestWithCsrf(Url.GRAPGQL_URL)
                         .post(
@@ -162,7 +223,6 @@ public class UserDataClient extends SBABClient {
                         .getLoans()
                         .getMortgages()
                         .getCollaterals();
-        LoanResponse loanResponse = new LoanResponse();
 
         for (CollateralsEntity col : collaterals) {
             List<LoanEntity> mortgages = col.getMortgages();
@@ -170,6 +230,5 @@ public class UserDataClient extends SBABClient {
                 loanResponse.add(loan);
             }
         }
-        return Optional.ofNullable(loanResponse);
     }
 }

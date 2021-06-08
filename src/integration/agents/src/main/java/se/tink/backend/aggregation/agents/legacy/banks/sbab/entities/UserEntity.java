@@ -24,11 +24,17 @@ public class UserEntity {
         return savingsAccounts.stream().map(SavingsAccount::getId).collect(Collectors.toList());
     }
 
+    private LoanEntity loan;
+
     public AccountEntity getSavingsAccountsDetail() {
         return savingsAccountsDetail;
     }
 
     public LoansEntity getLoans() {
         return loans;
+    }
+
+    public LoanEntity getLoan() {
+        return loan;
     }
 }
