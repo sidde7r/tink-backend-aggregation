@@ -271,7 +271,10 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
             log.info("[LOG IN] Failed with error: {}", e.getMessage(), e);
             action.unavailable();
             ConnectivityError error = ConnectivityErrorFactory.fromLegacy(e);
-            statusUpdater.updateStatusWithError(CredentialsStatus.TEMPORARY_ERROR, null, error);
+            statusUpdater.updateStatusWithError(
+                    CredentialsStatus.TEMPORARY_ERROR,
+                    context.getCatalog().getString(e.getUserMessage()),
+                    error);
             // couldn't determine isLoggedIn or not, return ABORT
             emitLoginResultEvent(
                     LoginResult.CANNOT_DETERMINE_IF_ALREADY_LOGGED_IN_DUE_TO_BANK_SERVICE_ERROR);
