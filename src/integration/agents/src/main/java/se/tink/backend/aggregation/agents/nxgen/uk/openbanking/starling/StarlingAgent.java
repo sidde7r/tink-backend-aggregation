@@ -167,6 +167,11 @@ public final class StarlingAgent extends AgentPlatformAgent
         super.setConfiguration(configuration);
         client.setEidasProxy(configuration.getEidasProxy());
         client.setEidasIdentity(
-                new EidasIdentity(context.getClusterId(), context.getAppId(), UKOB_CERT_ID, ""));
+                new EidasIdentity(
+                        context.getClusterId(),
+                        context.getAppId(),
+                        UKOB_CERT_ID,
+                        context.getProviderId(),
+                        ""));
     }
 }

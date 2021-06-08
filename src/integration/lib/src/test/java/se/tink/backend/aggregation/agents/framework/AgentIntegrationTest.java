@@ -240,6 +240,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                             provider.getName(),
                             provider.getMarket(),
                             provider.isOpenBanking()));
+            context.setProviderId(provider.getName());
             AgentConfigurationControllerable agentConfigurationController =
                     new AgentConfigurationController(
                             tppSecretsServiceClient,

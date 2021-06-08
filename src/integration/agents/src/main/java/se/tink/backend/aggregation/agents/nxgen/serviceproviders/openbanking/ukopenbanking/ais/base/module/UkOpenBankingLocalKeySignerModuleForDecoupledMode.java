@@ -46,6 +46,11 @@ public class UkOpenBankingLocalKeySignerModuleForDecoupledMode extends AbstractM
 
     private EidasIdentity eidasIdentity(
             CompositeAgentContext context, Class<? extends Agent> agentClass) {
-        return new EidasIdentity(context.getClusterId(), context.getAppId(), "UKOB", agentClass);
+        return new EidasIdentity(
+                context.getClusterId(),
+                context.getAppId(),
+                "UKOB",
+                context.getProviderId(),
+                agentClass);
     }
 }

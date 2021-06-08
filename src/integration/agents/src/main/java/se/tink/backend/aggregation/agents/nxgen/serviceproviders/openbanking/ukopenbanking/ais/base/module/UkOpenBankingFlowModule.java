@@ -23,6 +23,11 @@ public final class UkOpenBankingFlowModule extends AbstractModule {
     @Singleton
     public EidasIdentity eidasIdentity(
             CompositeAgentContext context, @AgentClass Class<? extends Agent> agentClass) {
-        return new EidasIdentity(context.getClusterId(), context.getAppId(), "UKOB", agentClass);
+        return new EidasIdentity(
+                context.getClusterId(),
+                context.getAppId(),
+                "UKOB",
+                context.getProviderId(),
+                agentClass);
     }
 }
