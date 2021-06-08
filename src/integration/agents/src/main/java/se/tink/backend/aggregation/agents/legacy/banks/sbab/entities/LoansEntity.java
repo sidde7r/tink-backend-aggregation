@@ -6,8 +6,13 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class LoansEntity {
 
     private MortgagesEntity mortgages;
+    private BlancoEntity blanco;
 
     public MortgagesEntity getMortgages() {
         return mortgages;
+    }
+
+    public BlancoEntity getBlanco() {
+        return blanco;
     }
 }

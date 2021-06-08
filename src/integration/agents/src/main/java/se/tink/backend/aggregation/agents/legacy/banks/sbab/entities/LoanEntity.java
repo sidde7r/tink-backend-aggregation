@@ -150,7 +150,7 @@ public class LoanEntity {
         switch (loanType) {
             case "MORTGAGE_LOAN":
                 return Loan.Type.MORTGAGE;
-            case "BLANCO_LOAN":
+            case "BLANCO_MORTGAGE_LOAN":
                 return Loan.Type.BLANCO;
             default:
                 log.info("Unknown loan type {} categorised as other", loanType);
