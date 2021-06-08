@@ -28,16 +28,13 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 public class LclAccountFetcher implements AccountFetcher<TransactionalAccount> {
 
     private final LclApiClient apiClient;
-    private final LclDataConverter dataConverter;
 
     @Override
     public List<TransactionalAccount> fetchAccounts() {
         AccountsResponseDto accountsResponseDto = apiClient.getAccountsResponse();
 
         if (accountsResponseDto.getAccounts().stream()
-                .filter(acc -> CashAccountType.CACC != acc.getCashAccountType())
-                .findFirst()
-                .isPresent()) {
+                .anyMatch(acc -> CashAccountType.CACC != acc.getCashAccountType())) {
             log.info("Account type different than CACC.");
         }
 
@@ -93,7 +90,7 @@ public class LclAccountFetcher implements AccountFetcher<TransactionalAccount> {
                 .map(Optional::of)
                 .orElseGet(() -> balances.stream().findFirst())
                 .map(BalanceResourceDto::getBalanceAmount)
-                .map(dataConverter::convertAmountDtoToExactCurrencyAmount)
+                .map(LclDataConverter::convertAmountDtoToExactCurrencyAmount)
                 .get();
     }
 
@@ -102,7 +99,7 @@ public class LclAccountFetcher implements AccountFetcher<TransactionalAccount> {
                 .filter(b -> BalanceType.XPCD == b.getBalanceType())
                 .findAny()
                 .map(BalanceResourceDto::getBalanceAmount)
-                .map(dataConverter::convertAmountDtoToExactCurrencyAmount);
+                .map(LclDataConverter::convertAmountDtoToExactCurrencyAmount);
     }
 
     private AccountHolderType getAccountHolderType(AccountResourceDto account) {

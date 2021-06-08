@@ -10,7 +10,6 @@ import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.LclTes
 import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.LclTestFixtures.createAccountsResponseDto;
 import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.LclTestFixtures.createBalanceResourceDtoMock;
 import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.LclTestFixtures.createExactCurrencyAmount;
-import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.LclTestFixtures.createLclDataConverterMock;
 
 import com.google.common.collect.ImmutableList;
 import java.util.Arrays;
@@ -26,7 +25,6 @@ import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.apiclient.dto
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.apiclient.dto.account.BalanceType;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.apiclient.dto.account.CashAccountType;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.fecther.account.LclAccountFetcher;
-import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.fecther.converter.LclDataConverter;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
@@ -38,11 +36,10 @@ public class LclAccountFetcherTest {
 
     @Before
     public void setUp() {
-        final LclDataConverter dataConverterMock = createLclDataConverterMock();
 
         apiClientMock = mock(LclApiClient.class);
 
-        lclAccountFetcher = new LclAccountFetcher(apiClientMock, dataConverterMock);
+        lclAccountFetcher = new LclAccountFetcher(apiClientMock);
     }
 
     @Test

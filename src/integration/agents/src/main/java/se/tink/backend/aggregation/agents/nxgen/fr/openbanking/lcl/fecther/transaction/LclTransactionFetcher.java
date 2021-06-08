@@ -22,7 +22,6 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 public class LclTransactionFetcher implements TransactionPagePaginator<TransactionalAccount> {
 
     private final LclApiClient apiClient;
-    private final LclDataConverter dataConverter;
 
     @Override
     public PaginatorResponse getTransactionsFor(TransactionalAccount account, int page) {
@@ -59,7 +58,7 @@ public class LclTransactionFetcher implements TransactionPagePaginator<Transacti
     }
 
     private ExactCurrencyAmount getTransactionAmount(TransactionResourceDto transaction) {
-        return dataConverter.convertAmountDtoToExactCurrencyAmount(
+        return LclDataConverter.convertAmountDtoToExactCurrencyAmount(
                 transaction.getTransactionAmount());
     }
 
