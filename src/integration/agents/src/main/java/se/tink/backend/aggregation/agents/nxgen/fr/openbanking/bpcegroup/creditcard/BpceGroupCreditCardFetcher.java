@@ -11,12 +11,8 @@ import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccou
 
 public class BpceGroupCreditCardFetcher extends BpceGroupBaseAccountFetcher<CreditCardAccount> {
 
-    private final BpceGroupCreditCardConverter converter;
-
-    public BpceGroupCreditCardFetcher(
-            BpceGroupApiClient apiClient, BpceGroupCreditCardConverter converter) {
+    public BpceGroupCreditCardFetcher(BpceGroupApiClient apiClient) {
         super(apiClient);
-        this.converter = converter;
     }
 
     @Override
@@ -27,6 +23,7 @@ public class BpceGroupCreditCardFetcher extends BpceGroupBaseAccountFetcher<Cred
     @Override
     protected Optional<CreditCardAccount> map(
             AccountEntity accountEntity, List<BalanceEntity> balances) {
-        return Optional.of(converter.toCreditCardAccount(accountEntity, balances));
+        return Optional.of(
+                BpceGroupCreditCardConverter.toCreditCardAccount(accountEntity, balances));
     }
 }
