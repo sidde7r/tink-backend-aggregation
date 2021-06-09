@@ -10,7 +10,7 @@ public class TransactionPaginationHelperFactory {
     private final AgentsServiceConfiguration configuration;
 
     public TransactionPaginationHelper create(CredentialsRequest request) {
-        if (configuration.isFeatureEnabled("transactionsRefreshScope")) {
+        if (configuration != null && configuration.isFeatureEnabled("transactionsRefreshScope")) {
             return new RefreshScopeTransactionPaginationHelper(request.getRefreshScope());
         }
         return new CertainDateTransactionPaginationHelper(request);
