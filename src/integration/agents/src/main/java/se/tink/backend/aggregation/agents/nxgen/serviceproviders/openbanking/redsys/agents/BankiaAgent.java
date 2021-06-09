@@ -38,7 +38,7 @@ public final class BankiaAgent extends RedsysAgent {
 
     @Override
     public LocalDate oldestTransactionDate() {
-        return LocalDate.now().minusMonths(23).withDayOfMonth(1);
+        return LocalDate.now().minusYears(2).plusDays(1);
     }
 
     @Override
