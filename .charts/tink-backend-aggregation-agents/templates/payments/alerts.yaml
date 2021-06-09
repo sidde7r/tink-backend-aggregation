@@ -69,7 +69,7 @@ spec:
 
     - alert: TransferUnavailableOutcomeThresholdIsPassedForSwedbankWithHighTraffic
       expr: (sum by (className) (increase(tink_agent_transfer_total{market="SE", className="nxgen.se.banks.swedbank.fallback.SwedbankFallbackAgent", outcome="unavailable"}[1h]))
-        / sum by (className) (increase(tink_agent_transfer_total{market="SE", className="nxgen.se.banks.swedbank.fallback.SwedbankFallbackAgent"}[1h]))) > 0.015 and sum by (className) (increase(tink_agent_transfer_total{market="SE", className="nxgen.se.banks.swedbank.fallback.SwedbankFallbackAgent"}[1h])) > 1000
+        / sum by (className) (increase(tink_agent_transfer_total{market="SE", className="nxgen.se.banks.swedbank.fallback.SwedbankFallbackAgent"}[1h]))) > 0.02 and sum by (className) (increase(tink_agent_transfer_total{market="SE", className="nxgen.se.banks.swedbank.fallback.SwedbankFallbackAgent"}[1h])) > 1000
       labels:
         severity: urgent
         who: payments-connectivity
