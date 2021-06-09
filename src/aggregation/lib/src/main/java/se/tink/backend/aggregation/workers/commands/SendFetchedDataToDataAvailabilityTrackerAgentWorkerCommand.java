@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.workers.commands;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -12,6 +11,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
@@ -170,17 +170,20 @@ public class SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand extends 
                 // because we want to emit timestamp for these transactions to be able
                 // to see the timestamp for the oldest transaction
                 for (TransactionDateType transactionDateType : TransactionDateType.values()) {
-                    Optional<Transaction> oldestTransactionByBookingDate =
-                            findOldestTransactionByTransactionDateType(
-                                    transactionsOfAccount, transactionDateType);
-                    if (oldestTransactionByBookingDate.isPresent()) {
+                    Optional<Transaction> oldestTransaction =
+                            findOldestTransactionByCriteria(
+                                    transactionsOfAccount,
+                                    transaction ->
+                                            transaction.getDateForTransactionDateType(
+                                                    transactionDateType));
+                    if (oldestTransaction.isPresent()) {
                         log.info(
                                 "Oldest transaction by {} is {}",
                                 transactionDateType.toString(),
-                                oldestTransactionByBookingDate
+                                oldestTransaction
                                         .get()
                                         .getDateForTransactionDateType(transactionDateType));
-                        transactionsToProcess.add(oldestTransactionByBookingDate.get());
+                        transactionsToProcess.add(oldestTransaction.get());
                     } else {
                         log.info(
                                 "Could not detect oldest transaction for {}. The agent does not set {} for transactions",
@@ -204,17 +207,27 @@ public class SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand extends 
         return events;
     }
 
-    private Optional<Transaction> findOldestTransactionByTransactionDateType(
-            List<Transaction> transactions, TransactionDateType transactionDateType) {
+    private <T extends Comparable> Optional<Transaction> findOldestTransactionByCriteria(
+            List<Transaction> transactions, Function<Transaction, Optional<T>> fieldValueGetter) {
         return transactions.stream()
-                .filter(t -> t.getDateForTransactionDateType(transactionDateType).isPresent())
+                .filter(t -> fieldValueGetter.apply(t).isPresent())
                 .min(
                         (t1, t2) -> {
-                            LocalDate bookingDate1 =
-                                    t1.getDateForTransactionDateType(transactionDateType).get();
-                            LocalDate bookingDate2 =
-                                    t2.getDateForTransactionDateType(transactionDateType).get();
-                            return bookingDate1.compareTo(bookingDate2);
+                            T date1 =
+                                    fieldValueGetter
+                                            .apply(t1)
+                                            .orElseThrow(
+                                                    () ->
+                                                            new IllegalStateException(
+                                                                    "Field value getter failed"));
+                            T date2 =
+                                    fieldValueGetter
+                                            .apply(t2)
+                                            .orElseThrow(
+                                                    () ->
+                                                            new IllegalStateException(
+                                                                    "Field value getter failed"));
+                            return date1.compareTo(date2);
                         });
     }
 
