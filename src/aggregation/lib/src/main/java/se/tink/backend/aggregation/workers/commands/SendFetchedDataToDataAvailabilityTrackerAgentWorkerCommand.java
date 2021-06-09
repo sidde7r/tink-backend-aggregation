@@ -2,13 +2,16 @@ package se.tink.backend.aggregation.workers.commands;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
@@ -17,6 +20,7 @@ import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.models.AccountFeatures;
 import se.tink.backend.aggregation.agents.models.Transaction;
+import se.tink.backend.aggregation.agents.models.TransactionDateType;
 import se.tink.backend.aggregation.events.DataTrackerEventProducer;
 import se.tink.backend.aggregation.workers.commands.metrics.MetricsCommand;
 import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
@@ -149,16 +153,41 @@ public class SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand extends 
                                 account.getType().toString()));
 
                 // Pick MAX_TRANSACTIONS_TO_SEND_TO_BIGQUERY_PER_ACCOUNT transactions randomly and
-                // emit events
-                // for them
+                // emit events for them
                 List<Transaction> transactionsOfAccount = new ArrayList<>(originalTransactions);
                 Collections.shuffle(transactionsOfAccount);
-                List<Transaction> transactionsToProcess =
-                        transactionsOfAccount.size()
-                                        <= MAX_TRANSACTIONS_TO_SEND_TO_BIGQUERY_PER_ACCOUNT
-                                ? transactionsOfAccount
-                                : transactionsOfAccount.subList(
-                                        0, MAX_TRANSACTIONS_TO_SEND_TO_BIGQUERY_PER_ACCOUNT);
+                Set<Transaction> transactionsToProcess =
+                        new HashSet<>(
+                                transactionsOfAccount.size()
+                                                <= MAX_TRANSACTIONS_TO_SEND_TO_BIGQUERY_PER_ACCOUNT
+                                        ? transactionsOfAccount
+                                        : transactionsOfAccount.subList(
+                                                0,
+                                                MAX_TRANSACTIONS_TO_SEND_TO_BIGQUERY_PER_ACCOUNT));
+
+                // On top of randomly selected transactions, ensure that we pick the oldest
+                // transactions in terms of BOOKING_DATE, VALUE_DATE and EXECUTION_DATE
+                // because we want to emit timestamp for these transactions to be able
+                // to see the timestamp for the oldest transaction
+                for (TransactionDateType transactionDateType : TransactionDateType.values()) {
+                    Optional<Transaction> oldestTransactionByBookingDate =
+                            findOldestTransactionByTransactionDateType(
+                                    transactionsOfAccount, transactionDateType);
+                    if (oldestTransactionByBookingDate.isPresent()) {
+                        log.info(
+                                "Oldest transaction by {} is {}",
+                                transactionDateType.toString(),
+                                oldestTransactionByBookingDate
+                                        .get()
+                                        .getDateForTransactionDateType(transactionDateType));
+                        transactionsToProcess.add(oldestTransactionByBookingDate.get());
+                    } else {
+                        log.info(
+                                "Could not detect oldest transaction for {}. The agent does not set {} for transactions",
+                                transactionDateType.toString(),
+                                transactionDateType.toString());
+                    }
+                }
 
                 transactionsToProcess.forEach(
                         transaction ->
@@ -173,6 +202,20 @@ public class SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand extends 
         }
 
         return events;
+    }
+
+    private Optional<Transaction> findOldestTransactionByTransactionDateType(
+            List<Transaction> transactions, TransactionDateType transactionDateType) {
+        return transactions.stream()
+                .filter(t -> t.getDateForTransactionDateType(transactionDateType).isPresent())
+                .min(
+                        (t1, t2) -> {
+                            LocalDate bookingDate1 =
+                                    t1.getDateForTransactionDateType(transactionDateType).get();
+                            LocalDate bookingDate2 =
+                                    t2.getDateForTransactionDateType(transactionDateType).get();
+                            return bookingDate1.compareTo(bookingDate2);
+                        });
     }
 
     private List<Transaction> getTransactionsForAccount(Account account) {
@@ -249,15 +292,7 @@ public class SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand extends 
 
     private boolean shouldRedactFieldValue(String fieldName) {
         // we want to redact everything except Transaction<*>.transactionDate_*
-        if (!fieldName.startsWith("Transaction<")) {
-            return true;
-        }
-
-        if (!fieldName.contains("transactionDate_")) {
-            return true;
-        }
-
-        return false;
+        return !fieldName.startsWith("Transaction<") || !fieldName.contains("transactionDate_");
     }
 
     @Override
