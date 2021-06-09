@@ -1,0 +1,37 @@
+{
+    "hasMoreTransactions": true,
+    "transactions": [
+        {
+            "id": "2312394556",
+            "postingId": "2021-02-27-04.39.40.591905",
+            "text": "TEXT",
+            "date": {
+                "epoch": 1614553200000,
+                "utc": "01.03.2021"
+            },
+            "amount": {
+                "amount": -41.95,
+                "currencyCode": "DKK"
+            },
+            "originalAmount": {
+                "amount": -41.95,
+                "currencyCode": "DKK"
+            },
+            "balance": {
+                "amount": -41.95,
+                "currencyCode": "DKK"
+            },
+            "iconName": "card",
+            "comment": null,
+            "balanced": false,
+            "hasAttachment": false,
+            "inSync": true,
+            "category": {
+                "id": "466",
+                "isSplitChild": false,
+                "isSplit": false
+            },
+            "detectedCategories": []
+        }
+    ]
+}

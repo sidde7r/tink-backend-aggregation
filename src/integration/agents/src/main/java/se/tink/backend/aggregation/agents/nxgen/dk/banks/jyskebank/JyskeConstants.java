@@ -87,6 +87,7 @@ public class JyskeConstants {
         public static final String REFRESH_TOKEN = "refreshToken";
         public static final String PUBLIC_ID = "publicId";
         public static final String COUNTER = "counter";
+        public static final String ACCOUNT_RESPONSE = "accountResponse";
     }
 
     public static class Crypto {

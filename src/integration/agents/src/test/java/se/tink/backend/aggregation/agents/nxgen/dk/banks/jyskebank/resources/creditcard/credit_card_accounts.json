@@ -1,0 +1,38 @@
+[
+    {
+        "accountNumber": {
+            "regNo": "1234",
+            "accountNo": "1234567",
+            "shadowAccountId": null,
+            "publicId": "gTLV9Zx4GmM9IeztozuggdhVuZFaNycEDPIz7QjaVCVG9BpFXqCrsTqWjtFQjimUpKuTp6QmY22OfQqeGROUoBXXO6ePBfoufyL22eERG7Y="
+        },
+        "name": "Visa Credit Konto",
+        "ownerName": "FIRSTNAME MIDDLENAME LASTNAME",
+        "isOverdraft": false,
+        "balance": {
+            "amount": 0.0,
+            "currencyCode": "DKK"
+        },
+        "drawRight": {
+            "amount": 50000.0,
+            "currencyCode": "DKK"
+        },
+        "disposalAmount": {
+            "amount": 50000.0,
+            "currencyCode": "DKK"
+        },
+        "reservedAmount": {
+            "amount": 0.0,
+            "currencyCode": "DKK"
+        },
+        "showAmountAtDisposal": true,
+        "isOwnAccount": true,
+        "transfersFromAllowed": false,
+        "transfersToAllowed": true,
+        "isVisible": true,
+        "editNameAllowed": false,
+        "shadowAccounts": [],
+        "iban": "DK4912340001234567",
+        "swift": "JYBADKKK"
+    }
+]

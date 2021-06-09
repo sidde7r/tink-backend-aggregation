@@ -1,7 +1,6 @@
-package se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.fetcher.transactionalaccount;
+package se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.fetcher.creditcard;
 
 import java.util.Collection;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import org.apache.commons.collections4.ListUtils;
@@ -14,28 +13,25 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginator;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 
 @AllArgsConstructor
-public class JyskeBankAccountFetcher
-        implements AccountFetcher<TransactionalAccount>,
-                TransactionPagePaginator<TransactionalAccount> {
+public class JyskeBankCreditCardFetcher
+        implements AccountFetcher<CreditCardAccount>, TransactionPagePaginator<CreditCardAccount> {
     private final JyskeBankApiClient apiClient;
 
     @Override
-    public Collection<TransactionalAccount> fetchAccounts() {
+    public Collection<CreditCardAccount> fetchAccounts() {
         final AccountResponse accountResponse = apiClient.fetchAccounts();
 
         return ListUtils.emptyIfNull(accountResponse).stream()
-                .filter(AccountsEntity::isTransactionalAccount)
-                .map(AccountsEntity::toTinkAccount)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
+                .filter(AccountsEntity::isCreditCardAccount)
+                .map(AccountsEntity::toTinkCreditCardAccount)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public PaginatorResponse getTransactionsFor(TransactionalAccount account, int page) {
+    public PaginatorResponse getTransactionsFor(CreditCardAccount account, int page) {
         final TransactionResponse transactionResponse =
                 apiClient.fetchTransactions(
                         account.getFromTemporaryStorage(Storage.PUBLIC_ID), page);

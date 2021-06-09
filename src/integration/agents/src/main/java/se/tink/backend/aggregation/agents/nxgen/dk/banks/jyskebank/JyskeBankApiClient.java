@@ -109,7 +109,17 @@ public class JyskeBankApiClient {
     }
 
     public AccountResponse fetchAccounts() {
-        return buildRequest(Urls.FETCH_ACCOUNTS).get(AccountResponse.class);
+        return sessionStorage
+                .get(Storage.ACCOUNT_RESPONSE, AccountResponse.class)
+                .orElse(fetchAccountsResponse());
+    }
+
+    private AccountResponse fetchAccountsResponse() {
+        final AccountResponse accountResponse =
+                buildRequest(Urls.FETCH_ACCOUNTS).get(AccountResponse.class);
+        sessionStorage.put(Storage.ACCOUNT_RESPONSE, accountResponse);
+
+        return accountResponse;
     }
 
     public TransactionResponse fetchTransactions(String publicId, int page) {
