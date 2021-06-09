@@ -16,9 +16,10 @@ public class SwedbankHourRateLimitFilter extends Filter {
     public HttpResponse handle(HttpRequest httpRequest)
             throws HttpClientException, HttpResponseException {
         HttpResponse response = nextFilter(httpRequest);
-
+        TppErrorResponse errorResponse = response.getBody(TppErrorResponse.class);
         if (response.getStatus() == ACCESS_EXCEEDED_ERROR_CODE
-                && response.getBody(TppErrorResponse.class)
+                && errorResponse != null
+                && errorResponse
                         .getErrorMessage()
                         .contains(ErrorMessage.REACHED_HOUR_REQUESTS_LIMIT)) {
             throw BankServiceError.ACCESS_EXCEEDED.exception();
