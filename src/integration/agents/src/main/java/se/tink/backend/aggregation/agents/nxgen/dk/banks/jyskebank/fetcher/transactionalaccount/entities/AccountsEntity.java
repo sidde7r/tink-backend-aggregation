@@ -6,7 +6,9 @@ import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.JyskeConstants.Storage;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
+import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities.Answer;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
+import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.creditcard.CreditCardModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
@@ -62,14 +64,30 @@ public class AccountsEntity {
                 .build();
     }
 
+    public InvestmentAccount toTinkPensionAccount() {
+        return InvestmentAccount.nxBuilder()
+                .withoutPortfolios()
+                .withCashBalance(getBalanceObject())
+                .withId(getCreditCardIdModule())
+                .addHolderName(name)
+                .canWithdrawCash(Answer.From(transfersFromAllowed))
+                .build();
+    }
+
     public boolean isTransactionalAccount() {
-        return !isCreditCardAccount()
-                && !name.toLowerCase().contains("lån")
-                && !name.toLowerCase().contains("pension");
+        return !isCreditCardAccount() && !isLoanAccount() && !isPensionAccount();
     }
 
     public boolean isCreditCardAccount() {
         return name.toLowerCase().contains("credit");
+    }
+
+    public boolean isLoanAccount() {
+        return name.toLowerCase().contains("lån");
+    }
+
+    public boolean isPensionAccount() {
+        return name.toLowerCase().contains("pension");
     }
 
     private TransactionalAccountType getTinkAccountType() {
