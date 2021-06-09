@@ -1,19 +1,17 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.authenticator;
 
 import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.KnabApiClient;
-import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.KnabConstants;
-import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.KnabConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.KnabConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.KnabConstants.StorageKeys;
-import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.configuration.KnabConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.constants.ThirdPartyAppConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
@@ -21,31 +19,23 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
+/**
+ * Knab authentication flow require two redirects if user doesn't have an active consent:
+ *
+ * <p>Step 1: PSU authentication - User approves psd2 and offline access.
+ *
+ * <p>Step 2: Authorization of consent - With the access token we got from step 1 we make a request
+ * to create a consent resource. For a successful request we get a consent ID back. With this
+ * consent ID we initiate yet another redirect with the consent ID in the scope. This time the user
+ * approves the consent for fetching information about their accounts.
+ */
+@RequiredArgsConstructor
 public class KnabAuthenticator implements OAuth2Authenticator {
 
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final StrongAuthenticationState strongAuthenticationState;
     private final KnabApiClient apiClient;
     private final PersistentStorage persistentStorage;
-    private final KnabConfiguration configuration;
-
-    public KnabAuthenticator(
-            SupplementalInformationHelper supplementalInformationHelper,
-            StrongAuthenticationState strongAuthenticationState,
-            KnabApiClient apiClient,
-            PersistentStorage persistentStorage,
-            KnabConfiguration configuration) {
-        this.apiClient = apiClient;
-        this.persistentStorage = persistentStorage;
-        this.configuration = configuration;
-        this.supplementalInformationHelper = supplementalInformationHelper;
-        this.strongAuthenticationState = strongAuthenticationState;
-    }
-
-    private KnabConfiguration getConfiguration() {
-        return Optional.ofNullable(configuration)
-                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
-    }
 
     @Override
     public URL buildAuthorizeUrl(final String state) {
@@ -69,13 +59,13 @@ public class KnabAuthenticator implements OAuth2Authenticator {
     public void useAccessToken(final OAuth2Token accessToken) {
         // No need to create a new consent if the current one is still valid
         if (!apiClient.isConsentValid(persistentStorage.get(StorageKeys.CONSENT_ID), accessToken)) {
-            handleConsentFlow(accessToken);
+            triggerAuthorizeConsentFlow(accessToken);
         } else {
             persistentStorage.put(StorageKeys.OAUTH_TOKEN, accessToken);
         }
     }
 
-    private void handleConsentFlow(final OAuth2Token accessToken) {
+    private void triggerAuthorizeConsentFlow(final OAuth2Token accessToken) {
 
         persistentStorage.put(
                 StorageKeys.CONSENT_ID, apiClient.getConsent(accessToken).getConsentId());
@@ -98,7 +88,7 @@ public class KnabAuthenticator implements OAuth2Authenticator {
                                 TimeUnit.MINUTES)
                         .orElseThrow(ThirdPartyAppError.TIMED_OUT::exception);
 
-        String codeValue = queryMap.get(KnabConstants.QueryKeys.CODE);
+        String codeValue = queryMap.get(OAuth2Constants.CallbackParams.CODE);
         OAuth2Token oAuth2Token =
                 apiClient.exchangeAuthorizationCode(
                         codeValue, strongAuthenticationState.getState());

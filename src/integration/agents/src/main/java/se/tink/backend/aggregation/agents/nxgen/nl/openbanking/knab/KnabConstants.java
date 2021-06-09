@@ -67,7 +67,6 @@ public final class KnabConstants {
         public static final String CLIENT_ID = "client_id";
         public static final String SCOPE = "scope";
         public static final String REDIRECT_URI = "redirect_uri";
-        public static final String CODE = "code";
         public static final String WITH_BALANCE = "withBalance";
         public static final String BOOKING_STATUS = "bookingStatus";
         public static final String DATE_FROM = "dateFrom";

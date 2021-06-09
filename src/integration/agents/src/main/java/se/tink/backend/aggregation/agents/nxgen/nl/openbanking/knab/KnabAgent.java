@@ -35,7 +35,6 @@ public final class KnabAgent extends NextGenerationAgent
 
     private final KnabApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
-    private KnabConfiguration clientConfiguration;
 
     @Inject
     public KnabAgent(AgentComponentProvider componentProvider) {
@@ -62,9 +61,7 @@ public final class KnabAgent extends NextGenerationAgent
         final AgentConfiguration<KnabConfiguration> agentConfiguration =
                 getAgentConfigurationController().getAgentConfiguration(KnabConfiguration.class);
 
-        clientConfiguration = agentConfiguration.getProviderSpecificConfiguration();
-        apiClient.setConfiguration(agentConfiguration);
-
+        this.apiClient.setConfiguration(agentConfiguration);
         this.client.setEidasProxy(configuration.getEidasProxy());
     }
 
@@ -78,8 +75,7 @@ public final class KnabAgent extends NextGenerationAgent
                                 supplementalInformationHelper,
                                 strongAuthenticationState,
                                 apiClient,
-                                persistentStorage,
-                                clientConfiguration),
+                                persistentStorage),
                         credentials,
                         strongAuthenticationState);
 
