@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank;
 
-import java.util.UUID;
 import javax.ws.rs.core.MediaType;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.PostbankErrorHandler.ErrorSource;
@@ -18,6 +17,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deu
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.rpc.ConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.configuration.DeutscheMarketConfiguration;
 import se.tink.backend.aggregation.agents.utils.charsetguesser.CharsetGuesser;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -29,15 +29,16 @@ public class PostbankApiClient extends DeutscheBankApiClient {
             TinkHttpClient client,
             PersistentStorage persistentStorage,
             DeutscheHeaderValues headerValues,
-            DeutscheMarketConfiguration marketConfiguration) {
-        super(client, persistentStorage, headerValues, marketConfiguration);
+            DeutscheMarketConfiguration marketConfiguration,
+            RandomValueGenerator randomValueGenerator) {
+        super(client, persistentStorage, headerValues, marketConfiguration, randomValueGenerator);
     }
 
     public ConsentResponse getConsents(String psuId) {
         ConsentRequest consentRequest = new ConsentRequest(new GlobalConsentAccessEntity());
         try {
-            return createRequest(new URL(marketConfiguration.getBaseUrl() + Urls.CONSENT))
-                    .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
+            return createRequestWithServiceMapped(
+                            new URL(marketConfiguration.getBaseUrl() + Urls.CONSENT))
                     .header(HeaderKeys.PSU_ID_TYPE, marketConfiguration.getPsuIdType())
                     .header(HeaderKeys.PSU_ID, psuId)
                     .type(MediaType.APPLICATION_JSON)
@@ -58,7 +59,6 @@ public class PostbankApiClient extends DeutscheBankApiClient {
         try {
             AuthorisationResponse authorisationResponse =
                     createRequest(url)
-                            .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
                             .header(HeaderKeys.PSU_ID_TYPE, marketConfiguration.getPsuIdType())
                             .header(HeaderKeys.PSU_ID, psuId)
                             .put(AuthorisationResponse.class, startAuthorisationRequest.toData());
@@ -82,7 +82,6 @@ public class PostbankApiClient extends DeutscheBankApiClient {
     public AuthorisationResponse getAuthorisation(URL url, String psuId) {
         try {
             return createRequest(url)
-                    .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
                     .header(HeaderKeys.PSU_ID_TYPE, marketConfiguration.getPsuIdType())
                     .header(HeaderKeys.PSU_ID, psuId)
                     .get(AuthorisationResponse.class);
@@ -115,7 +114,6 @@ public class PostbankApiClient extends DeutscheBankApiClient {
             URL url, String psuId, UpdateAuthorisationRequest body) {
         try {
             return createRequest(url)
-                    .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
                     .header(HeaderKeys.PSU_ID_TYPE, marketConfiguration.getPsuIdType())
                     .header(HeaderKeys.PSU_ID, psuId)
                     .put(AuthorisationResponse.class, body);

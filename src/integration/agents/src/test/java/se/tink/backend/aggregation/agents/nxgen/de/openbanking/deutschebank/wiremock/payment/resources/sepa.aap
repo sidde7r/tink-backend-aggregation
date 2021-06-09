@@ -1,0 +1,36 @@
+
+REQUEST 1
+POST https://xs2a.db.com/pis/DE/DB/v1/payments/sepa-credit-transfers
+Accept: application/json
+Content-Type: application/json
+PSU-IP-Address: 127.0.0.1
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-ID-Type: DE_ONLB_DB
+PSU-ID: dummy_psu_id
+TPP-Redirect-URI: https://127.0.0.1:7357/api/v1/thirdparty/callback?state=00000000-0000-4000-0000-000000000000
+TPP-Nok-Redirect-URI: https://127.0.0.1:7357/api/v1/thirdparty/callback?state=00000000-0000-4000-0000-000000000000
+X-Aggregator: Tink Testing
+
+{"debtorAccount":{"iban":"DE78500105175814612478","currency":"EUR"},"creditorAccount":{"iban":"DE49500105177262199193"},"instructedAmount":{"amount":"1.0","currency":"EUR"},"creditorName":"dummy owner","remittanceInformationUnstructured":"SepaReferenceToCreditor"}
+
+RESPONSE 1
+201
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+Content-Type: application/json
+
+{"transactionStatus":"RCVD","_links":{"scaStatus":{"href":"https://xs2a.db.com/pis/DE/DB/v1/payments/sepa-credit-transfers/4372c712-6487-4de0-8d76-33c5d8757502/authorisations/8e81129e-c847-4231-a61f-bfd9c61b2dee"},"scaRedirect":{"href":"https://meine.deutsche-bank.de/taf/db/#/authorizepaymentorder?transaction-id=4372c712-6487-4de0-8d76-33c5d8757502&psu-id=2400758813&authorization-id=8e81129e-c847-4231-a61f-bfd9c61b2dee"},"self":{"href":"https://xs2a.db.com/pis/DE/DB/v1/payments/sepa-credit-transfers/4372c712-6487-4de0-8d76-33c5d8757502"},"status":{"href":"https://xs2a.db.com/pis/DE/DB/v1/payments/sepa-credit-transfers/4372c712-6487-4de0-8d76-33c5d8757502/status"}},"paymentId":"4372c712-6487-4de0-8d76-33c5d8757502","transactionFeeIndicator":true}
+
+REQUEST 2
+GET https://xs2a.db.com/pis/DE/DB/v1/payments/sepa-credit-transfers/4372c712-6487-4de0-8d76-33c5d8757502/status
+Accept: application/json
+Content-Type: application/json
+PSU-IP-Address: 127.0.0.1
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+
+RESPONSE 2
+200
+Content-Type: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+Content-Type: application/json;charset=utf-8
+
+{"transactionStatus":"ACTC","fundsAvailable":true}

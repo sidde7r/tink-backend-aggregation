@@ -1,9 +1,8 @@
-package se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen;
+package se.tink.backend.aggregation.agents.utils.berlingroup.payment;
 
 import static java.util.Objects.nonNull;
 
 import java.util.Optional;
-import se.tink.backend.aggregation.agents.utils.berlingroup.payment.PaymentMapper;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.entities.AmountEntity;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.rpc.CreatePaymentRequest;
@@ -13,13 +12,13 @@ import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.transfer.enums.RemittanceInformationType;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
-public class SparkassenPaymentMapper implements PaymentMapper<CreatePaymentRequest> {
+public class BasePaymentMapper implements PaymentMapper<CreatePaymentRequest> {
 
     @Override
     public CreatePaymentRequest getPaymentRequest(Payment payment) {
         return CreatePaymentRequest.builder()
-                .creditorAccount(getAccountEntity(payment.getCreditor().getAccountNumber()))
-                .debtorAccount(getAccountEntity(payment.getDebtor().getAccountNumber()))
+                .creditorAccount(getCreditorAccountEntity(payment))
+                .debtorAccount(getDebtorAccountEntity(payment))
                 .instructedAmount(getAmountEntity(payment))
                 .creditorName(payment.getCreditor().getName())
                 .remittanceInformationUnstructured(getUnstructuredRemittance(payment))
@@ -30,8 +29,8 @@ public class SparkassenPaymentMapper implements PaymentMapper<CreatePaymentReque
     @Override
     public CreatePaymentRequest getRecurringPaymentRequest(Payment payment) {
         return CreateRecurringPaymentRequest.builder()
-                .creditorAccount(getAccountEntity(payment.getCreditor().getAccountNumber()))
-                .debtorAccount(getAccountEntity(payment.getDebtor().getAccountNumber()))
+                .creditorAccount(getCreditorAccountEntity(payment))
+                .debtorAccount(getDebtorAccountEntity(payment))
                 .instructedAmount(getAmountEntity(payment))
                 .creditorName(payment.getCreditor().getName())
                 .remittanceInformationUnstructured(getUnstructuredRemittance(payment))
@@ -65,7 +64,15 @@ public class SparkassenPaymentMapper implements PaymentMapper<CreatePaymentReque
         return Optional.ofNullable(remittanceInformation.getValue()).orElse("");
     }
 
-    public AccountEntity getAccountEntity(String accountNumber) {
+    protected AccountEntity getDebtorAccountEntity(Payment payment) {
+        return getAccountEntity(payment.getDebtor().getAccountNumber());
+    }
+
+    private AccountEntity getCreditorAccountEntity(Payment payment) {
+        return getAccountEntity(payment.getCreditor().getAccountNumber());
+    }
+
+    protected AccountEntity getAccountEntity(String accountNumber) {
         return new AccountEntity(accountNumber);
     }
 }

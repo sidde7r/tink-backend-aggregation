@@ -9,9 +9,12 @@ import java.nio.file.Paths;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.Parameters;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheHeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.configuration.DeutscheMarketConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.fetcher.transactionalaccount.rpc.transactions.ErrorResponse;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGeneratorImpl;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
@@ -28,9 +31,11 @@ public class PostbankApiClientTest {
     private static final String CONSENT_CREATION_BAD_REQUEST = "consent_creation_bad_request.json";
     private static final String CONSENT_CREATION_SCA_UNKNOWN = "consent_creation_sca_unknown.json";
 
-    private static final String TEST_URL = "https://URL_1_2_3.example.com";
+    private static final String TEST_URL =
+            "https://URL_1_2_3.example.com/{" + Parameters.SERVICE_KEY + "}";
     private TinkHttpClient tinkClient;
     private PostbankApiClient apiClient;
+    private RandomValueGenerator randomValueGenerator = new RandomValueGeneratorImpl();
 
     @Before
     public void before() {
@@ -40,14 +45,18 @@ public class PostbankApiClientTest {
                         tinkClient,
                         null,
                         new DeutscheHeaderValues("", ""),
-                        new DeutscheMarketConfiguration(TEST_URL, "PSU_ID_TYPE"));
+                        new DeutscheMarketConfiguration(TEST_URL, "PSU_ID_TYPE"),
+                        randomValueGenerator);
     }
 
     @Test
     public void shouldHandleBadRequestInGetConsentCorrectly() {
         // given
         HttpResponse mockHttpResponse = mock(HttpResponse.class);
-        given(tinkClient.request(new URL(TEST_URL + "/v1/consents")))
+        given(
+                        tinkClient.request(
+                                new URL(TEST_URL + "/v1/consents")
+                                        .parameter(Parameters.SERVICE_KEY, Parameters.AIS)))
                 .willThrow(new HttpResponseException(null, mockHttpResponse));
         given(mockHttpResponse.hasBody()).willReturn(true);
         given(mockHttpResponse.getBody(ErrorResponse.class))
@@ -65,7 +74,10 @@ public class PostbankApiClientTest {
     public void shouldHandleScaMethodUnknownInGetConsentCorrectly() {
         // given
         HttpResponse mockHttpResponse = mock(HttpResponse.class);
-        given(tinkClient.request(new URL(TEST_URL + "/v1/consents")))
+        given(
+                        tinkClient.request(
+                                new URL(TEST_URL + "/v1/consents")
+                                        .parameter(Parameters.SERVICE_KEY, Parameters.AIS)))
                 .willThrow(new HttpResponseException(null, mockHttpResponse));
         given(mockHttpResponse.hasBody()).willReturn(true);
         given(mockHttpResponse.getBody(ErrorResponse.class))
@@ -85,7 +97,10 @@ public class PostbankApiClientTest {
         HttpResponse mockHttpResponse = mock(HttpResponse.class);
         HttpResponseException httpResponseException =
                 new HttpResponseException(null, mockHttpResponse);
-        given(tinkClient.request(new URL(TEST_URL + "/v1/consents")))
+        given(
+                        tinkClient.request(
+                                new URL(TEST_URL + "/v1/consents")
+                                        .parameter(Parameters.SERVICE_KEY, Parameters.AIS)))
                 .willThrow(httpResponseException);
         given(mockHttpResponse.getBody(ErrorResponse.class)).willReturn(new ErrorResponse());
         // when
