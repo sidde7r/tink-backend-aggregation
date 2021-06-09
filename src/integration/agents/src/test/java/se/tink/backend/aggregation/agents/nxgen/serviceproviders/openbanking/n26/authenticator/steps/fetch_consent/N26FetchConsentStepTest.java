@@ -27,7 +27,10 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.common.authent
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AccessTokenFetchingFailureError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AuthorizationError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.ServerError;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.error.ServerTemporaryUnavailableError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.http.ExternalApiCallResult;
+import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
+import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
 
 @RunWith(MockitoJUnitRunner.class)
 public class N26FetchConsentStepTest extends N26BaseTestStep {
@@ -45,26 +48,7 @@ public class N26FetchConsentStepTest extends N26BaseTestStep {
     @Test
     public void shouldExecuteSuccessfully() {
         // given
-        AgentProceedNextStepAuthenticationRequest authenticationProcessRequest =
-                mock(AgentProceedNextStepAuthenticationRequest.class);
-        AgentAuthenticationPersistedData agentAuthenticationPersistedData =
-                new AgentAuthenticationPersistedData(new HashMap<>());
-
-        RefreshableAccessToken redirectTokens =
-                RefreshableAccessToken.builder()
-                        .accessToken(Token.builder().body("TOKEN").tokenType("token_type").build())
-                        .build();
-        AgentRefreshableAccessTokenAuthenticationPersistedData
-                agentRedirectTokensAuthenticationPersistedData =
-                        new AgentRefreshableAccessTokenAuthenticationPersistedDataAccessorFactory(
-                                        objectMapper)
-                                .createAgentRefreshableAccessTokenAuthenticationPersistedData(
-                                        agentAuthenticationPersistedData);
-
-        when(authenticationProcessRequest.getAuthenticationPersistedData())
-                .thenReturn(
-                        agentRedirectTokensAuthenticationPersistedData.storeRefreshableAccessToken(
-                                redirectTokens));
+        AgentProceedNextStepAuthenticationRequest authenticationProcessRequest = mockAccessToken();
 
         ExternalApiCallResult<ConsentResponse> apiCallResult = mock(ExternalApiCallResult.class);
         when(apiCallResult.getAgentBankApiError()).thenReturn(Optional.empty());
@@ -111,28 +95,31 @@ public class N26FetchConsentStepTest extends N26BaseTestStep {
     }
 
     @Test
-    public void shouldFailAfterApiCall() {
+    public void shouldFailWhenBankSiteErrorIsPresent() {
         // given
-        AgentProceedNextStepAuthenticationRequest authenticationProcessRequest =
-                mock(AgentProceedNextStepAuthenticationRequest.class);
-        AgentAuthenticationPersistedData agentAuthenticationPersistedData =
-                new AgentAuthenticationPersistedData(new HashMap<>());
+        AgentProceedNextStepAuthenticationRequest authenticationProcessRequest = mockAccessToken();
 
-        RefreshableAccessToken redirectTokens =
-                RefreshableAccessToken.builder()
-                        .accessToken(Token.builder().body("TOKEN").tokenType("token_type").build())
-                        .build();
-        AgentRefreshableAccessTokenAuthenticationPersistedData
-                agentRedirectTokensAuthenticationPersistedData =
-                        new AgentRefreshableAccessTokenAuthenticationPersistedDataAccessorFactory(
-                                        objectMapper)
-                                .createAgentRefreshableAccessTokenAuthenticationPersistedData(
-                                        agentAuthenticationPersistedData);
+        when(n26FetchConsentApiCall.execute(any(), any(), any()))
+                .thenThrow(
+                        new HttpClientException(
+                                "upstream request timeout", mock(HttpRequest.class)));
 
-        when(authenticationProcessRequest.getAuthenticationPersistedData())
-                .thenReturn(
-                        agentRedirectTokensAuthenticationPersistedData.storeRefreshableAccessToken(
-                                redirectTokens));
+        // when
+        AgentAuthenticationResult result =
+                n26FetchConsentStep.execute(authenticationProcessRequest);
+
+        assertTrue(result instanceof AgentFailedAuthenticationResult);
+        AgentFailedAuthenticationResult agentFailedAuthenticationResult =
+                (AgentFailedAuthenticationResult) result;
+        assertTrue(
+                agentFailedAuthenticationResult.getError()
+                        instanceof ServerTemporaryUnavailableError);
+    }
+
+    @Test
+    public void shouldFailAfterServerError() {
+        // given
+        AgentProceedNextStepAuthenticationRequest authenticationProcessRequest = mockAccessToken();
 
         ExternalApiCallResult<ConsentResponse> apiCallResult = mock(ExternalApiCallResult.class);
         when(apiCallResult.getAgentBankApiError()).thenReturn(Optional.of(new ServerError()));
@@ -153,26 +140,7 @@ public class N26FetchConsentStepTest extends N26BaseTestStep {
     @Test
     public void shouldFailWhenConsentIsNotInResponse() {
         // given
-        AgentProceedNextStepAuthenticationRequest authenticationProcessRequest =
-                mock(AgentProceedNextStepAuthenticationRequest.class);
-        AgentAuthenticationPersistedData agentAuthenticationPersistedData =
-                new AgentAuthenticationPersistedData(new HashMap<>());
-
-        RefreshableAccessToken redirectTokens =
-                RefreshableAccessToken.builder()
-                        .accessToken(Token.builder().body("TOKEN").tokenType("token_type").build())
-                        .build();
-        AgentRefreshableAccessTokenAuthenticationPersistedData
-                agentRedirectTokensAuthenticationPersistedData =
-                        new AgentRefreshableAccessTokenAuthenticationPersistedDataAccessorFactory(
-                                        objectMapper)
-                                .createAgentRefreshableAccessTokenAuthenticationPersistedData(
-                                        agentAuthenticationPersistedData);
-
-        when(authenticationProcessRequest.getAuthenticationPersistedData())
-                .thenReturn(
-                        agentRedirectTokensAuthenticationPersistedData.storeRefreshableAccessToken(
-                                redirectTokens));
+        AgentProceedNextStepAuthenticationRequest authenticationProcessRequest = mockAccessToken();
 
         ExternalApiCallResult<ConsentResponse> apiCallResult = mock(ExternalApiCallResult.class);
         when(apiCallResult.getAgentBankApiError()).thenReturn(Optional.empty());
@@ -189,5 +157,29 @@ public class N26FetchConsentStepTest extends N26BaseTestStep {
         AgentFailedAuthenticationResult agentFailedAuthenticationResult =
                 (AgentFailedAuthenticationResult) result;
         assertTrue(agentFailedAuthenticationResult.getError() instanceof AuthorizationError);
+    }
+
+    private AgentProceedNextStepAuthenticationRequest mockAccessToken() {
+        AgentProceedNextStepAuthenticationRequest authenticationProcessRequest =
+                mock(AgentProceedNextStepAuthenticationRequest.class);
+        AgentAuthenticationPersistedData agentAuthenticationPersistedData =
+                new AgentAuthenticationPersistedData(new HashMap<>());
+        RefreshableAccessToken redirectTokens =
+                RefreshableAccessToken.builder()
+                        .accessToken(Token.builder().body("TOKEN").tokenType("token_type").build())
+                        .build();
+        AgentRefreshableAccessTokenAuthenticationPersistedData
+                agentRedirectTokensAuthenticationPersistedData =
+                        new AgentRefreshableAccessTokenAuthenticationPersistedDataAccessorFactory(
+                                        objectMapper)
+                                .createAgentRefreshableAccessTokenAuthenticationPersistedData(
+                                        agentAuthenticationPersistedData);
+
+        when(authenticationProcessRequest.getAuthenticationPersistedData())
+                .thenReturn(
+                        agentRedirectTokensAuthenticationPersistedData.storeRefreshableAccessToken(
+                                redirectTokens));
+
+        return authenticationProcessRequest;
     }
 }
