@@ -43,7 +43,8 @@ public class LaBanquePostaleWireMockTest {
                         .withHttpDebugTrace()
                         .withPayment(
                                 createRealDomesticPayment(
-                                        PaymentScheme.SEPA_INSTANT_CREDIT_TRANSFER))
+                                        PaymentScheme.SEPA_INSTANT_CREDIT_TRANSFER,
+                                        LocalDate.of(2021, 1, 1)))
                         .withAgentModule(new LaBanquePostaleWireMockTestModule())
                         .buildWithLogin(PaymentCommand.class);
 
@@ -66,7 +67,10 @@ public class LaBanquePostaleWireMockTest {
                         .addCallbackData("code", "DUMMY_AUTH_CODE")
                         .addCallbackData("psuAuthenticationFactor", "DUMMY_PSU_AUTH_CODE")
                         .withHttpDebugTrace()
-                        .withPayment(createRealDomesticPayment(PaymentScheme.SEPA_CREDIT_TRANSFER))
+                        .withPayment(
+                                createRealDomesticPayment(
+                                        PaymentScheme.SEPA_CREDIT_TRANSFER,
+                                        LocalDate.of(2021, 4, 20)))
                         .withAgentModule(new LaBanquePostaleWireMockTestModule())
                         .buildWithLogin(PaymentCommand.class);
 
@@ -103,7 +107,8 @@ public class LaBanquePostaleWireMockTest {
         agentWireMockRefreshTest.assertExpectedData(expected);
     }
 
-    private Payment createRealDomesticPayment(PaymentScheme paymentScheme) {
+    private Payment createRealDomesticPayment(
+            PaymentScheme paymentScheme, LocalDate executionDate) {
         AccountIdentifier creditorAccountIdentifier =
                 AccountIdentifier.create(AccountIdentifierType.IBAN, "FR1420041010050500013M02606");
 
@@ -118,7 +123,7 @@ public class LaBanquePostaleWireMockTest {
                 .withRemittanceInformation(
                         RemittanceInformationUtils.generateUnstructuredRemittanceInformation(
                                 "Message"))
-                .withExecutionDate(LocalDate.of(2021, 1, 1))
+                .withExecutionDate(executionDate)
                 .withPaymentScheme(paymentScheme)
                 .build();
     }
