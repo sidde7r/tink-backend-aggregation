@@ -462,6 +462,8 @@ clients:
     aggregatorIdentifier: "Mi-Trust"
   xero-production:
     aggregatorIdentifier: "Xero"
+  uk-openwrks-production:
+    aggregatorIdentifier: "OpenWrks MyBudget"
 
 tppSecretsServiceConfiguration:
   certificatesLocation: "cluster"
