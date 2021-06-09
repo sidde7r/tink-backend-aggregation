@@ -17,7 +17,6 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Account;
-import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.models.AccountFeatures;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.models.TransactionDateType;
@@ -132,7 +131,7 @@ public class SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand extends 
         agentDataAvailabilityTrackerClient.sendAccount(agentName, provider, market, serializer);
 
         // Produce event data for BigQuery for Account
-        events.add(produceAccountEventForBigQuery(account, features));
+        events.add(produceDataTrackerEvent(SerializationUtils.serializeAccount(account, features)));
 
         /*
            For an account we will pick the most recent MAX_TRANSACTIONS_TO_SEND_TO_BIGQUERY_PER_ACCOUNT
@@ -178,7 +177,7 @@ public class SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand extends 
                                                     transactionDateType));
                     if (oldestTransaction.isPresent()) {
                         log.info(
-                                "Oldest transaction by {} is {}",
+                                "Oldest transaction by {} is from {}",
                                 transactionDateType.toString(),
                                 oldestTransaction
                                         .get()
@@ -192,11 +191,47 @@ public class SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand extends 
                     }
                 }
 
+                // We also want to find oldest transactions in terms of "timestamp" and "date"
+                // fields and emit events for them as well
+                Optional<Transaction> oldestTransactionByDate =
+                        findOldestTransactionByCriteria(
+                                transactionsOfAccount,
+                                transaction -> Optional.ofNullable(transaction.getDate()));
+                if (oldestTransactionByDate.isPresent()) {
+                    log.info(
+                            "Oldest transaction by date is from {}",
+                            oldestTransactionByDate.get().getDate());
+                    transactionsToProcess.add(oldestTransactionByDate.get());
+                } else {
+                    log.info(
+                            "Could not detect oldest transaction for date field. The agent does not set date field for transactions");
+                }
+
+                Optional<Transaction> oldestTransactionByTimestamp =
+                        findOldestTransactionByCriteria(
+                                transactionsOfAccount,
+                                transaction -> {
+                                    long timestamp = transaction.getTimestamp();
+                                    return timestamp == 0L
+                                            ? Optional.empty()
+                                            : Optional.of(timestamp);
+                                });
+                if (oldestTransactionByTimestamp.isPresent()) {
+                    log.info(
+                            "Oldest transaction by timestamp is from {}",
+                            oldestTransactionByTimestamp.get().getTimestamp());
+                    transactionsToProcess.add(oldestTransactionByTimestamp.get());
+                } else {
+                    log.info(
+                            "Could not detect oldest transaction for timestamp field. The agent does not set timestamp field for transactions");
+                }
+
                 transactionsToProcess.forEach(
                         transaction ->
                                 events.add(
-                                        produceTransactionEventForBigQuery(
-                                                transaction, account.getType())));
+                                        produceDataTrackerEvent(
+                                                new TransactionTrackingSerializer(
+                                                        transaction, account.getType()))));
             }
         } catch (Exception e) {
             log.warn(
@@ -235,22 +270,6 @@ public class SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand extends 
         return context.getAccountDataCache().getFilteredAccountData().stream()
                 .collect(Collectors.toMap(AccountData::getAccount, AccountData::getTransactions))
                 .get(account);
-    }
-
-    private DataTrackerEvent produceAccountEventForBigQuery(
-            final Account account, final AccountFeatures features) {
-        AccountTrackingSerializer serializer =
-                SerializationUtils.serializeAccount(account, features);
-
-        return produceDataTrackerEvent(serializer);
-    }
-
-    private DataTrackerEvent produceTransactionEventForBigQuery(
-            Transaction transaction, AccountTypes accountType) {
-        TransactionTrackingSerializer serializer =
-                new TransactionTrackingSerializer(transaction, accountType);
-
-        return produceDataTrackerEvent(serializer);
     }
 
     private Optional<DataTrackerEvent> produceIdentityDataEventForBigQuery() {
@@ -304,8 +323,18 @@ public class SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand extends 
     }
 
     private boolean shouldRedactFieldValue(String fieldName) {
-        // we want to redact everything except Transaction<*>.transactionDate_*
-        return !fieldName.startsWith("Transaction<") || !fieldName.contains("transactionDate_");
+        // we do not want to redact Transaction<*>.transactionDate_*
+        if (fieldName.startsWith("Transaction<") && fieldName.contains("transactionDate_")) {
+            return false;
+        }
+
+        // we do not want to redact Transaction<*>.date/timestamp
+        if (fieldName.startsWith("Transaction<")
+                && ((fieldName.contains(".date") || fieldName.contains(".timestamp")))) {
+            return false;
+        }
+
+        return true;
     }
 
     @Override
