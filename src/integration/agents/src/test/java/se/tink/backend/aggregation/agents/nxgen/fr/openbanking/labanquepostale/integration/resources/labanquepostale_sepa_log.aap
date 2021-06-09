@@ -17,7 +17,7 @@ Authorization: Bearer DUMMY_ACCESS_TOKEN
 X-Aggregator: Tink Testing
 
 {
-    "requestedExecutionDate": "2021-01-01T00:01:00.000+01:00",
+    "requestedExecutionDate": "2021-04-20T00:01:00.000+02:00",
     "numberOfTransactions": 1,
     "initiatingParty": {
         "name": "Tink"
@@ -39,9 +39,10 @@ X-Aggregator: Tink Testing
             "iban": "FR1420041010050500013M02606"
         }
     },
+    "requestedExecutionDate": "2021-04-20T00:01:00.000+02:00",
     "creditTransferTransaction": [
         {
-            "requestedExecutionDate": "2021-01-01T00:01:00.000+01:00",
+            "requestedExecutionDate": "2021-04-20T00:01:00.000+02:00",
             "remittanceInformation": {
                 "structured": null,
                 "unstructured": [
@@ -143,7 +144,7 @@ Content-Type: application/json
         "statusReasonInformation": "",
         "fundsAvailability": null,
         "booking": null,
-        "requestedExecutionDate": "2021-01-01T00:01:00.000+01:00",
+        "requestedExecutionDate": "2021-04-20T00:01:00.000+02:00",
         "creditTransferTransaction": [
             {
                 "paymentId": {
@@ -151,7 +152,7 @@ Content-Type: application/json
                     "resourceIdPSU": "028020210319997581001209650300000000",
                     "endToEndId": "92b5e0c49e524f20a15b7d891237ffdd"
                 },
-                "requestedExecutionDate": "2021-01-01T00:01:00.000+01:00",
+                "requestedExecutionDate": "2021-04-20T00:01:00.000+02:00",
                 "endDate": null,
                 "executionRule": null,
                 "frequency": null,

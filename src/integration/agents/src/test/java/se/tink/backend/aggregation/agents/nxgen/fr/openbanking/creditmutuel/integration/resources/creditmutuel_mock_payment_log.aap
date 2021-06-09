@@ -38,7 +38,7 @@ Content-Type: application/json
             "iban": "FR7630004033770000100375924"
         }
     },
-    "requestedExecutionDate": "2021-04-20T00:00:00+02:00",
+    "requestedExecutionDate": "2021-04-20",
     "creditTransferTransaction": [
         {
             "instructedAmount": {
@@ -108,7 +108,7 @@ Content-Language: fr
                 "iban": "FR7630004033770000100375924"
             }
         },
-        "requestedExecutionDate": "2021-04-20T00:00:00+02:00",
+        "requestedExecutionDate": "2021-04-20",
         "paymentInformationStatusCode": "ACSP",
         "creditTransferTransaction": [
             {
@@ -185,6 +185,7 @@ Content-Language: fr
             }
         },
         "paymentInformationStatusCode": "PDNG",
+        "requestedExecutionDate": "2021-04-20",
         "creditTransferTransaction": [
             {
                 "paymentId": {

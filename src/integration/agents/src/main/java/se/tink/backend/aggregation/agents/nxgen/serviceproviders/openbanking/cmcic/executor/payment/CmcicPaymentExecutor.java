@@ -2,14 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cm
 
 import com.google.api.client.repackaged.com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.Clock;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -27,7 +20,6 @@ import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicConstants;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicConstants.DateFormat;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicConstants.PaymentSteps;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicConstants.PaymentTypeInformation;
@@ -53,6 +45,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmc
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.entity.StatusReasonInformationEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.entity.SupplementaryDataEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.entity.SupplementaryDataEntity.AcceptedAuthenticationApproachEnum;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.utils.FrOpenBankingDateUtil;
 import se.tink.backend.aggregation.agents.utils.remittanceinformation.RemittanceInformationValidator;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
@@ -314,18 +307,8 @@ public class CmcicPaymentExecutor implements PaymentExecutor, FetchablePaymentEx
                                                                         accountIdentificationEntity
                                                                                 .getIban()))
                                                 .orElse(null)))
-                        .withExecutionDate(
-                                parseDate(payment.getRequestedExecutionDate()).toLocalDate())
+                        .withExecutionDate(LocalDate.parse(payment.getRequestedExecutionDate()))
                         .build());
-    }
-
-    private LocalDateTime parseDate(String date) {
-        try {
-            SimpleDateFormat format = new SimpleDateFormat(DateFormat.DATE_FORMAT);
-            return LocalDateTime.ofInstant(format.parse(date).toInstant(), ZoneId.systemDefault());
-        } catch (ParseException e) {
-            return OffsetDateTime.parse(date).toLocalDateTime();
-        }
     }
 
     private String getPaymentId(String authorizationUrl) throws PaymentException {
@@ -415,9 +398,11 @@ public class CmcicPaymentExecutor implements PaymentExecutor, FetchablePaymentEx
 
         return PaymentRequestResourceEntity.builder()
                 .paymentInformationId(UUIDUtils.generateUUID())
-                .creationDateTime(OffsetDateTime.now(Clock.systemDefaultZone()).toString())
+                .creationDateTime(FrOpenBankingDateUtil.getCreationDate().toString())
                 .numberOfTransactions(FormValues.NUMBER_OF_TRANSACTIONS)
-                .requestedExecutionDate(getExecutionDate(payment.getExecutionDate()))
+                .requestedExecutionDate(
+                        FrOpenBankingDateUtil.getExecutionDate(payment.getExecutionDate())
+                                .toString())
                 .initiatingParty(initiatingParty)
                 .paymentTypeInformation(paymentTypeInformation)
                 .debtorAccount(debtorAccount)
@@ -425,20 +410,6 @@ public class CmcicPaymentExecutor implements PaymentExecutor, FetchablePaymentEx
                 .creditTransferTransaction(creditTransferTransaction)
                 .supplementaryData(supplementaryData)
                 .build();
-    }
-
-    private String getExecutionDate(LocalDate localDate) {
-        return Optional.ofNullable(localDate)
-                .map(
-                        date ->
-                                localDate
-                                        .atStartOfDay()
-                                        .atZone(ZoneId.of("CET"))
-                                        .format(DateTimeFormatter.ISO_OFFSET_DATE_TIME))
-                .orElse(
-                        LocalDateTime.now()
-                                .atZone(ZoneId.of("CET"))
-                                .format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
     }
 
     private void openThirdPartyApp(URL authorizeUrl) {
