@@ -2,7 +2,13 @@ package se.tink.backend.aggregation.workers.commands;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
@@ -20,6 +26,7 @@ import se.tink.backend.aggregation.workers.operation.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
 import se.tink.backend.aggregation.workers.operation.type.AgentWorkerOperationMetricType;
 import se.tink.backend.integration.agent_data_availability_tracker.client.AsAgentDataAvailabilityTrackerClient;
+import se.tink.backend.integration.agent_data_availability_tracker.common.serialization.TrackingMapSerializer;
 import se.tink.backend.integration.agent_data_availability_tracker.serialization.AccountTrackingSerializer;
 import se.tink.backend.integration.agent_data_availability_tracker.serialization.IdentityDataSerializer;
 import se.tink.backend.integration.agent_data_availability_tracker.serialization.SerializationUtils;
@@ -28,7 +35,6 @@ import se.tink.eventproducerservice.events.grpc.DataTrackerEventProto.DataTracke
 import se.tink.libraries.account_data_cache.AccountData;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.metrics.core.MetricId;
-import se.tink.libraries.pair.Pair;
 
 public class SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand extends AgentWorkerCommand
         implements MetricsCommand {
@@ -141,6 +147,10 @@ public class SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand extends 
                         String.format(
                                 "We have transactions for account to send to BQ. Account type is %s",
                                 account.getType().toString()));
+
+                // Pick MAX_TRANSACTIONS_TO_SEND_TO_BIGQUERY_PER_ACCOUNT transactions randomly and
+                // emit events
+                // for them
                 List<Transaction> transactionsOfAccount = new ArrayList<>(originalTransactions);
                 Collections.shuffle(transactionsOfAccount);
                 List<Transaction> transactionsToProcess =
@@ -149,6 +159,7 @@ public class SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand extends 
                                 ? transactionsOfAccount
                                 : transactionsOfAccount.subList(
                                         0, MAX_TRANSACTIONS_TO_SEND_TO_BIGQUERY_PER_ACCOUNT);
+
                 transactionsToProcess.forEach(
                         transaction ->
                                 events.add(
@@ -175,24 +186,7 @@ public class SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand extends 
         AccountTrackingSerializer serializer =
                 SerializationUtils.serializeAccount(account, features);
 
-        List<Pair<String, Boolean>> eventData = new ArrayList<>();
-
-        serializer
-                .buildList()
-                .forEach(
-                        entry ->
-                                eventData.add(
-                                        new Pair<String, Boolean>(
-                                                entry.getName(),
-                                                !("null".equalsIgnoreCase(entry.getValue())))));
-
-        return dataTrackerEventProducer.produceDataTrackerEvent(
-                context.getRequest().getCredentials().getProviderName(),
-                context.getCorrelationId(),
-                eventData,
-                context.getAppId(),
-                context.getClusterId(),
-                context.getRequest().getCredentials().getUserId());
+        return produceDataTrackerEvent(serializer);
     }
 
     private DataTrackerEvent produceTransactionEventForBigQuery(
@@ -200,24 +194,7 @@ public class SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand extends 
         TransactionTrackingSerializer serializer =
                 new TransactionTrackingSerializer(transaction, accountType);
 
-        List<Pair<String, Boolean>> eventData = new ArrayList<>();
-
-        serializer
-                .buildList()
-                .forEach(
-                        entry ->
-                                eventData.add(
-                                        new Pair<String, Boolean>(
-                                                entry.getName(),
-                                                !("null".equalsIgnoreCase(entry.getValue())))));
-
-        return dataTrackerEventProducer.produceDataTrackerEvent(
-                context.getRequest().getCredentials().getProviderName(),
-                context.getCorrelationId(),
-                eventData,
-                context.getAppId(),
-                context.getClusterId(),
-                context.getRequest().getCredentials().getUserId());
+        return produceDataTrackerEvent(serializer);
     }
 
     private Optional<DataTrackerEvent> produceIdentityDataEventForBigQuery() {
@@ -237,25 +214,50 @@ public class SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand extends 
         agentDataAvailabilityTrackerClient.sendIdentityData(
                 agentName, provider, market, serializer);
 
-        List<Pair<String, Boolean>> eventData = new ArrayList<>();
+        return Optional.of(produceDataTrackerEvent(serializer));
+    }
+
+    private DataTrackerEvent produceDataTrackerEvent(TrackingMapSerializer serializer) {
+        // for each field keeps information on whether this field
+        // is populated or not
+        Map<String, Boolean> fieldsPopulated = new HashMap<>();
+        Map<String, String> fieldValues = new HashMap<>();
 
         serializer
                 .buildList()
                 .forEach(
-                        entry ->
-                                eventData.add(
-                                        new Pair<String, Boolean>(
-                                                entry.getName(),
-                                                !entry.getValue().equalsIgnoreCase("null"))));
+                        entry -> {
+                            String fieldName = entry.getName();
+                            String fieldValue = entry.getValue();
+                            boolean isFieldPopulated = !("null".equalsIgnoreCase(fieldValue));
+                            fieldsPopulated.put(fieldName, isFieldPopulated);
 
-        return Optional.of(
-                dataTrackerEventProducer.produceDataTrackerEvent(
-                        context.getRequest().getCredentials().getProviderName(),
-                        context.getCorrelationId(),
-                        eventData,
-                        context.getAppId(),
-                        context.getClusterId(),
-                        context.getRequest().getCredentials().getUserId()));
+                            if (!shouldRedactFieldValue(fieldName) && isFieldPopulated) {
+                                fieldValues.put(fieldName, fieldValue);
+                            }
+                        });
+
+        return dataTrackerEventProducer.produceDataTrackerEvent(
+                context.getRequest().getCredentials().getProviderName(),
+                context.getCorrelationId(),
+                fieldsPopulated,
+                fieldValues,
+                context.getAppId(),
+                context.getClusterId(),
+                context.getRequest().getCredentials().getUserId());
+    }
+
+    private boolean shouldRedactFieldValue(String fieldName) {
+        // we want to redact everything except Transaction<*>.transactionDate_*
+        if (!fieldName.startsWith("Transaction<")) {
+            return true;
+        }
+
+        if (!fieldName.contains("transactionDate_")) {
+            return true;
+        }
+
+        return false;
     }
 
     @Override

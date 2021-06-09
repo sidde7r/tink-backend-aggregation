@@ -16,7 +16,6 @@ import se.tink.eventproducerservice.events.grpc.DataTrackerEventProto;
 import se.tink.libraries.events.api.EventSubmitter;
 import se.tink.libraries.events.api.SubmitEventException;
 import se.tink.libraries.events.guice.EventSubmitterProvider;
-import se.tink.libraries.pair.Pair;
 
 public final class DataTrackerEventProducerTest {
 
@@ -56,18 +55,28 @@ public final class DataTrackerEventProducerTest {
         final String providerName = "hoy";
         final String correlationId = "hoy";
         final String fieldName = "hoy";
+        final String fieldValue = "hoy";
         final boolean hasValue = true;
         final String appId = "hoy";
         final String clusterId = "hoy";
         final String userId = "hoy";
 
-        List<Pair<String, Boolean>> data =
-                Collections.singletonList(new Pair<>(fieldName, hasValue));
+        Map<String, Boolean> isFieldPopulated = new HashMap<>();
+        Map<String, String> fieldValues = new HashMap<>();
+
+        isFieldPopulated.put(fieldName, hasValue);
+        fieldValues.put(fieldName, fieldValue);
 
         // when
         DataTrackerEventProto.DataTrackerEvent event =
                 producer.produceDataTrackerEvent(
-                        providerName, correlationId, data, appId, clusterId, userId);
+                        providerName,
+                        correlationId,
+                        isFieldPopulated,
+                        fieldValues,
+                        appId,
+                        clusterId,
+                        userId);
         eventSubmitterProvider.get().submit(event);
 
         final Map<FieldDescriptor, Object> fields = event.getAllFields();
