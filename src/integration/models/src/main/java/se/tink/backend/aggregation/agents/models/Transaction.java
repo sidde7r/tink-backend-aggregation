@@ -116,16 +116,16 @@ public class Transaction implements Comparable<Transaction>, Cloneable {
 
     @JsonIgnore
     public Optional<LocalDate> getDateForTransactionDateType(TransactionDateType type) {
-        Optional<TransactionDate> transactionDate =
+        Optional<TransactionDate> maybeTransactionDate =
                 this.getTransactionDates().stream()
-                        .filter(date -> type.equals(date.getType()))
+                        .filter(transactionDate -> type.equals(transactionDate.getType()))
                         .findFirst();
 
-        if (!transactionDate.isPresent()) {
+        if (!maybeTransactionDate.isPresent()) {
             return Optional.empty();
         }
 
-        AvailableDateInformation availableDateInformation = transactionDate.get().getValue();
+        AvailableDateInformation availableDateInformation = maybeTransactionDate.get().getValue();
         if (Objects.isNull(availableDateInformation)) {
             return Optional.empty();
         }

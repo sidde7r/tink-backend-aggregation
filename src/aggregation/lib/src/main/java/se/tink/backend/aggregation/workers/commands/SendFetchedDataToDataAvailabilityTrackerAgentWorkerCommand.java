@@ -165,66 +165,11 @@ public class SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand extends 
                                                 MAX_TRANSACTIONS_TO_SEND_TO_BIGQUERY_PER_ACCOUNT));
 
                 // On top of randomly selected transactions, ensure that we pick the oldest
-                // transactions in terms of BOOKING_DATE, VALUE_DATE and EXECUTION_DATE
-                // because we want to emit timestamp for these transactions to be able
-                // to see the timestamp for the oldest transaction
-                for (TransactionDateType transactionDateType : TransactionDateType.values()) {
-                    Optional<Transaction> oldestTransaction =
-                            findOldestTransactionByCriteria(
-                                    transactionsOfAccount,
-                                    transaction ->
-                                            transaction.getDateForTransactionDateType(
-                                                    transactionDateType));
-                    if (oldestTransaction.isPresent()) {
-                        log.info(
-                                "Oldest transaction by {} is from {}",
-                                transactionDateType.toString(),
-                                oldestTransaction
-                                        .get()
-                                        .getDateForTransactionDateType(transactionDateType));
-                        transactionsToProcess.add(oldestTransaction.get());
-                    } else {
-                        log.info(
-                                "Could not detect oldest transaction for {}. The agent does not set {} for transactions",
-                                transactionDateType.toString(),
-                                transactionDateType.toString());
-                    }
-                }
-
-                // We also want to find oldest transactions in terms of "timestamp" and "date"
-                // fields and emit events for them as well
-                Optional<Transaction> oldestTransactionByDate =
-                        findOldestTransactionByCriteria(
-                                transactionsOfAccount,
-                                transaction -> Optional.ofNullable(transaction.getDate()));
-                if (oldestTransactionByDate.isPresent()) {
-                    log.info(
-                            "Oldest transaction by date is from {}",
-                            oldestTransactionByDate.get().getDate());
-                    transactionsToProcess.add(oldestTransactionByDate.get());
-                } else {
-                    log.info(
-                            "Could not detect oldest transaction for date field. The agent does not set date field for transactions");
-                }
-
-                Optional<Transaction> oldestTransactionByTimestamp =
-                        findOldestTransactionByCriteria(
-                                transactionsOfAccount,
-                                transaction -> {
-                                    long timestamp = transaction.getTimestamp();
-                                    return timestamp == 0L
-                                            ? Optional.empty()
-                                            : Optional.of(timestamp);
-                                });
-                if (oldestTransactionByTimestamp.isPresent()) {
-                    log.info(
-                            "Oldest transaction by timestamp is from {}",
-                            oldestTransactionByTimestamp.get().getTimestamp());
-                    transactionsToProcess.add(oldestTransactionByTimestamp.get());
-                } else {
-                    log.info(
-                            "Could not detect oldest transaction for timestamp field. The agent does not set timestamp field for transactions");
-                }
+                // transactions in terms of BOOKING_DATE, VALUE_DATE and EXECUTION_DATE and
+                // in terms of "date" and "timestamp" field. This is because we want to emit
+                // events for such transactions where we will be able to emit their timestamps
+                Set<Transaction> oldestTransactions = getOldestTransactions(transactionsOfAccount);
+                transactionsToProcess.addAll(oldestTransactions);
 
                 transactionsToProcess.forEach(
                         transaction ->
@@ -240,6 +185,61 @@ public class SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand extends 
         }
 
         return events;
+    }
+
+    private Set<Transaction> getOldestTransactions(List<Transaction> transactionsOfAccount) {
+        Set<Transaction> transactionsToProcess = new HashSet<>();
+        for (TransactionDateType transactionDateType : TransactionDateType.values()) {
+            Optional<Transaction> oldestTransaction =
+                    findOldestTransactionByCriteria(
+                            transactionsOfAccount,
+                            transaction ->
+                                    transaction.getDateForTransactionDateType(transactionDateType));
+            if (oldestTransaction.isPresent()) {
+                log.info(
+                        "Oldest transaction by {} is from {}",
+                        transactionDateType.toString(),
+                        oldestTransaction.get().getDateForTransactionDateType(transactionDateType));
+                transactionsToProcess.add(oldestTransaction.get());
+            } else {
+                log.info(
+                        "Could not detect oldest transaction for {}. The agent does not set {} for transactions",
+                        transactionDateType.toString(),
+                        transactionDateType.toString());
+            }
+        }
+
+        Optional<Transaction> oldestTransactionByDate =
+                findOldestTransactionByCriteria(
+                        transactionsOfAccount,
+                        transaction -> Optional.ofNullable(transaction.getDate()));
+        if (oldestTransactionByDate.isPresent()) {
+            log.info(
+                    "Oldest transaction by date is from {}",
+                    oldestTransactionByDate.get().getDate());
+            transactionsToProcess.add(oldestTransactionByDate.get());
+        } else {
+            log.info(
+                    "Could not detect oldest transaction for date field. The agent does not set date field for transactions");
+        }
+
+        Optional<Transaction> oldestTransactionByTimestamp =
+                findOldestTransactionByCriteria(
+                        transactionsOfAccount,
+                        transaction -> {
+                            long timestamp = transaction.getTimestamp();
+                            return timestamp == 0L ? Optional.empty() : Optional.of(timestamp);
+                        });
+        if (oldestTransactionByTimestamp.isPresent()) {
+            log.info(
+                    "Oldest transaction by timestamp is from {}",
+                    oldestTransactionByTimestamp.get().getTimestamp());
+            transactionsToProcess.add(oldestTransactionByTimestamp.get());
+        } else {
+            log.info(
+                    "Could not detect oldest transaction for timestamp field. The agent does not set timestamp field for transactions");
+        }
+        return transactionsToProcess;
     }
 
     private <T extends Comparable> Optional<Transaction> findOldestTransactionByCriteria(
@@ -329,12 +329,8 @@ public class SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand extends 
         }
 
         // we do not want to redact Transaction<*>.date/timestamp
-        if (fieldName.startsWith("Transaction<")
-                && ((fieldName.contains(".date") || fieldName.contains(".timestamp")))) {
-            return false;
-        }
-
-        return true;
+        return !fieldName.startsWith("Transaction<")
+                || (!fieldName.contains(".date") && !fieldName.contains(".timestamp"));
     }
 
     @Override
