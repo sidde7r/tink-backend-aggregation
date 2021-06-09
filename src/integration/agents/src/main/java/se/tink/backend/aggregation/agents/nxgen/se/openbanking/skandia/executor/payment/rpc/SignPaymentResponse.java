@@ -13,7 +13,7 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 @JsonObject
 @Getter
-public class SignPaymentResponse {
+public final class SignPaymentResponse {
 
     private final String paymentId;
 

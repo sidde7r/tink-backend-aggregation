@@ -21,9 +21,8 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.authentic
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.authenticator.rpc.TokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.configuration.SkandiaConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.executor.payment.rpc.BasePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.executor.payment.rpc.CreatePaymentResponse;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.executor.payment.rpc.DomesticGirosPaymentRequest;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.executor.payment.rpc.DomesticPaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.executor.payment.rpc.GetPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.executor.payment.rpc.SignPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.fetcher.transactionalaccount.rpc.GetAccountsResponse;
@@ -172,21 +171,14 @@ public final class SkandiaApiClient {
                 .get(GetTransactionsResponse.class);
     }
 
-    public CreatePaymentResponse createDomesticPayment(
-            DomesticPaymentRequest domesticPaymentRequest) {
-        return createRequestInSession(
-                        SkandiaConstants.Urls.CREATE_PAYMENT.parameter(
-                                SkandiaConstants.IdTags.PAYMENT_TYPE,
-                                PaymentProduct.DOMESTIC_CREDIT_TRANSFERS.getProduct()))
-                .post(CreatePaymentResponse.class, domesticPaymentRequest);
-    }
+    public CreatePaymentResponse createPayment(Payment payment) {
+        BasePaymentRequest basePaymentRequest = BasePaymentRequest.of(payment);
 
-    public CreatePaymentResponse createDomesticGirosPayment(DomesticGirosPaymentRequest request) {
         return createRequestInSession(
                         SkandiaConstants.Urls.CREATE_PAYMENT.parameter(
                                 SkandiaConstants.IdTags.PAYMENT_TYPE,
-                                PaymentProduct.DOMESTIC_GIROS.getProduct()))
-                .post(CreatePaymentResponse.class, request);
+                                PaymentProduct.from(payment).getProduct()))
+                .post(CreatePaymentResponse.class, basePaymentRequest);
     }
 
     public GetPaymentResponse getPayment(Payment payment) {

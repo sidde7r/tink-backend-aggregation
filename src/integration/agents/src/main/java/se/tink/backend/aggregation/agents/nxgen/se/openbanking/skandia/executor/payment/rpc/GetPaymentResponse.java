@@ -9,7 +9,7 @@ import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.rpc.Payment;
 
 @JsonObject
-public class GetPaymentResponse {
+public final class GetPaymentResponse {
     private final String transactionStatus;
 
     @JsonCreator

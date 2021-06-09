@@ -2,55 +2,43 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.executor
 
 import static se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.SkandiaConstants.AccountIdentifier.BANK_GIRO_TYPE;
 import static se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.SkandiaConstants.AccountIdentifier.PLUS_GIRO_TYPE;
-import static se.tink.libraries.transfer.enums.RemittanceInformationType.REFERENCE;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonValue;
 import java.util.Collections;
 import java.util.List;
-import lombok.EqualsAndHashCode;
+import java.util.Optional;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.SkandiaConstants.ErrorMessages;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.executor.payment.entities.AccountEntity;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.executor.payment.entities.AmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.executor.payment.entities.RemittanceInformationStructuredEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.executor.payment.entities.TinkCreditorConstructor;
-import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.GenericTypeMapper;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Payment;
+import se.tink.libraries.transfer.enums.RemittanceInformationType;
+import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 @JsonInclude(Include.NON_NULL)
-@EqualsAndHashCode
 @JsonObject
 @Getter
-public class DomesticGirosPaymentRequest {
+final class PaymentRequest extends BasePaymentRequest {
 
-    private final String endToEndIdentification;
-    private final AccountEntity debtorAccount;
     private final GiroCreditorAccount creditorAccount;
-    private final AmountEntity instructedAmount;
-    private final String requestedExecutionDate;
     private final List<String> remittanceInformationUnstructuredArray;
     private final List<RemittanceInformationStructuredEntity> remittanceInformationStructuredArray;
 
-    public DomesticGirosPaymentRequest(
-            AccountEntity debtorAccount, AmountEntity instructedAmount, Payment payment) {
-        endToEndIdentification = RandomUtils.generateRandomAlphabeticString(35);
-        this.debtorAccount = debtorAccount;
-        this.instructedAmount = instructedAmount;
-        this.requestedExecutionDate = payment.getExecutionDate().toString();
+    PaymentRequest(Payment payment) {
+        super(payment);
         this.creditorAccount = new GiroCreditorAccount(payment.getCreditor());
 
-        switch (payment.getRemittanceInformation().getType()) {
-            case REFERENCE:
-                throw new IllegalStateException(
-                        REFERENCE + " remittance information not implemented.");
+        RemittanceInformationType remittanceInformationType = mapRemittanceInformationType(payment);
+
+        switch (remittanceInformationType) {
             case OCR:
                 this.remittanceInformationUnstructuredArray = null;
                 this.remittanceInformationStructuredArray =
@@ -62,13 +50,18 @@ public class DomesticGirosPaymentRequest {
                 this.remittanceInformationStructuredArray = null;
                 break;
             default:
-                this.remittanceInformationUnstructuredArray = null;
-                this.remittanceInformationStructuredArray = null;
+                throw new IllegalStateException(ErrorMessages.UNSUPPORTED_REMITTANCE_INFORMATION);
         }
     }
 
     private static List<String> remittanceInformationUnstructuredSingleFrom(Payment payment) {
-        return Collections.singletonList(payment.getRemittanceInformation().getValue());
+
+        final String reference =
+                Optional.ofNullable(payment.getRemittanceInformation())
+                        .map(RemittanceInformation::getValue)
+                        .orElse("");
+
+        return Collections.singletonList(reference);
     }
 
     @JsonObject
