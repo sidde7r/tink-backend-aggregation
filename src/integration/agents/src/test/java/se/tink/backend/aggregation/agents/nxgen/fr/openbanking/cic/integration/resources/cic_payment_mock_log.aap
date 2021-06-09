@@ -38,6 +38,7 @@ Authorization: Bearer DUMMY_ACCESS_TOKEN
             "iban": "FR1420041010050500013M02606"
         }
     },
+    "requestedExecutionDate": "2021-04-20",
     "creditTransferTransaction": [
         {
             "instructedAmount": {
@@ -100,6 +101,7 @@ Content-Type: application/json
             }
         },
         "paymentInformationStatusCode": "ACSP",
+        "requestedExecutionDate": "2021-04-20",
         "creditTransferTransaction": [
             {
                 "instructedAmount": {
@@ -168,6 +170,7 @@ Content-Type: application/json
             }
         },
         "paymentInformationStatusCode": "ACSC",
+        "requestedExecutionDate": "2021-04-20",
         "creditTransferTransaction": [
             {
                 "instructedAmount": {
