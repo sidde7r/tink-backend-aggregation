@@ -29,6 +29,11 @@ public class BankIdWebDriverImpl implements BankIdWebDriver {
     private final BankIdElementsSearcher elementsSearcher;
 
     @Override
+    public WebDriver getDriver() {
+        return driver;
+    }
+
+    @Override
     public void getUrl(String url) {
         driver.get(url);
     }
