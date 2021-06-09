@@ -1,8 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.authenticator.rpc;
 
-import java.time.OffsetDateTime;
+import java.time.ZonedDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.OpBankConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
@@ -33,10 +34,10 @@ public class AuthorizationRequest {
         }
 
         public AuthorizationRequest build() {
-            OffsetDateTime now = OffsetDateTime.now();
+            ZonedDateTime now = ZonedDateTime.now(OpBankConstants.API_ZONE_ID);
             String transactionFrom = now.minusDays(daysOfTransactions).toLocalDate().toString();
             String transactionTo = now.toLocalDate().toString();
-            String expires = now.plusDays(daysToExpire).toString();
+            String expires = now.plusDays(daysToExpire).toOffsetDateTime().toString();
             return new AuthorizationRequest(transactionFrom, transactionTo, expires);
         }
     }

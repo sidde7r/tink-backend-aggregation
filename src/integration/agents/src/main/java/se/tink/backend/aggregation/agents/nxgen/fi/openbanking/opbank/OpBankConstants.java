@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank;
 
+import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalUnit;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.PersistentStorageKeys;
@@ -12,6 +13,9 @@ public final class OpBankConstants {
     private OpBankConstants() {
         throw new AssertionError();
     }
+
+    // OP Bank assumes all dates that we send are in Finland's time zone
+    public static final ZoneId API_ZONE_ID = ZoneId.of("Europe/Helsinki");
 
     public static final TransactionalAccountTypeMapper ACCOUNT_TYPE_MAPPER =
             TransactionalAccountTypeMapper.builder()
