@@ -18,8 +18,10 @@ public class SwedbankParallelRateLimitFilter extends AbstractRandomRetryFilter {
 
     @Override
     protected boolean shouldRetry(HttpResponse response) {
+        TppErrorResponse errorResponse = response.getBody(TppErrorResponse.class);
         return response.getStatus() == ACCESS_EXCEEDED_ERROR_CODE
-                && response.getBody(TppErrorResponse.class)
+                && errorResponse != null
+                && errorResponse
                         .getErrorMessage()
                         .contains(ErrorMessage.REACHED_PARALLEL_REQUESTS_LIMIT);
     }
