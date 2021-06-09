@@ -57,7 +57,7 @@ public class AccountsEntity {
         return CreditCardAccount.nxBuilder()
                 .withCardDetails(getCardDetails())
                 .withoutFlags()
-                .withId(getCreditCardIdModule())
+                .withId(getNonTransactionalAccountIdModule())
                 .addHolderName(ownerName)
                 .canWithdrawCash(AccountCapabilities.Answer.From(transfersFromAllowed))
                 .putInTemporaryStorage(Storage.PUBLIC_ID, accountNumber.getPublicId())
@@ -68,7 +68,7 @@ public class AccountsEntity {
         return InvestmentAccount.nxBuilder()
                 .withoutPortfolios()
                 .withCashBalance(getBalanceObject())
-                .withId(getCreditCardIdModule())
+                .withId(getNonTransactionalAccountIdModule())
                 .addHolderName(name)
                 .canWithdrawCash(Answer.From(transfersFromAllowed))
                 .build();
@@ -114,7 +114,7 @@ public class AccountsEntity {
                 .build();
     }
 
-    private IdModule getCreditCardIdModule() {
+    private IdModule getNonTransactionalAccountIdModule() {
         return IdModule.builder()
                 .withUniqueIdentifier(accountNumber.getRegNo() + ":" + accountNumber.getAccountNo())
                 .withAccountNumber(accountNumber.getAccountNo())
