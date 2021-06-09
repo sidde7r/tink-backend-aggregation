@@ -9,8 +9,8 @@ import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 /**
- * This class ensures compatibility with old approach to certainDate for account fetch. Will be
- * replaced by TransactionPaginationHelper.
+ * @deprecated This class ensures compatibility with old approach to certainDate for account fetch.
+ *     Will be replaced by TransactionPaginationHelper.
  */
 @Deprecated
 @RequiredArgsConstructor(access = AccessLevel.PACKAGE)

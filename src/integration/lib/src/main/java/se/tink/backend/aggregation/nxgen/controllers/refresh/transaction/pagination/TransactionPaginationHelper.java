@@ -17,12 +17,13 @@ public abstract class TransactionPaginationHelper {
             return true;
         }
 
-        final Optional<Date> transactionDateLimit = getTransactionDateLimit(account);
+        return getTransactionDateLimit(account)
+                .map(date -> !ensuresSafetyThresholds(transactions, date))
+                .orElse(true);
+    }
 
-        if (!transactionDateLimit.isPresent()) {
-            return true;
-        }
-
+    private static boolean ensuresSafetyThresholds(
+            List<AggregationTransaction> transactions, Date transactionDateLimit) {
         // Reached certain date and check next SAFETY_THRESHOLD_NUMBER_OF_OVERLAPS transactions
         // to not be after the previous one.
 
@@ -33,7 +34,7 @@ public abstract class TransactionPaginationHelper {
 
             if (lastTransaction == null) {
 
-                if (t.getDate().before(transactionDateLimit.get())) {
+                if (t.getDate().before(transactionDateLimit)) {
                     lastTransaction = t;
                     transactionsBeforeCertainDate++;
                 }
@@ -43,7 +44,7 @@ public abstract class TransactionPaginationHelper {
 
                 // Certain date reached, check transaction is before last one.
 
-                if (t.getDate().after(transactionDateLimit.get())) {
+                if (t.getDate().after(transactionDateLimit)) {
 
                     // If after, there is a gap in the paging. Start over again and
                     // find next transaction that is before certain date and do this again.
@@ -60,16 +61,16 @@ public abstract class TransactionPaginationHelper {
                     Math.abs(
                             Duration.between(
                                             t.getDate().toInstant(),
-                                            transactionDateLimit.get().toInstant())
+                                            transactionDateLimit.toInstant())
                                     .toDays());
 
             if (transactionsBeforeCertainDate >= SAFETY_THRESHOLD_NUMBER_OF_OVERLAPS
                     && overlappingTransactionDays >= SAFETY_THRESHOLD_NUMBER_OF_DAYS) {
-                return false;
+                return true;
             }
         }
 
-        return true;
+        return false;
     }
 
     public abstract Optional<Date> getTransactionDateLimit(Account account);
