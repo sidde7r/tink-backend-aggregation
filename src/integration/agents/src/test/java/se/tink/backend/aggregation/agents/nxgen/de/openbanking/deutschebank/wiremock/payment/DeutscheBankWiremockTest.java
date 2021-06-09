@@ -73,10 +73,10 @@ public class DeutscheBankWiremockTest {
         remittanceInformation.setValue("SepaReferenceToCreditor");
         remittanceInformation.setType(RemittanceInformationType.UNSTRUCTURED);
 
-        AccountIdentifier creditorAccountIdentifier = new IbanIdentifier("DE19100777770479662900");
-        Creditor creditor = new Creditor(creditorAccountIdentifier, "Tobias Klug");
+        AccountIdentifier creditorAccountIdentifier = new IbanIdentifier("DE49500105177262199193");
+        Creditor creditor = new Creditor(creditorAccountIdentifier, "dummy owner");
 
-        AccountIdentifier debtorAccountIdentifier = new IbanIdentifier("DE32600700240075881300");
+        AccountIdentifier debtorAccountIdentifier = new IbanIdentifier("DE78500105175814612478");
         Debtor debtor = new Debtor(debtorAccountIdentifier);
 
         ExactCurrencyAmount amount = ExactCurrencyAmount.inEUR(1);

@@ -41,6 +41,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deu
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AuthenticationType;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.CommonFields;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.GermanFields;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGeneratorImpl;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
@@ -74,6 +76,7 @@ public class PostbankAuthenticationControllerTest {
     public static final String OTP_CODE = "otpCode";
 
     private final Catalog catalog = new Catalog(Locale.getDefault());
+    private final RandomValueGenerator randomValueGenerator = new RandomValueGeneratorImpl();
 
     private final SupplementalInformationController mockSuppController =
             mock(SupplementalInformationController.class);
@@ -300,7 +303,8 @@ public class PostbankAuthenticationControllerTest {
                         tinkHttpClient,
                         persistentStorage,
                         deutscheHeaderValues,
-                        deutscheMarketConfiguration);
+                        deutscheMarketConfiguration,
+                        randomValueGenerator);
         return new PostbankAuthenticator(postbankApiClient, persistentStorage, credentials);
     }
 

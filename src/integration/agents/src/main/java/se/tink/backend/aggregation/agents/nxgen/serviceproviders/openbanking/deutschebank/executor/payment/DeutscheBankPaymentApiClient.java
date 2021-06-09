@@ -20,6 +20,7 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.ran
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.transfer.rpc.PaymentServiceType;
@@ -28,7 +29,6 @@ public class DeutscheBankPaymentApiClient extends DeutscheBankApiClient
         implements PaymentApiClient {
     private final Credentials credentials;
     private final StrongAuthenticationState authenticationState;
-    private final RandomValueGenerator randomValueGenerator;
     private final DeutscheBankPaymentMapper paymentMapper;
 
     public DeutscheBankPaymentApiClient(
@@ -40,10 +40,9 @@ public class DeutscheBankPaymentApiClient extends DeutscheBankApiClient
             StrongAuthenticationState authenticationState,
             RandomValueGenerator randomValueGenerator,
             DeutscheBankPaymentMapper paymentMapper) {
-        super(client, persistentStorage, headerValues, marketConfiguration);
+        super(client, persistentStorage, headerValues, marketConfiguration, randomValueGenerator);
         this.credentials = credentials;
         this.authenticationState = authenticationState;
-        this.randomValueGenerator = randomValueGenerator;
         this.paymentMapper = paymentMapper;
     }
 
@@ -55,22 +54,18 @@ public class DeutscheBankPaymentApiClient extends DeutscheBankApiClient
                         .queryParam(QueryKeys.STATE, authenticationState.getState());
         CreatePaymentRequest createPaymentRequest = buildPaymentRequestBody(paymentRequest);
 
-        return createRequest(
-                        enrichURLWithService(
-                                new URL(marketConfiguration.getBaseUrl() + Urls.PAYMENT)
-                                        .parameter(
-                                                PaymentConstants.PathVariables.PAYMENT_SERVICE,
-                                                PaymentService.getPaymentService(
-                                                        paymentRequest
-                                                                .getPayment()
-                                                                .getPaymentServiceType()))
-                                        .parameter(
-                                                PaymentConstants.PathVariables.PAYMENT_PRODUCT,
-                                                PaymentProduct.getPaymentProduct(
-                                                        paymentRequest
-                                                                .getPayment()
-                                                                .getPaymentScheme()))))
-                .header(HeaderKeys.X_REQUEST_ID, randomValueGenerator.getUUID().toString())
+        return createRequestWithServiceMapped(
+                        new URL(marketConfiguration.getBaseUrl() + Urls.PAYMENT)
+                                .parameter(
+                                        PaymentConstants.PathVariables.PAYMENT_SERVICE,
+                                        PaymentService.getPaymentService(
+                                                paymentRequest
+                                                        .getPayment()
+                                                        .getPaymentServiceType()))
+                                .parameter(
+                                        PaymentConstants.PathVariables.PAYMENT_PRODUCT,
+                                        PaymentProduct.getPaymentProduct(
+                                                paymentRequest.getPayment().getPaymentScheme())))
                 .header(HeaderKeys.PSU_ID_TYPE, marketConfiguration.getPsuIdType())
                 .header(HeaderKeys.PSU_ID, psuId)
                 .header(HeaderKeys.TPP_REDIRECT_URI, redirectWithState)
@@ -88,11 +83,8 @@ public class DeutscheBankPaymentApiClient extends DeutscheBankApiClient
     @Override
     public FetchPaymentStatusResponse fetchPaymentStatus(PaymentRequest paymentRequest) {
         String paymentId = paymentRequest.getPayment().getUniqueId();
-        return createRequest(
-                        enrichURLWithService(
-                                        new URL(
-                                                marketConfiguration.getBaseUrl()
-                                                        + Urls.PAYMENT_STATUS))
+        return createRequestWithServiceMapped(
+                        new URL(marketConfiguration.getBaseUrl() + Urls.PAYMENT_STATUS)
                                 .parameter(
                                         PaymentConstants.PathVariables.PAYMENT_SERVICE,
                                         PaymentService.getPaymentService(
@@ -104,12 +96,11 @@ public class DeutscheBankPaymentApiClient extends DeutscheBankApiClient
                                         PaymentProduct.getPaymentProduct(
                                                 paymentRequest.getPayment().getPaymentScheme()))
                                 .parameter(PaymentConstants.PathVariables.PAYMENT_ID, paymentId))
-                .header(HeaderKeys.X_REQUEST_ID, randomValueGenerator.getUUID().toString())
                 .get(FetchPaymentStatusResponse.class);
     }
 
     @Override
-    protected URL enrichURLWithService(URL url) {
-        return url.parameter(Parameters.SERVICE_KEY, Parameters.PIS);
+    protected RequestBuilder createRequestWithServiceMapped(URL url) {
+        return createRequest(url.parameter(Parameters.SERVICE_KEY, Parameters.PIS));
     }
 }

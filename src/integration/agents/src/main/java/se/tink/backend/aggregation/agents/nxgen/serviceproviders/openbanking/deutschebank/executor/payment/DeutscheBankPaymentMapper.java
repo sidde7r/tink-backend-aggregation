@@ -10,9 +10,4 @@ public class DeutscheBankPaymentMapper extends BasePaymentMapper {
     protected AccountEntity getDebtorAccountEntity(Payment payment) {
         return new AccountEntity(payment.getDebtor().getAccountNumber(), payment.getCurrency());
     }
-
-    @Override
-    protected AccountEntity getCreditorAccountEntity(Payment payment) {
-        return new AccountEntity(payment.getCreditor().getAccountNumber());
-    }
 }

@@ -47,7 +47,11 @@ public final class DeutscheBankDEAgent extends DeutscheBankAgent
     @Override
     protected DeutscheBankApiClient constructApiClient(DeutscheHeaderValues headerValues) {
         return new DeutscheBankDEApiClient(
-                client, persistentStorage, headerValues, DEUTSCHE_DE_CONFIGURATION);
+                client,
+                persistentStorage,
+                headerValues,
+                DEUTSCHE_DE_CONFIGURATION,
+                randomValueGenerator);
     }
 
     @Override

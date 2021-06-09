@@ -38,7 +38,10 @@ public class BasePaymentMapper implements PaymentMapper<CreatePaymentRequest> {
                 .startDate(payment.getStartDate())
                 // optional attributes
                 .endDate(payment.getEndDate())
-                .executionRule("preceeding")
+                .executionRule(
+                        payment.getExecutionRule() != null
+                                ? payment.getExecutionRule().toString()
+                                : null)
                 .dayOfExecution(
                         nonNull(payment.getDayOfExecution())
                                 ? String.valueOf(payment.getDayOfExecution())
@@ -65,7 +68,7 @@ public class BasePaymentMapper implements PaymentMapper<CreatePaymentRequest> {
         return getAccountEntity(payment.getDebtor().getAccountNumber());
     }
 
-    protected AccountEntity getCreditorAccountEntity(Payment payment) {
+    private AccountEntity getCreditorAccountEntity(Payment payment) {
         return getAccountEntity(payment.getCreditor().getAccountNumber());
     }
 

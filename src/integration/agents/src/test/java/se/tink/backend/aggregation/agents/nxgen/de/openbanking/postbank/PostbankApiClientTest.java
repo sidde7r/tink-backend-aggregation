@@ -13,6 +13,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deu
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheHeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.configuration.DeutscheMarketConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.fetcher.transactionalaccount.rpc.transactions.ErrorResponse;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGeneratorImpl;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
@@ -33,6 +35,7 @@ public class PostbankApiClientTest {
             "https://URL_1_2_3.example.com/{" + Parameters.SERVICE_KEY + "}";
     private TinkHttpClient tinkClient;
     private PostbankApiClient apiClient;
+    private RandomValueGenerator randomValueGenerator = new RandomValueGeneratorImpl();
 
     @Before
     public void before() {
@@ -42,7 +45,8 @@ public class PostbankApiClientTest {
                         tinkClient,
                         null,
                         new DeutscheHeaderValues("", ""),
-                        new DeutscheMarketConfiguration(TEST_URL, "PSU_ID_TYPE"));
+                        new DeutscheMarketConfiguration(TEST_URL, "PSU_ID_TYPE"),
+                        randomValueGenerator);
     }
 
     @Test

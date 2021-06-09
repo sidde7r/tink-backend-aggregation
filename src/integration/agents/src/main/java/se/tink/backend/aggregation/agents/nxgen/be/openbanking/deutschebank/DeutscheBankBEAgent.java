@@ -28,7 +28,11 @@ public final class DeutscheBankBEAgent extends DeutscheBankAgent {
     @Override
     protected DeutscheBankApiClient constructApiClient(DeutscheHeaderValues headerValues) {
         return new DeutscheBankApiClient(
-                client, persistentStorage, headerValues, DEUTSCHE_BE_CONFIGURATION);
+                client,
+                persistentStorage,
+                headerValues,
+                DEUTSCHE_BE_CONFIGURATION,
+                randomValueGenerator);
     }
 
     @Override

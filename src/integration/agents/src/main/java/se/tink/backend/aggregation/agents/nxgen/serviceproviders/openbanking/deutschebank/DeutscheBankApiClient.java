@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.de
 
 import com.google.common.base.Strings;
 import java.util.Optional;
-import java.util.UUID;
 import javax.ws.rs.core.MediaType;
 import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
@@ -24,6 +23,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deu
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.fetcher.transactionalaccount.rpc.account.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.fetcher.transactionalaccount.rpc.account.FetchBalancesResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.fetcher.transactionalaccount.rpc.transactions.TransactionsKeyPaginatorBaseResponse;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -38,25 +38,24 @@ public class DeutscheBankApiClient {
     protected final PersistentStorage persistentStorage;
     protected final DeutscheHeaderValues headerValues;
     protected final DeutscheMarketConfiguration marketConfiguration;
+    protected final RandomValueGenerator randomValueGenerator;
 
     protected RequestBuilder createRequest(URL url) {
         return client.request(url)
                 .accept(MediaType.APPLICATION_JSON)
                 .type(MediaType.APPLICATION_JSON)
-                .header(HeaderKeys.PSU_IP_ADDRESS, headerValues.getUserIp());
+                .header(HeaderKeys.PSU_IP_ADDRESS, headerValues.getUserIp())
+                .header(HeaderKeys.X_REQUEST_ID, randomValueGenerator.getUUID().toString());
     }
 
-    protected URL enrichURLWithService(URL url) {
-        return url.parameter(Parameters.SERVICE_KEY, Parameters.AIS);
+    protected RequestBuilder createRequestWithServiceMapped(URL url) {
+        return createRequest(url.parameter(Parameters.SERVICE_KEY, Parameters.AIS));
     }
 
     protected RequestBuilder createRequestInSession(URL url) {
         String consentId = persistentStorage.get(StorageKeys.CONSENT_ID);
-        String uuid = UUID.randomUUID().toString();
 
-        return createRequest(url)
-                .header(HeaderKeys.CONSENT_ID, consentId)
-                .header(HeaderKeys.X_REQUEST_ID, uuid);
+        return createRequestWithServiceMapped(url).header(HeaderKeys.CONSENT_ID, consentId);
     }
 
     public ConsentResponse getConsent(String state, String psuId) {
@@ -68,10 +67,8 @@ public class DeutscheBankApiClient {
             ConsentRequest consentRequest, String state, String psuId) {
         URL redirectWithState =
                 new URL(headerValues.getRedirectUrl()).queryParam(QueryKeys.STATE, state);
-        return createRequest(
-                        enrichURLWithService(
-                                new URL(marketConfiguration.getBaseUrl().concat(Urls.CONSENT))))
-                .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
+        return createRequestWithServiceMapped(
+                        new URL(marketConfiguration.getBaseUrl().concat(Urls.CONSENT)))
                 .header(HeaderKeys.PSU_ID_TYPE, marketConfiguration.getPsuIdType())
                 .header(HeaderKeys.PSU_ID, psuId)
                 .header(HeaderKeys.TPP_REDIRECT_URI, redirectWithState)
@@ -83,11 +80,9 @@ public class DeutscheBankApiClient {
         String consentId =
                 Optional.ofNullable(persistentStorage.get(StorageKeys.CONSENT_ID))
                         .orElseThrow(SessionError.SESSION_EXPIRED::exception);
-        return createRequest(
-                        enrichURLWithService(
-                                new URL(marketConfiguration.getBaseUrl() + Urls.CONSENT_DETAILS)
-                                        .parameter(IdKeys.CONSENT_ID, consentId)))
-                .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
+        return createRequestWithServiceMapped(
+                        new URL(marketConfiguration.getBaseUrl() + Urls.CONSENT_DETAILS)
+                                .parameter(IdKeys.CONSENT_ID, consentId))
                 .get(ConsentDetailsResponse.class);
     }
 
@@ -95,37 +90,31 @@ public class DeutscheBankApiClient {
         String consentId =
                 Optional.ofNullable(persistentStorage.get(StorageKeys.CONSENT_ID))
                         .orElseThrow(SessionError.SESSION_EXPIRED::exception);
-        return createRequest(
-                        enrichURLWithService(
-                                new URL(marketConfiguration.getBaseUrl() + Urls.CONSENTS_STATUS)
-                                        .parameter(IdKeys.CONSENT_ID, consentId)))
-                .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
+        return createRequestWithServiceMapped(
+                        new URL(marketConfiguration.getBaseUrl() + Urls.CONSENTS_STATUS)
+                                .parameter(IdKeys.CONSENT_ID, consentId))
                 .get(ConsentStatusResponse.class);
     }
 
     public AuthorisationDetailsResponse getAuthorisationDetails(String url) {
-        return createRequest(new URL(url))
-                .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
-                .get(AuthorisationDetailsResponse.class);
+        return createRequest(new URL(url)).get(AuthorisationDetailsResponse.class);
     }
 
     public FetchAccountsResponse fetchAccounts() {
         return createRequestInSession(
-                        enrichURLWithService(
-                                new URL(marketConfiguration.getBaseUrl().concat(Urls.ACCOUNTS))))
+                        new URL(marketConfiguration.getBaseUrl().concat(Urls.ACCOUNTS)))
                 .get(FetchAccountsResponse.class);
     }
 
     public FetchBalancesResponse fetchBalances(AccountEntity accountEntity) {
         return createRequestInSession(
-                        enrichURLWithService(
-                                new URL(
-                                        marketConfiguration
-                                                .getBaseUrl()
-                                                .concat(
-                                                        String.format(
-                                                                Urls.BALANCES,
-                                                                accountEntity.getResourceId())))))
+                        new URL(
+                                marketConfiguration
+                                        .getBaseUrl()
+                                        .concat(
+                                                String.format(
+                                                        Urls.BALANCES,
+                                                        accountEntity.getResourceId()))))
                 .get(FetchBalancesResponse.class);
     }
 
@@ -139,7 +128,7 @@ public class DeutscheBankApiClient {
                             .concat(String.format(Urls.TRANSACTIONS, account.getApiIdentifier()));
         }
 
-        return createRequestInSession(enrichURLWithService(new URL(key)))
+        return createRequestInSession(new URL(key))
                 .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BOOKING_STATUS)
                 .queryParam(QueryKeys.DELTA_LIST, QueryValues.DELTA_LIST)
                 .get(TransactionsKeyPaginatorBaseResponse.class);

@@ -33,9 +33,9 @@ public abstract class DeutscheBankAgent extends NextGenerationAgent
     public DeutscheBankAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
         headerValues = setupHeaderValues(componentProvider);
+        randomValueGenerator = componentProvider.getRandomValueGenerator();
         apiClient = constructApiClient(headerValues);
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
-        randomValueGenerator = componentProvider.getRandomValueGenerator();
     }
 
     private DeutscheHeaderValues setupHeaderValues(AgentComponentProvider componentProvider) {

@@ -31,7 +31,11 @@ public final class PostbankAgent extends DeutscheBankAgent {
     @Override
     protected DeutscheBankApiClient constructApiClient(DeutscheHeaderValues headerValues) {
         return new PostbankApiClient(
-                client, persistentStorage, headerValues, POSTBANK_CONFIGURATION);
+                client,
+                persistentStorage,
+                headerValues,
+                POSTBANK_CONFIGURATION,
+                randomValueGenerator);
     }
 
     @Override

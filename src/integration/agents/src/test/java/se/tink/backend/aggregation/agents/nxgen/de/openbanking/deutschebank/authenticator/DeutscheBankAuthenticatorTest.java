@@ -27,6 +27,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deu
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.rpc.ConsentStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.configuration.DeutscheMarketConfiguration;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGeneratorImpl;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -43,6 +45,7 @@ public class DeutscheBankAuthenticatorTest {
     private DeutscheBankAuthenticator deutscheBankAuthenticator;
     private Credentials credentials;
     private PersistentStorage persistentStorage = new PersistentStorage();
+    private RandomValueGenerator randomValueGenerator = new RandomValueGeneratorImpl();
 
     @Before
     public void setup() {
@@ -247,7 +250,8 @@ public class DeutscheBankAuthenticatorTest {
                         tinkHttpClient,
                         persistentStorage,
                         new DeutscheHeaderValues("redirectUrl", "userIp"),
-                        deutscheMarketConfiguration);
+                        deutscheMarketConfiguration,
+                        randomValueGenerator);
         deutscheBankAuthenticator =
                 new DeutscheBankAuthenticator(
                         deutscheBankApiClient,

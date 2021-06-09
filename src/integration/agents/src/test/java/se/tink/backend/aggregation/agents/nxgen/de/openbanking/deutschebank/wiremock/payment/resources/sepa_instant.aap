@@ -11,7 +11,7 @@ TPP-Redirect-URI: https://127.0.0.1:7357/api/v1/thirdparty/callback?state=000000
 TPP-Nok-Redirect-URI: https://127.0.0.1:7357/api/v1/thirdparty/callback?state=00000000-0000-4000-0000-000000000000
 X-Aggregator: Tink Testing
 
-{"debtorAccount":{"iban":"DE32600700240075881300","currency":"EUR"},"creditorAccount":{"iban":"DE19100777770479662900"},"instructedAmount":{"amount":"1.0","currency":"EUR"},"creditorName":"Tobias Klug","remittanceInformationUnstructured":"SepaReferenceToCreditor"}
+{"debtorAccount":{"iban":"DE78500105175814612478","currency":"EUR"},"creditorAccount":{"iban":"DE49500105177262199193"},"instructedAmount":{"amount":"1.0","currency":"EUR"},"creditorName":"dummy owner","remittanceInformationUnstructured":"SepaReferenceToCreditor"}
 
 RESPONSE 1
 201
