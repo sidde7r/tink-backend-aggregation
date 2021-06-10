@@ -2,8 +2,6 @@ package se.tink.backend.aggregation.configuration;
 
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
 import java.util.HashMap;
 import java.util.Map;
@@ -12,9 +10,6 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class IntegrationsConfiguration {
-    private static final ObjectMapper OBJECT_MAPPER =
-            new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-
     private Map<String, Object> integrations = new HashMap<>();
 
     @JsonProperty private ImmutableList<String> proxyUris;
