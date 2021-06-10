@@ -1,14 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.fetcher.transactionalaccount.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Strings;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.BankdataApiClient;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.BankdataConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
@@ -18,6 +15,7 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
+@Slf4j
 @JsonObject
 public class AccountEntity {
     private String resourceId;
@@ -34,18 +32,14 @@ public class AccountEntity {
 
     private List<BalanceEntity> balances;
 
-    @JsonIgnore
-    private static final Logger LOGGER = LoggerFactory.getLogger(BankdataApiClient.class);
-
-    public AccountEntity() {}
-
     public Optional<TransactionalAccount> toTinkAccount() {
         if (!getBalance().isPresent()) {
-            LOGGER.error(
-                    "Balance fetch error: {}", BankdataConstants.LogTags.ERROR_FETCHING_BALANCE);
+            log.error("Balance fetch error: {}", BankdataConstants.LogTags.ERROR_FETCHING_BALANCE);
 
             return Optional.empty();
         }
+
+        log.info("[Bankdata] Account type check: [{}][{}]", name, product);
 
         return TransactionalAccount.nxBuilder()
                 .withType(TransactionalAccountType.CHECKING)
