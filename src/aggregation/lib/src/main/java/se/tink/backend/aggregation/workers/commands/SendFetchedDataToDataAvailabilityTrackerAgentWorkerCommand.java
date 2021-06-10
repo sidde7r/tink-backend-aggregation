@@ -2,15 +2,24 @@ package se.tink.backend.aggregation.workers.commands;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Account;
-import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.models.AccountFeatures;
 import se.tink.backend.aggregation.agents.models.Transaction;
+import se.tink.backend.aggregation.agents.models.TransactionDateType;
 import se.tink.backend.aggregation.events.DataTrackerEventProducer;
 import se.tink.backend.aggregation.workers.commands.metrics.MetricsCommand;
 import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
@@ -20,6 +29,7 @@ import se.tink.backend.aggregation.workers.operation.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
 import se.tink.backend.aggregation.workers.operation.type.AgentWorkerOperationMetricType;
 import se.tink.backend.integration.agent_data_availability_tracker.client.AsAgentDataAvailabilityTrackerClient;
+import se.tink.backend.integration.agent_data_availability_tracker.common.serialization.TrackingMapSerializer;
 import se.tink.backend.integration.agent_data_availability_tracker.serialization.AccountTrackingSerializer;
 import se.tink.backend.integration.agent_data_availability_tracker.serialization.IdentityDataSerializer;
 import se.tink.backend.integration.agent_data_availability_tracker.serialization.SerializationUtils;
@@ -28,7 +38,6 @@ import se.tink.eventproducerservice.events.grpc.DataTrackerEventProto.DataTracke
 import se.tink.libraries.account_data_cache.AccountData;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.metrics.core.MetricId;
-import se.tink.libraries.pair.Pair;
 
 public class SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand extends AgentWorkerCommand
         implements MetricsCommand {
@@ -122,7 +131,7 @@ public class SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand extends 
         agentDataAvailabilityTrackerClient.sendAccount(agentName, provider, market, serializer);
 
         // Produce event data for BigQuery for Account
-        events.add(produceAccountEventForBigQuery(account, features));
+        events.add(produceDataTrackerEvent(SerializationUtils.serializeAccount(account, features)));
 
         /*
            For an account we will pick the most recent MAX_TRANSACTIONS_TO_SEND_TO_BIGQUERY_PER_ACCOUNT
@@ -141,19 +150,33 @@ public class SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand extends 
                         String.format(
                                 "We have transactions for account to send to BQ. Account type is %s",
                                 account.getType().toString()));
+
+                // Pick MAX_TRANSACTIONS_TO_SEND_TO_BIGQUERY_PER_ACCOUNT transactions randomly and
+                // emit events for them
                 List<Transaction> transactionsOfAccount = new ArrayList<>(originalTransactions);
                 Collections.shuffle(transactionsOfAccount);
-                List<Transaction> transactionsToProcess =
-                        transactionsOfAccount.size()
-                                        <= MAX_TRANSACTIONS_TO_SEND_TO_BIGQUERY_PER_ACCOUNT
-                                ? transactionsOfAccount
-                                : transactionsOfAccount.subList(
-                                        0, MAX_TRANSACTIONS_TO_SEND_TO_BIGQUERY_PER_ACCOUNT);
+                Set<Transaction> transactionsToProcess =
+                        new HashSet<>(
+                                transactionsOfAccount.size()
+                                                <= MAX_TRANSACTIONS_TO_SEND_TO_BIGQUERY_PER_ACCOUNT
+                                        ? transactionsOfAccount
+                                        : transactionsOfAccount.subList(
+                                                0,
+                                                MAX_TRANSACTIONS_TO_SEND_TO_BIGQUERY_PER_ACCOUNT));
+
+                // On top of randomly selected transactions, ensure that we pick the oldest
+                // transactions in terms of BOOKING_DATE, VALUE_DATE and EXECUTION_DATE and
+                // in terms of "date" and "timestamp" field. This is because we want to emit
+                // events for such transactions where we will be able to emit their timestamps
+                Set<Transaction> oldestTransactions = getOldestTransactions(transactionsOfAccount);
+                transactionsToProcess.addAll(oldestTransactions);
+
                 transactionsToProcess.forEach(
                         transaction ->
                                 events.add(
-                                        produceTransactionEventForBigQuery(
-                                                transaction, account.getType())));
+                                        produceDataTrackerEvent(
+                                                new TransactionTrackingSerializer(
+                                                        transaction, account.getType()))));
             }
         } catch (Exception e) {
             log.warn(
@@ -164,60 +187,89 @@ public class SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand extends 
         return events;
     }
 
+    private Set<Transaction> getOldestTransactions(List<Transaction> transactionsOfAccount) {
+        Set<Transaction> transactionsToProcess = new HashSet<>();
+        for (TransactionDateType transactionDateType : TransactionDateType.values()) {
+            Optional<Transaction> oldestTransaction =
+                    findOldestTransactionByCriteria(
+                            transactionsOfAccount,
+                            transaction ->
+                                    transaction.getDateForTransactionDateType(transactionDateType));
+            if (oldestTransaction.isPresent()) {
+                log.info(
+                        "Oldest transaction by {} is from {}",
+                        transactionDateType.toString(),
+                        oldestTransaction.get().getDateForTransactionDateType(transactionDateType));
+                transactionsToProcess.add(oldestTransaction.get());
+            } else {
+                log.info(
+                        "Could not detect oldest transaction for {}. The agent does not set {} for transactions",
+                        transactionDateType.toString(),
+                        transactionDateType.toString());
+            }
+        }
+
+        Optional<Transaction> oldestTransactionByDate =
+                findOldestTransactionByCriteria(
+                        transactionsOfAccount,
+                        transaction -> Optional.ofNullable(transaction.getDate()));
+        if (oldestTransactionByDate.isPresent()) {
+            log.info(
+                    "Oldest transaction by date is from {}",
+                    oldestTransactionByDate.get().getDate());
+            transactionsToProcess.add(oldestTransactionByDate.get());
+        } else {
+            log.info(
+                    "Could not detect oldest transaction for date field. The agent does not set date field for transactions");
+        }
+
+        Optional<Transaction> oldestTransactionByTimestamp =
+                findOldestTransactionByCriteria(
+                        transactionsOfAccount,
+                        transaction -> {
+                            long timestamp = transaction.getTimestamp();
+                            return timestamp == 0L ? Optional.empty() : Optional.of(timestamp);
+                        });
+        if (oldestTransactionByTimestamp.isPresent()) {
+            log.info(
+                    "Oldest transaction by timestamp is from {}",
+                    oldestTransactionByTimestamp.get().getTimestamp());
+            transactionsToProcess.add(oldestTransactionByTimestamp.get());
+        } else {
+            log.info(
+                    "Could not detect oldest transaction for timestamp field. The agent does not set timestamp field for transactions");
+        }
+        return transactionsToProcess;
+    }
+
+    private <T extends Comparable> Optional<Transaction> findOldestTransactionByCriteria(
+            List<Transaction> transactions, Function<Transaction, Optional<T>> fieldValueGetter) {
+        return transactions.stream()
+                .filter(t -> fieldValueGetter.apply(t).isPresent())
+                .min(
+                        (t1, t2) -> {
+                            T date1 =
+                                    fieldValueGetter
+                                            .apply(t1)
+                                            .orElseThrow(
+                                                    () ->
+                                                            new IllegalStateException(
+                                                                    "Field value getter failed"));
+                            T date2 =
+                                    fieldValueGetter
+                                            .apply(t2)
+                                            .orElseThrow(
+                                                    () ->
+                                                            new IllegalStateException(
+                                                                    "Field value getter failed"));
+                            return date1.compareTo(date2);
+                        });
+    }
+
     private List<Transaction> getTransactionsForAccount(Account account) {
         return context.getAccountDataCache().getFilteredAccountData().stream()
                 .collect(Collectors.toMap(AccountData::getAccount, AccountData::getTransactions))
                 .get(account);
-    }
-
-    private DataTrackerEvent produceAccountEventForBigQuery(
-            final Account account, final AccountFeatures features) {
-        AccountTrackingSerializer serializer =
-                SerializationUtils.serializeAccount(account, features);
-
-        List<Pair<String, Boolean>> eventData = new ArrayList<>();
-
-        serializer
-                .buildList()
-                .forEach(
-                        entry ->
-                                eventData.add(
-                                        new Pair<String, Boolean>(
-                                                entry.getName(),
-                                                !("null".equalsIgnoreCase(entry.getValue())))));
-
-        return dataTrackerEventProducer.produceDataTrackerEvent(
-                context.getRequest().getCredentials().getProviderName(),
-                context.getCorrelationId(),
-                eventData,
-                context.getAppId(),
-                context.getClusterId(),
-                context.getRequest().getCredentials().getUserId());
-    }
-
-    private DataTrackerEvent produceTransactionEventForBigQuery(
-            Transaction transaction, AccountTypes accountType) {
-        TransactionTrackingSerializer serializer =
-                new TransactionTrackingSerializer(transaction, accountType);
-
-        List<Pair<String, Boolean>> eventData = new ArrayList<>();
-
-        serializer
-                .buildList()
-                .forEach(
-                        entry ->
-                                eventData.add(
-                                        new Pair<String, Boolean>(
-                                                entry.getName(),
-                                                !("null".equalsIgnoreCase(entry.getValue())))));
-
-        return dataTrackerEventProducer.produceDataTrackerEvent(
-                context.getRequest().getCredentials().getProviderName(),
-                context.getCorrelationId(),
-                eventData,
-                context.getAppId(),
-                context.getClusterId(),
-                context.getRequest().getCredentials().getUserId());
     }
 
     private Optional<DataTrackerEvent> produceIdentityDataEventForBigQuery() {
@@ -237,25 +289,48 @@ public class SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand extends 
         agentDataAvailabilityTrackerClient.sendIdentityData(
                 agentName, provider, market, serializer);
 
-        List<Pair<String, Boolean>> eventData = new ArrayList<>();
+        return Optional.of(produceDataTrackerEvent(serializer));
+    }
+
+    private DataTrackerEvent produceDataTrackerEvent(TrackingMapSerializer serializer) {
+        // for each field keeps information on whether this field
+        // is populated or not
+        Map<String, Boolean> fieldsPopulated = new HashMap<>();
+        Map<String, String> fieldValues = new HashMap<>();
 
         serializer
                 .buildList()
                 .forEach(
-                        entry ->
-                                eventData.add(
-                                        new Pair<String, Boolean>(
-                                                entry.getName(),
-                                                !entry.getValue().equalsIgnoreCase("null"))));
+                        entry -> {
+                            String fieldName = entry.getName();
+                            String fieldValue = entry.getValue();
+                            boolean isFieldPopulated = !("null".equalsIgnoreCase(fieldValue));
+                            fieldsPopulated.put(fieldName, isFieldPopulated);
 
-        return Optional.of(
-                dataTrackerEventProducer.produceDataTrackerEvent(
-                        context.getRequest().getCredentials().getProviderName(),
-                        context.getCorrelationId(),
-                        eventData,
-                        context.getAppId(),
-                        context.getClusterId(),
-                        context.getRequest().getCredentials().getUserId()));
+                            if (!shouldRedactFieldValue(fieldName) && isFieldPopulated) {
+                                fieldValues.put(fieldName, fieldValue);
+                            }
+                        });
+
+        return dataTrackerEventProducer.produceDataTrackerEvent(
+                context.getRequest().getCredentials().getProviderName(),
+                context.getCorrelationId(),
+                fieldsPopulated,
+                fieldValues,
+                context.getAppId(),
+                context.getClusterId(),
+                context.getRequest().getCredentials().getUserId());
+    }
+
+    private boolean shouldRedactFieldValue(String fieldName) {
+        // we do not want to redact Transaction<*>.transactionDate_*
+        if (fieldName.startsWith("Transaction<") && fieldName.contains("transactionDate_")) {
+            return false;
+        }
+
+        // we do not want to redact Transaction<*>.date/timestamp
+        return !fieldName.startsWith("Transaction<")
+                || (!fieldName.contains(".date") && !fieldName.contains(".timestamp"));
     }
 
     @Override

@@ -5,14 +5,17 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.MoreObjects;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.libraries.amount.ExactCurrencyAmount;
+import se.tink.libraries.chrono.AvailableDateInformation;
 import se.tink.libraries.uuid.UUIDUtils;
 
 @Slf4j
@@ -109,6 +112,30 @@ public class Transaction implements Comparable<Transaction>, Cloneable {
         }
 
         return payload;
+    }
+
+    @JsonIgnore
+    public Optional<LocalDate> getDateForTransactionDateType(TransactionDateType type) {
+        Optional<TransactionDate> maybeTransactionDate =
+                this.getTransactionDates().stream()
+                        .filter(transactionDate -> type.equals(transactionDate.getType()))
+                        .findFirst();
+
+        if (!maybeTransactionDate.isPresent()) {
+            return Optional.empty();
+        }
+
+        AvailableDateInformation availableDateInformation = maybeTransactionDate.get().getValue();
+        if (Objects.isNull(availableDateInformation)) {
+            return Optional.empty();
+        }
+
+        LocalDate localDate = availableDateInformation.getDate();
+        if (Objects.isNull(localDate)) {
+            return Optional.empty();
+        }
+
+        return Optional.of(localDate);
     }
 
     public long getTimestamp() {
