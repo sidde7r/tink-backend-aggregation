@@ -71,6 +71,7 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponen
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.TimeoutFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.TimeoutRetryFilter;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
@@ -133,6 +134,7 @@ public class SwedbankDefaultApiClient {
                 new SwedbankParallelRateLimitFilter(
                         RetryFilter.NUM_TIMEOUT_RETRIES,
                         RetryFilter.TIMEOUT_RETRY_SLEEP_MILLISECONDS));
+        client.addFilter(new TimeoutFilter());
     }
 
     protected <T> T makeGetRequest(URL url, Class<T> responseClass, boolean retry) {
