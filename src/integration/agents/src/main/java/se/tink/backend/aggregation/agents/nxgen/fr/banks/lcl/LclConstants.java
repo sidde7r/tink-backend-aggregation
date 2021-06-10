@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl;
 
+import com.google.common.collect.Sets;
+import java.util.Set;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
@@ -91,8 +93,8 @@ public class LclConstants {
         public static final String LCL_BPI_METADATA = "LCL-BPI-Metadata";
         public static final String IDENTIFIANT = "identifiant";
         public static final String ERROR_TRUE = "true";
-        public static final String INCORRECT_PASSWORD = "UAUT100";
-        public static final String INCORRECT_LOGIN_CREDENTIALS = "UAUT200";
+        public static final Set<String> INCORRECT_CREDENTIALS_CODE_LIST =
+                Sets.newHashSet("UAUT100", "UAUT105", "UAUT200");
     }
 
     public enum AuthenticationValuePairs {
