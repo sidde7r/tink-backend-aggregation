@@ -95,6 +95,10 @@ public class DomesticPaymentApiClient implements UkOpenBankingPaymentApiClient {
                         ErrorMessage.INVALID_CLAIM_FAILURE + ", Path = " + body.getErrorPaths(),
                         InternalStatus.INVALID_CLAIM_ERROR);
             }
+            if (body.getErrorMessages()
+                    .contains(ErrorMessage.CREDITOR_SAME_USER_AS_DEBTOR_FAILURE)) {
+                throw DebtorValidationException.canNotFromSameUser();
+            }
 
             // To add more internal specific error exception
             throw e;
