@@ -29,9 +29,14 @@ public class TransactionTrackingSerializer extends TrackingMapSerializer {
             Transaction transaction,
             String key,
             Function<Transaction, String> valueExtractor,
-            Predicate<Transaction> condition) {
+            Predicate<Transaction> condition,
+            boolean shouldRedact) {
         if (condition.test(transaction)) {
-            listBuilder.putRedacted(key, valueExtractor.apply(transaction));
+            if (shouldRedact) {
+                listBuilder.putRedacted(key, valueExtractor.apply(transaction));
+            } else {
+                listBuilder.putListed(key, valueExtractor.apply(transaction));
+            }
         } else {
             listBuilder.putNull(key);
         }
@@ -56,14 +61,16 @@ public class TransactionTrackingSerializer extends TrackingMapSerializer {
                 transaction,
                 "date",
                 transactionObject -> transactionObject.getDate().toString(),
-                transactionObject -> !Objects.isNull(transactionObject.getDate()));
+                transactionObject -> !Objects.isNull(transactionObject.getDate()),
+                false);
 
         addFieldForTrackingListBuilder(
                 listBuilder,
                 transaction,
                 "mutability",
                 transactionObject -> transactionObject.getMutability().toString(),
-                transactionObject -> !Objects.isNull(transactionObject.getMutability()));
+                transactionObject -> !Objects.isNull(transactionObject.getMutability()),
+                true);
 
         addFieldForTrackingListBuilder(
                 listBuilder,
@@ -85,7 +92,8 @@ public class TransactionTrackingSerializer extends TrackingMapSerializer {
                                                 .getExternalSystemIds()
                                                 .get(
                                                         TransactionExternalSystemIdType
-                                                                .PROVIDER_GIVEN_TRANSACTION_ID)));
+                                                                .PROVIDER_GIVEN_TRANSACTION_ID)),
+                true);
 
         if (!Objects.isNull(transaction.getTransactionAmount())
                 && transaction.getTransactionAmount().getDoubleValue() != 0) {
@@ -107,7 +115,7 @@ public class TransactionTrackingSerializer extends TrackingMapSerializer {
                                 .map(TransactionDate::getValue);
                 if (maybeLocalDate.isPresent()) {
                     isDateFound = true;
-                    listBuilder.putRedacted(key, maybeLocalDate.get().toString());
+                    listBuilder.putListed(key, maybeLocalDate.get().toString());
                 }
             }
 

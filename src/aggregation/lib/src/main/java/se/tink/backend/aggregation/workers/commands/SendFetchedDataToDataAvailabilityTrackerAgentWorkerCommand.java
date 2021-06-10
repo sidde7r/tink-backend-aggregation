@@ -156,13 +156,9 @@ public class SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand extends 
                 List<Transaction> transactionsOfAccount = new ArrayList<>(originalTransactions);
                 Collections.shuffle(transactionsOfAccount);
                 Set<Transaction> transactionsToProcess =
-                        new HashSet<>(
-                                transactionsOfAccount.size()
-                                                <= MAX_TRANSACTIONS_TO_SEND_TO_BIGQUERY_PER_ACCOUNT
-                                        ? transactionsOfAccount
-                                        : transactionsOfAccount.subList(
-                                                0,
-                                                MAX_TRANSACTIONS_TO_SEND_TO_BIGQUERY_PER_ACCOUNT));
+                        transactionsOfAccount.stream()
+                                .limit(MAX_TRANSACTIONS_TO_SEND_TO_BIGQUERY_PER_ACCOUNT)
+                                .collect(Collectors.toSet());
 
                 // On top of randomly selected transactions, ensure that we pick the oldest
                 // transactions in terms of BOOKING_DATE, VALUE_DATE and EXECUTION_DATE and
