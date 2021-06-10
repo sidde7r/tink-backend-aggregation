@@ -65,6 +65,7 @@ public class SupplementaryAccountsItem {
                                 .addIdentifier(new MaskedPanIdentifier(pan))
                                 .build())
                 .addHolderName(holder.getProfile().getEmbossedName())
+                .setHolderType(product.getHolderType())
                 .putInTemporaryStorage(AmericanExpressConstants.StorageKey.STATEMENTS, statementMap)
                 .build();
     }

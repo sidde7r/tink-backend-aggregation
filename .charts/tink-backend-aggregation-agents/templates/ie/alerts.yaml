@@ -1,0 +1,125 @@
+kind: RuleGroup
+apiVersion: monitoring.tink.se/v1
+metadata:
+  name: alerts-ie
+  namespace: agents
+spec:
+  rules:
+    - alert: LoginSuccessRateLowWithAttemptLimitIE
+      expr: |
+        # Successful/Cancelled attempts above 90%
+        (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled|cancelled_due_to_third_party_app_timeout|unavailable", market="IE", provider_type!="test"}[60m])) by (action,className,provider)
+            / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="IE", provider_type!="test"}[60m])) by (action,className,provider) < 0.90)
+        # At least this many attempts.
+        and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="IE", provider_type!="test"}[60m])) by (action,className,provider) > 5
+      for: 5m
+      labels:
+        severity: urgent
+        who: integration-fluffy
+      annotations:
+        description: {{ .Values.kibanaClassLink }}
+          {{ .Values.grafanaLink }}
+                       Please check if the problem is not caused by API maintenance here https://openbanking.atlassian.net/wiki/spaces/DZ/pages/441614754/API+Downtime
+        summary: Login success rate is below 90% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+          the last hour.
+        tags: {{ .Values.tags }}
+
+    - alert: RefreshSuccessRateLowWithAttemptLimitIE
+      expr: |
+        # Successful attempts above 90%
+        (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="IE", provider_type!="test"}[60m])) by (className,provider,type)
+            / sum(increase(tink_agent_refresh_total{market="IE", provider_type!="test"}[60m])) by (className,provider,type) < 0.90)
+        # At least this many attempts.
+        and sum(increase(tink_agent_refresh_total{market="IE", provider_type!="test"}[60m])) by (className,provider,type) > 5
+      for: 5m
+      labels:
+        severity: urgent
+        who: integration-fluffy
+      annotations:
+        description: {{ .Values.kibanaLink }}
+          {{ .Values.grafanaLink }}
+                       Please check if the problem is not caused by API maintenance here https://openbanking.atlassian.net/wiki/spaces/DZ/pages/441614754/API+Downtime
+        summary: Refresh success rate is below 90% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+          the last hour for <{ $labels.type }>.
+        tags: {{ .Values.tags }}
+    ### Bank side failures
+    - alert: BankServerUnavailableForLoginIE
+      expr: |
+        # Unavailable outcome above 50%
+        (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"unavailable", market="IE", provider_type!="test"}[30m])) by (action,className,provider)
+            / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="IE"}[30m])) by (action,className,provider) > 0.50)
+        # At least this many attempts.
+        and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="IE"}[30m])) by (action,className,provider) > 10
+      for: 5m
+      labels:
+        severity: urgent
+        priority: P1
+        who: integration-fluffy
+      annotations:
+        description: {{ .Values.kibanaLink }}
+          {{ .Values.grafanaLink }}
+        summary: Login unavailable rate is above 50% ( <{ $value }> ) for <{ $labels.className }>
+          the last 30 minutes.
+        tags: {{ .Values.tags }}
+
+    - alert: BankServerUnavailableForRefreshIE
+      expr: |
+        # Unavailable outcome above 50%
+        (sum(increase(tink_agent_refresh_total{outcome=~"unavailable", market="IE", provider_type!="test"}[30m])) by (className,type)
+            / sum(increase(tink_agent_refresh_total{market="IE", provider_type!="test"}[30m])) by (className,type) > 0.50)
+        # At least this many attempts.
+        and sum(increase(tink_agent_refresh_total{market="IE", provider_type!="test"}[30m])) by (className,type) > 10
+      for: 5m
+      labels:
+        severity: urgent
+        priority: P1
+        who: integration-fluffy
+      annotations:
+        description: {{ .Values.kibanaClassLink }}
+          {{ .Values.grafanaLink }}
+        summary: Refresh unavailable rate is above 50% ( <{ $value }> ) for <{ $labels.className }>
+          the last 30 minutes for <{ $labels.type }>.
+        tags: {{ .Values.tags }}
+    ### Agent level login failures
+    - alert: HighProviderFailedLoginRatioIE
+      expr: |
+        # Never trigger on agents with less than 40 login attempts past 60 minutes.
+        # This filters out small agents which are less critical to fix quickly
+        sum(increase(tink_agent_login_total{action="login", market="IE", provider_type!="test"}[1h])) BY (className,provider) > 40 and
+        # Agents where more than 20% of the login attempts fail.
+        sum(increase(tink_agent_login_total{action="login",outcome="failed", market="IE"}[30m])) BY (className,provider) / sum(increase(tink_agent_login_total{action="login", market="IE"}[30m])) BY (className,provider) > 0.20
+      for: 30m
+      labels:
+        severity: urgent
+        priority: P1
+        who: integration-fluffy
+      annotations:
+        description: To learn more check out the metric `tink_agent_login_total`. This
+          alert never triggers on agents that did less than 10 operations in the
+          past 60 minutes.
+          {{ .Values.kibanaLink }}
+          {{ .Values.grafanaLink }}
+        summary: Agent <{ $labels.className }> has failed over 20%
+          of its login attempts the past 60 minutes.
+        tags: {{ .Values.tags }}
+
+    ### Provider level fails
+    - alert: HighProviderErrorRatioIE
+      expr: |
+        # Never triggers on providers that did less than 10 operations past 60
+        # minutes. This filters out small providers which are less critical to fix
+        # quickly.
+        sum(increase(tink_executions_total{market="IE", provider_type!="test"}[1h])) BY (provider) > 10 and
+        # Providers where over 50% of the requests have failed.
+        ratio:tink_provider_errors:delta60m > 50
+      for: 15m
+      labels:
+        severity: urgent
+        priority: P1
+        who: integration-fluffy
+      annotations:
+        description: {{ .Values.kibanaLink }}
+          {{ .Values.grafanaLink }}
+        summary: Provider <{ $labels.provider }> has failed over 50%
+          of its operations the past 60 minutes
+        tags: {{ .Values.tags }}

@@ -93,6 +93,14 @@ public class AmericanExpressConstants {
                 BASE_PATH.concat("/financials/transactions");
     }
 
+    public static class CardType {
+        private CardType() {}
+
+        public static final String CONSUMER_CARD = "ConsumerCard";
+        public static final String COMPANY_CARD = "CompanyCard";
+        public static final String CORPORATE_CARD = "CorporateCard";
+    }
+
     static class HttpClient {
         public static final int MAX_ATTEMPTS = 3;
         public static final int RETRY_SLEEP_MILLISECONDS = 2000;
