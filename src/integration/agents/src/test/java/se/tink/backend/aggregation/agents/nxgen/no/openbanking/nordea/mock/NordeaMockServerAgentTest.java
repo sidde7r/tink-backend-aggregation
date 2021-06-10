@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.assertj.core.api.Java6Assertions.assertThat;
 import static se.tink.libraries.enums.MarketCode.NO;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockrefresh.AgentWireMockRefreshTest;
@@ -12,8 +11,6 @@ import se.tink.backend.aggregation.agents.nxgen.no.openbanking.nordea.mock.modul
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationReader;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 
-// Temporary skip broken test
-@Ignore
 public class NordeaMockServerAgentTest {
     private static final String PATH =
             "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/no/openbanking/nordea/mock/resources/";
