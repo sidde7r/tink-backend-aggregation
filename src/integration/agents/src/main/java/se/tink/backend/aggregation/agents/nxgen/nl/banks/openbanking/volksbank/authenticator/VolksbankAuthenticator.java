@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.authenticator;
 
+import lombok.extern.slf4j.Slf4j;
+import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
@@ -10,6 +12,7 @@ import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.V
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankConstants.TokenParams;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankUrlFactory;
+import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.authenticator.rpc.TokenErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.configuration.VolksbankConfiguration;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
@@ -18,6 +21,7 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
+@Slf4j
 public class VolksbankAuthenticator implements OAuth2Authenticator {
 
     private final VolksbankApiClient client;
@@ -105,9 +109,24 @@ public class VolksbankAuthenticator implements OAuth2Authenticator {
                         .queryParam(QueryParams.GRANT_TYPE, TokenParams.REFRESH_TOKEN)
                         .queryParam(QueryParams.REFRESH_TOKEN, refreshToken);
 
-        OAuth2Token token = getBearerToken(url);
-        persistentStorage.put(Storage.OAUTH_TOKEN, token);
-        return token;
+        try {
+            OAuth2Token token = getBearerToken(url);
+            persistentStorage.put(Storage.OAUTH_TOKEN, token);
+            return token;
+        } catch (HttpResponseException e) {
+            // Volksbank sometimes returns this error (investigated TC-4746)
+            // We also get this error if we've failed storing the latest refresh token (AAP-1336)
+            // No matter the cause users have to authenticate again to get a valid token.
+            if (e.getResponse().getStatus() == HttpStatus.SC_INTERNAL_SERVER_ERROR) {
+                TokenErrorResponse errorResponse =
+                        e.getResponse().getBody(TokenErrorResponse.class);
+                if (errorResponse.isInvalidRequest()) {
+                    log.warn("Invalid request error when refreshing access token.");
+                    throw SessionError.SESSION_EXPIRED.exception();
+                }
+            }
+            throw e;
+        }
     }
 
     @Override
