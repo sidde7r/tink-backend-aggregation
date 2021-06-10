@@ -5,10 +5,12 @@ import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
+import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.KnabApiClient;
-import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.KnabConstants.QueryValues;
+import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.KnabConstants;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.KnabConstants.StorageKeys;
+import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.constants.ThirdPartyAppConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants;
@@ -39,12 +41,20 @@ public class KnabAuthenticator implements OAuth2Authenticator {
 
     @Override
     public URL buildAuthorizeUrl(final String state) {
-        return apiClient.buildAuthorizeUrl(state, QueryValues.INITIAL_SCOPE);
+        return apiClient.buildAuthorizeUrl(state, KnabConstants.Scopes.PSU_AUTHENTICATION);
     }
 
     @Override
     public OAuth2Token exchangeAuthorizationCode(final String code) throws BankServiceException {
-        return apiClient.exchangeAuthorizationCode(code, strongAuthenticationState.getState());
+        TokenResponse tokenResponse =
+                apiClient.exchangeAuthorizationCode(code, strongAuthenticationState.getState());
+
+        // PSD2 consent is required for making any request to the Knab API
+        if (!tokenResponse.userHasAuthorizedPsd2Consent()) {
+            throw SessionError.CONSENT_INVALID.exception();
+        }
+
+        return tokenResponse.toTinkToken();
     }
 
     @Override
@@ -74,7 +84,7 @@ public class KnabAuthenticator implements OAuth2Authenticator {
                 apiClient.buildAuthorizeUrl(
                         strongAuthenticationState.getState(),
                         String.format(
-                                QueryValues.CONSENTED_SCOPE,
+                                KnabConstants.Scopes.AUTHORIZE_CONSENT,
                                 persistentStorage.get(StorageKeys.CONSENT_ID)));
 
         supplementalInformationHelper.openThirdPartyApp(
@@ -89,10 +99,10 @@ public class KnabAuthenticator implements OAuth2Authenticator {
                         .orElseThrow(ThirdPartyAppError.TIMED_OUT::exception);
 
         String codeValue = queryMap.get(OAuth2Constants.CallbackParams.CODE);
-        OAuth2Token oAuth2Token =
+        TokenResponse tokenResponse =
                 apiClient.exchangeAuthorizationCode(
                         codeValue, strongAuthenticationState.getState());
 
-        persistentStorage.put(StorageKeys.OAUTH_TOKEN, oAuth2Token);
+        persistentStorage.put(StorageKeys.OAUTH_TOKEN, tokenResponse.toTinkToken());
     }
 }

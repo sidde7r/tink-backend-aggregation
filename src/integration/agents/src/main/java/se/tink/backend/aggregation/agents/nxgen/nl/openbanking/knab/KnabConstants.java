@@ -75,9 +75,16 @@ public final class KnabConstants {
 
     public static class QueryValues {
         public static final String CODE = "code";
-        public static final String INITIAL_SCOPE = "openid profile psd2 offline_access";
-        public static final String CONSENTED_SCOPE = INITIAL_SCOPE.concat(" AIS:%s");
         public static final String BOOKED = "booked";
+    }
+
+    public static class Scopes {
+        private Scopes() {}
+
+        public static final String PSD2 = "psd2";
+        public static final String PSU_AUTHENTICATION =
+                PSD2.concat(" profile openid offline_access");
+        public static final String AUTHORIZE_CONSENT = PSU_AUTHENTICATION.concat(" AIS:%s");
     }
 
     public static class BodyValues {

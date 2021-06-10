@@ -133,7 +133,7 @@ public class KnabApiClient {
         return dateFormat.format(calendar.getTime());
     }
 
-    public OAuth2Token exchangeAuthorizationCode(String code, String state) {
+    public TokenResponse exchangeAuthorizationCode(String code, String state) {
 
         TokenRequest tokenRequest =
                 TokenRequest.builder()
@@ -147,8 +147,7 @@ public class KnabApiClient {
 
         return client.request(Urls.TOKEN)
                 .type(MediaType.APPLICATION_FORM_URLENCODED)
-                .post(TokenResponse.class, tokenRequest.toTokenData())
-                .toTinkToken();
+                .post(TokenResponse.class, tokenRequest.toTokenData());
     }
 
     public OAuth2Token refreshToken(String refreshToken) {
