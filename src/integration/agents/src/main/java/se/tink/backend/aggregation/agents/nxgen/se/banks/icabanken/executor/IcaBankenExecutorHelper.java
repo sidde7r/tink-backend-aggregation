@@ -384,6 +384,7 @@ public class IcaBankenExecutorHelper {
                 .setEndUserMessage(
                         catalog.getString(
                                 TransferExecutionException.EndUserMessage.BANKID_TRANSFER_FAILED))
+                .setInternalStatus(InternalStatus.BANKID_UNKNOWN_EXCEPTION.toString())
                 .build();
     }
 

@@ -43,6 +43,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.ident
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.investment.IcaBankenInvestmentFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.loans.IcaBankenLoanFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.transfer.IcaBankenTransferDestinationFetcher;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.filter.ConnectionResetRetryFilter;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.filter.IcaBankenFilter;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.storage.IcaBankenSessionStorage;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.storage.IcabankenPersistentStorage;
@@ -137,6 +138,7 @@ public final class IcaBankenAgent extends NextGenerationAgent
 
     protected void configureHttpClient(TinkHttpClient client) {
         client.addFilter(new IcaBankenFilter());
+        client.addFilter(new ConnectionResetRetryFilter());
         client.addFilter(
                 new TimeoutRetryFilter(
                         TimeoutFilter.NUM_TIMEOUT_RETRIES,
