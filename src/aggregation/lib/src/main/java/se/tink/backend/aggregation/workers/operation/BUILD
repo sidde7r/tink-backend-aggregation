@@ -2,7 +2,10 @@ load("//tools/bzl:junit.bzl", "junit_test")
 
 java_library(
     name = "operation",
-    srcs = glob(["*.java"]),
+    srcs = glob([
+        "*.java",
+        "summary/*.java",
+    ]),
     data = [
     ],
     visibility = ["//visibility:public"],
@@ -24,11 +27,13 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/contexts",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/contexts/agent",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/summary/refresh",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/api",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/controllers",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/locks",
         "//src/integration/models",
         "//src/integration/transfer:rpc",
+        "//src/integration/user:rpc",
         "//src/libraries/account_data_cache",
         "//src/libraries/connectivity_errors",
         "//src/libraries/giro_validation",
@@ -43,6 +48,7 @@ java_library(
         "//third_party:org_apache_curator_curator_framework",
         "//third_party:org_apache_curator_curator_recipes",
         "//third_party:org_slf4j_slf4j_api",
+        "@aggregation//:com_google_code_gson_gson",
         "@tink_backend//src/aggregation-controller/api/src/main/java/se/tink/backend/aggregationcontroller/v1/rpc/accountholder",
         "@tink_backend//src/aggregation-controller/api/src/main/java/se/tink/backend/aggregationcontroller/v1/rpc/credentialsservice",
         "@tink_backend//src/aggregation-controller/api/src/main/java/se/tink/backend/aggregationcontroller/v1/rpc/enums",

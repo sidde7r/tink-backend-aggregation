@@ -30,6 +30,9 @@ import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
+import se.tink.backend.aggregation.agents.summary.refresh.RefreshStatus;
+import se.tink.backend.aggregation.agents.summary.refresh.RefreshSummary;
+import se.tink.backend.aggregation.agents.summary.refresh.RefreshableItemFetchingStatus;
 import se.tink.backend.aggregation.compliance.customer_restrictions.CustomerDataFetchingRestrictions;
 import se.tink.backend.aggregation.events.RefreshEvent;
 import se.tink.backend.aggregation.events.RefreshEventProducer;
@@ -109,42 +112,65 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
 
     @Override
     protected AgentWorkerCommandResult doExecute() throws Exception {
+        RefreshSummary refreshSummary = context.getRefreshSummary();
+        refreshSummary.initItemSummary(item);
+
         if (isNotAllowedToRefresh()) {
+            refreshSummary.updateItemSummary(item, RefreshableItemFetchingStatus.RESTRICTED);
             return AgentWorkerCommandResult.CONTINUE;
         }
 
         metrics.start(AgentWorkerOperationMetricType.EXECUTE_COMMAND);
+
         try {
             MetricAction action =
                     metrics.buildAction(
                             new MetricId.MetricLabels()
                                     .add("action", METRIC_ACTION)
                                     .add("type", item.name()));
-            try {
-                log.info("Refreshing item: {}", item.name());
 
+            try {
                 Agent agent = context.getAgent();
+
+                refreshSummary.updateStatus(RefreshStatus.FETCHING_STARTED);
                 boolean allItemsRefreshedSuccessfully = executeRefresh(agent);
-                markRefreshAsSuccessful(action, agent, allItemsRefreshedSuccessfully);
+
+                if (isAbleToRefreshItem(agent, item)) {
+                    if (allItemsRefreshedSuccessfully) {
+                        action.completed();
+                        refreshSummary.updateStatus(RefreshStatus.FETCHING_COMPLETED);
+                    } else {
+                        action.partiallyCompleted();
+                        refreshSummary.updateStatus(RefreshStatus.FETCHING_COMPLETED_PARTIALLY);
+                    }
+                }
+
             } catch (BankServiceException e) {
+                refreshSummary.updateStatus(RefreshStatus.INTERRUPTED_BY_BANK_SERVICE_EXCEPTION);
                 handleFailedRefreshDueToBankError(action, e);
                 return AgentWorkerCommandResult.ABORT;
+
             } catch (SessionException e) {
+                refreshSummary.updateStatus(RefreshStatus.INTERRUPTED_BY_SESSION_EXCEPTION);
                 handleFailedRefreshDueToSessionError(action, e);
                 return AgentWorkerCommandResult.ABORT;
+
             } catch (RuntimeException e) {
                 log.warn(
                         "Couldn't refresh RefreshableItem({}) because of RuntimeException.",
                         item,
                         e);
+                refreshSummary.updateStatus(RefreshStatus.INTERRUPTED_BY_RUNTIME_EXCEPTION);
                 handleFailedRefreshDueToTinkException(
                         action, e, AdditionalInfo.INTERNAL_SERVER_ERROR);
             } catch (Exception e) {
                 log.warn("Couldn't refresh RefreshableItem({}) because of exception.", item, e);
+                refreshSummary.updateStatus(RefreshStatus.INTERRUPTED_BY_EXCEPTION);
                 handleFailedRefreshDueToTinkException(action, e, AdditionalInfo.ERROR_INFO);
             }
         } finally {
             metrics.stop();
+            log.info("[REFRESH SUMMARY]\n{}", refreshSummary.toJson());
         }
 
         return AgentWorkerCommandResult.CONTINUE;
@@ -181,17 +207,6 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
             return true;
         } else {
             return RefreshExecutorUtils.executeSegregatedRefresher(agent, item, context);
-        }
-    }
-
-    private void markRefreshAsSuccessful(
-            MetricAction action, Agent agent, boolean allItemsRefreshedSuccessfully) {
-        if (isAbleToRefreshItem(agent, item)) {
-            if (allItemsRefreshedSuccessfully) {
-                action.completed();
-            } else {
-                action.partiallyCompleted();
-            }
         }
     }
 
