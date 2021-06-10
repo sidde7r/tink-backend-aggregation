@@ -1,0 +1,293 @@
+
+REQUEST 1
+GET https://obonline.nationwide.co.uk/open-banking/.well-known/openid-configuration
+x-fapi-financial-id: 0015800000jf8aKAAQ
+
+RESPONSE 1 SET STATE2
+200
+Date: Thu, 10 Jun 2021 19:56:08 GMT
+Date: Thu, 10 Jun 2021 19:56:08 GMT
+Content-Type: application/json
+x-fapi-financial-id: 0015800000jf8aKAAQ
+
+
+
+          {
+
+	"issuer": "https://obonline.nationwide.co.uk/open-banking/",
+
+	"authorization_endpoint": "https://obonline.nationwide.co.uk/open-banking/oauth/authorize",
+
+	"token_endpoint": "https://api.nationwide.co.uk/open-banking/oauth/token",
+
+	"jwks_uri": "https://keystore.openbanking.org.uk/0015800000jf8aKAAQ/0015800000jf8aKAAQ.jwks",
+
+	"registration_endpoint": "https://api.nationwide.co.uk/open-banking/register",
+
+	"scopes_supported": ["openid", "accounts", "payments", "fundsconfirmations"],
+
+	"claims_supported": ["openbanking_intent_id", "acr"],
+
+	"response_types_supported": ["code id_token"],
+
+	"grant_types_supported": ["authorization_code", "refresh_token", "client_credentials"],
+
+	"subject_types_supported": ["public"],
+
+	"acr_values_supported": ["urn:openbanking:psd2:sca","urn:openbanking:psd2:ca"],
+
+	"response_modes_supported": ["fragment"],
+
+	"id_token_signing_alg_values_supported": ["PS256"],
+
+	"token_endpoint_auth_signing_alg_values_supported": ["PS256"],
+
+	"token_endpoint_auth_methods_supported": ["tls_client_auth", "private_key_jwt"],
+
+	"request_parameter_supported": true,
+
+	"claims_parameter_supported": true,
+
+	"request_object_signing_alg_values_supported": ["PS256"],
+
+	"service_documentation": "https://www.nationwide.co.uk/developer",
+
+	"tls_client_certificate_bound_access_tokens": true
+
+}
+
+        
+
+
+REQUEST 2 MATCH STATE2
+POST https://api.nationwide.co.uk/open-banking/oauth/token
+Content-Type: application/x-www-form-urlencoded
+Accept: application/json
+x-fapi-financial-id: 0015800000jf8aKAAQ
+
+grant_type=client_credentials&scope=payments&redirect_uri=https%3A%2F%2Fapi.tink.se%2Fapi%2Fv1%2Fcredentials%2Fthird-party%2Fcallback&client_id=DUMMY_CLIENT_ID&client_assertion_type=urn%3Aietf%3Aparams%3Aoauth%3Aclient-assertion-type%3Ajwt-bearer&client_assertion=RkFLRV9TSUdOQVRVUkUK
+
+RESPONSE 2 SET STATE3
+200
+Date: Thu, 10 Jun 2021 19:56:08 GMT
+Date: Thu, 10 Jun 2021 19:56:09 GMT
+Content-Type: application/json;charset=utf-8
+
+{
+
+            "access_token" : "waehUE/x02+ChY2ma+cag1FMW51AlJKcQA4yDrVD1kpsWlQA33FmWGM5zIXmoP6ygq+pfZpGpigRjbVyk6RoQ1rTKM0zeDHKp4q1pEJYL4yWYIQxtjZVLdbZHob8awOk52sv3zciC0FoAWN8QxGZMq/ahkSoh4p4GieJzHXqZU3sj+oc/kTqZEt2Nx34bcDvhfd3ZYyInutgpes8wy3/AVyZsGTyx1g2knKSFXeJh9eYSdLbW0BU9hgcK3R/YEWWJWGBD49uihiCO8aGXCdXP0gtiKA18/2icMoGTWHoeQdIskXBWSU++Soa//+MOmUMKzCEhmnoO1VOuvNTrxsuSfOmWQn7GsLg/nE9t7p36uCbmJ7whoTE2WeW12Kiu0KYTjSaxtwvBlVR8qrmfb43GdRvtuEf3cjvkKoKKIL4whor4p5ZAvRlASpqUQOvUmHu7KRNBJF1Ipld0WpmrJCgeHiQg/C01Scb0o0jZyRHvFYUdxW+79qs0ZUDodza8Jpvq2kXK9PZyRrqjLIMSQqBfXtWzkQWZ6/RfS+1SdRngwfGBqqfED+qOtwXJZFHCV8PTJ2SxcXqsfxdvH1DVebRC8J3I0pnqq0Rmia9ektaZzNX02SFwqTIaar4w3+t+Lp4mJCnvKsWrQJQ7DBIuhUF2qFtbYAR+GysjO8yxh2KXJf/dRV0HQ6aJjuUtFK0l2NLin58ne9fvRnsHnYfGv277kW9vCamVDBltVAn5bRW52qWfuJ4Rdjq1FHuOvHZH6ySDSIpa9jpAcVgtFakJm1eY6Qfh+w7/VR1+IIhBeiRwSxmvqgNnBuZOraWFnSlnT24M4BHAcXbDG0/9prbqwTa2gK8pmqO1PVfK3WGRn5E/bnj3r6tS+qN7coARZePRxD0akugonJpweH9oCXjw9t0QPtfur3VBHz0Vf24UhGiug86uuMkMWxVQvrYt0h4ME8JEq4G33KPXHY+25DYaKSlwC4vsRNpMD1r2K+lVlirtI+USIqfl4FRo2F3FrFU4LyKDXKDXKlxz8m+oko4kUsJmWMzlypySlXjyrkI1ZQjcVfQ7cIzXlcQevuxDuBw1uSssrFJGQ96js7M6fLUmQIv+nueA5mkopUfMdgCipPRLGzUfZg+gap/H+Sqxjhs7sFTxxeFTDk1Br1EIPbj22zdLVSoUhFvCGWC1pCraxeoXZwY3ay2zISkCURu3TzqSzne8jSB5xlfc8UE/fUVIJoYgp4PuDWn/+a2rdpq9y8rnoUxLB1HJXgBSQ3AWVh/CSsVP4Gab/dk5GyfTBD7T1Ls7tRuKykfwu19x8doMLpgx28v8JBd9jtOamfJYB8eksEIY2wZaaSGRI1hWAs/kaDAKJzxHLRCL92kE0UKAoHQOQq9AN9ySJjZNX80ltgAHHT5NYG57rk0+NrROw+akvsWNzzGvVgiD4+f64boEazf1Qi+4xcQc7Fg25PaLLRQTGjTifEqjKGZipyTGOcrYrD6VrzRdEsOBbHI+68BRqmDWLO6go2UEJcJ6O28wr0loxTFNcLo9CWEwbqgBTw7gfyWFtMmkQ+DVYpkk3FvEWTZyu4x9Rq8R1Z9KN/+xbgOyFd3/2ayAC4GIiIASsa90llJOViACCTTJquK3Eze5NadL2gXQadupfLpQ3cnStyDFXl0Hw3n+xKcuO8bL3xQal06JGoIsSHzDpGtaYJxrTUlE0TlJe4W9n2Y00gAT4QLRmn7Qhq+SzQslM9JTh2HO75yLNib/GegnwpKKGcl1Q==",
+
+            "token_type" : "Bearer",
+
+            "expires_in" : 3599,
+
+            "scope" : "payments"
+
+            }
+
+REQUEST 3 MATCH STATE3
+POST https://api.nationwide.co.uk/open-banking/v3.1/pisp/domestic-payment-consents
+Accept: application/json
+Content-Type: application/json; charset=UTF-8
+x-fapi-financial-id: 0015800000jf8aKAAQ
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+{
+    "Data": {
+        "Initiation": {
+            "CreditorAccount": {
+                "Identification": "12345612345678",
+                "Name": "Amnesty",
+                "SchemeName": "UK.OBIE.SortCodeAccountNumber"
+            }, 
+            "EndToEndIdentification": "c6aef91a03e44b34b355422d142fa3f",
+            "InstructedAmount": {
+                "Amount": "10.00",
+                "Currency": "GBP"
+            }, 
+            "InstructionIdentification": "c6aef91a03e44b34b355422d142fa3ff",
+            "RemittanceInformation": {
+                "Reference": "Donation"
+            }
+        }
+    }, 
+    "Risk": {
+        "PaymentContextCode": "Other"
+    }
+}
+
+RESPONSE 3 SET STATE4
+201
+Date: Thu, 10 Jun 2021 19:56:09 GMT
+Date: Thu, 10 Jun 2021 19:56:10 GMT
+Content-Type: application/json;charset=utf-8
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+{
+    "Data": {
+        "ConsentId": "DIP_1_6_e6ec7930-ca25-11eb-bc06-a30904bad74e", 
+        "CreationDateTime": "2021-06-10T19:56:10.179Z", 
+        "Initiation": {
+            "CreditorAccount": {
+                "Identification": "12345612345678",
+                "Name": "Amnesty",
+                "SchemeName": "UK.OBIE.SortCodeAccountNumber"
+            }, 
+            "EndToEndIdentification": "c6aef91a03e44b34b355422d142fa3f",
+            "InstructedAmount": {
+                "Amount": "10.00",
+                "Currency": "GBP"
+            }, 
+            "InstructionIdentification": "c6aef91a03e44b34b355422d142fa3ff",
+            "RemittanceInformation": {
+                "Reference": "Donation"
+            }
+        }, 
+        "Status": "AwaitingAuthorisation", 
+        "StatusUpdateDateTime": "2021-06-10T19:56:10.179Z"
+    }, 
+    "Links": {
+        "Self": "https://api.nationwide.co.uk/open-banking/v3.1/pisp/domestic-payment-consents"
+    }, 
+    "Meta": {}, 
+    "Risk": {
+        "PaymentContextCode": "Other"
+    }
+}
+
+
+REQUEST 4 MATCH STATE4
+POST https://api.nationwide.co.uk/open-banking/oauth/token
+Content-Type: application/x-www-form-urlencoded
+Accept: application/json
+x-fapi-financial-id: 0015800000jf8aKAAQ
+
+grant_type=authorization_code&redirect_uri=https%3A%2F%2Fapi.tink.se%2Fapi%2Fv1%2Fcredentials%2Fthird-party%2Fcallback&client_id=DUMMY_CLIENT_ID&client_assertion_type=urn%3Aietf%3Aparams%3Aoauth%3Aclient-assertion-type%3Ajwt-bearer&client_assertion=RkFLRV9TSUdOQVRVUkUK
+
+RESPONSE 4 SET STATE5
+200
+Date: Thu, 10 Jun 2021 19:56:32 GMT
+Date: Thu, 10 Jun 2021 19:56:32 GMT
+Content-Type: application/json;charset=utf-8
+
+{
+
+            "access_token" : "7YQ0jlBLbN7wF55JWH7bpu5xulo9",
+
+            "token_type" : "Bearer",
+
+            "expires_in" : 86399,
+
+            "scope" : "openid payments",
+
+            "id_token" : "eyJraWQiOiJmbFpROFZjZ2FIaWkweExfaTN4Uk5HeUlKbm8iLCJ0eXAiOiJKV1QiLCJhbGciOiJ**MASKEDhN**J9.eyJhdF9oYXNoIjoiUFQzeWx2N3Q5Z0w0b1BKRjJHdVJpQSIsInN1YiI6IkRJUF8xXzZfZTZlYzc5MzAtY2EyNS0xMWViLWJjMDYtYTMwOTA0YmFkNzRlIiwiYXVkIjoi**MASKEDku**YiLCJhY3IiOiJ1cm46b3BlbmJhbmtpbmc6cHNkMjpzY2EiLCJvcGVuYmFua2luZ19pbnRlbnRfaWQiOiJESVBfMV82X2U2ZWM3OTMwLWNhMjUtMTFlYi1iYzA2LWEzMDkwNGJhZDc0ZSIsImlzcyI6Imh0dHBzOlwvXC9vYm9ubGluZS5uYXRpb253aWRlLmNvLnVrXC9vcGVuLWJhbmtpbmdcLyIsImV4cCI6MTYyMzM1Njc5MiwiaWF0IjoxNjIzMzU0OTkyLCJub25jZSI6IjJmNzhlNmU1MGFlMDU3ODgifQ.EbEIPBo7ftvNign8DEdEuUC0FePKBG-1dIE2QfLNwgLcq6_q2plI2_gLVsg_2HyJX5byJOm5RrZnFNYTq9HnlTmnW8Y75KJAljQpsdVsKaf78mIwrkigGtD82q0Op-sBUtgkgE30WRT1jhAE3KXyOiKookzEeV-0e4jhigC31P5QoaW8GZuLPR_eoQ5kXLCGwe-qZ0B-DNUbye4PvvvhTX8rsCXBAnp0gESlgJTVGWNVP_bgmKnky1o2L00nNxjd-Hl3GGEfTAwrqW1xWp8EeQOgjBHyah1NWeb9lf2F4vfRGAVzyvsTwwcQpA94oLvjNhtuKS8VrXAAw7XN_Iy2mg"
+
+            }
+
+REQUEST 5 MATCH STATE5
+GET https://keystore.openbanking.org.uk/0015800000jf8aKAAQ/0015800000jf8aKAAQ.jwks
+x-fapi-financial-id: 0015800000jf8aKAAQ
+
+RESPONSE 5 SET STATE6
+200
+Date: Thu, 10 Jun 2021 19:56:31 GMT
+Date: Thu, 10 Jun 2021 19:56:32 GMT
+Content-Type: application/jwk+json
+
+{ "keys" : []}
+
+REQUEST 6 MATCH STATE6
+GET https://api.nationwide.co.uk/open-banking/v3.1/pisp/domestic-payment-consents/DIP_1_6_e6ec7930-ca25-11eb-bc06-a30904bad74e/funds-confirmation
+Accept: application/json
+x-fapi-financial-id: 0015800000jf8aKAAQ
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+RESPONSE 6 SET STATE7
+200
+Date: Thu, 10 Jun 2021 19:56:33 GMT
+Date: Thu, 10 Jun 2021 19:56:34 GMT
+Content-Type: application/json;charset=utf-8
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+{
+    "Data": {
+        "FundsAvailableResult": {
+            "FundsAvailable": true, 
+            "FundsAvailableDateTime": "2021-06-10T19:56:34.165Z"
+        }, 
+        "SupplementaryData": {}
+    }, 
+    "Links": {
+        "Self": "https://api.nationwide.co.uk/open-banking/v3.1/pisp/domestic-payment-consents/DIP_1_6_e6ec7930-ca25-11eb-bc06-a30904bad74e/funds-confirmation"
+    }, 
+    "Meta": {}
+}
+
+REQUEST 7 MATCH STATE7
+POST https://api.nationwide.co.uk/open-banking/v3.1/pisp/domestic-payments
+Accept: application/json
+Content-Type: application/json; charset=UTF-8
+x-fapi-financial-id: 0015800000jf8aKAAQ
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+{
+    "Data": {
+        "ConsentId": "DIP_1_6_e6ec7930-ca25-11eb-bc06-a30904bad74e", 
+        "Initiation": {
+            "CreditorAccount": {
+                "Identification": "12345612345678",
+                "Name": "Amnesty",
+                "SchemeName": "UK.OBIE.SortCodeAccountNumber"
+            }, 
+            "EndToEndIdentification": "c6aef91a03e44b34b355422d142fa3f",
+            "InstructedAmount": {
+                "Amount": "10.00",
+                "Currency": "GBP"
+            }, 
+            "InstructionIdentification": "c6aef91a03e44b34b355422d142fa3ff",
+            "RemittanceInformation": {
+                "Reference": "Donation"
+            }
+        }
+    }, 
+    "Risk": {
+        "PaymentContextCode": "Other"
+    }
+}
+
+RESPONSE 7 SET STATE8
+201
+Date: Thu, 10 Jun 2021 19:56:34 GMT
+Date: Thu, 10 Jun 2021 19:56:35 GMT
+Content-Type: application/json;charset=utf-8
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+{
+    "Data": {
+        "ConsentId": "DIP_1_6_e6ec7930-ca25-11eb-bc06-a30904bad74e", 
+        "CreationDateTime": "2021-06-10T19:56:34.779Z", 
+        "DomesticPaymentId": "ba3b4d19-eb76-5bf0-8be0-87501452ab41", 
+        "Initiation": {
+            "CreditorAccount": {
+                "Identification": "12345612345678",
+                "Name": "Amnesty",
+                "SchemeName": "UK.OBIE.SortCodeAccountNumber"
+            }, 
+            "EndToEndIdentification": "c6aef91a03e44b34b355422d142fa3f",
+            "InstructedAmount": {
+                "Amount": "10.00",
+                "Currency": "GBP"
+            }, 
+            "InstructionIdentification": "c6aef91a03e44b34b355422d142fa3ff",
+            "RemittanceInformation": {
+                "Reference": "Donation"
+            }
+        }, 
+        "Status": "Pending", 
+        "StatusUpdateDateTime": "2021-06-10T19:56:34.779Z"
+    }, 
+    "Links": {
+        "Self": "https://api.nationwide.co.uk/open-banking/v3.1/pisp/domestic-payments"
+    }, 
+    "Meta": {}
+}
