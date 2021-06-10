@@ -1,9 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.authenticator;
 
 import java.util.List;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.ArgentaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.ArgentaConstants.CredentialKeys;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.ArgentaConstants.StorageKeys;
@@ -13,8 +15,11 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.libraries.i18n.LocalizableKey;
 
 public class ArgentaAuthenticator implements OAuth2Authenticator {
+
+    private static final Pattern IBAN_PATTERN = Pattern.compile("BE[0-9]{14}");
 
     private final Credentials credentials;
     private final ArgentaApiClient apiClient;
@@ -35,6 +40,7 @@ public class ArgentaAuthenticator implements OAuth2Authenticator {
                 Stream.of(credentials.getField(CredentialKeys.IBAN).split(","))
                         .map(String::trim)
                         .map(IbanEntity::new)
+                        .filter(this::verifyIban)
                         .collect(Collectors.toList());
 
         ConsentResponse consentResponse = apiClient.getConsent(ibans);
@@ -56,5 +62,14 @@ public class ArgentaAuthenticator implements OAuth2Authenticator {
     @Override
     public void useAccessToken(OAuth2Token accessToken) {
         persistentStorage.put(StorageKeys.OAUTH_TOKEN, accessToken);
+    }
+
+    private boolean verifyIban(IbanEntity ibanEntity) {
+        if (!IBAN_PATTERN.matcher(ibanEntity.getIban()).matches()) {
+            throw LoginError.INCORRECT_CREDENTIALS.exception(
+                    new LocalizableKey(
+                            "Please enter a correct IBAN. It must start with ‘BE’ in capital letters."));
+        }
+        return true;
     }
 }
