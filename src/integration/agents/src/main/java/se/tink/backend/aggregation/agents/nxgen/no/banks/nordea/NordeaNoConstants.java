@@ -56,7 +56,7 @@ public class NordeaNoConstants {
         public static final String METHOD_ID = "bankidm_no";
         public static final String LANG = "en";
         public static final String RESPONSE_TYPE = "code";
-        public static final String AV = "3.13.2.1092";
+        public static final String AV = "3.20.0";
         public static final String DM = "iPhone9,3";
         public static final String EC = "0";
         public static final String SCOPE = "openid ndf agreement offline_access";
@@ -87,8 +87,8 @@ public class NordeaNoConstants {
     public static class HeaderValues {
         public static final String NORDEA_PRIVATE_HOST = "private.nordea.no";
         public static final String BR_GZIP_ENCODING = "br, gzip, deflate";
-        public static final String APP_VERSION = "3.13.2.1092 -> 1.16.3";
-        public static final String APP_VERSION_SHORT = "3.13.2.1092";
+        public static final String APP_VERSION = "3.20.0";
+        public static final String APP_VERSION_SHORT = "3.20.0";
         public static final String DEVICE_MODEL = "iPhone9,3";
         public static final String DEVICE_EC = "0";
         public static final String PLATFORM_TYPE = "iOS";

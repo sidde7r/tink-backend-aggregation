@@ -3,7 +3,7 @@ POST https://identify.nordea.com/api/dbf/ca/bankidno-v1/authentications
 x-device-ec: 0
 Content-Type: application/json
 x-platform-type: iOS
-x-app-version: 3.13.2.1092 -> 1.16.3
+x-app-version: 3.20.0
 x-device-model: iPhone9,3
 
 {"client_id":"bQwEsS8eczQFjqqF2ocl","code_challenge":"Fv2688auEbi41amQx632hFOuqeksultlC336EpO_3WY","code_challenge_method":"S256","redirect_uri":"com.nordea.mobilebank.no://auth-callback","response_type":"code","scope":"openid ndf agreement offline_access","state":"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=","nonce":"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=","acr_values":null,"signing_order_id":null,"amr":"bankidm_no"}
@@ -37,7 +37,7 @@ x-app-language: en_NO
 x-platform-version: 12.4.0
 x-app-segment: household
 x-platform-type: iOS
-x-app-version: 3.13.2.1092
+x-app-version: 3.20.0
 x-device-model: iPhone9,3
 x-app-country: NO
 
@@ -71,7 +71,7 @@ Accept-Encoding: br, gzip, deflate
 x-app-segment: household
 x-platform-type: iOS
 Content-Type: application/json
-x-app-version: 3.13.2.1092
+x-app-version: 3.20.0
 Connection: keep-alive
 x-device-model: iPhone9,3
 x-app-country: NO
@@ -102,7 +102,7 @@ x-app-language: en_NO
 x-platform-version: 12.4.0
 x-app-segment: household
 x-platform-type: iOS
-x-app-version: 3.13.2.1092
+x-app-version: 3.20.0
 Connection: keep-alive
 x-device-model: iPhone9,3
 x-app-country: NO
@@ -135,7 +135,7 @@ x-app-language: en_NO
 x-platform-version: 12.4.0
 x-app-segment: household
 x-platform-type: iOS
-x-app-version: 3.13.2.1092
+x-app-version: 3.20.0
 Connection: keep-alive
 x-device-model: iPhone9,3
 x-app-country: NO
@@ -168,7 +168,7 @@ x-app-language: en_NO
 x-platform-version: 12.4.0
 x-app-segment: household
 x-platform-type: iOS
-x-app-version: 3.13.2.1092
+x-app-version: 3.20.0
 Connection: keep-alive
 x-device-model: iPhone9,3
 x-app-country: NO
@@ -201,7 +201,7 @@ x-app-language: en_NO
 x-platform-version: 12.4.0
 x-app-segment: household
 x-platform-type: iOS
-x-app-version: 3.13.2.1092
+x-app-version: 3.20.0
 Connection: keep-alive
 x-device-model: iPhone9,3
 x-app-country: NO
