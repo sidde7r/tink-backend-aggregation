@@ -67,8 +67,6 @@ agents:
       nordeaEncryptionPublicKey: "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA3AGZUQ50rhOZtKVi916QuG5FPzAk2Ku/e0/CH3hqDaffPzZw5yRtAS0GDKINuUs/cN1vuNyvMyM2zERNp+DMexc6UQ5yas3+OEBC5SjwITFoxQPqc2WuqcyNO6dmtVzpbNVDYrMbEwlUSNlBL9QiDdk1wtrTFniQK2vKCBsHbK1ouvyxCDoK0hr3IjRkkJBPguP20WnOjztLlxCq22pXREp/Zh5ySkDzGcd2o2lcSxZyjEUWZEQkhyHpc8VWfNRHzq6Qy7EJ5o0HTaHF78GPoouqI9Beq8/DsOwz+jOkiW7YZTH/HLoNCDgzxGYGYsOSD2jWzlLW6J2h7s8WST6dDQIDAQAB"
       keyId: "tink-nordea-encrypt"
 
-  proxyUri: http://10.88.12.185:8080
-
   proxyUris: [
     "http://http-proxy-0.internal.production.aggregation.tink.network:8080",
     "http://http-proxy-1.internal.production.aggregation.tink.network:8080",

@@ -17,8 +17,6 @@ public class IntegrationsConfiguration {
 
     private Map<String, Object> integrations = new HashMap<>();
 
-    @JsonProperty private String proxyUri;
-
     @JsonProperty private ImmutableList<String> proxyUris;
 
     public Optional<Object> getIntegration(String integrationName) {
@@ -36,10 +34,6 @@ public class IntegrationsConfiguration {
     @JsonAnySetter
     private void addIntegration(String integrationName, Object integration) {
         integrations.put(integrationName, integration);
-    }
-
-    public String getProxyUri() {
-        return proxyUri;
     }
 
     public ImmutableList<String> getProxyUris() {
