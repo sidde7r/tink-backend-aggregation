@@ -28,6 +28,7 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.agents.AgentEventListener;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
+import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.models.AccountFeatures;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.models.TransactionTypes;
@@ -431,7 +432,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         if (!request.getUserAvailability().isUserAvailableForInteraction()) {
             logger.error(
                     "Supplemental Information requested when user is not available for interaction. SesionHandler and/or AuthenticationController needs to be fixed.");
-            throw new IllegalStateException(
+            throw SessionError.SESSION_EXPIRED.exception(
                     "Cannot start SCA when user is not available for interaction!");
         }
 
