@@ -1,13 +1,18 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.barclays.mock;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 import org.junit.Test;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesJsonFileParser;
 import se.tink.backend.aggregation.agents.framework.assertions.entities.AgentContractEntity;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.AgentWireMockPaymentTest;
+import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.command.PaymentCommand;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.command.PaymentGBCommand;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockrefresh.AgentWireMockRefreshTest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.PartyDataStorage;
@@ -17,12 +22,15 @@ import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationReade
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.enums.AccountIdentifierType;
+import se.tink.libraries.account.identifiers.SortCodeIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.enums.MarketCode;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
+import se.tink.libraries.transfer.enums.RemittanceInformationType;
+import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 public class BarclaysAgentWireMockTest {
 
@@ -170,6 +178,34 @@ public class BarclaysAgentWireMockTest {
         agentWireMockPaymentTest.executePayment();
     }
 
+    @Test
+    public void testFailedPayment() throws Exception {
+        // given
+        final String wireMockFilePath = "data/agents/uk/barclays/payment_failed.aap";
+
+        final AgentsServiceConfiguration configuration =
+                AgentsServiceConfigurationReader.read(CONFIGURATION_PATH);
+
+        final AgentWireMockPaymentTest agentWireMockPaymentTest =
+                AgentWireMockPaymentTest.builder(
+                                MarketCode.UK, "uk-barclays-oauth2", wireMockFilePath)
+                        .withConfigurationFile(configuration)
+                        .addCallbackData("code", "DUMMY_AUTH_CODE")
+                        .addCallbackData("error", "server_error")
+                        .addCallbackData("error_description", "server_error_processing")
+                        .withPayment(createUkCustomerDomesticPayment())
+                        .buildWithoutLogin(PaymentCommand.class);
+
+        // when / then (execution and assertion currently done in the same step)
+        final Throwable thrown = catchThrowable(agentWireMockPaymentTest::executePayment);
+
+        // then
+        assertThat(thrown)
+                .isExactlyInstanceOf(BankServiceException.class)
+                .hasNoCause()
+                .hasMessage("server_error_processing");
+    }
+
     private Payment createMockedDomesticPayment() {
         ExactCurrencyAmount amount = ExactCurrencyAmount.of("1.00", "GBP");
         LocalDate executionDate = LocalDate.now();
@@ -191,6 +227,21 @@ public class BarclaysAgentWireMockTest {
                         RemittanceInformationUtils.generateUnstructuredRemittanceInformation(
                                 "UK Demo"))
                 .withUniqueId("b900555d03124056b54930e1c53c9cac")
+                .build();
+    }
+
+    private Payment createUkCustomerDomesticPayment() {
+        ExactCurrencyAmount amount = ExactCurrencyAmount.of("15.88", "GBP");
+        RemittanceInformation reference = new RemittanceInformation();
+        reference.setType(RemittanceInformationType.REFERENCE);
+        reference.setValue("41821e8eb7d95a48be");
+        String currency = "GBP";
+        return new Payment.Builder()
+                .withCreditor(new Creditor(new SortCodeIdentifier("12345612345678"), "PayOp"))
+                .withExactCurrencyAmount(amount)
+                .withCurrency(currency)
+                .withRemittanceInformation(reference)
+                .withUniqueId("979b860cfca14467951e08941138e945")
                 .build();
     }
 }
