@@ -16,6 +16,8 @@ public class EidasProxySignerHealthCheck implements HealthCheck {
 
     private static final Logger logger = LoggerFactory.getLogger(EidasProxySignerHealthCheck.class);
     private static final String HEALTHCHECK_DEFAULT_VALUE = "healthcheck";
+    private static final String HEALTHCHECK_DEFAULT_CERTID = "DEFAULT";
+    private static final String HEALTHCHECK_DEFAULT_PROVIDERID = "se-provider-ob";
 
     private final EidasProxyConfiguration eidasProxyConfiguration;
 
@@ -41,8 +43,8 @@ public class EidasProxySignerHealthCheck implements HealthCheck {
                             new EidasIdentity(
                                     HEALTHCHECK_DEFAULT_VALUE,
                                     HEALTHCHECK_DEFAULT_VALUE,
-                                    HEALTHCHECK_DEFAULT_VALUE,
-                                    HEALTHCHECK_DEFAULT_VALUE,
+                                    HEALTHCHECK_DEFAULT_CERTID,
+                                    HEALTHCHECK_DEFAULT_PROVIDERID,
                                     HEALTHCHECK_DEFAULT_VALUE));
             signer.getSignatureBase64(
                     Base64.getEncoder().encode(HEALTHCHECK_DEFAULT_VALUE.getBytes()));
