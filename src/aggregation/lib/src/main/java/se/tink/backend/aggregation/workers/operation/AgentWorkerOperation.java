@@ -96,7 +96,7 @@ public class AgentWorkerOperation implements Runnable {
     }
 
     private void executeAllCommands() {
-        log.info(
+        log.debug(
                 "[AGENT WORKER OPERATION] Starting with command execution for operation '{}'",
                 operationMetricName);
 
@@ -105,9 +105,9 @@ public class AgentWorkerOperation implements Runnable {
 
         for (AgentWorkerCommand command : commands) {
             try {
-                log.info(
+                log.debug(
                         "[AGENT WORKER OPERATION] Executing command '{}' for operation '{}'",
-                        command,
+                        command.getClass().getCanonicalName(),
                         operationMetricName);
 
                 List<Context> contexts =
@@ -119,25 +119,25 @@ public class AgentWorkerOperation implements Runnable {
                 stopCommandContexts(contexts);
 
                 if (commandResult == AgentWorkerCommandResult.ABORT) {
-                    log.info(
+                    log.debug(
                             "[AGENT WORKER OPERATION] Got ABORT from command '{}' for operation '{}'",
-                            command,
+                            command.getClass().getCanonicalName(),
                             operationMetricName);
                     break;
                 }
 
                 if (commandResult == AgentWorkerCommandResult.REJECT) {
-                    log.info(
+                    log.debug(
                             "[AGENT WORKER OPERATION] Got REJECT from command '{}' for operation '{}'",
-                            command,
+                            command.getClass().getCanonicalName(),
                             operationMetricName);
                     break;
                 }
 
                 if (Thread.interrupted()) {
-                    log.info(
+                    log.debug(
                             "[AGENT WORKER OPERATION] Thread was interrupted when executing '{}' for operation '{}'. Aborting.",
-                            command,
+                            command.getClass().getCanonicalName(),
                             operationMetricName);
                     break;
                 }
@@ -145,7 +145,7 @@ public class AgentWorkerOperation implements Runnable {
             } catch (Exception e) {
                 log.error(
                         "[AGENT WORKER OPERATION] Caught exception while executing command '{}' for operation '{}'",
-                        command,
+                        command.getClass().getCanonicalName(),
                         operationMetricName,
                         e);
 
@@ -165,19 +165,19 @@ public class AgentWorkerOperation implements Runnable {
         // Handle the status of the last executed command.
 
         if (commandResult == AgentWorkerCommandResult.CONTINUE) {
-            log.info(
+            log.debug(
                     "[AGENT WORKER OPERATION] Done with command execution for operation '{}'",
                     operationMetricName);
         }
 
         if (commandResult == AgentWorkerCommandResult.ABORT) {
-            log.info(
+            log.debug(
                     "[AGENT WORKER OPERATION] Aborted command execution for operation '{}'",
                     operationMetricName);
         }
 
         if (commandResult == AgentWorkerCommandResult.REJECT) {
-            log.info(
+            log.debug(
                     "[AGENT WORKER OPERATION] Rejected command execution for operation '{}'",
                     operationMetricName);
             // At the time of writing this comment, it can only occur if we fail to acquire lock
@@ -193,7 +193,7 @@ public class AgentWorkerOperation implements Runnable {
             try {
                 log.debug(
                         "[AGENT WORKER OPERATION] Starting post processing of command '{}' for operation '{}'",
-                        command,
+                        command.getClass().getCanonicalName(),
                         operationMetricName);
 
                 List<Context> contexts =
@@ -207,7 +207,7 @@ public class AgentWorkerOperation implements Runnable {
             } catch (Exception e) {
                 log.error(
                         "[AGENT WORKER OPERATION] Caught exception while finalizing command '{}' for operation '{}'",
-                        command,
+                        command.getClass().getCanonicalName(),
                         operationMetricName,
                         e);
             }
