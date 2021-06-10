@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Strings;
 import java.time.Instant;
-import java.util.Base64;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -47,9 +46,6 @@ public class NordeaNemIdAuthenticatorV2
     private static final String NEM_ID_SCRIPT_FORMAT =
             "<script type=\"text/x-nemid\" id=\"nemid_parameters\">%s</script>";
 
-    private static final String STATIC_SALT = "phi6aejui9EiMi2je(a8";
-    private static final Base64.Encoder ENCODER = Base64.getEncoder();
-
     private final NordeaDkApiClient bankClient;
     private final NemIdIFrameController iFrameController;
 
@@ -81,21 +77,6 @@ public class NordeaNemIdAuthenticatorV2
                 || Strings.isNullOrEmpty(credentials.getField(Field.Key.USERNAME))) {
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
-
-        // There are a lot of invalid_credentials thrown.
-        // Users often finally manages to provide correct credentials in 2nd or 3rd time.
-        // We want to investigate if users has problems with providing username or password.
-        // To achieve that - this logging will be helpful. We will check the hashes from
-        // unsuccessful and successful authentications for the same credentialsId and check
-        // whether username hash or credentials hash changed.
-        log.info(
-                "[Nordea NemId] Hashes: {}, {}",
-                ENCODER.encodeToString(
-                                Hash.sha512(credentials.getField(Field.Key.USERNAME) + STATIC_SALT))
-                        .substring(0, 6),
-                ENCODER.encodeToString(
-                                Hash.sha512(credentials.getField(Field.Key.PASSWORD) + STATIC_SALT))
-                        .substring(0, 6));
 
         String token = iFrameController.logInWithCredentials(credentials);
         final String code = exchangeNemIdToken(token);
