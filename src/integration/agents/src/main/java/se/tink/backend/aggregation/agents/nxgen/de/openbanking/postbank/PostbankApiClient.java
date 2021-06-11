@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenti
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenticator.rpc.StartAuthorisationRequest;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenticator.rpc.UpdateAuthorisationRequest;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.utils.PostbankCryptoUtils;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.crypto.JwtGenerator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.Urls;
@@ -25,6 +25,8 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 @Slf4j
 public class PostbankApiClient extends DeutscheBankApiClient {
+    private JwtGenerator jwtGenerator;
+
     public PostbankApiClient(
             TinkHttpClient client,
             PersistentStorage persistentStorage,
@@ -32,6 +34,10 @@ public class PostbankApiClient extends DeutscheBankApiClient {
             DeutscheMarketConfiguration marketConfiguration,
             RandomValueGenerator randomValueGenerator) {
         super(client, persistentStorage, headerValues, marketConfiguration, randomValueGenerator);
+    }
+
+    public void enrichWithJwtGenerator(JwtGenerator jwtGenerator) {
+        this.jwtGenerator = jwtGenerator;
     }
 
     public ConsentResponse getConsents(String psuId) {
@@ -51,10 +57,8 @@ public class PostbankApiClient extends DeutscheBankApiClient {
     }
 
     public AuthorisationResponse startAuthorisation(URL url, String psuId, String password) {
-        PostbankCryptoUtils encryptedPassword = new PostbankCryptoUtils();
-
         StartAuthorisationRequest startAuthorisationRequest =
-                new StartAuthorisationRequest(new PsuData(encryptedPassword.createJWT(password)));
+                new StartAuthorisationRequest(new PsuData(jwtGenerator.createJWT(password)));
 
         try {
             AuthorisationResponse authorisationResponse =

@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class LinksEntity {
 
     private Href startAuthorisationWithPsuAuthentication;
+    private Href startAuthorisationWithEncryptedPsuAuthentication;
     private Href scaOAuth;
     private Href scaRedirect;
     private Href self;

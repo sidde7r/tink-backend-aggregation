@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.utils;
+package se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.crypto;
 
 import com.nimbusds.jose.EncryptionMethod;
 import com.nimbusds.jose.JOSEException;
@@ -16,7 +16,7 @@ import java.util.Arrays;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.PostbankConstants;
 import se.tink.backend.aggregation.agents.utils.crypto.parser.Pem;
 
-public class PostbankCryptoUtils {
+public class PostbankJwtGenerator implements JwtGenerator {
 
     public String createJWT(String password) {
 
