@@ -6,6 +6,8 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.authenticator.steps.await_user_confirmation.N26AwaitUserConfirmationStep;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.error.ErrorFactory;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.error.N26BankSiteErrorDiscoverer;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentResponse;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentAuthenticationProcessStepIdentifier;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.request.AgentProceedNextStepAuthenticationRequest;
@@ -20,6 +22,7 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AgentBan
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AuthorizationError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.http.AuthenticationPersistedDataCookieStoreAccessorFactory;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.http.ExternalApiCallResult;
+import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -43,36 +46,47 @@ public class N26FetchConsentStep
 
         String accessToken = optionalAccessToken.get();
 
-        ExternalApiCallResult<ConsentResponse> callResult =
-                prepareAndExecuteApiCall(authenticationProcessRequest, accessToken);
+        try {
+            ExternalApiCallResult<ConsentResponse> callResult =
+                    prepareAndExecuteApiCall(authenticationProcessRequest, accessToken);
 
-        Optional<AgentBankApiError> optionalBankError = callResult.getAgentBankApiError();
-        if (optionalBankError.isPresent()) {
-            log.error("Could not fetch consent");
-            return new AgentFailedAuthenticationResult(
-                    optionalBankError.get(),
-                    authenticationProcessRequest.getAuthenticationPersistedData());
+            Optional<AgentBankApiError> optionalBankError = callResult.getAgentBankApiError();
+            if (optionalBankError.isPresent()) {
+                log.error("Could not fetch consent");
+                return new AgentFailedAuthenticationResult(
+                        optionalBankError.get(),
+                        authenticationProcessRequest.getAuthenticationPersistedData());
+            }
+
+            Optional<ConsentResponse> optionalConsentResponse = callResult.getResponse();
+
+            if (!optionalConsentResponse.isPresent()) {
+                log.error("Could not find consent response");
+                return new AgentFailedAuthenticationResult(
+                        new AuthorizationError(),
+                        authenticationProcessRequest.getAuthenticationPersistedData());
+            }
+
+            String consentId = optionalConsentResponse.get().getConsentId();
+
+            N26ConsentPersistentData consentPersistentData =
+                    new N26ConsentPersistentData(consentId);
+            N26ConsentAccessor n26ConsentAccessor =
+                    getN26ConsentAccessor(authenticationProcessRequest);
+
+            return new AgentProceedNextStepAuthenticationResult(
+                    AgentAuthenticationProcessStepIdentifier.of(
+                            N26AwaitUserConfirmationStep.class.getSimpleName()),
+                    authenticationProcessRequest.getAuthenticationProcessState(),
+                    n26ConsentAccessor.storeN26ConsentPersistentData(consentPersistentData));
+        } catch (HttpClientException ex) {
+            if (new N26BankSiteErrorDiscoverer().isBankSiteError(ex)) {
+                return new AgentFailedAuthenticationResult(
+                        ErrorFactory.createServerTemporaryUnavailableError(ex.getMessage()),
+                        authenticationProcessRequest.getAuthenticationPersistedData());
+            }
+            throw ex;
         }
-
-        Optional<ConsentResponse> optionalConsentResponse = callResult.getResponse();
-
-        if (!optionalConsentResponse.isPresent()) {
-            log.error("Could not find consent response");
-            return new AgentFailedAuthenticationResult(
-                    new AuthorizationError(),
-                    authenticationProcessRequest.getAuthenticationPersistedData());
-        }
-
-        String consentId = optionalConsentResponse.get().getConsentId();
-
-        N26ConsentPersistentData consentPersistentData = new N26ConsentPersistentData(consentId);
-        N26ConsentAccessor n26ConsentAccessor = getN26ConsentAccessor(authenticationProcessRequest);
-
-        return new AgentProceedNextStepAuthenticationResult(
-                AgentAuthenticationProcessStepIdentifier.of(
-                        N26AwaitUserConfirmationStep.class.getSimpleName()),
-                authenticationProcessRequest.getAuthenticationProcessState(),
-                n26ConsentAccessor.storeN26ConsentPersistentData(consentPersistentData));
     }
 
     private N26ConsentAccessor getN26ConsentAccessor(

@@ -1,13 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.error;
 
-import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.request.AgentAuthenticationRequest;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentFailedAuthenticationResult;
-import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AgentError;
-import se.tink.backend.aggregation.agentsplatform.agentsframework.error.ServerTemporaryUnavailableError;
-import se.tink.backend.aggregation.agentsplatform.framework.error.Error;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 
 @RequiredArgsConstructor
@@ -21,11 +17,7 @@ public abstract class AuthenticationStepBankSiteErrorHandler<T extends AgentAuth
         } catch (HttpClientException ex) {
             if (errorDiscoverer.isBankSiteError(ex)) {
                 return new AgentFailedAuthenticationResult(
-                        new ServerTemporaryUnavailableError(
-                                new Error(
-                                        UUID.randomUUID().toString(),
-                                        ex.getMessage(),
-                                        AgentError.HTTP_RESPONSE_ERROR.getCode())),
+                        ErrorFactory.createServerTemporaryUnavailableError(ex.getMessage()),
                         authenticationProcessRequest.getAuthenticationPersistedData());
             }
             throw ex;
