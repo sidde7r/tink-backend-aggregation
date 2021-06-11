@@ -144,7 +144,6 @@ public final class BecConstants {
                     .put("stjernekonto", AccountTypes.CHECKING)
                     .put("coop konto", AccountTypes.OTHER)
                     .put("ung konto", AccountTypes.CHECKING)
-                    .put("konto", AccountTypes.CHECKING)
                     .put("18-27 konto", AccountTypes.CHECKING)
                     .put("lønkonto", AccountTypes.CHECKING)
                     .put("al-flex-start", AccountTypes.SAVINGS)
@@ -228,6 +227,7 @@ public final class BecConstants {
                     .put("spar nord platin 1000", AccountTypes.CREDIT_CARD)
                     .put("spar nord prioritet", AccountTypes.CREDIT_CARD)
                     .put("stjerne invest fri", AccountTypes.INVESTMENT)
+                    .put("konto", AccountTypes.CHECKING)
                     .build();
 
     public static final ImmutableMap<String, Instrument.Type> INSTRUMENT_TYPES =

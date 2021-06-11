@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.acco
 import static se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType.*;
 
 import java.util.Optional;
+import lombok.Getter;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.accounts.checking.rpc.AccountDetailsResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -14,6 +15,7 @@ import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
+@Getter
 public class AccountEntity {
     private String accountId;
     private String accountName;
@@ -27,50 +29,6 @@ public class AccountEntity {
     private boolean isStdFraKonto;
     private boolean hasExpenditureOverview;
 
-    public String getAccountId() {
-        return accountId;
-    }
-
-    public String getAccountName() {
-        return accountName;
-    }
-
-    public double getBalance() {
-        return balance;
-    }
-
-    public String getBalanceTxt() {
-        return balanceTxt;
-    }
-
-    public String getDateLastRecord() {
-        return dateLastRecord;
-    }
-
-    public double getMaximum() {
-        return maximum;
-    }
-
-    public String getMaximumTxt() {
-        return maximumTxt;
-    }
-
-    public String getCurrency() {
-        return currency;
-    }
-
-    public int getAccountAuthCode() {
-        return accountAuthCode;
-    }
-
-    public boolean getStdFraKonto() {
-        return isStdFraKonto;
-    }
-
-    public boolean getHasExpenditureOverview() {
-        return hasExpenditureOverview;
-    }
-
     public ExactCurrencyAmount getTinkBalance() {
         return ExactCurrencyAmount.of(balance, currency);
     }
@@ -83,10 +41,6 @@ public class AccountEntity {
                         .orElseThrow(() -> new IllegalStateException("Unknown account type"));
 
         TransactionalAccountType transactionalAccountType = from(accountType).orElse(null);
-
-        if (isNotTransactionalAccount(accountType)) {
-            return Optional.empty();
-        }
 
         return TransactionalAccount.nxBuilder()
                 .withType(transactionalAccountType)
