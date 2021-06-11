@@ -319,11 +319,14 @@ public class SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand extends 
             return false;
         }
 
-        // we do not want to redact Transaction<*>.date/timestamp/numberOfTransactions
-        return !fieldName.startsWith("Transaction<")
-                || (!fieldName.contains(".date")
-                        && !fieldName.contains(".timestamp")
-                        && !fieldName.contains(".numberOfTransactions"));
+        // we do not want to redact Transaction<*>.date/timestamp
+        if (fieldName.startsWith("Transaction<")
+                && (fieldName.contains(".date") || fieldName.contains(".timestamp"))) {
+            return false;
+        }
+
+        // we do not want to redact Account<*>.numberOfTransactions
+        return !fieldName.startsWith("Account<") || !fieldName.contains(".numberOfTransactions");
     }
 
     @Override
