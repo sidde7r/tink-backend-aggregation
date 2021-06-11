@@ -229,5 +229,7 @@ public final class NordeaBaseConstants {
     public static class Filters {
         public static final int NUMBER_OF_RETRIES = 5;
         public static final long MS_TO_WAIT = 4000;
+        public static final long RATE_LIMIT_RETRY_MS_MIN = 1300;
+        public static final long RATE_LIMIT_RETRY_MS_MAX = 1900;
     }
 }

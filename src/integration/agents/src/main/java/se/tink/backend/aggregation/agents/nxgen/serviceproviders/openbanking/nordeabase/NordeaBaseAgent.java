@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase;
 
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants.Filters;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.configuration.NordeaBaseConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.filters.BankSideFailureFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.filters.BankSideRetryFilter;
@@ -9,8 +10,8 @@ import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
-import se.tink.backend.aggregation.nxgen.http.filter.filters.AccessExceededFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.BadGatewayFilter;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.RateLimitFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.ServiceUnavailableBankServiceErrorFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.TimeoutFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.BadGatewayRetryFilter;
@@ -50,7 +51,11 @@ public abstract class NordeaBaseAgent extends NextGenerationAgent {
                 new BadGatewayRetryFilter(
                         NordeaBaseConstants.Filters.NUMBER_OF_RETRIES,
                         NordeaBaseConstants.Filters.MS_TO_WAIT));
-        this.client.addFilter(new AccessExceededFilter());
+        this.client.addFilter(
+                new RateLimitFilter(
+                        provider.getName(),
+                        Filters.RATE_LIMIT_RETRY_MS_MIN,
+                        Filters.RATE_LIMIT_RETRY_MS_MAX));
         this.client.addFilter(new BankSideFailureFilter());
         this.client.addFilter(new BankSideRetryFilter());
         this.client.addFilter(new ServiceUnavailableBankServiceErrorFilter());
