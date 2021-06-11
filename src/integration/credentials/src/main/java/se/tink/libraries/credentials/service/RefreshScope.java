@@ -1,5 +1,6 @@
 package se.tink.libraries.credentials.service;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.Set;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,7 +19,9 @@ import se.tink.backend.agents.rpc.FinancialService.FinancialServiceSegment;
 @Getter
 @Setter
 @NoArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class RefreshScope {
     private Set<FinancialServiceSegment> financialServiceSegmentsIn;
     private TransactionsRefreshScope transactions;
+    private Set<RefreshableItem> refreshableItemsIn;
 }

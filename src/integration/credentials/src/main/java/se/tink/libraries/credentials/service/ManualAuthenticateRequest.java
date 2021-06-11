@@ -14,6 +14,7 @@ import se.tink.libraries.user.rpc.User;
 @Setter
 public class ManualAuthenticateRequest extends CredentialsRequest {
     @JsonProperty private boolean manual;
+    private RefreshScope refreshScope;
 
     /**
      * This constructor is used only for testing purposes. In case of real requests Jackson
@@ -41,5 +42,9 @@ public class ManualAuthenticateRequest extends CredentialsRequest {
     @Deprecated
     public boolean isManual() {
         return manual;
+    }
+
+    public RefreshScope getRefreshScope() {
+        return refreshScope;
     }
 }
