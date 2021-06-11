@@ -119,26 +119,28 @@ public class SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand extends 
 
         List<DataTrackerEvent> events = new ArrayList<>();
 
-        AccountTrackingSerializer serializer =
-                SerializationUtils.serializeAccount(account, features);
-
-        /*
-           We are intentionally sending only account and skipping transaction to data-tracker.
-           We are sending transactions only as data-tracker-event to BigQuery. We are planning
-           to deprecate data-tracker and only use BigQuery and for this reason we are following
-           such an approach for transactions.
-        */
-        agentDataAvailabilityTrackerClient.sendAccount(agentName, provider, market, serializer);
-
-        // Produce event data for BigQuery for Account
-        events.add(produceDataTrackerEvent(SerializationUtils.serializeAccount(account, features)));
-
-        /*
-           For an account we will pick the most recent MAX_TRANSACTIONS_TO_SEND_TO_BIGQUERY_PER_ACCOUNT
-           transactions. We do not want to send all transactions in order to avoid putting too much
-           load to the system
-        */
         try {
+            AccountTrackingSerializer serializer =
+                    SerializationUtils.serializeAccount(account, features);
+
+            /*
+               We are intentionally sending only account and skipping transaction to data-tracker.
+               We are sending transactions only as data-tracker-event to BigQuery. We are planning
+               to deprecate data-tracker and only use BigQuery and for this reason we are following
+               such an approach for transactions.
+            */
+            agentDataAvailabilityTrackerClient.sendAccount(agentName, provider, market, serializer);
+
+            // Produce event data for BigQuery for Account
+            events.add(
+                    produceDataTrackerEvent(
+                            SerializationUtils.serializeAccount(account, features)));
+
+            /*
+               For an account we will pick the most recent MAX_TRANSACTIONS_TO_SEND_TO_BIGQUERY_PER_ACCOUNT
+               transactions. We do not want to send all transactions in order to avoid putting too much
+               load to the system
+            */
             List<Transaction> originalTransactions = getTransactionsForAccount(account);
             if (Objects.isNull(originalTransactions)) {
                 log.info(
