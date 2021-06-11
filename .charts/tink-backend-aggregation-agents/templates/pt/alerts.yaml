@@ -16,7 +16,7 @@ spec:
         (count(sum_over_time(tink_agent_login_total{action="login", outcome=~"cancelled|cancelled_due_to_third_party_app_timeout|unavailable|failed", market="PT", provider_type!="test"}[1h])) by (className,provider)
             / count(sum_over_time(tink_agent_login_total{action="login", market="PT", provider_type!="test"}[1h])) by (className,provider) > 0.9)
         # At least this many attempts.
-            and count(sum_over_time(tink_agent_login_total{action="login", market="PT", provider_type!="test"}[1h])) by (className,provider) > 3
+            and count(sum_over_time(tink_agent_login_total{action="login", market="PT", provider_type!="test"}[1h])) by (className,provider) > 10
       for: 15m
       labels:
         severity: urgent
