@@ -18,12 +18,15 @@ public class SwedbankAgentTest {
     }
 
     private AgentIntegrationTest setupAgentTest() {
-        return new AgentIntegrationTest.Builder("ee", "ee-swedbank-ob")
+        return new AgentIntegrationTest.Builder("ee", "ee-swedbank-smartid")
                 .addCredentialField(Field.Key.USERNAME, manager.get(UsernameArgumentEnum.USERNAME))
+                //random tmp id
+                .addCredentialField(Field.Key.NATIONAL_ID_NUMBER, "11111111111")
+                // .addCredentialField(Field.Key.ACCESS_TOKEN, ACCESS_TOKEN)
                 .expectLoggedIn(false)
                 .setFinancialInstitutionId("swedbank")
                 .setAppId("tink")
-                .loadCredentialsBefore(false)
+                .loadCredentialsBefore(true)
                 .saveCredentialsAfter(true)
                 .build();
     }

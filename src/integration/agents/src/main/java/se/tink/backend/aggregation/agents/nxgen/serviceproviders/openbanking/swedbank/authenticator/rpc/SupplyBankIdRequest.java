@@ -8,6 +8,6 @@ public class SupplyBankIdRequest {
     private PsuDataEntity psuData;
 
     public SupplyBankIdRequest(String bankId) {
-        psuData = new PsuDataEntity(bankId);
+        psuData = new PsuDataEntity(bankId, null);
     }
 }

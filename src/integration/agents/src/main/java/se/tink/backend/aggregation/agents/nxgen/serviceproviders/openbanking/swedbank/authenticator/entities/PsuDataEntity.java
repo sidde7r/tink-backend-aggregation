@@ -9,7 +9,11 @@ public class PsuDataEntity {
     @JsonProperty("bankID")
     private String bankId;
 
-    public PsuDataEntity(String bankId) {
+    @JsonProperty("personalID")
+    private String personalID;
+
+    public PsuDataEntity(String bankId, String personalID) {
         this.bankId = bankId;
+        this.personalID = personalID;
     }
 }
