@@ -20,6 +20,7 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryCo
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.UpdateController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.TransactionPaginationHelper;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.TransactionPaginationHelperFactory;
 import se.tink.backend.aggregation.nxgen.controllers.session.CredentialsPersistence;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
@@ -92,7 +93,8 @@ public abstract class SubsequentGenerationAgent<Auth> extends SuperAbstractAgent
         if (context.getAgentConfigurationController().isOpenBankingAgent()) {
             client.disableSignatureRequestHeader();
         }
-        this.transactionPaginationHelper = new TransactionPaginationHelper(request);
+        this.transactionPaginationHelper =
+                new TransactionPaginationHelperFactory(configuration).create(request);
         this.metricRefreshController =
                 new MetricRefreshController(
                         metricContext.getMetricRegistry(),

@@ -28,6 +28,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.TransactionPaginationHelper;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.TransactionPaginationHelperFactory;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -117,12 +118,14 @@ public final class DnbAgent extends NextGenerationAgent
     }
 
     private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {
+        TransactionPaginationHelper transactionPaginationHelper =
+                new TransactionPaginationHelperFactory(configuration).create(request);
         return new TransactionalAccountRefreshController(
                 metricRefreshController,
                 updateController,
                 accountFetcher,
                 new TransactionFetcherController<>(
-                        new TransactionPaginationHelper(request), transactionFetcher));
+                        transactionPaginationHelper, transactionFetcher));
     }
 
     @Override

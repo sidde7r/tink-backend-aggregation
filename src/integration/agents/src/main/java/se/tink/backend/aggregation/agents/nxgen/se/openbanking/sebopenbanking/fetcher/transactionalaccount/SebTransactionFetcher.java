@@ -27,7 +27,7 @@ public class SebTransactionFetcher
     @Override
     public TransactionKeyPaginatorResponse<String> getTransactionsFor(
             TransactionalAccount account, String key) {
-        Optional<Date> certainDate = paginationHelper.getContentWithRefreshDate(account);
+        Optional<Date> certainDate = paginationHelper.getTransactionDateLimit(account);
 
         if (!certainDate.isPresent()) {
             return getAllTransactions(account, key);

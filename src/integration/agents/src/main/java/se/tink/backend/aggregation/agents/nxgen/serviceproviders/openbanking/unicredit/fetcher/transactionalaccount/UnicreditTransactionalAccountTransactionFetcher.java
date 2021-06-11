@@ -29,7 +29,7 @@ public class UnicreditTransactionalAccountTransactionFetcher
         List<AggregationTransaction> transactions = Lists.newArrayList();
 
         Optional<Date> dateOfLastFetchedTransactions =
-                transactionPaginationHelper.getContentWithRefreshDate(account);
+                transactionPaginationHelper.getTransactionDateLimit(account);
 
         TransactionsResponse transactionsResponse =
                 apiClient.getTransactionsFor(

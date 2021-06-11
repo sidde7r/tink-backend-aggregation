@@ -52,7 +52,7 @@ public class UnicreditTransactionalAccountTransactionFetcherTest {
     @Test
     public void shouldFetchPagesTillNoMoreAvailable() {
         // given
-        given(mockPaginationHelper.getContentWithRefreshDate(testAccount))
+        given(mockPaginationHelper.getTransactionDateLimit(testAccount))
                 .willReturn(Optional.empty());
         given(mockApiClient.getTransactionsFor(eq(testAccount), any(Date.class)))
                 .willReturn(getTransactionsResponse(true));
@@ -67,7 +67,7 @@ public class UnicreditTransactionalAccountTransactionFetcherTest {
         assertThat(transactions).hasSize(4);
         verify(mockApiClient).getTransactionsFor(eq(testAccount), any(Date.class));
         verify(mockApiClient).getTransactionsForNextUrl(NEXT_URL);
-        verify(mockPaginationHelper).getContentWithRefreshDate(testAccount);
+        verify(mockPaginationHelper).getTransactionDateLimit(testAccount);
 
         verifyNoMoreInteractions(mockApiClient, mockPaginationHelper);
     }
@@ -76,7 +76,7 @@ public class UnicreditTransactionalAccountTransactionFetcherTest {
     public void shouldStartWithExpectedStartOfTimesDate() {
         // given
         Date expectedDate = new Date(0);
-        given(mockPaginationHelper.getContentWithRefreshDate(testAccount))
+        given(mockPaginationHelper.getTransactionDateLimit(testAccount))
                 .willReturn(Optional.empty());
         given(mockApiClient.getTransactionsFor(testAccount, expectedDate))
                 .willReturn(getTransactionsResponse(false));
@@ -88,7 +88,7 @@ public class UnicreditTransactionalAccountTransactionFetcherTest {
         // then
         assertThat(transactions).hasSize(2);
         verify(mockApiClient).getTransactionsFor(testAccount, expectedDate);
-        verify(mockPaginationHelper).getContentWithRefreshDate(testAccount);
+        verify(mockPaginationHelper).getTransactionDateLimit(testAccount);
 
         verifyNoMoreInteractions(mockApiClient, mockPaginationHelper);
     }
@@ -97,7 +97,7 @@ public class UnicreditTransactionalAccountTransactionFetcherTest {
     public void shouldStartWithExpectedDateBasedOnAccount() {
         // given
         Date expectedDate = new Date(150123);
-        given(mockPaginationHelper.getContentWithRefreshDate(testAccount))
+        given(mockPaginationHelper.getTransactionDateLimit(testAccount))
                 .willReturn(Optional.of(expectedDate));
         given(mockApiClient.getTransactionsFor(testAccount, expectedDate))
                 .willReturn(getTransactionsResponse(false));
@@ -109,7 +109,7 @@ public class UnicreditTransactionalAccountTransactionFetcherTest {
         // then
         assertThat(transactions).hasSize(2);
         verify(mockApiClient).getTransactionsFor(testAccount, expectedDate);
-        verify(mockPaginationHelper).getContentWithRefreshDate(testAccount);
+        verify(mockPaginationHelper).getTransactionDateLimit(testAccount);
 
         verifyNoMoreInteractions(mockApiClient, mockPaginationHelper);
     }
