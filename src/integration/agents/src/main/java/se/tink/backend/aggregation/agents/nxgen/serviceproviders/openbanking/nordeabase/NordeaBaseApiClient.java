@@ -42,8 +42,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nor
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.fetcher.creditcard.rpc.CreditCardTransactionResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.fetcher.transactionalaccount.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.fetcher.transactionalaccount.rpc.GetTransactionsResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.filters.BankSideFailureFilter;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.filters.BankSideRetryFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.rpc.NordeaErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.util.SignatureUtil;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
@@ -55,12 +53,6 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
-import se.tink.backend.aggregation.nxgen.http.filter.filters.AccessExceededFilter;
-import se.tink.backend.aggregation.nxgen.http.filter.filters.BadGatewayFilter;
-import se.tink.backend.aggregation.nxgen.http.filter.filters.ServiceUnavailableBankServiceErrorFilter;
-import se.tink.backend.aggregation.nxgen.http.filter.filters.TimeoutFilter;
-import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.BadGatewayRetryFilter;
-import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.TimeoutRetryFilter;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -86,25 +78,6 @@ public class NordeaBaseApiClient implements TokenInterface {
         this.persistentStorage = persistentStorage;
         this.qsealcSigner = qsealcSigner;
         this.corporate = corporate;
-        configureFilters();
-    }
-
-    private void configureFilters() {
-
-        this.client.addFilter(
-                new TimeoutRetryFilter(
-                        NordeaBaseConstants.Filters.NUMBER_OF_RETRIES,
-                        NordeaBaseConstants.Filters.MS_TO_WAIT));
-        this.client.addFilter(
-                new BadGatewayRetryFilter(
-                        NordeaBaseConstants.Filters.NUMBER_OF_RETRIES,
-                        NordeaBaseConstants.Filters.MS_TO_WAIT));
-        this.client.addFilter(new AccessExceededFilter());
-        this.client.addFilter(new BankSideFailureFilter());
-        this.client.addFilter(new BankSideRetryFilter());
-        this.client.addFilter(new ServiceUnavailableBankServiceErrorFilter());
-        this.client.addFilter(new TimeoutFilter());
-        this.client.addFilter(new BadGatewayFilter());
     }
 
     public NordeaBaseConfiguration getConfiguration() {
