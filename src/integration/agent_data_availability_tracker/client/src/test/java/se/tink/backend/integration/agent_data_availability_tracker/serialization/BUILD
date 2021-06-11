@@ -11,6 +11,7 @@ junit_test(
         "//src/integration/account/src/main/java/se/tink/libraries/account/enums",
         "//src/integration/agent_data_availability_tracker/client",
         "//src/integration/agent_data_availability_tracker/client/src/main/java/se/tink/backend/integration/agent_data_availability_tracker/serialization",
+        "//src/integration/amount",
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/models",
         "@aggregation//:com_google_guava_guava",
