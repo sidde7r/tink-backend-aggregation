@@ -6,8 +6,11 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 import java.util.TimeZone;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -131,49 +134,64 @@ public class SparebankAuthenticator {
     }
 
     private boolean isTppSessionStillValid() {
-        Optional<AccountResponse> maybeAccounts = storage.getStoredAccounts();
-        Optional<CardResponse> maybeCards = storage.getStoredCards();
-
-        if (!maybeAccounts.isPresent() && !maybeCards.isPresent()) {
+        if (!isAccountOrCardResponseStored()) {
             log.info("[SpareBank] TPP session invalid - empty accounts & cards storage");
             return false;
         }
-        try {
-            // ITE-1648 No other way to validate the session (that I know of) than to run true
-            // operation.
-            // We fetch first account/card balance and store it, then when actual balance fetching
-            // occurs we retrieve balance for first account from storage and remove it. This logic
-            // helps us to limit balance fetching request and in result increase the number of
-            // background refreshes
-            Optional<String> maybeResourceId = Optional.empty();
-            if (maybeAccounts.isPresent()) {
-                maybeResourceId =
-                        maybeAccounts.get().getAccounts().stream()
-                                .map(AccountEntity::getResourceId)
-                                .findFirst();
-            }
-            if (!maybeResourceId.isPresent() && maybeCards.isPresent()) {
-                maybeResourceId =
-                        maybeCards.get().getCardAccounts().stream()
-                                .map(CardEntity::getResourceId)
-                                .findFirst();
-            }
 
-            if (maybeResourceId.isPresent()) {
-                String resourceId = maybeResourceId.get();
-                BalanceResponse balanceResponse = apiClient.fetchBalances(resourceId);
-                storage.storeBalanceResponse(resourceId, balanceResponse);
-                return true;
-            } else {
-                log.info("[SpareBank] TPP session invalid - no accounts or cards in storage");
-                return false;
-            }
-        } catch (ConsentExpiredException | ConsentRevokedException e) {
-            log.info(
-                    "[SpareBank] TPP session invalid - fetch balances unauthorized error. Consent creation ts: {}",
-                    storage.getConsentCreationTimestamp());
-            // We are sure that the session is invalid and will require full auth again
+        List<String> storedResourceIds = getResourceIdsOfStoredAccountsAndCards();
+        if (storedResourceIds.isEmpty()) {
+            log.info("[SpareBank] TPP session invalid - no accounts or cards in storage");
             return false;
         }
+        String resourceId = storedResourceIds.get(0);
+
+        /*
+        ITE-2621
+        - consent id and its status are handled internally by Evry - we cannot check them
+        - the only way of checking if our session is really valid is to make a real request
+        - fetching accounts & cards is available only for the 1st hour after consent creation, so we cannot use it
+        - every resourceId has its own separate background refreshes counters for balances and transactions
+        - because of that, when we make a real call here, it counts as a BG refresh, so we need to cache the response
+        - transactions response may be too big, so we need to fetch balances
+        - currently API allows to fetch balances with expired token and we cam only check if consent was revoked
+          (but it might be change in the future)
+         */
+        try {
+            BalanceResponse balanceResponse = apiClient.fetchBalances(resourceId);
+            storage.storeBalanceResponse(resourceId, balanceResponse);
+            return true;
+
+        } catch (ConsentRevokedException e) {
+            log.info(
+                    "[SpareBank] TPP session invalid - consent revoked. Consent creation ts: {}",
+                    storage.getConsentCreationTimestamp());
+            return false;
+
+        } catch (ConsentExpiredException e) {
+            log.info(
+                    "[SpareBank] TPP session invalid - consent expired. Consent creation ts: {}",
+                    storage.getConsentCreationTimestamp());
+            return false;
+        }
+    }
+
+    private boolean isAccountOrCardResponseStored() {
+        Optional<AccountResponse> maybeAccounts = storage.getStoredAccounts();
+        Optional<CardResponse> maybeCards = storage.getStoredCards();
+
+        return maybeAccounts.isPresent() || maybeCards.isPresent();
+    }
+
+    private List<String> getResourceIdsOfStoredAccountsAndCards() {
+        Stream<String> accountResourceIds =
+                storage.getStoredAccounts().orElse(AccountResponse.empty()).getAccounts().stream()
+                        .map(AccountEntity::getResourceId);
+
+        Stream<String> cardResourceIds =
+                storage.getStoredCards().orElse(CardResponse.empty()).getCardAccounts().stream()
+                        .map(CardEntity::getResourceId);
+
+        return Stream.concat(accountResourceIds, cardResourceIds).collect(Collectors.toList());
     }
 }
