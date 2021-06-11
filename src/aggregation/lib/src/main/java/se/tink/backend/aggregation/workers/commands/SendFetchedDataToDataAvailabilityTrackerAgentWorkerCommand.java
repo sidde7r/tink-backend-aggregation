@@ -30,7 +30,6 @@ import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
 import se.tink.backend.aggregation.workers.operation.type.AgentWorkerOperationMetricType;
 import se.tink.backend.integration.agent_data_availability_tracker.client.AsAgentDataAvailabilityTrackerClient;
 import se.tink.backend.integration.agent_data_availability_tracker.common.serialization.TrackingMapSerializer;
-import se.tink.backend.integration.agent_data_availability_tracker.serialization.AccountTrackingSerializer;
 import se.tink.backend.integration.agent_data_availability_tracker.serialization.IdentityDataSerializer;
 import se.tink.backend.integration.agent_data_availability_tracker.serialization.SerializationUtils;
 import se.tink.backend.integration.agent_data_availability_tracker.serialization.TransactionTrackingSerializer;
@@ -106,7 +105,7 @@ public class SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand extends 
                 }
             } catch (Exception e) {
                 action.failed();
-                log.error("Failed sending refresh data to tracking service.", e);
+                log.error("Failed to send DataTrackerEvent", e);
             }
         } finally {
             metrics.stop();
@@ -118,67 +117,61 @@ public class SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand extends 
             final Account account, final AccountFeatures features) {
 
         List<DataTrackerEvent> events = new ArrayList<>();
-
         try {
-            AccountTrackingSerializer serializer =
-                    SerializationUtils.serializeAccount(account, features);
-
-            /*
-               We are intentionally sending only account and skipping transaction to data-tracker.
-               We are sending transactions only as data-tracker-event to BigQuery. We are planning
-               to deprecate data-tracker and only use BigQuery and for this reason we are following
-               such an approach for transactions.
-            */
-            agentDataAvailabilityTrackerClient.sendAccount(agentName, provider, market, serializer);
-
-            // Produce event data for BigQuery for Account
-            events.add(
-                    produceDataTrackerEvent(
-                            SerializationUtils.serializeAccount(account, features)));
-
-            /*
-               For an account we will pick the most recent MAX_TRANSACTIONS_TO_SEND_TO_BIGQUERY_PER_ACCOUNT
-               transactions. We do not want to send all transactions in order to avoid putting too much
-               load to the system
-            */
             List<Transaction> originalTransactions = getTransactionsForAccount(account);
             if (Objects.isNull(originalTransactions)) {
                 log.info(
                         String.format(
                                 "Could not get transactions of account to send to BigQuery. Account type is %s",
                                 account.getType().toString()));
-            } else {
-                log.info(
-                        String.format(
-                                "We have transactions for account to send to BQ. Account type is %s",
-                                account.getType().toString()));
-
-                // Pick MAX_TRANSACTIONS_TO_SEND_TO_BIGQUERY_PER_ACCOUNT transactions randomly and
-                // emit events for them
-                List<Transaction> transactionsOfAccount = new ArrayList<>(originalTransactions);
-                Collections.shuffle(transactionsOfAccount);
-                Set<Transaction> transactionsToProcess =
-                        transactionsOfAccount.stream()
-                                .limit(MAX_TRANSACTIONS_TO_SEND_TO_BIGQUERY_PER_ACCOUNT)
-                                .collect(Collectors.toSet());
-
-                // On top of randomly selected transactions, ensure that we pick the oldest
-                // transactions in terms of BOOKING_DATE, VALUE_DATE and EXECUTION_DATE and
-                // in terms of "date" and "timestamp" field. This is because we want to emit
-                // events for such transactions where we will be able to emit their timestamps
-                Set<Transaction> oldestTransactions = getOldestTransactions(transactionsOfAccount);
-                transactionsToProcess.addAll(oldestTransactions);
-
-                transactionsToProcess.forEach(
-                        transaction ->
-                                events.add(
-                                        produceDataTrackerEvent(
-                                                new TransactionTrackingSerializer(
-                                                        transaction, account.getType()))));
+                return events;
             }
+
+            final int numberOfTransactions = originalTransactions.size();
+
+            /*
+               We are intentionally sending only account and skipping sending transaction for
+               DataTracker v1. We are sending transactions only to DataTracker v2. We are planning
+               to deprecate DataTracker v1 and only use DataTracker v2.
+            */
+            agentDataAvailabilityTrackerClient.sendAccount(
+                    agentName,
+                    provider,
+                    market,
+                    SerializationUtils.serializeAccount(account, features, numberOfTransactions));
+
+            // Produce event data for BigQuery for Account
+            events.add(
+                    produceDataTrackerEvent(
+                            SerializationUtils.serializeAccount(
+                                    account, features, numberOfTransactions)));
+
+            // Pick MAX_TRANSACTIONS_TO_SEND_TO_BIGQUERY_PER_ACCOUNT transactions randomly and
+            // emit events for them (We do not want to send all transactions in order to avoid
+            // putting too much load to the system)
+            List<Transaction> transactionsOfAccount = new ArrayList<>(originalTransactions);
+            Collections.shuffle(transactionsOfAccount);
+            Set<Transaction> transactionsToProcess =
+                    transactionsOfAccount.stream()
+                            .limit(MAX_TRANSACTIONS_TO_SEND_TO_BIGQUERY_PER_ACCOUNT)
+                            .collect(Collectors.toSet());
+
+            // On top of randomly selected transactions, ensure that we pick the oldest
+            // transactions in terms of BOOKING_DATE, VALUE_DATE and EXECUTION_DATE and
+            // in terms of "date" and "timestamp" field. This is because we want to emit
+            // events for such transactions where we will be able to emit their timestamps
+            Set<Transaction> oldestTransactions = getOldestTransactions(transactionsOfAccount);
+            transactionsToProcess.addAll(oldestTransactions);
+
+            transactionsToProcess.forEach(
+                    transaction ->
+                            events.add(
+                                    produceDataTrackerEvent(
+                                            new TransactionTrackingSerializer(
+                                                    transaction, account.getType()))));
         } catch (Exception e) {
             log.warn(
-                    "Failed to send transaction data to BigQuery. Cause: {}",
+                    "Failed to produce DataTrackerEvents for BigQuery. Cause: {}",
                     ExceptionUtils.getStackTrace(e));
         }
 
@@ -326,9 +319,11 @@ public class SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand extends 
             return false;
         }
 
-        // we do not want to redact Transaction<*>.date/timestamp
+        // we do not want to redact Transaction<*>.date/timestamp/numberOfTransactions
         return !fieldName.startsWith("Transaction<")
-                || (!fieldName.contains(".date") && !fieldName.contains(".timestamp"));
+                || (!fieldName.contains(".date")
+                        && !fieldName.contains(".timestamp")
+                        && !fieldName.contains(".numberOfTransactions"));
     }
 
     @Override

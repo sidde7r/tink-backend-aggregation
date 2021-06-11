@@ -67,7 +67,7 @@ public class AgentDataAvailabilityTrackerClientTest {
             AccountTrackingSerializer serializer =
                     se.tink.backend.integration.agent_data_availability_tracker.serialization
                             .SerializationUtils.serializeAccount(
-                            buildAccount(), new AccountFeatures());
+                            buildAccount(), new AccountFeatures(), 0);
 
             client.sendAccount("TestBank", "test-test", "SE", serializer);
         }

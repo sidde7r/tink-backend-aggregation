@@ -37,7 +37,7 @@ public class AccountTrackingSerializerTest {
         account.setBankId(SECRET_VALUE);
         account.setHolderName(SECRET_VALUE);
 
-        List<FieldEntry> entries = new AccountTrackingSerializer(account).buildList();
+        List<FieldEntry> entries = new AccountTrackingSerializer(account, 0).buildList();
 
         Assert.assertTrue(
                 "Failed: all entries in secretFieldKeys set is unlisted",
@@ -50,7 +50,7 @@ public class AccountTrackingSerializerTest {
         Account account = new Account();
         account.setType(AccountTypes.CHECKING);
 
-        List<FieldEntry> entries = new AccountTrackingSerializer(account).buildList();
+        List<FieldEntry> entries = new AccountTrackingSerializer(account, 0).buildList();
 
         Assert.assertTrue(
                 "Failed: has entry 'Account<CHECKING>.type' with value == CHECKING",
@@ -67,7 +67,7 @@ public class AccountTrackingSerializerTest {
         account.putIdentifier(
                 AccountIdentifier.create(AccountIdentifierType.SORT_CODE, EXAMPLE_SORTCODE));
 
-        List<FieldEntry> entries = new AccountTrackingSerializer(account).buildList();
+        List<FieldEntry> entries = new AccountTrackingSerializer(account, 0).buildList();
 
         Assert.assertTrue(
                 "Failed: has entries 'identifiers.iban' with non-listed-value",
@@ -89,7 +89,7 @@ public class AccountTrackingSerializerTest {
         account.putIdentifier(
                 AccountIdentifier.create(AccountIdentifierType.SORT_CODE, EXAMPLE_SORTCODE));
 
-        List<FieldEntry> entries = new AccountTrackingSerializer(account).buildList();
+        List<FieldEntry> entries = new AccountTrackingSerializer(account, 0).buildList();
 
         Assert.assertTrue(
                 "Failed: should have null 'identifiers.iban'",
@@ -109,7 +109,7 @@ public class AccountTrackingSerializerTest {
         account.putFlag(AccountFlag.BUSINESS);
         account.putFlag(AccountFlag.MANDATE);
 
-        List<FieldEntry> entries = new AccountTrackingSerializer(account).buildList();
+        List<FieldEntry> entries = new AccountTrackingSerializer(account, 0).buildList();
 
         Assert.assertTrue(
                 "Failed: has entries 'flags' with values [business, mandate]",
@@ -128,7 +128,7 @@ public class AccountTrackingSerializerTest {
         account.setBalance(100.0);
         account.setAvailableCredit(100.0);
 
-        List<FieldEntry> entries = new AccountTrackingSerializer(account).buildList();
+        List<FieldEntry> entries = new AccountTrackingSerializer(account, 0).buildList();
 
         Assert.assertTrue(
                 "Failed: all entries in secretFieldKeys set is unlisted",
