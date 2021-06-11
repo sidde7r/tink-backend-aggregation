@@ -8,12 +8,6 @@ import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.SkandiaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.SkandiaConstants.ErrorMessages;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.SkandiaConstants.PaymentProduct;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.executor.payment.entities.AccountEntity;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.executor.payment.entities.AmountEntity;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.executor.payment.rpc.CreatePaymentResponse;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.executor.payment.rpc.DomesticGirosPaymentRequest;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.executor.payment.rpc.DomesticPaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.executor.payment.rpc.SignPaymentResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.constants.ThirdPartyAppConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
@@ -57,51 +51,12 @@ public class SkandiaPaymentExecutor implements PaymentExecutor, FetchablePayment
     public PaymentResponse create(PaymentRequest paymentRequest) throws PaymentException {
 
         final Payment payment = paymentRequest.getPayment();
-        final AmountEntity amount = new AmountEntity(payment.getExactCurrencyAmount());
-        final AccountEntity debtor = new AccountEntity(payment.getDebtor().getAccountNumber());
 
         // add DebtorAccount validation
 
-        switch (PaymentProduct.from(payment)) {
-            case DOMESTIC_CREDIT_TRANSFERS:
-                return createDomesticPayment(payment, debtor, amount);
-            case DOMESTIC_GIROS:
-                return createDomesticGirosPayment(payment, debtor, amount);
-            default:
-                throw new IllegalStateException(ErrorMessages.UNSUPPORTED_PAYMENT_TYPE);
-        }
-    }
-
-    private PaymentResponse createDomesticPayment(
-            Payment payment, AccountEntity debtor, AmountEntity amount) throws PaymentException {
-
-        AccountEntity creditor = new AccountEntity(payment.getCreditor().getAccountNumber());
-
-        final DomesticPaymentRequest request =
-                new DomesticPaymentRequest(creditor, debtor, amount, payment);
-
         try {
 
-            CreatePaymentResponse response = apiClient.createDomesticPayment(request);
-
-            return response.toTinkPayment(creditor, debtor, amount.toAmount());
-
-        } catch (HttpResponseException e) {
-            throw HttpResponseExceptionHandler.checkForErrors(e);
-        }
-    }
-
-    private PaymentResponse createDomesticGirosPayment(
-            Payment payment, AccountEntity debtor, AmountEntity amount) throws PaymentException {
-
-        DomesticGirosPaymentRequest request =
-                new DomesticGirosPaymentRequest(debtor, amount, payment);
-
-        try {
-
-            CreatePaymentResponse response = apiClient.createDomesticGirosPayment(request);
-
-            return response.toTinkPayment(request.getCreditorAccount(), debtor, amount.toAmount());
+            return apiClient.createPayment(payment).toTinkPayment(payment);
 
         } catch (HttpResponseException e) {
             throw HttpResponseExceptionHandler.checkForErrors(e);

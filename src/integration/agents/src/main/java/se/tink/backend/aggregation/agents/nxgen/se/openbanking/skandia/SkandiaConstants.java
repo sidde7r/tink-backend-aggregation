@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia;
 
+import java.time.ZoneId;
+import java.util.Locale;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.PersistentStorageKeys;
@@ -47,6 +49,8 @@ public final class SkandiaConstants {
         public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
         public static final String MISSING_CREDENTIALS = "Client Credentials missing.";
         public static final String UNSUPPORTED_PAYMENT_TYPE = "Payment type is not supported.";
+        public static final String UNSUPPORTED_REMITTANCE_INFORMATION =
+                "Remittance information not supported.";
         public static final String MISSING_TOKEN = "Failed to retrieve access token.";
         public static final String SERVICE_BLOCKED = "Service_blocked";
         public static final String EXPIRED_AUTHORIZATION_CODE =
@@ -179,7 +183,7 @@ public final class SkandiaConstants {
         }
     }
 
-    public class PaymentTypes {
+    public static class PaymentTypes {
         public static final String DOMESTIC_CREDIT_TRANSFERS_RESPONSE = "DOMESTIC_CREDIT_TRANSFERS";
         public static final String DOMESTIC_GIROS_RESPONSE = "DOMESTIC_GIROS";
         public static final String CROSS_BORDER_CREDIT_TRANSFERS_RESPONSE =
@@ -191,13 +195,24 @@ public final class SkandiaConstants {
         PDTX
     }
 
-    public class BodyValues {
+    public static class BodyValues {
         public static final String EMPTY_BODY = "{}";
     }
 
-    public class AccountIdentifier {
+    public static class AccountIdentifier {
 
         public static final String BANK_GIRO_TYPE = "BANKGIRO";
         public static final String PLUS_GIRO_TYPE = "PLUSGIRO";
+    }
+
+    public static class Date {
+        static final int GIROS_DOMESTIC_CUT_OFF_HOURS = 9;
+        static final int GIROS_DOMESTIC_CUT_OFF_MINUTES = 0;
+
+        static final int DOMESTIC_CUT_OFF_HOURS = 13;
+        static final int DOMESTIC_CUT_OFF_MINUTES = 45;
+
+        static final ZoneId DEFAULT_ZONE_ID = ZoneId.of("Europe/Stockholm");
+        static final Locale DEFAULT_LOCALE = new Locale("sv", "SE");
     }
 }

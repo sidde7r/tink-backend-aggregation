@@ -3,18 +3,15 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.executor
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.SkandiaConstants;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.executor.payment.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.executor.payment.entities.LinksEntity;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.executor.payment.entities.TinkCreditorConstructor;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
-import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Payment;
 
 @JsonObject
-public class CreatePaymentResponse {
+public final class CreatePaymentResponse {
 
     private final LinksEntity links;
 
@@ -31,15 +28,14 @@ public class CreatePaymentResponse {
         this.transactionStatus = transactionStatus;
     }
 
-    public PaymentResponse toTinkPayment(
-            TinkCreditorConstructor creditor, AccountEntity debtor, ExactCurrencyAmount amount) {
+    public PaymentResponse toTinkPayment(Payment payment) {
 
         Payment.Builder buildingPaymentResponse =
                 new Payment.Builder()
-                        .withCreditor(creditor.toTinkCreditor())
-                        .withDebtor(debtor.toTinkDebtor())
-                        .withExactCurrencyAmount(amount)
-                        .withCurrency(amount.getCurrencyCode())
+                        .withCreditor(payment.getCreditor())
+                        .withDebtor(payment.getDebtor())
+                        .withExactCurrencyAmount(payment.getExactCurrencyAmount())
+                        .withCurrency(payment.getCurrency())
                         .withUniqueId(paymentId)
                         .withStatus(this.getPaymentStatus())
                         .withType(PaymentType.DOMESTIC);
