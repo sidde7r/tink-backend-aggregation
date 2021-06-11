@@ -27,8 +27,9 @@ public class SdcSessionHandler implements SessionHandler {
         try {
             FilterAccountsRequest request =
                     new FilterAccountsRequest()
+                            .setIncludeCreditAccounts(true)
                             .setIncludeDebitAccounts(true)
-                            .setOnlyFavorites(true)
+                            .setOnlyFavorites(false)
                             .setOnlyQueryable(true);
 
             bankClient.filterAccounts(request);
