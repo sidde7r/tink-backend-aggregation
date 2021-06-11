@@ -12,7 +12,7 @@ import se.tink.libraries.user.rpc.User;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @NoArgsConstructor
 @Setter
-public class ManualAuthenticateRequest extends CredentialsRequest {
+public class ManualAuthenticateRequest extends CredentialsRequest implements HasRefreshScope {
     @JsonProperty private boolean manual;
     private RefreshScope refreshScope;
 
@@ -44,6 +44,7 @@ public class ManualAuthenticateRequest extends CredentialsRequest {
         return manual;
     }
 
+    @Override
     public RefreshScope getRefreshScope() {
         return refreshScope;
     }
