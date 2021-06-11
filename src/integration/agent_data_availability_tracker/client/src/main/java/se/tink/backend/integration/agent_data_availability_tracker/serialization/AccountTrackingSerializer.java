@@ -14,10 +14,12 @@ public class AccountTrackingSerializer extends TrackingMapSerializer {
 
     private static final String ACCOUNT_ENTITY_NAME = "Account";
     private final Account account;
+    private final int numberOfTransactions;
 
-    public AccountTrackingSerializer(Account account) {
+    public AccountTrackingSerializer(Account account, int numberOfTransactions) {
         super(String.format(ACCOUNT_ENTITY_NAME + "<%s>", String.valueOf(account.getType())));
         this.account = account;
+        this.numberOfTransactions = numberOfTransactions;
     }
 
     @Override
@@ -30,7 +32,8 @@ public class AccountTrackingSerializer extends TrackingMapSerializer {
                 .putRedacted("holderName", account.getHolderName())
                 .putRedacted("balance", account.getNullableBalance())
                 .putRedacted("availableCredit", account.getNullableAvailableCredit())
-                .putListed("type", account.getType());
+                .putListed("type", account.getType())
+                .putListed("numberOfTransactions", Integer.toString(numberOfTransactions));
 
         for (AccountIdentifierType type : AccountIdentifierType.values()) {
             Optional<AccountIdentifier> maybeAccountIdentifier =

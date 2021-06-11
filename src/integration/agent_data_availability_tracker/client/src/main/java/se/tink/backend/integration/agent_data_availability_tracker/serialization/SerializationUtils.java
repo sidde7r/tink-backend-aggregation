@@ -6,8 +6,9 @@ import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.IdentityData;
 
 public class SerializationUtils {
     public static AccountTrackingSerializer serializeAccount(
-            final Account account, final AccountFeatures features) {
-        AccountTrackingSerializer serializer = new AccountTrackingSerializer(account);
+            final Account account, final AccountFeatures features, int numberOfTransactions) {
+        AccountTrackingSerializer serializer =
+                new AccountTrackingSerializer(account, numberOfTransactions);
 
         if (features.getPortfolios() != null) {
             features.getPortfolios().stream()

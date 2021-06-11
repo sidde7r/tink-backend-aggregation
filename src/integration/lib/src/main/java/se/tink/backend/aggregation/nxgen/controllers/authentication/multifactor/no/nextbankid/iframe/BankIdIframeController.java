@@ -39,12 +39,6 @@ public class BankIdIframeController {
         validatePassword(password);
 
         BankIdIframeFirstWindow firstWindow = authenticationState.getFirstIframeWindow();
-
-        log.info(
-                "{} Starting iframe authentication with window: {}",
-                BANK_ID_LOG_PREFIX,
-                firstWindow);
-
         log.info(
                 "{} Starting iframe authentication with window: {}",
                 BANK_ID_LOG_PREFIX,
