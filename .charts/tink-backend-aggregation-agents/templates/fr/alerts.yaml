@@ -33,6 +33,8 @@ spec:
         # Failed logins over 90%
         (count(sum_over_time(tink_agent_login_total{action="login", outcome=~"cancelled|cancelled_due_to_third_party_app_timeout|unavailable|failed", market="FR", provider_type!="test"}[12h])) by (className,provider)
             / count(sum_over_time(tink_agent_login_total{action="login", market="FR", provider_type!="test"}[12h])) by (className,provider) > 0.9)
+        # At least this many attempts.
+           and count(sum_over_time(tink_agent_login_total{action="login", market="FR", provider_type!="test"}[12h])) by (className,provider) > 3
       for: 15m
       labels:
         severity: urgent
@@ -88,7 +90,7 @@ spec:
         (count(sum_over_time(tink_agent_login_total{action="login", outcome="failed", market="FR", provider_type!="test"}[12h])) by (className,provider)
             / count(sum_over_time(tink_agent_login_total{action="login", market="FR", provider_type!="test"}[12h])) by (className,provider) > 0.1)
         # At least this many attempts.
-             and count(sum_over_time(tink_agent_login_total{action="login", market="FR", provider_type!="test"}[12h])) by (className,provider) > 5
+             and count(sum_over_time(tink_agent_login_total{action="login", market="FR", provider_type!="test"}[12h])) by (className,provider) > 3
       for: 15m
       labels:
         severity: urgent
