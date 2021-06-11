@@ -22,6 +22,7 @@ import se.tink.backend.aggregation.agents.utils.supplementalfields.NorwegianFiel
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdTestUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.BankIdWebDriver;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.BankIdElementsSearchQuery;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.screens.BankIdScreen;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.screens.BankIdScreensManager;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.screens.BankIdScreensQuery;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
@@ -61,9 +62,28 @@ public class BankIdAuthWithMobileBankIdStepTest {
     }
 
     @Test
+    public void should_throw_exception_when_user_need_to_enter_mobile_number() {
+        // given
+        mockScreenSearchResult(BankIdScreen.MOBILE_BANK_ID_ENTER_MOBILE_NUMBER_SCREEN);
+
+        // when
+        Throwable throwable =
+                catchThrowable(() -> authWithMobileBankIdStep.authenticateWithMobileBankId());
+
+        // then
+        assertThat(throwable)
+                .isInstanceOf(UnsupportedOperationException.class)
+                .hasMessage("Entering mobile number is not supported yet");
+
+        verifyChecksIfEnteringMobileNumberIsRequired();
+        mocksToVerifyInOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
     public void
             should_send_request_then_display_reference_words_to_user_and_wait_for_password_screen() {
         // given
+        mockScreenSearchResult(BankIdScreen.MOBILE_BANK_ID_SEND_REQUEST_SCREEN);
         mockUserAnswersSupplementalInfo();
 
         WebElement referenceWordsElement =
@@ -74,6 +94,7 @@ public class BankIdAuthWithMobileBankIdStepTest {
         authWithMobileBankIdStep.authenticateWithMobileBankId();
 
         // then
+        verifyChecksIfEnteringMobileNumberIsRequired();
         mocksToVerifyInOrder.verify(driver).clickButton(LOC_SUBMIT_BUTTON);
         mocksToVerifyInOrder
                 .verify(driver)
@@ -100,6 +121,7 @@ public class BankIdAuthWithMobileBankIdStepTest {
     @Test
     public void should_throw_exception_when_reference_words_cannot_be_found() {
         // given
+        mockScreenSearchResult(BankIdScreen.MOBILE_BANK_ID_SEND_REQUEST_SCREEN);
         mockUserAnswersSupplementalInfo();
         mockLocatorDoesNotExists(LOC_REFERENCE_WORDS, driver);
 
@@ -112,6 +134,7 @@ public class BankIdAuthWithMobileBankIdStepTest {
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage("Could not find reference words");
 
+        verifyChecksIfEnteringMobileNumberIsRequired();
         mocksToVerifyInOrder.verify(driver).clickButton(LOC_SUBMIT_BUTTON);
         mocksToVerifyInOrder
                 .verify(driver)
@@ -121,6 +144,22 @@ public class BankIdAuthWithMobileBankIdStepTest {
                                 .searchForSeconds(10)
                                 .build());
         mocksToVerifyInOrder.verifyNoMoreInteractions();
+    }
+
+    private void verifyChecksIfEnteringMobileNumberIsRequired() {
+        mocksToVerifyInOrder
+                .verify(screensManager)
+                .waitForAnyScreenFromQuery(
+                        BankIdScreensQuery.builder()
+                                .waitForScreens(BankIdScreen.MOBILE_BANK_ID_SEND_REQUEST_SCREEN)
+                                .waitForScreens(
+                                        BankIdScreen.MOBILE_BANK_ID_ENTER_MOBILE_NUMBER_SCREEN)
+                                .waitForSeconds(10)
+                                .build());
+    }
+
+    private void mockScreenSearchResult(BankIdScreen screen) {
+        when(screensManager.waitForAnyScreenFromQuery(any())).thenReturn(screen);
     }
 
     private void mockUserAnswersSupplementalInfo() {

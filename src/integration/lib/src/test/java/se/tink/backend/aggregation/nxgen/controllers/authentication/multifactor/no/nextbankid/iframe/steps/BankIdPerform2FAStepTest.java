@@ -244,7 +244,8 @@ public class BankIdPerform2FAStepTest {
             case ONE_TIME_CODE_METHOD_SCREEN:
                 mocksToVerifyInOrder.verify(authWithOneTimeCodeStep).authenticateWithOneTimeCode();
                 break;
-            case MOBILE_BANK_ID_METHOD_SCREEN:
+            case MOBILE_BANK_ID_SEND_REQUEST_SCREEN:
+            case MOBILE_BANK_ID_ENTER_MOBILE_NUMBER_SCREEN:
                 mocksToVerifyInOrder
                         .verify(authWithMobileBankIdStep)
                         .authenticateWithMobileBankId();

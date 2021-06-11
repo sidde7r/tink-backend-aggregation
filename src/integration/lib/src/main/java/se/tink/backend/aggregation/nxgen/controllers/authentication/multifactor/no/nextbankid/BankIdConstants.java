@@ -8,6 +8,7 @@ import static se.tink.backend.aggregation.nxgen.controllers.authentication.multi
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants.HtmlSelectors.BY_ERROR_SCREEN_WITH_NO_HEADING;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants.HtmlSelectors.BY_IFRAME;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants.HtmlSelectors.BY_MOBILE_BANK_ID_SPINNER;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants.HtmlSelectors.BY_MOBILE_NUMBER_INPUT;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants.HtmlSelectors.BY_ONE_TIME_CODE_INPUT;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants.HtmlSelectors.BY_PASSWORD_ERROR_BUBBLE;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdConstants.HtmlSelectors.BY_PASSWORD_INPUT;
@@ -79,7 +80,10 @@ public class BankIdConstants {
         /*
          * These inputs must be mutually exclusive
          */
-        static final ByCssSelector BY_SSN_INPUT = new ByCssSelector("input[type=tel]");
+        static final ByCssSelector BY_SSN_INPUT =
+                new ByCssSelector("input[type=tel][maxlength='11']");
+        static final ByCssSelector BY_MOBILE_NUMBER_INPUT =
+                new ByCssSelector("input[type=tel][maxlength='8']");
         static final ByCssSelector BY_ONE_TIME_CODE_INPUT =
                 new ByCssSelector("input[type=password]:not([data-type]):not([disabled])");
         static final ByCssSelector BY_PASSWORD_INPUT =
@@ -112,11 +116,15 @@ public class BankIdConstants {
         /*
         mobile BankID screen
         */
-        public static final BankIdElementLocator LOC_MOBILE_BANK_ID_METHOD_SCREEN =
+        public static final BankIdElementLocator LOC_MOBILE_BANK_ID_SEND_REQUEST_SCREEN =
                 inIframeLocator()
                         .element(BY_TITLE_OF_SCREEN_WITH_FORM_TO_SEND)
                         .mustContainOneOfTexts("BankID på mobil", "BankID on mobile")
                         .build();
+
+        public static final BankIdElementLocator LOC_MOBILE_BANK_ID_ENTER_MOBILE_NUMBER_SCREEN =
+                inIframeLocator().element(BY_MOBILE_NUMBER_INPUT).build();
+
         public static final BankIdElementLocator LOC_MOBILE_BANK_ID_REFERENCE_WORDS_SCREEN =
                 inIframeLocator().element(BY_MOBILE_BANK_ID_SPINNER).build();
         public static final BankIdElementLocator LOC_REFERENCE_WORDS =
