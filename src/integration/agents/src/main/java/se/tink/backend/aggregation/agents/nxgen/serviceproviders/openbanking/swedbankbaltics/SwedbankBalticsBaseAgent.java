@@ -69,7 +69,7 @@ public class SwedbankBalticsBaseAgent extends SubsequentProgressiveGenerationAge
 
     @Override
     public StatelessProgressiveAuthenticator getAuthenticator() {
-        return new SwedbankBalticsAuthenticator(apiClient);
+        return new SwedbankBalticsAuthenticator(apiClient, persistentStorage, sessionStorage);
     }
 
     @Override
