@@ -4,7 +4,6 @@ import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.BecApiClient;
@@ -40,13 +39,9 @@ public class BecAccountFetcher implements AccountFetcher<TransactionalAccount> {
             }
 
             // Filter out non-transactional accounts
-            if (!details.isTransactionalAccount()) {
-                continue;
+            if (details.isTransactionalAccount()) {
+                account.toTinkTransactionalAccount(details).ifPresent(transactionalAccounts::add);
             }
-
-            Optional<TransactionalAccount> transactionalAccount =
-                    account.toTinkTransactionalAccount(details);
-            transactionalAccount.ifPresent(transactionalAccounts::add);
         }
 
         return transactionalAccounts;
