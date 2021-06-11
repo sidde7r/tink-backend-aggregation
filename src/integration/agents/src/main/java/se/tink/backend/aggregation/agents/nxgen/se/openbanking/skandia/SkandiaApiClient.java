@@ -39,7 +39,7 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 import se.tink.libraries.payment.rpc.Payment;
 
-public final class SkandiaApiClient {
+public class SkandiaApiClient {
 
     private final TinkHttpClient client;
     private final PersistentStorage persistentStorage;
