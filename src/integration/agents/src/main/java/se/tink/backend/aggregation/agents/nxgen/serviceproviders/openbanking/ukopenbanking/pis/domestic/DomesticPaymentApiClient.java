@@ -79,6 +79,11 @@ public class DomesticPaymentApiClient implements UkOpenBankingPaymentApiClient {
                     response);
         } catch (HttpResponseException e) {
             HttpResponse httpResponse = e.getResponse();
+
+            if (FAILED_STATUSES.contains(httpResponse.getStatus())) {
+                throw NO_BANK_SERVICE.exception();
+            }
+
             ErrorResponse body = httpResponse.getBody(ErrorResponse.class);
             if (body.getErrorMessages().contains(ErrorMessage.DEBTOR_VALIDATION_FAILURE)) {
                 throw new DebtorValidationException(
