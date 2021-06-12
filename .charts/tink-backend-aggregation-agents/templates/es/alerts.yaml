@@ -4,6 +4,7 @@ metadata:
   name: alerts-es
   namespace: agents
 spec:
+  interval: 10m
   rules:
                       ##### RE #####
 
