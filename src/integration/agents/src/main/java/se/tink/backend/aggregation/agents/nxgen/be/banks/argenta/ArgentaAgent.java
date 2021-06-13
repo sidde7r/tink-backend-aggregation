@@ -42,6 +42,7 @@ public final class ArgentaAgent extends NextGenerationAgent
         this.transactionalAccountRefreshController =
                 constructTransactionalAccountRefreshController();
         this.client.addFilter(new ArgentaTransactionFetchRetryFilter(1000));
+        this.client.addFilter(new ArgentaUnknownHostExceptionFilter());
     }
 
     protected void configureHttpClient(TinkHttpClient client) {
