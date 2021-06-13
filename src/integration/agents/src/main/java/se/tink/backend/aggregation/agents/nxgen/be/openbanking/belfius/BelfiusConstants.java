@@ -105,4 +105,8 @@ public final class BelfiusConstants {
         public static final String ACCOUNT_NOT_SUPPORTED = "20003";
         public static final String NOT_SUPPORTED = "20004";
     }
+
+    public static class Errors {
+        public static final String SERVICE_UNAVAILABLE = "SERVICE_UNAVAILABLE";
+    }
 }

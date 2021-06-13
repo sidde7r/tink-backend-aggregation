@@ -7,9 +7,11 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import javax.ws.rs.core.MediaType;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.refresh.AccountRefreshException;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusConstants.ErrorCodes;
+import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusConstants.Errors;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusConstants.QueryKeys;
@@ -85,6 +87,8 @@ public final class BelfiusApiClient {
             if (isAccountNotSupportedError(e)) {
                 throw LoginError.NOT_SUPPORTED.exception(
                         "This account can't be consulted via electronic channel");
+            } else if (isServiceUnavailable(e)) {
+                throw BankServiceError.NO_BANK_SERVICE.exception();
             }
             throw e;
         }
@@ -96,6 +100,13 @@ public final class BelfiusApiClient {
         return response.getStatus() == HttpStatusCodes.STATUS_CODE_FORBIDDEN
                 && (ErrorCodes.ACCOUNT_NOT_SUPPORTED.equals(body.getErrorCode())
                         || ErrorCodes.NOT_SUPPORTED.equals(body.getErrorCode()));
+    }
+
+    private boolean isServiceUnavailable(HttpResponseException ex) {
+        HttpResponse response = ex.getResponse();
+        ErrorResponse body = response.getBody(ErrorResponse.class);
+        return response.getStatus() == HttpStatusCodes.STATUS_CODE_SERVICE_UNAVAILABLE
+                && (Errors.SERVICE_UNAVAILABLE.equals(body.getError()));
     }
 
     public TokenResponse postToken(URL url, String tokenEntity) {
