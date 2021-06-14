@@ -24,9 +24,7 @@ public final class N26SmsAuthAgent extends N26Agent {
         // TODO: Set timeout
 
         N26SmsAuthenticator authenticator = new N26SmsAuthenticator(sessionStorage, n26APiClient);
-        SmsOtpAuthenticationPasswordController<String> thirdPartyAppAuthenticationController =
-                new SmsOtpAuthenticationPasswordController<>(
-                        catalog, supplementalInformationHelper, authenticator, 6);
-        return thirdPartyAppAuthenticationController;
+        return new SmsOtpAuthenticationPasswordController<>(
+                catalog, supplementalInformationHelper, authenticator, 6);
     }
 }

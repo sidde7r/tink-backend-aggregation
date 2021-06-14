@@ -8,6 +8,7 @@ import java.util.NoSuchElementException;
 import java.util.UUID;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
+import lombok.SneakyThrows;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
@@ -220,18 +221,26 @@ public class N26ApiClient {
         }
     }
 
+    @SneakyThrows
     public <T> T initiate2fa(String secondFactor, Class<T> className, String mfaToken) {
 
         String deviceToken =
                 N26Utils.getFromStorage(
                         persistentStorage, N26Constants.Storage.DEVICE_TOKEN, String.class);
         MultiFactorSelectRequest request = new MultiFactorSelectRequest(secondFactor, mfaToken);
-        return getRequest(
-                        URLS.APP_AUTHENTICATION,
-                        MediaType.APPLICATION_JSON_TYPE,
-                        N26Constants.BASIC_AUTHENTICATION_TOKEN)
-                .header(N26Constants.DEVICE_TOKEN, deviceToken)
-                .post(className, request);
+        try {
+            return getRequest(
+                            URLS.APP_AUTHENTICATION,
+                            MediaType.APPLICATION_JSON_TYPE,
+                            N26Constants.BASIC_AUTHENTICATION_TOKEN)
+                    .header(N26Constants.DEVICE_TOKEN, deviceToken)
+                    .post(className, request);
+        } catch (HttpResponseException exception) {
+            ErrorResponse errorResponse = exception.getResponse().getBody(ErrorResponse.class);
+            throw N26Utils.mapError(exception, errorResponse)
+                    .map(e -> e.exception(errorResponse.getErrorDescription()))
+                    .orElseGet(IllegalStateException::new);
+        }
     }
 
     public Either<ErrorResponse, AuthenticationResponse> pollAppStatus() {
