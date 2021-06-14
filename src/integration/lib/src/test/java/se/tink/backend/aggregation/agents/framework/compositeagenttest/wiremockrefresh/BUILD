@@ -18,6 +18,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/framework/wiremock/configuration/provider/socket",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/framework/wiremock/module",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/module/loader",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/summary/refresh",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/agentsservice",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/contractproducer",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/assertions",

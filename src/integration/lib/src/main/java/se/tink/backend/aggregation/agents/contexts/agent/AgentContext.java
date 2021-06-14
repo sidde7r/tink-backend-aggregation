@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.contexts.agent;
 
 import java.io.ByteArrayOutputStream;
 import se.tink.backend.aggregation.agents.contexts.CompositeAgentContext;
+import se.tink.backend.aggregation.agents.summary.refresh.RefreshSummary;
 import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.logmasker.LogMasker;
@@ -26,9 +27,14 @@ public abstract class AgentContext implements CompositeAgentContext {
     private UnleashClient unleashClient;
     private String certId;
     private String providerId;
+    protected RefreshSummary refreshSummary = new RefreshSummary();
 
     public InteractionCounter getSupplementalInteractionCounter() {
         return supplementalInteractionCounter;
+    }
+
+    public RefreshSummary getRefreshSummary() {
+        return this.refreshSummary;
     }
 
     @Override

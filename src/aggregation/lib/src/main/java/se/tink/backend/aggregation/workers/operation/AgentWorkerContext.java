@@ -33,6 +33,7 @@ import se.tink.backend.aggregation.agents.models.AccountFeatures;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.models.TransactionTypes;
 import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
+import se.tink.backend.aggregation.agents.summary.refresh.RefreshSummary;
 import se.tink.backend.aggregation.agents.utils.mappers.CoreAccountHolderMapper;
 import se.tink.backend.aggregation.agents.utils.mappers.CoreAccountMapper;
 import se.tink.backend.aggregation.agents.utils.mappers.CoreCredentialsMapper;
@@ -81,7 +82,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
                     CredentialsStatus.UNCHANGED);
 
     private Catalog catalog;
-    protected CuratorFramework coordinationClient;
+    private final CuratorFramework coordinationClient;
     protected CredentialsRequest request;
     private final AccountDataCache accountDataCache;
 
@@ -181,6 +182,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         this.supplementalInformationController = supplementalInformationController;
         this.providerSessionCacheController = providerSessionCacheController;
         this.controllerWrapper = controllerWrapper;
+        this.refreshSummary = new RefreshSummary(request, appId);
     }
 
     @Override
