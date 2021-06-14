@@ -46,6 +46,7 @@ import se.tink.backend.aggregation.agents.framework.dao.CredentialDataDao;
 import se.tink.backend.aggregation.agents.framework.modules.production.AgentIntegrationTestModule;
 import se.tink.backend.aggregation.agents.framework.testserverclient.AgentTestServerClient;
 import se.tink.backend.aggregation.agents.progressive.ProgressiveAuthAgent;
+import se.tink.backend.aggregation.agents.summary.refresh.RefreshSummary;
 import se.tink.backend.aggregation.configuration.AbstractConfigurationBase;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationWrapper;
 import se.tink.backend.aggregation.configuration.ProviderConfig;
@@ -627,6 +628,9 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
     }
 
     public NewAgentTestContext testRefresh(String credentialName) throws Exception {
+        RefreshSummary refreshSummary = new RefreshSummary();
+        context.setRefreshSummary(refreshSummary);
+
         initiateCredentials();
         RefreshInformationRequest credentialsRequest = createRefreshInformationRequest();
         readConfigurationFile();
@@ -649,7 +653,10 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
 
         context.validateCredentials();
         context.validateFetchedData(validator);
+
+        log.info("[REFRESH SUMMARY]\n" + refreshSummary.toJson());
         context.printCollectedData();
+
         if (!Strings.isNullOrEmpty(credentialName)) {
             CredentialDataDao credentialDataDao = context.dumpCollectedData();
             try {

@@ -164,6 +164,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         setAggregatorInfo(aggregatorInfo);
         setAppId(appId);
         setProviderId(request.getProvider().getName());
+        setRefreshSummary(new RefreshSummary(request, appId));
 
         if (request.getUser() != null) {
             String locale = request.getUser().getProfile().getLocale();
@@ -182,7 +183,6 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         this.supplementalInformationController = supplementalInformationController;
         this.providerSessionCacheController = providerSessionCacheController;
         this.controllerWrapper = controllerWrapper;
-        this.refreshSummary = new RefreshSummary(request, appId);
     }
 
     @Override

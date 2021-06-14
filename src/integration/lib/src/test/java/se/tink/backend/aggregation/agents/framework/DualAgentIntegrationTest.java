@@ -60,10 +60,12 @@ public class DualAgentIntegrationTest {
                                                         firstContext, secondContext, accountId)))
                         .collect(Collectors.toMap(p -> p.first, p -> p.second));
 
+        log.info("[REFRESH SUMMARY]\n" + firstContext.getRefreshSummary().toJson());
         // Log data obtained from both agents
         log.info("[[[ {} CONTEXT DATA ]]]\n\n", firstName);
         firstContext.printCollectedData();
 
+        log.info("[REFRESH SUMMARY]\n" + secondContext.getRefreshSummary().toJson());
         log.info("[[[ {} CONTEXT DATA ]]]\n\n", secondName);
         secondContext.printCollectedData();
 

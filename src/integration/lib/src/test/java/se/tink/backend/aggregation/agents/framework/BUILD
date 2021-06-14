@@ -16,6 +16,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/agent",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/agentfactory/iface",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/agentplatform",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/summary/refresh",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/agentsservice",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/eidasidentity",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/logmasker",

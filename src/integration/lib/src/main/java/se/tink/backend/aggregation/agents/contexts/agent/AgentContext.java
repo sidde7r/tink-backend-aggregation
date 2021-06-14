@@ -27,7 +27,7 @@ public abstract class AgentContext implements CompositeAgentContext {
     private UnleashClient unleashClient;
     private String certId;
     private String providerId;
-    protected RefreshSummary refreshSummary = new RefreshSummary();
+    protected RefreshSummary refreshSummary;
 
     public InteractionCounter getSupplementalInteractionCounter() {
         return supplementalInteractionCounter;
@@ -35,6 +35,10 @@ public abstract class AgentContext implements CompositeAgentContext {
 
     public RefreshSummary getRefreshSummary() {
         return this.refreshSummary;
+    }
+
+    public void setRefreshSummary(RefreshSummary refreshSummary) {
+        this.refreshSummary = refreshSummary;
     }
 
     @Override

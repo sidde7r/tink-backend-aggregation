@@ -37,6 +37,12 @@ public final class RefreshCommand implements CompositeAgentTestCommand {
 
     @Override
     public void execute() throws Exception {
+        RefreshSummary summary = context.getRefreshSummary();
+        if (summary == null) {
+            summary = new RefreshSummary();
+        }
+        context.setRefreshSummary(summary);
+
         credential.setStatus(CredentialsStatus.UPDATING);
 
         if (agent instanceof DeprecatedRefreshExecutor) {
@@ -49,9 +55,9 @@ public final class RefreshCommand implements CompositeAgentTestCommand {
                                             agent, item, context));
         }
 
-        RefreshSummary summary = context.getRefreshSummary();
         summary.updateStatus(RefreshStatus.FETCHING_COMPLETED);
         log.info("[REFRESH SUMMARY]\n" + summary.toJson());
+
         context.printCollectedData();
     }
 }
