@@ -50,6 +50,7 @@ import se.tink.backend.aggregation.workers.worker.AgentWorkerOperationFactory;
 import se.tink.backend.aggregation.workers.worker.AgentWorkerRefreshOperationCreatorWrapper;
 import se.tink.libraries.credentials.service.CreateCredentialsRequest;
 import se.tink.libraries.credentials.service.CredentialsRequest;
+import se.tink.libraries.credentials.service.HasRefreshScope;
 import se.tink.libraries.credentials.service.ManualAuthenticateRequest;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.libraries.credentials.service.RefreshScope;
@@ -243,6 +244,7 @@ public class AggregationServiceResource implements AggregationService {
     public void authenticate(final ManualAuthenticateRequest request, ClientInfo clientInfo)
             throws Exception {
         trackUserPresentFlagPresence("authenticate", request);
+        trackRefreshScopePresence("manual_authenticate", request);
         agentWorker.execute(
                 agentWorkerCommandFactory.createOperationAuthenticate(request, clientInfo));
     }
@@ -469,27 +471,33 @@ public class AggregationServiceResource implements AggregationService {
         }
     }
 
-    private void trackRefreshScopePresence(String method, RefreshInformationRequest request) {
-        trackRefreshScopePresence(method, request.getRefreshScope());
-    }
-
-    private void trackRefreshScopePresence(String method, TransferRequest request) {
+    private void trackRefreshScopePresence(String method, HasRefreshScope request) {
         trackRefreshScopePresence(method, request.getRefreshScope());
     }
 
     private void trackRefreshScopePresence(String method, RefreshScope refreshScope) {
-        metricRegistry
-                .meter(
-                        REFRESH_SCOPE_PRESENCE
-                                .label("method", method)
-                                .label("refresh_scope_present", refreshScope != null)
-                                .label(
-                                        "refresh_scope_segments_present",
-                                        refreshScope != null
-                                                && CollectionUtils.isNotEmpty(
-                                                        refreshScope
-                                                                .getFinancialServiceSegmentsIn())))
-                .inc();
+        metricRegistry.meter(getRefreshScopeLabels(method, refreshScope)).inc();
+    }
+
+    private MetricId getRefreshScopeLabels(String method, RefreshScope refreshScope) {
+        MetricId metricId =
+                REFRESH_SCOPE_PRESENCE
+                        .label("method", method)
+                        .label("refresh_scope_present", refreshScope != null);
+        if (refreshScope == null) {
+            return metricId;
+        }
+        return metricId.label(
+                        "refresh_scope_segments_present",
+                        CollectionUtils.isNotEmpty(refreshScope.getFinancialServiceSegmentsIn()))
+                .label(
+                        "refresh_scope_refreshable_items_present",
+                        CollectionUtils.isNotEmpty(refreshScope.getRefreshableItemsIn()))
+                .label(
+                        "refresh_scope_refreshable_items",
+                        refreshScope.getRefreshableItemsIn() == null
+                                ? 0
+                                : refreshScope.getRefreshableItemsIn().size());
     }
 
     private void trackRefreshIncludedInPayment(String method, boolean refreshIncluded) {
