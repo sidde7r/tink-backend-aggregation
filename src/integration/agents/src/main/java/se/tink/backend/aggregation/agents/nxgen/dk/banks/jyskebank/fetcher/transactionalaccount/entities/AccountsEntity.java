@@ -3,15 +3,19 @@ package se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.fetcher.tran
 import java.util.Optional;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.JyskeConstants.Log;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.JyskeConstants.Storage;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
 import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities.Answer;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
+import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
+import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails.Type;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.creditcard.CreditCardModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.loan.LoanModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.AccountIdentifier;
@@ -57,7 +61,9 @@ public class AccountsEntity {
         return CreditCardAccount.nxBuilder()
                 .withCardDetails(getCardDetails())
                 .withoutFlags()
-                .withId(getNonTransactionalAccountIdModule())
+                .withId(
+                        getNonTransactionalAccountIdModule(
+                                accountNumber.getRegNo() + ":" + accountNumber.getAccountNo()))
                 .addHolderName(ownerName)
                 .canWithdrawCash(AccountCapabilities.Answer.From(transfersFromAllowed))
                 .putInTemporaryStorage(Storage.PUBLIC_ID, accountNumber.getPublicId())
@@ -68,9 +74,24 @@ public class AccountsEntity {
         return InvestmentAccount.nxBuilder()
                 .withoutPortfolios()
                 .withCashBalance(getBalanceObject())
-                .withId(getNonTransactionalAccountIdModule())
+                .withId(
+                        getNonTransactionalAccountIdModule(
+                                accountNumber.getRegNo() + accountNumber.getAccountNo()))
                 .addHolderName(name)
                 .canWithdrawCash(Answer.From(transfersFromAllowed))
+                .build();
+    }
+
+    public LoanAccount toTinkLoanAccount() {
+        return LoanAccount.nxBuilder()
+                .withLoanDetails(
+                        LoanModule.builder()
+                                .withType(getLoanType())
+                                .withBalance(getAvailableCredit())
+                                .withInterestRate(
+                                        0) // Mobile api does not seem to present interest rate
+                                .build())
+                .withId(getNonTransactionalAccountIdModule(iban))
                 .build();
     }
 
@@ -114,9 +135,9 @@ public class AccountsEntity {
                 .build();
     }
 
-    private IdModule getNonTransactionalAccountIdModule() {
+    private IdModule getNonTransactionalAccountIdModule(String uniqueId) {
         return IdModule.builder()
-                .withUniqueIdentifier(accountNumber.getRegNo() + ":" + accountNumber.getAccountNo())
+                .withUniqueIdentifier(uniqueId)
                 .withAccountNumber(accountNumber.getAccountNo())
                 .withAccountName(name)
                 .addIdentifier(getDKAccountIdentifier())
@@ -144,5 +165,19 @@ public class AccountsEntity {
 
     private ExactCurrencyAmount getBalanceObject() {
         return ExactCurrencyAmount.of(balance.getAmount(), balance.getCurrencyCode());
+    }
+
+    private Type getLoanType() {
+        if (name.toLowerCase().contains("bil")) {
+            return Type.VEHICLE;
+        }
+        if (name.toLowerCase().contains("hus")) {
+            return Type.MORTGAGE;
+        }
+        if (name.toLowerCase().contains("student")) {
+            return Type.STUDENT;
+        }
+        log.info("tag={} Unknown loan type: {}", Log.UNKOWN_ACCOUNT_TYPE, name);
+        return Type.OTHER;
     }
 }

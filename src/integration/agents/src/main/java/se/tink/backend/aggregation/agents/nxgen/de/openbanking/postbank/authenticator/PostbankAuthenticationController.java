@@ -48,7 +48,7 @@ public class PostbankAuthenticationController implements TypedAuthenticator {
 
     private final Catalog catalog;
     private final SupplementalInformationController supplementalInformationController;
-    private final PostbankAuthenticator authenticator;
+    protected final PostbankAuthenticator authenticator;
 
     public CredentialsTypes getType() {
         return CredentialsTypes.PASSWORD;
@@ -62,6 +62,12 @@ public class PostbankAuthenticationController implements TypedAuthenticator {
 
         AuthorisationResponse initValues = authenticator.init(username, password);
 
+        handleSca(initValues, username);
+
+        authenticator.validateAndStoreConsentDetails();
+    }
+
+    protected void handleSca(AuthorisationResponse initValues, String username) {
         ScaMethod chosenScaMethod = initValues.getChosenScaMethod();
 
         if (chosenScaMethod != null && !isSupported(chosenScaMethod)) {
@@ -84,7 +90,6 @@ public class PostbankAuthenticationController implements TypedAuthenticator {
         }
 
         authenticateUsingChosenScaMethod(username, initValues, chosenScaMethod);
-        authenticator.validateAndStoreConsentDetails();
     }
 
     private void authenticateUsingChosenScaMethod(
@@ -108,7 +113,7 @@ public class PostbankAuthenticationController implements TypedAuthenticator {
                 authenticationType);
     }
 
-    private void validateReceivedCredentials(Credentials credentials) {
+    protected void validateReceivedCredentials(Credentials credentials) {
         NotImplementedException.throwIf(
                 !Objects.equals(credentials.getType(), getType()),
                 String.format(

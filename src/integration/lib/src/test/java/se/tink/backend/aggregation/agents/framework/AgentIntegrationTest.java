@@ -566,7 +566,9 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         }
 
         PaymentStatus statusResult = paymentFromResponse.getStatus();
-        Assert.assertEquals(statusResult, PaymentStatus.SIGNED);
+        Assert.assertTrue(
+                PaymentStatus.SIGNED.equals(statusResult)
+                        || PaymentStatus.PAID.equals(statusResult));
 
         log.info("Done with bank transfer.");
     }

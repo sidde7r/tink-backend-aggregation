@@ -1,0 +1,85 @@
+REQUEST 1
+POST https://xs2a.db.com/pis/DE/Postbank/v1/payments/instant-sepa-credit-transfers
+Accept: application/json
+Content-Type: application/json
+PSU-IP-Address: 127.0.0.1
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-ID-Type: DE_ONLB_POBA
+PSU-ID: dummy_psu_id
+TPP-Redirect-URI: https://127.0.0.1:7357/api/v1/thirdparty/callback?state=00000000-0000-4000-0000-000000000000
+TPP-Nok-Redirect-URI: https://127.0.0.1:7357/api/v1/thirdparty/callback?state=00000000-0000-4000-0000-000000000000
+
+{"debtorAccount":{"iban":"DE98500105171243359369","currency":"EUR"},"creditorAccount":{"iban":"DE32600700240075881300"},"instructedAmount":{"amount":"1.0","currency":"EUR"},"creditorName":"dummy owner","remittanceInformationUnstructured":"SepaReferenceToCreditor"}
+
+RESPONSE 1 SET UPDATE2
+201
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+Content-Type: application/json;charset=utf-8
+
+{"transactionStatus":"RCVD","_links":{"scaStatus":{"href":"https://xs2a.db.com/pis/DE/Postbank/v1/payments/instant-sepa-credit-transfers/cfd6fe6d-17f7-44f1-b00b-41025d4b39a9/authorisations/4597bb7e-5502-44b8-8c42-03a582fd5d8d"},"startAuthorisationWithEncryptedPsuAuthentication":{"href":"https://xs2a.db.com/pis/DE/Postbank/v1/payments/instant-sepa-credit-transfers/cfd6fe6d-17f7-44f1-b00b-41025d4b39a9/authorisations/4597bb7e-5502-44b8-8c42-03a582fd5d8d"},"self":{"href":"https://xs2a.db.com/pis/DE/Postbank/v1/payments/instant-sepa-credit-transfers/cfd6fe6d-17f7-44f1-b00b-41025d4b39a9"},"aspspCertificates":{"href":"https://xs2a.db.com/pb/aspsp-certificates/"},"status":{"href":"https://xs2a.db.com/pis/DE/Postbank/v1/payments/instant-sepa-credit-transfers/cfd6fe6d-17f7-44f1-b00b-41025d4b39a9/status"}},"paymentId":"cfd6fe6d-17f7-44f1-b00b-41025d4b39a9","transactionFeeIndicator":true,"transactionFees":{"amount":"0","currency":"EUR"}}
+
+REQUEST 2 MATCH UPDATE2
+PUT https://xs2a.db.com/pis/DE/Postbank/v1/payments/instant-sepa-credit-transfers/cfd6fe6d-17f7-44f1-b00b-41025d4b39a9/authorisations/4597bb7e-5502-44b8-8c42-03a582fd5d8d
+Accept: application/json
+Content-Type: application/json
+PSU-IP-Address: 127.0.0.1
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-ID-Type: DE_ONLB_POBA
+PSU-ID: dummy_psu_id
+
+{"psuData":{"encryptedPassword":"dummy_password"}}
+
+RESPONSE 2 SET UPDATE3
+200
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+Content-Type: application/json;charset=utf-8
+
+{"scaStatus":"psuAuthenticated","scaMethods":[{"name":"MFN1","authenticationType":"SMS_OTP","authenticationMethodId":"75619154"},{"authenticationVersion":"HHD14","explaination":"Erfassung der Auftragsdaten mittels animierter Grafik. Erfordert geeigneten TAN-Generator.","name":"DUMMY_0, optisch","authenticationType":"CHIP_OTP","authenticationMethodId":"75628091#OPTICAL"},{"authenticationVersion":"HHD14","explaination":"Erfassung der Auftragsdaten mit den Tasten Ihres TAN-Generators.","name":"DUMMY_0, manuell","authenticationType":"CHIP_OTP","authenticationMethodId":"75628091#MANUEL"},{"name":"Jan Pixel 3","authenticationType":"PUSH_OTP","authenticationMethodId":"89257096"},{"name":"dummy","authenticationType":"PUSH_OTP","authenticationMethodId":"89268882"},{"name":"BestSign App","authenticationType":"PUSH_OTP","authenticationMethodId":"95089223"},{"name":"Google noname","authenticationType":"PUSH_OTP","authenticationMethodId":"95512342"}],"_links":{"scaStatus":{"href":"https://xs2a.db.com/pis/DE/Postbank/v1/payments/instant-sepa-credit-transfers/cfd6fe6d-17f7-44f1-b00b-41025d4b39a9/authorisations/4597bb7e-5502-44b8-8c42-03a582fd5d8d"},"selectAuthenticationMethod":{"href":"https://xs2a.db.com/pis/DE/Postbank/v1/payments/instant-sepa-credit-transfers/cfd6fe6d-17f7-44f1-b00b-41025d4b39a9/authorisations/4597bb7e-5502-44b8-8c42-03a582fd5d8d"}}}
+
+REQUEST 3 MATCH UPDATE3
+PUT https://xs2a.db.com/pis/DE/Postbank/v1/payments/instant-sepa-credit-transfers/cfd6fe6d-17f7-44f1-b00b-41025d4b39a9/authorisations/4597bb7e-5502-44b8-8c42-03a582fd5d8d
+Accept: application/json
+Content-Type: application/json
+PSU-IP-Address: 127.0.0.1
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-ID-Type: DE_ONLB_POBA
+PSU-ID: dummy_psu_id
+
+{"authenticationMethodId":"95512342"}
+
+RESPONSE 3
+200
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+Content-Type: application/json;charset=utf-8
+
+{"scaStatus":"scaMethodSelected","chosenScaMethod":{"name":"Google noname","authenticationType":"PUSH_OTP","authenticationMethodId":"95512342"},"_links":{"scaStatus":{"href":"https://xs2a.db.com/pis/DE/Postbank/v1/payments/instant-sepa-credit-transfers/cfd6fe6d-17f7-44f1-b00b-41025d4b39a9/authorisations/4597bb7e-5502-44b8-8c42-03a582fd5d8d"}},"psuMessage":"Bitte prüfen Sie alle Angaben auf der Anzeige Ihrer App bzw. Ihres Geräts und bestätigen Sie Ihren Auftrag.\n\nÖffnen Sie Ihre App und prüfen Sie die angezeigten Auftragsdaten. Geben Sie den Auftrag per Fingerabdruck, Face ID oder Passwort frei.\n\nSollten die Auftragsdaten fehlerhaft sein, können Sie den Vorgang jederzeit abbrechen."}
+
+REQUEST 4
+GET https://xs2a.db.com/pis/DE/Postbank/v1/payments/instant-sepa-credit-transfers/cfd6fe6d-17f7-44f1-b00b-41025d4b39a9/authorisations/4597bb7e-5502-44b8-8c42-03a582fd5d8d
+Accept: application/json
+Content-Type: application/json
+PSU-IP-Address: 127.0.0.1
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-ID-Type: DE_ONLB_POBA
+PSU-ID: dummy_psu_id
+
+RESPONSE 4
+200
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+Content-Type: application/json;charset=utf-8
+
+{"scaStatus":"finalised"}
+
+REQUEST 5
+GET https://xs2a.db.com/pis/DE/Postbank/v1/payments/instant-sepa-credit-transfers/cfd6fe6d-17f7-44f1-b00b-41025d4b39a9/status
+Accept: application/json
+Content-Type: application/json
+PSU-IP-Address: 127.0.0.1
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+
+RESPONSE 5
+200
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+Content-Type: application/json;charset=utf-8
+
+{"transactionStatus":"ACTC","fundsAvailable":true}

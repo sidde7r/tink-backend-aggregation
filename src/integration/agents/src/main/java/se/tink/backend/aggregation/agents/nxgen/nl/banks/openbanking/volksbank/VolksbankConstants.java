@@ -70,6 +70,7 @@ public class VolksbankConstants {
         public static final String CONSENT_EXPIRED = "CONSENT_EXPIRED";
         public static final String CONSENT_INVALID = "CONSENT_INVALID";
         public static final String SERVICE_BLOCKED = "SERVICE_BLOCKED";
+        public static final String INVALID_REQUEST = "invalid_request";
     }
 
     static class HttpClient {

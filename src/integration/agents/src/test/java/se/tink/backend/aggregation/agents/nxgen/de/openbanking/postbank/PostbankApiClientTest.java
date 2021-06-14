@@ -9,6 +9,7 @@ import java.nio.file.Paths;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.crypto.PostbankFakeJwtGenerator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.Parameters;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheHeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.configuration.DeutscheMarketConfiguration;
@@ -47,6 +48,7 @@ public class PostbankApiClientTest {
                         new DeutscheHeaderValues("", ""),
                         new DeutscheMarketConfiguration(TEST_URL, "PSU_ID_TYPE"),
                         randomValueGenerator);
+        apiClient.enrichWithJwtGenerator(new PostbankFakeJwtGenerator());
     }
 
     @Test

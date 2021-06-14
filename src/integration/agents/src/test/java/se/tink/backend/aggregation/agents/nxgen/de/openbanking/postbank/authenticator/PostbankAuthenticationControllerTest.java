@@ -32,6 +32,7 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenti
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenticator.rpc.AuthorisationResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenticator.rpc.UpdateAuthorisationRequest;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.crypto.PostbankFakeJwtGenerator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.Parameters;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheHeaderValues;
@@ -305,6 +306,7 @@ public class PostbankAuthenticationControllerTest {
                         deutscheHeaderValues,
                         deutscheMarketConfiguration,
                         randomValueGenerator);
+        postbankApiClient.enrichWithJwtGenerator(new PostbankFakeJwtGenerator());
         return new PostbankAuthenticator(postbankApiClient, persistentStorage, credentials);
     }
 
