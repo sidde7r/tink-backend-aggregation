@@ -140,7 +140,7 @@ public final class SwedbankConstants {
 
         public static final String ALL_SCOPES =
                 "PSD2 PSD2account_balances PSD2account_transactions PSD2account_transactions_over90";
-        public static final String EE_SCOPES = "PSD2";
+        public static final String ALL_ACCOUNTS_SCOPES = "PSD2";
     }
 
     public static class BICProduction {
@@ -193,6 +193,10 @@ public final class SwedbankConstants {
         public static final int ATTEMPS_BEFORE_TIMEOUT = 10;
         public static final int CONSENT_DURATION_IN_DAYS = 90;
         public static final int RETRY_TRANSACTIONS_DOWNLOAD = 5000;
+
+        public static final long SCA_STATUS_POLL_DELAY = 3000;
+        public static final int SCA_STATUS_POLL_FREQUENCY = 2000;
+        public static final int SCA_STATUS_POLL_MAX_ATTEMPTS = 90;
     }
 
     public static final class LogMessages {
@@ -302,7 +306,8 @@ public final class SwedbankConstants {
                             "Servicekonto",
                             "Transaktionskonto",
                             "Ungdomskonto",
-                            "Valutakonto")
+                            "Valutakonto",
+                            "Current")
                     .put(
                             TransactionalAccountType.SAVINGS,
                             "Depåkonto 1",

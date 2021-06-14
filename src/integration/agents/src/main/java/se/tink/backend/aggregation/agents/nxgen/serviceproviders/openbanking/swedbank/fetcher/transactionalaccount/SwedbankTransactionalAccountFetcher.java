@@ -1,19 +1,28 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.fetcher.transactionalaccount;
 
+import com.google.common.util.concurrent.Uninterruptibles;
+import java.lang.invoke.MethodHandles;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
+import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.AuthStatus;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.ConsentStatus;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.EndUserMessage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.TimeValues;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.rpc.AuthenticationResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.fetcher.transactionalaccount.entity.account.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.fetcher.transactionalaccount.rpc.FetchAccountResponse;
@@ -32,6 +41,8 @@ import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 @Slf4j
 @JsonObject
 public class SwedbankTransactionalAccountFetcher implements AccountFetcher<TransactionalAccount> {
+    private static final Logger logger =
+            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final SwedbankApiClient apiClient;
     private final PersistentStorage persistentStorage;
     private final SessionStorage sessionStorage;
@@ -54,10 +65,14 @@ public class SwedbankTransactionalAccountFetcher implements AccountFetcher<Trans
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
+        handleConsentFlow();
 
         Collection<TransactionalAccount> tinkAccounts =
                 getAccounts().getAccountList().stream()
                         .map(toTinkAccountWithBalance())
+                        // TODO: temporary for Baltic
+                        //                        .map(account -> account.toTinkAccount(new
+                        // LinkedList<>()))
                         .filter(Optional::isPresent)
                         .map(Optional::get)
                         .collect(Collectors.toList());
@@ -88,15 +103,63 @@ public class SwedbankTransactionalAccountFetcher implements AccountFetcher<Trans
             handleFetchAccountError(e);
         }
 
+        // All auth consent (not so good to store both consents in oe place)
         useConsent(apiClient.getConsentAllAccounts().getConsentId());
+
+        // Detailed consent
         getDetailedConsent(getAccounts())
-                .ifPresent(consentResponse -> useConsent(consentResponse.getConsentId()));
+                .ifPresent(
+                        consentResponse -> {
+                            String status = consentResponse.getConsentStatus();
+                            String consentId = consentResponse.getConsentId();
+
+                            if (ConsentStatus.VALID.equalsIgnoreCase(status)) {
+                                useConsent(consentId);
+                            } else {
+                                try {
+                                    handleConsentAuthentication(consentResponse);
+                                } catch (HttpResponseException e) {
+                                    handleFetchAccountError(e);
+                                }
+                            }
+                        });
+    }
+
+    private void handleConsentAuthentication(ConsentResponse consentResponse) {
+        String url = consentResponse.getLinks().getHrefEntity().getHref();
+        AuthenticationResponse authResponse = apiClient.authorizeConsent(url);
+
+        Uninterruptibles.sleepUninterruptibly(
+                TimeValues.SCA_STATUS_POLL_DELAY, TimeUnit.MILLISECONDS);
+
+        for (int i = 0; i < TimeValues.SCA_STATUS_POLL_MAX_ATTEMPTS; i++) {
+            String status = apiClient.getScaStatus(authResponse.getCollectAuthUri());
+
+            switch (status.toLowerCase()) {
+                case AuthStatus.RECEIVED:
+                case AuthStatus.STARTED:
+                    logger.warn("Waiting for authentication");
+                    break;
+                case AuthStatus.FINALIZED:
+                    useConsent(consentResponse.getConsentId());
+                    return;
+                case AuthStatus.FAILED:
+                    throw ThirdPartyAppError.AUTHENTICATION_ERROR.exception();
+                default:
+                    logger.warn(String.format("Unknown status (%s)", status));
+                    throw ThirdPartyAppError.AUTHENTICATION_ERROR.exception();
+            }
+
+            Uninterruptibles.sleepUninterruptibly(
+                    TimeValues.SCA_STATUS_POLL_FREQUENCY, TimeUnit.MILLISECONDS);
+        }
+
+        logger.warn("Timeout");
     }
 
     private FetchAccountResponse getAccounts() {
         try {
             if (fetchAccountResponse == null) {
-                handleConsentFlow();
                 fetchAccountResponse = apiClient.fetchAccounts();
             }
             return fetchAccountResponse;

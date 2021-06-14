@@ -12,6 +12,7 @@ import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.TimeValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.BICProduction;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.RequestValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.SwedbankDecoupledAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.SwedbankRedirectAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.configuration.SwedbankConfiguration;
@@ -72,7 +73,8 @@ public abstract class SwedbankBaseAgent extends NextGenerationAgent
                         qsealcSigner,
                         componentProvider,
                         componentProvider.getCredentialsRequest(),
-                        BICProduction.SWEDEN);
+                        BICProduction.SWEDEN,
+                        RequestValues.MOBILE_ID); // TODO: get authType from config
 
         transactionalAccountFetcher =
                 new SwedbankTransactionalAccountFetcher(

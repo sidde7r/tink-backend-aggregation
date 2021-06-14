@@ -35,6 +35,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swe
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.rpc.AuthenticationResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.rpc.AuthenticationStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.rpc.AuthorizeRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.rpc.ConsentAuthorizeRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.rpc.ConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.rpc.RefreshTokenRequest;
@@ -86,6 +87,7 @@ public final class SwedbankApiClient implements SwedbankOpenBankingPaymentApiCli
     private final AgentComponentProvider componentProvider;
     private final CredentialsRequest credentialsRequest;
     private final String bic;
+    private final String authenticationMethodId;
 
     public SwedbankApiClient(
             TinkHttpClient client,
@@ -94,7 +96,8 @@ public final class SwedbankApiClient implements SwedbankOpenBankingPaymentApiCli
             QsealcSigner qsealcSigner,
             AgentComponentProvider componentProvider,
             CredentialsRequest credentialsRequest,
-            String bic) {
+            String bic,
+            String authenticationMethodId) {
         this.client = client;
         this.persistentStorage = persistentStorage;
         this.qsealcSigner = qsealcSigner;
@@ -103,6 +106,7 @@ public final class SwedbankApiClient implements SwedbankOpenBankingPaymentApiCli
         this.componentProvider = componentProvider;
         this.credentialsRequest = credentialsRequest;
         this.bic = bic;
+        this.authenticationMethodId = authenticationMethodId;
 
         try {
             this.signingCertificate =
@@ -213,6 +217,8 @@ public final class SwedbankApiClient implements SwedbankOpenBankingPaymentApiCli
         // customer to login with single engagement
         String bankId = isSwedbank() ? SwedbankConstants.BANK_IDS.get(0) : "";
         AuthorizeRequest authorizeRequest = new AuthorizeRequest();
+
+        // TODO: fixme
         if (market == "SE") {
             authorizeRequest =
                     new AuthorizeRequest(
@@ -220,7 +226,7 @@ public final class SwedbankApiClient implements SwedbankOpenBankingPaymentApiCli
                             getRedirectUrl(),
                             bankId,
                             personalId,
-                            RequestValues.MOBILE_ID,
+                            authenticationMethodId,
                             RequestValues.ALL_SCOPES);
         } else if (market == "EE") {
             authorizeRequest =
@@ -229,8 +235,8 @@ public final class SwedbankApiClient implements SwedbankOpenBankingPaymentApiCli
                             getRedirectUrl(),
                             null,
                             personalId,
-                            RequestValues.SMART_ID,
-                            RequestValues.EE_SCOPES);
+                            authenticationMethodId,
+                            RequestValues.ALL_ACCOUNTS_SCOPES);
         }
 
         return createRequest(SwedbankConstants.Urls.AUTHORIZATION_DECOUPLED)
@@ -253,6 +259,14 @@ public final class SwedbankApiClient implements SwedbankOpenBankingPaymentApiCli
         return createAuthBaseRequest(ssn, path)
                 .body(new SupplyBankIdRequest(bankId), MediaType.APPLICATION_JSON)
                 .put(AuthenticationStatusResponse.class);
+    }
+
+    public AuthenticationResponse authorizeConsent(String url) {
+        return createRequestInSession(new URL(Urls.BASE.concat(url)), true)
+                .type(MediaType.APPLICATION_JSON_TYPE)
+                .put(
+                        AuthenticationResponse.class,
+                        new ConsentAuthorizeRequest(authenticationMethodId));
     }
 
     public ConsentRequest createConsentRequest() {

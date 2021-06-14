@@ -55,6 +55,7 @@ java_library(
         "@aggregation//:com_fasterxml_jackson_datatype_jackson_datatype_jsr310",
         "@aggregation//:com_google_guava_guava",
         "@aggregation//:com_kjetland_mbknor_jackson_jsonschema_2_12",
+        "@tink_backend//src/aggregation-controller/api/src/main/java/se/tink/backend/aggregationcontroller/v1/rpc/enums",
         "@tink_backend//src/libraries/account_identifier",
     ],
 )

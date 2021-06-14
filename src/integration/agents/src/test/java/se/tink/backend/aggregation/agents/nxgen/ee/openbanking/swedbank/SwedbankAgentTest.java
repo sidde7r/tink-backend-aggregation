@@ -20,9 +20,8 @@ public class SwedbankAgentTest {
     private AgentIntegrationTest setupAgentTest() {
         return new AgentIntegrationTest.Builder("ee", "ee-swedbank-smartid")
                 .addCredentialField(Field.Key.USERNAME, manager.get(UsernameArgumentEnum.USERNAME))
-                //random tmp id
+                // random tmp id for test purposes
                 .addCredentialField(Field.Key.NATIONAL_ID_NUMBER, "11111111111")
-                // .addCredentialField(Field.Key.ACCESS_TOKEN, ACCESS_TOKEN)
                 .expectLoggedIn(false)
                 .setFinancialInstitutionId("swedbank")
                 .setAppId("tink")

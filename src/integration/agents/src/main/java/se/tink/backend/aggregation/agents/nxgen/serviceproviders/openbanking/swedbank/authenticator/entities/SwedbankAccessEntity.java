@@ -11,7 +11,7 @@ public class SwedbankAccessEntity {
     private List<IbanEntity> accounts = new ArrayList<>();
     private List<IbanEntity> transactions = new ArrayList<>();
     private List<IbanEntity> balances = new ArrayList<>();
-    private List<IbanEntity> transactionsOver90Days = new ArrayList<>();
+    //    private List<IbanEntity> transactionsOver90Days = new ArrayList<>();
 
     @JsonIgnore
     public SwedbankAccessEntity addIbans(List<String> ibans) {
@@ -20,7 +20,9 @@ public class SwedbankAccessEntity {
             accounts.add(ibanEntity);
             transactions.add(ibanEntity);
             balances.add(ibanEntity);
-            transactionsOver90Days.add(ibanEntity);
+
+            // TODO: not all banks can fetch 90days. We need to handle it
+            //            transactionsOver90Days.add(ibanEntity);
         }
         return this;
     }
