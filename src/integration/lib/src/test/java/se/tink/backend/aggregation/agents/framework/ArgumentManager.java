@@ -91,6 +91,15 @@ public final class ArgumentManager<ArgumentEnum extends Enum<ArgumentEnum> & Arg
         }
     }
 
+    public enum PinArgumentEnum implements ArgumentManagerEnum {
+        PIN;
+
+        @Override
+        public boolean isOptional() {
+            return false;
+        }
+    }
+
     public enum SsnArgumentEnum implements ArgumentManagerEnum {
         SSN;
 
