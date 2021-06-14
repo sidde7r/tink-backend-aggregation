@@ -982,7 +982,6 @@ java_library(
         "@aggregation//:org_apache_logging_log4j_log4j_api",
         "@aggregation//:org_apache_logging_log4j_log4j_core",
         "@aggregation//:org_apache_zookeeper_zookeeper",
-        "@aggregation//:org_codehaus_jackson_jackson_mapper_asl",
         "@aggregation//:org_slf4j_slf4j_api",
     ],
 )

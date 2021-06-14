@@ -1192,10 +1192,38 @@ maven_install(
         "org.apache.commons:commons-lang3:3.9",
         "org.apache.commons:commons-math3:3.2",
         "org.apache.commons:commons-text:1.8",
-        "org.apache.curator:curator-client:4.1.0",
-        "org.apache.curator:curator-framework:4.1.0",
-        "org.apache.curator:curator-recipes:4.1.0",
-        "org.apache.curator:curator-x-discovery:4.0.0",
+        maven.artifact(
+            group = "org.apache.curator",
+            artifact = "curator-client",
+            version = "4.3.0",
+            exclusions = [
+                "com.google.guava:guava",
+            ],
+        ),
+        maven.artifact(
+            group = "org.apache.curator",
+            artifact = "curator-framework",
+            version = "4.3.0",
+            exclusions = [
+                "com.google.guava:guava",
+            ],
+        ),
+        maven.artifact(
+            group = "org.apache.curator",
+            artifact = "curator-recipes",
+            version = "4.3.0",
+            exclusions = [
+                "com.google.guava:guava",
+            ],
+        ),
+        maven.artifact(
+            group = "org.apache.curator",
+            artifact = "curator-x-discovery",
+            version = "4.3.0",
+            exclusions = [
+                "com.google.guava:guava",
+            ],
+        ),
         "org.apache.httpcomponents:httpclient:4.5.12",
         "org.apache.httpcomponents:httpcore:4.4.13",
         "org.apache.httpcomponents:httpmime:4.5.11",
@@ -1211,7 +1239,6 @@ maven_install(
         "org.bitbucket.b_c:jose4j:0.6.5",
         "org.bouncycastle:bcpkix-jdk15on:1.68",
         "org.bouncycastle:bcprov-jdk15on:1.68",
-        "org.codehaus.jackson:jackson-mapper-asl:1.9.13",
         "org.codehaus.plexus:plexus-utils:3.0.17",
         "org.codehaus.woodstox:stax2-api:4.1",
         "org.eclipse.jetty.orbit:javax.servlet:3.0.0.v201112011016",
