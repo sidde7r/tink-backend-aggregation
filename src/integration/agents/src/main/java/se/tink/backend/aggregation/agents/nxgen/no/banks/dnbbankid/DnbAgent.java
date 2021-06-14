@@ -23,6 +23,8 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.dnbbankid.filters.DnbRe
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdIframeAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdIframeAuthenticationControllerProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdIframeAuthenticationControllerProviderModule;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
@@ -88,12 +90,16 @@ public final class DnbAgent extends NextGenerationAgent
     protected Authenticator constructAuthenticator() {
         DnbBankIdIframeInitializer iframeInitializer = new DnbBankIdIframeInitializer(credentials);
         DnbAuthenticator dnbAuthenticator = new DnbAuthenticator(apiClient);
-        return authenticationControllerProvider.createAuthController(
-                catalog,
-                context,
-                supplementalInformationController,
-                iframeInitializer,
-                dnbAuthenticator);
+        BankIdIframeAuthenticationController iframeAuthenticationController =
+                authenticationControllerProvider.createAuthController(
+                        catalog,
+                        context,
+                        supplementalInformationController,
+                        iframeInitializer,
+                        dnbAuthenticator);
+
+        return new AutoAuthenticationController(
+                request, context, iframeAuthenticationController, dnbAuthenticator);
     }
 
     @Override
@@ -145,6 +151,6 @@ public final class DnbAgent extends NextGenerationAgent
 
     @Override
     protected SessionHandler constructSessionHandler() {
-        return SessionHandler.alwaysFail();
+        return new DnbSessionHandler(apiClient);
     }
 }
