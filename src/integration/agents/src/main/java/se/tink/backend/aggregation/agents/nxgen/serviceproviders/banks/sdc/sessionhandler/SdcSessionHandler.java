@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.sess
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetcher.rpc.FilterAccountsRequest;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 
 public class SdcSessionHandler implements SessionHandler {
@@ -11,7 +10,6 @@ public class SdcSessionHandler implements SessionHandler {
     private final SdcApiClient bankClient;
 
     public SdcSessionHandler(SdcApiClient bankClient) {
-
         this.bankClient = bankClient;
     }
 
@@ -22,17 +20,8 @@ public class SdcSessionHandler implements SessionHandler {
 
     @Override
     public void keepAlive() throws SessionException {
-        // use filter request to check if the session is still alive
-        // any error is deemed session expired
         try {
-            FilterAccountsRequest request =
-                    new FilterAccountsRequest()
-                            .setIncludeCreditAccounts(true)
-                            .setIncludeDebitAccounts(true)
-                            .setOnlyFavorites(false)
-                            .setOnlyQueryable(true);
-
-            bankClient.filterAccounts(request);
+            bankClient.fetchAgreements();
         } catch (Exception e) {
             throw SessionError.SESSION_EXPIRED.exception(e);
         }
