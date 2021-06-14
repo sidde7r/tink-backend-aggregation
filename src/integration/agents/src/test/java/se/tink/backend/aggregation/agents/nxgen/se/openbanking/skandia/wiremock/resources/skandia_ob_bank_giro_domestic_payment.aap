@@ -11,19 +11,22 @@ Content-Type: application/json;charset=utf-8
 {
     "access_token": "dummyToken",
     "expires_in": 7200,
-    "refresh_token": "UmbG2iADd4YFZli8hgr5sS8x55faengkS5jUw3rA8L",
+    "refresh_token": "wVO02fhdy5tYZLN8W8gJkGLSKr0CYkapZPzRQigtHD",
     "token_type": "Bearer"
 }
 
 REQUEST 2 MATCH STATE2
-POST https://apis.skandia.se/open-banking/core-bank/pis/v2/payments/domestic-credit-transfer
+POST https://apis.skandia.se/open-banking/core-bank/pis/v2/payments/giro-domestic-credit-transfer
 Accept: application/json
 Content-Type: application/json
 Authorization: Bearer dummyToken
 
 {
     "creditorAccount": {
-        "bban": "12345678900"
+        "accountReferenceOther": {
+            "identification": "11111111",
+            "identificationType": "BANKGIRO"
+        }
     },
     "debtorAccount": {
         "bban": "12345654321"
@@ -34,8 +37,8 @@ Authorization: Bearer dummyToken
     },
     "remittanceInformationStructuredArray": [
         {
-            "reference": "test",
-            "referenceType": "PDTX"
+            "reference": "11111111111111111",
+            "referenceType": "SCOR"
         }
     ]
 }
@@ -48,25 +51,25 @@ Content-Type: application/json;charset=utf-8
 
   "transactionStatus": "RCVD",
 
-  "paymentId": "915085259414190",
+  "paymentId": "915026290134191",
 
   "_links": {
 
     "startAuthorisation": {
 
-      "href": "payments/domestic-credit-transfer/915085259414190/authorisations"
+      "href": "payments/giro-domestic-credit-transfer/915026290134191/authorisations"
 
     },
 
     "self": {
 
-      "href": "payments/domestic-credit-transfer/915085259414190"
+      "href": "payments/giro-domestic-credit-transfer/915026290134191"
 
     },
 
     "status": {
 
-      "href": "payments/domestic-credit-transfer/915085259414190/status"
+      "href": "payments/giro-domestic-credit-transfer/915026290134191/status"
 
     }
 
@@ -74,8 +77,9 @@ Content-Type: application/json;charset=utf-8
 
 }
 
+
 REQUEST 3 MATCH STATE3
-POST https://apis.skandia.se/open-banking/core-bank/pis/v2/payments/domestic-credit-transfer/915085259414190/authorisations
+POST https://apis.skandia.se/open-banking/core-bank/pis/v2/payments/giro-domestic-credit-transfer/915026290134191/authorisations
 Accept: application/json
 Content-Type: application/json
 Authorization: Bearer dummyToken
@@ -93,32 +97,32 @@ Content-Type: application/json;charset=utf-8
 
     "scaRedirect": {
 
-      "href": "https://signservice.skandia.se/b6956bae-7061-4d4a-a10e-210aa3a05fc6"
+      "href": "https://signservice.skandia.se/9b6ba5a3-903b-44c5-ba95-a3dcc65643db"
 
     },
 
     "status": {
 
-      "href": "payments/domestic-credit-transfer/915085259414190/status"
+      "href": "payments/giro-domestic-credit-transfer/915026290134191/status"
 
     },
 
     "self": {
 
-      "href": "payments/domestic-credit-transfer/915085259414190"
+      "href": "payments/giro-domestic-credit-transfer/915026290134191"
 
     }
 
   },
 
-  "paymentId": "915085259414190",
+  "paymentId": "915026290134191",
 
   "transactionStatus": "ACSP"
 
 }
 
 REQUEST 4 MATCH STATE4
-GET https://apis.skandia.se/open-banking/core-bank/pis/v2/payments/domestic-credit-transfer/915085259414190
+GET https://apis.skandia.se/open-banking/core-bank/pis/v2/payments/giro-domestic-credit-transfer/915026290134191
 Accept: application/json
 Content-Type: application/json
 Authorization: Bearer dummyToken
@@ -131,7 +135,13 @@ Content-Type: application/json;charset=utf-8
 
   "creditorAccount": {
 
-    "bban": "12345678900"
+    "accountReferenceOther": {
+
+      "identification": "11111111",
+
+      "identificationType": "BANKGIRO"
+
+    }
 
   },
 
@@ -145,15 +155,17 @@ Content-Type: application/json;charset=utf-8
 
     {
 
-      "reference": "TEST",
+      "reference": "11111111111111111",
 
-      "referenceType": "PDTX"
+      "referenceType": "SCOR"
 
     }
 
   ],
 
-  "endToEndIdentification": "eFvoEpNLoUeDzoLzxdjsYWodnYLglixgwsX",
+  "requestedExecutionDate": "2021-06-11T00:00:00+02:00",
+
+  "endToEndIdentification": "cHtOIdKfasCHWaSQwNbgVqRNhczWWUEJbAh",
 
   "instructedAmount": {
 
@@ -163,7 +175,6 @@ Content-Type: application/json;charset=utf-8
 
   },
 
-  "transactionStatus": "ACCC"
+  "transactionStatus": "ACSP"
 
 }
-
