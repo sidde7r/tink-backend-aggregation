@@ -1,28 +1,41 @@
 package se.tink.backend.aggregation.client.provider_configuration.rpc;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.google.common.base.MoreObjects;
 import java.util.List;
+import lombok.AccessLevel;
+import lombok.EqualsAndHashCode;
+import lombok.Setter;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
+@JsonPropertyOrder(alphabetic = true)
+@EqualsAndHashCode
+@Setter
 public class Field {
 
     private String defaultValue;
     private String description;
     private boolean exposed = true;
     private List<Field> children;
+    private String group;
     private String helpText;
     private String hint;
     private boolean immutable;
     private boolean masked;
+
+    @Setter(AccessLevel.NONE)
     private Integer maxLength;
+
     private Integer minLength;
     private String name;
     private boolean numeric;
+    private boolean oneOf;
     private boolean optional;
     private List<String> options;
     private String pattern;
     private String patternError;
+    private String style;
     private String type;
     private String value;
     private boolean sensitive;
@@ -40,6 +53,10 @@ public class Field {
 
     public List<Field> getChildren() {
         return children;
+    }
+
+    public String getGroup() {
+        return group;
     }
 
     public String getHelpText() {
@@ -74,6 +91,10 @@ public class Field {
         return patternError;
     }
 
+    public String getStyle() {
+        return style;
+    }
+
     public String getType() {
         return type;
     }
@@ -98,6 +119,10 @@ public class Field {
         return numeric;
     }
 
+    public boolean isOneOf() {
+        return oneOf;
+    }
+
     public boolean isOptional() {
         return optional;
     }
@@ -106,36 +131,16 @@ public class Field {
         return selectOptions;
     }
 
-    public void setDefaultValue(String defaultValue) {
-        this.defaultValue = defaultValue;
+    public boolean isSensitive() {
+        return sensitive;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public boolean isCheckbox() {
+        return checkbox;
     }
 
-    public void setExposed(boolean exposed) {
-        this.exposed = exposed;
-    }
-
-    public void setChildren(List<Field> children) {
-        this.children = children;
-    }
-
-    public void setHelpText(String helpText) {
-        this.helpText = helpText;
-    }
-
-    public void setHint(String hint) {
-        this.hint = hint;
-    }
-
-    public void setImmutable(boolean immutable) {
-        this.immutable = immutable;
-    }
-
-    public void setMasked(boolean masked) {
-        this.masked = masked;
+    public String getAdditionalInfo() {
+        return additionalInfo;
     }
 
     public void setMaxLength(Integer length) {
@@ -144,70 +149,6 @@ public class Field {
         } else {
             this.maxLength = length;
         }
-    }
-
-    public void setMinLength(Integer minLength) {
-        this.minLength = minLength;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setNumeric(boolean numeric) {
-        this.numeric = numeric;
-    }
-
-    public void setOptional(boolean optional) {
-        this.optional = optional;
-    }
-
-    public void setOptions(List<String> options) {
-        this.options = options;
-    }
-
-    public void setPattern(String pattern) {
-        this.pattern = pattern;
-    }
-
-    public void setPatternError(String patternError) {
-        this.patternError = patternError;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
-    }
-
-    public boolean isSensitive() {
-        return sensitive;
-    }
-
-    public void setSensitive(boolean sensitive) {
-        this.sensitive = sensitive;
-    }
-
-    public boolean isCheckbox() {
-        return checkbox;
-    }
-
-    public void setCheckbox(boolean checkbox) {
-        this.checkbox = checkbox;
-    }
-
-    public String getAdditionalInfo() {
-        return additionalInfo;
-    }
-
-    public void setAdditionalInfo(String additionalInfo) {
-        this.additionalInfo = additionalInfo;
-    }
-
-    public void setSelectOptions(List<SelectOption> selectOptions) {
-        this.selectOptions = selectOptions;
     }
 
     /**
