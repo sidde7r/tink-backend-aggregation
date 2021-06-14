@@ -55,7 +55,7 @@ import se.tink.libraries.account.enums.AccountIdentifierType;
 @AgentCapabilities({CHECKING_ACCOUNTS, TRANSFERS})
 @AgentPisCapability(
         capabilities = {PisCapability.SEPA_CREDIT_TRANSFER},
-        markets = {"DE", "ES", "IT", "FR"})
+        markets = {"DE", "ES", "IT", "FR", "IE"})
 public final class N26Agent extends AgentPlatformAgent
         implements RefreshCheckingAccountsExecutor, RefreshTransferDestinationExecutor {
 
