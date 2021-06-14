@@ -21,6 +21,7 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.dnb.filters.DnbRetryFil
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.bankid.BankIdAuthenticationControllerNO;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
@@ -77,8 +78,12 @@ public final class DnbAgent extends NextGenerationAgent
 
     @Override
     protected Authenticator constructAuthenticator() {
-        return new BankIdAuthenticationControllerNO(
-                supplementalInformationController, authenticator, catalog);
+        return new AutoAuthenticationController(
+                request,
+                context,
+                new BankIdAuthenticationControllerNO(
+                        supplementalInformationController, authenticator, catalog),
+                authenticator);
     }
 
     @Override
@@ -130,6 +135,6 @@ public final class DnbAgent extends NextGenerationAgent
 
     @Override
     protected SessionHandler constructSessionHandler() {
-        return SessionHandler.alwaysFail();
+        return new DnbSessionHandler(apiClient);
     }
 }
