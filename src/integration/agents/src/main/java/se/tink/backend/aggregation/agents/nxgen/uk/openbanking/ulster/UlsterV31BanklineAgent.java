@@ -1,8 +1,7 @@
-package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.rbs;
+package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.ulster;
 
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CREDIT_CARDS;
-import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
 
 import com.google.inject.Inject;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
@@ -11,7 +10,6 @@ import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModul
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.UkOpenBankingBaseAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingFlowFacade;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.authenticator.UkOpenBankingAisAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountOwnershipType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAis;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.module.UkOpenBankingFlowModule;
@@ -20,52 +18,38 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.UkOpenBankingV31Ais;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.authenticator.UkOpenBankingAisAuthenticationController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.authenticator.consent.ConsentStatusValidator;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.creditcards.CreditCardAccountMapper;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.creditcards.RbsGroupCreditCardBalanceMapper;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.identifier.DefaultIdentifierMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticationValidator;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
-import se.tink.libraries.mapper.PrioritizedValueExtractor;
 
 @AgentDependencyModulesForProductionMode(modules = UkOpenBankingFlowModule.class)
 @AgentDependencyModulesForDecoupledMode(
         modules = UkOpenBankingLocalKeySignerModuleForDecoupledMode.class)
-@AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, CREDIT_CARDS})
-public class RbsV31CorporateAgent extends UkOpenBankingBaseAgent {
+@AgentCapabilities({CHECKING_ACCOUNTS, CREDIT_CARDS})
+public class UlsterV31BanklineAgent extends UkOpenBankingBaseAgent {
 
     private static final UkOpenBankingAisConfig aisConfig;
-    private final LocalDateTimeSource localDateTimeSource;
 
     static {
         aisConfig =
                 UkOpenBankingAisConfiguration.builder()
-                        .withOrganisationId(RbsConstants.ORGANISATION_ID)
-                        .withApiBaseURL(RbsConstants.AIS_API_URL)
-                        .withWellKnownURL(RbsConstants.CORPORATE_WELL_KNOWN_URL)
-                        .withAllowedAccountOwnershipTypes(AccountOwnershipType.BUSINESS)
+                        .withOrganisationId(UlsterConstants.ORG_ID)
+                        .withApiBaseURL(UlsterConstants.AIS_API_URL)
+                        .withWellKnownURL(UlsterConstants.CORPORATE_WELL_KNOWN_URL)
                         .build();
     }
 
     @Inject
-    public RbsV31CorporateAgent(
+    public UlsterV31BanklineAgent(
             AgentComponentProvider componentProvider, UkOpenBankingFlowFacade flowFacade) {
         super(componentProvider, flowFacade, aisConfig);
-        this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
     }
 
     @Override
     protected UkOpenBankingAis makeAis() {
-        PrioritizedValueExtractor valueExtractor = new PrioritizedValueExtractor();
-        CreditCardAccountMapper creditCardAccountMapper =
-                new CreditCardAccountMapper(
-                        new RbsGroupCreditCardBalanceMapper(),
-                        new DefaultIdentifierMapper(valueExtractor));
-        return new UkOpenBankingV31Ais(
-                aisConfig, persistentStorage, creditCardAccountMapper, localDateTimeSource);
+        return new UkOpenBankingV31Ais(aisConfig, persistentStorage, localDateTimeSource);
     }
 
     @Override

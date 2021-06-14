@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.natwest;
+package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.rbs;
 
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CREDIT_CARDS;
@@ -35,7 +35,7 @@ import se.tink.libraries.mapper.PrioritizedValueExtractor;
 @AgentDependencyModulesForDecoupledMode(
         modules = UkOpenBankingLocalKeySignerModuleForDecoupledMode.class)
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, CREDIT_CARDS})
-public final class NatWestV31CorporateAgent extends UkOpenBankingBaseAgent {
+public class RbsV31BanklineAgent extends UkOpenBankingBaseAgent {
 
     private static final UkOpenBankingAisConfig aisConfig;
     private final LocalDateTimeSource localDateTimeSource;
@@ -43,15 +43,15 @@ public final class NatWestV31CorporateAgent extends UkOpenBankingBaseAgent {
     static {
         aisConfig =
                 UkOpenBankingAisConfiguration.builder()
-                        .withOrganisationId(NatWestConstants.ORGANISATION_ID)
-                        .withApiBaseURL(NatWestConstants.AIS_API_URL)
-                        .withWellKnownURL(NatWestConstants.CORPORATE_WELL_KNOWN_URL)
+                        .withOrganisationId(RbsConstants.ORGANISATION_ID)
+                        .withApiBaseURL(RbsConstants.AIS_API_URL)
+                        .withWellKnownURL(RbsConstants.CORPORATE_WELL_KNOWN_URL)
                         .withAllowedAccountOwnershipTypes(AccountOwnershipType.BUSINESS)
                         .build();
     }
 
     @Inject
-    public NatWestV31CorporateAgent(
+    public RbsV31BanklineAgent(
             AgentComponentProvider componentProvider, UkOpenBankingFlowFacade flowFacade) {
         super(componentProvider, flowFacade, aisConfig);
         this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
