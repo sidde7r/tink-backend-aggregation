@@ -3,19 +3,17 @@ package se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.fetcher;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.KnabApiClient;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.fetcher.entity.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.fetcher.rpc.BalancesResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
+@RequiredArgsConstructor
 public class KnabAccountFetcher implements AccountFetcher<TransactionalAccount> {
 
     private final KnabApiClient apiClient;
-
-    public KnabAccountFetcher(final KnabApiClient apiClient) {
-        this.apiClient = apiClient;
-    }
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
