@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.workers.commands.migrations.AgentVersionMigra
 import se.tink.backend.aggregation.workers.commands.migrations.implementations.banks.icabanken.IcaBankenSanitizingMigration;
 import se.tink.backend.aggregation.workers.commands.migrations.implementations.banks.ics.ICSSanitizingMigration;
 import se.tink.backend.aggregation.workers.commands.migrations.implementations.banks.jyskebank.JyskebankSanitizingMigration;
+import se.tink.backend.aggregation.workers.commands.migrations.implementations.banks.nordea.NordeaCreditcardAccountMigration;
 import se.tink.backend.aggregation.workers.commands.migrations.implementations.banks.nordea.NordeaSanitizingMigration;
 import se.tink.backend.aggregation.workers.commands.migrations.implementations.banks.nordeadk.NordeaDkAccountMigration;
 import se.tink.backend.aggregation.workers.commands.migrations.implementations.banks.skandiabanken.SkandiaBankenSanitizingMigration;
@@ -72,6 +73,8 @@ public class MigrateCredentialsAndAccountsWorkerCommand extends AgentWorkerComma
                     .put("coop-bankid", new EnterCardAccountIdMigration())
                     .put("remembermastercard-bankid", new EnterCardAccountIdMigration())
                     .put("moregolfmastercard-bankid", new EnterCardAccountIdMigration())
+                    .put("fi-nordea-thirdpartyapp", new NordeaCreditcardAccountMigration())
+                    .put("no-nordea-bankid", new NordeaCreditcardAccountMigration())
                     .build();
 
     public MigrateCredentialsAndAccountsWorkerCommand(

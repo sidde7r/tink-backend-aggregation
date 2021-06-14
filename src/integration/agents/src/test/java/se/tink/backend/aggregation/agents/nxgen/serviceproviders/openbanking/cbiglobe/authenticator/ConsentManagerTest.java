@@ -39,6 +39,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.UpdateConsentPsuCredentialsRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.AccountsResponse;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.ActualLocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
@@ -67,7 +68,9 @@ public class ConsentManagerTest {
     public void init() {
         apiClient = mock(CbiGlobeApiClient.class);
         userState = mock(CbiUserState.class);
-        consentManager = new ConsentManager(apiClient, userState, 100L, 3);
+
+        consentManager =
+                new ConsentManager(apiClient, userState, new ActualLocalDateTimeSource(), 100L, 3);
     }
 
     @Test

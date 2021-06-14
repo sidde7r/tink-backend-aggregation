@@ -1,0 +1,279 @@
+REQUEST 1
+POST https://cbiglobeopenbankingapigateway.nexi.it/auth/oauth/v2/token?grant_type=client_credentials&scope=production
+Content-Type: application/x-www-form-urlencoded
+Authorization: Basic ZHVtbXlDbGllbnRJZDpkdW1teUNsaWVudFNlY3JldA==
+X-Aggregator: Tink Testing
+
+RESPONSE 1
+200
+Date: Thu, 20 May 2021 12:02:25 GMT
+Date: Thu, 20 May 2021 12:02:25 GMT
+Pragma: no-cache
+Cache-Control: no-store
+Content-Type: application/json;charset=utf-8
+Server:
+Content-Length: 90
+
+{"access_token":"dummyToken", "token_type":"Bearer", "expires_in":0, "scope":"production"}
+
+REQUEST 2
+POST https://cbiglobeopenbankingapigateway.nexi.it/platform/enabler/psd2orchestrator/ais/3.0.0/consents
+Content-Type: application/json
+Authorization: Bearer dummyToken
+aspsp-code: 36081
+aspsp-product-code: IBANCARD
+X-Aggregator: Tink Testing
+tpp-redirect-uri: https://127.0.0.1:7357/api/v1/thirdparty/callback?state=00000000-0000-4000-0000-000000000000&code=acc&result=success
+tpp-nok-redirect-uri: https://127.0.0.1:7357/api/v1/thirdparty/callback?state=00000000-0000-4000-0000-000000000000&code=acc&result=failure
+
+{"access":{"balances":null,"transactions":null,"availableAccounts":"allAccounts"},"combinedServiceIndicator":"true","frequencyPerDay":"1","recurringIndicator":"false","validUntil":"1992-07-09"}
+
+RESPONSE 2
+200
+Date: Thu, 20 May 2021 12:02:25 GMT
+Date: Thu, 20 May 2021 12:02:24 GMT
+X-Frame-Options: SAMEORIGIN
+aspsp-sca-approach: REDIRECT
+x-request-id: fff782a4-5c8f-46e2-82df-483ed5fb25d7
+Cache-Control: no-store
+Pragma: no-cache
+Strict-Transport-Security: max-age=315**HASHED:iz**0; includeSubDomains; preload
+X-XSS-Protection: 1; mode=block
+X-Content-Type-Options: nosniff
+Content-Type: application/json
+Server:
+Content-Length: 273
+
+{"consentStatus":"received","consentId":"consentForAccountId","scaMethods":[{"authenticationMethodId":"2","authenticationType":"SMS_OTP","name":"SMS numero sicuro","explanation":"Autenticazione tramite SMS numero sicuro","authenticationVersion":"1.11"},{"authenticationMethodId":"1","authenticationType":"PUSH_OTP","name":"APP BancoPosta","explanation":"Autenticazione tramite App Bancoposta","authenticationVersion":"1.11"}],"_links":{"selectAuthenticationMethod":{"href":"/consents/consentId"},"self":{"href":"/consents/consentId"}}}
+
+REQUEST 3
+PUT https://cbiglobeopenbankingapigateway.nexi.it/platform/enabler/psd2orchestrator/ais/2.3.2/consents/consentForAccountId
+Content-Type: application/json
+Authorization: Bearer dummyToken
+aspsp-code: 36081
+X-Aggregator: Tink Testing
+operation-name: updatePsuData
+
+{"authenticationMethodId":"2"}
+
+RESPONSE 3
+200
+Date: Thu, 20 May 2021 10:38:55 GMT
+Date: Thu, 20 May 2021 10:38:55 GMT
+X-Frame-Options: SAMEORIGIN
+aspsp-sca-approach: REDIRECT
+x-request-id: b76ade57-077e-4fe4-8ec2-64e58989c621
+Cache-Control: no-store
+Pragma: no-cache
+Strict-Transport-Security: max-age=315**HASHED:iz**0; includeSubDomains; preload
+X-XSS-Protection: 1; mode=block
+X-Content-Type-Options: nosniff
+Content-Type: application/json
+Server:
+Content-Length: 722
+
+{"_links":{"scaRedirect":{"href":"https://idp-poste.poste.it/jod-idp-retail/federation/cbiauth/public/v1/sca-login?a=E4GRi6j_1d15BarAhyCHf1plACjVuoiwe6_4ke6N-XKOXJQyBK_tOiTxHOFbh_jnMfTDu8S3fl8sTVHJXpW5dw7nlIoZocFrvArZC0fxPMKNrT8fazvPogEwRrGYq5MqfffW7KgD5tinvHA29mhff-YoTzLgJwir6mssogJ-8MhwSw3Tk0EqOtlK_x8QvFQa_0b9XOjJx3RHwLC96xkAXK3MoB9N2XLMp5WLjstrEfSE4fcF5FcNppDNRSgptEbXYWFvDfAbTllDLFagVsELXx7uDF7aqBr7N7WPjrsqZgZfTo9y9u5rHQz3yYNhslqwggzVw4W7wk7vRT1YzgEzcA.y_kqU5jxNxqK7X-f.kuYSbrwRLHlt5rJbK0oh1B2za-Zk-0jCbTTZEfDtKANwlQs4zvkvujYRY4MxsfviVcyDmIJqO3-4R11eIxFWdc4MDoZLQbD45WhQ-3L81o1Ab_O8KWfcI9TbPVHF5Q.VK6ZLzmF84PvkAhYg_RgZQ"},"self":{"href":"/consents/consentId"}},"consentStatus":"received"}
+
+REQUEST 4
+GET https://cbiglobeopenbankingapigateway.nexi.it/platform/enabler/psd2orchestrator/ais/2.3.2/consents/consentForAccountId
+Content-Type: application/json
+Authorization: Bearer dummyToken
+aspsp-code: 36081
+X-Aggregator: Tink Testing
+
+RESPONSE 4
+200
+Date: Thu, 20 May 2021 10:40:51 GMT
+Date: Thu, 20 May 2021 10:40:51 GMT
+X-Frame-Options: SAMEORIGIN
+Cache-Control: no-store
+Pragma: no-cache
+Strict-Transport-Security: max-age=315**HASHED:iz**0; includeSubDomains; preload
+X-XSS-Protection: 1; mode=block
+X-Content-Type-Options: nosniff
+Content-Type: application/json
+Server:
+Content-Length: 200
+
+{"access":{"availableAccounts":"allAccounts"},"recurringIndicator":"false","validUntil":"1992-07-09","frequencyPerDay":"1","lastActionDate":"2021-05-20","consentStatus":"valid","scaStatus":"VERIFIED"}
+
+REQUEST 5
+GET https://cbiglobeopenbankingapigateway.nexi.it/platform/enabler/psd2orchestrator/ais/3.0.0/accounts
+Content-Type: application/json
+Authorization: Bearer dummyToken
+aspsp-code: 36081
+consent-id: consentForAccountId
+psu-ip-address: 127.0.0.1
+X-Aggregator: Tink Testing
+
+RESPONSE 5
+200
+Date: Thu, 20 May 2021 10:40:52 GMT
+Date: Thu, 20 May 2021 10:40:52 GMT
+X-Frame-Options: SAMEORIGIN
+x-request-id: 4f378bdb-bd86-44b2-aca4-a4976cd33a62
+Cache-Control: no-store
+Pragma: no-cache
+Strict-Transport-Security: max-age=315**HASHED:iz**0; includeSubDomains; preload
+X-XSS-Protection: 1; mode=block
+X-Content-Type-Options: nosniff
+Content-Type: application/json
+Server:
+Content-Length: 370
+
+{"accounts":[{"iban":"ACCOUNT_1_IBAN_1234","currency":"EUR","resourceId":"ACCOUNT_1","product":"PREPAGATA CARTA TINABA","usage":"PRIV","_links":{"account":{"href":"/accounts/0100000032722745"},"balances":{"href":"/accounts/0100000032722745/balances"},"transactions":{"href":"/accounts/0100000032722745/transactions"}}}]}
+
+REQUEST 6
+POST https://cbiglobeopenbankingapigateway.nexi.it/platform/enabler/psd2orchestrator/ais/3.0.0/consents
+Content-Type: application/json
+Authorization: Bearer dummyToken
+aspsp-code: 36081
+tpp-redirect-uri:  https://127.0.0.1:7357/api/v1/thirdparty/callback?state=00000000-0000-4000-0000-000000000000&code=trans&result=success
+tpp-nok-redirect-uri:  https://127.0.0.1:7357/api/v1/thirdparty/callback?state=00000000-0000-4000-0000-000000000000&code=trans&result=failure
+X-Aggregator: Tink Testing
+
+{"access":{"balances":[{"accountId":"ACCOUNT_1","iban":"ACCOUNT_1_IBAN_1234"}],"transactions":[{"accountId":"ACCOUNT_1","iban":"ACCOUNT_1_IBAN_1234"}],"availableAccounts":null},"combinedServiceIndicator":"true","frequencyPerDay":"4","recurringIndicator":"true","validUntil":"1992-07-09"}
+
+RESPONSE 6
+201
+Date: Thu, 20 May 2021 10:40:53 GMT
+Date: Thu, 20 May 2021 10:40:52 GMT
+X-Frame-Options: SAMEORIGIN
+aspsp-sca-approach: REDIRECT
+x-request-id: fbee7b9f-acf9-4af4-a565-7b84b4d79c60
+Location: ***
+Cache-Control: no-store
+Pragma: no-cache
+Strict-Transport-Security: max-age=315**HASHED:iz**0; includeSubDomains; preload
+X-XSS-Protection: 1; mode=block
+X-Content-Type-Options: nosniff
+Content-Type: application/json
+Server:
+Content-Length: 606
+
+{"consentStatus":"received","consentId":"consentForTransactionId","scaMethods":[{"authenticationMethodId":"2","authenticationType":"SMS_OTP","name":"SMS numero sicuro","explanation":"Autenticazione tramite SMS numero sicuro","authenticationVersion":"1.11"},{"authenticationMethodId":"1","authenticationType":"PUSH_OTP","name":"APP BancoPosta","explanation":"Autenticazione tramite App Bancoposta","authenticationVersion":"1.11"}],"_links":{"selectAuthenticationMethod":{"href":"/consents/**HASHED:37**"},"self":{"href":"/consents/**HASHED:37**"}}}
+
+REQUEST 7
+PUT https://cbiglobeopenbankingapigateway.nexi.it/platform/enabler/psd2orchestrator/ais/2.3.2/consents/consentForTransactionId
+Content-Type: application/json
+Authorization: Bearer dummyToken
+aspsp-code: 36081
+X-Aggregator: Tink Testing
+
+{"authenticationMethodId":"2"}
+
+RESPONSE 7
+200
+Date: Thu, 20 May 2021 10:40:54 GMT
+Date: Thu, 20 May 2021 10:40:54 GMT
+X-Frame-Options: SAMEORIGIN
+aspsp-sca-approach: REDIRECT
+Cache-Control: no-store
+Pragma: no-cache
+Strict-Transport-Security: max-age=315**HASHED:iz**0; includeSubDomains; preload
+X-XSS-Protection: 1; mode=block
+X-Content-Type-Options: nosniff
+Content-Type: application/json
+Server:
+Content-Length: 722
+
+{"_links":{"scaRedirect":{"href":"https://idp-poste.poste.it/jod-idp-retail/federation/cbiauth/public/v1/sca-login?a=ZPIAvYuL_JyxbRtNBL7kx6sZuPBC9l6_Tk1OPqcJMf_L4z8f_ttAnqtMkxzzenYrgFHzFMBUX-rERV7FG-6x9K-tQDqdbT4rOQd_1oXtNsvWcC5ZPsFk2YysXdnIxDtIfbFrFf2AgreT0gw7j52-BpDiwEzxzy3WOvfNBQHhfrm45muU5lFWU3RcxusuMn7_C8vaCcL3v-PWLMphj9X0ZbmgUuAv4DNS2OMHbxwvbJSkkaw_k6lvTQqRWQX4VmpBa4qDSqRvnqAQyh567RIehAXQ2PSy1hSrFmqPyeoXoN3bTu55h3Bey2RwfHhubMAFbEQaqzRHDcFNoBpUTIKcow.gqRkAQxHNP6-l-3X.Olf1HWYTkD5MkGYsZaSz5adbsMKirIAdD4P114cEDYJLClUxIGpFivqCRYiw_CdkzZlJKGnlGnYQQ7h_qd8TnbJiq7_HW9YY8xiK7-b34X1iYnAWfLLgi-jUw8MHLA.WOoL42wniYPjVpnOO-XUsw"},"self":{"href":"/consents/**HASHED:37**"}},"consentStatus":"received"}
+
+REQUEST 8
+GET https://cbiglobeopenbankingapigateway.nexi.it/platform/enabler/psd2orchestrator/ais/2.3.2/consents/consentForTransactionId
+Content-Type: application/json
+Authorization: Bearer dummyToken
+aspsp-code: 36081
+X-Aggregator: Tink Testing
+
+RESPONSE 8
+200
+Date: Thu, 20 May 2021 10:41:53 GMT
+Date: Thu, 20 May 2021 10:41:52 GMT
+X-Frame-Options: SAMEORIGIN
+Cache-Control: no-store
+Pragma: no-cache
+Strict-Transport-Security: max-age=315**HASHED:iz**0; includeSubDomains; preload
+X-XSS-Protection: 1; mode=block
+X-Content-Type-Options: nosniff
+Content-Type: application/json
+Server:
+Content-Length: 273
+
+{"access":{"balances":[{"iban":"ACCOUNT_1_IBAN_1234"}],"transactions":[{"iban":"ACCOUNT_1_IBAN_1234"}]},"recurringIndicator":"true","validUntil":"1992-07-09","frequencyPerDay":"4","lastActionDate":"2021-05-20","consentStatus":"valid","scaStatus":"VERIFIED"}
+
+REQUEST 9
+GET https://cbiglobeopenbankingapigateway.nexi.it/platform/enabler/psd2orchestrator/ais/2.3.2/accounts/ACCOUNT_1/balances
+Content-Type: application/json
+Authorization: Bearer dummyToken
+aspsp-code: 36081
+consent-id: consentForTransactionId
+X-Aggregator: Tink Testing
+
+RESPONSE 9
+200
+Date: Thu, 20 May 2021 12:02:26 GMT
+Date: Thu, 20 May 2021 12:02:26 GMT
+X-Frame-Options: SAMEORIGIN
+Cache-Control: no-store
+Pragma: no-cache
+Strict-Transport-Security: max-age=315**HASHED:iz**0; includeSubDomains; preload
+X-XSS-Protection: 1; mode=block
+X-Content-Type-Options: nosniff
+Content-Type: application/json
+Server: 
+Content-Length: 339
+
+{"balances":[{"balanceAmount":{"currency":"EUR","amount":"14237.48"},"balanceType":"forwardAvailable","lastChangeDateTime":"2021-05-20T14:02:26.000Z","referenceDate":"2021-05-20"},{"balanceAmount":{"currency":"EUR","amount":"14212.71"},"balanceType":"authorised","lastChangeDateTime":"2021-05-20T14:02:26.000Z","referenceDate":"2021-05-20"}]}
+
+REQUEST 10
+GET https://cbiglobeopenbankingapigateway.nexi.it/platform/enabler/psd2orchestrator/ais/2.4.0/accounts/ACCOUNT_1/transactions?booking_status=booked&date_from=2021-02-20&date_to=2021-05-21&offset=1
+Content-Type: application/json
+Authorization: Bearer dummyToken
+aspsp-code: 36081
+consent-id: consentForTransactionId
+X-Aggregator: Tink Testing
+
+RESPONSE 10
+200
+Date: Thu, 20 May 2021 12:02:27 GMT
+Date: Thu, 20 May 2021 12:02:27 GMT
+X-Frame-Options: SAMEORIGIN
+cpaas-total-pages: 2
+x-request-id: 2c816e94-6fd7-4750-8e64-db14d951ced5
+cpaas-total-elements: ***
+Cache-Control: no-store
+Pragma: no-cache
+Strict-Transport-Security: max-age=315**HASHED:iz**0; includeSubDomains; preload
+X-XSS-Protection: 1; mode=block
+X-Content-Type-Options: nosniff
+Content-Type: application/json
+Server:
+Transfer-Encoding: chunked
+
+{"transactions":{"booked":[{"transactionId":"2021051957333271885000000","bookingDate":"2021-05-19","valueDate":"2021-05-19","transactionAmount":{"currency":"EUR","amount":"-500.00"},"remittanceInformationUnstructured":"POSTA","_links":{"transactionDetails":{"href":"/accounts/**HASHED:5b**/transactions/2021051957333271885000000"}}},{"transactionId":"2021051900130180660900000","bookingDate":"2021-05-19","valueDate":"2021-05-18","transactionAmount":{"currency":"EUR","amount":"-600.00"},"remittanceInformationUnstructured":"SPORT","_links":{"transactionDetails":{"href":"/accounts/**HASHED:5b**/transactions/2021051900130180660900000"}}}]}}
+
+REQUEST 11
+GET https://cbiglobeopenbankingapigateway.nexi.it/platform/enabler/psd2orchestrator/ais/2.4.0/accounts/ACCOUNT_1/transactions?booking_status=booked&date_from=2021-02-20&date_to=2021-05-21&offset=2
+Content-Type: application/json
+Authorization: Bearer dummyToken
+aspsp-code: 36081
+consent-id: consentForTransactionId
+X-Aggregator: Tink Testing
+
+RESPONSE 11
+200
+Date: Thu, 20 May 2021 12:02:28 GMT
+Date: Thu, 20 May 2021 12:02:28 GMT
+X-Frame-Options: SAMEORIGIN
+x-request-id: ad6c5836-072f-4157-8be5-43dd6f5c0056
+Cache-Control: no-store
+Pragma: no-cache
+Strict-Transport-Security: max-age=315**HASHED:iz**0; includeSubDomains; preload
+X-XSS-Protection: 1; mode=block
+X-Content-Type-Options: nosniff
+Content-Type: application/json
+Server:
+Transfer-Encoding: chunked
+
+{"transactions":{"booked":[{"transactionId":"2021050500130244466500000","bookingDate":"2021-05-05","valueDate":"2021-05-05","transactionAmount":{"currency":"EUR","amount":"-24.80"},"remittanceInformationUnstructured":"remittanceInformationUnstructured","_links":{"transactionDetails":{"href":"/accounts/**HASHED:5b**/transactions/2021050500130244466500000"}}}]}}

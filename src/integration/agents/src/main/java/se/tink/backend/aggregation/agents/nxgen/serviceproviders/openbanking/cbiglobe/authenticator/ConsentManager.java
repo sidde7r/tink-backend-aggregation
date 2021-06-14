@@ -9,7 +9,6 @@ import com.github.rholder.retry.RetryerBuilder;
 import com.github.rholder.retry.StopStrategies;
 import com.github.rholder.retry.WaitStrategies;
 import java.text.ParseException;
-import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -45,6 +44,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.UpdateConsentPsuCredentialsRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.UpdateConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.AccountsResponse;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
@@ -57,11 +57,15 @@ public class ConsentManager {
 
     private final CbiGlobeApiClient apiClient;
     private final CbiUserState userState;
+    private final LocalDateTimeSource localDateTimeSource;
     private final long sleepTime;
     private final int retryAttempts;
 
-    public ConsentManager(CbiGlobeApiClient apiClient, CbiUserState userState) {
-        this(apiClient, userState, SLEEP_TIME, RETRY_ATTEMPTS);
+    public ConsentManager(
+            CbiGlobeApiClient apiClient,
+            CbiUserState userState,
+            LocalDateTimeSource localDateTimeSource) {
+        this(apiClient, userState, localDateTimeSource, SLEEP_TIME, RETRY_ATTEMPTS);
     }
 
     public ConsentResponse createAllPsd2Consent(String state, AllPsd2 allPsd2) {
@@ -116,7 +120,11 @@ public class ConsentManager {
     }
 
     private String createConsentValidDate() {
-        return LocalDate.now().plusDays(FormValues.CONSENT_VALID_PERIOD_DAYS).toString();
+        return localDateTimeSource
+                .now()
+                .toLocalDate()
+                .plusDays(FormValues.CONSENT_VALID_PERIOD_DAYS)
+                .toString();
     }
 
     private ConsentResponse create(

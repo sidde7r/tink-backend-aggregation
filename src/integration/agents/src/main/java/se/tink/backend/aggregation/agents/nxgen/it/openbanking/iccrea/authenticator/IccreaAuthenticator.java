@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.CbiThirdPartyFinishAuthenticationStep;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.CbiUserState;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.configuration.CbiGlobeConfiguration;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
@@ -22,8 +23,9 @@ public class IccreaAuthenticator extends CbiGlobeAuthenticator {
             CbiUserState userState,
             CbiGlobeConfiguration configuration,
             SupplementalInformationController supplementalInformationController,
-            Catalog catalog) {
-        super(apiClient, strongAuthenticationState, userState, configuration);
+            Catalog catalog,
+            LocalDateTimeSource localDateTimeSource) {
+        super(apiClient, strongAuthenticationState, userState, configuration, localDateTimeSource);
         this.consentProcessor =
                 new ConsentProcessor(
                         consentManager,
