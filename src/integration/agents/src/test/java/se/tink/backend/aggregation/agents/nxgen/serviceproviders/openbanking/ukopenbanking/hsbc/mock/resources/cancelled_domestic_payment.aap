@@ -1,0 +1,148 @@
+
+REQUEST 1
+GET https://ob.hsbc.co.uk/.well-known/openid-configuration
+x-fapi-financial-id: 00158000016i44JAAQ
+
+RESPONSE 1 SET STATE2
+200
+Date: Thu, 10 Jun 2021 21:10:30 GMT
+Date: Thu, 10 Jun 2021 20:08:48 GMT
+Content-Type: application/json
+
+{
+
+  "version": 1.0,
+
+  "issuer": "https://api.ob.hsbc.co.uk",
+
+  "authorization_endpoint": "https://ob.hsbc.co.uk/obie/open-banking/v1.1/oauth2/authorize",
+
+  "registration_endpoint": "https://api.ob.hsbc.co.uk/obie/open-banking/v3.2/oauth2/register",
+
+  "token_endpoint": "https://api.ob.hsbc.co.uk/obie/open-banking/v1.1/oauth2/token",
+
+  "jwks_uri": "https://ob.hsbc.co.uk/jwks/public.jwks",
+
+  "scopes_supported": ["accounts", "payments", "openid", "fundsconfirmations"],
+
+  "claims_supported": ["sub","iss","auth_time","acr","openbanking_intent_id"],
+
+  "response_types_supported": ["code id_token"],
+
+  "grant_types_supported": ["authorization_code", "client_credentials", "refresh_token"],
+
+  "subject_types_supported": ["pairwise"],
+
+  "id_token_signing_alg_values_supported": ["PS256"],
+
+  "request_object_signing_alg_values_supported": ["PS256"],
+
+  "token_endpoint_auth_methods_supported": ["private_key_jwt", "tls_client_auth"],
+
+  "claims_parameter_supported": true,
+
+  "request_parameter_supported": true,
+
+  "request_uri_parameter_supported": false,
+
+  "token_endpoint_auth_signing_alg_values_supported": ["PS256"],
+
+  "acr_values_supported": ["urn:openbanking:psd2:sca"],
+
+  "tls_client_certificate_bound_access_tokens": true
+
+}
+
+
+REQUEST 2 MATCH STATE2
+POST https://api.ob.hsbc.co.uk/obie/open-banking/v1.1/oauth2/token
+Content-Type: application/x-www-form-urlencoded
+Accept: application/json
+x-fapi-financial-id: 00158000016i44JAAQ
+
+grant_type=client_credentials&scope=payments&redirect_uri=https%3A%2F%2Fapi.tink.se%2Fapi%2Fv1%2Fcredentials%2Fthird-party%2Fcallback&client_id=DUMMY_ID&client_assertion_type=urn%3Aietf%3Aparams%3Aoauth%3Aclient-assertion-type%3Ajwt-bearer&client_assertion=RkFLRV9TSUdOQVRVUkUK
+
+RESPONSE 2 SET STATE3
+200
+Date: Thu, 10 Jun 2021 21:10:31 GMT
+Date: Thu, 10 Jun 2021 21:10:31 GMT
+Content-Type: application/json
+
+{
+    "access_token": "Haxc8MYa1Jh2kRqgixxypd-98_U", 
+    "expires_in": 299, 
+    "scope": "payments", 
+    "token_type": "Bearer"
+}
+
+REQUEST 3 MATCH STATE3
+POST https://api.ob.hsbc.co.uk/obie/open-banking/v3.1/pisp/domestic-payment-consents
+Accept: application/json
+Content-Type: application/json; charset=UTF-8
+x-fapi-financial-id: 00158000016i44JAAQ
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+{
+    "Data": {
+        "Initiation": {
+            "CreditorAccount": {
+                "Identification": "12345612345678",
+                "Name": "BHF", 
+                "SchemeName": "UK.OBIE.SortCodeAccountNumber"
+            }, 
+            "EndToEndIdentification": "1e366a7c3dd948f3a9a2eccda375961", 
+            "InstructedAmount": {
+                "Amount": "100.00", 
+                "Currency": "GBP"
+            }, 
+            "InstructionIdentification": "1e366a7c3dd948f3a9a2eccda375961d", 
+            "RemittanceInformation": {
+                "Reference": "Donation"
+            }
+        }
+    }, 
+    "Risk": {
+        "PaymentContextCode": "Other"
+    }
+}
+
+RESPONSE 3 SET STATE4
+201
+Date: Thu, 10 Jun 2021 21:10:31 GMT
+Date: Thu, 10 Jun 2021 21:10:33 GMT
+Content-Type: application/json;charset=utf-8
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+{
+    "Data": {
+        "ConsentId": "1db11fb7-9696-4c69-9fa0-e73f25b2c1e5", 
+        "CreationDateTime": "2021-06-10T21:10:32+00:00", 
+        "Initiation": {
+            "CreditorAccount": {
+                "Identification": "12345612345678",
+                "Name": "BHF", 
+                "SchemeName": "UK.OBIE.SortCodeAccountNumber"
+            }, 
+            "EndToEndIdentification": "1e366a7c3dd948f3a9a2eccda375961", 
+            "InstructedAmount": {
+                "Amount": "100.00", 
+                "Currency": "GBP"
+            }, 
+            "InstructionIdentification": "1e366a7c3dd948f3a9a2eccda375961d", 
+            "RemittanceInformation": {
+                "Reference": "Donation"
+            }
+        }, 
+        "Status": "AwaitingAuthorisation", 
+        "StatusUpdateDateTime": "2021-06-10T21:10:32+00:00"
+    }, 
+    "Links": {
+        "Self": "https://api.ob.hsbc.co.uk/obie/open-banking/v3.1/pisp/domestic-payment-consents/1db11fb7-9696-4c69-9fa0-e73f25b2c1e5"
+    }, 
+    "Meta": {
+        "TotalPages": 1
+    }, 
+    "Risk": {
+        "PaymentContextCode": "Other"
+    }
+}
