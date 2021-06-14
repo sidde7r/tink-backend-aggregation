@@ -1,21 +1,32 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33.authenticator;
 
 import com.google.common.util.concurrent.Uninterruptibles;
-import java.util.concurrent.*;
-import lombok.RequiredArgsConstructor;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.http.HttpStatus;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Field;
-import se.tink.backend.aggregation.agents.exceptions.*;
-import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
+import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
+import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.LoginException;
+import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
+import se.tink.backend.aggregation.agents.exceptions.ThirdPartyAppException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33.NordeaFIApiClient;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33.NordeaFIConstants;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33.authenticator.rpc.AuthenticateCode;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33.authenticator.rpc.AuthenticateErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33.authenticator.rpc.AuthenticateResponse;
-import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33.authenticator.rpc.AuthenticateStatus;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33.authenticator.rpc.AuthenticateTokenResponse;
+import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
+import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.CommonFields;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppStatus;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
@@ -25,7 +36,6 @@ import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.i18n.LocalizableKey;
 
 @Slf4j
-@RequiredArgsConstructor
 public class NordeaFIAuthenticator implements MultiFactorAuthenticator {
 
     private static final LocalizableKey CONFIRM_LOGIN =
@@ -36,16 +46,30 @@ public class NordeaFIAuthenticator implements MultiFactorAuthenticator {
     private final SessionStorage sessionStorage;
     private final SupplementalInformationController supplementalInformationController;
     private final Catalog catalog;
-    private final Credentials credentials;
+    private final RandomValueGenerator randomValueGenerator;
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
-    private String authReference;
+    private String sessionId;
+    private String codeVerifier;
+
+    public NordeaFIAuthenticator(
+            NordeaFIApiClient apiClient,
+            SessionStorage sessionStorage,
+            SupplementalInformationController supplementalInformationController,
+            Catalog catalog,
+            RandomValueGenerator randomValueGenerator) {
+        this.apiClient = apiClient;
+        this.sessionStorage = sessionStorage;
+        this.supplementalInformationController = supplementalInformationController;
+        this.catalog = catalog;
+        this.randomValueGenerator = randomValueGenerator;
+    }
 
     @Override
     public void authenticate(Credentials credentials)
             throws AuthenticationException, AuthorizationException {
         init(credentials.getField(Field.Key.USERNAME));
 
-        Future<AuthenticateResponse> authenticateResponseFuture = startPollingForResponse();
+        Future<AuthenticateTokenResponse> authenticateResponseFuture = startPollingForResponse();
 
         askSupplementalInformationSync();
 
@@ -54,33 +78,23 @@ public class NordeaFIAuthenticator implements MultiFactorAuthenticator {
 
     @Override
     public CredentialsTypes getType() {
-        return CredentialsTypes.THIRD_PARTY_APP;
+        return CredentialsTypes.PASSWORD;
     }
 
-    private void init(String username) {
+    private AuthenticateResponse init(String username) {
+        codeVerifier = generateCodeVerifier();
+        String codeChallenge = generateCodeChallenge(codeVerifier);
         try {
-            apiClient.initCodesAuthentication(username);
+            AuthenticateResponse authenticateResponse =
+                    apiClient.initAuthentication(username, codeChallenge);
+            sessionId = authenticateResponse.getSessionId();
+            return authenticateResponse;
         } catch (HttpResponseException e) {
-            AuthenticateStatus response = e.getResponse().getBody(AuthenticateStatus.class);
-            authReference = response.getReference();
-            handleInitExceptions(response.getStatus());
+            AuthenticateErrorResponse response =
+                    e.getResponse().getBody(AuthenticateErrorResponse.class);
+            handleAuthenticateExceptions(response.getStatus(), response.getRawError());
         }
-
-        if (authReference == null) {
-            throw BankServiceError.BANK_SIDE_FAILURE.exception();
-        }
-    }
-
-    private void handleInitExceptions(ThirdPartyAppStatus thirdPartyAppStatus) {
-        if (thirdPartyAppStatus == ThirdPartyAppStatus.ALREADY_IN_PROGRESS) {
-            throw ThirdPartyAppError.ALREADY_IN_PROGRESS.exception();
-        } else if (thirdPartyAppStatus == ThirdPartyAppStatus.TIMED_OUT) {
-            throw ThirdPartyAppError.TIMED_OUT.exception();
-        } else if (thirdPartyAppStatus == ThirdPartyAppStatus.CANCELLED) {
-            throw ThirdPartyAppError.CANCELLED.exception();
-        } else if (thirdPartyAppStatus == ThirdPartyAppStatus.AUTHENTICATION_ERROR) {
-            throw ThirdPartyAppError.AUTHENTICATION_ERROR.exception();
-        }
+        throw ThirdPartyAppError.AUTHENTICATION_ERROR.exception();
     }
 
     private void askSupplementalInformationSync() {
@@ -93,7 +107,7 @@ public class NordeaFIAuthenticator implements MultiFactorAuthenticator {
         }
     }
 
-    private Future<AuthenticateResponse> startPollingForResponse() {
+    private Future<AuthenticateTokenResponse> startPollingForResponse() {
         return executor.submit(this::pollForResponse);
     }
 
@@ -104,40 +118,81 @@ public class NordeaFIAuthenticator implements MultiFactorAuthenticator {
         } catch (InterruptedException e) {
             executor.shutdownNow();
             Thread.currentThread().interrupt();
-            log.error("[NordeaFI] Interrupted exception happened", e);
-            throw new IllegalStateException("[NordeaFI] Interrupted exception happened", e);
+            log.error(toErrorMessage("Interrupted exception happened"), e);
+            throw new IllegalStateException(toErrorMessage("Interrupted exception happened"), e);
         } catch (ExecutionException e) {
             throwKnownExceptionOrDefault(e);
         }
     }
 
-    private AuthenticateResponse pollForResponse() {
+    private AuthenticateTokenResponse pollForResponse() {
         for (int i = 0; i < POLL_MAX_ATTEMPTS; i++) {
-            AuthenticateResponse authenticationResponse = getAuthenticateResponse();
-            if (authenticationResponse != null) {
-                authenticationResponse.storeTokens(sessionStorage);
-                return authenticationResponse;
+            AuthenticateResponse authenticationResponse = getAuthenticateStatus();
+            if (authenticationResponse != null
+                    && authenticationResponse.getStatus() != ThirdPartyAppStatus.WAITING) {
+                return handleStatusResponse(authenticationResponse);
             }
-            Uninterruptibles.sleepUninterruptibly(2, TimeUnit.SECONDS);
+            Uninterruptibles.sleepUninterruptibly(3, TimeUnit.SECONDS);
         }
 
-        log.info("NordeaFIAuthenticator timed out internally.");
+        log.info(toErrorMessage("NordeaFIAuthenticator timed out internally."));
         throw ThirdPartyAppError.TIMED_OUT.exception();
     }
 
-    private AuthenticateResponse getAuthenticateResponse() {
-        try {
-            return apiClient.getCodesAuthentication(
-                    credentials.getField(Field.Key.USERNAME), authReference);
-
-        } catch (HttpResponseException e) {
-            if (e.getResponse().getStatus() != HttpStatus.SC_UNAUTHORIZED) {
-                // ignore SC_UNAUTHORIZED, as it happens while waiting for approve
-                log.error("[NordeaFI] HttpResponseException while polling for response", e);
-                throw ThirdPartyAppError.AUTHENTICATION_ERROR.exception(e);
-            }
+    private AuthenticateTokenResponse handleStatusResponse(
+            AuthenticateResponse authenticateResponse) {
+        ThirdPartyAppStatus status = authenticateResponse.getStatus();
+        if (status == ThirdPartyAppStatus.DONE) {
+            return exchangeCodeForToken(authenticateResponse);
+        } else {
+            handleAuthenticateExceptions(status, authenticateResponse.getRawStatus());
         }
-        return null;
+        throw new IllegalStateException(
+                NordeaFIConstants.LogTags.NORDEA_FI_AUTHENTICATE
+                        + " Unhandled status response for authentication");
+    }
+
+    private AuthenticateTokenResponse exchangeCodeForToken(
+            AuthenticateResponse authenticateResponse) {
+        String code = authenticateResponse.getCode();
+        AuthenticateCode authenticateCode =
+                apiClient.getAuthenticateCode(AuthenticateCode.builder().code(code).build());
+        validateAuthenticateCode(authenticateCode);
+        AuthenticateTokenResponse authenticateTokenResponse =
+                apiClient.getAuthenticationToken(authenticateCode.getCode(), codeVerifier);
+        authenticateTokenResponse.storeTokens(sessionStorage);
+        return authenticateTokenResponse;
+    }
+
+    private AuthenticateResponse getAuthenticateStatus() {
+        try {
+            return apiClient.getAuthenticationStatus(sessionId);
+        } catch (HttpResponseException e) {
+            log.error(toErrorMessage("HttpResponseException while polling for response"), e);
+            throw ThirdPartyAppError.AUTHENTICATION_ERROR.exception(e);
+        }
+    }
+
+    private void validateAuthenticateCode(AuthenticateCode authenticateCode) {
+        if (authenticateCode == null || authenticateCode.getCode() == null) {
+            throw ThirdPartyAppError.AUTHENTICATION_ERROR.exception();
+        }
+    }
+
+    private void handleAuthenticateExceptions(
+            ThirdPartyAppStatus thirdPartyAppStatus, String rawStatus) {
+        if (thirdPartyAppStatus == ThirdPartyAppStatus.ALREADY_IN_PROGRESS) {
+            throw ThirdPartyAppError.ALREADY_IN_PROGRESS.exception();
+        } else if (thirdPartyAppStatus == ThirdPartyAppStatus.TIMED_OUT) {
+            throw ThirdPartyAppError.TIMED_OUT.exception();
+        } else if (thirdPartyAppStatus == ThirdPartyAppStatus.CANCELLED) {
+            throw ThirdPartyAppError.CANCELLED.exception();
+        } else if (thirdPartyAppStatus == ThirdPartyAppStatus.AUTHENTICATION_ERROR) {
+            throw ThirdPartyAppError.AUTHENTICATION_ERROR.exception();
+        } else if (thirdPartyAppStatus == ThirdPartyAppStatus.UNKNOWN) {
+            log.error(toErrorMessage("Unknown authenticate status response: {}"), rawStatus);
+            throw ThirdPartyAppError.AUTHENTICATION_ERROR.exception();
+        }
     }
 
     private void throwKnownExceptionOrDefault(ExecutionException e) {
@@ -150,7 +205,20 @@ public class NordeaFIAuthenticator implements MultiFactorAuthenticator {
             throw (RuntimeException) cause;
         } else {
             throw new IllegalStateException(
-                    "[NordeaFI] Other error occurred while polling NordeaFI", e);
+                    toErrorMessage("Other error occurred while polling NordeaFI"), e);
         }
+    }
+
+    private String generateCodeVerifier() {
+        return randomValueGenerator.generateRandomBase64UrlEncoded(96);
+    }
+
+    private String generateCodeChallenge(String codeVerifier) {
+        final byte[] digest = Hash.sha256(codeVerifier);
+        return EncodingUtils.encodeAsBase64UrlSafe(digest);
+    }
+
+    private String toErrorMessage(String message) {
+        return NordeaFIConstants.LogTags.NORDEA_FI_AUTHENTICATE + " " + message;
     }
 }

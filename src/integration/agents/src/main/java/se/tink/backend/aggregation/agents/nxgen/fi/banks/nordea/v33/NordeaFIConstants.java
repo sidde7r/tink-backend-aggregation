@@ -14,10 +14,17 @@ public class NordeaFIConstants {
     public static final ImmutableMap<String, String> DEFAULT_FORM_PARAMS =
             ImmutableMap.<String, String>builder()
                     .put(FormParams.AUTH_METHOD, "mta")
-                    .put(FormParams.CLIENT_ID, "NDHMFI")
+                    .put(FormParams.CLIENT_ID, "StNlrhoEJKZvCmfTSbiU")
                     .put(FormParams.COUNTRY, "FI")
-                    .put(FormParams.GRANT_TYPE, "password")
-                    .put(FormParams.SCOPE, "ndf")
+                    .put(FormParams.SCOPE, "openid ndf agreement offline_access mpid")
+                    .put(FormParams.REDIRECT_URI, "https://netbank.nordea.fi")
+                    .build();
+
+    public static final ImmutableMap<String, String> AUTH_FORM_PARAMS =
+            ImmutableMap.<String, String>builder()
+                    .put(FormParams.CODE_CHALLENGE_METHOD, "S256")
+                    .put(FormParams.GRANT_TYPE, "authorization_code")
+                    .put(FormParams.RESPONSE_TYPE, "code")
                     .build();
 
     public static final TypeMapper<Instrument.Type> INSTRUMENT_TYPE_MAP =
@@ -47,6 +54,17 @@ public class NordeaFIConstants {
                     .put(ThirdPartyAppStatus.ALREADY_IN_PROGRESS, "authentication_collision")
                     .build();
 
+    public static final TypeMapper<ThirdPartyAppStatus> AUTHENTICATION_STATUS_RESPONSE =
+            TypeMapper.<ThirdPartyAppStatus>builder()
+                    .put(ThirdPartyAppStatus.DONE, "completed")
+                    .put(ThirdPartyAppStatus.WAITING, "assignment_pending", "confirmation_pending")
+                    .put(ThirdPartyAppStatus.CANCELLED, "cancelled")
+                    .put(
+                            ThirdPartyAppStatus.AUTHENTICATION_ERROR,
+                            "invalid_request",
+                            "authentication_failed")
+                    .build();
+
     public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
             TypeMapper.<AccountTypes>builder()
                     .put(AccountTypes.CHECKING, "transaction", "savings")
@@ -65,6 +83,8 @@ public class NordeaFIConstants {
         private static final String BASE = "https://private.nordea.fi/api/dbf";
 
         public static final URL AUTHENTICATE = new URL(BASE + ApiService.AUTHENTICATE);
+        public static final URL AUTHENTICATE_INIT = new URL(BASE + ApiService.AUTHENTICATE_INIT);
+        public static final URL AUTHENTICATE_CODE = new URL(BASE + ApiService.AUTHENTICATE_CODE);
         public static final URL FETCH_ACCOUNTS = new URL(BASE + ApiService.FETCH_ACCOUNTS);
         public static final URL FETCH_CARDS = new URL(BASE + ApiService.FETCH_CARDS);
         public static final URL FETCH_INVESTMENTS = new URL(BASE + ApiService.FETCH_INVESTMENTS);
@@ -79,7 +99,10 @@ public class NordeaFIConstants {
         private static final String FETCH_CARDS = "/ca/cards-v4/cards/";
         private static final String FETCH_INVESTMENTS = "/ca/savings-v1/savings/custodies";
         private static final String FETCH_LOANS = "/ca/loans-v1/loans/";
-        private static final String AUTHENTICATE = "/ca/authentication-mta-v1/security/oauth/token";
+        private static final String AUTHENTICATE = "/ca/token-service-v3/oauth/token";
+        private static final String AUTHENTICATE_INIT = "/ca/mta-v1/mta/authentications";
+        private static final String AUTHENTICATE_CODE =
+                "/ca/user-accounts-service-v1/user-accounts/primary/authorization";
         private static final String FETCH_ACCOUNTS = "/ca/accounts-v3/accounts/";
         private static final String FETCH_CUSTOMER_INFO = "/fi/customerinfo-v1/customers/info";
         private static final String LOGOUT = "/ca/token-revocation-v1/token/revoke";
@@ -95,6 +118,10 @@ public class NordeaFIConstants {
         public static final String TOKEN_TYPE_HINT = "token_type_hint";
         public static final String USERNAME = "username";
         public static final String CODE = "code";
+        public static final String CODE_VERIFIER = "code_verifier";
+        public static final String CODE_CHALLENGE_METHOD = "code_challenge_method";
+        public static final String RESPONSE_TYPE = "response_type";
+        public static final String REDIRECT_URI = "redirect_uri";
     }
 
     public static class HeaderParams {
