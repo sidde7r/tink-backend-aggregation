@@ -19,6 +19,7 @@ public class PaymentEntity {
     private StatusReasonInformationEntity statusReasonInformation;
     private List<CreditTransferTransactionEntity> creditTransferTransaction;
     private SupplementaryDataEntity supplementaryData;
+    private DebtorAccountEntity debtorAccount;
 
     public InstructedAmountEntity getAmountFromResponse() {
         return creditTransferTransaction.stream()
