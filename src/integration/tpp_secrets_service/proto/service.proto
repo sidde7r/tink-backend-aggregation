@@ -25,6 +25,7 @@ service ExternalCertificateService {
 
 service InternalSecretsService {
     rpc GetAllSecrets (GetSecretsRequest) returns (GetAllSecretsResponse) {}
+    rpc GetLicenseModel (GetLicenseModelRequest) returns (GetLicenseModelResponse) {}
     rpc Ping (PingMessage) returns (PingMessage) {}
 }
 
@@ -186,4 +187,14 @@ message EnrollmentResponse {
     map<string, string> encryptedSecrets = 2;
     repeated string providerIds = 3;
     string publicKey = 4;
+}
+
+message GetLicenseModelRequest {
+  string appId = 1;
+  string clusterId = 2;
+  string providerId = 3;
+}
+
+message GetLicenseModelResponse {
+  string licenseModel = 1;
 }
