@@ -1,0 +1,35 @@
+load("//tools/bzl:junit.bzl", "junit_test")
+
+junit_test(
+    name = "degussabank",
+    srcs = glob(["*.java"]),
+    data = ["//:agent_test_data"],
+    tags = [
+        "external",
+        "manual",
+    ],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//src/integration/amount",
+        "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
+        "//src/integration/credentials:service",
+        "//src/integration/lib",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/agent",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/agentfactory",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/agentfactory/iface",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/module/factory",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/module/loader",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/framework/validation",
+        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
+        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/configuration",
+        "//src/integration/payment:enums",
+        "//src/integration/payment:rpc",
+        "//src/integration/user:rpc",
+        "//src/libraries/agent-storage",
+        "//third_party:org_iban4j_iban4j",
+        "//third_party:org_mockito_mockito_core",
+        "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
+        "@aggregation//:com_google_guava_guava",
+        "@tink_backend//src/libraries/account_identifier",
+    ],
+)

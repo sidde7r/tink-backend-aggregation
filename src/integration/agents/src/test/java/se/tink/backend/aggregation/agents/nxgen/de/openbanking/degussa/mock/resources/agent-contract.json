@@ -1,0 +1,91 @@
+{
+  "accounts" : [ {
+    "accountNumber" : "DE66600703000009954120",
+    "accountExclusion" : "NONE",
+    "exactBalance" : {
+      "currencyCode" : "EUR",
+      "exactValue" : 1,
+      "unscaledValue" : 1,
+      "doubleValue" : 1.0,
+      "scale" : 0
+    },
+    "currencyCode" : "EUR",
+    "availableBalance" : {
+      "currencyCode" : "EUR",
+      "exactValue" : 0,
+      "unscaledValue" : 0,
+      "doubleValue" : 0.0,
+      "scale" : 0
+    },
+    "bankId" : "DE66600703000009954120",
+    "excluded" : false,
+    "favored" : false,
+    "name" : "GiroDigital PLUS",
+    "ownership" : 1.0,
+    "type" : "CHECKING",
+    "userModifiedExcluded" : false,
+    "userModifiedName" : false,
+    "userModifiedType" : false,
+    "identifiers" : "[]",
+    "closed" : false,
+    "holderName" : "Person One",
+    "accountHolder" : {
+      "accountId" : null,
+      "type" : "PERSONAL",
+      "identities" : [ {
+        "name" : "Person One",
+        "role" : "HOLDER"
+      } ]
+    },
+    "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
+    "balances" : [ ],
+    "availableCredit" : 0.0,
+    "balance" : 1.0
+  } ],
+  "transactions" : [ {
+    "amount" : 2.0,
+    "date" : 1623060000000,
+    "description" : "SVWZ+Gesendet von Revolut",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"20\":\"SVWZ+Gesendet von Revolut\",\"30\":\"REVOLT21\",\"31\":\"LT123450067891234567\",\"32\":\"Person one\",\"83\":\"5\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  }, {
+    "amount" : -2.0,
+    "date" : 1623146400000,
+    "description" : "SVWZ+Zurueck an DKB",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"20\":\"SVWZ+Zurueck an DKB\",\"30\":\"BYLADEM1001\",\"31\":\"DE52123400001009845111\",\"32\":\"Person one\",\"83\":\"5\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  }, {
+    "amount" : 1.0,
+    "date" : 1623232800000,
+    "description" : "SVWZ+Zurueck an Degussa",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : {
+      "DETAILS" : "{\"20\":\"SVWZ+Zurueck an Degussa\",\"30\":\"BYLADEM1001\",\"31\":\"DE52123400001009845111602\",\"32\":\"Person one\",\"83\":\"5\"}"
+    },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  } ]
+}

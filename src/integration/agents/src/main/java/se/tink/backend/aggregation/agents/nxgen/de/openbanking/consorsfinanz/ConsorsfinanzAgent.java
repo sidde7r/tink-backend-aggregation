@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.de.openbanking.targobank;
+package se.tink.backend.aggregation.agents.nxgen.de.openbanking.consorsfinanz;
 
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
@@ -13,10 +13,10 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponen
     CHECKING_ACCOUNTS,
     SAVINGS_ACCOUNTS,
 })
-public final class TargobankAgent extends BankverlagBaseAgent {
+public class ConsorsfinanzAgent extends BankverlagBaseAgent {
 
     @Inject
-    public TargobankAgent(AgentComponentProvider componentProvider) {
-        super(componentProvider, BankverlagConstants.BankverlagAspspId.TARGOBANK);
+    public ConsorsfinanzAgent(AgentComponentProvider componentProvider) {
+        super(componentProvider, BankverlagConstants.BankverlagAspspId.CONSORSFINANZ);
     }
 }
