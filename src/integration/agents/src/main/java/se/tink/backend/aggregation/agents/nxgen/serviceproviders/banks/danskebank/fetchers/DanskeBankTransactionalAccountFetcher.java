@@ -40,6 +40,8 @@ public class DanskeBankTransactionalAccountFetcher implements AccountFetcher<Tra
                         ListAccountsRequest.createFromLanguageCode(
                                 configuration.getLanguageCode()));
 
+        logAllAccounts(listAccounts);
+
         List<AccountEntity> transactionalAccounts =
                 listAccounts.getAccounts().stream()
                         .filter(DanskeBankPredicates.CREDIT_CARDS.negate())
@@ -130,6 +132,18 @@ public class DanskeBankTransactionalAccountFetcher implements AccountFetcher<Tra
                                                     account.getAccountNoExt(),
                                                     account.getAccountNoInt()))
                             .collect(Collectors.joining(", ")));
+        }
+    }
+
+    private void logAllAccounts(ListAccountsResponse accounts) {
+        // Adding a temporary logger for Payment Account Mapping.
+        // This enables searching for the product code on Kibana.
+        List<AccountEntity> listAccounts = accounts.getAccounts();
+        for (AccountEntity accountEntity : listAccounts) {
+            log.info(
+                    "Account: accountName = {}, accountProduct = {}",
+                    accountEntity.getAccountName(),
+                    accountEntity.getAccountProduct());
         }
     }
 }
