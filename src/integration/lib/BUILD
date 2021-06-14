@@ -153,6 +153,7 @@ junit_test(
         "//src/libraries/metrics:registry",
         "//src/libraries/metrics:timers",
         "//src/libraries/pair",
+        "//src/libraries/rate_limit_service",
         "//src/libraries/serialization",
         "//src/libraries/strings",
         "//src/libraries/uuid",
