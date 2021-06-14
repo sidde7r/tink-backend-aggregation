@@ -166,7 +166,7 @@ Content-Length: 286
 {"account":{"iban":"DE66600703000009954120","currency":"EUR"},"balances":[{"balanceAmount":{"currency":"EUR","amount":"1"},"balanceType":"closingBooked","creditLimitIncluded":false},{"balanceAmount":{"currency":"EUR","amount":"0"},"balanceType":"expected","creditLimitIncluded":false}]}
 
 REQUEST 7
-GET https://psd2.bvxs2a.de/degussabank/v1/accounts/3cd0d59217e6153366e3c3d93a877eba1a07d5b1e2d6216951d3894938efa269/transactions?dateFrom=2021-03-13&bookingStatus=booked
+GET https://psd2.bvxs2a.de/degussabank/v1/accounts/3cd0d59217e6153366e3c3d93a877eba1a07d5b1e2d6216951d3894938efa269/transactions?bookingStatus=booked
 Content-Type: application/json
 X-Request-ID: 00000000-0000-4000-0000-000000000000
 PSU-IP-Address: 127.0.0.1
