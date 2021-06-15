@@ -65,7 +65,7 @@ public final class BankverlagConstants {
     // special handling to parse transactions
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class AspspId {
-        static final List<String> ASPSP_WITH_URI_FOR_TRANSACTIONS =
+        public static final List<String> ASPSP_WITH_URI_FOR_TRANSACTIONS =
                 Arrays.asList(BankverlagAspspId.TARGOBANK);
     }
 
