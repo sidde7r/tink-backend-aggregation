@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.openbanking.nordea.mock;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesJsonFileParser;
 import se.tink.backend.aggregation.agents.framework.assertions.entities.AgentContractEntity;
@@ -11,7 +10,6 @@ import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConf
 import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.enums.MarketCode;
 
-@Ignore
 public class NordeaFiWireMockTest {
 
     @Test
@@ -29,13 +27,16 @@ public class NordeaFiWireMockTest {
                 AgentsServiceConfigurationReader.read(configurationPath);
 
         final AgentWireMockRefreshTest agentWireMockRefreshTest =
-                AgentWireMockRefreshTest.builder(
-                                MarketCode.FI, "fi-nordea-oauth2", wireMockServerFilePath)
+                AgentWireMockRefreshTest.nxBuilder()
+                        .withMarketCode(MarketCode.FI)
+                        .withProviderName("fi-nordea-oauth2")
+                        .withWireMockFilePath(wireMockServerFilePath)
+                        .withConfigFile(configuration)
+                        .testFullAuthentication()
                         .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
-                        .withConfigurationFile(configuration)
-                        .addCallbackData("code", "dummyCode")
-                        .withAgentModule(new NordeaWireMockTestModule())
                         .addRefreshableItems()
+                        .addCallbackData("code", "dummyCode")
+                        .withAgentTestModule(new NordeaWireMockTestModule())
                         .build();
 
         final AgentContractEntity expected =
