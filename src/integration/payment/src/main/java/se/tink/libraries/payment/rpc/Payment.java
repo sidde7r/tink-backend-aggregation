@@ -268,8 +268,8 @@ public class Payment {
         private Frequency frequency;
         private LocalDate startDate;
         private LocalDate endDate;
-        public Integer dayOfMonth;
-        public DayOfWeek dayOfWeek;
+        private Integer dayOfMonth;
+        private DayOfWeek dayOfWeek;
         private ExecutionRule executionRule;
 
         public Builder withPaymentServiceType(PaymentServiceType paymentServiceType) {
