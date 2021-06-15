@@ -2,11 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.reactivex.rxjava3.plugins.RxJavaPlugins;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
@@ -30,7 +28,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAis;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.tls.TlsConfigurationSetter;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.authenticator.consent.AllowedRefreshableItemsValidator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.PartyMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.ConsentErrorFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.FinancialOrganisationIdFilter;
@@ -90,8 +87,6 @@ import se.tink.backend.aggregation.nxgen.instrumentation.FetcherInstrumentationR
 import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.account.identifiers.SortCodeIdentifier;
 import se.tink.libraries.concurrency.RunnableMdcWrapper;
-import se.tink.libraries.credentials.service.RefreshInformationRequest;
-import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.identitydata.IdentityData;
 import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Payment;
@@ -105,9 +100,6 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
                 RefreshSavingsAccountsExecutor,
                 RefreshIdentityDataExecutor,
                 TypedPaymentControllerable {
-
-    protected static final String FETCHING_FORBIDDEN_FOR_ITEM_MSG =
-            "Fetching '{}' forbidden. Returning empty collection in the response.";
 
     private final JwtSigner jwtSigner;
     private final EidasIdentity eidasIdentity;
@@ -135,8 +127,6 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
     protected ClientInfo providerConfiguration;
     private String redirectUrl;
 
-    protected AllowedRefreshableItemsValidator allowedItemsValidator;
-
     public UkOpenBankingBaseAgent(
             AgentComponentProvider componentProvider,
             UkOpenBankingFlowFacade ukOpenBankingFlowFacade,
@@ -154,13 +144,8 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
         this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
         this.fetcherInstrumentation = new FetcherInstrumentationRegistry();
         this.pisRequestFilter = pisRequestFilter;
-        this.allowedItemsValidator = new AllowedRefreshableItemsValidator(persistentStorage);
 
         configureMdcPropagation();
-
-        if (isFullAuthenticationRefresh()) {
-            allowedItemsValidator.save(getItemsExpectedToBeRefreshed());
-        }
     }
 
     public UkOpenBankingBaseAgent(
@@ -240,41 +225,21 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
 
     @Override
     public FetchAccountsResponse fetchCheckingAccounts() {
-        if (allowedItemsValidator.isForbiddenToBeRefreshed(RefreshableItem.CHECKING_ACCOUNTS)) {
-            log.info(FETCHING_FORBIDDEN_FOR_ITEM_MSG, RefreshableItem.CHECKING_ACCOUNTS);
-            return new FetchAccountsResponse(Collections.emptyList());
-        }
-
         return transactionalAccountRefreshController.fetchCheckingAccounts();
     }
 
     @Override
     public FetchTransactionsResponse fetchCheckingTransactions() {
-        if (allowedItemsValidator.isForbiddenToBeRefreshed(RefreshableItem.CHECKING_TRANSACTIONS)) {
-            log.info(FETCHING_FORBIDDEN_FOR_ITEM_MSG, RefreshableItem.CHECKING_TRANSACTIONS);
-            return new FetchTransactionsResponse(Collections.emptyMap());
-        }
-
         return transactionalAccountRefreshController.fetchCheckingTransactions();
     }
 
     @Override
     public FetchAccountsResponse fetchSavingsAccounts() {
-        if (allowedItemsValidator.isForbiddenToBeRefreshed(RefreshableItem.SAVING_ACCOUNTS)) {
-            log.info(FETCHING_FORBIDDEN_FOR_ITEM_MSG, RefreshableItem.SAVING_ACCOUNTS);
-            return new FetchAccountsResponse(Collections.emptyList());
-        }
-
         return transactionalAccountRefreshController.fetchSavingsAccounts();
     }
 
     @Override
     public FetchTransactionsResponse fetchSavingsTransactions() {
-        if (allowedItemsValidator.isForbiddenToBeRefreshed(RefreshableItem.SAVING_TRANSACTIONS)) {
-            log.info(FETCHING_FORBIDDEN_FOR_ITEM_MSG, RefreshableItem.SAVING_TRANSACTIONS);
-            return new FetchTransactionsResponse(Collections.emptyMap());
-        }
-
         return transactionalAccountRefreshController.fetchSavingsTransactions();
     }
 
@@ -293,21 +258,11 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
 
     @Override
     public FetchAccountsResponse fetchCreditCardAccounts() {
-        if (allowedItemsValidator.isForbiddenToBeRefreshed(RefreshableItem.CREDITCARD_ACCOUNTS)) {
-            log.info(FETCHING_FORBIDDEN_FOR_ITEM_MSG, RefreshableItem.CREDITCARD_ACCOUNTS);
-            return new FetchAccountsResponse(Collections.emptyList());
-        }
-
         return creditCardRefreshController.fetchCreditCardAccounts();
     }
 
     @Override
     public FetchTransactionsResponse fetchCreditCardTransactions() {
-        if (allowedItemsValidator.isForbiddenToBeRefreshed(RefreshableItem.CREDITCARD_ACCOUNTS)) {
-            log.info(FETCHING_FORBIDDEN_FOR_ITEM_MSG, RefreshableItem.CREDITCARD_ACCOUNTS);
-            return new FetchTransactionsResponse(Collections.emptyMap());
-        }
-
         return creditCardRefreshController.fetchCreditCardTransactions();
     }
 
@@ -325,21 +280,11 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
 
     @Override
     public FetchTransferDestinationsResponse fetchTransferDestinations(List<Account> accounts) {
-        if (allowedItemsValidator.isForbiddenToBeRefreshed(RefreshableItem.TRANSFER_DESTINATIONS)) {
-            log.info(FETCHING_FORBIDDEN_FOR_ITEM_MSG, RefreshableItem.TRANSFER_DESTINATIONS);
-            return new FetchTransferDestinationsResponse(Collections.emptyMap());
-        }
-
         return transferDestinationRefreshController.fetchTransferDestinations(accounts);
     }
 
     @Override
     public FetchTransferDestinationsResponse fetchBeneficiaries(List<Account> accounts) {
-        if (allowedItemsValidator.isForbiddenToBeRefreshed(RefreshableItem.LIST_BENEFICIARIES)) {
-            log.info(FETCHING_FORBIDDEN_FOR_ITEM_MSG, RefreshableItem.LIST_BENEFICIARIES);
-            return new FetchTransferDestinationsResponse(Collections.emptyMap());
-        }
-
         return transferDestinationRefreshController.fetchTransferDestinations(accounts);
     }
 
@@ -368,36 +313,12 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
                 new FetchIdentityDataResponse(
                         IdentityData.builder().setFullName(null).setDateOfBirth(null).build());
 
-        if (allowedItemsValidator.isForbiddenToBeRefreshed(RefreshableItem.IDENTITY_DATA)) {
-            log.info(FETCHING_FORBIDDEN_FOR_ITEM_MSG, RefreshableItem.IDENTITY_DATA);
-            return responseWithEmptyIdentityData;
-        }
-
         return getAisSupport()
                 .makePartyFetcher(apiClient)
                 .fetchParty()
                 .map(PartyMapper::toIdentityData)
                 .map(FetchIdentityDataResponse::new)
                 .orElse(responseWithEmptyIdentityData);
-    }
-
-    private boolean isItRefreshRequest() {
-        return request instanceof RefreshInformationRequest;
-    }
-
-    private boolean isFullAuthentication() {
-        return request.getUserAvailability().isUserAvailableForInteraction();
-    }
-
-    protected boolean isFullAuthenticationRefresh() {
-        return isItRefreshRequest() && isFullAuthentication();
-    }
-
-    protected Set<RefreshableItem> getItemsExpectedToBeRefreshed() {
-        Set<RefreshableItem> itemsExpectedToBeRefreshed =
-                ((RefreshInformationRequest) request).getItemsToRefresh();
-        log.info("Items expected to be refreshed: `{}`", itemsExpectedToBeRefreshed);
-        return itemsExpectedToBeRefreshed;
     }
 
     private AccountFetcher<TransactionalAccount> getTransactionalAccountFetcher() {
