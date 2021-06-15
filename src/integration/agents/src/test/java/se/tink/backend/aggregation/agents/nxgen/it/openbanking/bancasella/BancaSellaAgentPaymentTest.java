@@ -63,7 +63,7 @@ public class BancaSellaAgentPaymentTest {
         recurringPayment.withStartDate(LocalDate.now().plusDays(2));
         recurringPayment.withEndDate(LocalDate.now().plusMonths(3));
         recurringPayment.withExecutionRule(ExecutionRule.FOLLOWING);
-        recurringPayment.withDayOfExecution(10);
+        recurringPayment.withDayOfMonth(10);
 
         return recurringPayment;
     }

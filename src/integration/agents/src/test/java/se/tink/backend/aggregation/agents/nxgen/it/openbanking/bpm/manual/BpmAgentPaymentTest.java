@@ -61,7 +61,7 @@ public class BpmAgentPaymentTest {
                 .withStartDate(LocalDate.now().plusDays(2))
                 .withEndDate(LocalDate.now().plusMonths(3))
                 .withExecutionRule(ExecutionRule.FOLLOWING)
-                .withDayOfExecution(10);
+                .withDayOfMonth(10);
     }
 
     private Payment.Builder createRealDomesticPayment() {

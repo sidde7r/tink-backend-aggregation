@@ -82,7 +82,7 @@ public class DeutscheBankDEAgentPaymentTest {
                 // has to be the last date of moth
                 .withEndDate(LocalDate.of(2021, 7, 31))
                 .withExecutionRule(ExecutionRule.FOLLOWING)
-                .withDayOfExecution(25);
+                .withDayOfMonth(25);
     }
 
     private Payment.Builder createSepaPayment() {

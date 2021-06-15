@@ -81,7 +81,7 @@ public class NorisbankAgentPaymentTest {
                 .withStartDate(LocalDate.now().plusDays(2))
                 .withEndDate(LocalDate.now().plusMonths(2))
                 .withExecutionRule(ExecutionRule.FOLLOWING)
-                .withDayOfExecution(10);
+                .withDayOfMonth(10);
     }
 
     private Payment.Builder createSepaPayment() {

@@ -7,6 +7,7 @@ import static se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank
 import static se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants.Urls.BASE_URL;
 import static se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants.Urls.OAUTH_TOKEN;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.Optional;
 import javax.ws.rs.core.MediaType;
@@ -33,6 +34,7 @@ import se.tink.backend.aggregation.nxgen.storage.Storage;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.rpc.Payment;
+import se.tink.libraries.payment.rpc.Payment.Builder;
 import se.tink.libraries.transfer.rpc.Frequency;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
@@ -114,21 +116,35 @@ public class DemobankRecurringPaymentApiClient implements DemobankPaymentApiClie
         final ExactCurrencyAmount amount =
                 mappers.convertAmountDtoToExactCurrencyAmount(initiation.getAmount());
 
-        return new Payment.Builder()
-                .withExactCurrencyAmount(amount)
-                .withStatus(mappers.convertPaymentStatus(paymentStatus))
-                .withDebtor(mappers.convertDebtorAccountToDebtor(initiation.getDebtorAccount()))
-                .withCreditor(
-                        mappers.convertCreditorAccountToCreditor(
-                                initiation.getCreditorAccount(), initiation.getCreditorName()))
-                .withCurrency(amount.getCurrencyCode())
-                .withRemittanceInformation(remittanceInformation)
-                .withUniqueId(paymentId)
-                .withStartDate(LocalDate.parse(initiation.getStartDate()))
-                .withEndDate(LocalDate.parse(initiation.getEndDate()))
-                .withFrequency(Frequency.valueOf(initiation.getFrequency().toUpperCase()))
-                .withDayOfExecution(initiation.getDayOfExecution())
-                .build();
+        Builder builder =
+                new Builder()
+                        .withExactCurrencyAmount(amount)
+                        .withStatus(mappers.convertPaymentStatus(paymentStatus))
+                        .withDebtor(
+                                mappers.convertDebtorAccountToDebtor(initiation.getDebtorAccount()))
+                        .withCreditor(
+                                mappers.convertCreditorAccountToCreditor(
+                                        initiation.getCreditorAccount(),
+                                        initiation.getCreditorName()))
+                        .withCurrency(amount.getCurrencyCode())
+                        .withRemittanceInformation(remittanceInformation)
+                        .withUniqueId(paymentId)
+                        .withStartDate(LocalDate.parse(initiation.getStartDate()))
+                        .withEndDate(LocalDate.parse(initiation.getEndDate()))
+                        .withFrequency(Frequency.valueOf(initiation.getFrequency().toUpperCase()));
+
+        switch (Frequency.valueOf(initiation.getFrequency().toUpperCase())) {
+            case WEEKLY:
+                builder.withDayOfWeek(DayOfWeek.of(initiation.getDayOfExecution()));
+                break;
+            case MONTHLY:
+                builder.withDayOfMonth(initiation.getDayOfExecution());
+                break;
+            default:
+                throw new IllegalArgumentException(
+                        "Unsupported frequecy " + initiation.getFrequency());
+        }
+        return builder.build();
     }
 
     private RecurringPaymentInitiationDto createRecurringPaymentInitiationDto(
