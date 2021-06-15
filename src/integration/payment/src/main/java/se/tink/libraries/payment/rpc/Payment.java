@@ -64,7 +64,6 @@ public class Payment {
     private Frequency frequency;
     private LocalDate startDate;
     private LocalDate endDate;
-    @Deprecated private Integer dayOfExecution;
     private Integer dayOfMonth;
     private DayOfWeek dayOfWeek;
     private ExecutionRule executionRule;
@@ -87,7 +86,6 @@ public class Payment {
         this.frequency = builder.frequency;
         this.startDate = builder.startDate;
         this.endDate = builder.endDate;
-        this.dayOfExecution = builder.dayOfExecution;
         this.dayOfMonth = builder.dayOfMonth;
         this.dayOfWeek = builder.dayOfWeek;
         this.executionRule = builder.executionRule;
@@ -195,11 +193,6 @@ public class Payment {
         return executionRule;
     }
 
-    @Deprecated
-    public Integer getDayOfExecution() {
-        return dayOfExecution;
-    }
-
     public Integer getDayOfMonth() {
         return dayOfMonth;
     }
@@ -275,7 +268,6 @@ public class Payment {
         private Frequency frequency;
         private LocalDate startDate;
         private LocalDate endDate;
-        private Integer dayOfExecution;
         public Integer dayOfMonth;
         public DayOfWeek dayOfWeek;
         private ExecutionRule executionRule;
@@ -297,11 +289,6 @@ public class Payment {
 
         public Builder withEndDate(LocalDate endDate) {
             this.endDate = endDate;
-            return this;
-        }
-
-        public Builder withDayOfExecution(Integer dayOfExecution) {
-            this.dayOfExecution = dayOfExecution;
             return this;
         }
 

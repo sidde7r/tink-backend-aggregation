@@ -68,8 +68,6 @@ public class RecurringPaymentRequest extends TransferRequest {
         recurringPayment.setStartDate(startDate);
         recurringPayment.setEndDate(endDate);
         recurringPayment.setExecutionRule(executionRule);
-        // TODO fix properly
-        recurringPayment.setDayOfExecution(dayOfMonth);
         recurringPayment.setDayOfMonth(dayOfMonth);
         recurringPayment.setDayOfWeek(dayOfWeek);
 
