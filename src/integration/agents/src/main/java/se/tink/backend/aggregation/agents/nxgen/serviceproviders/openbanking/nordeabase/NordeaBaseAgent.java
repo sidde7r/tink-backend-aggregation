@@ -55,7 +55,8 @@ public abstract class NordeaBaseAgent extends NextGenerationAgent {
                 new RateLimitFilter(
                         provider.getName(),
                         Filters.RATE_LIMIT_RETRY_MS_MIN,
-                        Filters.RATE_LIMIT_RETRY_MS_MAX));
+                        Filters.RATE_LIMIT_RETRY_MS_MAX,
+                        Filters.NUMBER_OF_RETRIES));
         this.client.addFilter(new BankSideFailureFilter());
         this.client.addFilter(new BankSideRetryFilter());
         this.client.addFilter(new ServiceUnavailableBankServiceErrorFilter());
