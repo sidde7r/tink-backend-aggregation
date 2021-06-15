@@ -45,6 +45,11 @@ public class RateLimitFilterTest {
         new RateLimitFilter(providerName, 0, 0);
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void shouldThrowWhenBuiltWithZeroRetries() {
+        new RateLimitFilter(providerName, 1000, 2000, 0);
+    }
+
     @Test
     public void shouldInitWithProviderName() {
         new RateLimitFilter(providerName);
@@ -53,6 +58,11 @@ public class RateLimitFilterTest {
     @Test
     public void shouldInitWithProviderNameAndRetryTime() {
         new RateLimitFilter(providerName, 1000, 2000);
+    }
+
+    @Test
+    public void shouldInitWithProviderNameAndRetryTimeAndRetries() {
+        new RateLimitFilter(providerName, 1000, 2000, 5);
     }
 
     @Test
@@ -80,6 +90,40 @@ public class RateLimitFilterTest {
         final RateLimitFilter rateLimitFilter = new RateLimitFilter(providerName, 1, 2);
         rateLimitFilter.setNext(new MockResponseFilter(mockRateLimitResponse(), mockOkResponse()));
         rateLimitFilter.handle(null);
+
+        assertTrue(
+                "Should notify rate limit service",
+                RateLimitService.INSTANCE.hasReceivedRateLimitNotificationRecently(providerName));
+    }
+
+    @Test
+    public void shouldNotifyRateLimiterAndRetryTwice() {
+        final RateLimitFilter rateLimitFilter = new RateLimitFilter(providerName, 1, 2, 2);
+        rateLimitFilter.setNext(
+                new MockResponseFilter(
+                        mockRateLimitResponse(), mockRateLimitResponse(), mockOkResponse()));
+        rateLimitFilter.handle(null);
+
+        assertTrue(
+                "Should notify rate limit service",
+                RateLimitService.INSTANCE.hasReceivedRateLimitNotificationRecently(providerName));
+    }
+
+    @Test
+    public void shouldNotifyRateLimiterAndRetryTwiceAndFail() {
+        final RateLimitFilter rateLimitFilter = new RateLimitFilter(providerName, 1, 2, 2);
+        rateLimitFilter.setNext(
+                new MockResponseFilter(
+                        mockRateLimitResponse(), mockRateLimitResponse(), mockRateLimitResponse()));
+        try {
+            rateLimitFilter.handle(null);
+            fail("This should not be reached - exception should be thrown");
+        } catch (BankServiceException ex) {
+            assertEquals(
+                    "Should throw bank service exception",
+                    BankServiceError.ACCESS_EXCEEDED,
+                    ex.getError());
+        }
 
         assertTrue(
                 "Should notify rate limit service",
