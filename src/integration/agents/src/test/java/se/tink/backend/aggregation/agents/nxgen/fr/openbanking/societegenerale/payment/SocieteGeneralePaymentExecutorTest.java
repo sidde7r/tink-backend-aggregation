@@ -25,9 +25,11 @@ import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.e
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.executor.payment.entities.BeneficiaryEntity;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.executor.payment.entities.ConsentApprovalEntity;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.executor.payment.entities.CreditTransferTransactionEntity;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.executor.payment.entities.DebtorAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.executor.payment.entities.PaymentEntity;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.executor.payment.entities.PaymentInformationStatusCodeEntity;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.executor.payment.entities.PaymentRequestLinkEntity;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.executor.payment.entities.StatusReasonInformationEntity;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.executor.payment.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.executor.payment.rpc.GetPaymentResponse;
 import se.tink.backend.aggregation.agents.utils.remittanceinformation.RemittanceInformationUtils;
@@ -147,7 +149,12 @@ public class SocieteGeneralePaymentExecutorTest {
                                         status,
                                         null,
                                         CreditTransferTransactionEntity.of(paymentRequest),
-                                        null)));
+                                        null,
+                                        new DebtorAccountEntity(
+                                                paymentRequest
+                                                        .getPayment()
+                                                        .getDebtor()
+                                                        .getAccountNumber()))));
         // when
         PaymentMultiStepResponse response = paymentExecutor.sign(paymentMultiStepRequest);
 
@@ -180,7 +187,12 @@ public class SocieteGeneralePaymentExecutorTest {
                                         status,
                                         null,
                                         CreditTransferTransactionEntity.of(paymentRequest),
-                                        null)));
+                                        null,
+                                        new DebtorAccountEntity(
+                                                paymentRequest
+                                                        .getPayment()
+                                                        .getDebtor()
+                                                        .getAccountNumber()))));
         // when
         PaymentMultiStepResponse response = paymentExecutor.sign(paymentMultiStepRequest);
 
@@ -213,7 +225,12 @@ public class SocieteGeneralePaymentExecutorTest {
                                         status,
                                         null,
                                         CreditTransferTransactionEntity.of(paymentRequest),
-                                        null)));
+                                        null,
+                                        new DebtorAccountEntity(
+                                                paymentRequest
+                                                        .getPayment()
+                                                        .getDebtor()
+                                                        .getAccountNumber()))));
 
         // when
         Throwable thrown = catchThrowable(() -> paymentExecutor.sign(paymentMultiStepRequest));
@@ -244,8 +261,9 @@ public class SocieteGeneralePaymentExecutorTest {
                                         null,
                                         BeneficiaryEntity.of(paymentRequest),
                                         status,
-                                        null,
+                                        new StatusReasonInformationEntity("AM18"),
                                         CreditTransferTransactionEntity.of(paymentRequest),
+                                        null,
                                         null)));
 
         // when

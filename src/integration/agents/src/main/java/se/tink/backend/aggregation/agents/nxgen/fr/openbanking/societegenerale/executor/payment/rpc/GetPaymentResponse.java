@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.rpc.Creditor;
+import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
 
 @JsonObject
@@ -40,6 +41,9 @@ public class GetPaymentResponse {
                                                 payment.getBeneficiary()
                                                         .getCreditorAccount()
                                                         .getIban())))
+                        .withDebtor(
+                                new Debtor(
+                                        new IbanIdentifier(payment.getDebtorAccount().getIban())))
                         .withUniqueId(payment.getResourceId())
                         .withExactCurrencyAmount(amount)
                         .withCurrency(amount.getCurrencyCode())

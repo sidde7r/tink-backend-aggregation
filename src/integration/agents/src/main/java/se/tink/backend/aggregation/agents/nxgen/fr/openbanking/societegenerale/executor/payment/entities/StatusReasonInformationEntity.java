@@ -19,7 +19,7 @@ import se.tink.libraries.signableoperation.enums.InternalStatus;
 public class StatusReasonInformationEntity {
     private String value;
 
-    StatusReasonInformationEntity(String value) {
+    public StatusReasonInformationEntity(String value) {
         this.value = value;
     }
 
