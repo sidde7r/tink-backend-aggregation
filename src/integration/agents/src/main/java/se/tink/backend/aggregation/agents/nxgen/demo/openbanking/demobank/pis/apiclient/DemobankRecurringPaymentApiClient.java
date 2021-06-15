@@ -152,11 +152,23 @@ public class DemobankRecurringPaymentApiClient implements DemobankPaymentApiClie
                         .startDate(payment.getStartDate().toString())
                         .endDate(payment.getEndDate().toString())
                         .frequency(payment.getFrequency().toString())
-                        .dayOfExecution(payment.getDayOfExecution());
+                        .dayOfExecution(getDayOfExecution(payment));
 
         maybeDebtorAccount.ifPresent(builder::debtorAccount);
 
         return builder.build();
+    }
+
+    private int getDayOfExecution(Payment payment) {
+        switch (payment.getFrequency()) {
+            case WEEKLY:
+                return payment.getDayOfWeek().getValue();
+            case MONTHLY:
+                return payment.getDayOfMonth();
+            default:
+                throw new IllegalArgumentException(
+                    "Frequency is not supported: " + payment.getFrequency());
+        }
     }
 
     private PaymentResponse convertResponseDtoToPaymentResponse(

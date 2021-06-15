@@ -196,6 +196,7 @@ public class Payment {
         return executionRule;
     }
 
+    @Deprecated
     public Integer getDayOfExecution() {
         return dayOfExecution;
     }

@@ -1,7 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment;
 
-import static java.util.Objects.nonNull;
-
 import com.google.api.client.repackaged.com.google.common.base.Preconditions;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -132,10 +130,7 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
                         payment.getExecutionRule() != null
                                 ? mapExecutionRule(payment.getExecutionRule())
                                 : null)
-                .dayOfExecution(
-                        nonNull(payment.getDayOfExecution())
-                                ? String.valueOf(payment.getDayOfExecution())
-                                : null)
+                .dayOfExecution(getDayOfExecution(payment))
                 .build();
     }
 
@@ -163,6 +158,18 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
 
     private AccountEntity getAccountEntity(String accountNumber) {
         return new AccountEntity(accountNumber);
+    }
+
+    private String getDayOfExecution(Payment payment) {
+        switch (payment.getFrequency()) {
+            case WEEKLY:
+                return String.valueOf(payment.getDayOfWeek().getValue());
+            case MONTHLY:
+                return payment.getDayOfMonth().toString();
+            default:
+                throw new IllegalArgumentException(
+                        "Frequency is not supported: " + payment.getFrequency());
+        }
     }
 
     private void fetchToken() {

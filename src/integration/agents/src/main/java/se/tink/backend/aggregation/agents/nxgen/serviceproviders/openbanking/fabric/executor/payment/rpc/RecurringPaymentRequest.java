@@ -1,7 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.executor.payment.rpc;
 
-import static java.util.Objects.isNull;
-
 import java.util.Optional;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -50,10 +48,7 @@ public class RecurringPaymentRequest extends FabricPaymentRequest {
                         .remittanceInformationUnstructured(remittanceInformation.getValue())
                         .frequency(payment.getFrequency().toString())
                         .startDate(payment.getStartDate().toString())
-                        .dayOfExecution(
-                                isNull(payment.getDayOfExecution())
-                                        ? null
-                                        : String.valueOf(payment.getDayOfExecution()));
+                        .dayOfExecution(getDayOfExecution(payment));
         // optional attributes
         if (Optional.ofNullable(payment.getEndDate()).isPresent()) {
             createRecurringPaymentRequest.endDate(payment.getEndDate().toString());
@@ -72,6 +67,18 @@ public class RecurringPaymentRequest extends FabricPaymentRequest {
             return "preceeding";
         } else {
             return rule.toString();
+        }
+    }
+
+    private static String getDayOfExecution(Payment payment) {
+        switch (payment.getFrequency()) {
+            case WEEKLY:
+                return String.valueOf(payment.getDayOfWeek().getValue());
+            case MONTHLY:
+                return payment.getDayOfMonth().toString();
+            default:
+                throw new IllegalArgumentException(
+                        "Frequency is not supported: " + payment.getFrequency());
         }
     }
 }
