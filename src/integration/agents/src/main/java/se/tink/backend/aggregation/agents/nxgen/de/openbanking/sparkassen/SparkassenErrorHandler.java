@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.Sparka
 import se.tink.backend.aggregation.agents.utils.berlingroup.error.ErrorResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.error.TppMessage;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
+import se.tink.libraries.i18n.LocalizableKey;
 
 @Slf4j
 public class SparkassenErrorHandler {
@@ -72,6 +73,13 @@ public class SparkassenErrorHandler {
                 default:
                     return;
             }
+            if (error == LoginError.NOT_CUSTOMER) {
+                throw error.exception(
+                        new LocalizableKey(
+                                "Bank couldn't find such a user in the system. "
+                                        + "Are you sure that you have selected a correct branch or entered a correct username?"),
+                        httpResponseException);
+            }
             if (error != null) {
                 throw error.exception(httpResponseException);
             }
@@ -93,6 +101,10 @@ public class SparkassenErrorHandler {
                 .or(ErrorResponse.psuMessageContainsPredicate(PsuErrorMessages.BLOCKED_ACCOUNT))
                 .test(errorResponse)) {
             return AuthorizationError.ACCOUNT_BLOCKED;
+        }
+        if (ErrorResponse.psuMessageContainsPredicate(PsuErrorMessages.CUSTOMER_NOT_FOUND)
+                .test(errorResponse)) {
+            return LoginError.NOT_CUSTOMER;
         }
         if (ErrorResponse.anyTppMessageMatchesPredicate(PSU_CREDENTIALS_INVALID)
                 .or(ErrorResponse.anyTppMessageMatchesPredicate(PSU_TOO_LONG))

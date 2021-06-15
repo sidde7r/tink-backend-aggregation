@@ -29,6 +29,8 @@ public final class SparkassenConstants {
                 "Ihr Zugang ist gesperrt - Bitte informieren Sie Ihren Berater";
         static final String NO_ACTIVE_TAN_MEDIUM = "Kein aktives TAN-Medium gefunden.";
         static final String PLEASE_CHANGE_PIN = "Bitte führen Sie eine PIN-Änderung durch.";
+        static final String CUSTOMER_NOT_FOUND =
+                "9070- Der Auftrag wurde nicht ausgeführt. - 9931- Anmeldename oder PIN ist falsch.";
     }
 
     public static class Urls {
@@ -56,7 +58,6 @@ public final class SparkassenConstants {
 
     static class PathVariables {
         static final String CONSENT_ID = "consentId";
-        static final String AUTHORIZATION_ID = "authorizationId";
         static final String ACCOUNT_ID = "accountId";
         static final String BANK_CODE = "bankCode";
     }
