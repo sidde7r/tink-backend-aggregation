@@ -13,4 +13,8 @@ public class AccountResponse {
     public List<AccountEntity> getAccounts() {
         return accounts == null ? Collections.emptyList() : accounts;
     }
+
+    public static AccountResponse empty() {
+        return new AccountResponse();
+    }
 }
