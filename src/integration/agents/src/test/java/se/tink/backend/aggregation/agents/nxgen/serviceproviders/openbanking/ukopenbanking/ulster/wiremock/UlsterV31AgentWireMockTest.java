@@ -1,8 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ulster.wiremock;
 
-import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.authenticator.consent.AllowedRefreshableItemsValidator.ITEMS_ALLOWED_TO_BE_REFRESHED;
 
 import com.google.common.collect.Sets;
 import java.util.Set;
@@ -30,8 +28,6 @@ public class UlsterV31AgentWireMockTest {
             RESOURCES_PATH + "auto-auth-fetch-data.aap";
     private static final String AUTO_AUTH_FETCH_DATA_CONTRACT =
             RESOURCES_PATH + "auto-auth-fetch-data.json";
-    private static final String AUTO_AUTH_FETCH_DATA_FOR_ALLOWED_ITEMS_TRAFFIC =
-            RESOURCES_PATH + "auto-auth-fetch-data-allowed-items.aap";
     private static final String REFRESH_TOKEN_TRAFFIC = RESOURCES_PATH + "refresh-token.aap";
     private static final String AUTO_AUTH_CONSENT_ID_STORED_REVOKED_TRAFFIC =
             RESOURCES_PATH + "auto-auth-consent-id-stored-revoked.aap";
@@ -74,7 +70,6 @@ public class UlsterV31AgentWireMockTest {
         // given
         Set<RefreshableItem> itemsExpectedToBeRefreshed =
                 Sets.newHashSet(RefreshableItem.CHECKING_ACCOUNTS, RefreshableItem.SAVING_ACCOUNTS);
-        String itemsAllowedToBeRefreshedStr = serializeItems(itemsExpectedToBeRefreshed);
 
         final AgentWireMockRefreshTest test =
                 AgentWireMockRefreshTest.nxBuilder()
@@ -84,8 +79,6 @@ public class UlsterV31AgentWireMockTest {
                         .withConfigFile(AgentsServiceConfigurationReader.read(CONFIGURATION_PATH))
                         .testAutoAuthentication()
                         .withRefreshableItems(itemsExpectedToBeRefreshed)
-                        .addPersistentStorageData(
-                                ITEMS_ALLOWED_TO_BE_REFRESHED, itemsAllowedToBeRefreshedStr)
                         .addPersistentStorageData(
                                 OPEN_ID_ACCESS_TOKEN_STORAGE_KEY, createOpenIdAccessToken())
                         .enableHttpDebugTrace()
@@ -100,39 +93,6 @@ public class UlsterV31AgentWireMockTest {
                 new AgentContractEntitiesJsonFileParser()
                         .parseContractOnBasisOfFile(AUTO_AUTH_FETCH_DATA_CONTRACT);
         test.assertExpectedData(expected);
-    }
-
-    @Test
-    public void shouldRunAutoAuthWithRefreshOfAllowedItemsOnly() throws Exception {
-        // given
-        Set<RefreshableItem> itemsExpectedToBeRefreshed =
-                Sets.newHashSet(
-                        RefreshableItem.CHECKING_ACCOUNTS,
-                        RefreshableItem.SAVING_ACCOUNTS,
-                        RefreshableItem.CHECKING_TRANSACTIONS);
-
-        Set<RefreshableItem> itemsAllowedToBeRefreshed =
-                Sets.newHashSet(RefreshableItem.CHECKING_ACCOUNTS, RefreshableItem.SAVING_ACCOUNTS);
-        String itemsAllowedToBeRefreshedStr = serializeItems(itemsAllowedToBeRefreshed);
-
-        final AgentWireMockRefreshTest test =
-                AgentWireMockRefreshTest.nxBuilder()
-                        .withMarketCode(MarketCode.UK)
-                        .withProviderName(PROVIDER_NAME)
-                        .withWireMockFilePath(AUTO_AUTH_FETCH_DATA_FOR_ALLOWED_ITEMS_TRAFFIC)
-                        .withConfigFile(AgentsServiceConfigurationReader.read(CONFIGURATION_PATH))
-                        .testAutoAuthentication()
-                        .withRefreshableItems(itemsExpectedToBeRefreshed)
-                        .addPersistentStorageData(
-                                ITEMS_ALLOWED_TO_BE_REFRESHED, itemsAllowedToBeRefreshedStr)
-                        .addPersistentStorageData(
-                                OPEN_ID_ACCESS_TOKEN_STORAGE_KEY, createOpenIdAccessToken())
-                        .enableHttpDebugTrace()
-                        .enableDataDumpForContractFile()
-                        .build();
-
-        // expected
-        assertThatCode(test::executeRefresh).doesNotThrowAnyException();
     }
 
     @Test
@@ -175,10 +135,6 @@ public class UlsterV31AgentWireMockTest {
         assertThatExceptionOfType(SessionException.class)
                 .isThrownBy(test::executeRefresh)
                 .withMessage("Invalid consent status. Expiring the session.");
-    }
-
-    private String serializeItems(Set<RefreshableItem> items) {
-        return SerializationUtils.serializeToString(items);
     }
 
     private String createOpenIdAccessToken() {
