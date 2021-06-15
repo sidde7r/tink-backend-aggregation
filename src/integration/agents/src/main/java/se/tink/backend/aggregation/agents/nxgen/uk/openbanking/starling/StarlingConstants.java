@@ -79,14 +79,6 @@ public class StarlingConstants {
                 new URL(API_STARLING + ApiEndpoint.GET_PAYMENT_STATUS);
     }
 
-    public class AccountHolderType {
-        public static final String INDIVIDUAL = "INDIVIDUAL";
-        public static final String JOINT = "JOINT";
-        public static final String BUSINESS = "BUSINESS";
-        public static final String SOLE_TRADER = "SOLE_TRADER";
-        public static final String BANKING_AS_A_SERVICE = "BANKING_AS_A_SERVICE";
-    }
-
     public class RequestKey {
         public static final String FROM = "minTransactionTimestamp";
         public static final String TO = "maxTransactionTimestamp";

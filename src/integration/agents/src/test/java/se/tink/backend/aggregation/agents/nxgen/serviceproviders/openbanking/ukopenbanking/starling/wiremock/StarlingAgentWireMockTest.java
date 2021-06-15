@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 import java.time.Clock;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.result.error.AgentPlatformAuthenticationProcessException;
 import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesJsonFileParser;
@@ -25,10 +24,10 @@ public class StarlingAgentWireMockTest {
     private static final String AUTO_REFRESH_TRAFFIC = RESOURCES_PATH + "auto-refresh.aap";
     private static final String AUTO_REFRESH_DATA_CONTRACT = RESOURCES_PATH + "auto-refresh.json";
 
-    private static final String NO_BUSINESS_ACCOUNTS_TRAFFIC =
-            RESOURCES_PATH + "no-business-accounts.aap";
-    private static final String NO_BUSINESS_ACCOUNTS_DATA_CONTRACT =
-            RESOURCES_PATH + "no-business-accounts.json";
+    private static final String BUSINESS_ACCOUNTS_TRAFFIC =
+            RESOURCES_PATH + "business-accounts.aap";
+    private static final String BUSINESS_ACCOUNTS_DATA_CONTRACT =
+            RESOURCES_PATH + "business-accounts.json";
 
     private static final String INVALID_GRANT_TRAFFIC = RESOURCES_PATH + "invalid-grant.aap";
 
@@ -49,8 +48,7 @@ public class StarlingAgentWireMockTest {
     }
 
     @Test
-    @Ignore
-    public void shouldAutoRefreshSuccessfully() throws Exception {
+    public void shouldAutoRefreshSuccessfullyWithPersonalAccounts() throws Exception {
 
         final AgentWireMockRefreshTest test =
                 AgentWireMockRefreshTest.nxBuilder()
@@ -74,13 +72,13 @@ public class StarlingAgentWireMockTest {
     }
 
     @Test
-    public void shouldNotReturnBusinessAccounts() throws Exception {
+    public void shouldReturnBusinessAccounts() throws Exception {
 
         final AgentWireMockRefreshTest agentWireMockRefreshTest =
                 AgentWireMockRefreshTest.nxBuilder()
                         .withMarketCode(MarketCode.UK)
                         .withProviderName(PROVIDER_NAME)
-                        .withWireMockFilePath(NO_BUSINESS_ACCOUNTS_TRAFFIC)
+                        .withWireMockFilePath(BUSINESS_ACCOUNTS_TRAFFIC)
                         .withConfigFile(AgentsServiceConfigurationReader.read(CONFIGURATION_PATH))
                         .testAutoAuthentication()
                         .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
@@ -93,7 +91,7 @@ public class StarlingAgentWireMockTest {
         // then
         final AgentContractEntity expected =
                 new AgentContractEntitiesJsonFileParser()
-                        .parseContractOnBasisOfFile(NO_BUSINESS_ACCOUNTS_DATA_CONTRACT);
+                        .parseContractOnBasisOfFile(BUSINESS_ACCOUNTS_DATA_CONTRACT);
         agentWireMockRefreshTest.assertExpectedData(expected);
     }
 

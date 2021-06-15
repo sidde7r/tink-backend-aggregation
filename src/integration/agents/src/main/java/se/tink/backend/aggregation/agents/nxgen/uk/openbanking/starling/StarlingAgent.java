@@ -1,12 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling;
 
-import static se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.StarlingConstants.AccountHolderType.INDIVIDUAL;
-import static se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.StarlingConstants.AccountHolderType.JOINT;
-import static se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.StarlingConstants.AccountHolderType.SOLE_TRADER;
-import static se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.StarlingConstants.UKOB_CERT_ID;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
 
-import com.google.common.collect.ImmutableSet;
 import com.google.inject.Inject;
 import java.util.List;
 import java.util.Optional;
@@ -53,13 +48,13 @@ public final class StarlingAgent extends AgentPlatformAgent
                 AgentPlatformAuthenticator,
                 AgentPlatformStorageMigration {
 
-    private StarlingApiClient apiClient;
+    private final StarlingApiClient apiClient;
     private final TransferDestinationRefreshController transferDestinationRefreshController;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
-    private ClientConfigurationEntity aisConfiguration;
-    private ClientConfigurationEntity pisConfiguration;
-    private String redirectUrl;
+    private final ClientConfigurationEntity aisConfiguration;
+    private final ClientConfigurationEntity pisConfiguration;
+    private final String redirectUrl;
 
     @Inject
     public StarlingAgent(AgentComponentProvider componentProvider) {
@@ -105,8 +100,7 @@ public final class StarlingAgent extends AgentPlatformAgent
         return new TransactionalAccountRefreshController(
                 metricRefreshController,
                 updateController,
-                new StarlingTransactionalAccountFetcher(
-                        apiClient, ImmutableSet.of(INDIVIDUAL, SOLE_TRADER, JOINT)),
+                new StarlingTransactionalAccountFetcher(apiClient),
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
                         new TransactionDatePaginationController.Builder<>(
@@ -170,8 +164,8 @@ public final class StarlingAgent extends AgentPlatformAgent
                 new EidasIdentity(
                         context.getClusterId(),
                         context.getAppId(),
-                        UKOB_CERT_ID,
+                        context.getCertId(),
                         context.getProviderId(),
-                        ""));
+                        getAgentClass()));
     }
 }
