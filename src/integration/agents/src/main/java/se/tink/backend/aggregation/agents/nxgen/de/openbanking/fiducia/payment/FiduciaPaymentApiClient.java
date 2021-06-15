@@ -31,7 +31,33 @@ public class FiduciaPaymentApiClient implements PaymentApiClient {
     private final FiduciaPaymentMapper paymentMapper;
     private final RandomValueGenerator randomValueGenerator;
 
-    protected URL createPaymentUrl(String path, PaymentRequest paymentRequest) {
+    public CreatePaymentResponse createPayment(PaymentRequest paymentRequest) {
+        if (PaymentServiceType.PERIODIC == paymentRequest.getPayment().getPaymentServiceType()) {
+            return createRecurringPayment(paymentRequest);
+        } else {
+            return createPaymentRequestBuilder(paymentRequest)
+                    .type(MediaType.APPLICATION_XML_TYPE)
+                    .post(
+                            CreatePaymentResponse.class,
+                            paymentMapper.getPaymentRequest(paymentRequest.getPayment()));
+        }
+    }
+
+    public FetchPaymentStatusResponse fetchPaymentStatus(PaymentRequest paymentRequest) {
+        PaymentStatusXmlResponse paymentStatusXmlResponse =
+                apiClient
+                        .createRequest(
+                                createPaymentUrl(FETCH_PAYMENT_STATUS, paymentRequest)
+                                        .parameter(
+                                                PaymentConstants.PathVariables.PAYMENT_ID,
+                                                paymentRequest.getPayment().getUniqueId()))
+                        .get(PaymentStatusXmlResponse.class);
+
+        return new FetchPaymentStatusResponse(
+                paymentStatusXmlResponse.getCstmrPmtStsRpt().getOrgnlGrpInfAndSts().getGrpSts());
+    }
+
+    private URL createPaymentUrl(String path, PaymentRequest paymentRequest) {
         return apiClient
                 .createUrl(path)
                 .parameter(
@@ -43,19 +69,6 @@ public class FiduciaPaymentApiClient implements PaymentApiClient {
                         PAIN_001
                                 + PaymentProduct.getPaymentProduct(
                                         paymentRequest.getPayment().getPaymentScheme()));
-    }
-
-    public CreatePaymentResponse createPayment(PaymentRequest paymentRequest) {
-        if (PaymentServiceType.PERIODIC.equals(
-                paymentRequest.getPayment().getPaymentServiceType())) {
-            return createRecurringPayment(paymentRequest);
-        } else {
-            return createPaymentRequestBuilder(paymentRequest)
-                    .type(MediaType.APPLICATION_XML_TYPE)
-                    .post(
-                            CreatePaymentResponse.class,
-                            paymentMapper.getPaymentRequest(paymentRequest.getPayment()));
-        }
     }
 
     private CreatePaymentResponse createRecurringPayment(PaymentRequest paymentRequest) {
@@ -73,19 +86,5 @@ public class FiduciaPaymentApiClient implements PaymentApiClient {
                 .header(
                         FiduciaConstants.HeaderKeys.PSU_ID,
                         credentials.getField(FiduciaConstants.CredentialKeys.PSU_ID));
-    }
-
-    public FetchPaymentStatusResponse fetchPaymentStatus(PaymentRequest paymentRequest) {
-        PaymentStatusXmlResponse paymentStatusXmlResponse =
-                apiClient
-                        .createRequest(
-                                createPaymentUrl(FETCH_PAYMENT_STATUS, paymentRequest)
-                                        .parameter(
-                                                PaymentConstants.PathVariables.PAYMENT_ID,
-                                                paymentRequest.getPayment().getUniqueId()))
-                        .get(PaymentStatusXmlResponse.class);
-
-        return new FetchPaymentStatusResponse(
-                paymentStatusXmlResponse.getCstmrPmtStsRpt().getOrgnlGrpInfAndSts().getGrpSts());
     }
 }

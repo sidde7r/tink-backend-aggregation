@@ -22,7 +22,7 @@ junit_test(
         "//src/integration/transfer:rpc",
         "//src/libraries/agent-storage",
         "//src/libraries/serialization",
-        "//third_party:org_apache_commons_commons_lang",
+        "//third_party:org_apache_commons_commons_lang3",
         "//third_party:org_assertj_assertj_core",
         "//third_party:org_iban4j_iban4j",
         "//third_party:org_mockito_mockito_core",

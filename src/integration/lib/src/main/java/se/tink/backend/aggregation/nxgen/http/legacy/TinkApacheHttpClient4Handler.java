@@ -169,8 +169,7 @@ public final class TinkApacheHttpClient4Handler extends TerminatingClientHandler
             return r.hasEntity();
         } catch (ClientHandlerException e) {
             Throwable t = e.getCause();
-            if (t != null
-                    && (t instanceof EOFException || t instanceof ConnectionClosedException)) {
+            if (t instanceof EOFException || t instanceof ConnectionClosedException) {
                 return false;
             }
 
