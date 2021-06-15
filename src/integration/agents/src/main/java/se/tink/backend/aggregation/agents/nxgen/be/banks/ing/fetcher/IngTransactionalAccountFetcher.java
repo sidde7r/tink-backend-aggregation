@@ -77,11 +77,15 @@ public class IngTransactionalAccountFetcher implements AccountFetcher<Transactio
         throw new AccountRefreshException("Unknown account type " + type);
     }
 
+    /**
+     * @param amountEntity is null for Savings Account and in that situation we want to put some
+     *     dummy value
+     * @return Mapped value to the ExactCurrencyAmount
+     */
     private ExactCurrencyAmount extractBalance(AmountEntity amountEntity) {
-        if (amountEntity == null) {
-            return null;
-        }
-        return ExactCurrencyAmount.of(amountEntity.getValue(), amountEntity.getCurrency());
+        return Optional.ofNullable(amountEntity)
+                .map(entity -> ExactCurrencyAmount.of(entity.getValue(), entity.getCurrency()))
+                .orElse(ExactCurrencyAmount.zero("EUR"));
     }
 
     private String extractTransactionsHref(List<LinkEntity> links) {
