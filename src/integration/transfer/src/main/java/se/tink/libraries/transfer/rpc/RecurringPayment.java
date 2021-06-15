@@ -17,6 +17,7 @@ public class RecurringPayment extends Transfer {
     private LocalDate startDate;
     private LocalDate endDate;
     private ExecutionRule executionRule;
+    @Deprecated
     private Integer dayOfExecution;
     private Integer dayOfMonth;
     private DayOfWeek dayOfWeek;

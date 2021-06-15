@@ -64,6 +64,7 @@ public class Payment {
     private Frequency frequency;
     private LocalDate startDate;
     private LocalDate endDate;
+    @Deprecated
     private Integer dayOfExecution;
     private Integer dayOfMonth;
     private DayOfWeek dayOfWeek;
