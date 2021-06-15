@@ -6,8 +6,10 @@ import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentCancelledException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentValidationException;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.SkandiaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.SkandiaConstants.ErrorMessages;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.SkandiaConstants.MinimumValues;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.executor.payment.rpc.SignPaymentResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.constants.ThirdPartyAppConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
@@ -49,18 +51,27 @@ public class SkandiaPaymentExecutor implements PaymentExecutor, FetchablePayment
 
     @Override
     public PaymentResponse create(PaymentRequest paymentRequest) throws PaymentException {
-
         final Payment payment = paymentRequest.getPayment();
 
-        // add DebtorAccount validation
+        validatePayment(payment);
 
         try {
-
             return apiClient.createPayment(payment).toTinkPayment(payment);
-
         } catch (HttpResponseException e) {
             throw HttpResponseExceptionHandler.checkForErrors(e);
         }
+    }
+
+    private void validatePayment(Payment payment) throws PaymentValidationException {
+        if (payment.getExactCurrencyAmount().getExactValue().compareTo(MinimumValues.MINIMUM_AMOUNT)
+                < 0) {
+            throw new PaymentValidationException(
+                    String.format(
+                            "Transfer amount can't be less than %.2f SEK",
+                            MinimumValues.MINIMUM_AMOUNT),
+                    InternalStatus.INVALID_MINIMUM_AMOUNT);
+        }
+        // add DebtorAccount validation
     }
 
     @Override
