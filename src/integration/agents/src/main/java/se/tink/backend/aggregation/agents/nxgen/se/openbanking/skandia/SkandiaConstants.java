@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia;
 
+import java.math.BigDecimal;
 import java.time.ZoneId;
 import java.util.Locale;
 import lombok.Getter;
@@ -214,5 +215,9 @@ public final class SkandiaConstants {
 
         static final ZoneId DEFAULT_ZONE_ID = ZoneId.of("Europe/Stockholm");
         static final Locale DEFAULT_LOCALE = new Locale("sv", "SE");
+    }
+
+    public static class MinimumValues {
+        public static final BigDecimal MINIMUM_AMOUNT = BigDecimal.ONE;
     }
 }
