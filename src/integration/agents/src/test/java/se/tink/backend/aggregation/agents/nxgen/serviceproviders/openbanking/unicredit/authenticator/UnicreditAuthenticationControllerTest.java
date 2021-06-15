@@ -99,7 +99,7 @@ public class UnicreditAuthenticationControllerTest {
         credentials = new Credentials();
 
         UnicreditAuthenticator authenticator =
-                new UnicreditAuthenticator(unicreditStorage, apiClientMock, credentials);
+                new UnicreditAuthenticator(apiClientMock, unicreditStorage, credentials);
         authenticatorController =
                 new UnicreditAuthenticationController(
                         supplementalInformationHelperMock,

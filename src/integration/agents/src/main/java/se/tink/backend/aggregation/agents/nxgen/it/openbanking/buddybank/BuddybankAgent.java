@@ -10,6 +10,8 @@ import se.tink.backend.aggregation.agents.nxgen.it.openbanking.buddybank.authent
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.buddybank.authenticator.BuddybankAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.buddybank.payment.executor.BuddybankPaymentController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditBaseAgent;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditBaseApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditBaseHeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.configuration.UnicreditProviderConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.executor.payment.UnicreditPaymentExecutor;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
@@ -39,8 +41,14 @@ public final class BuddybankAgent extends UnicreditBaseAgent {
     @Override
     public Optional<PaymentController> constructPaymentController() {
         return Optional.of(
-                new BuddybankPaymentController(
-                        new UnicreditPaymentExecutor(apiClient),
-                        new BuddybankApiClient(apiClient)));
+                new BuddybankPaymentController(new UnicreditPaymentExecutor(apiClient), apiClient));
+    }
+
+    @Override
+    protected UnicreditBaseApiClient getApiClient(
+            UnicreditProviderConfiguration providerConfiguration,
+            UnicreditBaseHeaderValues headerValues) {
+        return new BuddybankApiClient(
+                client, unicreditStorage, providerConfiguration, headerValues);
     }
 }

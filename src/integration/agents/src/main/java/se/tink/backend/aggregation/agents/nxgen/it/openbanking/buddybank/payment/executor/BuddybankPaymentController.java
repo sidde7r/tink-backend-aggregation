@@ -10,6 +10,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.buddybank.BuddybankApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.executor.payment.UnicreditPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.executor.payment.rpc.FetchPaymentStatusResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
@@ -25,10 +26,10 @@ public class BuddybankPaymentController extends PaymentController {
     private final BuddybankApiClient apiClient;
 
     public BuddybankPaymentController(
-            UnicreditPaymentExecutor paymentExecutor, BuddybankApiClient apiClient) {
+            UnicreditPaymentExecutor paymentExecutor, UnicreditBaseApiClient apiClient) {
         super(paymentExecutor, paymentExecutor);
 
-        this.apiClient = apiClient;
+        this.apiClient = (BuddybankApiClient) apiClient;
     }
 
     @Override

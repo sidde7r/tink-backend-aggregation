@@ -16,25 +16,25 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 @RequiredArgsConstructor
 public class UnicreditAuthenticator {
 
-    protected static final List<ErrorCodes> INVALID_CONSENT_ERROR_CODES =
+    private static final List<ErrorCodes> INVALID_CONSENT_ERROR_CODES =
             ImmutableList.of(
                     ErrorCodes.CONSENT_INVALID,
                     ErrorCodes.CONSENT_EXPIRED,
                     ErrorCodes.CONSENT_UNKNOWN);
 
-    protected final UnicreditStorage unicreditStorage;
     protected final UnicreditBaseApiClient apiClient;
-    protected final Credentials credentials;
+    private final UnicreditStorage unicreditStorage;
+    private final Credentials credentials;
 
-    protected Optional<String> getConsentId() {
+    public Optional<String> getConsentId() {
         return unicreditStorage.getConsentId();
     }
 
-    protected void clearConsent() {
+    public void clearConsent() {
         unicreditStorage.removeConsentId();
     }
 
-    protected Optional<ConsentDetailsResponse> getConsentDetailsWithValidStatus() {
+    public Optional<ConsentDetailsResponse> getConsentDetailsWithValidStatus() {
         try {
             ConsentDetailsResponse consentDetails = apiClient.getConsentDetails();
             return consentDetails.isValid() ? Optional.of(consentDetails) : Optional.empty();
@@ -47,17 +47,17 @@ public class UnicreditAuthenticator {
         }
     }
 
-    protected void setCredentialsSessionExpiryDate(ConsentDetailsResponse consentDetailsResponse) {
+    public void setCredentialsSessionExpiryDate(ConsentDetailsResponse consentDetailsResponse) {
         credentials.setSessionExpiryDate(consentDetailsResponse.getValidUntil());
     }
 
-    protected URL buildAuthorizeUrl(String state) {
+    public URL buildAuthorizeUrl(String state) {
         ConsentResponse consentResponse = apiClient.createConsent(state);
         unicreditStorage.saveConsentId(consentResponse.getConsentId());
         return apiClient.getScaRedirectUrlFromConsentResponse(consentResponse);
     }
 
-    protected boolean isInvalidConsentException(HttpResponseException httpResponseException) {
+    public boolean isInvalidConsentException(HttpResponseException httpResponseException) {
         final String responseBody = httpResponseException.getResponse().getBody(String.class);
         return INVALID_CONSENT_ERROR_CODES.stream()
                 .map(ErrorCodes::name)

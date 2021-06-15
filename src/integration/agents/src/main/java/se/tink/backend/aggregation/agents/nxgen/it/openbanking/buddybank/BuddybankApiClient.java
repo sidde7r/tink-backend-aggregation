@@ -3,20 +3,27 @@ package se.tink.backend.aggregation.agents.nxgen.it.openbanking.buddybank;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.buddybank.authenticator.rpc.BuddybankConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.buddybank.payment.executor.rpc.BuddybankCreatePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditBaseApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditBaseHeaderValues;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditStorage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.authenticator.rpc.ConsentResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.configuration.UnicreditProviderConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.executor.payment.rpc.CreatePaymentResponse;
+import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class BuddybankApiClient extends UnicreditBaseApiClient {
 
-    public BuddybankApiClient(UnicreditBaseApiClient unicreditBaseApiClient) {
-        super(unicreditBaseApiClient);
+    public BuddybankApiClient(
+            TinkHttpClient client,
+            UnicreditStorage unicreditStorage,
+            UnicreditProviderConfiguration providerConfiguration,
+            UnicreditBaseHeaderValues headerValues) {
+        super(client, unicreditStorage, providerConfiguration, headerValues);
     }
 
     @Override
     public ConsentResponse createConsent(String state) {
-        BuddybankConsentResponse consentResponse =
-                (BuddybankConsentResponse) super.createConsent(state);
+        ConsentResponse consentResponse = super.createConsent(state);
         unicreditStorage.saveConsentId(consentResponse.getConsentId());
 
         return consentResponse;
