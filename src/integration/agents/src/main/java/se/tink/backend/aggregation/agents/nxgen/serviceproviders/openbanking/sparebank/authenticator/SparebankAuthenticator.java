@@ -7,7 +7,6 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 import java.util.TimeZone;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -154,7 +153,7 @@ public class SparebankAuthenticator {
         - every resourceId has its own separate background refreshes counters for balances and transactions
         - because of that, when we make a real call here, it counts as a BG refresh, so we need to cache the response
         - transactions response may be too big, so we need to fetch balances
-        - currently API allows to fetch balances with expired token and we cam only check if consent was revoked
+        - currently API allows to fetch balances with expired token and we can only check if consent was revoked
           (but it might be change in the future)
          */
         try {
@@ -177,10 +176,7 @@ public class SparebankAuthenticator {
     }
 
     private boolean isAccountOrCardResponseStored() {
-        Optional<AccountResponse> maybeAccounts = storage.getStoredAccounts();
-        Optional<CardResponse> maybeCards = storage.getStoredCards();
-
-        return maybeAccounts.isPresent() || maybeCards.isPresent();
+        return storage.getStoredAccounts().isPresent() || storage.getStoredCards().isPresent();
     }
 
     private List<String> getResourceIdsOfStoredAccountsAndCards() {
