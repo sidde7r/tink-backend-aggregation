@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen;
 
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
-import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
 
 import com.google.inject.Inject;
 import java.security.cert.CertificateException;
@@ -16,7 +15,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.Au
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationController;
 
-@AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS})
+@AgentCapabilities({CHECKING_ACCOUNTS})
 public class SparkassenRedirectAgent extends SparkassenAgent {
 
     @Inject

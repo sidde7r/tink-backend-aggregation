@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen;
 
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
-import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.TRANSFERS;
 
 import com.google.inject.Inject;
@@ -12,7 +11,6 @@ import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
-import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentPisCapability;
@@ -41,7 +39,7 @@ import se.tink.backend.aggregation.nxgen.http.filter.filters.AccessExceededFilte
 import se.tink.backend.aggregation.nxgen.http.filter.filters.BankServiceDownExceptionFilter;
 import se.tink.libraries.account.enums.AccountIdentifierType;
 
-@AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, TRANSFERS})
+@AgentCapabilities({CHECKING_ACCOUNTS, TRANSFERS})
 @AgentPisCapability(
         capabilities = {
             PisCapability.SEPA_CREDIT_TRANSFER,
@@ -49,9 +47,7 @@ import se.tink.libraries.account.enums.AccountIdentifierType;
             PisCapability.PIS_SEPA_RECURRING_PAYMENTS
         })
 public class SparkassenAgent extends NextGenerationAgent
-        implements RefreshCheckingAccountsExecutor,
-                RefreshSavingsAccountsExecutor,
-                RefreshTransferDestinationExecutor {
+        implements RefreshCheckingAccountsExecutor, RefreshTransferDestinationExecutor {
 
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
@@ -119,16 +115,6 @@ public class SparkassenAgent extends NextGenerationAgent
     @Override
     public FetchTransactionsResponse fetchCheckingTransactions() {
         return transactionalAccountRefreshController.fetchCheckingTransactions();
-    }
-
-    @Override
-    public FetchAccountsResponse fetchSavingsAccounts() {
-        return transactionalAccountRefreshController.fetchSavingsAccounts();
-    }
-
-    @Override
-    public FetchTransactionsResponse fetchSavingsTransactions() {
-        return transactionalAccountRefreshController.fetchSavingsTransactions();
     }
 
     private TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
