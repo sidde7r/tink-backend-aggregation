@@ -15,7 +15,6 @@ import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
-import se.tink.backend.aggregation.agents.exceptions.payment.PaymentCancelledException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
@@ -72,6 +71,7 @@ import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.payments.common.model.PaymentScheme;
+import se.tink.libraries.signableoperation.enums.InternalStatus;
 import se.tink.libraries.transfer.enums.RemittanceInformationType;
 import se.tink.libraries.uuid.UUIDUtils;
 
@@ -179,7 +179,8 @@ public class CmcicPaymentExecutor implements PaymentExecutor, FetchablePaymentEx
                 throw new PaymentException(
                         TransferExecutionException.EndUserMessage.GENERIC_PAYMENT_ERROR_MESSAGE
                                 .getKey()
-                                .get());
+                                .get(),
+                        InternalStatus.BANK_ERROR_CODE_NOT_HANDLED_YET);
         }
         return paymentMultiStepResponse;
     }
@@ -242,7 +243,8 @@ public class CmcicPaymentExecutor implements PaymentExecutor, FetchablePaymentEx
                 throw new PaymentException(
                         TransferExecutionException.EndUserMessage.GENERIC_PAYMENT_ERROR_MESSAGE
                                 .getKey()
-                                .get());
+                                .get(),
+                        InternalStatus.BANK_ERROR_CODE_NOT_HANDLED_YET);
         }
         return paymentMultiStepResponse;
     }
@@ -252,7 +254,8 @@ public class CmcicPaymentExecutor implements PaymentExecutor, FetchablePaymentEx
         String error = StatusReasonInformationEntity.mapRejectStatusToError(rejectStatus);
         logger.error("Payment Rejected by the bank with error ={}", error);
         throw new PaymentRejectedException(
-                TransferExecutionException.EndUserMessage.PAYMENT_REJECTED.getKey().get());
+                TransferExecutionException.EndUserMessage.PAYMENT_REJECTED.getKey().get(),
+                InternalStatus.BANK_ERROR_CODE_NOT_HANDLED_YET);
     }
 
     private void handleCancel(StatusReasonInformationEntity rejectStatus)
@@ -261,7 +264,7 @@ public class CmcicPaymentExecutor implements PaymentExecutor, FetchablePaymentEx
         logger.error("Authorisation of payment was cancelled with bank status={}", error);
         throw new PaymentAuthenticationException(
                 TransferExecutionException.EndUserMessage.PAYMENT_CANCELLED.getKey().get(),
-                new PaymentCancelledException());
+                new PaymentAuthorizationException(InternalStatus.PAYMENT_AUTHORIZATION_CANCELLED));
     }
 
     private PaymentResponse getPaymentResponse(PaymentResponseEntity payment) {
@@ -318,7 +321,8 @@ public class CmcicPaymentExecutor implements PaymentExecutor, FetchablePaymentEx
             throw new PaymentException(
                     TransferExecutionException.EndUserMessage.GENERIC_PAYMENT_ERROR_MESSAGE
                             .getKey()
-                            .get());
+                            .get(),
+                    InternalStatus.BANK_ERROR_CODE_NOT_HANDLED_YET);
         }
         return authorizationUrl.substring(index + 1);
     }
@@ -433,6 +437,7 @@ public class CmcicPaymentExecutor implements PaymentExecutor, FetchablePaymentEx
                                 () ->
                                         new PaymentAuthorizationException(
                                                 "SCA time-out.",
+                                                InternalStatus.PAYMENT_AUTHORIZATION_TIMEOUT,
                                                 ThirdPartyAppError.TIMED_OUT.exception()));
 
         // Query parameters can be case insesitive returned by bank,this is to take care of that

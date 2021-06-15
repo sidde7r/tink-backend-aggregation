@@ -19,7 +19,6 @@ import org.iban4j.CountryCode;
 import org.iban4j.Iban;
 import org.junit.Before;
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
@@ -386,7 +385,7 @@ public class LaBanquePostalePaymentExecutorTest {
         Throwable thrown = catchThrowable(() -> paymentExecutor.sign(paymentRequest));
 
         // then
-        Assertions.assertThat(thrown).isInstanceOf(PaymentAuthenticationException.class);
+        Assertions.assertThat(thrown).isInstanceOf(PaymentRejectedException.class);
         verify(apiClient).confirmPayment(null, psuAuthorizationFactor);
     }
 

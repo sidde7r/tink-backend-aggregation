@@ -24,6 +24,7 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.payment.enums.PaymentStatus;
+import se.tink.libraries.signableoperation.enums.InternalStatus;
 
 @Slf4j
 public class N26Xs2aPaymentExecutor extends Xs2aDevelopersPaymentExecutor {
@@ -83,15 +84,19 @@ public class N26Xs2aPaymentExecutor extends Xs2aDevelopersPaymentExecutor {
 
         } catch (ExecutionException | RetryException e) {
             log.warn("Retryer couldn't get payment status");
-            throw new PaymentRejectedException("Retryer couldn't get payment status");
+            throw new PaymentRejectedException(
+                    "Retryer couldn't get payment status",
+                    InternalStatus.PAYMENT_REJECTED_BY_BANK_NO_DESCRIPTION);
         }
 
         if (paymentStatus == PaymentStatus.PENDING) {
-            throw new PaymentAuthorizationException();
+            throw new PaymentRejectedException();
         }
 
         if (paymentStatus != PaymentStatus.SIGNED) {
-            throw new PaymentRejectedException("Unexpected payment status: " + paymentStatus);
+            throw new PaymentRejectedException(
+                    "Unexpected payment status: " + paymentStatus,
+                    InternalStatus.PAYMENT_REJECTED_BY_BANK_NO_DESCRIPTION);
         }
 
         return paymentStatus;

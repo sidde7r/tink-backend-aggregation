@@ -76,7 +76,8 @@ public class SocieteGeneralePaymentExecutor implements PaymentExecutor {
                                 () -> {
                                     logger.error(
                                             "Payment authorization failed. There is no authentication url!");
-                                    return new PaymentAuthorizationException();
+                                    return new PaymentException(
+                                            InternalStatus.PAYMENT_REJECTED_BY_BANK_NO_DESCRIPTION);
                                 });
 
         sessionStorage.put(SocieteGeneraleConstants.StorageKeys.AUTH_URL, authorizeUrl);
