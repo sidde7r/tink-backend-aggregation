@@ -6,7 +6,7 @@ import lombok.Getter;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-@JsonNaming(PropertyNamingStrategy.UpperCamelCaseStrategy.class)
+@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 @Getter
 public class ErrorResponse {
     private String errorDescription;
