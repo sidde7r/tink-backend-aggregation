@@ -1,10 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.dnb;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 
+@Slf4j
 @RequiredArgsConstructor
 public class DnbSessionHandler implements SessionHandler {
 
@@ -17,17 +21,26 @@ public class DnbSessionHandler implements SessionHandler {
 
     @Override
     public void keepAlive() throws SessionException {
-        /*
-        - if session is still valid, we should be able to fetch accounts
-        - if session is not valid, DNB sometimes returns HTML page with status 200, other times it's status 302
-        - if API is temporarily down, we handle it already with retry filters
-        - if API is down or we're making invalid request - it will still be logged later on during
-          authentication / data fetching
-         */
-        try {
-            apiClient.fetchAccounts();
-        } catch (Exception e) {
-            throw SessionError.SESSION_EXPIRED.exception();
+        HttpResponse response = apiClient.fetchAccountsRaw();
+        if (isJsonResponse(response)) {
+            return;
         }
+
+        if (isHomePageRedirect(response)) {
+            log.info("[DNB] Home page redirect - session expired");
+        } else {
+            log.warn("[DNB] Unexpected non json response - session expired");
+        }
+        throw SessionError.SESSION_EXPIRED.exception();
+    }
+
+    private boolean isJsonResponse(HttpResponse response) {
+        String contentType = response.getHeaders().getFirst("Content-Type");
+        return StringUtils.containsIgnoreCase(contentType, "application/json");
+    }
+
+    private boolean isHomePageRedirect(HttpResponse response) {
+        String html = response.getBody(String.class);
+        return DnbConstants.Messages.HOME_PAGE_REDIRECT.matcher(html).find();
     }
 }
