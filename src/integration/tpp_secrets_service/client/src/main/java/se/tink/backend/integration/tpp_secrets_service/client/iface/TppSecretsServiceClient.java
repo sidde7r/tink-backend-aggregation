@@ -7,6 +7,8 @@ public interface TppSecretsServiceClient {
     Optional<SecretsEntityCore> getAllSecrets(
             String appId, String clusterId, String certId, String providerId);
 
+    Optional<String> getLicenseModel(String appId, String clusterId, String providerId);
+
     void ping();
 
     boolean isEnabled();

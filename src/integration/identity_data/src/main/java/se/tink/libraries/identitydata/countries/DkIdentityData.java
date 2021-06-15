@@ -1,6 +1,7 @@
 package se.tink.libraries.identitydata.countries;
 
 import java.time.LocalDate;
+import org.apache.commons.lang3.math.NumberUtils;
 import se.tink.libraries.identitydata.IdentityData;
 
 public class DkIdentityData extends IdentityData {
@@ -43,6 +44,16 @@ public class DkIdentityData extends IdentityData {
                 .addSurnameElement(surname)
                 .setDateOfBirth(getBirthDateFromCpr(cpr))
                 .build();
+    }
+
+    public static boolean isCpr(String cpr) {
+        if (cpr.length() == 10 && NumberUtils.isDigits(cpr)) {
+            final int day = Integer.parseInt(cpr.substring(0, 2));
+            final int month = Integer.parseInt(cpr.substring(2, 4));
+
+            return (day < 32 && month < 13);
+        }
+        return false;
     }
 
     private static LocalDate getBirthDateFromCpr(String cpr) {

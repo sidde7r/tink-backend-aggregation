@@ -16,7 +16,14 @@ public class JyskeIdentityDataFetcher implements IdentityDataFetcher {
     @Override
     public IdentityData fetchIdentityData() {
         final IdentityResponse identityResponse = apiClient.fetchIdentityData();
+        final String userId = jyskePersistentStorage.getUserId();
 
-        return DkIdentityData.of(identityResponse.getName(), jyskePersistentStorage.getUserId());
+        if (DkIdentityData.isCpr(userId)) {
+            return DkIdentityData.of(identityResponse.getName(), userId);
+        }
+        return IdentityData.builder()
+                .setFullName(identityResponse.getName())
+                .setDateOfBirth(null)
+                .build();
     }
 }

@@ -11,6 +11,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.integration.tpp_secrets_service.client.entities.SecretsEntityCore;
 import se.tink.backend.secretservice.grpc.GetAllSecretsResponse;
+import se.tink.backend.secretservice.grpc.GetLicenseModelRequest;
+import se.tink.backend.secretservice.grpc.GetLicenseModelResponse;
 import se.tink.backend.secretservice.grpc.GetSecretsRequest;
 import se.tink.backend.secretservice.grpc.InternalSecretsServiceGrpc;
 import se.tink.backend.secretservice.grpc.TppSecret;
@@ -73,6 +75,29 @@ class AllSecretsFetcher {
                         .build());
     }
 
+    public Optional<String> getLicenseModel(String appId, String clusterId, String providerId) {
+        log.info(
+                "calling SecretService getLicenseModel with params: appId:{}, clusterId:{}, providerId:{}",
+                appId,
+                clusterId,
+                providerId);
+        if (!enabled) {
+            log.warn(
+                    "Trying to call getLicenseModel for an instance of TppSecretsServiceClientImpl when the configuration says it is not enabled.");
+            return Optional.empty();
+        }
+
+        if (StringUtils.isBlank(appId) || StringUtils.isBlank(providerId)) {
+            return Optional.empty();
+        }
+
+        GetLicenseModelRequest getLicenseModelRequest =
+                buildLicenseModelRequest(appId, clusterId, providerId);
+        GetLicenseModelResponse getLicenseModelResponse =
+                internalSecretsServiceStub.getLicenseModel(getLicenseModelRequest);
+        return Optional.of(getLicenseModelResponse.getLicenseModel());
+    }
+
     private GetSecretsRequest buildRequest(
             String appId, String clusterId, String certId, String providerId) {
         Preconditions.checkNotNull(appId, "appId must not be null");
@@ -84,6 +109,19 @@ class AllSecretsFetcher {
                 .setAppId(appId)
                 .setClusterId(clusterId)
                 .setCertId(Strings.isNullOrEmpty(certId) ? "" : certId)
+                .build();
+    }
+
+    private GetLicenseModelRequest buildLicenseModelRequest(
+            String appId, String clusterId, String providerId) {
+        Preconditions.checkNotNull(appId, "appId must not be null");
+        Preconditions.checkNotNull(clusterId, "clusterId must not be null");
+        Preconditions.checkNotNull(providerId, "providerId must not be null");
+
+        return GetLicenseModelRequest.newBuilder()
+                .setAppId(appId)
+                .setClusterId(clusterId)
+                .setProviderId(providerId)
                 .build();
     }
 }

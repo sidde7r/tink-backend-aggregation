@@ -104,6 +104,13 @@ public final class TppSecretsServiceClientImpl extends ManagedSafeStop
     }
 
     @Override
+    public Optional<String> getLicenseModel(String appId, String clusterId, String providerId) {
+        final AllSecretsFetcher allSecretsFetcher =
+                new AllSecretsFetcher(enabled, internalSecretsServiceStub);
+        return allSecretsFetcher.getLicenseModel(appId, clusterId, providerId);
+    }
+
+    @Override
     public void ping() {
         this.internalSecretsServiceStub.ping(PingMessage.newBuilder().build());
     }
