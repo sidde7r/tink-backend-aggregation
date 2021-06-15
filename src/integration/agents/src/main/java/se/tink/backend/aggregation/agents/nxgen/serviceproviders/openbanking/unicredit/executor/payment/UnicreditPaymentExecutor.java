@@ -130,7 +130,7 @@ public class UnicreditPaymentExecutor implements PaymentExecutor, FetchablePayme
                 return payment.getDayOfMonth().toString();
             default:
                 throw new IllegalArgumentException(
-                    "Frequency is not supported: " + payment.getFrequency());
+                        "Frequency is not supported: " + payment.getFrequency());
         }
     }
 

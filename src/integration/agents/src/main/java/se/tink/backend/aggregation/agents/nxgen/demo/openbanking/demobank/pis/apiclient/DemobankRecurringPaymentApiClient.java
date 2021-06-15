@@ -167,7 +167,7 @@ public class DemobankRecurringPaymentApiClient implements DemobankPaymentApiClie
                 return payment.getDayOfMonth();
             default:
                 throw new IllegalArgumentException(
-                    "Frequency is not supported: " + payment.getFrequency());
+                        "Frequency is not supported: " + payment.getFrequency());
         }
     }
 
