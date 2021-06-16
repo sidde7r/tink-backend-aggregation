@@ -32,6 +32,7 @@ import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33.filters.Nord
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33.session.NordeaFISessionHandler;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
@@ -65,6 +66,7 @@ public final class NordeaFIAgent extends NextGenerationAgent
     private final LoanRefreshController loanRefreshController;
     private final CreditCardRefreshController creditCardRefreshController;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
+    private final RandomValueGenerator randomValueGenerator;
 
     @Inject
     public NordeaFIAgent(AgentComponentProvider componentProvider) {
@@ -84,6 +86,8 @@ public final class NordeaFIAgent extends NextGenerationAgent
         creditCardRefreshController = constructCreditCardRefreshController();
 
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
+
+        randomValueGenerator = componentProvider.getRandomValueGenerator();
     }
 
     private void configureHttpClient(TinkHttpClient client) {
@@ -99,7 +103,11 @@ public final class NordeaFIAgent extends NextGenerationAgent
     @Override
     protected Authenticator constructAuthenticator() {
         return new NordeaFIAuthenticator(
-                apiClient, sessionStorage, supplementalInformationController, catalog, credentials);
+                apiClient,
+                sessionStorage,
+                supplementalInformationController,
+                catalog,
+                randomValueGenerator);
     }
 
     @Override

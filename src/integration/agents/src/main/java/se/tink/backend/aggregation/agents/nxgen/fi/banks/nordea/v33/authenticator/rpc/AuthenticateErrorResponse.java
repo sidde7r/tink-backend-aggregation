@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 
 @JsonObject
 @Slf4j
-public class AuthenticateStatus implements ThirdPartyAppResponse<String> {
+public class AuthenticateErrorResponse implements ThirdPartyAppResponse<String> {
 
     private String error;
     private String code;
@@ -25,8 +25,12 @@ public class AuthenticateStatus implements ThirdPartyAppResponse<String> {
         return code;
     }
 
+    public String getRawError() {
+        return error;
+    }
+
     private ThirdPartyAppStatus logUnknownError() {
-        log.info("tag={} {}", NordeaFIConstants.LogTags.NORDEA_FI_AUTHENTICATE, error);
+        log.info("{} {}", NordeaFIConstants.LogTags.NORDEA_FI_AUTHENTICATE, error);
         return ThirdPartyAppStatus.UNKNOWN;
     }
 }
