@@ -280,6 +280,9 @@ public class CmcicPaymentExecutor implements PaymentExecutor, FetchablePaymentEx
                                                         .getCreditorAccount()
                                                         .getIban()),
                                         payment.getBeneficiary().getCreditor().getName()))
+                        .withDebtor(
+                                new Debtor(
+                                        new IbanIdentifier(payment.getDebtorAccount().getIban())))
                         .build());
     }
 
