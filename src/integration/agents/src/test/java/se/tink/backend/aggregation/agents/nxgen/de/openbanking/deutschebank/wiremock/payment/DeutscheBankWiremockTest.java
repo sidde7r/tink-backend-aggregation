@@ -82,7 +82,7 @@ public class DeutscheBankWiremockTest {
                         .withPaymentScheme(PaymentScheme.SEPA_CREDIT_TRANSFER)
                         .withPaymentServiceType(PaymentServiceType.PERIODIC)
                         .withFrequency(Frequency.MONTHLY)
-                        .withDayOfExecution(25)
+                        .withDayOfMonth(25)
                         .withStartDate(LocalDate.of(2021, 06, 18))
                         .withEndDate(LocalDate.of(2021, 07, 31))
                         .withExecutionRule(ExecutionRule.FOLLOWING)
