@@ -121,8 +121,8 @@ public class FrOpenBankingPaymentExecutorTest {
         PaymentMultiStepResponse response = paymentExecutor.sign(paymentRequest);
 
         // then
-        Assertions.assertThat(response.getStep()).isEqualTo(
-            FrOpenBankingPaymentExecutor.PAYMENT_POST_SIGN_STATE);
+        Assertions.assertThat(response.getStep())
+                .isEqualTo(FrOpenBankingPaymentExecutor.PAYMENT_POST_SIGN_STATE);
         verify(sessionStorage, times(1))
                 .get(FrOpenBankingPaymentExecutor.PAYMENT_AUTHORIZATION_URL);
         verify(supplementalInformationHelper, times(1)).openThirdPartyApp(any());
