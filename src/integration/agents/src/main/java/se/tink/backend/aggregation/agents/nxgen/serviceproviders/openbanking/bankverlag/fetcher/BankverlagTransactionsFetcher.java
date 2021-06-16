@@ -40,7 +40,7 @@ public class BankverlagTransactionsFetcher implements TransactionFetcher<Transac
 
         List<AggregationTransaction> aggregationTransactions = new ArrayList<>();
 
-        if (BankverlagConstants.AspspId.ASPSP_WITH_URI_FOR_TRANSACTIONS.contains(aspspId)) {
+        if (BankverlagConstants.BankverlagAspspId.TARGOBANK.equalsIgnoreCase(aspspId)) {
             HttpResponse zipFile =
                     apiClient.getTransactionsZipFile(
                             storage.getConsentId(),
@@ -64,14 +64,14 @@ public class BankverlagTransactionsFetcher implements TransactionFetcher<Transac
             List<AggregationTransaction> aggregationTransactions, HttpResponse zipFile) {
         try (ZipInputStream zipInputStream = new ZipInputStream(zipFile.getBodyInputStream())) {
 
-            ZipEntry entry = zipInputStream.getNextEntry();
-
-            while (entry != null) {
+            ZipEntry entry;
+            do {
+                entry = zipInputStream.getNextEntry();
                 aggregationTransactions.addAll(
                         getTransactionsFromCamtFormat(
                                 IOUtils.toString(zipInputStream, StandardCharsets.UTF_8)));
-                entry = zipInputStream.getNextEntry();
-            }
+
+            } while (entry != null);
 
         } catch (HttpResponseException e) {
             log.error("Unable to download transactions zip file", e);

@@ -1,0 +1,456 @@
+
+REQUEST 1
+POST https://psd2.bvxs2a.de/targobank/v1/consents
+Content-Type: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-IP-Address: 127.0.0.1
+X-Aggregator: Tink Testing
+
+{"access":{"allPsd2":"allAccounts"},"recurringIndicator":true,"validUntil":"1992-07-09","frequencyPerDay":4,"combinedServiceIndicator":false}
+
+RESPONSE 1
+201
+Date: Wed, 16 Jun 2021 13:27:37 GMT
+Date: Wed, 16 Jun 2021 13:27:38 GMT
+Server: nginx/1.19.10
+Content-Type: application/json;charset=utf-8
+ASPSP-Notification-Support: ***
+Location: ***
+X-Request-Id: 00000000-0000-4000-0000-000000000000
+X-Kong-Upstream-Latency: ***
+X-Kong-Proxy-Latency: ***
+Strict-Transport-Security: max-age=15724800; includeSubDomains
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+X-Frame-Options: DENY
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Content-Length: 789
+
+{"consentStatus":"received","consentId":"**HASHED:me**","_links":{"self":{"href":"https://psd2.bvxs2a.de/targobank/v1/consents/**HASHED:me**"},"status":{"href":"https://psd2.bvxs2a.de/targobank/v1/consents/**HASHED:me**/status"},"startAuthorisationWithPsuAuthentication":{"href":"https://psd2.bvxs2a.de/targobank/v1/consents/**HASHED:me**/authorisations"}}}
+
+REQUEST 2
+POST https://psd2.bvxs2a.de/targobank/v1/consents/**HASHED:me**/authorisations
+Content-Type: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-IP-Address: 127.0.0.1
+PSU-ID: test_username
+X-Aggregator: Tink Testing
+
+{"psuData":{"password":"test_password"}}
+
+RESPONSE 2
+201
+Date: Wed, 16 Jun 2021 13:27:39 GMT
+Date: Wed, 16 Jun 2021 13:27:40 GMT
+Server: nginx/1.19.10
+Content-Type: application/json;charset=utf-8
+Aspsp-Sca-Approach: ***
+X-Request-Id: 00000000-0000-4000-0000-000000000000
+X-Kong-Upstream-Latency: ***
+X-Kong-Proxy-Latency: ***
+Strict-Transport-Security: max-age=15724800; includeSubDomains
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+X-Frame-Options: DENY
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Content-Length: 841
+
+{"scaMethods":[{"authenticationType":"SMS_OTP","authenticationMethodId":"921","name":"smsTAN","explanation":"TAN-Nummer"},{"authenticationType":"PUSH_OTP","authenticationMethodId":"921","name":"easyTAN solution","explanation":"TAN-Nummer"}],"_links":{"selectAuthenticationMethod":{"href":"https://psd2.bvxs2a.de/targobank/v1/consents/**HASHED:me**/authorisations/36ce2006-c671-45ec-9379-271cc9521e39"},"scaStatus":{"href":"https://psd2.bvxs2a.de/targobank/v1/consents/**HASHED:me**/authorisations/36ce2006-c671-45ec-9379-271cc9521e39"}},"scaStatus":"psuAuthenticated","authorisationId":"36ce2006-c671-45ec-9379-271cc9521e39"}
+
+REQUEST 3
+PUT https://psd2.bvxs2a.de/targobank/v1/consents/**HASHED:me**/authorisations/36ce2006-c671-45ec-9379-271cc9521e39
+Content-Type: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-IP-Address: 127.0.0.1
+X-Aggregator: Tink Testing
+
+{"authenticationMethodId":"921"}
+
+RESPONSE 3
+200
+Date: Wed, 16 Jun 2021 13:27:43 GMT
+Date: Wed, 16 Jun 2021 13:27:46 GMT
+Server: nginx/1.19.10
+Content-Type: application/json;charset=utf-8
+Vary: Accept-Encoding
+Aspsp-Sca-Approach: ***
+X-Request-Id: 00000000-0000-4000-0000-000000000000
+X-Kong-Upstream-Latency: ***
+X-Kong-Proxy-Latency: ***
+Strict-Transport-Security: max-age=15724800; includeSubDomains
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+X-Frame-Options: DENY
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Content-Length: 313
+
+{"_links":{"scaStatus":{"href":"https://psd2.bvxs2a.de/targobank/v1/consents/**HASHED:me**/authorisations/36ce2006-c671-45ec-9379-271cc9521e39"}},"scaStatus":"scaMethodSelected","psuMessage":"nochallenge"}
+
+REQUEST 4
+GET https://psd2.bvxs2a.de/targobank/v1/consents/**HASHED:me**/authorisations/36ce2006-c671-45ec-9379-271cc9521e39
+Content-Type: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-IP-Address: 127.0.0.1
+X-Aggregator: Tink Testing
+
+RESPONSE 4
+200
+Date: Wed, 16 Jun 2021 13:27:59 GMT
+Date: Wed, 16 Jun 2021 13:28:00 GMT
+Server: nginx/1.19.10
+Content-Type: application/json;charset=utf-8
+X-Request-Id: d68164c9-19f2-408d-b532-17f0fe8631c6
+X-Kong-Upstream-Latency: ***
+X-Kong-Proxy-Latency: ***
+Strict-Transport-Security: max-age=15724800; includeSubDomains
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+X-Frame-Options: DENY
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Content-Length: 25
+
+{"scaStatus":"finalised"}
+
+REQUEST 5
+GET https://psd2.bvxs2a.de/targobank/v1/consents/**HASHED:me**
+Content-Type: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-IP-Address: 127.0.0.1
+X-Aggregator: Tink Testing
+
+RESPONSE 5
+200
+Date: Wed, 16 Jun 2021 13:28:01 GMT
+Date: Wed, 16 Jun 2021 13:28:01 GMT
+Server: nginx/1.19.10
+Content-Type: application/json;charset=utf-8
+X-Request-Id: 00000000-0000-4000-0000-000000000000
+X-Kong-Upstream-Latency: ***
+X-Kong-Proxy-Latency: ***
+Strict-Transport-Security: max-age=15724800; includeSubDomains
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+X-Frame-Options: DENY
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Content-Length: 208
+
+{"access":{"accounts":[],"balances":[],"transactions":[],"allPsd2":"allAccounts"},"recurringIndicator":true,"validUntil":"2021-09-13","frequencyPerDay":4,"lastActionDate":"2021-06-16","consentStatus":"valid"}
+
+REQUEST 6
+GET https://psd2.bvxs2a.de/targobank/v1/accounts
+Content-Type: application/x-www-form-urlencoded
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-IP-Address: 127.0.0.1
+Consent-ID: **HASHED:me**
+X-Aggregator: Tink Testing
+
+RESPONSE 6
+200
+Date: Wed, 16 Jun 2021 13:28:02 GMT
+Date: Wed, 16 Jun 2021 13:28:03 GMT
+Server: nginx/1.19.10
+Content-Type: application/json;charset=utf-8
+Vary: Accept-Encoding
+X-Request-Id: 00000000-0000-4000-0000-000000000000
+X-Kong-Upstream-Latency: ***
+X-Kong-Proxy-Latency: ***
+Strict-Transport-Security: max-age=15724800; includeSubDomains
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+X-Frame-Options: DENY
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Content-Length: 588
+
+{"accounts":[{"resourceId":"7714b663e6d643abaef2075916917c98905e20eb387ac8c32748ce842240fa94","iban":"DE50500505005550555555","currency":"EUR","name":"ONLINE-KONTO","cashAccountType":"CACC","status":"enabled","bic":"CMCIDEDDXXX","usage":"PRIV","_links":{"balances":{"href":"https://psd2.bvxs2a.de/targobank/v1/accounts/7714b663e6d643abaef2075916917c98905e20eb387ac8c32748ce842240fa94/balances"},"transactions":{"href":"https://psd2.bvxs2a.de/targobank/v1/accounts/7714b663e6d643abaef2075916917c98905e20eb387ac8c32748ce842240fa94/transactions"}},"ownerName":"Psu Name"}]}
+
+REQUEST 7
+GET https://psd2.bvxs2a.de/targobank/v1/accounts/7714b663e6d643abaef2075916917c98905e20eb387ac8c32748ce842240fa94/balances
+Content-Type: application/x-www-form-urlencoded
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-IP-Address: 127.0.0.1
+Consent-ID: **HASHED:me**
+X-Aggregator: Tink Testing
+
+RESPONSE 7
+200
+Date: Wed, 16 Jun 2021 13:28:03 GMT
+Date: Wed, 16 Jun 2021 13:28:04 GMT
+Server: nginx/1.19.10
+Content-Type: application/json;charset=utf-8
+Vary: Accept-Encoding
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+X-Kong-Upstream-Latency: ***
+X-Kong-Proxy-Latency: ***
+Strict-Transport-Security: max-age=15724800; includeSubDomains
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+X-Frame-Options: DENY
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Content-Length: 399
+
+{"account":{"iban":"DE50500505005550555555","currency":"EUR"},"balances":[{"balanceAmount":{"currency":"EUR","amount":"17"},"balanceType":"closingBooked","creditLimitIncluded":false},{"balanceAmount":{"currency":"EUR","amount":"17"},"balanceType":"expected","creditLimitIncluded":false},{"balanceAmount":{"currency":"EUR","amount":"17"},"balanceType":"interimAvailable","creditLimitIncluded":true}]}
+
+REQUEST 8
+GET https://psd2.bvxs2a.de/targobank/v1/accounts/7714b663e6d643abaef2075916917c98905e20eb387ac8c32748ce842240fa94/transactions?dateFrom=1970-01-01&bookingStatus=booked
+Content-Type: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-IP-Address: 127.0.0.1
+Consent-ID: **HASHED:me**
+Accept: application/json
+X-Aggregator: Tink Testing
+
+RESPONSE 8
+200
+Date: Wed, 16 Jun 2021 13:28:05 GMT
+Date: Wed, 16 Jun 2021 13:28:05 GMT
+Server: nginx/1.19.10
+Content-Type: application/json;charset=utf-8
+Vary: Accept-Encoding
+X-Request-Id: 068f312a-258e-4dec-b991-4eddbc509452
+X-Kong-Upstream-Latency: ***
+X-Kong-Proxy-Latency: ***
+Strict-Transport-Security: max-age=15724800; includeSubDomains
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+X-Frame-Options: DENY
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Content-Length: 276
+
+{"account":{"iban":"DE50500505005550555555","currency":"EUR"},"_links":{"download":{"href":"https://psd2.bvxs2a.de/targobank/v1/accounts/7714b663e6d643abaef2075916917c98905e20eb387ac8c32748ce842240fa94/transactions/download/OTdhNTRmMjYtZDcwOS00ZjRlLTgxMmEtNmJmOTgyYjA5ZDY4"}}}
+
+REQUEST 9
+GET https://psd2.bvxs2a.de/targobank/v1/accounts/7714b663e6d643abaef2075916917c98905e20eb387ac8c32748ce842240fa94/transactions/download/OTdhNTRmMjYtZDcwOS00ZjRlLTgxMmEtNmJmOTgyYjA5ZDY4
+Content-Type: application/octet-stream
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-IP-Address: 127.0.0.1
+Consent-ID: **HASHED:me**
+Accept: application/octet-stream
+X-Aggregator: Tink Testing
+
+RESPONSE 9
+200
+Date: Wed, 16 Jun 2021 13:28:06 GMT
+Date: Wed, 16 Jun 2021 13:28:07 GMT
+Server: nginx/1.19.10
+Content-Type: application/octet-stream;charset=UTF-8
+Content-Disposition: ***
+X-Kong-Upstream-Latency: ***
+X-Kong-Proxy-Latency: ***
+Strict-Transport-Security: max-age=15724800; includeSubDomains
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+X-Frame-Options: DENY
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Transfer-Encoding: chunked
+
+*�������[���^��k��b,�z���>���@mE6If�����@�Y���}Z�G"�[��;��睫�,�
+
+{��p&��<�;���M�S~4[-œ��
+
+�C���M?��j��a���."��t
+
+��A4�8�`�-��+�4Y�<m�r��D'yH�uBŀ���V;�6���r^Sp�W?g�ǲ��F��??>?6�w�'(����V��Σ�5p�显<]�+���ژ�e�D�q�r!
+
+�_��Νb� "���-x����~PK�P��  C  PK �{�R               transactions_2.xml�U�n�0}_i��6���
+
+д٦��W
+
+q�����1�B<A���o�fc���䛰�������p��[�-D�&*(ߚ�-��bq���!��o��4�F�G��${y�OR:��3��?,F8���9�VI�^??��r��H�Q����/AخV�R����
+
+�`߰��>����_�PK��7f�  C  PK �{�R               transactions_3.xml�V�n�Hݏ4�PBiFjS�i�i��6
+
+8eG�8V�r���^�d����;N�ΌfS�{��>
+
+�/گ�`�J�EVR��e=֤T�u��4mF!YVi�ܩ�u�&qAEԗE��MYh՘h9�(]�><<��X�d����	����{˲�q�dL�^�u��TIL���38X�#h��U�DO����d5K��/녝j̨�H}e�Τ�`xޮ1l�xL2�F��R����H��@E�vBn*H�m��<ױ]�wṑ�!�hl�b6�%-5�/���iF��5�v�j��3w�Fy�;�M�p���'$�L���zH�)R����ne�#_cdE�ٍ�V�������\�	��͹�0�{;���!�mCw5�:C
+
+@�%��u�|ԡ-�:���鿧�V�vl����6���ӣ�[��������(����d��,�p���ϳn�P�����o���ue׌}�6��Fe,
+
+$Q�W!4mԔ BV{�@IT~"�i�>M�=5/���&�nw��"��73��؀��E�ܧ���r�:T����d]fCuN��z��~Ano��d
+
+Ǘt�nIi�ieS��ф�4m��+{O;�
+
+�4�]��۰�@���X��
+
+�fe~6-��6E�(K����e����)OHX�L�-j��Y0�Ж7�	�[�i���ht\;o�M3��]�3�d�6H�h�<�w���
+
+�̉OyS�c����Q��q�0Tϗ��;nv��BpL�{#��7���D
+
+l���19<_K��UZ����LGI�r!
+
+ğ��❂k/����Ex�����~PK�#B�  F  PK �{�R               transactions_6.xml�U�n�0}_i��쐋r\hڨ)A����%��d;M�7��>�?���&�n�]i`{��̙�١ȕ��Ь*�j_����Qge:U7��7Q���oȩ�]��L���N�)͌V&e�u�dI�546��`��ܧ�6f\�M�-c�	�~����")��}��z���I������nE3�JᲊB&9�[d��Z�#�.�l�
+
+2�"���R_��k�.b̝�tc4��aߘ�f�@�E6I��{p�돃���'&#�)�+?������=�]��`� H_��O��d%F^���>rDː2/]�1fd� p\K��t�e����)�IP9L��ਧ���huH �b�92��@��ơ]?8u1���xK�D�D$y��f.v·p��
+
+��i"B��+�9���W�#�<�)�|��!�DpV0Ŏ����W�>�D_�P�1�F�}'����s�!j^��D��E"P�WFo?�ŧ[�������&l!�4c��Z�����\LnÜ��-њQl�V����.����G��iU�����|��)L��(����[+dW�ir��%���Qf5�rE\�aۭ�S�Q-��<��Ќ~�b�e	��"�??>?�ǻ���_��qb�H�?���Z��r�_�.��{��OбG��8f�X
+
+s����t�a��Hg
+
+�c�
+
+C�^��戴���b��Nq@+Uw�s�e�}q���"�a6"���.&G\څ�3���MF8�0!�E�H��O7\��EK�4np��6S�-�f̧����&]�U(R���?7ǻY�;(?g�c��%�z�G����/�x�4����E[��e�D�$��r�/�c���6F>ZJ��RB"�^+��a)�GK����m_ZN��/M��?|pa������RbQySJ���R:B��xn`����iX��W^����`�S�n�Y��'j����M�}�S���}�?kv�e��h3�n�,Gsϟ���6���������ӘۆɌ�0.��9e�Cyw����_���Y���/|{���Չ]��PK��Jw  o	  PK �{�R               transactions_8.xml�U�n�0���H�9�Bhڴ)A���J�T~"�iҷ��Ծ������v�E��of�����\�ͪr��T����8+ӑ�
+
+���z��CNm��d
+
+�6�l���X �v;mgjI7�����2Z'E��J��2J��,*��*
+
+���o��wk�cT�컠�PV�q1�0:'���`tM�Y���S��Շ�a�^#Pkф$
+
+h��4����S���r�[0�����Z�F��!�|�1L�7�7�N�k��̓��#&�;+o�cI�h�$�f����Y����D����&v�s& ^�0� ���'!pG
+
+ ��)��a���|�}��|�P�1�F��N ,�5)��+BT�$��L���Z��?��2�x��->�����u��7ayG�Ԇ��x8��-���br�o�v���b{��B@̐]Uw�G�_�?��#L��^�G䓔�a��E���R9'�2N����5Qn_��r�-3E^�aӭ�S�Q-��<�`_�~�b�e	��"�??>?6ǻ��#�_��qb+�H�?�Q���rL_�.��{���Oв��8f�X
+
+4i���4�������l@g�"W�B�����U%)�*��t�n�yo���_�SE�")���%��;RZ�,�b9�ŒhkhlEa�480�OCm̸*��[�j��~��M�")��:�y�\G{YIYXF	���E�ⲊB&9�[d卬q����6�l�
+
+�N��B����;�6N���5%x��߀�~PK����  B  PK �{�R               transactions_10.xml�T�n�0}_i��6�9��]T
+
+��j_)P��M�ۤ�o闭ͥ��V�J+�眙9�AgǪ��2B���Ț
+
+�nDnLY�;u�y�8�;���ʻ2����K� Qc31�d������F� 0`H0�s���X���>��>�m�0���.�9� цN<r̭���9���5��
+
+`_�]̸�JZ� �I@yS���� ����d%��|�x�ι\nn̾��X�	�q�D�=���0��N�':,������?	��fwxz��sŞ�6��B�+U�_		�h)&wqI���h�(6}�
+
+1Cf�<䟉~o��3� �f��EMS���G��n����H��hg�
+
+�mF�@�?��s1�W�mHk��:���f�R?�;���G zX��]��4�
+
+u	 N�4�%Ӯ0����I��6�p��
+
+uj2
+
+R���ȗIV���p#���`o�h,�!�썱k�3wv0OCA��f�i ��u�KG����*�dΘ,������Tu������@mAA/|�
+
+d�	j�%6_����q]��yF�5�5�.���W�Vy+8!ҳ�3�Hb��D��~��u����`qe�Ċp�#"���+�n�����s>���sV���4Wuǹ��ϰ�����8?/'�c���'ۿ�.��x�?��o��]�UM����mn�O�V�UN���M��LUVx�:g>���i��Y��ʊ6�����M{�{p�-X��qN�H=ͣ�m�œ��~zc{�,��MX��[�Z�9_rěǱ��bK#疒|���ȟ�J�?XJ��Rr\ü�cYW����/�Q@����#��k^�3�Ģ�ʽ�t��黎o�c�1̀앗n������)`��Y�W��=�1щwX�/QjV��`g������eښ�޸7���|�S}�S�J'�[aF�_�+�Y{(�?�Wތ�����Wg�
+
+���`x�f+
+
+��گ�C�ީ���ϑރū/|�R���	�PK�)m��  �  PK �{�R               transactions_12.xml�U�n�0}_i��l�E	r\%дQSY�+JP��v��o�!}jlmM��n�ڈ`��̙3c��g�CLhZcUנ��EXFi��յ?������p��S8��cuG
+
+��.�w������Am#P{�Eb��9�z:�����14� ��)��Pp;9^:��sٹY:�� �j7��I�
+
+����`9�E@��3��8�2���rY��#�u�3�6c�v�ЇД�	�[��5�#~!���&���]e!���9�V��)ͧۗ=^'��g]�C�AƕT<A�$.a�(���,���3�I�+<��˵�b~0�=N���7R��پ�lm$J��S���&5| �ZL�&�7�D��_�#3�����#\�W�3�!l �t�Q�7�t�V��@31�2ʏfk��x�\�  fhZ���G�_�?��#L����'%���3~�?m�?sW��Qo^��D�{y"�*�X�ob�f�ڝjYD�l���C=z�\��T6��������y��5p��r�;.lM���:j\�o���ӵ�v�^}���*p:�"�	S ���w�[���-x����~PKʨ��  C  PK �{�R               transactions_13.xml�U͒�8��j�A��bٞ�b\�)�3	5P�l���¸�eJjO�C#�̋�e�@�N�{Y�XR���_wK{�+r�ĥ�J�3l�q�d"����5�z�a~W@/TϨ�p3U�
+
+�@��sϸ��w�55_j;�5�a��ڲ]3����2�Eͫ��
+
+��x�?���;�K�t7�?�d-䌈e�&��G�r=YF�­�.�#(o0��3�glP���5�ߕ��5�A�����ߤt
+
+4��"��U���7PK���h  �  PK �{�R               transactions_14.xml�U�r�8�o�����ŲM�".�)���cf��fla\�2%��k�0�1�ɏm���lfv/KK�~���[�ػ}��g.UV��a��A���$i�X���������qUp�B��J
+
+
+
+"���&2�#�w�W��n6���Z���M���Y�z��r�[�]�'P�p6{`T�ذ,7�[��V~��0G�n��s,��9L��.����?�@>f���K�>;�)����^,��Wm�Z�V>�Q�o� �d�)�Dև�맯������3TP`��B�L������H�d�I�p�hcu4��g���P'ɐ��a�D�+EJ����Z�D�;�9(�)r��t������BJ8E�i&�DB�&J
+
+��.U�.^G�/���@�e͇�w1+�I�q�(P���J
+
+r��A�����u&�K��H��$��x�������O��`	.�x�w� ��'I�J�R�kq�M۞Ѷ���I�^j�ډ��ٸо��l�����W-^�PK��	ki  �  PK �{�R               transactions_15.xml�U_o�@���v5J�mTjkj� ^���)��Z������b��@��뵗�Avg�73��Y ]�\yH	�T�P5t�*iWɦ̆�2�j}����*�i��/�Pݑ���ʦ,��	�i�,����&vL�]S���4�ڍ�6Cu���`���{K�H��~���:-"mSR�qʽ�ƦR9��I���Yy'��b4��	e�1��+��F�4�%؄�a��Շc��j�ڊ&$uXXp�ih������f߆=Z�"�[`ϝ��K��sC���j3��Y�J���]a��yD����3�K8�ҹ�-sY��#�u�SVk��ah!��@cC�cZvw�/� �'ۣ��c&�;K�s�i��$�f㑋����\� �-D�z@�2�r�d�$�	#G��~0qx
+
+�;3 L��ǡz�T���/W
+
+�Z��9��@���X��
+
+�<���v/۰��
+
+����ޙ�.���I���Z�@�20�6�Ϙ� �m�`� �pY�wCN�i��$���
+
+Aׂӗq�����&���鿗�^�lہY��{^�X�<��m�"���'A�N�6n	��cT�	X���b�1f�-C#�OF�0�<e'XWv��7�Xc�m]Fq�J*���B�~��p�G���/
+
+�p�1p]񇛬�	a�-��t,�Mn;�qnpkvC����+Nm����.{M�W�M���ٛl�W���IJ�0{��¿c��&7d%��d� 4��U*ޒ��Ϛ�R�}��Bu$v�"�1��C�.sH vqQtsʿ|��q��9z�Z�t��ڀN����j�P�1F�S.�3�9m��7��7B�n}�T���"�E˪6��-�4@�9"i�je�з�N���ޒ
+
+��T�D1`Y(5��Z���SM�`�\�R��`}vR����l�?�?		�����l�~���5JE��V#M٥Bu�چ��"��(Vwo���n�iW"�R��4��-�Gk����rX�
+
+��pto��f�[�oPK�
+
+��I  N  PK �{�R               transactions_18.xml�U�n�@}��@H�Z�f�Z���(��ʛı�łM���3�oI~��`b�J���˜3sff��.τ۴��e1e	�BZ�e�,c1
+
+�{#�H����e|�� _�c�*�e]�5K�Q�XQT��W�]���<g(��S[��c񊱕��z���}���2�yj�U��{ˢf�"N�U/պٴ�x���Y�[K�5b\��fy��1�WL#�j5K*���+�,+}y���pt8l��V2�R��9����=y�U�xHPg����vr�ulˡ��	]�`��՚a�-
+
+uʛ4��N��K>���d|���'+��b�67A������&hc����duo���q�f��sg��64�e�f�܇��C�_%m>����� @�V^Ū{>�<b��1 �s&L���H#_��4���y̼h�L|3��nMx
+
+�ls%�o��F�;B&��8M���Km��
+
+�J\�e��H]���@=�_� ��y\0��:R���RZZ�Er6 4����:��
+
+��4��Ӈ�a��#Piє�6�sl@C��~G���i�h�
+
+�N���b�w����D���J�nR�#7q6XG@�hP�&�"�cN{i\ۀ��L���<��K������!��@��!�|�1��9��Z'�������e!���1[$� ɣ�d�`������D���T&� �Lv<@�$.a�^,��MmB�Z
+
+w�(
+
+j�?sW��Qo��D�y~$����ML�;�u��N5^D�l���c5{�\��T��k����P_�JZ(/���֔̣��p��=?^zk��E��aND�Q�2�����kc+'���U%x���~PK&++��  C  PK �{�R               transactions_20.xml�U_o�0���x6���
+
+дYS��J�T�D�Ӥߦ�O��m��ݺv�`����~w���\�ͪr��T����8+Ӊ�f��z��~AN튤d
+
+h�#x��G�a-#P[�M��:��=}���p�@k��H�v�ts��w�t�%\!c�f>�Ғ�y�{�u�!e^:/c��.A�(K����e����)�HP9L���� BS46$��1F����@c�:���w�y�{g�-xΎ�e���ܚ��9;�}��p�B����.V�s&[� ^�0r/���m�����`��OԳ����P�v�c̜k����@x�2%��X+BU�$�w���D���qe�����°�����~-�-m<���c�_���h.&7aN��lE�b[��%b����M���b���a�X��]D>(�g� \�`歔s�+�4�~~�����(��r�_"`�Z�J�QD���C=�9�=�%T6��c������Z:(����֔�̣�5p��=?^�k���ژ�e�D�q�r!
+
+d��8����xgC���0~�O�Z���x �����u��at�c�#�k����0��p㰿�y�}8���灄�2��٠��Չ�ƺ����C F��C�^�#�5n��U�@=�iM�!nap
+
+j��H?y�XW��=�����A����'��X��̄���X5��Usx�H�������{�o��v������l9"�:�ȯ����Ln�\ck�l
+
+:��53�+�U���ʏq�f�2Ş�%ꕐa��7�.�8
+
+�;^l�����).4�~�Je%3"�m��־R{/&[!���'9��S̊�?󯟿~�}ލ��&���5�4x��*W\��Pd*8�$����·��:qLȚ#�fJ�'Q���� �"7�/P�
+
+bE�;~£T�|U)�X��Ǚ~C6\JC���`�8	�B�*V��(�U����I���	8�oA��:��Y��K��� ��d�Am�2 &�?v�\@.��q~sHW�h����y��Ə�	X���q�Th
+
+���g�]Bٶ,F�i@]K����E:�W��3����/�)�}�\����=-�-+-�c5�xm�#��(̹{ȀP�Dz�&Lۑ��|gp8�C�(i
+
+�!��
+
+imaXm�Wq	��#ư�Ǟ���߱LNn��وx���+��ey������#����&��˻�~PR&��Q6����[j�t_�i�~~�P����j�dM�!�4M�W�Y�&���3QSp�F?�Ƿ	S���?=<=�ǻҁ��E���4&�p5\}9�Ϗ���{�bMLа'��8�%��D���*����U�|,A�;��_PK��	l�  C  PK �{�R               transactions_23.xml�U�n�@}��@H�Z�f�6Z���(����X�b�&v��yȷ$?�]01���})�2�̜�Y:�f)w��ժ�'�(@�K�W�r��Yoğ*�?!���$'��Մ�+syUrE�z� �$�$э��b9
+
+3"��$@H}J|C��Մ�!d-��l�M_(�%�d�\�^t�dao�W$̣����\՛f����o����@1���[��V$+�("�(hV��q��E�4bEa�/�#x"�G�a�F���i����	Jb{���4�����\��me�m���{��Ѝ�Wc�g��\A�ҺRh�zDfXgi�Bʻ���&�8�U^�qD;/�����������\�l�!�b��<����������N#���cҘ���P�G��Z��O`���!|36�����)U��b�tJR>���S��`��0��n=Lx��"���	u�1�1ѯj=SW��]#�}��"���W��!SS��B�:{�ɵ�9°9�����r 
+
+#�pw.4���;���u/�E��p@
+
+�JRDe�)ұ�
+
+���z��~AN��`
+
+�t��HanhiR�р�0L�Dk�@c3
+
+s����A�}je�U���flk���}W+I
+
+��#���y鬈1#���,�k�0�i��;��<%A�01��=� 4�@�C�ct����:���g�EL�wVޜ�l� �Iͬ��������o�*P�Xaƙly�xA<�ȃ�bϷB�Z
+
+ ���)v�0V�W����6�qg��3�F�}'���D
+
+g� 
+
+��=}�e�,8D�S
+
+W~$|�^�˅{޻Z��
+
+.��5�xi�J��Խ�:rDː2/]�1fd� p\K��t�e����)�IP9L�'`����huH �b��e���@��ơ]?8u1���xK�D�D$y��M]�`���!|��P6���d�I��+�F�{���w� 8-�bG�|��h#Η�sn$�wa٭�H�?�\��%9|@�^ξHj��� ���'��d�fc��������#����o<���-���br�o�n�֌��ju����YUݥq~U�0�J4{}�OR:��3~�?6#�{k���8Mn^��D�}y"ʴ&Y��K8l��u��"�尜����Y�,��PD������x72p��^;NlC���<\�_���ӥ�q/^u��	:V�Ht�,K��k8^�Sl�Dx�YS�wK�����PK� ��  C  PK �{�R               transactions_26.xml�V�n�8�_i���=����Ɉh�R@!�j�h�RT� ǔv�e/�Yf_l'�f���X|�����Sb��-]�ׄ�<�*T%
+
+�ðP�U�a0^d"��x1|�(�e��B�~[�o�������yi���r���+d�l4�VH�Y>�dLj�h�it�ax'��Ն���]�"!ٻ�� �<Xa2%y�۽��zM�C\I��#C���W{�&k8 �1�]�q�p��;`��Kr����Mث�&l�J��pK>N��Yϙ4�{[�KUSr�@�؟$�����d$O�A
+
+�*1�t��c�rB�ꪔ��H�Z���i�* 7�)��²G�[���y���D�C8��.��D2ړ׈�ĦC5Y�o���h�Ʈ?Co�C�s�����4�87��wa�CT���\�[·�V"�eC�/������vu]���$�a��5��բz�mh��ރ��!r�[��q0��\f>�%3��}�
+
+��hj�����Tށ
+
+� ��fA
+
+A�lD1<���7Y���kj�v9�G��b%�R�"�#�
+
+��ҠK�8W����+�~�2�����{ϟL��������T�&!?�
+
+r�-O6_Q���]�T���^���i�'�����y1�l3\R��)�B���$q{wHk��B��F�;�N�]⨦j����C�H���zT�[�3�;ZMo6;'�f�ݢ�=���%�=mP�
+
+�GV_�\^0�?�N���E�oPK'��h�  Q
+
+��4��;nTe(?��')�N��dظ�Nؔ P��*�*%�j�H!M������B*�&"�/��>�f^��w�~Ny�Y��͆�1���G��F$���مA{�W����N!�;so9�4D��$O�AB�a0W����i��A��`� �5��タI�z��@
+
+�;2 	�B����:��*�;�n���c(�ǒ��;Lz�{"K���V���z�.�ǃ�1��DdRf�O?z�GGW˦�9֐3"fS������IG�ޒ�(�`:�#HJd��/�K�?���fo�Þ�����a��d�Øz���̆^_ڷ���e7s6�o}w��S�'T{�.9"�ZخZ�D���#�������k]����P�Y�4tc��J3��So��:J"��J�Ӂ�3�\xIf�k���>L�L��0\��tD�`~
+
+��6��Cz�)�y�E�
+
+�wa|�;A�<�Ip1�c5�����:"�o1�n<�u�;��/��ʸ`��9�y�BD:�$�ܥL�X��b�7e�M��&[� _шr�"�N�l!pG
+
+ߛ��]لp�5����w�`�N��bqfBpbN��Z�����
+
+�ACѡ�n��J���A�C{����-s�qA��>�_PK���.[  s  PK �{�R               transactions_29.xml�U�n�0}_i��lH�M��*��5%��վR��Kd;M�7��>�?��@�T�E�=�33gfl@�����SB��u-��:ɫl���ig����ߐ[��2�����[R�9�m�9ZZ���xm�ib�Q�س�OKWf\���5c��ng�FM2��M��z���iu򊲨�SnEs���yGLr������#�.�'��d�,�0�.��gB0���,��	���u���}%#��hBR��%��ev`�c�C�g[�h��U�^��|�]t�^�@�/H_J�'~V�
+
+  transactions_5.xmlPK  �{�R�iZ�  C               9  transactions_6.xmlPK  �{�R��Jw  o	               0  transactions_7.xmlPK  �{�R���Z�  C               �  transactions_8.xmlPK  �{�R����  B               �  transactions_9.xmlPK  �{�RQ֥�                 �  transactions_10.xmlPK  �{�R�)m��  �               �  transactions_11.xmlPK  �{�Rʨ��  C               �#  transactions_12.xmlPK  �{�R���h  �               �&  transactions_13.xmlPK  �{�R��	ki  �               \*  transactions_14.xmlPK  �{�Ro��	�  C               .  transactions_15.xmlPK  �{�R��r�  C               �0  transactions_16.xmlPK  �{�R�
+
+��I  N               �3  transactions_17.xmlPK  �{�R��yw  $               �7  transactions_18.xmlPK  �{�R&++��  C               �:  transactions_19.xmlPK  �{�R(B�B�  C               �=  transactions_20.xmlPK  �{�Re���  �               �@  transactions_21.xmlPK  �{�R��	l�  C               �D  transactions_22.xmlPK  �{�R�T�  $               �G  transactions_23.xmlPK  �{�R����  F               K  transactions_24.xmlPK  �{�R� ��  C               �M  transactions_25.xmlPK  �{�R'��h�  Q
+
+               �P  transactions_26.xmlPK  �{�R4�=�                 �T  transactions_27.xmlPK  �{�R���.[  s               8X  transactions_28.xmlPK  �{�Rˢ_�  C               �[  transactions_29.xmlPK      T  �^    
