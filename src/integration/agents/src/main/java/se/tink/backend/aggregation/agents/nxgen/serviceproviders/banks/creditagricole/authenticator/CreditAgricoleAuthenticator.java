@@ -287,6 +287,8 @@ public class CreditAgricoleAuthenticator extends StatelessProgressiveAuthenticat
                 throw BankServiceError.NO_BANK_SERVICE.exception();
             case ErrorCode.BAM_AUTH_REQUIRED:
                 throw AuthorizationError.UNAUTHORIZED.exception();
+            case ErrorCode.NO_SCA_METHOD:
+                throw LoginError.NO_AVAILABLE_SCA_METHODS.exception();
             default:
                 throw new RuntimeException("Unknown error: " + error);
         }
