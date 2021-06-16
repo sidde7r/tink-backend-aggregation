@@ -152,11 +152,19 @@ public class DataStudioLoginEventPublisherService {
                                             .LoginResult>
                                     builder()
                             .put(
+                                    BankIdNOError.INVALID_SSN,
+                                    AgentLoginCompletedEventProto.AgentLoginCompletedEvent
+                                            .LoginResult.LOGIN_ERROR_INCORRECT_CREDENTIALS)
+                            .put(
                                     BankIdNOError.INVALID_SSN_FORMAT,
                                     AgentLoginCompletedEventProto.AgentLoginCompletedEvent
                                             .LoginResult.LOGIN_ERROR_INCORRECT_CREDENTIALS)
                             .put(
                                     BankIdNOError.INVALID_SSN_OR_ONE_TIME_CODE,
+                                    AgentLoginCompletedEventProto.AgentLoginCompletedEvent
+                                            .LoginResult.LOGIN_ERROR_INCORRECT_CREDENTIALS)
+                            .put(
+                                    BankIdNOError.INVALID_ONE_TIME_CODE,
                                     AgentLoginCompletedEventProto.AgentLoginCompletedEvent
                                             .LoginResult.LOGIN_ERROR_INCORRECT_CREDENTIALS)
                             .put(

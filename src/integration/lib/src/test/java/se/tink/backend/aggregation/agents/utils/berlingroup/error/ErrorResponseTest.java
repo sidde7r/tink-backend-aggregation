@@ -14,7 +14,6 @@ import org.junit.runner.RunWith;
 public class ErrorResponseTest {
 
     private static final String TEST_PSU_MESSAGE = "test_psu_message";
-    private static final String NULL = null;
 
     @Test
     @Parameters(value = {TEST_PSU_MESSAGE, "asdf" + TEST_PSU_MESSAGE + "zxcv", "TEST_psu_MESSage"})
