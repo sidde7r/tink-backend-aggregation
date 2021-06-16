@@ -375,7 +375,7 @@ spec:
           httpGet:
             # This is named start as this is emulating a startupProbe which will not be ready until
             # we upgrade to k8s 1.17+
-            {{- if  (eq .Values.Environment "development") or $startupProbeEnabled }}
+            {{- if or (eq .Values.Environment "development") ($startupProbeEnabled) }}
             # No need to start external dependencies when running in local minikube
             path: /aggregation/ping
             {{- else }}
