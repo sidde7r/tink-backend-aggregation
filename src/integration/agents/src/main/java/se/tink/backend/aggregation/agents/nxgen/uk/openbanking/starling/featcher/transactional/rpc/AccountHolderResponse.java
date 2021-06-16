@@ -4,15 +4,15 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class AccountHolderResponse {
-
     private String accountHolderUid;
-    private String accountHolderType;
+
+    private StarlingAccountHolderType accountHolderType;
 
     public String getAccountHolderUid() {
         return accountHolderUid;
     }
 
-    public String getAccountHolderType() {
+    public StarlingAccountHolderType getAccountHolderType() {
         return accountHolderType;
     }
 }

@@ -42,6 +42,7 @@ public class BankIdAuthenticationController<T> implements AutoAuthenticator, Typ
     private final int bankIdPollMaxAttempts;
     private static final int DEFAULT_TOKEN_LIFETIME = 90;
     private static final TemporalUnit DEFAULT_TOKEN_LIFETIME_UNIT = ChronoUnit.DAYS;
+    private static final String BANKID_DYNAMIC_QR_PREFIX = "bankid.";
 
     private final BankIdAuthenticator<T> authenticator;
     private final SupplementalInformationController supplementalInformationController;
@@ -138,6 +139,14 @@ public class BankIdAuthenticationController<T> implements AutoAuthenticator, Typ
         supplementalInformationController.openMobileBankIdAsync(autostartToken);
     }
 
+    private boolean shouldUpdateDynamicQRCode() {
+        return authenticator
+                .getAutostartToken()
+                .filter(token -> token.startsWith(BANKID_DYNAMIC_QR_PREFIX))
+                .map(token -> !token.equals(credentials.getSupplementalInformation()))
+                .orElse(false);
+    }
+
     // throws exception unless the BankIdStatus was DONE
     private void poll(T reference) throws AuthenticationException, AuthorizationException {
         BankIdStatus status = null;
@@ -154,6 +163,9 @@ public class BankIdAuthenticationController<T> implements AutoAuthenticator, Typ
                     return;
                 case WAITING:
                     logger.info("Waiting for BankID");
+                    if (shouldUpdateDynamicQRCode()) {
+                        openBankId();
+                    }
                     break;
                 case CANCELLED:
                     throw BankIdError.CANCELLED.exception();

@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
+import java.util.List;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import org.apache.commons.httpclient.HttpStatus;
@@ -13,6 +14,7 @@ import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.executor
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.executor.transfer.rpc.ExecutePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.executor.transfer.rpc.ExecutePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.executor.transfer.util.PaymentSignature;
+import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.entity.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.rpc.AccountBalanceResponse;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.rpc.AccountHolderNameResponse;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.rpc.AccountHolderResponse;
@@ -20,6 +22,7 @@ import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.rpc.BusinessAccountHolderResponse;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.rpc.SoleTraderAccountHolderResponse;
+import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.rpc.StarlingAccountHolderType;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transfer.rpc.PayeesResponse;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentAuthenticationPersistedData;
@@ -53,12 +56,16 @@ public class StarlingApiClient {
                                 new AgentAuthenticationPersistedData(persistentStorage));
     }
 
-    public AccountsResponse fetchAccounts() {
-        return request(StarlingConstants.Url.GET_ACCOUNTS).get(AccountsResponse.class);
+    public List<AccountEntity> fetchAccounts() {
+        return request(StarlingConstants.Url.GET_ACCOUNTS)
+                .get(AccountsResponse.class)
+                .getAccounts();
     }
 
-    public AccountHolderResponse fetchAccountHolder() {
-        return request(Url.GET_ACCOUNT_HOLDER).get(AccountHolderResponse.class);
+    public StarlingAccountHolderType fetchAccountHolderType() {
+        return request(Url.GET_ACCOUNT_HOLDER)
+                .get(AccountHolderResponse.class)
+                .getAccountHolderType();
     }
 
     public AccountHolderNameResponse fetchAccountHolderName() {
