@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbankbaltics;
 
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
@@ -30,6 +29,7 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.BankServiceInternalErrorFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.ServiceUnavailableBankServiceErrorFilter;
 
+// TODO: Maybe to have conception SwedbankBalticsBaseAgent -> SwedbankStepAuthenticationBaseAgent
 public class SwedbankBalticsBaseAgent extends SubsequentProgressiveGenerationAgent
         implements RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor,
@@ -55,7 +55,7 @@ public class SwedbankBalticsBaseAgent extends SubsequentProgressiveGenerationAge
                         qsealcSigner,
                         componentProvider.getCredentialsRequest(),
                         BICProduction.ESTONIA,
-                        RequestValues.SMART_ID); // TODO: get authType from config
+                        RequestValues.SMART_ID); // TODO: can we get authType from config??
 
         transactionalAccountFetcher =
                 new SwedbankTransactionalAccountFetcher(
@@ -71,7 +71,8 @@ public class SwedbankBalticsBaseAgent extends SubsequentProgressiveGenerationAge
 
     @Override
     public StatelessProgressiveAuthenticator getAuthenticator() {
-        return new SwedbankBalticsAuthenticator(apiClient, persistentStorage, sessionStorage);
+        return new SwedbankBalticsAuthenticator(
+                apiClient, persistentStorage, sessionStorage, request, provider);
     }
 
     @Override
@@ -91,23 +92,17 @@ public class SwedbankBalticsBaseAgent extends SubsequentProgressiveGenerationAge
 
     @Override
     public FetchTransactionsResponse fetchCheckingTransactions() {
-        // TODO: fixme
-        return new FetchTransactionsResponse(new HashMap<>());
-        //        return transactionalAccountRefreshController.fetchCheckingTransactions();
+        return transactionalAccountRefreshController.fetchCheckingTransactions();
     }
 
     @Override
     public FetchAccountsResponse fetchSavingsAccounts() {
-        // TODO: fixme
-        return new FetchAccountsResponse(new LinkedList<>());
-        //        return transactionalAccountRefreshController.fetchSavingsAccounts();
+        return transactionalAccountRefreshController.fetchSavingsAccounts();
     }
 
     @Override
     public FetchTransactionsResponse fetchSavingsTransactions() {
-        // TODO: fixme
-        return new FetchTransactionsResponse(new HashMap<>());
-        //        return transactionalAccountRefreshController.fetchSavingsTransactions();
+        return transactionalAccountRefreshController.fetchSavingsTransactions();
     }
 
     @Override
