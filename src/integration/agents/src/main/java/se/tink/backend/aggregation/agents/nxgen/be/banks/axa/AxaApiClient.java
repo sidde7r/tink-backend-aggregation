@@ -4,6 +4,8 @@ import java.net.URI;
 import java.security.KeyPair;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpHeaders;
+import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.AxaConstants.ErrorCodes;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.AxaConstants.Request;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.AxaConstants.Url;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.authenticator.rpc.AnonymousInvokeRequest;
@@ -13,6 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.authenticator.rpc.A
 import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.authenticator.rpc.BaseRequest;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.authenticator.rpc.BindRequest;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.authenticator.rpc.BindResponse;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.authenticator.rpc.ErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.authenticator.rpc.LoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.authenticator.rpc.LoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.authenticator.rpc.LogonResponse;
@@ -24,6 +27,8 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.utils.AxaCryptoUtil
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.form.Form;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class AxaApiClient {
@@ -109,8 +114,14 @@ public class AxaApiClient {
                 new URL(Url.ASSERT)
                         .queryParam("did", storage.getDeviceIdFromHeader())
                         .queryParam("sid", storage.getSessionIdFromHeader());
-
-        return createRequestWithSignature(url, requestBody).post(AssertFormResponse.class);
+        try {
+            return createRequestWithSignature(url, requestBody).post(AssertFormResponse.class);
+        } catch (HttpResponseException exception) {
+            if (isSessionExpired(exception.getResponse())) {
+                throw SessionError.SESSION_EXPIRED.exception();
+            }
+            throw exception;
+        }
     }
 
     public BindResponse bind(BindRequest request) {
@@ -175,5 +186,11 @@ public class AxaApiClient {
         }
 
         return result.replace("/AXA_BANK_TransmitApi", StringUtils.EMPTY);
+    }
+
+    private boolean isSessionExpired(HttpResponse response) {
+        ErrorResponse responseBody = response.getBody(ErrorResponse.class);
+        return response.getStatus() == 401
+                && ErrorCodes.SESSION_REJECTED == responseBody.getErrorCode();
     }
 }
