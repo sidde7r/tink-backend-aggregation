@@ -14,15 +14,18 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 
-public class NordeaBaseCreditCardFetcher
+public class NordeaBaseCreditCardFetcher<R extends TransactionKeyPaginatorResponse<String>>
         implements AccountFetcher<CreditCardAccount>,
                 TransactionKeyPaginator<CreditCardAccount, String> {
     private final NordeaBaseApiClient apiClient;
+    private final Class<R> responseClass;
     private final String currency;
 
-    public NordeaBaseCreditCardFetcher(NordeaBaseApiClient apiClient, String currency) {
+    public NordeaBaseCreditCardFetcher(
+            NordeaBaseApiClient apiClient, String currency, Class<R> responseClass) {
         this.apiClient = apiClient;
         this.currency = currency;
+        this.responseClass = responseClass;
     }
 
     @Override
@@ -47,7 +50,7 @@ public class NordeaBaseCreditCardFetcher
     @Override
     public TransactionKeyPaginatorResponse<String> getTransactionsFor(
             CreditCardAccount account, String key) {
-        return apiClient.fetchCreditCardTransactions(account, key);
+        return apiClient.fetchCreditCardTransactions(account, key, responseClass);
     }
 
     private CreditCardAccount toTinkCreditCard(CardsEntity cardsEntity) {

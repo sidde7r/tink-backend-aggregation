@@ -18,7 +18,7 @@ public class CreditCardTransactionResponse implements TransactionKeyPaginatorRes
     private GroupHeaderEntity groupHeader;
 
     @JsonProperty("response")
-    private TransactionsEntity transactions;
+    protected TransactionsEntity transactions;
 
     @Override
     public Collection<? extends Transaction> getTinkTransactions() {
@@ -35,5 +35,9 @@ public class CreditCardTransactionResponse implements TransactionKeyPaginatorRes
     @Override
     public String nextKey() {
         return transactions.getContinuationKey();
+    }
+
+    protected TransactionsEntity getTransactionsResponse() {
+        return transactions;
     }
 }

@@ -15,9 +15,9 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 public class GetTransactionsResponse<T extends TransactionEntity> extends NordeaBaseResponse
         implements TransactionKeyPaginatorResponse<String> {
 
-    private TransactionsResponseEntity<T> response;
+    protected TransactionsResponseEntity<T> response;
 
-    @JsonIgnore private String providerMarket;
+    @JsonIgnore protected String providerMarket;
 
     @Override
     public Collection<? extends Transaction> getTinkTransactions() {

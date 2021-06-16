@@ -39,7 +39,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nor
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.executor.payment.rpc.GetPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.executor.payment.rpc.GetPaymentsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.fetcher.creditcard.rpc.CreditCardResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.fetcher.creditcard.rpc.CreditCardTransactionResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.fetcher.transactionalaccount.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.fetcher.transactionalaccount.rpc.GetTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.rpc.NordeaErrorResponse;
@@ -242,8 +241,8 @@ public class NordeaBaseApiClient implements TokenInterface {
                 CreditCardResponse.class);
     }
 
-    public CreditCardTransactionResponse fetchCreditCardTransactions(
-            CreditCardAccount account, String page) {
+    public <T> T fetchCreditCardTransactions(
+            CreditCardAccount account, String page, Class<T> responseClass) {
         return requestRefreshableGet(
                 createRequestInSession(
                         Urls.GET_CARD_TRANSACTIONS
@@ -253,7 +252,7 @@ public class NordeaBaseApiClient implements TokenInterface {
                                 .queryParam(NordeaBaseConstants.QueryKeys.CONTINUATION_KEY, page),
                         HttpMethod.GET,
                         null),
-                CreditCardTransactionResponse.class);
+                responseClass);
     }
 
     @Override
