@@ -4,7 +4,6 @@ import com.google.common.collect.Lists;
 import com.google.common.util.concurrent.Uninterruptibles;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -19,6 +18,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swe
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.fetcher.transactionalaccount.rpc.FetchOfflineTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.fetcher.transactionalaccount.rpc.FetchOnlineTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.fetcher.transactionalaccount.rpc.StatementResponse;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
@@ -32,14 +32,17 @@ public class SwedbankTransactionFetcher implements TransactionFetcher<Transactio
     private final SwedbankApiClient apiClient;
     private final SessionStorage sessionStorage;
     private final String providerMarket;
+    private final AgentComponentProvider componentProvider;
 
     public SwedbankTransactionFetcher(
             final SwedbankApiClient apiClient,
             SessionStorage sessionStorage,
-            String providerMarket) {
+            String providerMarket,
+            AgentComponentProvider componentProvider) {
         this.apiClient = apiClient;
         this.sessionStorage = sessionStorage;
         this.providerMarket = providerMarket;
+        this.componentProvider = componentProvider;
     }
 
     private Optional<FetchOnlineTransactionsResponse> fetchOnlineTransactions(
@@ -47,9 +50,12 @@ public class SwedbankTransactionFetcher implements TransactionFetcher<Transactio
         return Optional.ofNullable(
                 apiClient.getOnlineTransactions(
                         account.getApiIdentifier(),
-                        LocalDate.now(SwedbankConstants.ZONE_ID)
+                        componentProvider
+                                .getLocalDateTimeSource()
+                                .now()
+                                .toLocalDate()
                                 .minusDays(TimeValues.ONLINE_STATEMENT_MAX_DAYS),
-                        LocalDate.now(SwedbankConstants.ZONE_ID)));
+                        componentProvider.getLocalDateTimeSource().now().toLocalDate()));
     }
 
     private Optional<FetchOfflineTransactionsResponse> downloadZippedTransactions(

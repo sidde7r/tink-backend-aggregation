@@ -60,6 +60,7 @@ import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agents.utils.CertificateUtils;
 import se.tink.backend.aggregation.configuration.agents.utils.CertificateUtils.CANameEncoding;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.PersistentStorageKeys;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -68,7 +69,6 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.signableoperation.enums.InternalStatus;
@@ -82,20 +82,20 @@ public final class SwedbankApiClient implements SwedbankOpenBankingPaymentApiCli
     private final SwedbankConfiguration configuration;
     private final String redirectUrl;
     private final String signingKeyId;
-    private final CredentialsRequest credentialsRequest;
+    private final AgentComponentProvider componentProvider;
 
     public SwedbankApiClient(
             TinkHttpClient client,
             PersistentStorage persistentStorage,
             AgentConfiguration<SwedbankConfiguration> agentConfiguration,
             QsealcSigner qsealcSigner,
-            CredentialsRequest credentialsRequest) {
+            AgentComponentProvider componentProvider) {
         this.client = client;
         this.persistentStorage = persistentStorage;
         this.qsealcSigner = qsealcSigner;
         this.configuration = agentConfiguration.getProviderSpecificConfiguration();
         this.redirectUrl = agentConfiguration.getRedirectUrl();
-        this.credentialsRequest = credentialsRequest;
+        this.componentProvider = componentProvider;
 
         try {
             this.signingCertificate =
@@ -139,10 +139,13 @@ public final class SwedbankApiClient implements SwedbankOpenBankingPaymentApiCli
     private RequestBuilder createRequestInSession(URL url, boolean withConsent) {
         final RequestBuilder request = createRequest(url).addBearerToken(getTokenFromSession());
 
-        if (credentialsRequest.getUserAvailability().isUserPresent()) {
+        if (componentProvider.getCredentialsRequest().getUserAvailability().isUserPresent()) {
             request.header(
                             HeaderKeys.PSU_IP_ADDRESS,
-                            Optional.ofNullable(credentialsRequest.getOriginatingUserIp())
+                            Optional.ofNullable(
+                                            componentProvider
+                                                    .getCredentialsRequest()
+                                                    .getOriginatingUserIp())
                                     .orElse(HeaderValues.PSU_IP_ADDRESS))
                     .header(HeaderKeys.PSU_USER_AGENT, HeaderValues.PSU_USER_AGENT)
                     .header(HeaderKeys.PSU_IP_PORT, HeaderValues.PSU_IP_PORT)
@@ -230,7 +233,10 @@ public final class SwedbankApiClient implements SwedbankOpenBankingPaymentApiCli
     public ConsentRequest createConsentRequest() {
         return new ConsentRequest<>(
                 false,
-                LocalDate.now()
+                componentProvider
+                        .getLocalDateTimeSource()
+                        .now()
+                        .toLocalDate()
                         .plusDays(SwedbankConstants.TimeValues.CONSENT_DURATION_IN_DAYS)
                         .toString(),
                 SwedbankConstants.BodyParameter.FREQUENCY_PER_DAY,
@@ -241,7 +247,10 @@ public final class SwedbankApiClient implements SwedbankOpenBankingPaymentApiCli
     public ConsentRequest createConsentRequest(List<String> list) {
         return new ConsentRequest<>(
                 true,
-                LocalDate.now()
+                componentProvider
+                        .getLocalDateTimeSource()
+                        .now()
+                        .toLocalDate()
                         .plusDays(SwedbankConstants.TimeValues.CONSENT_DURATION_IN_DAYS)
                         .toString(),
                 SwedbankConstants.BodyParameter.FREQUENCY_PER_DAY,
@@ -318,7 +327,7 @@ public final class SwedbankApiClient implements SwedbankOpenBankingPaymentApiCli
             String accountId, LocalDate fromDate, LocalDate toDate) {
 
         // Swedbank doesn't allow offline statement without PSU involvement
-        if (credentialsRequest.getUserAvailability().isUserPresent()) {
+        if (componentProvider.getCredentialsRequest().getUserAvailability().isUserPresent()) {
             RequestBuilder requestBuilder =
                     createRequestInSession(
                                     Urls.ACCOUNT_TRANSACTIONS.parameter(
@@ -370,7 +379,7 @@ public final class SwedbankApiClient implements SwedbankOpenBankingPaymentApiCli
 
     public boolean isSwedbank() {
         return SwedbankConstants.SWEDBANK_OB_PROVIDER_NAME.equals(
-                credentialsRequest.getCredentials().getProviderName());
+                componentProvider.getCredentialsRequest().getCredentials().getProviderName());
     }
 
     @Override
@@ -380,7 +389,7 @@ public final class SwedbankApiClient implements SwedbankOpenBankingPaymentApiCli
                 new AuthorizeRequest(
                         configuration.getClientId(),
                         getRedirectUrl(),
-                        credentialsRequest.getProvider().getPayload());
+                        componentProvider.getCredentialsRequest().getProvider().getPayload());
         try {
 
             return createRequestInSession(new URL(Urls.BASE.concat(endpoint)), true)

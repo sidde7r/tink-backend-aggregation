@@ -49,9 +49,11 @@ public abstract class SwedbankBaseAgent extends NextGenerationAgent
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final TransferDestinationRefreshController transferDestinationRefreshController;
     private final SwedbankTransactionalAccountFetcher transactionalAccountFetcher;
+    private final AgentComponentProvider componentProvider;
 
     public SwedbankBaseAgent(AgentComponentProvider componentProvider, QsealcSigner qsealcSigner) {
         super(componentProvider);
+        this.componentProvider = componentProvider;
         client.addFilter(new SwedbankConsentLimitFilter());
         client.addFilter(new SwedbankMethodNotAllowedFilter());
         client.addFilter(new BankServiceInternalErrorFilter());
@@ -62,11 +64,15 @@ public abstract class SwedbankBaseAgent extends NextGenerationAgent
                         persistentStorage,
                         getAgentConfiguration(),
                         qsealcSigner,
-                        componentProvider.getCredentialsRequest());
+                        componentProvider);
 
         transactionalAccountFetcher =
                 new SwedbankTransactionalAccountFetcher(
-                        apiClient, persistentStorage, sessionStorage, transactionPaginationHelper);
+                        apiClient,
+                        persistentStorage,
+                        sessionStorage,
+                        transactionPaginationHelper,
+                        componentProvider);
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
         transferDestinationRefreshController = constructTransferDestinationController();
     }
@@ -169,7 +175,10 @@ public abstract class SwedbankBaseAgent extends NextGenerationAgent
                 updateController,
                 transactionalAccountFetcher,
                 new SwedbankTransactionFetcher(
-                        apiClient, sessionStorage, request.getProvider().getMarket()));
+                        apiClient,
+                        sessionStorage,
+                        request.getProvider().getMarket(),
+                        componentProvider));
     }
 
     @Override
