@@ -17,13 +17,13 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenti
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenticator.PostbankPaymentAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.crypto.JwtGenerator;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.crypto.PostbankJwtModule;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.payment.PostbankPaymentMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.Parameters;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheHeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.configuration.DeutscheMarketConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.executor.payment.DeutscheBankPaymentApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.executor.payment.DeutscheBankPaymentMapper;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.BasePaymentExecutor;
 import se.tink.backend.aggregation.agents.utils.transfer.InferredTransferDestinations;
 import se.tink.backend.aggregation.client.provider_configuration.rpc.PisCapability;
@@ -96,7 +96,7 @@ public final class PostbankAgent extends DeutscheBankAgent
                         credentials,
                         strongAuthenticationState,
                         randomValueGenerator,
-                        new DeutscheBankPaymentMapper());
+                        new PostbankPaymentMapper());
 
         BasePaymentExecutor paymentExecutor =
                 new BasePaymentExecutor(apiClient, postbankPaymentAuthenticator, sessionStorage);

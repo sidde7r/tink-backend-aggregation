@@ -78,10 +78,11 @@ public class DeutscheBankDEAgentPaymentTest {
                 .withRemittanceInformation(remittanceInformation)
                 .withPaymentServiceType(PaymentServiceType.PERIODIC)
                 .withFrequency(Frequency.MONTHLY)
-                .withStartDate(LocalDate.now().plusDays(4))
-                .withEndDate(LocalDate.now().plusMonths(2))
+                .withStartDate(LocalDate.now().plusDays(3))
+                // has to be the last date of moth
+                .withEndDate(LocalDate.of(2021, 7, 31))
                 .withExecutionRule(ExecutionRule.FOLLOWING)
-                .withDayOfExecution(10);
+                .withDayOfExecution(25);
     }
 
     private Payment.Builder createSepaPayment() {

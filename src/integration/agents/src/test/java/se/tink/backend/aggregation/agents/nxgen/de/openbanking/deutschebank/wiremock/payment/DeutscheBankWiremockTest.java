@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.deutschebank.wiremock.payment;
 
+import java.time.LocalDate;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.AgentWireMockPaymentTest;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.command.PaymentCommand;
@@ -14,6 +15,9 @@ import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.payments.common.model.PaymentScheme;
 import se.tink.libraries.transfer.enums.RemittanceInformationType;
+import se.tink.libraries.transfer.rpc.ExecutionRule;
+import se.tink.libraries.transfer.rpc.Frequency;
+import se.tink.libraries.transfer.rpc.PaymentServiceType;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 public class DeutscheBankWiremockTest {
@@ -66,7 +70,34 @@ public class DeutscheBankWiremockTest {
     }
 
     @Test
-    public void testRecurringPaymentInitiation() {}
+    public void testRecurringPaymentInitiation() throws Exception {
+        final AgentsServiceConfiguration configuration =
+                AgentsServiceConfigurationReader.read(CONFIGURATION_FILE);
+
+        final String wireMockFilePath =
+                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen//de/openbanking/deutschebank/wiremock/payment/resources/recurring.aap";
+
+        Payment payment =
+                createRealDomesticPayment()
+                        .withPaymentScheme(PaymentScheme.SEPA_CREDIT_TRANSFER)
+                        .withPaymentServiceType(PaymentServiceType.PERIODIC)
+                        .withFrequency(Frequency.MONTHLY)
+                        .withDayOfExecution(25)
+                        .withStartDate(LocalDate.of(2021, 06, 18))
+                        .withEndDate(LocalDate.of(2021, 07, 31))
+                        .withExecutionRule(ExecutionRule.FOLLOWING)
+                        .build();
+
+        final AgentWireMockPaymentTest agentWireMockPaymentTest =
+                AgentWireMockPaymentTest.builder(
+                                MarketCode.DE, "de-deutschebank-ob", wireMockFilePath)
+                        .withConfigurationFile(configuration)
+                        .addCredentialField("username", "dummy_psu_id")
+                        .withPayment(payment)
+                        .addCallbackData("code", "DUMMY_AUTH_CODE")
+                        .buildWithoutLogin(PaymentCommand.class);
+        agentWireMockPaymentTest.executePayment();
+    }
 
     private Payment.Builder createRealDomesticPayment() {
         RemittanceInformation remittanceInformation = new RemittanceInformation();

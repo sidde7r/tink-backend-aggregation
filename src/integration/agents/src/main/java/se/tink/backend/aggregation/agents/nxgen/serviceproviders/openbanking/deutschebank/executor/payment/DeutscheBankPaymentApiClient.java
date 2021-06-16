@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deu
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.configuration.DeutscheMarketConfiguration;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.PaymentApiClient;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.PaymentConstants;
+import se.tink.backend.aggregation.agents.utils.berlingroup.payment.PaymentMapper;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.enums.PaymentProduct;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.enums.PaymentService;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.rpc.CreatePaymentRequest;
@@ -29,7 +30,7 @@ public class DeutscheBankPaymentApiClient extends DeutscheBankApiClient
         implements PaymentApiClient {
     private final Credentials credentials;
     private final StrongAuthenticationState authenticationState;
-    private final DeutscheBankPaymentMapper paymentMapper;
+    private final PaymentMapper<CreatePaymentRequest> paymentMapper;
 
     public DeutscheBankPaymentApiClient(
             TinkHttpClient client,
@@ -39,7 +40,7 @@ public class DeutscheBankPaymentApiClient extends DeutscheBankApiClient
             Credentials credentials,
             StrongAuthenticationState authenticationState,
             RandomValueGenerator randomValueGenerator,
-            DeutscheBankPaymentMapper paymentMapper) {
+            PaymentMapper<CreatePaymentRequest> paymentMapper) {
         super(client, persistentStorage, headerValues, marketConfiguration, randomValueGenerator);
         this.credentials = credentials;
         this.authenticationState = authenticationState;
