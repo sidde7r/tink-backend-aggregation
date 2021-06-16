@@ -15,7 +15,6 @@ import org.iban4j.CountryCode;
 import org.iban4j.Iban;
 import org.junit.Before;
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.entities.ConsentApprovalEntity;
@@ -169,7 +168,7 @@ public class FrOpenBankingPaymentExecutorTest {
         Throwable thrown = catchThrowable(() -> paymentExecutor.sign(paymentRequest));
 
         // then
-        Assertions.assertThat(thrown).isInstanceOf(PaymentAuthenticationException.class);
+        Assertions.assertThat(thrown).isInstanceOf(PaymentRejectedException.class);
         verify(apiClient, times(1)).getPayment(any());
     }
 

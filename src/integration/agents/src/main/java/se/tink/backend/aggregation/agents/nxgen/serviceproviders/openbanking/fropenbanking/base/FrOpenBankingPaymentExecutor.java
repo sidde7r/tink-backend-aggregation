@@ -11,7 +11,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
-import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
@@ -44,6 +43,7 @@ import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
+import se.tink.libraries.signableoperation.enums.InternalStatus;
 import se.tink.libraries.transfer.enums.RemittanceInformationType;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
@@ -150,13 +150,7 @@ public class FrOpenBankingPaymentExecutor implements PaymentExecutor, FetchableP
 
         switch (paymentMultiStepRequest.getStep()) {
             case AuthenticationStepConstants.STEP_INIT:
-                String authorizationUrl =
-                        Optional.ofNullable(sessionStorage.get(PAYMENT_AUTHORIZATION_URL))
-                                .orElseThrow(
-                                        () ->
-                                                new PaymentAuthenticationException(
-                                                        "Payment authentication failed. There is no authorization url!",
-                                                        new PaymentRejectedException()));
+                String authorizationUrl = sessionStorage.get(PAYMENT_AUTHORIZATION_URL);
                 openThirdPartyApp(new URL(authorizationUrl));
                 nextStep = PAYMENT_POST_SIGN_STATE;
                 break;
@@ -167,7 +161,8 @@ public class FrOpenBankingPaymentExecutor implements PaymentExecutor, FetchableP
                 break;
             default:
                 throw new PaymentException(
-                        "Unknown step " + paymentMultiStepRequest.getStep() + " for payment sign.");
+                        "Unknown step " + paymentMultiStepRequest.getStep() + " for payment sign.",
+                        InternalStatus.BANK_ERROR_CODE_NOT_HANDLED_YET);
         }
 
         return new PaymentMultiStepResponse(payment, nextStep, Collections.emptyList());
@@ -184,7 +179,9 @@ public class FrOpenBankingPaymentExecutor implements PaymentExecutor, FetchableP
                 .orElseThrow(
                         () ->
                                 new PaymentAuthorizationException(
-                                        "SCA time-out.", ThirdPartyAppError.TIMED_OUT.exception()));
+                                        "SCA time-out.",
+                                        InternalStatus.PAYMENT_AUTHORIZATION_TIMEOUT,
+                                        ThirdPartyAppError.TIMED_OUT.exception()));
     }
 
     private PaymentStatus getAndVerifyStatus(String paymentId) throws PaymentException {
@@ -200,12 +197,13 @@ public class FrOpenBankingPaymentExecutor implements PaymentExecutor, FetchableP
 
         } catch (ExecutionException | RetryException e) {
             log.warn("Payment failed, couldn't fetch payment status");
-            throw new PaymentRejectedException("Payment failed, couldn't fetch payment status");
+            throw new PaymentRejectedException(
+                    "Payment failed, couldn't fetch payment status",
+                    InternalStatus.PAYMENT_REJECTED_BY_BANK_NO_DESCRIPTION);
         }
 
         if (paymentResponse.getPaymentStatus() == PaymentStatus.PENDING) {
-            throw new PaymentAuthenticationException(
-                    "Payment authentication failed.", new PaymentRejectedException());
+            throw new PaymentRejectedException();
         }
 
         if (paymentResponse.getPaymentStatus() != PaymentStatus.SIGNED) {

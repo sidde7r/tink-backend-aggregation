@@ -46,7 +46,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.TimeoutRetryFilter;
-import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 @AgentCapabilities({
@@ -215,8 +214,7 @@ public final class BbvaAgent extends NextGenerationAgent
     }
 
     private void checkIfFirstLogin() {
-        log.info("Credentials status is equal {}", this.credentials.getStatus());
-        if (this.credentials.getStatus() == CredentialsStatus.CREATED) {
+        if (request.getUserAvailability().isUserAvailableForInteraction()) {
             log.info("Fetching transactions over 90 days");
             persistentStorage.put(Defaults.FIRST_LOGIN, true);
         } else {

@@ -9,7 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.map.CaseInsensitiveMap;
 import org.assertj.core.util.VisibleForTesting;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
-import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
@@ -134,7 +133,8 @@ public class LaBanquePostalePaymentExecutor implements PaymentExecutor, Fetchabl
                 break;
             default:
                 throw new PaymentException(
-                        "Unknown step " + paymentMultiStepRequest.getStep() + " for payment sign.");
+                        "Unknown step " + paymentMultiStepRequest.getStep() + " for payment sign.",
+                        InternalStatus.BANK_ERROR_CODE_NOT_HANDLED_YET);
         }
         return new PaymentMultiStepResponse(payment, nextStep, Collections.emptyList());
     }
@@ -202,12 +202,13 @@ public class LaBanquePostalePaymentExecutor implements PaymentExecutor, Fetchabl
                         : berlinPaymentStatus.getTinkPaymentStatus();
 
         if (paymentStatus == PaymentStatus.PENDING) {
-            throw new PaymentAuthenticationException(
-                    "Payment authentication failed.", new PaymentRejectedException());
+            throw new PaymentRejectedException();
         }
 
         if (paymentStatus != PaymentStatus.SIGNED) {
-            throw new PaymentRejectedException("Unexpected payment status: " + paymentStatus);
+            throw new PaymentRejectedException(
+                    "Unexpected payment status: " + paymentStatus,
+                    InternalStatus.PAYMENT_REJECTED_BY_BANK_NO_DESCRIPTION);
         }
 
         return paymentStatus;
@@ -225,7 +226,9 @@ public class LaBanquePostalePaymentExecutor implements PaymentExecutor, Fetchabl
         return queryParameters.orElseThrow(
                 () ->
                         new PaymentAuthorizationException(
-                                "SCA time-out.", ThirdPartyAppError.TIMED_OUT.exception()));
+                                "SCA time-out.",
+                                InternalStatus.PAYMENT_AUTHORIZATION_TIMEOUT,
+                                ThirdPartyAppError.TIMED_OUT.exception()));
     }
 
     @VisibleForTesting
