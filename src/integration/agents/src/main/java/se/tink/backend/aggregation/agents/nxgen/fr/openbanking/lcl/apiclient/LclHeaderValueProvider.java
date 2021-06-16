@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.apiclient;
 
-import java.time.Clock;
-import java.time.ZonedDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Base64;
 import java.util.Objects;
@@ -9,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.configuration.LclConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.signature.LclSignatureProvider;
 import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @RequiredArgsConstructor
@@ -16,7 +16,7 @@ public class LclHeaderValueProvider {
 
     private final LclSignatureProvider signatureProvider;
     private final LclConfiguration configuration;
-    private final Clock clock;
+    private final LocalDateTimeSource localDateTimeSource;
 
     public String getSignatureHeaderValue(String requestId, String date, String digest) {
         final String signature = signatureProvider.signRequest(requestId, date, digest);
@@ -34,7 +34,8 @@ public class LclHeaderValueProvider {
     }
 
     public String getDateHeaderValue() {
-        return DateTimeFormatter.RFC_1123_DATE_TIME.format(ZonedDateTime.now(clock));
+        return DateTimeFormatter.RFC_1123_DATE_TIME.format(
+                localDateTimeSource.getInstant().atZone(ZoneId.of("CET")));
     }
 
     private String serializeBody(Object body) {

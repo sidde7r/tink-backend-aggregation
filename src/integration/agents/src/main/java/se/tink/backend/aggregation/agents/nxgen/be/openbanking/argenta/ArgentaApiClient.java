@@ -38,6 +38,7 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.dat
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
@@ -164,7 +165,9 @@ public class ArgentaApiClient {
                     .queryParam(QueryKeys.WITH_BALANCE, String.valueOf(true))
                     .get(AccountResponse.class);
         } catch (HttpResponseException ex) {
-            if (ex.getMessage().contains("ACCESS_EXCEEDED")) {
+            HttpResponse response = ex.getResponse();
+            if (response.getStatus() == 429
+                    && response.getBody(String.class).contains("ACCESS_EXCEEDED")) {
                 throw BankServiceError.ACCESS_EXCEEDED.exception();
             }
             throw ex;

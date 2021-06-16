@@ -7,8 +7,6 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.TRANSFERS;
 
 import com.google.inject.Inject;
-import java.time.Clock;
-import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.Account;
@@ -45,6 +43,7 @@ import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.eidassigner.module.QSealcSignerModuleRSASHA256;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentProgressiveGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2TokenFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2TokenStorage;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2based.AccessCodeStorage;
@@ -73,7 +72,6 @@ public final class LclAgent extends SubsequentProgressiveGenerationAgent
                 RefreshBeneficiariesExecutor,
                 RefreshCreditCardAccountsExecutor {
 
-    private static final ZoneId ZONE_ID = ZoneId.of("CET");
     public static final String BASE_URL = "https://psd.lcl.fr";
 
     private final LclApiClient lclApiClient;
@@ -93,7 +91,8 @@ public final class LclAgent extends SubsequentProgressiveGenerationAgent
         this.agentConfiguration = getAgentConfiguration();
         this.tokenStorage = new OAuth2TokenStorage(this.persistentStorage, this.sessionStorage);
 
-        LclHeaderValueProvider lclHeaderValueProvider = getLclHeaderValueProvider(qsealcSigner);
+        LclHeaderValueProvider lclHeaderValueProvider =
+                getLclHeaderValueProvider(qsealcSigner, componentProvider.getLocalDateTimeSource());
         this.tokenApiClient =
                 new LclTokenApiClient(this.client, lclHeaderValueProvider, this.agentConfiguration);
         this.lclApiClient =
@@ -237,12 +236,12 @@ public final class LclAgent extends SubsequentProgressiveGenerationAgent
         return getAgentConfigurationController().getAgentConfiguration(LclConfiguration.class);
     }
 
-    private LclHeaderValueProvider getLclHeaderValueProvider(QsealcSigner qsealcSigner) {
+    private LclHeaderValueProvider getLclHeaderValueProvider(
+            QsealcSigner qsealcSigner, LocalDateTimeSource localDateTimeSource) {
         final LclSignatureProvider signatureProvider = new LclSignatureProvider(qsealcSigner);
-        final Clock clock = Clock.system(ZONE_ID);
         return new LclHeaderValueProvider(
                 signatureProvider,
                 this.agentConfiguration.getProviderSpecificConfiguration(),
-                clock);
+                localDateTimeSource);
     }
 }
