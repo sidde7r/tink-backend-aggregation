@@ -24,6 +24,7 @@ public class RateLimitFilter extends Filter {
     private final String providerName;
     private long retrySleepMillisecondsMin = 0;
     private long retrySleepMillisecondsMax = 0;
+    private long maxRetries = 0;
 
     public RateLimitFilter(String providerName) {
         this.providerName =
@@ -33,14 +34,24 @@ public class RateLimitFilter extends Filter {
 
     public RateLimitFilter(
             String providerName, long retrySleepMillisecondsMin, long retrySleepMillisecondsMax) {
+        this(providerName, retrySleepMillisecondsMin, retrySleepMillisecondsMax, 1);
+    }
+
+    public RateLimitFilter(
+            String providerName,
+            long retrySleepMillisecondsMin,
+            long retrySleepMillisecondsMax,
+            long maxRetries) {
         this(providerName);
         Preconditions.checkArgument(
                 retrySleepMillisecondsMax >= retrySleepMillisecondsMin,
                 "Maximum retry time must not be lower than minimum retry time");
         Preconditions.checkArgument(
                 retrySleepMillisecondsMin > 0, "Retry time must be greater than zero");
+        Preconditions.checkArgument(maxRetries > 0, "Max retries should be more than zero");
         this.retrySleepMillisecondsMin = retrySleepMillisecondsMin;
         this.retrySleepMillisecondsMax = retrySleepMillisecondsMax;
+        this.maxRetries = maxRetries;
     }
 
     @Override
@@ -55,20 +66,23 @@ public class RateLimitFilter extends Filter {
                             "Http status: " + response.getStatus() + " Error body: " + body);
             RateLimitService.INSTANCE.notifyRateLimitExceeded(providerName, ex);
 
-            long retrySleepMilliseconds = calculateRetryTime();
-            if (retrySleepMilliseconds > 0) {
+            for (long retry = 1; retry <= maxRetries; retry++) {
+                long retrySleepMilliseconds = calculateRetryTime();
                 log.warn(
-                        "[RateLimitFilter] Got rate limited, retrying in {}ms",
-                        retrySleepMilliseconds);
+                        "[RateLimitFilter] Got rate limited, retrying in {}ms ({}/{})",
+                        retrySleepMilliseconds,
+                        retry,
+                        maxRetries);
                 Uninterruptibles.sleepUninterruptibly(
                         retrySleepMilliseconds, TimeUnit.MILLISECONDS);
                 response = nextFilter(httpRequest);
                 if (!isRateLimitResponse(response)) {
+                    log.warn("[RateLimitFilter] Success after retrying {} time(s)", retry);
                     return response;
                 }
-                log.warn("[RateLimitFilter] Got rate limited again, giving up.");
             }
 
+            log.warn("[RateLimitFilter] Got rate limited after {} retries, giving up.", maxRetries);
             throw ex;
         }
 
