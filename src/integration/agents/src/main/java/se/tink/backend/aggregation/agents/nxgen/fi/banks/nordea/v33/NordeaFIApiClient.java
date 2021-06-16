@@ -80,6 +80,13 @@ public class NordeaFIApiClient {
                 .get(AuthenticateResponse.class);
     }
 
+    public void cancelAuthentication(String sessionId) throws HttpResponseException {
+        httpClient
+                .request(NordeaFIConstants.Urls.AUTHENTICATE_INIT.concatWithSeparator(sessionId))
+                .accept(MediaType.APPLICATION_JSON_TYPE)
+                .delete();
+    }
+
     private AuthenticateResponse sendAuthenticateInitRequest(
             AuthenticateRequest authenticateRequest) throws HttpResponseException {
         return httpClient

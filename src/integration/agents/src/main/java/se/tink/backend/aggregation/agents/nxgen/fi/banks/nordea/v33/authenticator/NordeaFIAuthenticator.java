@@ -40,6 +40,9 @@ public class NordeaFIAuthenticator implements MultiFactorAuthenticator {
 
     private static final LocalizableKey CONFIRM_LOGIN =
             new LocalizableKey("Please open the Nordea Codes app and confirm login.");
+    private static final LocalizableKey AUTHENTICATION_COLLISION_ERROR_MESSAGE =
+            new LocalizableKey(
+                    "Several simultaneous identification/confirmation attempts. Open the authentication app to cancel the error.");
     private static final int POLL_MAX_ATTEMPTS = 90;
 
     private final NordeaFIApiClient apiClient;
@@ -136,6 +139,7 @@ public class NordeaFIAuthenticator implements MultiFactorAuthenticator {
         }
 
         log.info(toErrorMessage("NordeaFIAuthenticator timed out internally."));
+        apiClient.cancelAuthentication(sessionId);
         throw ThirdPartyAppError.TIMED_OUT.exception();
     }
 
@@ -145,6 +149,7 @@ public class NordeaFIAuthenticator implements MultiFactorAuthenticator {
         if (status == ThirdPartyAppStatus.DONE) {
             return exchangeCodeForToken(authenticateResponse);
         } else {
+            apiClient.cancelAuthentication(sessionId);
             handleAuthenticateExceptions(status, authenticateResponse.getRawStatus());
         }
         throw new IllegalStateException(
@@ -182,7 +187,8 @@ public class NordeaFIAuthenticator implements MultiFactorAuthenticator {
     private void handleAuthenticateExceptions(
             ThirdPartyAppStatus thirdPartyAppStatus, String rawStatus) {
         if (thirdPartyAppStatus == ThirdPartyAppStatus.ALREADY_IN_PROGRESS) {
-            throw ThirdPartyAppError.ALREADY_IN_PROGRESS.exception();
+            throw ThirdPartyAppError.ALREADY_IN_PROGRESS.exception(
+                    AUTHENTICATION_COLLISION_ERROR_MESSAGE);
         } else if (thirdPartyAppStatus == ThirdPartyAppStatus.TIMED_OUT) {
             throw ThirdPartyAppError.TIMED_OUT.exception();
         } else if (thirdPartyAppStatus == ThirdPartyAppStatus.CANCELLED) {
