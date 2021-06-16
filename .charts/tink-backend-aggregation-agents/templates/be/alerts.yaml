@@ -101,7 +101,7 @@ spec:
       annotations:
         description: {{ .Values.kibanaLink }}
           {{ .Values.grafanaLink }}
-        summary: Authentication failures due to unknown RuntimeExceptions is 100% <{ $labels.className }> (<{ $labels.provider }> for the last 1h
+        summary: Authentication failures due to unknown RuntimeExceptions is 100% <{ $labels.className }> <{ $labels.provider }> for the last 1h
         tags: {{ .Values.tags }}
 
     - alert: LongTermAuthenticationUnknownErrorRate100%BE
@@ -119,7 +119,7 @@ spec:
       annotations:
         description: {{ .Values.kibanaLink12h }}
           {{ .Values.grafanaLink }}
-        summary: Authentication failures due to unknown RuntimeExceptions is 100% for <{ $labels.className }> (<{ $labels.provider }> for the last 12 hours
+        summary: Authentication failures due to unknown RuntimeExceptions is 100% for <{ $labels.className }> <{ $labels.provider }> for the last 12 hours
         tags: {{ .Values.tags }}
 
     # Refresh urgent alerts
@@ -136,7 +136,7 @@ spec:
       annotations:
         description: {{ .Values.kibanaLink }}
           {{ .Values.grafanaLink }}
-        summary: Refresh failures due to unknown RuntimeExceptions is 100% for <{ $labels.className }> (<{ $labels.provider }> for the last 1h
+        summary: Refresh failures due to unknown RuntimeExceptions is 100% for <{ $labels.className }> <{ $labels.provider }> for the last 1h
         tags: {{ .Values.tags }}
 
     # Authentication ping alerts
@@ -155,7 +155,7 @@ spec:
       annotations:
         description: {{ .Values.kibanaLink }}
           {{ .Values.grafanaLink }}
-        summary: Authentication failures due to unknown RuntimeExceptions is over 10% (<{ $value }>) for <{ $labels.className }> (<{ $labels.provider }> for the last 1h
+        summary: Authentication failures due to unknown RuntimeExceptions is over 10% (<{ $value }>) for <{ $labels.className }> <{ $labels.provider }> for the last 1h
         tags: {{ .Values.tags }}
 
     - alert: LongTermAuthenticationUnknownErrorRateOver10%BE
@@ -173,7 +173,7 @@ spec:
       annotations:
         description: {{ .Values.kibanaLink12h }}
           {{ .Values.grafanaLink }}
-        summary: Authentication failures due to unknown RuntimeExceptions is over 10% (<{ $value }>) for <{ $labels.className }> (<{ $labels.provider }>) for the last 12 hours
+        summary: Authentication failures due to unknown RuntimeExceptions is over 10% (<{ $value }>) for <{ $labels.className }> <{ $labels.provider }>) for the last 12 hours
         tags: {{ .Values.tags }}
 
     # Refresh ping alerts
@@ -190,7 +190,7 @@ spec:
       annotations:
         description: {{ .Values.kibanaLink }}
           {{ .Values.grafanaLink }}
-        summary: Refresh failures due to unknown RuntimeExceptions is over 10% (<{ $value }>) for <{ $labels.className }> (<{ $labels.provider }> for the last 1h
+        summary: Refresh failures due to unknown RuntimeExceptions is over 10% (<{ $value }>) for <{ $labels.className }> <{ $labels.provider }> for the last 1h
         tags: {{ .Values.tags }}
 
 
@@ -214,7 +214,7 @@ spec:
       annotations:
         description: {{ .Values.kibanaLink4h }}
           {{ .Values.grafanaLink }}
-        summary: Manual authentication failures due to bank site errors is 100% for <{ $labels.className }> (<{ $labels.provider }> for the last 4h
+        summary: Manual authentication failures due to bank site errors is 100% for <{ $labels.className }> <{ $labels.provider }> for the last 4h
         tags: {{ .Values.tags }}
 
     - alert: AutoAuthenticationBankSiteErrorRate100%BE
@@ -233,7 +233,7 @@ spec:
       annotations:
         description: {{ .Values.kibanaLink4h }}
           {{ .Values.grafanaLink }}
-        summary: Auto authentication failures due to bank site errors is 100% for <{ $labels.className }> (<{ $labels.provider }> for the last 4h
+        summary: Auto authentication failures due to bank site errors is 100% for <{ $labels.className }> <{ $labels.provider }> for the last 4h
         tags: {{ .Values.tags }}
 
 
@@ -251,7 +251,7 @@ spec:
       annotations:
         description: {{ .Values.kibanaLink12h }}
           {{ .Values.grafanaLink }}
-        summary: Authentication failures due to bank site errors is 100% for <{ $labels.className }> (<{ $labels.provider }> for the last 12h
+        summary: Authentication failures due to bank site errors is 100% for <{ $labels.className }> <{ $labels.provider }> for the last 12h
         tags: {{ .Values.tags }}
 
     # Refresh urgent alerts
@@ -269,7 +269,7 @@ spec:
       annotations:
         description: {{ .Values.kibanaLink4h }}
           {{ .Values.grafanaLink }}
-        summary: Refresh failures due to bank site errors is 100%  for <{ $labels.className }> (<{ $labels.provider }> for the last 4h
+        summary: Refresh failures due to bank site errors is 100%  for <{ $labels.className }> <{ $labels.provider }> for the last 4h
         tags: {{ .Values.tags }}
 
     - alert: LongTermRefreshBankSiteErrorRate100%BE
@@ -284,7 +284,7 @@ spec:
       annotations:
         description: {{ .Values.kibanaLink12h }}
           {{ .Values.grafanaLink }}
-        summary: Refresh failures due to bank site errors is 100% (<{ $value }>) for <{ $labels.className }> (<{ $labels.provider }> for the last 12h
+        summary: Refresh failures due to bank site errors is 100% (<{ $value }>) for <{ $labels.className }> <{ $labels.provider }> for the last 12h
         tags: {{ .Values.tags }}
 
 
@@ -308,7 +308,7 @@ spec:
       annotations:
         description: {{ .Values.kibanaLink12h }}
           {{ .Values.grafanaLink }}
-        summary: Authentication failures due to user cancelletion is 100% for <{ $labels.className }> (<{ $labels.provider }> for the last 12h
+        summary: Authentication failures due to user cancelletion is 100% for <{ $labels.className }> <{ $labels.provider }> for the last 12h
         tags: {{ .Values.tags }}
 
     - alert: AuthenticationUserCancellationDueToThirdPartyAppTimeoutRate100%BE
@@ -327,7 +327,7 @@ spec:
       annotations:
         description: {{ .Values.kibanaLink12h }}
           {{ .Values.grafanaLink }}
-        summary: Authentication failures due to user cancelletion is 100% for <{ $labels.className }> (<{ $labels.provider }> for the last 12h. Please check if a redirect url is correct.
+        summary: Authentication failures due to user cancelletion is 100% for <{ $labels.className }> <{ $labels.provider }> for the last 12h. Please check if a redirect url is correct.
         tags: {{ .Values.tags }}
 
     # Authentication ping alerts
@@ -345,5 +345,5 @@ spec:
       annotations:
         description: {{ .Values.kibanaLink24h }}
           {{ .Values.grafanaLink }}
-        summary: Authentication failures due to user cancelletion is 100% for <{ $labels.className }> (<{ $labels.provider }> for the last 24h. Please check if a redirect url is correct.
+        summary: Authentication failures due to user cancelletion is 100% for <{ $labels.className }> <{ $labels.provider }> for the last 24h. Please check if a redirect url is correct.
         tags: {{ .Values.tags }}
