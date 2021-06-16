@@ -113,6 +113,7 @@ public class CreditAgricoleConstants {
         public static final String FUNCTIONAL_ERROR = "FonctionnalError";
         public static final String BAM_AUTH_REQUIRED = "BamAuthenticationRequired";
         public static final String TECHNICAL_ERROR = "TechnicalError";
+        public static final String NO_SCA_METHOD = "fr.mabanque.createuser.noscamethodavailable";
     }
 
     public static class Step {
