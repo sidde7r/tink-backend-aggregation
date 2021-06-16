@@ -51,14 +51,20 @@ public class DnbApiClient {
     }
 
     public AccountListResponse fetchAccounts() {
-        return this.client
-                .request(DnbConstants.Url.FETCH_ACCOUNT_DETAILS)
+        return fetchAccountsRequest().get(AccountListResponse.class);
+    }
+
+    public HttpResponse fetchAccountsRaw() {
+        return fetchAccountsRequest().get(HttpResponse.class);
+    }
+
+    private RequestBuilder fetchAccountsRequest() {
+        return client.request(DnbConstants.Url.FETCH_ACCOUNT_DETAILS)
                 .queryParam(
                         DnbConstants.QueryParam.PREVENT_CACHE, String.valueOf(new Date().getTime()))
                 .header(
                         DnbConstants.Header.REQUEST_WITH_KEY,
-                        DnbConstants.Header.REQUEST_WITH_VALUE)
-                .get(AccountListResponse.class);
+                        DnbConstants.Header.REQUEST_WITH_VALUE);
     }
 
     public HttpResponse fetchTransactions(Account account, int count) {

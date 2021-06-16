@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.dnb;
 
+import java.util.regex.Pattern;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public final class DnbConstants {
@@ -106,7 +107,7 @@ public final class DnbConstants {
         public static final String DNB_API_SECRET = "156db93480evgxo8u83nif48nz";
     }
 
-    public final class Messages {
+    public static final class Messages {
         public static final String GENERIC_BANKID_ERROR =
                 "du har ikke tilgang til å logge på med bankid. ta kontakt med din administrator.";
         public static final String LOGIN_TIMEOUT =
@@ -139,6 +140,11 @@ public final class DnbConstants {
         public static final String SERVICE_NOT_AVAILABLE_PREFIX = "Vi beklager at tjenesten";
         public static final String TRY_IN_A_FEW_MINUTES_PREFIX = "fem minutter";
         public static final String TRY_IN_5_MINUTES_PREFIX = "Vent 5 minutter";
+
+        public static final Pattern HOME_PAGE_REDIRECT =
+                Pattern.compile(
+                        "<META HTTP-EQUIV=\"Refresh\" CONTENT=\"\\d;URL=\\/\">",
+                        Pattern.CASE_INSENSITIVE);
     }
 
     public static class CardStatus {

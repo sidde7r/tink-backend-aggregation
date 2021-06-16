@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.dnbbankid;
 
+import java.util.regex.Pattern;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.openqa.selenium.By;
@@ -168,6 +169,11 @@ public final class DnbConstants {
         public static final String SERVICE_NOT_AVAILABLE_PREFIX = "Vi beklager at tjenesten";
         public static final String TRY_IN_A_FEW_MINUTES_PREFIX = "fem minutter";
         public static final String TRY_IN_5_MINUTES_PREFIX = "Vent 5 minutter";
+
+        public static final Pattern HOME_PAGE_REDIRECT =
+                Pattern.compile(
+                        "<META HTTP-EQUIV=\"Refresh\" CONTENT=\"\\d;URL=\\/\">",
+                        Pattern.CASE_INSENSITIVE);
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
