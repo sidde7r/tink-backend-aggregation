@@ -28,6 +28,10 @@ public class DnbSessionHandler implements SessionHandler {
 
         if (isHomePageRedirect(response)) {
             log.info("[DNB] Home page redirect - session expired");
+        } else if (isRedirect(response)) {
+            log.warn(
+                    "[DNB] Unhandled redirect - session expired. Location: {}",
+                    response.getLocation());
         } else {
             log.warn("[DNB] Unexpected non json response - session expired");
         }
@@ -37,6 +41,10 @@ public class DnbSessionHandler implements SessionHandler {
     private boolean isJsonResponse(HttpResponse response) {
         String contentType = response.getHeaders().getFirst("Content-Type");
         return StringUtils.containsIgnoreCase(contentType, "application/json");
+    }
+
+    private boolean isRedirect(HttpResponse response) {
+        return response.getStatus() == 302;
     }
 
     private boolean isHomePageRedirect(HttpResponse response) {
