@@ -10,7 +10,7 @@ metadata:
     app: aggregation-service
 spec:
   # This needs to be large enough to encapsulate *all* aggregation pods waiting 600s.
-  progressDeadlineSeconds: 1200
+  progressDeadlineSeconds: 6000
   revisionHistoryLimit: 3
   selector:
     matchLabels:
