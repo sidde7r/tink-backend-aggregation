@@ -23,6 +23,7 @@ import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.ListTransactionsRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.ListTransactionsResponse;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
@@ -51,6 +52,7 @@ public class DanskeBankMultiTransactionsFetcherTest {
     private DanskeBankApiClient client;
     private DanskeBankMultiTransactionsFetcher<TransactionalAccount> fetcherForInitialRequest;
     private DanskeBankMultiTransactionsFetcher<TransactionalAccount> fetcherForNotInitialRefresh;
+    private LocalDateTimeSource mockLocalDateTimeSource;
 
     private TransactionalAccount transactionalAccount;
     private Date dateTo;
@@ -60,8 +62,10 @@ public class DanskeBankMultiTransactionsFetcherTest {
     @Before
     public void before() {
         client = mock(DanskeBankApiClient.class);
+        mockLocalDateTimeSource = mock(LocalDateTimeSource.class);
         transactionalAccount = getTransactionalAccount();
         now = LocalDate.of(2021, 3, 30);
+        when(mockLocalDateTimeSource.now()).thenReturn(now.atStartOfDay());
 
         dateTo = parseLocalDate(now);
         dateFrom = parseLocalDate(now.minusDays(89));
@@ -75,7 +79,8 @@ public class DanskeBankMultiTransactionsFetcherTest {
         List<Account> credentialsRequestAccounts = new LinkedList<>();
         Mockito.when(credentialsRequest.getAccounts()).thenReturn(credentialsRequestAccounts);
         fetcherForInitialRequest =
-                new DanskeBankMultiTransactionsFetcher<>(client, "en", credentialsRequest);
+                new DanskeBankMultiTransactionsFetcher<>(
+                        client, "en", credentialsRequest, mockLocalDateTimeSource);
     }
 
     private void mockSituationWhenThereIsAccountWithCertainDateInContext() {
@@ -87,7 +92,8 @@ public class DanskeBankMultiTransactionsFetcherTest {
         credentialsRequestAccounts.add(account);
         Mockito.when(credentialsRequest.getAccounts()).thenReturn(credentialsRequestAccounts);
         fetcherForNotInitialRefresh =
-                new DanskeBankMultiTransactionsFetcher<>(client, "en", credentialsRequest);
+                new DanskeBankMultiTransactionsFetcher<>(
+                        client, "en", credentialsRequest, mockLocalDateTimeSource);
     }
 
     @Test

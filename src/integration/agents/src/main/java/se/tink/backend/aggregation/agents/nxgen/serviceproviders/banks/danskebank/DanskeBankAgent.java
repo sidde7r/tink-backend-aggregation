@@ -195,7 +195,10 @@ public abstract class DanskeBankAgent<MarketSpecificApiClient extends DanskeBank
                     LocalDateTimeSource localDateTimeSource) {
         DanskeBankMultiTransactionsFetcher<A> transactionFetcher =
                 new DanskeBankMultiTransactionsFetcher<>(
-                        this.apiClient, this.configuration.getLanguageCode(), request);
+                        this.apiClient,
+                        this.configuration.getLanguageCode(),
+                        request,
+                        localDateTimeSource);
         return new TransactionFetcherController<>(
                 this.transactionPaginationHelper,
                 new TransactionDatePaginationController.Builder<>(transactionFetcher)
