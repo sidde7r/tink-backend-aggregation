@@ -7,6 +7,8 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.TRANSFERS;
 
 import com.google.inject.Inject;
+import java.util.Arrays;
+import java.util.List;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentPisCapability;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModules;
@@ -32,6 +34,11 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponen
         })
 public final class CicAgent extends CmcicAgent {
 
+    private static final String AUTH_URL_FORMAT =
+            "https://www.cic.fr/oauth2/%s/banque/oauth2_authorization.aspx";
+    private static final List<String> SUPPORTED_LANGUAGES = Arrays.asList("de", "en", "es", "fr");
+    private static final String PRIMARY_LANGUAGE = "fr";
+
     @Inject
     public CicAgent(AgentComponentProvider componentProvider, QsealcSigner qsealcSigner) {
         super(
@@ -40,6 +47,15 @@ public final class CicAgent extends CmcicAgent {
                 new CmcicAgentConfig(
                         "https://oauth2-apiii.e-i.com",
                         "/cic/",
-                        "https://www.cic.fr/oauth2/fr/banque/oauth2_authorization.aspx"));
+                        getLocalizedAuthUrl(componentProvider)));
+    }
+
+    private static String getLocalizedAuthUrl(AgentComponentProvider componentProvider) {
+        return String.format(
+                AUTH_URL_FORMAT,
+                CmcicAgent.getPreferredLanguage(
+                        componentProvider.getCredentialsRequest().getUser().getLocale(),
+                        SUPPORTED_LANGUAGES,
+                        PRIMARY_LANGUAGE));
     }
 }

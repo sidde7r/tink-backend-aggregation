@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.Account;
@@ -201,5 +202,15 @@ public abstract class CmcicAgent extends NextGenerationAgent
     private TransferDestinationRefreshController constructTransferDestinationRefreshController() {
         return new TransferDestinationRefreshController(
                 metricRefreshController, new CmcicTransferDestinationFetcher(apiClient));
+    }
+
+    protected static String getPreferredLanguage(
+            String locale, Collection<String> supportedLanguages, String primaryLanguage) {
+        for (String lang : supportedLanguages) {
+            if (locale.startsWith(lang)) {
+                return lang;
+            }
+        }
+        return primaryLanguage;
     }
 }
