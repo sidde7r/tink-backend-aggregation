@@ -28,6 +28,9 @@ public class BankverlagTransactionsFetcher implements TransactionFetcher<Transac
     // later move this mapper to common util
     FinTsTransactionMapper mapper = new FinTsTransactionMapper();
 
+    private int expectedThresholdEntries = 100;
+    private double expectedThresholdRatio = 10;
+
     public BankverlagTransactionsFetcher(
             BankverlagApiClient apiClient, BankverlagStorage storage, String aspspId) {
         this.apiClient = apiClient;
@@ -62,21 +65,58 @@ public class BankverlagTransactionsFetcher implements TransactionFetcher<Transac
 
     private void processZipFileTransactions(
             List<AggregationTransaction> aggregationTransactions, HttpResponse zipFile) {
+
+        int totalArchiveEntries = 0;
+
         try (ZipInputStream zipInputStream = new ZipInputStream(zipFile.getBodyInputStream())) {
 
-            ZipEntry entry;
+            ZipEntry entry = zipInputStream.getNextEntry();
             do {
-                entry = zipInputStream.getNextEntry();
-                aggregationTransactions.addAll(
-                        getTransactionsFromCamtFormat(
-                                IOUtils.toString(zipInputStream, StandardCharsets.UTF_8)));
 
+                totalArchiveEntries++;
+                String transactionXML = IOUtils.toString(zipInputStream, StandardCharsets.UTF_8);
+                aggregationTransactions.addAll(getTransactionsFromCamtFormat(transactionXML));
+
+                if (hasSizeThresholdReached(entry, transactionXML)
+                        || hasEntryInArchiveExceededLimit(totalArchiveEntries)) {
+                    break;
+                }
+                entry = zipInputStream.getNextEntry();
             } while (entry != null);
 
         } catch (HttpResponseException e) {
             log.error("Unable to download transactions zip file", e);
         } catch (IOException e) {
             log.error("Failed to read transactions zip file", e);
+        }
+    }
+
+    private boolean hasEntryInArchiveExceededLimit(int totalArchiveEntry) {
+        if (totalArchiveEntry > expectedThresholdEntries) {
+            log.error(
+                    "Zip files count more than expectedThresholdEntries={0}, hence stopped processing more transactions. ",
+                    totalArchiveEntry);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private boolean hasSizeThresholdReached(ZipEntry entry, String transactionXML) {
+
+        long compressionRatio = transactionXML.length() / entry.getCompressedSize();
+
+        if (compressionRatio > expectedThresholdRatio) {
+            // ratio between compressed and uncompressed data is highly suspicious, looks
+            // like a Zip Bomb Attack
+            log.error(
+                    "Expected thresholdRatio={0} but ratio between compressed and uncompressed data is highly"
+                            + " suspicious, looks like a Zip Bomb Attack, compressionRatio={1}",
+                    expectedThresholdRatio, compressionRatio);
+            return true;
+
+        } else {
+            return false;
         }
     }
 
