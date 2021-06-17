@@ -2157,8 +2157,7 @@ Content-type: application/json; charset=UTF-8
 			}
 		}
 	},
-	"transactions": [
-	],
+"transactions": [{"date": "2021-01-01", "description": "dummytrx", "expenseControlIncluded": "something", "localAmount": {"currencyCode": "SEK", "amount": "50"} }, {"date": "2021-01-01", "description": "dummytrx", "expenseControlIncluded": "something", "localAmount": {"currencyCode": "SEK", "amount": "12341"} } ,{"date": "2021-01-01", "description": "dummytrx", "expenseControlIncluded": "something", "localAmount": {"currencyCode": "SEK", "amount": "123424"} },{"date": "2021-01-01", "description": "dummytrx", "expenseControlIncluded": "something", "localAmount": {"currencyCode": "SEK", "amount": "54321"} } ],
 	"reservedTransactions": [
 
 	],

@@ -4,10 +4,10 @@
         "accountExclusion" : "NONE",
         "exactBalance" : {
             "currencyCode" : "SEK",
+            "scale" : 1,
             "unscaledValue" : -1968400,
             "exactValue" : -196840.0,
-            "doubleValue" : -196840.0,
-            "scale" : 1
+            "doubleValue" : -196840.0
         },
         "currencyCode" : "SEK",
         "bankId" : "800101231230002",
@@ -30,10 +30,10 @@
         "accountExclusion" : "NONE",
         "exactBalance" : {
             "currencyCode" : "SEK",
+            "scale" : 2,
             "unscaledValue" : 103,
             "exactValue" : 1.03,
-            "doubleValue" : 1.03,
-            "scale" : 2
+            "doubleValue" : 1.03
         },
         "currencyCode" : "SEK",
         "bankId" : "81234569",
@@ -56,10 +56,10 @@
         "accountExclusion" : "NONE",
         "exactBalance" : {
             "currencyCode" : "SEK",
+            "scale" : 1,
             "unscaledValue" : -3500000,
             "exactValue" : -350000.0,
-            "doubleValue" : -350000.0,
-            "scale" : 1
+            "doubleValue" : -350000.0
         },
         "currencyCode" : "SEK",
         "bankId" : "800101231230036",
@@ -82,10 +82,10 @@
         "accountExclusion" : "NONE",
         "exactBalance" : {
             "currencyCode" : "SEK",
+            "scale" : 2,
             "unscaledValue" : -5166661,
             "exactValue" : -51666.61,
-            "doubleValue" : -51666.61,
-            "scale" : 2
+            "doubleValue" : -51666.61
         },
         "currencyCode" : "SEK",
         "bankId" : "1234567890",
@@ -108,25 +108,25 @@
         "accountExclusion" : "NONE",
         "exactBalance" : {
             "currencyCode" : "SEK",
+            "scale" : 1,
             "unscaledValue" : 0,
             "exactValue" : 0.0,
-            "doubleValue" : 0.0,
-            "scale" : 1
+            "doubleValue" : 0.0
         },
         "currencyCode" : "SEK",
         "availableBalance" : {
             "currencyCode" : "SEK",
+            "scale" : 1,
             "unscaledValue" : 0,
             "exactValue" : 0.0,
-            "doubleValue" : 0.0,
-            "scale" : 1
+            "doubleValue" : 0.0
         },
         "creditLimit" : {
             "currencyCode" : "SEK",
+            "scale" : 1,
             "unscaledValue" : 0,
             "exactValue" : 0.0,
-            "doubleValue" : 0.0,
-            "scale" : 1
+            "doubleValue" : 0.0
         },
         "bankId" : "810593333336661",
         "excluded" : false,
@@ -157,25 +157,25 @@
         "accountExclusion" : "NONE",
         "exactBalance" : {
             "currencyCode" : "SEK",
+            "scale" : 2,
             "unscaledValue" : 33333,
             "exactValue" : 333.33,
-            "doubleValue" : 333.33,
-            "scale" : 2
+            "doubleValue" : 333.33
         },
         "currencyCode" : "SEK",
         "availableBalance" : {
             "currencyCode" : "SEK",
+            "scale" : 2,
             "unscaledValue" : 33333,
             "exactValue" : 333.33,
-            "doubleValue" : 333.33,
-            "scale" : 2
+            "doubleValue" : 333.33
         },
         "creditLimit" : {
             "currencyCode" : "SEK",
+            "scale" : 1,
             "unscaledValue" : 0,
             "exactValue" : 0.0,
-            "doubleValue" : 0.0,
-            "scale" : 1
+            "doubleValue" : 0.0
         },
         "bankId" : "800021111111116",
         "excluded" : false,
@@ -206,17 +206,17 @@
         "accountExclusion" : "NONE",
         "exactAvailableCredit" : {
             "currencyCode" : "SEK",
+            "scale" : 2,
             "unscaledValue" : 1999947,
             "exactValue" : 19999.47,
-            "doubleValue" : 19999.47,
-            "scale" : 2
+            "doubleValue" : 19999.47
         },
         "exactBalance" : {
             "currencyCode" : "SEK",
+            "scale" : 2,
             "unscaledValue" : -53,
             "exactValue" : -0.53,
-            "doubleValue" : -0.53,
-            "scale" : 2
+            "doubleValue" : -0.53
         },
         "currencyCode" : "SEK",
         "bankId" : "5500000000",
@@ -248,10 +248,10 @@
         "accountExclusion" : "NONE",
         "exactBalance" : {
             "currencyCode" : "SEK",
+            "scale" : 1,
             "unscaledValue" : -270740,
             "exactValue" : -27074.0,
-            "doubleValue" : -27074.0,
-            "scale" : 1
+            "doubleValue" : -27074.0
         },
         "currencyCode" : "SEK",
         "bankId" : "812322223334448",
@@ -274,10 +274,10 @@
         "accountExclusion" : "NONE",
         "exactBalance" : {
             "currencyCode" : "SEK",
+            "scale" : 2,
             "unscaledValue" : 6666666,
             "exactValue" : 66666.66,
-            "doubleValue" : 66666.66,
-            "scale" : 2
+            "doubleValue" : 66666.66
         },
         "currencyCode" : "SEK",
         "bankId" : "810343333333338",
@@ -300,25 +300,25 @@
         "accountExclusion" : "NONE",
         "exactBalance" : {
             "currencyCode" : "SEK",
+            "scale" : 1,
             "unscaledValue" : 0,
             "exactValue" : 0.0,
-            "doubleValue" : 0.0,
-            "scale" : 1
+            "doubleValue" : 0.0
         },
         "currencyCode" : "SEK",
         "availableBalance" : {
             "currencyCode" : "SEK",
+            "scale" : 1,
             "unscaledValue" : 0,
             "exactValue" : 0.0,
-            "doubleValue" : 0.0,
-            "scale" : 1
+            "doubleValue" : 0.0
         },
         "creditLimit" : {
             "currencyCode" : "SEK",
+            "scale" : 1,
             "unscaledValue" : 0,
             "exactValue" : 0.0,
-            "doubleValue" : 0.0,
-            "scale" : 1
+            "doubleValue" : 0.0
         },
         "bankId" : "800102222222222",
         "excluded" : false,
@@ -349,10 +349,10 @@
         "accountExclusion" : "NONE",
         "exactBalance" : {
             "currencyCode" : "SEK",
+            "scale" : 2,
             "unscaledValue" : 66666666,
             "exactValue" : 666666.66,
-            "doubleValue" : 666666.66,
-            "scale" : 2
+            "doubleValue" : 666666.66
         },
         "currencyCode" : "SEK",
         "bankId" : "810443333334444",
@@ -375,10 +375,10 @@
         "accountExclusion" : "NONE",
         "exactBalance" : {
             "currencyCode" : "SEK",
+            "scale" : 2,
             "unscaledValue" : 59577737,
             "exactValue" : 595777.37,
-            "doubleValue" : 595777.37,
-            "scale" : 2
+            "doubleValue" : 595777.37
         },
         "currencyCode" : "SEK",
         "bankId" : "810593333335556",
@@ -435,6 +435,66 @@
         "upcoming" : false,
         "externalSystemIds" : { },
         "transactionDates" : [ ]
+    }, {
+        "amount" : 50.0,
+        "date" : 1609498800000,
+        "description" : "dummytrx",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "SUB_ACCOUNT" : "5500 00** **** 0000"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "CREDIT_CARD",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : 12341.0,
+        "date" : 1609498800000,
+        "description" : "dummytrx",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "SUB_ACCOUNT" : "5500 00** **** 0000"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "CREDIT_CARD",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : 123424.0,
+        "date" : 1609498800000,
+        "description" : "dummytrx",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "SUB_ACCOUNT" : "5500 00** **** 0000"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "CREDIT_CARD",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : 54321.0,
+        "date" : 1609498800000,
+        "description" : "dummytrx",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "SUB_ACCOUNT" : "5500 00** **** 0000"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "CREDIT_CARD",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
     } ],
     "identityData" : {
         "nameElements" : [ {
@@ -444,15 +504,15 @@
         "dateOfBirth" : {
             "year" : 1990,
             "month" : "JANUARY",
+            "monthValue" : 1,
+            "dayOfMonth" : 1,
             "dayOfWeek" : "MONDAY",
             "leapYear" : false,
             "dayOfYear" : 1,
             "chronology" : {
-                "id" : "ISO",
-                "calendarType" : "iso8601"
+                "calendarType" : "iso8601",
+                "id" : "ISO"
             },
-            "monthValue" : 1,
-            "dayOfMonth" : 1,
             "era" : "CE"
         }
     }

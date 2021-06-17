@@ -37,7 +37,12 @@ public class SwedbankSEAgentWireMockTest {
                 "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/banks/swedbank/mock/resources/agent-contract-all-accounts.json";
 
         final AgentWireMockRefreshTest agentWireMockRefreshTest =
-                AgentWireMockRefreshTest.builder(MarketCode.SE, "swedbank-bankid", wireMockFilePath)
+                AgentWireMockRefreshTest.nxBuilder()
+                        .withMarketCode(MarketCode.SE)
+                        .withProviderName("swedbank-bankid")
+                        .withWireMockFilePath(wireMockFilePath)
+                        .withoutConfigFile()
+                        .testFullAuthentication()
                         .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
                         .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
                         .build();
@@ -65,8 +70,13 @@ public class SwedbankSEAgentWireMockTest {
                 AgentsServiceConfigurationReader.read(CONFIGURATION_PATH);
 
         final AgentWireMockRefreshTest agentWireMockRefreshTest =
-                AgentWireMockRefreshTest.builder(MarketCode.SE, "swedbank-bankid", wireMockFilePath)
-                        .withConfigurationFile(configuration)
+                AgentWireMockRefreshTest.nxBuilder()
+                        .withMarketCode(MarketCode.SE)
+                        .withProviderName("swedbank-bankid")
+                        .withWireMockFilePath(wireMockFilePath)
+                        .withoutConfigFile()
+                        .testFullAuthentication()
+                        .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
                         .build();
 
         final AgentContractEntity expected =
