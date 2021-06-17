@@ -10,6 +10,8 @@ import se.tink.backend.aggregation.agents.framework.ArgumentManager.UsernameArgu
 import se.tink.libraries.credentials.service.RefreshableItem;
 
 public class SdcSeAgentTest {
+    private final String MARKET = "se";
+    private final String PROVIDER_NAME = "sparbankensyd-bankid";
     private final ArgumentManager<UsernameArgumentEnum> manager =
             new ArgumentManager<>(UsernameArgumentEnum.values());
 
@@ -19,17 +21,26 @@ public class SdcSeAgentTest {
     }
 
     @Test
-    public void testRegisterAndRefresh() throws Exception {
-        AgentIntegrationTest.Builder builder =
-                new AgentIntegrationTest.Builder("se", "sparbankensyd-bankid")
-                        .addCredentialField(
-                                Field.Key.USERNAME, manager.get(UsernameArgumentEnum.USERNAME))
-                        .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
-                        .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
-                        .loadCredentialsBefore(false)
-                        .saveCredentialsAfter(true);
+    public void testLogin() throws Exception {
+        new AgentIntegrationTest.Builder(MARKET, PROVIDER_NAME)
+                .addCredentialField(Field.Key.USERNAME, manager.get(UsernameArgumentEnum.USERNAME))
+                .loadCredentialsBefore(false)
+                .saveCredentialsAfter(true)
+                .withoutRefreshableItems()
+                .build()
+                .testRefresh();
+    }
 
-        builder.build().testRefresh();
+    @Test
+    public void testRefresh() throws Exception {
+        new AgentIntegrationTest.Builder(MARKET, PROVIDER_NAME)
+                .addCredentialField(Field.Key.USERNAME, manager.get(UsernameArgumentEnum.USERNAME))
+                .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
+                .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
+                .loadCredentialsBefore(true)
+                .saveCredentialsAfter(true)
+                .build()
+                .testRefresh();
     }
 
     @AfterClass
