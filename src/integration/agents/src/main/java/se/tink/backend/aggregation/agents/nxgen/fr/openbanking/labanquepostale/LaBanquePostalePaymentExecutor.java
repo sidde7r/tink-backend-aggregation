@@ -20,7 +20,6 @@ import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.a
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.authenticator.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.entities.CreditorAgentEntity;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.entities.RemittanceInformationEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.executor.payment.enums.BerlinGroupPaymentStatus;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.entities.AmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.entities.CreditorEntity;
@@ -127,8 +126,9 @@ public class LaBanquePostalePaymentExecutor implements PaymentExecutor, Fetchabl
                 nextStep = CONFIRM_PAYMENT;
                 break;
             case CONFIRM_PAYMENT:
-                PaymentStatus paymentStatus = confirmAndVerifyStatus(payment.getUniqueId());
-                payment.setStatus(paymentStatus);
+                payment =
+                        confirmAndVerifyStatus(paymentMultiStepRequest.getPayment().getUniqueId())
+                                .getPayment();
                 nextStep = AuthenticationStepConstants.STEP_FINALIZE;
                 break;
             default:
@@ -187,19 +187,14 @@ public class LaBanquePostalePaymentExecutor implements PaymentExecutor, Fetchabl
         }
     }
 
-    private PaymentStatus confirmAndVerifyStatus(String paymentId) throws PaymentException {
+    private PaymentResponse confirmAndVerifyStatus(String paymentId) throws PaymentException {
 
         ConfirmPaymentResponse confirmPaymentResponse =
                 apiClient.confirmPayment(
                         paymentId, laBanquePostalePaymentSigner.getPsuAuthenticationFactor());
 
-        BerlinGroupPaymentStatus berlinPaymentStatus =
-                confirmPaymentResponse.getPaymentRequest().getPaymentStatus();
-
-        PaymentStatus paymentStatus =
-                berlinPaymentStatus.getTinkPaymentStatus().equals(PaymentStatus.PAID)
-                        ? PaymentStatus.SIGNED
-                        : berlinPaymentStatus.getTinkPaymentStatus();
+        PaymentResponse paymentResponse = confirmPaymentResponse.toTinkPaymentResponse();
+        PaymentStatus paymentStatus = paymentResponse.getPayment().getStatus();
 
         if (paymentStatus == PaymentStatus.PENDING) {
             throw new PaymentRejectedException();
@@ -211,7 +206,7 @@ public class LaBanquePostalePaymentExecutor implements PaymentExecutor, Fetchabl
                     InternalStatus.PAYMENT_REJECTED_BY_BANK_NO_DESCRIPTION);
         }
 
-        return paymentStatus;
+        return paymentResponse;
     }
 
     private Map<String, String> openThirdPartyApp(URL authorizationUrl) throws PaymentException {

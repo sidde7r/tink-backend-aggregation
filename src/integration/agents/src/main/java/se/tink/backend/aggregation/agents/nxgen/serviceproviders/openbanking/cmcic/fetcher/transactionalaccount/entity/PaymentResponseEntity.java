@@ -20,4 +20,5 @@ public class PaymentResponseEntity {
     private BeneficiaryEntity beneficiary;
     private PaymentInformationStatusCodeEntity paymentInformationStatusCode;
     private StatusReasonInformationEntity statusReasonInformation;
+    private AccountIdentificationEntity debtorAccount;
 }

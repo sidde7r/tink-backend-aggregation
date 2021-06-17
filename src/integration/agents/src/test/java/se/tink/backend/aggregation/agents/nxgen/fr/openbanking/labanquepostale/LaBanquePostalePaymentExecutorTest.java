@@ -27,9 +27,12 @@ import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.L
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.LaBanquePostaleConstants.PaymentTypeInformation;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.authenticator.rpc.ConfirmPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.authenticator.rpc.CreatePaymentRequest;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.entities.BeneficiaryEntity;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.entities.CreditTransferTransactionEntity;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.entities.CreditorAgentEntity;
-import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.entities.PaymentStatusEntity;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.entities.PaymentEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.entities.AccountEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.entities.AmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.entities.ConsentApprovalEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.entities.LinksEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.rpc.CreatePaymentResponse;
@@ -340,7 +343,7 @@ public class LaBanquePostalePaymentExecutorTest {
         Map<String, String> callback = new HashMap<>();
         callback.put("psuAuthenticationFactor", psuAuthorizationFactor);
         when(apiClient.confirmPayment(null, psuAuthorizationFactor))
-                .thenReturn(new ConfirmPaymentResponse(new PaymentStatusEntity("ACSC")));
+                .thenReturn(new ConfirmPaymentResponse(getPaymentEntity("ACSC")));
         paymentExecutor
                 .getLaBanquePostalePaymentSigner()
                 .setPaymentAuthorizationUrl(AUTHORIZATION_URL);
@@ -373,7 +376,7 @@ public class LaBanquePostalePaymentExecutorTest {
         callback.put("psuAuthenticationFactor", psuAuthorizationFactor);
 
         when(apiClient.confirmPayment(null, psuAuthorizationFactor))
-                .thenReturn(new ConfirmPaymentResponse(new PaymentStatusEntity("RCVD")));
+                .thenReturn(new ConfirmPaymentResponse(getPaymentEntity("RCVD")));
         paymentExecutor
                 .getLaBanquePostalePaymentSigner()
                 .setPaymentAuthorizationUrl(AUTHORIZATION_URL);
@@ -403,7 +406,7 @@ public class LaBanquePostalePaymentExecutorTest {
         String psuAuthorizationFactor = "psuAuthorizationFactor";
 
         when(apiClient.confirmPayment(null, psuAuthorizationFactor))
-                .thenReturn(new ConfirmPaymentResponse(new PaymentStatusEntity("RJCT")));
+                .thenReturn(new ConfirmPaymentResponse(getPaymentEntity("RJCT")));
         Map<String, String> callback = new HashMap<>();
         callback.put("psuAuthenticationFactor", psuAuthorizationFactor);
         paymentExecutor
@@ -419,5 +422,21 @@ public class LaBanquePostalePaymentExecutorTest {
         // then
         Assertions.assertThat(thrown).isInstanceOf(PaymentRejectedException.class);
         verify(apiClient).confirmPayment(null, psuAuthorizationFactor);
+    }
+
+    private PaymentEntity getPaymentEntity(String rjct) {
+        return PaymentEntity.builder()
+                .paymentInformationStatus(rjct)
+                .beneficiary(
+                        BeneficiaryEntity.builder()
+                                .creditorAccount(new AccountEntity("123456789"))
+                                .build())
+                .creditTransferTransaction(
+                        Collections.singletonList(
+                                CreditTransferTransactionEntity.builder()
+                                        .amount(new AmountEntity("1.0", "EUR"))
+                                        .build()))
+                .debtorAccount(new AccountEntity("123456789"))
+                .build();
     }
 }

@@ -68,7 +68,7 @@ public class BasePaymentMapper implements PaymentMapper<CreatePaymentRequest> {
         return getAccountEntity(payment.getDebtor().getAccountNumber());
     }
 
-    private AccountEntity getCreditorAccountEntity(Payment payment) {
+    protected AccountEntity getCreditorAccountEntity(Payment payment) {
         return getAccountEntity(payment.getCreditor().getAccountNumber());
     }
 

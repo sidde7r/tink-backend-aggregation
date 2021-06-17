@@ -155,8 +155,7 @@ public class FrOpenBankingPaymentExecutor implements PaymentExecutor, FetchableP
                 nextStep = PAYMENT_POST_SIGN_STATE;
                 break;
             case PAYMENT_POST_SIGN_STATE:
-                PaymentStatus paymentStatus = getAndVerifyStatus(payment.getUniqueId());
-                payment.setStatus(paymentStatus);
+                payment = verifyStatus(payment.getUniqueId()).getPayment();
                 nextStep = AuthenticationStepConstants.STEP_FINALIZE;
                 break;
             default:
@@ -184,16 +183,16 @@ public class FrOpenBankingPaymentExecutor implements PaymentExecutor, FetchableP
                                         ThirdPartyAppError.TIMED_OUT.exception()));
     }
 
-    private PaymentStatus getAndVerifyStatus(String paymentId) throws PaymentException {
+    private PaymentResponse verifyStatus(String paymentId) throws PaymentException {
         Retryer<GetPaymentResponse> paymentResponseRetryer = getPaymentResponseRetryer();
 
-        GetPaymentResponse paymentResponse;
+        GetPaymentResponse getPaymentResponse;
         log.info(
                 "Start to Get Payment Status every {} Seconds for a total of {} times.",
                 SLEEP_TIME,
                 RETRY_ATTEMPTS);
         try {
-            paymentResponse = paymentResponseRetryer.call(() -> apiClient.getPayment(paymentId));
+            getPaymentResponse = paymentResponseRetryer.call(() -> apiClient.getPayment(paymentId));
 
         } catch (ExecutionException | RetryException e) {
             log.warn("Payment failed, couldn't fetch payment status");
@@ -202,15 +201,15 @@ public class FrOpenBankingPaymentExecutor implements PaymentExecutor, FetchableP
                     InternalStatus.PAYMENT_REJECTED_BY_BANK_NO_DESCRIPTION);
         }
 
-        if (paymentResponse.getPaymentStatus() == PaymentStatus.PENDING) {
+        if (getPaymentResponse.getPaymentStatus() == PaymentStatus.PENDING) {
             throw new PaymentRejectedException();
         }
 
-        if (paymentResponse.getPaymentStatus() != PaymentStatus.SIGNED) {
-            throw frOpenBankingStatusParser.parseErrorResponse(paymentResponse);
+        if (getPaymentResponse.getPaymentStatus() != PaymentStatus.SIGNED) {
+            throw frOpenBankingStatusParser.parseErrorResponse(getPaymentResponse);
         }
 
-        return paymentResponse.getPaymentStatus();
+        return getPaymentResponse.toTinkPaymentResponse(paymentId);
     }
 
     private Retryer<GetPaymentResponse> getPaymentResponseRetryer() {
