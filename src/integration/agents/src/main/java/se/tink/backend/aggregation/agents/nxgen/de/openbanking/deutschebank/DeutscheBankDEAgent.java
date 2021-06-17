@@ -31,8 +31,7 @@ import se.tink.libraries.account.enums.AccountIdentifierType;
 @AgentPisCapability(
         capabilities = {
             PisCapability.SEPA_CREDIT_TRANSFER,
-            PisCapability.SEPA_INSTANT_CREDIT_TRANSFER,
-            PisCapability.PIS_SEPA_RECURRING_PAYMENTS
+            PisCapability.SEPA_INSTANT_CREDIT_TRANSFER
         })
 public final class DeutscheBankDEAgent extends DeutscheBankAgent
         implements RefreshTransferDestinationExecutor {

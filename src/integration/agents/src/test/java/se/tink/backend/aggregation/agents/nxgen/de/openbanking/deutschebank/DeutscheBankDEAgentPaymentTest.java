@@ -79,7 +79,7 @@ public class DeutscheBankDEAgentPaymentTest {
                 .withPaymentServiceType(PaymentServiceType.PERIODIC)
                 .withFrequency(Frequency.MONTHLY)
                 .withStartDate(LocalDate.now().plusDays(3))
-                // has to be the last date of moth
+                // has to be the last date of month
                 .withEndDate(LocalDate.of(2021, 7, 31))
                 .withExecutionRule(ExecutionRule.FOLLOWING)
                 .withDayOfMonth(25);
