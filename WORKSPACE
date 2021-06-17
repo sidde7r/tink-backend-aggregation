@@ -142,7 +142,7 @@ go_repository(
 
 git_repository(
     name = "tink_backend",
-    commit = "e6a5ba7f4199b6adb63f9078247e79c66dd6d382",
+    commit = "fcd13786e97a82a88cb0a498fdb5a798d33d0c46",
     remote = "git@github.com:tink-ab/tink-backend.git",
     shallow_since = "1601479333 +0000",
 )
@@ -742,6 +742,9 @@ maven_install(
         "org.apache.thrift:libthrift:0.12.0",
         "org.apache.zookeeper:zookeeper:3.5.9",
         "org.apache.zookeeper:zookeeper-jute:3.5.9",
+        "com.squareup.okhttp3:okhttp:4.9.0",
+        "com.squareup.okhttp3:okhttp-tls:4.9.0",
+        "com.squareup.okhttp3:mockwebserver:4.9.0",
         "org.bouncycastle:bcpkix-jdk15on:1.68",
         "org.bouncycastle:bcprov-jdk15on:1.68",
         "org.eclipse.jetty.orbit:javax.servlet:3.0.0.v201112011016",
