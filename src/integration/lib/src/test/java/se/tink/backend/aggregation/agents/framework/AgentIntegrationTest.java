@@ -1057,6 +1057,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         private String clusterIdForSecretsService = null;
 
         private boolean dumpContentForContractFile = false;
+        private boolean withoutRefreshableItems = false;
 
         public Builder(String market, String providerName) {
             ProviderConfig marketProviders = readProvidersConfiguration(market);
@@ -1135,6 +1136,11 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
 
         public Builder setRefreshableItems(Set<RefreshableItem> refreshableItems) {
             this.refreshableItems = refreshableItems;
+            return this;
+        }
+
+        public Builder withoutRefreshableItems() {
+            this.withoutRefreshableItems = true;
             return this;
         }
 
@@ -1236,7 +1242,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         }
 
         public AgentIntegrationTest build() {
-            if (refreshableItems.isEmpty()) {
+            if (refreshableItems.isEmpty() && withoutRefreshableItems == false) {
                 refreshableItems.addAll(
                         RefreshableItem.sort(RefreshableItem.REFRESHABLE_ITEMS_ALL));
             }
