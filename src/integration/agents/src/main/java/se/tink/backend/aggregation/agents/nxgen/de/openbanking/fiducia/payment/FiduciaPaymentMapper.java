@@ -1,11 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.payment;
 
-import static java.util.Objects.nonNull;
-
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.util.EntityUtils;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaConstants;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.payment.request.Amt;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.payment.request.CdtTrfTxInf;
@@ -37,7 +39,6 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @RequiredArgsConstructor
 public class FiduciaPaymentMapper {
-
     public static final String NEW_LINE = "\r\n";
     private final RandomValueGenerator randomValueGenerator;
     private final LocalDateTimeSource localDateTimeSource;
@@ -91,27 +92,21 @@ public class FiduciaPaymentMapper {
                 new CreatePaymentXmlRequest(new CstmrCdtTrfInitn(groupHeader, paymentInfo)));
     }
 
+    @SneakyThrows
     public String getRecurringPaymentRequest(Payment payment, String boundary) {
         // This request is a multipart http message, consisting of xml part that is the same as
         // regular one-off payment, and a json part that supplies all fields unique for recurring
         // payments
-
         String xmlPart = getPaymentRequest(payment);
         String jsonPart = buildRecurringJsonPart(payment);
 
-        StringBuilder builder = new StringBuilder();
-        builder.append("--").append(boundary).append(NEW_LINE);
-        builder.append("Content-Disposition: form-data;name=\"xml_sct\"").append(NEW_LINE);
-        builder.append("Content-type: application/xml").append(NEW_LINE).append(NEW_LINE);
-        builder.append(xmlPart).append(NEW_LINE);
-        builder.append("--").append(boundary).append(NEW_LINE);
-        builder.append("Content-Disposition: form-data;name=\"json_standingorderType\"")
-                .append(NEW_LINE);
-        builder.append("Content-type: application/json").append(NEW_LINE).append(NEW_LINE);
-        builder.append(jsonPart).append("\r\n\r\n");
-        builder.append("--").append(boundary).append("--");
+        MultipartEntityBuilder multipartEntityBuilder = MultipartEntityBuilder.create();
+        multipartEntityBuilder.addTextBody("xml_sct", xmlPart, ContentType.APPLICATION_XML);
+        multipartEntityBuilder.addTextBody(
+                "json_standingorderType", jsonPart, ContentType.APPLICATION_JSON);
+        multipartEntityBuilder.setBoundary(boundary);
 
-        return builder.toString();
+        return EntityUtils.toString(multipartEntityBuilder.build());
     }
 
     private String buildRecurringJsonPart(Payment payment) {
@@ -124,10 +119,19 @@ public class FiduciaPaymentMapper {
                                 payment.getExecutionRule() != null
                                         ? payment.getExecutionRule().toString()
                                         : null)
-                        .dayOfExecution(
-                                nonNull(payment.getDayOfExecution())
-                                        ? String.valueOf(payment.getDayOfExecution())
-                                        : null)
+                        .dayOfExecution(getDayOfExecution(payment))
                         .build());
+    }
+
+    private String getDayOfExecution(Payment payment) {
+        switch (payment.getFrequency()) {
+            case WEEKLY:
+                return String.valueOf(payment.getDayOfWeek().getValue());
+            case MONTHLY:
+                return payment.getDayOfMonth().toString();
+            default:
+                throw new IllegalArgumentException(
+                        "Frequency is not supported: " + payment.getFrequency());
+        }
     }
 }

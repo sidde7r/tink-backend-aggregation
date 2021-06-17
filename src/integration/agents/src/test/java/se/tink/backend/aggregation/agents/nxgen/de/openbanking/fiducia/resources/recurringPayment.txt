@@ -1,6 +1,7 @@
 --1234testBoundary4321
-Content-Disposition: form-data;name="xml_sct"
-Content-type: application/xml
+Content-Disposition: form-data; name="xml_sct"
+Content-Type: application/xml; charset=ISO-8859-1
+Content-Transfer-Encoding: 8bit
 
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Document xsi:schemaLocation="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03 schema.xsd" xmlns="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -69,9 +70,9 @@ Content-type: application/xml
 </Document>
 
 --1234testBoundary4321
-Content-Disposition: form-data;name="json_standingorderType"
-Content-type: application/json
+Content-Disposition: form-data; name="json_standingorderType"
+Content-Type: application/json; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-{"startDate":"1992-04-11","endDate":"1992-04-19","frequency":"Weekly","executionRule":"following"}
-
+{"startDate":"1992-04-11","endDate":"1992-04-19","frequency":"Weekly","executionRule":"following","dayOfExecution":"6"}
 --1234testBoundary4321--

@@ -141,7 +141,7 @@ public class FiduciaAgentPaymentTest {
                         creditorDebtorManager.get(FiduciaAgentPaymentTest.Arg.DEBTOR_ACCOUNT));
         Debtor debtor = new Debtor(debtorAccountIdentifier);
 
-        ExactCurrencyAmount amount = ExactCurrencyAmount.inEUR(0.99);
+        ExactCurrencyAmount amount = ExactCurrencyAmount.inEUR(1);
         String currency = "EUR";
 
         return new Payment.Builder()

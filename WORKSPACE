@@ -1198,6 +1198,7 @@ maven_install(
         "org.apache.curator:curator-x-discovery:4.0.0",
         "org.apache.httpcomponents:httpclient:4.5.12",
         "org.apache.httpcomponents:httpcore:4.4.13",
+        "org.apache.httpcomponents:httpmime:4.5.11",
         "org.apache.logging.log4j:log4j-api:2.11.1",
         "org.apache.logging.log4j:log4j-core:2.11.1",
         "org.apache.mahout.commons:commons-cli:2.0-mahout",

@@ -1028,6 +1028,14 @@ java_library(
 )
 
 java_library(
+    name = "org_apache_httpcomponents_httpmime",
+    visibility = ["//visibility:public"],
+    exports = [
+        "@aggregation//:org_apache_httpcomponents_httpmime",
+    ],
+)
+
+java_library(
     name = "org_assertj_assertj_core",
     visibility = ["//visibility:public"],
     exports = [

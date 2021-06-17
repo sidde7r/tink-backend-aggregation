@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.DayOfWeek;
 import org.junit.Test;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.ConstantLocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
@@ -79,6 +80,7 @@ public class FiduciaPaymentMapperTest {
                         .withStartDate(dateTimeSource.now().toLocalDate().plusDays(1))
                         .withEndDate(dateTimeSource.now().toLocalDate().plusWeeks(1).plusDays(2))
                         .withExecutionRule(ExecutionRule.FOLLOWING)
+                        .withDayOfWeek(DayOfWeek.SATURDAY)
                         .build();
 
         FiduciaPaymentMapper mapper =
