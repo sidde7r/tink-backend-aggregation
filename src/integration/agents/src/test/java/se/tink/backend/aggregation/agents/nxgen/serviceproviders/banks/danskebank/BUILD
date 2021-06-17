@@ -50,6 +50,7 @@ junit_test(
         "//src/integration/enums",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/compliance/account_capabilities",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/agents/componentproviders",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/refresh",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/core/account",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/exceptions/client",
