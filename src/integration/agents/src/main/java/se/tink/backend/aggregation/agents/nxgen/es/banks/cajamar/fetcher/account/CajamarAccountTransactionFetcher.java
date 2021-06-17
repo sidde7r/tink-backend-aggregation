@@ -4,7 +4,6 @@ import io.vavr.control.Try;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.cajamar.CajamarApiClient;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.cajamar.CajamarConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.cajamar.CajamarConstants.Fetchers;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.cajamar.CajamarConstants.LogTags;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.cajamar.fetcher.account.rpc.CajamarAccountTransactionsResponse;
@@ -38,13 +37,13 @@ public class CajamarAccountTransactionFetcher
                 .recover(
                         HttpClientException.class,
                         e -> {
+                            if (attempt > Fetchers.MAX_TRY_ATTEMPTS) {
+                                return CajamarAccountTransactionsResponse.createEmptyResponse();
+                            }
                             logRetry(account, key, attempt, e);
                             backoffAWhile();
                             return fetchWithBackoffAndRetry(account, key, attempt + 1);
                         })
-                .filterTry(
-                        CajamarAccountTransactionsResponse.shouldRetryFetching(attempt),
-                        () -> new RuntimeException(ErrorMessages.MAX_TRY_ATTEMPTS))
                 .get();
     }
 
