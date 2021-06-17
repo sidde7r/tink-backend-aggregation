@@ -77,14 +77,16 @@ public class DeutscheBankWiremockTest {
         final String wireMockFilePath =
                 "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen//de/openbanking/deutschebank/wiremock/payment/resources/recurring.aap";
 
+        LocalDate refDate = LocalDate.of(2000, 02, 12);
+
         Payment payment =
                 createRealDomesticPayment()
                         .withPaymentScheme(PaymentScheme.SEPA_CREDIT_TRANSFER)
                         .withPaymentServiceType(PaymentServiceType.PERIODIC)
                         .withFrequency(Frequency.MONTHLY)
                         .withDayOfMonth(25)
-                        .withStartDate(LocalDate.of(2021, 06, 18))
-                        .withEndDate(LocalDate.of(2021, 07, 31))
+                        .withStartDate(refDate.plusDays(4))
+                        .withEndDate(refDate.plusMonths(2))
                         .withExecutionRule(ExecutionRule.FOLLOWING)
                         .build();
 
