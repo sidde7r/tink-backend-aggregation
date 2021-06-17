@@ -85,7 +85,7 @@ public class PostbankAgentPaymentTest {
                 .withStartDate(LocalDate.now().plusDays(4))
                 .withEndDate(LocalDate.now().plusMonths(2))
                 .withExecutionRule(ExecutionRule.FOLLOWING)
-                .withDayOfExecution(10);
+                .withDayOfMonth(10);
     }
 
     private Payment.Builder createSepaPayment() {

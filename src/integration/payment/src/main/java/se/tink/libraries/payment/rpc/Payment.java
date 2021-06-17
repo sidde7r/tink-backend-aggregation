@@ -2,6 +2,7 @@ package se.tink.libraries.payment.rpc;
 
 import com.google.common.collect.ImmutableList;
 import java.math.BigDecimal;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.Objects;
 import java.util.UUID;
@@ -63,7 +64,8 @@ public class Payment {
     private Frequency frequency;
     private LocalDate startDate;
     private LocalDate endDate;
-    private Integer dayOfExecution;
+    private Integer dayOfMonth;
+    private DayOfWeek dayOfWeek;
     private ExecutionRule executionRule;
 
     private Payment(Builder builder) {
@@ -84,7 +86,8 @@ public class Payment {
         this.frequency = builder.frequency;
         this.startDate = builder.startDate;
         this.endDate = builder.endDate;
-        this.dayOfExecution = builder.dayOfExecution;
+        this.dayOfMonth = builder.dayOfMonth;
+        this.dayOfWeek = builder.dayOfWeek;
         this.executionRule = builder.executionRule;
     }
 
@@ -190,8 +193,12 @@ public class Payment {
         return executionRule;
     }
 
-    public Integer getDayOfExecution() {
-        return dayOfExecution;
+    public Integer getDayOfMonth() {
+        return dayOfMonth;
+    }
+
+    public DayOfWeek getDayOfWeek() {
+        return dayOfWeek;
     }
 
     public Pair<AccountIdentifierType, AccountIdentifierType> getCreditorAndDebtorAccountType() {
@@ -238,6 +245,7 @@ public class Payment {
     }
 
     public static class Builder {
+
         private Creditor creditor;
         private Debtor debtor;
         private Amount amount;
@@ -260,7 +268,8 @@ public class Payment {
         private Frequency frequency;
         private LocalDate startDate;
         private LocalDate endDate;
-        private Integer dayOfExecution;
+        private Integer dayOfMonth;
+        private DayOfWeek dayOfWeek;
         private ExecutionRule executionRule;
 
         public Builder withPaymentServiceType(PaymentServiceType paymentServiceType) {
@@ -283,8 +292,13 @@ public class Payment {
             return this;
         }
 
-        public Builder withDayOfExecution(Integer dayOfExecution) {
-            this.dayOfExecution = dayOfExecution;
+        public Builder withDayOfMonth(Integer dayOfMonth) {
+            this.dayOfMonth = dayOfMonth;
+            return this;
+        }
+
+        public Builder withDayOfWeek(DayOfWeek dayOfWeek) {
+            this.dayOfWeek = dayOfWeek;
             return this;
         }
 

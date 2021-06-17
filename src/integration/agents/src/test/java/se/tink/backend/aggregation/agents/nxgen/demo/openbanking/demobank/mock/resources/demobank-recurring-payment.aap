@@ -29,8 +29,8 @@ X-Aggregator: Tink Testing
   },
   "startDate": "2021-03-23",
   "endDate": "2021-03-30",
-  "frequency": "Weekly",
-  "dayOfExecution": null
+  "frequency": "Monthly",
+  "dayOfExecution": 23
 }
 
 RESPONSE 1
@@ -73,8 +73,8 @@ Connection: keep-alive
       "referenceType": "REFERENCE"
     },
     "startDate": "2021-03-23",
-    "frequency": "Weekly",
-    "dayOfExecution": null,
+    "frequency": "Monthly",
+    "dayOfExecution": 23,
     "endDate": "2021-03-30"
   },
   "paymentStatus": "Received",
@@ -187,8 +187,8 @@ Connection: keep-alive
       "referenceType": "REFERENCE"
     },
     "startDate": "2021-03-23",
-    "frequency": "Weekly",
-    "dayOfExecution": null,
+    "frequency": "Monthly",
+    "dayOfExecution": 23,
     "endDate": "2021-03-30"
   },
   "paymentStatus": "AcceptedTechnicalValidation",

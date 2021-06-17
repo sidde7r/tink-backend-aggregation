@@ -109,7 +109,7 @@ public class PostbankPaymentWiremockTest {
                 .withStartDate(refDate.plusDays(4))
                 .withEndDate(refDate.plusMonths(2))
                 .withExecutionRule(ExecutionRule.FOLLOWING)
-                .withDayOfExecution(10)
+                .withDayOfMonth(10)
                 .build();
     }
 

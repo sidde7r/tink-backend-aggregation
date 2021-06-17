@@ -1,7 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.executor.payment;
 
-import static java.util.Objects.nonNull;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
@@ -101,10 +99,7 @@ public class UnicreditPaymentExecutor implements PaymentExecutor, FetchablePayme
                         payment.getExecutionRule() != null
                                 ? payment.getExecutionRule().toString()
                                 : null)
-                .dayOfExecution(
-                        nonNull(payment.getDayOfExecution())
-                                ? String.valueOf(payment.getDayOfExecution())
-                                : null)
+                .dayOfExecution(getDayOfExecution(payment))
                 .build();
     }
 
@@ -125,6 +120,18 @@ public class UnicreditPaymentExecutor implements PaymentExecutor, FetchablePayme
 
     private AccountEntity getAccountEntity(String accountNumber) {
         return new AccountEntity(accountNumber);
+    }
+
+    private String getDayOfExecution(Payment payment) {
+        switch (payment.getFrequency()) {
+            case WEEKLY:
+                return String.valueOf(payment.getDayOfWeek().getValue());
+            case MONTHLY:
+                return payment.getDayOfMonth().toString();
+            default:
+                throw new IllegalArgumentException(
+                        "Frequency is not supported: " + payment.getFrequency());
+        }
     }
 
     @Override

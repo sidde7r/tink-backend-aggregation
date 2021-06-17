@@ -1,7 +1,5 @@
 package se.tink.backend.aggregation.agents.utils.berlingroup.payment;
 
-import static java.util.Objects.nonNull;
-
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.entities.AmountEntity;
@@ -42,10 +40,7 @@ public class BasePaymentMapper implements PaymentMapper<CreatePaymentRequest> {
                         payment.getExecutionRule() != null
                                 ? payment.getExecutionRule().toString()
                                 : null)
-                .dayOfExecution(
-                        nonNull(payment.getDayOfExecution())
-                                ? String.valueOf(payment.getDayOfExecution())
-                                : null)
+                .dayOfExecution(getDayOfExecution(payment))
                 .build();
     }
 
@@ -74,5 +69,17 @@ public class BasePaymentMapper implements PaymentMapper<CreatePaymentRequest> {
 
     protected AccountEntity getAccountEntity(String accountNumber) {
         return new AccountEntity(accountNumber);
+    }
+
+    private String getDayOfExecution(Payment payment) {
+        switch (payment.getFrequency()) {
+            case WEEKLY:
+                return String.valueOf(payment.getDayOfWeek().getValue());
+            case MONTHLY:
+                return payment.getDayOfMonth().toString();
+            default:
+                throw new IllegalArgumentException(
+                        "Frequency is not supported: " + payment.getFrequency());
+        }
     }
 }
