@@ -283,9 +283,7 @@ public class DkbAuthenticator implements AutoAuthenticator, MultiFactorAuthentic
             throws SupplementalInfoException, LoginException {
         String code =
                 supplementalDataProvider.getTanCode(
-                        consentAuth.getChosenScaMethod(),
-                        consentAuth.getChallengeData().getData(),
-                        consentAuth.getChallengeData());
+                        consentAuth.getChosenScaMethod(), consentAuth.getChallengeData().getData());
         authApiClient.consentAuthorization2ndFactor(consentId, authorisationId, code);
     }
 }

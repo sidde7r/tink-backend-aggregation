@@ -31,15 +31,12 @@ public class DkbSupplementalDataProvider {
     }
 
     String getTanCode(List<String> data) throws SupplementalInfoException {
-        return getTanCode(null, data, new ConsentAuthorization.ChallengeData());
+        return getTanCode(null, data);
     }
 
-    String getTanCode(
-            ConsentAuthorization.ScaMethod scaMethod,
-            List<String> data,
-            ConsentAuthorization.ChallengeData challengeData)
+    String getTanCode(ConsentAuthorization.ScaMethod scaMethod, List<String> data)
             throws SupplementalInfoException {
-        List<Field> fields = getSupplementalFields(scaMethod, data, challengeData);
+        List<Field> fields = getSupplementalFields(scaMethod, data);
         String otp =
                 supplementalInformationHelper
                         .askSupplementalInformation(fields.toArray(new Field[0]))
@@ -52,26 +49,28 @@ public class DkbSupplementalDataProvider {
         }
     }
 
-    List<Field> getSupplementalFields(
-            ConsentAuthorization.ScaMethod scaMethod,
-            List<String> data,
-            ConsentAuthorization.ChallengeData challengeData) {
+    List<Field> getSupplementalFields(ConsentAuthorization.ScaMethod scaMethod, List<String> data) {
         List<Field> fields = new LinkedList<>();
 
         extractStartCode(data).ifPresent(s -> fields.add(GermanFields.Startcode.build(catalog, s)));
 
-        TanBuilder tanBuilder = GermanFields.Tan.builder(catalog);
+        TanBuilder tanBuilder = sixDigitsTanBuilder();
+
         if (scaMethod != null) {
             tanBuilder.authenticationType(scaMethod.getAuthenticationType());
             tanBuilder.authenticationMethodName(scaMethod.getName());
         }
-        if (challengeData != null) {
-            tanBuilder.otpMaxLength(challengeData.getOtpMaxLength());
-            tanBuilder.otpFormat(OtpFormat.fromString(challengeData.getOtpFormat()).orElse(null));
-        }
-        fields.add(tanBuilder.build());
 
+        fields.add(tanBuilder.build());
         return fields;
+    }
+
+    private TanBuilder sixDigitsTanBuilder() {
+        TanBuilder tanBuilder = GermanFields.Tan.builder(catalog);
+        tanBuilder.otpMinLength(6);
+        tanBuilder.otpMaxLength(6);
+        tanBuilder.otpFormat(OtpFormat.INTEGER);
+        return tanBuilder;
     }
 
     private Optional<String> extractStartCode(List<String> challengeData) {
