@@ -3,8 +3,6 @@ package se.tink.backend.aggregation.client.provider_configuration.rpc;
 public enum PisCapability {
     PIS_SE_BG,
     PIS_SE_PG,
-    @Deprecated
-    PIS_UK_FASTER_PAYMENT, // Deprecated in favour of FASTER_PAYMENTS
     PIS_SE_BANK_TRANSFERS,
     PIS_FUTURE_DATE,
     PIS_SEPA_RECURRING_PAYMENTS,
