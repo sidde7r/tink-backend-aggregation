@@ -90,7 +90,7 @@ import se.tink.libraries.identitydata.NameElement;
 @AgentPisCapability(
         capabilities = PisCapability.SEPA_CREDIT_TRANSFER,
         markets = {"DE", "ES", "FR", "PT"})
-@AgentPisCapability(capabilities = PisCapability.PIS_UK_FASTER_PAYMENT, markets = "GB")
+@AgentPisCapability(capabilities = PisCapability.FASTER_PAYMENTS, markets = "GB")
 public final class RedirectAuthenticationDemoAgent extends NextGenerationDemoAgent
         implements RefreshTransferDestinationExecutor {
     private static final Logger log =
