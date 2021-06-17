@@ -1,7 +1,9 @@
 package se.tink.backend.aggregation.nxgen.agents;
 
+import com.google.common.base.Preconditions;
 import java.security.Security;
 import java.util.Optional;
+import java.util.function.Supplier;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Provider;
@@ -30,8 +32,11 @@ import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformati
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.factory.ClientFilterFactory;
+import se.tink.backend.aggregation.nxgen.http_api_client.HttpApiClientFactory;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.libraries.aggregation_agent_api_client.src.api.ApiClient;
+import se.tink.libraries.aggregation_agent_api_client.src.http.HttpApiClient;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.transfer.rpc.Transfer;
 
@@ -75,6 +80,8 @@ public abstract class SubsequentGenerationAgent<Auth> extends SuperAbstractAgent
     private TransferController transferController;
     private SessionController sessionController;
     private Optional<CreateBeneficiaryController> createBeneficiaryController = Optional.empty();
+
+    private HttpApiClient httpApiClient = null;
 
     protected SubsequentGenerationAgent(final AgentComponentProvider componentProvider) {
         super(componentProvider);
@@ -120,6 +127,19 @@ public abstract class SubsequentGenerationAgent<Auth> extends SuperAbstractAgent
         return Optional.ofNullable(request.getOriginatingUserIp()).orElse(DEFAULT_USER_IP);
     }
 
+    /** This http api client is meant to be used with code generated api clients. */
+    protected Supplier<ApiClient> getHttpApiClient() {
+        return () -> {
+            if (this.httpApiClient == null) {
+                Preconditions.checkNotNull(
+                        this.configuration, "HttpApiClient was invoked before creation.");
+                this.httpApiClient = buildHttpApiClient(this.configuration);
+            }
+
+            return this.httpApiClient;
+        };
+    }
+
     protected EidasIdentity getEidasIdentity() {
         return new EidasIdentity(
                 context.getClusterId(),
@@ -135,6 +155,18 @@ public abstract class SubsequentGenerationAgent<Auth> extends SuperAbstractAgent
         client.setEidasIdentity(getEidasIdentity());
         client.setDebugOutput(configuration.getTestConfiguration().isDebugOutputEnabled());
         client.setEidasProxyConfiguration(configuration.getEidasProxy());
+    }
+
+    private HttpApiClient buildHttpApiClient(AgentsServiceConfiguration configuration) {
+        HttpApiClientFactory httpApiClientFactory =
+                new HttpApiClientFactory(
+                        configuration.getEidasProxy(),
+                        getEidasIdentity(),
+                        context.getAgentConfigurationController().isOpenBankingAgent(),
+                        context.getLogMasker(),
+                        context.getLogOutputStream());
+
+        return httpApiClientFactory.build();
     }
 
     @Override
