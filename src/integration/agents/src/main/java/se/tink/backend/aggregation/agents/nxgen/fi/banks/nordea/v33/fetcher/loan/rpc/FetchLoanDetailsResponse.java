@@ -85,7 +85,7 @@ public class FetchLoanDetailsResponse {
         final BigDecimal balance =
                 Optional.ofNullable(credit)
                         .map(CreditEntity::getAvailable)
-                        .orElseGet(amount::getBalance);
+                        .orElseGet(() -> amount.getBalance());
         return new ExactCurrencyAmount(balance, currency);
     }
 
@@ -99,7 +99,9 @@ public class FetchLoanDetailsResponse {
 
     private ExactCurrencyAmount getPaid() {
         final BigDecimal paid =
-                Optional.ofNullable(credit).map(CreditEntity::getSpent).orElseGet(amount::getPaid);
+                Optional.ofNullable(credit)
+                        .map(CreditEntity::getSpent)
+                        .orElseGet(() -> amount.getPaid());
         return new ExactCurrencyAmount(paid, currency);
     }
 
