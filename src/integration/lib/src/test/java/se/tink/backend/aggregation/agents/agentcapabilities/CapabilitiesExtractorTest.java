@@ -55,8 +55,7 @@ public class CapabilitiesExtractorTest {
 
         assertThat(pisCapabilities).hasSize(1);
         assertThat(pisCapabilities.containsKey(MARKET)).isTrue();
-        assertThat(pisCapabilities.get(MARKET))
-                .containsOnly(PisCapability.PIS_UK_FASTER_PAYMENT.name());
+        assertThat(pisCapabilities.get(MARKET)).containsOnly(PisCapability.FASTER_PAYMENTS.name());
     }
 
     @Test
