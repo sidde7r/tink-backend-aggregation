@@ -91,4 +91,8 @@ public final class AxaConstants {
 
         public static final String BLOCKED_SUBSTRING = "Dieser Benutzer wird endgültig gesperrt";
     }
+
+    public static class ErrorCodes {
+        public static final int SESSION_REJECTED = 4001;
+    }
 }
