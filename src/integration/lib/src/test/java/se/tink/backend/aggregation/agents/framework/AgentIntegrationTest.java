@@ -53,8 +53,6 @@ import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConf
 import se.tink.backend.aggregation.eidasidentity.CertificateIdProvider;
 import se.tink.backend.aggregation.eidasidentity.CertificateIdProviderImpl;
 import se.tink.backend.aggregation.fakelogmasker.FakeLogMasker;
-import se.tink.backend.aggregation.logmasker.LogMasker;
-import se.tink.backend.aggregation.logmasker.LogMaskerImpl;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.executor.ProgressiveLoginExecutor;
 import se.tink.backend.aggregation.nxgen.controllers.configuration.AgentConfigurationController;
@@ -79,7 +77,6 @@ import se.tink.backend.aggregation.nxgen.framework.validation.ValidatorFactory;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.Storage;
-import se.tink.backend.aggregation.utils.masker.CredentialsStringMaskerBuilder;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
 import se.tink.backend.integration.tpp_secrets_service.client.ManagedTppSecretsServiceClient;
 import se.tink.backend.integration.tpp_secrets_service.client.TppSecretsServiceClientImpl;
@@ -637,9 +634,6 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         try {
             login(agent, credentialsRequest);
             refresh(agent);
-            if (configuration.getTestConfiguration().isDebugOutputEnabled()) {
-                printMaskedDebugLog(agent);
-            }
             Assert.assertTrue("Expected to be logged in.", !expectLoggedIn || keepAlive(agent));
 
             if (doLogout) {
@@ -680,24 +674,6 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         return testRefresh("");
     }
 
-    private void printMaskedDebugLog(Agent agent) {
-        if (agent instanceof PersistentLogin) {
-            final PersistentLogin persistentLoginAgent = (PersistentLogin) agent;
-            persistentLoginAgent.persistLoginSession();
-        }
-
-        final LogMasker logMasker =
-                LogMaskerImpl.builder()
-                        .addStringMaskerBuilder(new CredentialsStringMaskerBuilder(this.credential))
-                        .build();
-        final String maskedLog = logMasker.mask(context.getLogOutputStream().toString());
-
-        System.out.println();
-        System.out.println("===== MASKED DEBUG LOG =====");
-        System.out.println(maskedLog);
-        System.out.println();
-    }
-
     public void testBankTransfer(Transfer transfer) throws Exception {
         initiateCredentials();
         RefreshInformationRequest credentialsRequest = createRefreshInformationRequest();
@@ -706,9 +682,6 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         try {
             login(agent, credentialsRequest);
             doBankTransfer(agent, transfer);
-            if (configuration.getTestConfiguration().isDebugOutputEnabled()) {
-                printMaskedDebugLog(agent);
-            }
             Assert.assertTrue("Expected to be logged in.", !expectLoggedIn || keepAlive(agent));
 
             if (doLogout) {
@@ -729,9 +702,6 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         try {
             // login(agent, credentialsRequest);
             doBankTransfer(agent, transfer);
-            if (configuration.getTestConfiguration().isDebugOutputEnabled()) {
-                printMaskedDebugLog(agent);
-            }
             Assert.assertTrue("Expected to be logged in.", !expectLoggedIn || keepAlive(agent));
 
             if (doLogout) {
@@ -758,9 +728,6 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
             } else {
                 throw new NotImplementedException(
                         String.format("%s", agent.getAgentClass().getSimpleName()));
-            }
-            if (configuration.getTestConfiguration().isDebugOutputEnabled()) {
-                printMaskedDebugLog(agent);
             }
             Assert.assertTrue("Expected to be logged in.", !expectLoggedIn || keepAlive(agent));
 
@@ -805,9 +772,6 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                 throw new NotImplementedException(
                         String.format("%s", agent.getAgentClass().getSimpleName()));
             }
-            if (configuration.getTestConfiguration().isDebugOutputEnabled()) {
-                printMaskedDebugLog(agent);
-            }
             Assert.assertTrue("Expected to be logged in.", !expectLoggedIn || keepAlive(agent));
 
             if (doLogout) {
@@ -850,9 +814,6 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
             } else {
                 throw new NotImplementedException(
                         String.format("%s", agent.getAgentClass().getSimpleName()));
-            }
-            if (configuration.getTestConfiguration().isDebugOutputEnabled()) {
-                printMaskedDebugLog(agent);
             }
             Assert.assertTrue("Expected to be logged in.", !expectLoggedIn || keepAlive(agent));
 
@@ -954,9 +915,6 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
             } else {
                 throw new NotImplementedException(agent.getAgentClass().getSimpleName());
             }
-            if (configuration.getTestConfiguration().isDebugOutputEnabled()) {
-                printMaskedDebugLog(agent);
-            }
             Assert.assertTrue("Expected to be logged in.", !expectLoggedIn || keepAlive(agent));
 
             if (doLogout) {
@@ -983,9 +941,6 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                 throw new NotImplementedException(
                         String.format("%s", agent.getAgentClass().getSimpleName()));
             }
-            if (configuration.getTestConfiguration().isDebugOutputEnabled()) {
-                printMaskedDebugLog(agent);
-            }
             Assert.assertTrue("Expected to be logged in.", !expectLoggedIn || keepAlive(agent));
 
             if (doLogout) {
@@ -1005,9 +960,6 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
 
         doGenericPaymentBankTransferUKOB(agent, payment);
 
-        if (configuration.getTestConfiguration().isDebugOutputEnabled()) {
-            printMaskedDebugLog(agent);
-        }
         Assert.assertTrue("Expected to be logged in.", !expectLoggedIn || keepAlive(agent));
 
         if (doLogout) {
