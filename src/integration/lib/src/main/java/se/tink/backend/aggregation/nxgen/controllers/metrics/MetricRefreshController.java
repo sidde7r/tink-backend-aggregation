@@ -5,6 +5,7 @@ import java.util.List;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsRequestType;
+import se.tink.libraries.credentials.service.UserAvailability;
 import se.tink.libraries.metrics.core.MetricId;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 
@@ -13,9 +14,9 @@ public class MetricRefreshController extends MetricController {
             MetricRegistry registry,
             Provider provider,
             Credentials credentials,
-            boolean isManual,
+            UserAvailability userAvailability,
             CredentialsRequestType requestType) {
-        super(registry, provider, credentials, isManual, requestType);
+        super(registry, provider, credentials, userAvailability, requestType);
     }
 
     @Override

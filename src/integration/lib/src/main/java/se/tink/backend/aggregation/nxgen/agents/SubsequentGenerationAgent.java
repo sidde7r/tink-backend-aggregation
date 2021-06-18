@@ -100,7 +100,7 @@ public abstract class SubsequentGenerationAgent<Auth> extends SuperAbstractAgent
                         metricContext.getMetricRegistry(),
                         request.getProvider(),
                         credentials,
-                        request.isManual(),
+                        request.getUserAvailability(),
                         request.getType());
         this.supplementalInformationFormer =
                 new SupplementalInformationFormer(request.getProvider());

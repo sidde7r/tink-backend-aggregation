@@ -19,6 +19,7 @@ import se.tink.libraries.concurrency.ListenableThreadPoolExecutor;
 import se.tink.libraries.concurrency.NamedRunnable;
 import se.tink.libraries.concurrency.TypedThreadPoolBuilder;
 import se.tink.libraries.concurrency.WrappedRunnableListenableFutureTask;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.dropwizard_lifecycle.ManagedSafeStop;
 import se.tink.libraries.executor.ExecutorServiceUtils;
 import se.tink.libraries.metrics.core.MetricId;
@@ -149,30 +150,32 @@ public class AgentWorker extends ManagedSafeStop {
     }
 
     public void execute(AgentWorkerOperation operation) throws Exception {
+        CredentialsRequest request = operation.getRequest();
         InstrumentedRunnable instrumentedRunnable =
                 new InstrumentedRunnable(
                         metricRegistry,
                         "aggregation_operation_tasks",
                         new MetricId.MetricLabels()
-                                .add("provider", operation.getRequest().getProvider().getName())
-                                .add("market", operation.getRequest().getProvider().getMarket())
+                                .add("provider", request.getProvider().getName())
+                                .add("market", request.getProvider().getMarket())
                                 .add(
                                         "request_type",
-                                        operation.getRequest().isManual() ? "manual" : "automatic"),
+                                        request.getUserAvailability().isUserPresent()
+                                                ? "manual"
+                                                : "automatic"),
                         operation);
 
         NamedRunnable namedRunnable =
                 new NamedRunnable(
                         instrumentedRunnable,
                         String.format(
-                                MONITOR_THREAD_NAME_FORMAT,
-                                operation.getRequest().getCredentials().getId()));
+                                MONITOR_THREAD_NAME_FORMAT, request.getCredentials().getId()));
 
-        if (operation.getRequest().isManual()) {
+        if (request.getUserAvailability().isUserPresent()) {
             // Don't rate limit manual requests
             aggregationExecutorService.execute(Tracing.wrapRunnable(namedRunnable));
         } else {
-            rateLimitedExecutorService.execute(namedRunnable, operation.getRequest().getProvider());
+            rateLimitedExecutorService.execute(namedRunnable, request.getProvider());
         }
         instrumentedRunnable.submitted();
     }
