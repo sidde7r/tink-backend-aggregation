@@ -3,12 +3,11 @@ package se.tink.backend.aggregation.agents.utils.supplementalfields.sdktemplates
 import java.util.ArrayList;
 import java.util.List;
 import se.tink.backend.agents.rpc.Field;
+import se.tink.backend.aggregation.agents.utils.supplementalfields.sdktemplates.TemplatesEnum;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.sdktemplates.commons.FieldsBuilder;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.sdktemplates.idcompletion.dto.IdCompletionData;
 
 public class IdCompletionTemplate {
-
-    private static final String TEMPLATE_NAME = "ID_COMPLETION";
 
     private static final String COLOR = "color";
     private static final String TITLE = "title";
@@ -18,7 +17,7 @@ public class IdCompletionTemplate {
 
     public static List<Field> getTemplate(IdCompletionData idCompletionData) {
         List<Field> templatesList = new ArrayList<>();
-        templatesList.add(FieldsBuilder.buildTemplateField(TEMPLATE_NAME));
+        templatesList.add(FieldsBuilder.buildTemplateField(TemplatesEnum.ID_COMPLETION));
         templatesList.add(FieldsBuilder.buildColorField(idCompletionData.getColorHex(), COLOR));
         templatesList.add(FieldsBuilder.buildTitleField(idCompletionData.getTitle(), TITLE));
         templatesList.add(

@@ -8,6 +8,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.agents.rpc.Field;
+import se.tink.backend.aggregation.agents.utils.supplementalfields.sdktemplates.TemplatesEnum;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.sdktemplates.commons.dto.CommonInput;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.sdktemplates.commons.dto.CommonPositionalInput;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.sdktemplates.commons.dto.InGroup;
@@ -15,13 +16,13 @@ import se.tink.backend.aggregation.agents.utils.supplementalfields.sdktemplates.
 public class FieldsBuilder {
     private static final String INFO_SCREEN_ADDITIONAL_INFO = "{\"layoutType\":\"INSTRUCTIONS\"}";
 
-    public static Field buildTemplateField(String templateName) {
+    public static Field buildTemplateField(TemplatesEnum templateName) {
         return Field.builder()
                 .type(CommonConstants.FieldTypes.TinkLinkCompatible.TEMPLATE)
                 .description(CommonConstants.FieldTypes.TinkLinkCompatible.TEMPLATE)
                 .immutable(true)
                 .name(CommonConstants.FieldTypes.TinkLinkCompatible.TEMPLATE)
-                .value(templateName)
+                .value(templateName.toString())
                 .build();
     }
 

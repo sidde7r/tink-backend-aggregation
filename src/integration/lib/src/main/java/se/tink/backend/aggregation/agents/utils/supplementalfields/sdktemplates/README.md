@@ -2,11 +2,13 @@
 
 ## Background
 For Tink Link we are extending the supplemental info definitions - so they now how to render 2FA screen. 
-This behaviour must be hidden from the customers using DI.
+This behaviour must be hidden from the customers using Direct Integration.
 
-This library templates is backward compatible with customers using DI - please be aware that it will just work with Tink Link.
+This library templates is backward compatible with customers using Direct Integration - please be aware that it will just work with Tink Link.
 
-To trigger that templates on credentials level - you need to ```withTemplatesScreen = true``` to Credentials Service.
+How it will work on backend?
+Tink Link will pass an argument ```withTemplatesScreen = true``` to Credentials Service.
+If parameter is not passed - Credentials Service will convert supplemental information to backward compatible solution.
 
 Implementation of supplemental information filtering can be found in: ```se.tink.credentials.service.templatesscreen.TemplatesScreenHandler```
 

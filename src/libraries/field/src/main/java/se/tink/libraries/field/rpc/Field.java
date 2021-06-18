@@ -52,9 +52,7 @@ public class Field {
         return children;
     }
 
-    @ApiModelProperty(
-            name = "group",
-            value = "Identifies which fields should be gathered in the group.")
+    @ApiModelProperty(name = "group", value = "It identifies to which group this field belongs.")
     public String getGroup() {
         return group;
     }
