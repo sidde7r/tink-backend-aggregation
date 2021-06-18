@@ -34,7 +34,7 @@ public class CertificateIdProviderTest {
     @Before
     public void setUp() throws Exception {
         this.certificateIdentityService =
-                new CertificateIdProviderImpl(tppSecretsServiceClient, unleashClient);
+                new UnleashCertificateIdProvider(tppSecretsServiceClient, unleashClient);
     }
 
     @Test

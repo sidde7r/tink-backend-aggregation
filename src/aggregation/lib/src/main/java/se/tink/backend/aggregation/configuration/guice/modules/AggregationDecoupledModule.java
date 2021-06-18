@@ -48,7 +48,7 @@ import se.tink.backend.aggregation.configuration.models.ProviderConfigurationSer
 import se.tink.backend.aggregation.configuration.models.ProviderTierConfiguration;
 import se.tink.backend.aggregation.configuration.models.configuration.S3StorageConfiguration;
 import se.tink.backend.aggregation.eidasidentity.CertificateIdProvider;
-import se.tink.backend.aggregation.eidasidentity.CertificateIdProviderImpl;
+import se.tink.backend.aggregation.eidasidentity.DefaultCertificateIdProvider;
 import se.tink.backend.aggregation.log.AggregationLoggerRequestFilter;
 import se.tink.backend.aggregation.resources.AggregationServiceResource;
 import se.tink.backend.aggregation.resources.FakeCreditSafeService;
@@ -254,7 +254,9 @@ public class AggregationDecoupledModule extends AbstractModule {
         bind(ClientConfigurationProvider.class).in(Scopes.SINGLETON);
 
         bind(AggregationService.class).to(AggregationServiceResource.class).in(Scopes.SINGLETON);
-        bind(CertificateIdProvider.class).to(CertificateIdProviderImpl.class).in(Scopes.SINGLETON);
+        bind(CertificateIdProvider.class)
+                .to(DefaultCertificateIdProvider.class)
+                .in(Scopes.SINGLETON);
         bind(CreditSafeService.class).to(FakeCreditSafeService.class).in(Scopes.SINGLETON);
         bind(MonitoringService.class).to(MonitoringServiceResource.class).in(Scopes.SINGLETON);
         bind(ProviderConfigurationService.class)

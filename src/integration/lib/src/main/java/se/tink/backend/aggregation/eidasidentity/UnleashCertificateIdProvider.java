@@ -11,13 +11,13 @@ import se.tink.backend.integration.tpp_secrets_service.client.iface.TppSecretsSe
 import se.tink.libraries.unleash.UnleashClient;
 
 @Slf4j
-public class CertificateIdProviderImpl implements CertificateIdProvider {
+public class UnleashCertificateIdProvider implements CertificateIdProvider {
     private static final String TINK_ORGANIZATION_ID = "PSDSE-FINA-44059";
     private final TppSecretsServiceClient tppSecretsServiceClient;
     private final EidasMigrationToggle eidasMigrationToggle;
 
     @Inject
-    public CertificateIdProviderImpl(
+    public UnleashCertificateIdProvider(
             ManagedTppSecretsServiceClient tppSecretsServiceClient, UnleashClient unleashClient) {
         this.tppSecretsServiceClient = tppSecretsServiceClient;
         this.eidasMigrationToggle = new EidasMigrationToggle(unleashClient);
