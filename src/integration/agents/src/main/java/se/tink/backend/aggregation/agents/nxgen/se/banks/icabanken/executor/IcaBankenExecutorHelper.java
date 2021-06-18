@@ -323,7 +323,7 @@ public class IcaBankenExecutorHelper {
                         break;
                     case CANCELLED:
                         throw bankIdCancelledError();
-                    case TIMEOUT:
+                    case EXPIRED_AUTOSTART_TOKEN:
                         throw bankIdTimeoutError();
                     default:
                         throw bankIdFailedError();
