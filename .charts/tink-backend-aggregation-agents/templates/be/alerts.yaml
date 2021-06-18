@@ -334,7 +334,7 @@ spec:
     - alert: LongTermAuthenticationUserCancellationDueToThirdPartyAppTimeoutRate100%BE
       expr: |
         # Failed logins (due to third party app timeout) is 100%
-        count(sum_over_time(tink_agent_login_total{action="login",outcome="cancelled_due_to_third_party_app_timeout", market="BE"}[24h])) BY (className,provider)
+        count(sum_over_time(tink_agent_login_total{action="login",outcome="cancelled_due_to_third_party_app_timeout", market="BE", provider_type!="test"}[24h])) BY (className,provider)
         # All login attempts the last 24 hours
           / count(sum_over_time(tink_agent_login_total{action="login", market="BE"}[24h])) BY (className,provider) > 0.99
       for: 15m
