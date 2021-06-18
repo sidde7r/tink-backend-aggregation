@@ -119,8 +119,6 @@ public interface TinkHttpClient extends Filterable<TinkHttpClient>, RequestBuild
 
     void addRedirectHandler(RedirectHandler handler);
 
-    void setDebugOutput(boolean debugOutput);
-
     // --- Configuration ---
 
     // +++ Cookies +++

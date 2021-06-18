@@ -153,7 +153,6 @@ public abstract class SubsequentGenerationAgent<Auth> extends SuperAbstractAgent
     public void setConfiguration(final AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
         client.setEidasIdentity(getEidasIdentity());
-        client.setDebugOutput(configuration.getTestConfiguration().isDebugOutputEnabled());
         client.setEidasProxyConfiguration(configuration.getEidasProxy());
     }
 
