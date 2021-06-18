@@ -6,7 +6,6 @@ import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -62,7 +61,7 @@ public class FiduciaSigningFilter extends Filter {
         MultivaluedMap<String, Object> requestHeaders = httpRequest.getHeaders();
 
         String body =
-                MediaType.APPLICATION_XML_TYPE.equals(requestHeaders.getFirst("content-type"))
+                httpRequest.getBody() instanceof String
                         ? httpRequest.getBody().toString()
                         : getBody(httpRequest);
         String digest = createDigest(body);

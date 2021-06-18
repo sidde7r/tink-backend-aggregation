@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.payment.entities;
+package se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.payment.request;
 
 import javax.xml.bind.annotation.XmlElement;
 

@@ -74,3 +74,16 @@ RESPONSE 4
 Content-Type: application/json
 
 {}
+
+REQUEST 5
+POST https://dummy.com/applicationxml
+Header1: HeaderValue1
+Content-Type: application/xml
+
+<Expected></Expected>
+
+RESPONSE 5
+200
+Content-Type: application/json
+
+{}

@@ -1,19 +1,19 @@
-package se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.payment.entities;
+package se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.payment.request;
 
 import javax.xml.bind.annotation.XmlElement;
 
 public class CdtTrfTxInf {
-    @XmlElement(name = "Cdtr")
-    private Cdtr cdtr;
-
-    @XmlElement(name = "CdtrAcct")
-    private CdtrAcct cdtrAcct;
-
     @XmlElement(name = "PmtId")
     private PmtId pmtId;
 
     @XmlElement(name = "Amt")
     private Amt amt;
+
+    @XmlElement(name = "Cdtr")
+    private Cdtr cdtr;
+
+    @XmlElement(name = "CdtrAcct")
+    private CdtrAcct cdtrAcct;
 
     @XmlElement(name = "RmtInf")
     private RmtInf rmtInf;

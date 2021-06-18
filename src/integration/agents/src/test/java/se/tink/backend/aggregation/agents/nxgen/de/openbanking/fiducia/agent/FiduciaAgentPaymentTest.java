@@ -70,7 +70,7 @@ public class FiduciaAgentPaymentTest {
     public void testSepaPayments() throws Exception {
         builder.build()
                 .testTinkLinkPayment(
-                        createSepaPayment().withExecutionDate(LocalDate.now().plusDays(1)).build());
+                        createSepaPayment().withExecutionDate(LocalDate.now()).build());
     }
 
     @Test

@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Field;
@@ -46,6 +46,7 @@ public class FiduciaAuthenticator
     private static final String PSU_AUTHENTICATED = "psuAuthenticated";
     private static final String STARTED = "started";
     private static final String FINALISED = "finalised";
+    private static final String EXEMPTED = "exempted";
     private static final int PSU_ID_MAX_ALLOWED_LENGTH = 30;
 
     private static final List<String> UNSUPPORTED_AUTH_METHOD_IDS =
@@ -90,7 +91,7 @@ public class FiduciaAuthenticator
                                 .getLinks()
                                 .getStartAuthorisationWithPsuAuthentication()
                                 .getHref(),
-                        credentials.getField(CredentialKeys.PASSWORD));
+                        credentials.getField(Field.Key.PASSWORD));
         authorize(authorizationResponse);
 
         verifyConsentValidity(consentResponse.getConsentId());
@@ -102,13 +103,13 @@ public class FiduciaAuthenticator
         AuthorizationResponse authorizationResponse =
                 apiClient.authorizeWithPassword(
                         scaLinks.getStartAuthorisationWithPsuAuthentication().getHref(),
-                        credentials.getField(CredentialKeys.PASSWORD));
+                        credentials.getField(Field.Key.PASSWORD));
         authorize(authorizationResponse);
     }
 
     private void validateCredentials(Credentials credentials) {
         String username = credentials.getField(CredentialKeys.PSU_ID);
-        String password = credentials.getField(CredentialKeys.PASSWORD);
+        String password = credentials.getField(Field.Key.PASSWORD);
         if (StringUtils.isBlank(username)
                 || username.length() > PSU_ID_MAX_ALLOWED_LENGTH
                 || !username.equals(username.trim())
@@ -126,10 +127,12 @@ public class FiduciaAuthenticator
     private void authorize(AuthorizationResponse authorizationResponse) {
         switch (authorizationResponse.getScaStatus()) {
             case PSU_AUTHENTICATED:
-                authorizeWithOtp(selectMethod(authorizationResponse));
+                authorize(selectMethod(authorizationResponse));
                 break;
             case STARTED:
                 authorizeWithOtp(authorizationResponse);
+                break;
+            case EXEMPTED:
                 break;
             default:
                 throw LoginError.DEFAULT_MESSAGE.exception(

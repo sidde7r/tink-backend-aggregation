@@ -9,7 +9,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
-import com.google.common.collect.ImmutableMap;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -21,7 +20,7 @@ import java.util.Map;
 import java.util.Optional;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -96,9 +95,8 @@ public class FiduciaAuthenticatorTest {
     }
 
     private void beforeFullAuth() {
-        credentials.setFields(
-                ImmutableMap.of(
-                        CredentialKeys.PSU_ID, USERNAME, CredentialKeys.PASSWORD, PASSWORD));
+        credentials.setField(CredentialKeys.PSU_ID, USERNAME);
+        credentials.setField(Field.Key.PASSWORD, PASSWORD);
 
         when(apiClient.createConsent(USERNAME))
                 .thenReturn(
@@ -112,9 +110,8 @@ public class FiduciaAuthenticatorTest {
     @Test
     public void authenticateShouldThrowExceptionIfPsuIsInvalid() {
         // given
-        Map<String, String> fields = new HashMap<>();
-        fields.put(CredentialKeys.PSU_ID, USERNAME_LONGER_THAN_ALLOWED);
-        fields.put(CredentialKeys.PASSWORD, PASSWORD);
+        credentials.setField(CredentialKeys.PSU_ID, USERNAME_LONGER_THAN_ALLOWED);
+        credentials.setField(Field.Key.PASSWORD, PASSWORD);
 
         // when
         Throwable t = catchThrowable(() -> authenticator.authenticate(credentials));

@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.utils.berlingroup.payment;
 import java.util.Collections;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentCancelledException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
@@ -32,6 +31,8 @@ import se.tink.libraries.payment.rpc.Payment;
 @Slf4j
 public class BasePaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
 
+    private static final String STEP_PENDING = "PENDING";
+
     private final PaymentApiClient apiClient;
     private final PaymentAuthenticator authenticator;
     private final SessionStorage sessionStorage;
@@ -47,16 +48,24 @@ public class BasePaymentExecutor implements PaymentExecutor, FetchablePaymentExe
 
     @Override
     public PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentMultiStepRequest)
-            throws PaymentException, AuthenticationException {
+            throws PaymentException {
+        if (AuthenticationStepConstants.STEP_INIT.equals(paymentMultiStepRequest.getStep())) {
+            authorizePayment();
+        }
+        return checkStatus(paymentMultiStepRequest);
+    }
 
+    private void authorizePayment() {
         LinksEntity scaLinks =
                 sessionStorage
                         .get(StorageValues.SCA_LINKS, LinksEntity.class)
                         .orElseThrow(
                                 () -> new IllegalStateException(ErrorMessages.MISSING_SCA_URL));
-
         authenticator.authenticatePayment(scaLinks);
+    }
 
+    private PaymentMultiStepResponse checkStatus(PaymentMultiStepRequest paymentMultiStepRequest)
+            throws PaymentException {
         Payment payment = paymentMultiStepRequest.getPayment();
         PaymentResponse paymentResponse = fetch(paymentMultiStepRequest);
         PaymentStatus paymentStatus = paymentResponse.getPayment().getStatus();
@@ -69,13 +78,15 @@ public class BasePaymentExecutor implements PaymentExecutor, FetchablePaymentExe
                         paymentResponse,
                         AuthenticationStepConstants.STEP_FINALIZE,
                         Collections.emptyList());
+            case PENDING:
+                return new PaymentMultiStepResponse(
+                        paymentResponse, STEP_PENDING, Collections.emptyList());
             case REJECTED:
                 throw new PaymentRejectedException("Payment rejected by Bank");
             case CANCELLED:
                 throw new PaymentCancelledException("Payment Cancelled by PSU");
-
             default:
-                log.error("Payment was not signed even after waiting for SCA");
+                log.error("Payment in unexpected status after signing: {}", paymentStatus);
                 throw new PaymentAuthorizationException();
         }
     }

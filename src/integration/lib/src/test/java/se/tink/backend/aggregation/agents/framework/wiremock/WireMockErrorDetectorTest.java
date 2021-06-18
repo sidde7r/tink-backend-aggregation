@@ -387,6 +387,37 @@ public class WireMockErrorDetectorTest {
 
     @Test
     public void
+            whenFailedApplicationXmlRequestIsMadeErrorDetectorShouldDetectRequestBodyMismatchBetweenFailedRequestAndClosestMatch()
+                    throws IOException {
+        // given
+        String body = "<Different></Different>";
+
+        // when
+        Throwable throwable =
+                catchThrowable(
+                        () ->
+                                httpClient
+                                        .request("http://dummy.com/applicationxml")
+                                        .header("Header1", "HeaderValue1")
+                                        .type(MediaType.APPLICATION_XML_TYPE)
+                                        .post(String.class, body));
+
+        // then
+        assertException(throwable);
+        // and
+        CompareEntity differences = server.findDifferencesBetweenFailedRequestAndItsClosestMatch();
+        assertThat(differences.areMethodsMatching()).isTrue();
+        assertThat(differences.areUrlsMatching()).isTrue();
+        assertThat(differences.getMissingHeaderKeysInGivenRequest()).isEmpty();
+        assertThat(differences.getHeaderKeysWithDifferentValues()).isEmpty();
+        // and
+        PlainTextComparisonReporter reporter =
+                getReporter(differences, PlainTextComparisonReporter.class);
+        assertThat(reporter.isThereDifference()).isTrue();
+    }
+
+    @Test
+    public void
             whenFailedPlainTextRequestIsMadeErrorDetectorShouldDetectHeaderMismatchBetweenFailedRequestAndClosestMatch()
                     throws IOException {
         // given
