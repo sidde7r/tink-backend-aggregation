@@ -59,6 +59,8 @@ public class ExecutorExceptionResolver {
         switch (code) {
             case "1010": // "The transfer amount exceeds the available amount on the account"
                 return cancelTransfer(exceptionMessage, InternalStatus.INSUFFICIENT_FUNDS);
+            case "1030":
+                return cancelTransfer(exceptionMessage, InternalStatus.INVALID_OCR);
             case "6242": // "The payment date is too soon or not a business day"
             case "1026": // "The payment date is too soon or not a business day"
                 return cancelTransfer(exceptionMessage, InternalStatus.INVALID_DUE_DATE);
