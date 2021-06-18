@@ -41,7 +41,7 @@ public class PaymentEntity {
     }
 
     public AccountEntity getDebtorAccount() {
-        return debtorAccount;
+        return debtorAccount == null ? new AccountEntity() : debtorAccount;
     }
 
     public AccountEntity getCreditorAccount() {

@@ -37,4 +37,4 @@ RESPONSE 3
 200
 Content-Type: application/json
 
-{"paymentRequest":{"paymentTypeInformation":{"serviceLevel":"SEPA"},"debtorAccount":{"iban":"FR1261401750597365134612940"},"beneficiary":{"creditorAccount":{"iban":"FR1420041010050500013M02606"}},"paymentInformationStatus":"ACSP","creditTransferTransaction":[{"instructedAmount":{"currency":"EUR","amount":"1"}}]}}
+{"paymentRequest":{"paymentTypeInformation":{"serviceLevel":"SEPA"},"beneficiary":{"creditorAccount":{"iban":"FR1420041010050500013M02606"}},"paymentInformationStatus":"ACSP","creditTransferTransaction":[{"instructedAmount":{"currency":"EUR","amount":"1"}}]}}
