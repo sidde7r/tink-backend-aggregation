@@ -56,4 +56,9 @@ public class N26Constants {
         public static final String INVALID_TOKEN = "invalid_token";
         public static final String LOGIN_TIMEOUT = "Login attempt expired";
     }
+
+    public static class HeaderKeys {
+        public static final String PSU_IP_ADDRESS = "token-customer-ip-address";
+        public static final String PSU_INITIATED = "customer-initiated";
+    }
 }
