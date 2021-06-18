@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.workers.encryption;
 
-import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import java.lang.invoke.MethodHandles;
 import java.nio.charset.Charset;
@@ -61,16 +60,19 @@ public class CredentialsCrypto {
         String credentialsSensitiveData = credentials.getSensitiveDataSerialized();
         String dataToDecrypt = credentialsSensitiveData;
 
-        // See if there is any sensitive data in the cache
-        String cachedSensitiveData =
-                (String)
-                        cacheClient.get(
-                                CacheScope.ENCRYPTED_CREDENTIALS_BY_CREDENTIALSID,
-                                credentials.getId());
+        // if force authenticate flag is true, we never consider cached data
+        if (!request.isForceAuthenticate()) {
+            // See if there is any sensitive data in the cache
+            String cachedSensitiveData =
+                    (String)
+                            cacheClient.get(
+                                    CacheScope.ENCRYPTED_CREDENTIALS_BY_CREDENTIALSID,
+                                    credentials.getId());
 
-        if (!Strings.isNullOrEmpty(cachedSensitiveData)) {
-            dataToDecrypt =
-                    pickMostRecentSensitiveData(cachedSensitiveData, credentialsSensitiveData);
+            if (!Strings.isNullOrEmpty(cachedSensitiveData)) {
+                dataToDecrypt =
+                        pickMostRecentSensitiveData(cachedSensitiveData, credentialsSensitiveData);
+            }
         }
 
         if (Strings.isNullOrEmpty(dataToDecrypt)) {
@@ -78,9 +80,6 @@ public class CredentialsCrypto {
             logger.info("There is nothing to decrypt.");
             return true;
         }
-
-        Preconditions.checkState(
-                !Strings.isNullOrEmpty(dataToDecrypt), "Sensitive data was not set.");
 
         // Deserialize & Decrypt using right version
         return VersionDeserializer.withDefaultHandler(
