@@ -14,7 +14,7 @@ public class BnlAgentTest {
                 new AgentIntegrationTest.Builder("it", "it-bnl-oauth2")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
-                        .saveCredentialsAfter(false)
+                        .saveCredentialsAfter(true)
                         .setFinancialInstitutionId("bnl")
                         .setAppId("tink");
     }
