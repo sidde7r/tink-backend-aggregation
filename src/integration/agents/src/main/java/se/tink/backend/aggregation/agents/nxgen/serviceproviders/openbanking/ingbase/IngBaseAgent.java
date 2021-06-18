@@ -51,15 +51,12 @@ public abstract class IngBaseAgent extends NextGenerationAgent
                 MarketConfiguration {
 
     protected final IngBaseApiClient apiClient;
-
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
-    private AutoAuthenticationController authenticator;
-    private final boolean isManualAuthentication;
 
     public IngBaseAgent(AgentComponentProvider agentComponentProvider, QsealcSigner qsealcSigner) {
         super(agentComponentProvider);
         configureHttpClient(client);
-        isManualAuthentication = shouldDoManualAuthentication(request);
+
         /*
             ING in their documentation use country code in lowercase, however their API treat
             lowercase as wrong country code and returns error that it's malformed
@@ -72,7 +69,7 @@ public abstract class IngBaseAgent extends NextGenerationAgent
                         persistentStorage,
                         marketInUppercase,
                         providerSessionCacheController,
-                        isManualAuthentication,
+                        shouldDoManualAuthentication(request),
                         this,
                         qsealcSigner);
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
@@ -127,14 +124,12 @@ public abstract class IngBaseAgent extends NextGenerationAgent
                         ingBaseAuthenticator,
                         credentials,
                         strongAuthenticationState);
-        authenticator =
-                new AutoAuthenticationController(
-                        request,
-                        context,
-                        new ThirdPartyAppAuthenticationController<>(
-                                oAuth2AuthenticationController, supplementalInformationHelper),
-                        oAuth2AuthenticationController);
-        return authenticator;
+        return new AutoAuthenticationController(
+                request,
+                context,
+                new ThirdPartyAppAuthenticationController<>(
+                        oAuth2AuthenticationController, supplementalInformationHelper),
+                oAuth2AuthenticationController);
     }
 
     @Override

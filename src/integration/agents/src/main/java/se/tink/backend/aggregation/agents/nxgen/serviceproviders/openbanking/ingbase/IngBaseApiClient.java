@@ -9,9 +9,9 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import javax.ws.rs.core.MediaType;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants.ErrorCodes;
@@ -56,38 +56,22 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.date.DateFormat;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
+@Slf4j
+@RequiredArgsConstructor
 public class IngBaseApiClient {
 
     private final TinkHttpClient client;
     private final PersistentStorage persistentStorage;
     private final String market;
+    private final ProviderSessionCacheController providerSessionCacheController;
+    private final boolean isManualAuthentication;
+    private final MarketConfiguration marketConfiguration;
+    private final QsealcSigner proxySigner;
+
     private String redirectUrl;
     private String hexCertificateSerial;
     private String base64derQsealc;
-    private final ProviderSessionCacheController providerSessionCacheController;
-    private final boolean isManualAuthentication;
-    private MarketConfiguration marketConfiguration;
-    private final QsealcSigner proxySigner;
     private String psuIdAddress;
-
-    private static final Logger logger = LoggerFactory.getLogger(IngBaseApiClient.class);
-
-    public IngBaseApiClient(
-            TinkHttpClient client,
-            PersistentStorage persistentStorage,
-            String market,
-            ProviderSessionCacheController providerSessionCacheController,
-            boolean isManualAuthentication,
-            MarketConfiguration marketConfiguration,
-            QsealcSigner proxySigner) {
-        this.client = client;
-        this.persistentStorage = persistentStorage;
-        this.market = market;
-        this.providerSessionCacheController = providerSessionCacheController;
-        this.isManualAuthentication = isManualAuthentication;
-        this.marketConfiguration = marketConfiguration;
-        this.proxySigner = proxySigner;
-    }
 
     public void setConfiguration(AgentConfiguration<IngBaseConfiguration> agentConfiguration)
             throws CertificateException {
@@ -260,12 +244,12 @@ public class IngBaseApiClient {
                 String applicationToken = cacheInfo.get(StorageKeys.APPLICATION_TOKEN);
                 if (applicationToken != null) {
                     try {
-                        logger.info("Get application token from cache");
+                        log.info("Get application token from cache");
                         final TokenResponse response =
                                 new Gson().fromJson(applicationToken, TokenResponse.class);
                         return response;
                     } catch (Exception e) {
-                        logger.warn("Unable to parse payload : " + applicationToken);
+                        log.warn("Unable to parse payload : " + applicationToken);
                     }
                 }
             }

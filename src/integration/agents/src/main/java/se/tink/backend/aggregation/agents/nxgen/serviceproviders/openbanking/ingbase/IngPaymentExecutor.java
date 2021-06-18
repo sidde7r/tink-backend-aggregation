@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.RandomStringUtils;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
@@ -45,6 +46,7 @@ import se.tink.libraries.transfer.enums.RemittanceInformationType;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 @Slf4j
+@RequiredArgsConstructor
 public class IngPaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
 
     public static final String PAYMENT_AUTHORIZATION_URL = "payment_authorization_url";
@@ -57,17 +59,6 @@ public class IngPaymentExecutor implements PaymentExecutor, FetchablePaymentExec
     private final SessionStorage sessionStorage;
     private final StrongAuthenticationState strongAuthenticationState;
     private final SupplementalInformationHelper supplementalInformationHelper;
-
-    public IngPaymentExecutor(
-            IngBaseApiClient apiClient,
-            SessionStorage sessionStorage,
-            StrongAuthenticationState strongAuthenticationState,
-            SupplementalInformationHelper supplementalInformationHelper) {
-        this.apiClient = apiClient;
-        this.sessionStorage = sessionStorage;
-        this.strongAuthenticationState = strongAuthenticationState;
-        this.supplementalInformationHelper = supplementalInformationHelper;
-    }
 
     @Override
     public PaymentResponse create(PaymentRequest paymentRequest) throws PaymentException {
