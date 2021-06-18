@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Locale;
-import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.exceptions.payment.DebtorValidationException;
@@ -87,16 +86,9 @@ public class LansforsakringarPaymentExecutor implements PaymentExecutor, Fetchab
         final AmountEntity amount = new AmountEntity(payment.getExactCurrencyAmount());
         final AccountEntity debtor =
                 new AccountEntity(payment.getDebtor().getAccountNumber(), amount.getCurrency());
-
         String executionDate =
-                Optional.ofNullable(payment.getExecutionDate())
-                        .map(
-                                providedDate ->
-                                        LansforsakringarDateUtil.getCurrentOrNextBusinessDate(
-                                                        providedDate)
-                                                .format(DateTimeFormatter.ISO_DATE))
-                        .orElse(null);
-
+                LansforsakringarDateUtil.getCurrentOrNextBusinessDate(payment.getExecutionDate())
+                        .format(DateTimeFormatter.ISO_DATE);
         AccountIdentifierType accountIdentifierType =
                 paymentRequest.getPayment().getCreditor().getAccountIdentifierType();
 
