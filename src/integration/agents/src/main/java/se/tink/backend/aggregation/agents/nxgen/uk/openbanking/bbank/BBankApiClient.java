@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.signer.iface.JwtSigner;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.rpc.TokenRequestForm;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.rpc.TokenResponse;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -23,7 +24,8 @@ public class BBankApiClient extends UkOpenBankingApiClient {
             ClientInfo providerConfiguration,
             RandomValueGenerator randomValueGenerator,
             PersistentStorage persistentStorage,
-            UkOpenBankingAisConfig aisConfig) {
+            UkOpenBankingAisConfig aisConfig,
+            AgentComponentProvider componentProvider) {
         super(
                 httpClient,
                 signer,
@@ -32,7 +34,8 @@ public class BBankApiClient extends UkOpenBankingApiClient {
                 providerConfiguration,
                 randomValueGenerator,
                 persistentStorage,
-                aisConfig);
+                aisConfig,
+                componentProvider);
     }
 
     @Override

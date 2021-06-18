@@ -18,7 +18,7 @@ public class RevolutEEAAgentTest {
     @Test
     public void test() throws Exception {
         new AgentIntegrationTest.Builder("pt", "pt-revolut-ob")
-                .loadCredentialsBefore(true)
+                .loadCredentialsBefore(false)
                 .saveCredentialsAfter(true)
                 .expectLoggedIn(false)
                 .setFinancialInstitutionId("revolut-eea")

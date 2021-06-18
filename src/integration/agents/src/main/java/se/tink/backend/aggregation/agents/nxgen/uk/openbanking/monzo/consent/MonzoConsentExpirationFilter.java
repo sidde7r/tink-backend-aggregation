@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.consent;
 
 import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.authenticator.SessionKiller;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.consent.SessionKiller;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.rpc.Response;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.iface.Filter;

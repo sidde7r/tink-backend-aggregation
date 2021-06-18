@@ -8,7 +8,7 @@ public class CapitalOneAgentTest {
     @Test
     public void testRefresh() throws Exception {
         new AgentIntegrationTest.Builder("uk", "uk-capitalone-ob")
-                .loadCredentialsBefore(true)
+                .loadCredentialsBefore(false)
                 .saveCredentialsAfter(true)
                 .expectLoggedIn(false)
                 .setFinancialInstitutionId("capitalone")

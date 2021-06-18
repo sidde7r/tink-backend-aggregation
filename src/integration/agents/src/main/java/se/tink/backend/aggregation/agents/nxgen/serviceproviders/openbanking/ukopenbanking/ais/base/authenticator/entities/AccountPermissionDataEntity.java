@@ -31,4 +31,9 @@ public class AccountPermissionDataEntity {
     public static AccountPermissionDataEntity create(Set<String> permissions) {
         return new AccountPermissionDataEntity(permissions);
     }
+
+    public static AccountPermissionDataEntity create(
+            Set<String> permissions, String expirationDateTime) {
+        return new AccountPermissionDataEntity(permissions, expirationDateTime);
+    }
 }

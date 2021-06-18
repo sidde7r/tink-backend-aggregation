@@ -6,9 +6,11 @@ import java.util.Optional;
 import java.util.Set;
 import javax.ws.rs.core.MediaType;
 import lombok.extern.slf4j.Slf4j;
-import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
+import no.finn.unleash.UnleashContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.authenticator.rpc.AccountPermissionRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.authenticator.rpc.AccountPermissionResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.consent.ConsentPermissionsMapper;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.consent.RefreshableItemsProvider;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountBalanceEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.PartyV31Entity;
@@ -24,19 +26,24 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.configuration.ClientInfo;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.configuration.SoftwareStatementAssertion;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.signer.iface.JwtSigner;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
-import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.libraries.credentials.service.RefreshableItem;
+import se.tink.libraries.unleash.UnleashClient;
+import se.tink.libraries.unleash.model.Toggle;
+import se.tink.libraries.unleash.strategies.aggregation.providersidsandexcludeappids.Constants;
 
 @Slf4j
 public class UkOpenBankingApiClient extends OpenIdApiClient {
 
     private final PersistentStorage persistentStorage;
     private final UkOpenBankingAisConfig aisConfig;
+    private final AgentComponentProvider componentProvider;
 
     public UkOpenBankingApiClient(
             TinkHttpClient httpClient,
@@ -46,7 +53,8 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
             ClientInfo providerConfiguration,
             RandomValueGenerator randomValueGenerator,
             PersistentStorage persistentStorage,
-            UkOpenBankingAisConfig aisConfig) {
+            UkOpenBankingAisConfig aisConfig,
+            AgentComponentProvider componentProvider) {
         super(
                 httpClient,
                 signer,
@@ -58,6 +66,7 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
 
         this.persistentStorage = persistentStorage;
         this.aisConfig = aisConfig;
+        this.componentProvider = componentProvider;
     }
 
     public List<AccountEntity> fetchV31Accounts() {
@@ -152,27 +161,28 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
         }
     }
 
-    public String createConsent(Set<String> permissions) {
-        AccountPermissionRequest accountPermissionRequest =
-                AccountPermissionRequest.create(permissions);
-        String intentId;
-        try {
-            intentId =
-                    aisConfig.getIntentId(
-                            createAisRequest(aisConfig.createConsentRequestURL())
-                                    .type(MediaType.APPLICATION_JSON_TYPE)
-                                    .body(accountPermissionRequest)
-                                    .post(aisConfig.getIntentIdResponseType()));
-        } catch (HttpResponseException e) {
-            HttpResponse errorResponse = e.getResponse();
-            if (errorResponse.getStatus() >= 500) {
-                throw BankServiceError.BANK_SIDE_FAILURE.exception();
-            }
-            throw e;
-        }
+    public String createConsent() {
+        Set<RefreshableItem> items =
+                new RefreshableItemsProvider()
+                        .getItemsExpectedToBeRefreshed(componentProvider.getCredentialsRequest());
+        Set<String> permissions =
+                getPermissions(
+                        componentProvider.getUnleashClient(),
+                        componentProvider
+                                .getCredentialsRequest()
+                                .getCredentials()
+                                .getProviderName(),
+                        items);
+
+        String intentId =
+                aisConfig.getIntentId(
+                        createAisRequest(aisConfig.createConsentRequestURL())
+                                .type(MediaType.APPLICATION_JSON_TYPE)
+                                .body(AccountPermissionRequest.create(permissions))
+                                .post(aisConfig.getIntentIdResponseType()));
+
         saveIntentId(intentId);
         saveAppliedPermissions(permissions);
-
         return intentId;
     }
 
@@ -198,5 +208,26 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
                 .request(url)
                 .accept(MediaType.APPLICATION_JSON_TYPE)
                 .addFilter(getAisAuthFilter());
+    }
+
+    private Set<String> getPermissions(
+            UnleashClient unleashClient, String currentProviderName, Set<RefreshableItem> items) {
+        Toggle toggle =
+                Toggle.of("uk-consent-mapping")
+                        .context(
+                                UnleashContext.builder()
+                                        .addProperty(
+                                                Constants.Context.PROVIDER_NAME.getValue(),
+                                                currentProviderName)
+                                        .build())
+                        .build();
+
+        if (unleashClient.isToggleEnable(toggle)) {
+            log.info("[CONSENT MAPPER] Enabled.");
+            return new ConsentPermissionsMapper(aisConfig).mapFrom(items);
+        } else {
+            log.info("[CONSENT MAPPER] Disabled.");
+            return aisConfig.getPermissions();
+        }
     }
 }
