@@ -35,6 +35,7 @@ import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.fecther.ident
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.fecther.transaction.LclTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.fecther.transferdestination.LclTransferDestinationFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.payment.LclPaymentApiClient;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.payment.LclPaymentDatePolicy;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.signature.LclSignatureProvider;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.FrOpenBankingPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.FrOpenBankingStatusParser;
@@ -198,7 +199,8 @@ public final class LclAgent extends SubsequentProgressiveGenerationAgent
                         sessionStorage,
                         strongAuthenticationState,
                         supplementalInformationHelper,
-                        new FrOpenBankingStatusParser());
+                        new FrOpenBankingStatusParser(),
+                        new LclPaymentDatePolicy());
 
         return Optional.of(new PaymentController(paymentExecutor, paymentExecutor));
     }

@@ -62,7 +62,8 @@ public class FrOpenBankingPaymentExecutorTest {
                         sessionStorage,
                         strongAuthenticationState,
                         supplementalInformationHelper,
-                        new FrOpenBankingStatusParser());
+                        new FrOpenBankingStatusParser(),
+                        new FrOpenBankingPaymentDatePolicy());
     }
 
     @Test

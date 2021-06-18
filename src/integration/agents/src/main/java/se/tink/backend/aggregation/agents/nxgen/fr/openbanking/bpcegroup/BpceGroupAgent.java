@@ -7,6 +7,7 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 import com.google.inject.Inject;
 import java.util.Optional;
 import lombok.SneakyThrows;
+import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
@@ -21,6 +22,7 @@ import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.creditc
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.creditcard.BpceGroupCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.creditcard.converter.BpceGroupCreditCardConverter;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.payment.BpceGroupPaymentApiClient;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.payment.BpceGroupPaymentDatePolicy;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.signature.BpceGroupRequestSigner;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.signature.BpceGroupSignatureHeaderGenerator;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.storage.BpceOAuth2TokenStorage;
@@ -58,6 +60,7 @@ public final class BpceGroupAgent extends NextGenerationAgent
     private final BpceOAuth2TokenStorage bpceOAuth2TokenStorage;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final CreditCardRefreshController creditCardRefreshController;
+    private final Provider provider;
 
     @Inject
     @SneakyThrows
@@ -70,6 +73,7 @@ public final class BpceGroupAgent extends NextGenerationAgent
                 agentConfiguration.getProviderSpecificConfiguration();
         bpceGroupConfiguration.setClientId(
                 CertificateUtils.getOrganizationIdentifier(agentConfiguration.getQsealc()));
+        provider = componentProvider.getCredentialsRequest().getProvider();
         bpceGroupConfiguration.setServerUrl(
                 componentProvider.getCredentialsRequest().getProvider().getPayload());
         final BpceGroupSignatureHeaderGenerator bpceGroupSignatureHeaderGenerator =
@@ -207,7 +211,8 @@ public final class BpceGroupAgent extends NextGenerationAgent
                         sessionStorage,
                         strongAuthenticationState,
                         supplementalInformationHelper,
-                        new FrOpenBankingStatusParser());
+                        new FrOpenBankingStatusParser(),
+                        new BpceGroupPaymentDatePolicy(provider.getName()));
 
         return Optional.of(new PaymentController(paymentExecutor, paymentExecutor));
     }

@@ -14,14 +14,11 @@ public class DateUtil {
     private static final DateTimeFormatter SAME_DAY_FORMATTER =
             DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
 
-    private static String plusOneDayDate(String date) {
-        return ZonedDateTime.parse(date).plusDays(1L).format(DATE_TIME_FORMATTER);
-    }
-
     public static String getExecutionDate(CreatePaymentRequest paymentRequest) {
         AccountEntity creditorAccount = paymentRequest.getBeneficiary().getCreditorAccount();
         if (creditorAccount.isFrenchIban() || creditorAccount.isMonacoIban()) {
-            return DateUtil.plusOneDayDate(paymentRequest.getRequestedExecutionDate());
+            return ZonedDateTime.parse(paymentRequest.getRequestedExecutionDate())
+                    .format(DATE_TIME_FORMATTER);
         } else {
             return ZonedDateTime.parse(paymentRequest.getCreationDateTime())
                     .withZoneSameInstant(ZoneId.of("GMT"))
