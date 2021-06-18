@@ -114,6 +114,7 @@ public class CreditAgricoleConstants {
         public static final String BAM_AUTH_REQUIRED = "BamAuthenticationRequired";
         public static final String TECHNICAL_ERROR = "TechnicalError";
         public static final String NO_SCA_METHOD = "fr.mabanque.createuser.noscamethodavailable";
+        public static final String INVALID_OTP = "fr.mabanque.otp.invalid";
     }
 
     public static class Step {
