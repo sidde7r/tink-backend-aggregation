@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.authenticator;
 
-import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import org.openqa.selenium.WebDriver;
@@ -10,7 +10,7 @@ public class HtmlLogger {
     private final WebDriver webDriver;
     private final PrintStream printLogStream;
 
-    public HtmlLogger(WebDriver webDriver, ByteArrayOutputStream logStream) {
+    public HtmlLogger(WebDriver webDriver, OutputStream logStream) {
         this.webDriver = webDriver;
         try {
             this.printLogStream = new PrintStream(logStream, true, "UTF-8");

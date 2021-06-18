@@ -1,7 +1,9 @@
 package se.tink.backend.aggregation.workers.commands;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
@@ -224,7 +226,14 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
 
     private String getCleanLogContent(Credentials credentials)
             throws UnsupportedEncodingException, EmptyDebugLogException {
-        String logContent = context.getLogOutputStream().toString(StandardCharsets.UTF_8.name());
+        OutputStream logOutputStream = context.getLogOutputStream();
+        if (!(logOutputStream instanceof ByteArrayOutputStream)) {
+            // Cannot collect log output from any other stream type than ByteArrayOutputStream.
+            throw new EmptyDebugLogException();
+        }
+        ByteArrayOutputStream inMemoryLogOutputStream = (ByteArrayOutputStream) logOutputStream;
+
+        String logContent = inMemoryLogOutputStream.toString(StandardCharsets.UTF_8.name());
 
         // Don't save logs without content
         if (logContent.getBytes(StandardCharsets.UTF_8).length == 0) {

@@ -16,8 +16,8 @@ import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.client.apache4.config.DefaultApacheHttpClient4Config;
 import io.vavr.jackson.datatype.VavrModule;
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
@@ -136,7 +136,7 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
 
     private RestIoLoggingFilter debugOutputLoggingFilter;
 
-    private final ByteArrayOutputStream logOutputStream;
+    private final OutputStream logOutputStream;
     private final MetricRegistry metricRegistry;
     private final Provider provider;
 
@@ -311,7 +311,7 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
         private final LoggingMode loggingMode;
         private AggregatorInfo aggregatorInfo;
         private MetricRegistry metricRegistry;
-        private ByteArrayOutputStream logOutputStream;
+        private OutputStream logOutputStream;
         private SignatureKeyPair signatureKeyPair;
         private Provider provider;
         private PrintStream printStream;
@@ -335,7 +335,7 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
             return metricRegistry;
         }
 
-        public ByteArrayOutputStream getLogOutputStream() {
+        public OutputStream getLogOutputStream() {
             return logOutputStream;
         }
 
@@ -365,7 +365,7 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
             return this;
         }
 
-        public Builder setLogOutputStream(ByteArrayOutputStream logOutputStream) {
+        public Builder setLogOutputStream(OutputStream logOutputStream) {
             this.logOutputStream = logOutputStream;
             return this;
         }

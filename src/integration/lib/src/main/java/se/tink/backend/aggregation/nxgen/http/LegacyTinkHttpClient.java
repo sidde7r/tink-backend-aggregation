@@ -16,8 +16,8 @@ import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.client.apache4.config.DefaultApacheHttpClient4Config;
 import io.vavr.jackson.datatype.VavrModule;
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
@@ -128,7 +128,7 @@ public class LegacyTinkHttpClient extends LegacyFilterable<TinkHttpClient>
     private LoggingFilter debugOutputLoggingFilter;
     private boolean debugOutput = false;
 
-    private final ByteArrayOutputStream logOutputStream;
+    private final OutputStream logOutputStream;
     private final MetricRegistry metricRegistry;
     private final Provider provider;
 
@@ -235,7 +235,7 @@ public class LegacyTinkHttpClient extends LegacyFilterable<TinkHttpClient>
     public LegacyTinkHttpClient(
             @Nullable AggregatorInfo aggregatorInfo,
             @Nullable MetricRegistry metricRegistry,
-            @Nullable ByteArrayOutputStream logOutPutStream,
+            @Nullable OutputStream logOutPutStream,
             @Nullable SignatureKeyPair signatureKeyPair,
             @Nullable Provider provider,
             @Nullable LogMasker logMasker,

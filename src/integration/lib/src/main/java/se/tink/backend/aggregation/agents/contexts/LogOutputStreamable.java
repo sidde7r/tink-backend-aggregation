@@ -1,8 +1,8 @@
 package se.tink.backend.aggregation.agents.contexts;
 
-import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
 
 public interface LogOutputStreamable {
 
-    ByteArrayOutputStream getLogOutputStream();
+    OutputStream getLogOutputStream();
 }
