@@ -49,35 +49,32 @@ public class InternalEidasProxyConfiguration {
         return environment;
     }
 
-    public KeyStore getRootCaTrustStore()
-            throws IOException, CertificateException, KeyStoreException, NoSuchAlgorithmException {
-
-        final Certificate certificate;
+    public byte[] getRootCa() throws IOException {
         if (caPath != null) {
-            certificate = Pem.parseCertificate(Files.toByteArray(new File(caPath)));
-        } else if (localEidasDev) {
+            return Files.toByteArray(new File(caPath));
+        } else if (localEidasDev && localEidasDevCertificate == null) {
             /* If running in local development mode, we want to load development certificate one
             time into the class. This is needed because loading the same certificate too many times
             causes error when running tests in parallel */
-            if (this.localEidasDevCertificate == null) {
-                try {
-                    localEidasDevCertificate =
-                            Pem.parseCertificate(
-                                    Files.toByteArray(
-                                            new File(
-                                                    "data/eidas_dev_certificates/aggregation-staging-ca.pem")));
-                } catch (CertificateException | IOException e) {
-                    throw new IllegalStateException(
-                            "Could not load eIDAS development certificate, please ensure that the file "
-                                    + "have data/eidas_dev_certificates/aggregation-staging-ca.pem exists",
-                            e);
-                }
+            try {
+                return Files.toByteArray(
+                        new File("data/eidas_dev_certificates/aggregation-staging-ca.pem"));
+            } catch (IOException e) {
+                throw new IllegalStateException(
+                        "Could not load eIDAS development certificate, please ensure that the file "
+                                + " data/eidas_dev_certificates/aggregation-staging-ca.pem exists",
+                        e);
             }
-            // Running in local development, we can trust aggregation staging
-            certificate = localEidasDevCertificate;
-        } else {
-            throw new IllegalStateException("Trusted CA for eiDAS proxy not configured");
         }
+
+        throw new IllegalStateException("Trusted CA for eiDAS proxy not configured");
+    }
+
+    public KeyStore getRootCaTrustStore()
+            throws IOException, CertificateException, KeyStoreException, NoSuchAlgorithmException {
+
+        final Certificate certificate = Pem.parseCertificate(getRootCa());
+
         KeyStore keyStore = KeyStore.getInstance("JKS");
         keyStore.load(null, DUMMY_PASSWORD.toCharArray());
 
