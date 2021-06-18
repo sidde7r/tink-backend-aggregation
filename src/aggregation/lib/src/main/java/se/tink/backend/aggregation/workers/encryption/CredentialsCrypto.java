@@ -56,6 +56,9 @@ public class CredentialsCrypto {
 
     public boolean decrypt(CredentialsRequest request, Charset charset) {
         Credentials credentials = request.getCredentials();
+
+        // See if there is any sensitive data on the credential
+        String credentialsSensitiveData = credentials.getSensitiveDataSerialized();
         // See if there is any sensitive data in the cache
         String cachedSensitiveData =
                 (String)
@@ -63,8 +66,6 @@ public class CredentialsCrypto {
                                 CacheScope.ENCRYPTED_CREDENTIALS_BY_CREDENTIALSID,
                                 credentials.getId());
 
-        // See if there is any sensitive data on the credential
-        String credentialsSensitiveData = credentials.getSensitiveDataSerialized();
 
         if (Strings.isNullOrEmpty(cachedSensitiveData)
                 && Strings.isNullOrEmpty(credentialsSensitiveData)) {
