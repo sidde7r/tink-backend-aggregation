@@ -59,6 +59,8 @@ public class CredentialsCrypto {
 
         // See if there is any sensitive data on the credential
         String credentialsSensitiveData = credentials.getSensitiveDataSerialized();
+        String dataToDecrypt = credentialsSensitiveData;
+
         // See if there is any sensitive data in the cache
         String cachedSensitiveData =
                 (String)
@@ -66,18 +68,19 @@ public class CredentialsCrypto {
                                 CacheScope.ENCRYPTED_CREDENTIALS_BY_CREDENTIALSID,
                                 credentials.getId());
 
+        if (!Strings.isNullOrEmpty(cachedSensitiveData)) {
+            dataToDecrypt =
+                    pickMostRecentSensitiveData(cachedSensitiveData, credentialsSensitiveData);
+        }
 
-        if (Strings.isNullOrEmpty(cachedSensitiveData)
-                && Strings.isNullOrEmpty(credentialsSensitiveData)) {
+        if (Strings.isNullOrEmpty(dataToDecrypt)) {
             // There's nothing to decrypt. Both cache and credential were empty.
             logger.info("There is nothing to decrypt.");
             return true;
         }
 
-        String sensitiveData =
-                pickMostRecentSensitiveData(cachedSensitiveData, credentialsSensitiveData);
         Preconditions.checkState(
-                !Strings.isNullOrEmpty(sensitiveData), "Sensitive data was not set.");
+                !Strings.isNullOrEmpty(dataToDecrypt), "Sensitive data was not set.");
 
         // Deserialize & Decrypt using right version
         return VersionDeserializer.withDefaultHandler(
@@ -168,7 +171,7 @@ public class CredentialsCrypto {
 
                             return true;
                         })
-                .handle(sensitiveData);
+                .handle(dataToDecrypt);
     }
 
     public boolean encrypt(
