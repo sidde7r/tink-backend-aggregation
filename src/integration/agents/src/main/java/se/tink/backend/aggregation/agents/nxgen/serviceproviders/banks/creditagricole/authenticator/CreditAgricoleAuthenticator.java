@@ -289,6 +289,8 @@ public class CreditAgricoleAuthenticator extends StatelessProgressiveAuthenticat
                 throw AuthorizationError.UNAUTHORIZED.exception();
             case ErrorCode.NO_SCA_METHOD:
                 throw LoginError.NO_AVAILABLE_SCA_METHODS.exception();
+            case ErrorCode.INVALID_OTP:
+                throw LoginError.INCORRECT_CHALLENGE_RESPONSE.exception();
             default:
                 throw new RuntimeException("Unknown error: " + error);
         }
