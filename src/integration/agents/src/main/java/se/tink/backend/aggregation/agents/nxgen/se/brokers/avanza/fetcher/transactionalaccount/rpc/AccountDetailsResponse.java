@@ -342,7 +342,6 @@ public class AccountDetailsResponse {
         ExactCurrencyAmount result = getBalance();
         if (result.getExactValue().signum() != -1) {
             LOGGER.info("Loan account has positive balance");
-            result = result.negate();
         } else {
             LOGGER.info("Loan account has negative balance");
         }
