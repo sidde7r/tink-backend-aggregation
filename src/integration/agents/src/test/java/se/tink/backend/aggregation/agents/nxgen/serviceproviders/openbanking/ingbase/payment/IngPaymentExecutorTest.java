@@ -21,7 +21,6 @@ import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.payment.entities.PaymentsLinksEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.payment.entities.SimpleAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.payment.rpc.CreatePaymentRequest;
@@ -52,21 +51,21 @@ public class IngPaymentExecutorTest {
     private static final String AUTHORIZATION_URL = "http://something.com/redirect?id=123";
 
     private IngPaymentExecutor paymentExecutor;
-    private IngBaseApiClient apiClient;
+    private IngPaymentApiClient paymentApiClient;
     private SessionStorage sessionStorage;
     private SupplementalInformationHelper supplementalInformationHelper;
     private StrongAuthenticationState strongAuthenticationState;
 
     @Before
     public void setup() {
-        apiClient = mock(IngBaseApiClient.class);
+        paymentApiClient = mock(IngPaymentApiClient.class);
         sessionStorage = mock(SessionStorage.class);
         strongAuthenticationState = mock(StrongAuthenticationState.class);
         supplementalInformationHelper = mock(SupplementalInformationHelper.class);
 
         paymentExecutor =
                 new IngPaymentExecutor(
-                        apiClient,
+                        paymentApiClient,
                         sessionStorage,
                         strongAuthenticationState,
                         supplementalInformationHelper);
@@ -142,7 +141,7 @@ public class IngPaymentExecutorTest {
                                 .build());
 
         String paymentId = "paymentId";
-        when(apiClient.createPayment(any()))
+        when(paymentApiClient.createPayment(any()))
                 .thenReturn(
                         new CreatePaymentResponse(
                                 paymentId, new PaymentsLinksEntity(AUTHORIZATION_URL)));
@@ -174,7 +173,7 @@ public class IngPaymentExecutorTest {
         Assertions.assertThat(paymentResponse.getPayment().getDebtor()).isEqualTo(null);
 
         verify(sessionStorage).put(IngPaymentExecutor.PAYMENT_AUTHORIZATION_URL, AUTHORIZATION_URL);
-        verify(apiClient).createPayment(any());
+        verify(paymentApiClient).createPayment(any());
     }
 
     @Test
@@ -218,7 +217,7 @@ public class IngPaymentExecutorTest {
                         Collections.emptyList(),
                         Collections.emptyList());
 
-        when(apiClient.getPayment(any())).thenReturn(new GetPaymentResponse("ACSC"));
+        when(paymentApiClient.getPayment(any())).thenReturn(new GetPaymentResponse("ACSC"));
 
         // when
         PaymentMultiStepResponse response = paymentExecutor.sign(paymentRequest);
@@ -226,7 +225,7 @@ public class IngPaymentExecutorTest {
         // then
         Assertions.assertThat(response.getStep())
                 .isEqualTo(AuthenticationStepConstants.STEP_FINALIZE);
-        verify(apiClient).getPayment(any());
+        verify(paymentApiClient).getPayment(any());
     }
 
     @Test
@@ -240,13 +239,13 @@ public class IngPaymentExecutorTest {
                         Collections.emptyList(),
                         Collections.emptyList());
 
-        when(apiClient.getPayment(any())).thenReturn(new GetPaymentResponse("RCVD"));
+        when(paymentApiClient.getPayment(any())).thenReturn(new GetPaymentResponse("RCVD"));
 
         // when
         Throwable thrown = catchThrowable(() -> paymentExecutor.sign(paymentRequest));
 
         Assertions.assertThat(thrown).isInstanceOf(PaymentRejectedException.class);
-        verify(apiClient).getPayment(any());
+        verify(paymentApiClient).getPayment(any());
     }
 
     @Test
@@ -260,12 +259,12 @@ public class IngPaymentExecutorTest {
                         Collections.emptyList(),
                         Collections.emptyList());
 
-        when(apiClient.getPayment(any())).thenReturn(new GetPaymentResponse("RCVD"));
+        when(paymentApiClient.getPayment(any())).thenReturn(new GetPaymentResponse("RCVD"));
 
         // when
         Throwable thrown = catchThrowable(() -> paymentExecutor.sign(paymentRequest));
 
         Assertions.assertThat(thrown).isInstanceOf(PaymentRejectedException.class);
-        verify(apiClient).getPayment(any());
+        verify(paymentApiClient).getPayment(any());
     }
 }

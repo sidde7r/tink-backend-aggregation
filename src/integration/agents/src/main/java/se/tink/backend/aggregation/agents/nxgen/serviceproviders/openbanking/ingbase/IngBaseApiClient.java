@@ -17,15 +17,12 @@ import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants.ErrorCodes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants.HeaderKeys;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants.IdTags;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants.Signature;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.authenticator.entities.AuthorizationEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.authenticator.entities.PaymentAuthorizationEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.authenticator.entities.PaymentSignatureEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.authenticator.entities.SignatureEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.authenticator.rpc.ApplicationTokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.authenticator.rpc.AuthorizationUrl;
@@ -39,9 +36,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ing
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.fetcher.rpc.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.fetcher.rpc.FetchBalancesResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.fetcher.rpc.FetchCardTransactionsResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.payment.rpc.CreatePaymentRequest;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.payment.rpc.CreatePaymentResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.payment.rpc.GetPaymentResponse;
 import se.tink.backend.aggregation.api.Psd2Headers;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agents.utils.CertificateUtils;
@@ -54,7 +48,6 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.date.DateFormat;
-import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -66,12 +59,12 @@ public class IngBaseApiClient {
     private final ProviderSessionCacheController providerSessionCacheController;
     private final boolean isManualAuthentication;
     private final MarketConfiguration marketConfiguration;
-    private final QsealcSigner proxySigner;
+    protected final QsealcSigner proxySigner;
 
-    private String redirectUrl;
     private String hexCertificateSerial;
     private String base64derQsealc;
-    private String psuIdAddress;
+    protected String psuIdAddress;
+    protected String redirectUrl;
 
     public void setConfiguration(AgentConfiguration<IngBaseConfiguration> agentConfiguration)
             throws CertificateException {
@@ -161,43 +154,6 @@ public class IngBaseApiClient {
                 .get(FetchCardTransactionsResponse.class);
     }
 
-    public CreatePaymentResponse createPayment(CreatePaymentRequest request) {
-
-        final TokenResponse tokenResponse = getApplicationAccessToken();
-        setApplicationTokenToSession(tokenResponse.toTinkToken());
-        setClientIdToSession(tokenResponse.getClientId());
-
-        RequestBuilder requestBuilder =
-                buildRequestWithPaymentSignature(
-                                Urls.PAYMENT_INITIATION,
-                                Signature.HTTP_METHOD_POST,
-                                SerializationUtils.serializeToString(request))
-                        .addBearerToken(getApplicationTokenFromSession())
-                        .type(MediaType.APPLICATION_JSON)
-                        .header(HeaderKeys.TPP_REDIRECT_URI, redirectUrl)
-                        .header(HeaderKeys.PSU_ID_ADDRESS, psuIdAddress);
-
-        return requestBuilder.post(
-                CreatePaymentResponse.class, SerializationUtils.serializeToString(request));
-    }
-
-    public GetPaymentResponse getPayment(String paymentId) {
-
-        RequestBuilder requestBuilder =
-                buildRequestWithPaymentSignature(
-                                new URL(Urls.GET_PAYMENT_STATUS)
-                                        .parameter(IdTags.PAYMENT_ID, paymentId)
-                                        .toString(),
-                                Signature.HTTP_METHOD_GET,
-                                StringUtils.EMPTY)
-                        .addBearerToken(getApplicationTokenFromSession())
-                        .type(MediaType.APPLICATION_JSON)
-                        .header(HeaderKeys.TPP_REDIRECT_URI, redirectUrl)
-                        .header(HeaderKeys.PSU_ID_ADDRESS, psuIdAddress);
-
-        return requestBuilder.get(GetPaymentResponse.class);
-    }
-
     public URL getAuthorizeUrl(final String state) {
         final TokenResponse tokenResponse = getApplicationAccessToken();
         setApplicationTokenToSession(tokenResponse.toTinkToken());
@@ -231,7 +187,7 @@ public class IngBaseApiClient {
         persistentStorage.put(StorageKeys.TOKEN, accessToken);
     }
 
-    private TokenResponse getApplicationAccessToken() {
+    protected TokenResponse getApplicationAccessToken() {
         if (!isManualAuthentication) {
             /*
                 Reuse the application access token which saved in the cache if it is still valid
@@ -337,27 +293,7 @@ public class IngBaseApiClient {
                                 digest));
     }
 
-    RequestBuilder buildRequestWithPaymentSignature(
-            final String reqPath, final String httpMethod, final String payload) {
-        final String reqId = Psd2Headers.getRequestId();
-        final String date = getFormattedDate();
-        final String digest = generateDigest(payload);
-
-        final PaymentSignatureEntity signatureEntity =
-                new PaymentSignatureEntity(httpMethod, reqPath, date, digest, reqId);
-
-        return buildRequest(reqId, date, digest, reqPath)
-                .header(HeaderKeys.X_REQUEST_ID, reqId)
-                .header(
-                        HeaderKeys.SIGNATURE,
-                        new PaymentAuthorizationEntity(
-                                        getClientIdFromSession(),
-                                        proxySigner.getSignatureBase64(
-                                                signatureEntity.toString().getBytes()))
-                                .toString());
-    }
-
-    private RequestBuilder buildRequest(
+    protected RequestBuilder buildRequest(
             final String reqId, final String date, final String digest, final String reqPath) {
         return client.request(Urls.BASE_URL + reqPath)
                 .accept(MediaType.APPLICATION_JSON)
@@ -366,17 +302,17 @@ public class IngBaseApiClient {
                 .header(HeaderKeys.X_ING_REQUEST_ID, reqId);
     }
 
-    OAuth2Token getApplicationTokenFromSession() {
+    protected OAuth2Token getApplicationTokenFromSession() {
         return persistentStorage
                 .get(StorageKeys.APPLICATION_TOKEN, OAuth2Token.class)
                 .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_TOKEN));
     }
 
-    private void setApplicationTokenToSession(OAuth2Token token) {
+    protected void setApplicationTokenToSession(OAuth2Token token) {
         persistentStorage.put(StorageKeys.APPLICATION_TOKEN, token);
     }
 
-    private void setClientIdToSession(final String clientId) {
+    protected void setClientIdToSession(final String clientId) {
         persistentStorage.put(StorageKeys.CLIENT_ID, clientId, false);
     }
 
@@ -390,7 +326,7 @@ public class IngBaseApiClient {
                 .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_TOKEN));
     }
 
-    private String getClientIdFromSession() {
+    protected String getClientIdFromSession() {
         return persistentStorage
                 .get(StorageKeys.CLIENT_ID, String.class)
                 .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CLIENT_ID));
@@ -421,11 +357,11 @@ public class IngBaseApiClient {
         return proxySigner.getSignatureBase64(signatureEntity.toString().getBytes());
     }
 
-    private String generateDigest(final String data) {
+    protected String generateDigest(final String data) {
         return Signature.DIGEST_PREFIX + Psd2Headers.calculateDigest(data);
     }
 
-    private String getFormattedDate() {
+    protected String getFormattedDate() {
         return DateFormat.getFormattedCurrentDate(
                 Signature.DATE_FORMAT, Signature.TIMEZONE, Locale.ENGLISH);
     }

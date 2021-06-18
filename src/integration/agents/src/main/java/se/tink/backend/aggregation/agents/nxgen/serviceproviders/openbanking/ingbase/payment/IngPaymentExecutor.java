@@ -17,7 +17,6 @@ import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.entities.AmountEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.payment.entities.SimpleAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.payment.rpc.CreatePaymentRequest;
@@ -57,7 +56,7 @@ public class IngPaymentExecutor implements PaymentExecutor, FetchablePaymentExec
 
     private static final long WAIT_FOR_MINUTES = 9L;
 
-    private final IngBaseApiClient apiClient;
+    private final IngPaymentApiClient paymentApiClient;
     private final SessionStorage sessionStorage;
     private final StrongAuthenticationState strongAuthenticationState;
     private final SupplementalInformationHelper supplementalInformationHelper;
@@ -71,7 +70,8 @@ public class IngPaymentExecutor implements PaymentExecutor, FetchablePaymentExec
 
         CreatePaymentRequest createPaymentRequest = createPaymentRequest(paymentRequest);
 
-        CreatePaymentResponse paymentResponse = apiClient.createPayment(createPaymentRequest);
+        CreatePaymentResponse paymentResponse =
+                paymentApiClient.createPayment(createPaymentRequest);
 
         String authorizationUrl = paymentResponse.getLinks().getAuthorizationUrl();
         sessionStorage.put(PAYMENT_AUTHORIZATION_URL, authorizationUrl);
@@ -119,7 +119,7 @@ public class IngPaymentExecutor implements PaymentExecutor, FetchablePaymentExec
 
     private PaymentStatus getAndVerifyStatus(String paymentId) throws PaymentException {
 
-        PaymentStatus paymentStatus = apiClient.getPayment(paymentId).getPaymentStatus();
+        PaymentStatus paymentStatus = paymentApiClient.getPayment(paymentId).getPaymentStatus();
 
         if (paymentStatus == PaymentStatus.PENDING) {
             throw new PaymentAuthenticationException(

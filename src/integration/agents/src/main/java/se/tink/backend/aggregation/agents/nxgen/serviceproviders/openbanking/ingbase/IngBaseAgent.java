@@ -22,6 +22,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ing
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.filters.IngBaseGatewayTimeoutFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.filters.IngBaseSignatureInvalidFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.filters.IngRetryFilter;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.payment.IngPaymentApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.payment.IngPaymentExecutor;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
@@ -52,6 +53,7 @@ public abstract class IngBaseAgent extends NextGenerationAgent
                 MarketConfiguration {
 
     protected final IngBaseApiClient apiClient;
+    private final IngPaymentApiClient paymentApiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
     public IngBaseAgent(AgentComponentProvider agentComponentProvider, QsealcSigner qsealcSigner) {
@@ -62,10 +64,19 @@ public abstract class IngBaseAgent extends NextGenerationAgent
             ING in their documentation use country code in lowercase, however their API treat
             lowercase as wrong country code and returns error that it's malformed
         */
-        final String marketInUppercase = request.getProvider().getMarket().toUpperCase();
+        String marketInUppercase = request.getProvider().getMarket().toUpperCase();
 
         apiClient =
                 new IngBaseApiClient(
+                        client,
+                        persistentStorage,
+                        marketInUppercase,
+                        providerSessionCacheController,
+                        shouldDoManualAuthentication(request),
+                        this,
+                        qsealcSigner);
+        paymentApiClient =
+                new IngPaymentApiClient(
                         client,
                         persistentStorage,
                         marketInUppercase,
@@ -95,11 +106,12 @@ public abstract class IngBaseAgent extends NextGenerationAgent
     @Override
     public void setConfiguration(final AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
-        final AgentConfiguration<IngBaseConfiguration> agentConfiguration =
+        AgentConfiguration<IngBaseConfiguration> agentConfiguration =
                 getAgentConfigurationController().getAgentConfiguration(IngBaseConfiguration.class);
 
         try {
             apiClient.setConfiguration(agentConfiguration);
+            paymentApiClient.setConfiguration(agentConfiguration);
         } catch (CertificateException e) {
             throw new IllegalStateException(
                     "Could not parse QSEALC properly while setting up ING agent", e);
@@ -170,7 +182,7 @@ public abstract class IngBaseAgent extends NextGenerationAgent
     public Optional<PaymentController> constructPaymentController() {
         IngPaymentExecutor paymentExecutor =
                 new IngPaymentExecutor(
-                        apiClient,
+                        paymentApiClient,
                         sessionStorage,
                         strongAuthenticationState,
                         supplementalInformationHelper);
