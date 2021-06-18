@@ -31,7 +31,6 @@ import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformati
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationFormer;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
-import se.tink.backend.aggregation.nxgen.http.filter.factory.ClientFilterFactory;
 import se.tink.backend.aggregation.nxgen.http_api_client.HttpApiClientFactory;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
@@ -204,11 +203,6 @@ public abstract class SubsequentGenerationAgent<Auth> extends SuperAbstractAgent
         TransferExecutionException.throwIf(!transferController.isPresent());
 
         return transferController.get().execute(transfer);
-    }
-
-    @Override
-    public void attachHttpFilters(ClientFilterFactory filterFactory) {
-        filterFactory.addClientFilter(client.getInternalClient());
     }
 
     private Optional<TransferController> getTransferController() {
