@@ -1,7 +1,9 @@
 package se.tink.libraries.credentials.service;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UserAvailability {
     // The userPresent flag indicates whether or not the user is present at the time of the
@@ -18,8 +20,18 @@ public class UserAvailability {
     private boolean userAvailableForInteraction;
     private String originatingUserIp;
 
+    private static final String DEFAULT_USER_IP = "127.0.0.1";
+
     public String getOriginatingUserIp() {
         return originatingUserIp;
+    }
+
+    public String getOriginatingUserIpOrDefault() {
+        if (getOriginatingUserIp() == null) {
+            log.info("Using default user Ip");
+            return DEFAULT_USER_IP;
+        }
+        return getOriginatingUserIp();
     }
 
     public void setOriginatingUserIp(String originatingUserIp) {

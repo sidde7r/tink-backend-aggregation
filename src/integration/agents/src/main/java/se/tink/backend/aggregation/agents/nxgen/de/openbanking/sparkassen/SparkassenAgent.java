@@ -82,7 +82,7 @@ public class SparkassenAgent extends NextGenerationAgent
                 new SparkassenHeaderValues(
                         bankCode,
                         request.getUserAvailability().isUserPresent()
-                                ? request.getUserAvailability().getOriginatingUserIp()
+                                ? request.getUserAvailability().getOriginatingUserIpOrDefault()
                                 : null);
         return new SparkassenApiClient(
                 client,

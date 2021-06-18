@@ -33,7 +33,7 @@ public class SparkassenRedirectAgent extends SparkassenAgent {
                         bankCode,
                         redirectUrl,
                         request.getUserAvailability().isUserPresent()
-                                ? request.getUserAvailability().getOriginatingUserIp()
+                                ? request.getUserAvailability().getOriginatingUserIpOrDefault()
                                 : null);
         return new SparkassenApiClient(
                 client,

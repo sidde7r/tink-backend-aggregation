@@ -59,7 +59,9 @@ public abstract class UnicreditBaseAgent extends NextGenerationAgent
                 componentProvider.getCredentialsRequest().getUserAvailability();
         return new UnicreditBaseHeaderValues(
                 redirectUrl,
-                userAvailability.isUserPresent() ? userAvailability.getOriginatingUserIp() : null);
+                userAvailability.isUserPresent()
+                        ? userAvailability.getOriginatingUserIpOrDefault()
+                        : null);
     }
 
     protected UnicreditBaseApiClient getApiClient(

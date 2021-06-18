@@ -53,7 +53,7 @@ public final class MediolanumAgent extends NextGenerationAgent
         providerSpecificConfiguration.setRedirectUrl(agentConfiguration.getRedirectUrl());
         providerSpecificConfiguration.setUserIp(
                 request.getUserAvailability().isUserPresent()
-                        ? request.getUserAvailability().getOriginatingUserIp()
+                        ? request.getUserAvailability().getOriginatingUserIpOrDefault()
                         : null);
         return providerSpecificConfiguration;
     }

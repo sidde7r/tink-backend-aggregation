@@ -56,7 +56,7 @@ public abstract class CbiGlobeAgent extends SubsequentProgressiveGenerationAgent
 
     public CbiGlobeAgent(AgentComponentProvider agentComponentProvider) {
         super(agentComponentProvider);
-        psuIpAddress = request.getUserAvailability().getOriginatingUserIp();
+        psuIpAddress = request.getUserAvailability().getOriginatingUserIpOrDefault();
         providerConfiguration =
                 PayloadParser.parse(
                         request.getProvider().getPayload(), CbiGlobeProviderConfiguration.class);

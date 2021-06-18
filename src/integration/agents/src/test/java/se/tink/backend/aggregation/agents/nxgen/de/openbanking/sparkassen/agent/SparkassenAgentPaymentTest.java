@@ -37,7 +37,7 @@ public class SparkassenAgentPaymentTest {
         creditorDebtorManager.before();
 
         builder =
-                new AgentIntegrationTest.Builder("de", "de-sparkassestadmünchen-ob")
+                new AgentIntegrationTest.Builder("de", "de-bwbank-ob")
                         .addCredentialField(
                                 Field.Key.USERNAME,
                                 usernamePasswordManager.get(
