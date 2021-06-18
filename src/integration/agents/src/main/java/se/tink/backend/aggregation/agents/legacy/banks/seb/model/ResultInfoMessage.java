@@ -53,6 +53,8 @@ public class ResultInfoMessage {
                 case "PCB03G0":
                     throw cancelTransfer(
                             EndUserMessage.EXCESS_AMOUNT, InternalStatus.INSUFFICIENT_FUNDS);
+                case "PCB03H5":
+                    throw cancelTransfer(EndUserMessage.INVALID_OCR, InternalStatus.INVALID_OCR);
                 case "PCB03K1":
                 case "PCB03L1":
                 case "PCB0354":
