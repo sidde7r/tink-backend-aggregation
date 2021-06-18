@@ -1,0 +1,90 @@
+REQUEST 1
+POST https://psd2.api.swedbank.com/psd2/v3/authorize-decoupled?bic=HABAEE2X
+Accept: application/json
+Content-Type: application/json
+X-Aggregator: Tink Testing
+
+{"authenticationMethodId":"SMART_ID","clientID":"dummyClientId","psuData":{"bankID":null,"personalID":"200012121212"},"redirectUri":"https://127.0.0.1:7357/api/v1/thirdparty/callback","scope":"PSD2"}
+
+RESPONSE 1
+200
+Date: Fri, 22 Jan 2021 10:48:47 GMT
+Date: Fri, 22 Jan 2021 10:48:48 GMT
+ASPSP-SCA-Approach: ***
+X-Rate-Limit-Limit: 60000
+X-Rate-Limit-Remaining: 53332
+X-Rate-Limit-Reset: 672
+Content-Type: application/json;charset=utf-8
+Server: Layer7-API-Gateway
+Set-Cookie: ***
+Content-Length: 480
+
+{"authorizeId" : "1612345678-1234-1234-1234-123456789123","chosenScaMethod":{"authenticationType" : "Smart-ID","authenticationMethodId" : "SMART_ID"},"challengeData": { "code": "0469"},"psuMessage" : "Request is sent to your device. Compare the code and enter PIN1.","_links": {"scaStatus": {"href": "/psd2/v3/authorize-decoupled/authorize/1612345678-1234-1234-1234-123456789123"}}}
+
+REQUEST 2
+GET https://psd2.api.swedbank.com/psd2/v3/authorize-decoupled/authorize/1612345678-1234-1234-1234-123456789123?bic=HABAEE2X&client_id=dummyClientId
+Accept: application/json
+X-Aggregator: Tink Testing
+
+RESPONSE 2 SET AUTH_POLL_1
+200
+Date: Fri, 22 Jan 2021 10:48:48 GMT
+Date: Fri, 22 Jan 2021 10:48:48 GMT
+X-Rate-Limit-Limit: 60000
+X-Rate-Limit-Remaining: 53327
+X-Rate-Limit-Reset: 671
+Content-Type: application/json;charset=utf-8
+Server: Layer7-API-Gateway
+
+{"scaStatus": "started"}
+
+REQUEST 3 MATCH AUTH_POLL_1
+GET https://psd2.api.swedbank.com/psd2/v3/authorize-decoupled/authorize/1612345678-1234-1234-1234-123456789123?bic=HABAEE2X&client_id=dummyClientId
+Accept: application/json
+X-Aggregator: Tink Testing
+
+RESPONSE 3 SET AUTH_START_2
+200
+Date: Fri, 22 Jan 2021 10:48:51 GMT
+Date: Fri, 22 Jan 2021 10:48:51 GMT
+X-Rate-Limit-Limit: 60000
+X-Rate-Limit-Remaining: 53303
+X-Rate-Limit-Reset: 669
+Content-Type: application/json;charset=utf-8
+Server: Layer7-API-Gateway
+
+{"scaStatus": "started"}
+
+REQUEST 6 MATCH AUTH_START_2
+GET https://psd2.api.swedbank.com/psd2/v3/authorize-decoupled/authorize/1612345678-1234-1234-1234-123456789123?bic=HABAEE2X&client_id=dummyClientId
+Accept: application/json
+X-Aggregator: Tink Testing
+
+RESPONSE 6
+200
+Date: Fri, 22 Jan 2021 10:48:59 GMT
+Date: Fri, 22 Jan 2021 10:49:00 GMT
+X-Rate-Limit-Limit: 60000
+X-Rate-Limit-Remaining: 53258
+X-Rate-Limit-Reset: 660
+Content-Type: application/json;charset=utf-8
+Server: Layer7-API-Gateway
+
+{"scaStatus": "finalised","authorizationCode": "abcdefab-abcd-abcd-abcd-abcdefabcdef"}
+
+REQUEST 7
+POST https://psd2.api.swedbank.com/psd2/token?bic=HABAEE2X&code=abcdefab-abcd-abcd-abcd-abcdefabcdef&grant_type=authorization_code&client_secret=dummyClientSecret&redirect_uri=https%3A%2F%2F127.0.0.1%3A7357%2Fapi%2Fv1%2Fthirdparty%2Fcallback&client_id=dummyClientId
+Accept: application/json
+X-Aggregator: Tink Testing
+
+RESPONSE 7
+200
+Date: Fri, 22 Jan 2021 10:49:01 GMT
+Date: Fri, 22 Jan 2021 10:49:01 GMT
+UserID: ***
+Pragma: no-cache
+Cache-Control: no-store
+Content-Type: application/json;charset=utf-8
+Server: Layer7-API-Gateway
+
+{"access_token":"ACCESS_TOKEN", "token_type":"Bearer", "expires_in":599, "refresh_token":"REFRESH_TOKEN", "scope":"PSD2 PSD2account_list"}
