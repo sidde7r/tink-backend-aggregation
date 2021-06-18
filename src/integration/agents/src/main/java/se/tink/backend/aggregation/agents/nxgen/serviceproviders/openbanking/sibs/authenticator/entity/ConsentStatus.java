@@ -24,8 +24,8 @@ public enum ConsentStatus {
         return thirdPartyAppStatus;
     }
 
-    public boolean isFinalStatus() {
-        return this == ACTC || this == CANC || this == RJCT;
+    public boolean isNotFinalStatus() {
+        return this != ACTC && this != CANC && this != RJCT;
     }
 
     public boolean isAcceptedStatus() {
