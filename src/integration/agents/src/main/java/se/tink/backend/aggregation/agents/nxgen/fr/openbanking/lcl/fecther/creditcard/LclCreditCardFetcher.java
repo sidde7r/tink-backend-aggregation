@@ -128,7 +128,8 @@ public class LclCreditCardFetcher
     }
 
     private LocalDate getDate(TransactionResourceDto transaction) {
-        if (TransactionStatus.BOOK.equals(transaction.getStatus())) {
+        if (TransactionStatus.BOOK.equals(transaction.getStatus())
+                || TransactionStatus.PDNG.equals(transaction.getStatus())) {
             return transaction.getBookingDate();
         }
         return transaction.getExpectingBookingDate();
