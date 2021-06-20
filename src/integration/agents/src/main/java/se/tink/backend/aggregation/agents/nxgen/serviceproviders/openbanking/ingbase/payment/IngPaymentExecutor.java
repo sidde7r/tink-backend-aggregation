@@ -1,27 +1,18 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.payment;
 
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang.RandomStringUtils;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.entities.AccountEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.entities.AmountEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.payment.entities.SimpleAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.payment.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.payment.rpc.CreatePaymentResponse;
-import se.tink.backend.aggregation.agents.utils.remittanceinformation.RemittanceInformationValidator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
@@ -40,11 +31,7 @@ import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.payment.enums.PaymentStatus;
-import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Payment;
-import se.tink.libraries.payments.common.model.PaymentScheme;
-import se.tink.libraries.transfer.enums.RemittanceInformationType;
-import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -52,11 +39,11 @@ public class IngPaymentExecutor implements PaymentExecutor, FetchablePaymentExec
 
     public static final String PAYMENT_AUTHORIZATION_URL = "payment_authorization_url";
     public static final String VALIDATE_PAYMENT = "confirm_payment";
-    private static final ZoneId DEFAULT_ZONE_ID = ZoneId.of("CET");
 
     private static final long WAIT_FOR_MINUTES = 9L;
 
     private final IngPaymentApiClient paymentApiClient;
+    private final IngPaymentMapper paymentMapper;
     private final SessionStorage sessionStorage;
     private final StrongAuthenticationState strongAuthenticationState;
     private final SupplementalInformationHelper supplementalInformationHelper;
@@ -64,27 +51,15 @@ public class IngPaymentExecutor implements PaymentExecutor, FetchablePaymentExec
     @Override
     public PaymentResponse create(PaymentRequest paymentRequest) throws PaymentException {
 
-        AccountEntity creditor = AccountEntity.creditorOf(paymentRequest);
-        AmountEntity amount = AmountEntity.amountOf(paymentRequest);
-        AccountEntity debtor = AccountEntity.debtorOf(paymentRequest);
-
-        CreatePaymentRequest createPaymentRequest = createPaymentRequest(paymentRequest);
-
+        CreatePaymentRequest createPaymentRequest =
+                paymentMapper.toIngPaymentRequest(paymentRequest);
         CreatePaymentResponse paymentResponse =
                 paymentApiClient.createPayment(createPaymentRequest);
 
         String authorizationUrl = paymentResponse.getLinks().getAuthorizationUrl();
         sessionStorage.put(PAYMENT_AUTHORIZATION_URL, authorizationUrl);
 
-        return new PaymentResponse(
-                new Payment.Builder()
-                        .withUniqueId(paymentResponse.getPaymentId())
-                        .withType(PaymentType.SEPA)
-                        .withCurrency(amount.getCurrency())
-                        .withExactCurrencyAmount(amount.toTinkAmount())
-                        .withCreditor(creditor.toTinkCreditor())
-                        .withDebtor(debtor.toTinkDebtor())
-                        .build());
+        return paymentMapper.toTinkPaymentResponse(paymentRequest, paymentResponse);
     }
 
     @Override
@@ -133,49 +108,8 @@ public class IngPaymentExecutor implements PaymentExecutor, FetchablePaymentExec
         return paymentStatus;
     }
 
-    public CreatePaymentRequest createPaymentRequest(PaymentRequest paymentRequest) {
-
-        Payment payment = paymentRequest.getPayment();
-
-        SimpleAccountEntity creditor =
-                new SimpleAccountEntity(
-                        payment.getCreditor().getAccountNumber(), payment.getCurrency());
-
-        SimpleAccountEntity debtor =
-                new SimpleAccountEntity(
-                        payment.getDebtor().getAccountNumber(), payment.getCurrency());
-
-        RemittanceInformation remittanceInformation = payment.getRemittanceInformation();
-        RemittanceInformationValidator.validateSupportedRemittanceInformationTypesOrThrow(
-                remittanceInformation, null, RemittanceInformationType.UNSTRUCTURED);
-
-        LocalDate executionDate =
-                Optional.ofNullable(payment.getExecutionDate())
-                        .orElse(LocalDate.now((DEFAULT_ZONE_ID)));
-
-        return CreatePaymentRequest.builder()
-                .endToEndIdentification(RandomStringUtils.random(35, true, true))
-                .instructedAmount(AmountEntity.amountOf(paymentRequest))
-                .debtorAccount(debtor)
-                .creditorAccount(creditor)
-                .creditorAgent(IngBaseConstants.PaymentRequest.CREDITOR_AGENT)
-                .creditorName(IngBaseConstants.PaymentRequest.PAYMENT_CREDITOR)
-                .chargeBearer(IngBaseConstants.PaymentRequest.SLEV)
-                .remittanceInformationUnstructured(remittanceInformation.getValue())
-                .serviceLevelCode(IngBaseConstants.PaymentRequest.SEPA)
-                .requestedExecutionDate(
-                        executionDate.format(
-                                DateTimeFormatter.ofPattern(
-                                        IngBaseConstants.PaymentRequest.EXECUTION_DATE_FORMAT)))
-                .localInstrumentCode(
-                        PaymentScheme.SEPA_INSTANT_CREDIT_TRANSFER == payment.getPaymentScheme()
-                                ? IngBaseConstants.PaymentRequest.INST
-                                : null)
-                .build();
-    }
-
     private void openThirdPartyApp(URL authorizationUrl) throws PaymentException {
-        this.supplementalInformationHelper.openThirdPartyApp(
+        supplementalInformationHelper.openThirdPartyApp(
                 ThirdPartyAppAuthenticationPayload.of(authorizationUrl));
         Optional<Map<String, String>> queryParameters =
                 supplementalInformationHelper.waitForSupplementalInformation(
