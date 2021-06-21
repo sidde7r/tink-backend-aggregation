@@ -38,6 +38,7 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.aggregation_agent_api_client.src.api.ApiClient;
 import se.tink.libraries.aggregation_agent_api_client.src.http.HttpApiClient;
+import se.tink.libraries.aggregation_agent_api_client.src.variable.VariableStore;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.transfer.rpc.Transfer;
 
@@ -176,8 +177,12 @@ public abstract class SubsequentGenerationAgent<Auth> extends SuperAbstractAgent
                 .getSensitivePayload(Field.Key.HTTP_API_CLIENT, String.class)
                 .ifPresent(httpClient::loadState);
 
+        setApiClientVariables(httpClient);
+
         return httpClient;
     }
+
+    protected void setApiClientVariables(VariableStore variableStore) {}
 
     @Override
     public void logout() {
