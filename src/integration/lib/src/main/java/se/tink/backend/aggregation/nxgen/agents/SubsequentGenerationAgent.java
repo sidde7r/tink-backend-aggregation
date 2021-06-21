@@ -169,6 +169,7 @@ public abstract class SubsequentGenerationAgent<Auth> extends SuperAbstractAgent
                         .setLogOutputStream(context.getLogOutputStream())
                         .setPersistentStorage(persistentStorage)
                         .setSecretsMap(context.getAgentConfigurationController().getSecretsMap())
+                        .setUserIp(getOriginatingUserIpOrDefault())
                         .build();
 
         credentials

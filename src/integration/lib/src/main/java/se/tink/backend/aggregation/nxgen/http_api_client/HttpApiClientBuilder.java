@@ -46,6 +46,7 @@ public class HttpApiClientBuilder {
     private OutputStream logOutputStream;
     private PersistentStorage persistentStorage;
     private Map<String, Object> secretsMap;
+    private String userIp;
 
     public static HttpApiClientBuilder builder() {
         return new HttpApiClientBuilder();
@@ -87,6 +88,11 @@ public class HttpApiClientBuilder {
         return this;
     }
 
+    public HttpApiClientBuilder setUserIp(String userIp) {
+        this.userIp = userIp;
+        return this;
+    }
+
     public HttpApiClient build() {
         HttpApiClient httpApiClient =
                 new HttpApiClient(
@@ -121,6 +127,11 @@ public class HttpApiClientBuilder {
 
         populateVariablesFromSecrets(httpApiClient);
         populateVariablesFromStorage(httpApiClient);
+
+        Optional.ofNullable(userIp)
+                .ifPresent(
+                        userIpAddr ->
+                                httpApiClient.addVariable(VariableKey.PSU_IP_ADDRESS, userIpAddr));
 
         return httpApiClient;
     }
