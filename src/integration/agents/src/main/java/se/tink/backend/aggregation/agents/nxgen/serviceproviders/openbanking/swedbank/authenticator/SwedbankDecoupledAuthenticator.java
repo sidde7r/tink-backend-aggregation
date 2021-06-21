@@ -43,6 +43,7 @@ public class SwedbankDecoupledAuthenticator implements BankIdAuthenticator<Strin
     public String init(String ssn) {
         this.ssn = ssn;
         try {
+            // TODO: get "SE" from Agent ?
             AuthenticationResponse authenticationResponse =
                     apiClient.authenticateDecoupled(ssn, "SE", null);
             this.autoStartToken =

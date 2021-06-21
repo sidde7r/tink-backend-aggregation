@@ -49,7 +49,8 @@ public class InitStep implements AuthenticationStep {
                 authenticator.verifyCredentialsNotNullOrEmpty(
                         credentials.getField(Key.NATIONAL_ID_NUMBER));
 
-        // TODO: separate function
+        // TODO: separate function ?
+        // This is Special case for Sweden, should we use it here?
         if (!credentialsRequest.getUserAvailability().isUserAvailableForInteraction()) {
             if (credentialsRequest.getType() == CredentialsRequestType.MANUAL_AUTHENTICATION) {
                 // note that request type "MANUAL_AUTHENTICATION" is misleading and will, in this
@@ -57,7 +58,7 @@ public class InitStep implements AuthenticationStep {
                 // User _Not_ availableForInteraction), refer to the operation "authenticate-auto".
                 throw SessionError.SESSION_EXPIRED.exception();
             }
-            logger.warn("Triggering MobileID even though user is not available for interaction!");
+            logger.warn("Triggering SMART_ID even though user is not available for interaction!");
         }
 
         // get "EE" from the Agent / provider

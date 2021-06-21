@@ -40,7 +40,7 @@ public class SwedbankBalticsAuthenticator extends StatelessProgressiveAuthentica
                         new CheckIfAccessTokenIsValidStep(persistentStorage),
                         new RefreshAccessTokenStep(apiClient, persistentStorage),
                         new InitStep(this, apiClient, sessionStorage, credentialsRequest, provider),
-                        new CollectStatusStep(apiClient, persistentStorage, sessionStorage),
+                        new CollectStatusStep(this, apiClient, persistentStorage, sessionStorage),
                         new ExchangeCodeForTokenStep(apiClient, persistentStorage, sessionStorage));
     }
     

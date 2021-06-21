@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbankbaltics.SwedbankBalticsConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.PersistentStorageKeys;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
@@ -30,8 +31,7 @@ public class ExchangeCodeForTokenStep implements AuthenticationStep {
     public AuthenticationStepResponse execute(AuthenticationRequest request)
             throws AuthenticationException, AuthorizationException {
 
-        // TODO: use constants for storages
-        String authorizationCode = sessionStorage.get("authorizationCode");
+        String authorizationCode = sessionStorage.get(SwedbankBalticsConstants.AUTH_CODE);
 
         // TODO: catch exceptions
         OAuth2Token accessToken = apiClient.exchangeCodeForToken(authorizationCode);

@@ -20,6 +20,7 @@ public class CheckIfAccessTokenIsValidStep implements AuthenticationStep {
     public AuthenticationStepResponse execute(AuthenticationRequest request)
             throws AuthenticationException, AuthorizationException {
 
+        // TODO: maybe to use fetcher helper like in Aktia bank ??
         Optional<OAuth2Token> token =
                 persistentStorage.get(PersistentStorageKeys.OAUTH_2_TOKEN, OAuth2Token.class);
 
