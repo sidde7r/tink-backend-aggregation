@@ -300,7 +300,7 @@
             "achieved": false,
             "balanceAmount": 19.28,
             "balanceCurrency": "DKK",
-            "cashedOut": false,
+            "cashedOut": null,
             "created": 1614689770630,
             "deleted": false,
             "fields": [
@@ -365,6 +365,76 @@
             "templateId": "7d19ac9a-f597-4d4c-977d-4e1c51ebfe3c",
             "templateTitle": "Rejse",
             "updated": 1614689795254
+        },
+        {
+            "achieved": false,
+            "balanceAmount": 1500.11,
+            "balanceCurrency": "DKK",
+            "cashedOut": true,
+            "created": 1614689770630,
+            "deleted": false,
+            "fields": [
+                {
+                    "created": 1614689770630,
+                    "deleted": false,
+                    "fieldIdentifier": "",
+                    "id": "e81dbc69-669d-4854-b8ac-68dc46d80b63",
+                    "inputButtonTitle": "Næste",
+                    "inputPlaceholder": "Fx Paris",
+                    "inputSubtitle": "Destination",
+                    "inputTitle": "Hvor skal du hen?",
+                    "order": 0,
+                    "readonly": false,
+                    "required": true,
+                    "templateFieldId": "2e11a791-cc99-4aae-ba3f-68ee4f1c3bdd",
+                    "type": "location",
+                    "updated": 1614689795254,
+                    "value": "{\"latitude\":-12.1234,\"longitude\":123.123124,\"title\":\"Cashed out\"}",
+                    "visible": true
+                },
+                {
+                    "created": 1614689770630,
+                    "deleted": false,
+                    "fieldIdentifier": "target",
+                    "id": "031ec00c-636a-475e-95aa-e94050c79ded",
+                    "inputButtonTitle": "Næste",
+                    "inputPlaceholder": "Fx: 500",
+                    "inputSubtitle": "Indtast beløb",
+                    "inputTitle": "Hvad koster din rejse?",
+                    "order": 1,
+                    "readonly": false,
+                    "required": true,
+                    "templateFieldId": "7e5dafec-9a52-400c-90a8-59606348bdc7",
+                    "type": "money",
+                    "updated": 1614689795254,
+                    "value": "{\"amount\":\"1500.11\",\"currency\":\"DKK\"}",
+                    "visible": true
+                },
+                {
+                    "created": 1614689770630,
+                    "deleted": false,
+                    "fieldIdentifier": "image",
+                    "id": "9b0d9da3-6482-4480-a904-d12bbcd57a3a",
+                    "inputButtonTitle": "Opret",
+                    "inputPlaceholder": "",
+                    "inputSubtitle": "Søg",
+                    "inputTitle": "Vælg et billede",
+                    "order": 2,
+                    "readonly": false,
+                    "required": true,
+                    "templateFieldId": "cbea1d58-921c-4687-9111-73795bcd0472",
+                    "type": "image",
+                    "updated": 1614689795254,
+                    "value": "\"f2316145-8bc9-4e89-b5c7-5f2530be52da\"",
+                    "visible": true
+                }
+            ],
+            "id": "4354c910-ab9c-4efd-9d1c-a44b2fe6443f",
+            "readonly": false,
+            "sort": 1614689770630,
+            "templateId": "a846e76b-277e-42e3-ae23-d050f609dada",
+            "templateTitle": "Rejse",
+            "updated": 1614689795299
         }
     ]
 }

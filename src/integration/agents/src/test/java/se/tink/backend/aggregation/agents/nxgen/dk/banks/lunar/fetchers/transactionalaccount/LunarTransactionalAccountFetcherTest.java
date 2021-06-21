@@ -24,6 +24,7 @@ import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.per
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.persistance.LunarAuthDataAccessor;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.persistance.LunarDataAccessorFactory;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.client.FetcherApiClient;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.identity.LunarIdentityDataFetcher;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.transactionalaccount.rpc.GoalsResponse;
 import se.tink.backend.aggregation.nxgen.core.account.entity.Party;
@@ -100,7 +101,7 @@ public class LunarTransactionalAccountFetcherTest {
         // then
         assertThat(result.size()).isEqualTo(7);
         for (int i = 0; i < result.size(); i++) {
-            assertThat(result.get(i)).isEqualToComparingFieldByFieldRecursively(expected.get(i));
+            assertThat(result.get(i)).usingRecursiveComparison().isEqualTo(expected.get(i));
         }
     }
 
@@ -155,7 +156,7 @@ public class LunarTransactionalAccountFetcherTest {
         // then
         assertThat(result.size()).isEqualTo(2);
         for (int i = 0; i < result.size(); i++) {
-            assertThat(result.get(i)).isEqualToComparingFieldByFieldRecursively(expected.get(i));
+            assertThat(result.get(i)).usingRecursiveComparison().isEqualTo(expected.get(i));
         }
     }
 
@@ -177,7 +178,7 @@ public class LunarTransactionalAccountFetcherTest {
         // then
         assertThat(result.size()).isEqualTo(5);
         for (int i = 0; i < result.size(); i++) {
-            assertThat(result.get(i)).isEqualToComparingFieldByFieldRecursively(expected.get(i));
+            assertThat(result.get(i)).usingRecursiveComparison().isEqualTo(expected.get(i));
         }
     }
 

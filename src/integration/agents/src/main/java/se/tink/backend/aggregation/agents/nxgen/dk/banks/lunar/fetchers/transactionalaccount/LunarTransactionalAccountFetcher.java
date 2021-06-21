@@ -13,8 +13,10 @@ import se.tink.backend.aggregation.agents.agentplatform.authentication.storage.P
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.persistance.LunarAuthData;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.persistance.LunarDataAccessorFactory;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.client.FetcherApiClient;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.identity.LunarIdentityDataFetcher;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.transactionalaccount.entities.BaseResponseEntity;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.transactionalaccount.entities.GoalEntity;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.entity.Party;
@@ -88,6 +90,7 @@ public class LunarTransactionalAccountFetcher implements AccountFetcher<Transact
     private Collection<TransactionalAccount> fetchSavingsAccounts() {
         return apiClient.fetchSavingGoals().getGoals().stream()
                 .filter(BaseResponseEntity::notDeleted)
+                .filter(GoalEntity::isNotCashedOut)
                 .map(goal -> goal.toTransactionalAccount(getAccountHolderIfPresent()))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
