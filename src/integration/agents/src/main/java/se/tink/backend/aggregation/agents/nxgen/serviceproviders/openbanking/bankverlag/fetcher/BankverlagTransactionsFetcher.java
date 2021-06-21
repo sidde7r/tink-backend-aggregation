@@ -94,7 +94,7 @@ public class BankverlagTransactionsFetcher implements TransactionFetcher<Transac
     private boolean hasEntryInArchiveExceededLimit(int totalArchiveEntry) {
         if (totalArchiveEntry > expectedThresholdEntries) {
             log.error(
-                    "Zip files count more than expectedThresholdEntries={0}, hence stopped processing more transactions. ",
+                    "Zip files count more than expectedThresholdEntries={}, hence stopped processing more transactions. ",
                     totalArchiveEntry);
             return true;
         } else {
@@ -107,12 +107,11 @@ public class BankverlagTransactionsFetcher implements TransactionFetcher<Transac
         long compressionRatio = transactionXML.length() / entry.getCompressedSize();
 
         if (compressionRatio > expectedThresholdRatio) {
-            // ratio between compressed and uncompressed data is highly suspicious, looks
-            // like a Zip Bomb Attack
             log.error(
-                    "Expected thresholdRatio={0} but ratio between compressed and uncompressed data is highly"
-                            + " suspicious, looks like a Zip Bomb Attack, compressionRatio={1}",
-                    expectedThresholdRatio, compressionRatio);
+                    "Expected thresholdRatio={} but ratio between compressed and uncompressed data is highly"
+                            + " suspicious, looks like a Zip Bomb Attack, compressionRatio={}",
+                    expectedThresholdRatio,
+                    compressionRatio);
             return true;
 
         } else {

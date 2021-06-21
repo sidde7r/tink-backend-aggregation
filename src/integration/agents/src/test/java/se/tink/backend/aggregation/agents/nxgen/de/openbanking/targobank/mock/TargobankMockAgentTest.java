@@ -38,7 +38,6 @@ public class TargobankMockAgentTest {
                         .addCredentialField("username", "test_username")
                         .addCredentialField("password", "test_password")
                         .enableHttpDebugTrace()
-                        .enableDataDumpForContractFile()
                         .build();
 
         AgentContractEntity expected =
