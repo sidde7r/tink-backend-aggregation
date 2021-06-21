@@ -97,7 +97,7 @@ public abstract class CbiGlobeAgent extends SubsequentProgressiveGenerationAgent
                 temporaryStorage,
                 InstrumentType.ACCOUNTS,
                 getProviderConfiguration(),
-                requestManual ? psuIpAddress : null);
+                psuIpAddress);
     }
 
     @Override

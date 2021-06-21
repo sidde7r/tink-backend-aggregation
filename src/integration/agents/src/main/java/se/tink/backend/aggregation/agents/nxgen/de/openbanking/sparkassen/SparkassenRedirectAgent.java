@@ -32,9 +32,7 @@ public class SparkassenRedirectAgent extends SparkassenAgent {
                 SparkassenHeaderValues.forRedirect(
                         bankCode,
                         redirectUrl,
-                        request.getUserAvailability().isUserPresent()
-                                ? request.getUserAvailability().getOriginatingUserIpOrDefault()
-                                : null);
+                        request.getUserAvailability().getOriginatingUserIpOrDefault());
         return new SparkassenApiClient(
                 client,
                 headerValues,

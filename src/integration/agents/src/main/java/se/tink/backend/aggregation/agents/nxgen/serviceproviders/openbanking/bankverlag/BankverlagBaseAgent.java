@@ -55,9 +55,7 @@ public abstract class BankverlagBaseAgent extends NextGenerationAgent
         BankverlagHeaderValues headerValues =
                 new BankverlagHeaderValues(
                         this.aspspId,
-                        request.getUserAvailability().isUserPresent()
-                                ? request.getUserAvailability().getOriginatingUserIpOrDefault()
-                                : null);
+                        request.getUserAvailability().getOriginatingUserIpOrDefault());
         return new BankverlagApiClient(
                 client, headerValues, bankverlagStorage, randomValueGenerator, localDateTimeSource);
     }

@@ -27,8 +27,11 @@ public class UserAvailability {
     }
 
     public String getOriginatingUserIpOrDefault() {
+        if (!userPresent) {
+            return null;
+        }
         if (getOriginatingUserIp() == null) {
-            log.info("Using default user Ip");
+            log.info("Using user Ip: " + DEFAULT_USER_IP);
             return DEFAULT_USER_IP;
         }
         return getOriginatingUserIp();

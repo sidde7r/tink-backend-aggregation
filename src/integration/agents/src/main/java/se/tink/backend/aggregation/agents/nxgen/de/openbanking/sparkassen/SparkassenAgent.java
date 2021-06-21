@@ -80,10 +80,7 @@ public class SparkassenAgent extends NextGenerationAgent
         String bankCode = provider.getPayload();
         SparkassenHeaderValues headerValues =
                 new SparkassenHeaderValues(
-                        bankCode,
-                        request.getUserAvailability().isUserPresent()
-                                ? request.getUserAvailability().getOriginatingUserIpOrDefault()
-                                : null);
+                        bankCode, request.getUserAvailability().getOriginatingUserIpOrDefault());
         return new SparkassenApiClient(
                 client,
                 headerValues,
