@@ -4,13 +4,13 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
-import org.apache.commons.lang.RandomStringUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.entities.AmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.payment.entities.SimpleAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.payment.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.payment.rpc.CreatePaymentResponse;
+import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
 import se.tink.backend.aggregation.agents.utils.remittanceinformation.RemittanceInformationValidator;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
@@ -44,7 +44,7 @@ public class IngPaymentMapper {
                         .orElse(LocalDate.now((DEFAULT_ZONE_ID)));
 
         return CreatePaymentRequest.builder()
-                .endToEndIdentification(RandomStringUtils.random(35, true, true))
+                .endToEndIdentification(RandomUtils.generateRandomAlphanumericString(35))
                 .instructedAmount(AmountEntity.amountOf(paymentRequest))
                 .debtorAccount(debtor)
                 .creditorAccount(creditor)
