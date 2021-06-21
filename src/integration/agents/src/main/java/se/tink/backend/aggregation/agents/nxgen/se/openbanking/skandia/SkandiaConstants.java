@@ -68,6 +68,9 @@ public final class SkandiaConstants {
         public static final String NOT_ENOUGH_FUNDS =
                 "Not enough funds on account to make payments";
         public static final String SCA_REDIRECT_MISSING = "SCA Redirect missing";
+        public static final String INVALID_SCOPE =
+                "%s contain invalid scope(s), only support scopes AIS and PIS";
+        public static final String MISSING_SCOPE = "Scope not provided, support scopes AIS and PIS";
     }
 
     public static class ErrorCodes {
@@ -125,7 +128,8 @@ public final class SkandiaConstants {
         public static final String PENDING = "pending";
         public static final String BOOKED = "booked";
         public static final String CODE = "code";
-        public static final String SCOPE = "psd2.aisp";
+        public static final String SCOPE = "psd2.aisp%20psd2.pisp";
+        public static final String SCOPE_WITHOUT_PAYMENT = "psd2.aisp";
     }
 
     public static class FormKeys {
@@ -219,5 +223,10 @@ public final class SkandiaConstants {
 
     public static class MinimumValues {
         public static final BigDecimal MINIMUM_AMOUNT = BigDecimal.ONE;
+    }
+
+    public class Scopes {
+        public static final String AIS = "AIS";
+        public static final String PIS = "PIS";
     }
 }
