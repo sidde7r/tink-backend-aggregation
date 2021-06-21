@@ -18,24 +18,41 @@ import se.tink.libraries.aggregation_agent_api_client.src.configuration.ServiceC
 import se.tink.libraries.aggregation_agent_api_client.src.configuration.TlsConfiguration;
 import se.tink.libraries.aggregation_agent_api_client.src.http.HttpApiClient;
 
-public class HttpApiClientFactory {
-    private final EidasProxyConfiguration eidasProxyConfiguration;
-    private final EidasIdentity eidasIdentity;
-    private final boolean useEidasProxy;
-    private final LogMasker logMasker;
-    private final OutputStream logOutputStream;
+public class HttpApiClientBuilder {
+    private EidasProxyConfiguration eidasProxyConfiguration;
+    private EidasIdentity eidasIdentity;
+    private boolean useEidasProxy;
+    private LogMasker logMasker;
+    private OutputStream logOutputStream;
 
-    public HttpApiClientFactory(
-            EidasProxyConfiguration eidasProxyConfiguration,
-            EidasIdentity eidasIdentity,
-            boolean useEidasProxy,
-            LogMasker logMasker,
-            OutputStream logOutputStream) {
+    public static HttpApiClientBuilder builder() {
+        return new HttpApiClientBuilder();
+    }
+
+    public HttpApiClientBuilder setEidasProxyConfiguration(
+            EidasProxyConfiguration eidasProxyConfiguration) {
         this.eidasProxyConfiguration = eidasProxyConfiguration;
+        return this;
+    }
+
+    public HttpApiClientBuilder setEidasIdentity(EidasIdentity eidasIdentity) {
         this.eidasIdentity = eidasIdentity;
+        return this;
+    }
+
+    public HttpApiClientBuilder setUseEidasProxy(boolean useEidasProxy) {
         this.useEidasProxy = useEidasProxy;
+        return this;
+    }
+
+    public HttpApiClientBuilder setLogMasker(LogMasker logMasker) {
         this.logMasker = logMasker;
+        return this;
+    }
+
+    public HttpApiClientBuilder setLogOutputStream(OutputStream logOutputStream) {
         this.logOutputStream = logOutputStream;
+        return this;
     }
 
     public HttpApiClient build() {
