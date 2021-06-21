@@ -295,6 +295,7 @@ public class Field {
      * coding in all implementations.
      */
     public enum Key {
+        HTTP_API_CLIENT("http-api-client"),
         HTTP_CLIENT("http-client"),
         SESSION_STORAGE("session-storage"),
         PERSISTENT_STORAGE("persistent-storage"),
