@@ -12,6 +12,7 @@ import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModules;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.nordea.authenticator.NordeaFiAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.nordea.fetcher.creditcard.NordeaFiCreditCardFetcher;
+import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.nordea.fetcher.creditcard.OneYearLimitCreditCardTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.nordea.fetcher.transactionalaccount.NordeaFiTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.nordea.fetcher.transactionalaccount.OneYearLimitGetTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseAgent;
@@ -43,7 +44,8 @@ public final class NordeaFiAgent extends NordeaBaseAgent
     public NordeaFiAgent(AgentComponentProvider componentProvider, QsealcSigner qsealcSigner) {
         super(componentProvider);
         apiClient = new NordeaFiApiClient(client, persistentStorage, qsealcSigner);
-        this.creditCardRefreshController = getCreditCardRefreshController();
+        creditCardRefreshController =
+                getCreditCardRefreshController(componentProvider.getLocalDateTimeSource());
         transactionalAccountRefreshController =
                 getTransactionalAccountRefreshController(
                         componentProvider.getLocalDateTimeSource());
@@ -106,9 +108,11 @@ public final class NordeaFiAgent extends NordeaBaseAgent
                         new TransactionKeyPaginationController<>(accountFetcher)));
     }
 
-    private CreditCardRefreshController getCreditCardRefreshController() {
-        NordeaBaseCreditCardFetcher creditFetcher =
-                new NordeaFiCreditCardFetcher(apiClient, provider.getCurrency());
+    private CreditCardRefreshController getCreditCardRefreshController(
+            LocalDateTimeSource localDateTimeSource) {
+        NordeaBaseCreditCardFetcher<OneYearLimitCreditCardTransactionsResponse> creditFetcher =
+                new NordeaFiCreditCardFetcher(
+                        apiClient, provider.getCurrency(), localDateTimeSource);
 
         return new CreditCardRefreshController(
                 metricRefreshController,

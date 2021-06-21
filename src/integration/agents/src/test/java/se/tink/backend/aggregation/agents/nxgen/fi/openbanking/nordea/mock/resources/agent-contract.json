@@ -320,54 +320,6 @@
             "transactionDates": []
         },
         {
-            "amount": -615.0,
-            "date": 662727600000,
-            "description": "narrative",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {
-                "CREDIT_CARD_HOLDER": "narrative"
-            },
-            "pending": false,
-            "timestamp": 0,
-            "type": "CREDIT_CARD",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": -90.0,
-            "date": 662727600000,
-            "description": "narrative",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {
-                "CREDIT_CARD_HOLDER": "narrative"
-            },
-            "pending": false,
-            "timestamp": 0,
-            "type": "CREDIT_CARD",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
-            "amount": 499.0,
-            "date": 662727600000,
-            "description": "narrative",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {
-                "CREDIT_CARD_HOLDER": "narrative"
-            },
-            "pending": false,
-            "timestamp": 0,
-            "type": "CREDIT_CARD",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        },
-        {
             "amount": -0.97,
             "date": 694263600000,
             "description": "counterparty_name",
