@@ -26,6 +26,9 @@ public class UserAvailability {
         return originatingUserIp;
     }
 
+    // Intended to be used for OB agents which need to include PSU_IP_ADDRESS only when the user is
+    // present. Using output of this method while setting header will make sure that the header is
+    // present when user is present, and skip the header if user is not present.
     public String getOriginatingUserIpOrDefault() {
         if (!userPresent) {
             return null;
