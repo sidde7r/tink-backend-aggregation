@@ -8,6 +8,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.cert.CertificateException;
 import java.util.List;
+import java.util.Map.Entry;
 import se.tink.backend.aggregation.configuration.eidas.InternalEidasProxyConfiguration;
 import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
 import se.tink.backend.aggregation.eidasidentity.identity.EidasIdentity;
@@ -108,7 +109,29 @@ public class HttpApiClientBuilder {
                     }
                 });
 
+        populateVariablesFromStorage(httpApiClient);
+
         return httpApiClient;
+    }
+
+    private void populateVariablesFromStorage(HttpApiClient client) {
+        for (Entry<String, String> entry : persistentStorage.entrySet()) {
+            String storageKey = entry.getKey();
+            String storageValue = entry.getValue();
+
+            if (storageKey.startsWith(ROTATED_STORAGE_PREFIX)) {
+                continue;
+            }
+
+            for (VariableDetector detector : VARIABLE_DETECTORS) {
+                boolean variableDetected =
+                        detector.detectVariableFromStorage(client, storageKey, storageValue);
+
+                if (variableDetected) {
+                    break;
+                }
+            }
+        }
     }
 
     private EidasConfiguration setupEidasConfig() {
