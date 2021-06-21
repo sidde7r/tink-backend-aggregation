@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbankbaltics.SwedbankBalticsConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbankbaltics.authenticator.StepDataStorage;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.PersistentStorageKeys;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
@@ -15,7 +15,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.OpenBankingTokenExpirationDateHelper;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 @RequiredArgsConstructor
 public class ExchangeCodeForTokenStep implements AuthenticationStep {
@@ -25,13 +24,13 @@ public class ExchangeCodeForTokenStep implements AuthenticationStep {
 
     private final SwedbankApiClient apiClient;
     private final PersistentStorage persistentStorage;
-    private final SessionStorage sessionStorage;
+    private final StepDataStorage stepDataStorage;
 
     @Override
     public AuthenticationStepResponse execute(AuthenticationRequest request)
             throws AuthenticationException, AuthorizationException {
 
-        String authorizationCode = sessionStorage.get(SwedbankBalticsConstants.AUTH_CODE);
+        String authorizationCode = stepDataStorage.getAuthCode();
 
         // TODO: catch exceptions
         OAuth2Token accessToken = apiClient.exchangeCodeForToken(authorizationCode);

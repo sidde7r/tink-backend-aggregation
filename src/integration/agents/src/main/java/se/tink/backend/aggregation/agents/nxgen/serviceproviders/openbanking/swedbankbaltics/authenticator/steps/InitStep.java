@@ -13,12 +13,11 @@ import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.rpc.AuthenticationResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbankbaltics.SwedbankBalticsConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbankbaltics.authenticator.StepDataStorage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbankbaltics.authenticator.SwedbankBalticsAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepResponse;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsRequestType;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
@@ -27,8 +26,7 @@ public class InitStep implements AuthenticationStep {
 
     private final SwedbankBalticsAuthenticator authenticator;
     private final SwedbankApiClient apiClient;
-    // TODO: wrapper for session Storage
-    private final SessionStorage sessionStorage;
+    private final StepDataStorage stepDataStorage;
     private final CredentialsRequest credentialsRequest;
     private final Provider provider;
 
@@ -61,12 +59,10 @@ public class InitStep implements AuthenticationStep {
             logger.warn("Triggering SMART_ID even though user is not available for interaction!");
         }
 
-        // get "EE" from the Agent / provider
         AuthenticationResponse authenticationResponse =
                 apiClient.authenticateDecoupled(userId, provider.getMarket(), personalId);
 
-        sessionStorage.put(
-                SwedbankBalticsConstants.AUTH_URL, authenticationResponse.getCollectAuthUri());
+        stepDataStorage.putAuthUrl(authenticationResponse.getCollectAuthUri());
 
         // TODO: open smartId ???
 

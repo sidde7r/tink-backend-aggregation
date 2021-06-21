@@ -13,12 +13,12 @@ import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.rpc.AuthenticationStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbankbaltics.SwedbankBalticsConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbankbaltics.authenticator.StepDataStorage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbankbaltics.authenticator.SwedbankBalticsAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepResponse;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 @RequiredArgsConstructor
 public class CollectStatusStep implements AuthenticationStep {
@@ -28,7 +28,7 @@ public class CollectStatusStep implements AuthenticationStep {
             LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final SwedbankApiClient apiClient;
     private final PersistentStorage persistentStorage;
-    private final SessionStorage sessionStorage;
+    private final StepDataStorage stepDataStorage;
 
     @Override
     public AuthenticationStepResponse execute(AuthenticationRequest request)
@@ -41,7 +41,7 @@ public class CollectStatusStep implements AuthenticationStep {
                 authenticator.verifyCredentialsNotNullOrEmpty(
                         credentials.getField(Field.Key.USERNAME));
 
-        String collectAuthUri = sessionStorage.get(SwedbankBalticsConstants.AUTH_URL);
+        String collectAuthUri = stepDataStorage.getAuthUrl();
 
         for (int i = 0; i < SwedbankBalticsConstants.SMART_ID_POLL_MAX_ATTEMPTS; i++) {
 
@@ -57,9 +57,7 @@ public class CollectStatusStep implements AuthenticationStep {
             // TODO: handle expiration time and so on
 
             if (status.equals("finalised")) {
-                sessionStorage.put(
-                        SwedbankBalticsConstants.AUTH_CODE,
-                        authenticationStatusResponse.getAuthorizationCode());
+                stepDataStorage.putAuthCode(authenticationStatusResponse.getAuthorizationCode());
                 return AuthenticationStepResponse.executeNextStep();
             }
 

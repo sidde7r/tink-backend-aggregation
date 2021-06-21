@@ -21,9 +21,6 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 public class SwedbankBalticsAuthenticator extends StatelessProgressiveAuthenticator {
 
     private final List<AuthenticationStep> authenticationSteps;
-    private final PersistentStorage persistentStorage;
-    private final SessionStorage sessionStorage;
-    private final CredentialsRequest credentialsRequest;
 
     public SwedbankBalticsAuthenticator(
             SwedbankApiClient apiClient,
@@ -32,16 +29,14 @@ public class SwedbankBalticsAuthenticator extends StatelessProgressiveAuthentica
             CredentialsRequest credentialsRequest,
             Provider provider) {
 
-        this.persistentStorage = persistentStorage;
-        this.sessionStorage = sessionStorage;
-        this.credentialsRequest = credentialsRequest;
+        final StepDataStorage stepDataStorage = new StepDataStorage(sessionStorage);
         this.authenticationSteps =
                 Arrays.asList(
                         new CheckIfAccessTokenIsValidStep(persistentStorage),
                         new RefreshAccessTokenStep(apiClient, persistentStorage),
-                        new InitStep(this, apiClient, sessionStorage, credentialsRequest, provider),
-                        new CollectStatusStep(this, apiClient, persistentStorage, sessionStorage),
-                        new ExchangeCodeForTokenStep(apiClient, persistentStorage, sessionStorage));
+                        new InitStep(this, apiClient, stepDataStorage, credentialsRequest, provider),
+                        new CollectStatusStep(this, apiClient, persistentStorage, stepDataStorage),
+                        new ExchangeCodeForTokenStep(apiClient, persistentStorage, stepDataStorage));
     }
     
     @Override
