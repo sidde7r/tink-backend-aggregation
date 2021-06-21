@@ -101,6 +101,8 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
                 RefreshIdentityDataExecutor,
                 TypedPaymentControllerable {
 
+    private final AgentComponentProvider componentProvider;
+
     private final JwtSigner jwtSigner;
     private final EidasIdentity eidasIdentity;
     private final TlsConfigurationSetter tlsConfigurationSetter;
@@ -144,6 +146,7 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
         this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
         this.fetcherInstrumentation = new FetcherInstrumentationRegistry();
         this.pisRequestFilter = pisRequestFilter;
+        this.componentProvider = componentProvider;
 
         configureMdcPropagation();
     }
@@ -207,7 +210,8 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
                 providerConfiguration,
                 randomValueGenerator,
                 persistentStorage,
-                aisConfig);
+                aisConfig,
+                componentProvider);
     }
 
     @Override
@@ -355,7 +359,7 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
     }
 
     protected OpenIdAuthenticator getAisAuthenticator() {
-        return new UkOpenBankingAisAuthenticator(this.apiClient, aisConfig.getPermissions());
+        return new UkOpenBankingAisAuthenticator(this.apiClient);
     }
 
     @Override
