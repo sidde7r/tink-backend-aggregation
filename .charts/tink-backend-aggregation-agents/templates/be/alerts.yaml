@@ -334,16 +334,18 @@ spec:
     - alert: LongTermAuthenticationUserCancellationDueToThirdPartyAppTimeoutRate100%BE
       expr: |
         # Failed logins (due to third party app timeout) is 100%
-        count(sum_over_time(tink_agent_login_total{action="login",outcome="cancelled_due_to_third_party_app_timeout", market="BE", provider_type!="test"}[24h])) BY (className,provider)
-        # All login attempts the last 24 hours
-          / count(sum_over_time(tink_agent_login_total{action="login", market="BE"}[24h])) BY (className,provider) > 0.99
+        count(sum_over_time(tink_agent_login_total{action="login",outcome="cancelled_due_to_third_party_app_timeout", market="BE", provider_type!="test"}[48h])) BY (className,provider)
+        # All login attempts the last 48 hours
+          / count(sum_over_time(tink_agent_login_total{action="login", market="BE"}[48h])) BY (className,provider) > 0.99
+        # At least this many attempts.
+          and count(sum_over_time(tink_agent_login_total{action="login", outcome=~"cancelled_due_to_third_party_app_timeout", market="BE", provider_type!="test"}[48h])) by (className,provider) > 10
       for: 15m
       labels:
         severity: ping
         priority: P3
         who: integration-minions
       annotations:
-        description: {{ .Values.kibanaLink24h }}
+        description: {{ .Values.kibanaLink48h }}
           {{ .Values.grafanaLink }}
-        summary: Authentication failures due to user cancelletion is 100% for <{ $labels.className }> <{ $labels.provider }> for the last 24h. Please check if a redirect url is correct.
+        summary: Authentication failures due to user cancelletion is 100% for <{ $labels.className }> <{ $labels.provider }> for the last 48h. Please check if a redirect url is correct.
         tags: {{ .Values.tags }}
