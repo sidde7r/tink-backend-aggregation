@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.framework.context;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
+import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
@@ -84,6 +85,11 @@ public class AgentTestContext extends AgentContext {
 
     public List<Transfer> getTransfers() {
         return transfers;
+    }
+
+    @Override
+    public OutputStream getLogOutputStream() {
+        return System.out;
     }
 
     @Override

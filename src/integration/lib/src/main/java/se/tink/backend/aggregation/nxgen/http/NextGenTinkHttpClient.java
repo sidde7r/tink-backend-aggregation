@@ -16,8 +16,8 @@ import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.client.apache4.config.DefaultApacheHttpClient4Config;
 import io.vavr.jackson.datatype.VavrModule;
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
@@ -36,7 +36,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 import javax.net.ssl.SSLContext;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.ext.MessageBodyReader;
@@ -84,7 +83,6 @@ import se.tink.backend.aggregation.nxgen.http.filter.engine.FilterOrder;
 import se.tink.backend.aggregation.nxgen.http.filter.engine.FilterPhases;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.NextGenFilterable;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
-import se.tink.backend.aggregation.nxgen.http.filter.filters.RestIoLoggingFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.iface.Filter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.persistent.Header;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.persistent.PersistentHeaderFilter;
@@ -134,9 +132,7 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
     private boolean followRedirects = false;
     private final ApacheHttpRedirectStrategy redirectStrategy;
 
-    private RestIoLoggingFilter debugOutputLoggingFilter;
-
-    private final ByteArrayOutputStream logOutputStream;
+    private final OutputStream logOutputStream;
     private final MetricRegistry metricRegistry;
     private final Provider provider;
 
@@ -163,7 +159,6 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
         private static final int MAX_REDIRECTS = 10;
         private static final boolean CHUNKED_ENCODING = false;
         private static final boolean FOLLOW_REDIRECTS = true;
-        private static final boolean DEBUG_OUTPUT = false;
     }
 
     private class CONSTANTS {
@@ -270,12 +265,7 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
         setChunkedEncoding(DEFAULTS.CHUNKED_ENCODING);
         setMaxRedirects(DEFAULTS.MAX_REDIRECTS);
         setFollowRedirects(DEFAULTS.FOLLOW_REDIRECTS);
-        setDebugOutput(DEFAULTS.DEBUG_OUTPUT);
         setUserAgent(DEFAULTS.DEFAULT_USER_AGENT);
-
-        final PrintStream printStream =
-                Optional.ofNullable(builder.getPrintStream())
-                        .orElseGet(() -> new PrintStream(System.out));
 
         registerJacksonModule(new VavrModule());
         registerJacksonModule(new JavaTimeModule());
@@ -284,9 +274,6 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
                         this.provider != null ? this.provider.getName() : null);
         this.logMasker = logMasker;
         this.loggingMode = loggingMode;
-
-        debugOutputLoggingFilter =
-                new RestIoLoggingFilter(printStream, this.logMasker, this.loggingMode);
 
         addFilter(new SendRequestFilter());
     }
@@ -311,10 +298,9 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
         private final LoggingMode loggingMode;
         private AggregatorInfo aggregatorInfo;
         private MetricRegistry metricRegistry;
-        private ByteArrayOutputStream logOutputStream;
+        private OutputStream logOutputStream;
         private SignatureKeyPair signatureKeyPair;
         private Provider provider;
-        private PrintStream printStream;
         private LogMasker logMasker;
         private NextGenTinkHttpClientEventProducer eventProducer;
 
@@ -335,7 +321,7 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
             return metricRegistry;
         }
 
-        public ByteArrayOutputStream getLogOutputStream() {
+        public OutputStream getLogOutputStream() {
             return logOutputStream;
         }
 
@@ -345,10 +331,6 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
 
         public Provider getProvider() {
             return provider;
-        }
-
-        public PrintStream getPrintStream() {
-            return printStream;
         }
 
         public NextGenTinkHttpClientEventProducer getEventProducer() {
@@ -365,7 +347,7 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
             return this;
         }
 
-        public Builder setLogOutputStream(ByteArrayOutputStream logOutputStream) {
+        public Builder setLogOutputStream(OutputStream logOutputStream) {
             this.logOutputStream = logOutputStream;
             return this;
         }
@@ -377,11 +359,6 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
 
         public Builder setProvider(Provider provider) {
             this.provider = provider;
-            return this;
-        }
-
-        public Builder setPrintStream(PrintStream printStream) {
-            this.printStream = printStream;
             return this;
         }
 
@@ -779,14 +756,6 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
 
     public void addRedirectHandler(RedirectHandler handler) {
         this.redirectStrategy.addHandler(handler);
-    }
-
-    public void setDebugOutput(boolean debugOutput) {
-        if (debugOutput && !isFilterPresent(debugOutputLoggingFilter)) {
-            this.addFilter(debugOutputLoggingFilter);
-        } else if (!debugOutput && isFilterPresent(debugOutputLoggingFilter)) {
-            this.removeFilter(debugOutputLoggingFilter);
-        }
     }
 
     public void setMessageSignInterceptor(MessageSignInterceptor messageSignInterceptor) {

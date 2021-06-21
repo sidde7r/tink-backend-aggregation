@@ -168,7 +168,6 @@ import se.tink.backend.aggregation.client.provider_configuration.rpc.PisCapabili
 import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
-import se.tink.backend.aggregation.nxgen.http.filter.factory.ClientFilterFactory;
 import se.tink.backend.aggregation.source_info.AccountSourceInfo;
 import se.tink.backend.aggregation.utils.transfer.StringNormalizerSwedish;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
@@ -1907,11 +1906,6 @@ public final class SEBApiAgent extends AbstractAgent
 
         // Clear the cookies on the client
         clearSessionCookiesFromClient(client.getClientHandler().getCookieStore());
-    }
-
-    @Override
-    public void attachHttpFilters(ClientFilterFactory filterFactory) {
-        filterFactory.addClientFilter(client);
     }
 
     @Override

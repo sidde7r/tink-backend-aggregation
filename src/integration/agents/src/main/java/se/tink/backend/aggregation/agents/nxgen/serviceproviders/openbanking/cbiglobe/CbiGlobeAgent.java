@@ -106,7 +106,6 @@ public abstract class CbiGlobeAgent extends SubsequentProgressiveGenerationAgent
         final AgentConfiguration<CbiGlobeConfiguration> agentConfiguration =
                 getAgentConfiguration();
         apiClient.setConfiguration(agentConfiguration);
-        this.client.setDebugOutput(true);
         this.client.setEidasProxy(configuration.getEidasProxy());
     }
 

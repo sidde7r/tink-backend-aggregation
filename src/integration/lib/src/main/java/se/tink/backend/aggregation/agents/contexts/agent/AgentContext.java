@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.contexts.agent;
 
 import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
 import se.tink.backend.aggregation.agents.contexts.CompositeAgentContext;
 import se.tink.backend.aggregation.agents.summary.refresh.RefreshSummary;
 import se.tink.backend.aggregation.api.AggregatorInfo;
@@ -58,7 +59,7 @@ public abstract class AgentContext implements CompositeAgentContext {
     }
 
     @Override
-    public ByteArrayOutputStream getLogOutputStream() {
+    public OutputStream getLogOutputStream() {
         return logOutputStream;
     }
 

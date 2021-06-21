@@ -148,7 +148,6 @@ import se.tink.backend.aggregation.agents.modules.LegacyAgentWiremockStrategyMod
 import se.tink.backend.aggregation.agents.modules.providers.LegacyAgentStrategyInterface;
 import se.tink.backend.aggregation.client.provider_configuration.rpc.PisCapability;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
-import se.tink.backend.aggregation.nxgen.http.filter.factory.ClientFilterFactory;
 import se.tink.backend.aggregation.utils.transfer.StringNormalizerSwedish;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageLengthConfig;
@@ -642,11 +641,6 @@ public final class LansforsakringarAgent extends AbstractAgent
             transfer = transactionEntity.toTransfer();
         }
         return transfer;
-    }
-
-    @Override
-    public void attachHttpFilters(ClientFilterFactory filterFactory) {
-        filterFactory.addClientFilter(client);
     }
 
     @Override

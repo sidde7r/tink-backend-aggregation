@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.framework.context;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
+import java.io.OutputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -154,6 +155,11 @@ public final class NewAgentTestContext extends AgentContext {
         return accountDataCache.getTransferDestinationPatternsToBeProcessed().values().stream()
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public OutputStream getLogOutputStream() {
+        return System.out;
     }
 
     @Override
