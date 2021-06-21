@@ -8,11 +8,14 @@ import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.cert.CertificateException;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 import se.tink.backend.aggregation.configuration.eidas.InternalEidasProxyConfiguration;
 import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
 import se.tink.backend.aggregation.eidasidentity.identity.EidasIdentity;
 import se.tink.backend.aggregation.logmasker.LogMasker;
+import se.tink.backend.aggregation.nxgen.controllers.configuration.AgentConfigurationController;
 import se.tink.backend.aggregation.nxgen.http_api_client.variable_detection.storage.ClientIdDetector;
 import se.tink.backend.aggregation.nxgen.http_api_client.variable_detection.storage.ConsentIdDetector;
 import se.tink.backend.aggregation.nxgen.http_api_client.variable_detection.storage.TokenDetector;
@@ -25,6 +28,7 @@ import se.tink.libraries.aggregation_agent_api_client.src.configuration.LoggingC
 import se.tink.libraries.aggregation_agent_api_client.src.configuration.ServiceConfiguration;
 import se.tink.libraries.aggregation_agent_api_client.src.configuration.TlsConfiguration;
 import se.tink.libraries.aggregation_agent_api_client.src.http.HttpApiClient;
+import se.tink.libraries.aggregation_agent_api_client.src.variable.VariableKey;
 
 public class HttpApiClientBuilder {
     private static final String ROTATED_STORAGE_PREFIX = "OLD_";
@@ -41,6 +45,7 @@ public class HttpApiClientBuilder {
     private LogMasker logMasker;
     private OutputStream logOutputStream;
     private PersistentStorage persistentStorage;
+    private Map<String, Object> secretsMap;
 
     public static HttpApiClientBuilder builder() {
         return new HttpApiClientBuilder();
@@ -77,6 +82,11 @@ public class HttpApiClientBuilder {
         return this;
     }
 
+    public HttpApiClientBuilder setSecretsMap(Map<String, Object> secretsMap) {
+        this.secretsMap = secretsMap;
+        return this;
+    }
+
     public HttpApiClient build() {
         HttpApiClient httpApiClient =
                 new HttpApiClient(
@@ -109,9 +119,30 @@ public class HttpApiClientBuilder {
                     }
                 });
 
+        populateVariablesFromSecrets(httpApiClient);
         populateVariablesFromStorage(httpApiClient);
 
         return httpApiClient;
+    }
+
+    private void populateVariablesFromSecrets(HttpApiClient client) {
+        Optional.ofNullable(secretsMap.get(AgentConfigurationController.REDIRECT_URL_KEY))
+                .ifPresent(
+                        redirectUrl -> client.addVariable(VariableKey.REDIRECT_URI, redirectUrl));
+
+        Optional.ofNullable(secretsMap.get(AgentConfigurationController.QSEALC_KEY))
+                .ifPresent(qsealc -> client.addVariable(VariableKey.SIGNATURE_PUBLIC_KEY, qsealc));
+
+        Optional.ofNullable(secretsMap.get("apiKey"))
+                .ifPresent(apiKey -> client.addVariable(VariableKey.API_KEY, apiKey));
+
+        Optional.ofNullable(secretsMap.get("clientId"))
+                .ifPresent(clientId -> client.addVariable(VariableKey.CLIENT_ID, clientId));
+
+        Optional.ofNullable(secretsMap.get("clientSecret"))
+                .ifPresent(
+                        clientSecret ->
+                                client.addVariable(VariableKey.CLIENT_SECRET, clientSecret));
     }
 
     private void populateVariablesFromStorage(HttpApiClient client) {
