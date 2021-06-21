@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deu
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
@@ -29,11 +30,13 @@ public abstract class DeutscheBankAgent extends NextGenerationAgent
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     protected final DeutscheHeaderValues headerValues;
     protected RandomValueGenerator randomValueGenerator;
+    protected LocalDateTimeSource localDateTimeSource;
 
     public DeutscheBankAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
         headerValues = setupHeaderValues(componentProvider);
         randomValueGenerator = componentProvider.getRandomValueGenerator();
+        localDateTimeSource = componentProvider.getLocalDateTimeSource();
         apiClient = constructApiClient(headerValues);
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }

@@ -17,6 +17,7 @@ import se.tink.backend.aggregation.agents.utils.berlingroup.payment.enums.Paymen
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.rpc.FetchPaymentStatusResponse;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
@@ -40,8 +41,15 @@ public class DeutscheBankPaymentApiClient extends DeutscheBankApiClient
             Credentials credentials,
             StrongAuthenticationState authenticationState,
             RandomValueGenerator randomValueGenerator,
-            PaymentMapper<CreatePaymentRequest> paymentMapper) {
-        super(client, persistentStorage, headerValues, marketConfiguration, randomValueGenerator);
+            PaymentMapper<CreatePaymentRequest> paymentMapper,
+            LocalDateTimeSource localDateTimeSource) {
+        super(
+                client,
+                persistentStorage,
+                headerValues,
+                marketConfiguration,
+                randomValueGenerator,
+                localDateTimeSource);
         this.credentials = credentials;
         this.authenticationState = authenticationState;
         this.paymentMapper = paymentMapper;

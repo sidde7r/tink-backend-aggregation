@@ -48,7 +48,12 @@ public final class NorisbankAgent extends DeutscheBankAgent
     @Override
     protected DeutscheBankApiClient constructApiClient(DeutscheHeaderValues headerValues) {
         return new NorisbankApiClient(
-                client, persistentStorage, headerValues, NORIS_CONFIGURATION, randomValueGenerator);
+                client,
+                persistentStorage,
+                headerValues,
+                NORIS_CONFIGURATION,
+                randomValueGenerator,
+                localDateTimeSource);
     }
 
     @Override
@@ -66,7 +71,8 @@ public final class NorisbankAgent extends DeutscheBankAgent
                         credentials,
                         strongAuthenticationState,
                         randomValueGenerator,
-                        new DeutscheBankPaymentMapper());
+                        new DeutscheBankPaymentMapper(),
+                        localDateTimeSource);
 
         BasePaymentExecutor paymentExecutor =
                 new BasePaymentExecutor(apiClient, redirectPaymentAuthenticator, sessionStorage);

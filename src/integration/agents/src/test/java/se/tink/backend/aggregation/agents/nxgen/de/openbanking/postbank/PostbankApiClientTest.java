@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deu
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheHeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.configuration.DeutscheMarketConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.fetcher.transactionalaccount.rpc.transactions.ErrorResponse;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.ActualLocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGeneratorImpl;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -47,7 +48,8 @@ public class PostbankApiClientTest {
                         null,
                         new DeutscheHeaderValues("", ""),
                         new DeutscheMarketConfiguration(TEST_URL, "PSU_ID_TYPE"),
-                        randomValueGenerator);
+                        randomValueGenerator,
+                        new ActualLocalDateTimeSource());
         apiClient.enrichWithJwtGenerator(new PostbankFakeJwtGenerator());
     }
 

@@ -42,6 +42,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deu
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AuthenticationType;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.CommonFields;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.GermanFields;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.ActualLocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGeneratorImpl;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
@@ -305,7 +306,8 @@ public class PostbankAuthenticationControllerTest {
                         persistentStorage,
                         deutscheHeaderValues,
                         deutscheMarketConfiguration,
-                        randomValueGenerator);
+                        randomValueGenerator,
+                        new ActualLocalDateTimeSource());
         postbankApiClient.enrichWithJwtGenerator(new PostbankFakeJwtGenerator());
         return new PostbankAuthenticator(postbankApiClient, persistentStorage, credentials);
     }

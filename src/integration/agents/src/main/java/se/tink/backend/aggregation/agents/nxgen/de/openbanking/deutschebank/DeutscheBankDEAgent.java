@@ -52,7 +52,8 @@ public final class DeutscheBankDEAgent extends DeutscheBankAgent
                 persistentStorage,
                 headerValues,
                 DEUTSCHE_DE_CONFIGURATION,
-                randomValueGenerator);
+                randomValueGenerator,
+                localDateTimeSource);
     }
 
     @Override
@@ -70,7 +71,8 @@ public final class DeutscheBankDEAgent extends DeutscheBankAgent
                         credentials,
                         strongAuthenticationState,
                         randomValueGenerator,
-                        new DeutscheBankPaymentMapper());
+                        new DeutscheBankPaymentMapper(),
+                        localDateTimeSource);
 
         BasePaymentExecutor paymentExecutor =
                 new BasePaymentExecutor(apiClient, redirectPaymentAuthenticator, sessionStorage);

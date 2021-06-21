@@ -17,6 +17,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deu
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.rpc.ConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.configuration.DeutscheMarketConfiguration;
 import se.tink.backend.aggregation.agents.utils.charsetguesser.CharsetGuesser;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
@@ -32,8 +33,15 @@ public class PostbankApiClient extends DeutscheBankApiClient {
             PersistentStorage persistentStorage,
             DeutscheHeaderValues headerValues,
             DeutscheMarketConfiguration marketConfiguration,
-            RandomValueGenerator randomValueGenerator) {
-        super(client, persistentStorage, headerValues, marketConfiguration, randomValueGenerator);
+            RandomValueGenerator randomValueGenerator,
+            LocalDateTimeSource localDateTimeSource) {
+        super(
+                client,
+                persistentStorage,
+                headerValues,
+                marketConfiguration,
+                randomValueGenerator,
+                localDateTimeSource);
     }
 
     public void enrichWithJwtGenerator(JwtGenerator jwtGenerator) {
@@ -41,7 +49,8 @@ public class PostbankApiClient extends DeutscheBankApiClient {
     }
 
     public ConsentResponse getConsents(String psuId) {
-        ConsentRequest consentRequest = new ConsentRequest(new GlobalConsentAccessEntity());
+        ConsentRequest consentRequest =
+                new ConsentRequest(new GlobalConsentAccessEntity(), localDateTimeSource);
         try {
             return createRequestWithServiceMapped(
                             new URL(marketConfiguration.getBaseUrl() + Urls.CONSENT))
