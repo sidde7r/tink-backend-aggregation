@@ -64,6 +64,7 @@ public class FrOpenBankingPaymentExecutor implements PaymentExecutor, FetchableP
     private final StrongAuthenticationState strongAuthenticationState;
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final FrOpenBankingStatusParser frOpenBankingStatusParser;
+    private final FrOpenBankingPaymentDatePolicy frOpenBankingPaymentDatePolicy;
 
     public FrOpenBankingPaymentExecutor(
             FrOpenBankingPaymentApiClient apiClient,
@@ -71,13 +72,15 @@ public class FrOpenBankingPaymentExecutor implements PaymentExecutor, FetchableP
             SessionStorage sessionStorage,
             StrongAuthenticationState strongAuthenticationState,
             SupplementalInformationHelper supplementalInformationHelper,
-            FrOpenBankingStatusParser frOpenBankingStatusParser) {
+            FrOpenBankingStatusParser frOpenBankingStatusParser,
+            FrOpenBankingPaymentDatePolicy frOpenBankingPaymentDatePolicy) {
         this.apiClient = apiClient;
         this.redirectUrl = redirectUrl;
         this.sessionStorage = sessionStorage;
         this.strongAuthenticationState = strongAuthenticationState;
         this.supplementalInformationHelper = supplementalInformationHelper;
         this.frOpenBankingStatusParser = frOpenBankingStatusParser;
+        this.frOpenBankingPaymentDatePolicy = frOpenBankingPaymentDatePolicy;
     }
 
     @Override
@@ -100,7 +103,6 @@ public class FrOpenBankingPaymentExecutor implements PaymentExecutor, FetchableP
         RemittanceInformation remittanceInformation = payment.getRemittanceInformation();
         RemittanceInformationValidator.validateSupportedRemittanceInformationTypesOrThrow(
                 remittanceInformation, null, RemittanceInformationType.UNSTRUCTURED);
-
         CreatePaymentRequest createPaymentRequest =
                 new CreatePaymentRequest.Builder()
                         .withPaymentType(paymentType)
@@ -108,8 +110,7 @@ public class FrOpenBankingPaymentExecutor implements PaymentExecutor, FetchableP
                         .withCreditorAccount(creditor)
                         .withCreditorName(new CreditorEntity(payment.getCreditor().getName()))
                         .withDebtorAccount(debtor)
-                        .withExecutionDate(
-                                FrOpenBankingDateUtil.getExecutionDate(payment.getExecutionDate()))
+                        .withExecutionDate(frOpenBankingPaymentDatePolicy.apply(payment))
                         .withCreationDateTime(FrOpenBankingDateUtil.getCreationDate())
                         .withRedirectUrl(
                                 new URL(redirectUrl)

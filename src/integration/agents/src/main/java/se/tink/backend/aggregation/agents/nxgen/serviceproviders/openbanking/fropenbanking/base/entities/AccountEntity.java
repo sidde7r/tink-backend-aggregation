@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
+import se.tink.libraries.payment.rpc.Payment;
 
 @JsonObject
 @AllArgsConstructor
@@ -29,6 +30,15 @@ public class AccountEntity {
 
     public static AccountEntity debtorOf(PaymentRequest paymentRequest) {
         return Optional.ofNullable(paymentRequest.getPayment().getDebtor())
+                .map(
+                        debtor ->
+                                new AccountEntity(
+                                        ((IbanIdentifier) debtor.getAccountIdentifier()).getIban()))
+                .orElse(new AccountEntity());
+    }
+
+    public static AccountEntity creditorOf(Payment payment) {
+        return Optional.ofNullable(payment.getDebtor())
                 .map(
                         debtor ->
                                 new AccountEntity(
