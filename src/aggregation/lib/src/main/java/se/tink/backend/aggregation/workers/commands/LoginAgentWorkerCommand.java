@@ -61,10 +61,6 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
         static final String LOGIN_SESSION_EXPIRY_METRIC = "agent_login_session_lifetime";
 
         static final String IS_LOGGED_IN = "is-logged-in";
-        static final String LOGIN = "login";
-        static final String LOGIN_MANUAL = "login-manual";
-        static final String LOGIN_AUTO = "login-auto";
-        static final String LOGIN_CRON = "login-cron";
         static final String LOGOUT = "logout";
         static final String ACQUIRE_LOCK = "acquire-lock";
         static final String RELEASE_LOCK = "release-lock";
