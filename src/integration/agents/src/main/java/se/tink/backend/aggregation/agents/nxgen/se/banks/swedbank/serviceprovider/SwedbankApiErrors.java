@@ -135,6 +135,9 @@ public class SwedbankApiErrors {
 
     public static void throwIfPaymentOrTransferAlreadyExists(HttpResponseException hre) {
         HttpResponse httpResponse = hre.getResponse();
+        if (httpResponse.getStatus() != HttpStatus.SC_BAD_REQUEST) {
+            throw hre;
+        }
         ErrorResponse errorResponse = httpResponse.getBody(ErrorResponse.class);
         if (errorResponse.hasErrorCode(ErrorCode.TRANSFER_ALREADY_EXISTS)
                 || errorResponse.hasErrorCode(ErrorCode.PAYMENT_ALREADY_EXISTS)) {
