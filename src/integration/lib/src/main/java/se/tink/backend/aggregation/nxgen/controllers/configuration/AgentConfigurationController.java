@@ -461,4 +461,20 @@ public final class AgentConfigurationController implements AgentConfigurationCon
                     .build();
         }
     }
+
+    @Override
+    public Map<String, Object> getSecretsMap() {
+        if (tppSecretsServiceEnabled) {
+            return allSecretsMapObj;
+        }
+
+        Optional<Object> clientConfiguration =
+                integrationsConfiguration.getClientConfigurationAsObject(
+                        financialInstitutionId, appId);
+
+        return clientConfiguration
+                .filter(x -> x instanceof Map)
+                .map(x -> (Map<String, Object>) x)
+                .orElse(Collections.emptyMap());
+    }
 }

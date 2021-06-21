@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.nxgen.controllers.configuration.iface;
 
 import io.reactivex.rxjava3.core.Observable;
 import java.util.Collection;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
@@ -30,4 +31,6 @@ public interface AgentConfigurationControllerable {
             String integrationName, Class<T> clientConfigClass);
 
     String getQsealc();
+
+    Map<String, Object> getSecretsMap();
 }
