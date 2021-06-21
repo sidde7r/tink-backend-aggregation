@@ -1,9 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Builder;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
+@Builder
 public class PsuDataEntity {
 
     @JsonProperty("bankID")
@@ -11,9 +13,4 @@ public class PsuDataEntity {
 
     @JsonProperty("personalID")
     private String personalID;
-
-    public PsuDataEntity(String bankId, String personalID) {
-        this.bankId = bankId;
-        this.personalID = personalID;
-    }
 }

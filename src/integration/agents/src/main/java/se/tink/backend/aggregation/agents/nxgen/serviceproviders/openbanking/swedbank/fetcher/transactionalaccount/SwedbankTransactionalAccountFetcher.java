@@ -70,9 +70,6 @@ public class SwedbankTransactionalAccountFetcher implements AccountFetcher<Trans
         Collection<TransactionalAccount> tinkAccounts =
                 getAccounts().getAccountList().stream()
                         .map(toTinkAccountWithBalance())
-                        // TODO: temporary for Baltic
-                        //                        .map(account -> account.toTinkAccount(new
-                        // LinkedList<>()))
                         .filter(Optional::isPresent)
                         .map(Optional::get)
                         .collect(Collectors.toList());

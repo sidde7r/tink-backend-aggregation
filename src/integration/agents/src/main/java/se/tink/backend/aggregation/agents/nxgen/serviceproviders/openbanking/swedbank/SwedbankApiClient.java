@@ -216,33 +216,24 @@ public final class SwedbankApiClient implements SwedbankOpenBankingPaymentApiCli
         // If the provider is swedbank-ob, then default bankId to 08999 to prevent savingsbank
         // customer to login with single engagement
         String bankId = isSwedbank() ? SwedbankConstants.BANK_IDS.get(0) : "";
-        AuthorizeRequest authorizeRequest = new AuthorizeRequest();
+        AuthorizeRequest.AuthorizeRequestBuilder requestBuilder =
+                AuthorizeRequest.builder()
+                        .clientID(configuration.getClientId())
+                        .redirectUri(getRedirectUrl())
+                        .authenticationMethodId(authenticationMethodId);
 
         // TODO: fixme
-        if (market == "SE") {
-            authorizeRequest =
-                    new AuthorizeRequest(
-                            configuration.getClientId(),
-                            getRedirectUrl(),
-                            bankId,
-                            personalId,
-                            authenticationMethodId,
-                            RequestValues.ALL_SCOPES);
-        } else if (market == "EE") {
-            authorizeRequest =
-                    new AuthorizeRequest(
-                            configuration.getClientId(),
-                            getRedirectUrl(),
-                            null,
-                            personalId,
-                            authenticationMethodId,
-                            RequestValues.ALL_ACCOUNTS_SCOPES);
+        if (market.equalsIgnoreCase("SE")) {
+            requestBuilder = requestBuilder.bankId(bankId).scope(RequestValues.ALL_SCOPES);
+        } else if (market.equalsIgnoreCase("EE")) {
+            requestBuilder =
+                    requestBuilder.personalID(personalId).scope(RequestValues.ALL_ACCOUNTS_SCOPES);
         }
 
         return createRequest(SwedbankConstants.Urls.AUTHORIZATION_DECOUPLED)
                 .header(HeaderKeys.PSU_ID, ssn)
                 .type(MediaType.APPLICATION_JSON_TYPE)
-                .post(AuthenticationResponse.class, authorizeRequest);
+                .post(AuthenticationResponse.class, requestBuilder.build());
     }
 
     private RequestBuilder createAuthBaseRequest(String ssn, String path) {
@@ -421,26 +412,22 @@ public final class SwedbankApiClient implements SwedbankOpenBankingPaymentApiCli
                 componentProvider.getCredentialsRequest().getCredentials().getProviderName());
     }
 
-    // For Sweden Only
     @Override
     public AuthenticationResponse startPaymentAuthorization(String endpoint)
             throws PaymentException {
         final AuthorizeRequest authorizeRequest =
-                new AuthorizeRequest(
-                        configuration.getClientId(),
-                        getRedirectUrl(),
-                        componentProvider.getCredentialsRequest().getProvider().getPayload(),
-                        null,
-                        RequestValues.MOBILE_ID,
-                        RequestValues.ALL_SCOPES);
-
+                AuthorizeRequest.builder()
+                        .clientID(configuration.getClientId())
+                        .redirectUri(getRedirectUrl())
+                        .bankId(credentialsRequest.getProvider().getPayload())
+                        .build();
         try {
 
             return createRequestInSession(new URL(Urls.BASE.concat(endpoint)), true)
                     .header(HeaderKeys.TPP_REDIRECT_URI, getRedirectUrl())
                     .header(HeaderKeys.TPP_NOK_REDIRECT_URI, getRedirectUrl())
                     .header(HeaderKeys.TPP_REDIRECT_PREFERRED, HeaderValues.TPP_REDIRECT_PREFERRED)
-                    .body(new AuthorizeRequest(), MediaType.APPLICATION_JSON_TYPE)
+                    .body(AuthorizeRequest.builder().build(), MediaType.APPLICATION_JSON_TYPE)
                     .put(AuthenticationResponse.class, authorizeRequest);
         } catch (HttpResponseException e) {
             handleBankSideErrorCodes(e);
