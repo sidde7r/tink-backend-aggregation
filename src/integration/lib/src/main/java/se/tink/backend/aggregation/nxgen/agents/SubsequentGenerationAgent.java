@@ -167,6 +167,7 @@ public abstract class SubsequentGenerationAgent<Auth> extends SuperAbstractAgent
                                 context.getAgentConfigurationController().isOpenBankingAgent())
                         .setLogMasker(context.getLogMasker())
                         .setLogOutputStream(context.getLogOutputStream())
+                        .setPersistentStorage(persistentStorage)
                         .build();
 
         credentials
