@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import java.util.Collection;
 import java.util.Set;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.consent.mappers.AccountsPermissionsMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.consent.mappers.BeneficiariesPermissionsMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.consent.mappers.IdentityDataPermissionsMapper;
@@ -12,6 +13,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.libraries.credentials.service.RefreshableItem;
 
+@Slf4j
 public class ConsentPermissionsMapper {
 
     private final Set<PermissionsMapper> mappers;
@@ -28,13 +30,21 @@ public class ConsentPermissionsMapper {
     }
 
     public ImmutableSet<String> mapFrom(Set<RefreshableItem> itemsToRefresh) {
-        return mappers.stream()
-                .map(mapper -> mapper.mapFrom(itemsToRefresh))
-                .flatMap(Collection::stream)
-                .map(ConsentPermission::getValue)
-                // TODO: Filtering to be removed when Core trims RefreshScope, so it respects agent
-                // capabilities
-                .filter(permission -> aisConfig.getPermissions().contains(permission))
-                .collect(ImmutableSet.toImmutableSet());
+        ImmutableSet<String> permissions =
+                mappers.stream()
+                        .map(mapper -> mapper.mapFrom(itemsToRefresh))
+                        .flatMap(Collection::stream)
+                        .map(ConsentPermission::getValue)
+                        // TODO: Filtering to be removed when Core trims RefreshScope, so it
+                        // respects agent
+                        // capabilities
+                        .filter(permission -> aisConfig.getPermissions().contains(permission))
+                        .collect(ImmutableSet.toImmutableSet());
+        log.info(
+                "[ConsentPermissionsMapper]: Requesting permissions {}, refreshableItems: {}, aisConfigPermissions: {}",
+                permissions,
+                itemsToRefresh,
+                aisConfig.getPermissions());
+        return permissions;
     }
 }
