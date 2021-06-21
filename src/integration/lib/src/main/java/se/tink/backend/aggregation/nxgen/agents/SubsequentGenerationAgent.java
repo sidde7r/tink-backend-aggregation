@@ -2,10 +2,12 @@ package se.tink.backend.aggregation.nxgen.agents;
 
 import com.google.common.base.Preconditions;
 import java.security.Security;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Supplier;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.CreateBeneficiaryControllerable;
 import se.tink.backend.aggregation.agents.PaymentControllerable;
@@ -164,7 +166,13 @@ public abstract class SubsequentGenerationAgent<Auth> extends SuperAbstractAgent
                         context.getLogMasker(),
                         context.getLogOutputStream());
 
-        return httpApiClientFactory.build();
+        HttpApiClient httpClient = httpApiClientFactory.build();
+
+        credentials
+                .getSensitivePayload(Field.Key.HTTP_API_CLIENT, String.class)
+                .ifPresent(httpClient::loadState);
+
+        return httpClient;
     }
 
     @Override
@@ -185,6 +193,11 @@ public abstract class SubsequentGenerationAgent<Auth> extends SuperAbstractAgent
     @Override
     public void persistLoginSession() {
         getSessionController().store();
+
+        if (Objects.nonNull(this.httpApiClient)) {
+            credentials.setSensitivePayload(
+                    Field.Key.HTTP_API_CLIENT, this.httpApiClient.saveState());
+        }
     }
 
     @Override
@@ -195,6 +208,11 @@ public abstract class SubsequentGenerationAgent<Auth> extends SuperAbstractAgent
     @Override
     public void clearLoginSession() {
         getSessionController().clear();
+
+        credentials.removeSensitivePayload(Field.Key.HTTP_API_CLIENT);
+        if (Objects.nonNull(this.httpApiClient)) {
+            this.httpApiClient.clearState();
+        }
     }
 
     @Override
