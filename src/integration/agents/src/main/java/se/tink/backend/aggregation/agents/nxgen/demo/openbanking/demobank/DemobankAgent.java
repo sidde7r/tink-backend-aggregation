@@ -32,6 +32,7 @@ import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authen
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.DemobankAutoAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.DemobankDecoupledAppAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.DemobankMockDkNemIdReAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.DemobankMockNoBankIdAlwaysWaitingAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.DemobankMockNoBankIdAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.DemobankMultiRedirectAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.DemobankPasswordAndOtpAuthenticator;
@@ -183,6 +184,12 @@ public final class DemobankAgent extends NextGenerationAgent
         } else if (CredentialsTypes.PASSWORD.equals(provider.getCredentialsType())) {
             return new PasswordAuthenticationController(
                     new DemobankPasswordAuthenticator(apiClient));
+        } else if (CredentialsTypes.MOBILE_BANKID.equals(provider.getCredentialsType())
+                && "se-demobank-timeout-bankid".equals(provider.getName())) {
+            return new BankIdAuthenticationControllerNO(
+                    supplementalInformationController,
+                    new DemobankMockNoBankIdAlwaysWaitingAuthenticator(),
+                    catalog);
         }
         throw new IllegalStateException("Invalid provider configuration");
     }
