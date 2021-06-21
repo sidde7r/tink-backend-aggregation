@@ -18,7 +18,7 @@ public class CreditCardTransactionResponse implements TransactionKeyPaginatorRes
     private GroupHeaderEntity groupHeader;
 
     @JsonProperty("response")
-    protected TransactionsEntity transactions;
+    private TransactionsEntity transactions;
 
     @Override
     public Collection<? extends Transaction> getTinkTransactions() {

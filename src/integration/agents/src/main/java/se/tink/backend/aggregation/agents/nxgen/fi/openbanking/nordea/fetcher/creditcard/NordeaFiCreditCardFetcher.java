@@ -6,7 +6,8 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.dat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 
-public class NordeaFiCreditCardFetcher extends NordeaBaseCreditCardFetcher {
+public class NordeaFiCreditCardFetcher
+        extends NordeaBaseCreditCardFetcher<OneYearLimitCreditCardTransactionsResponse> {
     private final LocalDateTimeSource localDateTimeSource;
 
     public NordeaFiCreditCardFetcher(
