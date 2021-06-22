@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.nxgen.http_api_client;
 import com.google.common.collect.ImmutableList;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
@@ -211,7 +212,9 @@ public class HttpApiClientBuilder {
                             "changeme",
                             "clientcert")
                     .serverCertificateAuthority(
-                            new String(internalEidasProxyConfiguration.getRootCa()))
+                            new String(
+                                    internalEidasProxyConfiguration.getRootCa(),
+                                    StandardCharsets.UTF_8))
                     .build();
         } catch (KeyStoreException
                 | IOException
