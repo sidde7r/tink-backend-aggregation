@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
+import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
@@ -87,6 +88,7 @@ public class AccountEntity {
                                 .withAccountNumber(bban)
                                 .withAccountName(getAccountName())
                                 .addIdentifier(new IbanIdentifier(iban))
+                                .addIdentifier(new SwedishIdentifier(bban))
                                 .build())
                 .putInTemporaryStorage(StorageKeys.ACCOUNT_ID, iban)
                 .setApiIdentifier(resourceId)
