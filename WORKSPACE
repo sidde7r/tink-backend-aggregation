@@ -293,17 +293,17 @@ http_file(
 
 http_file(
     name = "libwebp6_0.6.1-2",
-    downloaded_file_path = "libwebp6_0.6.1-2_amd64.deb",
-    sha256 = "7d9cb5e08149327731e84380e454a56f148c517ec2ecad30900c6837d0b1b76a",
-    urls = ["http://ftp.se.debian.org/debian/pool/main/libw/libwebp/libwebp6_0.6.1-2_amd64.deb"],
-)
+    downloaded_file_path = "libwebp6_0.6.1-2.1_amd64.deb",
+    sha256 = "52bfd0f8d3a1bbd2c25fcd72fab857d0f24aea35874af68e057dde869ae3902c",
+    urls = ["http://ftp.se.debian.org/debian/pool/main/libw/libwebp/libwebp6_0.6.1-2.1_amd64.deb"],
+ )
 
 http_file(
     name = "libopenjp2-7_2.3.0-2",
-    downloaded_file_path = "libopenjp2-7_2.3.0-2+deb10u1_amd64.deb",
-    sha256 = "be133e48ac8894d4824b6106fe361a1b46acbcef8232b3b98dc04455da90e02a",
-    urls = ["http://ftp.se.debian.org/debian/pool/main/o/openjpeg2/libopenjp2-7_2.3.0-2+deb10u1_amd64.deb"],
-)
+    downloaded_file_path = "libopenjp2-7_2.3.0-2+deb10u2_amd64.deb",
+    sha256 = "55127318744936099e6979136c66bf6be6528151639215f657891cfe021cfd56",
+    urls = ["http://ftp.se.debian.org/debian/pool/main/o/openjpeg2/libopenjp2-7_2.3.0-2+deb10u2_amd64.deb"],
+ )
 
 http_file(
     name = "libc6_2.28-10",
