@@ -174,9 +174,7 @@ public abstract class SubsequentGenerationAgent<Auth> extends SuperAbstractAgent
                         .setUserIp(getOriginatingUserIpOrDefault())
                         .build();
 
-        credentials
-                .getSensitivePayload(Field.Key.HTTP_API_CLIENT, String.class)
-                .ifPresent(httpClient::loadState);
+        credentials.getSensitivePayload(Field.Key.HTTP_API_CLIENT).ifPresent(httpClient::loadState);
 
         setApiClientVariables(httpClient);
 
