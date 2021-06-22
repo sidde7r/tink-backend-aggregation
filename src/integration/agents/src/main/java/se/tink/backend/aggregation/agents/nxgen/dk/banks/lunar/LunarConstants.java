@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.utils.deviceprofile.DeviceProfileConfiguratio
 
 public class LunarConstants {
 
-    public static final String APP_VERSION = "4.31.0";
+    public static final String APP_VERSION = "4.36.1";
     private static final String LUNAR_BASE_URL = "https://api.prod.lunarway.com/";
 
     public static class Uri {

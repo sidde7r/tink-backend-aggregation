@@ -22,6 +22,9 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ing
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.filters.IngBaseGatewayTimeoutFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.filters.IngBaseSignatureInvalidFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.filters.IngRetryFilter;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.payment.IngPaymentApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.payment.IngPaymentExecutor;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.payment.IngPaymentMapper;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
@@ -51,20 +54,18 @@ public abstract class IngBaseAgent extends NextGenerationAgent
                 MarketConfiguration {
 
     protected final IngBaseApiClient apiClient;
-
+    private final IngPaymentApiClient paymentApiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
-    private AutoAuthenticationController authenticator;
-    private final boolean isManualAuthentication;
 
     public IngBaseAgent(AgentComponentProvider agentComponentProvider, QsealcSigner qsealcSigner) {
         super(agentComponentProvider);
         configureHttpClient(client);
-        isManualAuthentication = shouldDoManualAuthentication(request);
+
         /*
             ING in their documentation use country code in lowercase, however their API treat
             lowercase as wrong country code and returns error that it's malformed
         */
-        final String marketInUppercase = request.getProvider().getMarket().toUpperCase();
+        String marketInUppercase = request.getProvider().getMarket().toUpperCase();
 
         apiClient =
                 new IngBaseApiClient(
@@ -72,7 +73,16 @@ public abstract class IngBaseAgent extends NextGenerationAgent
                         persistentStorage,
                         marketInUppercase,
                         providerSessionCacheController,
-                        isManualAuthentication,
+                        shouldDoManualAuthentication(request),
+                        this,
+                        qsealcSigner);
+        paymentApiClient =
+                new IngPaymentApiClient(
+                        client,
+                        persistentStorage,
+                        marketInUppercase,
+                        providerSessionCacheController,
+                        shouldDoManualAuthentication(request),
                         this,
                         qsealcSigner);
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
@@ -97,11 +107,12 @@ public abstract class IngBaseAgent extends NextGenerationAgent
     @Override
     public void setConfiguration(final AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
-        final AgentConfiguration<IngBaseConfiguration> agentConfiguration =
+        AgentConfiguration<IngBaseConfiguration> agentConfiguration =
                 getAgentConfigurationController().getAgentConfiguration(IngBaseConfiguration.class);
 
         try {
             apiClient.setConfiguration(agentConfiguration);
+            paymentApiClient.setConfiguration(agentConfiguration);
         } catch (CertificateException e) {
             throw new IllegalStateException(
                     "Could not parse QSEALC properly while setting up ING agent", e);
@@ -127,14 +138,12 @@ public abstract class IngBaseAgent extends NextGenerationAgent
                         ingBaseAuthenticator,
                         credentials,
                         strongAuthenticationState);
-        authenticator =
-                new AutoAuthenticationController(
-                        request,
-                        context,
-                        new ThirdPartyAppAuthenticationController<>(
-                                oAuth2AuthenticationController, supplementalInformationHelper),
-                        oAuth2AuthenticationController);
-        return authenticator;
+        return new AutoAuthenticationController(
+                request,
+                context,
+                new ThirdPartyAppAuthenticationController<>(
+                        oAuth2AuthenticationController, supplementalInformationHelper),
+                oAuth2AuthenticationController);
     }
 
     @Override
@@ -174,7 +183,8 @@ public abstract class IngBaseAgent extends NextGenerationAgent
     public Optional<PaymentController> constructPaymentController() {
         IngPaymentExecutor paymentExecutor =
                 new IngPaymentExecutor(
-                        apiClient,
+                        paymentApiClient,
+                        new IngPaymentMapper(),
                         sessionStorage,
                         strongAuthenticationState,
                         supplementalInformationHelper);
