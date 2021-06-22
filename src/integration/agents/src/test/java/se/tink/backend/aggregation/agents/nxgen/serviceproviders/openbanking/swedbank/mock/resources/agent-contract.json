@@ -4,9 +4,9 @@
         "accountExclusion" : "NONE",
         "exactBalance" : {
             "currencyCode" : "SEK",
-            "unscaledValue" : 567560,
             "exactValue" : 5675.6,
             "scale" : 2,
+            "unscaledValue" : 567560,
             "doubleValue" : 5675.6
         },
         "currencyCode" : "SEK",
@@ -19,8 +19,13 @@
         "userModifiedExcluded" : false,
         "userModifiedName" : false,
         "userModifiedType" : false,
-        "identifiers" : "[]",
+        "identifiers" : "[\"se://815059231235734\"]",
         "closed" : false,
+        "accountHolder" : {
+            "accountId" : null,
+            "type" : "PERSONAL",
+            "identities" : [ ]
+        },
         "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
         "balances" : [ ],
         "availableCredit" : 0.0,

@@ -27,10 +27,14 @@ public class SEBWireMockTest {
                 AgentsServiceConfigurationReader.read(CONFIGURATION_PATH);
 
         final AgentWireMockRefreshTest agentWireMockRefreshTest =
-                AgentWireMockRefreshTest.builder(MarketCode.SE, "se-seb-ob", wireMockServerFilePath)
+                AgentWireMockRefreshTest.nxBuilder()
+                        .withMarketCode(MarketCode.SE)
+                        .withProviderName("se-seb-ob")
+                        .withWireMockFilePath(wireMockServerFilePath)
+                        .withConfigFile(configuration)
+                        .testFullAuthentication()
                         .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
                         .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
-                        .withConfigurationFile(configuration)
                         .build();
 
         final AgentContractEntity expected =
