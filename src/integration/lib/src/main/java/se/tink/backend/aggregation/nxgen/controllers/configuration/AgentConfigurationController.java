@@ -474,8 +474,8 @@ public final class AgentConfigurationController implements AgentConfigurationCon
                         financialInstitutionId, appId);
 
         return clientConfiguration
-                .filter(x -> x instanceof Map)
-                .map(x -> (Map<String, Object>) x)
+                .filter(Map.class::isInstance)
+                .map(Map.class::cast)
                 .orElse(Collections.emptyMap());
     }
 }
