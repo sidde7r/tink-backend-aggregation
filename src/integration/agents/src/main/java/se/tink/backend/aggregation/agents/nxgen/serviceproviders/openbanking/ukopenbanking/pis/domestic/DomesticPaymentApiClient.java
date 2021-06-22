@@ -30,6 +30,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domestic.dto.DomesticPaymentConsentRequestData;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domestic.dto.DomesticPaymentConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domestic.dto.DomesticPaymentInitiation;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domestic.dto.DomesticPaymentInitiation.DomesticPaymentInitiationBuilder;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domestic.dto.DomesticPaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domestic.dto.DomesticPaymentRequestData;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domestic.dto.DomesticPaymentResponse;
@@ -40,6 +41,7 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.payment.rpc.Payment;
+import se.tink.libraries.payments.common.model.PaymentScheme;
 import se.tink.libraries.signableoperation.enums.InternalStatus;
 
 @RequiredArgsConstructor
@@ -273,15 +275,26 @@ public class DomesticPaymentApiClient implements UkOpenBankingPaymentApiClient {
 
     private DomesticPaymentInitiation createDomesticPaymentInitiation(
             Payment payment, String endToEndIdentification, String instructionIdentification) {
-        return DomesticPaymentInitiation.builder()
-                .debtorAccount(domesticPaymentConverter.getDebtorAccount(payment))
-                .creditorAccount(domesticPaymentConverter.getCreditorAccount(payment))
-                .instructedAmount(domesticPaymentConverter.getInstructedAmount(payment))
-                .remittanceInformation(
-                        domesticPaymentConverter.getRemittanceInformationDto(payment))
-                .instructionIdentification(instructionIdentification)
-                .endToEndIdentification(endToEndIdentification)
-                .build();
+        DomesticPaymentInitiationBuilder domesticPaymentInitiationBuilder =
+                DomesticPaymentInitiation.builder()
+                        .debtorAccount(domesticPaymentConverter.getDebtorAccount(payment))
+                        .creditorAccount(domesticPaymentConverter.getCreditorAccount(payment))
+                        .instructedAmount(domesticPaymentConverter.getInstructedAmount(payment))
+                        .remittanceInformation(
+                                domesticPaymentConverter.getRemittanceInformationDto(payment))
+                        .instructionIdentification(instructionIdentification)
+                        .endToEndIdentification(endToEndIdentification);
+
+        // First step to optionally enable this before making this mandatory
+        if (payment.getPaymentScheme() != null
+                && payment.getPaymentScheme() == PaymentScheme.FASTER_PAYMENTS) {
+            log.info(
+                    "Explicitly passed FASTER_PAYMENTS scheme, will populate LocalInstrument accordingly");
+            domesticPaymentInitiationBuilder.localInstrument(
+                    domesticPaymentConverter.getLocalInstrument(payment));
+        }
+
+        return domesticPaymentInitiationBuilder.build();
     }
 
     private URL createUrl(String path) {
