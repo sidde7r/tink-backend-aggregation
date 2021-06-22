@@ -46,7 +46,7 @@ public class HttpApiClientBuilder {
     private LogMasker logMasker;
     private OutputStream logOutputStream;
     private PersistentStorage persistentStorage;
-    private Map<String, Object> secretsMap;
+    private Map<String, Object> secretsConfiguration;
     private String userIp;
 
     public static HttpApiClientBuilder builder() {
@@ -84,8 +84,8 @@ public class HttpApiClientBuilder {
         return this;
     }
 
-    public HttpApiClientBuilder setSecretsMap(Map<String, Object> secretsMap) {
-        this.secretsMap = secretsMap;
+    public HttpApiClientBuilder setSecretsConfiguration(Map<String, Object> secretsConfiguration) {
+        this.secretsConfiguration = secretsConfiguration;
         return this;
     }
 
@@ -138,20 +138,20 @@ public class HttpApiClientBuilder {
     }
 
     private void populateVariablesFromSecrets(HttpApiClient client) {
-        Optional.ofNullable(secretsMap.get(AgentConfigurationController.REDIRECT_URL_KEY))
+        Optional.ofNullable(secretsConfiguration.get(AgentConfigurationController.REDIRECT_URL_KEY))
                 .ifPresent(
                         redirectUrl -> client.addVariable(VariableKey.REDIRECT_URI, redirectUrl));
 
-        Optional.ofNullable(secretsMap.get(AgentConfigurationController.QSEALC_KEY))
+        Optional.ofNullable(secretsConfiguration.get(AgentConfigurationController.QSEALC_KEY))
                 .ifPresent(qsealc -> client.addVariable(VariableKey.SIGNATURE_PUBLIC_KEY, qsealc));
 
-        Optional.ofNullable(secretsMap.get("apiKey"))
+        Optional.ofNullable(secretsConfiguration.get("apiKey"))
                 .ifPresent(apiKey -> client.addVariable(VariableKey.API_KEY, apiKey));
 
-        Optional.ofNullable(secretsMap.get("clientId"))
+        Optional.ofNullable(secretsConfiguration.get("clientId"))
                 .ifPresent(clientId -> client.addVariable(VariableKey.CLIENT_ID, clientId));
 
-        Optional.ofNullable(secretsMap.get("clientSecret"))
+        Optional.ofNullable(secretsConfiguration.get("clientSecret"))
                 .ifPresent(
                         clientSecret ->
                                 client.addVariable(VariableKey.CLIENT_SECRET, clientSecret));

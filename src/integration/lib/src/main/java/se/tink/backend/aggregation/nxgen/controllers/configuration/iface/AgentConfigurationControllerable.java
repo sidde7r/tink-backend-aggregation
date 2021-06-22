@@ -32,5 +32,5 @@ public interface AgentConfigurationControllerable {
 
     String getQsealc();
 
-    Map<String, Object> getSecretsMap();
+    Map<String, Object> getSecretsConfiguration();
 }

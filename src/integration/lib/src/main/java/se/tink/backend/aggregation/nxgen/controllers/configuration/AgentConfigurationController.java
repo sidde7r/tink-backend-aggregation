@@ -464,7 +464,7 @@ public final class AgentConfigurationController implements AgentConfigurationCon
     }
 
     @Override
-    public Map<String, Object> getSecretsMap() {
+    public Map<String, Object> getSecretsConfiguration() {
         if (tppSecretsServiceEnabled) {
             return allSecretsMapObj;
         }
