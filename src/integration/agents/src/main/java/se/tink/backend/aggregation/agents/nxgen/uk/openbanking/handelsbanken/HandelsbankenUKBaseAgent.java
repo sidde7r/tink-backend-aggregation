@@ -14,7 +14,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 public class HandelsbankenUKBaseAgent extends HandelsbankenBaseAgent {
 
     private static final int MAX_FETCH_PERIOD_MONTHS = 12;
-    private HandelsbankenAccountConverter accountConverter;
+    private final HandelsbankenAccountConverter accountConverter;
 
     public HandelsbankenUKBaseAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
