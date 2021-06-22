@@ -4,10 +4,10 @@
     "accountExclusion" : "NONE",
     "exactBalance" : {
       "currencyCode" : "SEK",
-      "exactValue" : 6000.0,
-      "unscaledValue" : 6000000,
+      "doubleValue" : 6000.0,
       "scale" : 3,
-      "doubleValue" : 6000.0
+      "unscaledValue" : 6000000,
+      "exactValue" : 6000.0
     },
     "currencyCode" : "SEK",
     "bankId" : "51503123456",
@@ -20,7 +20,7 @@
     "userModifiedExcluded" : false,
     "userModifiedName" : false,
     "userModifiedType" : false,
-    "identifiers" : "[]",
+    "identifiers" : "[\"se://51503123456\"]",
     "closed" : false,
     "holderName" : "Firstname Lastnamesson",
     "accountHolder" : {
@@ -40,10 +40,10 @@
     "accountExclusion" : "NONE",
     "exactBalance" : {
       "currencyCode" : "SEK",
-      "exactValue" : 1091.28,
-      "unscaledValue" : 1091280,
+      "doubleValue" : 1091.28,
       "scale" : 3,
-      "doubleValue" : 1091.28
+      "unscaledValue" : 1091280,
+      "exactValue" : 1091.28
     },
     "currencyCode" : "SEK",
     "bankId" : "5150012345",
@@ -56,7 +56,7 @@
     "userModifiedExcluded" : false,
     "userModifiedName" : false,
     "userModifiedType" : false,
-    "identifiers" : "[]",
+    "identifiers" : "[\"se://5150012345\"]",
     "closed" : false,
     "holderName" : "Firstname Lastnamesson",
     "accountHolder" : {
@@ -76,10 +76,10 @@
     "accountExclusion" : "NONE",
     "exactBalance" : {
       "currencyCode" : "SEK",
-      "exactValue" : 40055.94,
-      "unscaledValue" : 40055940,
+      "doubleValue" : 40055.94,
       "scale" : 3,
-      "doubleValue" : 40055.94
+      "unscaledValue" : 40055940,
+      "exactValue" : 40055.94
     },
     "currencyCode" : "SEK",
     "bankId" : "00000000646",
