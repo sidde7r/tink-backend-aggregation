@@ -2,10 +2,12 @@ package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.transa
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 @Data
+@Slf4j
 public class AccountEntity {
 
     private String cashAccountType;
@@ -25,7 +27,15 @@ public class AccountEntity {
     private String linkedAccount;
 
     public boolean isTransactionalAccount() {
+        logAccountTypeIfUnknown();
         return AccountType.TRANSACTIONAL.getType().equalsIgnoreCase(cashAccountType);
+    }
+
+    private void logAccountTypeIfUnknown() {
+        if (!AccountType.TRANSACTIONAL.getType().equalsIgnoreCase(cashAccountType)
+                && !AccountType.CARD.getType().equalsIgnoreCase(cashAccountType)) {
+            log.debug("Unknown account type {}", cashAccountType);
+        }
     }
 
     public boolean isCard() {
