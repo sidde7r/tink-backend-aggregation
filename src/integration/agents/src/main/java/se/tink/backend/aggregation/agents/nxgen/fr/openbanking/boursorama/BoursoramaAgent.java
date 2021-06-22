@@ -41,6 +41,7 @@ import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.paymen
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.payment.BoursoramaStatusParser;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.FrOpenBankingPaymentDatePolicy;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.FrOpenBankingPaymentExecutor;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.FrOpenBankingRequestValidator;
 import se.tink.backend.aggregation.client.provider_configuration.rpc.PisCapability;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agents.utils.CertificateUtils;
@@ -259,7 +260,8 @@ public final class BoursoramaAgent extends NextGenerationAgent
                         strongAuthenticationState,
                         supplementalInformationHelper,
                         new BoursoramaStatusParser(),
-                        new FrOpenBankingPaymentDatePolicy());
+                        new FrOpenBankingPaymentDatePolicy(),
+                        new FrOpenBankingRequestValidator(provider.getName()));
 
         return Optional.of(new PaymentController(paymentExecutor, paymentExecutor));
     }

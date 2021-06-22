@@ -53,9 +53,9 @@ public class BnpParibasAgentPaymentTest {
                         creditorDebtorManager.get(BnpParibasAgentPaymentTest.Arg.DEBTOR_ACCOUNT));
 
         return new Payment.Builder()
-                .withCreditor(new Creditor(creditorAccountIdentifier))
+                .withCreditor(new Creditor(creditorAccountIdentifier, "Creditor Name"))
                 .withDebtor(new Debtor(debtorAccountIdentifier))
-                .withExactCurrencyAmount(ExactCurrencyAmount.inEUR(1))
+                .withExactCurrencyAmount(ExactCurrencyAmount.inEUR(1.0))
                 .withCurrency("EUR")
                 .withRemittanceInformation(
                         RemittanceInformationUtils.generateUnstructuredRemittanceInformation(

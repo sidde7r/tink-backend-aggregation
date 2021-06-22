@@ -9,6 +9,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.Collections;
 import java.util.UUID;
+import lombok.SneakyThrows;
 import org.assertj.core.api.Assertions;
 import org.iban4j.CountryCode;
 import org.iban4j.Iban;
@@ -66,9 +67,11 @@ public class FrOpenBankingPaymentExecutorTest {
                         strongAuthenticationState,
                         supplementalInformationHelper,
                         new FrOpenBankingStatusParser(),
-                        new FrOpenBankingPaymentDatePolicy());
+                        new FrOpenBankingPaymentDatePolicy(),
+                        new FrOpenBankingRequestValidator("fr-lcl-ob"));
     }
 
+    @SneakyThrows
     @Test
     public void createShouldCallApiClientAndReturnPaymentResponse() {
         // given
