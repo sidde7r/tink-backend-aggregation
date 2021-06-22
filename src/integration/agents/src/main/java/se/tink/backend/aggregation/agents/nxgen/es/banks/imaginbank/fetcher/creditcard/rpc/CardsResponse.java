@@ -26,7 +26,7 @@ public class CardsResponse {
         }
 
         return cardList.getCards().stream()
-                .filter(CardEntity::isCreditCard)
+                .filter(cardEntity -> cardEntity.isCreditCard() || cardEntity.isPrepaidCard())
                 .map(CardEntity::toTinkCreditCard)
                 .collect(Collectors.toList());
     }
