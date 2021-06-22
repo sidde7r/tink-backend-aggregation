@@ -2,7 +2,11 @@ package se.tink.backend.aggregation.utils.qrcode;
 
 import com.google.api.client.util.Base64;
 import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+import com.google.zxing.BarcodeFormat;
 import com.google.zxing.BinaryBitmap;
+import com.google.zxing.DecodeHintType;
 import com.google.zxing.LuminanceSource;
 import com.google.zxing.MultiFormatReader;
 import com.google.zxing.NotFoundException;
@@ -11,12 +15,17 @@ import com.google.zxing.common.HybridBinarizer;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.imageio.ImageIO;
 
 public class QrCodeParser {
+    private static final Map<DecodeHintType, ?> DECODER_HINTS =
+            ImmutableMap.<DecodeHintType, Object>builder()
+                    .put(DecodeHintType.POSSIBLE_FORMATS, ImmutableList.of(BarcodeFormat.QR_CODE))
+                    .build();
     /**
      * Decode a QR Code image using zxing
      *
@@ -34,15 +43,17 @@ public class QrCodeParser {
 
         LuminanceSource source = new BufferedImageLuminanceSource(bufferedImage);
         BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
+        MultiFormatReader reader = new MultiFormatReader();
+        reader.setHints(DECODER_HINTS);
 
         try {
-            return new MultiFormatReader().decode(bitmap).getText();
+            return reader.decode(bitmap).getText();
         } catch (NotFoundException e) {
             throw new IOException(e);
         }
     }
 
-    private static String AUTOSTARTTOKEN_PATTERN = "autostarttoken=([-0-9a-fA-F]{36})";
+    private static final String AUTOSTARTTOKEN_PATTERN = "autostarttoken=([-0-9a-fA-F]{36})";
 
     /**
      * Decode a BankID QR Code image using zxing
