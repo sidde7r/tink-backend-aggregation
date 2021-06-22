@@ -33,11 +33,12 @@ import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformati
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationFormer;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
-import se.tink.backend.aggregation.nxgen.http_api_client.HttpApiClientFactory;
+import se.tink.backend.aggregation.nxgen.http_api_client.HttpApiClientBuilder;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.aggregation_agent_api_client.src.api.ApiClient;
 import se.tink.libraries.aggregation_agent_api_client.src.http.HttpApiClient;
+import se.tink.libraries.aggregation_agent_api_client.src.variable.VariableStore;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.transfer.rpc.Transfer;
 
@@ -158,22 +159,31 @@ public abstract class SubsequentGenerationAgent<Auth> extends SuperAbstractAgent
     }
 
     private HttpApiClient buildHttpApiClient(AgentsServiceConfiguration configuration) {
-        HttpApiClientFactory httpApiClientFactory =
-                new HttpApiClientFactory(
-                        configuration.getEidasProxy(),
-                        getEidasIdentity(),
-                        context.getAgentConfigurationController().isOpenBankingAgent(),
-                        context.getLogMasker(),
-                        context.getLogOutputStream());
 
-        HttpApiClient httpClient = httpApiClientFactory.build();
+        HttpApiClient httpClient =
+                HttpApiClientBuilder.builder()
+                        .setEidasIdentity(getEidasIdentity())
+                        .setEidasProxyConfiguration(configuration.getEidasProxy())
+                        .setUseEidasProxy(
+                                context.getAgentConfigurationController().isOpenBankingAgent())
+                        .setLogMasker(context.getLogMasker())
+                        .setLogOutputStream(context.getLogOutputStream())
+                        .setPersistentStorage(persistentStorage)
+                        .setSecretsConfiguration(
+                                context.getAgentConfigurationController().getSecretsConfiguration())
+                        .setUserIp(getOriginatingUserIpOrDefault())
+                        .build();
 
         credentials
                 .getSensitivePayload(Field.Key.HTTP_API_CLIENT, String.class)
                 .ifPresent(httpClient::loadState);
 
+        setApiClientVariables(httpClient);
+
         return httpClient;
     }
+
+    protected void setApiClientVariables(VariableStore variableStore) {}
 
     @Override
     public void logout() {

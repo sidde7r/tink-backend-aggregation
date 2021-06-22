@@ -59,9 +59,10 @@ public final class AgentConfigurationController implements AgentConfigurationCon
     private Set<String> secretValues = Collections.emptySet();
     private final Subject<Collection<String>> secretValuesSubject =
             BehaviorSubject.<Collection<String>>create().toSerialized();
-    private static final String REDIRECT_URL_KEY = "redirectUrl";
     private static final String QWAC_KEY = "qwac";
-    private static final String QSEALC_KEY = "qsealc";
+
+    public static final String REDIRECT_URL_KEY = "redirectUrl";
+    public static final String QSEALC_KEY = "qsealc";
 
     // Package private for testing purposes.
     AgentConfigurationController() {
@@ -460,5 +461,21 @@ public final class AgentConfigurationController implements AgentConfigurationCon
                     .setQsealc(EIdasTinkCert.QSEALC)
                     .build();
         }
+    }
+
+    @Override
+    public Map<String, Object> getSecretsConfiguration() {
+        if (tppSecretsServiceEnabled) {
+            return allSecretsMapObj;
+        }
+
+        Optional<Object> clientConfiguration =
+                integrationsConfiguration.getClientConfigurationAsObject(
+                        financialInstitutionId, appId);
+
+        return clientConfiguration
+                .filter(Map.class::isInstance)
+                .map(Map.class::cast)
+                .orElse(Collections.emptyMap());
     }
 }
