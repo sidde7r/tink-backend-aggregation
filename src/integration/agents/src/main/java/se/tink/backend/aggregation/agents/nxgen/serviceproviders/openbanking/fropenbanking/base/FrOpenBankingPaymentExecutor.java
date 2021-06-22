@@ -65,6 +65,7 @@ public class FrOpenBankingPaymentExecutor implements PaymentExecutor, FetchableP
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final FrOpenBankingStatusParser frOpenBankingStatusParser;
     private final FrOpenBankingPaymentDatePolicy frOpenBankingPaymentDatePolicy;
+    private final FrOpenBankingRequestValidator frOpenBankingRequestValidator;
 
     public FrOpenBankingPaymentExecutor(
             FrOpenBankingPaymentApiClient apiClient,
@@ -73,7 +74,8 @@ public class FrOpenBankingPaymentExecutor implements PaymentExecutor, FetchableP
             StrongAuthenticationState strongAuthenticationState,
             SupplementalInformationHelper supplementalInformationHelper,
             FrOpenBankingStatusParser frOpenBankingStatusParser,
-            FrOpenBankingPaymentDatePolicy frOpenBankingPaymentDatePolicy) {
+            FrOpenBankingPaymentDatePolicy frOpenBankingPaymentDatePolicy,
+            FrOpenBankingRequestValidator frOpenBankingRequestValidator) {
         this.apiClient = apiClient;
         this.redirectUrl = redirectUrl;
         this.sessionStorage = sessionStorage;
@@ -81,11 +83,18 @@ public class FrOpenBankingPaymentExecutor implements PaymentExecutor, FetchableP
         this.supplementalInformationHelper = supplementalInformationHelper;
         this.frOpenBankingStatusParser = frOpenBankingStatusParser;
         this.frOpenBankingPaymentDatePolicy = frOpenBankingPaymentDatePolicy;
+        this.frOpenBankingRequestValidator = frOpenBankingRequestValidator;
     }
 
     @Override
-    public PaymentResponse create(PaymentRequest paymentRequest) {
+    public PaymentResponse create(PaymentRequest paymentRequest) throws PaymentException {
         apiClient.fetchToken();
+
+        Optional<PaymentException> paymentException =
+                frOpenBankingRequestValidator.validateRequestBody(paymentRequest);
+        if (paymentException.isPresent()) {
+            throw paymentException.get();
+        }
 
         AccountEntity creditor = AccountEntity.creditorOf(paymentRequest);
         AccountEntity debtor = AccountEntity.debtorOf(paymentRequest);

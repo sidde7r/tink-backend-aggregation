@@ -27,6 +27,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnp
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.utils.BnpParibasSignatureHeaderProvider;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.FrOpenBankingPaymentDatePolicy;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.FrOpenBankingPaymentExecutor;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.FrOpenBankingRequestValidator;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
@@ -214,7 +215,8 @@ public abstract class BnpParibasBaseAgent extends NextGenerationAgent
                         strongAuthenticationState,
                         supplementalInformationHelper,
                         new BnpParibasStatusParser(),
-                        new FrOpenBankingPaymentDatePolicy());
+                        new FrOpenBankingPaymentDatePolicy(),
+                        new FrOpenBankingRequestValidator(provider.getName()));
         return Optional.of(new PaymentController(paymentExecutor, paymentExecutor));
     }
 
