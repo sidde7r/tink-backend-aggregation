@@ -6,7 +6,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.rpc.GenericResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbankbaltics.authenticator.StepDataStorage;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.PersistentStorageKeys;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationRequest;
@@ -14,6 +16,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.OpenBankingTokenExpirationDateHelper;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 @RequiredArgsConstructor
@@ -30,19 +33,26 @@ public class ExchangeCodeForTokenStep implements AuthenticationStep {
     public AuthenticationStepResponse execute(AuthenticationRequest request)
             throws AuthenticationException, AuthorizationException {
 
-        String authorizationCode = stepDataStorage.getAuthCode();
-
-        // TODO: catch exceptions
-        OAuth2Token accessToken = apiClient.exchangeCodeForToken(authorizationCode);
+        OAuth2Token accessToken = exchangeCodeForToken(stepDataStorage.getAuthCode());
 
         persistentStorage.put(PersistentStorageKeys.OAUTH_2_TOKEN, accessToken);
         request.getCredentials()
                 .setSessionExpiryDate(
                         OpenBankingTokenExpirationDateHelper.getExpirationDateFromTokenOrDefault(
                                 accessToken));
-        logger.info("token is in persistentStorage");
 
         return AuthenticationStepResponse.authenticationSucceeded();
+    }
+
+    private OAuth2Token exchangeCodeForToken(String code) {
+        try {
+            return apiClient.exchangeCodeForToken(code);
+        } catch (HttpResponseException e) {
+            GenericResponse errorResponse = e.getResponse().getBody(GenericResponse.class);
+            logger.warn(
+                    String.format("Can exchange token for code. Got error (%s)", errorResponse));
+            throw ThirdPartyAppError.AUTHENTICATION_ERROR.exception();
+        }
     }
 
     @Override

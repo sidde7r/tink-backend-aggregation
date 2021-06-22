@@ -10,15 +10,18 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.AuthStatus;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.rpc.AuthenticationStatusResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.rpc.GenericResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbankbaltics.SwedbankBalticsConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbankbaltics.authenticator.StepDataStorage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbankbaltics.authenticator.SwedbankBalticsAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepResponse;
-import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
 @RequiredArgsConstructor
 public class CollectStatusStep implements AuthenticationStep {
@@ -27,7 +30,6 @@ public class CollectStatusStep implements AuthenticationStep {
     private static final Logger logger =
             LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final SwedbankApiClient apiClient;
-    private final PersistentStorage persistentStorage;
     private final StepDataStorage stepDataStorage;
 
     @Override
@@ -45,28 +47,45 @@ public class CollectStatusStep implements AuthenticationStep {
 
         for (int i = 0; i < SwedbankBalticsConstants.SMART_ID_POLL_MAX_ATTEMPTS; i++) {
 
-            // TODO: catch exceptions
             AuthenticationStatusResponse authenticationStatusResponse =
-                    apiClient.collectAuthStatus(userId, collectAuthUri);
+                    collectAuthStatus(userId, collectAuthUri);
+
+            if (authenticationStatusResponse.loginCanceled()) {
+                throw ThirdPartyAppError.CANCELLED.exception();
+            }
+
             String status = authenticationStatusResponse.getScaStatus();
 
-            logger.info("response:" + authenticationStatusResponse.getAuthorizationCode());
-            logger.info("status:" + status);
-
-            // TODO: switch statuses. Example WaitScaStatusHelper / BankId Controller
-            // TODO: handle expiration time and so on
-
-            if (status.equals("finalised")) {
-                stepDataStorage.putAuthCode(authenticationStatusResponse.getAuthorizationCode());
-                return AuthenticationStepResponse.executeNextStep();
+            switch (status.toLowerCase()) {
+                case AuthStatus.RECEIVED:
+                case AuthStatus.STARTED:
+                    break;
+                case AuthStatus.FINALIZED:
+                    stepDataStorage.putAuthCode(
+                            authenticationStatusResponse.getAuthorizationCode());
+                    return AuthenticationStepResponse.executeNextStep();
+                case AuthStatus.FAILED:
+                    throw ThirdPartyAppError.AUTHENTICATION_ERROR.exception();
+                default:
+                    logger.warn(String.format("Unknown status (%s)", status));
+                    throw ThirdPartyAppError.AUTHENTICATION_ERROR.exception();
             }
 
             Uninterruptibles.sleepUninterruptibly(
                     SwedbankBalticsConstants.SMART_ID_POOL_FREQUENCY, TimeUnit.MILLISECONDS);
         }
 
-        // TODO: here we need to throw exception. it is an ERROR situation!
-        return AuthenticationStepResponse.authenticationSucceeded();
+        throw ThirdPartyAppError.TIMED_OUT.exception();
+    }
+
+    private AuthenticationStatusResponse collectAuthStatus(String userId, String collectAuthUri) {
+        try {
+            return apiClient.collectAuthStatus(userId, collectAuthUri);
+        } catch (HttpResponseException e) {
+            GenericResponse errorResponse = e.getResponse().getBody(GenericResponse.class);
+            logger.warn(String.format("Can not collect status. Got error (%s)", errorResponse));
+            throw ThirdPartyAppError.AUTHENTICATION_ERROR.exception();
+        }
     }
 
     @Override
