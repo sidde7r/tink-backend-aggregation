@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Provider;
@@ -55,6 +56,7 @@ import se.tink.libraries.transfer.rpc.ExecutionRule;
 import se.tink.libraries.transfer.rpc.PaymentServiceType;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
+@RequiredArgsConstructor
 public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
 
     private final CbiGlobeApiClient apiClient;
@@ -66,26 +68,11 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
 
     private static final Logger logger = LoggerFactory.getLogger(CbiGlobePaymentExecutor.class);
 
-    public CbiGlobePaymentExecutor(
-            CbiGlobeApiClient apiClient,
-            SupplementalInformationHelper supplementalInformationHelper,
-            SessionStorage sessionStorage,
-            StrongAuthenticationState strongAuthenticationState,
-            Provider provider) {
-        this.apiClient = apiClient;
-        this.supplementalInformationHelper = supplementalInformationHelper;
-        this.sessionStorage = sessionStorage;
-        this.strongAuthenticationState = strongAuthenticationState;
-        this.provider = provider;
-    }
-
     @Override
     public PaymentResponse create(PaymentRequest paymentRequest) {
         fetchToken();
 
         sessionStorage.put(QueryKeys.STATE, strongAuthenticationState.getState());
-        sessionStorage.put(
-                CbiGlobeConstants.HeaderKeys.PSU_IP_ADDRESS, paymentRequest.getOriginatingUserIp());
 
         CreatePaymentRequest createPaymentRequest =
                 PaymentServiceType.PERIODIC.equals(

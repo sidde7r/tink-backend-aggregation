@@ -100,9 +100,7 @@ public final class FinecoBankAgent extends NextGenerationAgent
                         getAgentConfigurationController()
                                 .getAgentConfiguration(FinecoBankConfiguration.class)
                                 .getRedirectUrl(),
-                        request.getUserAvailability().isUserPresent()
-                                ? request.getUserAvailability().getOriginatingUserIp()
-                                : null);
+                        request.getUserAvailability().getOriginatingUserIpOrDefault());
 
         return new FinecoBankApiClient(
                 new FinecoUrlProvider(),

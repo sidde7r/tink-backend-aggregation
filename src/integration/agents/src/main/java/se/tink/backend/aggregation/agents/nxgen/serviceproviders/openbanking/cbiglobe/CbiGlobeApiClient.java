@@ -465,11 +465,7 @@ public class CbiGlobeApiClient {
     }
 
     protected RequestBuilder addPsuIpAddressHeaderIfNeeded(RequestBuilder requestBuilder) {
-        String originatingUserIPAddress =
-                (psuIpAddress != null
-                        ? psuIpAddress
-                        : sessionStorage.get(HeaderKeys.PSU_IP_ADDRESS));
-        return requestBuilder.header(HeaderKeys.PSU_IP_ADDRESS, originatingUserIPAddress);
+        return requestBuilder.header(HeaderKeys.PSU_IP_ADDRESS, psuIpAddress);
     }
 
     private String getPaymentProduct(Payment payment) {

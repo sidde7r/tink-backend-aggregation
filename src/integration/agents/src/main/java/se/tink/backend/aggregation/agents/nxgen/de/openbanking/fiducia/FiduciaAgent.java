@@ -62,10 +62,7 @@ public final class FiduciaAgent extends NextGenerationAgent
         super(componentProvider);
         String serverUrl = request.getProvider().getPayload();
 
-        String userIp =
-                request.getUserAvailability().isUserPresent()
-                        ? request.getUserAvailability().getOriginatingUserIp()
-                        : null;
+        String userIp = request.getUserAvailability().getOriginatingUserIpOrDefault();
 
         RandomValueGenerator randomValueGenerator = componentProvider.getRandomValueGenerator();
 

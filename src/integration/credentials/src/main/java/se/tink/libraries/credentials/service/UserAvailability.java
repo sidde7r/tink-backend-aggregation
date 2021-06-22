@@ -1,7 +1,9 @@
 package se.tink.libraries.credentials.service;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UserAvailability {
     // The userPresent flag indicates whether or not the user is present at the time of the
@@ -18,8 +20,24 @@ public class UserAvailability {
     private boolean userAvailableForInteraction;
     private String originatingUserIp;
 
+    private static final String DEFAULT_USER_IP = "127.0.0.1";
+
     public String getOriginatingUserIp() {
         return originatingUserIp;
+    }
+
+    // Intended to be used for OB agents which need to include PSU_IP_ADDRESS only when the user is
+    // present. Using output of this method while setting header will make sure that the header is
+    // present when user is present, and skip the header if user is not present.
+    public String getOriginatingUserIpOrDefault() {
+        if (!userPresent) {
+            return null;
+        }
+        if (getOriginatingUserIp() == null) {
+            log.info("Using user Ip: " + DEFAULT_USER_IP);
+            return DEFAULT_USER_IP;
+        }
+        return getOriginatingUserIp();
     }
 
     public void setOriginatingUserIp(String originatingUserIp) {

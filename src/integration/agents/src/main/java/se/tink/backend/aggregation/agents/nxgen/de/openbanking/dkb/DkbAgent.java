@@ -62,7 +62,7 @@ public final class DkbAgent extends NextGenerationAgent
                 DkbUserIpInformation.class,
                 new DkbUserIpInformation(
                         request.getUserAvailability().isUserPresent(),
-                        request.getUserAvailability().getOriginatingUserIp()));
+                        request.getUserAvailability().getOriginatingUserIpOrDefault()));
         beans.put(Catalog.class, catalog);
         beans.put(Credentials.class, credentials);
         beans.put(SupplementalInformationHelper.class, supplementalInformationHelper);

@@ -46,8 +46,7 @@ public abstract class DeutscheBankAgent extends NextGenerationAgent
         UserAvailability userAvailability =
                 componentProvider.getCredentialsRequest().getUserAvailability();
         return new DeutscheHeaderValues(
-                redirectUrl,
-                userAvailability.isUserPresent() ? userAvailability.getOriginatingUserIp() : null);
+                redirectUrl, userAvailability.getOriginatingUserIpOrDefault());
     }
 
     @Override
