@@ -70,7 +70,6 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.signableoperation.enums.InternalStatus;
@@ -85,7 +84,6 @@ public final class SwedbankApiClient implements SwedbankOpenBankingPaymentApiCli
     private final String redirectUrl;
     private final String signingKeyId;
     private final AgentComponentProvider componentProvider;
-    private final CredentialsRequest credentialsRequest;
     private final String bic;
     private final String authenticationMethodId;
 
@@ -95,7 +93,6 @@ public final class SwedbankApiClient implements SwedbankOpenBankingPaymentApiCli
             AgentConfiguration<SwedbankConfiguration> agentConfiguration,
             QsealcSigner qsealcSigner,
             AgentComponentProvider componentProvider,
-            CredentialsRequest credentialsRequest,
             String bic,
             String authenticationMethodId) {
         this.client = client;
@@ -104,7 +101,6 @@ public final class SwedbankApiClient implements SwedbankOpenBankingPaymentApiCli
         this.configuration = agentConfiguration.getProviderSpecificConfiguration();
         this.redirectUrl = agentConfiguration.getRedirectUrl();
         this.componentProvider = componentProvider;
-        this.credentialsRequest = credentialsRequest;
         this.bic = bic;
         this.authenticationMethodId = authenticationMethodId;
 
@@ -419,7 +415,11 @@ public final class SwedbankApiClient implements SwedbankOpenBankingPaymentApiCli
                 AuthorizeRequest.builder()
                         .clientID(configuration.getClientId())
                         .redirectUri(getRedirectUrl())
-                        .bankId(credentialsRequest.getProvider().getPayload())
+                        .bankId(
+                                componentProvider
+                                        .getCredentialsRequest()
+                                        .getProvider()
+                                        .getPayload())
                         .build();
         try {
 

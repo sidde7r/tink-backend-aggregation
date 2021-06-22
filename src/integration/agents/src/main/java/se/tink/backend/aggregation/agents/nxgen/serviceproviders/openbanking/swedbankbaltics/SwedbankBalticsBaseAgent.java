@@ -39,10 +39,12 @@ public class SwedbankBalticsBaseAgent extends SubsequentProgressiveGenerationAge
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     //    private final TransferDestinationRefreshController transferDestinationRefreshController;
     private final SwedbankTransactionalAccountFetcher transactionalAccountFetcher;
+    private final AgentComponentProvider componentProvider;
 
     protected SwedbankBalticsBaseAgent(
             AgentComponentProvider componentProvider, QsealcSigner qsealcSigner) {
         super(componentProvider);
+        this.componentProvider = componentProvider;
         client.addFilter(new SwedbankConsentLimitFilter());
         client.addFilter(new SwedbankMethodNotAllowedFilter());
         client.addFilter(new BankServiceInternalErrorFilter());
@@ -53,13 +55,17 @@ public class SwedbankBalticsBaseAgent extends SubsequentProgressiveGenerationAge
                         persistentStorage,
                         getAgentConfiguration(),
                         qsealcSigner,
-                        componentProvider.getCredentialsRequest(),
+                        componentProvider,
                         BICProduction.ESTONIA,
                         RequestValues.SMART_ID); // TODO: can we get authType from config??
 
         transactionalAccountFetcher =
                 new SwedbankTransactionalAccountFetcher(
-                        apiClient, persistentStorage, sessionStorage, transactionPaginationHelper);
+                        apiClient,
+                        persistentStorage,
+                        sessionStorage,
+                        transactionPaginationHelper,
+                        componentProvider);
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
         //        transferDestinationRefreshController = constructTransferDestinationController();
     }
@@ -118,7 +124,10 @@ public class SwedbankBalticsBaseAgent extends SubsequentProgressiveGenerationAge
                 updateController,
                 transactionalAccountFetcher,
                 new SwedbankTransactionFetcher(
-                        apiClient, sessionStorage, request.getProvider().getMarket()));
+                        apiClient,
+                        sessionStorage,
+                        request.getProvider().getMarket(),
+                        componentProvider));
     }
 
     // TODO: fixme

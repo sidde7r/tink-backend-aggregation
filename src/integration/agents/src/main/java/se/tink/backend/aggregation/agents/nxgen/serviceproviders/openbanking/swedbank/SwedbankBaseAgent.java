@@ -72,7 +72,6 @@ public abstract class SwedbankBaseAgent extends NextGenerationAgent
                         getAgentConfiguration(),
                         qsealcSigner,
                         componentProvider,
-                        componentProvider.getCredentialsRequest(),
                         BICProduction.SWEDEN,
                         RequestValues.MOBILE_ID); // TODO: get authType from config
 

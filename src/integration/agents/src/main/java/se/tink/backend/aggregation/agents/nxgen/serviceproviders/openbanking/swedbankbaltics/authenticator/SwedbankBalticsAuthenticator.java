@@ -34,11 +34,13 @@ public class SwedbankBalticsAuthenticator extends StatelessProgressiveAuthentica
                 Arrays.asList(
                         new CheckIfAccessTokenIsValidStep(persistentStorage),
                         new RefreshAccessTokenStep(apiClient, persistentStorage),
-                        new InitStep(this, apiClient, stepDataStorage, credentialsRequest, provider),
+                        new InitStep(
+                                this, apiClient, stepDataStorage, credentialsRequest, provider),
                         new CollectStatusStep(this, apiClient, persistentStorage, stepDataStorage),
-                        new ExchangeCodeForTokenStep(apiClient, persistentStorage, stepDataStorage));
+                        new ExchangeCodeForTokenStep(
+                                apiClient, persistentStorage, stepDataStorage));
     }
-    
+
     @Override
     public List<AuthenticationStep> authenticationSteps() {
         return authenticationSteps;
