@@ -1,7 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankverlag;
 
-import java.util.Arrays;
-import java.util.List;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -59,14 +57,6 @@ public final class BankverlagConstants {
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     static class FormValues {
         static final int FREQUENCY_PER_DAY = 4;
-    }
-
-    // ASPSP Id's under this list provide URL to download transactions as file, hence they need
-    // special handling to parse transactions
-    @NoArgsConstructor(access = AccessLevel.PRIVATE)
-    public static class AspspId {
-        static final List<String> ASPSP_WITH_URI_FOR_TRANSACTIONS =
-                Arrays.asList(BankverlagAspspId.TARGOBANK);
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)

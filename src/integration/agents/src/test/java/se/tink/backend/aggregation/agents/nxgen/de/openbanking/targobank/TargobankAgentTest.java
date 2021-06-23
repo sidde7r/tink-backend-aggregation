@@ -27,6 +27,7 @@ public class TargobankAgentTest {
                         .expectLoggedIn(false)
                         .saveCredentialsAfter(false)
                         .setAppId("tink")
+                        .dumpContentForContractFile()
                         .setFinancialInstitutionId("targobank");
     }
 

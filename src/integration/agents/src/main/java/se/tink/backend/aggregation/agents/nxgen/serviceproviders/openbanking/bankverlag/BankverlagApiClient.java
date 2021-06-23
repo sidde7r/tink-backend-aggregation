@@ -5,7 +5,7 @@ import static se.tink.backend.aggregation.agents.utils.berlingroup.consent.Acces
 import java.time.LocalDate;
 import javax.ws.rs.core.MediaType;
 import lombok.RequiredArgsConstructor;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankverlag.BankverlagConstants.AspspId;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankverlag.BankverlagConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankverlag.BankverlagConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankverlag.BankverlagConstants.PathVariables;
@@ -31,9 +31,11 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.ran
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 @RequiredArgsConstructor
+@Slf4j
 public class BankverlagApiClient {
 
     private final TinkHttpClient client;
@@ -130,15 +132,6 @@ public class BankverlagApiClient {
     }
 
     public String fetchTransactions(String consentId, String accountId, LocalDate startDate) {
-        if (AspspId.ASPSP_WITH_URI_FOR_TRANSACTIONS.contains(headerValues.getAspspId())) {
-            return getTransactionsFromResponseUrl(consentId, accountId, startDate);
-        } else {
-            return getTransactionsFromResponse(consentId, accountId, startDate);
-        }
-    }
-
-    private String getTransactionsFromResponse(
-            String consentId, String accountId, LocalDate startDate) {
         return createRequestInSession(
                         Urls.FETCH_TRANSACTIONS
                                 .parameter(PathVariables.ACCOUNT_ID, accountId)
@@ -149,7 +142,7 @@ public class BankverlagApiClient {
                 .get(String.class);
     }
 
-    private String getTransactionsFromResponseUrl(
+    public HttpResponse getTransactionsZipFile(
             String consentId, String accountId, LocalDate startDate) {
 
         FetchTransactionsResponse fetchTransactionsResponse =
@@ -163,11 +156,15 @@ public class BankverlagApiClient {
                         .accept(MediaType.APPLICATION_JSON_TYPE)
                         .get(FetchTransactionsResponse.class);
 
-        return createRequestInSession(
-                        fetchTransactionsResponse.getLinks().getDownload().getHref(), consentId)
+        return getTransactionsFile(
+                consentId, fetchTransactionsResponse.getLinks().getDownload().getHref());
+    }
+
+    private HttpResponse getTransactionsFile(String consentId, URL file) {
+        return createRequestInSession(file, consentId)
                 .type(MediaType.APPLICATION_OCTET_STREAM_TYPE)
                 .accept(MediaType.APPLICATION_OCTET_STREAM_TYPE)
-                .get(String.class);
+                .get(HttpResponse.class);
     }
 
     public TokenResponse sendToken(String tokenEndpoint, String tokenEntity) {
