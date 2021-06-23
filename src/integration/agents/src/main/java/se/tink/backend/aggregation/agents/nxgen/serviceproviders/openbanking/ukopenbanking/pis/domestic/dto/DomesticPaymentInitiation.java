@@ -35,6 +35,9 @@ public class DomesticPaymentInitiation {
     @JsonInclude(Include.NON_NULL)
     private DebtorAccount debtorAccount;
 
+    @JsonInclude(Include.NON_NULL)
+    private String localInstrument;
+
     private CreditorAccount creditorAccount;
     private InstructedAmount instructedAmount;
 }
