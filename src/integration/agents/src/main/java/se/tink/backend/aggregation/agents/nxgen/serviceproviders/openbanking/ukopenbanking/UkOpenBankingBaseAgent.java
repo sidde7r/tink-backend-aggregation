@@ -82,6 +82,7 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.ServiceUnavailableBankServiceErrorFilter;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.TerminatedHandshakeRetryFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.iface.Filter;
 import se.tink.backend.aggregation.nxgen.instrumentation.FetcherInstrumentationRegistry;
 import se.tink.libraries.account.enums.AccountIdentifierType;
@@ -183,6 +184,7 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
         this.transactionalAccountRefreshController =
                 constructTransactionalAccountRefreshController();
 
+        addFilter(new TerminatedHandshakeRetryFilter());
         addFilter(new ServiceUnavailableBankServiceErrorFilter());
         addFilter(new FinancialOrganisationIdFilter(aisConfig.getOrganisationId()));
         addFilter(new ConsentErrorFilter(persistentStorage));

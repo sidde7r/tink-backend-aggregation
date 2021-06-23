@@ -32,6 +32,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.TerminatedHandshakeRetryFilter;
 
 public abstract class CrosskeyBaseAgent extends NextGenerationAgent
         implements RefreshCreditCardAccountsExecutor,
@@ -68,6 +69,7 @@ public abstract class CrosskeyBaseAgent extends NextGenerationAgent
                         componentProvider.getCredentialsRequest().getProvider().getMarket());
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
         creditCardRefreshController = getCreditCardRefreshController();
+        client.addFilter(new TerminatedHandshakeRetryFilter());
     }
 
     @Override

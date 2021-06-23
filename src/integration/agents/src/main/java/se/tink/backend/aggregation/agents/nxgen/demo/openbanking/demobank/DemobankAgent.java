@@ -67,6 +67,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.BankServiceInternalErrorFilter;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.TerminatedHandshakeRetryFilter;
 import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.transfer.rpc.PaymentServiceType;
@@ -106,6 +107,7 @@ public final class DemobankAgent extends NextGenerationAgent
         creditCardRefreshController = constructCreditCardRefreshController();
         client.addFilter(new BankServiceInternalErrorFilter());
         client.addFilter(new AuthenticationErrorFilter());
+        client.addFilter(new TerminatedHandshakeRetryFilter());
     }
 
     private String getCallbackUri() {

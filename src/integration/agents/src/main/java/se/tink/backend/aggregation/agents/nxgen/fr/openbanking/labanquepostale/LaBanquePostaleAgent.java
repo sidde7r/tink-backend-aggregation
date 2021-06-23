@@ -45,6 +45,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCa
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.TerminatedHandshakeRetryFilter;
 
 @AgentDependencyModules(modules = QSealcSignerModuleRSASHA256.class)
 @AgentCapabilities({CHECKING_ACCOUNTS, IDENTITY_DATA, LIST_BENEFICIARIES, TRANSFERS, CREDIT_CARDS})
@@ -72,6 +73,7 @@ public final class LaBanquePostaleAgent
             AgentComponentProvider componentProvider, QsealcSigner qsealcSigner) {
         super(componentProvider);
 
+        client.addFilter(new TerminatedHandshakeRetryFilter());
         agentConfiguration =
                 getAgentConfigurationController()
                         .getAgentConfiguration(LaBanquePostaleConfiguration.class);
