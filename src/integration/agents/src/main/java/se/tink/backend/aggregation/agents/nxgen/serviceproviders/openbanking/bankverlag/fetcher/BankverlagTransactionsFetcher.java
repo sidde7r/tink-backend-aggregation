@@ -64,15 +64,14 @@ public class BankverlagTransactionsFetcher implements TransactionFetcher<Transac
     }
 
     private void processZipFileTransactions(
-            List<AggregationTransaction> aggregationTransactions, HttpResponse zipFile) {
+            List<AggregationTransaction> aggregationTransactions, HttpResponse httpResponse) {
 
         int totalArchiveEntries = 0;
-
-        try (ZipInputStream zipInputStream = new ZipInputStream(zipFile.getBodyInputStream())) {
+        try (ZipInputStream zipInputStream =
+                new ZipInputStream(httpResponse.getBodyInputStream())) {
 
             ZipEntry entry = zipInputStream.getNextEntry();
-            do {
-
+            while (entry != null) {
                 totalArchiveEntries++;
                 String transactionXML = IOUtils.toString(zipInputStream, StandardCharsets.UTF_8);
                 aggregationTransactions.addAll(getTransactionsFromCamtFormat(transactionXML));
@@ -82,7 +81,7 @@ public class BankverlagTransactionsFetcher implements TransactionFetcher<Transac
                     break;
                 }
                 entry = zipInputStream.getNextEntry();
-            } while (entry != null);
+            }
 
         } catch (HttpResponseException e) {
             log.error("Unable to download transactions zip file", e);
