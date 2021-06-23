@@ -14,6 +14,8 @@ public class CommonInput {
     private final String inputFieldPattern;
     private final String inputFieldPatternError;
 
+    private final boolean sensitive;
+
     // Use it if input field must be in the group.
     private final InGroup inGroup;
 }

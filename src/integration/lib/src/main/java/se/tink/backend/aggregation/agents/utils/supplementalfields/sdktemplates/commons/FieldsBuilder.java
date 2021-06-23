@@ -62,6 +62,7 @@ public class FieldsBuilder {
                 .oneOf(inGroup != null && inGroup.isOneOf())
                 .patternError(commonInput.getInputFieldPatternError())
                 .pattern(commonInput.getInputFieldPattern())
+                .sensitive(commonInput.isSensitive())
                 .build();
     }
 
@@ -81,6 +82,7 @@ public class FieldsBuilder {
                 .oneOf(inGroup != null && inGroup.isOneOf())
                 .patternError(commonPositionalInput.getInputFieldPatternError())
                 .pattern(commonPositionalInput.getInputFieldPattern())
+                .sensitive(commonPositionalInput.isSensitive())
                 .build();
     }
 

@@ -26,6 +26,7 @@ public class IdCompletionTemplateTest {
                         .inputFieldMinLength(3)
                         .inputFieldPattern("\\%s")
                         .inputFieldPatternError("Pattern Error Message")
+                        .sensitive(true)
                         .build();
 
         CommonPositionalInput positionalInput1 =
@@ -125,6 +126,7 @@ public class IdCompletionTemplateTest {
         assertThat(field.getName()).isEqualTo("password");
         assertThat(field.getPattern()).isEqualTo("\\%s");
         assertThat(field.getPatternError()).isEqualTo("Pattern Error Message");
+        assertThat(field.isSensitive()).isTrue();
         assertThat(field.getStyle()).isEqualTo("INPUT");
         assertThat(field.getType()).isEqualTo("INPUT");
         assertThat(field.getValue()).isNull();
@@ -142,6 +144,7 @@ public class IdCompletionTemplateTest {
         assertThat(field.isOneOf()).isTrue();
         assertThat(field.getPattern()).isEqualTo("\\%s");
         assertThat(field.getPatternError()).isEqualTo("Pattern Error Message");
+        assertThat(field.isSensitive()).isFalse();
         assertThat(field.getStyle()).isEqualTo("POSITIONAL_INPUT");
         assertThat(field.getType()).isEqualTo("INPUT");
         assertThat(field.getValue()).isNull();
@@ -159,6 +162,7 @@ public class IdCompletionTemplateTest {
         assertThat(field.isOneOf()).isTrue();
         assertThat(field.getPattern()).isEqualTo("\\%s");
         assertThat(field.getPatternError()).isEqualTo("Pattern Error Message");
+        assertThat(field.isSensitive()).isFalse();
         assertThat(field.getStyle()).isEqualTo("POSITIONAL_INPUT");
         assertThat(field.getType()).isEqualTo("INPUT");
         assertThat(field.getValue()).isNull();
