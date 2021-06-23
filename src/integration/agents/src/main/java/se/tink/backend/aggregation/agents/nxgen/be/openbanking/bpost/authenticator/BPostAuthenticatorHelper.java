@@ -4,6 +4,7 @@ import com.google.common.base.Strings;
 import java.util.Map;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.Xs2aDevelopersAuthenticatorHelper;
@@ -31,6 +32,11 @@ public class BPostAuthenticatorHelper extends Xs2aDevelopersAuthenticatorHelper 
                 && value.contains(
                         "The Strong Customer Authentication solution encountered an error")) {
             throw ThirdPartyAppError.AUTHENTICATION_ERROR.exception();
+        }
+        String errorDescription = callbackData.getOrDefault(CallbackParams.ERROR_DESCRIPTION, "");
+        if (!Strings.isNullOrEmpty(errorDescription)
+                && errorDescription.equals("technical_error")) {
+            throw BankServiceError.BANK_SIDE_FAILURE.exception();
         }
     }
 }
