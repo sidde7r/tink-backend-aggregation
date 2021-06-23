@@ -72,7 +72,7 @@ public class HandelsbankenNOLoanAccountFetcher implements AccountFetcher<LoanAcc
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(loanEntity.getId())
-                                .withAccountNumber(loanEntity.getAccountNumber())
+                                .withAccountNumber(loanEntity.getId())
                                 .withAccountName(loanEntity.getAccountDescription())
                                 .addIdentifier(
                                         AccountIdentifier.create(
