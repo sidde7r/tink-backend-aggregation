@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia;
 
 import java.util.Date;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
@@ -14,6 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.SkandiaCo
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.SkandiaConstants.PaymentProduct;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.SkandiaConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.SkandiaConstants.QueryValues;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.SkandiaConstants.Scopes;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.SkandiaConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.SkandiaConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.authenticator.rpc.ErrorResponse;
@@ -96,13 +98,30 @@ public class SkandiaApiClient {
     }
 
     public URL getAuthorizeUrl(String state) {
-        return client.request(Urls.AUTHORIZE)
+        return Urls.AUTHORIZE
                 .queryParam(QueryKeys.CLIENT_ID, configuration.getClientId())
                 .queryParam(QueryKeys.REDIRECT_URI, getRedirectUrl())
-                .queryParamRaw(QueryKeys.SCOPE, QueryValues.SCOPE)
+                .queryParamRaw(QueryKeys.SCOPE, getScopes())
                 .queryParam(QueryKeys.STATE, state)
-                .queryParam(QueryKeys.RESPONSE_TYPE, QueryValues.CODE)
-                .getUrl();
+                .queryParam(QueryKeys.RESPONSE_TYPE, QueryValues.CODE);
+    }
+
+    private String getScopes() {
+        Set<String> scopes = configuration.getScopes();
+        if (scopes.stream().allMatch(Scopes.AIS::equalsIgnoreCase)) {
+            // Return only AIS scopes
+            return QueryValues.SCOPE_WITHOUT_PAYMENT;
+        } else if (scopes.stream()
+                .allMatch(
+                        scope ->
+                                Scopes.AIS.equalsIgnoreCase(scope)
+                                        || Scopes.PIS.equalsIgnoreCase(scope))) {
+            // Return AIS + PIS scopes
+            return QueryValues.SCOPE;
+        } else {
+            throw new IllegalArgumentException(
+                    String.format(ErrorMessages.INVALID_SCOPE, scopes.toString()));
+        }
     }
 
     public OAuth2Token getToken(String code) {

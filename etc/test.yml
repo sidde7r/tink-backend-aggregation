@@ -7041,6 +7041,8 @@ agentsServiceConfiguration:
         clientId: dummyValue
         clientSecret: dummyValue
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+        scopes:
+          - AIS
     skjern:
       tink:
         apiKey: Al5KynAkYTN4oOySVkS8pnhONurdenid
