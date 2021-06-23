@@ -8,13 +8,16 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.ToString;
 
 @ToString
 @EqualsAndHashCode
 @JsonIgnoreProperties(ignoreUnknown = true)
+@Getter
 public class Field {
     private String description; // This will be the headline in the view in the app
+    private String group; // Identifies fields which should be rendered in one group
     private String helpText; // Text displayed just under the input field
     private String hint; // Gray text in the input view giving hint of the format of the input
     // (YYYYMMDDNNNN for Swedish SSN)
@@ -26,6 +29,7 @@ public class Field {
     private Integer minLength; // The minimum length of the input
     private String name; // The key that will be used to retrieve the input
     private boolean numeric; // True if the input is of numeric type
+    private boolean oneOf; // Identifies if only one field within group should be filled.
     private boolean optional; // True if this is an optional input
     private String
             pattern; // This is a regex pattern of the input ((19|20)[0-9]{10} for Swedish SSN)
@@ -34,85 +38,19 @@ public class Field {
     private String value; // The value of the input
     private boolean sensitive; // If the field is sensitive. A sensitive field will be stored in the
     // encrypted credential.
+    private String style; // Information about style of 2FA screen.
+    private String type; // Type of field
     private boolean checkbox; // if the field should be a boolean value displayed as a checkbox
     private String additionalInfo; // This can be used to send additional information, possibly as a
     // serialized JSON.
     private List<SelectOption> selectOptions;
 
-    public String getDescription() {
-        return description;
-    }
-
-    public String getHelpText() {
-        return helpText;
-    }
-
-    public String getHint() {
-        return hint;
-    }
-
-    public Integer getMaxLength() {
-        return maxLength;
-    }
-
-    public Integer getMinLength() {
-        return minLength;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getPattern() {
-        return pattern;
-    }
-
-    public String getPatternError() {
-        return patternError;
-    }
-
-    public String getValue() {
-        return value;
-    }
-
-    public boolean isImmutable() {
-        return immutable;
-    }
-
-    public boolean isMasked() {
-        return masked;
-    }
-
-    public boolean isNumeric() {
-        return numeric;
-    }
-
-    public boolean isOptional() {
-        return optional;
-    }
-
-    public String getAdditionalInfo() {
-        return additionalInfo;
-    }
-
-    public List<SelectOption> getSelectOptions() {
-        return selectOptions;
-    }
-
     public void setValue(String value) {
         this.value = value;
     }
 
-    public boolean isSensitive() {
-        return sensitive;
-    }
-
     public static Builder builder() {
         return new Builder();
-    }
-
-    public boolean isCheckbox() {
-        return checkbox;
     }
 
     public static Field of(
@@ -149,6 +87,7 @@ public class Field {
 
     public static class Builder {
         private String description;
+        private String group;
         private String helpText;
         private String hint;
         private boolean immutable;
@@ -157,9 +96,12 @@ public class Field {
         private Integer minLength;
         private String name;
         private boolean numeric;
+        private boolean oneOf;
         private boolean optional;
         private String pattern;
         private String patternError;
+        private String style;
+        private String type;
         private String value;
         private String additionalInfo;
         private boolean checkbox;
@@ -178,6 +120,11 @@ public class Field {
 
         public Builder hint(String hint) {
             this.hint = hint;
+            return this;
+        }
+
+        public Builder group(String group) {
+            this.group = group;
             return this;
         }
 
@@ -211,6 +158,11 @@ public class Field {
             return this;
         }
 
+        public Builder oneOf(boolean oneOf) {
+            this.oneOf = oneOf;
+            return this;
+        }
+
         public Builder optional(boolean optional) {
             this.optional = optional;
             return this;
@@ -228,6 +180,16 @@ public class Field {
 
         public Builder sensitive(boolean sensitive) {
             this.sensitive = sensitive;
+            return this;
+        }
+
+        public Builder style(String style) {
+            this.style = style;
+            return this;
+        }
+
+        public Builder type(String type) {
+            this.type = type;
             return this;
         }
 
@@ -263,6 +225,7 @@ public class Field {
             Field field = new Field();
 
             field.description = description;
+            field.group = group;
             field.helpText = helpText;
             field.hint = hint;
             field.immutable = immutable;
@@ -275,10 +238,13 @@ public class Field {
             field.minLength = minLength;
             field.name = name;
             field.numeric = numeric;
+            field.oneOf = oneOf;
             field.optional = optional;
             field.pattern = pattern;
             field.patternError = patternError;
             field.sensitive = sensitive;
+            field.style = style;
+            field.type = type;
             field.value = value;
             field.additionalInfo = additionalInfo;
             field.checkbox = checkbox;
