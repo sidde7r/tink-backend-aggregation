@@ -30,7 +30,6 @@ import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.transac
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.transactionalaccount.BpceGroupTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.FrOpenBankingPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.FrOpenBankingRequestValidator;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.FrOpenBankingStatusParser;
 import se.tink.backend.aggregation.client.provider_configuration.rpc.PisCapability;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agents.utils.CertificateUtils;
@@ -212,7 +211,6 @@ public final class BpceGroupAgent extends NextGenerationAgent
                         sessionStorage,
                         strongAuthenticationState,
                         supplementalInformationHelper,
-                        new FrOpenBankingStatusParser(),
                         new BpceGroupPaymentDatePolicy(provider.getName()),
                         new FrOpenBankingRequestValidator(provider.getName()));
 

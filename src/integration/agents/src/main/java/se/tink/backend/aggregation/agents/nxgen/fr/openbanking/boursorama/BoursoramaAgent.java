@@ -38,7 +38,6 @@ import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.fetche
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.fetcher.identity.BoursoramaIdentityFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.fetcher.transfer.BoursoramaTransferDestinationFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.payment.BoursoramaPaymentApiClient;
-import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.payment.BoursoramaStatusParser;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.FrOpenBankingPaymentDatePolicy;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.FrOpenBankingPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.FrOpenBankingRequestValidator;
@@ -259,7 +258,6 @@ public final class BoursoramaAgent extends NextGenerationAgent
                         sessionStorage,
                         strongAuthenticationState,
                         supplementalInformationHelper,
-                        new BoursoramaStatusParser(),
                         new FrOpenBankingPaymentDatePolicy(),
                         new FrOpenBankingRequestValidator(provider.getName()));
 

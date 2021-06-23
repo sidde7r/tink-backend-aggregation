@@ -28,7 +28,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cre
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.FrOpenBankingPaymentDatePolicy;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.FrOpenBankingPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.FrOpenBankingRequestValidator;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.FrOpenBankingStatusParser;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
@@ -222,7 +221,6 @@ public class CreditAgricoleBaseAgent extends NextGenerationAgent
                         sessionStorage,
                         strongAuthenticationState,
                         supplementalInformationHelper,
-                        new FrOpenBankingStatusParser(),
                         new FrOpenBankingPaymentDatePolicy(),
                         new FrOpenBankingRequestValidator(provider.getName()));
 

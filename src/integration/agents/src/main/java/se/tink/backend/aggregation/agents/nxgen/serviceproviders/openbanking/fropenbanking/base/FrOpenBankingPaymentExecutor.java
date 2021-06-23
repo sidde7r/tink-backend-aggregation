@@ -21,6 +21,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fro
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.rpc.GetPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.utils.FrOpenBankingDateUtil;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.utils.FrOpenBankingErrorMapper;
 import se.tink.backend.aggregation.agents.utils.remittanceinformation.RemittanceInformationValidator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepConstants;
@@ -63,7 +64,6 @@ public class FrOpenBankingPaymentExecutor implements PaymentExecutor, FetchableP
     private final SessionStorage sessionStorage;
     private final StrongAuthenticationState strongAuthenticationState;
     private final SupplementalInformationHelper supplementalInformationHelper;
-    private final FrOpenBankingStatusParser frOpenBankingStatusParser;
     private final FrOpenBankingPaymentDatePolicy frOpenBankingPaymentDatePolicy;
     private final FrOpenBankingRequestValidator frOpenBankingRequestValidator;
 
@@ -73,7 +73,6 @@ public class FrOpenBankingPaymentExecutor implements PaymentExecutor, FetchableP
             SessionStorage sessionStorage,
             StrongAuthenticationState strongAuthenticationState,
             SupplementalInformationHelper supplementalInformationHelper,
-            FrOpenBankingStatusParser frOpenBankingStatusParser,
             FrOpenBankingPaymentDatePolicy frOpenBankingPaymentDatePolicy,
             FrOpenBankingRequestValidator frOpenBankingRequestValidator) {
         this.apiClient = apiClient;
@@ -81,7 +80,6 @@ public class FrOpenBankingPaymentExecutor implements PaymentExecutor, FetchableP
         this.sessionStorage = sessionStorage;
         this.strongAuthenticationState = strongAuthenticationState;
         this.supplementalInformationHelper = supplementalInformationHelper;
-        this.frOpenBankingStatusParser = frOpenBankingStatusParser;
         this.frOpenBankingPaymentDatePolicy = frOpenBankingPaymentDatePolicy;
         this.frOpenBankingRequestValidator = frOpenBankingRequestValidator;
     }
@@ -216,7 +214,8 @@ public class FrOpenBankingPaymentExecutor implements PaymentExecutor, FetchableP
         }
 
         if (getPaymentResponse.getPaymentStatus() != PaymentStatus.SIGNED) {
-            throw frOpenBankingStatusParser.parseErrorResponse(getPaymentResponse);
+            throw FrOpenBankingErrorMapper.mapToError(
+                    getPaymentResponse.getStatusReasonInformation());
         }
 
         return getPaymentResponse.toTinkPaymentResponse(paymentId);
