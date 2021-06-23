@@ -23,7 +23,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnp
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.fetcher.transactionalaccount.BnpParibasTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.fetcher.transfer.BnpTransferDestinationFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.payment.BnpParibasPaymentApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.payment.BnpParibasStatusParser;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.utils.BnpParibasSignatureHeaderProvider;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.FrOpenBankingPaymentDatePolicy;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.FrOpenBankingPaymentExecutor;
@@ -214,7 +213,6 @@ public abstract class BnpParibasBaseAgent extends NextGenerationAgent
                         sessionStorage,
                         strongAuthenticationState,
                         supplementalInformationHelper,
-                        new BnpParibasStatusParser(),
                         new FrOpenBankingPaymentDatePolicy(),
                         new FrOpenBankingRequestValidator(provider.getName()));
         return Optional.of(new PaymentController(paymentExecutor, paymentExecutor));

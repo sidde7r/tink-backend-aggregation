@@ -66,7 +66,6 @@ public class FrOpenBankingPaymentExecutorTest {
                         sessionStorage,
                         strongAuthenticationState,
                         supplementalInformationHelper,
-                        new FrOpenBankingStatusParser(),
                         new FrOpenBankingPaymentDatePolicy(),
                         new FrOpenBankingRequestValidator("fr-lcl-ob"));
     }

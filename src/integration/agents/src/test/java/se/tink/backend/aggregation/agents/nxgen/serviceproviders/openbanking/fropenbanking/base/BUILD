@@ -21,6 +21,7 @@ junit_test(
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
         "//src/integration/payment:enums",
         "//src/integration/payment:rpc",
+        "//src/integration/signableoperation/src/main/java/se/tink/libraries/signableoperation/enums",
         "//src/integration/transfer:rpc",
         "//src/libraries/agent-storage",
         "//third_party:lombok_libs",
