@@ -4,8 +4,8 @@ podMemoryRequest: "8Gi"
 podMemoryLimit: "8Gi"
 heapSize: "4G"
 replicas: 25
-maxReplicas: 60
-targetAverageCpuValue: "2.6"
+maxReplicas: 100
+targetAverageCpuValue: "2.1"
 initialDelaySeconds: "300"
 
 coordinationHosts: 10.88.54.160:2181,10.88.66.231:2181,10.88.85.63:2181
