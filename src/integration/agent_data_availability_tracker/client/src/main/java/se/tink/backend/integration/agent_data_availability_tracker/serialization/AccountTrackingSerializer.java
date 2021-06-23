@@ -39,8 +39,10 @@ public class AccountTrackingSerializer extends TrackingMapSerializer {
                 .putRedacted("availableCredit", account.getNullableAvailableCredit())
                 .putListed("type", account.getType());
 
-        if (!Objects.isNull(this.numberOfTransactions)) {
+        if (Objects.nonNull(this.numberOfTransactions)) {
             listBuilder.putListed("numberOfTransactions", Integer.toString(numberOfTransactions));
+        } else {
+            listBuilder.putNull("numberOfTransactions");
         }
 
         for (AccountIdentifierType type : AccountIdentifierType.values()) {
