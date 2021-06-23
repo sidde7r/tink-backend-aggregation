@@ -164,19 +164,20 @@ public class SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand extends 
                         market,
                         SerializationUtils.serializeAccount(
                                 account, features, numberOfTransactions));
+                events.add(
+                        produceDataTrackerEvent(
+                                SerializationUtils.serializeAccount(
+                                        account, features, numberOfTransactions)));
             } else {
                 agentDataAvailabilityTrackerClient.sendAccount(
                         agentName,
                         provider,
                         market,
                         SerializationUtils.serializeAccount(account, features));
+                events.add(
+                        produceDataTrackerEvent(
+                                SerializationUtils.serializeAccount(account, features)));
             }
-
-            // Produce event data for BigQuery for Account
-            events.add(
-                    produceDataTrackerEvent(
-                            SerializationUtils.serializeAccount(
-                                    account, features, numberOfTransactions)));
 
             // Pick MAX_TRANSACTIONS_TO_SEND_TO_BIGQUERY_PER_ACCOUNT transactions randomly and
             // emit events for them (We do not want to send all transactions in order to avoid
