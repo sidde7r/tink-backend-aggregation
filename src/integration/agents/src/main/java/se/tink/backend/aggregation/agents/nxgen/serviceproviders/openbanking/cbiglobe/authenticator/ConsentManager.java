@@ -257,7 +257,8 @@ public class ConsentManager {
     private Retryer<ConsentStatus> getApprovalStatusRetryer() {
         return RetryerBuilder.<ConsentStatus>newBuilder()
                 .retryIfResult(
-                        consentStatus -> consentStatus == null || !consentStatus.isFinalStatus())
+                        consentStatus ->
+                                consentStatus == null || consentStatus == ConsentStatus.RECEIVED)
                 .withWaitStrategy(WaitStrategies.fixedWait(sleepTime, TimeUnit.MILLISECONDS))
                 .withStopStrategy(StopStrategies.stopAfterAttempt(retryAttempts))
                 .build();
