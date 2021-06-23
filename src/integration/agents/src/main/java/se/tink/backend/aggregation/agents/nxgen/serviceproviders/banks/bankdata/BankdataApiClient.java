@@ -137,14 +137,14 @@ public class BankdataApiClient {
         return client.request(url)
                 .type(type)
                 .accept(MediaType.APPLICATION_JSON_TYPE)
-                .header(HttpHeaders.USER_AGENT, "iPhone, iOS, 12.4")
+                .header(HttpHeaders.USER_AGENT, "iPhone, iOS, 14.5")
                 .header(
                         BankdataConstants.Headers.X_VERSION,
                         BankdataConstants.Headers.X_VERSION_VALUE)
                 .header(BankdataConstants.Headers.X_APPID, BankdataConstants.Headers.X_APPID_VALUE)
                 .header(BankdataConstants.Headers.X_BANK_NO, bankdataBankNumber)
                 .header("x-ios-device-model-id", "iPhone10,4")
-                .header("x-ios-version", "12.4")
+                .header("x-ios-version", "14.5")
                 .header("Accept-Charset", "utf-8")
                 .header("Accept-Language", "da")
                 .header("Accept-Encoding", "gzip")
