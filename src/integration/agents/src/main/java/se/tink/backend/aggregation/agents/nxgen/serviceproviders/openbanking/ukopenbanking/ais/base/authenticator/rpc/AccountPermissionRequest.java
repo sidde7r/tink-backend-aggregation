@@ -23,11 +23,4 @@ public class AccountPermissionRequest {
         return new AccountPermissionRequest(
                 AccountPermissionDataEntity.create(permissions), new RiskEntity());
     }
-
-    public static AccountPermissionRequest create(
-            Set<String> permissions, String expirationDateTime) {
-        return new AccountPermissionRequest(
-                AccountPermissionDataEntity.create(permissions, expirationDateTime),
-                new RiskEntity());
-    }
 }

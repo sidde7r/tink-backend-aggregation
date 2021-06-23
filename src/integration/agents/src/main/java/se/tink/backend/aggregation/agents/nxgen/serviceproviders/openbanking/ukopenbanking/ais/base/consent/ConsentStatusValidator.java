@@ -1,11 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.consent;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingV31Constants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingV31Constants.PersistentStorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticatorConstants;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 @Slf4j
@@ -31,6 +35,7 @@ public class ConsentStatusValidator {
 
         checkIfMarkedWithErrorFlag(consentId);
         checkIfAuthorised(consentId);
+        checkIfConsentExpired();
     }
 
     private String restoreConsentId() {
@@ -51,12 +56,31 @@ public class ConsentStatusValidator {
     }
 
     private void checkIfAuthorised(String consentId) {
-        if (isNotAuthorised(consentId)) {
-            SessionKiller.cleanUpAndExpireSession(
-                    storage,
-                    SessionError.CONSENT_INVALID.exception(
-                            "Invalid consent status. Expiring the session."));
+        try {
+            if (isNotAuthorised(consentId)) {
+                SessionKiller.cleanUpAndExpireSession(
+                        storage,
+                        SessionError.CONSENT_INVALID.exception(
+                                "Invalid consent status. Expiring the session."));
+            }
+        } catch (HttpResponseException e) {
+            log.warn(
+                    "[CONSENT STATUS VALIDATOR] An error has occurred during validation of `{}` consentId",
+                    consentId,
+                    e);
         }
+    }
+
+    private void checkIfConsentExpired() {
+        storage.get(PersistentStorageKeys.AIS_ACCOUNT_CONSENT_CREATION_DATE, Instant.class)
+                .map(creationDate -> creationDate.plus(90, ChronoUnit.DAYS))
+                .filter(expirationDate -> Instant.now().isAfter(expirationDate))
+                .ifPresent(
+                        expirationDate ->
+                                SessionKiller.cleanUpAndExpireSession(
+                                        storage,
+                                        SessionError.CONSENT_INVALID.exception(
+                                                "Consent has expired. Expiring the session.")));
     }
 
     private boolean isNotAuthorised(String consentId) {

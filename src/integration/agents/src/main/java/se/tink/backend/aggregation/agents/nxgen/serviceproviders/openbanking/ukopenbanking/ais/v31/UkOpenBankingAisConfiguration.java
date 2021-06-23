@@ -8,12 +8,10 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingV31Constants;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.authenticator.rpc.AccountPermissionResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountOwnershipType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingConstants.ApiServices;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingConstants.PartyEndpoint;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.authenticator.rpc.AccountPermissionResponseV31;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticatorConstants;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
@@ -30,19 +28,6 @@ public class UkOpenBankingAisConfiguration implements UkOpenBankingAisConfig {
         this.partyEndpoints = builder.partyEndpoints;
         this.allowedAccountOwnershipTypes = builder.allowedAccountOwnershipTypes;
         this.organisationId = builder.organisationId;
-    }
-
-    @Override
-    public String getIntentId(AccountPermissionResponse accountPermissionResponse) {
-        AccountPermissionResponseV31 accountPermissionResponseV31 =
-                (AccountPermissionResponseV31) accountPermissionResponse;
-        return accountPermissionResponseV31.getData().getAccountConsentId();
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public <T extends AccountPermissionResponse> Class<T> getIntentIdResponseType() {
-        return (Class<T>) AccountPermissionResponseV31.class;
     }
 
     @Override
