@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.executor.payment;
 
+import static se.tink.libraries.transfer.enums.RemittanceInformationType.UNSTRUCTURED;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
@@ -15,6 +17,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uni
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.executor.payment.entity.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.executor.payment.entity.AmountEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.executor.payment.entity.RemittanceInformationStructuredEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.executor.payment.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.executor.payment.rpc.CreateRecurringPaymentRequest;
 import se.tink.backend.aggregation.agents.utils.remittanceinformation.RemittanceInformationValidator;
@@ -70,37 +73,46 @@ public class UnicreditPaymentExecutor implements PaymentExecutor, FetchablePayme
 
     private CreatePaymentRequest getCreatePaymentRequest(Payment payment) {
 
-        return CreatePaymentRequest.builder()
-                .creditorAccount(getAccountEntity(payment.getCreditor().getAccountNumber()))
-                .debtorAccount(getAccountEntity(payment.getDebtor().getAccountNumber()))
-                .instructedAmount(getAmountEntity(payment))
-                .creditorName(payment.getCreditor().getName())
-                .remittanceInformationUnstructured(getUnstructuredRemittance(payment))
-                .requestedExecutionDate(
-                        payment.getExecutionDate() != null
-                                ? payment.getExecutionDate().toString()
-                                : null)
-                .build();
+        CreatePaymentRequest.CreatePaymentRequestBuilder<?, ?> requestBuilder =
+                CreatePaymentRequest.builder()
+                        .creditorAccount(getAccountEntity(payment.getCreditor().getAccountNumber()))
+                        .debtorAccount(getAccountEntity(payment.getDebtor().getAccountNumber()))
+                        .instructedAmount(getAmountEntity(payment))
+                        .creditorName(payment.getCreditor().getName())
+                        .requestedExecutionDate(
+                                payment.getExecutionDate() != null
+                                        ? payment.getExecutionDate().toString()
+                                        : null);
+
+        addRemittanceInformation(requestBuilder, payment);
+
+        return requestBuilder.build();
     }
 
     private CreatePaymentRequest getCreateRecurringPaymentRequest(Payment payment) {
 
-        return CreateRecurringPaymentRequest.builder()
-                .creditorAccount(getAccountEntity(payment.getCreditor().getAccountNumber()))
-                .debtorAccount(getAccountEntity(payment.getDebtor().getAccountNumber()))
-                .instructedAmount(getAmountEntity(payment))
-                .creditorName(payment.getCreditor().getName())
-                .remittanceInformationUnstructured(getUnstructuredRemittance(payment))
-                .frequency(payment.getFrequency().toString())
-                .startDate(payment.getStartDate().toString())
-                // optional attributes
-                .endDate(payment.getEndDate() != null ? payment.getEndDate().toString() : null)
-                .executionRule(
-                        payment.getExecutionRule() != null
-                                ? payment.getExecutionRule().toString()
-                                : null)
-                .dayOfExecution(getDayOfExecution(payment))
-                .build();
+        CreateRecurringPaymentRequest.CreateRecurringPaymentRequestBuilder<?, ?> requestBuilder =
+                CreateRecurringPaymentRequest.builder()
+                        .creditorAccount(getAccountEntity(payment.getCreditor().getAccountNumber()))
+                        .debtorAccount(getAccountEntity(payment.getDebtor().getAccountNumber()))
+                        .instructedAmount(getAmountEntity(payment))
+                        .creditorName(payment.getCreditor().getName())
+                        .frequency(payment.getFrequency().toString())
+                        .startDate(payment.getStartDate().toString())
+                        // optional attributes
+                        .endDate(
+                                payment.getEndDate() != null
+                                        ? payment.getEndDate().toString()
+                                        : null)
+                        .executionRule(
+                                payment.getExecutionRule() != null
+                                        ? payment.getExecutionRule().toString()
+                                        : null)
+                        .dayOfExecution(getDayOfExecution(payment));
+
+        addRemittanceInformation(requestBuilder, payment);
+
+        return requestBuilder.build();
     }
 
     private AmountEntity getAmountEntity(Payment payment) {
@@ -109,11 +121,34 @@ public class UnicreditPaymentExecutor implements PaymentExecutor, FetchablePayme
                 payment.getExactCurrencyAmount().getCurrencyCode());
     }
 
+    private void addRemittanceInformation(
+            CreatePaymentRequest.CreatePaymentRequestBuilder<?, ?> requestBuilder,
+            Payment payment) {
+        RemittanceInformationType remittanceInformationType =
+                payment.getRemittanceInformation().getType();
+
+        switch (remittanceInformationType) {
+            case UNSTRUCTURED:
+                requestBuilder.remittanceInformationUnstructured(
+                        getUnstructuredRemittance(payment));
+                break;
+            case OCR:
+            case REFERENCE:
+                requestBuilder.remittanceInformationStructured(
+                        new RemittanceInformationStructuredEntity(
+                                payment.getRemittanceInformation().getValue(),
+                                remittanceInformationType.name()));
+                break;
+            default:
+                throw new IllegalArgumentException("Unsupported remittance information type!");
+        }
+    }
+
     private String getUnstructuredRemittance(Payment payment) {
         RemittanceInformation remittanceInformation = payment.getRemittanceInformation();
 
         RemittanceInformationValidator.validateSupportedRemittanceInformationTypesOrThrow(
-                remittanceInformation, null, RemittanceInformationType.UNSTRUCTURED);
+                remittanceInformation, null, UNSTRUCTURED);
 
         return Optional.ofNullable(remittanceInformation.getValue()).orElse("");
     }
