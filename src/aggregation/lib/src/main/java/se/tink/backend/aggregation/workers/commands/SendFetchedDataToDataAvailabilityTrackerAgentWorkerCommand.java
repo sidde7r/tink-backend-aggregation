@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.workers.commands;
 
 import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -17,6 +18,7 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.models.AccountFeatures;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.models.TransactionDateType;
@@ -36,6 +38,7 @@ import se.tink.backend.integration.agent_data_availability_tracker.serialization
 import se.tink.eventproducerservice.events.grpc.DataTrackerEventProto.DataTrackerEvent;
 import se.tink.libraries.account_data_cache.AccountData;
 import se.tink.libraries.credentials.service.CredentialsRequest;
+import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.metrics.core.MetricId;
 
 public class SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand extends AgentWorkerCommand
@@ -47,11 +50,26 @@ public class SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand extends 
     private static final String METRIC_NAME = "data_availability_tracker_refresh";
     private static final String METRIC_ACTION = "send_refresh_data_to_data_availability_tracker";
 
+    private static final Map<AccountTypes, RefreshableItem>
+            ACCOUNT_TYPE_TO_TRANSACTION_REFRESHABLE_ITEM =
+                    ImmutableMap.of(
+                            AccountTypes.CHECKING,
+                            RefreshableItem.CHECKING_TRANSACTIONS,
+                            AccountTypes.SAVINGS,
+                            RefreshableItem.SAVING_TRANSACTIONS,
+                            AccountTypes.CREDIT_CARD,
+                            RefreshableItem.CREDITCARD_TRANSACTIONS,
+                            AccountTypes.LOAN,
+                            RefreshableItem.LOAN_TRANSACTIONS,
+                            AccountTypes.INVESTMENT,
+                            RefreshableItem.INVESTMENT_TRANSACTIONS);
+
     private final AgentWorkerCommandContext context;
     private final AgentWorkerCommandMetricState metrics;
 
     private final AsAgentDataAvailabilityTrackerClient agentDataAvailabilityTrackerClient;
     private final DataTrackerEventProducer dataTrackerEventProducer;
+    private final List<RefreshableItem> items;
 
     private final String agentName;
     private final String provider;
@@ -63,7 +81,8 @@ public class SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand extends 
             AgentWorkerCommandContext context,
             AgentWorkerCommandMetricState metrics,
             AsAgentDataAvailabilityTrackerClient agentDataAvailabilityTrackerClient,
-            DataTrackerEventProducer dataTrackerEventProducer) {
+            DataTrackerEventProducer dataTrackerEventProducer,
+            List<RefreshableItem> items) {
         this.context = context;
         this.metrics = metrics.init(this);
         this.agentDataAvailabilityTrackerClient = agentDataAvailabilityTrackerClient;
@@ -73,6 +92,7 @@ public class SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand extends 
         this.agentName = request.getProvider().getClassName();
         this.provider = request.getProvider().getName();
         this.market = request.getProvider().getMarket();
+        this.items = items;
     }
 
     @Override
@@ -127,18 +147,30 @@ public class SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand extends 
                 return events;
             }
 
-            final int numberOfTransactions = originalTransactions.size();
-
             /*
                We are intentionally sending only account and skipping sending transaction for
                DataTracker v1. We are sending transactions only to DataTracker v2. We are planning
                to deprecate DataTracker v1 and only use DataTracker v2.
             */
-            agentDataAvailabilityTrackerClient.sendAccount(
-                    agentName,
-                    provider,
-                    market,
-                    SerializationUtils.serializeAccount(account, features, numberOfTransactions));
+            final int numberOfTransactions = originalTransactions.size();
+            final AccountTypes accountType = account.getType();
+            final RefreshableItem expectedTransactionRefreshableItem =
+                    ACCOUNT_TYPE_TO_TRANSACTION_REFRESHABLE_ITEM.get(accountType);
+
+            if (items.contains(expectedTransactionRefreshableItem)) {
+                agentDataAvailabilityTrackerClient.sendAccount(
+                        agentName,
+                        provider,
+                        market,
+                        SerializationUtils.serializeAccount(
+                                account, features, numberOfTransactions));
+            } else {
+                agentDataAvailabilityTrackerClient.sendAccount(
+                        agentName,
+                        provider,
+                        market,
+                        SerializationUtils.serializeAccount(account, features));
+            }
 
             // Produce event data for BigQuery for Account
             events.add(

@@ -293,7 +293,8 @@ public class AgentWorkerOperationFactory {
                             context,
                             createCommandMetricState(request, clientInfo),
                             agentDataAvailabilityTrackerClient,
-                            dataTrackerEventProducer));
+                            dataTrackerEventProducer,
+                            items));
         }
 
         // FIXME: remove when Handelsbanken and Avanza have been moved to the nextgen agents. (TOP
@@ -335,7 +336,8 @@ public class AgentWorkerOperationFactory {
                             context,
                             createCommandMetricState(request, clientInfo),
                             agentDataAvailabilityTrackerClient,
-                            dataTrackerEventProducer));
+                            dataTrackerEventProducer,
+                            items));
         }
 
         return commands;
@@ -1540,7 +1542,8 @@ public class AgentWorkerOperationFactory {
                             context,
                             createCommandMetricState(request, clientInfo),
                             agentDataAvailabilityTrackerClient,
-                            dataTrackerEventProducer));
+                            dataTrackerEventProducer,
+                            items));
         }
 
         // === END REFRESHING ===
