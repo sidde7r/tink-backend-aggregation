@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.fetcher.
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -15,7 +16,8 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
-import se.tink.libraries.account.identifiers.OtherIdentifier;
+import se.tink.libraries.account.identifiers.BbanIdentifier;
+import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
@@ -23,7 +25,6 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 @Getter
 public class AccountEntity {
     private String id;
-    private String accountNumber;
     private String bban;
     private String iban;
     private String customerRole;
@@ -64,10 +65,12 @@ public class AccountEntity {
                 .withBalance(BalanceModule.of(getBalance(accountBalance.getAvailableBalance())))
                 .withId(
                         IdModule.builder()
-                                .withUniqueIdentifier(accountNumber)
-                                .withAccountNumber(accountNumber)
+                                .withUniqueIdentifier(id)
+                                .withAccountNumber(id)
                                 .withAccountName(displayName)
-                                .addIdentifier(new OtherIdentifier(accountNumber))
+                                .addIdentifiers(
+                                        Arrays.asList(
+                                                new IbanIdentifier(iban), new BbanIdentifier(bban)))
                                 .build())
                 .setApiIdentifier(getTransactionUrl())
                 .addHolderName(owner.getName())

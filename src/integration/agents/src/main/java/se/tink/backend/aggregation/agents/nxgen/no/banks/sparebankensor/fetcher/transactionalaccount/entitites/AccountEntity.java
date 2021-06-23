@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.fetcher
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
+import java.util.Arrays;
 import java.util.Map;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -13,17 +14,21 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.libraries.account.identifiers.BbanIdentifier;
+import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 @Slf4j
 public class AccountEntity {
     private String id;
-    private String accountNumber;
     private String displayName;
     private OwnerEntity owner;
     private PropertiesEntity properties;
     private AccountBalanceEntity accountBalance;
+    private String iban;
+    private String bban;
+
     @Getter private Map<String, LinkEntity> links;
 
     @JsonIgnore
@@ -36,13 +41,12 @@ public class AccountEntity {
     @JsonIgnore
     public TransactionalAccount toTinkAccount() {
         return TransactionalAccount.builder(
-                        getTinkAccountType(),
-                        accountNumber,
-                        getBalance(accountBalance.getAvailableBalance()))
-                .setAccountNumber(accountNumber)
+                        getTinkAccountType(), id, getBalance(accountBalance.getAvailableBalance()))
+                .setAccountNumber(id)
                 .setName(displayName)
                 .setHolderName(new HolderName(owner.getName()))
                 .setBankIdentifier(id)
+                .addIdentifiers(Arrays.asList(new IbanIdentifier(iban), new BbanIdentifier(bban)))
                 .putInTemporaryStorage(
                         SparebankenSorConstants.Storage.TEMPORARY_STORAGE_LINKS, links)
                 .build();
@@ -64,8 +68,8 @@ public class AccountEntity {
     // Currently logging loan details.
     @JsonIgnore
     public LoanAccount toTinkLoan() {
-        return LoanAccount.builder(accountNumber, getBalance(accountBalance.getAccountingBalance()))
-                .setAccountNumber(accountNumber)
+        return LoanAccount.builder(id, getBalance(accountBalance.getAccountingBalance()))
+                .setAccountNumber(id)
                 .setName(displayName)
                 .setHolderName(new HolderName(owner.getName()))
                 .build();

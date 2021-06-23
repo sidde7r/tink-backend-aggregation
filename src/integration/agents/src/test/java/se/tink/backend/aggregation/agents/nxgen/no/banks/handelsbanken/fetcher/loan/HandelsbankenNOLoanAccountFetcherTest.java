@@ -363,7 +363,6 @@ public class HandelsbankenNOLoanAccountFetcherTest {
         LoanAccountEntity loanAccountEntity = new LoanAccountEntity();
         loanAccountEntity.setId(ID);
         loanAccountEntity.setAccountDescription(description);
-        loanAccountEntity.setAccountNumber(ACCOUNT_NUMBER);
         loanAccountEntity.setBalance(BALANCE);
         loanAccountEntity.setType(TYPE);
         loanAccountEntity.setLinks(links);
