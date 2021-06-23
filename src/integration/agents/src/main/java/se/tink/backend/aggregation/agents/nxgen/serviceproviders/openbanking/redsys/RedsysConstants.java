@@ -39,7 +39,9 @@ public final class RedsysConstants {
         public static final String TRANSACTIONS = "/v1/accounts/%s/transactions";
         public static final String BALANCES = "/v1/accounts/%s/balances";
         public static final String CREATE_PAYMENT = "/v1/payments/%s";
-        public static final String GET_PAYMENT = "/v1/payments/%s/%s";
+        public static final String FETCH_PAYMENT = "/v1/payments/%s/%s";
+        public static final String FETCH_PAYMENT_STATUS = "/v1/payments/%s/%s/status";
+        public static final String CANCEL_PAYMENT = "/v1/payments/%s/%s";
     }
 
     public static class StorageKeys {
@@ -140,5 +142,18 @@ public final class RedsysConstants {
         public static final String EXPECTED = "expected";
         public static final String OPENING_BOOKED = "openingBooked";
         public static final String INTERIM_AVAILABLE = "interimAvailable";
+    }
+
+    public static class Storage {
+        public static final String PAYMENT_SCA_REDIRECT = "scaRedirect";
+        public static final String STATE = "payment_state";
+    }
+
+    public static class Timer {
+        public static final long WAITING_FOR_QUIT_PENDING_STATUS_MILISEC = 3000L;
+    }
+
+    public static class PaymentStep {
+        public static final String IN_PROGRESS = "IN_PROGRESS";
     }
 }

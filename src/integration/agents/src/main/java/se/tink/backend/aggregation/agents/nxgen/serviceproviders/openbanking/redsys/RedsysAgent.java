@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.re
 
 import com.google.common.base.Strings;
 import java.time.LocalDate;
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
@@ -17,12 +18,14 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.red
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.fetcher.transactionalaccount.RedsysUpcomingTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.fetcher.transactionalaccount.rpc.BaseTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.fetcher.transactionalaccount.rpc.TransactionsResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.payments.RedsysPaymentExecutor;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.TransactionPaginator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
@@ -38,7 +41,6 @@ public abstract class RedsysAgent extends NextGenerationAgent
 
     private final RedsysApiClient apiClient;
     private final RedsysConsentStorage consentStorage;
-
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final RedsysConsentController consentController;
 
@@ -156,5 +158,17 @@ public abstract class RedsysAgent extends NextGenerationAgent
     @Override
     public boolean shouldReturnLowercaseAccountId() {
         return false;
+    }
+
+    @Override
+    public Optional<PaymentController> constructPaymentController() {
+        RedsysPaymentExecutor paymentExecutor =
+                new RedsysPaymentExecutor(
+                        apiClient,
+                        consentController,
+                        sessionStorage,
+                        supplementalInformationHelper,
+                        strongAuthenticationState);
+        return Optional.of(new PaymentController(paymentExecutor, paymentExecutor));
     }
 }
