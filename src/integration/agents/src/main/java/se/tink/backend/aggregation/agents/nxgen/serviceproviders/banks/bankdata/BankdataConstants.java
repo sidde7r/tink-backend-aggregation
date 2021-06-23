@@ -41,7 +41,7 @@ public class BankdataConstants {
 
     public static class Headers {
         public static final String X_VERSION = "x-version";
-        public static final String X_VERSION_VALUE = "5.25.1";
+        public static final String X_VERSION_VALUE = "5.26.5";
         public static final String X_BANK_NO = "x-bankNo";
         public static final String X_APPID = "x-appid";
         public static final String X_APPID_VALUE = "iphonemobilbank";
