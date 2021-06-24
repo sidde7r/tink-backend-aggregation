@@ -1,21 +1,18 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.payment;
 
 import java.util.Collections;
-import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
-import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentCancelledException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.payment.rpc.CreatePaymentRequest;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.payment.rpc.CreatePaymentResponse;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants.StorageKeys;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.payment.rpc.IngCreatePaymentRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.payment.rpc.IngCreatePaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.payment.rpc.IngPaymentStatusResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepConstants;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.FetchablePaymentExecutor;
@@ -26,9 +23,7 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepReq
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
-import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
-import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.rpc.Payment;
@@ -37,90 +32,93 @@ import se.tink.libraries.payment.rpc.Payment;
 @RequiredArgsConstructor
 public class IngPaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
 
-    public static final String PAYMENT_AUTHORIZATION_URL = "payment_authorization_url";
-    public static final String VALIDATE_PAYMENT = "confirm_payment";
-
-    private static final long WAIT_FOR_MINUTES = 9L;
-
-    private final IngPaymentApiClient paymentApiClient;
-    private final IngPaymentMapper paymentMapper;
     private final SessionStorage sessionStorage;
-    private final StrongAuthenticationState strongAuthenticationState;
-    private final SupplementalInformationHelper supplementalInformationHelper;
+    private final IngPaymentApiClient paymentApiClient;
+    private final IngPaymentAuthenticator paymentAuthenticator;
+    private final IngPaymentMapper paymentMapper;
 
     @Override
-    public PaymentResponse create(PaymentRequest paymentRequest) throws PaymentException {
+    public PaymentResponse create(PaymentRequest paymentRequest) {
+        Payment payment = paymentRequest.getPayment();
 
-        CreatePaymentRequest createPaymentRequest =
-                paymentMapper.toIngPaymentRequest(paymentRequest);
-        CreatePaymentResponse paymentResponse =
+        IngCreatePaymentRequest createPaymentRequest =
+                paymentMapper.toIngCreatePaymentRequest(payment);
+        IngCreatePaymentResponse createPaymentResponse =
                 paymentApiClient.createPayment(createPaymentRequest);
 
-        String authorizationUrl = paymentResponse.getLinks().getAuthorizationUrl();
-        sessionStorage.put(PAYMENT_AUTHORIZATION_URL, authorizationUrl);
+        savePaymentAuthorizationUrl(createPaymentResponse);
+        updateCreatedPayment(payment, createPaymentResponse);
+        return new PaymentResponse(payment);
+    }
 
-        return paymentMapper.toTinkPaymentResponse(paymentRequest, paymentResponse);
+    private void savePaymentAuthorizationUrl(IngCreatePaymentResponse createPaymentResponse) {
+        String authorizationUrl = createPaymentResponse.getLinks().getScaRedirect();
+        sessionStorage.put(StorageKeys.PAYMENT_AUTHORIZATION_URL, authorizationUrl);
+    }
+
+    private String readPaymentAuthorizationUrl() {
+        return Optional.ofNullable(sessionStorage.get(StorageKeys.PAYMENT_AUTHORIZATION_URL))
+                .orElseThrow(
+                        () -> new IllegalStateException("[ING] Missing authorize payment url"));
     }
 
     @Override
     public PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentMultiStepRequest)
             throws PaymentException {
-        String nextStep;
-        Payment payment = paymentMultiStepRequest.getPayment();
+        String authorizationUrl = readPaymentAuthorizationUrl();
+        paymentAuthenticator.authenticate(authorizationUrl);
 
-        switch (paymentMultiStepRequest.getStep()) {
-            case AuthenticationStepConstants.STEP_INIT:
-                String authorizationUrl =
-                        Optional.ofNullable(sessionStorage.get(PAYMENT_AUTHORIZATION_URL))
-                                .orElseThrow(
-                                        () ->
-                                                new PaymentAuthenticationException(
-                                                        "Payment authentication failed. There is no authorization url!",
-                                                        new PaymentRejectedException()));
-                openThirdPartyApp(new URL(authorizationUrl));
-                nextStep = VALIDATE_PAYMENT;
-                break;
-            case VALIDATE_PAYMENT:
-                PaymentStatus paymentStatus = getAndVerifyStatus(payment.getUniqueId());
-                payment.setStatus(paymentStatus);
-                nextStep = AuthenticationStepConstants.STEP_FINALIZE;
-                break;
+        PaymentResponse paymentResponse = fetch(paymentMultiStepRequest);
+        PaymentStatus paymentStatus = paymentResponse.getPayment().getStatus();
+        switch (paymentStatus) {
+            case SIGNED:
+            case PAID:
+                return new PaymentMultiStepResponse(
+                        paymentResponse,
+                        AuthenticationStepConstants.STEP_FINALIZE,
+                        Collections.emptyList());
+            case REJECTED:
+                throw new PaymentRejectedException("[ING] Payment rejected by Bank");
+            case CANCELLED:
+                throw new PaymentCancelledException("[ING] Payment cancelled by PSU");
+            case PENDING:
+                /*
+                On ING page user has an option to either:
+                 - click nothing and simply accept the request in the app
+                 - click "Back" or "Cancel"
+                Clicking any of those button does not actually cancel the request and it can still be
+                approved later - even after few hours. Because we don't want to leave agent hanging for that long,
+                we should treat this as if user has cancelled the request.
+                 */
+                cancel(paymentMultiStepRequest);
+                throw new PaymentCancelledException(
+                        "[ING] User left authorization page without approving request");
             default:
-                throw new PaymentException(
-                        "Unknown step " + paymentMultiStepRequest.getStep() + " for payment sign.");
+                throw new PaymentAuthorizationException(
+                        "[ING] Payment was not signed even after SCA, status: " + paymentStatus);
         }
-        return new PaymentMultiStepResponse(payment, nextStep, Collections.emptyList());
     }
 
-    private PaymentStatus getAndVerifyStatus(String paymentId) throws PaymentException {
+    @Override
+    public PaymentResponse fetch(PaymentRequest paymentRequest) {
+        Payment payment = paymentRequest.getPayment();
 
-        PaymentStatus paymentStatus = paymentApiClient.getPayment(paymentId).getPaymentStatus();
+        IngPaymentStatusResponse paymentStatusResponse =
+                paymentApiClient.getPaymentStatus(payment.getUniqueId());
 
-        if (paymentStatus == PaymentStatus.PENDING) {
-            throw new PaymentAuthenticationException(
-                    "Payment authentication failed.", new PaymentRejectedException());
-        }
-
-        if (paymentStatus != PaymentStatus.SIGNED) {
-            throw new PaymentRejectedException("Unexpected payment status: " + paymentStatus);
-        }
-
-        return paymentStatus;
+        updatePaymentStatus(payment, paymentStatusResponse.getTransactionStatus());
+        return new PaymentResponse(payment);
     }
 
-    private void openThirdPartyApp(URL authorizationUrl) throws PaymentException {
-        supplementalInformationHelper.openThirdPartyApp(
-                ThirdPartyAppAuthenticationPayload.of(authorizationUrl));
-        Optional<Map<String, String>> queryParameters =
-                supplementalInformationHelper.waitForSupplementalInformation(
-                        strongAuthenticationState.getSupplementalKey(),
-                        WAIT_FOR_MINUTES,
-                        TimeUnit.MINUTES);
+    private void updateCreatedPayment(
+            Payment payment, IngCreatePaymentResponse createPaymentResponse) {
+        updatePaymentStatus(payment, createPaymentResponse.getTransactionStatus());
+        payment.setUniqueId(createPaymentResponse.getPaymentId());
+    }
 
-        queryParameters.orElseThrow(
-                () ->
-                        new PaymentAuthorizationException(
-                                "SCA time-out.", ThirdPartyAppError.TIMED_OUT.exception()));
+    private void updatePaymentStatus(Payment payment, String transactionStatus) {
+        PaymentStatus paymentStatus = paymentMapper.getPaymentStatus(transactionStatus);
+        payment.setStatus(paymentStatus);
     }
 
     @Override
@@ -132,19 +130,16 @@ public class IngPaymentExecutor implements PaymentExecutor, FetchablePaymentExec
 
     @Override
     public PaymentResponse cancel(PaymentRequest paymentRequest) {
-        throw new NotImplementedException(
-                "cancel not yet implemented for " + this.getClass().getName());
+        Payment payment = paymentRequest.getPayment();
+        paymentApiClient.cancelPayment(payment.getUniqueId());
+
+        payment.setStatus(PaymentStatus.CANCELLED);
+        return PaymentResponse.of(paymentRequest);
     }
 
     @Override
     public PaymentListResponse fetchMultiple(PaymentListRequest paymentListRequest) {
         throw new NotImplementedException(
                 "fetchMultiple not yet implemented for " + this.getClass().getName());
-    }
-
-    @Override
-    public PaymentResponse fetch(PaymentRequest paymentRequest) {
-        throw new NotImplementedException(
-                "fetch not yet implemented for " + this.getClass().getName());
     }
 }

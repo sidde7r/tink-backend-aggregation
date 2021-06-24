@@ -1,25 +1,28 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase;
 
 import com.google.common.collect.ImmutableList;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.apache.http.HttpStatus;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class IngBaseConstants {
 
-    private IngBaseConstants() {
-        throw new AssertionError();
-    }
-
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class Urls {
         public static final String BASE_URL = "https://api.ing.com";
         public static final String ACCOUNTS = "/v3/accounts";
         private static final String BASE_AUTH = "/oauth2";
         public static final String OAUTH = BASE_AUTH + "/authorization-server-url";
         public static final String TOKEN = BASE_AUTH + "/token";
-        public static final String PAYMENT_INITIATION = "/v1/payments/sepa-credit-transfers";
+        public static final String CREATE_PAYMENT = "/v1/payments/sepa-credit-transfers";
+        public static final String DELETE_PAYMENT =
+                "/v1/payments/sepa-credit-transfers/{paymentId}";
         public static final String GET_PAYMENT_STATUS =
                 "/v1/payments/sepa-credit-transfers/{paymentId}/status";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class Transaction {
         // Time after authentication when full transaction history can be fetched (milliseconds).
         // Documentation says "immediately" after authentication. In practice, this is 1h.
@@ -27,21 +30,20 @@ public final class IngBaseConstants {
         public static final long DEFAULT_HISTORY_DAYS = 89;
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class IdTags {
         public static final String PAYMENT_ID = "paymentId";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class PaymentRequest {
-        public static final String CREDITOR_AGENT = "INGBFRPP";
-        public static final String PAYMENT_CREDITOR = "Payment Creditor";
         public static final String SLEV = "SLEV";
         public static final String SEPA = "SEPA";
-        public static final String PAYMENT_TYPE_SEPA = "SEPA";
         public static final String INST = "INST";
-        public static final String EXECUTION_DATE_FORMAT = "yyyy-MM-dd";
         public static final String DEFAULT_IP = "0.0.0.0";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class StorageKeys {
         public static final String AUTHENTICATION_TIME = "AUTHENTICATION_TIME";
         public static final String CLIENT_ID = "CLIENT_ID";
@@ -49,8 +51,10 @@ public final class IngBaseConstants {
         public static final String ACCOUNT_ID = "ACCOUNT_ID";
         public static final String APPLICATION_TOKEN = "APPLICATION_TOKEN";
         public static final String TRANSACTIONS_URL = "TRANSACTIONS_URL";
+        public static final String PAYMENT_AUTHORIZATION_URL = "PAYMENT_AUTHORIZATION_URL";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class QueryKeys {
         public static final String SCOPE = "scope";
         public static final String COUNTRY_CODE = "country_code";
@@ -63,6 +67,7 @@ public final class IngBaseConstants {
         public static final String LIMIT = "limit";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class QueryValues {
         public static final String CODE = "code";
         public static final String PAYMENT_ACCOUNTS_TRANSACTIONS_AND_BALANCES_VIEW =
@@ -70,6 +75,7 @@ public final class IngBaseConstants {
         public static final String TRANSACTIONS_LIMIT = "50";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class HeaderKeys {
         public static final String DIGEST = "Digest";
         public static final String DATE = "Date";
@@ -82,6 +88,7 @@ public final class IngBaseConstants {
         public static final String TPP_REDIRECT_URI = "TPP-Redirect-URI";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class FormKeys {
         public static final String GRANT_TYPE = "grant_type";
         public static final String CODE = "code";
@@ -89,12 +96,14 @@ public final class IngBaseConstants {
         public static final String REFRESH_TOKEN = "refresh_token";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class FormValues {
         public static final String CLIENT_CREDENTIALS = "client_credentials";
         public static final String AUTHORIZATION_CODE = "authorization_code";
         public static final String REFRESH_TOKEN = "refresh_token";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class Signature {
         public static final String SIGNING_STRING = "(request-target): ";
         public static final String DATE = "date: ";
@@ -113,14 +122,17 @@ public final class IngBaseConstants {
         public static final String SIGNATURE_NAME = "signature=";
         public static final String HTTP_METHOD_POST = "post";
         public static final String HTTP_METHOD_GET = "get";
+        public static final String HTTP_METHOD_DELETE = "delete";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class BalanceTypes {
         public static final String EXPECTED = "expected";
         public static final String INTERIM_BOOKED = "interimBooked";
         public static final String CLOSING_BOOKED = "closingBooked";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class ErrorMessages {
         public static final String UNKNOWN_ERROR = "Error unknown";
         public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
@@ -133,10 +145,12 @@ public final class IngBaseConstants {
                 ImmutableList.of(HttpStatus.SC_NOT_FOUND, HttpStatus.SC_BAD_GATEWAY);
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class ErrorCodes {
         public static final String NOT_FOUND = "NOT_FOUND";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     static class HttpClient {
         public static final int MAX_ATTEMPTS = 5;
         public static final int RETRY_SLEEP_MILLISECONDS = 2000;
