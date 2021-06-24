@@ -29,10 +29,11 @@ public class FiduciaPaymentMapperTest {
             "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/de/openbanking/fiducia/resources";
 
     private static final String TEST_BOUNDARY = "1234testBoundary4321";
+    private static final String TEST_BIC = "TEST1234";
 
     private LocalDateTimeSource dateTimeSource = new ConstantLocalDateTimeSource();
     private FiduciaPaymentMapper mapper =
-            new FiduciaPaymentMapper(new MockRandomValueGenerator(), dateTimeSource);
+            new FiduciaPaymentMapper(new MockRandomValueGenerator(), dateTimeSource, TEST_BIC);
 
     @Test
     public void shouldTransformOneOffRequestCorrectly() {
@@ -85,7 +86,9 @@ public class FiduciaPaymentMapperTest {
 
         FiduciaPaymentMapper mapper =
                 new FiduciaPaymentMapper(
-                        new MockRandomValueGenerator(), new ConstantLocalDateTimeSource());
+                        new MockRandomValueGenerator(),
+                        new ConstantLocalDateTimeSource(),
+                        TEST_BIC);
         // when
         String paymentRequest = mapper.getRecurringPaymentRequest(payment, TEST_BOUNDARY);
 

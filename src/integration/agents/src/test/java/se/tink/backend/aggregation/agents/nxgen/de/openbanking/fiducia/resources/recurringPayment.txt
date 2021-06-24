@@ -40,9 +40,7 @@ Content-Transfer-Encoding: 8bit
             </DbtrAcct>
             <DbtrAgt>
                 <FinInstnId>
-                    <Othr>
-                        <Id>NOTPROVIDED</Id>
-                    </Othr>
+                    <BIC>TEST1234</BIC>
                 </FinInstnId>
             </DbtrAgt>
             <ChrgBr>SLEV</ChrgBr>

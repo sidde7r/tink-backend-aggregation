@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.agent;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -99,11 +100,11 @@ public class FiduciaAgentPaymentTest {
         return createSepaPayment()
                 .withRemittanceInformation(remittanceInformation)
                 .withPaymentServiceType(PaymentServiceType.PERIODIC)
-                .withFrequency(Frequency.MONTHLY)
-                .withStartDate(LocalDate.now().plusDays(2))
-                .withEndDate(LocalDate.now().plusMonths(2))
+                .withFrequency(Frequency.WEEKLY)
+                .withStartDate(LocalDate.now().plusDays(1))
+                .withEndDate(LocalDate.now().plusDays(3))
                 .withExecutionRule(ExecutionRule.FOLLOWING)
-                .withDayOfMonth(10);
+                .withDayOfWeek(DayOfWeek.WEDNESDAY);
     }
 
     private Payment.Builder createSepaPayment() {

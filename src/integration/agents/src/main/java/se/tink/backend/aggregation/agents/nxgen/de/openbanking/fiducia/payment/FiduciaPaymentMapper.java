@@ -16,6 +16,8 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.payment.r
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.payment.request.CreatePaymentXmlRequest;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.payment.request.CstmrCdtTrfInitn;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.payment.request.DbtrAcct;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.payment.request.DbtrAgt;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.payment.request.FinInstnId;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.payment.request.GrpHdr;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.payment.request.IbanId;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.payment.request.Id;
@@ -39,9 +41,9 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @RequiredArgsConstructor
 public class FiduciaPaymentMapper {
-    public static final String NEW_LINE = "\r\n";
     private final RandomValueGenerator randomValueGenerator;
     private final LocalDateTimeSource localDateTimeSource;
+    private final String debtorBic;
 
     public String getPaymentRequest(Payment payment) {
         Creditor creditor = payment.getCreditor();
@@ -82,6 +84,7 @@ public class FiduciaPaymentMapper {
                 new PmtInf(
                         trfInf,
                         debtor == null ? null : new DbtrAcct(new IbanId(debtor.getAccountNumber())),
+                        new DbtrAgt(new FinInstnId(debtorBic)),
                         executionDate.format(
                                 DateTimeFormatter.ofPattern(
                                         FiduciaConstants.FormValues.DATE_FORMAT)),

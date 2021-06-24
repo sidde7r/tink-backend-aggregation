@@ -22,6 +22,7 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authentic
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.fetcher.transactionalaccount.FiduciaTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.payment.FiduciaPaymentApiClient;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.payment.FiduciaPaymentMapper;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.payment.FiduciaPaymentStatusMapper;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.BasePaymentExecutor;
 import se.tink.backend.aggregation.agents.utils.transfer.InferredTransferDestinations;
 import se.tink.backend.aggregation.client.provider_configuration.rpc.PisCapability;
@@ -60,7 +61,8 @@ public final class FiduciaAgent extends NextGenerationAgent
     @Inject
     public FiduciaAgent(AgentComponentProvider componentProvider, QsealcSigner qsealcSigner) {
         super(componentProvider);
-        String serverUrl = request.getProvider().getPayload();
+        FiduciaProviderInfo providerInfo =
+                parsePayloadToProviderInfo(request.getProvider().getPayload());
 
         String userIp = request.getUserAvailability().getOriginatingUserIpOrDefault();
 
@@ -68,13 +70,19 @@ public final class FiduciaAgent extends NextGenerationAgent
 
         this.apiClient =
                 new FiduciaApiClient(
-                        client, persistentStorage, userIp, serverUrl, randomValueGenerator);
+                        client,
+                        persistentStorage,
+                        userIp,
+                        providerInfo.getServerUrl(),
+                        randomValueGenerator);
         this.paymentApiClient =
                 new FiduciaPaymentApiClient(
                         apiClient,
                         credentials,
                         new FiduciaPaymentMapper(
-                                randomValueGenerator, componentProvider.getLocalDateTimeSource()),
+                                randomValueGenerator,
+                                componentProvider.getLocalDateTimeSource(),
+                                providerInfo.getBic()),
                         randomValueGenerator);
         fiduciaAuthenticator =
                 new FiduciaAuthenticator(
@@ -89,6 +97,11 @@ public final class FiduciaAgent extends NextGenerationAgent
                         qsealcSigner,
                         getAgentConfigurationController()
                                 .getAgentConfiguration(FiduciaConfiguration.class)));
+    }
+
+    private FiduciaProviderInfo parsePayloadToProviderInfo(String payload) {
+        String[] parts = payload.split(" ");
+        return new FiduciaProviderInfo(parts[0], parts.length > 1 ? parts[1] : null);
     }
 
     @Override
@@ -133,7 +146,11 @@ public final class FiduciaAgent extends NextGenerationAgent
     @Override
     public Optional<PaymentController> constructPaymentController() {
         final BasePaymentExecutor paymentExecutor =
-                new BasePaymentExecutor(paymentApiClient, fiduciaAuthenticator, sessionStorage);
+                new BasePaymentExecutor(
+                        paymentApiClient,
+                        fiduciaAuthenticator,
+                        sessionStorage,
+                        new FiduciaPaymentStatusMapper());
 
         return Optional.of(new PaymentController(paymentExecutor, paymentExecutor));
     }
