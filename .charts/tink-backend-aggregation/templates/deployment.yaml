@@ -329,16 +329,18 @@ spec:
         command:
         - "java"
         - "-jar"
-        - "-Xmx{{ default "256m" .Values.heapSize }}"
         - "-XX:-OmitStackTraceInFastThrow"
         - "-Dnetworkaddress.cache.ttl=60"
         - "-XX:+ExitOnOutOfMemoryError"
-        {{- if .Values.useG1gc }}
         - "-XX:+UseG1GC"
-        {{- end }}
+        - "-XX:+PrintFlagsFinal"
         - "/usr/share/tink-backend-aggregation/aggregation_service.jar"
         - "server"
         - "/etc/tink/config.yml"
+
+        env:
+          - name: JAVA_TOOL_OPTIONS
+            value: "-XX:+UseContainerSupport -XX:MinRAMPercentage=50.0 -XX:MaxRAMPercentage=70.0"
 
         ports:
         - name: https-api

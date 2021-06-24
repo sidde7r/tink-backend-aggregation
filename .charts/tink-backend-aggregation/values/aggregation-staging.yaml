@@ -84,5 +84,3 @@ sendAgentLoginCompletedEvents: true
 sendAgentRefreshEvents: true
 sendAccountInformationServiceEvents: true
 startupProbeEnabled: true
-
-useG1gc: true
