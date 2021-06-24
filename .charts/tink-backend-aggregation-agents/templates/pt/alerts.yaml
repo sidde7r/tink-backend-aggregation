@@ -242,7 +242,7 @@ spec:
         # Failed logins (due to bank site errors) is 100%
         count(sum_over_time(tink_agent_login_total{action="login",outcome="unavailable", market="PT"}[12h])) BY (className,provider)
         # All login attempts the last 12 hours
-          / count(sum_over_time(tink_agent_login_total{action="login", market="PT"}[12h])) BY (className,provider) > 0.99
+          / count(sum_over_time(tink_agent_login_total{action="login", market="PT", provider_type!="test"}[12h])) BY (className,provider) > 0.99
       for: 15m
       labels:
         severity: urgent
