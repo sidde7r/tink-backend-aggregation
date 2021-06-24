@@ -1,49 +1,13 @@
 {
   "accounts" : [ {
-    "accountNumber" : "53600000646",
-    "accountExclusion" : "NONE",
-    "exactBalance" : {
-      "currencyCode" : "SEK",
-      "doubleValue" : 40055.94,
-      "exactValue" : 40055.94,
-      "scale" : 3,
-      "unscaledValue" : 40055940
-    },
-    "currencyCode" : "SEK",
-    "bankId" : "53600000646",
-    "excluded" : false,
-    "favored" : false,
-    "name" : "accountName",
-    "ownership" : 1.0,
-    "payload" : "{\"ACCOUNT_ID\":\"resourceId_1\"}",
-    "type" : "CHECKING",
-    "userModifiedExcluded" : false,
-    "userModifiedName" : false,
-    "userModifiedType" : false,
-    "identifiers" : "[\"iban://SE6250000000053600000646\",\"se://53600000646\"]",
-    "closed" : false,
-    "holderName" : "Firstname Lastname",
-    "accountHolder" : {
-      "accountId" : null,
-      "type" : "PERSONAL",
-      "identities" : [ {
-        "name" : "Firstname Lastname",
-        "role" : "HOLDER"
-      } ]
-    },
-    "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
-    "balances" : [ ],
-    "availableCredit" : 0.0,
-    "balance" : 40055.94
-  }, {
     "accountNumber" : "51503123456",
     "accountExclusion" : "NONE",
     "exactBalance" : {
       "currencyCode" : "SEK",
-      "doubleValue" : 6000.0,
       "exactValue" : 6000.0,
+      "unscaledValue" : 6000000,
       "scale" : 3,
-      "unscaledValue" : 6000000
+      "doubleValue" : 6000.0
     },
     "currencyCode" : "SEK",
     "bankId" : "51503123456",
@@ -56,7 +20,7 @@
     "userModifiedExcluded" : false,
     "userModifiedName" : false,
     "userModifiedType" : false,
-    "identifiers" : "[\"iban://SE3350000000051503123456\",\"se://51503123456\"]",
+    "identifiers" : "[]",
     "closed" : false,
     "holderName" : "Firstname Lastnamesson",
     "accountHolder" : {
@@ -76,10 +40,10 @@
     "accountExclusion" : "NONE",
     "exactBalance" : {
       "currencyCode" : "SEK",
-      "doubleValue" : 1091.28,
       "exactValue" : 1091.28,
+      "unscaledValue" : 1091280,
       "scale" : 3,
-      "unscaledValue" : 1091280
+      "doubleValue" : 1091.28
     },
     "currencyCode" : "SEK",
     "bankId" : "5150012345",
@@ -92,7 +56,7 @@
     "userModifiedExcluded" : false,
     "userModifiedName" : false,
     "userModifiedType" : false,
-    "identifiers" : "[\"se://5150012345\",\"iban://SE4350000000005150012345\"]",
+    "identifiers" : "[]",
     "closed" : false,
     "holderName" : "Firstname Lastnamesson",
     "accountHolder" : {
@@ -107,6 +71,42 @@
     "balances" : [ ],
     "availableCredit" : 0.0,
     "balance" : 1091.28
+  }, {
+    "accountNumber" : "00000000646",
+    "accountExclusion" : "NONE",
+    "exactBalance" : {
+      "currencyCode" : "SEK",
+      "exactValue" : 40055.94,
+      "unscaledValue" : 40055940,
+      "scale" : 3,
+      "doubleValue" : 40055.94
+    },
+    "currencyCode" : "SEK",
+    "bankId" : "00000000646",
+    "excluded" : false,
+    "favored" : false,
+    "name" : "accountName",
+    "ownership" : 1.0,
+    "payload" : "{\"ACCOUNT_ID\":\"resourceId_1\"}",
+    "type" : "CHECKING",
+    "userModifiedExcluded" : false,
+    "userModifiedName" : false,
+    "userModifiedType" : false,
+    "identifiers" : "[]",
+    "closed" : false,
+    "holderName" : "Firstname Lastname",
+    "accountHolder" : {
+      "accountId" : null,
+      "type" : "PERSONAL",
+      "identities" : [ {
+        "name" : "Firstname Lastname",
+        "role" : "HOLDER"
+      } ]
+    },
+    "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
+    "balances" : [ ],
+    "availableCredit" : 0.0,
+    "balance" : 40055.94
   } ],
   "transactions" : [ {
     "amount" : -645.06,
