@@ -1,11 +1,11 @@
-podCpuRequest: "3500m"
-podCpuLimit: "3500m"
-podMemoryRequest: "8Gi"
-podMemoryLimit: "8Gi"
+podCpuRequest: "2600m"
+podCpuLimit: "2600m"
+podMemoryRequest: "6Gi"
+podMemoryLimit: "6Gi"
 heapSize: "4G"
-replicas: 25
-maxReplicas: 100
-targetAverageCpuValue: "2.1"
+replicas: 30
+maxReplicas: 200
+targetAverageCpuValue: "1.5"
 initialDelaySeconds: "300"
 
 coordinationHosts: 10.88.54.160:2181,10.88.66.231:2181,10.88.85.63:2181
