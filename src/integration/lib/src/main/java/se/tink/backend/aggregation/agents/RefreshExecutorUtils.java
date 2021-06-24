@@ -142,7 +142,7 @@ public final class RefreshExecutorUtils {
         RefreshSummary summary = context.getRefreshSummary();
 
         log.info("[Refresh Executor Utils] Start fetching checking accounts.");
-        summary.initItemSummary(RefreshableItem.CHECKING_ACCOUNTS);
+        summary.addItemSummary(RefreshableItem.CHECKING_ACCOUNTS);
         List<Account> checkingAccounts =
                 ((RefreshCheckingAccountsExecutor) agent).fetchCheckingAccounts().getAccounts();
 
@@ -164,7 +164,7 @@ public final class RefreshExecutorUtils {
 
         try {
             log.info("[Refresh Executor Utils] Start fetching checking transactions.");
-            summary.initItemSummary(RefreshableItem.CHECKING_TRANSACTIONS);
+            summary.addItemSummary(RefreshableItem.CHECKING_TRANSACTIONS);
             Set<Map.Entry<Account, List<Transaction>>> accountTransactionsEntrySet =
                     agent.fetchCheckingTransactions().getTransactions().entrySet();
 
@@ -194,7 +194,7 @@ public final class RefreshExecutorUtils {
         RefreshSummary summary = context.getRefreshSummary();
 
         log.info("[Refresh Executor Utils] Start fetching saving accounts.");
-        summary.initItemSummary(RefreshableItem.SAVING_ACCOUNTS);
+        summary.addItemSummary(RefreshableItem.SAVING_ACCOUNTS);
         List<Account> savingAccounts = agent.fetchSavingsAccounts().getAccounts();
 
         log.info(
@@ -214,7 +214,7 @@ public final class RefreshExecutorUtils {
 
         try {
             log.info("[Refresh Executor Utils] Start fetching saving transactions.");
-            summary.initItemSummary(RefreshableItem.SAVING_TRANSACTIONS);
+            summary.addItemSummary(RefreshableItem.SAVING_TRANSACTIONS);
             Set<Map.Entry<Account, List<Transaction>>> accountTransactionsEntrySet =
                     agent.fetchSavingsTransactions().getTransactions().entrySet();
 
@@ -243,7 +243,7 @@ public final class RefreshExecutorUtils {
         RefreshSummary summary = context.getRefreshSummary();
 
         log.info("[Refresh Executor Utils] Start fetching credit card accounts.");
-        summary.initItemSummary(RefreshableItem.CREDITCARD_ACCOUNTS);
+        summary.addItemSummary(RefreshableItem.CREDITCARD_ACCOUNTS);
         List<Account> creditCardAccounts = agent.fetchCreditCardAccounts().getAccounts();
 
         log.info(
@@ -263,7 +263,7 @@ public final class RefreshExecutorUtils {
 
         try {
             log.info("[Refresh Executor Utils] Start fetching credit card transactions.");
-            summary.initItemSummary(RefreshableItem.CREDITCARD_TRANSACTIONS);
+            summary.addItemSummary(RefreshableItem.CREDITCARD_TRANSACTIONS);
             Set<Map.Entry<Account, List<Transaction>>> accountTransactionsEntrySet =
                     agent.fetchCreditCardTransactions().getTransactions().entrySet();
             List<Integer> fetchedTransactionsCounters =
@@ -292,7 +292,7 @@ public final class RefreshExecutorUtils {
         RefreshSummary summary = context.getRefreshSummary();
 
         log.info("[Refresh Executor Utils] Start fetching loan accounts.");
-        summary.initItemSummary(RefreshableItem.LOAN_ACCOUNTS);
+        summary.addItemSummary(RefreshableItem.LOAN_ACCOUNTS);
         Map<Account, AccountFeatures> loanAccounts = agent.fetchLoanAccounts().getAccounts();
         for (Map.Entry<Account, AccountFeatures> loanAccount : loanAccounts.entrySet()) {
             context.cacheAccount(loanAccount.getKey(), loanAccount.getValue());
@@ -313,7 +313,7 @@ public final class RefreshExecutorUtils {
 
         try {
             log.info("[Refresh Executor Utils] Start fetching loans transactions.");
-            summary.initItemSummary(RefreshableItem.LOAN_TRANSACTIONS);
+            summary.addItemSummary(RefreshableItem.LOAN_TRANSACTIONS);
             Set<Map.Entry<Account, List<Transaction>>> accountTransactionsEntrySet =
                     agent.fetchLoanTransactions().getTransactions().entrySet();
             List<Integer> fetchedTransactionsCounters =
@@ -339,7 +339,7 @@ public final class RefreshExecutorUtils {
         RefreshSummary summary = context.getRefreshSummary();
 
         log.info("[Refresh Executor Utils] Start fetching investment accounts.");
-        summary.initItemSummary(RefreshableItem.INVESTMENT_ACCOUNTS);
+        summary.addItemSummary(RefreshableItem.INVESTMENT_ACCOUNTS);
 
         Map<Account, AccountFeatures> investmentAccounts =
                 agent.fetchInvestmentAccounts().getAccounts();
@@ -361,7 +361,7 @@ public final class RefreshExecutorUtils {
         RefreshSummary summary = context.getRefreshSummary();
 
         try {
-            summary.initItemSummary(RefreshableItem.INVESTMENT_TRANSACTIONS);
+            summary.addItemSummary(RefreshableItem.INVESTMENT_TRANSACTIONS);
 
             log.info("[Refresh Executor Utils] Start fetching investment transactions.");
             Set<Map.Entry<Account, List<Transaction>>> accountTransactionsEntrySet =
@@ -392,7 +392,7 @@ public final class RefreshExecutorUtils {
         RefreshSummary summary = context.getRefreshSummary();
 
         log.info("[Refresh Executor Utils] Trying to fetch and cache identity data");
-        summary.initItemSummary(RefreshableItem.IDENTITY_DATA);
+        summary.addItemSummary(RefreshableItem.IDENTITY_DATA);
         FetchIdentityDataResponse fetchIdentityDataResponse = agent.fetchIdentityData();
         context.cacheIdentityData(fetchIdentityDataResponse.getIdentityData());
 
@@ -405,7 +405,7 @@ public final class RefreshExecutorUtils {
         RefreshSummary summary = context.getRefreshSummary();
 
         log.info("[Refresh Executor Utils] Start fetching transfer destinations");
-        summary.initItemSummary(RefreshableItem.EINVOICES);
+        summary.addItemSummary(RefreshableItem.EINVOICES);
 
         List<Transfer> eInvoices = agent.fetchEInvoices().getEInvoices();
         context.updateEinvoices(eInvoices);
@@ -422,7 +422,7 @@ public final class RefreshExecutorUtils {
         RefreshSummary summary = context.getRefreshSummary();
 
         log.info("[Refresh Executor Utils] Start fetching transfer destinations");
-        summary.initItemSummary(RefreshableItem.TRANSFER_DESTINATIONS);
+        summary.addItemSummary(RefreshableItem.TRANSFER_DESTINATIONS);
 
         Map<Account, List<TransferDestinationPattern>> transferDestinations =
                 agent.fetchTransferDestinations(context.getUpdatedAccounts())
@@ -445,7 +445,7 @@ public final class RefreshExecutorUtils {
         RefreshSummary summary = context.getRefreshSummary();
 
         log.info("[Refresh Executor Utils] Start fetching beneficiaries");
-        summary.initItemSummary(RefreshableItem.LIST_BENEFICIARIES);
+        summary.addItemSummary(RefreshableItem.LIST_BENEFICIARIES);
         Map<Account, List<TransferDestinationPattern>> beneficiaries =
                 agent.fetchBeneficiaries(context.getUpdatedAccounts()).getTransferDestinations();
         context.updateTransferDestinationPatterns(beneficiaries);

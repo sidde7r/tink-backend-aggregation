@@ -51,14 +51,20 @@ public class RefreshSummary {
         this.status = status;
     }
 
-    public void initItemSummary(RefreshableItem item) {
-        if (!ObjectUtils.allNotNull(item)) {
-            log.warn("[REFRESH SUMMARY] initItemSummary cannot be performed, item is null");
+    public void addItemSummary(RefreshableItem item) {
+        addItemSummary(item, RefreshableItemFetchingStatus.REQUESTED);
+    }
+
+    public void addItemSummary(RefreshableItem item, RefreshableItemFetchingStatus status) {
+        if (!ObjectUtils.allNotNull(item, status)) {
+            log.warn(
+                    "[REFRESH SUMMARY] addItemSummary cannot be performed. item: {}, status: {}",
+                    item == null,
+                    status == null);
             return;
         }
 
-        itemSummaries.add(
-                new RefreshableItemSummary(item, RefreshableItemFetchingStatus.REQUESTED, null));
+        itemSummaries.add(new RefreshableItemSummary(item, status, null));
     }
 
     public void updateItemSummary(RefreshableItem item, RefreshableItemFetchingStatus status) {

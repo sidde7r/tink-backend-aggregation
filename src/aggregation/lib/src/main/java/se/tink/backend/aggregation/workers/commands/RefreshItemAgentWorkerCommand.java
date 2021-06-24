@@ -113,10 +113,12 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
     @Override
     protected AgentWorkerCommandResult doExecute() throws Exception {
         RefreshSummary refreshSummary = context.getRefreshSummary();
-        refreshSummary.initItemSummary(item);
+        if (refreshSummary == null) {
+            refreshSummary = new RefreshSummary(context.getRequest(), context.getAppId());
+        }
 
         if (isNotAllowedToRefresh()) {
-            refreshSummary.updateItemSummary(item, RefreshableItemFetchingStatus.RESTRICTED);
+            refreshSummary.addItemSummary(item, RefreshableItemFetchingStatus.RESTRICTED);
             return AgentWorkerCommandResult.CONTINUE;
         }
 
@@ -170,7 +172,6 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
             }
         } finally {
             metrics.stop();
-            log.info("[REFRESH SUMMARY]\n{}", refreshSummary.toJson());
         }
 
         return AgentWorkerCommandResult.CONTINUE;

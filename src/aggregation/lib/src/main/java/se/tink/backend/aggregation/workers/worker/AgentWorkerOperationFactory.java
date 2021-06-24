@@ -57,6 +57,7 @@ import se.tink.backend.aggregation.workers.commands.ExpireSessionAgentWorkerComm
 import se.tink.backend.aggregation.workers.commands.FetcherInstrumentationAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.InstantiateAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.LockAgentWorkerCommand;
+import se.tink.backend.aggregation.workers.commands.LogRefreshSummaryAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.LoginAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.MigrateCredentialsAndAccountsWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.Psd2PaymentAccountRestrictionWorkerCommand;
@@ -286,6 +287,8 @@ public class AgentWorkerOperationFactory {
                             createCommandMetricState(request, clientInfo),
                             refreshEventProducer));
         }
+
+        commands.add(new LogRefreshSummaryAgentWorkerCommand(context));
 
         if (accountItems.size() > 0) {
             commands.add(
@@ -1196,6 +1199,8 @@ public class AgentWorkerOperationFactory {
             }
         }
 
+        commands.add(new LogRefreshSummaryAgentWorkerCommand(context));
+
         return commands;
     }
 
@@ -1535,6 +1540,8 @@ public class AgentWorkerOperationFactory {
                                                 item,
                                                 createCommandMetricState(request, clientInfo),
                                                 refreshEventProducer)));
+
+        commands.add(new LogRefreshSummaryAgentWorkerCommand(context));
 
         if (accountItems.size() > 0) {
             commands.add(
