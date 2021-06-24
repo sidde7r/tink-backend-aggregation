@@ -11,6 +11,8 @@ public class AmountEntity {
     @JsonProperty private String currency;
     @JsonProperty private BigDecimal amount;
 
+    public AmountEntity() {}
+
     public AmountEntity(ExactCurrencyAmount amount) {
         this.currency = amount.getCurrencyCode();
         this.amount = amount.getExactValue();
