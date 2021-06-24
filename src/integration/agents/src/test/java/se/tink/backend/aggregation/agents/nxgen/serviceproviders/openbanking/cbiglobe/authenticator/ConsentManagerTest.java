@@ -380,6 +380,46 @@ public class ConsentManagerTest {
                 .hasMessage("Cause: LoginError.INCORRECT_CREDENTIALS");
     }
 
+    @Test
+    public void shouldRetryConsentStatusCallWhenStillInReceivedState() {
+        // given
+        when(apiClient.getConsentStatus(StorageKeys.CONSENT_ID))
+                .thenReturn(ConsentStatus.RECEIVED)
+                .thenReturn(ConsentStatus.EXPIRED);
+        // when
+        consentManager.retryCallForConsentStatus();
+        // then
+
+        verify(apiClient, times(2)).getConsentStatus(StorageKeys.CONSENT_ID);
+    }
+
+    @Test
+    @Parameters(method = "finalConsentStates")
+    public void shouldNotRetryConsentStatusCallWithAnyOtherConsentStatus(
+            ConsentStatus consentStatus) {
+        // given
+        when(apiClient.getConsentStatus(StorageKeys.CONSENT_ID)).thenReturn(consentStatus);
+
+        // when
+        consentManager.retryCallForConsentStatus();
+
+        // then
+        verify(apiClient).getConsentStatus(StorageKeys.CONSENT_ID);
+    }
+
+    private Object[] finalConsentStates() {
+        return new Object[] {
+            ConsentStatus.REJECTED,
+            ConsentStatus.VALID,
+            ConsentStatus.REVOKEDBYPSU,
+            ConsentStatus.EXPIRED,
+            ConsentStatus.TERMINATEDBYTPP,
+            ConsentStatus.REPLACED,
+            ConsentStatus.INVALIDATED,
+            ConsentStatus.PENDINGEXPIRED
+        };
+    }
+
     private HttpResponseException prepareConsentHttpException() {
         HttpRequest httpRequest = mock(HttpRequest.class);
         HttpResponse httpResponse = mock(HttpResponse.class);
