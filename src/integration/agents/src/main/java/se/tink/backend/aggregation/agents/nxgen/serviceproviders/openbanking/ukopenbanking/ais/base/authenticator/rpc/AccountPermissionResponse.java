@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.authenticator.rpc;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.time.Instant;
 import java.util.Map;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.authenticator.entities.AccountPermissionsDataResponseEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.authenticator.entities.RiskEntity;
@@ -34,5 +35,13 @@ public class AccountPermissionResponse {
 
     public Map<String, Object> getMeta() {
         return meta;
+    }
+
+    public String getConsentId() {
+        return data.getAccountConsentId();
+    }
+
+    public Instant getCreationDate() {
+        return data.getCreationDateTime();
     }
 }

@@ -6,11 +6,9 @@ import java.util.Collections;
 import java.util.Set;
 import javax.annotation.Nonnull;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingV31Constants;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.authenticator.rpc.AccountPermissionResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountOwnershipType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingConstants.ApiServices;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.authenticator.rpc.AccountPermissionResponseV31;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticatorConstants;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.enums.MarketCode;
@@ -88,19 +86,6 @@ public class DanskebankAisConfiguration implements UkOpenBankingAisConfig {
     @Override
     public String getOrganisationId() {
         return "0015800000jf7AeAAI";
-    }
-
-    @Override
-    public String getIntentId(AccountPermissionResponse accountPermissionResponse) {
-        AccountPermissionResponseV31 accountPermissionResponseV31 =
-                (AccountPermissionResponseV31) accountPermissionResponse;
-        return accountPermissionResponseV31.getData().getAccountConsentId();
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public <T extends AccountPermissionResponse> Class<T> getIntentIdResponseType() {
-        return (Class<T>) AccountPermissionResponseV31.class;
     }
 
     @Override
