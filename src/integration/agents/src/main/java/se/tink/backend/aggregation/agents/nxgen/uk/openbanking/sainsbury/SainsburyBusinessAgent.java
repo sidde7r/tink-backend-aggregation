@@ -12,7 +12,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.consent.ConsentStatusValidator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountOwnershipType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAis;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.module.UkOpenBankingFlowModule;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.module.UkOpenBankingLocalKeySignerModuleForDecoupledMode;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.UkOpenBankingAisConfiguration;
@@ -30,16 +29,16 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 @AgentCapabilities({CREDIT_CARDS})
 public class SainsburyBusinessAgent extends UkOpenBankingBaseAgent {
 
-    private static final UkOpenBankingAisConfig aisConfig;
+    private static final SainsburyAisConfiguration aisConfig;
 
     static {
         aisConfig =
-                UkOpenBankingAisConfiguration.builder()
-                        .withAllowedAccountOwnershipTypes(AccountOwnershipType.BUSINESS)
-                        .withOrganisationId(SainsburyConstants.ORGANISATION_ID)
-                        .withWellKnownURL(SainsburyConstants.WELL_KNOWN_URL)
-                        .withApiBaseURL(SainsburyConstants.AIS_API_URL)
-                        .build();
+                new SainsburyAisConfiguration(
+                        UkOpenBankingAisConfiguration.builder()
+                                .withAllowedAccountOwnershipTypes(AccountOwnershipType.BUSINESS)
+                                .withOrganisationId(SainsburyConstants.ORGANISATION_ID)
+                                .withWellKnownURL(SainsburyConstants.BUSINESS_WELL_KNOWN_URL)
+                                .withApiBaseURL(SainsburyConstants.AIS_API_URL));
     }
 
     @Inject
