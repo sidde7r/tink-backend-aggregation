@@ -333,6 +333,9 @@ spec:
         - "-XX:-OmitStackTraceInFastThrow"
         - "-Dnetworkaddress.cache.ttl=60"
         - "-XX:+ExitOnOutOfMemoryError"
+        {{- if .Values.useG1gc }}
+        - "-XX:+UseG1GC"
+        {{- end }}
         - "/usr/share/tink-backend-aggregation/aggregation_service.jar"
         - "server"
         - "/etc/tink/config.yml"
