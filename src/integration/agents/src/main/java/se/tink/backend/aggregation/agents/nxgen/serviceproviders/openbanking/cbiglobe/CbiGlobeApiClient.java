@@ -171,9 +171,10 @@ public class CbiGlobeApiClient {
     }
 
     protected RequestBuilder createConsentRequest(String state, ConsentType consentType) {
+        URL consentUrl = isAllPsd2Supported() ? Urls.ALL_PSD2_CONSENTS : Urls.CONSENTS;
         String okFullRedirectUrl = createRedirectUrl(state, consentType, QueryValues.SUCCESS);
         String nokFullRedirectUrl = createRedirectUrl(state, consentType, QueryValues.FAILURE);
-        return createRequestInSession(Urls.CONSENTS)
+        return createRequestInSession(consentUrl)
                 .header(HeaderKeys.ASPSP_PRODUCT_CODE, providerConfiguration.getAspspProductCode())
                 .header(HeaderKeys.TPP_REDIRECT_URI, okFullRedirectUrl)
                 .header(HeaderKeys.TPP_NOK_REDIRECT_URI, nokFullRedirectUrl);

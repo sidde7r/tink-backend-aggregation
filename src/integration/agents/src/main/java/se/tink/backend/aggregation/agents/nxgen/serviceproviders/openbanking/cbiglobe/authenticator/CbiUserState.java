@@ -38,15 +38,18 @@ public class CbiUserState {
         return persistentStorage.get(StorageKeys.SCA_URL);
     }
 
+    public void setAllPsd2Supported(boolean allPsd2Supported) {
+        persistentStorage.put(StorageKeys.ALL_PSD2_SUPPORTED, allPsd2Supported);
+    }
+
     public boolean isAllPsd2Supported() {
         return persistentStorage
                 .get(StorageKeys.ALL_PSD2_SUPPORTED, Boolean.class)
                 .orElse(Boolean.FALSE);
     }
 
-    void startManualAuthenticationStep(String consentId, boolean allPsd2Supported) {
+    void startManualAuthenticationStep(String consentId) {
         persistentStorage.put(StorageKeys.CONSENT_ID, consentId);
-        persistentStorage.put(StorageKeys.ALL_PSD2_SUPPORTED, allPsd2Supported);
         persistentStorage.put(CBI_MANUAL_AUTHENTICATION_IN_PROGRESS, true);
     }
 

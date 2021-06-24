@@ -132,9 +132,10 @@ public class ConsentManager {
             ConsentType consentType,
             ConsentRequest consentRequest,
             boolean allPsd2Supported) {
+        userState.setAllPsd2Supported(allPsd2Supported);
         ConsentResponse consentResponse =
                 apiClient.createConsent(state, consentType, consentRequest);
-        userState.startManualAuthenticationStep(consentResponse.getConsentId(), allPsd2Supported);
+        userState.startManualAuthenticationStep(consentResponse.getConsentId());
 
         return consentResponse;
     }
