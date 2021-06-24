@@ -25,7 +25,6 @@ public class IberCajaPasswordAuthenticator implements PasswordAuthenticator {
     public void authenticate(String username, String password)
             throws AuthenticationException, AuthorizationException {
 
-        // Construct session request from username and password
         SessionResponse sessionResponse =
                 bankClient.initializeSession(
                         new SessionRequest(
