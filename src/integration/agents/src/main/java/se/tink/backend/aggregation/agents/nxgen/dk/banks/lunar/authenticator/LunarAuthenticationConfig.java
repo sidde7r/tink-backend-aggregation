@@ -1,6 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator;
 
+import static se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.LunarConstants.LogTags.LUNAR_TAG;
+
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.client.AuthenticationApiClient;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.persistance.LunarDataAccessorFactory;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.steps.AutoAuthenticationStep;
@@ -17,6 +20,7 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 
 @RequiredArgsConstructor
+@Slf4j
 public class LunarAuthenticationConfig {
 
     private final AuthenticationApiClient apiClient;
@@ -45,6 +49,7 @@ public class LunarAuthenticationConfig {
             @Override
             public AgentAuthenticationProcessStep<AgentStartAuthenticationProcessRequest>
                     getStartStep() {
+                log.info("{} Getting a start step", LUNAR_TAG);
                 return new LunarAuthInitStep(getDataAccessorFactory());
             }
         };

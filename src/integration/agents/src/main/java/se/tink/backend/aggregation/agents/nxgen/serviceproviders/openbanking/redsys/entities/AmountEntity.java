@@ -11,11 +11,11 @@ public class AmountEntity {
     @JsonProperty private String currency;
     @JsonProperty private BigDecimal amount;
 
-    public AmountEntity() {}
-
-    public AmountEntity(ExactCurrencyAmount amount) {
-        this.currency = amount.getCurrencyCode();
-        this.amount = amount.getExactValue();
+    public static AmountEntity withAmount(ExactCurrencyAmount amount) {
+        AmountEntity amountEntity = new AmountEntity();
+        amountEntity.amount = amount.getExactValue();
+        amountEntity.currency = amount.getCurrencyCode();
+        return amountEntity;
     }
 
     @JsonIgnore

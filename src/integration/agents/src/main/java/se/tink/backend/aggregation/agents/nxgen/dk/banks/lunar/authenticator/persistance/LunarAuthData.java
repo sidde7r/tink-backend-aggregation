@@ -1,9 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.persistance;
 
+import static se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.LunarConstants.LogTags.LUNAR_TAG;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.apache.commons.lang3.ObjectUtils;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
@@ -11,6 +13,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @AllArgsConstructor
 @Data
 @JsonObject
+@Slf4j
 public class LunarAuthData {
     private String userId;
     private String nemIdPassword;
@@ -20,6 +23,16 @@ public class LunarAuthData {
     private AccountsResponse accountsResponse;
 
     public boolean hasCredentials() {
-        return ObjectUtils.allNotNull(userId, deviceId, accessToken);
+        boolean userIdNotNull = userId != null;
+        boolean deviceIdNotNull = deviceId != null;
+        boolean accessTokenNotNull = accessToken != null;
+        log.info(
+                "{} UserId is not null: {}, DeviceId is not null: {}, AccessToken is not null: {}",
+                LUNAR_TAG,
+                userIdNotNull,
+                deviceIdNotNull,
+                accessTokenNotNull);
+
+        return userIdNotNull && deviceIdNotNull && accessTokenNotNull;
     }
 }
