@@ -50,6 +50,8 @@ public final class BbvaConstants {
         public static final String CURRENCY = "EUR";
         public static final String TIMEZONE_CET = "CET";
         public static final String FIRST_LOGIN = "FIRST_LOGIN";
+        public static final String FETCHING_TRANSACTION_OLDER_THAN_90_DAYS_POSSIBLE =
+                "FETCHING_TRANSACTION_OLDER_THAN_90_DAYS_POSSIBLE";
     }
 
     public static final class AccountType {

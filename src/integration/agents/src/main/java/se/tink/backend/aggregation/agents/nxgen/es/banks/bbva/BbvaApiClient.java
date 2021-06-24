@@ -108,9 +108,11 @@ public class BbvaApiClient {
     }
 
     public AccountTransactionsResponse fetchAccountTransactions(Account account, String pageKey) {
-        boolean firstLogin = isFirstLogin();
-        final TransactionsRequest request = createAccountTransactionsRequest(account, firstLogin);
-        final RequestBuilder builder = buildAccountTransactionRequest(pageKey, firstLogin);
+        boolean olderThan90DaysPossible = isFetchingTransactionsOlderThan90DaysPossible();
+        final TransactionsRequest request =
+                createAccountTransactionsRequest(account, olderThan90DaysPossible);
+        final RequestBuilder builder =
+                buildAccountTransactionRequest(pageKey, olderThan90DaysPossible);
         try {
             return builder.post(AccountTransactionsResponse.class, request);
         } catch (HttpResponseException e) {
@@ -175,8 +177,8 @@ public class BbvaApiClient {
     }
 
     public TransactionsRequest createAccountTransactionsRequest(
-            Account account, boolean firstLogin) {
-        if (firstLogin) {
+            Account account, boolean olderThan90DaysPossible) {
+        if (olderThan90DaysPossible) {
             LocalDateTime fromTransactionDate =
                     getDateForFetchHistoryTransactions(account.getApiIdentifier());
             LocalDateTime toTransactionDate = LocalDateTime.now(Fetchers.CLOCK);
@@ -223,8 +225,9 @@ public class BbvaApiClient {
         return httpResponse.getBody(AccountTransactionsResponse.class);
     }
 
-    private RequestBuilder buildAccountTransactionRequest(String pageKey, boolean firstLogin) {
-        if (firstLogin && isFirstPageOfAccountTransactions(pageKey)) {
+    private RequestBuilder buildAccountTransactionRequest(
+            String pageKey, boolean olderThan90DaysPossible) {
+        if (olderThan90DaysPossible && isFirstPageOfAccountTransactions(pageKey)) {
             return createRequestOtpInSession()
                     .queryParam(QueryKeys.PAGINATION_OFFSET, QueryValues.FIRST_PAGE_KEY)
                     .queryParam(QueryKeys.PAGE_SIZE, String.valueOf(Fetchers.PAGE_SIZE));
@@ -312,12 +315,13 @@ public class BbvaApiClient {
                 && ErrorCode.OTP_SYSTEM_ERROR_CODE.equals(errorResponse.getSystemErrorCode());
     }
 
-    private boolean isFirstPageOfAccountTransactions(String pageKey) {
-        return Strings.isNullOrEmpty(pageKey);
+    private boolean isFetchingTransactionsOlderThan90DaysPossible() {
+        return Boolean.parseBoolean(
+                persistentStorage.get(Defaults.FETCHING_TRANSACTION_OLDER_THAN_90_DAYS_POSSIBLE));
     }
 
-    private boolean isFirstLogin() {
-        return Boolean.parseBoolean(persistentStorage.get(Defaults.FIRST_LOGIN));
+    private boolean isFirstPageOfAccountTransactions(String pageKey) {
+        return Strings.isNullOrEmpty(pageKey);
     }
 
     private String getUserAgent() {

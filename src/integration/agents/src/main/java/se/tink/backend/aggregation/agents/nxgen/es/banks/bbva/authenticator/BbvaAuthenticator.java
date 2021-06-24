@@ -12,6 +12,7 @@ import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.AuthenticationStates;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.Defaults;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.authenticator.rpc.LoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.authenticator.rpc.LoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.rpc.BbvaErrorResponse;
@@ -19,6 +20,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 @Slf4j
@@ -26,14 +28,17 @@ public class BbvaAuthenticator implements MultiFactorAuthenticator {
     private final BbvaApiClient apiClient;
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final CredentialsRequest request;
+    private final PersistentStorage storage;
 
     public BbvaAuthenticator(
             BbvaApiClient apiClient,
             SupplementalInformationHelper supplementalInformationHelper,
-            CredentialsRequest request) {
+            CredentialsRequest request,
+            PersistentStorage storage) {
         this.apiClient = apiClient;
         this.supplementalInformationHelper = supplementalInformationHelper;
         this.request = request;
+        this.storage = storage;
     }
 
     @Override
@@ -42,12 +47,15 @@ public class BbvaAuthenticator implements MultiFactorAuthenticator {
         final UserCredentials userCredentials = new UserCredentials(credentials);
         final LoginRequest loginRequest = new LoginRequest(userCredentials);
         try {
+            storage.put(Defaults.FETCHING_TRANSACTION_OLDER_THAN_90_DAYS_POSSIBLE, false);
+
             LoginResponse loginResponse = apiClient.login(loginRequest);
             String authenticationState = loginResponse.getAuthenticationState();
             log.info("Authentication state: {}", authenticationState);
             if (isTwoFactorAuthNeeded(authenticationState)) {
                 abortIfUserNotAvailableForInteraction();
                 loginWithOtp(loginResponse.getMultistepProcessId(), userCredentials);
+                storage.put(Defaults.FETCHING_TRANSACTION_OLDER_THAN_90_DAYS_POSSIBLE, true);
             }
         } catch (HttpResponseException ex) {
             mapHttpErrors(ex);

@@ -21,7 +21,6 @@ import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.Defaults;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.Proxy;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.authenticator.BbvaAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.creditcard.BbvaCreditCardFetcher;
@@ -103,7 +102,6 @@ public final class BbvaAgent extends NextGenerationAgent
 
     @Override
     public FetchTransactionsResponse fetchCheckingTransactions() {
-        checkIfFirstLogin();
         return transactionalAccountRefreshController.fetchCheckingTransactions();
     }
 
@@ -156,7 +154,8 @@ public final class BbvaAgent extends NextGenerationAgent
     @Override
     protected Authenticator constructAuthenticator() {
         Authenticator authenticator =
-                new BbvaAuthenticator(apiClient, supplementalInformationHelper, request);
+                new BbvaAuthenticator(
+                        apiClient, supplementalInformationHelper, request, persistentStorage);
         log.info(
                 "Credentials status after authenticating is equal {}",
                 this.credentials.getStatus());
@@ -211,15 +210,5 @@ public final class BbvaAgent extends NextGenerationAgent
                         transactionPaginationHelper,
                         new TransactionKeyPaginationController<>(
                                 new BbvaCreditCardTransactionFetcher(apiClient))));
-    }
-
-    private void checkIfFirstLogin() {
-        if (request.getUserAvailability().isUserAvailableForInteraction()) {
-            log.info("Fetching transactions over 90 days");
-            persistentStorage.put(Defaults.FIRST_LOGIN, true);
-        } else {
-            log.info("Fetching the last 90 days of transactions");
-            persistentStorage.put(Defaults.FIRST_LOGIN, false);
-        }
     }
 }
