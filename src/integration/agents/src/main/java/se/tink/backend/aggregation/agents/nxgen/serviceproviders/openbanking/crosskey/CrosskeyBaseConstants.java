@@ -60,6 +60,7 @@ public class CrosskeyBaseConstants {
         public static final String X_IDEMPOTENCY_KEY = "x-idempotency-key";
         public static final String X_JWS_SIGNATURE = "x-jws-signature";
         public static final String X_FAPI_INTERACTION_ID = "x-fapi-interaction-id";
+        public static final String X_FAPI_CUSTOMER_IP_ADDRESS = "x-fapi-customer-ip-address";
     }
 
     public static class ErrorMessages {

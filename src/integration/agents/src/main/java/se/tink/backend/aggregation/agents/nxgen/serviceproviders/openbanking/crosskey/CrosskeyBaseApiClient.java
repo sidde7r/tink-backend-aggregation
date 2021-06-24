@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cr
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants.Transactions;
 
 import java.nio.charset.StandardCharsets;
+import java.security.cert.CertificateException;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -48,6 +49,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cro
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.utils.JwtUtils;
 import se.tink.backend.aggregation.api.Psd2Headers;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
+import se.tink.backend.aggregation.configuration.agents.utils.CertificateUtils;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
@@ -75,6 +77,7 @@ public class CrosskeyBaseApiClient {
     private final String xFapiFinancialId;
     private final String certificateSerialNumber;
     private final String providerMarket;
+    private final String userIp;
 
     public CrosskeyBaseApiClient(
             TinkHttpClient client,
@@ -82,8 +85,8 @@ public class CrosskeyBaseApiClient {
             CrosskeyMarketConfiguration marketConfiguration,
             AgentConfiguration<CrosskeyBaseConfiguration> agentConfiguration,
             QsealcSigner qsealcSigner,
-            String certificateSerialNumber,
-            String providerMarket) {
+            String providerMarket,
+            String userIp) {
         this.client = client;
         this.sessionStorage = sessionStorage;
         this.baseAuthUrl = marketConfiguration.getBaseAuthURL();
@@ -92,8 +95,18 @@ public class CrosskeyBaseApiClient {
         this.qsealcSigner = qsealcSigner;
         this.configuration = agentConfiguration.getProviderSpecificConfiguration();
         redirectUrl = agentConfiguration.getRedirectUrl();
-        this.certificateSerialNumber = certificateSerialNumber;
+        this.certificateSerialNumber = getCertificateSerialNumber(agentConfiguration);
         this.providerMarket = providerMarket;
+        this.userIp = userIp;
+    }
+
+    private String getCertificateSerialNumber(
+            AgentConfiguration<CrosskeyBaseConfiguration> agentConfiguration) {
+        try {
+            return CertificateUtils.getSerialNumber(agentConfiguration.getQsealc(), 10);
+        } catch (CertificateException e) {
+            throw new IllegalStateException(ErrorMessages.INVALID_CONFIGURATION, e);
+        }
     }
 
     public void setConfiguration(AgentsServiceConfiguration configuration) {
@@ -242,7 +255,8 @@ public class CrosskeyBaseApiClient {
         return createRequest(url)
                 .addBearerToken(getTokenFromSession())
                 .header(HeaderKeys.X_API_KEY, clientSecret)
-                .header(HeaderKeys.X_FAPI_FINANCIAL_ID, xFapiFinancialId);
+                .header(HeaderKeys.X_FAPI_FINANCIAL_ID, xFapiFinancialId)
+                .header(HeaderKeys.X_FAPI_CUSTOMER_IP_ADDRESS, userIp);
     }
 
     private RequestBuilder createAuthorizationRequest(
@@ -252,7 +266,8 @@ public class CrosskeyBaseApiClient {
         return createRequest(url)
                 .addBearerToken(clientCredentials.toTinkToken())
                 .header(HeaderKeys.X_API_KEY, clientSecret)
-                .header(HeaderKeys.X_FAPI_FINANCIAL_ID, xFapiFinancialId);
+                .header(HeaderKeys.X_FAPI_FINANCIAL_ID, xFapiFinancialId)
+                .header(HeaderKeys.X_FAPI_CUSTOMER_IP_ADDRESS, userIp);
     }
 
     private RequestBuilder createTokenRequest(URL url) {

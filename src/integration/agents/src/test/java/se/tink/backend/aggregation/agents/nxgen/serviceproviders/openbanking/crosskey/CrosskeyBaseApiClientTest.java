@@ -20,6 +20,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cro
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.eidassigner.QsealcSignerImpl;
+import se.tink.backend.aggregation.nxgen.controllers.configuration.EIdasTinkCert;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
@@ -50,6 +51,7 @@ public class CrosskeyBaseApiClientTest {
                 .thenReturn(CrossKeyTestUtils.CLIENT_SECRET);
         when(agentConfiguration.getProviderSpecificConfiguration())
                 .thenReturn(crosskeyBaseConfiguration);
+        when(agentConfiguration.getQsealc()).thenReturn(EIdasTinkCert.QSEALC);
 
         crosskeyApiClient =
                 new CrosskeyBaseApiClient(
@@ -58,8 +60,8 @@ public class CrosskeyBaseApiClientTest {
                         CrossKeyTestUtils.getCrossKeyMarketConfiguration(),
                         agentConfiguration,
                         qsealcSigner,
-                        CrossKeyTestUtils.CERTIFICATE_SERIAL_NUMBER,
-                        "FI");
+                        "FI",
+                        "127.0.0.1");
 
         when(requestBuilder.header(anyString(), anyString())).thenReturn(requestBuilder);
     }
