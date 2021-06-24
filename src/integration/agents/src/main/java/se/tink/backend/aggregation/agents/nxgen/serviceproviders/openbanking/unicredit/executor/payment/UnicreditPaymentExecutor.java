@@ -140,7 +140,9 @@ public class UnicreditPaymentExecutor implements PaymentExecutor, FetchablePayme
                                 remittanceInformationType.name()));
                 break;
             default:
-                throw new IllegalArgumentException("Unsupported remittance information type!");
+                throw new IllegalArgumentException(
+                        "Unsupported remittance information type: "
+                                + remittanceInformationType.name());
         }
     }
 
