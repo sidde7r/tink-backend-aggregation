@@ -129,7 +129,8 @@ public class RedsysPaymentExecutor implements PaymentExecutor, FetchablePaymentE
                 new AccountReferenceEntity(
                         paymentRequest.getPayment().getDebtor().getAccountNumber());
         AmountEntity amount =
-                new AmountEntity(paymentRequest.getPayment().getExactCurrencyAmountFromField());
+                AmountEntity.withAmount(
+                        paymentRequest.getPayment().getExactCurrencyAmountFromField());
 
         RemittanceInformation remittanceInformation =
                 paymentRequest.getPayment().getRemittanceInformation();
