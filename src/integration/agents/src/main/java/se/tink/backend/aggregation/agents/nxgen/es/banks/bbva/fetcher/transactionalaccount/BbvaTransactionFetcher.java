@@ -32,15 +32,15 @@ public class BbvaTransactionFetcher
             TransactionalAccount account, String key, int attempt) {
         return Try.of(() -> apiClient.fetchAccountTransactions(account, key))
                 .recover(
-                        HttpClientException.class,
-                        e -> {
-                            logRetry(account, key, attempt, e);
-                            backoffAWhile();
-                            return fetchWithBackoffAndRetry(account, key, attempt + 1);
-                        })
-                .filterTry(
-                        AccountTransactionsResponse.shouldRetryFetching(attempt),
-                        () -> new RuntimeException(ErrorMessages.MAX_TRY_ATTEMPTS))
+                    HttpClientException.class,
+                    e -> {
+                        if (attempt > Fetchers.MAX_TRY_ATTEMPTS) {
+                            throw new RuntimeException(ErrorMessages.MAX_TRY_ATTEMPTS);
+                        }
+                        logRetry(account, key, attempt, e);
+                        backoffAWhile();
+                        return fetchWithBackoffAndRetry(account, key, attempt + 1);
+                    })
                 .get();
     }
 
