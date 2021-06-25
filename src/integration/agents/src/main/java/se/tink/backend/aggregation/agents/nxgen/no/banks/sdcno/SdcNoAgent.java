@@ -55,7 +55,7 @@ public class SdcNoAgent extends NextGenerationAgent
 
     @Override
     protected SessionHandler constructSessionHandler() {
-        return SessionHandler.alwaysFail();
+        return new SdcNoSessionHandler(bankClient);
     }
 
     @Override
