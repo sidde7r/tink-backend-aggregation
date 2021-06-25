@@ -14,12 +14,17 @@ public class TransactionPaginationHelperFactory {
     private final AgentsServiceConfiguration configuration;
 
     public TransactionPaginationHelper create(CredentialsRequest request) {
-        if (configuration != null && configuration.isFeatureEnabled("transactionsRefreshScope")) {
+        boolean transactionsRefreshScopeFeatureEnabled =
+                configuration != null && configuration.isFeatureEnabled("transactionsRefreshScope");
+        log.info(
+                "transactionsRefreshScope feature is enabled: {}",
+                transactionsRefreshScopeFeatureEnabled);
+        if (transactionsRefreshScopeFeatureEnabled) {
             RefreshScope refreshScope = null;
             if (request instanceof HasRefreshScope) {
                 refreshScope = ((HasRefreshScope) request).getRefreshScope();
             } else {
-                log.debug(
+                log.info(
                         "Request of type {} does not implement {}, pagination helper will always return that it needs another page",
                         request.getClass(),
                         HasRefreshScope.class);
