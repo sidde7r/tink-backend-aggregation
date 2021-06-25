@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.module.UkOpenBankingLocalKeySignerModuleForDecoupledMode;
 import se.tink.backend.aggregation.client.provider_configuration.rpc.PisCapability;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.RateLimitFilter;
 
 @AgentDependencyModulesForProductionMode(modules = RevolutEEAModule.class)
 @AgentDependencyModulesForDecoupledMode(
@@ -29,5 +30,10 @@ public final class RevolutEEAAgent extends RevolutBaseAgent {
     public RevolutEEAAgent(
             AgentComponentProvider componentProvider, UkOpenBankingFlowFacade flowFacade) {
         super(componentProvider, flowFacade);
+        prepareRateLimitFilter();
+    }
+
+    private void prepareRateLimitFilter() {
+        client.addFilter(new RateLimitFilter(provider.getName(), 500, 1500, 3));
     }
 }
