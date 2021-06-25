@@ -47,8 +47,6 @@ public class BbvaAuthenticator implements MultiFactorAuthenticator {
         final UserCredentials userCredentials = new UserCredentials(credentials);
         final LoginRequest loginRequest = new LoginRequest(userCredentials);
         try {
-            storage.put(Defaults.FETCHING_TRANSACTION_OLDER_THAN_90_DAYS_POSSIBLE, false);
-
             LoginResponse loginResponse = apiClient.login(loginRequest);
             String authenticationState = loginResponse.getAuthenticationState();
             log.info("Authentication state: {}", authenticationState);

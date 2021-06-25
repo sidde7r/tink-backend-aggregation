@@ -20,7 +20,7 @@ import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
-import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.Defaults;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.Proxy;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.authenticator.BbvaAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.creditcard.BbvaCreditCardFetcher;
@@ -93,6 +93,8 @@ public final class BbvaAgent extends NextGenerationAgent
 
         this.transactionalAccountRefreshController =
                 constructTransactionalAccountRefreshController();
+
+        persistentStorage.put(Defaults.FETCHING_TRANSACTION_OLDER_THAN_90_DAYS_POSSIBLE, false);
     }
 
     @Override
