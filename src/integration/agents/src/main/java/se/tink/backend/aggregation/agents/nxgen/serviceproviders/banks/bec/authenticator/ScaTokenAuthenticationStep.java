@@ -1,8 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.authenticator;
 
-import java.lang.invoke.MethodHandles;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
@@ -15,21 +14,15 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepResponse;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.libraries.credentials.service.UserAvailability;
 
+@RequiredArgsConstructor
+@Slf4j
 public class ScaTokenAuthenticationStep implements AuthenticationStep {
-    private static final Logger logger =
-            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-
     private final BecApiClient apiClient;
     private final PersistentStorage persistentStorage;
     private final String deviceId;
-
-    public ScaTokenAuthenticationStep(
-            BecApiClient apiClient, PersistentStorage persistentStorage, String deviceId) {
-        this.apiClient = apiClient;
-        this.persistentStorage = persistentStorage;
-        this.deviceId = deviceId;
-    }
+    private final UserAvailability userAvailability;
 
     @Override
     public AuthenticationStepResponse execute(AuthenticationRequest request)
@@ -48,9 +41,12 @@ public class ScaTokenAuthenticationStep implements AuthenticationStep {
                         StorageKeys.SCA_TOKEN_STORAGE_KEY, loggedInEntity.getScaToken());
                 return AuthenticationStepResponse.authenticationSucceeded();
             } catch (LoginException loginException) {
-                logger.error("SCA ScaToken-> forcing manual auth");
                 persistentStorage.remove(StorageKeys.SCA_TOKEN_STORAGE_KEY);
-                return AuthenticationStepResponse.executeStepWithId("syncApp");
+                if (userAvailability.isUserAvailableForInteraction()) {
+                    log.error("SCA ScaToken-> forcing manual auth");
+                    return AuthenticationStepResponse.executeStepWithId("syncApp");
+                }
+                throw loginException;
             }
 
         } else return AuthenticationStepResponse.executeStepWithId("syncApp");
