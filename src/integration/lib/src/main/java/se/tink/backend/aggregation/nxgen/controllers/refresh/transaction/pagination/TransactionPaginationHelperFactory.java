@@ -17,8 +17,9 @@ public class TransactionPaginationHelperFactory {
         boolean transactionsRefreshScopeFeatureEnabled =
                 configuration != null && configuration.isFeatureEnabled("transactionsRefreshScope");
         log.info(
-                "transactionsRefreshScope feature is enabled: {}",
-                transactionsRefreshScopeFeatureEnabled);
+                "transactionsRefreshScope feature is enabled: {}, flags: {}",
+                transactionsRefreshScopeFeatureEnabled,
+                configuration == null ? "configuration is null" : configuration.getFeatureFlags());
         if (transactionsRefreshScopeFeatureEnabled) {
             RefreshScope refreshScope = null;
             if (request instanceof HasRefreshScope) {
