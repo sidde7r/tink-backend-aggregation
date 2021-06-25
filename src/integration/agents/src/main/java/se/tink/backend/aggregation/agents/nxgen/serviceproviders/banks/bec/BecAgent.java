@@ -188,6 +188,7 @@ public final class BecAgent extends SubsequentProgressiveGenerationAgent
                 sessionStorage,
                 supplementalInformationController,
                 persistentStorage,
-                catalog);
+                catalog,
+                request.getUserAvailability());
     }
 }
