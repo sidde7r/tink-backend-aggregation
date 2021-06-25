@@ -26,14 +26,16 @@ public class SavingAccountEntity {
                 AccountIdentifier.create(
                         AccountIdentifierType.OTHER, translateAccountType(), description);
 
+        String account = associatedAccount != null ? associatedAccount : depositId;
+
         return TransactionalAccount.nxBuilder()
                 .withType(TransactionalAccountType.SAVINGS)
                 .withoutFlags()
                 .withBalance(toTinkAmountBalance(currency))
                 .withId(
                         IdModule.builder()
-                                .withUniqueIdentifier(associatedAccount)
-                                .withAccountNumber(associatedAccount)
+                                .withUniqueIdentifier(account)
+                                .withAccountNumber(account)
                                 .withAccountName(description)
                                 .addIdentifier(ibanIdentifier)
                                 .build())
