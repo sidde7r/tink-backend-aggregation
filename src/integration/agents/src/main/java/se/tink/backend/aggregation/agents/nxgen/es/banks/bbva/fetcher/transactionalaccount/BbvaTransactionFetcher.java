@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transacti
 
 import io.vavr.control.Try;
 import lombok.extern.slf4j.Slf4j;
+import se.tink.backend.aggregation.agents.exceptions.refresh.TransactionRefreshException;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.Fetchers;
@@ -35,7 +36,8 @@ public class BbvaTransactionFetcher
                         HttpClientException.class,
                         e -> {
                             if (attempt > Fetchers.MAX_TRY_ATTEMPTS) {
-                                throw new RuntimeException(ErrorMessages.MAX_TRY_ATTEMPTS);
+                                throw new TransactionRefreshException(
+                                        ErrorMessages.MAX_TRY_ATTEMPTS);
                             }
                             logRetry(account, key, attempt, e);
                             backoffAWhile();
