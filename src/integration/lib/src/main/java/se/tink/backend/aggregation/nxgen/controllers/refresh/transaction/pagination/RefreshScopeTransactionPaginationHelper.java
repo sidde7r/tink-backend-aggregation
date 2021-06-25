@@ -28,7 +28,6 @@ public class RefreshScopeTransactionPaginationHelper extends TransactionPaginati
     @Override
     public Optional<Date> getTransactionDateLimit(Account account) {
         if (refreshScope == null || refreshScope.getTransactions() == null) {
-            log.info("Returning empty");
             return Optional.empty();
         }
 
@@ -36,7 +35,6 @@ public class RefreshScopeTransactionPaginationHelper extends TransactionPaginati
                 Optional.ofNullable(refreshScope.getTransactions().getTransactionBookedDateGte())
                         .map(RefreshScopeTransactionPaginationHelper::localDateToDate);
         if (refreshScope.getTransactions().getAccounts() == null) {
-            log.info("Returning {}", defaultLimit);
             return defaultLimit;
         }
 
@@ -45,14 +43,10 @@ public class RefreshScopeTransactionPaginationHelper extends TransactionPaginati
 
         if (accountRefreshScope.isPresent()
                 && accountRefreshScope.get().getTransactionBookedDateGte() != null) {
-            log.info(
-                    "Returning {}",
-                    localDateToDate(accountRefreshScope.get().getTransactionBookedDateGte()));
             return Optional.of(
                     localDateToDate(accountRefreshScope.get().getTransactionBookedDateGte()));
         }
 
-        log.info("Returning {}", defaultLimit);
         return defaultLimit;
     }
 
