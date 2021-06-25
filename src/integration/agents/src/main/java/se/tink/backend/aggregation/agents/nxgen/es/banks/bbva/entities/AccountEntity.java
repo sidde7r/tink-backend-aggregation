@@ -5,7 +5,6 @@ import static se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaTypeMap
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Predicates;
-import io.vavr.control.Option;
 import io.vavr.control.Try;
 import java.util.List;
 import java.util.Locale;
@@ -14,6 +13,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.util.Strings;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.HolderTypes;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.entity.Party;
@@ -83,9 +83,19 @@ public class AccountEntity extends AbstractContractDetailsEntity {
 
     @JsonIgnore
     public boolean isTransactionalAccount() {
-        return Option.ofOptional(ACCOUNT_TYPE_MAPPER.translate(getAccountProductId()))
-                .filter(IS_TRANSACTIONAL_ACCOUNT)
-                .isDefined();
+        String productId = getAccountProductId();
+        String productName = getAccountProductName();
+        String productDescription = getAccountProductDescription();
+        Optional<AccountTypes> accountType = ACCOUNT_TYPE_MAPPER.translate(productId);
+        if (!accountType.isPresent()) {
+            log.warn(
+                    "[UNKNOWN ACCOUNT TYPE] product id, name - description: {}, {} - {}",
+                    productId,
+                    productName,
+                    productDescription);
+        }
+
+        return accountType.filter(IS_TRANSACTIONAL_ACCOUNT).isPresent();
     }
 
     @JsonIgnore
@@ -107,6 +117,22 @@ public class AccountEntity extends AbstractContractDetailsEntity {
     public String getAccountProductId() {
         return Optional.ofNullable(getProduct())
                 .map(ProductEntity::getId)
+                .filter(Predicates.not(Strings::isNullOrEmpty))
+                .orElse(null);
+    }
+
+    @JsonIgnore
+    public String getAccountProductName() {
+        return Optional.ofNullable(getProduct())
+                .map(ProductEntity::getName)
+                .filter(Predicates.not(Strings::isNullOrEmpty))
+                .orElse(null);
+    }
+
+    @JsonIgnore
+    public String getAccountProductDescription() {
+        return Optional.ofNullable(getProduct())
+                .map(ProductEntity::getDescription)
                 .filter(Predicates.not(Strings::isNullOrEmpty))
                 .orElse(null);
     }

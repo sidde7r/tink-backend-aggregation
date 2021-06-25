@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.ContractEntity;
@@ -14,6 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.PositionE
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
+@Slf4j
 public class BbvaAccountFetcher implements AccountFetcher<TransactionalAccount> {
 
     private final BbvaApiClient apiClient;
@@ -27,6 +29,11 @@ public class BbvaAccountFetcher implements AccountFetcher<TransactionalAccount> 
         return apiClient
                 .fetchFinancialDashboard()
                 .getPositions()
+                .peek(
+                        position ->
+                                log.info(
+                                        "[PRODUCT TYPE] balanceAgrupation: {}",
+                                        position.getBalanceAgrupation()))
                 .map(PositionEntity::getContract)
                 .map(ContractEntity::getAccount)
                 .filter(Option::isDefined)
