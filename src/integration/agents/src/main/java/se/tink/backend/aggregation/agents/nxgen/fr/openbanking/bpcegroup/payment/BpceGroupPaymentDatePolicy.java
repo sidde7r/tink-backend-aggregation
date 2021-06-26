@@ -20,7 +20,7 @@ public class BpceGroupPaymentDatePolicy extends FrOpenBankingPaymentDatePolicy {
         } else {
             LocalDate createDate = FrOpenBankingDateUtil.getCreationDate().toLocalDate();
             if (isCaisseGroup && !FrOpenBankingDateUtil.isBusinessDate(createDate)) {
-                return super.apply(payment).plusDays(1);
+                return super.apply(payment).plusDays(3);
             } else {
                 return super.apply(payment);
             }
