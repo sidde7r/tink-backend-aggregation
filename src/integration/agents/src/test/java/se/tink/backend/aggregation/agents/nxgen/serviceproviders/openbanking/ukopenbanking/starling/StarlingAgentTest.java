@@ -2,16 +2,17 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
-import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.enums.AccountIdentifierType;
+import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
+import se.tink.libraries.account.identifiers.SortCodeIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
-import se.tink.libraries.transfer.enums.TransferType;
-import se.tink.libraries.transfer.rpc.Transfer;
+import se.tink.libraries.payment.rpc.Creditor;
+import se.tink.libraries.payment.rpc.Debtor;
+import se.tink.libraries.payment.rpc.Payment;
+import se.tink.libraries.transfer.enums.RemittanceInformationType;
+import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 public class StarlingAgentTest {
 
-    private static final String TRANSFER_SOURCE = "";
-    private static final String TRANSFER_DEST = "";
     private static final String STARLING_FINANCIAL_INSTITUTION_ID =
             "b615ccc66e4b4ed1876e80ad397acf56";
 
@@ -21,32 +22,40 @@ public class StarlingAgentTest {
                 .loadCredentialsBefore(false)
                 .saveCredentialsAfter(true)
                 .expectLoggedIn(false)
-                .setFinancialInstitutionId(STARLING_FINANCIAL_INSTITUTION_ID)
+                .setFinancialInstitutionId("starling")
                 .setAppId("tink")
                 .build()
                 .testRefresh();
     }
 
     @Test
-    public void testTransfer() throws Exception {
+    public void testPayments() throws Exception {
+        AgentIntegrationTest.Builder builder =
+                new AgentIntegrationTest.Builder("uk", "uk-starling-oauth2")
+                        .expectLoggedIn(false)
+                        .loadCredentialsBefore(true)
+                        .saveCredentialsAfter(false)
+                        .setAppId("tink")
+                        .setClusterId("oxford-staging")
+                        .setFinancialInstitutionId(STARLING_FINANCIAL_INSTITUTION_ID);
 
-        Transfer transfer = new Transfer();
+        builder.build().testTinkLinkPayment(createMockedDomesticPayment());
+    }
 
-        transfer.setType(TransferType.BANK_TRANSFER);
-        transfer.setSource(
-                AccountIdentifier.create(AccountIdentifierType.SORT_CODE, TRANSFER_SOURCE));
-        transfer.setDestination(
-                AccountIdentifier.create(AccountIdentifierType.SORT_CODE, TRANSFER_DEST));
-        transfer.setAmount(ExactCurrencyAmount.of("10.50", "GBP"));
-        transfer.setSourceMessage("Message!");
+    private Payment createMockedDomesticPayment() {
+        RemittanceInformation remittanceInformation = new RemittanceInformation();
+        remittanceInformation.setType(RemittanceInformationType.REFERENCE);
+        remittanceInformation.setValue("Ref1234");
+        ExactCurrencyAmount amount = ExactCurrencyAmount.of("0.01", "GBP");
+        String currency = "GBP";
 
-        new AgentIntegrationTest.Builder("uk", "uk-starling-oauth2")
-                .loadCredentialsBefore(true)
-                .saveCredentialsAfter(true)
-                .expectLoggedIn(false)
-                .setFinancialInstitutionId(STARLING_FINANCIAL_INSTITUTION_ID)
-                .setAppId("tink")
-                .build()
-                .testBankTransfer(transfer);
+        return new Payment.Builder()
+                .withCreditor(new Creditor(new SortCodeIdentifier(""), "Unknown Person"))
+                .withDebtor(new Debtor(new SortCodeIdentifier("")))
+                .withExactCurrencyAmount(amount)
+                .withCurrency(currency)
+                .withRemittanceInformation(remittanceInformation)
+                .withUniqueId(RandomUtils.generateRandomHexEncoded(15))
+                .build();
     }
 }

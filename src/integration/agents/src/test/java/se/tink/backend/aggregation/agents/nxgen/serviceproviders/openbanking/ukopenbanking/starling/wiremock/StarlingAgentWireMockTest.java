@@ -1,18 +1,31 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.starling.wiremock;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
+
 import java.time.Clock;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.result.error.AgentPlatformAuthenticationProcessException;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationCancelledByUserException;
 import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesJsonFileParser;
 import se.tink.backend.aggregation.agents.framework.assertions.entities.AgentContractEntity;
+import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.AgentWireMockPaymentTest;
+import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.command.PaymentCommand;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockrefresh.AgentWireMockRefreshTest;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.common.authentication.RefreshableAccessToken;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.common.authentication.Token;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationReader;
+import se.tink.libraries.account.identifiers.SortCodeIdentifier;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.enums.MarketCode;
+import se.tink.libraries.payment.rpc.Creditor;
+import se.tink.libraries.payment.rpc.Debtor;
+import se.tink.libraries.payment.rpc.Payment;
+import se.tink.libraries.transfer.enums.RemittanceInformationType;
+import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 public class StarlingAgentWireMockTest {
 
@@ -30,6 +43,8 @@ public class StarlingAgentWireMockTest {
             RESOURCES_PATH + "business-accounts.json";
 
     private static final String INVALID_GRANT_TRAFFIC = RESOURCES_PATH + "invalid-grant.aap";
+    private static final String FPS_PAYMENT_SUCCESSFUL =
+            RESOURCES_PATH + "fast-payment-success.aap";
 
     private static final String CONFIGURATION_PATH = RESOURCES_PATH + "config.yml";
 
@@ -116,6 +131,32 @@ public class StarlingAgentWireMockTest {
                         "RefreshTokenFailureError: Bank API HTTP status error. Unexpected status code. [APAG-1]");
     }
 
+    @Test
+    public void testPaymentCancelledCase() throws Exception {
+        // given
+        final Payment payment = createDomesticPayment();
+        final AgentWireMockPaymentTest agentWireMockPaymentTest =
+                createAgentWireMockPaymentTestWithErrorCallbackData(payment);
+
+        // when
+        final Throwable thrown = catchThrowable(agentWireMockPaymentTest::executePayment);
+
+        // then
+        assertThat(thrown)
+                .isExactlyInstanceOf(PaymentAuthorizationCancelledByUserException.class)
+                .hasNoCause()
+                .hasMessage("Authorisation of payment was cancelled. Please try again.");
+    }
+
+    @Test
+    public void testPaymentSuccessCase() throws Exception {
+        final Payment payment = createDomesticPayment();
+        final AgentWireMockPaymentTest agentWireMockPaymentTest =
+                createAgentWireMockPaymentTestSuccess(payment);
+
+        agentWireMockPaymentTest.executePayment();
+    }
+
     private RefreshableAccessToken createRefreshableAccessToken() {
         Token expiredAccessToken = createAccessToken();
         Token refreshToken = createRefreshToken();
@@ -156,6 +197,43 @@ public class StarlingAgentWireMockTest {
         return RefreshableAccessToken.builder()
                 .accessToken(expiredAccessToken)
                 .refreshToken(refreshToken)
+                .build();
+    }
+
+    private AgentWireMockPaymentTest createAgentWireMockPaymentTestWithErrorCallbackData(
+            Payment payment) throws Exception {
+
+        return AgentWireMockPaymentTest.builder(MarketCode.UK, PROVIDER_NAME, INVALID_GRANT_TRAFFIC)
+                .withConfigurationFile(AgentsServiceConfigurationReader.read(CONFIGURATION_PATH))
+                .addCallbackData("state", "state")
+                .addCallbackData("error", "access_denied")
+                .withPayment(payment)
+                .buildWithoutLogin(PaymentCommand.class);
+    }
+
+    private AgentWireMockPaymentTest createAgentWireMockPaymentTestSuccess(Payment payment)
+            throws Exception {
+
+        return AgentWireMockPaymentTest.builder(
+                        MarketCode.UK, PROVIDER_NAME, FPS_PAYMENT_SUCCESSFUL)
+                .withConfigurationFile(AgentsServiceConfigurationReader.read(CONFIGURATION_PATH))
+                .addCallbackData("state", "state")
+                .addCallbackData("code", "code")
+                .withPayment(payment)
+                .buildWithoutLogin(PaymentCommand.class);
+    }
+
+    private static Payment createDomesticPayment() {
+        RemittanceInformation remittanceInformation = new RemittanceInformation();
+        remittanceInformation.setType(RemittanceInformationType.REFERENCE);
+        remittanceInformation.setValue("Ref1234");
+        return new Payment.Builder()
+                .withCreditor(
+                        new Creditor(new SortCodeIdentifier("12345612345678"), "Unknown Person"))
+                .withDebtor(new Debtor(new SortCodeIdentifier("65432112345678")))
+                .withExactCurrencyAmount(ExactCurrencyAmount.of(0.01, "GBP"))
+                .withCurrency("GBP")
+                .withRemittanceInformation(remittanceInformation)
                 .build();
     }
 }
