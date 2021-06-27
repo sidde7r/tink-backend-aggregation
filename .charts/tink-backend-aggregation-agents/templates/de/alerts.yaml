@@ -278,14 +278,14 @@ spec:
     #################################
     ### AllErrors - Agent Refresh ###
     #################################
-    - alert: agent_refreshes_below45_greater35_due_to_all_error_with_rate_limit_de
+    - alert: agent_refreshes_below45_greater35_due_to_all_error_for_specific_product_in_de
       expr: |
         (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.allErrorsRefresh }}, market="DE"}))
             / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"})) < 0.45
         and (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.allErrorsRefresh }}, market="DE"}))
             / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"})) >= 0.35
          and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"}) > 20
-      for: 5m
+      for: 30m
       labels:
         severity: ping
         priority: P4
@@ -297,14 +297,14 @@ spec:
           the last 30 minutes for <{ $labels.type }>
         tags: {{ .Values.tags }}
 
-    - alert: agent_refreshes_below35_greater25_due_to_all_error_with_rate_limit_de
+    - alert: agent_refreshes_below35_greater25_due_to_all_error_for_specific_product_in_de
       expr: |
         (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.allErrorsRefresh }}, market="DE"}))
             / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"})) < 0.35
         and (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.allErrorsRefresh }}, market="DE"}))
             / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"})) >= 0.25
          and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"}) > 20
-      for: 5m
+      for: 30m
       labels:
         severity: urgent
         priority: P3
@@ -316,14 +316,14 @@ spec:
           the last 30 minutes for <{ $labels.type }>
         tags: {{ .Values.tags }}
 
-    - alert: agent_refreshes_below25_greater15_due_to_all_error_with_rate_limit_de
+    - alert: agent_refreshes_below25_greater15_due_to_all_error_for_specific_product_in_de
       expr: |
         (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.allErrorsRefresh }}, market="DE"}))
             / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"})) < 0.25
         and (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.allErrorsRefresh }}, market="DE"}))
             / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"})) >= 0.15
          and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"}) > 20
-      for: 5m
+      for: 30m
       labels:
         severity: urgent
         priority: P2
@@ -335,12 +335,12 @@ spec:
           the last 30 minutes for <{ $labels.type }>
         tags: {{ .Values.tags }}
 
-    - alert: agent_refreshes_below15_due_to_all_error_with_rate_limit_de
+    - alert: agent_refreshes_below15_due_to_all_error_for_specific_product_in_de
       expr: |
         (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.allErrorsRefresh }}, market="DE"}))
             / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"})) < 0.15
          and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"}) > 20
-      for: 5m
+      for: 30m
       labels:
         severity: urgent
         priority: P1
@@ -356,14 +356,14 @@ spec:
     ### AllErrors - Partially Completed Refresh ###
     ###############################################
 
-    - alert: agent_refreshes_below60_greater50_due_to_partially_completed_error_with_rate_limit_de
+    - alert: agent_refreshes_below60_greater50_due_to_partially_completed_error_for_specific_product_in_de
       expr: |
         (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.partiallyCompletedErrorRefresh }}, market="DE"}))
             / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"})) < 0.6
         and (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.partiallyCompletedErrorRefresh }}, market="DE"}))
             / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"})) >= 0.5
          and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"}) > 20
-      for: 5m
+      for: 30m
       labels:
         severity: ping
         priority: P4
@@ -375,14 +375,14 @@ spec:
           the last 30 minutes.
         tags: {{ .Values.tags }}
 
-    - alert: agent_refreshes_below50_greater40_due_to_partially_completed_error_with_rate_limit_de
+    - alert: agent_refreshes_below50_greater40_due_to_partially_completed_error_for_specific_product_in_de
       expr: |
         (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.partiallyCompletedErrorRefresh }}, market="DE"}))
             / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"})) < 0.5
         and (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.partiallyCompletedErrorRefresh }}, market="DE"}))
             / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"})) >= 0.4
          and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"}) > 20
-      for: 5m
+      for: 30m
       labels:
         severity: urgent
         priority: P3
@@ -394,14 +394,14 @@ spec:
           the last 30 minutes.
         tags: {{ .Values.tags }}
 
-    - alert: agent_refreshes_below40_greater30_due_to_partially_completed_error_with_rate_limit_de
+    - alert: agent_refreshes_below40_greater30_due_to_partially_completed_error_for_specific_product_in_de
       expr: |
         (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.partiallyCompletedErrorRefresh }}, market="DE"}))
             / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"})) < 0.4
         and (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.partiallyCompletedErrorRefresh }}, market="DE"}))
             / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"})) >= 0.3
          and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"}) > 20
-      for: 5m
+      for: 30m
       labels:
         severity: urgent
         priority: P2
@@ -413,12 +413,12 @@ spec:
           the last 30 minutes.
         tags: {{ .Values.tags }}
 
-    - alert: agent_refreshes_below30_due_to_partially_completed_error_with_rate_limit_de
+    - alert: agent_refreshes_below30_due_to_partially_completed_error_for_specific_product_in_de
       expr: |
         (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.partiallyCompletedErrorRefresh }}, market="DE"}))
             / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"})) < 0.3
          and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="DE"}) > 20
-      for: 5m
+      for: 30m
       labels:
         severity: urgent
         priority: P1
