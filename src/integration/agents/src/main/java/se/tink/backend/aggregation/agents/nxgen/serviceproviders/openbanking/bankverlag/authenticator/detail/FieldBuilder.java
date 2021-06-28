@@ -23,7 +23,8 @@ public class FieldBuilder {
     private static final Pattern STARTCODE_CHIP_PATTERN = Pattern.compile("Startcode\\s(\\d+)");
     private static final String CHIP_TYPE = "CHIP_OTP";
     private static final LocalizableParametrizedKey INSTRUCTIONS =
-            new LocalizableParametrizedKey("Confirm by entering the generated TAN for \"{0}\".");
+            new LocalizableParametrizedKey(
+                    "Please open the \"{0}\" Banking-App app and confirm the login via \"{1}\". Then click the \"Submit\" button");
 
     private final Catalog catalog;
 
@@ -63,7 +64,8 @@ public class FieldBuilder {
                         scaMethods, new BankverlagIconUrlMapper(aspspId)));
     }
 
-    public Field getInstructionsField(ScaMethodEntity scaMethod) {
-        return CommonFields.Instruction.build(catalog.getString(INSTRUCTIONS, scaMethod.getName()));
+    public Field getInstructionsField(ScaMethodEntity scaMethod, String aspspName) {
+        return CommonFields.Instruction.build(
+                catalog.getString(INSTRUCTIONS, aspspName, scaMethod.getName()));
     }
 }

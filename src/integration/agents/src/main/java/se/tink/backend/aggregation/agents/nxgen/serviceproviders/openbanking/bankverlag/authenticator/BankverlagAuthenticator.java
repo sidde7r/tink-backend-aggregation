@@ -53,6 +53,7 @@ public class BankverlagAuthenticator implements MultiFactorAuthenticator, AutoAu
     private final Credentials credentials;
     private final FieldBuilder fieldBuilder;
     private final String aspspId;
+    private final String aspspName;
 
     public BankverlagAuthenticator(
             BankverlagApiClient apiClient,
@@ -60,13 +61,15 @@ public class BankverlagAuthenticator implements MultiFactorAuthenticator, AutoAu
             BankverlagStorage storage,
             Credentials credentials,
             Catalog catalog,
-            String aspspId) {
+            String aspspId,
+            String aspspName) {
         this.apiClient = apiClient;
         this.supplementalInformationController = supplementalInformationController;
         this.storage = storage;
         this.credentials = credentials;
         this.fieldBuilder = new FieldBuilder(Preconditions.checkNotNull(catalog));
         this.aspspId = aspspId;
+        this.aspspName = aspspName;
     }
 
     @Override
@@ -215,7 +218,7 @@ public class BankverlagAuthenticator implements MultiFactorAuthenticator, AutoAu
     }
 
     private void showInfo(ScaMethodEntity scaMethod) {
-        Field informationField = fieldBuilder.getInstructionsField(scaMethod);
+        Field informationField = fieldBuilder.getInstructionsField(scaMethod, aspspName);
         try {
             supplementalInformationController.askSupplementalInformationSync(informationField);
         } catch (SupplementalInfoException e) {
