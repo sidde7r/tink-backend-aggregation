@@ -14,7 +14,6 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
-import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 @RequiredArgsConstructor
@@ -28,7 +27,6 @@ public class LansforsakringarAuthenticator implements OAuth2Authenticator {
     public URL buildAuthorizeUrl(String state) {
         ConsentResponse consent = apiClient.getConsent();
         storageHelper.setConsentId(consent.getConsentId());
-
         return apiClient.buildAuthorizeUrl(state, consent.getAuthorisationId());
     }
 
@@ -60,21 +58,6 @@ public class LansforsakringarAuthenticator implements OAuth2Authenticator {
         }
     }
 
-    public boolean isConsentValid() {
-        try {
-            if (apiClient.getConsentStatus() == null) {
-                return false;
-            }
-            return apiClient.getConsentStatus().isConsentValid();
-        } catch (HttpResponseException e) {
-            log.error("Bank thrown an error when fetching consent status", e);
-            throw SessionError.SESSION_EXPIRED.exception();
-        } catch (RuntimeException e) {
-            log.error("Unexpected error occurred when fetching consent status.", e);
-            throw SessionError.SESSION_EXPIRED.exception();
-        }
-    }
-
     public void tryRefreshingToken() {
         OAuth2Token oAuth2Token = fetchTokenFromPermanentStorage();
         refreshAndStoreNewToken(oAuth2Token);
@@ -90,5 +73,9 @@ public class LansforsakringarAuthenticator implements OAuth2Authenticator {
                         token.getRefreshToken()
                                 .orElseThrow(SessionError.SESSION_EXPIRED::exception));
         storageHelper.setOAuth2Token(oAuth2Token);
+    }
+
+    public boolean isConsentValid() {
+        return apiClient.isConsentValid();
     }
 }
