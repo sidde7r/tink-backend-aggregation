@@ -10,13 +10,6 @@
             "scale" : 2
         },
         "currencyCode" : "EUR",
-        "availableBalance" : {
-            "currencyCode" : "EUR",
-            "doubleValue" : 90.11,
-            "exactValue" : 90.11,
-            "unscaledValue" : 9011,
-            "scale" : 2
-        },
         "bankId" : "dummyIban",
         "excluded" : false,
         "favored" : false,

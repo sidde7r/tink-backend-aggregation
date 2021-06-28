@@ -95,7 +95,7 @@ public class ConsentManagerTest {
 
         // then
         verify(apiClient).createConsent(eq(STATE), eq(ConsentType.ACCOUNT), any());
-        verify(userState).startManualAuthenticationStep(CONSENT_ID, false);
+        verify(userState).startManualAuthenticationStep(CONSENT_ID);
     }
 
     @Test
@@ -128,7 +128,7 @@ public class ConsentManagerTest {
 
         // then
         verify(apiClient).createConsent(eq(STATE), eq(ConsentType.BALANCE_TRANSACTION), any());
-        verify(userState).startManualAuthenticationStep(CONSENT_ID, false);
+        verify(userState).startManualAuthenticationStep(CONSENT_ID);
     }
 
     @Test
