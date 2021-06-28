@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar;
 
+import static se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.LunarConstants.LogTags.LUNAR_TAG;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.storage.PersistentStorageService;
@@ -33,7 +35,7 @@ public class LunarSessionHandler implements SessionHandler {
         try {
             apiClient.fetchAccounts(authData.getAccessToken(), authData.getDeviceId());
         } catch (HttpResponseException e) {
-            log.error("Caught exception while checking if session is active", e);
+            log.error("{} Caught exception while checking if session is active", LUNAR_TAG, e);
             throw SessionError.SESSION_EXPIRED.exception();
         }
     }
@@ -43,6 +45,6 @@ public class LunarSessionHandler implements SessionHandler {
                 .createAuthDataAccessor(
                         new PersistentStorageService(persistentStorage)
                                 .readFromAgentPersistentStorage())
-                .get();
+                .getData();
     }
 }

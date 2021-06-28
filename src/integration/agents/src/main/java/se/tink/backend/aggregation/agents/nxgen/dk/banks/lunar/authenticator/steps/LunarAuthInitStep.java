@@ -26,7 +26,7 @@ public class LunarAuthInitStep
         LunarAuthData authData =
                 dataAccessorFactory
                         .createAuthDataAccessor(request.getAuthenticationPersistedData())
-                        .get();
+                        .getData();
 
         AgentAuthenticationProcessStepIdentifier nextStep =
                 authData.hasCredentials()
