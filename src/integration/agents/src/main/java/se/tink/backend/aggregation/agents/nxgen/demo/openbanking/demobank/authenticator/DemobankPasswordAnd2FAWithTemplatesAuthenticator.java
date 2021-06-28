@@ -11,6 +11,7 @@ import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.errors.SupplementalInfoError;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.sdktemplates.TemplatesSupplementalInfoBuilder;
@@ -76,12 +77,18 @@ public class DemobankPasswordAnd2FAWithTemplatesAuthenticator implements MultiFa
 
     private TemplatesSupplementalInfoBuilder.TemplateType askToChoose2FAMethod(
             String name, Field field) {
-        return TemplatesSupplementalInfoBuilder.TemplateType.valueOf(
-                Optional.ofNullable(
-                                supplementalInformationController
-                                        .askSupplementalInformationSync(field)
-                                        .get(name))
-                        .orElseThrow(() -> new IllegalStateException("Invalid 2FA method passed")));
+        try {
+            return TemplatesSupplementalInfoBuilder.TemplateType.valueOf(
+                    Optional.of(
+                                    supplementalInformationController
+                                            .askSupplementalInformationSync(field)
+                                            .get(name)
+                                            .toUpperCase())
+                            .orElseThrow(
+                                    () -> new IllegalStateException("Invalid 2FA method passed")));
+        } catch (RuntimeException e) {
+            throw SupplementalInfoError.NO_VALID_CODE.exception(e);
+        }
     }
 
     private String getOtpCode(String message) {
