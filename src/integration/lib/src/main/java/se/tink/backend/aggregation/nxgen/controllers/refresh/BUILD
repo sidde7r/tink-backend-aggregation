@@ -24,5 +24,6 @@ java_library(
         "//third_party:lombok_libs",
         "//third_party:org_slf4j_slf4j_api",
         "@tink_backend//src/libraries/account_identifier",
+        "@tink_backend//src/libraries/unleash",
     ],
 )

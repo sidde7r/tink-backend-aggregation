@@ -103,7 +103,8 @@ public abstract class SubsequentGenerationAgent<Auth> extends SuperAbstractAgent
             client.disableSignatureRequestHeader();
         }
         this.transactionPaginationHelper =
-                new TransactionPaginationHelperFactory(configuration).create(request);
+                new TransactionPaginationHelperFactory(componentProvider.getUnleashClient())
+                        .create(request);
         this.metricRefreshController =
                 new MetricRefreshController(
                         metricContext.getMetricRegistry(),

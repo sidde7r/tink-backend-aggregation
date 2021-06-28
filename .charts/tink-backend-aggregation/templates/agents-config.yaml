@@ -107,7 +107,6 @@ data:
         allowRefreshRegardlessOfRestrictions: {{ $featureFlagsConfig.allowRefreshRegardlessOfRestrictions | default false }}
         supportIndividualAccountsRefresh: {{ $featureFlagsConfig.supportIndividualAccountsRefresh | default false }}
         useAccountSegmentRestriction: {{ $featureFlagsConfig.useAccountSegmentRestriction | default false }}
-        transactionsRefreshScope: {{ $featureFlagsConfig.transactionsRefreshScope | default false }}
 
       integrations:
         {{- if $agentsConfig.collectorSubscriptionKey }}

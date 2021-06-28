@@ -35,6 +35,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.TimeoutRetryFilter;
+import se.tink.libraries.unleash.UnleashClient;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, CREDIT_CARDS})
 @AgentDependencyModules(modules = BankIdIframeAuthenticationControllerProviderModule.class)
@@ -71,7 +72,8 @@ public final class DnbAgent extends NextGenerationAgent
 
         this.creditCardRefreshController = constructCreditCardRefreshController();
         this.transactionalAccountRefreshController =
-                constructTransactionalAccountRefreshController();
+                constructTransactionalAccountRefreshController(
+                        componentProvider.getUnleashClient());
     }
 
     protected void configureHttpClient(TinkHttpClient client) {
@@ -123,9 +125,10 @@ public final class DnbAgent extends NextGenerationAgent
         return transactionalAccountRefreshController.fetchSavingsTransactions();
     }
 
-    private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {
+    private TransactionalAccountRefreshController constructTransactionalAccountRefreshController(
+            UnleashClient unleashClient) {
         TransactionPaginationHelper transactionPaginationHelper =
-                new TransactionPaginationHelperFactory(configuration).create(request);
+                new TransactionPaginationHelperFactory(unleashClient).create(request);
         return new TransactionalAccountRefreshController(
                 metricRefreshController,
                 updateController,

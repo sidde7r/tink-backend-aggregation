@@ -1,20 +1,26 @@
 package se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.HasRefreshScope;
 import se.tink.libraries.credentials.service.RefreshScope;
+import se.tink.libraries.unleash.UnleashClient;
+import se.tink.libraries.unleash.model.Toggle;
 
-@RequiredArgsConstructor
 @Slf4j
 public class TransactionPaginationHelperFactory {
 
-    private final AgentsServiceConfiguration configuration;
+    private final UnleashClient unleashClient;
+
+    public TransactionPaginationHelperFactory(UnleashClient unleashClient) {
+        this.unleashClient = unleashClient;
+    }
 
     public TransactionPaginationHelper create(CredentialsRequest request) {
-        if (configuration != null && configuration.isFeatureEnabled("transactionsRefreshScope")) {
+        if (isTransactionsRefreshScopeFeatureEnabled()) {
+            log.debug(
+                    "Unleash toggle \"TransactionsRefreshScope\" is enabled, {} implementation will be used",
+                    RefreshScopeTransactionPaginationHelper.class);
             RefreshScope refreshScope = null;
             if (request instanceof HasRefreshScope) {
                 refreshScope = ((HasRefreshScope) request).getRefreshScope();
@@ -27,5 +33,16 @@ public class TransactionPaginationHelperFactory {
             return new RefreshScopeTransactionPaginationHelper(refreshScope);
         }
         return new CertainDateTransactionPaginationHelper(request);
+    }
+
+    private boolean isTransactionsRefreshScopeFeatureEnabled() {
+        try {
+            Toggle transactionRefreshScopeFeatureToggle =
+                    Toggle.of("TransactionsRefreshScope").build();
+            return unleashClient.isToggleEnable(transactionRefreshScopeFeatureToggle);
+        } catch (RuntimeException e) {
+            log.warn("Couldn't get \"TransactionsRefreshScope\" feature flag", e);
+            return false;
+        }
     }
 }
