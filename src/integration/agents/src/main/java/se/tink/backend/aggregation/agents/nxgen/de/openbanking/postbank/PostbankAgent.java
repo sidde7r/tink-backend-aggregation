@@ -66,7 +66,8 @@ public final class PostbankAgent extends DeutscheBankAgent
                 persistentStorage,
                 headerValues,
                 POSTBANK_CONFIGURATION,
-                randomValueGenerator);
+                randomValueGenerator,
+                localDateTimeSource);
     }
 
     @Override
@@ -97,7 +98,8 @@ public final class PostbankAgent extends DeutscheBankAgent
                         credentials,
                         strongAuthenticationState,
                         randomValueGenerator,
-                        new PostbankPaymentMapper());
+                        new PostbankPaymentMapper(),
+                        localDateTimeSource);
 
         BasePaymentExecutor paymentExecutor =
                 new BasePaymentExecutor(apiClient, postbankPaymentAuthenticator, sessionStorage);

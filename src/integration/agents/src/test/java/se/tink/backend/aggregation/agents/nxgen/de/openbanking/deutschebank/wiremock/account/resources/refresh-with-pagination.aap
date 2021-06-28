@@ -1,0 +1,227 @@
+
+REQUEST 1
+POST https://xs2a.db.com/ais/DE/DB/v1/consents
+Accept: application/json
+Content-Type: application/json
+PSU-IP-Address: 127.0.0.1
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-ID-Type: DE_ONLB_DB
+TPP-Redirect-URI: https://127.0.0.1:7357/api/v1/thirdparty/callback?state=00000000-0000-4000-0000-000000000000
+TPP-Nok-Redirect-URI: https://127.0.0.1:7357/api/v1/thirdparty/callback?state=00000000-0000-4000-0000-000000000000
+X-Aggregator: Tink Testing
+
+{"access":{"accounts":[],"transactions":[],"balances":[],"additionalInformation":{"ownerName":[]}},"recurringIndicator":true,"validUntil":"1993-03-10","frequencyPerDay":4,"combinedServiceIndicator":false}
+
+RESPONSE 1
+201
+Date: Fri, 18 Jun 2021 11:45:30 GMT
+Date: Fri, 18 Jun 2021 11:45:32 GMT
+Server: Apache
+glue2gExit: ***
+Access-Control-Allow-Origin: *
+X-Request-ID: 4584e9fe-53bd-44a9-adf3-80bfbb9f0b51
+Access-Control-Allow-Methods: ***
+ASPSP-SCA-Approach: ***
+bffEntry: ***
+Access-Control-Allow-Headers: ***
+bffExit: ***
+Content-Type: application/json;charset=utf-8
+glue2gEntry: ***
+Location: ***
+Content-Length: 650
+
+{"consentId":"testConsentId","_links":{"scaStatus":{"href":"**HASHED:J6**"},"scaRedirect":{"href":"https://meine.deutsche-bank.de/taf/db/#/authorizexs2a?transaction-id=**HASHED:+Q**&psu-id=**HASHED:Aq**&authorization-id=dd98323a-10da-4dce-b102-ad7157f9bc0b"},"self":{"href":"https://xs2a.db.com/ais/DE/DB/v1/consents/testConsentId"},"status":{"href":"https://xs2a.db.com/ais/DE/DB/v1/consents/testConsentId/status"}},"consentStatus":"received"}
+
+REQUEST 2
+GET https://xs2a.db.com/ais/DE/DB/v1/consents/testConsentId/status
+Accept: application/json
+Content-Type: application/json
+PSU-IP-Address: 127.0.0.1
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+X-Aggregator: Tink Testing
+
+RESPONSE 2
+200
+Date: Fri, 18 Jun 2021 11:46:53 GMT
+Date: Fri, 18 Jun 2021 11:46:53 GMT
+Server: Apache
+glue2gExit: ***
+Access-Control-Allow-Origin: *
+X-Request-ID: 7dfcf9c2-8d77-4be8-9fd5-b833bae4dd61
+Access-Control-Allow-Methods: ***
+bffEntry: ***
+Access-Control-Allow-Headers: ***
+bffExit: ***
+Content-Type: application/json;charset=utf-8
+glue2gEntry: ***
+Vary: Accept-Encoding
+Content-Length: 25
+
+{"consentStatus":"valid"}
+
+REQUEST 3
+GET https://xs2a.db.com/ais/DE/DB/v1/consents/testConsentId
+Accept: application/json
+Content-Type: application/json
+PSU-IP-Address: 127.0.0.1
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+X-Aggregator: Tink Testing
+
+RESPONSE 3
+200
+Date: Fri, 18 Jun 2021 11:46:54 GMT
+Date: Fri, 18 Jun 2021 11:46:54 GMT
+Server: Apache
+glue2gExit: ***
+Access-Control-Allow-Origin: *
+X-Request-ID: c286d320-3456-44ab-9cf3-e00f20d90805
+Access-Control-Allow-Methods: ***
+bffEntry: ***
+Access-Control-Allow-Headers: ***
+bffExit: ***
+Content-Type: application/json;charset=utf-8
+glue2gEntry: ***
+Vary: Accept-Encoding
+Content-Length: 499
+
+{"access":{"additionalInformation":{"ownerName":[{"iban":"FAKEIBAN007","currency":"EUR"}]},"balances":[{"iban":"FAKEIBAN007","currency":"EUR"}],"accounts":[{"iban":"FAKEIBAN007","currency":"EUR"}],"transactions":[{"iban":"FAKEIBAN007","currency":"EUR"}]},"_links":{"account":{"href":"https://xs2a.db.com/ais/DE/DB/v1/accounts"}},"consentStatus":"valid","validUntil":"2021-09-16","recurringIndicator":true,"lastActionDate":"2021-06-18","frequencyPerDay":4}
+
+
+REQUEST 4
+GET https://xs2a.db.com/ais/DE/DB/v1/consents/**HASHED:Rd**/status
+Accept: application/json
+Content-Type: application/json
+PSU-IP-Address: 127.0.0.1
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+X-Aggregator: Tink Testing
+
+RESPONSE 4
+200
+Date: Fri, 18 Jun 2021 12:51:15 GMT
+Date: Fri, 18 Jun 2021 12:51:15 GMT
+Server: Apache
+glue2gExit: ***
+Access-Control-Allow-Origin: *
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+Access-Control-Allow-Methods: ***
+bffEntry: ***
+Access-Control-Allow-Headers: ***
+bffExit: ***
+Content-Type: application/json;charset=utf-8
+glue2gEntry: ***
+Vary: Accept-Encoding
+Content-Length: 25
+
+{"consentStatus":"valid"}
+
+REQUEST 5
+GET https://xs2a.db.com/ais/DE/DB/v1/accounts
+Accept: application/json
+Content-Type: application/json
+PSU-IP-Address: 127.0.0.1
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+Consent-ID: testConsentId
+X-Aggregator: Tink Testing
+
+RESPONSE 5
+200
+Date: Fri, 18 Jun 2021 12:51:16 GMT
+Date: Fri, 18 Jun 2021 12:51:17 GMT
+Server: Apache
+glue2gExit: ***
+Access-Control-Allow-Origin: *
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+Access-Control-Allow-Methods: ***
+bffEntry: ***
+Access-Control-Allow-Headers: ***
+bffExit: ***
+Content-Type: application/json;charset=utf-8
+glue2gEntry: ***
+Vary: Accept-Encoding
+Content-Length: 538
+
+{"accounts":[{"cashAccountType":"CACC","product":"PERSKTO","resourceId":"29DC9E0F1571B6FBAAF0E62B3E995A9A","ownerName":"Not Real Customer","_links":{"balances":{"href":"https://xs2a.db.com/ais/DE/DB/v1/accounts/29DC9E0F1571B6FBAAF0E62B3E995A9A/balances"},"transactions":{"href":"https://xs2a.db.com/ais/DE/DB/v1/accounts/29DC9E0F1571B6FBAAF0E62B3E995A9A/transactions"},"account":{"href":"https://xs2a.db.com/ais/DE/DB/v1/accounts/29DC9E0F1571B6FBAAF0E62B3E995A9A"}},"iban":"FAKEIBAN007","currency":"EUR","status":"enabled"}]}
+
+REQUEST 6
+GET https://xs2a.db.com/ais/DE/DB/v1/accounts/29DC9E0F1571B6FBAAF0E62B3E995A9A/balances
+Accept: application/json
+Content-Type: application/json
+PSU-IP-Address: 127.0.0.1
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+Consent-ID: testConsentId
+X-Aggregator: Tink Testing
+
+RESPONSE 6
+200
+Date: Fri, 18 Jun 2021 12:51:18 GMT
+Date: Fri, 18 Jun 2021 12:51:19 GMT
+Server: Apache
+glue2gExit: ***
+Access-Control-Allow-Origin: *
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+Access-Control-Allow-Methods: ***
+bffEntry: ***
+Access-Control-Allow-Headers: ***
+bffExit: ***
+Content-Type: application/json;charset=utf-8
+glue2gEntry: ***
+Vary: Accept-Encoding
+Content-Length: 306
+
+{"balances":[{"balanceType":"closingBooked","creditLimitIncluded":false,"balanceAmount":{"amount":"6640.05","currency":"EUR"}},{"balanceType":"interimAvailable","creditLimitIncluded":false,"balanceAmount":{"amount":"6755.33","currency":"EUR"}}],"account":{"iban":"FAKEIBAN007","currency":"EUR"}}
+
+REQUEST 7
+GET https://xs2a.db.com/ais/DE/DB/v1/accounts/29DC9E0F1571B6FBAAF0E62B3E995A9A/transactions?bookingStatus=both&deltaList=true
+Accept: application/json
+Content-Type: application/json
+PSU-IP-Address: 127.0.0.1
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+Consent-ID: testConsentId
+X-Aggregator: Tink Testing
+
+RESPONSE 7
+200
+Date: Fri, 18 Jun 2021 12:51:20 GMT
+Date: Fri, 18 Jun 2021 12:51:22 GMT
+Server: Apache
+glue2gExit: ***
+Access-Control-Allow-Origin: *
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+Access-Control-Allow-Methods: ***
+bffEntry: ***
+Access-Control-Allow-Headers: ***
+bffExit: ***
+Content-Type: application/json;charset=utf-8
+glue2gEntry: ***
+Vary: Accept-Encoding
+Content-Length: 700
+
+{ "transactions": { "booked": [ { "debtorAccount": { "iban": "FAKE007" }, "creditorAccount": { "iban": "FAKE001", "currency": "EUR" }, "transactionAmount": { "amount": "115.28", "currency": "EUR" }, "debtorName": "Debtor 1", "bookingDate": "2021-06-18", "remittanceInformationUnstructured": "some information", "valueDate": "2021-06-18", "endToEndId": "S/836597520613/613800582277", "checkId": "0000000000000", "transactionId": "000001-4E10D9E1617B52054901D6F0FT0077222" }, { "debtorAccount": { "iban": "FAKE007" }, "creditorAccount": { "iban": "FAKE001", "currency": "EUR" }, "transactionAmount": { "amount": "115.28", "currency": "EUR" }, "debtorName": "Debtor 2", "bookingDate": "2021-06-18", "remittanceInformationUnstructured": "some information", "valueDate": "2021-06-18", "endToEndId": "S/836597520613/613800582277", "checkId": "0000000000000", "transactionId": "000001-4E10D9E1617B52054901D6F0FT0077222" } ], "_links": { "account": { "href": "https://xs2a.db.com/ais/DE/DB/v1/accounts/29DC9E0F1571B6FBAAF0E62B3E995A9A" }, "next": { "href": "https://xs2a.db.com/ais/DE/DB/v1/accounts/29DC9E0F1571B6FBAAF0E62B3E995A9A/transactions?bookingStatus=both&deltaList=true&scrollRef=111222" } } }, "account": { "iban": "FAKE001", "currency": "EUR" } }
+
+REQUEST 8
+GET https://xs2a.db.com/ais/DE/DB/v1/accounts/29DC9E0F1571B6FBAAF0E62B3E995A9A/transactions?bookingStatus=both&deltaList=true&scrollRef=111222
+Accept: application/json
+Content-Type: application/json
+PSU-IP-Address: 127.0.0.1
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+Consent-ID: testConsentId
+X-Aggregator: Tink Testing
+
+RESPONSE 8
+200
+Date: Fri, 18 Jun 2021 12:51:20 GMT
+Date: Fri, 18 Jun 2021 12:51:22 GMT
+Server: Apache
+glue2gExit: ***
+Access-Control-Allow-Origin: *
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+Access-Control-Allow-Methods: ***
+bffEntry: ***
+Access-Control-Allow-Headers: ***
+bffExit: ***
+Content-Type: application/json;charset=utf-8
+glue2gEntry: ***
+Vary: Accept-Encoding
+Content-Length: 700
+
+{ "transactions": { "booked": [ { "debtorAccount": { "iban": "FAKE007" }, "creditorAccount": { "iban": "FAKE001", "currency": "EUR" }, "transactionAmount": { "amount": "115.28", "currency": "EUR" }, "debtorName": "Debtor 3", "bookingDate": "2021-06-18", "remittanceInformationUnstructured": "some information", "valueDate": "2021-06-18", "endToEndId": "S/836597520613/613800582277", "checkId": "0000000000000", "transactionId": "000001-4E10D9E1617B52054901D6F0FT0077222" }, { "debtorAccount": { "iban": "FAKE007" }, "creditorAccount": { "iban": "FAKE001", "currency": "EUR" }, "transactionAmount": { "amount": "115.28", "currency": "EUR" }, "debtorName": "Debtor 4", "bookingDate": "2021-06-18", "remittanceInformationUnstructured": "some information", "valueDate": "2021-06-18", "endToEndId": "S/836597520613/613800582277", "checkId": "0000000000000", "transactionId": "000001-4E10D9E1617B52054901D6F0FT0077222" } ], "_links": { "account": { "href": "https://xs2a.db.com/ais/DE/DB/v1/accounts/29DC9E0F1571B6FBAAF0E62B3E995A9A" } } }, "account": { "iban": "FAKE001", "currency": "EUR" } }

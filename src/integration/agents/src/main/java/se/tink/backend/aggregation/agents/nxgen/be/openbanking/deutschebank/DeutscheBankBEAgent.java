@@ -32,7 +32,8 @@ public final class DeutscheBankBEAgent extends DeutscheBankAgent {
                 persistentStorage,
                 headerValues,
                 DEUTSCHE_BE_CONFIGURATION,
-                randomValueGenerator);
+                randomValueGenerator,
+                localDateTimeSource);
     }
 
     @Override

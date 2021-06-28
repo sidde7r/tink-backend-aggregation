@@ -23,6 +23,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deu
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.fetcher.transactionalaccount.rpc.account.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.fetcher.transactionalaccount.rpc.account.FetchBalancesResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.fetcher.transactionalaccount.rpc.transactions.TransactionsKeyPaginatorBaseResponse;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -39,6 +40,7 @@ public class DeutscheBankApiClient {
     protected final DeutscheHeaderValues headerValues;
     protected final DeutscheMarketConfiguration marketConfiguration;
     protected final RandomValueGenerator randomValueGenerator;
+    protected final LocalDateTimeSource localDateTimeSource;
 
     protected RequestBuilder createRequest(URL url) {
         return client.request(url)
@@ -49,7 +51,10 @@ public class DeutscheBankApiClient {
     }
 
     protected RequestBuilder createRequestWithServiceMapped(URL url) {
-        return createRequest(url.parameter(Parameters.SERVICE_KEY, Parameters.AIS));
+        if (url.get().contains("{" + Parameters.SERVICE_KEY + "}")) {
+            url = url.parameter(Parameters.SERVICE_KEY, Parameters.AIS);
+        }
+        return createRequest(url);
     }
 
     protected RequestBuilder createRequestInSession(URL url) {
@@ -59,7 +64,8 @@ public class DeutscheBankApiClient {
     }
 
     public ConsentResponse getConsent(String state, String psuId) {
-        ConsentRequest consentRequest = new ConsentRequest(new GlobalConsentAccessEntity());
+        ConsentRequest consentRequest =
+                new ConsentRequest(new GlobalConsentAccessEntity(), localDateTimeSource);
         return getConsent(consentRequest, state, psuId);
     }
 
@@ -121,16 +127,25 @@ public class DeutscheBankApiClient {
     public TransactionKeyPaginatorResponse<String> fetchTransactionsForAccount(
             TransactionalAccount account, String key) {
 
+        RequestBuilder requestBuilder;
+
         if (Strings.isNullOrEmpty(key)) {
-            key =
-                    marketConfiguration
-                            .getBaseUrl()
-                            .concat(String.format(Urls.TRANSACTIONS, account.getApiIdentifier()));
+            requestBuilder = createTransactionRequest(account);
+        } else {
+            requestBuilder = createRequestInSession(new URL(key));
         }
 
-        return createRequestInSession(new URL(key))
+        return requestBuilder
                 .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BOOKING_STATUS)
                 .queryParam(QueryKeys.DELTA_LIST, QueryValues.DELTA_LIST)
                 .get(TransactionsKeyPaginatorBaseResponse.class);
+    }
+
+    private RequestBuilder createTransactionRequest(TransactionalAccount account) {
+        String key =
+                marketConfiguration
+                        .getBaseUrl()
+                        .concat(String.format(Urls.TRANSACTIONS, account.getApiIdentifier()));
+        return createRequestInSession(new URL(key));
     }
 }
