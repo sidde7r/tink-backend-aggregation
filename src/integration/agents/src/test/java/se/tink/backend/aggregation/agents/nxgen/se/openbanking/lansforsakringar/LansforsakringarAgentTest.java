@@ -10,25 +10,38 @@ import se.tink.backend.aggregation.agents.framework.ArgumentManager.SsnArgumentE
 
 public class LansforsakringarAgentTest {
 
-    private AgentIntegrationTest.Builder builder;
     private final ArgumentManager<SsnArgumentEnum> manager =
             new ArgumentManager<>(SsnArgumentEnum.values());
 
     @Before
     public void setup() {
         manager.before();
-        builder =
-                new AgentIntegrationTest.Builder("SE", "se-lansforsakringar-ob")
-                        .addCredentialField(Field.Key.USERNAME, manager.get(SsnArgumentEnum.SSN))
-                        .setFinancialInstitutionId("lansforsakringar")
-                        .setAppId("tink")
-                        .loadCredentialsBefore(true)
-                        .saveCredentialsAfter(true);
+    }
+
+    @Test
+    public void testLogin() throws Exception {
+        new AgentIntegrationTest.Builder("se", "se-lansforsakringar-ob")
+                .addCredentialField(Field.Key.USERNAME, manager.get(SsnArgumentEnum.SSN))
+                .setFinancialInstitutionId("lansforsakringar")
+                .setAppId("tink")
+                .loadCredentialsBefore(false)
+                .saveCredentialsAfter(true)
+                .withoutRefreshableItems()
+                .expectLoggedIn(false)
+                .build()
+                .testRefresh();
     }
 
     @Test
     public void testRefresh() throws Exception {
-        builder.build().testRefresh();
+        new AgentIntegrationTest.Builder("SE", "se-lansforsakringar-ob")
+                .addCredentialField(Field.Key.USERNAME, manager.get(SsnArgumentEnum.SSN))
+                .setFinancialInstitutionId("lansforsakringar")
+                .setAppId("tink")
+                .loadCredentialsBefore(true)
+                .saveCredentialsAfter(false)
+                .build()
+                .testRefresh();
     }
 
     @AfterClass

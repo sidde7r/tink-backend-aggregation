@@ -26,26 +26,26 @@ public class LansforsakringarSessionHandler implements SessionHandler {
     public void keepAlive() throws SessionException {
         OAuth2Token token = fetchTokenFromPermanentStorage();
 
-        if (token.hasAccessExpired()) {
+        /*
+         * With lansforsakringar we can refresh the token but have a expired consentId which will cause the agent to think we have a valid session.
+         * Therefore, all storage is cleared.
+         */
+        if (token.hasAccessExpired() && apiClient.isConsentValid()) {
             refreshAndStoreNewToken(token);
             return;
         }
 
         try {
             String resourceId = getSampleAccountIdFromStorage();
-
             // We fetch first account balance and store it, then when actual balance fetching occurs
             // we retrieve balance for first account from storage and remove it. This logic helps us
             // to limit balance fetching request and in result increase the number of background
             // refreshes
             GetBalancesResponse balanceResponse = apiClient.getBalances(resourceId);
             storageHelper.storeBalanceResponse(resourceId, balanceResponse);
-            return;
         } catch (BankServiceException e) {
             log.warn("Error when fetching balance for account - in session handler", e);
         }
-        clearDataFromStorage();
-        throw SessionError.SESSION_EXPIRED.exception();
     }
 
     private OAuth2Token fetchTokenFromPermanentStorage() throws SessionException {
@@ -70,14 +70,5 @@ public class LansforsakringarSessionHandler implements SessionHandler {
                 .findFirst()
                 .map(AccountEntity::getResourceId)
                 .orElseThrow(SessionError.SESSION_EXPIRED::exception);
-    }
-
-    /*
-     * With lansforsakringar we can refresh the token but have a expired consentId which will cause the agent to think we have a valid session.
-     * Therefore, all storage is cleared.
-     */
-    private void clearDataFromStorage() throws SessionException {
-        storageHelper.clearSessionData();
-        throw SessionError.SESSION_EXPIRED.exception();
     }
 }
