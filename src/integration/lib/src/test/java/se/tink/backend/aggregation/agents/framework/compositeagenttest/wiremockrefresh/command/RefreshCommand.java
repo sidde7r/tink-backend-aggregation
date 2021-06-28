@@ -39,7 +39,7 @@ public final class RefreshCommand implements CompositeAgentTestCommand {
     public void execute() throws Exception {
         RefreshSummary summary = context.getRefreshSummary();
         if (summary == null) {
-            summary = new RefreshSummary();
+            summary = new RefreshSummary(credential, context.getAppId());
         }
         context.setRefreshSummary(summary);
 

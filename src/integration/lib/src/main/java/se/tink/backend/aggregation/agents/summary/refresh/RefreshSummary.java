@@ -33,8 +33,6 @@ public class RefreshSummary {
     private RefreshStatus status = RefreshStatus.NOT_STARTED;
     private List<RefreshableItemSummary> itemSummaries = new ArrayList<>();
 
-    public RefreshSummary() {}
-
     public RefreshSummary(CredentialsRequest credentialsRequest, String appId) {
         new RefreshSummary(credentialsRequest.getCredentials(), appId);
     }
