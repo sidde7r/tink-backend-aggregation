@@ -31,6 +31,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ing
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.payment.entities.IngPaymentsLinksEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.payment.rpc.IngCreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.payment.rpc.IngCreatePaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.payment.rpc.IngCreateRecurringPaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.payment.rpc.IngPaymentStatusResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepRequest;
@@ -77,7 +78,7 @@ public class IngPaymentExecutorTest {
         when(paymentMapper.toIngCreatePaymentRequest(any())).thenReturn(createPaymentRequest);
 
         // and
-        when(paymentApiClient.createPayment(any()))
+        when(paymentApiClient.createPayment(any(), any()))
                 .thenReturn(
                         new IngCreatePaymentResponse(
                                 "SAMPLE_PAYMENT_ID",
@@ -95,7 +96,9 @@ public class IngPaymentExecutorTest {
         assertThat(tinkResponse.getPayment().getStatus()).isEqualTo(resultPaymentStatus);
 
         mocksInOrder.verify(paymentMapper).toIngCreatePaymentRequest(payment);
-        mocksInOrder.verify(paymentApiClient).createPayment(createPaymentRequest);
+        mocksInOrder
+                .verify(paymentApiClient)
+                .createPayment(createPaymentRequest, payment.getPaymentServiceType());
         mocksInOrder
                 .verify(sessionStorage)
                 .put(StorageKeys.PAYMENT_AUTHORIZATION_URL, "http://something.com/redirect?id=123");
@@ -114,6 +117,60 @@ public class IngPaymentExecutorTest {
             for (PaymentStatus paymentStatus : paymentStatuses) {
                 params.add(new Object[] {payment, paymentStatus});
             }
+        }
+        return params.toArray();
+    }
+
+    @Test
+    @Parameters(method = "recurringPaymentsWithAllPossibleCreatePaymentStatuses")
+    public void createRecurringPaymentShouldCallApiClientAndReturnPaymentResponse(
+            Payment payment, PaymentStatus createPaymentStatus) {
+        // given
+        IngCreateRecurringPaymentRequest createPaymentRequest =
+                mock(IngCreateRecurringPaymentRequest.class);
+        when(paymentMapper.toIngCreateRecurringPaymentRequest(any()))
+                .thenReturn(createPaymentRequest);
+
+        // and
+        when(paymentApiClient.createPayment(any(), any()))
+                .thenReturn(
+                        new IngCreatePaymentResponse(
+                                "SAMPLE_PAYMENT_ID_123",
+                                "SAMPLE_TRANSACTION_STATUS_123",
+                                new IngPaymentsLinksEntity(
+                                        "http://something.com/redirect?id=123456")));
+
+        // and
+        when(paymentMapper.getPaymentStatus(anyString())).thenReturn(createPaymentStatus);
+
+        // when
+        PaymentResponse tinkResponse = paymentExecutor.create(new PaymentRequest(payment));
+
+        // then
+        assertThat(tinkResponse.getPayment()).isEqualTo(payment);
+        assertThat(tinkResponse.getPayment().getUniqueId()).isEqualTo("SAMPLE_PAYMENT_ID_123");
+        assertThat(tinkResponse.getPayment().getStatus()).isEqualTo(createPaymentStatus);
+
+        mocksInOrder.verify(paymentMapper).toIngCreateRecurringPaymentRequest(payment);
+        mocksInOrder
+                .verify(paymentApiClient)
+                .createPayment(createPaymentRequest, payment.getPaymentServiceType());
+        mocksInOrder
+                .verify(sessionStorage)
+                .put(
+                        StorageKeys.PAYMENT_AUTHORIZATION_URL,
+                        "http://something.com/redirect?id=123456");
+        mocksInOrder.verify(paymentMapper).getPaymentStatus("SAMPLE_TRANSACTION_STATUS_123");
+        mocksInOrder.verifyNoMoreInteractions();
+    }
+
+    @SuppressWarnings("unused")
+    private static Object[] recurringPaymentsWithAllPossibleCreatePaymentStatuses() {
+        Payment recurringPayment = emptyPayment(PaymentServiceType.PERIODIC);
+
+        List<Object[]> params = new ArrayList<>();
+        for (PaymentStatus createPaymentStatus : PaymentStatus.values()) {
+            params.add(new Object[] {recurringPayment, createPaymentStatus});
         }
         return params.toArray();
     }
@@ -139,7 +196,7 @@ public class IngPaymentExecutorTest {
 
         // and
         IngPaymentStatusResponse statusResponse = new IngPaymentStatusResponse("SAMPLE_STATUS");
-        when(paymentApiClient.getPaymentStatus(anyString())).thenReturn(statusResponse);
+        when(paymentApiClient.getPaymentStatus(anyString(), any())).thenReturn(statusResponse);
 
         // and
         when(paymentMapper.getPaymentStatus(anyString())).thenReturn(paymentStatus);
@@ -169,10 +226,14 @@ public class IngPaymentExecutorTest {
 
         mocksInOrder.verify(sessionStorage).get(StorageKeys.PAYMENT_AUTHORIZATION_URL);
         mocksInOrder.verify(paymentAuthenticator).authenticate("SAMPLE_AUTHORIZATION_URL");
-        mocksInOrder.verify(paymentApiClient).getPaymentStatus("SAMPLE_PAYMENT_ID_123");
+        mocksInOrder
+                .verify(paymentApiClient)
+                .getPaymentStatus("SAMPLE_PAYMENT_ID_123", payment.getPaymentServiceType());
         mocksInOrder.verify(paymentMapper).getPaymentStatus("SAMPLE_STATUS");
         if (paymentStatus == PaymentStatus.PENDING) {
-            mocksInOrder.verify(paymentApiClient).cancelPayment("SAMPLE_PAYMENT_ID_123");
+            mocksInOrder
+                    .verify(paymentApiClient)
+                    .cancelPayment("SAMPLE_PAYMENT_ID_123", payment.getPaymentServiceType());
         }
         mocksInOrder.verifyNoMoreInteractions();
     }

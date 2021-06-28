@@ -20,6 +20,8 @@ import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.payments.common.model.PaymentScheme;
 import se.tink.libraries.transfer.enums.RemittanceInformationType;
+import se.tink.libraries.transfer.rpc.Frequency;
+import se.tink.libraries.transfer.rpc.PaymentServiceType;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 public class IngAgentPaymentTest {
@@ -69,6 +71,11 @@ public class IngAgentPaymentTest {
         builder.build().testTinkLinkPayment(createSepaFuturePayment().build());
     }
 
+    @Test
+    public void testSepaRecurringPayment() throws Exception {
+        builder.build().testTinkLinkPayment(createSepaRecurringPayment().build());
+    }
+
     private Payment.Builder createSepaPayment() {
         String paymentId = preparePaymentId("TinkSepa");
         System.out.println("Running payment: " + paymentId);
@@ -82,6 +89,18 @@ public class IngAgentPaymentTest {
         System.out.println("Running payment: " + paymentId);
 
         return createRealSepaPayment(paymentId)
+                .withExecutionDate(LocalDate.now().plus(1, ChronoUnit.DAYS));
+    }
+
+    private Payment.Builder createSepaRecurringPayment() {
+        String paymentId = preparePaymentId("TinkSepaRecurring");
+        System.out.println("Running payment: " + paymentId);
+
+        return createRealSepaPayment(paymentId)
+                .withPaymentServiceType(PaymentServiceType.PERIODIC)
+                .withStartDate(LocalDate.now())
+                .withEndDate(LocalDate.now().plus(2, ChronoUnit.DAYS))
+                .withFrequency(Frequency.DAILY)
                 .withExecutionDate(LocalDate.now().plus(1, ChronoUnit.DAYS));
     }
 

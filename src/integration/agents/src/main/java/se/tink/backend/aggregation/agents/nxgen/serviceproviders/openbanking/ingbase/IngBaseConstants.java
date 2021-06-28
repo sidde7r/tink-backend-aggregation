@@ -15,11 +15,17 @@ public final class IngBaseConstants {
         private static final String BASE_AUTH = "/oauth2";
         public static final String OAUTH = BASE_AUTH + "/authorization-server-url";
         public static final String TOKEN = BASE_AUTH + "/token";
-        public static final String CREATE_PAYMENT = "/v1/payments/sepa-credit-transfers";
+        public static final String CREATE_PAYMENT = "/v1/{payment-service}/sepa-credit-transfers";
         public static final String DELETE_PAYMENT =
-                "/v1/payments/sepa-credit-transfers/{paymentId}";
+                "/v1/{payment-service}/sepa-credit-transfers/{paymentId}";
         public static final String GET_PAYMENT_STATUS =
-                "/v1/payments/sepa-credit-transfers/{paymentId}/status";
+                "/v1/{payment-service}/sepa-credit-transfers/{paymentId}/status";
+    }
+
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class PathVariables {
+        public static final String PAYMENT_SERVICE = "payment-service";
+        public static final String PAYMENT_ID = "paymentId";
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -28,11 +34,6 @@ public final class IngBaseConstants {
         // Documentation says "immediately" after authentication. In practice, this is 1h.
         public static final long FULL_HISTORY_MAX_AGE = 30 * 60 * 1000L;
         public static final long DEFAULT_HISTORY_DAYS = 89;
-    }
-
-    @NoArgsConstructor(access = AccessLevel.PRIVATE)
-    public static class IdTags {
-        public static final String PAYMENT_ID = "paymentId";
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)

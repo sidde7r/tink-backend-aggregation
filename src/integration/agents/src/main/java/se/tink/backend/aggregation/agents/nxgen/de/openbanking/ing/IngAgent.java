@@ -18,7 +18,11 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponen
 @AgentDependencyModules(modules = QSealcSignerModuleRSASHA256.class)
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, TRANSFERS})
 @AgentPisCapability(
-        capabilities = {PisCapability.SEPA_CREDIT_TRANSFER, PisCapability.PIS_FUTURE_DATE})
+        capabilities = {
+            PisCapability.SEPA_CREDIT_TRANSFER,
+            PisCapability.PIS_FUTURE_DATE,
+            PisCapability.PIS_SEPA_RECURRING_PAYMENTS
+        })
 public final class IngAgent extends IngBaseAgent {
 
     @Inject

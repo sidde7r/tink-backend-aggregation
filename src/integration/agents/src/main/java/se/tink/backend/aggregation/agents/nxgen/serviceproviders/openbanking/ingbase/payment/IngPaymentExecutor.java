@@ -27,6 +27,7 @@ import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.rpc.Payment;
+import se.tink.libraries.transfer.rpc.PaymentServiceType;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -41,14 +42,21 @@ public class IngPaymentExecutor implements PaymentExecutor, FetchablePaymentExec
     public PaymentResponse create(PaymentRequest paymentRequest) {
         Payment payment = paymentRequest.getPayment();
 
-        IngCreatePaymentRequest createPaymentRequest =
-                paymentMapper.toIngCreatePaymentRequest(payment);
+        IngCreatePaymentRequest createPaymentRequest = createPaymentRequest(payment);
         IngCreatePaymentResponse createPaymentResponse =
-                paymentApiClient.createPayment(createPaymentRequest);
+                paymentApiClient.createPayment(
+                        createPaymentRequest, payment.getPaymentServiceType());
 
         savePaymentAuthorizationUrl(createPaymentResponse);
         updateCreatedPayment(payment, createPaymentResponse);
         return new PaymentResponse(payment);
+    }
+
+    private IngCreatePaymentRequest createPaymentRequest(Payment payment) {
+        if (PaymentServiceType.PERIODIC.equals(payment.getPaymentServiceType())) {
+            return paymentMapper.toIngCreateRecurringPaymentRequest(payment);
+        }
+        return paymentMapper.toIngCreatePaymentRequest(payment);
     }
 
     private void savePaymentAuthorizationUrl(IngCreatePaymentResponse createPaymentResponse) {
@@ -104,7 +112,8 @@ public class IngPaymentExecutor implements PaymentExecutor, FetchablePaymentExec
         Payment payment = paymentRequest.getPayment();
 
         IngPaymentStatusResponse paymentStatusResponse =
-                paymentApiClient.getPaymentStatus(payment.getUniqueId());
+                paymentApiClient.getPaymentStatus(
+                        payment.getUniqueId(), payment.getPaymentServiceType());
 
         updatePaymentStatus(payment, paymentStatusResponse.getTransactionStatus());
         return new PaymentResponse(payment);
@@ -131,7 +140,7 @@ public class IngPaymentExecutor implements PaymentExecutor, FetchablePaymentExec
     @Override
     public PaymentResponse cancel(PaymentRequest paymentRequest) {
         Payment payment = paymentRequest.getPayment();
-        paymentApiClient.cancelPayment(payment.getUniqueId());
+        paymentApiClient.cancelPayment(payment.getUniqueId(), payment.getPaymentServiceType());
 
         payment.setStatus(PaymentStatus.CANCELLED);
         return PaymentResponse.of(paymentRequest);

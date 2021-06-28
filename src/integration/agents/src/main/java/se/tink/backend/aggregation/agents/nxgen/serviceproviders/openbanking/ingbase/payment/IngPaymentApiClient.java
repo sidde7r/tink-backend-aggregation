@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ing
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.payment.rpc.IngCreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.payment.rpc.IngCreatePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.payment.rpc.IngPaymentStatusResponse;
+import se.tink.backend.aggregation.agents.utils.berlingroup.payment.enums.PaymentService;
 import se.tink.backend.aggregation.api.Psd2Headers;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
@@ -20,6 +21,7 @@ import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestB
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.serialization.utils.SerializationUtils;
+import se.tink.libraries.transfer.rpc.PaymentServiceType;
 
 public class IngPaymentApiClient extends IngBaseApiClient {
 
@@ -45,7 +47,8 @@ public class IngPaymentApiClient extends IngBaseApiClient {
         this.strongAuthenticationState = strongAuthenticationState;
     }
 
-    public IngCreatePaymentResponse createPayment(IngCreatePaymentRequest request) {
+    public IngCreatePaymentResponse createPayment(
+            IngCreatePaymentRequest request, PaymentServiceType paymentServiceType) {
 
         TokenResponse tokenResponse = getApplicationAccessToken();
         setApplicationTokenToSession(tokenResponse.toTinkToken());
@@ -53,7 +56,7 @@ public class IngPaymentApiClient extends IngBaseApiClient {
 
         RequestBuilder requestBuilder =
                 buildRequestWithPaymentSignature(
-                                new URL(IngBaseConstants.Urls.CREATE_PAYMENT),
+                                createPaymentUrl(paymentServiceType),
                                 IngBaseConstants.Signature.HTTP_METHOD_POST,
                                 SerializationUtils.serializeToString(request))
                         .addBearerToken(getApplicationTokenFromSession())
@@ -67,11 +70,18 @@ public class IngPaymentApiClient extends IngBaseApiClient {
                 IngCreatePaymentResponse.class, SerializationUtils.serializeToString(request));
     }
 
-    public IngPaymentStatusResponse getPaymentStatus(String paymentId) {
+    private URL createPaymentUrl(PaymentServiceType paymentServiceType) {
+        return new URL(IngBaseConstants.Urls.CREATE_PAYMENT)
+                .parameter(
+                        IngBaseConstants.PathVariables.PAYMENT_SERVICE,
+                        PaymentService.getPaymentService(paymentServiceType));
+    }
+
+    public IngPaymentStatusResponse getPaymentStatus(
+            String paymentId, PaymentServiceType paymentServiceType) {
         RequestBuilder requestBuilder =
                 buildRequestWithPaymentSignature(
-                                new URL(IngBaseConstants.Urls.GET_PAYMENT_STATUS)
-                                        .parameter(IngBaseConstants.IdTags.PAYMENT_ID, paymentId),
+                                getPaymentStatusUrl(paymentId, paymentServiceType),
                                 IngBaseConstants.Signature.HTTP_METHOD_GET,
                                 StringUtils.EMPTY)
                         .addBearerToken(getApplicationTokenFromSession())
@@ -84,11 +94,18 @@ public class IngPaymentApiClient extends IngBaseApiClient {
         return requestBuilder.get(IngPaymentStatusResponse.class);
     }
 
-    public void cancelPayment(String paymentId) {
+    private URL getPaymentStatusUrl(String paymentId, PaymentServiceType paymentServiceType) {
+        return new URL(IngBaseConstants.Urls.GET_PAYMENT_STATUS)
+                .parameter(
+                        IngBaseConstants.PathVariables.PAYMENT_SERVICE,
+                        PaymentService.getPaymentService(paymentServiceType))
+                .parameter(IngBaseConstants.PathVariables.PAYMENT_ID, paymentId);
+    }
+
+    public void cancelPayment(String paymentId, PaymentServiceType paymentServiceType) {
         RequestBuilder requestBuilder =
                 buildRequestWithPaymentSignature(
-                                new URL(IngBaseConstants.Urls.DELETE_PAYMENT)
-                                        .parameter(IngBaseConstants.IdTags.PAYMENT_ID, paymentId),
+                                getCancelPaymentUrl(paymentId, paymentServiceType),
                                 IngBaseConstants.Signature.HTTP_METHOD_DELETE,
                                 "")
                         .addBearerToken(getApplicationTokenFromSession())
@@ -98,6 +115,14 @@ public class IngPaymentApiClient extends IngBaseApiClient {
                         .header(IngBaseConstants.HeaderKeys.PSU_ID_ADDRESS, psuIdAddress);
 
         requestBuilder.delete();
+    }
+
+    private URL getCancelPaymentUrl(String paymentId, PaymentServiceType paymentServiceType) {
+        return new URL(IngBaseConstants.Urls.DELETE_PAYMENT)
+                .parameter(
+                        IngBaseConstants.PathVariables.PAYMENT_SERVICE,
+                        PaymentService.getPaymentService(paymentServiceType))
+                .parameter(IngBaseConstants.PathVariables.PAYMENT_ID, paymentId);
     }
 
     private RequestBuilder buildRequestWithPaymentSignature(
