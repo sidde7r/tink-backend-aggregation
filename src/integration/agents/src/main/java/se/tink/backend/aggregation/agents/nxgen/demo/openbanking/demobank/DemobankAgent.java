@@ -177,11 +177,11 @@ public final class DemobankAgent extends NextGenerationAgent
             if (AuthenticationFlow.DECOUPLED.equals(provider.getAuthenticationFlow())) {
                 return constructDecoupledAppAuthenticator();
             } else if (AuthenticationFlow.EMBEDDED.equals(provider.getAuthenticationFlow())) {
-                if (provider.getName().endsWith("-templates")) {
+                if (hasTemplateAuthentication()) {
                     return constructPasswordAndOtpWithTemplatesAuthenticator();
                 }
                 return constructPasswordAndOtpAuthenticator();
-            } else if (provider.getName().endsWith("-app-to-app")) {
+            } else if (hasAppToAppAuthentication()) {
                 return constructApptToAppAuthenticator();
             }
             return constructRedirectAuthenticator();
@@ -205,6 +205,10 @@ public final class DemobankAgent extends NextGenerationAgent
                 new DemobankPasswordAndOtpAuthenticator(
                         apiClient, supplementalInformationController);
         return new AutoAuthenticationController(request, context, authenticator, autoAuthenticator);
+    }
+
+    private boolean hasTemplateAuthentication() {
+        return provider.getName().endsWith("-templates");
     }
 
     private Authenticator constructPasswordAndOtpWithTemplatesAuthenticator() {
@@ -239,6 +243,10 @@ public final class DemobankAgent extends NextGenerationAgent
                 new DemobankAutoAuthenticator(persistentStorage, apiClient);
         return new AutoAuthenticationController(
                 request, systemUpdater, demobankDecoupledAppAuthenticator, autoAuthenticator);
+    }
+
+    private boolean hasAppToAppAuthentication() {
+        return provider.getName().endsWith("-app-to-app");
     }
 
     private Authenticator constructApptToAppAuthenticator() {

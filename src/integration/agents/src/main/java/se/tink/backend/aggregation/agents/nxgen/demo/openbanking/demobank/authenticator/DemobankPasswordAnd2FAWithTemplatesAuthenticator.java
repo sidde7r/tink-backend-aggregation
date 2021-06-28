@@ -55,7 +55,8 @@ public class DemobankPasswordAnd2FAWithTemplatesAuthenticator implements MultiFa
     private String handleSupplementalInformationFlow(String message) {
         String name = "2fa-option";
         Field field = TemplatesSupplementalInfoBuilder.createTemplateSelectOption(message, name);
-        String chosen2faOption = askToChoose2FAMethod(name, field);
+        TemplatesSupplementalInfoBuilder.TemplateType chosen2faOption =
+                askToChoose2FAMethod(name, field);
         String otpCode = getOtpCode(message);
 
         List<Field> fields =
@@ -73,12 +74,14 @@ public class DemobankPasswordAnd2FAWithTemplatesAuthenticator implements MultiFa
         return otpCode;
     }
 
-    private String askToChoose2FAMethod(String name, Field field) {
-        return Optional.ofNullable(
-                        supplementalInformationController
-                                .askSupplementalInformationSync(field)
-                                .get(name))
-                .orElseThrow(() -> new IllegalStateException("Invalid 2FA method passed"));
+    private TemplatesSupplementalInfoBuilder.TemplateType askToChoose2FAMethod(
+            String name, Field field) {
+        return TemplatesSupplementalInfoBuilder.TemplateType.valueOf(
+                Optional.ofNullable(
+                                supplementalInformationController
+                                        .askSupplementalInformationSync(field)
+                                        .get(name))
+                        .orElseThrow(() -> new IllegalStateException("Invalid 2FA method passed")));
     }
 
     private String getOtpCode(String message) {
