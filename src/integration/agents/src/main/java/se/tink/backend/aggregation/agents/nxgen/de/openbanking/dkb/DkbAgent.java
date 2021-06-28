@@ -42,7 +42,6 @@ public final class DkbAgent extends NextGenerationAgent
     public DkbAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
-
         dependencyRegistry = initializeAgentDependencies(new DkbModuleDependenciesRegistration());
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
@@ -110,7 +109,10 @@ public final class DkbAgent extends NextGenerationAgent
         final DkbTransactionalAccountFetcher accountFetcher =
                 new DkbTransactionalAccountFetcher(getApiClient());
         final DkbTransactionsFetcher transactionsFetcher =
-                new DkbTransactionsFetcher(getApiClient(), getDkbStorage());
+                new DkbTransactionsFetcher(
+                        getApiClient(),
+                        getDkbStorage(),
+                        request.getUserAvailability().isUserPresent());
 
         return new TransactionalAccountRefreshController(
                 metricRefreshController, updateController, accountFetcher, transactionsFetcher);
