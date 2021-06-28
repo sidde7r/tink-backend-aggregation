@@ -288,8 +288,6 @@ public class AgentWorkerOperationFactory {
                             refreshEventProducer));
         }
 
-        commands.add(new LogRefreshSummaryAgentWorkerCommand(context));
-
         if (accountItems.size() > 0) {
             commands.add(
                     new SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand(
@@ -356,7 +354,6 @@ public class AgentWorkerOperationFactory {
             log.info("createOperationRefresh called with empty or null itemsToRefresh.");
             request.setItemsToRefresh(RefreshableItem.REFRESHABLE_ITEMS_ALL);
         }
-
         log.debug("Creating refresh operation chain for credential");
 
         ControllerWrapper controllerWrapper =
@@ -489,6 +486,8 @@ public class AgentWorkerOperationFactory {
                         request.getItemsToRefresh(),
                         controllerWrapper,
                         clientInfo));
+
+        commands.add(new LogRefreshSummaryAgentWorkerCommand(context));
 
         log.debug("Created refresh operation chain for credential");
         return new AgentWorkerOperation(
@@ -1199,8 +1198,6 @@ public class AgentWorkerOperationFactory {
             }
         }
 
-        commands.add(new LogRefreshSummaryAgentWorkerCommand(context));
-
         return commands;
     }
 
@@ -1322,6 +1319,7 @@ public class AgentWorkerOperationFactory {
                         request.getItemsToRefresh(),
                         controllerWrapper,
                         clientInfo));
+        commands.add(new LogRefreshSummaryAgentWorkerCommand(context));
 
         log.debug("Created whitelist refresh operation chain for credential");
         return new AgentWorkerOperation(
@@ -1540,8 +1538,6 @@ public class AgentWorkerOperationFactory {
                                                 item,
                                                 createCommandMetricState(request, clientInfo),
                                                 refreshEventProducer)));
-
-        commands.add(new LogRefreshSummaryAgentWorkerCommand(context));
 
         if (accountItems.size() > 0) {
             commands.add(
