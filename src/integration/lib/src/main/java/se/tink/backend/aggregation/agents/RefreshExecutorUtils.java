@@ -172,7 +172,8 @@ public final class RefreshExecutorUtils {
                     updateTransactionsForAccounts(context, accountTransactionsEntrySet);
 
             log.info(
-                    "[Refresh Executor Utils] Successfully finished fetching checking transactions.");
+                    "[Refresh Executor Utils] Successfully finished fetching checking transactions, size: {}",
+                    fetchedTransactionsCounters);
             summary.updateItemSummary(
                     RefreshableItem.CHECKING_TRANSACTIONS,
                     RefreshableItemFetchingStatus.COMPLETED,
@@ -222,7 +223,8 @@ public final class RefreshExecutorUtils {
                     updateTransactionsForAccounts(context, accountTransactionsEntrySet);
 
             log.info(
-                    "[Refresh Executor Utils] Successfully finished fetching saving transactions.");
+                    "[Refresh Executor Utils] Successfully finished fetching saving transactions, size: {}",
+                    fetchedTransactionsCounters);
             summary.updateItemSummary(
                     RefreshableItem.SAVING_TRANSACTIONS,
                     RefreshableItemFetchingStatus.COMPLETED,
@@ -270,7 +272,8 @@ public final class RefreshExecutorUtils {
                     updateTransactionsForAccounts(context, accountTransactionsEntrySet);
 
             log.info(
-                    "[Refresh Executor Utils] Successfully finished fetching credit card transactions.");
+                    "[Refresh Executor Utils] Successfully finished fetching credit card transactions, size: {}",
+                    fetchedTransactionsCounters);
             summary.updateItemSummary(
                     RefreshableItem.CREDITCARD_TRANSACTIONS,
                     RefreshableItemFetchingStatus.COMPLETED,
@@ -319,7 +322,9 @@ public final class RefreshExecutorUtils {
             List<Integer> fetchedTransactionsCounters =
                     updateTransactionsForAccounts(context, accountTransactionsEntrySet);
 
-            log.info("[Refresh Executor Utils] Successfully finished fetching loans transactions.");
+            log.info(
+                    "[Refresh Executor Utils] Successfully finished fetching loans transactions, size: {}",
+                    fetchedTransactionsCounters);
             summary.updateItemSummary(
                     RefreshableItem.LOAN_TRANSACTIONS,
                     RefreshableItemFetchingStatus.COMPLETED,
@@ -370,7 +375,8 @@ public final class RefreshExecutorUtils {
                     updateTransactionsForAccounts(context, accountTransactionsEntrySet);
 
             log.info(
-                    "[Refresh Executor Utils] Successfully finished fetching investment transactions.");
+                    "[Refresh Executor Utils] Successfully finished fetching investment transactions, size: {}",
+                    fetchedTransactionsCounters);
             summary.updateItemSummary(
                     RefreshableItem.INVESTMENT_TRANSACTIONS,
                     RefreshableItemFetchingStatus.COMPLETED,

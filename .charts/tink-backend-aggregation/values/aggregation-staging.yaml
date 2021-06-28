@@ -75,7 +75,6 @@ featureFlags:
   allowRefreshRegardlessOfRestrictions: true
   supportIndividualAccountsRefresh: true
   useAccountSegmentRestriction: true
-  transactionsRefreshScope: true
 
 providerConfigurationServiceConfiguration:
   enabled: true

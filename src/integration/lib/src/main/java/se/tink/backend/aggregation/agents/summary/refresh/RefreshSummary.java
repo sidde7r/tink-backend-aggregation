@@ -33,8 +33,6 @@ public class RefreshSummary {
     private RefreshStatus status = RefreshStatus.NOT_STARTED;
     private List<RefreshableItemSummary> itemSummaries = new ArrayList<>();
 
-    public RefreshSummary() {}
-
     public RefreshSummary(CredentialsRequest credentialsRequest, String appId) {
         new RefreshSummary(credentialsRequest.getCredentials(), appId);
     }
@@ -65,6 +63,7 @@ public class RefreshSummary {
         }
 
         itemSummaries.add(new RefreshableItemSummary(item, status, null));
+        log.info("[REFRESH SUMMARY] addItemSummary executed");
     }
 
     public void updateItemSummary(RefreshableItem item, RefreshableItemFetchingStatus status) {
@@ -77,6 +76,7 @@ public class RefreshSummary {
                 .filter(itemSummary -> itemSummary.getItem() == item)
                 .findFirst()
                 .ifPresent(itemSummary -> itemSummary.setFetchingStatus(status));
+        log.info("[REFRESH SUMMARY] updateItemSummary executed for item and status");
     }
 
     public void updateItemSummary(
@@ -94,6 +94,8 @@ public class RefreshSummary {
                             itemSummary.setFetchingStatus(status);
                             itemSummary.setFetched(Collections.singletonList(fetchingCounter));
                         });
+        log.info(
+                "[REFRESH SUMMARY] updateItemSummary executed for item, status and fetchingCounter");
     }
 
     public void updateItemSummary(
@@ -113,6 +115,8 @@ public class RefreshSummary {
                             itemSummary.setFetchingStatus(status);
                             itemSummary.setFetched(fetchingCounters);
                         });
+        log.info(
+                "[REFRESH SUMMARY] updateItemSummary executed for item, status and fetchingCounters");
     }
 
     public String toJson() {

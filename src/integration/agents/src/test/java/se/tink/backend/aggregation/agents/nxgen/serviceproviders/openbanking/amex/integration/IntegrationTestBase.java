@@ -51,6 +51,7 @@ import se.tink.libraries.metrics.registry.MetricRegistry;
 import se.tink.libraries.metrics.types.counters.Counter;
 import se.tink.libraries.metrics.types.histograms.Histogram;
 import se.tink.libraries.metrics.types.timers.Timer;
+import se.tink.libraries.unleash.UnleashClient;
 import se.tink.libraries.user.rpc.User;
 import se.tink.libraries.user.rpc.UserProfile;
 
@@ -111,6 +112,10 @@ public abstract class IntegrationTestBase {
 
         final MetricRegistry metricRegistry = createMetricRegistry();
         when(agentContext.getMetricRegistry()).thenReturn(metricRegistry);
+
+        UnleashClient unleashClient = mock(UnleashClient.class);
+        when(unleashClient.isToggleEnable(any())).thenReturn(true);
+        when(agentContext.getUnleashClient()).thenReturn(unleashClient);
 
         return agentContext;
     }

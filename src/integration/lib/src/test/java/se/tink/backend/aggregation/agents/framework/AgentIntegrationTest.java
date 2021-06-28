@@ -625,7 +625,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
     }
 
     public NewAgentTestContext testRefresh(String credentialName) throws Exception {
-        RefreshSummary refreshSummary = new RefreshSummary();
+        RefreshSummary refreshSummary = new RefreshSummary(credential, context.getAppId());
         context.setRefreshSummary(refreshSummary);
 
         initiateCredentials();

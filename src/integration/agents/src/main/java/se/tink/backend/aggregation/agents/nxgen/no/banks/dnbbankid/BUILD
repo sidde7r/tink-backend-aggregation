@@ -49,5 +49,6 @@ java_library(
         "@aggregation//:com_google_guava_guava",
         "@selenium//:org_seleniumhq_selenium_selenium_api",
         "@tink_backend//src/libraries/account_identifier",
+        "@tink_backend//src/libraries/unleash",
     ],
 )

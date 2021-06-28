@@ -18,8 +18,9 @@ public class LogRefreshSummaryAgentWorkerCommand extends AgentWorkerCommand {
     @Override
     protected AgentWorkerCommandResult doExecute() throws Exception {
         RefreshSummary summary = context.getRefreshSummary();
+        log.info("[REFRESH SUMMARY] isNull: {}", summary == null);
         if (summary != null) {
-            log.info(summary.toJson());
+            log.info("[REFRESH SUMMARY]\n{}", summary.toJson());
         }
 
         return AgentWorkerCommandResult.CONTINUE;
