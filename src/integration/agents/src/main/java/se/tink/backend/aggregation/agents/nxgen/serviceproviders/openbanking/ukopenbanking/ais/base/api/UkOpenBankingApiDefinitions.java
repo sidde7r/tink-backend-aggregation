@@ -62,6 +62,7 @@ public class UkOpenBankingApiDefinitions {
     }
 
     public enum AccountBalanceType {
+        CLEARED_BALANCE,
         CLOSING_AVAILABLE,
         CLOSING_BOOKED,
         CLOSING_CLEARED,
