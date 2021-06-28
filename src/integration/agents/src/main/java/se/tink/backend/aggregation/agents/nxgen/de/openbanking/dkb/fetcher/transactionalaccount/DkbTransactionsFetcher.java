@@ -16,6 +16,7 @@ public class DkbTransactionsFetcher implements TransactionFetcher<TransactionalA
 
     private final DkbApiClient apiClient;
     private final DkbStorage storage;
+    private final boolean isUserPresent;
 
     @Override
     public List<AggregationTransaction> fetchTransactionsFor(TransactionalAccount account) {
@@ -30,7 +31,7 @@ public class DkbTransactionsFetcher implements TransactionFetcher<TransactionalA
 
     private LocalDate getFetchStartDate() {
         LocalDate startDate;
-        if (storage.isFirstFetch()) {
+        if (isUserPresent && storage.isFirstFetch()) {
             startDate = LocalDate.ofEpochDay(0);
             storage.markFirstFetchAsDone();
         } else {
