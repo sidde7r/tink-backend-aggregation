@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
@@ -14,8 +14,8 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.openqa.selenium.TimeoutException;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterConstants.LoginForm;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterConstants.ScaForm;
+import se.tink.backend.aggregation.agents.exceptions.ThirdPartyAppException;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.authenticator.page.AttemptsLimitExceededException;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -34,10 +34,8 @@ public class BankinterAuthenticatorTest {
     }
 
     @Test
-    public void shouldAuthenticateUserProperlyWithoutSCA() {
+    public void shouldAuthenticateUserProperlyWithoutSCA() throws AttemptsLimitExceededException {
         // given
-        String loginUrl = "loginUrl";
-        when(authenticationClient.login(USERNAME, PASSWORD)).thenReturn(loginUrl);
         when(authenticationClient.isScaNeeded()).thenReturn(false);
 
         // when
@@ -47,17 +45,13 @@ public class BankinterAuthenticatorTest {
         verify(authenticationClient, times(1)).login(USERNAME, PASSWORD);
         verify(authenticationClient, times(1)).finishProcess();
         verify(authenticationClient, times(0)).submitSca(supplementalInformationHelper);
-        verifyZeroInteractions(supplementalInformationHelper);
+        verifyNoMoreInteractions(supplementalInformationHelper);
     }
 
     @Test
-    public void shouldAuthenticateUserProperlyWithSCA() {
+    public void shouldAuthenticateUserProperlyWithSCA() throws AttemptsLimitExceededException {
         // given
-        String loginUrl = "loginUrl";
-        when(authenticationClient.login(USERNAME, PASSWORD)).thenReturn(loginUrl);
         when(authenticationClient.isScaNeeded()).thenReturn(true);
-        String scaUrl = "scaUrl";
-        when(authenticationClient.submitSca(supplementalInformationHelper)).thenReturn(scaUrl);
 
         // when
         authenticator.authenticate(USERNAME, PASSWORD);
@@ -69,37 +63,46 @@ public class BankinterAuthenticatorTest {
     }
 
     @Test
-    public void shouldThrowTimeoutExceptionWhenTimeFOrLoginFormHasExceeded() {
+    public void shouldThrowThirdPartyAppExceptionWithTimeoutWhenTimeFOrLoginFormHasExceeded()
+            throws AttemptsLimitExceededException {
         // given
-        String loginUrl = "loginUrl";
-        when(authenticationClient.login(USERNAME, PASSWORD)).thenReturn(loginUrl);
-        doThrow(TimeoutException.class)
-                .when(authenticationClient)
-                .waitForErrorOrRedirect(LoginForm.SUBMIT_TIMEOUT_SECONDS, loginUrl);
+        doThrow(TimeoutException.class).when(authenticationClient).login(USERNAME, PASSWORD);
 
         // when
         ThrowingCallable result = () -> authenticator.authenticate(USERNAME, PASSWORD);
 
         // then
-        assertThatThrownBy(result).isInstanceOf(TimeoutException.class);
+        assertThatThrownBy(result).isInstanceOf(ThirdPartyAppException.class);
     }
 
     @Test
-    public void shouldThrowTimeoutExceptionWhenTimeForSCAFormHasExceeded() {
+    public void shouldThrowThirdPartyAppExceptionWithTimeoutWhenTimeForSCAFormHasExceeded()
+            throws AttemptsLimitExceededException {
         // given
-        String loginUrl = "loginUrl";
-        when(authenticationClient.login(USERNAME, PASSWORD)).thenReturn(loginUrl);
         when(authenticationClient.isScaNeeded()).thenReturn(true);
-        String scaUrl = "scaUrl";
-        when(authenticationClient.submitSca(supplementalInformationHelper)).thenReturn(scaUrl);
         doThrow(TimeoutException.class)
                 .when(authenticationClient)
-                .waitForErrorOrRedirect(ScaForm.SUBMIT_TIMEOUT_SECONDS, scaUrl);
+                .submitSca(supplementalInformationHelper);
 
         // when
         ThrowingCallable result = () -> authenticator.authenticate(USERNAME, PASSWORD);
 
         // then
-        assertThatThrownBy(result).isInstanceOf(TimeoutException.class);
+        assertThatThrownBy(result).isInstanceOf(ThirdPartyAppException.class);
+    }
+
+    @Test
+    public void shouldThrowThirdPartyAppExceptionWithAuthenticationErrorWhenAttemptsLimitExceeded()
+            throws AttemptsLimitExceededException {
+        // given
+        doThrow(AttemptsLimitExceededException.class)
+                .when(authenticationClient)
+                .login(USERNAME, PASSWORD);
+
+        // when
+        ThrowingCallable result = () -> authenticator.authenticate(USERNAME, PASSWORD);
+
+        // then
+        assertThatThrownBy(result).isInstanceOf(ThirdPartyAppException.class);
     }
 }

@@ -6,7 +6,8 @@ import java.io.UnsupportedEncodingException;
 import org.openqa.selenium.WebDriver;
 
 public class HtmlLogger {
-    private static final String LOG_TEMPLATE = "[%s]: %s\n\nRESPONSE:\n\n %s";
+    private static final String LOG_TEMPLATE =
+            "[WEB_DRIVER][URL `%s`]\n[%s]: %s\n\nRESPONSE:\n\n %s";
     private final WebDriver webDriver;
     private final PrintStream printLogStream;
 
@@ -28,7 +29,13 @@ public class HtmlLogger {
     }
 
     private void log(String level, String message) {
-        String logMessage = String.format(LOG_TEMPLATE, level, message, webDriver.getPageSource());
+        String logMessage =
+                String.format(
+                        LOG_TEMPLATE,
+                        webDriver.getCurrentUrl(),
+                        level,
+                        message,
+                        webDriver.getPageSource());
         printLogStream.println(logMessage);
     }
 }
