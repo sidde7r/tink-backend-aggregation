@@ -27,7 +27,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 @AgentDependencyModulesForDecoupledMode(
         modules = UkOpenBankingLocalKeySignerModuleForDecoupledMode.class)
 @AgentCapabilities({CREDIT_CARDS})
-public class SainsburyBusinessAgent extends UkOpenBankingBaseAgent {
+public class SainsburyAgent extends UkOpenBankingBaseAgent {
 
     private static final SainsburyAisConfiguration aisConfig;
 
@@ -35,14 +35,14 @@ public class SainsburyBusinessAgent extends UkOpenBankingBaseAgent {
         aisConfig =
                 new SainsburyAisConfiguration(
                         UkOpenBankingAisConfiguration.builder()
-                                .withAllowedAccountOwnershipTypes(AccountOwnershipType.BUSINESS)
+                                .withAllowedAccountOwnershipTypes(AccountOwnershipType.PERSONAL)
                                 .withOrganisationId(SainsburyConstants.ORGANISATION_ID)
-                                .withWellKnownURL(SainsburyConstants.BUSINESS_WELL_KNOWN_URL)
+                                .withWellKnownURL(SainsburyConstants.WELL_KNOWN_URL)
                                 .withApiBaseURL(SainsburyConstants.AIS_API_URL));
     }
 
     @Inject
-    public SainsburyBusinessAgent(
+    public SainsburyAgent(
             AgentComponentProvider componentProvider, UkOpenBankingFlowFacade flowFacade) {
         super(componentProvider, flowFacade, aisConfig);
     }
