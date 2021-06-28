@@ -108,16 +108,26 @@ public class BbvaApiClient {
     }
 
     public AccountTransactionsResponse fetchAccountTransactions(Account account, String pageKey) {
-        boolean firstLogin = isFirstLogin();
-        final TransactionsRequest request = createAccountTransactionsRequest(account, firstLogin);
-        final RequestBuilder builder = buildAccountTransactionRequest(pageKey, firstLogin);
+        TransactionsRequest body;
+        RequestBuilder request;
+
+        if (isFetchingTransactionsOlderThan90DaysPossible()) {
+            request = buildAccountTransactionFullHistoryRequest(pageKey);
+            body = createAccountTransactionsFullHistoryRequestBody(account);
+            log.info("[FETCH ACCOUNT TRANSACTIONS] Fetching full transaction history");
+        } else {
+            request = buildAccountTransactionRequest(pageKey);
+            body = createAccountTransactionsRequestBody(account);
+            log.info("[FETCH ACCOUNT TRANSACTIONS] Fetching only 90 days of transaction history");
+        }
+
         try {
-            return builder.post(AccountTransactionsResponse.class, request);
+            return request.post(AccountTransactionsResponse.class, body);
         } catch (HttpResponseException e) {
             HttpResponse exceptionResponse = e.getResponse();
             BbvaErrorResponse errorResponse = exceptionResponse.getBody(BbvaErrorResponse.class);
             if (isSecondFactorAuthenticationNeeded(errorResponse)) {
-                return fetchAccountTransactionsWithOtp(exceptionResponse, request);
+                return fetchAccountTransactionsWithOtp(exceptionResponse, body);
             }
             if (errorResponse.isConflictStatus() || errorResponse.isInternalServerError()) {
                 throw BankServiceError.BANK_SIDE_FAILURE.exception();
@@ -174,19 +184,26 @@ public class BbvaApiClient {
                 .get(LoanDetailsResponse.class);
     }
 
-    public TransactionsRequest createAccountTransactionsRequest(
-            Account account, boolean firstLogin) {
-        if (firstLogin) {
-            LocalDateTime fromTransactionDate =
-                    getDateForFetchHistoryTransactions(account.getApiIdentifier());
-            LocalDateTime toTransactionDate = LocalDateTime.now(Fetchers.CLOCK);
-            return createAccountTransactionsAllHistoryRequest(
-                    account, fromTransactionDate.toString(), toTransactionDate.toString());
-        }
+    public TransactionsRequest createAccountTransactionsRequestBody(Account account) {
         return TransactionsRequest.builder()
                 .withCustomer(new UserEntity(getUserId()))
                 .withSearchType(BbvaConstants.PostParameter.SEARCH_TYPE)
                 .withAccountContracts(ImmutableList.of(getAccountContract(account)))
+                .build();
+    }
+
+    public TransactionsRequest createAccountTransactionsFullHistoryRequestBody(Account account) {
+        LocalDateTime fromTransactionDate =
+                getDateForFetchHistoryTransactions(account.getApiIdentifier());
+        LocalDateTime toTransactionDate = LocalDateTime.now(Fetchers.CLOCK);
+        final DateFilterEntity dateFilterEntity =
+                new DateFilterEntity(fromTransactionDate.toString(), toTransactionDate.toString());
+        return TransactionsRequest.builder()
+                .withCustomer(new UserEntity(getUserId()))
+                .withSearchType(BbvaConstants.PostParameter.SEARCH_TYPE)
+                .withAccountContracts(ImmutableList.of(getAccountContract(account)))
+                .withError(true)
+                .withFilter(new FilterEntity(dateFilterEntity, Fetchers.OPERATION_TYPES))
                 .build();
     }
 
@@ -223,12 +240,16 @@ public class BbvaApiClient {
         return httpResponse.getBody(AccountTransactionsResponse.class);
     }
 
-    private RequestBuilder buildAccountTransactionRequest(String pageKey, boolean firstLogin) {
-        if (firstLogin && isFirstPageOfAccountTransactions(pageKey)) {
+    private RequestBuilder buildAccountTransactionFullHistoryRequest(String pageKey) {
+        if (isFirstPageOfAccountTransactions(pageKey)) {
             return createRequestOtpInSession()
                     .queryParam(QueryKeys.PAGINATION_OFFSET, QueryValues.FIRST_PAGE_KEY)
                     .queryParam(QueryKeys.PAGE_SIZE, String.valueOf(Fetchers.PAGE_SIZE));
         }
+        return createRequestInSession(Url.ASO + pageKey);
+    }
+
+    private RequestBuilder buildAccountTransactionRequest(String pageKey) {
         if (isFirstPageOfAccountTransactions(pageKey)) {
             return createRequestInSession(BbvaConstants.Url.ACCOUNT_TRANSACTION)
                     .queryParam(QueryKeys.PAGINATION_OFFSET, QueryValues.FIRST_PAGE_KEY)
@@ -290,18 +311,6 @@ public class BbvaApiClient {
         return currentDate.minusDays(ChronoUnit.DAYS.between(maximumDate, currentDate));
     }
 
-    private TransactionsRequest createAccountTransactionsAllHistoryRequest(
-            Account account, String fromDate, String toDate) {
-        final DateFilterEntity dateFilterEntity = new DateFilterEntity(fromDate, toDate);
-        return TransactionsRequest.builder()
-                .withCustomer(new UserEntity(getUserId()))
-                .withSearchType(BbvaConstants.PostParameter.SEARCH_TYPE)
-                .withAccountContracts(ImmutableList.of(getAccountContract(account)))
-                .withError(true)
-                .withFilter(new FilterEntity(dateFilterEntity, Fetchers.OPERATION_TYPES))
-                .build();
-    }
-
     private AccountContractsEntity getAccountContract(Account account) {
         final String accountId = account.getApiIdentifier();
         return new AccountContractsEntity(new ContractEntity().setId(accountId));
@@ -312,12 +321,13 @@ public class BbvaApiClient {
                 && ErrorCode.OTP_SYSTEM_ERROR_CODE.equals(errorResponse.getSystemErrorCode());
     }
 
-    private boolean isFirstPageOfAccountTransactions(String pageKey) {
-        return Strings.isNullOrEmpty(pageKey);
+    private boolean isFetchingTransactionsOlderThan90DaysPossible() {
+        return Boolean.parseBoolean(
+                persistentStorage.get(Defaults.FETCHING_TRANSACTION_OLDER_THAN_90_DAYS_POSSIBLE));
     }
 
-    private boolean isFirstLogin() {
-        return Boolean.parseBoolean(persistentStorage.get(Defaults.FIRST_LOGIN));
+    private boolean isFirstPageOfAccountTransactions(String pageKey) {
+        return Strings.isNullOrEmpty(pageKey);
     }
 
     private String getUserAgent() {

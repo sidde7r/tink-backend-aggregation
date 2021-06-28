@@ -17,6 +17,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.rpc.BbvaErrorRespo
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
@@ -25,7 +26,6 @@ public class BbvaAuthenticatorTest {
     private Credentials credentials;
     private BbvaAuthenticator authenticator;
     private BbvaApiClient apiClient;
-    private SupplementalInformationHelper supplementalInformationHelper;
 
     @Before
     public void setUp() {
@@ -35,7 +35,10 @@ public class BbvaAuthenticatorTest {
         credentials.setPassword("password");
         authenticator =
                 new BbvaAuthenticator(
-                        apiClient, supplementalInformationHelper, mock(CredentialsRequest.class));
+                        apiClient,
+                        mock(SupplementalInformationHelper.class),
+                        mock(CredentialsRequest.class),
+                        mock(PersistentStorage.class));
     }
 
     @Test

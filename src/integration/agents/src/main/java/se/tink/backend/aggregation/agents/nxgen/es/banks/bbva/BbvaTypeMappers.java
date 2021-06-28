@@ -25,7 +25,15 @@ public final class BbvaTypeMappers {
                             "0CA0000014", // CUENTA EMPLEADOS BBVA
                             "0CA0000303", // CUENTA PERSONALES - CUENTA CORRIENTE UNO-E-ALTA
                             "0CA0000126", // CUENTA PERSONALES - CUENTA REMUNERADA UNO-E
-                            "0CA0000304" // CUENTA PERSONALES - CUENTA CORRIENTE UNO-E-ALTA CON NIF
+                            "0CA0000304", // CUENTA PERSONALES - CUENTA CORRIENTE UNO-E-ALTA CON NIF
+                            "0000016675", // CUENTA PERSONALES - CUENTA ELECCION
+                            "0000015119", // CUENTA PERSONALES - MI SEGUNDA CUENTA
+                            "0000006087", // CUENTA PERSONALES - CUENTA EMPLEADOS INTEGRACION
+                            "0000004781", // CUENTA PERSONALES - CUENTA SELECCION COLECTIVOS
+                            "0000008704", // CUENTA PERSONALES - CUENTA CORRIENTE UNO-E-ALTA DNI-NIE
+                            // SIN OTE
+                            "0000016231", //  CUENTA PERSONALES - CUENTA SIN COMISIONES PARA JOVENES
+                            "0CA0000274" //  CUENTA PERSONALES - CUENTA 59+
                             )
                     .put(
                             AccountTypes.SAVINGS, "0000011102" // CUENTA METAS - goal account
