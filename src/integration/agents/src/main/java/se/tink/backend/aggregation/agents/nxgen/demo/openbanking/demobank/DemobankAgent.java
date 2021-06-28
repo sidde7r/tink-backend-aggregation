@@ -35,6 +35,7 @@ import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authen
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.DemobankMockNoBankIdAlwaysWaitingAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.DemobankMockNoBankIdAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.DemobankMultiRedirectAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.DemobankPasswordAnd2FAWithTemplatesAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.DemobankPasswordAndOtpAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.DemobankPasswordAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.fetcher.transactionalaccount.DemobankCreditCardFetcher;
@@ -176,8 +177,11 @@ public final class DemobankAgent extends NextGenerationAgent
             if (AuthenticationFlow.DECOUPLED.equals(provider.getAuthenticationFlow())) {
                 return constructDecoupledAppAuthenticator();
             } else if (AuthenticationFlow.EMBEDDED.equals(provider.getAuthenticationFlow())) {
+                if (hasTemplateAuthentication()) {
+                    return constructPasswordAndOtpWithTemplatesAuthenticator();
+                }
                 return constructPasswordAndOtpAuthenticator();
-            } else if (provider.getName().endsWith("-app-to-app")) {
+            } else if (hasAppToAppAuthentication()) {
                 return constructApptToAppAuthenticator();
             }
             return constructRedirectAuthenticator();
@@ -199,6 +203,19 @@ public final class DemobankAgent extends NextGenerationAgent
                 new DemobankAutoAuthenticator(persistentStorage, apiClient);
         DemobankPasswordAndOtpAuthenticator authenticator =
                 new DemobankPasswordAndOtpAuthenticator(
+                        apiClient, supplementalInformationController);
+        return new AutoAuthenticationController(request, context, authenticator, autoAuthenticator);
+    }
+
+    private boolean hasTemplateAuthentication() {
+        return provider.getName().endsWith("-templates");
+    }
+
+    private Authenticator constructPasswordAndOtpWithTemplatesAuthenticator() {
+        DemobankAutoAuthenticator autoAuthenticator =
+                new DemobankAutoAuthenticator(persistentStorage, apiClient);
+        DemobankPasswordAnd2FAWithTemplatesAuthenticator authenticator =
+                new DemobankPasswordAnd2FAWithTemplatesAuthenticator(
                         apiClient, supplementalInformationController);
         return new AutoAuthenticationController(request, context, authenticator, autoAuthenticator);
     }
@@ -226,6 +243,10 @@ public final class DemobankAgent extends NextGenerationAgent
                 new DemobankAutoAuthenticator(persistentStorage, apiClient);
         return new AutoAuthenticationController(
                 request, systemUpdater, demobankDecoupledAppAuthenticator, autoAuthenticator);
+    }
+
+    private boolean hasAppToAppAuthentication() {
+        return provider.getName().endsWith("-app-to-app");
     }
 
     private Authenticator constructApptToAppAuthenticator() {
