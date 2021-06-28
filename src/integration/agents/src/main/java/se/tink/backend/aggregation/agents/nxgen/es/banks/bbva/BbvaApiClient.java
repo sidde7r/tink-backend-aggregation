@@ -114,9 +114,11 @@ public class BbvaApiClient {
         if (isFetchingTransactionsOlderThan90DaysPossible()) {
             request = buildAccountTransactionFullHistoryRequest(pageKey);
             body = createAccountTransactionsFullHistoryRequestBody(account);
+            log.info("[FETCH ACCOUNT TRANSACTIONS] Fetching full transaction history");
         } else {
             request = buildAccountTransactionRequest(pageKey);
             body = createAccountTransactionsRequestBody(account);
+            log.info("[FETCH ACCOUNT TRANSACTIONS] Fetching only 90 days of transaction history");
         }
 
         try {
