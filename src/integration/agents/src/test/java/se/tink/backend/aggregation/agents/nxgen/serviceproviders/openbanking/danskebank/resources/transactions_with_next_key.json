@@ -1,0 +1,74 @@
+{
+    "Data": {
+        "Transaction": [
+            {
+                "AccountId": "BI123",
+                "TransactionId": "860c2f12-a275-4a40-82f3-a137cc3f1f63",
+                "TransactionReference": "REF1",
+                "CreditDebitIndicator": "Credit",
+                "Status": "Booked",
+                "TransactionMutability": "Mutable",
+                "BookingDateTime": "2019-10-29T00:00:00Z",
+                "ValueDateTime": "2019-10-29T00:00:00Z",
+                "Amount": {
+                    "Amount": "11.12",
+                    "Currency": "DKK"
+                },
+                "BankTransactionCode": {
+                    "Code": "ReceivedCreditTransfers",
+                    "SubCode": "DomesticCreditTransfer"
+                },
+                "TransactionInformation": "Some transaction",
+                "Balance": {
+                    "CreditDebitIndicator": "Credit",
+                    "Type": "Information",
+                    "Amount": {
+                        "Amount": "11.12",
+                        "Currency": "DKK"
+                    }
+                },
+                "DebtorAccount": {
+                    "Name": "Ram pam pam"
+                }
+            },
+            {
+                "AccountId": "BI123",
+                "TransactionId": "6d6dda69-0983-4bdc-aaa8-a452f7c2b899",
+                "TransactionReference": "REF2",
+                "CreditDebitIndicator": "Debit",
+                "Status": "Booked",
+                "TransactionMutability": "Mutable",
+                "BookingDateTime": "2019-10-30T00:00:00Z",
+                "ValueDateTime": "2019-10-30T00:00:00Z",
+                "Amount": {
+                    "Amount": "111.99",
+                    "Currency": "DKK"
+                },
+                "BankTransactionCode": {
+                    "Code": "IssuedCreditTransfers",
+                    "SubCode": "DomesticCreditTransfer"
+                },
+                "TransactionInformation": "Transfer 2",
+                "Balance": {
+                    "CreditDebitIndicator": "Credit",
+                    "Type": "Information",
+                    "Amount": {
+                        "Amount": "111.99",
+                        "Currency": "DKK"
+                    }
+                },
+                "CreditorAccount": {
+                    "SchemeName": "DK.DanskeBank.AccountNumber",
+                    "Identification": "11111",
+                    "Name": "Bank A"
+                }
+            }
+        ]
+    },
+    "Links": {
+        "Self": "https://psd2-api.danskebank.com/psd2/v3.1/aisp/accounts/BI123/transactions?fromBookingDateTime=2019-07-23T00:00:00&toBookingDateTime=2021-06-23T00:00:00&pg=0d4c9f4a-28e5-4a2f-875c-61e12dd4b3f1&int=b95e85fc-3706-4e9c-abb2-d911dabb27fb",
+        "First": "https://psd2-api.danskebank.com/psd2/v3.1/aisp/accounts/BI123/transactions?fromBookingDateTime=2019-07-23T00:00:00&toBookingDateTime=2021-06-23T00:00:00&pg=0d4c9f4a-28e5-4a2f-875c-61e12dd4b3f1&int=b95e85fc-3706-4e9c-abb2-d911dabb27fb",
+        "Next": "https://psd2-api.danskebank.com/psd2/v3.1/aisp/accounts/BI123/transactions?fromBookingDateTime=2019-07-23T00:00:00&toBookingDateTime=2021-06-23T00:00:00&pg=df5dde55-234b-4732-9a32-b623e0e1bb11&int=b95e85fc-3706-4e9c-abb2-d911dabb27fb"
+    },
+    "Meta": {}
+}

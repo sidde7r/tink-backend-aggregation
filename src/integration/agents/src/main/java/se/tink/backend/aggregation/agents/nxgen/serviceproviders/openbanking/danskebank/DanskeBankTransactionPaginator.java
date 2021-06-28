@@ -3,6 +3,8 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.da
 import java.lang.invoke.MethodHandles;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +17,7 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.dat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
+import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.retrypolicy.RetryCallback;
@@ -54,20 +57,28 @@ public class DanskeBankTransactionPaginator<T, S extends Account>
 
     @Override
     public TransactionKeyPaginatorResponse<String> getTransactionsFor(S account, String key) {
-        updateAccountPaginationCount(account.getApiIdentifier());
-        if (isPaginationCountOverLimit()) {
-            return TransactionKeyPaginatorResponseImpl.createEmpty();
-        }
         key = initialisePaginationKeyIfNull(account, key);
+        updateAccountPaginationCount(account.getApiIdentifier());
 
+        List<Transaction> transactions = new ArrayList<>();
+        while (key != null && !isPaginationCountOverLimit()) {
+            TransactionKeyPaginatorResponse<String> transactionsPage =
+                    fetchTransactionsPage(account, key);
+            transactions.addAll(transactionsPage.getTinkTransactions());
+            key = transactionsPage.nextKey();
+            updateAccountPaginationCount(account.getApiIdentifier());
+        }
+        return new TransactionKeyPaginatorResponseImpl<>(transactions, null);
+    }
+
+    private TransactionKeyPaginatorResponse<String> fetchTransactionsPage(S account, String key) {
         try {
             // Danske Bank sometimes throws an error when we try to fetch transactions too far in
             // time, although we are using links provided by them in response. It is Danske internal
             // bug.
-            String finalKey = key;
             return retryExecutor.execute(
                     (RetryCallback<TransactionKeyPaginatorResponse<String>, BankServiceException>)
-                            () -> fetchTransactions(account, finalKey));
+                            () -> fetchTransactions(account, key));
         } catch (BankServiceException e) {
             log.warn("Ignoring http 500 (Internal server error) in pagination.", e);
             return TransactionKeyPaginatorResponseImpl.createEmpty();
