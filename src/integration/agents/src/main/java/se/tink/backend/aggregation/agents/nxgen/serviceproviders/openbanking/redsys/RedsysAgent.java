@@ -81,7 +81,7 @@ public abstract class RedsysAgent extends NextGenerationAgent
     @Override
     public FetchTransferDestinationsResponse fetchTransferDestinations(List<Account> accounts) {
         return InferredTransferDestinations.forPaymentAccounts(
-                accounts, AccountIdentifierType.SEPA_EUR, AccountIdentifierType.IBAN);
+                accounts, AccountIdentifierType.IBAN);
     }
 
     @Override
