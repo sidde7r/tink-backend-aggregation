@@ -165,6 +165,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         setAppId(appId);
         setProviderId(request.getProvider().getName());
         setRefreshSummary(new RefreshSummary(request, appId));
+        logger.info("[REFRESH SUMMARY] refresh summary created for AgentWorkerContext");
 
         if (request.getUser() != null) {
             String locale = request.getUser().getProfile().getLocale();

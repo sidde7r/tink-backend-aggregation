@@ -115,6 +115,8 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
         RefreshSummary refreshSummary = context.getRefreshSummary();
         if (refreshSummary == null) {
             refreshSummary = new RefreshSummary(context.getRequest(), context.getAppId());
+            context.setRefreshSummary(refreshSummary);
+            log.info("[REFRESH SUMMARY] refresh summary created for refresh command");
         }
 
         if (isNotAllowedToRefresh()) {
