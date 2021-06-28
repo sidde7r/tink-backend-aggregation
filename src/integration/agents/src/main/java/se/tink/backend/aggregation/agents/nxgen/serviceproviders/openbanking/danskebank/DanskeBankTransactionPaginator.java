@@ -61,16 +61,12 @@ public class DanskeBankTransactionPaginator<T, S extends Account>
         updateAccountPaginationCount(account.getApiIdentifier());
 
         List<Transaction> transactions = new ArrayList<>();
-        while (key != null) {
+        while (key != null && !isPaginationCountOverLimit()) {
             TransactionKeyPaginatorResponse<String> transactionsPage =
                     fetchTransactionsPage(account, key);
             transactions.addAll(transactionsPage.getTinkTransactions());
             key = transactionsPage.nextKey();
-
             updateAccountPaginationCount(account.getApiIdentifier());
-            if (isPaginationCountOverLimit()) {
-                key = null;
-            }
         }
         return new TransactionKeyPaginatorResponseImpl<>(transactions, null);
     }
