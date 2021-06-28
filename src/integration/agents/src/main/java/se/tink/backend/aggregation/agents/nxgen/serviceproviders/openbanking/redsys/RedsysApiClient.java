@@ -88,7 +88,7 @@ public class RedsysApiClient {
     private String signingKeyId;
     private String authScopes;
     private ConsentStatus cachedConsentStatus = ConsentStatus.UNKNOWN;
-    private String psuIpAddress = null;
+    private String psuIpAddress;
     private final EidasIdentity eidasIdentity;
     private final CredentialsRequest request;
 
@@ -105,6 +105,7 @@ public class RedsysApiClient {
         this.aspspConfiguration = aspspConfiguration;
         this.eidasIdentity = eidasIdentity;
         this.request = request;
+        this.psuIpAddress = request.getUserAvailability().getOriginatingUserIp();
 
         client.addFilter(
                 new ErrorFilter(
@@ -434,10 +435,6 @@ public class RedsysApiClient {
         final RequestBuilder builder =
                 createSignedRequest(makeApiUrl(key.getPath()), null, headers);
         return fetchTransactions(builder);
-    }
-
-    public void setPsuIpAddress(String psuIpAddress) {
-        this.psuIpAddress = psuIpAddress;
     }
 
     public PaymentInitiationResponse createPayment(

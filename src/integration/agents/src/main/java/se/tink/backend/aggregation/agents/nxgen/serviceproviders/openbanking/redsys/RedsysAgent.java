@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys;
 
-import com.google.common.base.Strings;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -65,7 +64,6 @@ public abstract class RedsysAgent extends NextGenerationAgent
                         this,
                         this.getEidasIdentity(),
                         request);
-        apiClient.setPsuIpAddress(Strings.emptyToNull(request.getOriginatingUserIp()));
 
         consentStorage = new RedsysConsentStorage(persistentStorage);
         consentController =
