@@ -142,7 +142,7 @@ go_repository(
 
 git_repository(
     name = "tink_backend",
-    commit = "b3cfbe1aaeaee65b284e3b72f802c8baea2e211e",
+    commit = "977d8d69cea88fef0e73a110b79501d3b371c598",
     remote = "git@github.com:tink-ab/tink-backend.git",
     shallow_since = "1601479333 +0000",
 )
@@ -715,6 +715,7 @@ maven_install(
         "io.prometheus:simpleclient_common:0.6.0",
         "io.prometheus:simpleclient_hotspot:0.6.0",
         "io.prometheus:simpleclient_httpserver:0.6.0",
+        "io.prometheus:simpleclient_jetty:0.6.0",
         "io.prometheus:simpleclient_pushgateway:0.6.0",
         "io.prometheus:simpleclient_servlet:0.6.0",
         "io.protostuff:protostuff-api:1.5.1",
