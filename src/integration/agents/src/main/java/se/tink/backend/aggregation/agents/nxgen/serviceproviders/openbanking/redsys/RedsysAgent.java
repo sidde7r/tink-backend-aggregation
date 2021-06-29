@@ -56,14 +56,7 @@ public abstract class RedsysAgent extends NextGenerationAgent
             AgentsServiceConfiguration configuration) {
         super(request, context, configuration.getSignatureKeyPair());
 
-        apiClient =
-                new RedsysApiClient(
-                        client,
-                        sessionStorage,
-                        persistentStorage,
-                        this,
-                        this.getEidasIdentity(),
-                        request);
+        apiClient = getApiClient(request);
 
         consentStorage = new RedsysConsentStorage(persistentStorage);
         consentController =
@@ -74,6 +67,11 @@ public abstract class RedsysAgent extends NextGenerationAgent
                         strongAuthenticationState);
 
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
+    }
+
+    protected RedsysApiClient getApiClient(CredentialsRequest request) {
+        return new RedsysApiClient(
+                client, sessionStorage, persistentStorage, this, this.getEidasIdentity(), request);
     }
 
     @Override
