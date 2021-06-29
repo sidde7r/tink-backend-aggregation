@@ -1,0 +1,11 @@
+agentsServiceConfiguration:
+  featureFlags:
+    esProxy: true
+  eidasProxy:
+    host: https://eidas-proxy.staging.aggregation.tink.network
+    localEidasDev: true
+  countryProxies:
+    es:
+      host: dummyproxy
+      password: dummyPassword
+      username: dummyUsername

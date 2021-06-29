@@ -14,6 +14,7 @@ import javax.ws.rs.ext.MessageBodyReader;
 import javax.ws.rs.ext.MessageBodyWriter;
 import org.apache.http.conn.ssl.TrustStrategy;
 import org.apache.http.cookie.Cookie;
+import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.utils.jersey.interceptor.MessageSignInterceptor;
 import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
 import se.tink.backend.aggregation.eidasidentity.identity.EidasIdentity;
@@ -63,6 +64,11 @@ public class IntegrationWireMockTestTinkHttpClient implements TinkHttpClient {
     @Override
     public String getUserAgent() {
         return tinkHttpClient.getUserAgent();
+    }
+
+    @Override
+    public Provider getProvider() {
+        return tinkHttpClient.getProvider();
     }
 
     @Override
@@ -198,7 +204,7 @@ public class IntegrationWireMockTestTinkHttpClient implements TinkHttpClient {
 
     @Override
     public void setProductionProxy(String uri, String username, String password) {
-        tinkHttpClient.setProductionProxy(uri, username, password);
+        // NOOP
     }
 
     @Override
