@@ -83,7 +83,7 @@ public abstract class SibsProgressiveBaseAgent extends SubsequentProgressiveGene
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
         authenticator =
                 new SibsAuthenticator(apiClient, userState, credentials, strongAuthenticationState);
-        LOG.debug(
+        LOG.info(
                 "CredentialsRequest class type:"
                         + agentComponentProvider.getCredentialsRequest().getClass());
     }
