@@ -69,7 +69,8 @@ public abstract class BankverlagBaseAgent extends NextGenerationAgent
                         bankverlagStorage,
                         credentials,
                         catalog,
-                        aspspId);
+                        aspspId,
+                        provider.getDisplayName());
 
         return new AutoAuthenticationController(
                 request, context, bankverlagAuthenticator, bankverlagAuthenticator);

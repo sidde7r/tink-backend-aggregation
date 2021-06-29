@@ -11,12 +11,13 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.Sparebank1Co
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.Sparebank1Constants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.authenticator.rpc.AgreementRequest;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.authenticator.rpc.AgreementsResponse;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.authenticator.rpc.AuthenticationStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.authenticator.rpc.BankBranchResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.authenticator.rpc.BankBranchResponse.Branch;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.authenticator.rpc.InitAuthenticationResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.authenticator.rpc.InitSessionRequest;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.authenticator.rpc.InitSessionResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.authenticator.rpc.InitTokenRequest;
-import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.authenticator.rpc.PollBankIdResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.authenticator.rpc.SessionRequest;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.authenticator.rpc.SessionResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.authenticator.rpc.TokenExpirationTimeResponse;
@@ -31,6 +32,7 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher.loan
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
+import se.tink.backend.aggregation.nxgen.http.form.Form;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.date.ThreadSafeDateFormat;
@@ -43,7 +45,7 @@ public class Sparebank1ApiClient {
 
     public Sparebank1ApiClient(TinkHttpClient client, String bankId) {
         this.client = client;
-        this.bankId = bankId.substring(4);
+        this.bankId = bankId;
     }
 
     public <T> T get(String url, Class<T> responseClass) {
@@ -58,12 +60,46 @@ public class Sparebank1ApiClient {
         return client.request(url.parameter(Parameters.BANK_NAME, bankId)).get(responseClass);
     }
 
-    public String initLogin() {
-        return client.request(Urls.INIT_LOGIN)
-                .queryParam("bank", "fid-sparebank1")
-                .queryParam("login-method", "bim")
-                .queryParam("goto", "https://www.sparebank1.no/login-complete-redirect")
-                .get(String.class);
+    public void initLinks() {
+        HttpResponse linksResponse =
+                client.request(Urls.INIT_LINKS)
+                        .queryParam(QueryParams.BANK, bankId)
+                        .type(MediaType.APPLICATION_FORM_URLENCODED)
+                        .accept(MediaType.APPLICATION_JSON_TYPE)
+                        .get(HttpResponse.class);
+
+        this.sessionToken =
+                linksResponse.getCookies().stream()
+                        .filter(cookie -> Keys.SESSION_ID.equalsIgnoreCase(cookie.getName()))
+                        .findFirst()
+                        .orElseThrow(() -> new IllegalStateException("Session cookie not found"))
+                        .getValue();
+    }
+
+    public void initLoginAppDispatcher() {
+        client.request(Urls.INIT_LOGIN_APP_DISPATCHER)
+                .queryParam(QueryParams.BANK, bankId)
+                .queryParam(QueryParams.LOGIN_METHOD, QueryParams.LOGIN_METHOD_VALUE)
+                .get(HttpResponse.class);
+    }
+
+    public InitAuthenticationResponse initAuthentication(String mobileNumber, String dob) {
+        Form formBuilder =
+                Form.builder()
+                        .put(Parameters.MOBILE_NUMBER, mobileNumber)
+                        .put(Parameters.DATE_OF_BIRTH, dob)
+                        .build();
+
+        return client.request(Urls.INIT_AUTHENTICATION)
+                .accept(MediaType.APPLICATION_JSON_TYPE)
+                .body(formBuilder.serialize(), MediaType.APPLICATION_FORM_URLENCODED)
+                .post(InitAuthenticationResponse.class);
+    }
+
+    public AuthenticationStatusResponse pollAuthenticationStatus() {
+        return client.request(Urls.POLL_BANKID)
+                .accept(MediaType.APPLICATION_JSON_TYPE)
+                .post(AuthenticationStatusResponse.class);
     }
 
     public String selectMarketAndAuthentication(String bankIdBody) {
@@ -71,21 +107,6 @@ public class Sparebank1ApiClient {
                 .queryParam(Parameters.CID, Parameters.CID_VALUE)
                 .type(MediaType.APPLICATION_FORM_URLENCODED)
                 .post(String.class, bankIdBody);
-    }
-
-    public PollBankIdResponse pollBankId() {
-        return client.request(Urls.POLL_BANKID)
-                .header(Headers.X_REQUESTED_WITH, Headers.XML_HTTP_REQUEST)
-                .header(Headers.ORIGIN, Urls.BASE_LOGIN)
-                .type(MediaType.APPLICATION_JSON)
-                .queryParam(Parameters.CID, Parameters.CID_VALUE)
-                .post(PollBankIdResponse.class);
-    }
-
-    public void loginDone() {
-        client.request(Urls.LOGIN_DONE)
-                .queryParam(Parameters.CID, Parameters.CID_VALUE)
-                .get(HttpResponse.class);
     }
 
     public CreditCardTransactionsResponse fetchCreditCardTransactions(String bankIdentifier) {
@@ -130,20 +151,6 @@ public class Sparebank1ApiClient {
                 .accept(Headers.TEXT_HTML_APPLICATION_XHTML_XML)
                 .type(MediaType.WILDCARD)
                 .get(HttpResponse.class);
-    }
-
-    public void retrieveSessionCookie() {
-        client.request(Urls.INITIAL_REQUEST)
-                .type(MediaType.WILDCARD)
-                .accept(MediaType.WILDCARD)
-                .get(HttpResponse.class);
-
-        this.sessionToken =
-                client.getCookies().stream()
-                        .filter(cookie -> Keys.SESSION_ID.equalsIgnoreCase(cookie.getName()))
-                        .findFirst()
-                        .orElseThrow(() -> new IllegalStateException("Dsession cookie not found"))
-                        .getValue();
     }
 
     public RequestBuilder getSessionRequestBuilder(URL url) {

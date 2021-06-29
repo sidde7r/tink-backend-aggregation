@@ -9,6 +9,7 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 
 import com.google.inject.Inject;
 import java.time.temporal.ChronoUnit;
+import org.apache.http.client.config.CookieSpecs;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
@@ -98,6 +99,7 @@ public final class Sparebank1Agent extends NextGenerationAgent
         client.setUserAgent(Headers.USER_AGENT);
         AddRefererFilter filter = new AddRefererFilter();
         client.addFilter(filter);
+        client.setCookieSpec(CookieSpecs.STANDARD);
     }
 
     @Override
@@ -105,11 +107,15 @@ public final class Sparebank1Agent extends NextGenerationAgent
         Sparebank1Authenticator authenticator =
                 new Sparebank1Authenticator(apiClient, credentials, persistentStorage, branchId);
 
+        int authenticationPollIntervalSeconds = 10000;
         return new AutoAuthenticationController(
                 request,
                 systemUpdater,
                 new BankIdAuthenticationControllerNO(
-                        supplementalInformationController, authenticator, catalog),
+                        supplementalInformationController,
+                        authenticator,
+                        catalog,
+                        authenticationPollIntervalSeconds),
                 authenticator);
     }
 
