@@ -1,0 +1,70 @@
+{
+    "accounts": [
+        {
+            "_links": {
+                "balances": {
+                    "href": "https://xs2a.consorsbank.de/v1/accounts/asdf1234/balances"
+                },
+                "transactions": {
+                    "href": "https://xs2a.consorsbank.de/v1/accounts/asdf1234/transactions"
+                }
+            },
+            "balances": [
+                {
+                    "balanceAmount": {
+                        "amount": "-7.12",
+                        "currency": "EUR"
+                    },
+                    "balanceType": "interimAvailable"
+                },
+                {
+                    "balanceAmount": {
+                        "amount": "-7.12",
+                        "currency": "EUR"
+                    },
+                    "balanceType": "closingBooked"
+                }
+            ],
+            "bic": "CSDBDE71XXX",
+            "cashAccountType": "TRAS",
+            "currency": "EUR",
+            "iban": "DE1234",
+            "ownerName": "Name Surname",
+            "resourceId": "asdf1234",
+            "status": "enabled"
+        },
+        {
+            "_links": {
+                "balances": {
+                    "href": "https://xs2a.consorsbank.de/v1/accounts/asdf4321/balances"
+                },
+                "transactions": {
+                    "href": "https://xs2a.consorsbank.de/v1/accounts/asdf4321/transactions"
+                }
+            },
+            "balances": [
+                {
+                    "balanceAmount": {
+                        "amount": "14.61",
+                        "currency": "EUR"
+                    },
+                    "balanceType": "interimAvailable"
+                },
+                {
+                    "balanceAmount": {
+                        "amount": "14.61",
+                        "currency": "EUR"
+                    },
+                    "balanceType": "closingBooked"
+                }
+            ],
+            "bic": "CSDBDE71XXX",
+            "cashAccountType": "CACC",
+            "currency": "EUR",
+            "iban": "DE4321",
+            "ownerName": "Name Surname",
+            "resourceId": "asdf4321",
+            "status": "enabled"
+        }
+    ]
+}

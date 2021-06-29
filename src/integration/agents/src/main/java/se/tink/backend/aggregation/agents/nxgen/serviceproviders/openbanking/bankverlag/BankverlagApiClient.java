@@ -1,7 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankverlag;
 
-import static se.tink.backend.aggregation.agents.utils.berlingroup.consent.AccessEntity.ALL_ACCOUNTS;
-
 import java.time.LocalDate;
 import javax.ws.rs.core.MediaType;
 import lombok.RequiredArgsConstructor;
@@ -72,7 +70,7 @@ public class BankverlagApiClient {
         LocalDate validUntil = localDateTimeSource.now().toLocalDate().plusDays(90);
         ConsentRequest consentRequest =
                 new ConsentRequest(
-                        new AccessEntity(ALL_ACCOUNTS),
+                        AccessEntity.builder().allPsd2(AccessEntity.ALL_ACCOUNTS).build(),
                         true,
                         validUntil.toString(),
                         FormValues.FREQUENCY_PER_DAY,
@@ -157,7 +155,7 @@ public class BankverlagApiClient {
                         .get(FetchTransactionsResponse.class);
 
         return getTransactionsFile(
-                consentId, fetchTransactionsResponse.getLinks().getDownload().getHref());
+                consentId, new URL(fetchTransactionsResponse.getLinks().getDownload().getHref()));
     }
 
     private HttpResponse getTransactionsFile(String consentId, URL file) {

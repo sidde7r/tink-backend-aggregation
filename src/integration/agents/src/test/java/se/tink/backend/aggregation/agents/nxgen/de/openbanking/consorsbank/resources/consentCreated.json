@@ -1,0 +1,18 @@
+{
+    "_links": {
+        "scaRedirect": {
+            "href": "http://test.sca.redirect.example.com"
+        },
+        "scaStatus": {
+            "href": "https://xs2a.consorsbank.de/v1/consents/test_consent_id/authorisations/7449c9f6-394c-45d6-b43f-6af042d7719d"
+        },
+        "self": {
+            "href": "https://xs2a.consorsbank.de/v1/consents/test_consent_id"
+        },
+        "status": {
+            "href": "https://xs2a.consorsbank.de/v1/consents/test_consent_id/status"
+        }
+    },
+    "consentId": "test_consent_id",
+    "consentStatus": "received"
+}

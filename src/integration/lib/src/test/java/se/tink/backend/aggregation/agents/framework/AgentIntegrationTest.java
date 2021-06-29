@@ -1071,6 +1071,11 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
             return userAvailability;
         }
 
+        public Builder setUserAvailability(UserAvailability userAvailability) {
+            this.userAvailability = userAvailability;
+            return this;
+        }
+
         public Builder setUser(User user) {
             this.user = user;
             return this;

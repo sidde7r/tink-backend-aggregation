@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.utils.berlingroup.consent;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
@@ -9,10 +10,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode
-public class ConsentRequest {
-    private AccessEntity access;
-    private boolean recurringIndicator;
-    private String validUntil;
-    private int frequencyPerDay;
-    private boolean combinedServiceIndicator;
+@Getter
+public class AccountReferenceEntity {
+    private String iban;
 }
