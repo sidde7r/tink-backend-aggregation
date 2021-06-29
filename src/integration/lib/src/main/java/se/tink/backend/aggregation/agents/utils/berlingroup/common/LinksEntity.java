@@ -46,4 +46,7 @@ public class LinksEntity {
 
     @JsonDeserialize(using = LinkDeserializer.class)
     private String selectAuthenticationMethod;
+
+    @JsonDeserialize(using = LinkDeserializer.class)
+    private String updatePsuAuthentication;
 }

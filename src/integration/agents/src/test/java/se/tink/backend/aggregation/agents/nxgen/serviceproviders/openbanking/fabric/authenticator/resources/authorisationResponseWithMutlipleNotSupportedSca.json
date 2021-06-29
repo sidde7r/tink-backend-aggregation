@@ -1,0 +1,22 @@
+{
+    "_links": {
+        "selectAuthenticationMethod": {
+            "href": "/v1/consents/139407/authorisations/217980"
+        }
+    },
+    "scaMethods": [
+        {
+            "authenticationMethodId": "CHIP_OTP",
+            "authenticationType": "CHIP_OTP",
+            "authenticationVersion": "1.4",
+            "name": "CHIP_OTP"
+        },
+        {
+            "authenticationMethodId": "CHIP_OTP",
+            "authenticationType": "CHIP_OTP",
+            "authenticationVersion": "1.4",
+            "name": "CHIP_OTP"
+        }
+    ],
+    "scaStatus": "psuAuthenticated"
+}

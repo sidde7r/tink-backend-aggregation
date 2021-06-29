@@ -177,6 +177,7 @@ junit_test(
         "//src/integration/lib",
         "//src/integration/lib:annotations",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/contexts",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/berlingroup",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/agents/utils",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/signaturekeypair",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/configuration",

@@ -1,0 +1,12 @@
+{
+    "scaStatus": "received",
+    "authorisationId": "217980",
+    "_links": {
+        "scaStatus": {
+            "href": "/v1/consents/139407/authorisations/217980"
+        },
+        "updatePsuAuthentication": {
+            "href": "/v1/consents/139407/authorisations/217980"
+        }
+    }
+}

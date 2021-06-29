@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.agents.rpc.Provider.AuthenticationFlow;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
@@ -13,7 +14,9 @@ import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.authenticator.FabricAutoAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.authenticator.FabricEmbeddedAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.authenticator.FabricRedirectAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.authenticator.FabricSupplementalInformationCollector;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.executor.payment.FabricPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.fetcher.transactionalaccount.FabricAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.fetcher.transactionalaccount.FabricTransactionFetcher;
@@ -58,7 +61,9 @@ public abstract class FabricAgent extends NextGenerationAgent
                         sessionStorage,
                         request.getUserAvailability().getOriginatingUserIpOrDefault(),
                         getBaseUrl(),
-                        getAgentConfiguration().getRedirectUrl());
+                        AuthenticationFlow.EMBEDDED.equals(provider.getAuthenticationFlow())
+                                ? null
+                                : getAgentConfiguration().getRedirectUrl());
 
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
@@ -75,6 +80,16 @@ public abstract class FabricAgent extends NextGenerationAgent
 
     @Override
     protected Authenticator constructAuthenticator() {
+        FabricAutoAuthenticator autoAuthenticator =
+                new FabricAutoAuthenticator(persistentStorage, apiClient);
+
+        return AuthenticationFlow.EMBEDDED.equals(provider.getAuthenticationFlow())
+                ? createEmbeddedAuthenticator(autoAuthenticator)
+                : createRedirectAuthenticator(autoAuthenticator);
+    }
+
+    private AutoAuthenticationController createRedirectAuthenticator(
+            FabricAutoAuthenticator autoAuthenticator) {
         FabricRedirectAuthenticator redirectAuthenticator =
                 new FabricRedirectAuthenticator(
                         persistentStorage,
@@ -84,15 +99,26 @@ public abstract class FabricAgent extends NextGenerationAgent
                         credentials,
                         localDateTimeSource);
 
-        FabricAutoAuthenticator autoAuthenticator =
-                new FabricAutoAuthenticator(persistentStorage, apiClient);
-
         return new AutoAuthenticationController(
                 request,
                 systemUpdater,
                 new ThirdPartyAppAuthenticationController<>(
                         redirectAuthenticator, supplementalInformationHelper),
                 autoAuthenticator);
+    }
+
+    private AutoAuthenticationController createEmbeddedAuthenticator(
+            FabricAutoAuthenticator autoAuthenticator) {
+        FabricEmbeddedAuthenticator embeddedAuthenticator =
+                new FabricEmbeddedAuthenticator(
+                        persistentStorage,
+                        apiClient,
+                        new FabricSupplementalInformationCollector(
+                                context.getCatalog(), supplementalInformationController),
+                        localDateTimeSource);
+
+        return new AutoAuthenticationController(
+                request, context, embeddedAuthenticator, autoAuthenticator);
     }
 
     @Override

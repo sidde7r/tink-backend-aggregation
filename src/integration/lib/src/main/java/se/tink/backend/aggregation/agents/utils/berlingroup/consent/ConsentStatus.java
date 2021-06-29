@@ -58,4 +58,9 @@ public class ConsentStatus {
     private boolean is(String other) {
         return value != null && value.equalsIgnoreCase(other);
     }
+
+    @Override
+    public String toString() {
+        return value;
+    }
 }

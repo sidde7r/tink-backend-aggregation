@@ -1,0 +1,5 @@
+agentsServiceConfiguration:
+  integrations:
+    9b1790e7628342a0a56f43d0604a1ed9:
+      tink:
+        redirectUrl: "https://doesnt.matter.com"

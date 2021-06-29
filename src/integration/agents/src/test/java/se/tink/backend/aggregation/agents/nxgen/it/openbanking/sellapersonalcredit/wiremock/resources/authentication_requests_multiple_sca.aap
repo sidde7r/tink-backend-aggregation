@@ -1,0 +1,132 @@
+REQUEST 1
+POST https://psdgw-sellapersonalcredit.fabrick.com/api/fabrick/psd2/v1/consents
+Content-Type: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+TPP-Redirect-Preferred: false
+X-Aggregator: Tink Testing
+
+{"access":{"allPsd2":"allAccounts"},"recurringIndicator":true,"validUntil":"1992-07-08","frequencyPerDay":4,"combinedServiceIndicator":false}
+
+RESPONSE 1
+201
+Date: Mon, 28 Jun 2021 09:16:31 GMT
+Date: Mon, 28 Jun 2021 09:16:32 GMT
+Server: fbkprapp02
+Max-Forwards: *** MASKED ***
+Via: 1.0 fbkprgtm03 ()
+X-CorrelationID: *** MASKED ***
+ASPSP-SCA-Approach: *** MASKED ***
+Content-Type: application/json;charset=utf-8
+Vary: User-Agent
+Content-Length: 212
+
+{"consentStatus":"received","consentId":"139407","_links":{"self":{"href":"/v1/consents/139407"},"status":{"href":"/v1/consents/139407/status"},"startAuthorisation":{"href":"/v1/consents/139407/authorisations"}}}
+
+REQUEST 2
+POST https://psdgw-sellapersonalcredit.fabrick.com/api/fabrick/psd2/v1/consents/139407/authorisations
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+Accept: application/json
+Content-Type: application/json
+X-Aggregator: Tink Testing
+
+RESPONSE 2
+201
+Date: Mon, 28 Jun 2021 09:17:20 GMT
+Date: Mon, 28 Jun 2021 09:17:21 GMT
+Server: fbkprapp02
+Max-Forwards: *** MASKED ***
+Via: 1.0 fbkprgtm02 ()
+X-CorrelationID: *** MASKED ***
+X-Psu-Challenge-Description: *** MASKED ***
+X-Psu-Challenge-Type: *** MASKED ***
+X-Psu-Username-Name: *** MASKED ***
+X-Psu-Username-Type: *** MASKED ***
+Content-Type: application/json;charset=utf-8
+Vary: User-Agent
+Content-Length: 206
+
+{"scaStatus":"received","authorisationId":"217980","_links":{"scaStatus":{"href":"/v1/consents/139407/authorisations/217980"},"updatePsuAuthentication":{"href":"/v1/consents/139407/authorisations/217980"}}}
+
+REQUEST 3
+PUT https://psdgw-sellapersonalcredit.fabrick.com/api/fabrick/psd2/v1/consents/139407/authorisations/217980
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+Accept: application/json
+Content-Type: application/json
+psu-id: test_username
+X-Aggregator: Tink Testing
+
+{"psuData":{"password":"test_password"}}
+
+RESPONSE 3
+200
+ASPSP-SCA-Approach: EMBEDDED
+Content-Type: application/json;charset=utf-8
+
+{"scaStatus":"psuAuthenticated","scaMethods":[{"authenticationType":"SMS_OTP","authenticationMethodId":"SMS_OTP","name":"SMS_OTP"},{"authenticationType":"CHIP_OTP","authenticationVersion":"1.4","authenticationMethodId":"CHIP_OTP","name":"CHIP_OTP"}],"_links":{"selectAuthenticationMethod":{"href":"/v1/consents/139407/authorisations/217980"}}}
+
+REQUEST 4
+PUT https://psdgw-sellapersonalcredit.fabrick.com/api/fabrick/psd2/v1/consents/139407/authorisations/217980
+accept: application/json
+Content-Type: application/json
+x-request-id: 00000000-0000-4000-0000-000000000000
+
+{"authenticationMethodId":"SMS_OTP"}
+
+RESPONSE 4
+200
+Date: Mon, 28 Jun 2021 09:17:31 GMT
+Date: Mon, 28 Jun 2021 09:17:32 GMT
+Server: fbkprapp01
+Max-Forwards: *** MASKED ***
+Via: 1.0 fbkprgtm01 ()
+X-CorrelationID: *** MASKED ***
+X-Psu-Challenge-Description: *** MASKED ***
+X-Psu-Challenge-Hint: *** MASKED ***
+X-Psu-Challenge-Type: *** MASKED ***
+Content-Type: application/json;charset=utf-8
+Vary: User-Agent
+Content-Length: 279
+
+{"scaStatus":"scaMethodSelected","chosenScaMethod":{"authenticationType":"SMS_OTP","authenticationVersion":"v1","authenticationMethodId":"SMS_OTP","name":"SMS_OTP"},"authorisationId":"217980","_links":{"authoriseTransaction":{"href":"/v1/consents/139407/authorisations/217980"}}}
+
+REQUEST 5
+PUT https://psdgw-sellapersonalcredit.fabrick.com/api/fabrick/psd2/v1/consents/139407/authorisations/217980
+accept: application/json
+Content-Type: application/json
+x-request-id: 00000000-0000-4000-0000-000000000000
+
+{"scaAuthenticationData":"123456"}
+
+RESPONSE 5
+200
+Content-Type: application/json;charset=utf-8
+
+{"scaStatus": "finalised"}
+
+REQUEST 6
+GET https://psdgw-sellapersonalcredit.fabrick.com/api/fabrick/psd2/v1/consents/139407/status
+accept: application/json
+Content-Type: application/json
+x-request-id: 00000000-0000-4000-0000-000000000000
+X-Aggregator: Tink Testing
+
+RESPONSE 6
+200
+Content-Type: application/json;charset=utf-8
+
+{"consentStatus": "valid"}
+
+REQUEST 7
+GET https://psdgw-sellapersonalcredit.fabrick.com/api/fabrick/psd2/v1/consents/139407
+accept: application/json
+Content-Type: application/json
+x-request-id: 00000000-0000-4000-0000-000000000000
+X-Aggregator: Tink Testing
+
+RESPONSE 7
+200
+Content-Type: application/json;charset=utf-8
+
+{"access":{"accounts":[],"balances":[],"transactions":[],"allPsd2":"allAccounts"},"recurringIndicator":true,"validUntil":"1992-07-08","frequencyPerDay":4,"lastActionDate":"1992-07-08","consentStatus":"valid","_links":{"account":{"href":"/v1/accounts"}}}
+
+
