@@ -115,7 +115,7 @@ POST https://www.bancsabadell.mobi/bsmobil/api/accounts/movements/grouped
 Content-Type: application/json
 Accept: application/vnd.idk.bsmobil-v1933+json
 
-{"moreRequest":false,"account":{"alias":"","description":"CUENTA RELACIÓN","availability":"TOTAL","owner":"**MisterM**","product":"DV00001","bic":"BSAB ESBB","number":"0081-1146-73-1111111111111","iban":"ES9820958631145727874921","amount":{"value":"2.198,02","currency":"EUR"},"numOwners":1,"isOwner":true,"isSBPManaged":false,"isIberSecurities":false,"joint":"I","mobileWarning":"A"},"dateFrom":"","dateTo":""}
+{"moreRequest":false,"account":{"alias":"","description":"CUENTA RELACIÓN","availability":"TOTAL","owner":"**MisterM**","product":"DV00001","bic":"BSAB ESBB","number":"0081-1146-73-1111111111111","iban":"ES9820958631145727874921","amount":{"value":"2.198,02","currency":"EUR"},"numOwners":1,"isOwner":true,"isSBPManaged":false,"isIberSecurities":false,"joint":"I","mobileWarning":"A"},"dateFrom":"10-04-1982","dateTo":"10-04-1992"}
 
 RESPONSE 11
 200
@@ -128,7 +128,7 @@ POST https://www.bancsabadell.mobi/bsmobil/api/accounts/movements/grouped
 Content-Type: application/json
 Accept: application/vnd.idk.bsmobil-v1933+json
 
-{"moreRequest":false,"account":{"alias":"","description":"CUENTA EXPANSIÓN","availability":"CONSULTA","owner":"JUAN ANTONIO **MisterY** SALAFRANCA","product":"DV00083","bic":"BSAB ESBB","number":"0081-1146-71-0006036811","iban":"ES6921001516061538226938","amount":{"value":"10.236,72","currency":"EUR"},"numOwners":1,"isOwner":false,"isSBPManaged":false,"isIberSecurities":false,"joint":"I","mobileWarning":"A"},"dateFrom":"","dateTo":""}
+{"moreRequest":false,"account":{"alias":"","description":"CUENTA EXPANSIÓN","availability":"CONSULTA","owner":"JUAN ANTONIO **MisterY** SALAFRANCA","product":"DV00083","bic":"BSAB ESBB","number":"0081-1146-71-0006036811","iban":"ES6921001516061538226938","amount":{"value":"10.236,72","currency":"EUR"},"numOwners":1,"isOwner":false,"isSBPManaged":false,"isIberSecurities":false,"joint":"I","mobileWarning":"A"},"dateFrom":"10-04-1982","dateTo":"10-04-1992"}
 
 RESPONSE 12
 200

@@ -27,7 +27,6 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.invest
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.loans.rpc.LoanDetailsRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.loans.rpc.LoanDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.loans.rpc.LoansResponse;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.transactionalaccounts.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.transactionalaccounts.rpc.AccountTransactionsRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.transactionalaccounts.rpc.AccountTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.transactionalaccounts.rpc.AccountsResponse;
@@ -111,10 +110,7 @@ public class SabadellApiClient {
                 .get(FetchCreditCardsResponse.class);
     }
 
-    public AccountTransactionsResponse fetchTransactions(AccountEntity accountEntity, boolean key) {
-        AccountTransactionsRequest requestEntity =
-                AccountTransactionsRequest.build(accountEntity, key);
-
+    public AccountTransactionsResponse fetchTransactions(AccountTransactionsRequest requestEntity) {
         return createRequest(SabadellConstants.Urls.FETCH_ACCOUNT_TRANSACTIONS)
                 .post(AccountTransactionsResponse.class, requestEntity);
     }
