@@ -59,7 +59,7 @@ public class RedsysPaymentExecutor implements PaymentExecutor, FetchablePaymentE
     }
 
     @Override
-    public PaymentResponse fetch(PaymentRequest paymentRequest) {
+    public PaymentResponse fetch(PaymentRequest paymentRequest) throws PaymentException {
         final Payment payment = paymentRequest.getPayment();
         return apiClient
                 .fetchPaymentStatus(payment.getPaymentScheme(), payment.getUniqueId())
@@ -68,11 +68,10 @@ public class RedsysPaymentExecutor implements PaymentExecutor, FetchablePaymentE
 
     @Override
     public PaymentListResponse fetchMultiple(PaymentListRequest paymentListRequest) {
-        return paymentListRequest.getPaymentRequestList().stream()
-                .map(this::fetch)
-                .collect(
-                        Collectors.collectingAndThen(
-                                Collectors.toList(), PaymentListResponse::new));
+        return new PaymentListResponse(
+                paymentListRequest.getPaymentRequestList().stream()
+                        .map(req -> new PaymentResponse(req.getPayment()))
+                        .collect(Collectors.toList()));
     }
 
     @Override

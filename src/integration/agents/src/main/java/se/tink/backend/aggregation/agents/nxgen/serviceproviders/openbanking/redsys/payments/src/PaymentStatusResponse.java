@@ -20,12 +20,16 @@ public class PaymentStatusResponse {
     @JsonProperty("_links")
     private LinkEntity links;
 
+    public void setTransactionStatus(RedsysTransactionStatus transactionStatus) {
+        this.transactionStatus = transactionStatus;
+    }
+
     public RedsysTransactionStatus getTransactionStatus() {
         return transactionStatus;
     }
 
     public PaymentResponse toTinkPayment(Payment payment) {
-        payment.setStatus(getTransactionStatus().getTinkStatus());
+        payment.setStatus(this.transactionStatus.getTinkStatus());
         return new PaymentResponse(payment);
     }
 }

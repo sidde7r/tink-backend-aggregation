@@ -17,6 +17,7 @@ import javax.ws.rs.core.MediaType;
 import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.ErrorCodes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.FormKeys;
@@ -171,7 +172,7 @@ public class RedsysApiClient {
                 "%s/%s%s", Urls.BASE_AUTH_URL, aspspConfiguration.getAspspCode(), path);
     }
 
-    private String makeApiUrl(String path, Object... args) {
+    protected String makeApiUrl(String path, Object... args) {
         if (!path.startsWith("/")) {
             path = "/" + path;
         }
@@ -291,7 +292,7 @@ public class RedsysApiClient {
         return createSignedRequest(url, payload, getTokenFromStorage(), headers);
     }
 
-    private RequestBuilder createSignedRequest(String url) {
+    protected RequestBuilder createSignedRequest(String url) {
         return createSignedRequest(url, null, getTokenFromStorage(), Maps.newHashMap());
     }
 
@@ -447,8 +448,8 @@ public class RedsysApiClient {
                 .post(PaymentInitiationResponse.class);
     }
 
-    public PaymentStatusResponse fetchPaymentStatus(
-            PaymentScheme paymentProduct, String paymentId) {
+    public PaymentStatusResponse fetchPaymentStatus(PaymentScheme paymentProduct, String paymentId)
+            throws PaymentException {
         return createSignedRequest(
                         makeApiUrl(
                                 Urls.FETCH_PAYMENT_STATUS,
