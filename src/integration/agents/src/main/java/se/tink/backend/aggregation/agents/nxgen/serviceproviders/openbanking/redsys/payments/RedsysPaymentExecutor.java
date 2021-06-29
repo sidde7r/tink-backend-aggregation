@@ -122,10 +122,10 @@ public class RedsysPaymentExecutor implements PaymentExecutor, FetchablePaymentE
 
     private Builder buildPaymentRequest(PaymentRequest paymentRequest) {
         AccountReferenceEntity creditorAccount =
-                new AccountReferenceEntity(
+                AccountReferenceEntity.ofIban(
                         paymentRequest.getPayment().getCreditor().getAccountNumber());
         AccountReferenceEntity debtorAccount =
-                new AccountReferenceEntity(
+                AccountReferenceEntity.ofIban(
                         paymentRequest.getPayment().getDebtor().getAccountNumber());
         AmountEntity amount =
                 AmountEntity.withAmount(
