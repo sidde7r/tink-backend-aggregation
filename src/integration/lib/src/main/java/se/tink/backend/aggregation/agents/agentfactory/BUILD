@@ -131,8 +131,6 @@ java_library(
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/es/openbanking/bankinter",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/es/openbanking/bbva",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/es/openbanking/caixabank",
-        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/es/openbanking/cajarural",
-        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/es/openbanking/eurocajarural",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/es/openbanking/evobanco",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/es/openbanking/ibercaja",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/es/openbanking/ing",
