@@ -16,7 +16,7 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class BpceGroupCreditCardConverter {
 
-    public CreditCardAccount toCreditCardAccount(
+    public static CreditCardAccount toCreditCardAccount(
             AccountEntity accountEntity, List<BalanceEntity> balances) {
 
         String cardNumber =
@@ -29,10 +29,11 @@ public class BpceGroupCreditCardConverter {
                 .withInferredAccountFlags()
                 .withId(mapIdModule(accountEntity, cardNumber))
                 .setApiIdentifier(accountEntity.getResourceId())
+                .addHolderName(accountEntity.getHolderName())
                 .build();
     }
 
-    private CreditCardModule mapCardDetails(
+    private static CreditCardModule mapCardDetails(
             AccountEntity accountEntity, String cardNumber, List<BalanceEntity> balances) {
 
         return CreditCardModule.builder()
@@ -43,7 +44,7 @@ public class BpceGroupCreditCardConverter {
                 .build();
     }
 
-    private IdModule mapIdModule(AccountEntity accountEntity, String cardNumber) {
+    private static IdModule mapIdModule(AccountEntity accountEntity, String cardNumber) {
         return IdModule.builder()
                 .withUniqueIdentifier(accountEntity.getResourceId())
                 .withAccountNumber(accountEntity.getLinkedAccount())
@@ -54,7 +55,7 @@ public class BpceGroupCreditCardConverter {
                 .build();
     }
 
-    private ExactCurrencyAmount getBalance(List<BalanceEntity> balances) {
+    private static ExactCurrencyAmount getBalance(List<BalanceEntity> balances) {
         return findBalanceByType(balances, BalanceType.CLBD)
                 .map(Optional::of)
                 .orElseGet(() -> findBalanceByType(balances, BalanceType.XPCD))

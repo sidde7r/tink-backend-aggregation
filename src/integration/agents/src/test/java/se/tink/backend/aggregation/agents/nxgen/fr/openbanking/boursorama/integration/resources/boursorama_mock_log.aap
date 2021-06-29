@@ -20,7 +20,7 @@ RESPONSE 2
 200
 Content-Type: application/json
 
-{"accounts":[{"resourceId":"DUMMY_RESOURCE_ID","bicFi":"BOUSFRPPXXX","accountId":{"iban":"DUMMY_IBAN"},"name":"DUMMY_NAME","details":"","usage":"PRIV","cashAccountType":"CACC","product":"CAV - BOURSORAMA BANQUE","psuStatus":"Account holder","_links":{"endUserIdentity":{"href":"\/services\/api\/v1.7\/_user_\/_70352f41061eda4_\/dsp2\/users\/identity","method":"GET"},"balances":{"href":"\/services\/api\/v1.7\/_user_\/_70352f41061eda4_\/dsp2\/accounts\/balances\/DUMMY_RESOURCE_ID","method":"GET"},"transactions":{"href":"\/services\/api\/v1.7\/_user_\/_70352f41061eda4_\/dsp2\/accounts\/transactions\/DUMMY_RESOURCE_ID","method":"GET"}}}],"_links":{"self":{"href":"\/services\/api\/v1.7\/_user_\/_70352f41061eda4_\/dsp2\/accounts","method":"GET"}}}
+{"accounts":[{"resourceId":"DUMMY_RESOURCE_ID","bicFi":"BOUSFRPPXXX","accountId":{"iban":"DUMMY_IBAN"},"name":"M Name Surname","details":"","usage":"PRIV","cashAccountType":"CACC","product":"CAV - BOURSORAMA BANQUE","psuStatus":"Account holder","_links":{"endUserIdentity":{"href":"\/services\/api\/v1.7\/_user_\/_70352f41061eda4_\/dsp2\/users\/identity","method":"GET"},"balances":{"href":"\/services\/api\/v1.7\/_user_\/_70352f41061eda4_\/dsp2\/accounts\/balances\/DUMMY_RESOURCE_ID","method":"GET"},"transactions":{"href":"\/services\/api\/v1.7\/_user_\/_70352f41061eda4_\/dsp2\/accounts\/transactions\/DUMMY_RESOURCE_ID","method":"GET"}}}],"_links":{"self":{"href":"\/services\/api\/v1.7\/_user_\/_70352f41061eda4_\/dsp2\/accounts","method":"GET"}}}
 
 REQUEST 3
 GET https://api-dsp2.boursorama.com/services/api/v1.7/_user_/_70352f41061eda4_/dsp2/accounts/balances/DUMMY_RESOURCE_ID

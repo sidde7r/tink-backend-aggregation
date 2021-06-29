@@ -20,7 +20,7 @@ RESPONSE 2 SET GOT_ACCOUNTS
 200
 Content-Type: application/json
 
-{"accounts":[{"accountId":{"iban":"DUMMY_IBAN"},"name":"DUMMY_NAME","usage":"PRIV","cashAccountType":"CACC","currency":"EUR","psuStatus":"Account Holder","_links":{}}],"_links":{"self":{"href":"/stet/psd2/v1/accounts","templated":false}}}
+{"connectedPsu": "HOLDER_NAME","accounts":[{"accountId":{"iban":"DUMMY_IBAN"},"name":"DUMMY_NAME","usage":"PRIV","cashAccountType":"CACC","currency":"EUR","psuStatus":"Account Holder","_links":{}}],"_links":{"self":{"href":"/stet/psd2/v1/accounts","templated":false}}}
 
 REQUEST 3
 PUT https://www.18715.live.api.89c3.com/stet/psd2/v1/consents

@@ -20,7 +20,6 @@ import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.authent
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.configuration.BpceGroupConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.creditcard.BpceGroupCardTransactionsFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.creditcard.BpceGroupCreditCardFetcher;
-import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.creditcard.converter.BpceGroupCreditCardConverter;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.payment.BpceGroupPaymentApiClient;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.payment.BpceGroupPaymentDatePolicy;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.signature.BpceGroupRequestSigner;
@@ -184,9 +183,8 @@ public final class BpceGroupAgent extends NextGenerationAgent
     }
 
     private CreditCardRefreshController getCreditCardRefreshController() {
-        final BpceGroupCreditCardConverter converter = new BpceGroupCreditCardConverter();
         final BpceGroupCreditCardFetcher creditCardFetcher =
-                new BpceGroupCreditCardFetcher(bpceGroupApiClient, converter);
+                new BpceGroupCreditCardFetcher(bpceGroupApiClient);
         final BpceGroupCardTransactionsFetcher transactionsFetcher =
                 new BpceGroupCardTransactionsFetcher(bpceGroupApiClient);
 

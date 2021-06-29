@@ -36,7 +36,7 @@ public class CreditAgricoleBaseTransactionalAccountFetcherTestData {
                     + "                \"other\": null,\n"
                     + "                \"currency\": \"EUR\"\n"
                     + "            },\n"
-                    + "            \"name\": \"MONSIEUR ALLO ALLO\",\n"
+                    + "            \"name\": \"M. ALLO ALLO\",\n"
                     + "            \"details\": null,\n"
                     + "            \"linkedAccount\": null,\n"
                     + "            \"usage\": \"PRIV\",\n"

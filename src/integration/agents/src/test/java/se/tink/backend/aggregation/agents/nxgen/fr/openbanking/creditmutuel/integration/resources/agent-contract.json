@@ -2,51 +2,78 @@
   "accounts": [
     {
       "accountNumber": "DUMMY_IBAN",
-      "accountExclusion":"NONE",
-      "exactBalance":{
-        "currencyCode":"EUR",
-        "doubleValue":5134.53,
-        "scale":2,
-        "unscaledValue":513453,
-        "exactValue":5134.53
+      "accountExclusion": "NONE",
+      "exactBalance": {
+        "currencyCode": "EUR",
+        "exactValue": 5134.53,
+        "scale": 2,
+        "unscaledValue": 513453,
+        "doubleValue": 5134.53
       },
-      "currencyCode":"EUR",
-      "bankId":"DUMMYIBAN",
-      "name":"DUMMY_NAME_1",
-      "ownership":1.0,
-      "type":"CHECKING",
-      "identifiers":"[]",
-      "closed":false,
-      "holderName":null,
-      "flags":"[\"PSD2_PAYMENT_ACCOUNT\"]",
-      "availableCredit":0.0,
-      "balance":5134.53
+      "currencyCode": "EUR",
+      "availableBalance": {
+        "currencyCode": "EUR",
+        "exactValue": 5134.53,
+        "scale": 2,
+        "unscaledValue": 513453,
+        "doubleValue": 5134.53
+      },
+      "bankId": "DUMMYIBAN",
+      "excluded": false,
+      "favored": false,
+      "name": "DUMMY_NAME_1",
+      "ownership": 1.0,
+      "type": "CHECKING",
+      "userModifiedExcluded": false,
+      "userModifiedName": false,
+      "userModifiedType": false,
+      "identifiers": "[]",
+      "closed": false,
+      "holderName": "Dummy_name_1",
+      "accountHolder": {
+        "accountId": null,
+        "type": "PERSONAL",
+        "identities": [
+          {
+            "name": "Dummy_name_1",
+            "role": "HOLDER"
+          }
+        ]
+      },
+      "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
+      "balances": [],
+      "availableCredit": 0.0,
+      "balance": 5134.53
     }
   ],
   "transactions": [
     {
-      "amount":12.25,
-      "date":1518433200000,
-      "description":"SEPA CREDIT TRANSFER from PSD2Company",
-      "internalPayload":{},
-      "originalAmount":0.0,
-      "payload":{},
-      "pending":false,
-      "timestamp":0,
-      "type":"DEFAULT",
-      "upcoming":false
+      "amount": 12.25,
+      "date": 1518433200000,
+      "description": "SEPA CREDIT TRANSFER from PSD2Company",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {},
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "externalSystemIds": {},
+      "transactionDates": []
     },
     {
-      "amount":13.25,
-      "date":1518519600000,
-      "description":"SEPA CREDIT TRANSFER from PSD2Company",
-      "internalPayload":{},
-      "originalAmount":0.0,
-      "payload":{},
-      "pending":false,
-      "timestamp":0,
-      "type":"DEFAULT",
-      "upcoming":false
+      "amount": 13.25,
+      "date": 1518519600000,
+      "description": "SEPA CREDIT TRANSFER from PSD2Company",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {},
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false,
+      "externalSystemIds": {},
+      "transactionDates": []
     }
   ]
 }

@@ -18,11 +18,11 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmc
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.configuration.CmcicAgentConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.configuration.CmcicConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.executor.payment.CmcicPaymentExecutor;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.creditcard.CmcicCreditCardConverter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.creditcard.CmcicCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.CmcicIdentityDataFetcher;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.CmcicTransactionalAccountConverter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.CmcicTransactionalAccountFetcher;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.converter.CmcicCreditCardConverter;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.converter.CmcicTransactionalAccountConverter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transfer.CmcicTransferDestinationFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.provider.CmcicCodeChallengeProvider;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.provider.CmcicDigestProvider;
@@ -156,9 +156,8 @@ public abstract class CmcicAgent extends NextGenerationAgent
     }
 
     private CreditCardRefreshController constructCreditCardRefreshController() {
-        CmcicCreditCardConverter cmcicCreditCardConverter = new CmcicCreditCardConverter();
         CmcicCreditCardFetcher creditCardFetcher =
-                new CmcicCreditCardFetcher(apiClient, cmcicCreditCardConverter);
+                new CmcicCreditCardFetcher(apiClient, new CmcicCreditCardConverter());
         return new CreditCardRefreshController(
                 this.metricRefreshController,
                 this.updateController,
@@ -169,11 +168,9 @@ public abstract class CmcicAgent extends NextGenerationAgent
     }
 
     private TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
-        CmcicTransactionalAccountConverter transactionalAccountConverter =
-                new CmcicTransactionalAccountConverter();
-
         final CmcicTransactionalAccountFetcher accountFetcher =
-                new CmcicTransactionalAccountFetcher(apiClient, transactionalAccountConverter);
+                new CmcicTransactionalAccountFetcher(
+                        apiClient, new CmcicTransactionalAccountConverter());
 
         return new TransactionalAccountRefreshController(
                 metricRefreshController,

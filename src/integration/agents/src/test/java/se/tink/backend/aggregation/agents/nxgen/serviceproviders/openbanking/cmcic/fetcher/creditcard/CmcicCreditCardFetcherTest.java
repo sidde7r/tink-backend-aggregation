@@ -8,7 +8,6 @@ import java.util.Collection;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.apiclient.CmcicApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.converter.CmcicCreditCardConverter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.rpc.FetchAccountsResponse;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.libraries.amount.ExactCurrencyAmount;
@@ -16,13 +15,12 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 public class CmcicCreditCardFetcherTest {
 
     private CmcicApiClient cmcicApiClient;
-    private CmcicCreditCardConverter cmcicCreditCardConverter;
     private CmcicCreditCardFetcher objectUnderTest;
 
     @Before
     public void before() {
         cmcicApiClient = mock(CmcicApiClient.class);
-        cmcicCreditCardConverter = new CmcicCreditCardConverter();
+        CmcicCreditCardConverter cmcicCreditCardConverter = new CmcicCreditCardConverter();
         objectUnderTest = new CmcicCreditCardFetcher(cmcicApiClient, cmcicCreditCardConverter);
     }
 
