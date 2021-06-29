@@ -45,7 +45,7 @@
     {
       "amount":1001.0,
       "date":1616151600000,
-      "description":null,
+      "description": " Pagamento  ",
       "internalPayload":{},
       "originalAmount":0.0,
       "payload":{},

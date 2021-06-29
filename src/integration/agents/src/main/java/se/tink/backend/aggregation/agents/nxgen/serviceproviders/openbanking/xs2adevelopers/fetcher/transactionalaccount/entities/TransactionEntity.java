@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.utils.berlingroup.AmountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -15,6 +16,7 @@ public class TransactionEntity {
     private AccountEntity creditorAccount;
     private String creditorName;
     private String remittanceInformationUnstructured;
+    private String remittanceInformationStructured;
     private AmountEntity transactionAmount;
     private String transactionId;
     private String valueDate;
@@ -56,7 +58,8 @@ public class TransactionEntity {
                 return creditorName;
             }
         }
-        return remittanceInformationUnstructured;
+        return Optional.ofNullable(remittanceInformationUnstructured)
+                .orElse(remittanceInformationStructured);
     }
 
     private boolean isExpense() {
