@@ -33,7 +33,33 @@ public final class BbvaTypeMappers {
                             "0000008704", // CUENTA PERSONALES - CUENTA CORRIENTE UNO-E-ALTA DNI-NIE
                             // SIN OTE
                             "0000016231", //  CUENTA PERSONALES - CUENTA SIN COMISIONES PARA JOVENES
-                            "0CA0000274" //  CUENTA PERSONALES - CUENTA 59+
+                            "0CA0000274", //  CUENTA PERSONALES - CUENTA 59+
+                            "0CA0000277", // CUENTAS PERSONALES - CUENTA RENDIMIENTO BBVA
+                            "0000015604", // CUENTAS PERSONALES - CUENTA NEGOCIOS BIENVENIDA
+                            "0CA0000067", // CUENTAS PERSONALES - CUENTA EMPLEADOS EMPRESAS BBVA
+                            "0CAX000006", // CUENTAS PERSONALES - CUENTAS DE AHORRO CON OPERATIVA
+                            // RESTRINGIDA CX
+                            "0CA0000113", // CUENTAS PERSONALES - CUENTA CORRIENTE UNO-E
+                            "0000009701", // CUENTAS PERSONALES - CTA. RENDIMIENTO BBVA
+                            "0CA0000305", // CUENTAS PERSONALES - CUENTA REINVERSION DIVIDENDOS
+                            // BLUE"
+                            "0000004273", // CUENTAS PERSONALES - CUENTA BLUE ON LINE
+                            "0CAX000001", // CUENTAS PERSONALES - CUENTA INTEGRACION CX CONSUMIDOR
+                            "0000016048", // CREDITO - CDC PYMES COVID-19
+                            "0CA0000025", // CUENTAS PERSONALES - CUENTA REINVERSION DIVIDENDOS
+                            "0CA0000116", // CUENTAS PERSONALES - CUENTA AHORRO UNO-E
+                            "0CVD000003", // CUENTAS EN DIVISAS - CUENTAS VISTA EN DIVISA - is it
+                            // correct mapping?
+                            "0000010892", // CUENTAS PERSONALES - CUENTA FAMILIARES DE BBVA
+                            "0CA0000103", // CUENTAS PERSONALES - COMPTE MED 1
+                            "0CA0000294", // CUENTAS PERSONALES - CUENTA RENDIMIENTO BBVA
+                            "0CA0000298", // CUENTAS PERSONALES - CUENTA ON LINE
+                            "0CA0000078", // CUENTAS PERSONALES - CUENTA MINI BLUE
+                            "0000015117", // CUENTAS PERSONALES - CUENTA ONLINE GO
+                            "0000015790", // CUENTAS PERSONALES - BBVA CUENTA ON LINE BIENVENIDA
+                            "0000011883", // CUENTAS PERSONALES - CUENTA VINCULADA
+                            "0000010461", // CUENTAS PERSONALES - CUENTA RENDIMIENTO BBVA 2015
+                            "0000010534" // CUENTAS PERSONALES - PRODUCTO CANCELADO CESE
                             )
                     .put(
                             AccountTypes.SAVINGS, "0000011102" // CUENTA METAS - goal account
@@ -56,7 +82,13 @@ public final class BbvaTypeMappers {
                     .put(
                             AccountTypes.CREDIT_CARD,
                             "0000010354", // CREDITO - REPSOL MAS CREDITO - credit card
-                            "0000001315" // CREDITO - TARJETA DESPUES BLUE BBVA - credit card
+                            "0000001315", // CREDITO - TARJETA DESPUES BLUE BBVA - credit card
+                            "0000015059", // CREDITO - CUENTA DE CREDITO NEGOCIOS ONLINE
+                            "0CC0000008" // CREDITO - CUENTA DE CREDITO TRES
+                            )
+                    .put(
+                            AccountTypes.MORTGAGE,
+                            "0CA0000105" // CUENTAS PERSONALES - CUENTA SOLUCION HIPOTECARIA
                             )
                     .build();
 
