@@ -24,7 +24,7 @@ public class LunarAuthDataAccessor
         return Storage.PERSISTED_DATA_KEY;
     }
 
-    public LunarAuthData get() {
+    public LunarAuthData getData() {
         log.info("{} Getting data from the storage", LUNAR_TAG);
         Optional<LunarAuthData> authData = getFromStorage();
         if (!authData.isPresent()) {

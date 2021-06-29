@@ -57,6 +57,7 @@ public final class LunarDkAgent extends AgentPlatformAgent
                 AgentPlatformAuthenticator {
 
     private final FetcherApiClient apiClient;
+    private final AuthenticationApiClient authenticationApiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final LoanRefreshController loanRefreshController;
     private final InvestmentRefreshController investmentRefreshController;
@@ -81,7 +82,7 @@ public final class LunarDkAgent extends AgentPlatformAgent
                         randomValueGenerator,
                         languageCode);
 
-        AuthenticationApiClient authenticationApiClient =
+        authenticationApiClient =
                 new AuthenticationApiClient(
                         new AgentPlatformHttpClient(client), randomValueGenerator, languageCode);
 
@@ -199,7 +200,7 @@ public final class LunarDkAgent extends AgentPlatformAgent
 
     @Override
     protected SessionHandler constructSessionHandler() {
-        return SessionHandler.alwaysFail();
+        return new LunarSessionHandler(authenticationApiClient, accessorFactory, persistentStorage);
     }
 
     @Override

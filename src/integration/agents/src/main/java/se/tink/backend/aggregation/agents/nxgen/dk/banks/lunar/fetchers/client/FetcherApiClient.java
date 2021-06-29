@@ -131,7 +131,7 @@ public class FetcherApiClient {
                             .createAuthDataAccessor(
                                     new PersistentStorageService(persistentStorage)
                                             .readFromAgentPersistentStorage())
-                            .get();
+                            .getData();
         }
         return authData;
     }

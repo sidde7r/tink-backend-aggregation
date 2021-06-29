@@ -111,7 +111,7 @@ public class LunarTransactionalAccountFetcher implements AccountFetcher<Transact
                             .createAuthDataAccessor(
                                     new PersistentStorageService(persistentStorage)
                                             .readFromAgentPersistentStorage())
-                            .get();
+                            .getData();
         }
         return authData;
     }

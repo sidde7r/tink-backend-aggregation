@@ -150,7 +150,7 @@ public class LunarIdentityDataFetcher implements IdentityDataFetcher {
                             .createAuthDataAccessor(
                                     new PersistentStorageService(persistentStorage)
                                             .readFromAgentPersistentStorage())
-                            .get();
+                            .getData();
         }
         return authData;
     }

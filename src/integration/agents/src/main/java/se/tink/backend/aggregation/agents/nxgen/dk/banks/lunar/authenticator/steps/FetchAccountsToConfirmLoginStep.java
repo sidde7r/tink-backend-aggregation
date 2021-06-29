@@ -36,7 +36,7 @@ public class FetchAccountsToConfirmLoginStep
         LunarAuthDataAccessor authDataAccessor =
                 dataAccessorFactory.createAuthDataAccessor(
                         request.getAuthenticationPersistedData());
-        LunarAuthData authData = authDataAccessor.get();
+        LunarAuthData authData = authDataAccessor.getData();
 
         LunarProcessState processState =
                 dataAccessorFactory

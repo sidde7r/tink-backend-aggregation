@@ -30,7 +30,7 @@ public class SaveUserCredentialsStep
         LunarAuthDataAccessor authDataAccessor =
                 persistedDataAccessorFactory.createAuthDataAccessor(
                         request.getAuthenticationPersistedData());
-        LunarAuthData authData = authDataAccessor.get();
+        LunarAuthData authData = authDataAccessor.getData();
 
         AgentUserInteractionData userData = request.getUserInteractionData();
 

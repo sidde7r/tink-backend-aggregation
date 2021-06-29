@@ -47,7 +47,7 @@ public class GetNemIdTokenStep
         LunarAuthDataAccessor authDataAccessor =
                 dataAccessorFactory.createAuthDataAccessor(
                         request.getAuthenticationPersistedData());
-        LunarAuthData authData = authDataAccessor.get();
+        LunarAuthData authData = authDataAccessor.getData();
 
         LunarProcessStateAccessor processStateAccessor =
                 dataAccessorFactory.createProcessStateAccessor(

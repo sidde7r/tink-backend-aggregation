@@ -22,7 +22,7 @@ public class SdcNoSessionHandler implements SessionHandler {
         try {
             apiClient.fetchAgreement();
         } catch (HttpResponseException e) {
-            log.error("[SDC] Caught exception while checking if session is active", e);
+            log.warn("[SDC] Caught exception while checking if session is active", e);
             throw SessionError.SESSION_EXPIRED.exception();
         }
     }
