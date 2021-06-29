@@ -26,7 +26,7 @@ public class BecSessionHandler implements SessionHandler {
         try {
             apiClient.fetchAccounts();
         } catch (HttpResponseException e) {
-            log.error("Caught exception while checking if session is active", e);
+            log.warn("Caught exception while checking if session is active", e);
             throw SessionError.SESSION_EXPIRED.exception();
         }
     }

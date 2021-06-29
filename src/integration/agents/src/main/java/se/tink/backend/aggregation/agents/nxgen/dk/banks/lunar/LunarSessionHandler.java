@@ -35,7 +35,7 @@ public class LunarSessionHandler implements SessionHandler {
         try {
             apiClient.fetchAccounts(authData.getAccessToken(), authData.getDeviceId());
         } catch (HttpResponseException e) {
-            log.error("{} Caught exception while checking if session is active", LUNAR_TAG, e);
+            log.warn("{} Caught exception while checking if session is active", LUNAR_TAG, e);
             throw SessionError.SESSION_EXPIRED.exception();
         }
     }
