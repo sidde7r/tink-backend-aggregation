@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 import org.apache.commons.lang3.StringEscapeUtils;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.SabadellConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.SabadellConstants.InitiateSessionRequest;
@@ -89,7 +90,13 @@ public class InitiateSessionRequestEntity {
                 new ParametersBSEntity()
                         .setKey(InitiateSessionRequest.ARXAN_BS_KEY)
                         .setValue(SabadellCryptoUtils.getArxan(username, csid));
-        return Arrays.asList(usernameParam, passwordParam, arxanParam);
+
+        ParametersBSEntity deviceId =
+                new ParametersBSEntity()
+                        .setKey(InitiateSessionRequest.DEVICE_ID_BS_KEY)
+                        .setValue(UUID.randomUUID().toString().replace("-", "").toUpperCase());
+
+        return Arrays.asList(usernameParam, passwordParam, arxanParam, deviceId);
     }
 
     public String getDeviceInfo() {
