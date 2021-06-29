@@ -169,6 +169,24 @@ public class BaseTransferExecutor {
         return hre;
     }
 
+    public void deleteUnsignedRegisteredTransfers(
+            List<TransferTransactionEntity> transferTransactions) {
+        try {
+            for (TransferTransactionEntity transferTransaction : transferTransactions) {
+                for (TransactionEntity transactionEntity : transferTransaction.getTransactions()) {
+                    deleteTransfer(transactionEntity);
+                }
+            }
+        } catch (Exception deleteException) {
+            throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
+                    .setEndUserMessage(
+                            TransferExecutionException.EndUserMessage.EXISTING_UNSIGNED_TRANSFERS)
+                    .setMessage(SwedbankBaseConstants.ErrorMessage.UNSIGNED_TRANFERS)
+                    .setInternalStatus(InternalStatus.EXISTING_UNSIGNED_TRANSFERS.toString())
+                    .build();
+        }
+    }
+
     /** Delete a set of transfer groups (used when cancelling injected transfers). */
     public void deleteTransfers(List<TransferTransactionEntity> transferTransactions) {
         try {

@@ -54,7 +54,7 @@ public class SwedbankDefaultPaymentExecutor extends BaseTransferExecutor
         String sourceAccountId = this.getSourceAccountIdAndSelectProfile(transfer);
 
         RegisteredTransfersResponse registeredTransfers = apiClient.registeredTransfers();
-        deleteTransfers(registeredTransfers.getRegisteredTransactions());
+        deleteUnsignedRegisteredTransfers(registeredTransfers.getRegisteredTransactions());
 
         RegisteredTransfersResponse registeredTransfersResponse =
                 registerPayment(transfer, sourceAccountId);
