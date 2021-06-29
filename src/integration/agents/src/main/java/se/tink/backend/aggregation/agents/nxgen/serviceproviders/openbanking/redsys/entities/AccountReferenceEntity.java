@@ -13,7 +13,9 @@ public class AccountReferenceEntity {
     @JsonProperty private String msisdn;
     @JsonProperty private String currency;
 
-    public AccountReferenceEntity(String iban) {
-        this.iban = iban;
+    public static AccountReferenceEntity ofIban(String iban) {
+        AccountReferenceEntity entity = new AccountReferenceEntity();
+        entity.iban = iban;
+        return entity;
     }
 }
