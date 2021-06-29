@@ -110,6 +110,6 @@ public class LoginResponse {
     }
 
     public List<PortfolioEntity> getPortfolios() {
-        return portfolios;
+        return Optional.ofNullable(portfolios).orElse(Collections.emptyList());
     }
 }

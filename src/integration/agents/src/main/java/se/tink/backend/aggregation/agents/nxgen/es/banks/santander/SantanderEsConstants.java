@@ -100,5 +100,5 @@ public class SantanderEsConstants {
     }
 
     public static final String DEFAULT_CURRENCY = "EUR";
-    public static final String DEFAULT_LOAN_AMOUNT = "0";
+    public static final String DEFAULT_INVESTMENT_AMOUNT = "0";
 }
