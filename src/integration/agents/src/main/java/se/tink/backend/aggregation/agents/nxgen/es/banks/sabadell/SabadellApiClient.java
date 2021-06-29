@@ -53,13 +53,6 @@ public class SabadellApiClient {
         client.addFilter(bankServiceErrorFilter);
     }
 
-    private RequestBuilder createRequest(URL url) {
-        return client.request(url)
-                .type(MediaType.APPLICATION_JSON_TYPE)
-                .acceptLanguage(SabadellConstants.Headers.ACCEPT_LANGUAGE)
-                .accept(SabadellConstants.Headers.SABADELL_ACCEPT);
-    }
-
     public SessionResponse initiateSession(
             String username,
             String password,
@@ -220,5 +213,12 @@ public class SabadellApiClient {
     public LoanDetailsResponse fetchLoanDetails(LoanDetailsRequest loanDetailsRequest) {
         return createRequest(SabadellConstants.Urls.FETCH_LOAN_DETAILS)
                 .post(LoanDetailsResponse.class, loanDetailsRequest);
+    }
+
+    private RequestBuilder createRequest(URL url) {
+        return client.request(url)
+                .type(MediaType.APPLICATION_JSON_TYPE)
+                .acceptLanguage(SabadellConstants.Headers.ACCEPT_LANGUAGE)
+                .accept(SabadellConstants.Headers.SABADELL_ACCEPT);
     }
 }

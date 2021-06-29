@@ -87,6 +87,7 @@ public final class SabadellConstants {
         public static final String USERNAME_BS_KEY = "userName";
         public static final String PASSWORD_BS_KEY = "password";
         public static final String ARXAN_BS_KEY = "arxan";
+        public static final String DEVICE_ID_BS_KEY = "deviceId";
         public static final String ARXAN_DATA =
                 "{csid} DebuggerOK RootKO SwizzlingOK VerifyCertificatesOK | ";
         public static final String FLOATING_KEYBOARD_KEY_PREFIX = "@0#";
