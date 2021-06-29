@@ -6,6 +6,8 @@ import com.google.inject.Injector;
 import io.dropwizard.Application;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
+import io.prometheus.client.CollectorRegistry;
+import io.prometheus.client.jetty.JettyStatisticsCollector;
 import java.util.TimeZone;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +25,7 @@ import se.tink.io.dropwizard.configuration.SubstitutingSourceProvider;
 import se.tink.libraries.draining.DrainModeTask;
 import se.tink.libraries.dropwizard.DropwizardLifecycleInjectorFactory;
 import se.tink.libraries.dropwizard.DropwizardObjectMapperConfigurator;
+import se.tink.libraries.metrics.prometheus.PrometheusExportServer;
 import se.tink.libraries.queue.QueueConsumer;
 import se.tink.libraries.unleash.UnleashClient;
 
@@ -82,6 +85,12 @@ public class AggregationServiceContainer extends Application<AggregationServiceC
         environment
                 .lifecycle()
                 .manage(injector.getInstance(AsAgentDataAvailabilityTrackerClient.class));
+
+        // Add metrics from Jetty Server
+        PrometheusExportServer prometheus = injector.getInstance(PrometheusExportServer.class);
+        JettyStatisticsCollector jettyStatisticsCollector =
+                new JettyStatisticsCollector(prometheus.getStatisticsHandler());
+        jettyStatisticsCollector.register(injector.getInstance(CollectorRegistry.class));
     }
 
     /**
