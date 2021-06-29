@@ -715,6 +715,7 @@ maven_install(
         "io.prometheus:simpleclient_common:0.6.0",
         "io.prometheus:simpleclient_hotspot:0.6.0",
         "io.prometheus:simpleclient_httpserver:0.6.0",
+        "io.prometheus:simpleclient_jetty:0.6.0",
         "io.prometheus:simpleclient_pushgateway:0.6.0",
         "io.prometheus:simpleclient_servlet:0.6.0",
         "io.protostuff:protostuff-api:1.5.1",
