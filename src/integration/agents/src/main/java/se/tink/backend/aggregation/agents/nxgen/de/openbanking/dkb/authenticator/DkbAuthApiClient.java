@@ -57,28 +57,25 @@ public class DkbAuthApiClient {
         return executeHttpRequest(request, ConsentDetailsResponse.class);
     }
 
-    ConsentAuthorization startConsentAuthorization(String consentId) throws LoginException {
+    Authorization startConsentAuthorization(String consentId) throws LoginException {
         HttpRequest request = requestsFactory.generateConsentAuthorizationRequest(consentId);
-        return executeHttpRequest(
-                request, ConsentAuthorization.class, INCORRECT_CHALLENGE_RESPONSE);
+        return executeHttpRequest(request, Authorization.class, INCORRECT_CHALLENGE_RESPONSE);
     }
 
-    ConsentAuthorization selectConsentAuthorizationMethod(
+    Authorization selectConsentAuthorizationMethod(
             String consentId, String authorizationId, String methodId) throws LoginException {
         HttpRequest request =
                 requestsFactory.generateConsentAuthorizationMethodRequest(
                         consentId, authorizationId, methodId);
-        return executeHttpRequest(
-                request, ConsentAuthorization.class, INCORRECT_CHALLENGE_RESPONSE);
+        return executeHttpRequest(request, Authorization.class, INCORRECT_CHALLENGE_RESPONSE);
     }
 
-    ConsentAuthorization consentAuthorization2ndFactor(
+    Authorization consentAuthorization2ndFactor(
             String consentId, String authorizationId, String code) throws LoginException {
         HttpRequest request =
                 requestsFactory.generateConsentAuthorizationOtpRequest(
                         consentId, authorizationId, code);
-        return executeHttpRequest(
-                request, ConsentAuthorization.class, INCORRECT_CHALLENGE_RESPONSE);
+        return executeHttpRequest(request, Authorization.class, INCORRECT_CHALLENGE_RESPONSE);
     }
 
     private <T> T executeHttpRequest(

@@ -15,7 +15,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @Data
 @JsonObject
-public class ConsentAuthorization {
+public class Authorization {
 
     private static final Set<String> METHODS_EXCLUDED_FROM_SELECTION = ImmutableSet.of("PHOTO_OTP");
     private String scaStatus;

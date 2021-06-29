@@ -112,7 +112,7 @@ public class DkbAuthenticatorTest {
                 HttpMethod.POST,
                 "https://api.dkb.de/psd2/v1/consents/consentId/authorisations",
                 null,
-                ConsentAuthorization.class,
+                Authorization.class,
                 "consent_authorisation.json",
                 200);
 
@@ -123,7 +123,7 @@ public class DkbAuthenticatorTest {
                 HttpMethod.PUT,
                 "https://api.dkb.de/psd2/v1/consents/consentId/authorisations/authorisationId",
                 consentAuthorizationMethod,
-                ConsentAuthorization.class,
+                Authorization.class,
                 "consent_authorisation_selected.json",
                 200);
 
@@ -134,7 +134,7 @@ public class DkbAuthenticatorTest {
                 HttpMethod.PUT,
                 "https://api.dkb.de/psd2/v1/consents/consentId/authorisations/authorisationId",
                 consentAuthorizationOtp,
-                ConsentAuthorization.class,
+                Authorization.class,
                 "consent_authorisation_finalised.json",
                 200);
 
