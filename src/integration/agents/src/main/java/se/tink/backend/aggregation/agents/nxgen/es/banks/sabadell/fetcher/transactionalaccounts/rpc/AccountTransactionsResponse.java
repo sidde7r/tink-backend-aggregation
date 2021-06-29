@@ -14,15 +14,8 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 @JsonObject
 public class AccountTransactionsResponse implements TransactionKeyPaginatorResponse<Boolean> {
     private boolean moreElements;
+
     private List<PeriodMovementModelListEntity> periodMovementModelList;
-
-    public boolean hasMoreElements() {
-        return moreElements;
-    }
-
-    public List<PeriodMovementModelListEntity> getPeriodMovementModelList() {
-        return periodMovementModelList;
-    }
 
     @Override
     public Collection<? extends Transaction> getTinkTransactions() {

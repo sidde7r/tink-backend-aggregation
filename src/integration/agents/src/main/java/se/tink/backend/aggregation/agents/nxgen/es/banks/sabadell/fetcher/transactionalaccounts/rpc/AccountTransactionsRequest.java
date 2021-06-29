@@ -1,26 +1,26 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.transactionalaccounts.rpc;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.transactionalaccounts.entities.AccountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class AccountTransactionsRequest {
-    private boolean moreRequest;
-    private AccountEntity account;
-    private String dateFrom;
-    private String dateTo;
+    private final boolean moreRequest;
+    private final AccountEntity account;
+    private final String dateFrom;
+    private final String dateTo;
 
-    @JsonIgnore
-    public static AccountTransactionsRequest build(AccountEntity account, boolean moreRequest) {
-        AccountTransactionsRequest accountTransactionsRequest = new AccountTransactionsRequest();
+    private AccountTransactionsRequest(Builder builder) {
+        this.moreRequest = builder.moreRequest;
+        this.account = builder.account;
+        this.dateFrom = builder.dateFrom;
+        this.dateTo = builder.dateTo;
+    }
 
-        accountTransactionsRequest.moreRequest = moreRequest;
-        accountTransactionsRequest.account = account;
-        accountTransactionsRequest.dateFrom = "";
-        accountTransactionsRequest.dateTo = "";
-
-        return accountTransactionsRequest;
+    public static Builder builder() {
+        return new Builder();
     }
 
     public boolean isMoreRequest() {
@@ -37,5 +37,38 @@ public class AccountTransactionsRequest {
 
     public String getDateTo() {
         return dateTo;
+    }
+
+    public static class Builder {
+        private static final DateTimeFormatter LOCAL_DATE_FORMAT =
+                DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        private boolean moreRequest;
+        private AccountEntity account;
+        private String dateFrom;
+        private String dateTo;
+
+        public Builder moreRequest(boolean moreRequest) {
+            this.moreRequest = moreRequest;
+            return this;
+        }
+
+        public Builder account(AccountEntity account) {
+            this.account = account;
+            return this;
+        }
+
+        public Builder dateFrom(LocalDate from) {
+            this.dateFrom = from.format(LOCAL_DATE_FORMAT);
+            return this;
+        }
+
+        public Builder dateTo(LocalDate to) {
+            this.dateTo = to.format(LOCAL_DATE_FORMAT);
+            return this;
+        }
+
+        public AccountTransactionsRequest build() {
+            return new AccountTransactionsRequest(this);
+        }
     }
 }

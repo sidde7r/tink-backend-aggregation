@@ -8,6 +8,7 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
 
 import com.google.inject.Inject;
+import java.time.LocalDateTime;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
@@ -66,13 +67,14 @@ public final class SabadellAgent extends SubsequentProgressiveGenerationAgent
     private final CreditCardRefreshController creditCardRefreshController;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final RandomValueGenerator randomValueGenerator;
+    private final LocalDateTime localDateTimeSource;
 
     @Inject
     public SabadellAgent(final AgentComponentProvider componentProvider) {
         super(componentProvider);
         this.randomValueGenerator = componentProvider.getRandomValueGenerator();
         this.apiClient = new SabadellApiClient(client);
-
+        this.localDateTimeSource = componentProvider.getLocalDateTimeSource().now();
         this.investmentRefreshController =
                 new InvestmentRefreshController(
                         metricRefreshController,
@@ -119,7 +121,8 @@ public final class SabadellAgent extends SubsequentProgressiveGenerationAgent
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
                         new TransactionKeyPaginationController<>(
-                                new SabadellTransactionFetcher(apiClient))));
+                                new SabadellTransactionFetcher(
+                                        apiClient, localDateTimeSource.toLocalDate()))));
     }
 
     @Override
