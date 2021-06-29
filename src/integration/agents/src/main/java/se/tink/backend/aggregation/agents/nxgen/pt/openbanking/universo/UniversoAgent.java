@@ -26,9 +26,11 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 @AgentCapabilities({CHECKING_ACCOUNTS})
 public class UniversoAgent extends Xs2aDevelopersTransactionalAgent {
 
+    private static final String BASE_URL = "https://api.psd2.universo.pt";
+
     @Inject
     public UniversoAgent(AgentComponentProvider componentProvider, QsealcSigner qsealcSigner) {
-        super(componentProvider, "https://api.psd2.universo.pt");
+        super(componentProvider, BASE_URL);
         client.addFilter(
                 new UniversoSigningFilter(
                         (UniversoProviderConfiguration) configuration, qsealcSigner));
@@ -91,7 +93,8 @@ public class UniversoAgent extends Xs2aDevelopersTransactionalAgent {
                         new UniversoTransactionDateFromFetcher(
                                 apiClient,
                                 agentComponentProvider.getLocalDateTimeSource(),
-                                request.getUserAvailability().isUserPresent()));
+                                request.getUserAvailability().isUserPresent(),
+                                BASE_URL));
 
         return new TransactionalAccountRefreshController(
                 metricRefreshController, updateController, accountFetcher, transactionFetcher);
