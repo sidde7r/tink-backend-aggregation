@@ -33,7 +33,6 @@ import se.tink.backend.aggregation.agents.models.AccountFeatures;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.models.TransactionTypes;
 import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
-import se.tink.backend.aggregation.agents.summary.refresh.RefreshSummary;
 import se.tink.backend.aggregation.agents.utils.mappers.CoreAccountHolderMapper;
 import se.tink.backend.aggregation.agents.utils.mappers.CoreAccountMapper;
 import se.tink.backend.aggregation.agents.utils.mappers.CoreCredentialsMapper;
@@ -164,8 +163,6 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         setAggregatorInfo(aggregatorInfo);
         setAppId(appId);
         setProviderId(request.getProvider().getName());
-        setRefreshSummary(new RefreshSummary(request, appId));
-        logger.info("[REFRESH SUMMARY] refresh summary created for AgentWorkerContext");
 
         if (request.getUser() != null) {
             String locale = request.getUser().getProfile().getLocale();
