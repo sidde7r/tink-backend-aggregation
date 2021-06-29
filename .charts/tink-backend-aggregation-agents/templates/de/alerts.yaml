@@ -372,7 +372,7 @@ spec:
         description: {{ .Values.kibanaClassLink }}
           {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is between 50 - 60% because of all issues ( <{ $value }> ) for <{ $labels.className }>
-          the last 30 minutes.
+          the last 30 minutes for <{ $labels.type }>
         tags: {{ .Values.tags }}
 
     - alert: agent_refreshes_below50_greater40_due_to_partially_completed_error_for_specific_product_in_de
@@ -391,7 +391,7 @@ spec:
         description: {{ .Values.kibanaClassLink }}
           {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is between 40 - 50% because of all issues ( <{ $value }> ) for <{ $labels.className }>
-          the last 30 minutes.
+          the last 30 minutes for <{ $labels.type }>
         tags: {{ .Values.tags }}
 
     - alert: agent_refreshes_below40_greater30_due_to_partially_completed_error_for_specific_product_in_de
@@ -410,7 +410,7 @@ spec:
         description: {{ .Values.kibanaClassLink }}
           {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is between 30 - 40% because of all issues ( <{ $value }> ) for <{ $labels.className }>
-          the last 30 minutes.
+          the last 30 minutes for <{ $labels.type }>
         tags: {{ .Values.tags }}
 
     - alert: agent_refreshes_below30_due_to_partially_completed_error_for_specific_product_in_de
@@ -427,5 +427,5 @@ spec:
         description: {{ .Values.kibanaClassLink }}
           {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is below 30% because of all issues ( <{ $value }> ) for <{ $labels.className }>
-          the last 30 minutes.
+          the last 30 minutes for <{ $labels.type }>
         tags: {{ .Values.tags }}

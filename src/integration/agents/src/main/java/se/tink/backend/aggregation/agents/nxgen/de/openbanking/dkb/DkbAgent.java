@@ -112,7 +112,7 @@ public final class DkbAgent extends NextGenerationAgent
                 new DkbTransactionsFetcher(
                         getApiClient(),
                         getDkbStorage(),
-                        request.getUserAvailability().isUserPresent());
+                        request.getUserAvailability().isUserAvailableForInteraction());
 
         return new TransactionalAccountRefreshController(
                 metricRefreshController, updateController, accountFetcher, transactionsFetcher);
