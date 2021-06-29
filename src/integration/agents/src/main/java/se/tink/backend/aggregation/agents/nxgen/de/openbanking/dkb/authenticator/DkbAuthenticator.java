@@ -231,8 +231,8 @@ public class DkbAuthenticator implements AutoAuthenticator, MultiFactorAuthentic
     }
 
     private void authorizeConsent(String consentId) throws AuthenticationException {
-        ConsentAuthorization consentAuth = authApiClient.startConsentAuthorization(consentId);
-        ConsentAuthorization consentAuthWithSelectedMethod =
+        Authorization consentAuth = authApiClient.startConsentAuthorization(consentId);
+        Authorization consentAuthWithSelectedMethod =
                 selectConsentAuthorizationMethodIfNeeded(consentId, consentAuth);
         consentAuthWithSelectedMethod.checkIfChallengeDataIsAllowed();
         provide2ndFactorConsentAuthorization(
@@ -244,8 +244,8 @@ public class DkbAuthenticator implements AutoAuthenticator, MultiFactorAuthentic
                         consentAuthWithSelectedMethod.getChosenScaMethod().getName()));
     }
 
-    private ConsentAuthorization selectConsentAuthorizationMethodIfNeeded(
-            String consentId, ConsentAuthorization previousResult) throws AuthenticationException {
+    private Authorization selectConsentAuthorizationMethodIfNeeded(
+            String consentId, Authorization previousResult) throws AuthenticationException {
         if (!previousResult.isScaMethodSelectionRequired()) {
             log.info(
                     "[DKB Auth] Sca Method selection not required, authenticationType is not available.");
@@ -255,31 +255,30 @@ public class DkbAuthenticator implements AutoAuthenticator, MultiFactorAuthentic
             return previousResult;
         }
 
-        List<ConsentAuthorization.ScaMethod> allowedScaMethods =
-                previousResult.getAllowedScaMethods();
+        List<Authorization.ScaMethod> allowedScaMethods = previousResult.getAllowedScaMethods();
         SelectableMethod selectedAuthMethod =
                 supplementalDataProvider.selectAuthMethod(allowedScaMethods);
         log.info(
                 "[DKB Auth] User for authenticationType {} started 2FA to authorize consent.",
                 selectedAuthMethod.getAuthenticationType());
-        ConsentAuthorization consentAuthorization =
+        Authorization authorization =
                 authApiClient.selectConsentAuthorizationMethod(
                         consentId,
                         previousResult.getAuthorisationId(),
                         selectedAuthMethod.getIdentifier());
-        setMissingAuthenticationType(selectedAuthMethod, consentAuthorization);
-        return consentAuthorization;
+        setMissingAuthenticationType(selectedAuthMethod, authorization);
+        return authorization;
     }
 
     private void setMissingAuthenticationType(
-            SelectableMethod selectedAuthMethod, ConsentAuthorization consentAuthorization) {
-        consentAuthorization
+            SelectableMethod selectedAuthMethod, Authorization authorization) {
+        authorization
                 .getChosenScaMethod()
                 .setAuthenticationType(selectedAuthMethod.getAuthenticationType());
     }
 
     private void provide2ndFactorConsentAuthorization(
-            String consentId, String authorisationId, ConsentAuthorization consentAuth)
+            String consentId, String authorisationId, Authorization consentAuth)
             throws SupplementalInfoException, LoginException {
         String code =
                 supplementalDataProvider.getTanCode(

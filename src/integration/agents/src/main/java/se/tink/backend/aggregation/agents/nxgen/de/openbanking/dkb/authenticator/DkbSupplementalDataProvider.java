@@ -34,7 +34,7 @@ public class DkbSupplementalDataProvider {
         return getTanCode(null, data);
     }
 
-    String getTanCode(ConsentAuthorization.ScaMethod scaMethod, List<String> data)
+    String getTanCode(Authorization.ScaMethod scaMethod, List<String> data)
             throws SupplementalInfoException {
         List<Field> fields = getSupplementalFields(scaMethod, data);
         String otp =
@@ -49,7 +49,7 @@ public class DkbSupplementalDataProvider {
         }
     }
 
-    List<Field> getSupplementalFields(ConsentAuthorization.ScaMethod scaMethod, List<String> data) {
+    List<Field> getSupplementalFields(Authorization.ScaMethod scaMethod, List<String> data) {
         List<Field> fields = new LinkedList<>();
 
         extractStartCode(data).ifPresent(s -> fields.add(GermanFields.Startcode.build(catalog, s)));

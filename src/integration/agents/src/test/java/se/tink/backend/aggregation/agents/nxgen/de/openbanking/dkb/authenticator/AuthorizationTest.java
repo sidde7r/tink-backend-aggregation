@@ -4,14 +4,14 @@ import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.authenticator.ConsentAuthorization.ScaMethod;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.authenticator.Authorization.ScaMethod;
 
-public class ConsentAuthorizationTest {
+public class AuthorizationTest {
 
     @Test
     public void isScaMethodSelectionRequiredShouldReturnTrueForNotEmptyMethodsSet() {
         // given
-        ConsentAuthorization tested = new ConsentAuthorization();
+        Authorization tested = new Authorization();
         tested.setScaMethods(singletonList(new ScaMethod()));
 
         // when
@@ -24,7 +24,7 @@ public class ConsentAuthorizationTest {
     @Test
     public void isScaMethodSelectionRequiredShouldReturnFalseTrueForEmptyMethodsSet() {
         // given
-        ConsentAuthorization tested = new ConsentAuthorization();
+        Authorization tested = new Authorization();
 
         // when
         boolean result = tested.isScaMethodSelectionRequired();

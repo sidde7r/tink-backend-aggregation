@@ -216,8 +216,7 @@ public class DkbAuthApiClientTest {
                 .thenReturn(givenHttpRequest);
 
         HttpResponse givenSuccessfulHttpResponse =
-                dummyHttpResponse(
-                        OK_REQUEST_STATUS, ConsentAuthorization.class, new ConsentAuthorization());
+                dummyHttpResponse(OK_REQUEST_STATUS, Authorization.class, new Authorization());
         when(clientMock.request(HttpResponse.class, givenHttpRequest))
                 .thenReturn(givenSuccessfulHttpResponse);
 
@@ -239,8 +238,7 @@ public class DkbAuthApiClientTest {
                 .thenReturn(givenHttpRequest);
 
         HttpResponse givenSuccessfulHttpResponse =
-                dummyHttpResponse(
-                        BAD_REQUEST_STATUS, ConsentAuthorization.class, new ConsentAuthorization());
+                dummyHttpResponse(BAD_REQUEST_STATUS, Authorization.class, new Authorization());
         when(clientMock.request(HttpResponse.class, givenHttpRequest))
                 .thenReturn(givenSuccessfulHttpResponse);
 
@@ -271,8 +269,7 @@ public class DkbAuthApiClientTest {
                 .thenReturn(givenHttpRequest);
 
         HttpResponse givenSuccessfulHttpResponse =
-                dummyHttpResponse(
-                        OK_REQUEST_STATUS, ConsentAuthorization.class, new ConsentAuthorization());
+                dummyHttpResponse(OK_REQUEST_STATUS, Authorization.class, new Authorization());
         when(clientMock.request(HttpResponse.class, givenHttpRequest))
                 .thenReturn(givenSuccessfulHttpResponse);
 
@@ -300,8 +297,7 @@ public class DkbAuthApiClientTest {
                 .thenReturn(givenHttpRequest);
 
         HttpResponse givenSuccessfulHttpResponse =
-                dummyHttpResponse(
-                        BAD_REQUEST_STATUS, ConsentAuthorization.class, new ConsentAuthorization());
+                dummyHttpResponse(BAD_REQUEST_STATUS, Authorization.class, new Authorization());
         when(clientMock.request(HttpResponse.class, givenHttpRequest))
                 .thenReturn(givenSuccessfulHttpResponse);
 
@@ -337,8 +333,7 @@ public class DkbAuthApiClientTest {
                 .thenReturn(givenHttpRequest);
 
         HttpResponse givenSuccessfulHttpResponse =
-                dummyHttpResponse(
-                        OK_REQUEST_STATUS, ConsentAuthorization.class, new ConsentAuthorization());
+                dummyHttpResponse(OK_REQUEST_STATUS, Authorization.class, new Authorization());
         when(clientMock.request(HttpResponse.class, givenHttpRequest))
                 .thenReturn(givenSuccessfulHttpResponse);
 
@@ -365,8 +360,7 @@ public class DkbAuthApiClientTest {
                 .thenReturn(givenHttpRequest);
 
         HttpResponse givenSuccessfulHttpResponse =
-                dummyHttpResponse(
-                        BAD_REQUEST_STATUS, ConsentAuthorization.class, new ConsentAuthorization());
+                dummyHttpResponse(BAD_REQUEST_STATUS, Authorization.class, new Authorization());
         when(clientMock.request(HttpResponse.class, givenHttpRequest))
                 .thenReturn(givenSuccessfulHttpResponse);
 

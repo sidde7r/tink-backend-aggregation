@@ -42,7 +42,7 @@ public class DkbSupplementalDataProviderTest {
             mock(SupplementalInformationHelper.class);
 
     private static Catalog catalog = mock(Catalog.class);
-    private static ConsentAuthorization.ScaMethod scaMethod;
+    private static Authorization.ScaMethod scaMethod;
 
     private DkbSupplementalDataProvider tested =
             new DkbSupplementalDataProvider(supplementalInfoHelperMock, catalog);
@@ -59,7 +59,7 @@ public class DkbSupplementalDataProviderTest {
                                         ((LocalizableParametrizedKey) i.getArguments()[0]).get(),
                                         i.getArguments()[1]));
 
-        scaMethod = new ConsentAuthorization.ScaMethod();
+        scaMethod = new Authorization.ScaMethod();
         scaMethod.setAuthenticationType("SMS_OTP");
         scaMethod.setName(TEST_SCA_METHOD_NAME);
     }
