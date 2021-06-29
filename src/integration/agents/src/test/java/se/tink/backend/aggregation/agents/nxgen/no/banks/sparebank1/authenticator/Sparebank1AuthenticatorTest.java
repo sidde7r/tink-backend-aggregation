@@ -17,6 +17,7 @@ import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.Sparebank1ApiClient;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.authenticator.rpc.AgreementsResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.authenticator.rpc.BankBranchResponse;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.authenticator.rpc.InitAuthenticationResponse;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
@@ -25,8 +26,6 @@ public class Sparebank1AuthenticatorTest {
     private PersistentStorage storage;
     private Sparebank1Authenticator authenticator;
 
-    private static final String INIT_BANK_ID_HTML =
-            "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/no/banks/sparebank1/resources/login_bankid.html";
     private static final String SELECT_MARKET_HTML =
             "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/no/banks/sparebank1/resources/select_market.html";
     private static final String BANK_BRANCH_RESPONSE =
@@ -44,56 +43,23 @@ public class Sparebank1AuthenticatorTest {
     @Test
     public void initShouldReturnPollingElement() {
         // given
-        String bankIdInitHtml =
-                FileUtils.readFileToString(new File(INIT_BANK_ID_HTML), StandardCharsets.UTF_8);
-        when(apiClient.initLogin()).thenReturn(bankIdInitHtml);
+        String expectedCode = "EXPECTED CODE";
+        String mobileNumber = "mobileNumber";
+        String dob = "dob";
+        InitAuthenticationResponse initAuthenticationResponse = new InitAuthenticationResponse();
+        initAuthenticationResponse.setMobileSecret(expectedCode);
+        when(apiClient.initAuthentication(mobileNumber, dob))
+                .thenReturn(initAuthenticationResponse);
 
         String selectMarketHtml =
                 FileUtils.readFileToString(new File(SELECT_MARKET_HTML), StandardCharsets.UTF_8);
         when(apiClient.selectMarketAndAuthentication(any())).thenReturn(selectMarketHtml);
 
         // when
-        String pollingElement = authenticator.init("dummyString", "dummyString", "dummyString");
+        String mobileSecretResult = authenticator.init("dummyString", dob, mobileNumber);
 
         // then
-        assertThat(pollingElement).isNotNull();
-    }
-
-    @Test
-    public void initShouldThrowBankIdExceptionIfBankIdInitElementsNotFound() {
-        // given
-        when(apiClient.initLogin()).thenReturn("dummyHtmlContent");
-
-        // when
-        Throwable throwable =
-                catchThrowable(
-                        () -> authenticator.init("dummyString", "dummyString", "dummyString"));
-
-        // then
-        assertThat(throwable)
-                .isInstanceOf(LoginException.class)
-                .hasMessage("Missing bank id init params: dummyHtmlContent");
-    }
-
-    @SneakyThrows
-    @Test
-    public void initShouldThrowBankIdErrorIfPollingElementNotFound() {
-        // given
-        String bankIdInitHtml =
-                FileUtils.readFileToString(new File(INIT_BANK_ID_HTML), StandardCharsets.UTF_8);
-        when(apiClient.initLogin()).thenReturn(bankIdInitHtml);
-
-        when(apiClient.selectMarketAndAuthentication(any())).thenReturn("dummyHtmlContent");
-
-        // when
-        Throwable throwable =
-                catchThrowable(
-                        () -> authenticator.init("dummyString", "dummyString", "dummyString"));
-
-        // then
-        assertThat(throwable)
-                .isInstanceOf(LoginException.class)
-                .hasMessageContaining("Unknown reason of missing polling element");
+        assertThat(mobileSecretResult).isEqualTo(expectedCode);
     }
 
     @Test
