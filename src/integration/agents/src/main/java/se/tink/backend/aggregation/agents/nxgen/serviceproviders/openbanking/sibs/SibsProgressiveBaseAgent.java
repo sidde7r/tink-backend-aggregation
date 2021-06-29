@@ -2,6 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.si
 
 import java.util.List;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
@@ -47,6 +49,8 @@ public abstract class SibsProgressiveBaseAgent extends SubsequentProgressiveGene
                 RefreshSavingsAccountsExecutor,
                 ProgressiveAuthAgent {
 
+    private static final Logger LOG = LoggerFactory.getLogger(SibsProgressiveBaseAgent.class);
+
     protected final SibsBaseApiClient apiClient;
     protected final SibsUserState userState;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
@@ -79,6 +83,9 @@ public abstract class SibsProgressiveBaseAgent extends SubsequentProgressiveGene
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
         authenticator =
                 new SibsAuthenticator(apiClient, userState, credentials, strongAuthenticationState);
+        LOG.debug(
+                "CredentialsRequest class type:"
+                        + agentComponentProvider.getCredentialsRequest().getClass());
     }
 
     private void applyFilters(TinkHttpClient client) {
