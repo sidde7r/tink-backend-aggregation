@@ -16,7 +16,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticato
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationController;
-import se.tink.backend.aggregation.nxgen.controllers.session.OAuth2TokenSessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS})
@@ -74,6 +73,6 @@ public final class BunqAgent extends BunqBaseAgent {
 
     @Override
     protected SessionHandler constructSessionHandler() {
-        return new OAuth2TokenSessionHandler(persistentStorage);
+        return SessionHandler.alwaysFail();
     }
 }
