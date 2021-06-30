@@ -1,9 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys;
 
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.PersistentStorageKeys;
-import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccountTypeMapper;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
-import se.tink.libraries.account.enums.AccountFlag;
 
 public final class RedsysConstants {
 
@@ -13,17 +10,6 @@ public final class RedsysConstants {
     private RedsysConstants() {
         throw new AssertionError();
     }
-
-    // partial ISO 20022 ExternalCashAccountType1Code
-    public static final TransactionalAccountTypeMapper ACCOUNT_TYPE_MAPPER =
-            TransactionalAccountTypeMapper.builder()
-                    .put(
-                            TransactionalAccountType.CHECKING,
-                            AccountFlag.PSD2_PAYMENT_ACCOUNT,
-                            "CACC",
-                            "TRAN")
-                    .put(TransactionalAccountType.SAVINGS, "SVGS")
-                    .build();
 
     public static class ErrorMessages {
         public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
@@ -44,7 +30,6 @@ public final class RedsysConstants {
         public static final String TRANSACTIONS = "/v1/accounts/%s/transactions";
         public static final String BALANCES = "/v1/accounts/%s/balances";
         public static final String CREATE_PAYMENT = "/v1/payments/%s";
-        public static final String FETCH_PAYMENT = "/v1/payments/%s/%s";
         public static final String FETCH_PAYMENT_STATUS = "/v1/payments/%s/%s/status";
         public static final String CANCEL_PAYMENT = "/v1/payments/%s/%s";
     }
