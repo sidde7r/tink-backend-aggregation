@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.utils.supplementalfields.sdktemplates.commons;
 
 import com.google.common.base.Strings;
+import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
@@ -12,9 +13,11 @@ import se.tink.backend.aggregation.agents.utils.supplementalfields.sdktemplates.
 import se.tink.backend.aggregation.agents.utils.supplementalfields.sdktemplates.commons.dto.CommonInput;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.sdktemplates.commons.dto.CommonPositionalInput;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.sdktemplates.commons.dto.InGroup;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class FieldsBuilder {
     private static final String INFO_SCREEN_ADDITIONAL_INFO = "{\"layoutType\":\"INSTRUCTIONS\"}";
+    private static final Gson gson = new Gson();
 
     public static Field buildTemplateField(TemplatesEnum templateName) {
         return Field.builder()
@@ -93,8 +96,12 @@ public class FieldsBuilder {
                 .description(CommonConstants.FieldStyles.TinkLinkCompatible.ORDERED_LIST)
                 .immutable(true)
                 .name(name)
-                .value(instructions.toString())
+                .value(getEscaped(instructions))
                 .build();
+    }
+
+    private static String getEscaped(List<String> instructions) {
+        return SerializationUtils.serializeToString(gson.toJson(instructions));
     }
 
     public static Field buildInstructionField(
