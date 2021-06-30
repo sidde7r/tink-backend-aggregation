@@ -18,7 +18,10 @@ public class TerminatedHandshakeRetryFilter extends Filter {
     private int timeoutSleepMilliseconds;
     private final Logger log = LoggerFactory.getLogger(TerminatedHandshakeRetryFilter.class);
 
-    public TerminatedHandshakeRetryFilter(int maxNumRetries, int timeoutSleepMilliseconds) {}
+    public TerminatedHandshakeRetryFilter(int maxNumRetries, int timeoutSleepMilliseconds) {
+        this.maxNumRetries = maxNumRetries;
+        this.timeoutSleepMilliseconds = timeoutSleepMilliseconds;
+    }
 
     public TerminatedHandshakeRetryFilter() {
         this.maxNumRetries = 3;
@@ -33,7 +36,7 @@ public class TerminatedHandshakeRetryFilter extends Filter {
                 return getNext().handle(httpRequest);
             } catch (RuntimeException e) {
 
-                if (shouldRetry(e) && retryCount >= maxNumRetries) {
+                if (shouldRetry(e) && !isLastTime(retryCount)) {
                     log.warn(
                             "Filter caught retryable exception, retrying [{}/{}]",
                             retryCount + 1,
@@ -53,7 +56,11 @@ public class TerminatedHandshakeRetryFilter extends Filter {
                 "This code should not be reached. TerminatedHandshakeFilter::handle should only result in a successful response or HttpClientException.");
     }
 
-    private boolean shouldRetry(Exception exception) {
+    public boolean shouldRetry(Exception exception) {
         return exception.getMessage().equalsIgnoreCase("Remote host terminated the handshake");
+    }
+
+    public boolean isLastTime(int retryCount) {
+        return (retryCount >= maxNumRetries);
     }
 }
