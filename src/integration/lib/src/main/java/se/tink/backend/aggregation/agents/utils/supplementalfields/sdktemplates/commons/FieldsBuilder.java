@@ -13,7 +13,6 @@ import se.tink.backend.aggregation.agents.utils.supplementalfields.sdktemplates.
 import se.tink.backend.aggregation.agents.utils.supplementalfields.sdktemplates.commons.dto.CommonInput;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.sdktemplates.commons.dto.CommonPositionalInput;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.sdktemplates.commons.dto.InGroup;
-import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class FieldsBuilder {
     private static final String INFO_SCREEN_ADDITIONAL_INFO = "{\"layoutType\":\"INSTRUCTIONS\"}";
@@ -101,7 +100,7 @@ public class FieldsBuilder {
     }
 
     private static String getEscaped(List<String> instructions) {
-        return SerializationUtils.serializeToString(gson.toJson(instructions));
+        return gson.toJson(instructions);
     }
 
     public static Field buildInstructionField(
