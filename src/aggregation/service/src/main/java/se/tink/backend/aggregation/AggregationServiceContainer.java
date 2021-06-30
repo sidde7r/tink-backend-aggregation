@@ -7,6 +7,7 @@ import io.dropwizard.Application;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import io.prometheus.client.CollectorRegistry;
+import io.prometheus.client.jetty.JettyStatisticsCollector;
 import java.util.TimeZone;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +16,6 @@ import se.tink.backend.aggregation.configuration.ConfigurationValidator;
 import se.tink.backend.aggregation.configuration.DevelopmentConfigurationSeeder;
 import se.tink.backend.aggregation.configuration.guice.modules.AggregationModuleFactory;
 import se.tink.backend.aggregation.configuration.models.AggregationServiceConfiguration;
-import se.tink.backend.aggregation.jetty.TinkServerFactory;
 import se.tink.backend.aggregation.storage.database.daos.CryptoConfigurationDao;
 import se.tink.backend.aggregation.workers.worker.AgentWorker;
 import se.tink.backend.integration.agent_data_availability_tracker.client.AsAgentDataAvailabilityTrackerClient;
@@ -25,6 +25,7 @@ import se.tink.io.dropwizard.configuration.SubstitutingSourceProvider;
 import se.tink.libraries.draining.DrainModeTask;
 import se.tink.libraries.dropwizard.DropwizardLifecycleInjectorFactory;
 import se.tink.libraries.dropwizard.DropwizardObjectMapperConfigurator;
+import se.tink.libraries.metrics.prometheus.PrometheusExportServer;
 import se.tink.libraries.queue.QueueConsumer;
 import se.tink.libraries.unleash.UnleashClient;
 
@@ -85,15 +86,11 @@ public class AggregationServiceContainer extends Application<AggregationServiceC
                 .lifecycle()
                 .manage(injector.getInstance(AsAgentDataAvailabilityTrackerClient.class));
 
-        if (aggregationServiceConfiguration.isStagingEnvironment()) {
-            // Swap out the Dropwizard (jetty) ServerFactory. The reason for doing this is to expose
-            // the ability to add metrics to jetty server. The TinkServerFactory is a direct copy
-            // of the DefaultServerFactory (which was the one in use before), but exposes what we
-            // need.
-            TinkServerFactory factory = new TinkServerFactory();
-            aggregationServiceConfiguration.setServerFactory(factory);
-            factory.registerJettyMetrics(injector.getInstance(CollectorRegistry.class));
-        }
+        // Add metrics from Jetty Server
+        PrometheusExportServer prometheus = injector.getInstance(PrometheusExportServer.class);
+        JettyStatisticsCollector jettyStatisticsCollector =
+                new JettyStatisticsCollector(prometheus.getStatisticsHandler());
+        jettyStatisticsCollector.register(injector.getInstance(CollectorRegistry.class));
     }
 
     /**

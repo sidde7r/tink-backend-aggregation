@@ -17,7 +17,6 @@ java_library(
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/cli",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/configuration",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/configuration/guice/modules",
-        "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/jetty",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/storage/database/daos",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/workers/worker",
         "//src/integration/agent_data_availability_tracker/client",
