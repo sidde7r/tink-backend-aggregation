@@ -24,7 +24,6 @@ import io.dropwizard.logging.FileAppenderFactory;
 import io.dropwizard.logging.SyslogAppenderFactory;
 import io.dropwizard.server.DefaultServerFactory;
 import io.dropwizard.setup.Environment;
-import io.prometheus.client.CollectorRegistry;
 import java.io.IOException;
 import java.util.HashMap;
 import javax.servlet.ServletException;
@@ -35,7 +34,6 @@ import javax.validation.Validator;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.AbstractHandler;
-import org.eclipse.jetty.server.handler.StatisticsHandler;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InOrder;
@@ -49,7 +47,6 @@ import se.tink.backend.aggregation.workers.worker.AgentWorker;
 import se.tink.backend.integration.agent_data_availability_tracker.client.AsAgentDataAvailabilityTrackerClient;
 import se.tink.backend.integration.tpp_secrets_service.client.ManagedTppSecretsServiceClient;
 import se.tink.libraries.draining.DrainModeTask;
-import se.tink.libraries.metrics.prometheus.PrometheusExportServer;
 import se.tink.libraries.queue.QueueConsumer;
 import se.tink.libraries.unleash.UnleashClient;
 
@@ -60,7 +57,6 @@ public class LifecycleTest {
     private AggregationServiceContainer aggregationContainer;
     private ManagedTppSecretsServiceClient managedTppSecretsServiceClient;
     private AgentWorker agentWorker;
-    private PrometheusExportServer prometheus;
 
     @Before
     public void setUp() throws Exception {
@@ -84,11 +80,7 @@ public class LifecycleTest {
         setUpInjectorMock(injector, AggregationServiceConfiguration.class);
         setUpInjectorMock(injector, DevelopmentConfigurationSeeder.class);
         setUpInjectorMock(injector, UnleashClient.class);
-        PrometheusExportServer server = setUpInjectorMock(injector, PrometheusExportServer.class);
         CryptoConfigurationDao dao = setUpInjectorMock(injector, CryptoConfigurationDao.class);
-        when(injector.getInstance(CollectorRegistry.class)).thenReturn(new CollectorRegistry());
-
-        when(server.getStatisticsHandler()).thenReturn(new StatisticsHandler());
 
         ConfigurationValidator validator =
                 new ConfigurationValidator(new HashMap<>(), new HashMap<>(), new HashMap<>(), dao);
