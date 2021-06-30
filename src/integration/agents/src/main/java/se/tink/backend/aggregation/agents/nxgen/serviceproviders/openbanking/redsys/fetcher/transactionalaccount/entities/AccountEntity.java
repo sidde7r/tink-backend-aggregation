@@ -1,7 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.fetcher.transactionalaccount.entities;
 
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.ACCOUNT_TYPE_MAPPER;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.vavr.control.Option;
@@ -78,10 +76,8 @@ public class AccountEntity {
 
         TransactionalBuildStep builder =
                 TransactionalAccount.nxBuilder()
-                        .withTypeAndFlagsFrom(
-                                ACCOUNT_TYPE_MAPPER,
-                                cashAccountType,
-                                TransactionalAccountType.CHECKING)
+                        .withType(setAccountType(cashAccountType))
+                        .withPaymentAccountFlag()
                         .withBalance(BalanceModule.of(balance))
                         .withId(idModule)
                         .addHolderName(ownerName)
@@ -124,5 +120,12 @@ public class AccountEntity {
             return Optional.empty();
         }
         return Optional.ofNullable(links.get(linkName));
+    }
+
+    private TransactionalAccountType setAccountType(String cashAccountType) {
+        if ("SVGS".equals(cashAccountType)) {
+            return TransactionalAccountType.SAVINGS;
+        }
+        return TransactionalAccountType.CHECKING;
     }
 }
