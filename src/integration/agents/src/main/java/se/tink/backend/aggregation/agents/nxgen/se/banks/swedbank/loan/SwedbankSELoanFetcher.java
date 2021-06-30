@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.SwedbankSEApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.loan.entities.LoanEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.loan.entities.intermediate.BaseAbstractLoanEntity;
@@ -98,21 +99,38 @@ public class SwedbankSELoanFetcher implements AccountFetcher<LoanAccount> {
             ArrayList<LoanAccount> loanAccounts,
             LoanOverviewResponse loanOverviewResponse,
             EngagementOverviewResponse engagementOverviewResponse) {
+
+        loanAccounts.addAll(getFilteredOutLoans(loanOverviewResponse, engagementOverviewResponse));
+    }
+
+    private List<LoanAccount> getFilteredOutLoans(
+            LoanOverviewResponse loanOverviewResponse,
+            EngagementOverviewResponse engagementOverviewResponse) {
         // Filter out any account that is present in the
         // engagementOverviewResponse::transactionAccounts list.
-        List<LoanAccount> consumptionLoans =
-                loanOverviewResponse.getConsumptionLoans().stream()
-                        .filter(
-                                loan ->
-                                        !engagementOverviewResponse.hasTransactionAccount(
-                                                loan.getAccount()))
-                        .map(
-                                loan ->
-                                        createLoanAccountFromLoanInformation(
-                                                loan, ConsumptionLoanEntity.class))
-                        .collect(Collectors.toList());
 
-        loanAccounts.addAll(consumptionLoans);
+        Stream<LoanEntity> consumptionLoans = loanOverviewResponse.getConsumptionLoans().stream();
+        if (!apiClient.isRefreshOnlyLoanData()) {
+            consumptionLoans =
+                    consumptionLoans.filter(
+                            loan ->
+                                    !engagementOverviewResponse.hasTransactionAccount(
+                                            loan.getAccount()));
+        } else {
+            consumptionLoans = consumptionLoans.filter(loan -> filterOutZeroDebtAccounts(loan));
+        }
+        return consumptionLoans
+                .map(
+                        loan ->
+                                createLoanAccountFromLoanInformation(
+                                        loan, ConsumptionLoanEntity.class))
+                .collect(Collectors.toList());
+    }
+
+    private boolean filterOutZeroDebtAccounts(LoanEntity loan) {
+        return loan.getDebt() != null
+                && !loan.getDebt().getAmount().isEmpty()
+                && loan.getDebt().getAmount() != "0";
     }
 
     private <T extends BaseAbstractLoanEntity> LoanAccount createLoanAccountFromLoanInformation(
