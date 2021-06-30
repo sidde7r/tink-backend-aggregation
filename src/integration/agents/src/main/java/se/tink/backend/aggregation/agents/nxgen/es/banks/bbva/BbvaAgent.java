@@ -90,8 +90,6 @@ public final class BbvaAgent extends NextGenerationAgent
 
         this.transactionalAccountRefreshController =
                 constructTransactionalAccountRefreshController();
-
-        persistentStorage.put(Defaults.FETCHING_TRANSACTION_OLDER_THAN_90_DAYS_POSSIBLE, false);
     }
 
     @Override
@@ -101,6 +99,7 @@ public final class BbvaAgent extends NextGenerationAgent
 
     @Override
     public FetchTransactionsResponse fetchCheckingTransactions() {
+        checkIfFetchingTransactionsOlderThan90DaysPossible();
         return transactionalAccountRefreshController.fetchCheckingTransactions();
     }
 
@@ -111,6 +110,7 @@ public final class BbvaAgent extends NextGenerationAgent
 
     @Override
     public FetchTransactionsResponse fetchSavingsTransactions() {
+        checkIfFetchingTransactionsOlderThan90DaysPossible();
         return transactionalAccountRefreshController.fetchSavingsTransactions();
     }
 
@@ -153,8 +153,7 @@ public final class BbvaAgent extends NextGenerationAgent
     @Override
     protected Authenticator constructAuthenticator() {
         Authenticator authenticator =
-                new BbvaAuthenticator(
-                        apiClient, supplementalInformationHelper, request, persistentStorage);
+                new BbvaAuthenticator(apiClient, supplementalInformationHelper, request);
         log.info(
                 "Credentials status after authenticating is equal {}",
                 this.credentials.getStatus());
@@ -215,5 +214,15 @@ public final class BbvaAgent extends NextGenerationAgent
                         transactionPaginationHelper,
                         new TransactionKeyPaginationController<>(
                                 new BbvaCreditCardTransactionFetcher(apiClient))));
+    }
+
+    private void checkIfFetchingTransactionsOlderThan90DaysPossible() {
+        if (request.getUserAvailability().isUserAvailableForInteraction()) {
+            log.info("Setting FETCHING_TRANSACTION_OLDER_THAN_90_DAYS_POSSIBLE flag to true");
+            persistentStorage.put(Defaults.FETCHING_TRANSACTION_OLDER_THAN_90_DAYS_POSSIBLE, true);
+        } else {
+            log.info("Setting FETCHING_TRANSACTION_OLDER_THAN_90_DAYS_POSSIBLE flag to false");
+            persistentStorage.put(Defaults.FETCHING_TRANSACTION_OLDER_THAN_90_DAYS_POSSIBLE, false);
+        }
     }
 }
