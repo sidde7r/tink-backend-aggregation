@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.consorsbank.fetcher;
 
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -24,10 +26,7 @@ public class ConsorsbankAccountFetcher implements AccountFetcher<TransactionalAc
     private final AccountMapper consorsbankAccountMapper;
 
     public Collection<TransactionalAccount> fetchAccounts() {
-        AccessEntity consentAccess = storage.getConsentAccess();
-
-        boolean canFetchAllWithBalances =
-                consentAccess.getAccounts().size() == consentAccess.getBalances().size();
+        boolean canFetchAllWithBalances = canFetchBalancesForAllAccounts();
 
         Stream<AccountEntity> accountStream =
                 apiClient.fetchAccounts(storage.getConsentId(), canFetchAllWithBalances)
@@ -44,6 +43,13 @@ public class ConsorsbankAccountFetcher implements AccountFetcher<TransactionalAc
                 .collect(Collectors.toList());
     }
 
+    private boolean canFetchBalancesForAllAccounts() {
+        AccessEntity consentAccess = storage.getConsentAccess();
+        List<AccountReferenceEntity> accounts = consentAccess.getAccounts();
+        List<AccountReferenceEntity> balances = consentAccess.getBalances();
+        return accounts != null && balances != null && accounts.size() == balances.size();
+    }
+
     private AccountEntity tryEnrichingWithBalance(AccountEntity accountEntity) {
         if (canFetchBalancesForAccount(accountEntity)) {
             FetchBalancesResponse fetchBalancesResponse =
@@ -57,7 +63,8 @@ public class ConsorsbankAccountFetcher implements AccountFetcher<TransactionalAc
     }
 
     private boolean canFetchBalancesForAccount(AccountEntity accountEntity) {
-        return storage.getConsentAccess().getBalances().stream()
+        return Optional.ofNullable(storage.getConsentAccess().getBalances())
+                .orElse(Collections.emptyList()).stream()
                 .map(AccountReferenceEntity::getIban)
                 .filter(Objects::nonNull)
                 .anyMatch(x -> x.equals(accountEntity.getIban()));

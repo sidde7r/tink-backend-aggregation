@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.de.openbanking.consorsbank.fetc
 
 import java.util.List;
 import java.util.Optional;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.utils.berlingroup.BalanceEntity;
 import se.tink.backend.aggregation.agents.utils.berlingroup.BalanceMapper;
 import se.tink.backend.aggregation.agents.utils.berlingroup.fetcher.entities.AccountEntity;
@@ -15,6 +16,7 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.libraries.account.enums.AccountFlag;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 
+@Slf4j
 public class ConsorsbankAccountMapper implements AccountMapper {
     private static final TypeMapper<TransactionalAccountType> ACCOUNT_TYPE_MAPPER =
             TypeMapper.<TransactionalAccountType>builder()
@@ -23,13 +25,19 @@ public class ConsorsbankAccountMapper implements AccountMapper {
                     .build();
 
     public Optional<TransactionalAccount> toTinkAccount(AccountEntity accountEntity) {
+        List<BalanceEntity> balances = accountEntity.getBalances();
+        if (balances == null || balances.isEmpty()) {
+            log.warn("Cannot parse account without balances! Skipping.");
+            return Optional.empty();
+        }
+
         return TransactionalAccount.nxBuilder()
                 .withType(
                         ACCOUNT_TYPE_MAPPER
                                 .translate(accountEntity.getCashAccountType())
                                 .orElse(null))
                 .withFlags(AccountFlag.PSD2_PAYMENT_ACCOUNT)
-                .withBalance(getBalanceModule(accountEntity.getBalances()))
+                .withBalance(getBalanceModule(balances))
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(accountEntity.getIban())

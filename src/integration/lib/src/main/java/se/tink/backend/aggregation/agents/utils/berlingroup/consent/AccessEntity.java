@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.utils.berlingroup.consent;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import java.util.Collections;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -31,16 +30,4 @@ public class AccessEntity {
     private String allPsd2;
     private String availableAccountsWithBalances;
     private String availableAccounts;
-
-    public List<AccountReferenceEntity> getAccounts() {
-        return accounts != null ? accounts : Collections.emptyList();
-    }
-
-    public List<AccountReferenceEntity> getTransactions() {
-        return transactions != null ? transactions : Collections.emptyList();
-    }
-
-    public List<AccountReferenceEntity> getBalances() {
-        return balances != null ? balances : Collections.emptyList();
-    }
 }

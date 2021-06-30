@@ -598,6 +598,13 @@ public final class AgentWireMockRefreshTest {
 
         @SneakyThrows
         @Override
+        public BuildStep addPersistentStorageData(String key, Object value) {
+            this.persistentStorageData.put(key, new ObjectMapper().writeValueAsString(value));
+            return this;
+        }
+
+        @SneakyThrows
+        @Override
         public BuildStep addRefreshableAccessToken(RefreshableAccessToken token) {
             String json = new ObjectMapper().writeValueAsString(token);
 
@@ -796,6 +803,8 @@ public final class AgentWireMockRefreshTest {
          * <p>Can be called multiple times to add several items
          */
         BuildStep addPersistentStorageData(String key, String value);
+
+        BuildStep addPersistentStorageData(String key, Object value);
 
         /** Add RefreshableAccessToken to persistent storage map */
         BuildStep addRefreshableAccessToken(RefreshableAccessToken token);

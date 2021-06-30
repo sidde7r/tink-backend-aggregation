@@ -3,10 +3,14 @@ package se.tink.backend.aggregation.agents.nxgen.de.openbanking.consorsbank.mock
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static se.tink.libraries.enums.MarketCode.DE;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesJsonFileParser;
 import se.tink.backend.aggregation.agents.framework.assertions.entities.AgentContractEntity;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockrefresh.AgentWireMockRefreshTest;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AccessEntity;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AccountReferenceEntity;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationReader;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.libraries.credentials.service.RefreshableItem;
@@ -61,6 +65,11 @@ public class ConsorsbankMockTest {
         UserAvailability userAvailability = new UserAvailability();
         userAvailability.setUserPresent(false);
 
+        List<AccountReferenceEntity> accessAllowed = new ArrayList<>();
+        accessAllowed.add(new AccountReferenceEntity("DE1234"));
+        AccessEntity accessEntity =
+                AccessEntity.builder().accounts(accessAllowed).balances(accessAllowed).build();
+
         final AgentWireMockRefreshTest agentWireMockRefreshTest =
                 AgentWireMockRefreshTest.nxBuilder()
                         .withMarketCode(DE)
@@ -72,6 +81,7 @@ public class ConsorsbankMockTest {
                         .enableDataDumpForContractFile()
                         .withUserAvailability(userAvailability)
                         .addPersistentStorageData("consentId", "test_consent_id")
+                        .addPersistentStorageData("consentAccess", accessEntity)
                         .build();
 
         final AgentContractEntity expected =

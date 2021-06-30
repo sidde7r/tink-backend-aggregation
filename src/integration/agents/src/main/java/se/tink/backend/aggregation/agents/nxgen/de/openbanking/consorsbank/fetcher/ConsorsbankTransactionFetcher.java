@@ -70,7 +70,8 @@ public class ConsorsbankTransactionFetcher implements TransactionFetcher<Transac
         }
 
         String iban = maybeIban.get();
-        return storage.getConsentAccess().getTransactions().stream()
+        return Optional.ofNullable(storage.getConsentAccess().getTransactions())
+                .orElse(Collections.emptyList()).stream()
                 .map(AccountReferenceEntity::getIban)
                 .filter(Objects::nonNull)
                 .anyMatch(x -> x.equalsIgnoreCase(iban));
