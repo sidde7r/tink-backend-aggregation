@@ -24,7 +24,7 @@ public class KnabConfiguration implements ClientConfiguration {
                 @JsonSchemaString(
                         path = "pattern",
                         value =
-                                "^[-A-Za-z0-9]{8}\\-[-A-Za-z0-9]{4}\\-[-A-Za-z0-9]{4}\\-[-A-Za-z0-9]{4}\\-[-A-Za-z0-9]{12}$")
+                                ("^[-A-Za-z0-9]{8}-[-A-Za-z0-9]{4}-[-A-Za-z0-9]{4}-[-A-Za-z0-9]{4}-[-A-Za-z0-9]{12}$"))
             })
     private String clientId;
 
@@ -32,6 +32,5 @@ public class KnabConfiguration implements ClientConfiguration {
     @SensitiveSecret
     @ClientSecretsConfiguration
     @JsonSchemaExamples("fds4!g@D64s5248%12gHcngrs677avw4982fhLn!")
-    @JsonSchemaInject(strings = {@JsonSchemaString(path = "pattern", value = "^[\\S+]{40}$")})
     private String clientSecret;
 }
