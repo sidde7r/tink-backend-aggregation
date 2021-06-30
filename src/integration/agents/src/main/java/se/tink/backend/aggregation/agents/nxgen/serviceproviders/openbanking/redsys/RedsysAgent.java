@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.red
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.authenticator.RedsysAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.configuration.AspspConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.configuration.RedsysConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.ConsentController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.RedsysConsentController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.RedsysConsentStorage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.fetcher.transactionalaccount.RedsysTransactionalAccountFetcher;
@@ -44,30 +45,32 @@ public abstract class RedsysAgent extends NextGenerationAgent
                 RefreshTransferDestinationExecutor,
                 AspspConfiguration {
 
-    private final RedsysApiClient apiClient;
-    private final RedsysConsentStorage consentStorage;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
-    private final RedsysConsentController consentController;
+    private final ConsentController consentController;
+    protected final RedsysApiClient apiClient;
+    protected final RedsysConsentStorage consentStorage;
 
     public RedsysAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
-
-        apiClient =
+        this.apiClient =
                 new RedsysApiClient(
                         sessionStorage,
                         persistentStorage,
                         this,
                         this.getEidasIdentity(),
                         componentProvider);
-        consentStorage = new RedsysConsentStorage(persistentStorage);
-        consentController =
-                new RedsysConsentController(
-                        apiClient,
-                        consentStorage,
-                        supplementalInformationHelper,
-                        strongAuthenticationState);
+        this.consentStorage = new RedsysConsentStorage(persistentStorage);
+        this.consentController = getConsentController();
+        this.transactionalAccountRefreshController =
+                constructTransactionalAccountRefreshController();
+    }
 
-        transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
+    protected ConsentController getConsentController() {
+        return new RedsysConsentController(
+                apiClient,
+                consentStorage,
+                supplementalInformationHelper,
+                strongAuthenticationState);
     }
 
     @Override

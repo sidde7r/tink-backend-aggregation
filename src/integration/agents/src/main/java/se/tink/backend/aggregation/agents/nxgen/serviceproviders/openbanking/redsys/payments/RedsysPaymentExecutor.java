@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.Storage;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.RedsysConsentController;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.ConsentController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.entities.AccountReferenceEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.entities.AmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.payments.entities.RedsysPaymentType;
@@ -38,14 +38,14 @@ import se.tink.libraries.transfer.rpc.RemittanceInformation;
 public class RedsysPaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
 
     private final RedsysApiClient apiClient;
-    private final RedsysConsentController consentController;
+    private final ConsentController consentController;
     private final SessionStorage sessionStorage;
     private final StrongAuthenticationState strongAuthenticationState;
     private final RedsysPaymentController redsysPaymentController;
 
     public RedsysPaymentExecutor(
             RedsysApiClient apiClient,
-            RedsysConsentController consentController,
+            ConsentController consentController,
             SessionStorage sessionStorage,
             SupplementalInformationHelper supplementalInformationHelper,
             StrongAuthenticationState strongAuthenticationState) {
