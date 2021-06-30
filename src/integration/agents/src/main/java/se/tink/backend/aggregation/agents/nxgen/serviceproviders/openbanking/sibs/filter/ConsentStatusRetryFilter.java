@@ -1,8 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.filter;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Pattern;
 import javax.net.ssl.SSLHandshakeException;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.authenticator.entity.ConsentStatus;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.authenticator.rpc.ConsentStatusResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.filter.engine.FilterOrder;
@@ -36,7 +38,11 @@ public class ConsentStatusRetryFilter extends AbstractRetryFilter {
     }
 
     private boolean isConsentStatusNotFinal(HttpResponse response) {
-        return response.getBody(ConsentStatusResponse.class).getConsentStatus().isNotFinalStatus();
+        return Optional.of(response.getBody(ConsentStatusResponse.class))
+                .filter(body -> !Objects.isNull(body.getTransactionStatus()))
+                .map(ConsentStatusResponse::getConsentStatus)
+                .map(ConsentStatus::isNotFinalStatus)
+                .orElse(false);
     }
 
     @Override
