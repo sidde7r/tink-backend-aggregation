@@ -70,9 +70,6 @@ public class AgentWorker extends ManagedSafeStop {
      */
     private static final long SHUTDOWN_TIMEOUT_SECONDS = LONGEST_SUPPLEMENTAL_INFORMATION_SECONDS;
 
-    private static final MetricId AGGREGATION_EXECUTOR_SERVICE_METRIC_NAME =
-            MetricId.newId("aggregation_executor_service");
-
     private RateLimitedExecutorService rateLimitedExecutorService;
     private RateLimitedExecutorService automaticRefreshRateLimitedExecutorService;
     private ListenableThreadPoolExecutor<Runnable> aggregationExecutorService;
@@ -104,7 +101,7 @@ public class AgentWorker extends ManagedSafeStop {
                         aggregationExecutorService, metricRegistry, MAX_QUEUED_UP);
         rateLimitedExecutorService.start();
 
-        // Build executionservices for automatic refreshes
+        // Build execution services for automatic refreshes
         BlockingQueue<WrappedRunnableListenableFutureTask<Runnable, ?>>
                 automaticExecutorServiceQueue =
                         Queues.newLinkedBlockingQueue(

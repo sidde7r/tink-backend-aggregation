@@ -7,6 +7,7 @@ import se.tink.libraries.concurrency.logger.exception.FutureUncaughtExceptionLog
 import se.tink.libraries.metrics.core.MetricId;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 import se.tink.libraries.metrics.types.counters.Counter;
+import se.tink.libraries.metrics.types.gauges.IncrementDecrementGauge;
 
 public final class ListenableThreadPoolExecutorBuilder<T extends Runnable> {
     private static final MetricId DEFAULT_METRIC_ID = MetricId.newId("thread_pool_executor");
@@ -16,6 +17,8 @@ public final class ListenableThreadPoolExecutorBuilder<T extends Runnable> {
             new MetricId.MetricLabels().add("event", "started");
     private static final MetricId.MetricLabels FINISHED_LABEL =
             new MetricId.MetricLabels().add("event", "finished");
+    private static final MetricId.MetricLabels NUMBER_OF_ACTIVE_THREADS_LABEL =
+            new MetricId.MetricLabels().add("event", "active_threads");
 
     private FutureCallback<Object> errorLoggingCallback = new FutureUncaughtExceptionLogger();
     private RejectedExecutionHandler<WrappedRunnableListenableFutureTask<T, ?>> rejectedHandler =
@@ -75,7 +78,14 @@ public final class ListenableThreadPoolExecutorBuilder<T extends Runnable> {
                                 .orElseGet(Counter::new),
                         metricRegistry
                                 .map(r -> r.meter(metric.label(FINISHED_LABEL)))
-                                .orElseGet(Counter::new));
+                                .orElseGet(Counter::new),
+                        metricRegistry
+                                .map(
+                                        r ->
+                                                r.incrementDecrementGauge(
+                                                        metric.label(
+                                                                NUMBER_OF_ACTIVE_THREADS_LABEL)))
+                                .orElseGet(IncrementDecrementGauge::new));
 
         return listenableThreadPoolExecutor;
     }

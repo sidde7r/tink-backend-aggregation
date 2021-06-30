@@ -19,6 +19,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.libraries.metrics.types.counters.Counter;
+import se.tink.libraries.metrics.types.gauges.IncrementDecrementGauge;
 
 /**
  * Something similar to a {@link ThreadPoolExecutor}, but
@@ -49,6 +50,8 @@ public class ListenableThreadPoolExecutor<T extends Runnable>
     private final Counter queuedItems;
     private final Counter startedItems;
     private final IncrementCounterRunnable finishedRunningIncrementor;
+    private final DecrementGaugeRunnable decrementGaugeRunnable;
+    private final IncrementDecrementGauge numberOfActiveThreadsGauge;
 
     private class QueuePopper extends AbstractExecutionThreadService {
         private Thread thread;
@@ -95,6 +98,7 @@ public class ListenableThreadPoolExecutor<T extends Runnable>
                     // Since there is no queue capacity for the threadPool, we know the item is
                     // running.
                     startedItems.inc();
+                    numberOfActiveThreadsGauge.increment();
 
                     item = null;
                 } catch (RejectedExecutionException e) {
@@ -137,7 +141,8 @@ public class ListenableThreadPoolExecutor<T extends Runnable>
             FutureCallback<Object> errorLoggingCallback,
             Counter queuedItems,
             Counter startedItems,
-            Counter finishedItems) {
+            Counter finishedItems,
+            IncrementDecrementGauge numberOfActiveThreadsGauge) {
 
         this.queue = queue;
         this.queuePopper = new QueuePopper();
@@ -146,8 +151,10 @@ public class ListenableThreadPoolExecutor<T extends Runnable>
 
         this.queuedItems = queuedItems;
         this.startedItems = startedItems;
+        this.numberOfActiveThreadsGauge = numberOfActiveThreadsGauge;
 
         this.finishedRunningIncrementor = new IncrementCounterRunnable(finishedItems);
+        this.decrementGaugeRunnable = new DecrementGaugeRunnable(numberOfActiveThreadsGauge);
 
         threadPool = threadPoolBuilder.build();
         queuePopper.startAsync();
@@ -248,6 +255,7 @@ public class ListenableThreadPoolExecutor<T extends Runnable>
         Futures.addCallback(future, errorLoggingCallback, MoreExecutors.directExecutor());
 
         future.addListener(finishedRunningIncrementor, MoreExecutors.directExecutor());
+        future.addListener(decrementGaugeRunnable, MoreExecutors.directExecutor());
 
         return future;
     }
