@@ -173,4 +173,8 @@ public class AgentWorkerCommandMetricState {
                         .label("client_cluster_id", clientInfo.getClusterId())
                         .label("is_user_present", request.getUserAvailability().isUserPresent()));
     }
+
+    public MetricRegistry getMetricRegistry() {
+        return metricRegistry;
+    }
 }
