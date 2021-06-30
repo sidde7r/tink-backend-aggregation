@@ -9,6 +9,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/utils",
         "//src/libraries/i18n",
         "//src/libraries/serialization",
+        "//third_party:com_google_code_gson_gson",
         "//third_party:com_google_guava_guava",
         "//third_party:javax_validation_validation_api",
         "//third_party:lombok_libs",

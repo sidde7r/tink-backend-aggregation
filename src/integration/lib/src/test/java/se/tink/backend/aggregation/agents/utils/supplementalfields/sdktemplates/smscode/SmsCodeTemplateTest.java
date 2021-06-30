@@ -93,6 +93,7 @@ public class SmsCodeTemplateTest {
         assertThat(field.getName()).isEqualTo("instructions");
         assertThat(field.getStyle()).isEqualTo("ORDERED_LIST");
         assertThat(field.getType()).isEqualTo("TEXT");
-        assertThat(field.getValue()).isEqualTo("[Instr 1, Instr 2, Instr 3]");
+        assertThat(field.getValue())
+                .isEqualTo("\"[\\\"Instr 1\\\",\\\"Instr 2\\\",\\\"Instr 3\\\"]\"");
     }
 }
