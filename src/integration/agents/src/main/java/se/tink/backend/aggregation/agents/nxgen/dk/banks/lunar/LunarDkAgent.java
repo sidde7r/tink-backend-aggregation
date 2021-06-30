@@ -35,6 +35,8 @@ import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.investme
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.loan.LunarLoansFetcher;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.transactionalaccount.LunarTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.transactionalaccount.LunarTransactionalAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.filter.LunarNotFoundFilter;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.filter.LunarNotFoundRetryFilter;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentAuthenticationProcess;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
@@ -149,6 +151,11 @@ public final class LunarDkAgent extends AgentPlatformAgent
     protected void configureHttpClient(TinkHttpClient client) {
         client.addFilter(
                 new TimeoutRetryFilter(
+                        LunarConstants.HttpClient.MAX_RETRIES,
+                        LunarConstants.HttpClient.RETRY_SLEEP_MILLISECONDS));
+        client.addFilter(new LunarNotFoundFilter());
+        client.addFilter(
+                new LunarNotFoundRetryFilter(
                         LunarConstants.HttpClient.MAX_RETRIES,
                         LunarConstants.HttpClient.RETRY_SLEEP_MILLISECONDS));
     }
