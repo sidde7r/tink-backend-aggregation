@@ -54,55 +54,45 @@ public class AggregationServiceContainer extends Application<AggregationServiceC
             AggregationServiceConfiguration aggregationServiceConfiguration,
             Environment environment)
             throws Exception {
-        try {
-            log.info("Default TimeZone: " + TimeZone.getDefault().getID());
-            // Add a dummy health check to avoid an annoying warning on startup.
-            environment
-                    .healthChecks()
-                    .register(
-                            "cache",
-                            new HealthCheck() {
-                                @Override
-                                protected Result check() throws Exception {
-                                    return Result.healthy();
-                                }
-                            });
+        log.info("Default TimeZone: " + TimeZone.getDefault().getID());
+        // Add a dummy health check to avoid an annoying warning on startup.
+        environment
+                .healthChecks()
+                .register(
+                        "cache",
+                        new HealthCheck() {
+                            @Override
+                            protected Result check() throws Exception {
+                                return Result.healthy();
+                            }
+                        });
 
-            Injector injector = generateInjector(aggregationServiceConfiguration, environment);
+        Injector injector = generateInjector(aggregationServiceConfiguration, environment);
 
-            setupCryptoConfiguration(injector, aggregationServiceConfiguration.isDevelopmentMode());
+        setupCryptoConfiguration(injector, aggregationServiceConfiguration.isDevelopmentMode());
 
-            // Validate the configurations on start up
-            ConfigurationValidator validator = injector.getInstance(ConfigurationValidator.class);
-            validator.validate();
+        // Validate the configurations on start up
+        ConfigurationValidator validator = injector.getInstance(ConfigurationValidator.class);
+        validator.validate();
 
-            environment.admin().addTask(injector.getInstance(DrainModeTask.class));
+        environment.admin().addTask(injector.getInstance(DrainModeTask.class));
 
-            environment
-                    .lifecycle()
-                    .manage(injector.getInstance(ManagedTppSecretsServiceClient.class));
-            environment.lifecycle().manage(injector.getInstance(UnleashClient.class));
-            environment.lifecycle().manage(injector.getInstance(AgentWorker.class));
-            environment.lifecycle().manage(injector.getInstance(QueueConsumer.class));
-            environment
-                    .lifecycle()
-                    .manage(injector.getInstance(AsAgentDataAvailabilityTrackerClient.class));
+        environment.lifecycle().manage(injector.getInstance(ManagedTppSecretsServiceClient.class));
+        environment.lifecycle().manage(injector.getInstance(UnleashClient.class));
+        environment.lifecycle().manage(injector.getInstance(AgentWorker.class));
+        environment.lifecycle().manage(injector.getInstance(QueueConsumer.class));
+        environment
+                .lifecycle()
+                .manage(injector.getInstance(AsAgentDataAvailabilityTrackerClient.class));
 
-            if (aggregationServiceConfiguration.isStagingEnvironment()) {
-                // Swap out the Dropwizard (jetty) ServerFactory. The reason for doing this is to
-                // expose
-                // the ability to add metrics to jetty server. The TinkServerFactory is a direct
-                // copy
-                // of the DefaultServerFactory (which was the one in use before), but exposes what
-                // we
-                // need.
-                TinkServerFactory factory = new TinkServerFactory();
-                aggregationServiceConfiguration.setServerFactory(factory);
-                factory.registerJettyMetrics(injector.getInstance(CollectorRegistry.class));
-            }
-        } catch (Exception e) {
-            log.error("Something went wrong when starting up.", e);
-            throw new RuntimeException("Wrapping exception with a message to make sonar happy", e);
+        if (aggregationServiceConfiguration.isStagingEnvironment()) {
+            // Swap out the Dropwizard (jetty) ServerFactory. The reason for doing this is to expose
+            // the ability to add metrics to jetty server. The TinkServerFactory is a direct copy
+            // of the DefaultServerFactory (which was the one in use before), but exposes what we
+            // need.
+            TinkServerFactory factory = new TinkServerFactory();
+            aggregationServiceConfiguration.setServerFactory(factory);
+            factory.registerJettyMetrics(injector.getInstance(CollectorRegistry.class));
         }
     }
 
