@@ -35,7 +35,6 @@ import javax.validation.Validator;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.AbstractHandler;
-import org.eclipse.jetty.server.handler.StatisticsHandler;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InOrder;
@@ -87,8 +86,6 @@ public class LifecycleTest {
         PrometheusExportServer server = setUpInjectorMock(injector, PrometheusExportServer.class);
         CryptoConfigurationDao dao = setUpInjectorMock(injector, CryptoConfigurationDao.class);
         when(injector.getInstance(CollectorRegistry.class)).thenReturn(new CollectorRegistry());
-
-        when(server.getStatisticsHandler()).thenReturn(new StatisticsHandler());
 
         ConfigurationValidator validator =
                 new ConfigurationValidator(new HashMap<>(), new HashMap<>(), new HashMap<>(), dao);
