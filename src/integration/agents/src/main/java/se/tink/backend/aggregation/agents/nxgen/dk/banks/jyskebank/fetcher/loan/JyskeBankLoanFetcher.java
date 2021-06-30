@@ -5,6 +5,10 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.JyskeBankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.JyskeConstants.Storage;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.fetcher.loan.entities.HomesEntity;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.fetcher.loan.entities.LoansEntity;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.fetcher.loan.rpc.MortgageDTO;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.fetcher.loan.rpc.MortgageResponse;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.fetcher.transactionalaccount.entities.AccountsEntity;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.fetcher.transactionalaccount.rpc.AccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyskebank.fetcher.transactionalaccount.rpc.TransactionResponse;
@@ -22,11 +26,26 @@ public class JyskeBankLoanFetcher
     @Override
     public Collection<LoanAccount> fetchAccounts() {
         final AccountResponse accountResponse = apiClient.fetchAccounts();
+        final MortgageResponse mortgageResponse = apiClient.fetchMortgages();
 
-        return accountResponse.stream()
-                .filter(AccountsEntity::isLoanAccount)
-                .map(AccountsEntity::toTinkLoanAccount)
-                .collect(Collectors.toList());
+        final Collection<LoanAccount> loanAccounts =
+                accountResponse.stream()
+                        .filter(AccountsEntity::isLoanAccount)
+                        .map(AccountsEntity::toTinkLoanAccount)
+                        .collect(Collectors.toList());
+
+        for (HomesEntity homesEntity : mortgageResponse.getHomes()) {
+            final Collection<LoanAccount> mortgages =
+                    homesEntity.getLoans().stream()
+                            .map(LoansEntity::getDocumentId)
+                            .map(id -> apiClient.fetchMortgageDetails(homesEntity, id))
+                            .map(MortgageDTO::toTinkLoanAccount)
+                            .collect(Collectors.toList());
+
+            loanAccounts.addAll(mortgages);
+        }
+
+        return loanAccounts;
     }
 
     @Override

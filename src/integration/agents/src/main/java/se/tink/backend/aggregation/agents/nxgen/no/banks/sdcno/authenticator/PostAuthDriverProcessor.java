@@ -26,6 +26,8 @@ public class PostAuthDriverProcessor {
     static final By ERROR_MESSAGE_CONTENT = By.xpath("//*[@id='error-message']/ul/li");
     static final By AGREEMENT_LIST = By.className("agreement-list");
     static final By AGREEMENT_LIST_FIRST_OPTION = By.xpath("//a[@data-id='0']");
+    static final By ACCEPT_COOKIES_BUTTON =
+            By.xpath("//button[@class='btn btn-flat' and text()='Aksepter valgte']");
 
     private static final By TARGET_ELEMENT_XPATH = By.xpath("//input[@value='Logg ut']");
 
@@ -41,8 +43,19 @@ public class PostAuthDriverProcessor {
     }
 
     public void processLogonCasesAfterSuccessfulBankIdAuthentication() {
+        acceptCookiesIfPrompted();
         checkForErrors();
         checkIfMultipleAgreements();
+    }
+
+    private void acceptCookiesIfPrompted() {
+        driver.findElements(ACCEPT_COOKIES_BUTTON)
+                .forEach(
+                        button -> {
+                            log.info("[SDC] Found cookies button. Trying to accept it.");
+                            button.click();
+                        });
+        webDriverHelper.sleep(2000);
     }
 
     private void checkForErrors() {

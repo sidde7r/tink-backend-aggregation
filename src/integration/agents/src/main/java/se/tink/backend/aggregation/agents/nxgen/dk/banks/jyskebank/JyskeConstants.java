@@ -17,6 +17,7 @@ public class JyskeConstants {
         public static final String FETCH_ACCOUNTS = HOST + "/rel/micro/accounts";
         public static final String FETCH_TRANSACTIONS = HOST + "/rel/micro/transactions/booked";
         public static final String FETCH_INVESTMENTS = HOST + "/rel/investment/accounts/overview";
+        public static final String FETCH_MORTGAGES = HOST + "/rjb/living/loans/";
         public static final String FETCH_IDENTITY = HOST + "/rel/general/userprofiles/name";
         public static final String VALIDATE_VERSION = HOST + "/rel/unauth/version/validate/51";
         public static final String SERVER_STATUS = HOST + "/rel/unauth/server/status";
@@ -42,11 +43,11 @@ public class JyskeConstants {
         public static final String ACCEPT_HTML =
                 "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8";
         public static final String ACCEPT_JSON = "application/vnd.relationsbank-v3+json";
-        public static final String USER_AGENT = "JyskeBank/2.21.0 (iPhone; iOS 13.3.1; Scale/3.00)";
-        public static final String BUILD_NUMBER = "116";
+        public static final String USER_AGENT = "JyskeBank/2.26.1 (iPhone; iOS 13.3.1; Scale/3.00)";
+        public static final String BUILD_NUMBER = "121";
         // API_KEY is retrieved from tracing the mobile app traffic in header "x-api-key"
         public static final String API_KEY = "w6FW248sXt42WZaaq8boFmXMGGTu06AG";
-        public static final String APP_VERSION = "2.21.0.111";
+        public static final String APP_VERSION = "2.26.1.121";
     }
 
     public static class QueryKeys {

@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.conve
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.credentials.service.CredentialsRequest;
@@ -49,8 +50,11 @@ public class SdcNoAgent extends NextGenerationAgent
 
     @Override
     protected Authenticator constructAuthenticator() {
-        return new SdcNoBankIdSSAuthenticator(
-                configuration, client, supplementalInformationController, catalog);
+        SdcNoBankIdSSAuthenticator authenticator =
+                new SdcNoBankIdSSAuthenticator(
+                        configuration, client, supplementalInformationController, catalog);
+        return new AutoAuthenticationController(
+                request, systemUpdater, authenticator, authenticator);
     }
 
     @Override
