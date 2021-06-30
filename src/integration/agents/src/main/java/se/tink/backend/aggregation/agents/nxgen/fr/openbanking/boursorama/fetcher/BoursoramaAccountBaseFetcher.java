@@ -33,8 +33,9 @@ public abstract class BoursoramaAccountBaseFetcher<T extends Account>
 
     private static final long MAX_NUM_DAYS_FOR_FETCH_WITHOUT_SCA = 89L;
     private static final String DEBIT_TRANSACTION_CODE = "DBIT";
+    private static final String SEMICOLON = "- ";
     private static final List<String> COURTESY_TITLES =
-            Lists.newArrayList("M OU MME ", "MME ", "MLE ", "MR ", "M ");
+            Lists.newArrayList("M OU MME ", "MLLE ", "MME ", "MLE ", "MR ", "M ");
 
     protected static final String STATUS_BOOKED = "BOOK";
 
@@ -113,10 +114,10 @@ public abstract class BoursoramaAccountBaseFetcher<T extends Account>
      * This method cuts courtesy titles from full name passed to it. If no of known titles is found
      * then empty will be returned.
      *
-     * @param fullName
      * @return Optional of holder name
      */
     protected String removeCourtesyTitle(String fullName) {
+        fullName = fullName.replace(SEMICOLON, "");
         for (String separator : COURTESY_TITLES) {
             if (fullName.contains(separator)) {
                 int index = fullName.indexOf(separator);
